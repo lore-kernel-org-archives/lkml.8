@@ -2,120 +2,229 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E377C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC618C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AF0206E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DldLXFnd"
+	by mail.kernel.org (Postfix) with ESMTP id C2CC6206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgCMRrO (ORCPT
+        id S1727080AbgCMRrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:47:14 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44844 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgCMRrO (ORCPT
+        Fri, 13 Mar 2020 13:47:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47702 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgCMRrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:47:14 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a10so11447052ljp.11
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:47:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Jz7ElaYl4G5s8tjf4//nL9X+feX8dgn1YasReBhmLU=;
-        b=DldLXFndSEJ23oNy6e2XGqNLYP7/80RxYvYEF6XuiZV7j6joGGBRiD2/yFukHE4LGn
-         Kbj8dD8fsioQ99dJZwruHJJK6NhcOgpj8pTGLSIfN2VP5TZoo9M1NZ70kuXD6tg6zXVe
-         f8Edjdza72ITuxxTT7jYRYpq+LS2JhTyc6fZRRHnXVGGmW9xY2rW1LWH4U3X94sbjNkR
-         TBKOMAgLNKYhW6mZZ6CfdU4+lproXFuUgI8svNgHwppmr9iD6jkuX6GfVjqH6kreeyxb
-         udIxsI3pBEsvPbrdAXnXCSC50aEHAMRFgWtf16vVGuTt+U6WoNbJH1dZGNpXiyReUmNk
-         xuYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Jz7ElaYl4G5s8tjf4//nL9X+feX8dgn1YasReBhmLU=;
-        b=MJJn3Nftq3f2pQUvATikOYRA+ijdwKbHFQvHLZeMvarF1H1rB9wRaU2ILQ1wxSaSgH
-         c8Hm9Ej5wYY40k+F3vWsPadTljIWLCA2ZzTEKu3vioEnM6r2X+roeJNSeI7V6I9wyLHn
-         QmwopCDodkkdd4FF+4po/dEiDWrUPwtE7Z/HPbGEe2v5urbBkH+XQyija8brHLS1Nymb
-         /AeuTHjVa9iXJ+qUsZ2owc4NKRysieNjKWSFjjbBEbEmj3qMQ2vSXHymdzukLvnt7kOp
-         M4Zi4tm2fiQBEbhbXxvcYnpb+a24fN+RFlJEpaS/4AxYgKJRJ9D2lL1aGNj6wAsmtEZJ
-         NtUw==
-X-Gm-Message-State: ANhLgQ3CHfW7Q2UK8tJfdrL0nEVAt+Pwtjh+7Spt6Rypjt92SEpLMOmd
-        OAxoDkAmcbhUsUrxKDx2qG0XUY0L6+sO2ZiSzN50KaT3Bew=
-X-Google-Smtp-Source: ADFU+vvbkq5f57Bek8364CZzVT+B//0Fq1cl6ZcqshvVZgQvozTnMpnTAMPH5tUC4q6Yb2li5IH5x6L7q2h1S0V211c=
-X-Received: by 2002:a05:651c:1b5:: with SMTP id c21mr3138597ljn.174.1584121631812;
- Fri, 13 Mar 2020 10:47:11 -0700 (PDT)
+        Fri, 13 Mar 2020 13:47:17 -0400
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jCoOx-00017r-77; Fri, 13 Mar 2020 18:47:15 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 2/9] timekeeping: Split jiffies seqlock
+Date:   Fri, 13 Mar 2020 18:46:54 +0100
+Message-Id: <20200313174701.148376-3-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200313174701.148376-1-bigeasy@linutronix.de>
+References: <20200313174701.148376-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-References: <20200304002137.83630-1-rajatja@google.com> <CA+jURcsGvKbQi0bUs1BtAa7RC0NmtKBS=qtEzYWv=pUBqenmgQ@mail.gmail.com>
-In-Reply-To: <CA+jURcsGvKbQi0bUs1BtAa7RC0NmtKBS=qtEzYWv=pUBqenmgQ@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Fri, 13 Mar 2020 10:46:33 -0700
-Message-ID: <CACK8Z6F1d=X22==rZLdBPWp2i-N6WDKXXhr4Qa5OdpmMaj+1BA@mail.gmail.com>
-Subject: Re: [PATCH v2] Input: Allocate keycode for SNIP key
-To:     Harry Cutts <hcutts@chromium.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dtor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 1:31 PM Harry Cutts <hcutts@chromium.org> wrote:
->
-> On Tue, 3 Mar 2020 at 16:21, Rajat Jain <rajatja@google.com> wrote:
-> >
-> > New chromeos keyboards have a "snip" key that is basically a selective
-> > screenshot (allows a user to select an area of screen to be copied).
-> > Allocate a keyvode for it.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > V2: Drop patch [1/2] and instead rebase this on top of Linus' tree.
-> >
-> >  include/uapi/linux/input-event-codes.h | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-> > index 0f1db1cccc3fd..08c8572891efb 100644
-> > --- a/include/uapi/linux/input-event-codes.h
-> > +++ b/include/uapi/linux/input-event-codes.h
-> > @@ -652,6 +652,9 @@
-> >  /* Electronic privacy screen control */
-> >  #define KEY_PRIVACY_SCREEN_TOGGLE      0x279
-> >
-> > +/* Selective Screenshot */
-> > +#define KEY_SNIP                        0x280
-> > +
->
-> It's not very obvious to me what KEY_SNIP represents, without the
-> comment above. Maybe you could call it something like
-> KEY_SELECTIVE_SCREENSHOT, so that its purpose is more apparent to
-> someone seeing it in use.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Sure, I do not have any preference, so I will change this to
-KEY_SELECTIVE_SCREENSHOT.
+seqlock consists of a sequence counter and a spinlock_t which is used to
+serialize the writers. spinlock_t is substituted by a "sleeping" spinlock
+on PREEMPT_RT enabled kernels which breaks the usage in the timekeeping
+code as the writers are executed in hard interrupt and therefore
+non-preemptible context even on PREEMPT_RT.
 
-Thanks,
+The spinlock in seqlock cannot be unconditionally replaced by a
+raw_spinlock_t as many seqlock users have nesting spinlock sections or
+other code which is not suitable to run in truly atomic context on RT.
 
-Rajat
+Instead of providing a raw_seqlock API for a single use case, open code the
+seqlock for the jiffies use case and implement it with a raw_spinlock_t and
+a sequence counter.
 
->
-> Harry Cutts
-> Chrome OS Touch/Input team
->
-> >  /*
-> >   * Some keyboards have keys which do not have a defined meaning, these keys
-> >   * are intended to be programmed / bound to macros by the user. For most
-> > --
-> > 2.25.0.265.gbab2e86ba0-goog
-> >
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/time/jiffies.c     |  7 ++++---
+ kernel/time/tick-common.c | 10 ++++++----
+ kernel/time/tick-sched.c  | 19 ++++++++++++-------
+ kernel/time/timekeeping.c |  6 ++++--
+ kernel/time/timekeeping.h |  3 ++-
+ 5 files changed, 28 insertions(+), 17 deletions(-)
+
+diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
+index d23b434c2ca7b..eddcf49704445 100644
+--- a/kernel/time/jiffies.c
++++ b/kernel/time/jiffies.c
+@@ -58,7 +58,8 @@ static struct clocksource clocksource_jiffies =3D {
+ 	.max_cycles	=3D 10,
+ };
+=20
+-__cacheline_aligned_in_smp DEFINE_SEQLOCK(jiffies_lock);
++__cacheline_aligned_in_smp DEFINE_RAW_SPINLOCK(jiffies_lock);
++__cacheline_aligned_in_smp seqcount_t jiffies_seq;
+=20
+ #if (BITS_PER_LONG < 64)
+ u64 get_jiffies_64(void)
+@@ -67,9 +68,9 @@ u64 get_jiffies_64(void)
+ 	u64 ret;
+=20
+ 	do {
+-		seq =3D read_seqbegin(&jiffies_lock);
++		seq =3D read_seqcount_begin(&jiffies_seq);
+ 		ret =3D jiffies_64;
+-	} while (read_seqretry(&jiffies_lock, seq));
++	} while (read_seqcount_retry(&jiffies_seq, seq));
+ 	return ret;
+ }
+ EXPORT_SYMBOL(get_jiffies_64);
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index 7e5d3524e924d..6c9c342dd0e53 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -84,13 +84,15 @@ int tick_is_oneshot_available(void)
+ static void tick_periodic(int cpu)
+ {
+ 	if (tick_do_timer_cpu =3D=3D cpu) {
+-		write_seqlock(&jiffies_lock);
++		raw_spin_lock(&jiffies_lock);
++		write_seqcount_begin(&jiffies_seq);
+=20
+ 		/* Keep track of the next tick event */
+ 		tick_next_period =3D ktime_add(tick_next_period, tick_period);
+=20
+ 		do_timer(1);
+-		write_sequnlock(&jiffies_lock);
++		write_seqcount_end(&jiffies_seq);
++		raw_spin_unlock(&jiffies_lock);
+ 		update_wall_time();
+ 	}
+=20
+@@ -162,9 +164,9 @@ void tick_setup_periodic(struct clock_event_device *dev=
+, int broadcast)
+ 		ktime_t next;
+=20
+ 		do {
+-			seq =3D read_seqbegin(&jiffies_lock);
++			seq =3D read_seqcount_begin(&jiffies_seq);
+ 			next =3D tick_next_period;
+-		} while (read_seqretry(&jiffies_lock, seq));
++		} while (read_seqcount_retry(&jiffies_seq, seq));
+=20
+ 		clockevents_switch_state(dev, CLOCK_EVT_STATE_ONESHOT);
+=20
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index a792d21cac645..4be756b88a48e 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -65,7 +65,8 @@ static void tick_do_update_jiffies64(ktime_t now)
+ 		return;
+=20
+ 	/* Reevaluate with jiffies_lock held */
+-	write_seqlock(&jiffies_lock);
++	raw_spin_lock(&jiffies_lock);
++	write_seqcount_begin(&jiffies_seq);
+=20
+ 	delta =3D ktime_sub(now, last_jiffies_update);
+ 	if (delta >=3D tick_period) {
+@@ -91,10 +92,12 @@ static void tick_do_update_jiffies64(ktime_t now)
+ 		/* Keep the tick_next_period variable up to date */
+ 		tick_next_period =3D ktime_add(last_jiffies_update, tick_period);
+ 	} else {
+-		write_sequnlock(&jiffies_lock);
++		write_seqcount_end(&jiffies_seq);
++		raw_spin_unlock(&jiffies_lock);
+ 		return;
+ 	}
+-	write_sequnlock(&jiffies_lock);
++	write_seqcount_end(&jiffies_seq);
++	raw_spin_unlock(&jiffies_lock);
+ 	update_wall_time();
+ }
+=20
+@@ -105,12 +108,14 @@ static ktime_t tick_init_jiffy_update(void)
+ {
+ 	ktime_t period;
+=20
+-	write_seqlock(&jiffies_lock);
++	raw_spin_lock(&jiffies_lock);
++	write_seqcount_begin(&jiffies_seq);
+ 	/* Did we start the jiffies update yet ? */
+ 	if (last_jiffies_update =3D=3D 0)
+ 		last_jiffies_update =3D tick_next_period;
+ 	period =3D last_jiffies_update;
+-	write_sequnlock(&jiffies_lock);
++	write_seqcount_end(&jiffies_seq);
++	raw_spin_unlock(&jiffies_lock);
+ 	return period;
+ }
+=20
+@@ -676,10 +681,10 @@ static ktime_t tick_nohz_next_event(struct tick_sched=
+ *ts, int cpu)
+=20
+ 	/* Read jiffies and the time when jiffies were updated last */
+ 	do {
+-		seq =3D read_seqbegin(&jiffies_lock);
++		seq =3D read_seqcount_begin(&jiffies_seq);
+ 		basemono =3D last_jiffies_update;
+ 		basejiff =3D jiffies;
+-	} while (read_seqretry(&jiffies_lock, seq));
++	} while (read_seqcount_retry(&jiffies_seq, seq));
+ 	ts->last_jiffies =3D basejiff;
+ 	ts->timer_expires_base =3D basemono;
+=20
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index ca69290bee2a3..856280d2cbd4c 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -2397,8 +2397,10 @@ EXPORT_SYMBOL(hardpps);
+  */
+ void xtime_update(unsigned long ticks)
+ {
+-	write_seqlock(&jiffies_lock);
++	raw_spin_lock(&jiffies_lock);
++	write_seqcount_begin(&jiffies_seq);
+ 	do_timer(ticks);
+-	write_sequnlock(&jiffies_lock);
++	write_seqcount_end(&jiffies_seq);
++	raw_spin_unlock(&jiffies_lock);
+ 	update_wall_time();
+ }
+diff --git a/kernel/time/timekeeping.h b/kernel/time/timekeeping.h
+index 141ab3ab0354f..099737f6f10c7 100644
+--- a/kernel/time/timekeeping.h
++++ b/kernel/time/timekeeping.h
+@@ -25,7 +25,8 @@ static inline void sched_clock_resume(void) { }
+ extern void do_timer(unsigned long ticks);
+ extern void update_wall_time(void);
+=20
+-extern seqlock_t jiffies_lock;
++extern raw_spinlock_t jiffies_lock;
++extern seqcount_t jiffies_seq;
+=20
+ #define CS_NAME_LEN	32
+=20
+--=20
+2.25.1
+
