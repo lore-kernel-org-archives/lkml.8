@@ -2,137 +2,180 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424F0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26B0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2EC6206B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:41:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="kMlus6sC"
+	by mail.kernel.org (Postfix) with ESMTP id 94E94206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgCMTlc (ORCPT
+        id S1726946AbgCMTqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 15:41:32 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38898 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgCMTlc (ORCPT
+        Fri, 13 Mar 2020 15:46:53 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:58973 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726477AbgCMTqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 15:41:32 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t28so8725999ott.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 12:41:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wjieT0R9WZnB9z3n+XY1qg0Ch3LybzVq7EUWHcy5YTo=;
-        b=kMlus6sC2nyintFvkXx9LHI0rgeCLG37gf4jtSyinrKY+YclOGnKzKJePfCn5QlwPl
-         YE5mMTwfiLKM9qhLlcNux4oSh+KMhKpwgc/lTfE7kLuFYjSliG5MuOmK9L2+7jrcgkuS
-         P/zojkhxaqelvLeov7dWwxqLSE+BmBFNJ3rlGn80JqYQwRKLPFu9pfr19m7H5auefrpW
-         dfPhDvvY+s8NCU+EeVfHUX7iP75icFzDdzXEkO4lxK1ujA++3w0bA/WkNmTLsgIvnXPM
-         d6PztCKlbM25SnoIAwKg6nz2f56lFb9vYDbZS82WyCJ4xXm58ANZaIf+uE7vhtALzOe/
-         aypQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wjieT0R9WZnB9z3n+XY1qg0Ch3LybzVq7EUWHcy5YTo=;
-        b=l0WwCnnARi3E+IKR85krVXvbPArN9mFRkbzTqpLZ4O9QEaR3MHJ2YF192pSpkRN9l1
-         jDIaG207lSD18CyWsZukbROeOo/M62am7DHy9tHMi1B+c+jdlOMHQzlM5E/q1SaClYb8
-         DCEQxuQltTIH4D2qNSlQ7JQVNoIM8peiWLksBoPxgSTsRs6KLvx5w8e70yYqQUsKEvu+
-         hUVh4bF5WiN+5Icso1QktluwL0subObVUWNY3XYQaCOEcRtPe89woONi0SDFGMjs1wCf
-         2cwcmIF3Xi22gboBnWshOc5Yg5vrHVKTL5M+vetRTVYdAXl/yc2WGNoXM7Go8D5YPjdk
-         nkGg==
-X-Gm-Message-State: ANhLgQ2ih2QImz69eIm0zrIG9CNxFGjvem6cbGb3s5O+o4CTxIx2AvsZ
-        kM4YuwSTk1i7bWE3XoFnkNxbjdQusEGFlI0cbREeuQ==
-X-Google-Smtp-Source: ADFU+vvz3zyxGYanegEtEhYVsPXr7j+OJ3pchZ5Pgj4K3BmzZJUyaiASUSU1nbsKYRV4BYUb2xdxCgQLa7EcmLJRnHY=
-X-Received: by 2002:a05:6830:1e06:: with SMTP id s6mr1601032otr.28.1584128491269;
- Fri, 13 Mar 2020 12:41:31 -0700 (PDT)
+        Fri, 13 Mar 2020 15:46:52 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TsV0fqL_1584128807;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TsV0fqL_1584128807)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 14 Mar 2020 03:46:49 +0800
+Subject: Re: [PATCH 1/2] mm: swap: make page_evictable() inline
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <1584124476-76534-1-git-send-email-yang.shi@linux.alibaba.com>
+ <CALvZod4W9kkh578Kix7+M9Jkwm1sxx2zvvPG+0Us3R8bEkpEpg@mail.gmail.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <520b3295-9fb8-04a7-6215-9bfda4f1a268@linux.alibaba.com>
+Date:   Fri, 13 Mar 2020 12:46:46 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
- <20200313153151.e5nmsbr6yrzchdxi@rric.localdomain> <20200313191230.qrrlo7ht24fhfhvj@rric.localdomain>
-In-Reply-To: <20200313191230.qrrlo7ht24fhfhvj@rric.localdomain>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Fri, 13 Mar 2020 12:41:19 -0700
-Message-ID: <CAJ+vNU0q7wW8JPC8FjEkD4a-ZJc1QAmVNne0w1T4MX9pd4bCyg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: thunderx: fix irq_request_resources
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CALvZod4W9kkh578Kix7+M9Jkwm1sxx2zvvPG+0Us3R8bEkpEpg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 12:12 PM Robert Richter <rrichter@marvell.com> wrote:
->
-> On 13.03.20 16:31:51, Robert Richter wrote:
-> > On 11.03.20 08:43:53, Tim Harvey wrote:
-> > > If there are no parent resources do not call irq_chip_request_resources_parent
-> > > at all as this will return an error.
-> > >
-> > > This resolves a regression where devices using a thunderx gpio as an interrupt
-> > > would fail probing.
-> > >
-> > > Fixes: 0d04d0c ("gpio: thunderx: Use the default parent apis for {request,release}_resources")
-> > > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> > > ---
-> > >  drivers/gpio/gpio-thunderx.c | 9 ++++++---
-> > >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-> > > index 4627704..f84b9b1 100644
-> > > --- a/drivers/gpio/gpio-thunderx.c
-> > > +++ b/drivers/gpio/gpio-thunderx.c
-> > > @@ -366,15 +366,18 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
-> > >  {
-> > >     struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
-> > >     struct thunderx_gpio *txgpio = txline->txgpio;
-> > > +   struct irq_data *parent_data = data->parent_data;
-> > >     int r;
-> > >
-> > >     r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
-> > >     if (r)
-> > >             return r;
-> > >
-> > > -   r = irq_chip_request_resources_parent(data);
-> > > -   if (r)
-> > > -           gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
-> > > +   if (parent_data && parent_data->chip->irq_request_resources) {
-> > > +           r = irq_chip_request_resources_parent(data);
-> > > +           if (r)
-> > > +                   gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
-> > > +   }
-> >
-> > There is no unlocking for the else case. I would assume the
-> > parent_data should be checked before grabbing the lock, or is this
-> > intended?
->
-> Looking at the original code, the parent resources are requested only
-> if existing. So the change is ok.
->
-> On the other hand, the overall change using irq_chip_{request,
-> release}_resources_parent() became pointless now. It is unreadable and
-> more complex now. Thus, commit 0d04d0c should just be reverted.
->
-> The function interface is limited. Instead of letting the child device
-> deal with the parent, parent requests should be handled directly in
-> irq_request_resources(). Another aspect is that the code for this
-> driver has been already removed upstream and ti_sci_inta_msi.c is the
-> last remaining user of it. This speaks also for a removal by a revert.
->
 
-Robert,
 
-A revert does make the most sense to me and it works for 5.2, 5.3, and
-5.5 but the revert fails for 5.4 and needs some manual intervention.
+On 3/13/20 12:33 PM, Shakeel Butt wrote:
+> On Fri, Mar 13, 2020 at 11:34 AM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>> When backporting commit 9c4e6b1a7027 ("mm, mlock, vmscan: no more
+>> skipping pagevecs") to our 4.9 kernel, our test bench noticed around 10%
+>> down with a couple of vm-scalability's test cases (lru-file-readonce,
+>> lru-file-readtwice and lru-file-mmap-read).  I didn't see that much down
+>> on my VM (32c-64g-2nodes).  It might be caused by the test configuration,
+>> which is 32c-256g with NUMA disabled and the tests were run in root memcg,
+>> so the tests actually stress only one inactive and active lru.  It
+>> sounds not very usual in mordern production environment.
+>>
+>> That commit did two major changes:
+>> 1. Call page_evictable()
+>> 2. Use smp_mb to force the PG_lru set visible
+>>
+>> It looks they contribute the most overhead.  The page_evictable() is a
+>> function which does function prologue and epilogue, and that was used by
+>> page reclaim path only.  However, lru add is a very hot path, so it
+>> sounds better to make it inline.  However, it calls page_mapping() which
+>> is not inlined either, but the disassemble shows it doesn't do push and
+>> pop operations and it sounds not very straightforward to inline it.
+>>
+>> Other than this, it sounds smp_mb() is not necessary for x86 since
+>> SetPageLRU is atomic which enforces memory barrier already, replace it
+>> with smp_mb__after_atomic() in the following patch.
+>>
+>> With the two fixes applied, the tests can get back around 5% on that
+>> test bench and get back normal on my VM.  Since the test bench
+>> configuration is not that usual and I also saw around 6% up on the
+>> latest upstream, so it sounds good enough IMHO.
+>>
+>> The below is test data (lru-file-readtwice throughput) against the v5.6-rc4:
+>>          mainline        w/ inline fix
+>>            150MB            154MB
+>>
+> What is the test setup for the above experiment? I would like to get a repro.
 
-I'm not sure how to proceed with this.
+Just startup a VM with two nodes, then run case-lru-file-readtwice or 
+case-lru-file-readonce in vm-scalability in root memcg or with memcg 
+disabled.  Then get the average throughput (dd result) from the test. 
+Our test bench uses the script from lkp, but I just ran it manually. 
+Single node VM should be more obvious showed in my test.
 
-Tim
+>
+>> With this patch the throughput gets 2.67% up.  The data with using
+>> smp_mb__after_atomic() is showed in the following patch.
+>>
+>> Fixes: 9c4e6b1a7027 ("mm, mlock, vmscan: no more skipping pagevecs")
+>> Cc: Shakeel Butt <shakeelb@google.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>>   include/linux/swap.h | 24 +++++++++++++++++++++++-
+>>   mm/vmscan.c          | 23 -----------------------
+>>   2 files changed, 23 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/include/linux/swap.h b/include/linux/swap.h
+>> index 1e99f7a..297eb66 100644
+>> --- a/include/linux/swap.h
+>> +++ b/include/linux/swap.h
+>> @@ -374,7 +374,29 @@ extern unsigned long mem_cgroup_shrink_node(struct mem_cgroup *mem,
+>>   #define node_reclaim_mode 0
+>>   #endif
+>>
+>> -extern int page_evictable(struct page *page);
+>> +/*
+>> + * page_evictable - test whether a page is evictable
+>> + * @page: the page to test
+>> + *
+>> + * Test whether page is evictable--i.e., should be placed on active/inactive
+>> + * lists vs unevictable list.
+>> + *
+>> + * Reasons page might not be evictable:
+>> + * (1) page's mapping marked unevictable
+>> + * (2) page is part of an mlocked VMA
+>> + *
+>> + */
+>> +static inline int page_evictable(struct page *page)
+>> +{
+>> +       int ret;
+>> +
+>> +       /* Prevent address_space of inode and swap cache from being freed */
+>> +       rcu_read_lock();
+>> +       ret = !mapping_unevictable(page_mapping(page)) && !PageMlocked(page);
+>> +       rcu_read_unlock();
+>> +       return ret;
+>> +}
+>> +
+>>   extern void check_move_unevictable_pages(struct pagevec *pvec);
+>>
+>>   extern int kswapd_run(int nid);
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index 8763705..855c395 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -4277,29 +4277,6 @@ int node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned int order)
+>>   }
+>>   #endif
+>>
+>> -/*
+>> - * page_evictable - test whether a page is evictable
+>> - * @page: the page to test
+>> - *
+>> - * Test whether page is evictable--i.e., should be placed on active/inactive
+>> - * lists vs unevictable list.
+>> - *
+>> - * Reasons page might not be evictable:
+>> - * (1) page's mapping marked unevictable
+>> - * (2) page is part of an mlocked VMA
+>> - *
+>> - */
+>> -int page_evictable(struct page *page)
+>> -{
+>> -       int ret;
+>> -
+>> -       /* Prevent address_space of inode and swap cache from being freed */
+>> -       rcu_read_lock();
+>> -       ret = !mapping_unevictable(page_mapping(page)) && !PageMlocked(page);
+>> -       rcu_read_unlock();
+>> -       return ret;
+>> -}
+>> -
+>>   /**
+>>    * check_move_unevictable_pages - check pages for evictability and move to
+>>    * appropriate zone lru list
+>> --
+>> 1.8.3.1
+>>
+
