@@ -2,228 +2,133 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D10EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0C4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA11520724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FCA20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:52:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="taRcVzN2"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="HEtJLVNw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgCMKvd (ORCPT
+        id S1726594AbgCMKwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:51:33 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:33711 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726387AbgCMKvd (ORCPT
+        Fri, 13 Mar 2020 06:52:10 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:56073 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726387AbgCMKwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:51:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584096692; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
- Subject: From: Sender; bh=kBNQDM77aAPD7s08izeo3UtypHJmtrzkhedefworo6c=;
- b=taRcVzN2vD2o1/gfpx7fMurJjRDj/9xJKMFZfG1NFbWotOgyUwenVuwsHXr+DAoN5VjKAAqE
- kOy2W+o40zYqXaJA9PWPKngfkFgNSjRt3xsTixjPLMfnp+3JnG8vCDKx2hgNJK5sBaCowfqT
- v/nj9AagNcf1QWJjLWyGhFXrSXc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6b65b2.7f246bda0fb8-smtp-out-n02;
- Fri, 13 Mar 2020 10:51:30 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E9C05C432C2; Fri, 13 Mar 2020 10:51:29 +0000 (UTC)
-Received: from [10.252.222.65] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2900C433D2;
-        Fri, 13 Mar 2020 10:51:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2900C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-From:   Akash Asthana <akashast@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Convert QSPI bindings to YAML
-To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org
-References: <1581932974-21654-1-git-send-email-akashast@codeaurora.org>
- <1581932974-21654-2-git-send-email-akashast@codeaurora.org>
- <158216578112.184098.9357700822184458798@swboyd.mtv.corp.google.com>
-Message-ID: <66c79dcb-4102-e138-cf4f-303f17367175@codeaurora.org>
-Date:   Fri, 13 Mar 2020 16:21:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Fri, 13 Mar 2020 06:52:10 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id Chv9j1v5yhVf8ChvDjOTmd; Fri, 13 Mar 2020 11:52:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1584096728; bh=XgNQEpf17BQrRrtbwqWNWDVbPQDeyw/hevpZ0P7tT2Q=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=HEtJLVNwTfTp+Xt4zdLoxkqbbk42Vot59L4pqGVceHa5gQn0FKimkgQYS4+p03kBo
+         AFTgw6BCCJ3C4Fs+RagzsYkef03tWeKWqCMLxKyO4SxwnoHLc+ZbGIc73eit7/4OlJ
+         3RJf/2MaY2eaUReeNxe23sSTSFvL/1TOnvHUJ0A+0OeYiD6VChqwMFBxi/zcOUChwF
+         FEL7SXBAghggW0RzmE9y2D/UQeEwiV/aTleP0MGZsxKRlwSLj6zl8IBBQ0AU6xEjSG
+         XGJvrqY85vrAW171lAI7gyjLGUkhjMfG1NwHiLQHWUDSLnIUDz4XyxHMLGiDyb+mrp
+         8i4gpkIe8Yq/Q==
+Subject: Re: [PATCH 2/8] media: adv748x: add audio mute control and output
+ selection ioctls
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1578924232.git.alexander.riesen@cetitec.com>
+ <20200113141521.GC3606@pflmari>
+ <ff34078d-895d-08c8-c64f-768e75388038@xs4all.nl>
+ <20200313102600.GF3832@pflmari>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <c260defe-bb3c-0dc2-476f-5cf8ff27b915@xs4all.nl>
+Date:   Fri, 13 Mar 2020 11:52:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <158216578112.184098.9357700822184458798@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200313102600.GF3832@pflmari>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEKRLqenygj6TEyXEiRcxy9HK3lxscJw3t3rlNCf90vl9x7Qy/dyNnY5TO60y8eB+miEY/CLUsiqnyR1ljHOd/oyWxwV3aot+7NoT973WtnujiMPYPyN
+ aDnPTaJRDv+ewpgOSqFkUpt5JacbF38ctyDMSLx9dKkGz09HK5LX8G34Xqs1rAeOsyQMsAYWUy8S9bSyRA7tvnJ2ygeL7bEQgFwkJGBNQc7J1898AnTn/xuU
+ yQG4fZS7ExOJNh60XuLqJHtFscxO/ETq5H2xqYJl7w1K9RGm18FCpR8BVu3OHXwfVU/C0ZSj5qoYeVh3QpEvLUm6kSXHYJrzR+Zla1drE2BeB4UD/L+d/GjS
+ +BjEbtiIF/Dw8hrP35sYD++1NbzFFKqCjyrhtbnFiZ5lvJF2YGLl7do8rq6RJW8jaaxYKBe5XVFrB073oQNwpCjmrIQXGqN/SHzwbt9EFLss3Q6ndhDfGOc1
+ dY3x1H5ULrq9ydbCbR4jwoZmT2gRKIfAiaYfdv0QHs3HZYjTC3+QtTWjY039CL91wysydPbgQ3eKZJ/dU2gu/IICfeeI3J1/g3EeDS8Xe4afMoB+ttnhFPtm
+ 5Og=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On 3/13/20 11:26 AM, Alex Riesen wrote:
+> Hi Hans,
+> 
+> Hans Verkuil, Fri, Mar 13, 2020 09:16:11 +0100:
+>> On 1/13/20 3:15 PM, Alex Riesen wrote:
+>>> This change implements audio-related V4L2 ioctls for the HDMI subdevice.
+>>
+>> This is really where things go wrong. These V4L2 audio ioctls are meant for
+>> old PCI TV tuner devices where the audio was implemented as audio jack outputs
+>> that are typically looped back to audio inputs on a (PCI) soundcard. And when
+>> these ioctls were designed ALSA didn't even exist.
+> 
+> I see. That was before my time :)
+> 
+>> Generally an hdmi driver will configure the i2s audio automatically, which is
+>> typically connected to the SoC and controlled by the ALSA driver of the SoC,
+>> but there may well be missing features (audio never got a lot of attention in
+>> hdmi receivers). So what I would like to know is: what features are missing?
+> 
+> Well, the audio is missing. The current adv748x driver does not export the
+> audio features of the device at all. There is no code to enable the I2S audio
+> output and it is disabled (all clock and the data lines) by default.
 
-On 2/20/2020 7:59 AM, Stephen Boyd wrote:
-> Quoting Akash Asthana (2020-02-17 01:49:33)
->> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
->> new file mode 100644
->> index 0000000..977070a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
->> @@ -0,0 +1,89 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +
->> +%YAML 1.2
->> +---
->> +$id:"http://devicetree.org/schemas/spi/qcom,spi-qcom-qspi.yaml#"
->> +$schema:"http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Qualcomm Quad Serial Peripheral Interface (QSPI)
->> +
->> +maintainers:
->> + - Mukesh Savaliya<msavaliy@codeaurora.org>
->> + - Akash Asthana<akashast@codeaurora.org>
->> +
->> +description: |
-> Drop the | because it doesn't look like any formatting needs to be
-> maintained in the text for the description.
-ok
->> + The QSPI controller allows SPI protocol communication in single, dual, or quad
->> + wire transmission modes for read/write access to slaves such as NOR flash.
->> +
->> +allOf:
->> +  - $ref: /spi/spi-controller.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: qcom,sdm845-qspi
->> +      - const: qcom,qspi-v1
->> +
->> +  reg:
->> +    description: Base register location and length.
-> Drop description? It doesn't seem useful.
-ok
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: iface
->> +      - const: core
->> +
->> +  clocks:
->> +    items:
->> +      - description: AHB clock
->> +      - description: QSPI core clock.
-> Please drop the full-stop on core clock.
-ok
->> +
->> +  "#address-cells":
->> +     const: 1
->> +
->> +  "#size-cells":
->> +    const: 0
-> Aren't these two unnecessary because they're covered by the
-> spi-controller.yaml binding?
-ok
->
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clock-names
->> +  - clocks
->> +  - "#address-cells"
->> +  - "#size-cells"
-> These last two are also covered by spi-controller binding.
-ok will remove
->> +
->> +
-> Why two newlines instead of one?
->
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    soc: soc@0 {
-> Remove this node from example please.
+Sorry, I was vague in my question. Obviously that needs to be added, but besides
+adding the low-level i2s support I was wondering if there are additional things
+that need to be exposed to userspace in order for audio to fully work.
 
-If I remove this node I am getting below compilation error.
+> 
+> But, by now it seems to be clear that implementation of ALSA SoC DAI
+> interfaces is the way to support the audio.
+> 
+> And I am already slowly working on it.
+> 
+>> Anything missing can likely be resolved by adding HDMI audio specific V4L2 controls,
+>> which would be the right approach for this.
+>>
+>> So I would expect to see a proposal for V4L2_CID_DV_RX_AUDIO_ controls to be
+>> added here:
+>>
+>> https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/ext-ctrls-dv.html
+> 
+> This seems to be an explicitly "digital video" control class. And it has no
+> control option for mute. Or did you mean a similarly structured new class for
+> "digital audio"?
 
-Error: 
-Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.example.dts:46.1-2 
-syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:311: recipe for target 
-'Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.example.dt.yaml' 
-failed
-make[1]: *** 
-[Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.example.dt.yaml] 
-Error 1
-Makefile:1264: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
->
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +
->> +        qspi: spi@88df000 {
->> +            compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
->> +            reg = <0 0x88df000 0 0x600>;
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +            interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
->> +            clock-names = "iface", "core";
->> +            clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
->> +                <&gcc GCC_QSPI_CORE_CLK>;
-> Weird tabbing here. Just use spaces and align it up.
-Ok, I will align it better.
->
->> +
->> +                flash@0 {
->> +                    compatible = "jedec,spi-nor";
->> +                    reg = <0>;
->> +                    spi-max-frequency = <25000000>;
->> +                    spi-tx-bus-width = <2>;
->> +                    spi-rx-bus-width = <2>;
->> +                };
-> Is this flash node necessary for the example?
-
-It's not neccessary.
-
-I just preserved the original example from .txt binding file.
-
->
->> +        };
->> +    };
->> +
-> Nitpick: Why newline here?
-
-Will remove it.
-
-Thankyou for reviewing the patch.
-
+There are no DV_ audio controls at all today. So any new audio controls would be
+added to the DV class. But if there is nothing that needs to be exposed, then
+nothing needs to be added :-)
 
 Regards,
 
-Akash
+	Hans
 
->
->> +...
+> 
+> This feels like an overkill for this particular driver...
+> 
+> Regards,
+> Alex
+> 
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
