@@ -2,132 +2,113 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95127C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2581AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B569206E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E14206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:47:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvK/Xx4f"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="Mw+VFPC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgCMSqO (ORCPT
+        id S1727231AbgCMSrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:46:14 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45251 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgCMSqO (ORCPT
+        Fri, 13 Mar 2020 14:47:37 -0400
+Received: from mail-qt1-f171.google.com ([209.85.160.171]:39099 "EHLO
+        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbgCMSrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:46:14 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c145so14273326qke.12
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 11:46:13 -0700 (PDT)
+        Fri, 13 Mar 2020 14:47:36 -0400
+Received: by mail-qt1-f171.google.com with SMTP id f17so7135368qtq.6
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 11:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eHmI1zJjsn+RyxJ173WIfEHfpucuAGOsedaISLkubgc=;
-        b=MvK/Xx4fyI+Ex0jclsWt5OAhghUZPJbHEBzlSGCao3Aol1d5SijXXdGs2l8cnPyXtj
-         Mk2Qo2taZMfylbmaRQuqopYU1l3fF2zYUgj4HF29ZvZcn/eYCKp/vTKdd+fRGnsBUE4v
-         tmLzTfb7rW94bLkZqgYtaX82koKk59pEiOikdsB+vTZAjoc0OIL8ZqvYwsAqa1FG3T/S
-         8RE6gEJ0poqKNwMQvoh2yxOP83ZKCbx6Dz9ou1N21lHHyKieyMkNQkOKlZSqMQyse5QQ
-         hZF6zSnzMy7MUJESNjNdRDc22Be7KXQNVl2GSk0WEvSh7rxWfx37m7R6D6aApsUEiKVw
-         QaBA==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=mj7rGF7ON3Eo/FvVmngslw/F8fURXQu1EMn3nTTBUPQ=;
+        b=Mw+VFPC1w0UbdRMWSYVpgl8XZWcn/xyU7HjgZBjymT1LdxHLk54OdU9J7RryeWrV6G
+         pmCAsvxCw6XBIrR2Z5DSa9CfEeJcGKuh/zQ62J5GrmsM23BnS/TkQOWWIGVCT/cPUhnP
+         mm/zvQEUeE+q3yK42lamLdvqmphm2Ot6wWUJv1CQBEctQWHl5XrvfaJBRTO78Y/uEQWX
+         1l7qCdw3dlmrC8UvDgfJkqLAkCDAm4l7/mSIUZHe+CJjQxziWFJmZIyA+x8UAD/HVCqX
+         kJqpDXv5yS7j0ShkpKY8fpwCpz07OokC7FALZ+xhU7HVgk00IIS+O4y9al6ahGYBMuiP
+         ykgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eHmI1zJjsn+RyxJ173WIfEHfpucuAGOsedaISLkubgc=;
-        b=SCHEFMiS3PF9IngnvyacoXNdeEnuaKDJnQAcR/ZR0qv6CPDJbtq7gx6tqvWyiw9WnU
-         2c/lhkHcV7X22GK6FsGKagCk28ZEJRXWYv8wrt3/tAQjdXaU14DMXXWs37Sf+NVWvPGG
-         Bq+k9xZXmskTg8qOt2wvH5EkqLaxrYRfZO33sIxfrOmwcupZoin6Zmroq9O+mv4EflGE
-         kvS0PeTeboxDyEMJZMeXJTSV9Ms5pOzNYdk9jF1LFdE/Xe20q1ccv+jPhEYzMe0hbtMs
-         7svyUnrrjJIqp3oRJDjbHdr9accYbHUfrmT9HuxUHjHgGi3ywyU7zSwdDg25XKSH9VGj
-         3K9g==
-X-Gm-Message-State: ANhLgQ1Krk03khMxTh3+Q/hrRkurngpKY74p6+34UGocAWqzQlf/Icv0
-        b2CkP+IHWjYRuEBYZfsvGJc=
-X-Google-Smtp-Source: ADFU+vtG+cBbcTIGgfwjcQfigQsjm4POqVr+YE2WauSYbJQ0LiipsaA1a4E9jizhgeWeZheB8q+B/w==
-X-Received: by 2002:a37:4fd2:: with SMTP id d201mr14801414qkb.190.1584125173201;
-        Fri, 13 Mar 2020 11:46:13 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id b10sm9070941qto.60.2020.03.13.11.46.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 11:46:12 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D7B4C40009; Fri, 13 Mar 2020 15:46:05 -0300 (-03)
-Date:   Fri, 13 Mar 2020 15:46:05 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf tools: give synthetic mmap events an inode
- generation
-Message-ID: <20200313184605.GB9917@kernel.org>
-References: <20200313053129.131264-1-irogers@google.com>
- <20200313093639.GA389625@krava>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=mj7rGF7ON3Eo/FvVmngslw/F8fURXQu1EMn3nTTBUPQ=;
+        b=qVFTQ8zjbKGnAlHzaRIThdvLULOg8KiaUkClOvpLkW33K3nlbELhjKJX13Mpt1Gn4M
+         BtAET+JbyEEb2g3+7X2/gsTv1jCRKWtUiWgF5v952wQlu0CqKiolWP275uF3NijMqYa7
+         W9YvClqHR5ZmR8qGpd4TAjytzyIrDllPMKS/P8fnWDMi6T13DR5LVjraBScbwmvcaTUX
+         asql5geMCgpno3jmeopb72Fs/DLm5QQvzDV7iPOfcj3xuquMN5++bySjWHmUhNMhPxUy
+         Pw+8iht2QmNAi5xxtlS+jGSkH68anjBFPDw6uwLAHt7KrVW5ZgA5MM6MEeNM4ek8AWON
+         naqw==
+X-Gm-Message-State: ANhLgQ3+dV331OtEBRl0ANVrE+iYOJsUkKO8YJs1QyPTKjqgDczhOfoL
+        I3PfBkoMBKMr1dUb8wi7Xk4spA==
+X-Google-Smtp-Source: ADFU+vt5NDaayPMUHsXSY8k4ZwE0SyPb1aBxsDRcUQaLRF+uXaXF3f1cbfLoYMcPhiB48Es6cJN9Mg==
+X-Received: by 2002:aed:2202:: with SMTP id n2mr14466967qtc.4.1584125254322;
+        Fri, 13 Mar 2020 11:47:34 -0700 (PDT)
+Received: from [192.168.1.106] ([107.15.81.208])
+        by smtp.gmail.com with ESMTPSA id w1sm14917915qkc.117.2020.03.13.11.47.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 11:47:33 -0700 (PDT)
+To:     lsf-pc <lsf-pc@lists.linuxfoundation.org>
+Cc:     Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-nvme@vger.kernel.org" <linux-nvme@vger.kernel.org>
+From:   Josef Bacik <josef@toxicpanda.com>
+Subject: LSF/MM/BPF 2020: Postponement announcement
+Message-ID: <e4f390c7-3b25-67c8-5d6d-d7e87ba1c072@toxicpanda.com>
+Date:   Fri, 13 Mar 2020 14:47:32 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313093639.GA389625@krava>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Mar 13, 2020 at 10:36:39AM +0100, Jiri Olsa escreveu:
-> On Thu, Mar 12, 2020 at 10:31:29PM -0700, Ian Rogers wrote:
-> 
-> SNIP
-> 
-> > 
-> > SUMMARY: MemorySanitizer: use-of-uninitialized-value tools/perf/util/dsos.c:23:6 in __dso_id__cmp
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/synthetic-events.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> > index dd3e6f43fb86..5fddb64ec8c7 100644
-> > --- a/tools/perf/util/synthetic-events.c
-> > +++ b/tools/perf/util/synthetic-events.c
-> > @@ -345,6 +345,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
-> >  			continue;
-> >  
-> >  		event->mmap2.ino = (u64)ino;
-> > +                event->mmap2.ino_generation = 0;
-> 
-> please use tabs for indent, other than that
+Hello,
 
-I fixed that.
- 
-> Acked-by: iri Olsa <jolsa@kernel.org>
+Unfortunately given the escalating nature of the response to COVID-19 we are
+making the decision to change the original LSF/MM/BPF dates in April 2020.  We
+currently do not have concrete plans about how we will reschedule, the Linux
+Foundation is working very hard at getting us alternative dates as we speak.
+Once the new plans are concretely made we will notify everyone again with the
+new plans.
 
-Thanks, applied.
+The tentative plan is to keep the attendees as they are if we reschedule within
+2020.  This includes anybody that declined for travel related concerns.  We will
+re-send all invitations again to the original invitees so it's clear that you
+have been invited.
 
-- Arnaldo
- 
-> thanks,
-> jirka
-> 
-> >  
-> >  		/*
-> >  		 * Just like the kernel, see __perf_event_mmap in kernel/perf_event.c
-> > -- 
-> > 2.25.1.481.gfbce0eb801-goog
-> > 
-> 
+If we have to reschedule into 2021 then we will redo the CFP once we are closer
+to the actual date again and redo all of the invites and topics so we're as up
+to date as possible with the current state of the community.
 
--- 
+We will keep the current program committee and I will continue to chair until we
+have the next LSF/MM/BPF.
 
-- Arnaldo
+Thank you on behalf of the program committee:
+
+         Josef Bacik (Filesystems)
+         Amir Goldstein (Filesystems)
+         Martin K. Petersen (Storage)
+         Omar Sandoval (Storage)
+         Michal Hocko (MM)
+         Dan Williams (MM)
+         Alexei Starovoitov (BPF)
+         Daniel Borkmann (BPF)
