@@ -2,87 +2,136 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B72C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8870FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C252072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0F12072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:01:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fQ7PD+60"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgCMOBB convert rfc822-to-8bit (ORCPT
+        id S1726894AbgCMOBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:01:01 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:30395 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726713AbgCMOBB (ORCPT
+        Fri, 13 Mar 2020 10:01:37 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:60078 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCMOBg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:01:01 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-28-VcqWgJnvMmuVCZnmJ3ehoA-1; Fri, 13 Mar 2020 14:00:57 +0000
-X-MC-Unique: VcqWgJnvMmuVCZnmJ3ehoA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 13 Mar 2020 14:00:56 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 13 Mar 2020 14:00:56 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Vitaly Kuznetsov' <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-CC:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: RE: [PATCH 06/10] KVM: nVMX: Convert local exit_reason to u16 in
- ...enter_non_root_mode()
-Thread-Topic: [PATCH 06/10] KVM: nVMX: Convert local exit_reason to u16 in
- ...enter_non_root_mode()
-Thread-Index: AQHV+T8ZWkEdJwzmyEmywl6tM5YljqhGjOmA
-Date:   Fri, 13 Mar 2020 14:00:56 +0000
-Message-ID: <f440af10303e408d9d7f3211aa680918@AcuMS.aculab.com>
-References: <20200312184521.24579-1-sean.j.christopherson@intel.com>
- <20200312184521.24579-7-sean.j.christopherson@intel.com>
- <87pndgnyud.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87pndgnyud.fsf@vitty.brq.redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 13 Mar 2020 10:01:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ebofW7P9NSpXupWM6c+gZTgOsDoM48+wVkeltb0bhIs=; b=fQ7PD+60iZ5/eyMc+OUZU3lKf
+        feSyRiIOA7uTL3RbpCIs+/fbfFc221rr+Izn1Eve4nvtS2Om/DLVORadykSRvdG3PDCDanWaFSThS
+        lPVsQlMlwJNFg6UlANfjdd9As78frbcuSWZ6UQmZ8APPGLta+MT+tSCqQnC+Rc+g/tiC0yyaH5HPT
+        5HivwFJ3rljFWXpVGEF9oYER2ii61kdzKsH5RYDQwU7vG1cbPxSrRDmkuAxtzX42E0FOIOZYjc1JR
+        EhSSB4hlGtZ1yNHTZ8yq0Jy7KfQOntnb4RSEgEueJQy8xAh1SE4+dk6JgLcoUVCJ9c1bj1goyjnnh
+        pLC79TSOQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:60008)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jCksR-0000di-TN; Fri, 13 Mar 2020 14:01:28 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jCksM-0007NR-FD; Fri, 13 Mar 2020 14:01:22 +0000
+Date:   Fri, 13 Mar 2020 14:01:22 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/4] net: phy: xpcs: Clear latched value of
+ RX/TX fault
+Message-ID: <20200313140122.GC25745@shell.armlinux.org.uk>
+References: <cover.1584106347.git.Jose.Abreu@synopsys.com>
+ <50f3dd2ab58fecfea1156aaf8dbfa99d0c7b36be.1584106347.git.Jose.Abreu@synopsys.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50f3dd2ab58fecfea1156aaf8dbfa99d0c7b36be.1584106347.git.Jose.Abreu@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov
-> Sent: 13 March 2020 13:56
-...
-> >  	load_vmcs12_host_state(vcpu, vmcs12);
-> > -	vmcs12->vm_exit_reason = exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY;
-> > +	vmcs12->vm_exit_reason = VMX_EXIT_REASONS_FAILED_VMENTRY | exit_reason;
+On Fri, Mar 13, 2020 at 02:39:40PM +0100, Jose Abreu wrote:
+> When reading RX/TX fault register we may have latched values from Link
+> down. Clear the latched value first and then read it again to make sure
+> no old errors are flagged and that new errors are caught.
+
+The purpose of the latched link down is so that software can respond
+to a momentary loss of link with a possible change in the negotiation
+results.  That is why IEEE 802.3 wants a link loss to be a latched
+event.
+
+Double-reading the status register loses that information, and hides
+it from phylink.  A change in negotiation, which can occur very
+quickly on fiber links) can go unnoticed if the latching is not
+propagated up through phylink.
+
+If the negotiation parameters have changed, and pcs_get_state() does
+not report that the link has failed, then mac_link_up() will _not_ be
+called with the new link parameters, and the MAC will continue using
+the old ones.  Therefore, it is very important that any link-down
+event is reported to phylink.
+
+Phylink currently doesn't respond to a link-down event reported via
+PCS by re-checking after processing the link loss, but it could do,
+which would improve it's behaviour in that scenario.  I would prefer
+this resolution, rather than your proposed double-reading of the
+status register to "lose" the link-down event.
+
+I do have some patches that make that easier, but they're delayed
+behind the mass of patches that I still have outstanding - and trying
+to get progress on getting phylink patches merged has been glacial,
+and fraught with problems this time around.
+
 > 
-> My personal preference would be to do
->  (u32)exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY
-> instead but maybe I'm just not in love with implicit type convertion in C.
+> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+> 
+> ---
+> Cc: Jose Abreu <Jose.Abreu@synopsys.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/net/phy/mdio-xpcs.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/phy/mdio-xpcs.c b/drivers/net/phy/mdio-xpcs.c
+> index 973f588146f7..a4cbeecc6d42 100644
+> --- a/drivers/net/phy/mdio-xpcs.c
+> +++ b/drivers/net/phy/mdio-xpcs.c
+> @@ -185,6 +185,7 @@ static int xpcs_read_fault(struct mdio_xpcs_args *xpcs,
+>  		return -EFAULT;
+>  	}
+>  
+> +	xpcs_read(xpcs, MDIO_MMD_PCS, MDIO_STAT2);
+>  	ret = xpcs_read(xpcs, MDIO_MMD_PCS, MDIO_STAT2);
+>  	if (ret < 0)
+>  		return ret;
+> -- 
+> 2.7.4
+> 
+> 
 
-I look at the cast and wonder what is going on :-)
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
