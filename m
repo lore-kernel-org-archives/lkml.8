@@ -2,118 +2,139 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F9EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6ABC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51DDF2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=netapp.onmicrosoft.com header.i=@netapp.onmicrosoft.com header.b="gD//Dyy+"
+	by mail.kernel.org (Postfix) with ESMTP id 11D362074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584134650;
+	bh=gsKkEKc6d0k39o7jrA19JOlTMKCw+3VuNguQ2GPAzd0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0AHKUjyBv8zhHoW7+2y020+J5jcPBY/h6eTuFX32JLSEGea1ur3xqTAk2nRxs2P55
+	 386p8J8U/R60sfHrh6Sd8UxM+CO5mUmt5GOYpLTD6tv30qZPdGVaelKxxWu3mwKdwb
+	 op3H37+dSiIh98W/9jibczIWY/dNfNJKuiM8dnl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgCMVX7 (ORCPT
+        id S1727574AbgCMVYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:23:59 -0400
-Received: from mail-dm6nam11on2072.outbound.protection.outlook.com ([40.107.223.72]:6052
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727052AbgCMVXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 17:23:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hClaUH73B0LHbupHNlqJS3bQxU+dbqqsR5dgTEVpaZ0kih94Dm6L+NRDRgTo++0PnsLhLPS1aBN09I1nwGoULVMzBGcZklapsudYICLh+wXBmzfaAlnBfIJrfNUKiu9bd/wkgKWhYpXEPGc/lbNVzs4Aas2YP048lzktumlqsCV4O7vK+E7y9nhSuYIEabKTVxNZNhAdezFHBoSo0BrsQfsyXtPJEw6E+uo7FrMfIqQ0fZO1nkPNm+FujK7ur7aTfYm4TRNZQRH+JBDK/eehEaB48WDp34VtwIQmnKVtOLJh6lprLkHkY7nwOm83d7OQ0C36eyHF1hrXGN9XtFQnuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OupXjqReRfSnc5tVGkNPnNXuYNA48xdwLUH6+K3Pvsc=;
- b=SScJQZ4MtjJSPOHQDrL4pvk6wkNNIHwvbepviwBqVfWAHtbVAzgK6YA2k9+UHw9K+tgczXLlHPhoeATr37QN6UQ1x32QDIvoREIhug8Mm16DPglH8ZvPLfM5sv5FUg8y/1mdopaTXvrWn4COvmZOZqANBTKLyeEy3Knjj84NQVddX4UyPaGpxx29MAp/Ox5COhO8NB13DryqiHZ1+MJ603XwaHxeobFodGdNySThq2pR0Ihpt+Qe9FL/CvPJmmYILaQ5MOvbo0o8Viz4oW56ygyZb08lnHfRKYMvpjS3XYnkJzqq/emm4ynzOY8lrfGr2Cc0UHNCblD4NIxP+0nWuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
+        Fri, 13 Mar 2020 17:24:09 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34626 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbgCMVYI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 17:24:08 -0400
+Received: by mail-il1-f196.google.com with SMTP id c8so10554065ilm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 14:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OupXjqReRfSnc5tVGkNPnNXuYNA48xdwLUH6+K3Pvsc=;
- b=gD//Dyy+I5SpEnb/Z/XfU7g6rdmiK/G1LgYaPogMumjOwmHk1xMA9aJqhPtXJsaUrrHypsOdIdmJbbn+J3rpInjr80/iobwQGuAvIFKv5ytNIqO6jRuqh0ej7i/EUDuBrZdrZABhKsHM0alljB2oHuorEzmN+Mxxavgv4BvIdTo=
-Received: from DM6PR06MB6617.namprd06.prod.outlook.com (2603:10b6:5:25f::14)
- by DM6PR06MB5867.namprd06.prod.outlook.com (2603:10b6:5:1ad::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Fri, 13 Mar
- 2020 21:23:52 +0000
-Received: from DM6PR06MB6617.namprd06.prod.outlook.com
- ([fe80::f1d5:1417:3acd:c3be]) by DM6PR06MB6617.namprd06.prod.outlook.com
- ([fe80::f1d5:1417:3acd:c3be%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 21:23:52 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS Client fixes for 5.6-rc6
-Thread-Topic: [GIT PULL] Please pull NFS Client fixes for 5.6-rc6
-Thread-Index: AQHV+X2xvtPTlyiGnESyhrHKya0f4A==
-Date:   Fri, 13 Mar 2020 21:23:52 +0000
-Message-ID: <301a18ca0151b97f54ff6f67b4d32afed696459b.camel@netapp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.0 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anna.Schumaker@netapp.com; 
-x-originating-ip: [68.32.74.190]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 02a3e18b-d5a1-47ec-0854-08d7c794d41e
-x-ms-traffictypediagnostic: DM6PR06MB5867:
-x-microsoft-antispam-prvs: <DM6PR06MB5867FEB2E934C9AA9FC50988F8FA0@DM6PR06MB5867.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1186;
-x-forefront-prvs: 034119E4F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(346002)(136003)(396003)(199004)(86362001)(186003)(66446008)(4326008)(6486002)(76116006)(66556008)(64756008)(66476007)(478600001)(66946007)(5660300002)(91956017)(8936002)(81166006)(26005)(71200400001)(6506007)(8676002)(316002)(6916009)(2616005)(81156014)(2906002)(54906003)(36756003)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR06MB5867;H:DM6PR06MB6617.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dSNS7eBz7knXoAlf99dsGgsrSGkU3ateSxeFLjBPhouBpIaUjnnPSFc9Ite+cDoU9tLO2q7+fr4P7KZjLGBpISCOTs39P9y7sFyl7Mpj27BI3gK9oz8M/jnSBzUhSN+9QY+G6puziWpN3NU576oE6ZEnPZV/BWiFRdhO6JaUCuGIqnwImkmegMcICLX3xJQ6w7wqKUAJkWVr7a3qwt/hIOAxixn8fzrBZwQP8iHBY6Q6uxSRBjAo9wxXjxfQH+NJvZqKBqAPcz9UtF4ybXo/YjnCE7rBQOuTE42qUSe7RlCbrt9C7JOeWFGqJZ1K0uB3o8U2gxlGLTYBlKuA+eiTO0jXRE8D6Pq6HBsn/QE1UzFpEFsV37nYh8deJdXm2d7JnG34OFhmiucBTm9dVztwqbjYMzP2Pgu64x5nG+QqrhJFnzqHUl+EE/ZdCHklHYDz
-x-ms-exchange-antispam-messagedata: ThHKrHmyrhbPe4jzfOH7tTesRKKb2ueusK9gchL9pHM/H4XIyUPFKv0KnCkKtooy1N5+8er8Xr6yFwY9hiEyGM/dAp46+LwRPVP3kv0pbQdk6jdl3hR06cTDLitX32QjMxnDZ21Y3WxDmUtTKkYwiA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E12D15A1EF2F7245A85596C2BA2FF2CC@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nh1n7M+VPSrWcMXPYIV91GLW2l6TAX14rIs4m1q72Xw=;
+        b=Efks9xuN/oML/BqvA8mL5/SGY7ASxmBkfpBAscYoHao8obdSNy14z5ctKJ/W9oel+D
+         Y/vAz9m+Efw7hAsy6BcaEKiS4tQFLBGtQGmLVLAm2ZFhf8eGvlu38VJ8OF6T30m5TzyH
+         SAu2lauGOxX81iwxVtgjsYUKlVbdYx57cgbj4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nh1n7M+VPSrWcMXPYIV91GLW2l6TAX14rIs4m1q72Xw=;
+        b=akVTC3iZxv7xLeMWF99e0Uz5qAPrpDWHB8oF7NHOSv6VC7NQ1VB+LACRfi3lbscXPK
+         9WKYB8KyQAXG1YOnLwPfz64ModZ+luropQDOQpsfdRQEVcsMeNrfIVR7+Bl9FsM+Y5DD
+         1YgVAKV1fi3mMhEMB3pZUYDXDIRw11GwU26Ljkd0LN8Xa3jpve/tbzmfWF9dhoVGD3KI
+         eIz54dB7M5NuAPWxMuUwCrtbsxT/m+SvMWIBTBsz2cxA4B/dp+8GFImt/tec7Ie0TqeG
+         lMIyHUNtniPdDGecOpxCcLmfixDAZRMOgg3Qug7X8hDOYmPl6ngbDF+vnqwNPc6rGwFt
+         ZpCA==
+X-Gm-Message-State: ANhLgQ0NJ1pU/zsMcPMAUiH0Rr6GXoMJjxhRy3g6SsmOiKnAfGlUFoqd
+        DuOl7J3pvpqfUJO1Vn/pEMf5FQ==
+X-Google-Smtp-Source: ADFU+vuNMKlTjRy366EcWR9ptiTfmLmVzeHxrmdb75AGQiAghLVYgPBSaZofsKRoLtZ4NCp+pGIgbw==
+X-Received: by 2002:a92:5fc5:: with SMTP id i66mr15532167ill.303.1584134646641;
+        Fri, 13 Mar 2020 14:24:06 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id y8sm6824029iot.14.2020.03.13.14.24.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 14:24:05 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     shuah@kernel.org, keescook@chromium.org, luto@amacapital.net,
+        wad@chromium.org, daniel@iogearbox.net, kafai@fb.com, yhs@fb.com,
+        andriin@fb.com, gregkh@linuxfoundation.org, tglx@linutronix.de
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, khilman@baylibre.com,
+        mpe@ellerman.id.au, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH v3] selftests: Fix seccomp to support relocatable build (O=objdir)
+Date:   Fri, 13 Mar 2020 15:24:04 -0600
+Message-Id: <20200313212404.24552-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02a3e18b-d5a1-47ec-0854-08d7c794d41e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 21:23:52.2825
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nC42lJB0YQ7SEEo48YPSu/F6NAvDhuGuHHGUptgfgApfMuWD/iWH5/fLhaZavKOsP3Wqp13zk3edBMOwx3qLlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR06MB5867
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgNWQ2Mzk0NGY4
-MjA2YTgwNjM2YWU4Y2I0YjkxMDdkM2I0OWY0M2QzNzoNCg0KICBORlN2NDogRW5zdXJlIHRoZSBk
-ZWxlZ2F0aW9uIGNyZWQgaXMgcGlubmVkIHdoZW4gd2UgY2FsbCBkZWxlZ3JldHVybiAoMjAyMC0w
-Mi0NCjEzIDE2OjIzOjAyIC0wNTAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
-dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy9hbm5hL2xpbnV4
-LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuNi0zDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1
-cCB0byA1NWRlZTFiYzBkNzI4NzdiOTk4MDVlNDJlMDIwNTA4N2U5OGI5ZWRkOg0KDQogIG5mczog
-YWRkIG1pbm9yIHZlcnNpb24gdG8gbmZzX3NlcnZlcl9rZXkgZm9yIGZzY2FjaGUgKDIwMjAtMDIt
-MjUgMTM6NTM6MjQNCi0wNTAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpUaGVzZSBhcmUgbW9zdGx5IGZzY29udGV4
-dCBmaXhlcywgYnV0IHRoZXJlIGlzIGFsc28gb25lIHRoYXQgZml4ZXMgY29sbGlzaW9ucw0Kc2Vl
-biBpbiBmc2NhY2hlLg0KDQpUaGFua3MsDQpBbm5hDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNClNjb3R0IE1heWhldyAo
-NCk6DQogICAgICBORlM6IEVuc3VyZSB0aGUgZnNfY29udGV4dCBoYXMgdGhlIGNvcnJlY3QgZnNf
-dHlwZSBiZWZvcmUgbW91bnRpbmcNCiAgICAgIE5GUzogRG9uJ3QgaGFyZC1jb2RlIHRoZSBmc190
-eXBlIHdoZW4gc3VibW91bnRpbmcNCiAgICAgIE5GUzogRml4IGxlYWsgb2YgY3R4LT5uZnNfc2Vy
-dmVyLmhvc3RuYW1lDQogICAgICBuZnM6IGFkZCBtaW5vciB2ZXJzaW9uIHRvIG5mc19zZXJ2ZXJf
-a2V5IGZvciBmc2NhY2hlDQoNCiBmcy9uZnMvY2xpZW50LmMgICAgIHwgMSArDQogZnMvbmZzL2Zz
-X2NvbnRleHQuYyB8IDkgKysrKysrKysrDQogZnMvbmZzL2ZzY2FjaGUuYyAgICB8IDIgKysNCiBm
-cy9uZnMvbmFtZXNwYWNlLmMgIHwgMiArLQ0KIGZzL25mcy9uZnM0Y2xpZW50LmMgfCAxIC0NCiA1
-IGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo=
+Fix seccomp relocatable builds. This is a simple fix to use the right
+lib.mk variable TEST_GEN_PROGS with dependency on kselftest_harness.h
+header, and defining LDFLAGS for pthread lib.
+
+Removes custom clean rule which is no longer necessary with the use of
+TEST_GEN_PROGS. 
+
+Uses $(OUTPUT) defined in lib.mk to handle build relocation.
+
+The following use-cases work with this change:
+
+In seccomp directory:
+make all and make clean
+
+From top level from main Makefile:
+make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
+ CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+
+Changes since v2:
+-- Using TEST_GEN_PROGS is sufficient to generate objects.
+   Addresses review comments from Kees Cook.
+
+ tools/testing/selftests/seccomp/Makefile | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+index 1760b3e39730..a0388fd2c3f2 100644
+--- a/tools/testing/selftests/seccomp/Makefile
++++ b/tools/testing/selftests/seccomp/Makefile
+@@ -1,17 +1,15 @@
+ # SPDX-License-Identifier: GPL-2.0
+-all:
+-
+-include ../lib.mk
++CFLAGS += -Wl,-no-as-needed -Wall
++LDFLAGS += -lpthread
+ 
+ .PHONY: all clean
+ 
+-BINARIES := seccomp_bpf seccomp_benchmark
+-CFLAGS += -Wl,-no-as-needed -Wall
++include ../lib.mk
++
++# OUTPUT set by lib.mk
++TEST_GEN_PROGS := $(OUTPUT)/seccomp_bpf $(OUTPUT)/seccomp_benchmark
+ 
+-seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+-	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
++$(TEST_GEN_PROGS): ../kselftest_harness.h
+ 
+-TEST_PROGS += $(BINARIES)
+-EXTRA_CLEAN := $(BINARIES)
++all: $(TEST_GEN_PROGS)
+ 
+-all: $(BINARIES)
+-- 
+2.20.1
+
