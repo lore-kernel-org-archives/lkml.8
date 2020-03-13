@@ -2,182 +2,102 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D301C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB05C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2762C20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:53:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584125631;
-	bh=gnpxFQ6kyuv8cFJo/3Zkqq3inKgjgPxdNfOajCalHP4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ANSaL0A2tXq7zcyUOQVK2k5kTbKGJtU7W8BemhTfs8l2wDZD/Xrm0/y9Mjs7aR3+h
-	 zhE1Hoi0USSKyh8+/Au94Dw12XvoQ4X2wkS00mNSLjwFCEt8e0ry2X687APwZ68QkS
-	 MHLjGi5cFJ6LilIbHt+3rq+yoo9zED9+bFCE/Yd4=
+	by mail.kernel.org (Postfix) with ESMTP id 135732071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:55:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ce46Gaog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgCMSxu (ORCPT
+        id S1727268AbgCMSzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:53:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgCMSxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:53:49 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73F9C20746;
-        Fri, 13 Mar 2020 18:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584125628;
-        bh=gnpxFQ6kyuv8cFJo/3Zkqq3inKgjgPxdNfOajCalHP4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0078zKpvvUv1c+PsA9vCK/xKx8XXEJInBx9+MguxNTCWmLdfMvwFJHrS2kObDs4Ya
-         HBHit0+PgmsC2scop4Tj7zRrPezAm8Y5xrIFaBjiaiZEumS70afq/118mW+ZCD5WWY
-         LrZpXqXkhgU62aXogfxtjv27UQvUhjq/oXpKEstI=
-Received: by mail-qk1-f170.google.com with SMTP id p62so14366596qkb.0;
-        Fri, 13 Mar 2020 11:53:48 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3mbNpRzwdC2lOUs0nfdC2dzjYN7K355c+crPuwDRj0HdOhAUbs
-        qjoepMy9fG5XobDdtVEhtA6zW4Ssn0oSC6g7UQ==
-X-Google-Smtp-Source: ADFU+vtIQWQ1iyBd9Hq/goh29DIW1Lm+8rr9b55lPBnrLwCB1yi/G66Yu2tNriWzEW+xFzAkAZJDQpZngvLu/4FVld8=
-X-Received: by 2002:a37:2cc6:: with SMTP id s189mr15023829qkh.223.1584125627547;
- Fri, 13 Mar 2020 11:53:47 -0700 (PDT)
+        Fri, 13 Mar 2020 14:55:01 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41961 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgCMSzB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:55:01 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m25so13124241edq.8;
+        Fri, 13 Mar 2020 11:54:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2WuB5xXMxFx8qoep56fRjLFlqqVLZxwUqYQw+OOizLU=;
+        b=ce46Gaog+VC1RTePandT+0mydyECZ68AyAEipXfSJ+flhB83WpX1JM4fvvJPdSkobf
+         rrFbfzCYSeP7PR6Z71nP/PqPL3J4d4yOug6SGogzhzuH1uqOIejw/GfdYaOwANPWoM9n
+         2A2k5tj5BMVr9oVME2CkR+IE7GxdzrCg3pA1qXVPm9qxllP20gh51Zx7+pjsCP5gxe8N
+         dFQmckYtfuikA+6RKRf/GrmiX9Io+uFTht9iieTybmJ1tjvVHfS/DyA9qCH2+guOwo7G
+         +WGvBimSemWRtqCsy8xnBtpSH/rFZcChbVNWt/XBOlsfGO6qrhIbiR1Y4NU3UEh55Zw9
+         Gyrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2WuB5xXMxFx8qoep56fRjLFlqqVLZxwUqYQw+OOizLU=;
+        b=pAm9EIZ8tBU+GR54uMbDU2t2wAgfYIk63U0lTqLRKTnaGxyJehG8JmaupYNlpJhXDq
+         kNiKpD4jKZO1HJrbHywUI2/Cg1+6rsdC1EL0MFKo1qqCaLxjgT1hFkd2UxSuFGrJxVYn
+         qbKg8YB3TN/a//eQ06Hp1LkqYVEfpUZ5OazhnifOOMcrrbPwa1GR2ebdLp4vJa+6+GEZ
+         UAHlpaDGzVSEtaK2WBi/zzi2FWFZVoWxUveLACMtsQ9m1nKegxNiU7ayk2uejgu1IJuq
+         WBF5Cj2cXBKlQygsfcYGf29FOKhhJKDjcQbL2IN6pNvyfnksNZiFHKdhrtNuUxV4nd/A
+         LNyg==
+X-Gm-Message-State: ANhLgQ3vv/3XVNE0sguxHjGN/8rttGl5b76VSM9pZdIskzcU2s9pFvkB
+        xfnd9ka1NAG5NeCv2Grz4/s=
+X-Google-Smtp-Source: ADFU+vuK7AU23b5J/6IMctVT/DI9hy1uvQ83h7z91tD7k0pf9nDNbJufUjhUG77sz7Dww8KUVWb6Uw==
+X-Received: by 2002:a50:eb05:: with SMTP id y5mr14849321edp.358.1584125699097;
+        Fri, 13 Mar 2020 11:54:59 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host61-50-dynamic.50-79-r.retail.telecomitalia.it. [79.50.50.61])
+        by smtp.googlemail.com with ESMTPSA id p7sm468763ejr.62.2020.03.13.11.54.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 11:54:58 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     agross@kernel.org
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Abhishek Sahu <absahu@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ipq806x: gcc: Added the enable regs and mask for PRNG
+Date:   Fri, 13 Mar 2020 19:54:06 +0100
+Message-Id: <20200313185406.10029-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200306132448.13917-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132510.AC2108030794@mail.baikalelectronics.ru> <CAL_JsqKRk+adXnej_XUU3dr9Z9G09oZTY+X1i=gYpD7vrbWCZg@mail.gmail.com>
- <20200313184005.gtlwzyak3sp6gier@ubsrv2.baikal.int>
-In-Reply-To: <20200313184005.gtlwzyak3sp6gier@ubsrv2.baikal.int>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 13 Mar 2020 13:53:35 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLFdjRkmtahBMTNhG3Vss2eL61MfucCb5KcnW9PX_PLHQ@mail.gmail.com>
-Message-ID: <CAL_JsqLFdjRkmtahBMTNhG3Vss2eL61MfucCb5KcnW9PX_PLHQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: gpio: Replace DW APB GPIO legacy
- bindings with YAML-based one
-To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 1:40 PM Sergey Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> On Thu, Mar 12, 2020 at 08:47:56AM -0500, Rob Herring wrote:
-> > On Fri, Mar 6, 2020 at 7:25 AM <Sergey.Semin@baikalelectronics.ru> wrote:
-> > >
-> >
-> > Subject is kind of long and wordy. Perhaps:
-> >
-> > dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema
-> >
->
-> Ok. I'll also do this for all similar patches in another patchsets.
->
-> > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > >
-> > > Modern device tree bindings are supposed to be created as YAML-files
-> > > in accordance with dt-schema. This commit replaces Synopsys DW GPIO
-> > > legacy bare text bindings with YAML file. As before the bindings file
-> > > states that the corresponding dts node is supposed to be compatible
-> > > with generic DW I2C controller indicated by the "snps,dw-apb-gpio"
-> > > compatible string and provide a mandatory registers memory range.
-> > > It may also have an optional clocks and resets phandle references.
-> > >
-> > > There must be specified at least one subnode with
-> > > "snps,dw-apb-gpio-port" compatible string indicating the GPIO port,
-> > > which would actually export the GPIO controller functionality. Such
-> > > nodes should have traditional GPIO controller properties together
-> > > with optional interrupt-controller attributes if the corresponding
-> > > controller was synthesized to detected and report the input values
-> > > change to the parental IRQ controller.
-> > >
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > Cc: Paul Burton <paulburton@kernel.org>
-> > > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > >
-> > > ---
-> > >
-> > > Synopsis DesignWare APB SSI controller has a bindings property
-> > > "snps,nr-gpios" of numeric type, which means the number of GPIO pins
-> > > exported by the corresponding controller port. There is also a generic
-> > > pattern-property "*-gpios", which corresponds to a GPIOs array. As you
-> > > can see the GPIOs array property wildcard matches the vendor-specific
-> > > property "snps,nr-gpios" property while having an incompatible type.
-> > > Due to this the DW APB GPIO dts-nodes evaluation will report the
-> > > following error:
-> > >
-> > > snps,nr-gpios:0:0: 8 is not valid under any of the given schemas (Possible causes of the failure):
-> > > snps,nr-gpios:0:0: missing phandle tag in 8
-> > >
-> > > I didn't manage to fix the problem by redefining the property schema (this
-> > > might be impossible anyway). In my opinion the best way to solve it would be
-> > > to change the DW APB SSI Controller bindings so the driver would accept the
-> > > standard "ngpios" property for the same purpose. But in this case we would have
-> > > to alter all the dts files currently having the "snps,dw-apb-ssi" compatible
-> > > nodes (it's a lot). I know the bindings modifications aren't that much welcome
-> > > in the kernel community and there are good reasons why. So what do you think
-> > > would be the better way to fix the problem with the property types collision?
-> >
-> > Does this change (to dt-schema) work for you?
-> >
-> > diff --git a/schemas/gpio/gpio.yaml b/schemas/gpio/gpio.yaml
-> > index 1d9c109f9791..d1c08ccfdc1a 100644
-> > --- a/schemas/gpio/gpio.yaml
-> > +++ b/schemas/gpio/gpio.yaml
-> > @@ -34,7 +34,7 @@ properties:
-> >        - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> >
-> >  patternProperties:
-> > -  ".*-gpios?$":
-> > +  "(?<!,nr)-gpios?$":
-> >      $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> >    "^gpios$":
-> >      $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> >
->
-> It partly fixes the problem. There is meta-schems/gpios.yaml ,
-> which also has a rule for the properties with "-gpios" suffix. So yours
-> alteration together with the next one shall fix the problem completely:
+kernel got hanged while reading from /dev/hwrng at the
+time of PRNG clock enable
 
-Oh right. I'll commit a fix for both.
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/clk/qcom/gcc-ipq806x.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
->
-> --- a/meta-schemas/gpios.yaml   2020-03-13 20:20:10.072900019 +0300
-> +++ b/meta-schemas/gpios.yaml   2020-03-13 20:20:16.000953216 +0300
-> @@ -19,9 +19,7 @@
->      $ref: "cell.yaml#array"
->
->  patternProperties:
-> -  '.*-gpio$':
-> -    $ref: "cell.yaml#array"
-> -  '.*-gpios$':
-> +  '(?<!,nr)-gpios?$':
->      $ref: "cell.yaml#array"
->
->  dependencies:
->
-> Regarding the generic schemas/gpio/gpio.yaml . Do you think I should be
-> also allOf-ing it in my DT schema?
+diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
+index b0eee0903807..a8456e09c44d 100644
+--- a/drivers/clk/qcom/gcc-ipq806x.c
++++ b/drivers/clk/qcom/gcc-ipq806x.c
+@@ -1224,6 +1224,8 @@ static struct clk_rcg prng_src = {
+ 		.parent_map = gcc_pxo_pll8_map,
+ 	},
+ 	.clkr = {
++		.enable_reg = 0x2e80,
++		.enable_mask = BIT(11),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "prng_src",
+ 			.parent_names = gcc_pxo_pll8,
+-- 
+2.25.0
 
-Only if you want to check everything twice. Most of the core schemas
-always get applied. The exception is generally bus controllers like
-SPI, I2C, etc.
-
-Rob
