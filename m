@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45208C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603F3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E0620637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361D220637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgCMX6m (ORCPT
+        id S1728004AbgCMX6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:58:42 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49970 "EHLO
+        Fri, 13 Mar 2020 19:58:50 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:49962 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727678AbgCMXx7 (ORCPT
+        with ESMTP id S1727674AbgCMXx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:53:59 -0400
+        Fri, 13 Mar 2020 19:53:58 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7p-00B6Yo-Ue; Fri, 13 Mar 2020 23:53:57 +0000
+        id 1jCu7p-00B6Yc-O1; Fri, 13 Mar 2020 23:53:57 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 07/69] atomic_open(): saner calling conventions (return dentry on success)
-Date:   Fri, 13 Mar 2020 23:52:55 +0000
-Message-Id: <20200313235357.2646756-7-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 05/69] make build_open_flags() treat O_CREAT | O_EXCL as implying O_NOFOLLOW
+Date:   Fri, 13 Mar 2020 23:52:53 +0000
+Message-Id: <20200313235357.2646756-5-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
@@ -42,85 +42,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Currently it either returns -E... or puts (nd->path.mnt,dentry)
-into *path and returns 0.  Make it return ERR_PTR(-E...) or
-dentry; adjust the caller.  Fewer arguments and it's easier
-to keep track of *path contents that way.
+O_CREAT | O_EXCL means "-EEXIST if we run into a trailing symlink".
+As it is, we might or might not have LOOKUP_FOLLOW in op->intent
+in that case - that depends upon having O_NOFOLLOW in open flags.
+It doesn't matter, since we won't be checking it in that case -
+do_last() bails out earlier.
+
+However, making sure it's not set (i.e. acting as if we had an explicit
+O_NOFOLLOW) makes the behaviour more explicit and allows to reorder the
+check for O_CREAT | O_EXCL in do_last() with the call of step_into()
+immediately following it.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 41 ++++++++++++++++++++++++-----------------
- 1 file changed, 24 insertions(+), 17 deletions(-)
+ fs/namei.c | 15 +++++----------
+ fs/open.c  |  4 +++-
+ 2 files changed, 8 insertions(+), 11 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index c104ec75faef..5f8b791a6d6e 100644
+index 6721c5f7e9d5..6938d20aa73a 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -3087,10 +3087,10 @@ static int may_o_create(const struct path *dir, struct dentry *dentry, umode_t m
-  *
-  * Returns an error code otherwise.
-  */
--static int atomic_open(struct nameidata *nd, struct dentry *dentry,
--			struct path *path, struct file *file,
--			const struct open_flags *op,
--			int open_flag, umode_t mode)
-+static struct dentry *atomic_open(struct nameidata *nd, struct dentry *dentry,
-+				  struct file *file,
-+				  const struct open_flags *op,
-+				  int open_flag, umode_t mode)
- {
- 	struct dentry *const DENTRY_NOT_SET = (void *) -1UL;
- 	struct inode *dir =  nd->path.dentry->d_inode;
-@@ -3131,17 +3131,15 @@ static int atomic_open(struct nameidata *nd, struct dentry *dentry,
- 			}
- 			if (file->f_mode & FMODE_CREATED)
- 				fsnotify_create(dir, dentry);
--			if (unlikely(d_is_negative(dentry))) {
-+			if (unlikely(d_is_negative(dentry)))
- 				error = -ENOENT;
--			} else {
--				path->dentry = dentry;
--				path->mnt = nd->path.mnt;
--				return 0;
--			}
- 		}
- 	}
--	dput(dentry);
--	return error;
-+	if (error) {
-+		dput(dentry);
-+		dentry = ERR_PTR(error);
+@@ -3396,22 +3396,17 @@ static int do_last(struct nameidata *nd,
+ 	if (unlikely(error < 0))
+ 		return error;
+ 
+-	/*
+-	 * create/update audit record if it already exists.
+-	 */
+-	audit_inode(nd->name, path.dentry, 0);
+-
+-	if (unlikely((open_flag & (O_EXCL | O_CREAT)) == (O_EXCL | O_CREAT))) {
+-		path_to_nameidata(&path, nd);
+-		return -EEXIST;
+-	}
+-
+ 	seq = 0;	/* out of RCU mode, so the value doesn't matter */
+ 	inode = d_backing_inode(path.dentry);
+ finish_lookup:
+ 	error = step_into(nd, &path, 0, inode, seq);
+ 	if (unlikely(error))
+ 		return error;
++
++	if (unlikely((open_flag & (O_EXCL | O_CREAT)) == (O_EXCL | O_CREAT))) {
++		audit_inode(nd->name, nd->path.dentry, 0);
++		return -EEXIST;
 +	}
-+	return dentry;
- }
+ finish_open:
+ 	/* Why this, you ask?  _Now_ we might have grown LOOKUP_JUMPED... */
+ 	error = complete_walk(nd);
+diff --git a/fs/open.c b/fs/open.c
+index 0788b3715731..e5227cd533f4 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1049,8 +1049,10 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
  
- /*
-@@ -3236,11 +3234,20 @@ static int lookup_open(struct nameidata *nd, struct path *path,
+ 	if (flags & O_CREAT) {
+ 		op->intent |= LOOKUP_CREATE;
+-		if (flags & O_EXCL)
++		if (flags & O_EXCL) {
+ 			op->intent |= LOOKUP_EXCL;
++			flags |= O_NOFOLLOW;
++		}
  	}
  
- 	if (dir_inode->i_op->atomic_open) {
--		error = atomic_open(nd, dentry, path, file, op, open_flag,
--				    mode);
--		if (unlikely(error == -ENOENT) && create_error)
--			error = create_error;
--		return error;
-+		dentry = atomic_open(nd, dentry, file, op, open_flag, mode);
-+		if (IS_ERR(dentry)) {
-+			error = PTR_ERR(dentry);
-+			if (unlikely(error == -ENOENT) && create_error)
-+				error = create_error;
-+			return error;
-+		}
-+		if (file->f_mode & FMODE_OPENED) {
-+			dput(dentry);
-+			return 0;
-+		}
-+		path->mnt = nd->path.mnt;
-+		path->dentry = dentry;
-+		return 0;
- 	}
- 
- no_open:
+ 	if (flags & O_DIRECTORY)
 -- 
 2.11.0
 
