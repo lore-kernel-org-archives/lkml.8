@@ -2,64 +2,142 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D987C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75B6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3060A206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDFB2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:07:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wJdKg3v4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgCMPGs (ORCPT
+        id S1726971AbgCMPHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:06:48 -0400
-Received: from mga03.intel.com ([134.134.136.65]:5422 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbgCMPGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:06:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 08:06:47 -0700
-X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
-   d="scan'208";a="237247492"
-Received: from unknown (HELO localhost) ([10.252.52.87])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 08:06:44 -0700
-From:   Jani Nikula <jani.nikula@intel.com>
-To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     Greg KH <greg@kroah.com>, "Bird\, Tim" <Tim.Bird@sony.com>,
-        "tech-board-discuss\@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "ksummit-discuss\@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation Technical Advisory Board Elections -- Change to charter
-In-Reply-To: <20200313145903.vwdpawgcve73hdmj@chatter.i7.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name> <20200312003436.GF1639@pendragon.ideasonboard.com> <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com> <20200313031947.GC225435@mit.edu> <87d09gljhj.fsf@intel.com> <20200313093548.GA2089143@kroah.com> <877dzolf7n.fsf@intel.com> <20200313145903.vwdpawgcve73hdmj@chatter.i7.local>
-Date:   Fri, 13 Mar 2020 17:07:05 +0200
-Message-ID: <87zhckjnty.fsf@intel.com>
+        Fri, 13 Mar 2020 11:07:51 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47072 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgCMPHv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:07:51 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DF7ldL049377;
+        Fri, 13 Mar 2020 10:07:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584112067;
+        bh=GR5w5xndlHpg2huTUFHevQHKlS7Ne1sG2FUatp7XZyQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wJdKg3v4wb+JOCRzK8s5/j1HTSru9hIMKmfhMG65a+xpBlt8BANuVqqaonLDyq2Nt
+         kO/4mFoMCGIXj+w9ey4/BS3Y6bldnlS2iQ4pqPw/MFoazX+N9PB9Nuyn9dwL2aZr7d
+         2GhTpHatjcK2t97Vhm7QQXkhqMrJn9y08ErRRlHU=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02DF7lfS072311
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Mar 2020 10:07:47 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Mar 2020 10:07:46 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Mar 2020 10:07:46 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DF7iJj129846;
+        Fri, 13 Mar 2020 10:07:45 -0500
+Subject: Re: [for-next PATCH v2 1/5] phy: ti: gmii-sel: simplify config
+ dependencies between net drivers and gmii phy
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        netdev <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200303160029.345-1-grygorii.strashko@ti.com>
+ <20200303160029.345-2-grygorii.strashko@ti.com>
+ <a6dc55bb-090f-d1de-90c7-247197d3748e@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <34c01cc2-55ed-8160-45eb-b75ca768bfb0@ti.com>
+Date:   Fri, 13 Mar 2020 17:07:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <a6dc55bb-090f-d1de-90c7-247197d3748e@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020, Konstantin Ryabitsev <konstantin@linuxfoundation.org> wrote:
-> I hope I helped clarify the procedure.
+Hi All,
 
-Yes, thank you. May I ask for the clarifications to be made to [1] and
-[2], as well as have them agree on the requirements, please?
+On 05/03/2020 13:06, Kishon Vijay Abraham I wrote:
+> Hi Dave,
+> 
+> On 03/03/20 9:30 pm, Grygorii Strashko wrote:
+>> The phy-gmii-sel can be only auto selected in Kconfig and now the pretty
+>> complex Kconfig dependencies are defined for phy-gmii-sel driver, which
+>> also need to be updated every time phy-gmii-sel is re-used for any new
+>> networking driver.
+>>
+>> Simplify Kconfig definition for phy-gmii-sel PHY driver - drop all
+>> dependencies and from networking drivers and rely on using 'imply
+>> PHY_TI_GMII_SEL' in Kconfig definitions for networking drivers instead.
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>>   drivers/net/ethernet/ti/Kconfig | 1 +
+> 
+> I can pick this in my tree. Can you give your Acked-by since there is a
+> small change in drivers/net?
 
-BR,
-Jani.
+Sorry for disturbing you, but what's the final decision here?
 
 
-[1] https://www.kernel.org/faq.html
-[2] https://korg.wiki.kernel.org/userdoc/accounts
+
+> 
+> Thanks
+> Kishon
+>>   drivers/phy/ti/Kconfig          | 3 ---
+>>   2 files changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+>> index bf98e0fa7d8b..8a6ca16eee3b 100644
+>> --- a/drivers/net/ethernet/ti/Kconfig
+>> +++ b/drivers/net/ethernet/ti/Kconfig
+>> @@ -53,6 +53,7 @@ config TI_CPSW
+>>   	select MFD_SYSCON
+>>   	select PAGE_POOL
+>>   	select REGMAP
+>> +	imply PHY_TI_GMII_SEL
+>>   	---help---
+>>   	  This driver supports TI's CPSW Ethernet Switch.
+>>   
+>> diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
+>> index 6dbe9d0b9ff3..15a3bcf32308 100644
+>> --- a/drivers/phy/ti/Kconfig
+>> +++ b/drivers/phy/ti/Kconfig
+>> @@ -106,11 +106,8 @@ config TWL4030_USB
+>>   
+>>   config PHY_TI_GMII_SEL
+>>   	tristate
+>> -	default y if TI_CPSW=y || TI_CPSW_SWITCHDEV=y
+>> -	depends on TI_CPSW || TI_CPSW_SWITCHDEV || COMPILE_TEST
+>>   	select GENERIC_PHY
+>>   	select REGMAP
+>> -	default m
+>>   	help
+>>   	  This driver supports configuring of the TI CPSW Port mode depending on
+>>   	  the Ethernet PHY connected to the CPSW Port.
+>>
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+Best regards,
+grygorii
