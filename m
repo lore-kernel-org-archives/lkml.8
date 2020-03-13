@@ -2,76 +2,101 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F42EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FF3C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D182074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE5A206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgCMPFS (ORCPT
+        id S1726952AbgCMPGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:05:18 -0400
-Received: from m176115.mail.qiye.163.com ([59.111.176.115]:46360 "EHLO
-        m176115.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgCMPFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:05:17 -0400
-X-Greylist: delayed 650 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Mar 2020 11:05:14 EDT
-Received: from localhost.localdomain (unknown [58.251.74.227])
-        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id 975B066499B;
-        Fri, 13 Mar 2020 22:54:19 +0800 (CST)
-From:   Zheng Wei <wei.zheng@vivo.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Zheng Wei <wei.zheng@vivo.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com, wenhu.wang@vivo.com
-Subject: [PATCH] arm64: add blank after 'if'
-Date:   Fri, 13 Mar 2020 22:54:02 +0800
-Message-Id: <20200313145403.6395-1-wei.zheng@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VCTktCQkJMSE1MQ05DQllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ME06SQw5Lzg0MDArFipCUVY4
-        SjcwCh9VSlVKTkNPSkpKSU1LSkJKVTMWGhIXVQweElUBEx4VHDsNEg0UVRgUFkVZV1kSC1lBWU5D
-        VUlOSlVMT1VJSUxZV1kIAVlBSUpPSjcG
-X-HM-Tid: 0a70d46391c29373kuws975b066499b
+        Fri, 13 Mar 2020 11:06:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:56818 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgCMPGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:06:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47ECF31B;
+        Fri, 13 Mar 2020 08:06:00 -0700 (PDT)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BA3D3F67D;
+        Fri, 13 Mar 2020 08:05:58 -0700 (PDT)
+Subject: Re: [PATCH v2] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+To:     Roger Quadros <rogerq@ti.com>, tony@atomide.com
+Cc:     hch@lst.de, robh+dt@kernel.org, nm@ti.com, t-kristo@ti.com,
+        nsekhar@ti.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@kernel.org
+References: <20200313094717.6671-1-rogerq@ti.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <fb916d06-1521-25a5-2eae-94244a3f9d06@arm.com>
+Date:   Fri, 13 Mar 2020 15:05:33 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200313094717.6671-1-rogerq@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add blank after 'if' for armv8_deprecated_init()
-to make it comply with kernel coding style.
+On 2020-03-13 9:47 am, Roger Quadros wrote:
+> The L3 interconnect's memory map is from 0x0 to
+> 0xffffffff. Out of this, System memory (SDRAM) can be
+> accessed from 0x80000000 to 0xffffffff (2GB)
+> 
+> DRA7 does support 4GB of SDRAM but upper 2GB can only be
+> accessed by the MPU subsystem.
+> 
+> Add the dma-ranges property to reflect the physical address limit
+> of the L3 bus.
+> 
+> Issues ere observed only with SATA on DRA7-EVM with 4GB RAM
+> and CONFIG_ARM_LPAE enabled. This is because the controller
+> supports 64-bit DMA and its driver sets the dma_mask to 64-bit
+> thus resulting in DMA accesses beyond L3 limit of 2G.
+> 
+> Setting the correct bus_dma_limit fixes the issue.
 
-Signed-off-by: Zheng Wei <wei.zheng@vivo.com>
----
- arch/arm64/kernel/armv8_deprecated.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Neat! In principle you should no longer need the specific dma-ranges on 
+the PCIe nodes, since AIUI those really only represent a subset of this 
+general limitation, but given the other inheritance issue you saw it's 
+probably safer to leave them as-is for now.
 
-diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
-index 7832b3216370..4cc581af2d96 100644
---- a/arch/arm64/kernel/armv8_deprecated.c
-+++ b/arch/arm64/kernel/armv8_deprecated.c
-@@ -630,7 +630,7 @@ static int __init armv8_deprecated_init(void)
- 		register_insn_emulation(&cp15_barrier_ops);
- 
- 	if (IS_ENABLED(CONFIG_SETEND_EMULATION)) {
--		if(system_supports_mixed_endian_el0())
-+		if (system_supports_mixed_endian_el0())
- 			register_insn_emulation(&setend_ops);
- 		else
- 			pr_info("setend instruction emulation is not supported on this system\n");
--- 
-2.17.1
+FWIW,
 
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Cc: stable@kernel.org
+> ---
+> 
+> Changelog:
+> v2:
+> - Revised patch with minimal intrusion. i.e. don't change #size-cells
+>    of device node.
+> 
+>   arch/arm/boot/dts/dra7.dtsi | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index d78b684e7fca..058b8cbb8ef3 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -148,6 +148,7 @@
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
+>   		ranges = <0x0 0x0 0x0 0xc0000000>;
+> +		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
+>   		ti,hwmods = "l3_main_1", "l3_main_2";
+>   		reg = <0x0 0x44000000 0x0 0x1000000>,
+>   		      <0x0 0x45000000 0x0 0x1000>;
+> 
