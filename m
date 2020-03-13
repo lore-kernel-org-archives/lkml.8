@@ -2,111 +2,85 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB1FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D3CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F842074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Xh+TwyUP"
+	by mail.kernel.org (Postfix) with ESMTP id 8E4EB2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgCMGqf (ORCPT
+        id S1726423AbgCMGsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 02:46:35 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:56008 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgCMGqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:46:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kYbgF5wLMHYGoUGMpbR6APlFhRJk8IuOMtZ3W/gt6tM=; b=Xh+TwyUPhcszAMNqJDRbTr6n4V
-        GJ9VGMNmMOe8RaRs46HjTAX0TSR8/ra5jiUgZYGJiPkBNqxufhR6b/fj63yvecV8C/eNm1UnxbYa/
-        hEDkFfOVC57W3H3TczJ47sKGE5T4FFw6f16MfVSUBq5asUHdr4VRppy/zjeF8vEUL36s=;
-Received: from p200300ccff096400e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:6400:e2ce:c3ff:fe93:fc31] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jCe4v-0002pF-J3; Fri, 13 Mar 2020 07:45:55 +0100
-Received: from andi by eeepc with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jCe4v-0008Cz-3c; Fri, 13 Mar 2020 07:45:53 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me, letux-kernel@openphoenux.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        jic23@kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH RESEND v6 3/7] mfd: rn5t618: add RTC related registers
-Date:   Fri, 13 Mar 2020 07:45:30 +0100
-Message-Id: <20200313064535.31503-4-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200313064535.31503-1-andreas@kemnade.info>
-References: <20200313064535.31503-1-andreas@kemnade.info>
+        Fri, 13 Mar 2020 02:48:14 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57221 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgCMGsO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 02:48:14 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jCe77-0007U2-CO; Fri, 13 Mar 2020 07:48:09 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jCe75-0002wf-1z; Fri, 13 Mar 2020 07:48:07 +0100
+Date:   Fri, 13 Mar 2020 07:48:07 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: Re: linux-next: build failure after merge of the v4l-dvb tree
+Message-ID: <20200313064807.op4ghjsc22du3q4e@pengutronix.de>
+References: <20200313131903.3975cdd2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313131903.3975cdd2@canb.auug.org.au>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:41:38 up 118 days, 22:00, 137 users,  load average: 0.13, 0.06,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Defines for some RTC related registers were missing, also
-they were not included in the volatile register list
+Hi Stephen,
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
+On 20-03-13 13:19, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the v4l-dvb tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+> 
+> ERROR: modpost: "fwnode_get_name" [drivers/media/v4l2-core/v4l2-fwnode.ko] undefined!
+> 
+> Caused by commit
+> 
+>   dfc22c073b78 ("media: v4l2-fwnode: add initial connector parsing support")
+> 
+> I have used the v4l-dvb tree from next-20200312 for today.
 
- drivers/mfd/rn5t618.c       |  2 ++
- include/linux/mfd/rn5t618.h | 11 +++++++++++
- 2 files changed, 13 insertions(+)
+I'm sorry for that. I put my branch on our 0day to test most of the
+compile configs. Obviously this casae wasn't covered..
 
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index 849a33d64860..30fed9ab3d04 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -34,6 +34,8 @@ static bool rn5t618_volatile_reg(struct device *dev, unsigned int reg)
- 	case RN5T618_IR_GPF:
- 	case RN5T618_MON_IOIN:
- 	case RN5T618_INTMON:
-+	case RN5T618_RTC_CTRL1 ... RN5T618_RTC_CTRL2:
-+	case RN5T618_RTC_SECONDS ... RN5T618_RTC_YEAR:
- 		return true;
- 	default:
- 		return false;
-diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
-index 739571656f2b..fba0df13d9a8 100644
---- a/include/linux/mfd/rn5t618.h
-+++ b/include/linux/mfd/rn5t618.h
-@@ -139,6 +139,17 @@
- #define RN5T618_INTPOL			0x9c
- #define RN5T618_INTEN			0x9d
- #define RN5T618_INTMON			0x9e
-+
-+#define RN5T618_RTC_SECONDS     0xA0
-+#define RN5T618_RTC_MDAY        0xA4
-+#define RN5T618_RTC_MONTH       0xA5
-+#define RN5T618_RTC_YEAR        0xA6
-+#define RN5T618_RTC_ADJUST      0xA7
-+#define RN5T618_RTC_ALARM_Y_SEC 0xA8
-+#define RN5T618_RTC_DAL_MONTH   0xAC
-+#define RN5T618_RTC_CTRL1       0xAE
-+#define RN5T618_RTC_CTRL2       0xAF
-+
- #define RN5T618_PREVINDAC		0xb0
- #define RN5T618_BATDAC			0xb1
- #define RN5T618_CHGCTL1			0xb3
--- 
-2.20.1
+@Sakari
+I will send a patch to fix this by adding:
+EXPORT_SYMBOL_GPL(fwnode_get_name).
 
+Regards,
+  Marco
