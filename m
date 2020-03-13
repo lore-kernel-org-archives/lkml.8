@@ -2,106 +2,76 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20290C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFB1C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03BE2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FE82074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:26:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pIadlKPH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ba9ga6dt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbgCMVZ4 (ORCPT
+        id S1727490AbgCMV0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:25:56 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58426 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgCMVZz (ORCPT
+        Fri, 13 Mar 2020 17:26:40 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52798 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCMV0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 17:25:55 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 97E942D6;
-        Fri, 13 Mar 2020 22:25:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584134753;
-        bh=/t7Y9g8Nkyd5MoI816w+jhumqD0cIUaOfKzNfSd2YCI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pIadlKPHDHVUtwLuYKNCSnGu6awfiAD1D9FqQBo2GJH2Udar4QA6ZEIHJ1fp47zPH
-         2c0VBcn76ta5Jo6HIBrNnMpo7SKUmk1w6MstHqbUL5zb7/611KeE8u7lcyP/rIvx50
-         d3SdBTrH76oSk2FhTax/BEap9EADt61XebXxtd58=
-Date:   Fri, 13 Mar 2020 23:25:50 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 4/4] ARM: dts: imx6qdl-wandboard: Switch to
- assigned-clock-rates for ov5645 node
-Message-ID: <20200313212550.GN4751@pendragon.ideasonboard.com>
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 13 Mar 2020 17:26:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=6G8s1T+GZ3P8r3F6F1F/EpnEULgc6g/30mc+g7rqZr4=; b=Ba9ga6dttaNNgbz+Sr5soV2Ykr
+        RueY7hooO5ZKBSibZK2CL1EkMwUHTFU3rE9DCCNrITWjH3eB42Rf76AFanuK5uHe11ov4EEpivTmK
+        KCDFZ9pla/p21BZxZpuOkUoe6rdM7Xh5w6x6HH91cru7jMLX9e1Du7PdO6R89hDdk0wtZGdONguiT
+        Q+ExgRY804XZKESZFyuO1i4twz/7kNSwsYWslC1xWQqFyB5Yykr0yj5Oumx8Ato1pj3gyi2HdgdPY
+        j6DrQeHQlQzvBjdt4kj3hVWMaiOjJr1mhunoLQjivT1Qg2xijTOivBDHghjYKp7vc5dFwoZYO6Pay
+        dyTsFVBg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCrp1-00072l-6x; Fri, 13 Mar 2020 21:26:23 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 241CE98112D; Fri, 13 Mar 2020 22:26:20 +0100 (CET)
+Date:   Fri, 13 Mar 2020 22:26:20 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
+        rostedt@goodmis.org, hannes@cmpxchg.org,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH] timer: silenct a lockdep splat with debugobjects
+Message-ID: <20200313212620.GA2452@worktop.programming.kicks-ass.net>
+References: <20200313154221.1566-1-cai@lca.pw>
+ <20200313180811.GD12521@hirez.programming.kicks-ass.net>
+ <4FFD109D-EAC1-486F-8548-AA1F5E024120@lca.pw>
+ <20200313201314.GE5086@worktop.programming.kicks-ass.net>
+ <D3115315-12A9-43A9-9209-09553CF2C71C@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1584133954-6953-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D3115315-12A9-43A9-9209-09553CF2C71C@lca.pw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Fri, Mar 13, 2020 at 05:00:41PM -0400, Qian Cai wrote:
+> > On Mar 13, 2020, at 4:13 PM, Peter Zijlstra <peterz@infradead.org> wrote:
 
-Thank you for the patch.
-
-On Fri, Mar 13, 2020 at 09:12:34PM +0000, Lad Prabhakar wrote:
-> clock-frequency property is now marked as deprecated in ov5645 binding,
-
-Maybe /is now marked as/has been/ to match the recommended change to the
-bindings in my reply to 1/4 ?
-
-> so switch to assigned-clock-rates for specifying xclk clock frequency.
+> > 
+> > Or, fix that random crud to do the wakeup outside of the lock.
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> That is likely to be difficult until we can find a creative way to not “uglifying" the
+> random code by dropping locks in the middle etc just because of debugojects.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=random/fast
 
-> ---
->  arch/arm/boot/dts/imx6qdl-wandboard.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-> index c070893..71f5f75 100644
-> --- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-> @@ -126,7 +126,8 @@
->  		reg = <0x3c>;
->  		clocks = <&clks IMX6QDL_CLK_CKO2>;
->  		clock-names = "xclk";
-> -		clock-frequency = <24000000>;
-> +		assigned-clocks = <&clks IMX6QDL_CLK_CKO2>;
-> +		assigned-clock-rates = <24000000>;
->  		vdddo-supply = <&reg_1p8v>;
->  		vdda-supply = <&reg_2p8v>;
->  		vddd-supply = <&reg_1p5v>;
-
--- 
-Regards,
-
-Laurent Pinchart
+Doesn't look difficult at all.
