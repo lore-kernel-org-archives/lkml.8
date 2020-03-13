@@ -2,91 +2,172 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B10C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDF2C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD595206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:46:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2dbZzf0"
+	by mail.kernel.org (Postfix) with ESMTP id BDA03206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgCMQqR (ORCPT
+        id S1727123AbgCMQqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:46:17 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46497 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgCMQqR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:46:17 -0400
-Received: by mail-il1-f195.google.com with SMTP id e8so9502350ilc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vLfO+OW4oRiObD1mcWwejLJW0KZ7ehp7OtU4EnfKGnY=;
-        b=K2dbZzf0Nn8BHIO22kvM9U0yfYXu2gWzb0d+PzeEv0ZsYACUferpfjoQysiSoLipXP
-         O6kLUYk1bfULHeyZXR7uRfYuAw5kiNGKuTYcbrklHzW+UDxegCDKW/x+ibmhmp4D3diU
-         yCMrZ81OoBxyoatFMa6cfN4CiTS/cOrb8S5qBN/Cr9wHuJs2S+NxbT+KK/UdOmby1Jg4
-         6/T2C1i2Gjs0/OLYJdKpkb/SoHRbMU1MY/9xGK9HkUPVQG/AdODm5piTppHYZbeNXyTP
-         u9mXEifEdVt2qwn4bBbkXhpx6xMMcwvUea9MatKGuTP5jBDugt9EbneoL1k2mRuSr5rG
-         M2hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vLfO+OW4oRiObD1mcWwejLJW0KZ7ehp7OtU4EnfKGnY=;
-        b=UL/Zu4xKm0KxG7szpa3yjKFVI0WXoRRpidIF5hHfLY2s1BkW6NiJ1nQZEKbfWilJQL
-         mtGW9zfT913GuZpHlnj1AVCT57B++SGhPvlRjX8aHlp5Otz7Yw66cj4svu31MJdlQhJU
-         uMW8KwVVEhloYDhTT5hrR0i2a/3zf32fPHgy83a76CoFurtWuCBZ9H3DxDFKByD3BdW9
-         x/tTI63vu00GrzLtfXMxF1j68Ive+08l+XJ016KoWLb6I3kQs5bbfzI6rQDHh461PHaS
-         ySsgH5QNS8txl41Jvtv5ud8u/E2NMmQ6qZ88Z2OKO6jGtmEU869hb4cI5VSzO9PdKPV1
-         G/Og==
-X-Gm-Message-State: ANhLgQ0JIpsTfz2MkN+gFur5hJS9/A+WT4fP36R65JWXTAmgYZYGlvsp
-        OhYWtJ94epv9GBjs3RDgpBCctUx6ubOY9bqC1w==
-X-Google-Smtp-Source: ADFU+vvTzFYHK/VoLB/yWrhBcpU9JrC3P6+QEoFKclsDoTKWNtbm7VQ9LwqF0C90UVcIxg98hNrTa8/E/9EulluiMWc=
-X-Received: by 2002:a92:dad0:: with SMTP id o16mr13665643ilq.27.1584117976392;
- Fri, 13 Mar 2020 09:46:16 -0700 (PDT)
+        Fri, 13 Mar 2020 12:46:23 -0400
+Received: from mga14.intel.com ([192.55.52.115]:18929 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727076AbgCMQqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 12:46:23 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 09:46:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
+   d="scan'208";a="243428918"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga003.jf.intel.com with ESMTP; 13 Mar 2020 09:46:22 -0700
+Date:   Fri, 13 Mar 2020 09:46:22 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200313164622.GC5181@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
+ <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200312134107.700205216@infradead.org> <20200312135041.641079164@infradead.org>
-In-Reply-To: <20200312135041.641079164@infradead.org>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Fri, 13 Mar 2020 12:46:05 -0400
-Message-ID: <CAMzpN2gkRGEYEzgO55rBhkTdQO3XhEEfHrq6+j1dy5kzn-C5AA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 04/16] objtool: Annotate identity_mapped()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 9:53 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Normally identity_mapped is not visible to objtool, due to:
->
->   arch/x86/kernel/Makefile:OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o := y
->
-> However, when we want to run objtool on vmlinux.o there is no hiding
-> it. Without the annotation we'll get complaints about the:
->
-         call 1f
-1:      popq %r8
-        subq $(1b - relocate_kernel), %r8
+On Fri, Mar 13, 2020 at 11:48:54AM -0400, Nathaniel McCallum wrote:
+> Thinking about this more carefully, I still think that at least part
+> of my critique still stands.
+> 
+> __vdso_sgx_enter_enclave() doesn't use the x86-64 ABI. This means that
+> there will always be an assembly wrapper for
+> __vdso_sgx_enter_enclave(). But because __vdso_sgx_enter_enclave()
+> doesn't save %rbx, the wrapper is forced to in order to be called from
+> C.
+> 
+> A common pattern for the wrapper will be to do something like this:
+> 
+> # void enter_enclave(rdi, rsi, rdx, unused, r8, r9, @tcs, @e,
+> @handler, @leaf, @vdso)
+> enter_enclave:
+>     push %rbx
+>     push $0 /* align */
+>     push 0x48(%rsp)
+>     push 0x48(%rsp)
+>     push 0x48(%rsp)
+> 
+>     mov 0x70(%rsp), %eax
+>     call *0x68(%rsp)
+> 
+>     add $0x20, %rsp
+>     pop %rbx
+>     ret
+> 
+> Because __vdso_sgx_enter_enclave() doesn't preserve %rbx, the wrapper
+> is forced to reposition stack parameters in a performance-critical
+> path. On the other hand, if __vdso_sgx_enter_enclave() preserved %rbx,
+> you could implement the above as:
+> 
+> # void enter_enclave(rdi, rsi, rdx, unused, r8, r9, @tcs, @e,
+> @handler, @leaf, @vdso)
+> enter_enclave:
+>     mov 0x20(%rsp), %eax
+>     jmp *0x28(%rsp)
+> 
+> This also implies that if __vdso_sgx_enter_enclave() took @leaf as a
+> stack parameter and preserved %rbx, it would be x86-64 ABI compliant
+> enough to call from C if the enclave preserves all callee-saved
+> registers besides %rbx (Enarx does).
+> 
+> What are the downsides of this approach? It also doesn't harm the more
+> extended case when you need to use an assembly wrapper to setup
+> additional registers. This can still be done. It does imply an extra
+> push and mov instruction. But because there are currently an odd
+> number of stack function parameters, the push also removes an
+> alignment instruction where the stack is aligned before the call to
+> __vdso_sgx_enter_enclave() (likely). Further, the push and mov are
+> going to be performed by *someone* in order to call
+> __vdso_sgx_enter_enclave() from C.
+> 
+> Therefore, I'd like to propose that __vdso_sgx_enter_enclave():
+>   * Preserve %rbx.
 
-It looks to me that this code is simply trying to get the virtual
-address of relocate_kernel using the old 32-bit method of PIC address
-calculation.  On 64-bit can be done with leaq relocate_kernel(%rip),
-%r8.
+At first glance, that looks sane.  Being able to call __vdso... from C
+would certainly be nice.
 
---
-Brian Gerst
+>   * Take the leaf as an additional stack parameter instead of passing
+> it in %rax.
+
+Does the leaf even need to be a stack param?  Wouldn't it be possible to
+use %rcx as @leaf instead of @unusued?  E.g.
+
+int __vdso_sgx_enter_enclave(unsigned long rdi, unsigned long rsi,
+			     unsigned long rdx, unsigned int leaf,
+			     unsigned long r8,  unsigned long r9,
+			     void *tcs, struct sgx_enclave_exception *e,
+			     sgx_enclave_exit_handler_t handler)
+{
+	push	%rbp
+	mov	%rsp, %rbp
+	push	%rbx
+
+	mov	%ecx, %eax
+.Lenter_enclave
+	cmp	$0x2, %eax
+	jb	.Linvalid_leaf
+	cmp	$0x3, %eax
+	ja	.Linvalid_leaf
+
+	mov	0x0x10(%rbp), %rbx
+	lea	.Lasync_exit_pointer(%rip), %rcx
+
+.Lasync_exit_pointer:
+.Lenclu_eenter_eresume:
+	enclu
+
+	xor	%eax, %eax
+
+.Lhandle_exit:
+	cmp	$0, 0x20(%rbp)
+	jne	.Linvoke_userspace_handler
+
+.Lout
+	pop	%rbx
+	leave
+	ret
+}
+		
+
+> Then C can call it without additional overhead. And people who need to
+> "extend" the C ABI can still do so.
+> 
