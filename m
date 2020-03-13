@@ -2,77 +2,90 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7A8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DD4C1975A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1542071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584061320;
-	bh=4Mb1/ZjU5Y5Lyt/H0AGgn+Vo8yCzq8TNH/LS6T+ozbw=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=jALDeZjv0JD0n0wcvrDDeLOqy2ADeNTTqd7mhVa9LIjIW/ew/CJHNgnoPpbRSyKrz
-	 oEiw2Z8jsRhCoWiBgAQ67zVFJzi/YqsRhlpE8Yzk5etMIoUy1L9ENAOGR9PSMTNQzE
-	 ULBKrTT4FpxVhHcjVCYfQQ+ENBkwP7Df7Y1Hom3E=
+	by mail.kernel.org (Postfix) with ESMTP id D8C0C20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCMBB7 (ORCPT
+        id S1726964AbgCMBEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:01:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60956 "EHLO mail.kernel.org"
+        Thu, 12 Mar 2020 21:04:37 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58736 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727176AbgCMBB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:01:59 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92B54206EB;
-        Fri, 13 Mar 2020 01:01:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584061318;
-        bh=4Mb1/ZjU5Y5Lyt/H0AGgn+Vo8yCzq8TNH/LS6T+ozbw=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Fq9UtREVlN2Xoe570gYbnJzmN6eqzaIXzngUH2AD1doDUatpiGh+Cp50SJfwDM5Wi
-         kmHq4sT7QkTBoyga6B+9wztjnGtkDlzt8BSmQ4ovOm/Zli9u1mZ2afSuPOS9gZKYUR
-         cQfCHQvr5qVbEcDDSbp6WeUy3ic+MlKih78Jank8=
-Content-Type: text/plain; charset="utf-8"
+        id S1726647AbgCMBEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 21:04:37 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 18:04:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
+   d="scan'208";a="243218144"
+Received: from seyal2-mobl.ger.corp.intel.com (HELO localhost) ([10.254.147.27])
+  by orsmga003.jf.intel.com with ESMTP; 12 Mar 2020 18:04:27 -0700
+Date:   Fri, 13 Mar 2020 03:04:25 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v2 1/2] KEYS: Don't write out to userspace while holding
+ key semaphore
+Message-ID: <20200313010425.GA11360@linux.intel.com>
+References: <20200308170410.14166-1-longman@redhat.com>
+ <20200308170410.14166-2-longman@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <f38e173f73f9c9c06291d96d095f5a42002720c9.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech> <f38e173f73f9c9c06291d96d095f5a42002720c9.1582533919.git-series.maxime@cerno.tech>
-Subject: Re: [PATCH 21/89] clk: bcm: rpi: Add DT provider for the clocks
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org
-To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Thu, 12 Mar 2020 18:01:57 -0700
-Message-ID: <158406131784.149997.17413643401851348290@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200308170410.14166-2-longman@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maxime Ripard (2020-02-24 01:06:23)
-> For the upcoming registration of the clocks provided by the firmware, make
-> sure it's exposed to the device tree providers.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
+On Sun, Mar 08, 2020 at 01:04:09PM -0400, Waiman Long wrote:
+> +		/*
+> +		 * Read methods will just return the required length
+> +		 * without any copying if the provided length isn't big
+> +		 * enough.
+> +		 */
+> +		if ((ret > 0) && (ret <= buflen) && buffer &&
+> +		    copy_to_user(buffer, tmpbuf, ret))
+> +			ret = -EFAULT;
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Please, reorg and remove redundant parentheses:
+
+/*
+ * Read methods will just return the required length
+ * without any copying if the provided length isn't big
+ * enough.
+ */
+if (ret > 0 && ret <= buflen) {
+	if (buffer && copy_to_user(buffer, tmpbuf, ret))
+		ret = -EFAULT;
+}
+
+Now the comment is attached to the exact right thing. The previous
+organization is a pain to look at when backtracking commits for
+whatever reason in the future.
+
+I'm also wondering, would it be possible to rework the code in a way
+that you don't have check whether buffer is valid on a constant basis?
+
+/Jarkko
