@@ -2,204 +2,110 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75437C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F8DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E513206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37504206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584113930;
-	bh=SRcprPq3VbUw28EYa7ZTMQ0PDgqkWwXJE4sUUr+6mak=;
+	s=default; t=1584114078;
+	bh=Ph1NaOx4Fqn/IwIUZeEekNk/YXReej4IS77CjGALXW4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vpvIjLSSfO2VFgpcurkdWWeCFQQBKmGbCebyJUWn5PT+QSCuniGRd1EqcuFpjyAT9
-	 4/P4qZIZjyDwQ60adleEcA9uZ5PUTnVKpNfn1UpcCxV09A8E/3SmarHaOIcRkcHQG/
-	 jSPfjTOsI6zNZVe8jZaWDoqJWCUwtkrvtyyqEt4s=
+	b=psQoc1EC8qaQ++7/FsENOFmCY/50lNfVTPfWZzEiKxw7Lehfolluut4hsM3fN+D6R
+	 0Zao/w9dbCa50ee6bUoMrCLwggO1Tw4qqmwHw14VCN/B/vHVSXO9BPIKuSOmsSfJby
+	 kB5cHewsq14bCNazQAzP0Qb5IrdPFo/huHxlPEaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgCMPit (ORCPT
+        id S1726736AbgCMPlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:38:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgCMPis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:38:48 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6F1E206B7;
-        Fri, 13 Mar 2020 15:38:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584113927;
-        bh=SRcprPq3VbUw28EYa7ZTMQ0PDgqkWwXJE4sUUr+6mak=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AK9IQ7fafeWpV/b8ZdLGtNbLAeXPqMoyNVnWkSl9ctJv6P00D6o7eDydetcG5jnNQ
-         KaXRui8AwelxVhb8R1mU5D6RGmQEi9FsaUjNr1v/T50U9Qsmmc2iVveRVq6TCCNqUa
-         ygaJLjogAYUY+6cKRK9vhCCUiZJyvYjOfI9ZRV4c=
-Date:   Fri, 13 Mar 2020 08:38:47 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
-Message-ID: <20200313153847.GA185439@google.com>
-References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
- <20200312170242.GA185506@google.com>
- <20200313012604.GI20234@codeaurora.org>
- <20200313014535.GA72547@google.com>
- <20200313051245.GK20234@codeaurora.org>
+        Fri, 13 Mar 2020 11:41:16 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51239 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgCMPlQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:41:16 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a132so10491692wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 08:41:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gkOpGqZ4HZ0Gczdmy8fRkS4oC/ZNHjgZPtF1KgbpwK8=;
+        b=RlX3asRT/tnr6igLFmVaj3qmvuypOSE2YNCtWMs1+F7DI5I3BaP0aWk3zoR+Wr6lhw
+         hzI2k+Yb2x5k4oA7xI4IozLzzeZmBLvET9PJjK+V0R18ebMeDnMv5Yi/i8ZxN69Nwk98
+         GwUkGDvDCUlLihIvoptHwuZkGCd0LKFvQnLCT/7yh0PYWIe0VykwUSrXsaeLQWK5NzbK
+         hT4VJ/xW3FvNIrVyxYKfqSHjT4wkho4l+L5QPSAr/tO8TtnjF8R1YjhJi4XByhOhYlSx
+         ecEoxH6+3mMbUjnCA4yTCY9/otelrl+Xp1gTQ9ZbW7r+bute9xk1ElabtOKmhDlmWyEm
+         ilzA==
+X-Gm-Message-State: ANhLgQ1RImQBgEHvGbJe1o68un6x99syCY96EsUJ2Qz7sTXkwkZxQdDk
+        HiBxvl66JVKGdRuQ82/zTA8=
+X-Google-Smtp-Source: ADFU+vubCQz/pw1/gHUN38Gv+kKTeEXfXIKG6z5UA/SluUtT62FiwYYo+OtYH4Tq/5PNvVY33Ih1hg==
+X-Received: by 2002:a7b:c456:: with SMTP id l22mr7278014wmi.184.1584114072890;
+        Fri, 13 Mar 2020 08:41:12 -0700 (PDT)
+Received: from localhost (ip-37-188-247-35.eurotel.cz. [37.188.247.35])
+        by smtp.gmail.com with ESMTPSA id f15sm17298220wmj.25.2020.03.13.08.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 08:41:12 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 16:41:10 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH] mm: Code cleanup for MADV_FREE
+Message-ID: <20200313154110.GH21007@dhcp22.suse.cz>
+References: <20200313090056.2104105-1-ying.huang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313051245.GK20234@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200313090056.2104105-1-ying.huang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/13, Sahitya Tummala wrote:
-> On Thu, Mar 12, 2020 at 06:45:35PM -0700, Jaegeuk Kim wrote:
-> > On 03/13, Sahitya Tummala wrote:
-> > > On Thu, Mar 12, 2020 at 10:02:42AM -0700, Jaegeuk Kim wrote:
-> > > > On 03/12, Sahitya Tummala wrote:
-> > > > > F2FS already has a default timeout of 5 secs for discards that
-> > > > > can be issued during umount, but it can take more than the 5 sec
-> > > > > timeout if the underlying UFS device queue is already full and there
-> > > > > are no more available free tags to be used. In that case, submit_bio()
-> > > > > will wait for the already queued discard requests to complete to get
-> > > > > a free tag, which can potentially take way more than 5 sec.
-> > > > > 
-> > > > > Fix this by submitting the discard requests with REQ_NOWAIT
-> > > > > flags during umount. This will return -EAGAIN for UFS queue/tag full
-> > > > > scenario without waiting in the context of submit_bio(). The FS can
-> > > > > then handle these requests by retrying again within the stipulated
-> > > > > discard timeout period to avoid long latencies.
-> > > > > 
-> > > > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > > > > ---
-> > > > >  fs/f2fs/segment.c | 14 +++++++++++++-
-> > > > >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > > > index fb3e531..a06bbac 100644
-> > > > > --- a/fs/f2fs/segment.c
-> > > > > +++ b/fs/f2fs/segment.c
-> > > > > @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> > > > >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
-> > > > >  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> > > > > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > > > +	int flag;
-> > > > >  	block_t lstart, start, len, total_len;
-> > > > >  	int err = 0;
-> > > > >  
-> > > > > +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > > > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > > > > +
-> > > > >  	if (dc->state != D_PREP)
-> > > > >  		return 0;
-> > > > >  
-> > > > > @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  		bio->bi_end_io = f2fs_submit_discard_endio;
-> > > > >  		bio->bi_opf |= flag;
-> > > > >  		submit_bio(bio);
-> > > > > +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
-> > > > > +			dc->state = D_PREP;
-> > > > > +			err = dc->error;
-> > > > > +			break;
-> > > > > +		}
-> > > > >  
-> > > > >  		atomic_inc(&dcc->issued_discard);
-> > > > >  
-> > > > > @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  			}
-> > > > >  
-> > > > >  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > > > > +			if (dc->error == -EAGAIN) {
-> > > > > +				congestion_wait(BLK_RW_ASYNC, HZ/50);
-> > > > 
-> > > > 						--> need to be DEFAULT_IO_TIMEOUT
-> > > 
-> > > Yes, i will update it.
-> > > 
-> > > > 
-> > > > > +				__relocate_discard_cmd(dcc, dc);
-> > > > 
-> > > > It seems we need to submit bio first, and then move dc to wait_list, if there's
-> > > > no error, in __submit_discard_cmd().
-> > > 
-> > > Yes, that is not changed and it still happens for the failed request
-> > > that is re-queued here too when it gets submitted again later.
-> > > 
-> > > I am requeuing the discard request failed with -EAGAIN error back to 
-> > > dcc->pend_list[] from wait_list. It will call submit_bio() for this request
-> > > and also move to wait_list when it calls __submit_discard_cmd() again next
-> > > time. Please let me know if I am missing anything?
-> > 
-> > This patch has no problem, but I'm thinking that __submit_discard_cmd() needs
-> > to return with any values by assumption where the waiting list should have
-> > submitted commands.
+On Fri 13-03-20 17:00:56, Huang, Ying wrote:
+> From: Huang Ying <ying.huang@intel.com>
 > 
-> I think dc->queued will indicated that dc is moved to wait_list. This can be
-> used along with return value to take right action. Can you check if this
-> works?
+> Some comments for MADV_FREE is revised and added to help people understand the
+> MADV_FREE code, especially the page flag, PG_swapbacked.  This makes
+> page_is_file_cache() isn't consistent with its comments.  So the function is
+> renamed to page_is_file_lru() to make them consistent again.  All these are put
+> in one patch as one logical change.
+> 
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Suggested-by: David Rientjes <rientjes@google.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Rik van Riel <riel@surriel.com>
 
-I mean why can't do this *in* __submit_discard_cmd()? Otherwise, existing and
-future callers should consider to handle the errors everytime.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-> 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index a06bbac..91df060 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -1478,7 +1478,7 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->         struct list_head *pend_list;
->         struct discard_cmd *dc, *tmp;
->         struct blk_plug plug;
-> -       int i, issued = 0;
-> +       int i, err, issued = 0;
->         bool io_interrupted = false;
-> 
->         if (dpolicy->timeout != 0)
-> @@ -1517,8 +1517,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->                                 break;
->                         }
-> 
-> -                       __submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> -                       if (dc->error == -EAGAIN) {
-> +                       err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> +                       if (err && err != -EAGAIN) {
-> +                               __remove_discard_cmd(sbi, dc);
-> +                       } else if (err == -EAGAIN && dc->queued) {
->                                 congestion_wait(BLK_RW_ASYNC, HZ/50);
->                                 __relocate_discard_cmd(dcc, dc);
->                         }
-> 
-> thanks,
-> > 
-> > > 
-> > > Thanks,
-> > > 
-> > > > 
-> > > > > +			}
-> > > > >  
-> > > > >  			if (issued >= dpolicy->max_requests)
-> > > > >  				break;
-> > > > > -- 
-> > > > > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> > > > > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-> > > 
-> > > -- 
-> > > --
-> > > Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
-> 
-> -- 
-> --
-> Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+Although I would rephrased this a bit
+> + * PG_swapbacked is cleared if the page is page cache page backed by a regular
+> + * file system or anonymous page lazily freed (e.g. via MADV_FREE).  It is set
+> + * if the page is normal anonymous page, tmpfs or otherwise RAM or swap backed.
+> + *
+
+PG_swapbacked is set when a page uses swap as a backing storage. This
+are usually PageAnon or shmem pages but please note that even anonymous
+pages might lose their PG_swapbacked flag when they simply can be
+dropped (e.g. as a result of MADV_FREE).
+-- 
+Michal Hocko
+SUSE Labs
