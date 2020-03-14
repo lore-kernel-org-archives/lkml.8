@@ -2,104 +2,120 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE29C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ED4C5ACC0
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5BB12076F
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0CF20637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q3u295ya"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PolnriIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgCOB3p (ORCPT
+        id S1727026AbgCOB3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:29:45 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54712 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgCOB3k (ORCPT
+        Sat, 14 Mar 2020 21:29:53 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33917 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbgCOB3v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:29:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id n8so13872053wmc.4
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 18:29:38 -0700 (PDT)
+        Sat, 14 Mar 2020 21:29:51 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x3so10618607wmj.1;
+        Sat, 14 Mar 2020 18:29:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uRfG0mwZMLjMl4FPHbusrIQaUL5wynktLP8666hh0Ic=;
-        b=q3u295yaWvJtyF0nX+itH6MgcSpzhi/WW183Rq9wGLBRLMK9E1D9n+YozKtG8wr/cW
-         prWRdLnb5KqNYxGwbMr9NT1YXCcGu+szlyiWm3eF1GxPkmszRZ18gO9IH9tgVp4xnEHl
-         scK3h4clMAHm72HKMPZn1BizqC782jmNPtEXG1D4qfrS9CitoHmvo7uLkih+M323gton
-         nO57LOy9ng7Dlbj9WkBQ3/La2796jyVvUbYmYQKdMUxXLySTdoqmzQ9A61v8r/5qr4zm
-         NPI6P9Hm96BHEFikcg2n9El7/tXtLB0Fv20UfC/MYXkAjVYXE3ib9ukBOvtb0Hicd8lN
-         ow8g==
+        h=from:to:cc:subject:date:message-id;
+        bh=MdAMJmGRrUWNR3TnrWQJWlEsL/rPdcDMZT589VL4k7k=;
+        b=PolnriIplP1QDNROgQ1dylop9To27slCK5uqrKfKdBbekoCNFT/OLobU7dG3cKboYB
+         MU//eTuoUI7T5i6B7tydGtvTtdwVEeeBUH/B16G1i4RoBfv85xUuFVKcWLI8vRHOqfdU
+         a867e7aScshL4JXEnVY4fjZMn6Ahnmk8Y9FMgiYOf58dR0IurMsoeDR/xAC1S4Kw+Z9m
+         xpxFpOAQiXatccTeSP5z1XJcQ0HC9wYS8RDfsP0nNw5hukMh/DxuixTkfAjF4Ra0Ph5T
+         rM83BdLg9zVYPe04jdDDFKTmxclPcGE9Y1u3zmdosgo8AfsqTATZB3Yn2YJgphZ4c7/1
+         0kBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uRfG0mwZMLjMl4FPHbusrIQaUL5wynktLP8666hh0Ic=;
-        b=Vyj8atNhJcPA4tfhziISSaLLkKUZWgSJ32mjDh1yj6yjxINUiTLNnneXTu0pidvZga
-         xea4F+XBieOOHwX/+Xk8HzGynNqwsgmzuwdKA/GWTxElXAiGw6YF7nHkDoGmPSDMPMz0
-         6sQ3qXwjlj54VU3dIKaqYriD5FNOJce99f+v1LWybase7j4S+3jJ1qICg8U/CpxXn4gk
-         DFUdRa1HBsKastgXe5221VJt6QZ15t5Joe9xLsK9x7DpZnaBLwrVkSuJ4YXVbrA1XWKt
-         pKdZQSZtmS0bfCvs4/qaFEvtzv4jh++Trfsk70dqQ74LT6I/IJFxVQ4qThjySRJ7oyOX
-         igxg==
-X-Gm-Message-State: ANhLgQ29N9d7Hd7v9F9ZaVCkNA/FKgk2Tl7yckY+siAoBc6WRNoAAdEC
-        P57roWhIS0ZSTT1eTsbgrFpNH3iy
-X-Google-Smtp-Source: ADFU+vusw/MooirDZ5px6QSB4Q7IrKYKrBAJeE9hSb0Jn2vYN866yAQB9P7y0dj2KFOY68fFzrfwmg==
-X-Received: by 2002:a1c:b4c1:: with SMTP id d184mr19096815wmf.160.1584235440708;
-        Sat, 14 Mar 2020 18:24:00 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id h18sm22200107wmm.6.2020.03.14.18.23.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 14 Mar 2020 18:24:00 -0700 (PDT)
-Date:   Sun, 15 Mar 2020 01:23:59 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/swap_state.c: use the same way to count page in
- [add_to|delete_from]_swap_cache
-Message-ID: <20200315012359.uebl54wauvcpd5j4@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200314215912.1554-1-richard.weiyang@gmail.com>
- <20200315002101.GT22433@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200315002101.GT22433@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MdAMJmGRrUWNR3TnrWQJWlEsL/rPdcDMZT589VL4k7k=;
+        b=cnlPkWcwA6A1V5ePFLa15CkIgjrseAFNaj+bgRdQBVp68a2xKK5tHBAs4XLCsCtHqC
+         NWxkBoSimXeqqEYGXIsXeamnYlkoEG8DG6M2Xlfx9L3nbbqlx9+YYuDrmrIu99jt4WHu
+         oftBZM94er3EhalptzBnsvIr88fdn0fnz5NZeyVFKIFU++PehGoUiTWh1Vidbr/4uxnY
+         J+fMM3iIbBzxICRwo/EeKSpE0T/et+fYRg34zaNJuyuoGaOhw6HBQ5BEiuusoRYqQTPj
+         ezuDObwJry+ijseMW31u/t18wUvdhLvdXcNEdt0U9iEOmlErdhfxAvaHuh5YPlsKvZw5
+         0oTQ==
+X-Gm-Message-State: ANhLgQ05UT1khs5JEnfxIYQ4Z7O68GbvYwPxqJ+Xp5/iZuerphxSEmdP
+        6S7yWU7hIBd+++npjS0oV2GoOA6Blbk=
+X-Google-Smtp-Source: ADFU+vtfdljSeqJJQhrgJp7NKZswNejaixyPKYbgD/BUJCJpyQFZKprGJFjj+IOtZPh/8qFRtbdXMw==
+X-Received: by 2002:a05:600c:286:: with SMTP id 6mr18285028wmk.101.1584225836482;
+        Sat, 14 Mar 2020 15:43:56 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id 133sm23690732wmd.5.2020.03.14.15.43.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2020 15:43:55 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH v3 00/12] NXP DSPI bugfixes and support for LS1028A
+Date:   Sun, 15 Mar 2020 00:43:28 +0200
+Message-Id: <20200314224340.1544-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 05:21:01PM -0700, Matthew Wilcox wrote:
->On Sat, Mar 14, 2020 at 09:59:12PM +0000, Wei Yang wrote:
->> Function add_to_swap_cache() and delete_from_swap_cache() are counter
->> parts, while currently they use different way to count page.
->> 
->> It doesn't break any thing because we only have two size for PageAnon,
->> but this is confusing and not a good practice.
->> 
->> This patch corrects it by both using compound_nr().
->
->You're converting in the wrong direction.  hpage_nr_pages() is optimised
->away when CONFIG_TRANSPARENT_HUGEPAGE is undefined, whereas compound_nr()
->is not.
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Ok, I didn't think about the optimisation.
+This series addresses a few issues that were missed during the previous
+series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
+SoCs other than LS1021A and LS1043A. DMA mode has been completely broken
+by that series, and XSPI mode never worked on little-endian controllers.
 
-Will use hpage_nr_pages() in v2.
+Then it introduces support for the LS1028A chip, whose compatible has
+recently been documented here:
 
->
->I also have this patch pending:
->http://git.infradead.org/users/willy/linux-dax.git/commitdiff/192b635b428ae74f680574cdcc3d5e9d213fcb64
+https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
+
+The device tree for the LS1028A SoC is extended with DMA channels
+definition, such that even though the default operating mode is XSPI,
+one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
+devtype_data structure of the driver and use that instead.
+
+I don't expect the "fixes" patches to reach very far down the stable
+pipe, since there has been pretty heavy refactoring in this driver.
+
+For testing, benchmarking and debugging, the mikroBUS connector on the
+LS1028A-RDB is made available via spidev.
+
+Vladimir Oltean (12):
+  spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
+  spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
+  spi: spi-fsl-dspi: Fix bits-per-word acceleration in DMA mode
+  spi: spi-fsl-dspi: Avoid reading more data than written in EOQ mode
+  spi: spi-fsl-dspi: Protect against races on dspi->words_in_flight
+  spi: spi-fsl-dspi: Replace interruptible wait queue with a simple
+    completion
+  spi: spi-fsl-dspi: Avoid NULL pointer in dspi_slave_abort for non-DMA
+    mode
+  spi: spi-fsl-dspi: Fix interrupt-less DMA mode taking an XSPI code
+    path
+  spi: spi-fsl-dspi: Move invariant configs out of
+    dspi_transfer_one_message
+  spi: spi-fsl-dspi: Add support for LS1028A
+  arm64: dts: ls1028a: Specify the DMA channels for the DSPI controllers
+  arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
+
+ .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  14 ++
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   6 +
+ drivers/spi/spi-fsl-dspi.c                    | 227 +++++++++---------
+ 3 files changed, 138 insertions(+), 109 deletions(-)
 
 -- 
-Wei Yang
-Help you, Help me
+2.17.1
+
