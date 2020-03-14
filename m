@@ -2,153 +2,128 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B4DC0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490FDC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F137020637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A01320637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QsE47yVs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNrWWyWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgCOBjo (ORCPT
+        id S1727126AbgCOBkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:39:44 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43183 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgCOBjn (ORCPT
+        Sat, 14 Mar 2020 21:40:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38762 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgCOBkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:39:43 -0400
-Received: by mail-qk1-f196.google.com with SMTP id x1so15078618qkx.10
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 18:39:42 -0700 (PDT)
+        Sat, 14 Mar 2020 21:40:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t13so7888931wmi.3;
+        Sat, 14 Mar 2020 18:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ecMdX/kkcgeI1bF1MRkVwY4khKwFUay4TKuNBxqnWmk=;
-        b=QsE47yVsnRi4mH/Ae9IkEz9gz4BC2eK+ktKXwyAIUyrPZgka87atHyWuUntrbWXx6K
-         5O9jjvQuM2JyWxS7EZxGwMNfx0kX2CiwRRUwjdGzEhWopOqj4hxl5eWexOQkYQg+LlCj
-         RFIWS9yj/KRTuquJfPaLd6wjP+GeXrjxeWXW5TTb8dea50oPDfulpjvJdBwOD8Rn+6EJ
-         dZXEf0rxId4IUN0pHvISieWW609kh+mKs5hDjbWgY/5NGf5k91QaKf8t0juiwX771QG2
-         jWsbyWbdOjhEkxd+2eMbaGKlMcuJsCd+M8JCJ2231jk0muQbUxR+8BMt7qy2AlZrS74/
-         8AAQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=vJdE0AuVXiJ36mNfX/pKHsHI39Q9/zpf+j6FYiGSXMw=;
+        b=QNrWWyWW8vK9IrfwwFeW4XuWps8p+RJtVmPpvgpuQGfC4AQfGYyorsuWKXMwspxsYV
+         /iERMorGpvh5h06YA+N2JXtBYc+39BAByPxacsEiPex5gYjtLSepO1kZBWUZOPABXmoh
+         t5onjH0u5uLBKUojMeHRuIhMpHBOndCMsSz4kqnbh7Q8SP9GPKPEyinFCQDw5wL0BVPq
+         L8xlczCWo8xiyzCXTFvwlN4m4aJR2AQb5X4xVxy1IH0aSZ+ZvW/5GTvMEXjPuRwR48Hd
+         Gns//wbii1ccl9zEvouIt/YPV9opXiy/uFYIxyJ9pHCzNwD73cbM0K5phsBKRF+EqrBm
+         nQkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ecMdX/kkcgeI1bF1MRkVwY4khKwFUay4TKuNBxqnWmk=;
-        b=n5nAiNBBTAlnUhIFSlBw0Ug312KRl6gvoGbrvGKaixSW+cTS4lIo4d/SKXnU8h1xKK
-         R2bbsbEZ0Xcky5zPYDosup+daTpyRAz0efm1lx8wSYlz2AkmoasGvnbVfaQppGBXCiKD
-         5u+cfE3D7XNbHUoMw8+hpNFoo7lxurcCRStERRCf6gB9VHtbYaizPDMjNjwPOIKxNDFM
-         7poRRZwZsndEXMam4QGKHvNpyWO8W5SvVZFDLtshz6/c2p+bjMC3um/k4zt6dCC7oAhO
-         pwYlguVjvmEHLVkAyvMbP7u3/WQQNnzgsoR+w0+yPv9mBHYMEWsQ7OXZpPnapSUSn3mV
-         /WJw==
-X-Gm-Message-State: ANhLgQ0w0uev0e07M7FiunTxfQ2I3BJ0ABtyPetv9rpGjf57mnGd8CeC
-        B9xDa5t/qowyVXpuCdWwFKSp5KeWZL2NEYAdn3pKEqwt
-X-Google-Smtp-Source: ADFU+vtOa6oagrl7UbWimFolLhARnqCo+lGIn00mrmW3AhyF192jiQVS5CfC0m0cO4nIO7G8SMb6EHmpHE2qlWBx0SY=
-X-Received: by 2002:a25:908a:: with SMTP id t10mr12174650ybl.177.1584204589078;
- Sat, 14 Mar 2020 09:49:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200314042826.166953-1-irogers@google.com> <20200314142332.GB492969@krava>
-In-Reply-To: <20200314142332.GB492969@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 14 Mar 2020 09:49:37 -0700
-Message-ID: <CAP-5=fXZJidxHYeCqHcNPBArMe_aYwP0+u2dxiTD+V1fammK_Q@mail.gmail.com>
-Subject: Re: [PATCH] perf mem2node: avoid double free related to realloc
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=vJdE0AuVXiJ36mNfX/pKHsHI39Q9/zpf+j6FYiGSXMw=;
+        b=C6/Q7Qb+YjIEMSUvHT2cX5/TApfE33aFTwW9Kz0EVB0aInB9sId5ZcDLr05Q4Uw+jd
+         iuY7pnrAORqjLQBWOwy0ysu3rk30jCjfi+BPBQC1txpC8EFXHxVMS874JojuhiEGkDz7
+         g36frEs5LhMJbRjHig2CNdpAhCE7JwPt63BHupsUTG8ckjTX1fD6GsTiV2DIlZvkTBeE
+         ZCJwnkiK3ZNLzG4ZmbGdhQsDVFii/AfEShPsi3Qn6q05K4AnIXBk1HxbVsbrJsQ0Gn/n
+         7Zu3axchBEH9Ikek+nGrGJq3if2bLAf0KLO8NfrqEtB7+sCN6pA1Z09oORq7wsNtlmT2
+         LThg==
+X-Gm-Message-State: ANhLgQ3WiBo6RZgnMwcKsfaKabYJXPy/QZmTuUmNu03PJ+AxMygxppU2
+        GDyo09fhxSasz6JuIgoLj/XqcERYeEo=
+X-Google-Smtp-Source: ADFU+vufBtUCuRE+ffzHkeys6l4lqDPG6E7fO4lYTZBaecUbjAC0rlm634GlJErKYLxE5STnOjnifA==
+X-Received: by 2002:a1c:8103:: with SMTP id c3mr17704074wmd.166.1584225837824;
+        Sat, 14 Mar 2020 15:43:57 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id 133sm23690732wmd.5.2020.03.14.15.43.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2020 15:43:57 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH v3 01/12] spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
+Date:   Sun, 15 Mar 2020 00:43:29 +0200
+Message-Id: <20200314224340.1544-2-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200314224340.1544-1-olteanv@gmail.com>
+References: <20200314224340.1544-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 7:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, Mar 13, 2020 at 09:28:26PM -0700, Ian Rogers wrote:
-> > Realloc of size zero is a free not an error, avoid this causing a double
-> > free. Caught by clang's address sanitizer:
-> >
-> > ==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
-> >     #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
-> >     #1 0x5649659e9251 in __zfree tools/lib/zalloc.c:13:2
-> >     #2 0x564965c0f92c in mem2node__exit tools/perf/util/mem2node.c:114:2
-> >     #3 0x564965a08b4c in perf_c2c__report tools/perf/builtin-c2c.c:2867:2
-> >     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
-> >     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
-> >     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
-> >     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
-> >     #8 0x564965942e41 in main tools/perf/perf.c:538:3
-> >
-> > 0x6020000015f0 is located 0 bytes inside of 1-byte region [0x6020000015f0,0x6020000015f1)
-> > freed by thread T0 here:
-> >     #0 0x564965929da3 in realloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
-> >     #1 0x564965c0f55e in mem2node__init tools/perf/util/mem2node.c:97:16
-> >     #2 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
-> >     #3 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
-> >     #4 0x564965944348 in run_builtin tools/perf/perf.c:312:11
-> >     #5 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
-> >     #6 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
-> >     #7 0x564965942e41 in main tools/perf/perf.c:538:3
-> >
-> > previously allocated by thread T0 here:
-> >     #0 0x564965929c42 in calloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:154:3
-> >     #1 0x5649659e9220 in zalloc tools/lib/zalloc.c:8:9
-> >     #2 0x564965c0f32d in mem2node__init tools/perf/util/mem2node.c:61:12
-> >     #3 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
-> >     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
-> >     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
-> >     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
-> >     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
-> >     #8 0x564965942e41 in main tools/perf/perf.c:538:3
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/mem2node.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
-> > index 797d86a1ab09..7f97aa69eb65 100644
-> > --- a/tools/perf/util/mem2node.c
-> > +++ b/tools/perf/util/mem2node.c
-> > @@ -95,7 +95,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
-> >
-> >       /* Cut unused entries, due to merging. */
-> >       tmp_entries = realloc(entries, sizeof(*entries) * j);
-> > -     if (tmp_entries)
-> > +     if (j == 0 || tmp_entries)
->
-> nice catch.. I wonder if we should fail in here, or at least
-> warn that there're no entris.. which is really strange ;-)
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-The workload was the stream benchmark with perf c2c, but stream isn't
-particularly long running. Not sure how j became 0, there's 2
-possibilities in the code. The worry with a warning is the spam, so I
-just wanted to make the code correct.
+The SPI_MCR_PCSIS macro assumes that the controller has a number of chip
+select signals equal to 6. That is not always the case, but actually is
+described through the driver-specific "spi-num-chipselects" device tree
+binding. LS1028A for example only has 4 chip selects.
 
-Thanks,
-Ian
+Don't write to the upper bits of the PCSIS field, which are reserved in
+the reference manual.
 
-> thanks,
-> jirka
->
-> >               entries = tmp_entries;
-> >
-> >       for (i = 0; i < j; i++) {
-> > --
-> > 2.25.1.481.gfbce0eb801-goog
-> >
->
+Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+Changes in v4:
+None.
+
+Changes in v3:
+None.
+
+Changes in v2:
+Remove duplicate phrase in commit message.
+
+ drivers/spi/spi-fsl-dspi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 50e3382f0c50..6ca35881881b 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -22,7 +22,7 @@
+ 
+ #define SPI_MCR				0x00
+ #define SPI_MCR_MASTER			BIT(31)
+-#define SPI_MCR_PCSIS			(0x3F << 16)
++#define SPI_MCR_PCSIS(x)		((x) << 16)
+ #define SPI_MCR_CLR_TXF			BIT(11)
+ #define SPI_MCR_CLR_RXF			BIT(10)
+ #define SPI_MCR_XSPI			BIT(3)
+@@ -1200,7 +1200,10 @@ static const struct regmap_config dspi_xspi_regmap_config[] = {
+ 
+ static void dspi_init(struct fsl_dspi *dspi)
+ {
+-	unsigned int mcr = SPI_MCR_PCSIS;
++	unsigned int mcr;
++
++	/* Set idle states for all chip select signals to high */
++	mcr = SPI_MCR_PCSIS(GENMASK(dspi->ctlr->num_chipselect - 1, 0));
+ 
+ 	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
+ 		mcr |= SPI_MCR_XSPI;
+-- 
+2.17.1
+
