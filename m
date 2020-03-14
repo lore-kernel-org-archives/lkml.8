@@ -3,76 +3,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FA4C0044D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6F7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC8F2074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1CF2074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:44:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgCNDn6 (ORCPT
+        id S1726678AbgCNDok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 23:43:58 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:48504 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgCNDn6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 23:43:58 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7E99E15A1577C;
-        Fri, 13 Mar 2020 20:43:57 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 20:43:54 -0700 (PDT)
-Message-Id: <20200313.204354.1099710416713347967.davem@davemloft.net>
-To:     bay@hackerdom.ru
-Cc:     oliver@neukum.org, gregkh@linuxfoundation.org, info@metux.net,
-        tglx@linutronix.de, kstewart@linuxfoundation.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] cdc_ncm: Implement the 32-bit version of NCM
- Transfer Block
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200313213823.178435-1-bay@hackerdom.ru>
-References: <20200313213823.178435-1-bay@hackerdom.ru>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 13 Mar 2020 20:43:57 -0700 (PDT)
+        Fri, 13 Mar 2020 23:44:40 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:60618 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726399AbgCNDoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 23:44:39 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BA0B21A1971;
+        Sat, 14 Mar 2020 04:44:36 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F239C1A194B;
+        Sat, 14 Mar 2020 04:44:26 +0100 (CET)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0E26B402C1;
+        Sat, 14 Mar 2020 11:44:14 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        bhelgaas@google.com, robh+dt@kernel.org, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        roy.zang@nxp.com, amurray@thegoodpenguin.co.uk,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        andrew.murray@arm.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH v6 00/11] Add the multiple PF support for DWC and Layerscape
+Date:   Sat, 14 Mar 2020 11:30:27 +0800
+Message-Id: <20200314033038.24844-1-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Bersenev <bay@hackerdom.ru>
-Date: Sat, 14 Mar 2020 02:38:20 +0500
+Add the PCIe EP multiple PF support for DWC and Layerscape, add
+the doorbell MSIX function for DWC, use list to manage the PF of
+one PCIe controller, and refactor the Layerscape EP driver due to
+some platforms difference.
 
-> The NCM specification defines two formats of transfer blocks: with 16-bit
-> fields (NTB-16) and with 32-bit fields (NTB-32). Currently only NTB-16 is
-> implemented.
-> 
-> This patch adds the support of NTB-32. The motivation behind this is that
-> some devices such as E5785 or E5885 from the current generation of Huawei
-> LTE routers do not support NTB-16. The previous generations of Huawei
-> devices are also use NTB-32 by default.
-> 
-> Also this patch enables NTB-32 by default for Huawei devices.
-> 
-> During the 2019 ValdikSS made five attempts to contact Huawei to add the
-> NTB-16 support to their router firmware, but they were unsuccessful.
-> 
-> Signed-off-by: Alexander Bersenev <bay@hackerdom.ru>
+Xiaowei Bao (11):
+  PCI: designware-ep: Add multiple PFs support for DWC
+  PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
+  PCI: designware-ep: Move the function of getting MSI capability
+    forward
+  PCI: designware-ep: Modify MSI and MSIX CAP way of finding
+  dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a
+    and ls2088a
+  PCI: layerscape: Fix some format issue of the code
+  PCI: layerscape: Modify the way of getting capability with different
+    PEX
+  PCI: layerscape: Modify the MSIX to the doorbell mode
+  PCI: layerscape: Add EP mode support for ls1088a and ls2088a
+  arm64: dts: layerscape: Add PCIe EP node for ls1088a
+  misc: pci_endpoint_test: Add LS1088a in pci_device_id table
 
-This patch is already in my net-next tree.
+ .../devicetree/bindings/pci/layerscape-pci.txt     |   2 +
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |  31 +++
+ drivers/misc/pci_endpoint_test.c                   |   2 +
+ drivers/pci/controller/dwc/pci-layerscape-ep.c     | 100 ++++++--
+ drivers/pci/controller/dwc/pcie-designware-ep.c    | 255 +++++++++++++++++----
+ drivers/pci/controller/dwc/pcie-designware.c       |  59 +++--
+ drivers/pci/controller/dwc/pcie-designware.h       |  48 +++-
+ 7 files changed, 404 insertions(+), 93 deletions(-)
 
-You need to submit the follow-up fix all by itself, relative to my
-net-next GIT tree.
+-- 
+2.9.5
 
-You must always post patches against the GIT tree that your change
-is targetting, that way you will avoid situations like this.
-
-Thank you.
