@@ -2,166 +2,114 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97324C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE061C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6FD20575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8528A20575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584239064;
-	bh=dQfzPYyCYdN+44zCm9AjIC54G7c/pVQL8vwGNg36xK8=;
+	s=default; t=1584239067;
+	bh=UhPNJ294fjCXqVxkid7P8jGGC9UBtD1iMM/BKx+zfyA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e0goWF+GRIs49LKwxY5PDGnx7hYsZeDfjXYk87vkuETmqFcbTxbcugZvr98NowA8x
-	 U85sPpEJpD7rIhQpXjJOxa8pi7RP1l8cC8K0P8MdQqtwJNOWiMQ30BJ0sf0+XC+b6t
-	 T6qRPB4bB87h1MDhruR78xMDmqdIId4D8IRmLMAM=
+	b=wNAbaCRwCYITA+3EXUNHwUJ2TrHCsdy2KD/87HuquisHECvi9GLFGBwtB1VSUq9a3
+	 Ey4km/OSJJSC8Bhipolg/WTHqSbj1oCNNYZm2V4EA2dlY/4TIH//nRox+jO92AeIeP
+	 0NKOyaaVODEutlvB+J1wbb6SsSOJW+4sJcBtLjJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgCOCYT (ORCPT
+        id S1727841AbgCOCYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39098 "EHLO mail.kernel.org"
+        Sat, 14 Mar 2020 22:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727917AbgCOCYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727693AbgCOCYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 14 Mar 2020 22:24:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+Received: from earth.universe (dyndsl-095-033-168-153.ewe-ip-backbone.de [95.33.168.153])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0CDC2073E;
-        Sat, 14 Mar 2020 11:20:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9510020788;
+        Sat, 14 Mar 2020 18:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584184825;
-        bh=dQfzPYyCYdN+44zCm9AjIC54G7c/pVQL8vwGNg36xK8=;
+        s=default; t=1584209051;
+        bh=UhPNJ294fjCXqVxkid7P8jGGC9UBtD1iMM/BKx+zfyA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ztNmQ9imaYg944LP2Tp1jJ8ZgvjqCngYPQRGC11tXYfpCbCRmX3lG6VlrNhesKoiL
-         2jq4LXNkX4Yb0W7o68AWIZup5z+o12xuG9ESxbf7yoT1mGRh7uQotFPOSRNMjiMtiy
-         zqzD4xyg/t8ifygN/+2fSg+esmPPWYBk9U4Jz0X0=
-Date:   Sat, 14 Mar 2020 12:20:22 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ruslan Bilovol <ruslan.bilovol@gmail.com>
-Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        bodong@mellanox.com, ddutile@redhat.com, rbilovol@cisco.com
-Subject: Re: [PATCH v3 1/4] PCI: sysfs: Define device attributes with
- DEVICE_ATTR*
-Message-ID: <20200314112022.GA53794@kroah.com>
-References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190815153352.86143-2-skunberg.kelsey@gmail.com>
- <CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com>
+        b=lGMT6Zjq+9MI4uKGs/48pJCp19OHsF/Zxuy5tfnv7IWYCnZFUfpZRWijw01yV9kbg
+         xVQFYsqaBWqq5Oipuhuw7Cpp/V9wHrqgJe7hog3KYAE4rxhAXyW5/Bmr0jyx7VNNQg
+         BGS9zRLu90M7rF9Np84xdrydH/jWfNAzUHWEEolo=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 58A193C0C82; Sat, 14 Mar 2020 19:04:09 +0100 (CET)
+Date:   Sat, 14 Mar 2020 19:04:09 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
+ SYSCON reboot-mode bindings
+Message-ID: <20200314180409.5nbnrajtf4q7rriu@earth.universe>
+References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+ <20200312211438.GA21883@bogus>
+ <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lztyclr74vqeyf6d"
 Content-Disposition: inline
-In-Reply-To: <CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com>
+In-Reply-To: <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 12:51:47PM +0200, Ruslan Bilovol wrote:
-> On Thu, Aug 15, 2019 at 7:01 PM Kelsey Skunberg
-> <skunberg.kelsey@gmail.com> wrote:
-> >
-> > Defining device attributes should be done through the helper
-> > DEVICE_ATTR_RO(), DEVICE_ATTR_WO(), or similar. Change all instances using
-> > __ATTR* to now use its equivalent DEVICE_ATTR*.
-> >
-> > Example of old:
-> >
-> > static struct device_attribute dev_name_##_attr=__ATTR_RO(_name);
-> >
-> > Example of new:
-> >
-> > static DEVICE_ATTR_RO(_name);
-> >
-> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > ---
-> >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
-> >  1 file changed, 27 insertions(+), 32 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 965c72104150..8af7944fdccb 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
-> >         }
-> >         return count;
-> >  }
-> > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-> > -                                                       (S_IWUSR|S_IWGRP),
-> > -                                                       NULL, dev_rescan_store);
-> > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
-> >
-> >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> >                             const char *buf, size_t count)
-> > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> >                 pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
-> >         return count;
-> >  }
-> > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
-> > -                                                       (S_IWUSR|S_IWGRP),
-> > -                                                       NULL, remove_store);
-> > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
-> > +                                 remove_store);
-> >
-> >  static ssize_t dev_bus_rescan_store(struct device *dev,
-> >                                     struct device_attribute *attr,
-> > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
-> >         }
-> >         return count;
-> >  }
-> > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
-> > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
-> 
-> This patch renamed 'rescan' to 'bus_rescan' and broke my userspace application.
-> There is also mismatch now between real functionality and documentation
-> Documentation/ABI/testing/sysfs-bus-pci which still contains old "rescan"
-> descriptions.
-> 
-> Another patch from this patch series also renamed 'rescan' to 'dev_rescan'
-> 
-> Here is a comparison between two stable kernels (with and without this
-> patch series):
-> 
-> v5.4
-> # find /sys -name '*rescan'
-> /sys/devices/pci0000:00/0000:00:01.2/dev_rescan
-> /sys/devices/pci0000:00/0000:00:01.0/dev_rescan
-> /sys/devices/pci0000:00/0000:00:04.0/dev_rescan
-> /sys/devices/pci0000:00/0000:00:00.0/dev_rescan
-> /sys/devices/pci0000:00/pci_bus/0000:00/bus_rescan
-> /sys/devices/pci0000:00/0000:00:01.3/dev_rescan
-> /sys/devices/pci0000:00/0000:00:03.0/dev_rescan
-> /sys/devices/pci0000:00/0000:00:01.1/dev_rescan
-> /sys/devices/pci0000:00/0000:00:02.0/dev_rescan
-> /sys/devices/pci0000:00/0000:00:05.0/dev_rescan
-> /sys/bus/pci/rescan
-> 
-> v4.19
-> # find /sys -name '*rescan'
-> /sys/devices/pci0000:00/0000:00:01.2/rescan
-> /sys/devices/pci0000:00/0000:00:01.0/rescan
-> /sys/devices/pci0000:00/0000:00:04.0/rescan
-> /sys/devices/pci0000:00/0000:00:00.0/rescan
-> /sys/devices/pci0000:00/pci_bus/0000:00/rescan
-> /sys/devices/pci0000:00/0000:00:01.3/rescan
-> /sys/devices/pci0000:00/0000:00:03.0/rescan
-> /sys/devices/pci0000:00/0000:00:01.1/rescan
-> /sys/devices/pci0000:00/0000:00:02.0/rescan
-> /sys/devices/pci0000:00/0000:00:05.0/rescan
-> /sys/bus/pci/rescan
-> 
-> Do we maintain this kind of API as non-changeable?
 
-Yeah, that's a bug and should be fixed, sorry for missing that on
-review.
+--lztyclr74vqeyf6d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Kelsey, can you fix this up?
+Hi,
 
-thanks,
+On Fri, Mar 13, 2020 at 04:02:31PM +0300, Sergey Semin wrote:
+> On Thu, Mar 12, 2020 at 04:14:38PM -0500, Rob Herring wrote:
+> > On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronic=
+s.ru wrote:
+> > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > Optional regmap property will be used to refer to a syscon-controller
+> > > having a reboot tolerant register mapped.
+> >=20
+> > NAK. It should simply be a child node of the 'syscon-controller'.
+>=20
+> Hm, It's dilemma. The driver maintainer said ack, while you
+> disagree. So the code change will be merged while the doc-part
+> won't?
 
-greg k-h
+FWIW I do not merge with bindings being NAK'd by Rob.
+
+-- Sebastian
+
+--lztyclr74vqeyf6d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5tHI4ACgkQ2O7X88g7
++poY6Q/8C31JO6yaOpuYy3gpP+cvQDk+qcMDKREcMJ2a0IweUsYQIjqb9YogeFYn
+AGXWI8mro35GAgPbKr79toHgily7PT+bMBSFZxqv0oHG6uQW7EPMxTTwIbpN5mk9
+3iJnWdp/gLXXqM8jvUh3nMOGeA+WXHorxpG9Tf0f2yGD7fhir7o3mIGNFaXjahgS
+I2uV16ESz6+10+fa2iCCPEfv6LBx/azfGDF9YmD0j61fn5V57S+nWbs8foLmucbC
+264b6O82tqYq9+tu+GEWL3E/2epVLLNMLpZZnptSK1F/F5qoQR2lBeZ3t0nS28rB
+zVRh7kVxs1KudZOITmLfF68AXdCASbuk9HMdL+qC1covhyQvEDjbJI3Npjb3kmyX
+O9LIrfBPxpnxuFDCsnKJedPcJ5lZqwGqnpttGdXGf1Nr0TWDBU8IwRVj0YoNF0xF
+QLCFq9O4s8n/DQXM8wpqi0hT1SFDJ6GaVagqgvaBURQsrJEweKX3Vrnzus3d0ocA
+1qx476q34aQINOL0VqjRuaCCo1VtT78p8DE9UKGa832eo2lu2i67gcCe0rFv2HC9
+K9JtpSJfVZfuUVy2bppD+K6f/0uofeZmcAFmzHfFmJXNREtsnv9JMzNwoRcvJiBa
+dQgjX0+DSis/TrOupSJp157LauxG79beDRJ2o14ly9c+uVDdMVc=
+=9xPE
+-----END PGP SIGNATURE-----
+
+--lztyclr74vqeyf6d--
