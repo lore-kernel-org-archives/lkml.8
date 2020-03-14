@@ -2,101 +2,142 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967D8C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632FCC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7873E20637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3192720637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="ftBgpQu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbgCOCS3 (ORCPT
+        id S1727792AbgCOCS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:18:29 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:42224 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbgCOCS3 (ORCPT
+        Sat, 14 Mar 2020 22:18:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36913 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727520AbgCOCS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:18:29 -0400
-X-Greylist: delayed 2387 seconds by postgrey-1.27 at vger.kernel.org; Sat, 14 Mar 2020 22:18:27 EDT
-Received: from relay10.mail.gandi.net (unknown [217.70.178.230])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 27F5B3A3405;
-        Sat, 14 Mar 2020 12:26:29 +0000 (UTC)
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C566A240009;
-        Sat, 14 Mar 2020 12:24:55 +0000 (UTC)
-Date:   Sat, 14 Mar 2020 13:24:55 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ran Bi <ran.bi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        YT Shen <yt.shen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Flora Fu <flora.fu@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v3 0/4] Add Support for MediaTek MT2712 RTC
-Message-ID: <20200314122455.GC4518@piout.net>
-References: <20200226051303.22560-1-ran.bi@mediatek.com>
+        Sat, 14 Mar 2020 22:18:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p14so7719387pfn.4
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 19:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=d5M5DPd0RI2rczhP4P91gPN3FdPDlZFf0L0WRN91en4=;
+        b=ftBgpQu/ef2KodsvtSBhktXBWOQD4w9838z0rkLa+o4/07RNwOHKopdPqSn8ckau9l
+         WdZEmfHBs4x2qhwM+8cgBdHQR2Esicxravh9cL1UcN4dDQCZhyytm+THZnb6xjdJR6PQ
+         Jte/OP6iyl2N5LeE/63/taq/zteoeqywc4lVRlzKTCsUgr12Y7mHT/yk4pMBlt5u2rGC
+         Btpa9qUhLSHJCcXsON5aVTv5XGoHLeCZMHo57RCdN39ZOB7fv6sslQFQ8FzJOHcSUlsY
+         e9Y94BBnVLDMSjA7RsS+toQmJEpyPhqa8jhVUPOv6F3bqIfJU5/p0gwhxwQdBzK9eoV7
+         twiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d5M5DPd0RI2rczhP4P91gPN3FdPDlZFf0L0WRN91en4=;
+        b=fBnvqUEbg6Xr3AW3fMYfFibR0xOlcKQbNItgzu3f23UwAvjQC8sA8LAp5uLs2hDv2/
+         GgI3guJ8mT0NgLngkWW4c1FnURn3enFxqqQjZDkMatv39YwK71XvlirEcQyxK4N1nXpT
+         mf7b/Jju+WSDqB2lhT8uRmnD7WtQ4bmN3xVbkzwQrCGW3pdslmGrNatkeChUO4ccPhgi
+         FMlkCfQLcpayYUBzo1so75+vYgbsCa5eJPIHGuYt1ELB4oSsk5COsHC6EXdifQQHQJaf
+         XbUshkxjQHN9PT6w28vUPkqAeC/kGtH6RJeZPmsoeXxAYXdQleruY4lj0ClhelM3iRIr
+         BB0Q==
+X-Gm-Message-State: ANhLgQ2lw6mrHWPOed2pLMh5rnSeDtGL44aTYkIIx/FBunLAW7yexWrG
+        /iyaLETEZbRvNlvGjKXzH9qVlJL+wLY=
+X-Google-Smtp-Source: ADFU+vus4vyzIYl9CFaEFiSMQ3/xkopLUxwv+ptaZRMSeLor25vsGi8XSvzH8is+QFcumbpMiK4Xpg==
+X-Received: by 2002:a62:1bd6:: with SMTP id b205mr17822879pfb.242.1584159158923;
+        Fri, 13 Mar 2020 21:12:38 -0700 (PDT)
+Received: from localhost (c-73-170-36-70.hsd1.ca.comcast.net. [73.170.36.70])
+        by smtp.gmail.com with ESMTPSA id g18sm14106109pfh.174.2020.03.13.21.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 21:12:38 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 21:12:37 -0700
+From:   Sandeep Patil <sspatil@android.com>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [EXTERNAL] Re: [PATCH v4 2/4] power_supply: Add additional
+ health properties to the header
+Message-ID: <20200314041237.GA121329@google.com>
+References: <20200116175039.1317-1-dmurphy@ti.com>
+ <20200116175039.1317-3-dmurphy@ti.com>
+ <20200117010658.iqs2zpwl6bsomkuo@earth.universe>
+ <20200306235548.GA187098@google.com>
+ <20200310213050.si7gcr2wbmjgr7jf@earth.universe>
+ <de919edb-79b3-82ec-f55c-31a127d6c751@ti.com>
+ <66b2ac86-8513-b540-8a2c-c2ebef4124dd@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226051303.22560-1-ran.bi@mediatek.com>
+In-Reply-To: <66b2ac86-8513-b540-8a2c-c2ebef4124dd@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/02/2020 13:12:59+0800, Ran Bi wrote:
-> This patchset add support to MT2712 RTC. MT2712 RTC is a SoC based RTC
-> with different architecture compared to MT7622 RTC.
+On Wed, Mar 11, 2020 at 11:43:00AM -0500, Ricardo Rivera-Matos wrote:
+> Sebastian
 > 
-> Changes in V3:
-> 1. change struct mt2712_rtc
-> 2. use 100 as year offset
-> 3. change irq handle thread
-> 4. remove useless rtc time check
-> 5. not modify struct rtc_time in set_time/set_alarm functions
-> 6. modify rtc init function
-> 7. add power lost flag for get_time/set_time functions
-> 8. add .alarm_irq_enable callback
-> 9. set rtc->range_min and rtc->range_max to do range checking
-> 10. use fixed driver name
-> 
-> Changes in V2:
-> 1. change minimum year from 1968 to 2000
-> 2. fix lock usage
-> 3. stop to calculate useless day of week
-> 4. stop to set default date after init
-> 5. change the prefix of functions
-> 6. use devm_request_threaded_irq() to replace request_threaded_irq()
-> 7. add mt2712 rtc related files into MAINTAINERS
-> 
-> Ran Bi (4):
->   bindings: rtc: add bindings for MT2712 RTC
->   rtc: add support for the MediaTek MT2712 RTC
->   arm64: dts: add RTC nodes for MT2712
->   MAINTAINERS: add MT2712 RTC files
-> 
+> On 3/11/20 6:29 AM, Dan Murphy wrote:
+> > Sebastian
+> > 
+> > On 3/10/20 4:30 PM, Sebastian Reichel wrote:
+> > > Hi Sandeep,
+> > > 
+> > > On Fri, Mar 06, 2020 at 03:55:48PM -0800, Sandeep Patil wrote:
+> > > > On Fri, Jan 17, 2020 at 02:06:58AM +0100, Sebastian Reichel wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > On Thu, Jan 16, 2020 at 11:50:37AM -0600, Dan Murphy wrote:
+> > > > > > Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+> > > > > > 
+> > > > > > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > > > > > ---
+> > > > > Looks good. But I will not merge it without a user and have comments
+> > > > > for the driver.
+> > > > Android has been looking for these properties for a while now [1].
+> > > > It was added[2] when we saw that the manufacturers were
+> > > > implementing these
+> > > > properties in the driver. I didn't know the properties were
+> > > > absent upstream
+> > > > until yesterday. Somebody pointed out in our ongoing effort to
+> > > > make sure
+> > > > all core kernel changes that android depends on are present upstream.
+> > > > 
+> > > > I think those values are also propagated in application facing APIs in
+> > > > Android (but I am not sure yet, let me know if that's something
+> > > > you want
+> > > > to find out).
+> > > > 
+> > > > I wanted to chime in and present you a 'user' for this if that helps.
+> > > With user I meant an upstream kernel driver, which exposes the
+> > > values. But thanks for the pointer. This should be mentioned in
+> > > the patch description, also the fact that the status values are
+> > > directly taken from JEITA spec.
+> > 
+> > I mentioned the JEITA in the cover letter but I guess you would like the
+> > description in the commit message as well
+> > 
+> > Dan
+> > 
+> > 
+> I have added a note mentioning that the properties are taken from the JEITA
+> spec in the commit message and listing the bq2515x_charger driver as a user.
+> I am waiting for feedback on my other patches in the series before sending
+> you v5 patches.
 
-Applied 1,2 and 4, thanks!
+Ricardo, I'll appreciate if you CC me if/when you send the v5 and followup.
+I want to track this series so we can uncheck yet another out-of-tree
+dependency that Android has.
 
+Thanks for the quick followup.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+- ssp
