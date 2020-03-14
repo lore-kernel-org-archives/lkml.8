@@ -2,109 +2,137 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A010C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6232CC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 232A32076D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2302076D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:46:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kLFzp45z"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dU2kijWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbgCOBqG (ORCPT
+        id S1727556AbgCOBq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:46:06 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4222 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgCOBqF (ORCPT
+        Sat, 14 Mar 2020 21:46:58 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:45012 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726847AbgCOBq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:46:05 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e6d88ae0000>; Sat, 14 Mar 2020 18:45:18 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 14 Mar 2020 18:46:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 14 Mar 2020 18:46:05 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 15 Mar
- 2020 01:46:04 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 15 Mar 2020 01:46:04 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.175.141]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e6d88dc0002>; Sat, 14 Mar 2020 18:46:04 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v4 1/8] arm64: tegra: Fix sor powergate clocks and reset
-Date:   Sat, 14 Mar 2020 18:45:59 -0700
-Message-ID: <1584236766-24819-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584236766-24819-1-git-send-email-skomatineni@nvidia.com>
-References: <1584236766-24819-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Sat, 14 Mar 2020 21:46:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584236817; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=VXbg0PkR8DzxPJz/MiykCW0CnZd/L0YGnzp2Lz0Y0eE=; b=dU2kijWkfofioMrxupypsc3dIaHRj2wxU8BetvrDbprYWehffAm0fMX0mqChvGW9PkmOBCqA
+ fXCkR+CuP7pllDzL0X2zFjmiFs76GFxAn+qT9xL7rHE18rZuVkUaBOQjbKXCr5KPLL1Eg5kf
+ xZLebyKfY8VUPLSS0Lg34MFBYHE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6d268b.7fb83f309a40-smtp-out-n01;
+ Sat, 14 Mar 2020 18:46:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6AE8FC432C2; Sat, 14 Mar 2020 18:46:35 +0000 (UTC)
+Received: from [192.168.0.104] (unknown [183.82.137.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1366FC433CB;
+        Sat, 14 Mar 2020 18:46:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1366FC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v5 3/5] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
+ <1582540703-6328-4-git-send-email-tdas@codeaurora.org>
+ <20200224184201.GA6030@bogus>
+ <eec22330-2bf4-f4f5-3d28-6b69aa71f992@codeaurora.org>
+ <CAL_JsqKRr3aOpcbPOtkArxnnJOBd-XaUGRVesR_CnA11pFHYXQ@mail.gmail.com>
+ <158267707817.177367.4165827948994155128@swboyd.mtv.corp.google.com>
+ <CAL_JsqJiB08vtDKP18Xzdzan-2TFVxJJ-rFgvXsqVHKB5-L18g@mail.gmail.com>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <888d1371-2eea-1cf2-5633-715fb047bbbb@codeaurora.org>
+Date:   Sun, 15 Mar 2020 00:16:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584236718; bh=PTc2SyRS9NP+68XdMh+c6cj6nLmKTNHZwxALx6dnzdM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=kLFzp45zhZwEq1wWj+FOe8Bu5pDofUz0uTd3bOzNMvK+xHa2Iuho9C77N5S7JDKw9
-         ZFjLIYP+guGkOym4oRFnaORuALZEKA6ql6sOE6Mk+hWgRRFzOE7O9DhrwQ7tO2Dsho
-         /yUvLRfJpHXQhrMMwzUKJium93zysGfrrANEsAde1W4IotBu+/AFWmDyMSROiq0rHZ
-         ktUSDjfwWbBscCCWdZBfASviLV/XnIvZSG4ZRqpdPsAtgMnD3+7NyprsFSWLSqBjBe
-         Fd2ZyeZKU1lW0k5SjqWMhR6zHY2IGPbaaqUXNW7I7i/z6zInuiQf4B6idj0fiJ+LEm
-         ixzdclHdf52lQ==
+In-Reply-To: <CAL_JsqJiB08vtDKP18Xzdzan-2TFVxJJ-rFgvXsqVHKB5-L18g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 device tree lists csi clock and reset under SOR powergate
-node.
+I have combined all the bindings in the same patch to avoid any YAML 
+dependency.
 
-But Tegra210 has csicil in SOR partition and csi in VENC partition.
+On 2/26/2020 7:40 PM, Rob Herring wrote:
+> On Tue, Feb 25, 2020 at 6:31 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>>
+>> Quoting Rob Herring (2020-02-25 05:58:19)
+>>> On Mon, Feb 24, 2020 at 11:49 PM Taniya Das <tdas@codeaurora.org> wrote:
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>> On 2/25/2020 12:12 AM, Rob Herring wrote:
+>>>>
+>>>>>
+>>>>> My bot found errors running 'make dt_binding_check' on your patch:
+>>>>>
+>>>>> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+>>>>> Error: Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dts:21.26-27 syntax error
+>>>>> FATAL ERROR: Unable to parse input tree
+>>>>> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml' failed
+>>>>> make[1]: *** [Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml] Error 1
+>>>>> Makefile:1263: recipe for target 'dt_binding_check' failed
+>>>>> make: *** [dt_binding_check] Error 2
+>>>>>
+>>>>> See https://patchwork.ozlabs.org/patch/1242999
+>>>>> Please check and re-submit.
+>>>>>
+>>>>
+>>>> The error shows syntax error at line 21, below is the example.dts from
+>>>> my tree and would compile for me as I have the dependency of the include
+>>>> file when I compile.
+>>>
+>>> The header should be part of this patch if possible.
+>>>
+>>
+>> Are patches tested in isolation instead of in series? I see this define
+>> in the first patch in this series so it seems like automated checkers
+>> should be able to apply the patches in series and see if they still
+>> work, unless that is broken somehow.
+> 
+> The series should be applied, but it's all very fragile. It's going to
+> stay that way until someone else writes and maintains the applying
+> patches to git logic.
+> 
+> In any case, the header is part of the binding (being an ABI) not the
+> driver, so it belongs in the binding patch.
+> 
+> 
+> However, in this case, the problem was pointed out in v4 to be a typo
+> in GCC_MSS_MFAB_AXIS_CLK.
+> 
+> Rob
+> 
 
-So, this patch includes fix for sor powergate node.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 64c46ce..d0eff92 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -796,7 +796,9 @@
- 			pd_sor: sor {
- 				clocks = <&tegra_car TEGRA210_CLK_SOR0>,
- 					 <&tegra_car TEGRA210_CLK_SOR1>,
--					 <&tegra_car TEGRA210_CLK_CSI>,
-+					 <&tegra_car TEGRA210_CLK_CILAB>,
-+					 <&tegra_car TEGRA210_CLK_CILCD>,
-+					 <&tegra_car TEGRA210_CLK_CILE>,
- 					 <&tegra_car TEGRA210_CLK_DSIA>,
- 					 <&tegra_car TEGRA210_CLK_DSIB>,
- 					 <&tegra_car TEGRA210_CLK_DPAUX>,
-@@ -804,7 +806,6 @@
- 					 <&tegra_car TEGRA210_CLK_MIPI_CAL>;
- 				resets = <&tegra_car TEGRA210_CLK_SOR0>,
- 					 <&tegra_car TEGRA210_CLK_SOR1>,
--					 <&tegra_car TEGRA210_CLK_CSI>,
- 					 <&tegra_car TEGRA210_CLK_DSIA>,
- 					 <&tegra_car TEGRA210_CLK_DSIB>,
- 					 <&tegra_car TEGRA210_CLK_DPAUX>,
 -- 
-2.7.4
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
+--
