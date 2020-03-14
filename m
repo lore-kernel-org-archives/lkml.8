@@ -2,109 +2,153 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF68C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE63C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 095FC20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D257B20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kie63I7d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bG5aihcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgCODcO (ORCPT
+        id S1727265AbgCODdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:32:14 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:39447 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCODcO (ORCPT
+        Sat, 14 Mar 2020 23:33:52 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37310 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbgCODdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:32:14 -0400
-Received: by mail-qv1-f65.google.com with SMTP id v38so2933623qvf.6;
-        Sat, 14 Mar 2020 20:32:13 -0700 (PDT)
+        Sat, 14 Mar 2020 23:33:52 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w13so14074248oih.4
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 20:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xbsrrOUuOCaew5V0EWs0+B+Jp0347VeucEvJJNOWq4g=;
-        b=Kie63I7dqrJ+CeU89vuO7pifO87HKB1RFY03QprPlryaQu20cucHqdDr/NbbN72R8s
-         Kkmvk5CRC3phlToat4QVCDWjgXXwgvzE0UTFdnza6TvBdPjp4i70j/RMi4Zk2W16/TOO
-         RrHX+5KF9kSSPz4vg5YB0DL+DIu1tE4/dgwNbhQVSUjdZSuz5e8nVZtodHQf+ExELFBc
-         xbbWEwa/8b1QyWp2r2NGH8RnsTwH/1dRv/Cybdzfdq0rjeEtin+4/YnwQlmGCzAAP+9v
-         JZIEs4tFktLsEnjHWRMTSvz6uVCekL3ib5cJzYddrnsOG92x0kS5JAFd6t/ep08CfkGD
-         s4+A==
+        h=message-id:subject:from:to:date:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=IEb+NSlMbsrypsWmkX+nuM5EY+ct1whAxHi5by7wFZk=;
+        b=bG5aihcWf/+r0MsUj2isrV4f3QSpFroQialqMuYStk5Nevs/PLSH6f2w49GWMx/oP6
+         G2MdC00xkDVCEADr0Rjp6z5PRXrNvhCBgrvybUrvH4yVOZZh4GS9qNPsTlUlZ7B+4Fev
+         9VT71bq8ZUBkWy2isWKKxhVd2GqnDj/abb8FkanwvIqVSVBlYXXPBrO3P9qaOUKvrAOV
+         5x9sgvgdOlhXYH8lPEK7hfNHKkhKgf5w6dLTb/V0Ns1TIfcsJFplgHxrVOaNvSsa2pWy
+         Sv/vGKqaEOmcV4kIUnJaUSZQU6+cumfyNoLy6T3rP8xyGpb9jJXOF0Y+h07gSmgKJqlO
+         tNCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xbsrrOUuOCaew5V0EWs0+B+Jp0347VeucEvJJNOWq4g=;
-        b=UZ8BdBox6MPgSziGZZqnjoJlRVIn7Hg6irmEkk11I74ZE5jMIuST4f5Xacml3B93xx
-         mdHyHa1za09X2QeYTe/j+BbdyPDErSs1y8DHckFFjHNCgfy3rNhDEOlARhfvsrYpS2B3
-         lH1j7CtSSQbwYfBYB0ovTTYpU2IfastDURem0hlNnC1uzyz+0Jmwk9YaBmbE4g5egzkH
-         O+skMAHpy2FZFqEjFE5Lm1G7UsfFcbFKj4WGUKTLxpoXFgI2NY+ox2ENJIsVGsebAB0R
-         k4qagwTxx30jstql0GXvaxtnV4+Mx2hCobsnMDvsF/oIBlnz0YCf2Tun96svDkxvf2KM
-         pQ/w==
-X-Gm-Message-State: ANhLgQ2n+rqUKgR9sfLbUK14QNToBQexcVXKEIg7k4o1b7bx0+lW9Yes
-        8X+Z+H+2Qa0fEzUIc44NEa7h9cnm4kU=
-X-Google-Smtp-Source: ADFU+vuNd6Tp1XUCLCGd+43lz8+qZo3gUwgEb1CVKJs42QFxX571L6En50gRptDRWtjpX1EtuWwuSQ==
-X-Received: by 2002:a17:902:9308:: with SMTP id bc8mr17473083plb.268.1584168950505;
-        Fri, 13 Mar 2020 23:55:50 -0700 (PDT)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id y18sm734349pge.73.2020.03.13.23.55.49
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IEb+NSlMbsrypsWmkX+nuM5EY+ct1whAxHi5by7wFZk=;
+        b=S5Nfydxtt42MYdfxw71kJfcJgQUzLHN7SdvUlHyi1RMEkLr4v/t8oGQcOtpXDyTaVq
+         uS10BzC4S1JDyCn1ylV6RVvIXARL9sEGpByrTcT5Wm3uZ6DJdeXDgiCifYg+7OgiyLqL
+         Y/LxriIfm0N5rBaYzcVmZMxGDY4hVAuAH4aB7jJ0TXIEIX7QNcH+dukuhSDiw1IpOep+
+         u7vSa3cmXdGx+pZVWSBdxXsLSFX9FJH9NcL4pogoD++XIHEyL3ZK9swoB8HzU483TshB
+         K1wqWkHEQkltJt1GN/EIfJUaeDxcOGIWBvqtPl5yL4rCPyfS0b6kH73r9ks5MkGGG+2a
+         5g2A==
+X-Gm-Message-State: ANhLgQ3abCGCFgSom2be3vdlAnKcWiqwVmafJIUtBTIYZSQ2HN1sz/ZW
+        ygrsI0lIGrhJ/heTFf1mypYDS2UdJ+o=
+X-Google-Smtp-Source: ADFU+vvWDA/UB5PKw9LjOeGxLGURwiON+mQeVoXZ4PlIhdgEdD1da3aGdyT6lGwiv2m6wxkHaHO2lA==
+X-Received: by 2002:a17:90a:c715:: with SMTP id o21mr15127998pjt.160.1584185301961;
+        Sat, 14 Mar 2020 04:28:21 -0700 (PDT)
+Received: from Shreeya-Patel ([113.193.35.211])
+        by smtp.googlemail.com with ESMTPSA id 8sm21886437pfp.67.2020.03.14.04.28.18
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 23:55:49 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 12:25:48 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        John Crispin <john@phrozen.org>
-Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
-Message-ID: <20200314065548.GB5285@afzalpc>
-References: <20200304203144.GA4323@alpha.franken.de>
- <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
- <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
- <20200311090308.GA5060@afzalpc>
- <20200311104217.GA10615@alpha.franken.de>
- <20200311131210.GA5115@afzalpc>
- <20200311160307.GA15464@alpha.franken.de>
- <20200311163249.GA4984@afzalpc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311163249.GA4984@afzalpc>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+        Sat, 14 Mar 2020 04:28:21 -0700 (PDT)
+Message-ID: <4deeaef8f8e0f23a9adbfd7d98840624e2994cf2.camel@gmail.com>
+Subject: Re: [Outreachy kernel] [PATCH v2] Staging: rtl8723bs: rtw_mlme:
+ Remove unnecessary conditions
+From:   Shreeya Patel <shreeya.patel23498@gmail.com>
+To:     Joe Perches <joe@perches.com>, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com, sbrivio@redhat.com,
+        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
+        hverkuil@xs4all.nl, Larry.Finger@lwfinger.net
+Date:   Sat, 14 Mar 2020 16:58:16 +0530
+In-Reply-To: <25a1aca2c993ecb70ba7cd9c9e38bce9170a98b0.camel@perches.com>
+References: <20200313102912.17218-1-shreeya.patel23498@gmail.com>
+         <25a1aca2c993ecb70ba7cd9c9e38bce9170a98b0.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 2020-03-13 at 14:21 -0700, Joe Perches wrote:
 
-On Wed, Mar 11, 2020 at 10:02:49PM +0530, afzal mohammed wrote:
-> On Wed, Mar 11, 2020 at 05:03:07PM +0100, Thomas Bogendoerfer wrote:
+Hi Joe,
 
-> > in your patch. How can we make sure they are unique enough for the use
-> > case ? I guess using handler as dev_id does a better job here.
+> On Fri, 2020-03-13 at 15:59 +0530, Shreeya Patel wrote:
+> > Remove unnecessary if and else conditions since both are leading to
+> > the
+> > initialization of "phtpriv->ampdu_enable" with the same value.
+> > Also, remove the unnecessary else-if condition since it does
+> > nothing.
 > 
-> There was one prior similar usage using string pointers, another way i
-> have seen is using irq no. itself, 
+> []
+> > diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> > b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> 
+> []
+> > @@ -2772,16 +2772,7 @@ void rtw_update_ht_cap(struct adapter
+> > *padapter, u8 *pie, uint ie_len, u8 channe
+> >  
+> >  	/* maybe needs check if ap supports rx ampdu. */
+> >  	if (!(phtpriv->ampdu_enable) && pregistrypriv->ampdu_enable ==
+> > 1) {
+> > -		if (pregistrypriv->wifi_spec == 1) {
+> > -			/* remove this part because testbed AP should
+> > disable RX AMPDU */
+> > -			/* phtpriv->ampdu_enable = false; */
+> > -			phtpriv->ampdu_enable = true;
+> > -		} else {
+> > -			phtpriv->ampdu_enable = true;
+> > -		}
+> > -	} else if (pregistrypriv->ampdu_enable == 2) {
+> > -		/* remove this part because testbed AP should disable
+> > RX AMPDU */
+> > -		/* phtpriv->ampdu_enable = true; */
+> > +		phtpriv->ampdu_enable = true;
+> 
+> This isn't the same test.
+> 
+> This could be:
+>  	if ((!(phtpriv->ampdu_enable) && pregistrypriv->ampdu_enable ==
+> 1)) ||
+> 	    pregistrypriv->ampdu_enable == 2)
+> 		phtpriv->ampdu_enable = true;
+> 
+> Though it is probably more sensible to just set
+> phtpriv->ampdu_enable without testing whether or
+> not it's already set:
+> 
+> 	if (pregistrypriv->ampdu_enable == 1 ||
+> 	    pregistrypriv->ampdu_enable == 2)
+> 		phtpriv->ampdu_enable = true;
 
-Huh, that was a total nonsense statement from me, considering the
-expectation of a unique dev_id, i don't know what i was thinking at
-that time, though you mentioned about uniqueness.
+But the else-if block which I removed in v2 of this patch had nothing
+in the block.
+It was not assigning any value to "phtpriv->ampdu_enable". ( basically
+it was empty and useless)
 
-Regards
-afzal
+Now as per your suggestion if I do the change then the value of
+"phtpriv->ampdu_enable" will be changed to true when we have
+"pregistrypriv->ampdu_enable == 2" condition. But in real it should be
+the same as it was by default coming from the start of the function.
+( This is because the else-if block was empty and doing nothing )
+
+Please let me know if I was able to make you understand my point of
+view here. Also, please correct me if I am wrong.
+
+
+Thanks
+
+
+> 
+> 
+
