@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52145C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B828C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33AB52076A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1775220637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgCOCOM (ORCPT
+        id S1727891AbgCOCOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:14:12 -0400
+        Sat, 14 Mar 2020 22:14:16 -0400
 Received: from mga14.intel.com ([192.55.52.115]:41896 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727754AbgCOCNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:13:39 -0400
-IronPort-SDR: 7Dx4jeO+q7GNQWymEQd0AmGCAljbX3G3jr/R66WE6XbhpgazNs6dFJ9x9+3nV+NdOLcBzCrJcN
- 0AxC0rfZa5FA==
+        id S1727744AbgCOCNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:13:38 -0400
+IronPort-SDR: ec91g7YqAudwWfp540QIr9XBcc6G58vomOvum3iIYQCHrz8CyxpLu9CnFPaN0M5l46M4ey16uq
+ IPjZD04o5JMw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 00:52:17 -0700
-IronPort-SDR: sIDcx8X+9yNrEo0qlSTkO5PF8Ib4uZZZPKiUy7hNOCsuIlyf0SaXWZ+yJnUvsYOjZW35LHnX9T
- N9I1lsUmJncA==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 00:52:04 -0700
+IronPort-SDR: +7QhIa6OG5TdA+1pLZPBQIvwnIurqmL9c+HZwZqJV7JzM6sbE3EvuEnyngT79jQWYeu8C+nlDn
+ Lv43KW7SkTjQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,551,1574150400"; 
-   d="scan'208";a="416537619"
+   d="scan'208";a="416537579"
 Received: from lxy-clx-4s.sh.intel.com ([10.239.43.160])
-  by orsmga005.jf.intel.com with ESMTP; 14 Mar 2020 00:52:12 -0700
+  by orsmga005.jf.intel.com with ESMTP; 14 Mar 2020 00:52:00 -0700
 From:   Xiaoyao Li <xiaoyao.li@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -45,9 +45,9 @@ Cc:     peterz@infradead.org, fenghua.yu@intel.com,
         Jim Mattson <jmattson@google.com>, x86@kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v4 07/10] kvm: vmx: Extend VMX's #AC interceptor to handle split lock #AC happens in guest
-Date:   Sat, 14 Mar 2020 15:34:11 +0800
-Message-Id: <20200314073414.184213-8-xiaoyao.li@intel.com>
+Subject: [PATCH v4 04/10] x86/split_lock: Export handle_user_split_lock()
+Date:   Sat, 14 Mar 2020 15:34:08 +0800
+Message-Id: <20200314073414.184213-5-xiaoyao.li@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200314073414.184213-1-xiaoyao.li@intel.com>
 References: <20200314073414.184213-1-xiaoyao.li@intel.com>
@@ -58,87 +58,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two types of #AC can be generated in Intel CPUs:
- 1. legacy alignment check #AC;
- 2. split lock #AC;
-
-Legacy alignment check #AC can be injected to guest if guest has enabled
-alignemnet check.
-
-when host enables split lock detectin, i.e., sld_warn or sld_fatal,
-there will be an unexpected #AC in guest and intercepted by KVM because
-KVM doesn't virtualize this feature to guest and hardware value of
-MSR_TEST_CTRL.SLD bit stays unchanged when vcpu is running.
-
-To handle this unexpected #AC, treat guest just like host usermode that
-calling handle_user_split_lock():
- - If host is sld_warn, it warns and set TIF_SLD so that __switch_to_xtra()
-   does the MSR_TEST_CTRL.SLD bit switching when control transfer to/from
-   this vcpu.
- - If host is sld_fatal, forward #AC to userspace, the similar as sending
-   SIGBUS.
+In the future, KVM will use handle_user_split_lock() to handle #AC
+caused by split lock in guest. Due to the fact that KVM doesn't have
+a @regs context and will pre-check EFLASG.AC, move the EFLAGS.AC check
+to do_alignment_check().
 
 Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/cpu.h  | 4 ++--
+ arch/x86/kernel/cpu/intel.c | 7 ++++---
+ arch/x86/kernel/traps.c     | 2 +-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 40b1e6138cd5..3fb132ad489d 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4609,6 +4609,12 @@ static int handle_machine_check(struct kvm_vcpu *vcpu)
- 	return 1;
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index ff6f3ca649b3..ff567afa6ee1 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -43,11 +43,11 @@ unsigned int x86_stepping(unsigned int sig);
+ #ifdef CONFIG_CPU_SUP_INTEL
+ extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
+ extern void switch_to_sld(unsigned long tifn);
+-extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
++extern bool handle_user_split_lock(unsigned long ip);
+ #else
+ static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
+ static inline void switch_to_sld(unsigned long tifn) {}
+-static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
++static inline bool handle_user_split_lock(unsigned long ip)
+ {
+ 	return false;
+ }
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 3eeab717a0d0..c401d174c8db 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1102,13 +1102,13 @@ static void split_lock_init(struct cpuinfo_x86 *c)
+ 	sld_state = sld_disable;
  }
  
-+static inline bool guest_cpu_alignment_check_enabled(struct kvm_vcpu *vcpu)
-+{
-+	return vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
-+	       (kvm_get_rflags(vcpu) & X86_EFLAGS_AC);
-+}
-+
- static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+-bool handle_user_split_lock(struct pt_regs *regs, long error_code)
++bool handle_user_split_lock(unsigned long ip)
  {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -4674,9 +4680,6 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		return handle_rmode_exception(vcpu, ex_no, error_code);
+-	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
++	if (sld_state == sld_fatal)
+ 		return false;
  
- 	switch (ex_no) {
--	case AC_VECTOR:
--		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
--		return 1;
- 	case DB_VECTOR:
- 		dr6 = vmcs_readl(EXIT_QUALIFICATION);
- 		if (!(vcpu->guest_debug &
-@@ -4705,6 +4708,27 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
- 		kvm_run->debug.arch.exception = ex_no;
- 		break;
-+	case AC_VECTOR:
-+		/*
-+		 * Reflect #AC to the guest if it's expecting the #AC, i.e. has
-+		 * legacy alignment check enabled.  Pre-check host split lock
-+		 * support to avoid the VMREADs needed to check legacy #AC,
-+		 * i.e. reflect the #AC if the only possible source is legacy
-+		 * alignment checks.
-+		 */
-+		if (!split_lock_detect_on() ||
-+		    guest_cpu_alignment_check_enabled(vcpu)) {
-+			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-+			return 1;
-+		}
-+
-+		/*
-+		 * Forward the #AC to userspace if kernel policy does not allow
-+		 * temporarily disabling split lock detection.
-+		 */
-+		if (handle_user_split_lock(kvm_rip_read(vcpu)))
-+			return 1;
-+		fallthrough;
- 	default:
- 		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
- 		kvm_run->ex.exception = ex_no;
+ 	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+-			    current->comm, current->pid, regs->ip);
++			    current->comm, current->pid, ip);
+ 
+ 	/*
+ 	 * Disable the split lock detection for this task so it can make
+@@ -1119,6 +1119,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+ 	set_tsk_thread_flag(current, TIF_SLD);
+ 	return true;
+ }
++EXPORT_SYMBOL_GPL(handle_user_split_lock);
+ 
+ /*
+  * This function is called only when switching between tasks with
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 0ef5befaed7d..407ff9be610f 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -304,7 +304,7 @@ dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
+ 
+ 	local_irq_enable();
+ 
+-	if (handle_user_split_lock(regs, error_code))
++	if (!(regs->flags & X86_EFLAGS_AC) && handle_user_split_lock(regs->ip))
+ 		return;
+ 
+ 	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
 -- 
 2.20.1
 
