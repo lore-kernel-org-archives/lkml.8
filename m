@@ -2,83 +2,132 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DATE_IN_PAST_12_24,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A88C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D06C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 510DA205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762DE205ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgCOCfv (ORCPT
+        id S1727272AbgCOCfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:35:51 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11649 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726840AbgCOCfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:35:51 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 87C62D1832B87DD2F636;
-        Sat, 14 Mar 2020 18:49:34 +0800 (CST)
-Received: from [127.0.0.1] (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Sat, 14 Mar 2020
- 18:49:33 +0800
-Subject: Re: [PATCH net-next] chcr: remove set but not used variable 'status'
-To:     <ayush.sawal@chelsio.com>, <vinay.yadav@chelsio.com>,
-        <rohitm@chelsio.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>
-References: <20200314101915.25008-1-yuehaibing@huawei.com>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <73fd96bd-efa9-b1a0-68b5-788d590e6d38@huawei.com>
-Date:   Sat, 14 Mar 2020 18:49:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Sat, 14 Mar 2020 22:35:55 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:42570 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgCOCfy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:35:54 -0400
+Received: by mail-il1-f197.google.com with SMTP id j88so10611342ilg.9
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 19:35:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=L3Qm1XVqvMB0vX00p+awtx3rexadT1xpluUKakT4GBU=;
+        b=jBS2RhRlmaAPbA87xhl/B2/YdGIKn1bft/JBtkAHxYT1dOap++U4RYl/tgMEiNqdmB
+         9VSTDkMjbajFbQvXFL+9SOoJbRCdSGXzkcTJmhClk2O887QsWUXbS2eFwMAegz5LkUyw
+         cgILOKa+0m5INNCQlxCoxBabryUkHAqM2lmejC6J808EK/O4sYFfBdYJRiZ4CT0g50QB
+         TZ4c1Fr8RALWmSkYbvZgGNiiZgVnWRL/2q0QBMRHQKbU/Zq4CPD9m2EVrKX/xbQuH1ew
+         isDLJK/8IVx6ohPKJ0gjbROGhhr1YI9kHTuZBUsxWXLNg27XDGloAKg22/aPijO1MrGB
+         btQA==
+X-Gm-Message-State: ANhLgQ0TmaL08ZJ8CWOnYQmyz03YtP55BhSZa2ANYqWeltx/curhQxtD
+        256JGtV3A1HiyFwrPDvYPvDQd6GG8xJ7uY0ZoFPCzcL5Z4sl
+X-Google-Smtp-Source: ADFU+vuCfL/HBvBHvVqlF+T6BmKAq0Ho0VZkVxqEftLOpW/GgD7N2+EtgJJSqyvF5t2AVDihXBz6hj123t2zb8CVIMbJyICLi8j1
 MIME-Version: 1.0
-In-Reply-To: <20200314101915.25008-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a6b:ac01:: with SMTP id v1mr16411922ioe.156.1584176582561;
+ Sat, 14 Mar 2020 02:03:02 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 02:03:02 -0700
+In-Reply-To: <CADG63jC=oy4PTRbw=6=OMdG3nabf3-AdjDKcH4FKJwNg4A-s5g@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007719b805a0ccdaa6@google.com>
+Subject: Re: WARNING: refcount bug in sctp_wfree
+From:   syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>
+To:     anenbupt@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This should apply to net-next, will resend.
+Hello,
 
-On 2020/3/14 18:19, YueHaibing wrote:
-> drivers/crypto/chelsio/chcr_ktls.c: In function chcr_ktls_cpl_set_tcb_rpl:
-> drivers/crypto/chelsio/chcr_ktls.c:662:11: warning:
->  variable status set but not used [-Wunused-but-set-variable]
-> 
-> commit 8a30923e1598 ("cxgb4/chcr: Save tx keys and handle HW response")
-> involved this unused variable, remove it.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/crypto/chelsio/chcr_ktls.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/crypto/chelsio/chcr_ktls.c b/drivers/crypto/chelsio/chcr_ktls.c
-> index f0c3834eda4f..00099e793e63 100644
-> --- a/drivers/crypto/chelsio/chcr_ktls.c
-> +++ b/drivers/crypto/chelsio/chcr_ktls.c
-> @@ -659,10 +659,9 @@ int chcr_ktls_cpl_set_tcb_rpl(struct adapter *adap, unsigned char *input)
->  	const struct cpl_set_tcb_rpl *p = (void *)input;
->  	struct chcr_ktls_info *tx_info = NULL;
->  	struct tid_info *t;
-> -	u32 tid, status;
-> +	u32 tid;
->  
->  	tid = GET_TID(p);
-> -	status = p->status;
->  
->  	t = &adap->tids;
->  	tx_info = lookup_tid(t, tid);
-> 
+syzbot has tested the proposed patch but the reproducer still triggered crash:
+WARNING: refcount bug in sctp_wfree
+
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 1 PID: 8581 at lib/refcount.c:28 refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 8581 Comm: syz-executor.3 Not tainted 5.6.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1ac/0x2d0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
+Code: c7 94 00 d1 88 31 c0 e8 33 1f b3 fd 0f 0b eb 85 e8 2a 4a e0 fd c6 05 4e 70 b1 05 01 48 c7 c7 c0 00 d1 88 31 c0 e8 15 1f b3 fd <0f> 0b e9 64 ff ff ff e8 09 4a e0 fd c6 05 2e 70 b1 05 01 48 c7 c7
+RSP: 0018:ffffc90002c978c8 EFLAGS: 00010246
+RAX: b1721d41aaac4d00 RBX: 0000000000000003 RCX: ffff88809eb123c0
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: 0000000000000003 R08: ffffffff815e16d6 R09: ffffed1015d24592
+R10: ffffed1015d24592 R11: 0000000000000000 R12: ffff8880a7b8c000
+R13: dffffc0000000000 R14: ffff8880a81d4800 R15: ffff8880a81e0d00
+ sctp_wfree+0x4be/0x840 net/sctp/socket.c:9113
+ skb_release_head_state+0xfb/0x210 net/core/skbuff.c:651
+ skb_release_all net/core/skbuff.c:662 [inline]
+ __kfree_skb+0x22/0x1c0 net/core/skbuff.c:678
+ sctp_chunk_destroy net/sctp/sm_make_chunk.c:1454 [inline]
+ sctp_chunk_put+0x17b/0x200 net/sctp/sm_make_chunk.c:1481
+ __sctp_outq_teardown+0x80a/0x9d0 net/sctp/outqueue.c:257
+ sctp_association_free+0x21e/0x7c0 net/sctp/associola.c:339
+ sctp_cmd_delete_tcb net/sctp/sm_sideeffect.c:930 [inline]
+ sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1318 [inline]
+ sctp_side_effects net/sctp/sm_sideeffect.c:1185 [inline]
+ sctp_do_sm+0x3c01/0x5560 net/sctp/sm_sideeffect.c:1156
+ sctp_primitive_ABORT+0x93/0xc0 net/sctp/primitive.c:104
+ sctp_close+0x231/0x770 net/sctp/socket.c:1512
+ inet_release+0x135/0x180 net/ipv4/af_inet.c:427
+ __sock_release net/socket.c:605 [inline]
+ sock_close+0xd8/0x260 net/socket.c:1283
+ __fput+0x2d8/0x730 fs/file_table.c:280
+ task_work_run+0x176/0x1b0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
+ prepare_exit_to_usermode+0x48e/0x600 arch/x86/entry/common.c:195
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x416041
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007fffbe2f3cc0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000000416041
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
+RBP: 0000000000000001 R08: 00ffffffffffffff R09: 00ffffffffffffff
+R10: 00007fffbe2f3da0 R11: 0000000000000293 R12: 000000000076bf20
+R13: 0000000000770850 R14: 0000000000012bfc R15: 000000000076bf2c
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+Tested on:
+
+commit:         1739e95e fix compile err
+git tree:       https://github.com/hqj/hqjagain_test.git sctp_wfree
+console output: https://syzkaller.appspot.com/x/log.txt?x=1239a3dde00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a5295e161cd85b82
+dashboard link: https://syzkaller.appspot.com/bug?extid=cea71eec5d6de256d54d
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
