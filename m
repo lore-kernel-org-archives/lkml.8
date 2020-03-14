@@ -7,71 +7,71 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0DFC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7746C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBD32074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA9F2074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584146429;
-	bh=6XBzNk9f4cBp+6gsTMIq5tmmgeRde+XSt+QOe7pklG8=;
+	s=default; t=1584146559;
+	bh=fMt1LmDe8niq6cjbhyN0NHJJG4Y1yKKZ/AMTwWhYE0A=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ahPSLFgPqG2Qi3wrA4YiOsrs/LQ0yjLs0xKYjudcJUM0i0ybqRHMkvFBHzZw+bPhy
-	 tUWbibAK6KQHxNDQU0COXhwmawcpHwE3us0ihSr55+MJ840JcB2o4cezEko7fJ8SKC
-	 IlyPZ3Nsb4bjCNVwBC2ihTsa+JhEHoZW8Rm0Yqd4=
+	b=kNTzGyTTmIFkqB1u4gMsnzddtnum0udZc2yAn+fB3RZsOCsABUXlST4M5voVjEsMI
+	 7bvKXgYQU9nZEtjb5oPYoY8RizsaK5AQzjiuAK454TkzjNd89ExOo8RbFXwrFG/qel
+	 WvR7B5YaY0ovUG3I11q7/yZEr898UUYMhA9oomWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbgCNAkX (ORCPT
+        id S1727717AbgCNAmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:40:23 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43493 "EHLO
+        Fri, 13 Mar 2020 20:42:38 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33051 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgCNAkX (ORCPT
+        with ESMTP id S1727481AbgCNAmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:40:23 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r7so12514487ljp.10
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:40:21 -0700 (PDT)
+        Fri, 13 Mar 2020 20:42:38 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f13so12542698ljp.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:42:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JqSpkfWgbM1F3EW77t+yz+x0olHI1MIS3rmLQvUjsfY=;
-        b=h0Tz0gWq3PbDuwAlu8mqUD6SjZrPMaRqc/j4UZj9jQmUowcFOJJIi9ZCL8z83J1tXE
-         7Au04VqmCECr7JqBbrxgltGl9GD8U4c5Fd2GyuYbKWoDz44wGtx5f6hrTX4vk7/Z25K2
-         eP89+Og4D6pSQCoVRZqpyW94FiDJOnuSc0uxA=
+        bh=/RwsAxU8WnehWNYnYawqMDWrndD0IlWbUqTUz3Fam9I=;
+        b=Iujf8nmDlOEl8DuY+scdOEaoXNtqE3/87ZkLYwqmOxxEburi8x/PvzjADUkVWiuy6t
+         yu0Mw4qmnFFYOzNVqGfC3HzJwT5Xf66YvEA3e9tIjJ37wHKrLORYFkjcemchA+IRQRdz
+         Nl+7RN1k830zJspW3aLfmSCT4Jr3sv7xVzmX4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JqSpkfWgbM1F3EW77t+yz+x0olHI1MIS3rmLQvUjsfY=;
-        b=kr0zyuVIsdSLASlCpQIEb3azy2Jc1Ml3WPvBS1SCbrqpAD48T6tYlXLjVdB5jTzzF1
-         eWt6id5Ee8+hrEcaJv2qJzgwQIkLmXA/c2TYvzJ79OKsfdDI7/u4LQyFC3+2LEXtiRVd
-         8bqlvEUC5Npm6dS0zSXf8LWL4J2JeIWi/0Pui3cIsRiAFCndB4L5l72HMuiTxQazN39M
-         Gi/xRANYVgdlqWydqfHaBKmlm1vp970e7q74Dr/hk3VoyBX/9OzePya6H/8tOT4OcYZE
-         v9bwuXwsMx3yhfEORPctjuDj4Lma83Q5ckYAy8292G0KxfzqysyWaNPRHjbk7GSIca/0
-         +SVw==
-X-Gm-Message-State: ANhLgQ2m0bEgor2rp3E9TyW89Epcaqne5M6t8PHJA6jp2RsmLd9D/5Wz
-        dTzVqGo4nV50EnIH6MMAXOFKsO6+1Hs=
-X-Google-Smtp-Source: ADFU+vuOIPTrogx32ItSzjOZoa5s5+y/1NTk/C+CFkxSdLXPvMCUC2QApnqDYeByFOjSeCeSH6dxoQ==
-X-Received: by 2002:a2e:9949:: with SMTP id r9mr8216866ljj.135.1584146420366;
-        Fri, 13 Mar 2020 17:40:20 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id r15sm3217009lfp.93.2020.03.13.17.40.19
+        bh=/RwsAxU8WnehWNYnYawqMDWrndD0IlWbUqTUz3Fam9I=;
+        b=BeJ1TSnyJmPmiOeXLjPVl3/riOjHGdPV89nYET6+W3PEsl43VM+lRorksD6q10SSO1
+         Kj+d9k0ZT8EAY9BYyEfOMGsdgjcqMwtTSHBnfJ3PAvJWvezD2IkfTG3Ne2NKNTtchdz5
+         SeqQS1cD2gF/U5M1uRvTtqkXvUz4PmdhEYmdEP1hR8FftcPU52IJXYIy1rMMJKhdGeCr
+         ltR5hGbYaPIwO8lSR/qB6L4QjSH+cW2izKR2JD8aUCIYqU/E+z75mZHCuxZLheXV0Nnx
+         yhbVBsrWw1Bi8DQ66NDfS91+MopNHEOQzrINqEG6BRXG4uR9rIQctdpWVDUKjbuBIdSk
+         djYA==
+X-Gm-Message-State: ANhLgQ3Jvqiq2XEv2tzZs83Xk9Ckp74S1DjAvKHSjxB04JR+8jEQ05fC
+        c/mJxN2EIbzuAAHgG/QdluDi5viT8bk=
+X-Google-Smtp-Source: ADFU+vuKfG9+6c6VdRncJMQQZGO0uXP5n2GqmMv+ZjZ4KP27xsV1DMGwdKCve2VXrJSNgH6Uxdx6Zg==
+X-Received: by 2002:a2e:9bd2:: with SMTP id w18mr4993880ljj.58.1584146555286;
+        Fri, 13 Mar 2020 17:42:35 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id z21sm21786966lfd.67.2020.03.13.17.42.34
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 17:40:19 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id 5so2226332lfr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:40:19 -0700 (PDT)
-X-Received: by 2002:ac2:5508:: with SMTP id j8mr10082934lfk.31.1584146418864;
- Fri, 13 Mar 2020 17:40:18 -0700 (PDT)
+        Fri, 13 Mar 2020 17:42:34 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id b186so9240485lfg.11
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:42:34 -0700 (PDT)
+X-Received: by 2002:ac2:5986:: with SMTP id w6mr9930880lfn.30.1584146554075;
+ Fri, 13 Mar 2020 17:42:34 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200313235303.GP23230@ZenIV.linux.org.uk> <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
- <20200313235357.2646756-20-viro@ZenIV.linux.org.uk>
-In-Reply-To: <20200313235357.2646756-20-viro@ZenIV.linux.org.uk>
+ <20200313235357.2646756-27-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20200313235357.2646756-27-viro@ZenIV.linux.org.uk>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 13 Mar 2020 17:40:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjQjL+W66NZ=+Rc_ibEznmt9bcY5MjxgLkqV1DtrFM4ow@mail.gmail.com>
-Message-ID: <CAHk-=wjQjL+W66NZ=+Rc_ibEznmt9bcY5MjxgLkqV1DtrFM4ow@mail.gmail.com>
-Subject: Re: [RFC][PATCH v4 20/69] merging pick_link() with get_link(), part 2
+Date:   Fri, 13 Mar 2020 17:42:18 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjwDZc4gh8R8gszZq+2mue-686aXTgELMZq=jqmj9z+FA@mail.gmail.com>
+Message-ID: <CAHk-=wjwDZc4gh8R8gszZq+2mue-686aXTgELMZq=jqmj9z+FA@mail.gmail.com>
+Subject: Re: [RFC][PATCH v4 27/69] namei: invert the meaning of WALK_FOLLOW
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
@@ -81,35 +81,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hmm..
+On Fri, Mar 13, 2020 at 4:56 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> -          !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW) ||
+> -          flags & WALK_NOFOLLOW) {
+> +          ((flags & WALK_TRAILING) && !(nd->flags & LOOKUP_FOLLOW)) ||
+> +          (flags & WALK_NOFOLLOW)) {
 
-On Fri, Mar 13, 2020 at 4:55 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->@@ -2370,10 +2375,9 @@ static int path_lookupat(struct nameidata *nd, unsigned flags, struct path *path
-> +       while (!(err = link_path_walk(s, nd)) &&
-> +              (s = lookup_last(nd)) != NULL)
-> +               ;
+Oh, and here you fix the implicit precedence thing I was complaining
+about earlier.
 
-There's two copies of that loop (the other being in path_openat()). Is
-there a reason why it's written that odd way?
+Maybe my original complaint had happened at this point, and I'd missed
+the original place.
 
-Why is the loop body empty, when the *natural* way to write that would
-seem to be
+Likely.
 
-        while (!(err = link_path_walk(s, nd))) {
-                s = lookup_last(nd));
-                if (!s)
-                        break;
-        }
-
-which may be a few lines longer, but a lot more legible.
-
-I don't think you should use assignments in tests, unless strictly
-required. Yes, that "err = ..." part almost has to be written that
-way, but the "s = ..." part doesn't seem to have any reason for being
-in the conditional.
-
-And I'm only reading the patches, so once again: maybe I'm messing up
-by mis-reading something. And maybe you have some reason for that
-pattern.
-
-                     Linus
+            Linus
