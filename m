@@ -2,157 +2,233 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129F1C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4616AC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE59B20637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ix52UfXV"
+	by mail.kernel.org (Postfix) with ESMTP id 1EC0820637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbgCOBgH (ORCPT
+        id S1727131AbgCOBgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:36:07 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37787 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgCOBgB (ORCPT
+        Sat, 14 Mar 2020 21:36:04 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:49691 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbgCOBgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:36:01 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p14so7687400pfn.4;
-        Sat, 14 Mar 2020 18:36:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=enmh88Oq7hYMaA3wg6YRTMgt0lLyr3oCSQxfmO8yIk0=;
-        b=ix52UfXVTvYdzWgeyE3fArZfM5Oov+79b6Wgfzmv4cG+x0P9TLxanMTeOw28etFnOT
-         FV5CxAErCIC3IJWfqam427ZSWrVOFXNy6jNG8+U1k/c7qGvfL3NNg/o/zPDOSlZhklG8
-         StaKqtyAZIcSb6OXqLPf8Y2YhvxfFvadynYDZrnuyMiCcd+fgOhlk1RWoZbdMezX4pss
-         M9MBPbczHMmWr9+fFt9cN7WhMNcjJQbWjkpZVJGpMaE2PycfriqMuwle4TaR/0RTw+8F
-         we7/VJsyrF0j7cy0kIVj3yV/wkM1A4wvlinXqtFpoYMS7eZlYPDM20Blid3akqJ6OgTx
-         G9rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=enmh88Oq7hYMaA3wg6YRTMgt0lLyr3oCSQxfmO8yIk0=;
-        b=nYGxEJLsm9EOlmLPe71/j7hU/S0jLPCrZDBvh9AQ78W1B8bsO3JBfuEclzdJ8o5SA7
-         irJWmWWYga1t8O3A4jtlFE9P5yh5jdEtPgSv39pgqSHo91Q64r4Cl02vbMXjJqATc54h
-         lDF5yp3dNAhBJUQ8SCqJg9XCyNLvwbhMVZih9TT45iGV1cvd2dmkmcq7uxFwj3yPDuNP
-         gIHTs+WMKuxQuY6BWkVFfE8wjuLWauqsOP/fBmGRhgc5kflQ+YzDLa4eiw4f73TW92eW
-         WI4clYVfq9/gRD8POhBn28+HJ6ZdprS32tqagxnHDPD2SJ8+bWbWY/XiAa4pCjLXIo8C
-         priQ==
-X-Gm-Message-State: ANhLgQ1T77+dP1YA8GwBO6A9LSpIO8PRnARTSURcCTeqcNkZgSUwg9M2
-        RjyupWTmyTQOcM+bIJOhbQNGI+g1
-X-Google-Smtp-Source: ADFU+vuGK2ZF9wa95KwLbauH1QnF8nd86i6tUXFxQWyV3BcPWwpk0QqcNGgnDyYpmlr+IkirNr2CDw==
-X-Received: by 2002:a63:89c1:: with SMTP id v184mr18165617pgd.333.1584181735887;
-        Sat, 14 Mar 2020 03:28:55 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q12sm60639314pfh.158.2020.03.14.03.28.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Mar 2020 03:28:55 -0700 (PDT)
-Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        John Crispin <john@phrozen.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-References: <20200304203144.GA4323@alpha.franken.de>
- <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
- <20200313164751.GA30134@roeck-us.net> <20200314010744.GA5494@afzalpc>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <204ac322-4214-fc83-e0b9-14473f855b0a@roeck-us.net>
-Date:   Sat, 14 Mar 2020 03:28:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 14 Mar 2020 21:36:00 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Sat, 14 Mar 2020 21:35:59 EDT
+IronPort-SDR: WNqQ90tfooloLtUjIzRFhtAWlcUNuKCojvc39CrmuyUnPQH4IsMCjaX9QtrbqwgA58OJ83eMRW
+ pvfuQHALONo+eJ6gz5+BjJHP+A4SpDm4Pb6+V/b31Dde1/jCqlyQN7QJ5r60tQ1XU/8O+jsODl
+ PbNunbElPLPy8q+ouAbW7MTFJ33j9SAb3QHhRziphBUcYSSqYCipZNlwoQnUeWlGjF/vD6CCbt
+ UF1j/j1WFy4TuYEQDkivjR199GRLEOe43fv2EddWttL3x0zRFKymsIKw/cl0WTkWMC7EeSc8fa
+ PY4=
+X-IronPort-AV: E=Sophos;i="5.70,554,1574150400"; 
+   d="asc'?scan'208";a="46773069"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 14 Mar 2020 14:07:40 -0800
+IronPort-SDR: /RLQV7rNI7rWdaYuKuF0cHArVKFRjEu3Tv94u7m/K2L7NdynM7zDqi0boFnq57eiBBY8L7GtUH
+ NpJVTMq3D4wlJugDwW3hVty+K2rzVGXdcXxGcZ6GFFhudEFzCazyXxiP6amkMb3sSLRt34LtTR
+ YLvK8Ow1OVEJHfmjniyO2bNyR22k9cstAmocZxu+/VZ1aHpt7jGodTFdGPDR37WnESP+tbfMBs
+ zy6FCUn+XFrI+xQkDObNMiV/3OtKIvJNASwHYbJpsrT8dWB9LesnEBfZlajvyvIckgXvrM6EHO
+ dpA=
+From:   Thomas Schwinge <thomas@codesourcery.com>
+To:     Woody Suwalski <terraluna977@gmail.com>,
+        Christian =?utf-8?Q?K=C3=B6ni?= =?utf-8?Q?g?= 
+        <christian.koenig@amd.com>, Christoph Hellwig <hch@lst.de>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Alexander Deucher <alexander.deucher@amd.com>,
+        Pavel Machek <pavel@ucw.cz>, Thomas Backlund <tmb@mageia.org>,
+        Meelis Roos <mroos@linux.ee>
+Subject: Re: Regression in 5.4 kernel on 32-bit Radeon IBM T40
+In-Reply-To: <66a6b0ea-4ee8-1a0d-b259-568059d54e09@gmail.com>
+References: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
+ <20200109141436.GA22111@lst.de>
+ <9ad75215-3ff1-ee76-9985-12fd78d6aa5f@amd.com>
+ <67f60d13-a245-5561-1372-7d68f35969f3@gmail.com>
+ <66a6b0ea-4ee8-1a0d-b259-568059d54e09@gmail.com>
+User-Agent: Notmuch/0.29.1+93~g67ed7df (https://notmuchmail.org) Emacs/26.1 (i686-pc-linux-gnu)
+Date:   Sat, 14 Mar 2020 23:06:51 +0100
+Message-ID: <87imj6si9w.fsf@dirichlet.schwinge.homeip.net>
 MIME-Version: 1.0
-In-Reply-To: <20200314010744.GA5494@afzalpc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed;
+        boundary="_41aa890b-3091-490d-b17c-395cfbf074d0_"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/13/20 6:07 PM, afzal mohammed wrote:
-> [ + Nathan ]
-> 
-> Hi Guenter, 
-> 
-> On Fri, Mar 13, 2020 at 09:47:51AM -0700, Guenter Roeck wrote:
-> 
->> This patch causes all my mips qemu emulations to hang during boot. This affects
->> all mips, mips64, mipsel, and mipsel64 emulations.
-> 
-> Can you please apply,
-> 
-> https://lkml.kernel.org/r/20200311152751.GA5044@afzalpc,
-> 
-> on top of this patch & see if it fixes the issue. Else please let me
-> know the qemu command line you are using.
-> 
+--_41aa890b-3091-490d-b17c-395cfbf074d0_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-I have not tested all configurations, but a quick check suggests
-that it does indeed fix the problem.
+-----------------
+Mentor Graphics (Deutschland) GmbH, Arnulfstra=DFe 201, 80634 M=FCnchen / G=
+ermany
+Registergericht M=FCnchen HRB 106955, Gesch=E4ftsf=FChrer: Thomas Heurung, =
+Alexander Walter
 
-Thanks,
-Guenter
+--_41aa890b-3091-490d-b17c-395cfbf074d0_
+Content-Type: message/rfc822
+
+Received: from SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) by
+ SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) with Microsoft SMTP Server
+ (TLS) id 15.0.1473.3; Sat, 14 Mar 2020 15:07:30 -0700
+Received: from tftp-cs (147.34.91.1) by SVR-ORW-MBX-07.mgc.mentorg.com
+ (147.34.90.207) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Sat, 14 Mar 2020 15:07:30 -0700
+Received: by tftp-cs (Postfix, from userid 49978)
+	id CA0ECC2296; Sat, 14 Mar 2020 15:07:36 -0700 (PDT)
+From: Thomas Schwinge <thomas@codesourcery.com>
+To: Woody Suwalski <terraluna977@gmail.com>, Christian =?utf-8?Q?K=C3=B6ni?=
+ =?utf-8?Q?g?= <christian.koenig@amd.com>, Christoph Hellwig <hch@lst.de>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	Alexander Deucher <alexander.deucher@amd.com>, Pavel Machek <pavel@ucw.cz>,
+	Thomas Backlund <tmb@mageia.org>, Meelis Roos <mroos@linux.ee>
+Subject: Re: Regression in 5.4 kernel on 32-bit Radeon IBM T40
+In-Reply-To: <66a6b0ea-4ee8-1a0d-b259-568059d54e09@gmail.com>
+References: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
+ <20200109141436.GA22111@lst.de>
+ <9ad75215-3ff1-ee76-9985-12fd78d6aa5f@amd.com>
+ <67f60d13-a245-5561-1372-7d68f35969f3@gmail.com>
+ <66a6b0ea-4ee8-1a0d-b259-568059d54e09@gmail.com>
+User-Agent: Notmuch/0.29.1+93~g67ed7df (https://notmuchmail.org) Emacs/26.1 (i686-pc-linux-gnu)
+Date: Sat, 14 Mar 2020 23:06:51 +0100
+Message-ID: <87imj6si9w.fsf@dirichlet.schwinge.homeip.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha512;
+	protocol="application/pgp-signature"
+Return-Path: tschwing@mentor.com
+X-MS-Exchange-Organization-OriginalArrivalTime: 14 Mar 2020 22:07:30.5302
+ (UTC)
+X-MS-Exchange-Forest-ArrivalHubServer: SVR-ORW-MBX-07.mgc.mentorg.com
+X-MS-Exchange-Organization-AuthSource: SVR-ORW-MBX-07.mgc.mentorg.com
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 10
+X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: SVR-ORW-MBX-07.mgc.mentorg.com
+X-MS-Exchange-Organization-MessageHighPrecisionLatencyInProgress: LSRV=SVR-ORW-MBX-07.mgc.mentorg.com:TOTAL-FE=0.203|SMRPI-FrontendProxyAgent=0.005|SMRPI=0.005|SMR=0.160;2020-03-14T22:07:30.733Z
+X-MS-Exchange-Organization-OriginalClientIPAddress: 147.34.90.207
+X-MS-Exchange-Organization-OriginalServerIPAddress: 147.34.90.205
+X-MS-Exchange-Organization-Network-Message-Id: 3dcc8ff0-c08c-4576-6a04-08d7c864172f
+X-MS-Exchange-Organization-OriginalSize: 6329
+X-MS-Exchange-Organization-HygienePolicy: Standard
+X-MS-Exchange-Organization-MessageLatency: SRV=SVR-ORW-MBX-07.mgc.mentorg.com:TOTAL-FE=0.218|SMRPI-FrontendProxyAgent=0.005|SMRPI=0.005|SMR=0.160|SMS=0.015
+X-MS-Exchange-Organization-AVStamp-Enterprise: 1.0
+X-MS-Exchange-Organization-Recipient-Limit-Verified: True
+X-MS-Exchange-Organization-Transport-Properties: DeliveryPriority=Normal
+X-MS-Exchange-Organization-Prioritization: 1
+X-MS-Exchange-Organization-Rules-Execution-History: TransportVersioned.Tamer
+ Ahmed
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+Has any progress been made regarding the issue reported here?
+
+Having updated the software (here: Linux kernel), I'm running into the
+same issue on my venerable ;-) Thinkpad T42 with:
+
+    01:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/AT=
+I] RV200/M7 [Mobility Radeon 7500]
+
+I lack knowledge of the specific graphics hardware/memory interface as
+well as Linux kernel graphics/memory stack at that level, but I'll be
+happy to try any suggestions, or test patches etc.
+
+On 2020-01-09T21:40:50-0500, Woody Suwalski <terraluna977@gmail.com> wrote:
+> Woody Suwalski wrote:
+>> Christian K=C3=B6nig wrote:
+>>> Am 09.01.20 um 15:14 schrieb Christoph Hellwig:
+>>>> On Sat, Dec 14, 2019 at 10:17:15PM -0500, Woody Suwalski wrote:
+>>>>> Regression in 5.4 kernel on 32-bit Radeon IBM T40
+>>>>> triggered by
+>>>>> commit 33b3ad3788aba846fc8b9a065fe2685a0b64f713
+>>>>> Author: Christoph Hellwig <hch@lst.de>
+>>>>> Date:=C2=A0=C2=A0 Thu Aug 15 09:27:00 2019 +0200
+>>>>>
+>>>>> The above patch has triggered a display problem on IBM Thinkpad=20
+>>>>> T40, where
+>>>>> the screen is covered with a lots of random short black horizontal=20
+>>>>> lines,
+>>>>> or distorted letters in X terms.
+>>>>>
+>>>>> The culprit seems to be that the dma_get_required_mask() is=20
+>>>>> returning a
+>>>>> value 0x3fffffff
+>>>>> which is smaller than dma_get_mask()0xffffffff.That results in
+>>>>> dma_addressing_limited()=3D=3D0 in ttm_bo_device(), and using 40-bits=
+ dma
+>>>>> instead of 32-bits.
+>>>> Which is the intended behavior assuming your system has 1GB of memory.
+>>>> Does it?
+>>>
+>>> Assuming the system doesn't have the 1GB split up somehow crazy over=20
+>>> the address space that should indeed work as intended.
+>>>
+>>>>
+>>>>> If I hardcode "1" as the last parameter to ttm_bo_device_init() in=20
+>>>>> place of
+>>>>> a call to dma_addressing_limited(),the problem goes away.
+
+I'm confirming that hack "resolves" the issue.
+
+>>>> I'll need some help from the drm / radeon / TTM maintainers if there=20
+>>>> are
+>>>> any other side effects from not passing the need_dma32 paramters.
+>>>> Obviously if the device doesn't have more than 32-bits worth of dram=20
+>>>> and
+>>>> no DMA offset we can't feed unaddressable memory to the device.
+>>>> Unfortunately I have a very hard time following the implementation of
+>>>> the TTM pool if it does anything else in this case.
+>>>
+>>> The only other thing which comes to mind is using huge pages. Can you=20
+>>> try a kernel with CONFIG_TRANSPARENT_HUGEPAGE disabled?
+>>
+>> Yes, the box has 1G of RAM, and unfortunately nope,=20
+>> TRANSPARENT_HUGEPAGE is not on. I am attaching the .config, maybe you=20
+>> can find some insanity there... Also - for reference - a minimalistic=20
+>> patch fixing symptoms (but not addressing the root cause=C2=A0 :-( )
+>>
+>> I can try to rebuild the kernel with HIGHMEM off, although I am not=20
+>> optimistic it will change anything. But at least it should simplify=20
+>> the 1G split...
+>>
+>> So if you have any other ideas - pls let me know..
+>>
+> Interesting. Rebuilding the kernel with HIMEM disabled actually solves=20
+> the display problem. The debug lines show exactly same values for=20
+> dma_get_required_mask() and dma_get_mask(), yet now it works OK... So=20
+> what has solved it???
+
+That I have not yet tried.
+
+
+Gr=C3=BC=C3=9Fe
+ Thomas
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEE7KZCCFfzmIiKFvCOphHFmisdAgYFAl5tVXwACgkQphHFmisd
+AgY3wAwAoOYpUrZ/3xFY2GaefxB27TuNulTAMNP8Ggb2tSZfAjvc8s/e+HRuxRjL
+Ri4DFsZ38Is6OlXONfak24tZeXaxEDNqiDbib0+mFXD6saGECbNCkvpujaaT+wsf
+E8Uph7Olh9mwL6C6I65w049voxw+T2pz79wIp8Y71sIBf1N5rONY9oYyBe9BhYTu
+BbQaV6zZ7PY0ZisL1Pb61kBNtEdoUBubJHCbsuPGU5SKTWeG1M6o4h2+Co/T7dvF
+ggfqx1vGu+RWQgHSiNTEmZqKrcMGgM9npeBU5Kb6fdeIyZZmnuZyXo734XGiDGD+
+va2JTFLJLlqoh8TtbD7icyRPYj0rdGYG6rm1IqRs6/BUBnrHnYak1wylBkDPkLbq
+3ssTN1+wMmv3HV4KLvAv9bhcP31l3gDAPqhJL7FxPvuYuZmtK7T7ugBsWuDlqLJh
+NFSb6jSP1yLPbaHsU1aWIB2QMsYj5L7MCKVyG0O/v05MLZf0OGfNAHnn1tZ74b5R
+Zh8E+AOl
+=JFLI
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--_41aa890b-3091-490d-b17c-395cfbf074d0_--
