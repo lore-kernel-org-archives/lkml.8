@@ -2,156 +2,249 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0E7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC53BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262DA20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C8520724
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RrfIQ6xw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dT71Y4c2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgCOEka (ORCPT
+        id S1726853AbgCOE5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 00:40:30 -0400
-Received: from mout.gmx.net ([212.227.17.21]:58303 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgCOEk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 00:40:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1584247228;
-        bh=C8oAC+ephMsyHFHAO7X3i49cAhiXb0eeDtczwsGpuBY=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=RrfIQ6xwOlS8zSsQCOXADu/M5QbPSLZZlbmyyR4+vmOYxHWycy7o239Y6W6Oc/WUC
-         DOhT7y11KDzgR0pwnooSX1ZpWDAd8a2oa6ONrZE+7x0hDseuA50Uiowzmiu3TLjGhN
-         +6Sfzynh+bBOW0H9AaRmkOlgBWT+TmD0XNXuKZB4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MIMbU-1j7aRo3fVc-00EOx6; Sat, 14
- Mar 2020 16:06:25 +0100
-Date:   Sat, 14 Mar 2020 16:06:13 +0100
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Malcolm Priestley <tvboxspy@gmail.com>, devel@driverdev.osuosl.org,
-        Colin Ian King <colin.king@canonical.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        linux-kernel@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
-Subject: Re: [PATCH] staging: vt6656: Use BIT_ULL() macro instead of bit
- shift operation
-Message-ID: <20200314150612.GA3153@ubuntu>
-References: <20200307104929.7710-1-oscar.carter@gmx.com>
- <20200308065538.GF3983392@kroah.com>
- <20200308161047.GA3285@ubuntu>
- <561bc968-f88c-40e3-f53c-5c03f74f75ea@gmail.com>
- <20200310095011.GC2516963@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310095011.GC2516963@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:G+I101FTrb9L8V0q7JzFuevV31mO2bV7RWoMbDwOukp6UUeCKq9
- +tlYqu3jGMXEhMHEHIEsXsbz4IdRepEVTgZIvRVn9cpSusRzjJ78TveUhvQJBDdeWOoa4ig
- ToC3HrPK54JvPJ/AEIj+o1XYeNy7M2DtvAJMw0kLgZz1Gd96la3yOBsEARVrGE1DF7/36LJ
- I/aA6sB1JwFyTZq4kYyiA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:G4YWjPqouOA=:+IXRzJUuKnIGMgxyc1li3n
- GaRDptOweB1B58embF3bCQNQ2nvkAY6cqmwqCFtUh2JTfIgf8pdpAitl8xVe55JT7jb4yDiFn
- PCQ1Ml72wed+H8IA+QABLN0h71wGoBrVOizjy3+EUY+qWYeOhGFCYxYmExsBCTSc4aE/EzTkL
- 6Y5SYxvh39OzNZhHEL2p6RKgzPXS9+2IiGwPjQauZ5Ch/97phu//uHwqr18VkOtt9A3HWCPX8
- 43gIbRU5Re68IpTxnpV8rSSzFm6jBVA/MZLHaKyR88k8YMezbOVoS9RF0m41amQ2JM7XO8M1B
- 7mjYpRE8b8qifWdmnTE7KpT1+VhYb0LU7TgXC2fIZC2Um+gXq0iYyjp4TmWGg+9/bNH0Zpv86
- WXa7e7byNyP/8IdxJL8WsxTT3viUc/iVkfBc6Y//vqdbGsmRW2j//AzIfTJnbE1CMUaQrRRGb
- PFTqRHJL+CTX2v/zlhxMtixD//fWrr+4a6VX8wgJ9gay1lvTvBdJfrmakzaICFiX3aZJCI+mf
- WqrR8kbD5ewwnrB4mK/BF4IvwDz6Tiu7Q1FBRax5S/q2TCvRk8LfcgJtgeuJIIiHQdYhd+kiq
- 3zr70O0pq9I/jnecqvaW3+FE7GRiocLDKRwd7FbvhsNLWCPZKIUKzWRmP4oNkCucOTawI5U/N
- nPim6HuSjQCXxXEo28s9FlmN/mKrDKxPwhXM3MAqfcKtI6hwB4IYDcIwuw7+sdR4FDz4BPpAB
- vqJau9PUf9GTbXumrdEDSwByTNEco9h2Pn/p1wy5WVK58bO8qKkPx0h+1Vew4gxm9/r1Swnoj
- ucDgqvZzP4Qx0LlE/CplbqZ/xtl9cfxh7RLNKVkyxhcOrI7JjGnVt/Fxv43YAXJZc2HMZaUnV
- XCQpqJvWWbjWcV4Z57vXMrCPw5l4qOVWAZBmbqgeEJCKwR66l7e5nXJJ+BxUuXLG2YJUAoGt/
- X4pS3BTQcb3O3UVkuG6FEZpx8CzdcxfMbxeyOyW8Nwp4aiRXWodSeNQOvpM5OKDwct/qeR+CH
- t+4BTrJYCSzSW8QqByveXzk3mQ/CgpNqvYA2SKqlDnD6xlTbSTZESk1Y9r93/PVN/RGITwRtV
- 0usW3ZLRWzuFjqKSTedg77to31bnFt3Wmpx+Gi8j7L1Z4FU4RnsIH45DKDHM6whrR1Vc2yLYV
- h9Lb52fY7jPO/AId4PTDgycJklZNsPSnemecYjIhD3UQ9qVV4XBCAH9vKip2NaBXoZLCfBxbV
- jw5GkXdQbMDHodC9u
-Content-Transfer-Encoding: quoted-printable
+        Sun, 15 Mar 2020 00:57:52 -0400
+Received: from mail-ot1-f74.google.com ([209.85.210.74]:43605 "EHLO
+        mail-ot1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbgCOE5w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 00:57:52 -0400
+Received: by mail-ot1-f74.google.com with SMTP id w21so6565707otp.10
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 21:57:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=FbErgK09Aa6nJYkuCUrBRaD9zp6nFWInm5nO78O2flo=;
+        b=dT71Y4c2WVAAB5IgXSTJDnOtQjY8WEF1wVbvbUqQFMxmNoApirL/M5/zncSqkTWE6Z
+         HxLYbw2q2fGPMxH+YEL3s3PiRxC/gMpy7IV5mkJMpAOd2DNHx4hGTYuHHKpO9e13U4FC
+         jXeSBxPA+KubGo6G5pA+Qta1YYirGl6En/wK4D4v+uZPIeTK0fONXbu8vJDV0+8ZWeTi
+         NG2Bw3eDeOfYRyCQLLJxk6lGY91zKrrw3hQ1Zgyzk+xqB7CS0JCODI9kZEWYoz6GOwY3
+         Ca8JPg5Eq2LIzQzqirfpokHY66fl8CSEgS49JqFqXgsH9s4HMA9cOPFblqgAf15da3id
+         zRHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=FbErgK09Aa6nJYkuCUrBRaD9zp6nFWInm5nO78O2flo=;
+        b=UpX3l1W983YGAgxnw5yHN4ykpRkPlZiSpguNlck12Vppl0kIDBonAZxFmx0c3DKXMr
+         +dxeH7yvgNeaFW/Ow5s41f+NSRdrehHztFUjyfhubyaIl7yeJOn7iiq2MTw8slIZLYRS
+         NZCqkZNVKJ+E4dyDNFThNwVUFz35XMDYGalCvbuYN1xE1MuO3hGpEJp1z2HAJ/OgydVw
+         nlIOqsPegoTW+ElFd1EnvHcE58aRkl11okfTAEGJwKfQ35a1P9b/RdOh1Suub5kVBAGh
+         6yhKXHjz0+X5D3u5bD9suBgo328aXJJm39kYwmlLiXK1nNTaMs/pr5+wskPqg/TjgPIj
+         JMBQ==
+X-Gm-Message-State: ANhLgQ2PMppGhnQ33I/LLYsZ4HYfjooPm/RB/Xt7BqGXr5sop8WGrq4i
+        fHhpVfwOy0Ywn/XarSPTImx11gkyOhx/
+X-Google-Smtp-Source: ADFU+vs52dttlEPc8eM4+pYO49Ur3CNjHXgYtEqCExzv5cBIAaM+bJG9fw47aVA4R1AoKEK/fteySEH+/lLf
+X-Received: by 2002:a17:90a:240a:: with SMTP id h10mr12636800pje.123.1584167046988;
+ Fri, 13 Mar 2020 23:24:06 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 23:24:04 -0700
+In-Reply-To: <4bb8eeef-54ac-86a7-4bc4-8e16fc149c1a@kernel.org>
+Message-Id: <xr93y2s34fp7.fsf@gthelen.svl.corp.google.com>
+Mime-Version: 1.0
+References: <20200227063134.261636-1-gthelen@google.com> <20200229015350.GA26612@ubuntu-m2-xlarge-x86>
+ <4bb8eeef-54ac-86a7-4bc4-8e16fc149c1a@kernel.org>
+Subject: Re: [PATCH] kunit: add --make_options
+From:   Greg Thelen <gthelen@google.com>
+To:     shuah <shuah@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        shuah <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:50:11AM +0100, Greg Kroah-Hartman wrote:
-> On Sun, Mar 08, 2020 at 07:22:07PM +0000, Malcolm Priestley wrote:
-> > >>>   */
-> > >>>  #undef __NO_VERSION__
-> > >>>
-> > >>> +#include <linux/bits.h>
-> > >>>  #include <linux/etherdevice.h>
-> > >>>  #include <linux/file.h>
-> > >>>  #include "device.h"
-> > >>> @@ -802,8 +803,7 @@ static u64 vnt_prepare_multicast(struct ieee80=
-211_hw *hw,
-> > >>>
-> > >>>  	netdev_hw_addr_list_for_each(ha, mc_list) {
-> > >>>  		bit_nr =3D ether_crc(ETH_ALEN, ha->addr) >> 26;
-> > >>> -
-> > >>> -		mc_filter |=3D 1ULL << (bit_nr & 0x3f);
-> > >>> +		mc_filter |=3D BIT_ULL(bit_nr);
-> > >>
-> > >> Are you sure this does the same thing?  You are not masking off bit=
-_nr
-> > >> anymore, why not?
-> > >
-> > > My reasons are exposed below:
-> > >
-> > > The ether_crc function returns an u32 type (unsigned of 32 bits). Th=
-en the right
-> > > shift operand discards the 26 lsb bits (the bits shifted off the rig=
-ht side are
-> > > discarded). The 6 msb bits of the u32 returned by the ether_crc func=
-tion are
-> > > positioned in bit 5 to bit 0 of the variable bit_nr. Due to the righ=
-t shift
-> > > happens over an unsigned type, the 26 new bits added on the left sid=
-e will be 0.
-> > >
-> > > In summary, after the right bit shift operation we obtain in the var=
-iable bit_nr
-> > > (unsigned of 32 bits) the value represented by the 6 msb bits of the=
- value
-> > > returned by the ether_crc function. So, only the 6 lsb bits of the v=
-ariable
-> > > bit_nr are important. The 26 msb bits of this variable are 0.
-> > >
-> > > In this situation, the "and" operation with the mask 0x3f (mask of 6=
- lsb bits)
-> > > is unnecessary due to its purpose is to reset (set to 0 value) the 2=
-6 msb bits
-> > > that are yet 0.
-> >
-> > The mask is only there out of legacy originally it was 31(0x1f) and th=
-e
-> > bit_nr spread across two mc_filter u32 arrays.
-> >
-> > The mask is not needed now it is u64.
-> >
-> > The patch is fine.
+shuah <shuah@kernel.org> wrote:
+
+> On 2/28/20 6:53 PM, Nathan Chancellor wrote:
+>> On Wed, Feb 26, 2020 at 10:31:34PM -0800, 'Greg Thelen' via Clang Built Linux wrote:
+>>> The kunit.py utility builds an ARCH=um kernel and then runs it.  Add
+>>> optional --make_options flag to kunit.py allowing for the operator to
+>>> specify extra build options.
+>>>
+>>> This allows use of the clang compiler for kunit:
+>>>    tools/testing/kunit/kunit.py run --defconfig \
+>>>      --make_options CC=clang --make_options HOSTCC=clang
+>>>
+>>> Signed-off-by: Greg Thelen <gthelen@google.com>
+>> 
+>> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+>> 
 >
-> Ok, then the changelog needs to be fixed up to explain all of this and
-> resent.
-
-Ok, I will create a new version patch with all of this information and I w=
-ill
-resend it.
-
+> Please rebase on Linux 5.6-rc5 and resend. I tried applying
+> on Linux 5.6-rc1 as well as 5.6-rc5 and both fail.
 >
 > thanks,
->
-> greg k-h
+> -- Shuah
 
-thanks,
+Rebased onto v5.6-rc5 below:
 
-Oscar
+From 0517b2c8b481535fb52bd86e94be1fec9aaeead7 Mon Sep 17 00:00:00 2001
+From: Greg Thelen <gthelen@google.com>
+Date: Wed, 26 Feb 2020 22:31:34 -0800
+Subject: [PATCH v2] kunit: add --make_options
+
+The kunit.py utility builds an ARCH=um kernel and then runs it.  Add
+optional --make_options flag to kunit.py allowing for the operator to
+specify extra build options.
+
+This allows use of the clang compiler for kunit:
+  tools/testing/kunit/kunit.py run --defconfig \
+    --make_options CC=clang --make_options HOSTCC=clang
+
+Signed-off-by: Greg Thelen <gthelen@google.com>
+---
+ tools/testing/kunit/kunit.py        | 15 +++++++++++----
+ tools/testing/kunit/kunit_kernel.py | 24 ++++++++++++++----------
+ 2 files changed, 25 insertions(+), 14 deletions(-)
+
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index 180ad1e1b04f..1aa4d14dc28d 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -22,7 +22,9 @@ import kunit_parser
+ 
+ KunitResult = namedtuple('KunitResult', ['status','result'])
+ 
+-KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
++KunitRequest = namedtuple('KunitRequest', ['raw_output', 'timeout', 'jobs',
++                                           'build_dir', 'defconfig',
++                                           'make_options'])
+ 
+ KernelDirectoryPath = sys.argv[0].split('tools/testing/kunit/')[0]
+ 
+@@ -47,7 +49,7 @@ def get_kernel_root_path():
+ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	      request: KunitRequest) -> KunitResult:
+ 	config_start = time.time()
+-	success = linux.build_reconfig(request.build_dir)
++	success = linux.build_reconfig(request.build_dir, request.make_options)
+ 	config_end = time.time()
+ 	if not success:
+ 		return KunitResult(KunitStatus.CONFIG_FAILURE, 'could not configure kernel')
+@@ -55,7 +57,7 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	kunit_parser.print_with_timestamp('Building KUnit Kernel ...')
+ 
+ 	build_start = time.time()
+-	success = linux.build_um_kernel(request.jobs, request.build_dir)
++	success = linux.build_um_kernel(request.jobs, request.build_dir, request.make_options)
+ 	build_end = time.time()
+ 	if not success:
+ 		return KunitResult(KunitStatus.BUILD_FAILURE, 'could not build kernel')
+@@ -120,6 +122,10 @@ def main(argv, linux=None):
+ 				help='Uses a default .kunitconfig.',
+ 				action='store_true')
+ 
++	run_parser.add_argument('--make_options',
++				help='X=Y make option, can be repeated.',
++				action='append')
++
+ 	cli_args = parser.parse_args(argv)
+ 
+ 	if cli_args.subcommand == 'run':
+@@ -143,7 +149,8 @@ def main(argv, linux=None):
+ 				       cli_args.timeout,
+ 				       cli_args.jobs,
+ 				       cli_args.build_dir,
+-				       cli_args.defconfig)
++				       cli_args.defconfig,
++				       cli_args.make_options)
+ 		result = run_tests(linux, request)
+ 		if result.status != KunitStatus.SUCCESS:
+ 			sys.exit(1)
+diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+index d99ae75ef72f..27758d6d115b 100644
+--- a/tools/testing/kunit/kunit_kernel.py
++++ b/tools/testing/kunit/kunit_kernel.py
+@@ -35,8 +35,10 @@ class LinuxSourceTreeOperations(object):
+ 		except subprocess.CalledProcessError as e:
+ 			raise ConfigError(e.output)
+ 
+-	def make_olddefconfig(self, build_dir):
++	def make_olddefconfig(self, build_dir, make_options):
+ 		command = ['make', 'ARCH=um', 'olddefconfig']
++		if make_options:
++			command.extend(make_options)
+ 		if build_dir:
+ 			command += ['O=' + build_dir]
+ 		try:
+@@ -46,8 +48,10 @@ class LinuxSourceTreeOperations(object):
+ 		except subprocess.CalledProcessError as e:
+ 			raise ConfigError(e.output)
+ 
+-	def make(self, jobs, build_dir):
++	def make(self, jobs, build_dir, make_options):
+ 		command = ['make', 'ARCH=um', '--jobs=' + str(jobs)]
++		if make_options:
++			command.extend(make_options)
+ 		if build_dir:
+ 			command += ['O=' + build_dir]
+ 		try:
+@@ -107,19 +111,19 @@ class LinuxSourceTree(object):
+ 			return False
+ 		return True
+ 
+-	def build_config(self, build_dir):
++	def build_config(self, build_dir, make_options):
+ 		kconfig_path = get_kconfig_path(build_dir)
+ 		if build_dir and not os.path.exists(build_dir):
+ 			os.mkdir(build_dir)
+ 		self._kconfig.write_to_file(kconfig_path)
+ 		try:
+-			self._ops.make_olddefconfig(build_dir)
++			self._ops.make_olddefconfig(build_dir, make_options)
+ 		except ConfigError as e:
+ 			logging.error(e)
+ 			return False
+ 		return self.validate_config(build_dir)
+ 
+-	def build_reconfig(self, build_dir):
++	def build_reconfig(self, build_dir, make_options):
+ 		"""Creates a new .config if it is not a subset of the .kunitconfig."""
+ 		kconfig_path = get_kconfig_path(build_dir)
+ 		if os.path.exists(kconfig_path):
+@@ -128,17 +132,17 @@ class LinuxSourceTree(object):
+ 			if not self._kconfig.is_subset_of(existing_kconfig):
+ 				print('Regenerating .config ...')
+ 				os.remove(kconfig_path)
+-				return self.build_config(build_dir)
++				return self.build_config(build_dir, make_options)
+ 			else:
+ 				return True
+ 		else:
+ 			print('Generating .config ...')
+-			return self.build_config(build_dir)
++			return self.build_config(build_dir, make_options)
+ 
+-	def build_um_kernel(self, jobs, build_dir):
++	def build_um_kernel(self, jobs, build_dir, make_options):
+ 		try:
+-			self._ops.make_olddefconfig(build_dir)
+-			self._ops.make(jobs, build_dir)
++			self._ops.make_olddefconfig(build_dir, make_options)
++			self._ops.make(jobs, build_dir, make_options)
+ 		except (ConfigError, BuildError) as e:
+ 			logging.error(e)
+ 			return False
+-- 
+2.25.1.481.gfbce0eb801-goog
+
