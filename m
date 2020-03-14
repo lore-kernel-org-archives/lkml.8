@@ -2,123 +2,123 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAB5C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80761C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F09A2071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9722071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:21:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p8SRUlzv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fDGyHtK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbgCOCUh (ORCPT
+        id S1727736AbgCOCVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:20:37 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37004 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgCOCUg (ORCPT
+        Sat, 14 Mar 2020 22:21:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39974 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727030AbgCOCVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:20:36 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 6so16921840wre.4;
-        Sat, 14 Mar 2020 19:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PE24DoRnfKFZy52Nrv5UE52xwHWVoBxgf+ra2gpiIaw=;
-        b=p8SRUlzvPABfmrEr4KF0tjpIdEQ+11vdcstDy0RA+Am3AirRl+HEt1jqh4Qcr4iHvQ
-         oygo9HYIk+GCPliR5UuSc1kRj+AccKbVoW/u83m0p/mlnrdmpIveGvWIkluaNKOJBbnM
-         BGV2B29W6/77StVMqHPo6koRSsZT2dtg8NJhjLJdJGtibJ/gqZXZYC2J1R2Wvey4Mj9V
-         e2TzCKmGaw+ffg4CT+UA2ulDCCy98mSVHHpAYTD+vwQA79/T0CVO+K7ZIFnStSuSybsh
-         6Onr/AYUx+739YiXcL23Svm05XVaF4dixrCzykKZmp+wY0ezy5RWPqT2zbkYbi9vjgLE
-         O13A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PE24DoRnfKFZy52Nrv5UE52xwHWVoBxgf+ra2gpiIaw=;
-        b=W8fhA6cJgVc5pwV+AviufF5lu4VSH9WDQNExeOjCIMUmCyQjDOU3i7fYreinJQJM9h
-         sRrpIlO6XEQD4Ii3MU5DkI6eLRr34MBAHnrMxz/e/U6QtYx+A3/OmX7Tk2mecUuzcDgS
-         O9Sj3SzhHvoVlVuoU6fV+GkhhNBKrFAWB/Q3Whga7WdfaIoYw0/KheE69Ki+uV8b2OrI
-         3JGuvblfRD9hh0/LuexHH6lszU2YoGzveFGB1RfFzMxRn397mUzovtA3CMlOaz65vC+O
-         9ttUU3K/oxALoRVJucaid5yaS3gg8vQoUcIDwyNf9FFxfwYgNp09SXMtn6wWUOQymvCr
-         RweA==
-X-Gm-Message-State: ANhLgQ12hqLItPMLm+coM1P3pw8l2j3DvetGRrgB5eXmlRNzvg5uzseh
-        jiopKTMJWxadl3XZxJjRovgICzbGV2c=
-X-Google-Smtp-Source: ADFU+vuncf2glww4dZrO79kzBlarasrCAqQD6mQQhjf/qj63KdOmFMMtFHPRYj3tZtd1TwszZWC2Hw==
-X-Received: by 2002:a05:6000:1008:: with SMTP id a8mr20082853wrx.8.1584221703177;
-        Sat, 14 Mar 2020 14:35:03 -0700 (PDT)
-Received: from debian (host-84-13-17-86.opaltelecom.net. [84.13.17.86])
-        by smtp.gmail.com with ESMTPSA id f9sm6660355wro.47.2020.03.14.14.35.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 14 Mar 2020 14:35:02 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 21:35:00 +0000
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Paul Wise <pabs3@bonedaddy.net>, viro@zeniv.linux.org.uk,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Ruffell <matthew.ruffell@canonical.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Jakub Wilk <jwilk@jwilk.net>
-Subject: Re: [PATCH 0/1] coredump: Fix null pointer dereference when
- kernel.core_pattern is "|"
-Message-ID: <20200314213500.s7y4wyok2lfc4w6f@debian>
-References: <20200220051015.14971-1-matthew.ruffell@canonical.com>
- <645fcbdfdd1321ff3e0afaafe7eccfd034e57748.camel@bonedaddy.net>
- <87a47997-3cde-bc86-423b-6154849183e9@canonical.com>
- <fa636317af3a38badff322ca11e437701154b1be.camel@bonedaddy.net>
+        Sat, 14 Mar 2020 22:21:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584238900;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=C9DfqLtk0vDlWXaqjECLFoszpiCzG9j/FOTAi7CnS+c=;
+        b=fDGyHtK7enDJDvPehgmvBgCbrRF5XhCZdcyVCb/oaa14YO7uygbVh9ytx6NISl7bmLFlEC
+        bxK3h/L+11kVwEBdCOWRGBHfvDZ8t2SEpQRJfPBV2hjiNCPtAwfS32MVsPlFovoOR6y7ht
+        6sTRmopIFT/BJXR9jv1WitNOTKGr0OM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-271-wbA9qoJkNsOr7xpdYyYqLw-1; Sat, 14 Mar 2020 14:20:56 -0400
+X-MC-Unique: wbA9qoJkNsOr7xpdYyYqLw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5BE113EA;
+        Sat, 14 Mar 2020 18:20:54 +0000 (UTC)
+Received: from localhost (ovpn-204-79.brq.redhat.com [10.40.204.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 38A5B19C69;
+        Sat, 14 Mar 2020 18:20:53 +0000 (UTC)
+From:   Giuseppe Scrivano <gscrivan@redhat.com>
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     syzbot <syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH -next] hugetlb_cgroup: fix illegal access to memory
+References: <20200313223920.124230-1-almasrymina@google.com>
+        <CAHS8izMcLx93DJtr0kyDz_qm_bNV-EOzKnPGrpQoopBHyJg9=g@mail.gmail.com>
+Date:   Sat, 14 Mar 2020 19:20:52 +0100
+In-Reply-To: <CAHS8izMcLx93DJtr0kyDz_qm_bNV-EOzKnPGrpQoopBHyJg9=g@mail.gmail.com>
+        (Mina Almasry's message of "Fri, 13 Mar 2020 15:48:36 -0700")
+Message-ID: <87zhcin6gr.fsf@redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa636317af3a38badff322ca11e437701154b1be.camel@bonedaddy.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Mina Almasry <almasrymina@google.com> writes:
 
-On Sat, Mar 14, 2020 at 08:28:10AM +0800, Paul Wise wrote:
-> On Tue, 2020-03-10 at 11:34 +1300, Matthew Ruffell wrote:
-> 
-> > Can I please get some feedback on this patch? Would be good to clear
-> > up the null pointer dereference.
+> On Fri, Mar 13, 2020 at 3:39 PM Mina Almasry <almasrymina@google.com> wrote:
+>>
+>> This appears to be a mistake in commit faced7e0806cf ("mm: hugetlb
+>> controller for cgroups v2"). Essentially that commit does
+>> a hugetlb_cgroup_from_counter assuming that page_counter_try_charge has
+>> initialized counter, but if page_counter_try_charge has failed then it
+>> seems it does not initialize counter, so
+>> hugetlb_cgroup_from_counter(counter) ends up pointing to random memory,
+>> causing kasan to complain.
+>>
+>> Solution, simply use h_cg, instead of
+>> hugetlb_cgroup_from_counter(counter), since that is a reference to the
+>> hugetlb_cgroup anyway. After this change kasan ceases to complain.
+>>
+>> Signed-off-by: Mina Almasry <almasrymina@google.com>
+>> Reported-by: syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com
+>> Fixes: commit faced7e0806cf ("mm: hugetlb controller for cgroups v2")
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: Giuseppe Scrivano <gscrivan@redhat.com>
+>> Cc: Tejun Heo <tj@kernel.org>
+>> Cc: mike.kravetz@oracle.com
+>> Cc: rientjes@google.com
+>>
+>> ---
+>>  mm/hugetlb_cgroup.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+>> index 7994eb8a2a0b4..aabf65d4d91ba 100644
+>> --- a/mm/hugetlb_cgroup.c
+>> +++ b/mm/hugetlb_cgroup.c
+>> @@ -259,8 +259,7 @@ static int __hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+>>                     __hugetlb_cgroup_counter_from_cgroup(h_cg, idx, rsvd),
+>>                     nr_pages, &counter)) {
+>>                 ret = -ENOMEM;
+>> -               hugetlb_event(hugetlb_cgroup_from_counter(counter, idx), idx,
+>> -                             HUGETLB_MAX);
+>> +               hugetlb_event(h_cg, idx, HUGETLB_MAX);
+>>                 css_put(&h_cg->css);
+>>                 goto done;
+>>         }
+>> --
+>> 2.25.1.481.gfbce0eb801-goog
 
-I could reproduce the problem very easily, though the core_pattern is
-not supposed to be used that way. Only "|" is invalid core_pattern. But
-in anycase I think the kernel should have a check for this invalid
-usecase.
+Acked-by: Giuseppe Scrivano <gscrivan@redhat.com>
 
-> 
-> I had a thought about it, instead of using strlen, what about checking
-> that the first item in the array is NUL or not? In the normal case this
-> should be faster than strlen.
-
-Why are you checking the corename in do_coredump() after it has done
-almost everything? It can be very easily checked in format_corename().
-Something like the following:
-
-diff --git a/fs/coredump.c b/fs/coredump.c
-index b1ea7dfbd149..d25bad2ed061 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -211,6 +211,8 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
- 			return -ENOMEM;
- 		(*argv)[(*argc)++] = 0;
- 		++pat_ptr;
-+		if (!(*pat_ptr))
-+			return -ENOMEM;
- 	}
- 
- 	/* Repeat as long as we have more pattern to process and more output
-
-
---
-Regards
-Sudip
+Thanks,
+Giuseppe
 
