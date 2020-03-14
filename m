@@ -2,73 +2,77 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AEAC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FA4C0044D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75082074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC8F2074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgCNDgD (ORCPT
+        id S1726647AbgCNDn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 23:36:03 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:52755 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbgCNDgC (ORCPT
+        Fri, 13 Mar 2020 23:43:58 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:48504 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgCNDn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 23:36:02 -0400
-Received: by mail-il1-f198.google.com with SMTP id d2so8496798ilf.19
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 20:36:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=dmWkzx0+VTdDKgiZu8md+VCLESddm4UQfDH67bvRGgw=;
-        b=QgW1u3ONCDZnXcj4YtIDXLcKFBdMOMhnS2bZsApR1fXPvxZUHJhO2luHXRBle8X/kZ
-         42UqjpWxGrP+pv2w5fx0WphozPKOpQ7nXLNdliwxXr6E/EoyE3BKTiO7xSZ9o19Cnvce
-         5zBkXml892Nh4bTO/m+ZgY3zMvGSPwre+X7rKCLwWsPD04m4RdCfcJ83qoF3D9uM/kpQ
-         pcWUb8Jg3Tgz0K2vN5URE56XXaJyv2KA4rufKlaYws+VqDX3JaQt/MEO4QaHJbxPz44k
-         y/DKHAw75C253L9FP1jI+D6Ou48twVCOKBtu5nkIy/1XtpbGjRVzFICAjvKj4QXr/0C5
-         cZxg==
-X-Gm-Message-State: ANhLgQ2GKh7PcEGf8W3V3JqRte+vgTBYTOUuMOnCId3JGWY4NZ7xsN6i
-        yzLLuATBygBG92oVttCP6lqu0kBNGDJuMmQBEaanheqbQhjB
-X-Google-Smtp-Source: ADFU+vvBMXHPEVzZfO8YFe9kW6MIFkbIJ7hF8kO6rAHH2jV/E0B4uqVQ3pZEgaiV4qVxTOWqsAwD5nlb/2zaCBCJjKUTD8jHWswW
-MIME-Version: 1.0
-X-Received: by 2002:a02:7b13:: with SMTP id q19mr16145948jac.73.1584156961742;
- Fri, 13 Mar 2020 20:36:01 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 20:36:01 -0700
-In-Reply-To: <CAM_iQpUBL=P6xvnyZckwVPUnmxReFDXJpfTA-ZtMqeAnh-4XVA@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f9286d05a0c848b3@google.com>
-Subject: Re: WARNING: ODEBUG bug in route4_change
-From:   syzbot <syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 13 Mar 2020 23:43:58 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7E99E15A1577C;
+        Fri, 13 Mar 2020 20:43:57 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 20:43:54 -0700 (PDT)
+Message-Id: <20200313.204354.1099710416713347967.davem@davemloft.net>
+To:     bay@hackerdom.ru
+Cc:     oliver@neukum.org, gregkh@linuxfoundation.org, info@metux.net,
+        tglx@linutronix.de, kstewart@linuxfoundation.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cdc_ncm: Implement the 32-bit version of NCM
+ Transfer Block
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200313213823.178435-1-bay@hackerdom.ru>
+References: <20200313213823.178435-1-bay@hackerdom.ru>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 13 Mar 2020 20:43:57 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Alexander Bersenev <bay@hackerdom.ru>
+Date: Sat, 14 Mar 2020 02:38:20 +0500
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+> The NCM specification defines two formats of transfer blocks: with 16-bit
+> fields (NTB-16) and with 32-bit fields (NTB-32). Currently only NTB-16 is
+> implemented.
+> 
+> This patch adds the support of NTB-32. The motivation behind this is that
+> some devices such as E5785 or E5885 from the current generation of Huawei
+> LTE routers do not support NTB-16. The previous generations of Huawei
+> devices are also use NTB-32 by default.
+> 
+> Also this patch enables NTB-32 by default for Huawei devices.
+> 
+> During the 2019 ValdikSS made five attempts to contact Huawei to add the
+> NTB-16 support to their router firmware, but they were unsuccessful.
+> 
+> Signed-off-by: Alexander Bersenev <bay@hackerdom.ru>
 
-Reported-and-tested-by: syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com
+This patch is already in my net-next tree.
 
-Tested on:
+You need to submit the follow-up fix all by itself, relative to my
+net-next GIT tree.
 
-commit:         29311b74 cls_route: remove the old filter from hashtable
-git tree:       https://github.com/congwang/linux.git tcindex
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
-dashboard link: https://syzkaller.appspot.com/bug?extid=f9b32aaacd60305d9687
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+You must always post patches against the GIT tree that your change
+is targetting, that way you will avoid situations like this.
 
-Note: testing is done by a robot and is best-effort only.
+Thank you.
