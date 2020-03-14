@@ -2,158 +2,122 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65371C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A265EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C88C20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BAA20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vfg9IUL1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M+f3VMz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbgCODzy (ORCPT
+        id S1727780AbgCOD4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:55:54 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46519 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbgCODzx (ORCPT
+        Sat, 14 Mar 2020 23:56:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48808 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727646AbgCOD4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:55:53 -0400
-Received: by mail-qt1-f195.google.com with SMTP id t13so11226319qtn.13
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 20:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wAGBaGlP5UjGPHzk24EwmtbBIUN0VOZVoqYTIi4xf8s=;
-        b=Vfg9IUL1wQtNRrZmPe6JtE+jjCAl0DofHknEisT0EbX3xBQN3Dz8aPLIm8ZvAFZLpW
-         qN+z/fTYjhI9C4NcGE1LFZdKV+Yyf5pCx/sLqJrSab0GaDDcTFoL/opOC63Io96pVQ0N
-         iC/I/5JKSpaT+w3wCUwKSbR0zsCKLzhxwnLbnolKriSY3W/NvvOuDw/x2xVh/OVQUlJ9
-         vXwpCt7G8jpOrnUZ1gMzKxcrX249o0IWQR1VspqSENNXPDe5TD7sG7kjDa5ViEDOExG4
-         QHRK48BSBvgJIqyfN5BwgCl20FR8cPE9CCt1C9ilZLLQO8f3ddEqV5vi2Zmq4wWcOxFI
-         m7pg==
+        Sat, 14 Mar 2020 23:56:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584244564;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G7U9eOBxycUxXuaSYt7hoS9gbd47jdv119MFjfE5TZ4=;
+        b=M+f3VMz9FU3iWNCBdKmvcKjhmYAEEHBcD0MZfDTBg9+OTKHkQngSJOl+X9wMHb3dayfrQe
+        2bLkgAaZDzETJXGmtcCGhaqFz0kb9Vbv1GiORXGYF+7Td6ArDwTyIaM+k5uDvnT39xkRfF
+        GyIEdrRBGMGJADzVhCYSdJRRtUytFFs=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-xkluNi-zNEqtzXFecVBZ3Q-1; Sat, 14 Mar 2020 07:52:32 -0400
+X-MC-Unique: xkluNi-zNEqtzXFecVBZ3Q-1
+Received: by mail-wr1-f70.google.com with SMTP id x14so5805796wrv.23
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 04:52:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wAGBaGlP5UjGPHzk24EwmtbBIUN0VOZVoqYTIi4xf8s=;
-        b=A1Q1z9yrFnpXOstzOmulUtnm/RahZVzhc+BtKPRLZsqs2j1y3vlCJIMLKe2IJA+uSf
-         sHxPxSdiyMaXbFYMAMckY+25ucz8wlyHQkLycsU0oZESOfwz79gdn9WEmPZHpojP09r/
-         Fu36Meaxe1kEIQ0gI+wSo+MthhiN3V6VLk2JLWpqFakyS4HFSQWr8QXPmm+yh4l2eWfC
-         X3A22RBCQDryCirG99DIy1peiaJFP1nuxPh6FEfZdChoGf+kw/oflM449RZIzAI8AgM6
-         fMmUlUkN033vJiijsbyPHFPtwnUWyDR56ehZPQHfa8ceaf5e8jlajtfQxstQn2E33rNK
-         y8PQ==
-X-Gm-Message-State: ANhLgQ18ajVB5gGYarXxt3KJ3rtjlmLVFDrbhgnqR1mBDMl/LNvXlxZR
-        TehNUTmJUeshnPe6Vk71Yz8CNCGNQtm8XxH6KG9CU85jJTI=
-X-Google-Smtp-Source: ADFU+vsaWhVJeWwbcUR3mI1iOg1Kx7ily9lUjGMV/AaCuYWbtMaJdWvOnghbteC5GlnLye9vMTld7eLbldeE1uH+RS8=
-X-Received: by 2002:a37:8b01:: with SMTP id n1mr15063650qkd.407.1584172414971;
- Sat, 14 Mar 2020 00:53:34 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G7U9eOBxycUxXuaSYt7hoS9gbd47jdv119MFjfE5TZ4=;
+        b=iBsJv2xHL20fHi90TK6FLAP5Ec8hWcYsZl8E18PeDUNvOQ2JuFg6M1NL64LXWnwzyy
+         uD3vibH3NfgqxphzZBkJK7kGFZx4HVzo39HvH7/12z5X1kw4a0SwP5BGVUeDwBse4TWe
+         w0soMRws6Aoazh0tav7rJcWsKTzqD3khy8BIzYxb1f84VwfgPS1xGAvQp3nBylK8XemB
+         +A/VwE6BLglnrXZKQFPOxjGQAatUu/aA5FAew54kQg4rG1S77/7LwRg7IVB4vxFzDIIP
+         3svgmyQsU4QG+1n9mAjP1OAjooashfSaZSg48EBpWMUgq5d+0xv1Yqv7NLkTV3tLA4qP
+         3MzQ==
+X-Gm-Message-State: ANhLgQ2HiVcC8Mizmv0Q1J34nIMKTFbDABU/FlT+/5JWFpDIT3AkVPjo
+        ZngFMXjqRDQAKsCIcu+nJYwW28ga0MwlwcgZTUYSilz2HTaNLHVGmCvHs0HjYoWtc5s0h7gwPuE
+        kkUhvRI5hBQWEr1IfavGfDyzr
+X-Received: by 2002:adf:e3cc:: with SMTP id k12mr19942153wrm.266.1584186751099;
+        Sat, 14 Mar 2020 04:52:31 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtbO2E61XdLtXp/96mfvEQSV5mUdgZ8xyNKOMzmTPGn0uJp/s3kNcRw4aIWCJobbf0eDb3gIg==
+X-Received: by 2002:adf:e3cc:: with SMTP id k12mr19942136wrm.266.1584186750833;
+        Sat, 14 Mar 2020 04:52:30 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7de8:5d90:2370:d1ac? ([2001:b07:6468:f312:7de8:5d90:2370:d1ac])
+        by smtp.gmail.com with ESMTPSA id k126sm21021489wme.4.2020.03.14.04.52.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Mar 2020 04:52:30 -0700 (PDT)
+Subject: Re: [PATCH 0/6] KVM: nVMX: propperly handle enlightened vmptrld
+ failure conditions
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Liran Alon <liran.alon@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>
+References: <20200309155216.204752-1-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <1cebb8c1-45f3-4991-f3d9-40cea1be1871@redhat.com>
+Date:   Sat, 14 Mar 2020 12:52:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <000000000000f4b79505a0cad08b@google.com>
-In-Reply-To: <000000000000f4b79505a0cad08b@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sat, 14 Mar 2020 08:53:24 +0100
-Message-ID: <CACT4Y+YOYhEngp_aGHrzMG=dZO=dUVjpjC72vd6_L01fROUchQ@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- corrupted (5)
-To:     syzbot <syzbot+8b0e78e390d1715b0f4e@syzkaller.appspotmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        KVM list <kvm@vger.kernel.org>
-Cc:     allison@lohutok.net, alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Takashi Iwai <tiwai@suse.com>, Takashi Iwai <tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200309155216.204752-1-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 7:37 AM syzbot
-<syzbot+8b0e78e390d1715b0f4e@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    30bb5572 Merge tag 'ktest-v5.6' of git://git.kernel.org/pu..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15d300b1e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a5295e161cd85b82
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8b0e78e390d1715b0f4e
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a57709e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13de9e91e00000
+On 09/03/20 16:52, Vitaly Kuznetsov wrote:
+> Miaohe Lin noticed that we incorrectly handle enlightened vmptrld failures
+> in nested_vmx_run(). Trying to handle errors correctly, I fixed
+> a few things:
+> - NULL pointer dereference with invalid eVMCS GPAs [PATCH1]
+> - moved eVMCS mapping after migration to nested_get_vmcs12_pages() from
+>   nested_sync_vmcs12_to_shadow() [PATCH2]
+> - added propper nested_vmx_handle_enlightened_vmptrld() error handling
+>   [PATCH3]
+> - added selftests for incorrect eVMCS revision id and GPA [PATCHes4-6]
+> 
+> PATCH1 fixes a DoS and thus marked for stable@.
+> 
+> Vitaly Kuznetsov (6):
+>   KVM: nVMX: avoid NULL pointer dereference with incorrect EVMCS GPAs
+>   KVM: nVMX: stop abusing need_vmcs12_to_shadow_sync for eVMCS mapping
+>   KVM: nVMX: properly handle errors in
+>     nested_vmx_handle_enlightened_vmptrld()
+>   KVM: selftests: define and use EVMCS_VERSION
+>   KVM: selftests: test enlightened vmenter with wrong eVMCS version
+>   KVM: selftests: enlightened VMPTRLD with an incorrect GPA
+> 
+>  arch/x86/kvm/vmx/evmcs.h                      |  7 ++
+>  arch/x86/kvm/vmx/nested.c                     | 64 +++++++++++++------
+>  tools/testing/selftests/kvm/include/evmcs.h   |  2 +
+>  tools/testing/selftests/kvm/lib/x86_64/vmx.c  |  2 +-
+>  .../testing/selftests/kvm/x86_64/evmcs_test.c | 25 ++++++--
+>  5 files changed, 72 insertions(+), 28 deletions(-)
+> 
 
-Looking at the reproducer, it's all KVM, +KVM maintainers.
+Queued, thanks.
 
-> The bug was bisected to:
->
-> commit 271213ef4d0d3a3b80d4cf95c5f2bebb5643e666
-> Author: Takashi Iwai <tiwai@suse.de>
-> Date:   Tue Dec 10 06:34:50 2019 +0000
->
->     ALSA: pcxhr: Support PCM sync_stop
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1566b08de00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1766b08de00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1366b08de00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+8b0e78e390d1715b0f4e@syzkaller.appspotmail.com
-> Fixes: 271213ef4d0d ("ALSA: pcxhr: Support PCM sync_stop")
->
-> BUG: kernel NULL pointer dereference, address: 0000000000000086
-> #PF: supervisor instruction fetch in kernel mode
-> #PF: error_code(0x0010) - not-present page
-> PGD a27fa067 P4D a27fa067 PUD a2185067 PMD 0
-> Oops: 0010 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 9168 Comm: syz-executor418 Not tainted 5.6.0-rc5-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:0x86
-> Code: Bad RIP value.
-> RSP: 0018:ffffc90002c9f998 EFLAGS: 00010086
-> RAX: ffffc90002c9f9c8 RBX: fffffe0000000000 RCX: ffff8880a31b6280
-> RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-> RBP: 0000000000000ec0 R08: ffffffff839888d3 R09: ffffffff811c7d9a
-> R10: ffff8880a31b6280 R11: 0000000000000002 R12: dffffc0000000000
-> R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-> FS:  0000000000981880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000000005c CR3: 00000000986d2000 CR4: 00000000001426e0
-> Call Trace:
-> Modules linked in:
-> CR2: 0000000000000086
-> ---[ end trace 7c78bc94cfc0a37d ]---
-> RIP: 0010:0x86
-> Code: Bad RIP value.
-> RSP: 0018:ffffc90002c9f998 EFLAGS: 00010086
-> RAX: ffffc90002c9f9c8 RBX: fffffe0000000000 RCX: ffff8880a31b6280
-> RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-> RBP: 0000000000000ec0 R08: ffffffff839888d3 R09: ffffffff811c7d9a
-> R10: ffff8880a31b6280 R11: 0000000000000002 R12: dffffc0000000000
-> R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-> FS:  0000000000981880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000000005c CR3: 00000000986d2000 CR4: 00000000001426e0
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+Paolo
+
