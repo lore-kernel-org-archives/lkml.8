@@ -2,131 +2,263 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DATE_IN_PAST_12_24,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63745C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0F8C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FB620637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CEF2076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ITfYkerg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbgCOBgd (ORCPT
+        id S1727356AbgCOBgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:36:33 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:45342 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgCOBgb (ORCPT
+        Sat, 14 Mar 2020 21:36:54 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:61944 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727334AbgCOBgy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:36:31 -0400
-Received: by mail-io1-f72.google.com with SMTP id h76so3510687iof.12
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 18:36:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=OXIiMb21nMuToBa09iBerZ4zSwKKsiaz46UUaxnA9wY=;
-        b=BEkB6ay2xg2iMlMmBUmFKSe0D843mRfkr4NiEQC+aE33RdcpdsqzEeCBDw0e3JPn08
-         dLwRur2Vb64acf1QceY0r74vt+qDFXGjAyOg0PBSt3qjIvpL8HEuXB5/yXngqaIOgdmy
-         MeEoCPCNDpnksHRP5IyMi90PNoWfXDhzWeHuThEmLAFn1O44sfBpngAHdgCCPFQuh7Jx
-         WRuEhQF4f3b8RqFQwt3a9bf60/KwAhi0MpKR4rgDtBTD0GRW2gsdwtlfLp3JyxflQYlX
-         I/7akN2QERMEWfXn076Zk/LhAagVCMle1rHixydb3ZJt8nb0tA/k3ld6mUvXnlmOsJu8
-         3rYQ==
-X-Gm-Message-State: ANhLgQ3Jn83PHJ0lGE7x//dwT80DeUe6xVx8jHCAyvvr5JbPDqx4KPGc
-        1L43x4wGo40FLpf/l4cgdZpMbcgMJi+3hZ/ueKWUt1w8u/VU
-X-Google-Smtp-Source: ADFU+vun2pqyW2VerBTIxX71FDFK/o02Hiw+MRbvsmIM8i1J/NP/s2umzPgnY3nwd6KWQB2Gj6SGp2TvBjbsmKIpwKUCc6Io8HDB
-MIME-Version: 1.0
-X-Received: by 2002:a6b:3944:: with SMTP id g65mr442793ioa.78.1584167833088;
- Fri, 13 Mar 2020 23:37:13 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 23:37:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f4b79505a0cad08b@google.com>
-Subject: BUG: unable to handle kernel NULL pointer dereference in corrupted (5)
-From:   syzbot <syzbot+8b0e78e390d1715b0f4e@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, alsa-devel@alsa-project.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        perex@perex.cz, rfontana@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        tiwai@suse.com, tiwai@suse.de
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 14 Mar 2020 21:36:54 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584236213; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=jonzZp63L40u3yfPOPtIkP2E/IYQDyZzE0IebztJjEc=; b=ITfYkerg+ADEqcMsRnQv+rfReQnAwnMtGoi8AFn6bMM7Ofv9Ip910rVomXIFWx0ILUQSwIGo
+ mpowVzATUI9vv0hyZzL98hPIKEF8nEvXihCRW+WVWSL1rQhQbaDfNYgAFyh+TN8kPzbLP9Zi
+ 9kE4TsinVY++Dclf1py0zaZkGvc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6d277b.7fbaa34f7068-smtp-out-n03;
+ Sat, 14 Mar 2020 18:50:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3A63AC433D2; Sat, 14 Mar 2020 18:50:34 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5EBA0C433CB;
+        Sat, 14 Mar 2020 18:50:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5EBA0C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v6 3/3] clk: qcom: Add modem clock controller driver for SC7180
+Date:   Sun, 15 Mar 2020 00:19:58 +0530
+Message-Id: <1584211798-10332-4-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
+References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add support for the modem clock controller found on SC7180
+based devices. This would allow modem drivers to probe and
+control their clocks.
 
-syzbot found the following crash on:
-
-HEAD commit:    30bb5572 Merge tag 'ktest-v5.6' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15d300b1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a5295e161cd85b82
-dashboard link: https://syzkaller.appspot.com/bug?extid=8b0e78e390d1715b0f4e
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a57709e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13de9e91e00000
-
-The bug was bisected to:
-
-commit 271213ef4d0d3a3b80d4cf95c5f2bebb5643e666
-Author: Takashi Iwai <tiwai@suse.de>
-Date:   Tue Dec 10 06:34:50 2019 +0000
-
-    ALSA: pcxhr: Support PCM sync_stop
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1566b08de00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1766b08de00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1366b08de00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+8b0e78e390d1715b0f4e@syzkaller.appspotmail.com
-Fixes: 271213ef4d0d ("ALSA: pcxhr: Support PCM sync_stop")
-
-BUG: kernel NULL pointer dereference, address: 0000000000000086
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0010) - not-present page
-PGD a27fa067 P4D a27fa067 PUD a2185067 PMD 0 
-Oops: 0010 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 9168 Comm: syz-executor418 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:0x86
-Code: Bad RIP value.
-RSP: 0018:ffffc90002c9f998 EFLAGS: 00010086
-RAX: ffffc90002c9f9c8 RBX: fffffe0000000000 RCX: ffff8880a31b6280
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: 0000000000000ec0 R08: ffffffff839888d3 R09: ffffffff811c7d9a
-R10: ffff8880a31b6280 R11: 0000000000000002 R12: dffffc0000000000
-R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-FS:  0000000000981880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000000005c CR3: 00000000986d2000 CR4: 00000000001426e0
-Call Trace:
-Modules linked in:
-CR2: 0000000000000086
----[ end trace 7c78bc94cfc0a37d ]---
-RIP: 0010:0x86
-Code: Bad RIP value.
-RSP: 0018:ffffc90002c9f998 EFLAGS: 00010086
-RAX: ffffc90002c9f9c8 RBX: fffffe0000000000 RCX: ffff8880a31b6280
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: 0000000000000ec0 R08: ffffffff839888d3 R09: ffffffff811c7d9a
-R10: ffff8880a31b6280 R11: 0000000000000002 R12: dffffc0000000000
-R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-FS:  0000000000981880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000000005c CR3: 00000000986d2000 CR4: 00000000001426e0
-
-
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/clk/qcom/Kconfig      |   9 +++
+ drivers/clk/qcom/Makefile     |   1 +
+ drivers/clk/qcom/mss-sc7180.c | 143 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 153 insertions(+)
+ create mode 100644 drivers/clk/qcom/mss-sc7180.c
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 15cdcdc..4225f86 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -280,6 +280,15 @@ config SC_GPUCC_7180
+ 	  Say Y if you want to support graphics controller devices and
+ 	  functionality such as 3D graphics.
+
++config SC_MSS_7180
++	tristate "SC7180 Modem Clock Controller"
++	select SC_GCC_7180
++	help
++	  Support for the Modem Subsystem clock controller on Qualcomm
++	  Technologies, Inc on SC7180 devices.
++	  Say Y if you want to use the Modem branch clocks of the Modem
++	  subsystem clock controller to reset the MSS subsystem.
++
+ config SC_VIDEOCC_7180
+ 	tristate "SC7180 Video Clock Controller"
+ 	select SC_GCC_7180
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index 656a87e..9135592 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -50,6 +50,7 @@ obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
+ obj-$(CONFIG_SC_DISPCC_7180) += dispcc-sc7180.o
+ obj-$(CONFIG_SC_GCC_7180) += gcc-sc7180.o
+ obj-$(CONFIG_SC_GPUCC_7180) += gpucc-sc7180.o
++obj-$(CONFIG_SC_MSS_7180) += mss-sc7180.o
+ obj-$(CONFIG_SC_VIDEOCC_7180) += videocc-sc7180.o
+ obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
+ obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
+diff --git a/drivers/clk/qcom/mss-sc7180.c b/drivers/clk/qcom/mss-sc7180.c
+new file mode 100644
+index 0000000..673fa1a
+--- /dev/null
++++ b/drivers/clk/qcom/mss-sc7180.c
+@@ -0,0 +1,143 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/pm_clock.h>
++#include <linux/pm_runtime.h>
++#include <linux/regmap.h>
++
++#include <dt-bindings/clock/qcom,mss-sc7180.h>
++
++#include "clk-regmap.h"
++#include "clk-branch.h"
++#include "common.h"
++
++static struct clk_branch mss_axi_nav_clk = {
++	.halt_reg = 0x20bc,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x20bc,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "mss_axi_nav_clk",
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "gcc_mss_nav_axi",
++			},
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch mss_axi_crypto_clk = {
++	.halt_reg = 0x20cc,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x20cc,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "mss_axi_crypto_clk",
++			.parent_data = &(const struct clk_parent_data){
++				.fw_name = "gcc_mss_mfab_axis",
++			},
++			.num_parents = 1,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static const struct regmap_config mss_regmap_config = {
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.val_bits	= 32,
++	.fast_io	= true,
++	.max_register	= 0x41aa0cc,
++};
++
++static struct clk_regmap *mss_sc7180_clocks[] = {
++	[MSS_AXI_CRYPTO_CLK] = &mss_axi_crypto_clk.clkr,
++	[MSS_AXI_NAV_CLK] = &mss_axi_nav_clk.clkr,
++};
++
++static const struct qcom_cc_desc mss_sc7180_desc = {
++	.config = &mss_regmap_config,
++	.clks = mss_sc7180_clocks,
++	.num_clks = ARRAY_SIZE(mss_sc7180_clocks),
++};
++
++static int mss_sc7180_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	pm_runtime_enable(&pdev->dev);
++	ret = pm_clk_create(&pdev->dev);
++	if (ret)
++		goto disable_pm_runtime;
++
++	ret = pm_clk_add(&pdev->dev, "cfg_ahb");
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to acquire iface clock\n");
++		goto destroy_pm_clk;
++	}
++
++	ret = qcom_cc_probe(pdev, &mss_sc7180_desc);
++	if (ret < 0)
++		goto destroy_pm_clk;
++
++	return 0;
++
++destroy_pm_clk:
++	pm_clk_destroy(&pdev->dev);
++
++disable_pm_runtime:
++	pm_runtime_disable(&pdev->dev);
++
++	return ret;
++}
++
++static int mss_sc7180_remove(struct platform_device *pdev)
++{
++	pm_clk_destroy(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++
++	return 0;
++}
++
++static const struct dev_pm_ops mss_sc7180_pm_ops = {
++	SET_RUNTIME_PM_OPS(pm_clk_suspend, pm_clk_resume, NULL)
++};
++
++static const struct of_device_id mss_sc7180_match_table[] = {
++	{ .compatible = "qcom,sc7180-mss" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, mss_sc7180_match_table);
++
++static struct platform_driver mss_sc7180_driver = {
++	.probe		= mss_sc7180_probe,
++	.remove		= mss_sc7180_remove,
++	.driver		= {
++		.name		= "sc7180-mss",
++		.of_match_table = mss_sc7180_match_table,
++		.pm = &mss_sc7180_pm_ops,
++	},
++};
++
++static int __init mss_sc7180_init(void)
++{
++	return platform_driver_register(&mss_sc7180_driver);
++}
++subsys_initcall(mss_sc7180_init);
++
++static void __exit mss_sc7180_exit(void)
++{
++	platform_driver_unregister(&mss_sc7180_driver);
++}
++module_exit(mss_sc7180_exit);
++
++MODULE_DESCRIPTION("QTI MSS SC7180 Driver");
++MODULE_LICENSE("GPL v2");
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
