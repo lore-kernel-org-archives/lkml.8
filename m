@@ -2,122 +2,238 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DATE_IN_PAST_12_24,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB27DC0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE4BC1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D86205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2980920724
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:21:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TIvWcuhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgCODUj (ORCPT
+        id S1727298AbgCODVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:20:39 -0400
-Received: from mail-qv1-f71.google.com ([209.85.219.71]:55398 "EHLO
-        mail-qv1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCODUj (ORCPT
+        Sat, 14 Mar 2020 23:21:55 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38155 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgCODVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:20:39 -0400
-Received: by mail-qv1-f71.google.com with SMTP id y11so10161481qvx.22
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 20:20:36 -0700 (PDT)
+        Sat, 14 Mar 2020 23:21:54 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k21so14057023oij.5;
+        Sat, 14 Mar 2020 20:21:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+pYPykgLXS7lxStFlyLTUgaTilQs/yGzdQnPq1WqMOI=;
+        b=TIvWcuhMIrnaPQnzkECzSlL8knE56EKLaAKfOTf/HwzEeFRjhcoRXJWhflgOIidecR
+         IUajaTML/QMRK/LGCRXEFaF4wl2Sy1mrI6DpLJHKtTn/QfyXP8BfnFBI4sf7j8seJqF2
+         AEvoUHNTUKOknkxBY1UjkcAz6qJ3FCAnQCycfgCF09yxsfJxWzUqrIPYJWZqwPitRuWs
+         U4qRUlnmsqQYK5BTC8epGvRyIPwT9e9xVGDWnVeouv4LBu3YTjKFr5ZBtobVVoSLpa7s
+         EIH2BVh7unJcClzcc50iDtSfe/JOq4MehqOoBIb1k43+7FpsbQLc9Zsh9Iue9yNZfiHt
+         7iYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=fehXyPD76GCyl5R7ov6y7Hf3HMx60GvaSqGjNkGo7AI=;
-        b=dsJQD1PCWjaTW71Y7TrzqmL8eHQv22y9Dh9v96KjlDsECHXCrQ98TdEWteeOI2CIn2
-         06ZgcbwEcDnZyY7DaC8pB+/CQQ0WHFOC0c8hnq238f0mR73juQJE/Z0RkNvVBL+nrCXp
-         o9yXx0WShCcSbRHeFIXOpwor9Pd8Bi+Z/+3eawHnOqW6RYiCYM1AXaEXXZvKzwROTDkb
-         HRFdVt9FqRRHP6qtdI5oE6cdiO/d0YYZUuXfIoVi1RZtNM3ODeL40c05sVHI9YlDtZTr
-         zAo0QeBqVl5zyJn6nqLov0mZPipYXuY7ZzQ8AmbQTDERch2gySIJMUT6OswfusXubVKK
-         G9Tg==
-X-Gm-Message-State: ANhLgQ26PBvVtLlCNOAV6OeMoeJgNB5BrygtCYkAFapQRuc8tuoSltin
-        CFDuycWLat6Rta3J24EpbrV3r4GLfnEW+/GRFOXyO+MgJP1K
-X-Google-Smtp-Source: ADFU+vv2891WR4s0bwl6a/z+8zKmjAsGygTo5Ydw9RASenClGGMHV/Cth46q/9iVaEz8Y3XWzsvuErzYfw5bihwf1QLKGLYJq7XJ
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+pYPykgLXS7lxStFlyLTUgaTilQs/yGzdQnPq1WqMOI=;
+        b=bNL1htQfMWbvolLEY/kOR0AG6tDnHfvLKEArS2jJtqZPZXmygif4kTJ0/2N5j1rEZc
+         LJf3wUfUZlADsBVqp2uVC3NkdE9DAFsY/d0qS+P/mCMKe+xfRU0EO3CF5LnOdfIo9tkd
+         yYslTVWvO32uwsWNfMQGQ96laQWsSpWkZWHd5nIc6WIsfGBQKzuq8GaNmM/XynkMnT4A
+         Klkj5hW/u+0OxCYrAfzwwNRXBmnXM3UH+UZRj6UmxWOaGXMCmSbDkXb8V1LNCoi+ElUv
+         eY6Rorq4W34Vf0aUvQ9P9P5IY12/KBnA6PuQYrhOIY63R8iMQEz/Bv+fTXvpxuzlj30B
+         kzfw==
+X-Gm-Message-State: ANhLgQ20XYZ9Nl+SywG04I1Cgd5ANNturhglGeuRHj2BaxdhFtuBzLFZ
+        oNXLIWo5g5AL6m9PlBjs5pRBrq0UOr8=
+X-Google-Smtp-Source: ADFU+vtQcLO7GbaBJMkQVIo+LdRKYw6YG03laQFpkC9O1/Sp9IEnoykCC/59zG6I0YYvZfLokauAMw==
+X-Received: by 2002:a17:90b:30d3:: with SMTP id hi19mr8923662pjb.52.1584173595732;
+        Sat, 14 Mar 2020 01:13:15 -0700 (PDT)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id my6sm15415916pjb.10.2020.03.14.01.13.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 14 Mar 2020 01:13:14 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 13:43:12 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>
+Subject: [PATCH v2] MIPS: pass non-NULL dev_id on shared request_irq()
+Message-ID: <20200314081312.GA4948@afzalpc>
+References: <20200304203144.GA4323@alpha.franken.de>
+ <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
+ <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
+ <20200311090308.GA5060@afzalpc>
+ <20200311104217.GA10615@alpha.franken.de>
+ <20200311131210.GA5115@afzalpc>
+ <20200311160307.GA15464@alpha.franken.de>
+ <20200311163249.GA4984@afzalpc>
+ <20200313121138.GA5985@afzalpc>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:a99:: with SMTP id 25mr17442914jas.37.1584177182115;
- Sat, 14 Mar 2020 02:13:02 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 02:13:02 -0700
-In-Reply-To: <CADG63jBKpM1vCzTHjPtTdsifpg_tuatd224BeFgra_ycXFW1ZQ@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000338c3a05a0ccfedd@google.com>
-Subject: Re: WARNING in idr_destroy
-From:   syzbot <syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com>
-To:     airlied@linux.ie, anenbupt@gmail.com, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313121138.GA5985@afzalpc>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Recently all usages of setup_irq() was replaced by request_irq().
+request_irq() does a few sanity checks that were not done in
+setup_irq(), if they fail irq registration will fail. One of the check
+is to ensure that non-NULL dev_id is passed in the case of shared irq.
+This caused malta on qemu to hang.
 
-syzbot has tested the proposed patch but the reproducer still triggered crash:
-WARNING in idr_destroy
+Fix it by passing handler as dev_id to all request_irq()'s that are
+shared. For sni, instead of passing non-NULL dev_id, remove shared irq
+flags.
 
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
-R13: 0000000000000203 R14: 00000000004c3e56 R15: 0000000000000008
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 9124 at lib/radix-tree.c:682 radix_tree_free_nodes lib/radix-tree.c:682 [inline]
-WARNING: CPU: 0 PID: 9124 at lib/radix-tree.c:682 idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9124 Comm: syz-executor.0 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- panic+0x264/0x7a9 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1b6/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:radix_tree_free_nodes lib/radix-tree.c:682 [inline]
-RIP: 0010:idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
-Code: 43 5f f9 48 89 df 48 c7 c6 10 83 17 88 e8 ca 5c 4c f9 4c 3b 65 b8 74 57 e8 7f 43 5f f9 4d 89 fc e9 67 ff ff ff e8 72 43 5f f9 <0f> 0b eb d5 89 f9 80 e1 07 38 c1 7c 84 e8 e0 75 9c f9 e9 7a ff ff
-RSP: 0018:ffffc900021b7ba0 EFLAGS: 00010293
-RAX: ffffffff8817dc0e RBX: ffff8880aa010598 RCX: ffff888096740440
-RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff8880aa010588
-RBP: ffffc900021b7be8 R08: ffffffff8817db80 R09: ffffed1011809f91
-R10: ffffed1011809f91 R11: 0000000000000000 R12: ffff8880aa010580
-R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
- drm_mode_create_lease_ioctl+0x13c9/0x18c0 drivers/gpu/drm/drm_lease.c:587
- drm_ioctl_kernel+0x2cf/0x410 drivers/gpu/drm/drm_ioctl.c:786
- drm_ioctl+0x52f/0x890 drivers/gpu/drm/drm_ioctl.c:886
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl fs/ioctl.c:763 [inline]
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl+0x113/0x190 fs/ioctl.c:770
- __x64_sys_ioctl+0x7b/0x90 fs/ioctl.c:770
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f680fc16c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f680fc176d4 RCX: 000000000045c479
-RDX: 0000000020000040 RSI: ffffffffffffffc6 RDI: 0000000000000003
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
-R13: 0000000000000203 R14: 00000000004c3e56 R15: 0000000000000008
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Fixes: ac8fd122e070 ("MIPS: Replace setup_irq() by request_irq()")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
 
+v2:
+ * use handler for dev_id
+ * remove shared irq flags for sni
 
-Tested on:
+ arch/mips/dec/setup.c                 | 2 +-
+ arch/mips/kernel/cevt-r4k.c           | 3 ++-
+ arch/mips/loongson2ef/lemote-2f/irq.c | 2 +-
+ arch/mips/pmcs-msp71xx/msp_time.c     | 2 +-
+ arch/mips/sni/a20r.c                  | 4 ++--
+ arch/mips/sni/pcit.c                  | 8 ++++----
+ arch/mips/sni/rm200.c                 | 6 +++---
+ 7 files changed, 14 insertions(+), 13 deletions(-)
 
-commit:         7f398516 drm/lease: fix stack variable uninitialized
-git tree:       https://github.com/hqj/hqjagain_test.git drm
-console output: https://syzkaller.appspot.com/x/log.txt?x=1227a1f9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cec95cb58b6f6294
-dashboard link: https://syzkaller.appspot.com/bug?extid=05835159fe322770fe3d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+diff --git a/arch/mips/dec/setup.c b/arch/mips/dec/setup.c
+index c8bbac0c5051..d4e868b828e5 100644
+--- a/arch/mips/dec/setup.c
++++ b/arch/mips/dec/setup.c
+@@ -758,7 +758,7 @@ void __init arch_init_irq(void)
+ 	/* Register the bus error interrupt. */
+ 	if (dec_interrupt[DEC_IRQ_BUS] >= 0 && busirq_handler) {
+ 		if (request_irq(dec_interrupt[DEC_IRQ_BUS], busirq_handler,
+-				busirq_flags, "bus error", NULL))
++				busirq_flags, "bus error", busirq_handler))
+ 			pr_err("Failed to register bus error interrupt\n");
+ 	}
+ 	/* Register the HALT interrupt. */
+diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
+index 64e917dfe6b2..17a9cbb8b3df 100644
+--- a/arch/mips/kernel/cevt-r4k.c
++++ b/arch/mips/kernel/cevt-r4k.c
+@@ -292,7 +292,8 @@ int r4k_clockevent_init(void)
+ 
+ 	cp0_timer_irq_installed = 1;
+ 
+-	if (request_irq(irq, c0_compare_interrupt, flags, "timer", NULL))
++	if (request_irq(irq, c0_compare_interrupt, flags, "timer",
++			c0_compare_interrupt))
+ 		pr_err("Failed to request irq %d (timer)\n", irq);
+ 
+ 	return 0;
+diff --git a/arch/mips/loongson2ef/lemote-2f/irq.c b/arch/mips/loongson2ef/lemote-2f/irq.c
+index 34e15e8b7a8f..6f00579971a3 100644
+--- a/arch/mips/loongson2ef/lemote-2f/irq.c
++++ b/arch/mips/loongson2ef/lemote-2f/irq.c
+@@ -109,7 +109,7 @@ void __init mach_init_irq(void)
+ 
+ 	/* setup north bridge irq (bonito) */
+ 	if (request_irq(LOONGSON_NORTH_BRIDGE_IRQ, ip6_action,
+-			IRQF_SHARED | IRQF_NO_THREAD, "cascade", NULL))
++			IRQF_SHARED | IRQF_NO_THREAD, "cascade", ip6_action))
+ 		pr_err("Failed to register north bridge cascade interrupt\n");
+ 	/* setup source bridge irq (i8259) */
+ 	if (request_irq(LOONGSON_SOUTH_BRIDGE_IRQ, no_action,
+diff --git a/arch/mips/pmcs-msp71xx/msp_time.c b/arch/mips/pmcs-msp71xx/msp_time.c
+index baf0da8b4c98..9c629829f447 100644
+--- a/arch/mips/pmcs-msp71xx/msp_time.c
++++ b/arch/mips/pmcs-msp71xx/msp_time.c
+@@ -81,7 +81,7 @@ unsigned int get_c0_compare_int(void)
+ 	/* MIPS_MT modes may want timer for second VPE */
+ 	if ((get_current_vpe()) && !tim_installed) {
+ 		if (request_irq(MSP_INT_VPE1_TIMER, c0_compare_interrupt, flags,
+-				"timer", NULL))
++				"timer", c0_compare_interrupt))
+ 			pr_err("Failed to register timer interrupt\n");
+ 		tim_installed++;
+ 	}
+diff --git a/arch/mips/sni/a20r.c b/arch/mips/sni/a20r.c
+index ba966d62fb4b..0ecffb65fd6d 100644
+--- a/arch/mips/sni/a20r.c
++++ b/arch/mips/sni/a20r.c
+@@ -222,8 +222,8 @@ void __init sni_a20r_irq_init(void)
+ 		irq_set_chip_and_handler(i, &a20r_irq_type, handle_level_irq);
+ 	sni_hwint = a20r_hwint;
+ 	change_c0_status(ST0_IM, IE_IRQ0);
+-	if (request_irq(SNI_A20R_IRQ_BASE + 3, sni_isa_irq_handler,
+-			IRQF_SHARED, "ISA", NULL))
++	if (request_irq(SNI_A20R_IRQ_BASE + 3, sni_isa_irq_handler, 0, "ISA",
++			NULL))
+ 		pr_err("Failed to register ISA interrupt\n");
+ }
+ 
+diff --git a/arch/mips/sni/pcit.c b/arch/mips/sni/pcit.c
+index 4a850ab03398..b331fe22c529 100644
+--- a/arch/mips/sni/pcit.c
++++ b/arch/mips/sni/pcit.c
+@@ -244,8 +244,8 @@ void __init sni_pcit_irq_init(void)
+ 	*(volatile u32 *)SNI_PCIT_INT_REG = 0;
+ 	sni_hwint = sni_pcit_hwint;
+ 	change_c0_status(ST0_IM, IE_IRQ1);
+-	if (request_irq(SNI_PCIT_INT_START + 6, sni_isa_irq_handler,
+-			IRQF_SHARED, "ISA", NULL))
++	if (request_irq(SNI_PCIT_INT_START + 6, sni_isa_irq_handler, 0, "ISA",
++			NULL))
+ 		pr_err("Failed to register ISA interrupt\n");
+ }
+ 
+@@ -259,8 +259,8 @@ void __init sni_pcit_cplus_irq_init(void)
+ 	*(volatile u32 *)SNI_PCIT_INT_REG = 0x40000000;
+ 	sni_hwint = sni_pcit_hwint_cplus;
+ 	change_c0_status(ST0_IM, IE_IRQ0);
+-	if (request_irq(MIPS_CPU_IRQ_BASE + 3, sni_isa_irq_handler,
+-			IRQF_SHARED, "ISA", NULL))
++	if (request_irq(MIPS_CPU_IRQ_BASE + 3, sni_isa_irq_handler, 0, "ISA",
++			NULL))
+ 		pr_err("Failed to register ISA interrupt\n");
+ }
+ 
+diff --git a/arch/mips/sni/rm200.c b/arch/mips/sni/rm200.c
+index ba1f2fc6a43e..d84744ca871d 100644
+--- a/arch/mips/sni/rm200.c
++++ b/arch/mips/sni/rm200.c
+@@ -473,10 +473,10 @@ void __init sni_rm200_irq_init(void)
+ 	sni_hwint = sni_rm200_hwint;
+ 	change_c0_status(ST0_IM, IE_IRQ0);
+ 	if (request_irq(SNI_RM200_INT_START + 0, sni_rm200_i8259A_irq_handler,
+-			IRQF_SHARED, "onboard ISA", NULL))
++			0, "onboard ISA", NULL))
+ 		pr_err("Failed to register onboard ISA interrupt\n");
+-	if (request_irq(SNI_RM200_INT_START + 1, sni_isa_irq_handler,
+-			IRQF_SHARED, "ISA", NULL))
++	if (request_irq(SNI_RM200_INT_START + 1, sni_isa_irq_handler, 0, "ISA",
++			NULL))
+ 		pr_err("Failed to register ISA interrupt\n");
+ }
+ 
+-- 
+2.18.0
 
