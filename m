@@ -2,102 +2,150 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E07EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179C0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453E02074C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D824F2074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584149245;
-	bh=swerRyUJxUODfmDzekCjsxd7ozDfqDISTBClgBXOfFE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hJT4IPpjNjwDcjinSFwCVRTnsBKrSEPbR/jF9ofGpx37BNIPcu7EfUi/qT3HBPRIP
-	 m9rFewax8+0WYTWNsg2pbJBQdrsa4foXYhOTD/Pv2ehuFiJZMmdosKwfpEN2RwXI2g
-	 mRGAQbeJA2WM8CPv/YOEhIx3PVBnn6t13TM1aO78=
+	s=default; t=1584149406;
+	bh=vFPRqj51GZag1JlfGyQscQkHysRJLfwsyD2BHctO5/g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JzJDi+jqDr9pEQ7IfIwNwhIYtkD12q692MsXrsezkwrlWR0rkYntTg1Dl7FAELU0i
+	 OPtPpNSO9seMMmzSXM1bwXNnNdErizKy2XT5FECmpxPv0cGUR/ra9NmM8MX3zUmk76
+	 Sm3aTvfLXcpcgBVPuHtST4gK5JVzBCwQ0Pnqgn6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbgCNB1Y (ORCPT
+        id S1727548AbgCNBaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 21:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbgCNB1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 21:27:23 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 006392074C;
-        Sat, 14 Mar 2020 01:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584149243;
-        bh=swerRyUJxUODfmDzekCjsxd7ozDfqDISTBClgBXOfFE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0UHuVr8i+OQnilm7VkRRv1BAqxlT/nxJQAuioO76UwF5jLBW8XshKQhae7T2OxRK+
-         5dFmWRdFwKVK3mFLu8doZMimwGHUJJXq0mlUGtEiM/YNIdVDmDk6x07xYWhMQg+1OZ
-         lgRrkWdAshDcgU/B+7a8eK+gno3l2yE8DGjnLc1Y=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] clk fixes for v5.6-rc5
-Date:   Fri, 13 Mar 2020 18:27:22 -0700
-Message-Id: <20200314012722.234270-1-sboyd@kernel.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        Fri, 13 Mar 2020 21:30:04 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:40396 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgCNBaE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 21:30:04 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 02E1TwYt031818;
+        Sat, 14 Mar 2020 10:29:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 02E1TwYt031818
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584149399;
+        bh=s+MLlPHJBKXrpuiK/f0t8GUAtsMBrB5F071oJPbl8vI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ED+w/hULkW6n1anfIyoGOTMM/5oIAJDxoVFphJoOi1Ia95t/7M8QFVXKBjoVSUYBF
+         loBRrmRtNKr6XnDGhCEO7/65FnYD2PrFkBlwQNKQcQXZ85i5A14dCRwWrYad1M5Xaj
+         7XyHagz14YQp8qxYIXh0qNWseSY8Vd1ZI3I+OK4ioPMJZ6+/LzhBuLXB94XZ+EoBHT
+         NCAA1ncM1sonPjQR4d8/NWjXuqAOs5bpXnzYp3kiUKcltWpWXtDub4am//bmrUmoir
+         NKLyJ89rrqzEYH1EQq+jexYR8PjoweRD8PWhF28/ZObc4Q1D3uX18Vse8Hw9Rbprgv
+         sdRKKfp3/8zeg==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id c18so7591989vsq.7;
+        Fri, 13 Mar 2020 18:29:58 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2TfjCspXjzvMF5+QGGYLdo3rvU42rYiKTDWtNOlksXgj4E4z/l
+        ILZeTQ1hKEqWtzC/ljGij0QNVxjNXP+ZM7H4txI=
+X-Google-Smtp-Source: ADFU+vs+Ei+coS5nmQYJ3m/p8jpM2R7rWBOFjjjJU8mvIZotzPAjx5d+zMNUiyTqlzLFL88Xz3l+0c7SsV0WqGBk52I=
+X-Received: by 2002:a67:2d55:: with SMTP id t82mr2322834vst.215.1584149397781;
+ Fri, 13 Mar 2020 18:29:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200311225044.29502-1-masahiroy@kernel.org>
+In-Reply-To: <20200311225044.29502-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 14 Mar 2020 10:29:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ=AVRwXxErOvs=2iK2vKYU3GrF_am7JUUFBiVGPchWXw@mail.gmail.com>
+Message-ID: <CAK7LNAQ=AVRwXxErOvs=2iK2vKYU3GrF_am7JUUFBiVGPchWXw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: fix references to other documents
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+On Thu, Mar 12, 2020 at 7:50 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> All the files in Documentation/kbuild/ were converted to reST.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+Applied to linux-kbuild.
 
-are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
+>
+>  Documentation/kbuild/kbuild.rst                 | 2 +-
+>  Documentation/kbuild/kconfig-macro-language.rst | 2 +-
+>  Documentation/kbuild/makefiles.rst              | 6 +++---
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
+> index f1e5dce86af7..510f38d7e78a 100644
+> --- a/Documentation/kbuild/kbuild.rst
+> +++ b/Documentation/kbuild/kbuild.rst
+> @@ -237,7 +237,7 @@ This is solely useful to speed up test compiles.
+>  KBUILD_EXTRA_SYMBOLS
+>  --------------------
+>  For modules that use symbols from other modules.
+> -See more details in modules.txt.
+> +See more details in modules.rst.
+>
+>  ALLSOURCE_ARCHS
+>  ---------------
+> diff --git a/Documentation/kbuild/kconfig-macro-language.rst b/Documentation/kbuild/kconfig-macro-language.rst
+> index 35b3263b7e40..8b413ef9603d 100644
+> --- a/Documentation/kbuild/kconfig-macro-language.rst
+> +++ b/Documentation/kbuild/kconfig-macro-language.rst
+> @@ -44,7 +44,7 @@ intermediate::
+>              def_bool y
+>
+>  Then, Kconfig moves onto the evaluation stage to resolve inter-symbol
+> -dependency as explained in kconfig-language.txt.
+> +dependency as explained in kconfig-language.rst.
+>
+>
+>  Variables
+> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+> index 6bc126a14b3d..04d5c01a2e99 100644
+> --- a/Documentation/kbuild/makefiles.rst
+> +++ b/Documentation/kbuild/makefiles.rst
+> @@ -924,7 +924,7 @@ When kbuild executes, the following steps are followed (roughly):
+>         $(KBUILD_AFLAGS_MODULE) is used to add arch-specific options that
+>         are used for assembler.
+>
+> -       From commandline AFLAGS_MODULE shall be used (see kbuild.txt).
+> +       From commandline AFLAGS_MODULE shall be used (see kbuild.rst).
+>
+>      KBUILD_CFLAGS_KERNEL
+>         $(CC) options specific for built-in
+> @@ -937,7 +937,7 @@ When kbuild executes, the following steps are followed (roughly):
+>
+>         $(KBUILD_CFLAGS_MODULE) is used to add arch-specific options that
+>         are used for $(CC).
+> -       From commandline CFLAGS_MODULE shall be used (see kbuild.txt).
+> +       From commandline CFLAGS_MODULE shall be used (see kbuild.rst).
+>
+>      KBUILD_LDFLAGS_MODULE
+>         Options for $(LD) when linking modules
+> @@ -945,7 +945,7 @@ When kbuild executes, the following steps are followed (roughly):
+>         $(KBUILD_LDFLAGS_MODULE) is used to add arch-specific options
+>         used when linking modules. This is often a linker script.
+>
+> -       From commandline LDFLAGS_MODULE shall be used (see kbuild.txt).
+> +       From commandline LDFLAGS_MODULE shall be used (see kbuild.rst).
+>
+>      KBUILD_LDS
+>
+> --
+> 2.17.1
+>
 
-for you to fetch changes up to 20055448dc1b439c87d0cb602e6d0469b0a3aaad:
-
-  Merge tag 'imx-clk-fixes-5.6' of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into clk-fixes (2020-02-25 08:57:00 -0800)
-
-----------------------------------------------------------------
-A small collection of fixes. I'll make another sweep soon to look for
-more fixes for this -rc series.
-
- - Mark device node const in of_clk_get_parent APIs to ease landing
-   changes in users later
- - Fix flag for Qualcomm SC7180 video clocks where we thought it would
-   never turn off but actually hardware takes care of it
- - Remove disp_cc_mdss_rscc_ahb_clk on Qualcomm SC7180 SoCs because this
-   clk is always on anyway
- - Correct some bad dt-binding numbers for i.MX8MN SoCs
-
-----------------------------------------------------------------
-Anson Huang (1):
-      clk: imx8mn: Fix incorrect clock defines
-
-Geert Uytterhoeven (1):
-      of: clk: Make of_clk_get_parent_{count,name}() parameter const
-
-Stephen Boyd (1):
-      Merge tag 'imx-clk-fixes-5.6' of git://git.kernel.org/.../shawnguo/linux into clk-fixes
-
-Taniya Das (2):
-      clk: qcom: videocc: Update the clock flag for video_cc_vcodec0_core_clk
-      clk: qcom: dispcc: Remove support of disp_cc_mdss_rscc_ahb_clk
-
- drivers/clk/clk.c                        |  4 ++--
- drivers/clk/qcom/dispcc-sc7180.c         | 19 -------------------
- drivers/clk/qcom/videocc-sc7180.c        |  2 +-
- include/dt-bindings/clock/imx8mn-clock.h |  4 ++--
- include/linux/of_clk.h                   |  8 ++++----
- 5 files changed, 9 insertions(+), 28 deletions(-)
 
 -- 
-Sent by a computer, using git, on the internet
+Best Regards
+Masahiro Yamada
