@@ -2,94 +2,113 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A38EC0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B235C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4418D20637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584236618;
-	bh=g+qCR8rgvUwJQKXzRWc9Irj4P4HHgrILoQcAVZefOoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gc9LYev434FCbjdGXoKATwCRjXl7pOxp9kJHux0ZQmLIbEp07xw5mlUzDAMfu8FWE
-	 7hVAiaRGNYdDEsoA7jRuRsx/8sOzA930eCgFKfLc+BusanY2Hq3gEgdzeAvqYv/p4i
-	 gIiCy9zLM+q1Dgy8zdq/zqNG3aweJM7yO1maaR5s=
+	by mail.kernel.org (Postfix) with ESMTP id 2DD1E206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:44:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgCOBnh (ORCPT
+        id S1726783AbgCOBok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:43:37 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36334 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbgCOBnh (ORCPT
+        Sat, 14 Mar 2020 21:44:40 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:15378 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726248AbgCOBoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:43:37 -0400
-Received: by mail-lf1-f67.google.com with SMTP id s1so11042736lfd.3
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 18:43:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cl7WWdndugVK0es2ynV4Gap0u1lguGYoJQLdlgdsR1k=;
-        b=enjZmzFVTuzvc7X10a6OFFS1apt7GY1I2smgBfberq8Jz+VIEZ+2YiLfLjdmxktnBE
-         2TMciEIExUafZhRF7hIQMfa8H8vCUIAUspLCDgLNuAhx9+/UhTAm10B63S3+JwoLTtpN
-         HyKgZp3zyHK4gR7k49zfwP/kx24+1Lp8+hCjebhsEYyom+LW7+s0ofy8lCv5RxB4XeyY
-         m7+yRa281afQgyZyIFCBd36AKhJM32hKVtaRWOQyPfrRMhrPTI+Pgh8v1cXZ228zk+Qw
-         gFuCWZjvgVetWRae8vVRRyOq0IioXwuE/8ktfoAddIiLw9DEyGZzVHSxA2tPlfmRyU55
-         86TA==
-X-Gm-Message-State: ANhLgQ3TFJxDSDmjyLgV6Y4o5oFjSsR5Y1imlTT8Juz5gWLYAUwgLyQO
-        5Ad9whKbN0bPIISSc/KkTmmjZFKy
-X-Google-Smtp-Source: ADFU+vuxlwBxUpjfTjmxexdc27Fw1psiW8V9oY9DcWgyKJ2vzjLtyCJ2iKiohct9r31VozfL4/eRFA==
-X-Received: by 2002:adf:f8c9:: with SMTP id f9mr7081671wrq.222.1584190602248;
-        Sat, 14 Mar 2020 05:56:42 -0700 (PDT)
-Received: from localhost (ip-37-188-252-125.eurotel.cz. [37.188.252.125])
-        by smtp.gmail.com with ESMTPSA id p16sm19736101wmi.40.2020.03.14.05.56.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2020 05:56:41 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 13:56:38 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, willy@infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
-        richard.weiyang@gmail.com
-Subject: Re: [PATCH v3] mm/sparse.c: Use kvmalloc_node/kvfree to alloc/free
- memmap for the classic sparse
-Message-ID: <20200314125638.GC10912@dhcp22.suse.cz>
-References: <20200312130822.6589-1-bhe@redhat.com>
- <20200312141749.GL27711@MiWiFi-R3L-srv>
- <20200313145619.GD21007@dhcp22.suse.cz>
- <20200314005334.GO27711@MiWiFi-R3L-srv>
+        Sat, 14 Mar 2020 21:44:39 -0400
+X-IronPort-AV: E=Sophos;i="5.70,554,1574118000"; 
+   d="scan'208";a="440346552"
+Received: from lfbn-bor-1-797-11.w86-234.abo.wanadoo.fr (HELO function.home) ([86.234.239.11])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 23:21:29 +0100
+Received: from samy by function.home with local (Exim 4.93)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1jDF9s-004ML5-HH; Sat, 14 Mar 2020 23:21:28 +0100
+Date:   Sat, 14 Mar 2020 23:21:28 +0100
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        linux-kernel@vger.kernel.org, jdike@addtoit.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, miguel.ojeda.sandonis@gmail.com,
+        willy@haproxy.com, ksenija.stanojevic@gmail.com, arnd@arndb.de,
+        mpm@selenic.com, herbert@gondor.apana.org.au,
+        jonathan@buzzard.org.uk, benh@kernel.crashing.org,
+        davem@davemloft.net, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        pavel@ucw.cz, len.brown@intel.com,
+        William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>
+Subject: Re: [PATCH RFC 3/3] speakup: misc: Use dynamic minor numbers for
+ speakup devices
+Message-ID: <20200314222128.mo4q3m72qoy76ayx@function>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        linux-kernel@vger.kernel.org, jdike@addtoit.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, miguel.ojeda.sandonis@gmail.com,
+        willy@haproxy.com, ksenija.stanojevic@gmail.com, arnd@arndb.de,
+        mpm@selenic.com, herbert@gondor.apana.org.au,
+        jonathan@buzzard.org.uk, benh@kernel.crashing.org,
+        davem@davemloft.net, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        pavel@ucw.cz, len.brown@intel.com,
+        William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>
+References: <20200309021747.626-1-zhenzhong.duan@gmail.com>
+ <20200309021747.626-4-zhenzhong.duan@gmail.com>
+ <20200309071506.GB4095204@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200314005334.GO27711@MiWiFi-R3L-srv>
+In-Reply-To: <20200309071506.GB4095204@kroah.com>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 14-03-20 08:53:34, Baoquan He wrote:
-> On 03/13/20 at 03:56pm, Michal Hocko wrote:
-> > On Thu 12-03-20 22:17:49, Baoquan He wrote:
-> > > This change makes populate_section_memmap()/depopulate_section_memmap
-> > > much simpler.
+Hello,
+
+Greg KH, le lun. 09 mars 2020 08:15:06 +0100, a ecrit:
+> On Mon, Mar 09, 2020 at 10:17:47AM +0800, Zhenzhong Duan wrote:
+> > Arnd notes in the link:
+> >    | To clarify: the only numbers that I think should be changed to dynamic
+> >    | allocation are for drivers/staging/speakup. While this is a fairly old
+> >    | subsystem, I would expect that it being staging means we can be a
+> >    | little more progressive with the changes.
 > > 
-> > Not only and you should make it more explicit. It also tries to allocate
-> > memmaps from the target numa node so this is a functional change. I
-> > would prefer to have that in a separate patch in case we hit some weird
-> > NUMA setups which would choke on memory less nodes and similar horrors.
+> > This releases misc device minor numbers 25-27 for dynamic usage.
+> > 
+> > Link: https://lore.kernel.org/lkml/20200120221323.GJ15860@mit.edu/t/
+> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+
+Acked-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+
+> > Cc: William Hubbs <w.d.hubbs@gmail.com>
+> > Cc: Chris Brannon <chris@the-brannons.com>
+> > Cc: Kirk Reiser <kirk@reisers.ca>
+> > Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >  drivers/staging/speakup/devsynth.c     | 10 +++-------
+> >  drivers/staging/speakup/speakup_soft.c | 14 +++++++-------
+> >  2 files changed, 10 insertions(+), 14 deletions(-)
 > 
-> Yes, splitting sounds more reasonable, I would love to do that. One
-> question is I noticed Andrew had picked this into -mm tree, if I post a
-> new patchset including these two small patches, whether it's convenient
-> to drop the old one and get these two merged.
+> speakup, while being in staging, has been around for a very long time,
+> so we might break things if we change their minor numbers.
+> 
+> I'd need an ACK from the speakup maintainers/developers before I can
+> take this as I don't have any way to verify what their systems look
+> like.
 
-Andrew usually just drops the previous version and replaces it by the
-new one. So just post a new version. Thanks!
+I believe it will be fine to use dynamic minor numbers, since the /dev
+entries are autocreated nowadays, and the espeakup and speechd-up don't
+use hardcoded minor values.
 
--- 
-Michal Hocko
-SUSE Labs
+Thanks for making sure,
+Samuel
