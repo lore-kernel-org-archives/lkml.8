@@ -2,156 +2,97 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBCEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F77C5ACC1
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2B12074C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B4E2074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UrNFuATq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uZyzXaRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbgCNAxp (ORCPT
+        id S1727810AbgCNAzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:53:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47897 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727629AbgCNAxp (ORCPT
+        Fri, 13 Mar 2020 20:55:08 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:50379 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727769AbgCNAzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:53:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584147224;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=y9gJ39nM22R6BINLHw3+oLq/uGsj2PXaZMR61+u7WNg=;
-        b=UrNFuATqm2haZeZ0wBboASLjVwF2k6+ReBMRzrPrzWYMuTkJzbsV4Msil5fDqRhUsfF8Sq
-        MUhqVKOxbwpR/G6meJOBKOHNigZbCV4m2HoQQrN5Ksb7AMmI2bkgNevmUadXTXZwSX4Tna
-        bjKK+eOWCy1Z6YLoQ0A4Q9BcgQSd/Jg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-150-ezN-Em1yPKWNPoaIkECnTA-1; Fri, 13 Mar 2020 20:53:42 -0400
-X-MC-Unique: ezN-Em1yPKWNPoaIkECnTA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 13 Mar 2020 20:55:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584147306; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=f+CR1kcG4Nmj1zbB3rR2lH3I1Cysjzz9Pe1f5KmSe4o=; b=uZyzXaRE3NWq8c86xJbOZJNXTfRjhUthJE+8qLat/f5xM4hEBP+hSwG+4raw4Fy7RwfMmfS/
+ Oxoglk5hKmeUZwgP0E/4GEvRMK0WcQrY6WueUlMV//OeZAV2FpA60J2DHDUZELqTDhN1Uj9L
+ 3WWeBk0iBlPgaxMWzL2v8ful3Vo=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6c2b68.7f139b73d228-smtp-out-n05;
+ Sat, 14 Mar 2020 00:55:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DE64DC447A1; Sat, 14 Mar 2020 00:55:03 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC6AE477;
-        Sat, 14 Mar 2020 00:53:40 +0000 (UTC)
-Received: from localhost (ovpn-12-20.pek2.redhat.com [10.72.12.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 89D335DA2C;
-        Sat, 14 Mar 2020 00:53:37 +0000 (UTC)
-Date:   Sat, 14 Mar 2020 08:53:34 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, willy@infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
-        richard.weiyang@gmail.com
-Subject: Re: [PATCH v3] mm/sparse.c: Use kvmalloc_node/kvfree to alloc/free
- memmap for the classic sparse
-Message-ID: <20200314005334.GO27711@MiWiFi-R3L-srv>
-References: <20200312130822.6589-1-bhe@redhat.com>
- <20200312141749.GL27711@MiWiFi-R3L-srv>
- <20200313145619.GD21007@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313145619.GD21007@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0E42CC4478F;
+        Sat, 14 Mar 2020 00:55:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0E42CC4478F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for sm8150 USB
+Date:   Fri, 13 Mar 2020 17:54:53 -0700
+Message-Id: <1584147293-6763-5-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
+References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/13/20 at 03:56pm, Michal Hocko wrote:
-> On Thu 12-03-20 22:17:49, Baoquan He wrote:
-> > This change makes populate_section_memmap()/depopulate_section_memmap
-> > much simpler.
-> 
-> Not only and you should make it more explicit. It also tries to allocate
-> memmaps from the target numa node so this is a functional change. I
-> would prefer to have that in a separate patch in case we hit some weird
-> NUMA setups which would choke on memory less nodes and similar horrors.
+The register map for SM8150 QMP USB SSPHY has moved
+QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
+an offset in the register table to override default value
+if it is a DP capable PHY.
 
-Yes, splitting sounds more reasonable, I would love to do that. One
-question is I noticed Andrew had picked this into -mm tree, if I post a
-new patchset including these two small patches, whether it's convenient
-to drop the old one and get these two merged.
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Sorry, I don't know very well how this works in mm maintaining.
-
-> 
-> > Suggested-by: Michal Hocko <mhocko@kernel.org>
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> 
-> I do not see any reason this shouldn't work. Btw. did you get to test
-> it?
-> 
-> Feel free to add
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> to both patches if you go and split.
-> 
-> > ---
-> > v2->v3:
-> >   Remove __GFP_NOWARN and use array_size when calling kvmalloc_node()
-> >   per Matthew's comments.
-> > 
-> >  mm/sparse.c | 27 +++------------------------
-> >  1 file changed, 3 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/mm/sparse.c b/mm/sparse.c
-> > index bf6c00a28045..bb99633575b5 100644
-> > --- a/mm/sparse.c
-> > +++ b/mm/sparse.c
-> > @@ -734,35 +734,14 @@ static void free_map_bootmem(struct page *memmap)
-> >  struct page * __meminit populate_section_memmap(unsigned long pfn,
-> >  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
-> >  {
-> > -	struct page *page, *ret;
-> > -	unsigned long memmap_size = sizeof(struct page) * PAGES_PER_SECTION;
-> > -
-> > -	page = alloc_pages(GFP_KERNEL|__GFP_NOWARN, get_order(memmap_size));
-> > -	if (page)
-> > -		goto got_map_page;
-> > -
-> > -	ret = vmalloc(memmap_size);
-> > -	if (ret)
-> > -		goto got_map_ptr;
-> > -
-> > -	return NULL;
-> > -got_map_page:
-> > -	ret = (struct page *)pfn_to_kaddr(page_to_pfn(page));
-> > -got_map_ptr:
-> > -
-> > -	return ret;
-> > +	return kvmalloc_node(array_size(sizeof(struct page),
-> > +			PAGES_PER_SECTION), GFP_KERNEL, nid);
-> >  }
-> >  
-> >  static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_pages,
-> >  		struct vmem_altmap *altmap)
-> >  {
-> > -	struct page *memmap = pfn_to_page(pfn);
-> > -
-> > -	if (is_vmalloc_addr(memmap))
-> > -		vfree(memmap);
-> > -	else
-> > -		free_pages((unsigned long)memmap,
-> > -			   get_order(sizeof(struct page) * PAGES_PER_SECTION));
-> > +	kvfree(pfn_to_page(pfn));
-> >  }
-> >  
-> >  static void free_map_bootmem(struct page *memmap)
-> > -- 
-> > 2.17.2
-> > 
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
-> 
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index cc04471..71a230a 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -164,6 +164,7 @@ enum qphy_reg_layout {
+ 	[QPHY_SW_RESET]			= 0x00,
+ 	[QPHY_START_CTRL]		= 0x44,
+ 	[QPHY_PCS_STATUS]		= 0x14,
++	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
+ };
+ 
+ static const unsigned int sdm845_ufsphy_regs_layout[] = {
+@@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+ 	if (cfg->has_phy_com_ctrl)
+ 		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+ 			     SW_PWRDN);
++	else if (!cfg->has_phy_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
++		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
++			     cfg->pwrdn_ctrl);
+ 	else
+ 		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
