@@ -2,100 +2,141 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40885C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3E4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 166672074E
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880402074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N8sEhkg8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UFnJrZOt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgCNAF0 (ORCPT
+        id S1727599AbgCNAKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:05:26 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38733 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgCNAFZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:05:25 -0400
-Received: by mail-pj1-f67.google.com with SMTP id m15so4527740pje.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:05:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XMbsIM64mSqh05JrNCssnMJdLyFSzyI+BFOw0GkSMUw=;
-        b=N8sEhkg8OD5Crs0Brz2CKkPWnZ0eeqdPahnd1a/gGHpOic4OtduLsFeG3gqAajmnxo
-         yTM6E/oagbTbE+Jaq2YK3kn4qsVnin8ITXfBduGQPTCkapgvcxsc+JMJKkSCC+jioSwB
-         Xfc9Kow9XjvxYhd+bjbGVs2ziweFLEYZ9/ghs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XMbsIM64mSqh05JrNCssnMJdLyFSzyI+BFOw0GkSMUw=;
-        b=S+K264GDSxpvKmtBqKAUn+y03vOd5RtjzYIdnKvnB42Y4WyRuuXT9bGvDQroBGME4X
-         G+oYqoe1GlrjMCKmquJ22/g9l0uRr4OwsOiVff99BDBfwuk3/eqVYMpVPxBqLyWXYoV9
-         F5OwuuRbHD8o4bwqEe9sO7CULl/e8FWyacl46Jmt4Fje5a7EhFHdhsUun+Qq/9NohrkM
-         83J7GWucgbSVwKRatBsEW40NXnot2NHHrbdWT65RAglOtpDrDqNeJ2RKQ9LSUzws1mMI
-         uzGcW2Hw/C10DmrtwwBNXBWy5e1h8f3R49M2p8Gcz1SqT+JbzBX35Vn09hgKgIoINbZx
-         Y2GQ==
-X-Gm-Message-State: ANhLgQ0mmxNIPH9ah4y5yjRj0REGaS0hd38NY1YdXEbdJyPn1rVxcYhm
-        95IO/J4qVzaf0dg3vVRtvabGkQ==
-X-Google-Smtp-Source: ADFU+vu72CrRKxiU4iI0BkuqzGvtp4WpzvnmPuk88nJZHE9CiRgLsPEU2Usf8IB4MV5AjKGf740udA==
-X-Received: by 2002:a17:90a:37c6:: with SMTP id v64mr12593867pjb.20.1584144324743;
-        Fri, 13 Mar 2020 17:05:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i6sm19548184pfe.62.2020.03.13.17.05.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 17:05:23 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 17:05:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH 4/5] kselftest: add fixture parameters
-Message-ID: <202003131705.F6D0FD73@keescook>
-References: <20200313031752.2332565-1-kuba@kernel.org>
- <20200313031752.2332565-5-kuba@kernel.org>
- <202003131628.77119E4F4E@keescook>
- <20200313165202.37d921cf@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Fri, 13 Mar 2020 20:10:05 -0400
+Received: from ozlabs.org ([203.11.71.1]:58345 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbgCNAKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 20:10:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48fNHF1kNzz9sPJ;
+        Sat, 14 Mar 2020 11:10:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584144601;
+        bh=T91XHMl+ZOPJKGof4hB+jxJrqw22lmyD6ou55Lz8oHs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UFnJrZOtOgcKsjnYHMMoIAREiArNDIah6KBnInIX7IE1V48LWTTFebUE77qvvOdAc
+         8WJAPk+pJqD8IUjgcPhlKhO01mCQcO6nLs9LEwfmvw3Pxr7Q/14Mjx/yQgtck1mqHd
+         evgGvm0daIq3ZebfVuzzUKb57WnnXPMtsCTM/mKwlBN1os7lpkV9J57oZbNBIzJO6h
+         9yvEq4Xtwi1lodLWrFBe30/5pfr805FG5wEJQuzypJwn8RNPLFx/m7z3xm19i19COB
+         ObuiYi0Fb6tW9p9nw9Oouu8WjIX/F8wHRi55r/YnPiaTiD6YYz4fi8odA2h0op/eUu
+         Tc5Mc1f2Bw0jg==
+Date:   Sat, 14 Mar 2020 11:09:54 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200314110954.580b58dd@canb.auug.org.au>
+In-Reply-To: <20200313125627.GA8518@MiWiFi-R3L-srv>
+References: <20200313214214.4d2e2af6@canb.auug.org.au>
+        <20200313125627.GA8518@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313165202.37d921cf@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: multipart/signed; boundary="Sig_/a5h5Lps4mlmLnYpyZaSyDtQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 04:52:02PM -0700, Jakub Kicinski wrote:
-> On Fri, 13 Mar 2020 16:31:25 -0700 Kees Cook wrote:
-> > > @@ -326,7 +387,8 @@
-> > >  	} \
-> > >  	static void fixture_name##_##test_name( \
-> > >  		struct __test_metadata __attribute__((unused)) *_metadata, \
-> > > -		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
-> > > +		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
-> > > +		const FIXTURE_PARAMS(fixture_name) __attribute__((unused)) *params)  
-> > 
-> > Could this be done without expanding the function arguments? (i.e. can
-> > the params just stay attached to the __test_metadata, perhaps having the
-> > test runner adjust a new "current_param" variable to point to the
-> > current param? Having everything attached to the single __test_metadata
-> > makes a lot of things easier, IMO.
-> 
-> Sure! I felt a little awkward dereferencing _metadata in the test,
-> so I followed the example of self. But I can change.
-> 
-> Can I add a macro like CURRENT_PARAM() that would implicitly use
-> _metadata?
+--Sig_/a5h5Lps4mlmLnYpyZaSyDtQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, that seems cleaner. Thanks! This is very cool. :)
+Hi Baoquan,
 
--- 
-Kees Cook
+On Fri, 13 Mar 2020 20:56:27 +0800 Baoquan He <bhe@redhat.com> wrote:
+>
+> I made below change, but I can't triger these warnings. Could you try
+> below patch, see if it's works?
+
+I needed to add "ARCH=3Dx86_64" to the "make allnoconfig" command line
+(and the subsequent "make") otherwise I get a 32 bit build.
+
+> From 9be668f1e30b6bb4ed5f4a07e7d3bb76d3f58f35 Mon Sep 17 00:00:00 2001
+> From: Baoquan He <bhe@redhat.com>
+> Date: Fri, 13 Mar 2020 20:25:54 +0800
+> Subject: [PATCH] mm/sparse.c: fix the building warning with !SPARSEMEM
+>=20
+> Stephen reported below warnings are seen with allnoconfig on x86_64.
+> Fix it by making those dummy functions sub-section map handling visible
+> with CONFIG_SPARSEMEM enabled.
+>=20
+> mm/sparse.c:311:12: warning: 'fill_subsection_map' defined but not used [=
+-Wunused-function]
+>   311 | static int fill_subsection_map(unsigned long pfn, unsigned long n=
+r_pages)
+>       |            ^~~~~~~~~~~~~~~~~~~
+> mm/sparse.c:306:13: warning: 'is_subsection_map_empty' defined but not us=
+ed [-Wunused-function]
+>   306 | static bool is_subsection_map_empty(struct mem_section *ms)
+>       |             ^~~~~~~~~~~~~~~~~~~~~~~
+> mm/sparse.c:301:12: warning: 'clear_subsection_map' defined but not used =
+[-Wunused-function]
+>   301 | static int clear_subsection_map(unsigned long pfn, unsigned long =
+nr_pages)
+>       |            ^~~~~~~~~~~~~~~~~~~~
+>=20
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  mm/sparse.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 362018e82e22..9e08d118719f 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -293,7 +293,7 @@ static int fill_subsection_map(unsigned long pfn, uns=
+igned long nr_pages)
+> =20
+>  	return rc;
+>  }
+> -#else
+> +#elif defined(CONFIG_SPARSEMEM)
+>  void __init subsection_map_init(unsigned long pfn, unsigned long nr_page=
+s)
+>  {
+>  }
+
+This didn't make any difference as CONFIG_SPARSEMEM is set for the
+x86_64 allnoconfig build.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/a5h5Lps4mlmLnYpyZaSyDtQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5sINIACgkQAVBC80lX
+0Gz+Xgf+OUITkPZ+BRZ8jb3n3lyWYz2nibo99W9+r1lIY92Zel/LYe5JiHkXOv1r
+BXqZjRpJ6XI8jjfKyHukrFOJmRS24QqY9PCy2ldlndc6jSaRgyyD3XfPxzCiyMco
+BZHtDMAQY72ASshviO+3x6RlPcjhEEdxgA6f12G+hj/yvyjiXfO9/y98fkL9jjHR
+Z+PYonV5sVDCRtz7QeRh5OXEmTWgkp3ikNAYHFxNxw9PGcAyy6CwHCZ5GjIJsGC2
+zEF5/fGAEBBhJesPT13/HSdKdDVBA1cswvVfbzDSetj7cLnOu/zFyZoeqwmPXiPN
+rF7hJvRoq0Fg+OMb5sDnatxqUl4MvA==
+=kktS
+-----END PGP SIGNATURE-----
+
+--Sig_/a5h5Lps4mlmLnYpyZaSyDtQ--
