@@ -2,95 +2,91 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896C4C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452B0C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5800F2071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H4QRWvnS"
+	by mail.kernel.org (Postfix) with ESMTP id 13C772071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584238413;
+	bh=9m0+UmDXvLUZ0fCFtWbFpFf884ZXrp14/KB3enaFsLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w0QAa0zujb56me339uHbOfNJivbI61vOcAmurfJUqoYOZB2DaVriZ9qAx6fA8UmZZ
+	 Q7MgQV5WHRbyf6udioJtFL87lzMUVyT5QRDpzM5VpbfYIH4FYBXlIlKZ/ONceIBcH7
+	 XQ4tStneNoODOdXBecTMn7P2oOqtyO3EuYyf7DWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbgCOCMj (ORCPT
+        id S1727725AbgCOCNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:12:39 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43145 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbgCOCMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:12:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ffYJ3vJbz9sQt;
-        Sat, 14 Mar 2020 21:53:08 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584183188;
-        bh=QlsV1HCQHbY2WWpViGPYwW68TQzmVIwuJv9pVD10PaY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=H4QRWvnSum976mvXURkExDaUS4gbZ8dRNH1uYSsmutv48nSHcRHjL7YfSXYZB58il
-         8zOuD1LA4ehxigqlIsKod/l0oc5HHvqeohtctjXz9uIkyGt0sC56PXlZeGTIngMbva
-         pZnYZYtaCacFKqz+jAA0vfjY7sl2vU6+X0zBOYz4OHYxXbjUX2ZF33dzD+9/7wuNMq
-         3e/PD0iTzSMz+lo0BTpH4ZEqKvUhvceL/OsYTGuwiJMxaZVK1pLyJbOq/1QVDxYggG
-         kO6nXIcqoLkY+bLNPrTn/mtlf++HQI5kwUkdXZsQBg1YlU6RqpFFCi3Qd1SudcsAIt
-         u42S8MHjCCRYQ==
-Date:   Sat, 14 Mar 2020 21:53:07 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: linux-next: Fixes tag needs some work in the tpmdd tree
-Message-ID: <20200314215307.1c5f4a45@canb.auug.org.au>
+        Sat, 14 Mar 2020 22:13:32 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37762 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbgCOCNb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:13:31 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j11so11078429lfg.4;
+        Sat, 14 Mar 2020 19:13:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qTvsDZK0rxtwgZonA0VJoQgg0bPgzs3j6WHVwR4bqZI=;
+        b=e++v7FGumBHI5+HlPttacUzXNYkzBpwoSjrwE6ufSCCWq+gtInkpm0Bx9RD0GG59nI
+         4IZOu3SsjDH0yTUHVeYjGLZAST6etZTomFkJNYfRYf5qCC03mfK80Z2hbvTW+CQEoa8n
+         L88Cm+xJ3l71HpglYeMmaQmjLkInsaVMtKF5NPIN0ihfSwmD9jMkcQ3QUXgQWl072SLJ
+         eQ6WB2vf2Ycj/DCYenSBDFwktrDeErYWuW6Z5LPMhqrA73LaN3EPwhLON4OMQrl9CAPX
+         w9JXeiBVOh4vm/sn0W5sTSx433M/Ip+OPyHOOFNjYE/RSenUzXxj1dbuSt5v4PJGIVtW
+         JQnA==
+X-Gm-Message-State: ANhLgQ27Q1aa53TymneA/HvK1YsVsCsVlNGyDJkA6FTAzUYbpfTkboiW
+        hLsdhkGPVSsoj2WxY4XLkwOVuXDw
+X-Google-Smtp-Source: ADFU+vuapXjT+zS11FjAUnN+oE9D5lHJ2QsCXnjtSRTI8yMnWnss9ph50Wosr+69IEUAzQJDJH9pXQ==
+X-Received: by 2002:a17:906:7a55:: with SMTP id i21mr16361531ejo.303.1584211535391;
+        Sat, 14 Mar 2020 11:45:35 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id d23sm1122777edr.33.2020.03.14.11.45.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 14 Mar 2020 11:45:34 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 19:45:30 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] extcon: max14577: Add proper dt-compatible strings
+Message-ID: <20200314184530.GD17580@kozik-lap>
+References: <20200220145127.21273-1-m.szyprowski@samsung.com>
+ <CGME20200220145135eucas1p123c4e4523e7e6eb86b64e728d6931cee@eucas1p1.samsung.com>
+ <20200220145127.21273-2-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ym6Mtc=/vK3Tn2cnkGWPAft";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200220145127.21273-2-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ym6Mtc=/vK3Tn2cnkGWPAft
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 20, 2020 at 03:51:26PM +0100, Marek Szyprowski wrote:
+> Add device tree compatible strings and create proper modalias structures
+> to let this driver load automatically if compiled as module, because
+> max14577 MFD driver creates MFD cells with such compatible strings.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/extcon/extcon-max14577.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-Hi all,
+The approach is still being discussed (in patch #1) so this should be
+applied if patch #1 is also accepted. In such case:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-In commit
-
-  606c8d992ba5 ("tpm: ibmvtpm: Wait for buffer to be set before proceeding")
-
-Fixes tag
-
-  Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ym6Mtc=/vK3Tn2cnkGWPAft
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5st5MACgkQAVBC80lX
-0GyY9QgAjO4PWGuZ2aLFTbw648wqk5zUUAAjur26F03CJfsf/vB4M9OML78aCoxM
-OZ6SqJQ4k5b4GNtHheUGFgjHf+NkS3OWhOJ2bt9E/tyrXwH4zWVbqub4nDtEaMgv
-2xmXzLde3m9ieDf/RAnWA86bXEfjkYnFcDGZmQ97t2EWJXX7Oem+7Xgk/yBFVORV
-Pf9ZXaA3RJdwLc/xjEPWu/gpT+fzQB2xwA0uvtGeUhvceICE3No1KfWJ4bYF36eC
-AmpInnYUConGn16W+mL3pdyc44xQ5b7Z80esNM9c7ixub496kqdJrlVHGOi+wXR3
-7pOiNJO8Q+y5sPcNtVt7H8RyuPA0tQ==
-=6CG+
------END PGP SIGNATURE-----
-
---Sig_/ym6Mtc=/vK3Tn2cnkGWPAft--
+Best regards,
+Krzysztof
