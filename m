@@ -2,155 +2,178 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B8EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ACCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C032074E
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M5Jirwb2"
+	by mail.kernel.org (Postfix) with ESMTP id CE2532074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584147328;
+	bh=A9LxF9QepjNmz5aiELSRd7cWBXPKdmZaxZjEEzMbCvs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xXQjkcLu4xMDFh2+BEDI32IFPmJY9Lgj5BBUO1g7CocVAZYJp3IxfMGNcB9QV4BmA
+	 //nF0Inu67UjTtXwlat4PkNeRCHbiehS9lhp0a2JbgSmpRSvjwN4qS9bMC5kw3YjCt
+	 PGzZcSqAfylEOV4FT9L5CyyHQQvWLAaQEk4rqFus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgCNAzP (ORCPT
+        id S1727908AbgCNAz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:55:15 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:50379 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727829AbgCNAzM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:55:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584147312; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=hb6tu0nDOFJcrv92gcih7zFdKzp38gkPg0cH8w+wR+w=; b=M5Jirwb2e4nvTJkgAEo9iZ2xVMqcacYQmCzIN7mneBt3PQnKFleVgnNkYpHSdZNk91od3HVT
- 8RAfZx/bzJ1UrJObPixxCJllSN9cf/D0mH1kNbHSedNFznTX76m6yixh2c1ElRS+Qszjg2xY
- d7EybDqyEzQF8FycY8ww8QbAo8A=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6c2b66.7f25ed075848-smtp-out-n01;
- Sat, 14 Mar 2020 00:55:02 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BCCCAC433CB; Sat, 14 Mar 2020 00:55:01 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 13 Mar 2020 20:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727629AbgCNAzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 20:55:08 -0400
+Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DAF9FC433D2;
-        Sat, 14 Mar 2020 00:54:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DAF9FC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
-Date:   Fri, 13 Mar 2020 17:54:50 -0700
-Message-Id: <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
-References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id D381820769;
+        Sat, 14 Mar 2020 00:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584147307;
+        bh=A9LxF9QepjNmz5aiELSRd7cWBXPKdmZaxZjEEzMbCvs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XyRqrhsjjfjgCfcV9f18JmjI8C47v87Zkh4lw4IIj2J739ULLIPMXUqf8A/t26gD8
+         xzCy+UPZsFvTlPpoztaDBTj9GfJUOdGPYH3e2aezXeezmV/opiu0QmOzPuEZ5AZSdf
+         +bbrBHQBGvXtaax2eYEfaQZkrlL9neDX2bvClWYQ=
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     shuah@kernel.org, keescook@chromium.org
+Cc:     luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH v2 2/4] kselftest: create fixture objects
+Date:   Fri, 13 Mar 2020 17:54:59 -0700
+Message-Id: <20200314005501.2446494-3-kuba@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200314005501.2446494-1-kuba@kernel.org>
+References: <20200314005501.2446494-1-kuba@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This binding shows the descriptions and properties for the
-7nm Synopsis HS USB PHY used on QCOM platforms.
+Grouping tests by fixture will allow us to parametrize
+test runs. Create full objects for fixtures.
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+Add a "global" fixture for tests without a fixture.
+
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+--
+v2:
+ - remove the fixture list, we won't iterate over
+   fixtures so it's not needed
 ---
- .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   | 74 ++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+ tools/testing/selftests/kselftest_harness.h | 31 ++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
-new file mode 100644
-index 0000000..ec64ceb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/qcom,usb-hs-7nm.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 5336b26506ab..66c2397d8c51 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -169,8 +169,10 @@
+ #define __TEST_IMPL(test_name, _signal) \
+ 	static void test_name(struct __test_metadata *_metadata); \
+ 	static struct __test_metadata _##test_name##_object = \
+-		{ .name = "global." #test_name, \
+-		  .fn = &test_name, .termsig = _signal, \
++		{ .name = #test_name, \
++		  .fn = &test_name, \
++		  .fixture = &_fixture_global, \
++		  .termsig = _signal, \
+ 		  .timeout = TEST_TIMEOUT_DEFAULT, }; \
+ 	static void __attribute__((constructor)) _register_##test_name(void) \
+ 	{ \
+@@ -212,6 +214,8 @@
+  * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
+  */
+ #define FIXTURE(fixture_name) \
++	static struct __fixture_metadata _##fixture_name##_fixture_object = \
++		{ .name =  #fixture_name, }; \
+ 	static void __attribute__((constructor)) \
+ 	_register_##fixture_name##_data(void) \
+ 	{ \
+@@ -309,8 +313,9 @@
+ 	} \
+ 	static struct __test_metadata \
+ 		      _##fixture_name##_##test_name##_object = { \
+-		.name = #fixture_name "." #test_name, \
++		.name = #test_name, \
+ 		.fn = &wrapper_##fixture_name##_##test_name, \
++		.fixture = &_##fixture_name##_fixture_object, \
+ 		.termsig = signal, \
+ 		.timeout = tmout, \
+ 	 }; \
+@@ -632,9 +637,12 @@
+ } while (0); OPTIONAL_HANDLER(_assert)
+ 
+ /* Contains all the information for test execution and status checking. */
++struct __fixture_metadata;
 +
-+title: Qualcomm Synopsys 7nm High-Speed USB PHY
+ struct __test_metadata {
+ 	const char *name;
+ 	void (*fn)(struct __test_metadata *);
++	struct __fixture_metadata *fixture;
+ 	int termsig;
+ 	int passed;
+ 	int trigger; /* extra handler after the evaluation */
+@@ -685,6 +693,13 @@ static inline void __register_test(struct __test_metadata *t)
+ 	}
+ }
+ 
++/* Contains all the information about a fixture */
++struct __fixture_metadata {
++	const char *name;
++} _fixture_global __attribute__((unused)) = {
++	.name = "global",
++};
 +
-+description: |
-+  Qualcomm Hi-Speed 7nm USB PHY
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,usb-snps-hs-7nm-phy
-+      - qcom,sm8150-usb-hs-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    items:
-+      - description: rpmhcc ref clock
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+
-+  resets:
-+    items:
-+      - description: PHY core reset
-+
-+  vdda-pll-supply:
-+    description: phandle to the regulator VDD supply node.
-+
-+  vdda18-supply:
-+    description: phandle to the regulator 1.8V supply node.
-+
-+  vdda33-supply:
-+    description: phandle to the regulator 3.3V supply node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - resets
-+  - vdda-pll-supply
-+  - vdda18-supply
-+  - vdda33-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/clock/qcom,gcc-sm8150.h>
-+    usb_1_hsphy: phy@88e2000 {
-+        compatible = "qcom,usb-snps-hs-7nm-phy",
-+                        "qcom,sm8150-usb-hs-phy";
-+        reg = <0 0x088e2000 0 0x400>;
-+        status = "disabled";
-+        #phy-cells = <0>;
-+
-+        clocks = <&rpmhcc RPMH_CXO_CLK>;
-+        clock-names = "ref";
-+
-+        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+	};
-+...
-\ No newline at end of file
+ static inline int __bail(int for_realz, bool no_print, __u8 step)
+ {
+ 	if (for_realz) {
+@@ -695,14 +710,15 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
+ 	return 0;
+ }
+ 
+-void __run_test(struct __test_metadata *t)
++void __run_test(struct __fixture_metadata *f,
++		struct __test_metadata *t)
+ {
+ 	pid_t child_pid;
+ 	int status;
+ 
+ 	t->passed = 1;
+ 	t->trigger = 0;
+-	printf("[ RUN      ] %s\n", t->name);
++	printf("[ RUN      ] %s.%s\n", f->name, t->name);
+ 	alarm(t->timeout);
+ 	child_pid = fork();
+ 	if (child_pid < 0) {
+@@ -751,7 +767,8 @@ void __run_test(struct __test_metadata *t)
+ 				status);
+ 		}
+ 	}
+-	printf("[     %4s ] %s\n", (t->passed ? "OK" : "FAIL"), t->name);
++	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
++	       f->name, t->name);
+ 	alarm(0);
+ }
+ 
+@@ -768,7 +785,7 @@ static int test_harness_run(int __attribute__((unused)) argc,
+ 	       __test_count, __fixture_count + 1);
+ 	for (t = __test_list; t; t = t->next) {
+ 		count++;
+-		__run_test(t);
++		__run_test(t->fixture, t);
+ 		if (t->passed)
+ 			pass_count++;
+ 		else
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.24.1
+
