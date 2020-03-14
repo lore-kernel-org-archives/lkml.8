@@ -2,63 +2,123 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A3DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F67FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABF1206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C047B206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+liN5FZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgCOEHL (ORCPT
+        id S1726272AbgCOEKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 00:07:11 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:35310 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgCOEHL (ORCPT
+        Sun, 15 Mar 2020 00:10:19 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38925 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgCOEKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 00:07:11 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 73A7615B75337;
-        Sat, 14 Mar 2020 21:07:10 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 21:07:09 -0700 (PDT)
-Message-Id: <20200314.210709.1134027873876631073.davem@davemloft.net>
-To:     antoine.tenart@bootlin.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 0/3] net: phy: split the mscc driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200313094802.82863-1-antoine.tenart@bootlin.com>
-References: <20200313094802.82863-1-antoine.tenart@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 14 Mar 2020 21:07:10 -0700 (PDT)
+        Sun, 15 Mar 2020 00:10:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f7so14380797wml.4;
+        Sat, 14 Mar 2020 21:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=7NszvAXb9CGNqwT7dYeN3INhVSTlKBvqRmiaZIGgUzM=;
+        b=n+liN5FZupOzuGmaL8W0VktGX+braNF2HwHqE4seR4kZiiex5TQZtj04W8EtxZmx4U
+         N7mE03CKIQLzpncNE7yyQ09H6quoTKYstglmWXP3LhUtIZFh0jpumW8LqsW4n0aYNu5E
+         9Zsda/e4+bVvPPea+hDL96ZY/Un+MMEko9W15c6R4h0gGHl1FKReRQ+O/qaUHi4rpz31
+         mE8oVXifg5I+uCgDvF8+B0njfnmctgZY6IZAk4BeeTta8N+fg++CYNS1dtGmFiAHuhNJ
+         h9ef3+9fGWIBNBEcI944HQfRxvk6l3tz04Tl6SJ4M+8dLIsYsa1ro7rfgL8rD96BGbKW
+         EFTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=7NszvAXb9CGNqwT7dYeN3INhVSTlKBvqRmiaZIGgUzM=;
+        b=Tmlno+NuQnDfIWyxElYaw53OfcDweB5O4gV7uqc5XUONjouwFXkJKepnLOpXfHUweR
+         8Lf+0qmlovwbiCArmHdB8Dwl+NOdq1/V/HJMQdVeZ2FJ1KEeuTpQ1tnYBX3NsosQYCIW
+         AT9ddpWDsLofJgLlkJTKQ99DPlMxnCz4/3X+QqQqhxPYLYTaQQk3IgYRxR5hXIYtnv/g
+         ND1/QijKCNmT7699V512yMe8jz5HS/Jo63NFNXGcsQFB7naOKIpQyJr3OdDNLOO8AZql
+         Xj251NdVHoSaPqc2zoD0KEXSJMu+ahoY1SZjfyYvPnI5wcitSRfnjTJFswQWxm36l9GC
+         Okzw==
+X-Gm-Message-State: ANhLgQ0M4z43tTly+GEgvbFRzY4e8i4c5wXJmhxBhXwJmwob8HCyUkuo
+        v9NlcWsMox4bHAEMOBdDBDiQCZp+
+X-Google-Smtp-Source: ADFU+vttRMhC6z4KeEiI90Sln9kvzZ3oD5DpV2H2KhdjIUk7TSHX42UtdII4c1he6JrDUQ6cxbKKBQ==
+X-Received: by 2002:a7b:cb17:: with SMTP id u23mr16873136wmj.12.1584185482872;
+        Sat, 14 Mar 2020 04:31:22 -0700 (PDT)
+Received: from 640k.localdomain ([93.56.174.5])
+        by smtp.gmail.com with ESMTPSA id n186sm454515wme.25.2020.03.14.04.31.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 14 Mar 2020 04:31:22 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     linmiaohe@huawei.com, vkuznets@redhat.com
+Subject: [PATCH] KVM: X86: correct meaningless kvm_apicv_activated() check
+Date:   Sat, 14 Mar 2020 12:31:20 +0100
+Message-Id: <1584185480-3556-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Fri, 13 Mar 2020 10:47:59 +0100
+After test_and_set_bit() for kvm->arch.apicv_inhibit_reasons, we will
+always get false when calling kvm_apicv_activated() because it's sure
+apicv_inhibit_reasons do not equal to 0.
 
-> This is a proposal to split the MSCC PHY driver, as its code base grew a
-> lot lately (it's already 3800+ lines). It also supports features
-> requiring a lot of code (MACsec), which would gain in being split from
-> the driver core, for readability and maintenance. This is also done as
-> other features should be coming later, which will also need lots of code
-> addition.
-> 
-> This series shouldn't change the way the driver works.
-> 
-> I checked, and there were no patch pending on this driver. This change
-> was done on top of all the modifications done on this driver in net-next.
- ...
+What the code wants to do, is check whether APICv was *already* active
+and if so skip the costly request; we can do this using cmpxchg.
 
-Series applied, thanks Antoine.
+Reported-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/x86.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index a7cb85231330..49efa4529662 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8049,19 +8049,26 @@ void kvm_vcpu_update_apicv(struct kvm_vcpu *vcpu)
+  */
+ void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
+ {
++	unsigned long old, new, expected;
++
+ 	if (!kvm_x86_ops->check_apicv_inhibit_reasons ||
+ 	    !kvm_x86_ops->check_apicv_inhibit_reasons(bit))
+ 		return;
+ 
+-	if (activate) {
+-		if (!test_and_clear_bit(bit, &kvm->arch.apicv_inhibit_reasons) ||
+-		    !kvm_apicv_activated(kvm))
+-			return;
+-	} else {
+-		if (test_and_set_bit(bit, &kvm->arch.apicv_inhibit_reasons) ||
+-		    kvm_apicv_activated(kvm))
+-			return;
+-	}
++	old = READ_ONCE(kvm->arch.apicv_inhibit_reasons);
++	do {
++		expected = new = old;
++		if (activate)
++			__clear_bit(bit, &new);
++		else
++			__set_bit(bit, &new);
++		if (new == old)
++			break;
++		old = cmpxchg(&kvm->arch.apicv_inhibit_reasons, expected, new);
++	} while (old != expected);
++
++	if ((old == 0) == (new == 0))
++		return;
+ 
+ 	trace_kvm_apicv_update_request(activate, bit);
+ 	if (kvm_x86_ops->pre_update_apicv_exec_ctrl)
+-- 
+1.8.3.1
+
