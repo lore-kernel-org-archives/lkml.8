@@ -2,162 +2,122 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DATE_IN_PAST_12_24,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56352C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB27DC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F36F205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:16:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KNThzAY9"
+	by mail.kernel.org (Postfix) with ESMTP id 87D86205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgCODQE (ORCPT
+        id S1727186AbgCODUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:16:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55294 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726596AbgCODQD (ORCPT
+        Sat, 14 Mar 2020 23:20:39 -0400
+Received: from mail-qv1-f71.google.com ([209.85.219.71]:55398 "EHLO
+        mail-qv1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgCODUj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:16:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584242161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a97+Df7ov789sy1dUrQf2ip/rUJBLWnpFYIx0FFhbAY=;
-        b=KNThzAY99ieQka1vAaq/RJqpHFfAZeu5Il0TSMg0tPAciNqyJF4a/LbDKEgUB7FSOUmkjG
-        GIb6+syQLBpPHFH/ZJ+v5Bppn3G2GN95p8g3uqkeRCaD+RH1NgnlpTEd+0pc+cOh0qSn2J
-        +GrCFfEFAyCINFmkxjw0gYd9AZiWGgg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-454-7dbR_dNeMauAGeMfNswACA-1; Sat, 14 Mar 2020 07:14:16 -0400
-X-MC-Unique: 7dbR_dNeMauAGeMfNswACA-1
-Received: by mail-wr1-f70.google.com with SMTP id h14so5102058wrv.12
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 04:14:16 -0700 (PDT)
+        Sat, 14 Mar 2020 23:20:39 -0400
+Received: by mail-qv1-f71.google.com with SMTP id y11so10161481qvx.22
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 20:20:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a97+Df7ov789sy1dUrQf2ip/rUJBLWnpFYIx0FFhbAY=;
-        b=gUBpZoXRmU82clFBe+UfGGXX4Yr5fYGYahR4zqBcNlzz3NZdw7gYrD1zqV/BMvt5S5
-         h0N8/15lv8Yr2TyauAADDVI1CjK6TL9TWUBKIsmt7kj3zkV/XhggRnDINeOnQftJie+8
-         JELXD8CjhIntKhBK3X55DRkVaacbtdUIAHjiFqtBBjAStvI5L1wQhV+5Xn2/ZJ+h8ZuW
-         BXyM/LhWxsL8OmwRwwpqW3b0KVy9eQ61deIq1MAJuQr9kLVlkw7DmGAaBMoCbpBMuSgB
-         Wkhbmva+mqBctF5sYkqE3NmS7tjkmBgMCuqynHuWB86agI2yiPgQGoi4CbWYv/DSVNi/
-         XAZw==
-X-Gm-Message-State: ANhLgQ1k7uRsd6qrkKlaDzpPIBFlRYWj0Z7RxSxw4ElyBxSDjLgNKsZ3
-        ntklfWDybU93q6AOGLgjwBUdEk1VxKTMm7OTacYl4TxDzZphZ9f0+lRfnJ6cgNaEPsRtDc94yne
-        d7qWzrzg0iMbgYPV8f4MhNl9O
-X-Received: by 2002:a5d:4c47:: with SMTP id n7mr6703137wrt.254.1584184455369;
-        Sat, 14 Mar 2020 04:14:15 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vspYTZUq3KJfifWUW/XTOvXTc1qsx25s1jBEUFu51U/OrTqfY6pI8+7wYMFcbRRtzK8nl0a/A==
-X-Received: by 2002:a5d:4c47:: with SMTP id n7mr6703105wrt.254.1584184455082;
-        Sat, 14 Mar 2020 04:14:15 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.174.5])
-        by smtp.gmail.com with ESMTPSA id n4sm5329135wrs.64.2020.03.14.04.14.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Mar 2020 04:14:14 -0700 (PDT)
-Subject: Re: [PATCH v8 0/5] Add a unified parameter "nopvspin"
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, x86@kernel.org,
-        peterz@infradead.org
-Cc:     mingo@redhat.com, bp@alien8.de, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com, will@kernel.org,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-References: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e31f932b-9838-09a7-49d4-f90dc673960c@redhat.com>
-Date:   Sat, 14 Mar 2020 12:14:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=fehXyPD76GCyl5R7ov6y7Hf3HMx60GvaSqGjNkGo7AI=;
+        b=dsJQD1PCWjaTW71Y7TrzqmL8eHQv22y9Dh9v96KjlDsECHXCrQ98TdEWteeOI2CIn2
+         06ZgcbwEcDnZyY7DaC8pB+/CQQ0WHFOC0c8hnq238f0mR73juQJE/Z0RkNvVBL+nrCXp
+         o9yXx0WShCcSbRHeFIXOpwor9Pd8Bi+Z/+3eawHnOqW6RYiCYM1AXaEXXZvKzwROTDkb
+         HRFdVt9FqRRHP6qtdI5oE6cdiO/d0YYZUuXfIoVi1RZtNM3ODeL40c05sVHI9YlDtZTr
+         zAo0QeBqVl5zyJn6nqLov0mZPipYXuY7ZzQ8AmbQTDERch2gySIJMUT6OswfusXubVKK
+         G9Tg==
+X-Gm-Message-State: ANhLgQ26PBvVtLlCNOAV6OeMoeJgNB5BrygtCYkAFapQRuc8tuoSltin
+        CFDuycWLat6Rta3J24EpbrV3r4GLfnEW+/GRFOXyO+MgJP1K
+X-Google-Smtp-Source: ADFU+vv2891WR4s0bwl6a/z+8zKmjAsGygTo5Ydw9RASenClGGMHV/Cth46q/9iVaEz8Y3XWzsvuErzYfw5bihwf1QLKGLYJq7XJ
 MIME-Version: 1.0
-In-Reply-To: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6638:a99:: with SMTP id 25mr17442914jas.37.1584177182115;
+ Sat, 14 Mar 2020 02:13:02 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 02:13:02 -0700
+In-Reply-To: <CADG63jBKpM1vCzTHjPtTdsifpg_tuatd224BeFgra_ycXFW1ZQ@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000338c3a05a0ccfedd@google.com>
+Subject: Re: WARNING in idr_destroy
+From:   syzbot <syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com>
+To:     airlied@linux.ie, anenbupt@gmail.com, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter/Thomas, can you apply this to tip or give your Acked-by?
+Hello,
 
-Thanks,
+syzbot has tested the proposed patch but the reproducer still triggered crash:
+WARNING in idr_destroy
 
-Paolo
+RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+R13: 0000000000000203 R14: 00000000004c3e56 R15: 0000000000000008
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 9124 at lib/radix-tree.c:682 radix_tree_free_nodes lib/radix-tree.c:682 [inline]
+WARNING: CPU: 0 PID: 9124 at lib/radix-tree.c:682 idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 9124 Comm: syz-executor.0 Not tainted 5.6.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ panic+0x264/0x7a9 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1b6/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:radix_tree_free_nodes lib/radix-tree.c:682 [inline]
+RIP: 0010:idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
+Code: 43 5f f9 48 89 df 48 c7 c6 10 83 17 88 e8 ca 5c 4c f9 4c 3b 65 b8 74 57 e8 7f 43 5f f9 4d 89 fc e9 67 ff ff ff e8 72 43 5f f9 <0f> 0b eb d5 89 f9 80 e1 07 38 c1 7c 84 e8 e0 75 9c f9 e9 7a ff ff
+RSP: 0018:ffffc900021b7ba0 EFLAGS: 00010293
+RAX: ffffffff8817dc0e RBX: ffff8880aa010598 RCX: ffff888096740440
+RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff8880aa010588
+RBP: ffffc900021b7be8 R08: ffffffff8817db80 R09: ffffed1011809f91
+R10: ffffed1011809f91 R11: 0000000000000000 R12: ffff8880aa010580
+R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
+ drm_mode_create_lease_ioctl+0x13c9/0x18c0 drivers/gpu/drm/drm_lease.c:587
+ drm_ioctl_kernel+0x2cf/0x410 drivers/gpu/drm/drm_ioctl.c:786
+ drm_ioctl+0x52f/0x890 drivers/gpu/drm/drm_ioctl.c:886
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl fs/ioctl.c:763 [inline]
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl+0x113/0x190 fs/ioctl.c:770
+ __x64_sys_ioctl+0x7b/0x90 fs/ioctl.c:770
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c479
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f680fc16c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f680fc176d4 RCX: 000000000045c479
+RDX: 0000000020000040 RSI: ffffffffffffffc6 RDI: 0000000000000003
+RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+R13: 0000000000000203 R14: 00000000004c3e56 R15: 0000000000000008
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-On 23/10/19 13:16, Zhenzhong Duan wrote:
-> There are cases folks want to disable spinlock optimization for
-> debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
-> and "hv_nopvspin" to support that, but kvm doesn't.
-> 
-> The first patch adds that feature to KVM guest with "nopvspin".
-> 
-> For compatibility reason original parameters "xen_nopvspin" and
-> "hv_nopvspin" are retained and marked obsolete.
-> 
-> v8:
-> PATCH2: use 'kvm-guest' instead of 'kvm_guest'        [Sean Christopherson]
-> PATCH3: add a comment to explain missed 'return'      [Sean Christopherson]
-> 
-> v7:
-> PATCH3: update comment and use goto, add RB              [Vitaly Kuznetsov]
-> 
-> v6:
-> PATCH1: add Reviewed-by                                  [Vitaly Kuznetsov]
-> PATCH2: change 'pv' to 'PV', add Reviewed-by             [Vitaly Kuznetsov]
-> PATCH3: refactor 'if' branch in kvm_spinlock_init()      [Vitaly Kuznetsov]
-> 
-> v5:
-> PATCH1: new patch to revert a currently unnecessory commit,
->         code is simpler a bit after that change.         [Boris Ostrovsky]
-> PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
->         reorder with PATCH2 to better reflect dependency                               
-> PATCH4: fold 'if' statement, add Reviewed-by             [Boris Ostrovsky]
-> PATCH5: add Reviewed-by                                  [Michael Kelley]
-> 
-> v4:
-> PATCH1: use variable name nopvspin instead of pvspin and
->         defined it as __initdata, changed print message,
->         updated patch description                     [Sean Christopherson]
-> PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
-> PATCH3: make variable nopvsin and xen_pvspin coexist
->         remove Reviewed-by due to code change         [Sean Christopherson]
-> PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
-> 
-> v3:
-> PATCH2: Fix indentation
-> 
-> v2:
-> PATCH1: pick the print code change into separate PATCH2,
->         updated patch description             [Vitaly Kuznetsov]
-> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
-> PATCH3: add Reviewed-by                       [Juergen Gross]
-> 
-> Zhenzhong Duan (5):
->   Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
->     get initialized"
->   x86/kvm: Change print code to use pr_*() format
->   x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
->   xen: Mark "xen_nopvspin" parameter obsolete
->   x86/hyperv: Mark "hv_nopvspin" parameter obsolete
-> 
->  Documentation/admin-guide/kernel-parameters.txt | 14 ++++-
->  arch/x86/hyperv/hv_spinlock.c                   |  4 ++
->  arch/x86/include/asm/qspinlock.h                |  1 +
->  arch/x86/kernel/kvm.c                           | 79 ++++++++++++++++---------
->  arch/x86/xen/spinlock.c                         |  4 +-
->  kernel/locking/qspinlock.c                      |  7 +++
->  6 files changed, 76 insertions(+), 33 deletions(-)
-> 
+
+Tested on:
+
+commit:         7f398516 drm/lease: fix stack variable uninitialized
+git tree:       https://github.com/hqj/hqjagain_test.git drm
+console output: https://syzkaller.appspot.com/x/log.txt?x=1227a1f9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cec95cb58b6f6294
+dashboard link: https://syzkaller.appspot.com/bug?extid=05835159fe322770fe3d
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
