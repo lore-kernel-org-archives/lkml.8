@@ -2,102 +2,156 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1557C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0E7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C708520722
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262DA20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:40:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YLSpqJxv"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RrfIQ6xw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgCOEfi (ORCPT
+        id S1726719AbgCOEka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 00:35:38 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:36554 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgCOEfh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 00:35:37 -0400
-Received: by mail-vk1-f193.google.com with SMTP id m131so2175885vkh.3;
-        Sat, 14 Mar 2020 21:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=05hQH/mydbkf9kLw/BVE0bzAJPp6+Ix4lu/k8QFSHrk=;
-        b=YLSpqJxvMli0pmWUwSXpQTCPMX7fBVBl6LUIePPEmrIeiNXwtQekVYD4KDi/kTAOMD
-         bq5+2QBWQ09YpAgf7IaDub4VZUlOb0zVtWXO5H2IZ+CXmtfAjFf5ZIjUpZiB74oAz+9n
-         y1BD+m3opft4HrcEjwzGf0eD9OgxOxwyRG/t2BQWeCt3606TtYq0paxbB6Y7EgC0j9VD
-         HTM2OZvrP9l+Y+Yi+IcNjaJ6YybuecvF9ZokD0K9Oj8RyHVdhdrg17xy9PF6QhOYW0RO
-         JuzMXYtv8sR0shp70jtuLJo+HZMyEwBoRIdXjae/HMVUhMZaCUuSQBGg+gZDmMnZgVVE
-         zs0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=05hQH/mydbkf9kLw/BVE0bzAJPp6+Ix4lu/k8QFSHrk=;
-        b=GfCZ0DtkiDUHmyEgzfcBwzwe3Tvsf8/A5Ylz3QQUGCAIlWpLuvR1Quc7BGWvBEFbqx
-         /SMSQFiCKTaGxGEGkKTGG3aVUX0ltMLOlDQQ3Q3z2pEbthX7IGL0OTNVy95qfyLFypuR
-         j7bcLjcPbjWnFuiUWlJW9uhi8BDVUq7zdkjp24qM8RS37eDxRgdJrT/d8Sj3at7D1dpp
-         k7J+NLbfCRmTdWrWWAtpIW0efo/3XMw8n2poLAMPkQC1h4fNKXrUlh80eo6uWQ04ZSca
-         2AGpp9h7cEgXLWPSQOjIDkjH49C37mGtYDLCa7luyqlB0+QAWm1wGPwJYL6LWsJbvdBM
-         yR5Q==
-X-Gm-Message-State: ANhLgQ1RqQnvoB/9Itw0RDBFUioeqMgBQOgchjXWPI+8+sch6ilL3jGa
-        vEYQRvq3xhxhEFbikgOJsdyov3G7B1w=
-X-Google-Smtp-Source: ADFU+vtkVGDOzsQ5IOyxks1qAgSbddq2JfKkVElfnRsaB1pvsH23gRXnk1ChS0jDsPHcaqJD6CTgZw==
-X-Received: by 2002:a17:902:bc47:: with SMTP id t7mr17276549plz.47.1584168591617;
-        Fri, 13 Mar 2020 23:49:51 -0700 (PDT)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id u23sm59330102pfm.29.2020.03.13.23.49.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 23:49:50 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 12:19:48 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     maobibo <maobibo@loongson.cn>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        John Crispin <john@phrozen.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
-Message-ID: <20200314064948.GA5285@afzalpc>
-References: <20200304203144.GA4323@alpha.franken.de>
- <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
- <20200313164751.GA30134@roeck-us.net>
- <20200314010744.GA5494@afzalpc>
- <0b41aa60-9869-ab62-4c8e-cbf7c62cdb7e@loongson.cn>
+        Sun, 15 Mar 2020 00:40:30 -0400
+Received: from mout.gmx.net ([212.227.17.21]:58303 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgCOEk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 00:40:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1584247228;
+        bh=C8oAC+ephMsyHFHAO7X3i49cAhiXb0eeDtczwsGpuBY=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=RrfIQ6xwOlS8zSsQCOXADu/M5QbPSLZZlbmyyR4+vmOYxHWycy7o239Y6W6Oc/WUC
+         DOhT7y11KDzgR0pwnooSX1ZpWDAd8a2oa6ONrZE+7x0hDseuA50Uiowzmiu3TLjGhN
+         +6Sfzynh+bBOW0H9AaRmkOlgBWT+TmD0XNXuKZB4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MIMbU-1j7aRo3fVc-00EOx6; Sat, 14
+ Mar 2020 16:06:25 +0100
+Date:   Sat, 14 Mar 2020 16:06:13 +0100
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Malcolm Priestley <tvboxspy@gmail.com>, devel@driverdev.osuosl.org,
+        Colin Ian King <colin.king@canonical.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        linux-kernel@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
+Subject: Re: [PATCH] staging: vt6656: Use BIT_ULL() macro instead of bit
+ shift operation
+Message-ID: <20200314150612.GA3153@ubuntu>
+References: <20200307104929.7710-1-oscar.carter@gmx.com>
+ <20200308065538.GF3983392@kroah.com>
+ <20200308161047.GA3285@ubuntu>
+ <561bc968-f88c-40e3-f53c-5c03f74f75ea@gmail.com>
+ <20200310095011.GC2516963@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0b41aa60-9869-ab62-4c8e-cbf7c62cdb7e@loongson.cn>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <20200310095011.GC2516963@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:G+I101FTrb9L8V0q7JzFuevV31mO2bV7RWoMbDwOukp6UUeCKq9
+ +tlYqu3jGMXEhMHEHIEsXsbz4IdRepEVTgZIvRVn9cpSusRzjJ78TveUhvQJBDdeWOoa4ig
+ ToC3HrPK54JvPJ/AEIj+o1XYeNy7M2DtvAJMw0kLgZz1Gd96la3yOBsEARVrGE1DF7/36LJ
+ I/aA6sB1JwFyTZq4kYyiA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:G4YWjPqouOA=:+IXRzJUuKnIGMgxyc1li3n
+ GaRDptOweB1B58embF3bCQNQ2nvkAY6cqmwqCFtUh2JTfIgf8pdpAitl8xVe55JT7jb4yDiFn
+ PCQ1Ml72wed+H8IA+QABLN0h71wGoBrVOizjy3+EUY+qWYeOhGFCYxYmExsBCTSc4aE/EzTkL
+ 6Y5SYxvh39OzNZhHEL2p6RKgzPXS9+2IiGwPjQauZ5Ch/97phu//uHwqr18VkOtt9A3HWCPX8
+ 43gIbRU5Re68IpTxnpV8rSSzFm6jBVA/MZLHaKyR88k8YMezbOVoS9RF0m41amQ2JM7XO8M1B
+ 7mjYpRE8b8qifWdmnTE7KpT1+VhYb0LU7TgXC2fIZC2Um+gXq0iYyjp4TmWGg+9/bNH0Zpv86
+ WXa7e7byNyP/8IdxJL8WsxTT3viUc/iVkfBc6Y//vqdbGsmRW2j//AzIfTJnbE1CMUaQrRRGb
+ PFTqRHJL+CTX2v/zlhxMtixD//fWrr+4a6VX8wgJ9gay1lvTvBdJfrmakzaICFiX3aZJCI+mf
+ WqrR8kbD5ewwnrB4mK/BF4IvwDz6Tiu7Q1FBRax5S/q2TCvRk8LfcgJtgeuJIIiHQdYhd+kiq
+ 3zr70O0pq9I/jnecqvaW3+FE7GRiocLDKRwd7FbvhsNLWCPZKIUKzWRmP4oNkCucOTawI5U/N
+ nPim6HuSjQCXxXEo28s9FlmN/mKrDKxPwhXM3MAqfcKtI6hwB4IYDcIwuw7+sdR4FDz4BPpAB
+ vqJau9PUf9GTbXumrdEDSwByTNEco9h2Pn/p1wy5WVK58bO8qKkPx0h+1Vew4gxm9/r1Swnoj
+ ucDgqvZzP4Qx0LlE/CplbqZ/xtl9cfxh7RLNKVkyxhcOrI7JjGnVt/Fxv43YAXJZc2HMZaUnV
+ XCQpqJvWWbjWcV4Z57vXMrCPw5l4qOVWAZBmbqgeEJCKwR66l7e5nXJJ+BxUuXLG2YJUAoGt/
+ X4pS3BTQcb3O3UVkuG6FEZpx8CzdcxfMbxeyOyW8Nwp4aiRXWodSeNQOvpM5OKDwct/qeR+CH
+ t+4BTrJYCSzSW8QqByveXzk3mQ/CgpNqvYA2SKqlDnD6xlTbSTZESk1Y9r93/PVN/RGITwRtV
+ 0usW3ZLRWzuFjqKSTedg77to31bnFt3Wmpx+Gi8j7L1Z4FU4RnsIH45DKDHM6whrR1Vc2yLYV
+ h9Lb52fY7jPO/AId4PTDgycJklZNsPSnemecYjIhD3UQ9qVV4XBCAH9vKip2NaBXoZLCfBxbV
+ jw5GkXdQbMDHodC9u
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 01:21:19PM +0800, maobibo wrote:
+On Tue, Mar 10, 2020 at 10:50:11AM +0100, Greg Kroah-Hartman wrote:
+> On Sun, Mar 08, 2020 at 07:22:07PM +0000, Malcolm Priestley wrote:
+> > >>>   */
+> > >>>  #undef __NO_VERSION__
+> > >>>
+> > >>> +#include <linux/bits.h>
+> > >>>  #include <linux/etherdevice.h>
+> > >>>  #include <linux/file.h>
+> > >>>  #include "device.h"
+> > >>> @@ -802,8 +803,7 @@ static u64 vnt_prepare_multicast(struct ieee80=
+211_hw *hw,
+> > >>>
+> > >>>  	netdev_hw_addr_list_for_each(ha, mc_list) {
+> > >>>  		bit_nr =3D ether_crc(ETH_ALEN, ha->addr) >> 26;
+> > >>> -
+> > >>> -		mc_filter |=3D 1ULL << (bit_nr & 0x3f);
+> > >>> +		mc_filter |=3D BIT_ULL(bit_nr);
+> > >>
+> > >> Are you sure this does the same thing?  You are not masking off bit=
+_nr
+> > >> anymore, why not?
+> > >
+> > > My reasons are exposed below:
+> > >
+> > > The ether_crc function returns an u32 type (unsigned of 32 bits). Th=
+en the right
+> > > shift operand discards the 26 lsb bits (the bits shifted off the rig=
+ht side are
+> > > discarded). The 6 msb bits of the u32 returned by the ether_crc func=
+tion are
+> > > positioned in bit 5 to bit 0 of the variable bit_nr. Due to the righ=
+t shift
+> > > happens over an unsigned type, the 26 new bits added on the left sid=
+e will be 0.
+> > >
+> > > In summary, after the right bit shift operation we obtain in the var=
+iable bit_nr
+> > > (unsigned of 32 bits) the value represented by the 6 msb bits of the=
+ value
+> > > returned by the ether_crc function. So, only the 6 lsb bits of the v=
+ariable
+> > > bit_nr are important. The 26 msb bits of this variable are 0.
+> > >
+> > > In this situation, the "and" operation with the mask 0x3f (mask of 6=
+ lsb bits)
+> > > is unnecessary due to its purpose is to reset (set to 0 value) the 2=
+6 msb bits
+> > > that are yet 0.
+> >
+> > The mask is only there out of legacy originally it was 31(0x1f) and th=
+e
+> > bit_nr spread across two mc_filter u32 arrays.
+> >
+> > The mask is not needed now it is u64.
+> >
+> > The patch is fine.
+>
+> Ok, then the changelog needs to be fixed up to explain all of this and
+> resent.
 
-> yeap, this supplementary patch fixes the issue, and it works for my on my
-> loongson64 RS780 machine.
+Ok, I will create a new version patch with all of this information and I w=
+ill
+resend it.
 
-Thanks, i will be sending a (hopefully) better patch based on the
-feedback from Thomas.
+>
+> thanks,
+>
+> greg k-h
 
-Regards
-afzal
+thanks,
+
+Oscar
