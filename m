@@ -2,78 +2,100 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B23C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60275C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141C6205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3419A205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbgCOCgs (ORCPT
+        id S1727422AbgCOChC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:36:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11695 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726712AbgCOCgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:36:47 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 36F5E8A47D899E3BDB75;
-        Sat, 14 Mar 2020 18:51:31 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Sat, 14 Mar 2020
- 18:51:23 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ayush.sawal@chelsio.com>, <vinay.yadav@chelsio.com>,
-        <rohitm@chelsio.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] chcr: remove set but not used variable 'status'
-Date:   Sat, 14 Mar 2020 18:51:20 +0800
-Message-ID: <20200314105120.20968-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 14 Mar 2020 22:37:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:54432 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726712AbgCOChB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:37:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C24501FB;
+        Sat, 14 Mar 2020 04:18:29 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61D1B3F67D;
+        Sat, 14 Mar 2020 04:18:26 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 11:18:23 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v9 08/13] arm64: traps: Shuffle code to eliminate forward
+ declarations
+Message-ID: <20200314111823.GA21082@mbp>
+References: <20200311192608.40095-1-broonie@kernel.org>
+ <20200311192608.40095-9-broonie@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311192608.40095-9-broonie@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/crypto/chelsio/chcr_ktls.c: In function chcr_ktls_cpl_set_tcb_rpl:
-drivers/crypto/chelsio/chcr_ktls.c:662:11: warning:
- variable status set but not used [-Wunused-but-set-variable]
+On Wed, Mar 11, 2020 at 07:26:03PM +0000, Mark Brown wrote:
+> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> index bc9f4292bfc3..3c07a7074145 100644
+> --- a/arch/arm64/kernel/traps.c
+> +++ b/arch/arm64/kernel/traps.c
+> @@ -272,7 +272,55 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
+>  	}
+>  }
+>  
+> -static void advance_itstate(struct pt_regs *regs);
+> +#ifdef CONFIG_COMPAT
+> +#define PSTATE_IT_1_0_SHIFT	25
+> +#define PSTATE_IT_1_0_MASK	(0x3 << PSTATE_IT_1_0_SHIFT)
+> +#define PSTATE_IT_7_2_SHIFT	10
+> +#define PSTATE_IT_7_2_MASK	(0x3f << PSTATE_IT_7_2_SHIFT)
 
-commit 8a30923e1598 ("cxgb4/chcr: Save tx keys and handle HW response")
-involved this unused variable, remove it.
+[...]
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/crypto/chelsio/chcr_ktls.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> @@ -578,34 +626,6 @@ static const struct sys64_hook sys64_hooks[] = {
+>  	{},
+>  };
+>  
+> -
+> -#ifdef CONFIG_COMPAT
+> -#define PSTATE_IT_1_0_SHIFT	25
+> -#define PSTATE_IT_1_0_MASK	(0x3 << PSTATE_IT_1_0_SHIFT)
+> -#define PSTATE_IT_7_2_SHIFT	10
+> -#define PSTATE_IT_7_2_MASK	(0x3f << PSTATE_IT_7_2_SHIFT)
 
-diff --git a/drivers/crypto/chelsio/chcr_ktls.c b/drivers/crypto/chelsio/chcr_ktls.c
-index f0c3834eda4f..00099e793e63 100644
---- a/drivers/crypto/chelsio/chcr_ktls.c
-+++ b/drivers/crypto/chelsio/chcr_ktls.c
-@@ -659,10 +659,9 @@ int chcr_ktls_cpl_set_tcb_rpl(struct adapter *adap, unsigned char *input)
- 	const struct cpl_set_tcb_rpl *p = (void *)input;
- 	struct chcr_ktls_info *tx_info = NULL;
- 	struct tid_info *t;
--	u32 tid, status;
-+	u32 tid;
- 
- 	tid = GET_TID(p);
--	status = p->status;
- 
- 	t = &adap->tids;
- 	tx_info = lookup_tid(t, tid);
+This patch breaks the kernel build with CONFIG_COMPAT disabled (e.g. 64K
+page configuration) as sys64_hooks[] ends up in the #ifdef/#endif block.
+
 -- 
-2.20.1
-
-
+Catalin
