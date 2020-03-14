@@ -2,71 +2,81 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F49AC0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88776C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C093A20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1EC20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:40:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="SG5VD3z4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cuhKXD2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgCODhf (ORCPT
+        id S1727433AbgCODkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:37:35 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46390 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCODhf (ORCPT
+        Sat, 14 Mar 2020 23:40:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24398 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726668AbgCODkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:37:35 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w12so6210377pll.13
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 20:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=/+9Q8TJ7jtUHpxRJyGUZ1bL86SBe7tVjOmhbbOA4p4w=;
-        b=SG5VD3z4MI8OduY4+2c3wYVTGDxZx6rfjOy9JvWLiHNHsY2hQyAoP0lwTCXSev6QbO
-         ROubWXIRQkgbTJ2+P2NPwnxQAY5jSgsq9oNiRl6qOQO/u3mz/NKMzUiyFaxap0XDRYb6
-         7OU8qGPjTqzxy+OwjkGyUlU9h6kWIB3H7s8mEMK/rPlLR51mo5OWHJs74cop8QLPfT/M
-         8G+6wBz5Rvc2qvVTMnuPdBquQbW9CwJksbbU/Kqx3lyrrMq9BBBbh9BTuD7+eOTroTsM
-         M/+Hlfot730nD9afcqDOp6rhHNZPe9QxozAI2p3v21Lkcu5LrtghZVuXsyC9Qd5P97o3
-         0bNg==
+        Sat, 14 Mar 2020 23:40:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584243610;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7mUmgqOIFOdKgmbkoQ0zespckuiZdF8ycwVxiswURFM=;
+        b=cuhKXD2JoWMcCLwfw5DqmA6ZZvk1QBAp0wZrhs4q2gkrPjV/ObUMLEjeWEiY+LaHsQ0v84
+        RlgxXKYrIS8Rp0nkg+BcsCO+2YLdRhwJJEQJvyQ69gclcHE1Rgftfk4jnvNIr2xB4se6kN
+        jXSfQBliixw0AcywWJmRCYXAkUqqCaY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-Pw3YuW3APQWkuirTtbakpw-1; Sat, 14 Mar 2020 07:37:44 -0400
+X-MC-Unique: Pw3YuW3APQWkuirTtbakpw-1
+Received: by mail-wr1-f69.google.com with SMTP id u12so3382473wrw.10
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 04:37:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/+9Q8TJ7jtUHpxRJyGUZ1bL86SBe7tVjOmhbbOA4p4w=;
-        b=WKtIOIjSgJJFIWSsFvy1A5k38b8s+ZMZ02mLL/NNfegILc6uztb6CVTsFtBW0Njdac
-         TsjYZpqTH5aRgQsxIEDYXyor8VTH3pseV3LR6z35gZAcBODlKfKj3TOqjnHPaJFlYES0
-         /gnqwTrzyu1S0roI1mayhPbme+ZRfMp+dl4J9LFcK6kmEEMHd3vF0CbgG1tpReQnUC7h
-         zpN+/59et8swk2E6kb9T1/wwDTfY06RIIatpLDZpSfj6TgsLGy8n2x3iosudL0ozorYx
-         nOwUM35ZBF8uZVf2epM2GSac1DEMpqtHcqAinYJBhkqtrhx1N1XbRN5XlP6BLa7hc/qX
-         SzJQ==
-X-Gm-Message-State: ANhLgQ3k2DYSWclMqhp5O8cfW/03Fuv0fmcJlSnr6GtcFJ9qig3awYCU
-        +7PhaDsoJTTwjPR+QqLYkGLWlRomkV7+RA==
-X-Google-Smtp-Source: ADFU+vtUob9/wk2Xo5IPPKPI0Pio7lMK+3XwsB2YuJ0xrn4KtFRW2bv81Vj2/I2bo284+Z7N4zVwcw==
-X-Received: by 2002:aa7:8b03:: with SMTP id f3mr20486548pfd.133.1584201520387;
-        Sat, 14 Mar 2020 08:58:40 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id n7sm3779560pgm.28.2020.03.14.08.58.39
+        bh=7mUmgqOIFOdKgmbkoQ0zespckuiZdF8ycwVxiswURFM=;
+        b=UNWq+U1vxabWfBv98hiapV9uQIIBj6lNk/PkTpWmnZhRxBpAhCgWcALKaiapKy+i6f
+         Ycimovx++pP1XuNdqfdWLVaPGe1shCiJeym+C/o5vnUPbiUisUs26bjVn7xUqoJ6r8cM
+         LXg4rqkJBVKPRfX4opqNC3Re3bnwJBwwqmuBVgeFQLkTPoIPcpz29cppJKQWHLSWv3rr
+         qB+zY6elsL3SqQzy8ndxhzQkr/w8ZVpagUp0YCfmNTW/0QxvO4n/OGpUpnF0y5hSqNNL
+         SNpjBXDUAwYa4erFrrgfgMBUuC+E7lGiLZXAou1APIRERZYD3vH40Rrvyhm8BEupZYv5
+         T03A==
+X-Gm-Message-State: ANhLgQ2dr1e7fjkU6G3Ww8EEFaQ+bZZcfCUuCfqs9gGsKyvTqn1qLuZ9
+        O+ZbADSYgKCzo/SsPJb1UM/NHhRmjVOtaAXXIafPfcC105vjNxsSYWVXRodpSL21/eI9t8HqGQQ
+        jZOsiAk6PA2i9dR79Ifu/z32M
+X-Received: by 2002:a5d:6a0e:: with SMTP id m14mr24146631wru.202.1584185863205;
+        Sat, 14 Mar 2020 04:37:43 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtNGoRby/wRfjauVrobYr5jBC5s8q6oSM+F2dujPpEvIkjrwFi5vDmCl73ddSAQ4SsdWa43Zw==
+X-Received: by 2002:a5d:6a0e:: with SMTP id m14mr24146612wru.202.1584185862992;
+        Sat, 14 Mar 2020 04:37:42 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7de8:5d90:2370:d1ac? ([2001:b07:6468:f312:7de8:5d90:2370:d1ac])
+        by smtp.gmail.com with ESMTPSA id f17sm76798128wrj.28.2020.03.14.04.37.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Mar 2020 08:58:39 -0700 (PDT)
-Subject: Re: [PATCH 5.6] io_uring: NULL-deref for IOSQE_{ASYNC,DRAIN}
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <3fff749b19ae1c3c2d59e88462a8a5bfc9e6689f.1584127615.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <62bc8817-5777-7f79-3c27-028a770e2f3b@kernel.dk>
-Date:   Sat, 14 Mar 2020 09:58:38 -0600
+        Sat, 14 Mar 2020 04:37:42 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] kvm: selftests: Introduce TEST_FAIL and convert
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        sean.j.christopherson@intel.com, shuah@kernel.org,
+        tglx@linutronix.de, thuth@redhat.com
+References: <20200310025059.9301-1-wainersm@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <61b30d46-316c-5ef6-179f-fc394d352766@redhat.com>
+Date:   Sat, 14 Mar 2020 12:37:41 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <3fff749b19ae1c3c2d59e88462a8a5bfc9e6689f.1584127615.git.asml.silence@gmail.com>
+In-Reply-To: <20200310025059.9301-1-wainersm@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,17 +85,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/13/20 1:29 PM, Pavel Begunkov wrote:
-> Processing links, io_submit_sqe() prepares requests, drops sqes, and
-> passes them with sqe=NULL to io_queue_sqe(). There IOSQE_DRAIN and/or
-> IOSQE_ASYNC requests will go through the same prep, which doesn't expect
-> sqe=NULL and fail with NULL pointer deference.
+On 10/03/20 03:50, Wainer dos Santos Moschetta wrote:
+> Introduce the TEST_FAIL macro and change the tests/utilities
+> to use it.
 > 
-> Always do full prepare including io_alloc_async_ctx() for linked
-> requests, and then it can skip the second preparation.
+> v1 -> v2:
+> - Completed the conversion to TEST_FAIL.
+> 
+> v1:
+> - [RFC PATCH 0/1] kvm: selftests: Add TEST_FAIL macro
+>   https://lore.kernel.org/kvm/20200305172532.9360-1-wainersm@redhat.com/
+> 
+> Wainer dos Santos Moschetta (2):
+>   selftests: kvm: Introduce the TEST_FAIL macro
+>   selftests: kvm: Uses TEST_FAIL in tests/utilities
+> 
+>  tools/testing/selftests/kvm/dirty_log_test.c  |  7 +++----
+>  .../testing/selftests/kvm/include/test_util.h |  3 +++
+>  .../selftests/kvm/lib/aarch64/processor.c     | 17 +++++++--------
+>  .../testing/selftests/kvm/lib/aarch64/ucall.c |  2 +-
+>  tools/testing/selftests/kvm/lib/io.c          | 12 +++++------
+>  tools/testing/selftests/kvm/lib/kvm_util.c    | 21 ++++++++-----------
+>  .../selftests/kvm/lib/x86_64/processor.c      |  5 ++---
+>  .../kvm/x86_64/cr4_cpuid_sync_test.c          |  4 ++--
+>  .../testing/selftests/kvm/x86_64/evmcs_test.c |  6 +++---
+>  .../testing/selftests/kvm/x86_64/state_test.c |  6 +++---
+>  .../selftests/kvm/x86_64/svm_vmcall_test.c    |  6 ++----
+>  .../kvm/x86_64/vmx_close_while_nested_test.c  |  4 ++--
+>  .../selftests/kvm/x86_64/vmx_dirty_log_test.c |  6 +++---
+>  .../kvm/x86_64/vmx_tsc_adjust_test.c          |  4 ++--
+>  14 files changed, 49 insertions(+), 54 deletions(-)
+> 
 
-Thanks, applied.
+Queued, thanks.
 
--- 
-Jens Axboe
+Paolo
 
