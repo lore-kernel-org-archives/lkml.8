@@ -2,71 +2,120 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2D3C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F1CC1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914FE20637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BC92071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AIQlqMfV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgCOCR1 (ORCPT
+        id S1727714AbgCOCSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:17:27 -0400
-Received: from smtprelay0153.hostedemail.com ([216.40.44.153]:39758 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727053AbgCOCR1 (ORCPT
+        Sat, 14 Mar 2020 22:18:13 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43383 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgCOCSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:17:27 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id 46150180373CD
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 19:10:26 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 17EDB18029DAE;
-        Sat, 14 Mar 2020 19:10:26 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: honey36_3b71627ac205
-X-Filterd-Recvd-Size: 1364
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 14 Mar 2020 19:10:25 +0000 (UTC)
-Message-ID: <f0b213d90e0c2138bedcc4822063dde2650f787f.camel@perches.com>
-Subject: vim: linux-kernel: Add "fallthrough" as a keyword
-From:   Joe Perches <joe@perches.com>
-To:     Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Date:   Sat, 14 Mar 2020 12:08:40 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 14 Mar 2020 22:18:12 -0400
+Received: by mail-ed1-f67.google.com with SMTP id dc19so17340864edb.10;
+        Sat, 14 Mar 2020 19:18:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=VJ+RY29P5A3JmNUd+RYfkaMYIhrPtnZKpKcnzxMgng4=;
+        b=AIQlqMfVJlN0HlyANWm0nSChXAKPt7/PzSrPhJsbEqjFRge+aDzgZhvs6Ien2kut/0
+         0vUee8KBQHhcVRpoH1DhP2rZg1Yxpuf/DOs0aaj4payldQeDCyV/mUSjDDqcIGsYJrkh
+         m/IqRrCyKU6iW4iyAdYlJ//gx+yM6znOMl1y9X3g63SGZQ+ZUUdfQoCbVShgUHf3NBRN
+         UrO1B/gBqyYQUPFGMNXFEUw+qVqJP7zI1JheW4IgrZJKmvKLvRBYdM4fNNbWQMEDMar0
+         gDSPyQyaKxJDT+ThhudfAWb5NIN7nyFD/DbzDrYteu77Xkl91n92sEkLHXRNk98hQ42w
+         Wvlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=VJ+RY29P5A3JmNUd+RYfkaMYIhrPtnZKpKcnzxMgng4=;
+        b=lVEP5gSbPymErp3VXp6MDUmpVqxZKH6gndjOoLzMM9XBvE/VSeYKN2gPVWx7OR6cE+
+         bBzoJnav2hW0PCnYX+Eim0ddXB+0nzvwun0PxEv99ZIddVO7dBNVzQEDGg09nOmOh/jg
+         czZj3h7/RuIwi06jglmFni0xJWEKEhKr2OYNpLwI8hpAkloWV2o46XZEOm0HSmdlTLgL
+         JSb54jTkLF9nTZF1g9OWLSxfGxMdbb2KG+cTIshQh+1nDg26EIMLNR9EZP9bwiDsAFkr
+         cXgwcPZK7QXiP4OEPtLap+WmkB8LY9QURs17WeZqRqmKKYYyd49s6Bi1lszTpmdB+Rt9
+         dUEg==
+X-Gm-Message-State: ANhLgQ1f/cj6kBRi6t1klSaopH/ielqvRAeViawaljZDEzpPxqBaQXNO
+        MaK/954r0byMbYsjYUf5jS4zkNS7XCc=
+X-Google-Smtp-Source: ADFU+vuj0pL5Ww/SuXqsYC+FIBzhjNsLjbKeBf77AQ5JP+yHyQGBqcpK7iOIx3za9aByLUgVWE1Aag==
+X-Received: by 2002:a5d:5746:: with SMTP id q6mr584815wrw.83.1584225841940;
+        Sat, 14 Mar 2020 15:44:01 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id 133sm23690732wmd.5.2020.03.14.15.44.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2020 15:44:01 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH v3 04/12] spi: spi-fsl-dspi: Avoid reading more data than written in EOQ mode
+Date:   Sun, 15 Mar 2020 00:43:32 +0200
+Message-Id: <20200314224340.1544-5-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200314224340.1544-1-olteanv@gmail.com>
+References: <20200314224340.1544-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add fallthrough as a keyword for source code highlighting as
-fallthrough was added as a pseudo-keyword macro to replace the
-various forms of switch/case /* fallthrough */ comments.
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Signed-off-by: Joe Perches <joe@perches.com>
+If dspi->words_in_flight is populated with the hardware FIFO size,
+then in dspi_fifo_read it will attempt to read more data at the end of a
+buffer that is not a multiple of 16 bytes in length. It will probably
+time out attempting to do so.
+
+So limit the num_fifo_entries variable to the actual number of FIFO
+entries that is going to be used.
+
+Fixes: d59c90a2400f ("spi: spi-fsl-dspi: Convert TCFQ users to XSPI FIFO mode")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
- plugin/linuxsty.vim | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v4:
+Patch is new.
 
-diff --git a/plugin/linuxsty.vim b/plugin/linuxsty.vim
-index 18b28..44824 100644
---- a/plugin/linuxsty.vim
-+++ b/plugin/linuxsty.vim
-@@ -69,6 +69,7 @@ function s:LinuxFormatting()
- endfunction
+ drivers/spi/spi-fsl-dspi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 8f2b73cc6ed7..51224b772680 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -739,13 +739,16 @@ static void dspi_eoq_fifo_write(struct fsl_dspi *dspi)
+ 	int num_fifo_entries = dspi->devtype_data->fifo_size;
+ 	u16 xfer_cmd = dspi->tx_cmd;
  
- function s:LinuxKeywords()
-+    syn keyword cStatement fallthrough
-     syn keyword cOperator likely unlikely
-     syn keyword cType u8 u16 u32 u64 s8 s16 s32 s64
-     syn keyword cType __u8 __u16 __u32 __u64 __s8 __s16 __s32 __s64
++	if (num_fifo_entries * dspi->oper_word_size > dspi->len)
++		num_fifo_entries = dspi->len / dspi->oper_word_size;
++
+ 	dspi->words_in_flight = num_fifo_entries;
+ 
+ 	/* Fill TX FIFO with as many transfers as possible */
+-	while (dspi->len && num_fifo_entries--) {
++	while (num_fifo_entries--) {
+ 		dspi->tx_cmd = xfer_cmd;
+ 		/* Request EOQF for last transfer in FIFO */
+-		if (dspi->len == dspi->oper_word_size || num_fifo_entries == 0)
++		if (num_fifo_entries == 0)
+ 			dspi->tx_cmd |= SPI_PUSHR_CMD_EOQ;
+ 		/* Write combined TX FIFO and CMD FIFO entry */
+ 		dspi_pushr_write(dspi);
+-- 
+2.17.1
 
