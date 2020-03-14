@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B938AC0044D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392E6C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 04:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9642074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198B12074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 04:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgCNDwD (ORCPT
+        id S1726485AbgCNECE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 23:52:03 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:45299 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgCNDwD (ORCPT
+        Sat, 14 Mar 2020 00:02:04 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:47284 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgCNECD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 23:52:03 -0400
-Received: by mail-il1-f200.google.com with SMTP id h12so8535101ils.12
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 20:52:02 -0700 (PDT)
+        Sat, 14 Mar 2020 00:02:03 -0400
+Received: by mail-io1-f71.google.com with SMTP id w21so7973272iod.14
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 21:02:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
-        bh=KCmAJDk94gn8lmzBp3+MaZXdfTJa9zfOjP1Al0kR+Bg=;
-        b=k7BxK5lfFTGKqHwLip07m/i3qqIJDREDgqLXiqaK7B9fSGcb35UmPHxvKinvgHJGKl
-         zFlrJws4f9x6U/vfUAOuNJ2kcJs4FAJ3cd6a0TChxFVEB/jEalVquRf8zUrpyXkbfTkc
-         yUpZmsUQ3sFB6Ikm8RlJkNugl6yGSH++Vq7H3dGw+5GYoeAxT/ehW+OWvMOsyFu/A27d
-         jDblZdwoo7sHlag5mLQw5rf8ZUXQSI0bMNig5P0W/g871WnuFz7MKS0HKuKAUgjNmfA4
-         6WvmVhnw/oQNyjqxmy9mmpDucNCxAFv7/jpoiOxsVvhiMLO978Ooxh2mAYhnWJtY3RlI
-         4xOQ==
-X-Gm-Message-State: ANhLgQ24UhZxu624M5pD9Qm1J0f136oSBXeVaELS/SgEml+q+MzW1ggs
-        SNmF4evFPpqlPdQlw07B3oFtdzpi7qGnb/88m8sY4qg5RkQX
-X-Google-Smtp-Source: ADFU+vt7Mx2gi6kRYfnT0aEo7wr0TNid+UV7hnHce2sBBCczu7qzhEVpG7lpLM714nNqKTdMRjkbmYp6hIKUGEo84swpCtCVg24a
+        bh=DBwJriMlM9SYUClSqGmnORw3G1P+BJ+ON7TkScNMz64=;
+        b=qvUbrecGxZJiY+SStSGTV6+lGSkQuF2javDW+5whF2sDoKYZTdAjMgWg2C8/T2EL5Q
+         JxHRWp4bVQN5QjBCsGGsGbBc6CBZYJEHn4i7W/7JAeSl7qSRPSHvQ/Voz4S38bw56d4p
+         UCSGCEYvZ1Qhu3OU4fY8ITU8+ki2j1oHhiUbhKh+Q9oXjRp4ZcLY7r/Wc39mHij40onI
+         J08MO+fCvGQpduvla+25tDqY9m9k5Uentv/R+SbtUR7r1htQuxP04ZS+76jsNQhqARVx
+         G3ol7tIgjAj8xX/DOSBTUsVbuBnJsAo5imRQuc7mV5FCBZxMqw3enKCjqSwYe+lvd99c
+         XLUA==
+X-Gm-Message-State: ANhLgQ2vsKPvOqS22Epk2OYuGRm3bYKbqlfEW3mvwZlL7+GBQVXslbob
+        mX/f5srdZoRp2OlGXJF4spgmf2uVxbfLDe3X+bvTAG32zzCU
+X-Google-Smtp-Source: ADFU+vupJLHw9fKO6B9jem1RLsOpvP0yw016OzW99SMSpx+q9uZCRPWMRqTG7xOR9vmrUCIgfyVfcZ99FmWJLbDMHyXGyXn7HJbj
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5a0c:: with SMTP id o12mr15083450iob.137.1584157922264;
- Fri, 13 Mar 2020 20:52:02 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 20:52:02 -0700
-In-Reply-To: <CAM_iQpXM7daXmcEGjk+CuOFf3KDixDidWSDpUAk=RcpRehF+Ag@mail.gmail.com>
+X-Received: by 2002:a92:afc1:: with SMTP id v62mr16687352ill.308.1584158522545;
+ Fri, 13 Mar 2020 21:02:02 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 21:02:02 -0700
+In-Reply-To: <CADG63jAAgdzmVQGHhxAY-diyMisXenTpd02StvwJytqkjGeSuw@mail.gmail.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000398bd005a0c882ab@google.com>
-Subject: Re: WARNING in call_rcu
-From:   syzbot <syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
+Message-ID: <000000000000011efd05a0c8a609@google.com>
+Subject: Re: WARNING in idr_destroy
+From:   syzbot <syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com>
+To:     airlied@linux.ie, anenbupt@gmail.com, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,16 +59,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+syzbot has tested the proposed patch but the reproducer still triggered crash:
+WARNING in idr_destroy
 
-Reported-and-tested-by: syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com
+RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+R13: 0000000000000203 R14: 00000000004c3e56 R15: 0000000000000008
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 9261 at lib/radix-tree.c:682 radix_tree_free_nodes lib/radix-tree.c:682 [inline]
+WARNING: CPU: 1 PID: 9261 at lib/radix-tree.c:682 idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9261 Comm: syz-executor.2 Not tainted 5.6.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ panic+0x264/0x7a9 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1b6/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:radix_tree_free_nodes lib/radix-tree.c:682 [inline]
+RIP: 0010:idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
+Code: 53 5f f9 48 89 df 48 c7 c6 10 73 17 88 e8 ca 6c 4c f9 4c 3b 65 b8 74 57 e8 7f 53 5f f9 4d 89 fc e9 67 ff ff ff e8 72 53 5f f9 <0f> 0b eb d5 89 f9 80 e1 07 38 c1 7c 84 e8 e0 85 9c f9 e9 7a ff ff
+RSP: 0018:ffffc90001e47ba0 EFLAGS: 00010293
+RAX: ffffffff8817cc0e RBX: ffff8880914be458 RCX: ffff8880a6fee040
+RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff8880914be448
+RBP: ffffc90001e47be8 R08: ffffffff8817cb80 R09: ffffed10130a7981
+R10: ffffed10130a7981 R11: 0000000000000000 R12: ffff8880914be440
+R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
+ drm_mode_create_lease_ioctl+0x133c/0x1860 drivers/gpu/drm/drm_lease.c:585
+ drm_ioctl_kernel+0x2cf/0x410 drivers/gpu/drm/drm_ioctl.c:786
+ drm_ioctl+0x52f/0x890 drivers/gpu/drm/drm_ioctl.c:886
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl fs/ioctl.c:763 [inline]
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl+0x113/0x190 fs/ioctl.c:770
+ __x64_sys_ioctl+0x7b/0x90 fs/ioctl.c:770
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c479
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f833d7e0c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f833d7e16d4 RCX: 000000000045c479
+RDX: 0000000020000040 RSI: ffffffffffffffc6 RDI: 0000000000000003
+RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+R13: 0000000000000203 R14: 00000000004c3e56 R15: 0000000000000008
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
 
 Tested on:
 
-commit:         29311b74 cls_route: remove the old filter from hashtable
-git tree:       https://github.com/congwang/linux.git tcindex
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a5295e161cd85b82
-dashboard link: https://syzkaller.appspot.com/bug?extid=2f8c233f131943d6056d
+commit:         48d976f6 drm/lease: fix WARNING in idr_destroy
+git tree:       https://github.com/hqj/hqjagain_test.git drm
+console output: https://syzkaller.appspot.com/x/log.txt?x=17a15753e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cec95cb58b6f6294
+dashboard link: https://syzkaller.appspot.com/bug?extid=05835159fe322770fe3d
 compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-Note: testing is done by a robot and is best-effort only.
