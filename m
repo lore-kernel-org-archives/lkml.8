@@ -2,68 +2,81 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36996C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07676C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170F62076A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89BC20637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgCOBce (ORCPT
+        id S1726647AbgCOBdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:32:34 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:60934 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbgCOBcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:32:33 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ABDD61A015F;
-        Sun, 15 Mar 2020 01:54:20 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ACE841A0170;
-        Sun, 15 Mar 2020 01:54:17 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 27880402B1;
-        Sun, 15 Mar 2020 08:54:14 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] rtc: snvs: remove redundant error message
-Date:   Sun, 15 Mar 2020 08:47:44 +0800
-Message-Id: <1584233264-26025-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sat, 14 Mar 2020 21:33:35 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48091 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgCOBde (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:33:34 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id ab1996ee3b51f96d; Sat, 14 Mar 2020 10:33:32 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     lenb@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, luto@kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] x86/acpi: make "asmlinkage" part first thing in the function definition
+Date:   Sat, 14 Mar 2020 10:33:31 +0100
+Message-ID: <1684981.ixsy79CQbx@kreacher>
+In-Reply-To: <20200303204144.GA9913@avx2>
+References: <20200303204144.GA9913@avx2>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RTC core already has error message for registration failure,
-no need to have error message in the driver again.
+On Tuesday, March 3, 2020 9:41:44 PM CET Alexey Dobriyan wrote:
+> g++ insists that function declaration must start with extern "C"
+> (which asmlinkage expands to).
+> 
+> gcc doesn't care.
+> 
+> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> ---
+> 
+>  arch/x86/kernel/acpi/sleep.c |    2 +-
+>  arch/x86/kernel/acpi/sleep.h |    2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> --- a/arch/x86/kernel/acpi/sleep.c
+> +++ b/arch/x86/kernel/acpi/sleep.c
+> @@ -43,7 +43,7 @@ unsigned long acpi_get_wakeup_address(void)
+>   *
+>   * Wrapper around acpi_enter_sleep_state() to be called by assmebly.
+>   */
+> -acpi_status asmlinkage __visible x86_acpi_enter_sleep_state(u8 state)
+> +asmlinkage acpi_status __visible x86_acpi_enter_sleep_state(u8 state)
+>  {
+>  	return acpi_enter_sleep_state(state);
+>  }
+> --- a/arch/x86/kernel/acpi/sleep.h
+> +++ b/arch/x86/kernel/acpi/sleep.h
+> @@ -19,4 +19,4 @@ extern void do_suspend_lowlevel(void);
+>  
+>  extern int x86_acpi_suspend_lowlevel(void);
+>  
+> -acpi_status asmlinkage x86_acpi_enter_sleep_state(u8 state);
+> +asmlinkage acpi_status x86_acpi_enter_sleep_state(u8 state);
+> 
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/rtc/rtc-snvs.c | 2 --
- 1 file changed, 2 deletions(-)
+Applied as 5.7 material, thanks!
 
-diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
-index 319ed1d..36f4961 100644
---- a/drivers/rtc/rtc-snvs.c
-+++ b/drivers/rtc/rtc-snvs.c
-@@ -354,8 +354,6 @@ static int snvs_rtc_probe(struct platform_device *pdev)
- 	data->rtc->ops = &snvs_rtc_ops;
- 	data->rtc->range_max = U32_MAX;
- 	ret = rtc_register_device(data->rtc);
--	if (ret)
--		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
- 
- 	return ret;
- }
--- 
-2.7.4
+
+
 
