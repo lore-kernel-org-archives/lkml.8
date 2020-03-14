@@ -2,120 +2,101 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F1CC1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967D8C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8BC92071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AIQlqMfV"
+	by mail.kernel.org (Postfix) with ESMTP id 7873E20637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgCOCSN (ORCPT
+        id S1727757AbgCOCS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:18:13 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43383 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgCOCSM (ORCPT
+        Sat, 14 Mar 2020 22:18:29 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:42224 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727520AbgCOCS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:18:12 -0400
-Received: by mail-ed1-f67.google.com with SMTP id dc19so17340864edb.10;
-        Sat, 14 Mar 2020 19:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VJ+RY29P5A3JmNUd+RYfkaMYIhrPtnZKpKcnzxMgng4=;
-        b=AIQlqMfVJlN0HlyANWm0nSChXAKPt7/PzSrPhJsbEqjFRge+aDzgZhvs6Ien2kut/0
-         0vUee8KBQHhcVRpoH1DhP2rZg1Yxpuf/DOs0aaj4payldQeDCyV/mUSjDDqcIGsYJrkh
-         m/IqRrCyKU6iW4iyAdYlJ//gx+yM6znOMl1y9X3g63SGZQ+ZUUdfQoCbVShgUHf3NBRN
-         UrO1B/gBqyYQUPFGMNXFEUw+qVqJP7zI1JheW4IgrZJKmvKLvRBYdM4fNNbWQMEDMar0
-         gDSPyQyaKxJDT+ThhudfAWb5NIN7nyFD/DbzDrYteu77Xkl91n92sEkLHXRNk98hQ42w
-         Wvlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VJ+RY29P5A3JmNUd+RYfkaMYIhrPtnZKpKcnzxMgng4=;
-        b=lVEP5gSbPymErp3VXp6MDUmpVqxZKH6gndjOoLzMM9XBvE/VSeYKN2gPVWx7OR6cE+
-         bBzoJnav2hW0PCnYX+Eim0ddXB+0nzvwun0PxEv99ZIddVO7dBNVzQEDGg09nOmOh/jg
-         czZj3h7/RuIwi06jglmFni0xJWEKEhKr2OYNpLwI8hpAkloWV2o46XZEOm0HSmdlTLgL
-         JSb54jTkLF9nTZF1g9OWLSxfGxMdbb2KG+cTIshQh+1nDg26EIMLNR9EZP9bwiDsAFkr
-         cXgwcPZK7QXiP4OEPtLap+WmkB8LY9QURs17WeZqRqmKKYYyd49s6Bi1lszTpmdB+Rt9
-         dUEg==
-X-Gm-Message-State: ANhLgQ1f/cj6kBRi6t1klSaopH/ielqvRAeViawaljZDEzpPxqBaQXNO
-        MaK/954r0byMbYsjYUf5jS4zkNS7XCc=
-X-Google-Smtp-Source: ADFU+vuj0pL5Ww/SuXqsYC+FIBzhjNsLjbKeBf77AQ5JP+yHyQGBqcpK7iOIx3za9aByLUgVWE1Aag==
-X-Received: by 2002:a5d:5746:: with SMTP id q6mr584815wrw.83.1584225841940;
-        Sat, 14 Mar 2020 15:44:01 -0700 (PDT)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id 133sm23690732wmd.5.2020.03.14.15.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2020 15:44:01 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v3 04/12] spi: spi-fsl-dspi: Avoid reading more data than written in EOQ mode
-Date:   Sun, 15 Mar 2020 00:43:32 +0200
-Message-Id: <20200314224340.1544-5-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200314224340.1544-1-olteanv@gmail.com>
-References: <20200314224340.1544-1-olteanv@gmail.com>
+        Sat, 14 Mar 2020 22:18:29 -0400
+X-Greylist: delayed 2387 seconds by postgrey-1.27 at vger.kernel.org; Sat, 14 Mar 2020 22:18:27 EDT
+Received: from relay10.mail.gandi.net (unknown [217.70.178.230])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 27F5B3A3405;
+        Sat, 14 Mar 2020 12:26:29 +0000 (UTC)
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C566A240009;
+        Sat, 14 Mar 2020 12:24:55 +0000 (UTC)
+Date:   Sat, 14 Mar 2020 13:24:55 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Ran Bi <ran.bi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Flora Fu <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v3 0/4] Add Support for MediaTek MT2712 RTC
+Message-ID: <20200314122455.GC4518@piout.net>
+References: <20200226051303.22560-1-ran.bi@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226051303.22560-1-ran.bi@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On 26/02/2020 13:12:59+0800, Ran Bi wrote:
+> This patchset add support to MT2712 RTC. MT2712 RTC is a SoC based RTC
+> with different architecture compared to MT7622 RTC.
+> 
+> Changes in V3:
+> 1. change struct mt2712_rtc
+> 2. use 100 as year offset
+> 3. change irq handle thread
+> 4. remove useless rtc time check
+> 5. not modify struct rtc_time in set_time/set_alarm functions
+> 6. modify rtc init function
+> 7. add power lost flag for get_time/set_time functions
+> 8. add .alarm_irq_enable callback
+> 9. set rtc->range_min and rtc->range_max to do range checking
+> 10. use fixed driver name
+> 
+> Changes in V2:
+> 1. change minimum year from 1968 to 2000
+> 2. fix lock usage
+> 3. stop to calculate useless day of week
+> 4. stop to set default date after init
+> 5. change the prefix of functions
+> 6. use devm_request_threaded_irq() to replace request_threaded_irq()
+> 7. add mt2712 rtc related files into MAINTAINERS
+> 
+> Ran Bi (4):
+>   bindings: rtc: add bindings for MT2712 RTC
+>   rtc: add support for the MediaTek MT2712 RTC
+>   arm64: dts: add RTC nodes for MT2712
+>   MAINTAINERS: add MT2712 RTC files
+> 
 
-If dspi->words_in_flight is populated with the hardware FIFO size,
-then in dspi_fifo_read it will attempt to read more data at the end of a
-buffer that is not a multiple of 16 bytes in length. It will probably
-time out attempting to do so.
+Applied 1,2 and 4, thanks!
 
-So limit the num_fifo_entries variable to the actual number of FIFO
-entries that is going to be used.
 
-Fixes: d59c90a2400f ("spi: spi-fsl-dspi: Convert TCFQ users to XSPI FIFO mode")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
-Changes in v4:
-Patch is new.
-
- drivers/spi/spi-fsl-dspi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 8f2b73cc6ed7..51224b772680 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -739,13 +739,16 @@ static void dspi_eoq_fifo_write(struct fsl_dspi *dspi)
- 	int num_fifo_entries = dspi->devtype_data->fifo_size;
- 	u16 xfer_cmd = dspi->tx_cmd;
- 
-+	if (num_fifo_entries * dspi->oper_word_size > dspi->len)
-+		num_fifo_entries = dspi->len / dspi->oper_word_size;
-+
- 	dspi->words_in_flight = num_fifo_entries;
- 
- 	/* Fill TX FIFO with as many transfers as possible */
--	while (dspi->len && num_fifo_entries--) {
-+	while (num_fifo_entries--) {
- 		dspi->tx_cmd = xfer_cmd;
- 		/* Request EOQF for last transfer in FIFO */
--		if (dspi->len == dspi->oper_word_size || num_fifo_entries == 0)
-+		if (num_fifo_entries == 0)
- 			dspi->tx_cmd |= SPI_PUSHR_CMD_EOQ;
- 		/* Write combined TX FIFO and CMD FIFO entry */
- 		dspi_pushr_write(dspi);
 -- 
-2.17.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
