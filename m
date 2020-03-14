@@ -2,79 +2,222 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183EEC1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 590B0C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E505F206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF952071B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:52:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YEuFy1W/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbgCOBv4 (ORCPT
+        id S1727445AbgCOBwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:51:56 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:44748 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCOBv4 (ORCPT
+        Sat, 14 Mar 2020 21:52:06 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52411 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726774AbgCOBwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:51:56 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id DB66D8051D;
-        Sat, 14 Mar 2020 09:16:07 +0100 (CET)
-Date:   Sat, 14 Mar 2020 09:16:06 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Ondrej Jirman <megous@megous.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 3/5] drm: panel: add Xingbangda XBD599 panel
-Message-ID: <20200314081606.GA10236@ravnborg.org>
-References: <20200311163329.221840-1-icenowy@aosc.io>
- <20200311163329.221840-4-icenowy@aosc.io>
- <20200314080000.GE5783@ravnborg.org>
- <6AE386BC-BBC9-491F-82F0-CA32EAFE44DF@aosc.io>
+        Sat, 14 Mar 2020 21:52:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584237124;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bNGxzRLoJwPeqvl0qjjNKyQm8VTvsM9D2d2AbN/+Uu8=;
+        b=YEuFy1W/8HYOyv7lO3pjB76BemAHbGZiww0vv8pBIZ09SpTfjX2AH4Gjkb+SfUs9szoHTs
+        wYZbbCjWjUJQ107FBtwN6AGv5WKLT2v8QOjl5Ex5e60SqfwgBL1teerpEBZu8YXI0yBEbT
+        K0LVnLPmYLVdVVoHFslmPBYFfjs6g7w=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-129-LvEiqFyhN9mT3sB-vWamMw-1; Sat, 14 Mar 2020 05:48:11 -0400
+X-MC-Unique: LvEiqFyhN9mT3sB-vWamMw-1
+Received: by mail-wr1-f70.google.com with SMTP id u12so3250199wrw.10
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 02:48:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=bNGxzRLoJwPeqvl0qjjNKyQm8VTvsM9D2d2AbN/+Uu8=;
+        b=iPtJ/bdp8mbHvtrlY7wXeKW5a6cESr6yn+Apd4SP0gkpARve1baQXc3+YC16oGdCW1
+         K1nXFYptNrrfOF1/pQgxS8ybdal+4awcTpQR5Lag8QPsqCr5KWTqni0h2P6s6ypmDy2+
+         kKUs/sY1Za7+nuE92lbLta5T8J9QOKW+kU4/AXuVryteA32sE82wpv3rMD9YUZ8skuBV
+         3We0zHx9Wy7oyx4JLInrwZ4E228m3JezBw4ODbY2k8xFm2Jr2ppsz6pETJC5GhGvM/6T
+         yZU4zmCF2ksGVp+Y96T4cEwq43bDt2t1ygq63QxDZZ/xTIGsnqzGwujwIS2DYmHrQMor
+         A9zQ==
+X-Gm-Message-State: ANhLgQ0NnAiKdaj4EIQl8IBPI0aWEGGrNhdW8NtNgFtKOe2+1vYjVhkF
+        VyF9ibnGo/LR+U+z2gmEQon0OZSzJ7pItBuUcark2fciZPDWaE8BYSaeJQj6K7Xy3TqruLytgIb
+        u71JLHJkXV4dveG2pznIPj59D
+X-Received: by 2002:adf:bb06:: with SMTP id r6mr14893645wrg.324.1584179290509;
+        Sat, 14 Mar 2020 02:48:10 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vt0vPH6mqrPR73DWT29nJZkdZ4BIosN3HBohHEZGvUyHoikP6cWyte5u5P+OvjhbeSmb9QPFQ==
+X-Received: by 2002:adf:bb06:: with SMTP id r6mr14893623wrg.324.1584179290274;
+        Sat, 14 Mar 2020 02:48:10 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.174.5])
+        by smtp.gmail.com with ESMTPSA id y3sm47651288wrm.46.2020.03.14.02.48.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Mar 2020 02:48:09 -0700 (PDT)
+Subject: Re: [Patch v2] KVM: x86: Initializing all kvm_lapic_irq fields in
+ ioapic_write_indirect
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mtosatti@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        peterx@redhat.com
+References: <1584105384-4864-1-git-send-email-nitesh@redhat.com>
+ <871rpwpesg.fsf@vitty.brq.redhat.com>
+ <29c41f43-a8c6-3d72-8647-d46782094524@redhat.com>
+ <e20e4fb5-247c-a029-e09f-49f83f2f9d1a@redhat.com>
+ <87v9n8mdn0.fsf@vitty.brq.redhat.com>
+ <66c57868-52dd-94cc-e9ef-7bceb54a65e3@redhat.com>
+ <87r1xwmct1.fsf@vitty.brq.redhat.com>
+ <6052eb34-3b70-35c1-2622-440bdfc43f16@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <4acfacb2-9509-0f1d-24d8-dbbda1944088@redhat.com>
+Date:   Sat, 14 Mar 2020 10:45:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6AE386BC-BBC9-491F-82F0-CA32EAFE44DF@aosc.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=QDd3ko92FGBvql3bwNIA:9 a=CjuIK1q_8ugA:10 a=pHzHmUro8NiASowvMSCR:22
-        a=nt3jZW36AmriUCFCBwmW:22
+In-Reply-To: <6052eb34-3b70-35c1-2622-440bdfc43f16@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="Nnzu5rtYW0HMuYYQBtmdqSAyrshoJcsvn"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Icenowy
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Nnzu5rtYW0HMuYYQBtmdqSAyrshoJcsvn
+Content-Type: multipart/mixed; boundary="Amx3acUXpJRkBSfsPH5YccsbVB34LglkS"
 
-> >> +++ b/drivers/gpu/drm/panel/panel-xingbangda-xbd599.c
-> >> @@ -0,0 +1,367 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Xingbangda XBD599 MIPI-DSI panel driver
-> >> + *
-> >> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-> >2020?
-> 
-> The work started at Mid 2019.
-> 
-> Is 2019-2020 okay?
+--Amx3acUXpJRkBSfsPH5YccsbVB34LglkS
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-We see this in other places so I guess it is. The point
-here is that the driver contains work from 2020 so you should at least
-specify 2020.
+On 13/03/20 17:38, Nitesh Narayan Lal wrote:
+>=20
+> On 3/13/20 12:36 PM, Vitaly Kuznetsov wrote:
+>> Nitesh Narayan Lal <nitesh@redhat.com> writes:
+>>
+>>> On 3/13/20 12:18 PM, Vitaly Kuznetsov wrote:
+>>>> Nitesh Narayan Lal <nitesh@redhat.com> writes:
+>>>>
+>>>>> On 3/13/20 9:38 AM, Nitesh Narayan Lal wrote:
+>>>>>> On 3/13/20 9:25 AM, Vitaly Kuznetsov wrote:
+>>>>>>> Nitesh Narayan Lal <nitesh@redhat.com> writes:
+>>>>>>>
+>>>>>>>> Previously all fields of structure kvm_lapic_irq were not initia=
+lized
+>>>>>>>> before it was passed to kvm_bitmap_or_dest_vcpus(). Which will c=
+ause
+>>>>>>>> an issue when any of those fields are used for processing a requ=
+est.
+>>>>>>>> For example not initializing the msi_redir_hint field before pas=
+sing
+>>>>>>>> to the kvm_bitmap_or_dest_vcpus(), may lead to a misbehavior of
+>>>>>>>> kvm_apic_map_get_dest_lapic(). This will specifically happen whe=
+n the
+>>>>>>>> kvm_lowest_prio_delivery() returns TRUE due to a non-zero garbag=
+e
+>>>>>>>> value of msi_redir_hint, which should not happen as the request =
+belongs
+>>>>>>>> to APIC fixed delivery mode and we do not want to deliver the
+>>>>>>>> interrupt only to the lowest priority candidate.
+>>>>>>>>
+>>>>>>>> This patch initializes all the fields of kvm_lapic_irq based on =
+the
+>>>>>>>> values of ioapic redirect_entry object before passing it on to
+>>>>>>>> kvm_bitmap_or_dest_vcpus().
+>>>>>>>>
+>>>>>>>> Fixes: 7ee30bc132c6("KVM: x86: deliver KVM IOAPIC scan request t=
+o target vCPUs")
+>>>>>>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+>>>>>>>> ---
+>>>>>>>>  arch/x86/kvm/ioapic.c | 7 +++++--
+>>>>>>>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+>>>>>>>> index 7668fed..3a8467d 100644
+>>>>>>>> --- a/arch/x86/kvm/ioapic.c
+>>>>>>>> +++ b/arch/x86/kvm/ioapic.c
+>>>>>>>> @@ -378,12 +378,15 @@ static void ioapic_write_indirect(struct k=
+vm_ioapic *ioapic, u32 val)
+>>>>>>>>  		if (e->fields.delivery_mode =3D=3D APIC_DM_FIXED) {
+>>>>>>>>  			struct kvm_lapic_irq irq;
+>>>>>>>> =20
+>>>>>>>> -			irq.shorthand =3D APIC_DEST_NOSHORT;
+>>>>>>>>  			irq.vector =3D e->fields.vector;
+>>>>>>>>  			irq.delivery_mode =3D e->fields.delivery_mode << 8;
+>>>>>>>> -			irq.dest_id =3D e->fields.dest_id;
+>>>>>>>>  			irq.dest_mode =3D
+>>>>>>>>  			    kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
+>>>>>>>> +			irq.level =3D 1;
+>>>>>>> 'level' is bool in struct kvm_lapic_irq but other than that, is t=
+here a
+>>>>>>> reason we set it to 'true' here? I understand that any particular=
 
-	Sam
+>>>>>>> setting is likely better than random
+>>>>>> Yes, that is the only reason which I had in my mind while doing th=
+is change.
+>>>>>> I was not particularly sure about the value, so I copied what ioap=
+ic_serivce()
+>>>>>> is doing.
+>>>>> Do you think I should skip setting this here?
+>>>>>
+>>>> Personally, i'd initialize it to 'false': usualy, if something is no=
+t
+>>>> properly initialized it's either 0 or garbage)
+>>> I think that's true, initializing it to 'false' might make more sense=
+=2E
+>>> Any other concerns or comments that I can improve?
+>>>
+>> Please add the missing space to the 'Fixes' tag:
+>>
+>> Fixes: 7ee30bc132c6 ("KVM: x86: deliver KVM IOAPIC scan request to tar=
+get vCPUs")
+>=20
+> My bad.
+>=20
+>>
+>> and with that and irq.level initialized to 'false' feel free to add
+>>
+>> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>
+>> tag. Thanks!
+>=20
+> Sure, thank you.
+
+I did the changes and applied the patch, thanks.
+
+Paolo
+
+
+
+--Amx3acUXpJRkBSfsPH5YccsbVB34LglkS--
+
+--Nnzu5rtYW0HMuYYQBtmdqSAyrshoJcsvn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEE8TM4V0tmI4mGbHaCv/vSX3jHroMFAl5sp9YACgkQv/vSX3jH
+roNLqQf/U3ykM9g/UnYCotH4sshiuuyg7+71DBQRVTYPG5ollo4wsrGOIMYCypsq
+kJn/GzAz7ey2VQ+Z3IMgNXslcLcZBsIXISV1LMh1a7CxgxubzaUVMHqRhkMo7o5+
+iCbUmsNZVPCNLCG47XmO6pXZAw3J2rojTNgLfYNjRCyTYmtkxL/XSUcoUBFmNzG0
+h5Dlc1vtatkb47IR5VtDHfFdZMBbHoSqujA+wEtcrMJIlPAU9DUwdUVcqzSQcpLp
+oh0QaSS7DttuMmGe3ji6Q4NnblKlSu238dTVWa1JHjkNxugObu4/UdNCl5Z440sa
+jcKQDIrefkvDQML04o+69KiEVyP8vA==
+=ZTrG
+-----END PGP SIGNATURE-----
+
+--Nnzu5rtYW0HMuYYQBtmdqSAyrshoJcsvn--
+
