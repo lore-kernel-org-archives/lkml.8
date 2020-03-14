@@ -2,146 +2,76 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96903C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895F0C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7342D206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A39206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JXT6fiPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbgCOByR (ORCPT
+        id S1727620AbgCOByW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:54:17 -0400
-Received: from sauhun.de ([88.99.104.3]:38226 "EHLO pokefinder.org"
+        Sat, 14 Mar 2020 21:54:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:36040 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbgCOByQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:54:16 -0400
-Received: from localhost (p5486CB31.dip0.t-ipconnect.de [84.134.203.49])
-        by pokefinder.org (Postfix) with ESMTPSA id D24CC2C1EFA;
-        Sat, 14 Mar 2020 22:08:52 +0100 (CET)
-Date:   Sat, 14 Mar 2020 22:08:49 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for v5.6
-Message-ID: <20200314210830.GA1730@ninjato>
+        id S1727519AbgCOByV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:54:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FhgxhvWIIVuY6B13AUlH0Smz4LynUEU/AuTeEi2VA88=; b=JXT6fiPSChn7qXiOXmjwwXvpgA
+        s8s4Wg+uRCJCx5XlBEoyF6Kt31072P+FQW0bR7BJ/pNMYbms8SRs984L8eE1jqGwh0BmX3Jo0Cg1h
+        p1szeizypEEEhg1Zle/Cqv3qyEJIsBjiIQplVC+xHTEO0qmMv9hM0xJo7B3KfxFLEVdM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jDEBo-0002Ko-Kw; Sat, 14 Mar 2020 22:19:24 +0100
+Date:   Sat, 14 Mar 2020 22:19:24 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Madalin Bucur <madalin.bucur@oss.nxp.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, shawnguo@kernel.org,
+        leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 3/3] arm64: dts: ls1046ardb: set RGMII interfaces to
+ RGMII_ID mode
+Message-ID: <20200314211924.GC8622@lunn.ch>
+References: <1584101065-3482-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1584101065-3482-4-git-send-email-madalin.bucur@oss.nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1584101065-3482-4-git-send-email-madalin.bucur@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 13, 2020 at 02:04:25PM +0200, Madalin Bucur wrote:
+> The correct setting for the RGMII ports on LS1046ARDB is to
+> enable delay on both Rx and Tx so the interface mode used must
+> be PHY_INTERFACE_MODE_RGMII_ID.
+> 
+> Since commit 1b3047b5208a80 ("net: phy: realtek: add support for
+> configuring the RX delay on RTL8211F") the Realtek 8211F PHY driver
+> has control over the RGMII RX delay and it is disabling it for
+> RGMII_TXID. The LS1046ARDB uses two such PHYs in RGMII_ID mode but
+> in the device tree the mode was described as "rgmii".
+> 
+> Changing the phy-connection-type to "rgmii-id" to address the issue.
+> 
+> Fixes: 3fa395d2c48a ("arm64: dts: add LS1046A DPAA FMan nodes")
+> Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Linus,
+    Andrew
 
-I2C has quite some regression fixes this time. One is also related to
-watchdogs, we have proper acks from Guenter for them.
-
-Please pull.
-
-Thanks,
-
-   Wolfram
-
-
-The following changes since commit 2c523b344dfa65a3738e7039832044aa133c75fb:
-
-  Linux 5.6-rc5 (2020-03-08 17:44:44 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-
-for you to fetch changes up to 92bd1f2e1eed493a73a19012a3a7f1feed0883ff:
-
-  Merge tag 'at24-fixes-for-v5.6-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into i2c/for-current (2020-03-13 16:32:28 +0100)
-
-----------------------------------------------------------------
-Hamish Martin (1):
-      i2c: gpio: suppress error on probe defer
-
-Jarkko Nikula (1):
-      i2c: designware-pci: Fix BUG_ON during device removal
-
-Michael Auchter (1):
-      misc: eeprom: at24: fix regulator underflow
-
-Mika Westerberg (3):
-      watchdog: iTCO_wdt: Export vendorsupport
-      watchdog: iTCO_wdt: Make ICH_RES_IO_SMI optional
-      i2c: i801: Do not add ICH_RES_IO_SMI for the iTCO_wdt device
-
-Wolfram Sang (3):
-      macintosh: windfarm: fix MODINFO regression
-      i2c: acpi: put device when verifying client fails
-      Merge tag 'at24-fixes-for-v5.6-rc6' of git://git.kernel.org/.../brgl/linux into i2c/for-current
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      (Rev.) i2c: acpi: put device when verifying client fails
-      (Rev.) i2c: designware-pci: Fix BUG_ON during device removal
-
-Erhard Furtner (1):
-      (Test) macintosh: windfarm: fix MODINFO regression
-
-Geert Uytterhoeven (1):
-      (Rev.) i2c: acpi: put device when verifying client fails
-
-Guenter Roeck (3):
-      (Rev.) i2c: i801: Do not add ICH_RES_IO_SMI for the iTCO_wdt device
-      (Rev.) watchdog: iTCO_wdt: Make ICH_RES_IO_SMI optional
-      (Rev.) watchdog: iTCO_wdt: Export vendorsupport
-
- drivers/i2c/busses/i2c-designware-pcidrv.c  |  1 +
- drivers/i2c/busses/i2c-gpio.c               |  2 +-
- drivers/i2c/busses/i2c-i801.c               | 45 ++++++++---------------------
- drivers/i2c/i2c-core-acpi.c                 | 10 ++++++-
- drivers/macintosh/windfarm_ad7417_sensor.c  |  7 +++++
- drivers/macintosh/windfarm_fcu_controls.c   |  7 +++++
- drivers/macintosh/windfarm_lm75_sensor.c    | 16 +++++++++-
- drivers/macintosh/windfarm_lm87_sensor.c    |  7 +++++
- drivers/macintosh/windfarm_max6690_sensor.c |  7 +++++
- drivers/macintosh/windfarm_smu_sat.c        |  7 +++++
- drivers/misc/eeprom/at24.c                  |  3 +-
- drivers/watchdog/iTCO_vendor.h              |  2 ++
- drivers/watchdog/iTCO_vendor_support.c      | 16 +++++-----
- drivers/watchdog/iTCO_wdt.c                 | 28 ++++++++++--------
- 14 files changed, 102 insertions(+), 56 deletions(-)
-
---RnlQjJ0d97Da+TV1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5tR8oACgkQFA3kzBSg
-Kbb8/g/8DRq7gPMUREIBT75XgWatigy4B5N5doEp744rN6UNdHtJ19NANM+vMH3c
-YBX07YCQ9jLbXS95ewkMUMvpsCJKJ/Du1SYjvgnu1NpuTqqpmOWSmy1cCLRpAknp
-tKMUI8Wr7pMFDomO+er1DM7/ccSXgtcyiA2qDvSXqqw5B+AS4jmM3Qcpju5FsVVY
-dEjNUM3E9bVNi4Npqixe7QAdkPl8/Q4MgwD63enxj5ghL8DZrBPl6QeGkE404PCs
-dsnyycdxBtM4UeMItXzjfaPhWWVOwMnvtW5ggurVhoKs6Ydv51YIyZelvx6IkZv5
-hTULfhs+b4KG5VgjvjhEbiebshAvDP4/LiL7iafHU8tA05wx6k62OvBV6185wo0p
-YIbopI1usa1+Qurwyrcb583Dq50BfxeWWI+RvbHlyN3MhQlTc/ZNGcwg1WlFGh7Q
-i0GJPCuhJMkJd+MqML2DCHu/ep/N2SOAA185I3uuQCPR5ZPMNVbI3Xv3gd+CYZ9p
-Lh2NW4+1EPocvVPvQoWAUgqCYABoptalFuzQqaMvLEpMOVjyVVhIit7wlHlZ/YeX
-kKa7gSK4hPXNl0NnW25jPl6nH+cHGi0PcibYbDfMGZBB8uPYqZ30DcpwVXiRGxAL
-IH5aJ83CGzpvOlQr9tkPO2n9A4peRe7ozPYSYtcDLUkV1CxlTGE=
-=6aWb
------END PGP SIGNATURE-----
-
---RnlQjJ0d97Da+TV1--
