@@ -2,153 +2,94 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8999AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93947C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601D82074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC862067C
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="CZSIjUYI"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rYS25dAT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgCNDNO (ORCPT
+        id S1726833AbgCNDQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 23:13:14 -0400
-Received: from st43p00im-zteg10063401.me.com ([17.58.63.175]:35003 "EHLO
-        st43p00im-zteg10063401.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726467AbgCNDNO (ORCPT
+        Fri, 13 Mar 2020 23:16:11 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:51114 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726530AbgCNDQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 23:13:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1584155592; bh=XVg9MvTPmWfYV3MDEBTqmqWRsnFid69lEYXtgfapPy4=;
-        h=Date:From:To:Subject:Message-ID:Content-Type;
-        b=CZSIjUYIeLflaR99z6LjMM3ISLMMAIHfD/GW6W7w3YdhKwr8XVknPlOMTwsqojZLu
-         a/nO0yaQ2DxWPZ3ao25p9gmBnItaNWH12DSp12ZS6A/oT03I4FOmYeAMvKgMlc4rCT
-         eJjV0yOJdHqRIDtnttasJOGMMVUhkLHR0Xtpx5QuQM1f7bTJXqcDdMB923Uosw87D5
-         3A7u75njBoN/mZPB0s1F0ZOFwyc2J11C8f7ra8qmTlgDvnwbtTyO/FswRK+8/qi7/M
-         B96KMkPMkCXjJQLVsYUw6ahJTJ079kHVDfX8064Yh2rgLqwFhyDcxF0e7Cnb0P9STY
-         baMQA9dKDc2ww==
-Received: from shwetrath.localdomain (unknown [66.199.8.131])
-        by st43p00im-zteg10063401.me.com (Postfix) with ESMTPSA id DA50D4A016B;
-        Sat, 14 Mar 2020 03:13:11 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 23:13:10 -0400
-From:   Vijay Thakkar <vijaythakkar@me.com>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] perf vendor events amd: update Zen1 events to V2
-Message-ID: <20200314031310.GA66224@shwetrath.localdomain>
-References: <20200228175639.39171-1-vijaythakkar@me.com>
- <20200228175639.39171-4-vijaythakkar@me.com>
- <77552e9e-7fca-7186-24cc-6a8a87d4b7b6@amd.com>
+        Fri, 13 Mar 2020 23:16:10 -0400
+X-UUID: bd1b57b6588349d08c3d5522e605bd8b-20200314
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=YAtFprbEne3aSZz7JwyfciYW/D36KWtz75LLZ+igOYI=;
+        b=rYS25dAToOayfxUq0sLY2CN0nKiha5fkPu8HSgbMA2H7NMO4Rra0pKQxYveFC+LKbEVusJ/fmp7OOV8niL0zwKjrxowm9dQycBVqrcNTPb6YqfDEvqxpl4dyqBwbH5WCdCpjCK8bvYMqEad9y6NJ8gkoa3zLly5bwCFBXawvD0Y=;
+X-UUID: bd1b57b6588349d08c3d5522e605bd8b-20200314
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 745921413; Sat, 14 Mar 2020 11:16:03 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 14 Mar 2020 11:13:49 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 14 Mar 2020 11:15:58 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v1 1/2] scsi: ufs: export ufshcd_link_recovery for vendor's error recovery
+Date:   Sat, 14 Mar 2020 11:15:59 +0800
+Message-ID: <20200314031600.10616-2-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200314031600.10616-1-stanley.chu@mediatek.com>
+References: <20200314031600.10616-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77552e9e-7fca-7186-24cc-6a8a87d4b7b6@amd.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-13_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-2003140016
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think I may have accidentally deleted your review of Patch 2 so I am
-replying to that here. Still quite new to mutt, sorry :p
-
-> > +  {                                                                                                  
-> > +    "EventName": "ls_tablewalker.perf_mon_tablewalk_alloc_iside",                                    
-> > +    "EventCode": "0x46",                                                                             
-> > +    "BriefDescription": "Tablewalker allocation.",                                                   
-> > +    "PublicDescription": "Tablewalker allocation.",                                                  
-> > +    "UMask": "0xc"                                                                                   
-> > +  },                                                                                                 
-> > +  {                                                                                                  
-> > +    "EventName": "ls_tablewalker.perf_mon_tablewalk_alloc_dside",                                    
-> > +    "EventCode": "0x46",                                                                             
-> > +    "BriefDescription": "Tablewalker allocation.",                                                   
-> > +    "PublicDescription": "Tablewalker allocation.",                                                  
-> > +    "UMask": "0x3"                                                                                   
-> > +  },                                                                                                 
->                                                                                                         
-> I see each of the two tablewalkers got consolidated into their own                                      
-> unit mask groups?  Any reason we couldn't leave the original
-> instances there, and add these in addition?  In any case we'd need
-> clarification of which 'side' are the both counting - I or D - in
-> a single BriefDescription here.
-
-So these have not been changed since zen1, and are still present as is
-in the mainline. Zen2 PPR version 55803 Rev 0.54 does not include them.
-But I see that these have been updated even for zen1 in the latest PPR
-version 54945 Rev 3.03 so I will add them for both.
-
-> I thought we agreed to call these LS MAB Allocates by Type", like the text in the
-> later PPR for AMD Family 17h Model 31h B0 - 55803 Rev 0.54 - Sep 12, 2019?
-> 
-> DC Miss By Type is probably less correct given the MAB != DC, and the name of
-> the event is "LsMabAlloc".
-> 
-> FWIW, a MAB is a Miss address buffer (seen in the Model 71h PPR's MCA_CTL_LS
-> register definition).
-
-Ah I am really sorry, I must have missed these. Should be fixed now.
-
-> Another case where it's hard to make out what the event is counting
-> in general: Make its PublicDescription a single Breifdescription?
-Yeah, I agree. Will merge the descriptions.
-
-> +  {
-> +    "EventName": "ls_refills_from_sys.ls_mabresp_rmt_dram",
-> +    "EventCode": "0x43",
-> +    "BriefDescription": "DRAM or IO from different die.",
-> +    "PublicDescription": "Demand Data Cache Fills by Data Source. DRAM or IO from different die.",
-> +    "UMask": "0x40"
-> +  },
-> +  {
-> +    "EventName": "ls_refills_from_sys.ls_mabresp_rmt_cache",
-> +    "EventCode": "0x43",
-> +    "BriefDescription": "Hit in cache; Remote CCX and the address's Home Node is on a different die.",
-> +    "PublicDescription": "Demand Data Cache Fills by Data Source. Hit in cache; Remote CCX and the address's Home Node is on a different die.",
-> +    "UMask": "0x10"
-> +  },
-> +  {
-> +    "EventName": "ls_refills_from_sys.ls_mabresp_lcl_dram",
-> +    "EventCode": "0x43",
-> +    "BriefDescription": "DRAM or IO from this thread's die.",
-> +    "PublicDescription": "Demand Data Cache Fills by Data Source. DRAM or IO from this thread's die.",
-> +    "UMask": "0x8"
-> +  },
-> +  {
-> +    "EventName": "ls_refills_from_sys.ls_mabresp_lcl_cache",
-> +    "EventCode": "0x43",
-> +    "BriefDescription": "Hit in cache; local CCX (not Local L2), or Remote CCX and the address's Home Node is on this thread's die.",
-> +    "PublicDescription": "Demand Data Cache Fills by Data Source. Hit in cache; local CCX (not Local L2), or Remote CCX and the address's Home Node is on this thread's die.",
-> +    "UMask": "0x2"
-> +  },
-> +  {
-> +    "EventName": "ls_refills_from_sys.ls_mabresp_lcl_l2",
-> +    "EventCode": "0x43",
-> +    "BriefDescription": "Local L2 hit.",
-> +    "PublicDescription": "Demand Data Cache Fills by Data Source. Local L2 hit.",
-> +    "UMask": "0x1"
-> +  },
-
-These events are ripe for fusing the public description with the brief
-one too, so I will do so as well.
-
--Vijay
+ZXhwb3J0IHVmc2hjZF9saW5rX3JlY292ZXJ5IHRvIGFsbG93IHZlbmRvcnMgdG8gcmVjb3ZlciBm
+YWlsZWQgbGluaw0KaW4gdmVuZG9yJ3MgY2FsbGJhY2tzLg0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFu
+bGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vm
+cy91ZnNoY2QuYyB8IDMgKystDQogZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuaCB8IDEgKw0KIDIg
+ZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2Qu
+Yw0KaW5kZXggY2QzM2QwN2M1NmNmLi5jYTliNjg5ODY0OGEgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
+L3Njc2kvdWZzL3Vmc2hjZC5jDQorKysgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQpAQCAt
+MzgxMiw3ICszODEyLDcgQEAgc3RhdGljIGludCB1ZnNoY2RfdWljX2NoYW5nZV9wd3JfbW9kZShz
+dHJ1Y3QgdWZzX2hiYSAqaGJhLCB1OCBtb2RlKQ0KIAlyZXR1cm4gcmV0Ow0KIH0NCiANCi1zdGF0
+aWMgaW50IHVmc2hjZF9saW5rX3JlY292ZXJ5KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQoraW50IHVm
+c2hjZF9saW5rX3JlY292ZXJ5KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogew0KIAlpbnQgcmV0Ow0K
+IAl1bnNpZ25lZCBsb25nIGZsYWdzOw0KQEAgLTM4MzksNiArMzgzOSw3IEBAIHN0YXRpYyBpbnQg
+dWZzaGNkX2xpbmtfcmVjb3Zlcnkoc3RydWN0IHVmc19oYmEgKmhiYSkNCiANCiAJcmV0dXJuIHJl
+dDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwodWZzaGNkX2xpbmtfcmVjb3ZlcnkpOw0KIA0KIHN0
+YXRpYyBpbnQgX191ZnNoY2RfdWljX2hpYmVybjhfZW50ZXIoc3RydWN0IHVmc19oYmEgKmhiYSkN
+CiB7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuaCBiL2RyaXZlcnMvc2Nz
+aS91ZnMvdWZzaGNkLmgNCmluZGV4IDI2OWRkYjkyYmI1NS4uZTcwMTk2MGY4NjY5IDEwMDY0NA0K
+LS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuaA0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91
+ZnNoY2QuaA0KQEAgLTc3OSw2ICs3NzksNyBAQCBpbnQgdWZzaGNkX2FsbG9jX2hvc3Qoc3RydWN0
+IGRldmljZSAqLCBzdHJ1Y3QgdWZzX2hiYSAqKik7DQogdm9pZCB1ZnNoY2RfZGVhbGxvY19ob3N0
+KHN0cnVjdCB1ZnNfaGJhICopOw0KIGludCB1ZnNoY2RfaGJhX2VuYWJsZShzdHJ1Y3QgdWZzX2hi
+YSAqaGJhKTsNCiBpbnQgdWZzaGNkX2luaXQoc3RydWN0IHVmc19oYmEgKiAsIHZvaWQgX19pb21l
+bSAqICwgdW5zaWduZWQgaW50KTsNCitpbnQgdWZzaGNkX2xpbmtfcmVjb3Zlcnkoc3RydWN0IHVm
+c19oYmEgKmhiYSk7DQogaW50IHVmc2hjZF9tYWtlX2hiYV9vcGVyYXRpb25hbChzdHJ1Y3QgdWZz
+X2hiYSAqaGJhKTsNCiB2b2lkIHVmc2hjZF9yZW1vdmUoc3RydWN0IHVmc19oYmEgKik7DQogaW50
+IHVmc2hjZF91aWNfaGliZXJuOF9leGl0KHN0cnVjdCB1ZnNfaGJhICpoYmEpOw0KLS0gDQoyLjE4
+LjANCg==
 
