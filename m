@@ -2,145 +2,110 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD17C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D532CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D763020722
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584243652;
-	bh=zZ9bAR3baPAPuE8evlBpnNMKiF2jY5NR9uiWv2PkB4c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2BbMBafsmdoyLAkR7AZzXYCK4sfTGWC6ntUEtlfFwQI0UaIhhK+h/G5UNo8Q2Bykv
-	 az46fwmJ7yao40pnkiI2FCIeTZfRbXg75T5HbdYfyZ8HpFF6uVFhshqg+3YflZ0Qfg
-	 N+qNgpbKT4w/EW5VIHhDDpnJZq4mV+KVveYQ1cfs=
+	by mail.kernel.org (Postfix) with ESMTP id ABF1F20716
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:47:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXJ2trjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgCODkv (ORCPT
+        id S1727549AbgCODrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:40:51 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:37486 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbgCODkv (ORCPT
+        Sat, 14 Mar 2020 23:47:09 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39701 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727140AbgCODrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:40:51 -0400
-Received: by mail-qk1-f193.google.com with SMTP id z25so15299879qkj.4;
-        Sat, 14 Mar 2020 20:40:50 -0700 (PDT)
+        Sat, 14 Mar 2020 23:47:09 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f7so14359595wml.4;
+        Sat, 14 Mar 2020 20:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ug9BTgmJGi8NUr0tGrh5CaZInERxLeb5201yui/HpNQ=;
+        b=nXJ2trjbMjeu8qK5jque7iej42Qy5Qc+uzWMP9G5JD4LmPtyrkqhzRKRWelKil+F9G
+         pc0gFY9v5dU7F1snlQAxQN8O4qhl7w8GiWJU8HhGlz0PxLZMRgBQEbtW80eEPLk/qgph
+         eTozSIXrOPVP/WimNOvbOzouDfbG6oJv0nWXBScx31AHdPhdv+C6zfSekffu+DnAiZbG
+         jRMIux/juOs2HRXYSr+R1/wR4joKPSLMsNAePslZKA7rWCDzbSKhXWyM66JFJaaOsDa5
+         DGaLKzmiL1yM7jrUKxRHnIlmp3FnC9hjHds13SquoaJPtmT7BV37imoK7uoL50XYQ9yW
+         06uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xWfNlXspNXP/Z3scX2GkjvDWCTPuiHmONTso2D85LQ0=;
-        b=sGtaPxoOYlnTE5+b5zUoJ5Qn4z0EdmGqcfdkyzpvc+A+oNj2ctggTsHy7R5k5KZaSS
-         bJmMY5PSsrpz4laFSZ4Cvu1/UjYJvYiDHDndj8EmjUyw16JFuCWraRfLM2fLieGE1rw/
-         t4GXZD+7QD+JKa0naTB5pkynZPCLuLQGIggS7Itm3YqeYqhRene0PWAK7SwTR5eN9yQl
-         +vJlMoXeZ6j0Q6fHxZXu9BH5N9pQBpt0VboKIs4enjv3glrDqAwo24UUnZ50iNeQXMLS
-         LYpw3WcitaT3FUhFNW5aVWy/LP1RCkHJmHHxiXiFyS60KPOk0PPhc36PkRXhY7LOVeLY
-         VzFA==
-X-Gm-Message-State: ANhLgQ3XMB+dMlygbKdQ6riMKlTY/fWvpG4+Pa5qXNxz0mSZPa0BgrSc
-        UYxcEye81dVp7IqW0xfZETMUf2fnx688Aje0f6bitg==
-X-Google-Smtp-Source: ADFU+vt9NbYnSnppxGI7xOTmGfRR3RSs/QZOhkMGUVuMhiPSyyT3vdhguRYt/HjQ0hyrQs/pQ8sEHfBxb3po2QAZY0w=
-X-Received: by 2002:a9d:1d07:: with SMTP id m7mr6029839otm.167.1584182450168;
- Sat, 14 Mar 2020 03:40:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200304113248.1143057-1-mail@maciej.szmigiero.name>
- <20200312161751.GA5245@fuller.cnet> <CAJZ5v0jLOKj5LN5Kmredixomer4BKdBPNwP7gOf7A0tS_WMbDQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jLOKj5LN5Kmredixomer4BKdBPNwP7gOf7A0tS_WMbDQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 14 Mar 2020 11:40:38 +0100
-Message-ID: <CAJZ5v0gSLR+K2698rwbv0j9-sbSNX98HUFDQfTHoom+gYtHrdw@mail.gmail.com>
-Subject: Re: [PATCH v2] cpuidle-haltpoll: allow force loading on hosts without
- the REALTIME hint
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        kvm-devel <kvm@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ug9BTgmJGi8NUr0tGrh5CaZInERxLeb5201yui/HpNQ=;
+        b=dRS4HJqArxAEAIRD73x0GuIbyruCLnGnDeVGdLS5KqAmVtTzBGYlBX4VDJ7pNqfG++
+         3u1zMhUErQedsgmDhSWiBNuqGqnXPsDr5o5zUJz/HEiuzdqXnofvYQMu3iskF2OiF+Qo
+         HwMtE2ZIxkLblkm6ap26zDRIr7reKsZHIvQWv09yczQzeuBSk4F7/C9kZl3KjvgkxdZn
+         iFmIR5/64ZGo+6SSJIV8kYIIu3cdRWGC1uiRuXyO7Xtgwi3sWbvTBF0IsIzdeSoxPiVi
+         pb2EGrd0W/dFGqfYIbH+WSoCPAptDFWQkp5LOljPEQ8yj17Wj8k1hVTFPk3mytjC1szd
+         63+g==
+X-Gm-Message-State: ANhLgQ28kY77gQod1IOO9KUqXdsTP9XSQr2hkACk5U+mJazveeTt6HFr
+        3txKYnWq1Nyx9UsBpN8HHg50uSz6
+X-Google-Smtp-Source: ADFU+vtC0cnr1UOuwuED1RIpL0D0venxkMj2BASKPi20qZ7Y9Bh32wYkLHE1AtBQCqFZIEnXGRhWew==
+X-Received: by 2002:a1c:b187:: with SMTP id a129mr13669908wmf.56.1584194882638;
+        Sat, 14 Mar 2020 07:08:02 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v8sm81788051wrw.2.2020.03.14.07.08.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 14 Mar 2020 07:08:02 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: rockchip: fix vref-supply for &saradc node rk3288 firefly reload
+Date:   Sat, 14 Mar 2020 15:07:55 +0100
+Message-Id: <20200314140755.4877-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 6:49 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Mar 12, 2020 at 5:36 PM Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> >
-> > On Wed, Mar 04, 2020 at 12:32:48PM +0100, Maciej S. Szmigiero wrote:
-> > > From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
-> > >
-> > > Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
-> > > when dedicated physical CPUs are available") the cpuidle-haltpoll driver
-> > > could also be used in scenarios when the host does not advertise the
-> > > KVM_HINTS_REALTIME hint.
-> > >
-> > > While the behavior introduced by the aforementioned commit makes sense as
-> > > the default there are cases where the old behavior is desired, for example,
-> > > when other kernel changes triggered by presence by this hint are unwanted,
-> > > for some workloads where the latency benefit from polling overweights the
-> > > loss from idle CPU capacity that otherwise would be available, or just when
-> > > running under older Qemu versions that lack this hint.
-> > >
-> > > Let's provide a typical "force" module parameter that allows restoring the
-> > > old behavior.
-> > >
-> > > Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
-> > > ---
-> > >  drivers/cpuidle/cpuidle-haltpoll.c | 12 ++++++++++--
-> > >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > >
-> > > Changes from v1:
-> > > Make the module parameter description more general, don't unnecessarily
-> > > break a line in haltpoll_init().
-> > >
-> > > diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-> > > index b0ce9bc78113..db124bc1ca2c 100644
-> > > --- a/drivers/cpuidle/cpuidle-haltpoll.c
-> > > +++ b/drivers/cpuidle/cpuidle-haltpoll.c
-> > > @@ -18,6 +18,10 @@
-> > >  #include <linux/kvm_para.h>
-> > >  #include <linux/cpuidle_haltpoll.h>
-> > >
-> > > +static bool force __read_mostly;
-> > > +module_param(force, bool, 0444);
-> > > +MODULE_PARM_DESC(force, "Load unconditionally");
-> > > +
-> > >  static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
-> > >  static enum cpuhp_state haltpoll_hp_state;
-> > >
-> > > @@ -90,6 +94,11 @@ static void haltpoll_uninit(void)
-> > >       haltpoll_cpuidle_devices = NULL;
-> > >  }
-> > >
-> > > +static bool haltpool_want(void)
-> > > +{
-> > > +     return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
-> > > +}
-> > > +
-> > >  static int __init haltpoll_init(void)
-> > >  {
-> > >       int ret;
-> > > @@ -101,8 +110,7 @@ static int __init haltpoll_init(void)
-> > >
-> > >       cpuidle_poll_state_init(drv);
-> > >
-> > > -     if (!kvm_para_available() ||
-> > > -             !kvm_para_has_hint(KVM_HINTS_REALTIME))
-> > > +     if (!kvm_para_available() || !haltpool_want())
-> > >               return -ENODEV;
-> > >
-> > >       ret = cpuidle_register_driver(drv);
-> >
-> > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
->
-> I'm taking this as a Reviewed-by, thanks!
+A test with the command below gives this error:
 
-Patch applied as 5.7 material, thanks!
+arch/arm/boot/dts/rk3288-firefly-reload.dt.yaml: saradc@ff100000:
+'vref-supply' is a required property
+
+PMIC Channel OUT11 with powername 'vcc_18'
+(connected through R155 bridge with 'vccio_wl')
+is used for the recovery key and ADC_AVDD_1V8.
+
+Fix error by adding 'vcc_18' as vref for the saradc.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/iio/adc/
+rockchip-saradc.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+Schematic:
+
+http://www.t-firefly.com/download/Firefly-RK3288-Reload/hardware/MainBoard/
+Schematic/FIREFLY-RK3288_RELOAD_V10_Schematic.pdf
+---
+ arch/arm/boot/dts/rk3288-firefly-reload.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-firefly-reload.dts b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+index 1574383fd..8c38bda21 100644
+--- a/arch/arm/boot/dts/rk3288-firefly-reload.dts
++++ b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+@@ -234,6 +234,7 @@
+ };
+ 
+ &saradc {
++	vref-supply = <&vcc_18>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.11.0
+
