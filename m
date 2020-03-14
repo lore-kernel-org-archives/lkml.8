@@ -2,105 +2,128 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4793C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B95EC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BC1205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:48:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tuOdksXj"
+	by mail.kernel.org (Postfix) with ESMTP id 5C6C920578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584240547;
+	bh=gnI3uxG2MjcP5dcmf2YwXbK59YkgPYCt3bzD1i2Vj6Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mkon82v38QVzSq883EI3AqaAy2VxSYxxUYYa87h0HI52o11UVfiZh2RoaT68WaK5E
+	 eOLqQVMc12GJHhvyTy2dgYbupXlx7hP74hWAMlLZrcA0/3SVWAzE5wTfjzj2+PkDi1
+	 FzO9u/O/LxG2a0sBDcADU4RfnLEa2xoHRm7C9mAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbgCOCsa (ORCPT
+        id S1727559AbgCOCtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:48:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43408 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgCOCsa (ORCPT
+        Sat, 14 Mar 2020 22:49:06 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37333 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgCOCtF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:48:30 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b2so10715480wrj.10
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 19:48:28 -0700 (PDT)
+        Sat, 14 Mar 2020 22:49:05 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b23so17427398edx.4
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 19:49:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=T0AmA3SLoC8G3PF3S4PDIyW1XE0SR/fol3ZCpKKwGF4=;
-        b=tuOdksXjKZZa/708qsSizgny4phoyVaGYrcVVvAfW14rNkujRB73WnTehlqDmX778M
-         zxDkQ8yvneee7Qqi4pr9gJCKPQETg7uhxDHfl0CBfuNoTXWMRTF+49WYY6Vvf7lM+MPG
-         fG3inXx/W9ZTmUwm3paWeze7THNdiu0wySb8PNJMagQlDl0rnuSNfYya65v73XIyzZmS
-         OXIY5FirnWhg0FuTfA3a4FPDGFqAUcg61JnAEC4JICqgsjpBTfSCgrcVQTTUk8Q8hYjI
-         +J/UKD6BKFIhJAyIUP5jWy2RM/LsAonhQXq+Br+fjzIYAzzKV2EIhJZRII/TKHertYsj
-         41SA==
+        bh=YPgN4l93OeEWMDSYtyHK2xEec1H49aBedq26BrSDmkA=;
+        b=eAS3kn7vfdKKx02/krekDoFV619IUUiDr+1OClPUae5Ij8mqsEA+MjuC5/3521kbs7
+         dxE5vpUPD0EmtOE4s6uxCLkrZDRvo36YV0uzX/AMD4xWRqc6VgorbY3sI9ARwyAXHRcr
+         7ixd9w7pQfxwxGBFVI6FnfuMgRvvfwKxQgyx4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=T0AmA3SLoC8G3PF3S4PDIyW1XE0SR/fol3ZCpKKwGF4=;
-        b=sC6PLj1L5FTUA/rd2+VFozq6cMVF5EEZJNGTEgBcQtzTQDKUQO5LUi59Retemcmqqb
-         1jbxNGAioa9M+DJA8fOiwFzD95aypLFsDygBMBbHzetZqvuvTIGbRijvXTTGB9E4Plnp
-         HzuHFWAjSJh/s2W9owbQT99xweZGa/esl61172zwT9Yxi+spU7NRk6qzozpt6MW2UyRa
-         ZqbwvW1WqOgj8D7B03riHTebTapavt6z/2IGHGJxw3a0U4FedAobUbCxX+Lc+Y0bVZGt
-         DHaCF7cx/scMQ3ACD4HSMyVQzOSKLd7dSsu1ga7LmXbhvlbNwLufJYR2QPtIjKsm9pZA
-         lwnQ==
-X-Gm-Message-State: ANhLgQ203bNTZAIOms+1gYxW/p553E3uftAppaH/B0y9neeqkAa3JpR6
-        /f2ERjplPMVI9Ltt/5jh1esuhWaAAKlZMBWmI9tsasSGdlA=
-X-Google-Smtp-Source: ADFU+vtD9cF248pexW4HplsKMBOQuYs7SQIgQqcJUCNcsIK+1AQEgSMvapSwYQWJnu99xSl4lE/n176hcjQijrnhhMo=
-X-Received: by 2002:a05:6402:3047:: with SMTP id bu7mr16918474edb.44.1584169471767;
- Sat, 14 Mar 2020 00:04:31 -0700 (PDT)
+        bh=YPgN4l93OeEWMDSYtyHK2xEec1H49aBedq26BrSDmkA=;
+        b=K88v4iC9+VZGh13qYPs4+gsUtXREnl9muHdXtVX4mYKQfrJYksxN11B4z7GPmnxEuq
+         IdEZd00Zqgtzt1UREG2ZlFPmE2PNR5FtbrfbwcFSuztAnNtyiFGatVi0VViY0aJjzTpx
+         Yt6PWcDca6txfUrj+Eglhfu1vyPn5vS/WnJG8HOhvAgio1H5SaXAUcKo0msf0rHW5K9/
+         69dycFsX8Dy58O2+0+69CNRWgnnK/N75+V6FtmS3KzOK68SwtxxMDXs9o52x7qDsTDPU
+         0AQDHrPaosTDNNvwINSHdGnOk0BouG4o/xxtSygeDpWRqREkIj7txeDHSWd/2Nc+XFgf
+         7Kyg==
+X-Gm-Message-State: ANhLgQ0ynfglMLID2/akBfAsVQ0pDIRQkCNosqqj2PeL3vp0Vc2dJmry
+        RjhJ716dp8vtP2VKVLxnv5xirSaplaU=
+X-Google-Smtp-Source: ADFU+vtD+aoGapK2USi68QzXp6dP2USYVZwF0NIn0sNn9e5wumkzLIbgjrdYfVyPVczxsHAluWigIQ==
+X-Received: by 2002:ac2:53b8:: with SMTP id j24mr11718626lfh.79.1584200426093;
+        Sat, 14 Mar 2020 08:40:26 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id h10sm3451859ljg.38.2020.03.14.08.40.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Mar 2020 08:40:25 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id u12so13883656ljo.2
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 08:40:24 -0700 (PDT)
+X-Received: by 2002:a05:651c:555:: with SMTP id q21mr11396356ljp.241.1584200424436;
+ Sat, 14 Mar 2020 08:40:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200312152510.12224-1-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20200312152510.12224-1-srinivas.kandagatla@linaro.org>
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-Date:   Sat, 14 Mar 2020 00:04:20 -0700
-Message-ID: <CAOCOHw5oX89s8At8sUSchHhU0BfO5LdBc95DUN-82ihVP7U5Fw@mail.gmail.com>
-Subject: Re: [PATCH] slimbus: ngd: add v2.1.0 compatible
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <20200313174701.148376-1-bigeasy@linutronix.de> <20200313174701.148376-6-bigeasy@linutronix.de>
+In-Reply-To: <20200313174701.148376-6-bigeasy@linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 14 Mar 2020 08:40:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgO1Fn88+1K9V7=mfBNOttkGkFakGxp_QEsokZU2ywUvg@mail.gmail.com>
+Message-ID: <CAHk-=wgO1Fn88+1K9V7=mfBNOttkGkFakGxp_QEsokZU2ywUvg@mail.gmail.com>
+Subject: Re: [PATCH 5/9] completion: Use simple wait queues
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 8:25 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
+On Fri, Mar 13, 2020 at 10:47 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
 >
-> This patch adds compatible for SlimBus Controller on SDM845.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Replace the wait queue in the completion with a simple wait queue (swait),
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This is almost certainly completely and utterly wrong.
 
-> ---
-> Hi Greg,
-> Could you please pick this one slimbus patch for 5.7.
->
-> Thanks,
-> srini
->
->  drivers/slimbus/qcom-ngd-ctrl.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-> index e3f5ebc0c05e..fc2575fef51b 100644
-> --- a/drivers/slimbus/qcom-ngd-ctrl.c
-> +++ b/drivers/slimbus/qcom-ngd-ctrl.c
-> @@ -1320,6 +1320,9 @@ static const struct of_device_id qcom_slim_ngd_dt_match[] = {
->         {
->                 .compatible = "qcom,slim-ngd-v1.5.0",
->                 .data = &ngd_v1_5_offset_info,
-> +       },{
-> +               .compatible = "qcom,slim-ngd-v2.1.0",
-> +               .data = &ngd_v1_5_offset_info,
->         },
->         {}
->  };
-> --
-> 2.21.0
->
+Every time somebody uses those horrible swait queues, the end result is buggy.
+
+Don't do it.
+
+And most definitely, don't do it like this, which seems to be entirely
+mindlessly just randomly changing things by some brute force in
+multiple places.
+
+The swait semantics are completely different from the normal
+wait-queue semantics, and generally not in good ways.
+
+There's a *REASON* why the comment at the top of <linux/swait.h> starts with
+
+ * BROKEN wait-queues.
+ *
+ * These "simple" wait-queues are broken garbage, and should never be
+ * used. The comments below claim that they are "similar" to regular
+ * wait-queues, but the semantics are actually completely different, and
+ * every single user we have ever had has been buggy (or pointless).
+
+and before you do a conversion, you need to spend a _lot_ of time
+thinking about why that is the case.
+
+And _after_ you do the conversion, you damn well need to explain why
+it's safe. Not just state that it's a good idea.
+
+For example, this patch just randomly changes wait events to the swait
+event _exclusive_ waits. With not a single explanation of why that
+would be ok.
+
+I want an explanation for EVERY SINGLE CASE. Because people have done
+this kind of conversion before, and it's been buggy garbage before. I
+want to see that people actually thought about what the semantic
+differences were, and _documented_ that thinking process.
+
+            Linus
