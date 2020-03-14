@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27D1C5ACC2
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AB2C0044D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16142076C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8062074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgCNDpC (ORCPT
+        id S1727026AbgCNDp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 23:45:02 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:60050 "EHLO inva021.nxp.com"
+        Fri, 13 Mar 2020 23:45:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59808 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbgCNDo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 23:44:56 -0400
+        id S1726704AbgCNDoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 23:44:44 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 28D8D200060;
-        Sat, 14 Mar 2020 04:44:55 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 48DE42014F9;
+        Sat, 14 Mar 2020 04:44:42 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 62295200449;
-        Sat, 14 Mar 2020 04:44:45 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6FF6B2014E6;
+        Sat, 14 Mar 2020 04:44:32 +0100 (CET)
 Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2CF83402E8;
-        Sat, 14 Mar 2020 11:44:33 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7EADD402DA;
+        Sat, 14 Mar 2020 11:44:20 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
         bhelgaas@google.com, robh+dt@kernel.org, shawnguo@kernel.org,
@@ -38,9 +38,9 @@ To:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v6 10/11] arm64: dts: layerscape: Add PCIe EP node for ls1088a
-Date:   Sat, 14 Mar 2020 11:30:37 +0800
-Message-Id: <20200314033038.24844-11-xiaowei.bao@nxp.com>
+Subject: [PATCH v6 03/11] PCI: designware-ep: Move the function of getting MSI capability forward
+Date:   Sat, 14 Mar 2020 11:30:30 +0800
+Message-Id: <20200314033038.24844-4-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200314033038.24844-1-xiaowei.bao@nxp.com>
 References: <20200314033038.24844-1-xiaowei.bao@nxp.com>
@@ -50,13 +50,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe EP node for ls1088a to support EP mode.
+Move the function of getting MSI capability to the front of init
+function, because the init function of the EP platform driver will use
+the return value by the function of getting MSI capability.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 ---
 v2:
- - Remove the pf-offset proparty.
+ - No change.
 v3:
  - No change.
 v4:
@@ -65,66 +67,35 @@ v5:
  - No change.
 v6:
  - No change.
- 
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31 ++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index ec6013a..cb0805b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -497,6 +497,17 @@
- 			status = "disabled";
- 		};
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 44ece33..933bb89 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -632,6 +632,10 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 	if (ret < 0)
+ 		epc->max_functions = 1;
  
-+		pcie_ep@3400000 {
-+			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-+			reg = <0x00 0x03400000 0x0 0x00100000
-+			       0x20 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			num-ib-windows = <24>;
-+			num-ob-windows = <128>;
-+			max-functions = /bits/ 8 <2>;
-+			status = "disabled";
-+		};
++	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
 +
- 		pcie@3500000 {
- 			compatible = "fsl,ls1088a-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-@@ -522,6 +533,16 @@
- 			status = "disabled";
- 		};
++	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
++
+ 	if (ep->ops->ep_init)
+ 		ep->ops->ep_init(ep);
  
-+		pcie_ep@3500000 {
-+			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-+			reg = <0x00 0x03500000 0x0 0x00100000
-+			       0x28 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			num-ib-windows = <6>;
-+			num-ob-windows = <8>;
-+			status = "disabled";
-+		};
-+
- 		pcie@3600000 {
- 			compatible = "fsl,ls1088a-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-@@ -547,6 +568,16 @@
- 			status = "disabled";
- 		};
+@@ -648,9 +652,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+ 		return -ENOMEM;
+ 	}
+-	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+-
+-	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
  
-+		pcie_ep@3600000 {
-+			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-+			reg = <0x00 0x03600000 0x0 0x00100000
-+			       0x30 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			num-ib-windows = <6>;
-+			num-ob-windows = <8>;
-+			status = "disabled";
-+		};
-+
- 		smmu: iommu@5000000 {
- 			compatible = "arm,mmu-500";
- 			reg = <0 0x5000000 0 0x800000>;
+ 	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+ 	if (offset) {
 -- 
 2.9.5
 
