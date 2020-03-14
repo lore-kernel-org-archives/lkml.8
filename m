@@ -2,107 +2,122 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB83C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28DEC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17BC20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:45:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxgvyT3a"
+	by mail.kernel.org (Postfix) with ESMTP id AA98320578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:47:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584240447;
+	bh=UlgM86N24/XMzcpnZJ59jzlsu/kFKy0NCiuuQmX9XZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QlD4jD7MJhxdQ+OKyZDUhoUj+hK+3D1QHLMKQJQHHPCM02LIG7wNdQ6CwFUpbWM+U
+	 kt0wuxucXSEqZrmI4ZjVirZWiQ/uz0ikmp8db4thBujcQ06uNvNfCO2oeB1FaHwjut
+	 nfCQbN7CgzHGsBuqAhp0cGsEkxHMCozTFGg1iSCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbgCOCpQ (ORCPT
+        id S1727546AbgCOCr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:45:16 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42465 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgCOCpQ (ORCPT
+        Sat, 14 Mar 2020 22:47:27 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35269 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgCOCr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:45:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x2so7368935pfn.9;
-        Sat, 14 Mar 2020 19:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kw9CcsIa8hpWF0Iym4ERSAJHoa1aTSGceWaGbJPt1dg=;
-        b=LxgvyT3aff88z7LHJUJDOWcq912ZPj1aQv8KmU107rAHX4yAiSlhD4ZaDqqXLhUZym
-         3yw+Q7t7hjs2U1Z71QjoSe2n/DklQyIuF9PHsBuNxuegRPfm6TNBNxfau+wQQWXf8oh2
-         LXlZcp59nwpAn0RJa/svAbE5LidToRHtefLyMm/fkljfo4aliGv3AGnO5ZP9D3C7Howb
-         H0EodKaQILMzDGIsHuqjwKndwEXXU//ObySYiBjtK2bXH8uUheKa3TRI4uaLHBH50mry
-         kuhiqTxlR5hqO2fPawbm/eX4Ca9/C3GqTyBgltOYMpgKtTN5c7FCbvFRQKEGX8iyVHmo
-         d9lw==
+        Sat, 14 Mar 2020 22:47:26 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a20so17457252edj.2;
+        Sat, 14 Mar 2020 19:47:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kw9CcsIa8hpWF0Iym4ERSAJHoa1aTSGceWaGbJPt1dg=;
-        b=rYtfE8x9cAeGvbr2WK2g+ix9GZoZ+eW+uQpk6eaemvLZImwd/OZ5XRjy/L12sy6CSB
-         M37EXFszXdM9FpLZFA8X/Vx+Gs/ZZGBc/N+culQ06w8j/pyYe6ogM+pcWkXJXFwIMvnh
-         ZJhGO6Is9j/iJwH07DlriG8xPtNhwD0aNDofja/BbpdqM98Dq4Uc5IzwvOeH6wVsoyOH
-         wxykeZOBHg+5/1NhwUoQLMX8m7oOKavFZRH1pR9vrZacB+BV6jE1cziKCmdI3crc8xDO
-         KKepJAf0s1VNqveT/tZUjDY85H8zsyixyXePI2ks2SlXOCryUfQKibaM03J1Ujf6/HKW
-         jkSA==
-X-Gm-Message-State: ANhLgQ3hJw47+uvlA/u20FdkhBDTjMJ0KPerShOcNLlReIf0YPMRE8a/
-        qxsMPaE1/uCza1qGmbDsh8rEK50d
-X-Google-Smtp-Source: ADFU+vtbdu3hTfKaDghBmaSo6RN03mCYTEzC4zprNx40x5ZF/aUl3sps+Xvccng2BK15502sRo+Cwg==
-X-Received: by 2002:a17:902:14b:: with SMTP id 69mr16880977plb.121.1584163607312;
-        Fri, 13 Mar 2020 22:26:47 -0700 (PDT)
-Received: from localhost ([216.24.188.11])
-        by smtp.gmail.com with ESMTPSA id l67sm7248719pjb.23.2020.03.13.22.26.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g01xlTcHoCeW8HA/Zoij0G1oenw325gwe1o5DluyjVk=;
+        b=fhOkvcAzmrWNJMgNJHPikI0QrGFXUsIZP5fkroS/IpA0TQrw0VoJrbLW4s1e4dcL0L
+         OkBTtQEMGbrcyKAZ/DZbMQgvicmu+g3W2zk691CCuMfY5wS3zAblPMF21MOExZYVv/29
+         wlVpXaW1FrRC7nxMmMnz4peCdKXJCQS7tNGOa+WX5CmBNw8QcyexYj5AneuIXFLe4Q7+
+         nR+xs7Io4N0jlM4IwpiC8AweeFotW6hX9oBszbn+Zhn0rug5mdNw4EhFqeDde03gn62+
+         xOdyunUAogpSjYSTCX+zLdRr0urBiPyT+igD4lXSqthOfdeHinWhuJGcspr2G1AzZL8y
+         Zf1g==
+X-Gm-Message-State: ANhLgQ0SzV6O2Bt/85guXt2+2wBEHCCjVeyp4t4II8iyl56lhdmONSLA
+        GQ9/hVsncD9cQ64HKzHRagjDuQeZDNU=
+X-Google-Smtp-Source: ADFU+vv1WkKB0u07WBdUm4ghC+dsxjEf7g/P9HdfFTe2RSYc3zQrfQ3xU1TFNHiCqZRBtceL52pXBQ==
+X-Received: by 2002:a17:906:2181:: with SMTP id 1mr15328632eju.131.1584183589584;
+        Sat, 14 Mar 2020 03:59:49 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id f21sm1538993ejx.41.2020.03.14.03.59.46
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 22:26:46 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org, hminas@synopsys.com,
-        mathias.nyman@intel.com, bgolaszewski@baylibre.com, arnd@arndb.de,
-        geert@linux-m68k.org, mchehab+samsung@kernel.org,
-        treding@nvidia.com, tglx@linutronix.de, suzuki.poulose@arm.com,
-        hdegoede@redhat.com, linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v2 0/4] drivers: new helper for ioremapping memory resources
-Date:   Sat, 14 Mar 2020 13:26:34 +0800
-Message-Id: <20200314052638.6008-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Sat, 14 Mar 2020 03:59:48 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 11:59:44 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jiri Slaby <jirislaby@gmail.com>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        virtualization@lists.linux-foundation.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 6/9] drm/mgag200: Constify ioreadX() iomem
+ argument (as in generic implementation)
+Message-ID: <20200314105944.GA16044@kozik-lap>
+References: <20200219175007.13627-1-krzk@kernel.org>
+ <20200219175007.13627-7-krzk@kernel.org>
+ <90baef2d-25fe-fac4-6a7e-b103b4b6721e@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <90baef2d-25fe-fac4-6a7e-b103b4b6721e@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit "drivers: provide devm_platform_ioremap_resource()",
-It was wrap platform_get_resource() and devm_ioremap_resource() as
-single helper devm_platform_ioremap_resource(). but now, many drivers
-still used platform_get_resource() and devm_ioremap_resource()
-together in the kernel tree. The reason can not be replaced is they
-still need use the resource variables obtained by platform_get_resource().
-so provide this helper.
+On Thu, Mar 12, 2020 at 11:49:05AM +0100, Thomas Zimmermann wrote:
+> Hi Krzysztof,
+> 
+> I just received a resend email from 3 weeks ago :/
+> 
+> Do you want me to merge the mgag200 patch into drm-misc-next?
 
-The first patch in this series adds a wrapper for these two calls and
-the other uses it in a driver.
+Thanks but it depends on the first patch in the series so either it
+could go with your ack through other tree or I will send it later (once
+1st patch gets to mainline).
 
-Since V1:
-	- add some real users of this function (Thanks for greg k-h's reminder)
 
-Dejin Zheng (4):
-  drivers: provide devm_platform_ioremap_and_get_resource()
-  usb: host: xhci-plat: convert to
-    devm_platform_ioremap_and_get_resource
-  usb: host: hisilicon: convert to
-    devm_platform_ioremap_and_get_resource
-  usb: dwc2: convert to devm_platform_ioremap_and_get_resource
-
- drivers/base/platform.c         | 18 ++++++++++++++++++
- drivers/usb/dwc2/platform.c     |  3 +--
- drivers/usb/host/xhci-histb.c   |  3 +--
- drivers/usb/host/xhci-plat.c    |  3 +--
- include/linux/platform_device.h |  3 +++
- 5 files changed, 24 insertions(+), 6 deletions(-)
-
--- 
-2.25.0
+Best regards,
+Krzysztof
 
