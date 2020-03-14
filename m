@@ -2,95 +2,80 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF3CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45ABAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8A82074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1386A2074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584148522;
-	bh=K5BEDgn6puHQRO0je2cYxXMrBtW98BD3fqUabckzk5w=;
+	s=default; t=1584148654;
+	bh=+OILuvouBCX8uMF/DlchLPyrx1JavU6/eR/UOXvuv8c=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=mKYctPhHqIVvPmOEA0f8HzgGhq+xGuWmAD4Iwk+nNOVrcZJ2W3hlgItBTRDgUznJR
-	 LjzUSKR2xh7CXU3i3yPn4TJtOYe4tTVprl0tXLQ8rl/RXpZ6cjW4yM4djwLMNDKXNP
-	 eek1PoIgAvuxbbWAiogVRCzHatmUxdi8g1NtrBCg=
+	b=dZWpG051C+vdKKzoqEfR0TdblvygUynzfiiVdGuPB/2UBt1j4xz+LLjpGkmNFKjlb
+	 GNu5b1pzPNAkznzuy/gVFVKPF/auG+Qlmr0FrIEIKn0g9gn3/hkh8zpT+oTjoORTrp
+	 z8I3PcusTKg7HQzUaQ4/tJTltIzCFiymoED0zKSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbgCNBPV (ORCPT
+        id S1727934AbgCNBRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 21:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58772 "EHLO mail.kernel.org"
+        Fri, 13 Mar 2020 21:17:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbgCNBPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 21:15:21 -0400
+        id S1726591AbgCNBRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 21:17:32 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 847142074A;
-        Sat, 14 Mar 2020 01:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A13DC2074A;
+        Sat, 14 Mar 2020 01:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584148520;
-        bh=K5BEDgn6puHQRO0je2cYxXMrBtW98BD3fqUabckzk5w=;
+        s=default; t=1584148651;
+        bh=+OILuvouBCX8uMF/DlchLPyrx1JavU6/eR/UOXvuv8c=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=I1134r+WeW0fPSfteZUhZTBJUUswIxI3xGHFaFmklgV841fyHQse4/vEp2Sk/8+jN
-         /CxPMJ5i9S4NBggC2DR3/tbk1KjRCV13i55wmMW6DkdfJBr2lL4fvosAVe5b/C9Wsu
-         wk7DqbYo7OD2GPl0yi+A3BX+KZJykLpGQatOwxSA=
+        b=R7xvdtknuSkmlj0jrBNdhaBIycSQ2z7QKYLKtuKhx4O87Qcm/sNM8vE+OeWqk5IlB
+         Zz74RpD+G7TgqxXlffwyX6UUf506YN4U+yRzn0iS+3a8CELbDkU83dsKnanJHrok9c
+         fZimPWbrxN9BfUoGqhYBr+IUC3iseze8NpNOD/YQ=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <00e201d5f97d$3e76a9d0$bb63fd70$@gmail.com>
-References: <20200313185406.10029-1-ansuelsmth@gmail.com> <158413140244.164562.11497203149584037524@swboyd.mtv.corp.google.com> <00e201d5f97d$3e76a9d0$bb63fd70$@gmail.com>
-Subject: Re: R: [PATCH] ipq806x: gcc: Added the enable regs and mask for PRNG
+In-Reply-To: <1d569e023b6cb7b8d0da8d1bcccd92e97fe436c8.1583896348.git.joe@perches.com>
+References: <cover.1583896344.git.joe@perches.com> <1d569e023b6cb7b8d0da8d1bcccd92e97fe436c8.1583896348.git.joe@perches.com>
+Subject: Re: [PATCH -next 010/491] ARM/SAMSUNG EXYNOS ARM ARCHITECTURES: Use fallthrough;
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     'Abhishek Sahu' <absahu@codeaurora.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Michael Turquette' <mturquette@baylibre.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     agross@kernel.org, ansuelsmth@gmail.com
-Date:   Fri, 13 Mar 2020 18:15:19 -0700
-Message-ID: <158414851968.164562.17479742036394576642@swboyd.mtv.corp.google.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Joe Perches <joe@perches.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>
+Date:   Fri, 13 Mar 2020 18:17:30 -0700
+Message-ID: <158414865091.164562.17682025008359421835@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting ansuelsmth@gmail.com (2020-03-13 14:20:36)
+Quoting Joe Perches (2020-03-10 21:51:24)
+> Convert the various uses of fallthrough comments to fallthrough;
 >=20
->=20
-> > -----Messaggio originale-----
-> > Da: Stephen Boyd <sboyd@kernel.org>
-> > Inviato: venerd=C3=AC 13 marzo 2020 21:30
-> > A: Ansuel Smith <ansuelsmth@gmail.com>; agross@kernel.org
-> > Cc: Ansuel Smith <ansuelsmth@gmail.com>; Abhishek Sahu
-> > <absahu@codeaurora.org>; Bjorn Andersson
-> > <bjorn.andersson@linaro.org>; Michael Turquette
-> > <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org; linux-
-> > clk@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Oggetto: Re: [PATCH] ipq806x: gcc: Added the enable regs and mask for
-> > PRNG
-> >=20
-> > Quoting Ansuel Smith (2020-03-13 11:54:06)
-> > > kernel got hanged while reading from /dev/hwrng at the
-> > > time of PRNG clock enable
-> > >
-> > > Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> >=20
-> > Is Abhishek the author? Otherwise the tag chain here looks wrong.
-> >=20
->=20
-> Yes Abhishek is the author.
->=20
-> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> >=20
-> > Is there some Fixes: tag we can get here too?
-> >=20
->=20
-> Think  I should put the commit that added the gcc. Right?
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390=
+fa.1582230379.git.joe.com/
 >=20
 
-Yes.
+This link doesn't work for me. It leads to a redirect for=20
+
+https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.15822=
+30379.git.joe@perches.com/
+
+>  drivers/clk/samsung/clk-s3c2443.c | 2 +-
+
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
