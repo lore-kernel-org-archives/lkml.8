@@ -2,151 +2,123 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5344C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB02C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA152076D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584238963;
-	bh=cCF9QQ0tXoQTRlWcuFWUKf2rJfXEqYIOKJW1N5/sevM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bsFykcbaRmtqpE5xQPCqRZm2K4IqKARyQ4CwrDUM74V8PKzoMsoWJEz8cvKDq+HxK
-	 aiD6/1AiM9YYzR/nuXFgbGge85jLOQxaFA9ArJCvBGYyywGen9qs6TIcVYCm3zDqKO
-	 rMP/HNmSqMvAT4OvO3YukhqMbXla1tKYaHWT8Bow=
+	by mail.kernel.org (Postfix) with ESMTP id ACE272071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:22:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSRMlx9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgCOCWm (ORCPT
+        id S1727803AbgCOCWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:22:42 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36220 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbgCOCWm (ORCPT
+        Sat, 14 Mar 2020 22:22:50 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:40169 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727607AbgCOCWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:22:42 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g12so14803331ljj.3;
-        Sat, 14 Mar 2020 19:22:40 -0700 (PDT)
+        Sat, 14 Mar 2020 22:22:50 -0400
+Received: by mail-wm1-f54.google.com with SMTP id z12so5094218wmf.5;
+        Sat, 14 Mar 2020 19:22:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=BqK64CqX9MkYP0O18+eeXN3RJtGVpqkBACDnpy+yIYU=;
+        b=PSRMlx9UOnyMJETtPmTFyRyfM+BrbnsVgo7ymMS2qabHUK+Mh/9EQ4Xqdjj56eRgjq
+         YXnbaGeH26G/27dfND5UORZz7taHyHrCkbcrg9pfAnoTF0nfhnZw53HiACa+WKwen3zY
+         lhpD7RXrVFX9yIQ8UBxXzpR97lyzB+EVbHKpRxZV8P+xjhMllZpUvm+GH72ZeN7L2bHo
+         L9/J+GM/vJq/aK2bbnrJzWA+F47f8azWZw0JZb6tkru58eMu0lhPDsUo5Jmk9N8b0RQ9
+         AoECPocZeqzz7vng8s+TnBcn3gY9XDNaGVbyi9F+Bpb0kwm7G8v9ovRA4FnXZW+8CRij
+         /GGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RT8FmRt2d7Rka6jKT65g4BGk8bfqytImFl8noTm1BK4=;
-        b=nI2UvQvxztyIygR3fKKCeZrdVW/FekgHfNldJp8F3ydIkwpt+zZY+KN2X0Y93bL06F
-         evZ8VRQvH7+1EQ9bdO5Nx0HtqB4A1ELb+Tqr8VSLjFANQiFu8V+kS6WtqqQy3BhW5J32
-         0EvbYgHHtfxgVVcjIKfd5FFhjGbo6FSLQ3eh4uDqz3oNGXoMAVLxlmBZkcRLlSD3+9Ss
-         ADhafAYswm4i6ga4uhEdmpRxp1dbt9H0y6ez5mo79FM/adAZZDe2Xc6KZMJYKi13G/EN
-         8lMD5UTACDed4J8M/diHShTxjJYXG/Ad3ZabrgZ+sBvGoiXB1/hBIR2J9OJGblPYvq/l
-         0iHQ==
-X-Gm-Message-State: ANhLgQ2lS/n8xmc0gi17+caNkTaiZXUDEIX/BY5rn+O25MyKsUqrA6v9
-        W5uEZU4u2WhOVuoxpZMcOlbqzPum
-X-Google-Smtp-Source: ADFU+vvbkxSkdqCqcPo+U3Yio95VswK+VbzKdme+wYLTCVgtcJgbzm90XyCTacwfZ7hhf0DuyIQPIQ==
-X-Received: by 2002:a17:906:3502:: with SMTP id r2mr16238993eja.67.1584211322632;
-        Sat, 14 Mar 2020 11:42:02 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id g5sm4110658edn.9.2020.03.14.11.41.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 14 Mar 2020 11:42:01 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 19:41:55 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] regulator: max14577: Add proper dt-compatible strings
-Message-ID: <20200314184155.GC17580@kozik-lap>
-References: <CGME20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45@eucas1p2.samsung.com>
- <20200220145127.21273-1-m.szyprowski@samsung.com>
- <20200220165614.GD3926@sirena.org.uk>
- <964b8c4c-36ca-203d-e62b-4a8fc970e23d@samsung.com>
- <20200221123813.GB5546@sirena.org.uk>
- <b52332cd-1dec-fdfe-51fc-8605d94abe7d@samsung.com>
- <20200221171342.GI5546@sirena.org.uk>
- <61dc8192-e313-021f-9e23-928257a66984@samsung.com>
- <20200224201256.GA8060@kozik-lap>
- <791edb65-4471-3e54-6806-4af2876fea19@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <791edb65-4471-3e54-6806-4af2876fea19@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=BqK64CqX9MkYP0O18+eeXN3RJtGVpqkBACDnpy+yIYU=;
+        b=jLMPmRPea0/trkCXglj5PqbsNFqe9rXJzUsLdbyVz3sr+l39rQCUtxC1Bw0hi5Ns3D
+         tV440fBR79erH8MJDWArcmLFohbcSJa3wMpJMtuRPHKDPFX6JaJk8c7A4k4mTIHdXIrG
+         SHv5fA8d/AVaAYsMADK/akkUPNRDm58raBqGFsy9WkwGRTIFZ7sEwc8sMh++4jrdpIKk
+         bGDIOz7WczcJo9cFKuT8HF3UEunKFDZyb8u8kAc8UCAeko1k/nOUyxiWwzDL5hNxiKSf
+         K4cM5fCTAdksIygZWUpcU5rspbh1T7+/1pKTAqR6psrvxGc8t7BgTvnrvPYFCql10kZj
+         J1IA==
+X-Gm-Message-State: ANhLgQ1TaA75f69yjeGEIajoQZaIjMy1EuuPs/8nnlcLWPq6sBJonD2I
+        hQNMloRHBo0qfVBHZmVnzmUNSgxC
+X-Google-Smtp-Source: ADFU+vuH6dqS2RIj/k++jM0ssC6J89atScvbiezFQRbu9tPKgJiU8oHViSeao2b+BkefI6C7rgjbXg==
+X-Received: by 2002:a1c:63c4:: with SMTP id x187mr17582653wmb.124.1584212973682;
+        Sat, 14 Mar 2020 12:09:33 -0700 (PDT)
+Received: from 640k.lan ([93.56.174.5])
+        by smtp.gmail.com with ESMTPSA id c26sm21731452wmb.8.2020.03.14.12.09.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 14 Mar 2020 12:09:33 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [GIT PULL] KVM changes for Linux 5.6-rc6
+Date:   Sat, 14 Mar 2020 20:09:30 +0100
+Message-Id: <1584212970-13453-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 02:51:22PM +0100, Marek Szyprowski wrote:
-> Hi Krzysztof,
-> 
-> On 24.02.2020 21:12, Krzysztof Kozlowski wrote:
-> > On Mon, Feb 24, 2020 at 03:08:05PM +0100, Marek Szyprowski wrote:
-> >> On 21.02.2020 18:13, Mark Brown wrote:
-> >>> On Fri, Feb 21, 2020 at 02:23:57PM +0100, Marek Szyprowski wrote:
-> >>>> On 21.02.2020 13:38, Mark Brown wrote:
-> >>>>> We could just remove the compatible strings from the binding
-> >>>>> documentation, they won't do any harm if we don't use them.
-> >>>> Frankly I have no strong opinion on this. I've just wanted to fix the
-> >>>> broken autoloading of the drivers compiled as modules.
-> >>> Shouldn't adding the relevant module table for the platform devices work
-> >>> just as well for that?  Possibly also deleting the of_compatible bits in
-> >>> the MFD as well, ISTR that's needed to make the platform device work.
-> >> Right. This will work too. MFD cells will match to their drivers by the
-> >> name and modalias strings will be correct. The question is which
-> >> approach is preffered? Krzysztof? I've checked other mfd drivers, but I
-> >> cannot find any pattern in this area.
-> > I would guess that adding MODULE_DEVICE_TABLE() for OF-matches in main
-> > MFD driver would fix the issue... otherwise the same problem we have
-> > with max77693 (also MUIC/extcon/regulator/charger).
-> 
-> Indeed, there is a same problem with max77963:
-> 
-> max77963-muic driver lacks compatible and has wrong platform modalias 
-> ("extcon-max77963"),
-> 
-> max77963-charger driver lacks compatible,
-> 
-> max77963-haptic driver lacks compatible.
-> 
-> > Some of these drivers (I guess only charger) bind to a OF node so they
-> > need a compatible. I think we added this to regulators and extcon for
-> > symmetry.
-> > Without this binding, the charger would need to read a specific child
-> > node from parent. This make them tightly coupled. It seems to me more
-> > robust for each component to bind to his own node, when needed.
-> 
-> Extcon would also need its node when support for it will be added to 
-> dwc2 driver. Having compatible strings in the nodes simplifies matching 
-> and makes it almost automatic.
-> 
-> > Another reason of adding compatibles was an idea of reusability of
-> > MFD children (between different MFD drivers or even standalone) but it
-> > never got implemented (children still depend on parent significantly).
-> 
-> So far, there is no such case.
-> 
-> > In general, I like the approach of children with compatibles but I will
-> > not argue against changing the drivers. They could really use some
-> > cleanup :)
-> > Long time I tried to remove the support for platform_data [1] - maybe
-> > let's continue?
-> >
-> > [1] https://lore.kernel.org/lkml/20170217200200.4521-1-krzk@kernel.org/
-> 
-> Cleanup of the driver is another story, completely independent of fixing 
-> this issue imho.
-> 
-> krzk: could you then specify if you are against or after the proposed 
-> changes?
+Linus,
 
-Since we already have compatibles and some of the children require them
-(charger), I vote in favor of this patch and for keeping compatibles.
+The following changes since commit 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c:
 
-Best regards,
-Krzysztof
+  KVM: VMX: check descriptor table exits on instruction emulation (2020-03-01 19:26:31 +0100)
 
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 018cabb694e3923998fdc2908af5268f1d89f48f:
+
+  Merge branch 'kvm-null-pointer-fix' into kvm-master (2020-03-14 12:49:37 +0100)
+
+----------------------------------------------------------------
+
+Bugfixes, x86+s390.
+
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      KVM: s390: Also reset registers in sync regs for initial cpu reset
+
+Haiwei Li (1):
+      KVM: SVM: Fix the svm vmexit code for WRMSR
+
+Jason A. Donenfeld (1):
+      KVM: fix Kconfig menu text for -Werror
+
+Nitesh Narayan Lal (1):
+      KVM: x86: Initializing all kvm_lapic_irq fields in ioapic_write_indirect
+
+Paolo Bonzini (2):
+      Merge tag 'kvm-s390-master-5.6-1' of git://git.kernel.org/.../kvms390/linux into kvm-master
+      Merge branch 'kvm-null-pointer-fix' into kvm-master
+
+Sean Christopherson (1):
+      KVM: VMX: Condition ENCLS-exiting enabling on CPU support for SGX1
+
+Vitaly Kuznetsov (3):
+      KVM: x86: clear stale x86_emulate_ctxt->intercept value
+      KVM: x86: remove stale comment from struct x86_emulate_ctxt
+      KVM: nVMX: avoid NULL pointer dereference with incorrect EVMCS GPAs
+
+Wanpeng Li (1):
+      KVM: X86: Fix dereference null cpufreq policy
+
+ arch/s390/kvm/kvm-s390.c           | 18 +++++++++++++++++-
+ arch/x86/include/asm/kvm_emulate.h |  1 -
+ arch/x86/kvm/Kconfig               |  2 +-
+ arch/x86/kvm/emulate.c             |  1 +
+ arch/x86/kvm/ioapic.c              |  7 +++++--
+ arch/x86/kvm/svm.c                 |  3 ++-
+ arch/x86/kvm/vmx/nested.c          |  5 +++--
+ arch/x86/kvm/vmx/vmx.c             | 16 ++++++++++++++--
+ arch/x86/kvm/x86.c                 |  8 +++++---
+ 9 files changed, 48 insertions(+), 13 deletions(-)
