@@ -2,263 +2,482 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0F8C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3C5C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CEF2076A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:36:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ITfYkerg"
+	by mail.kernel.org (Postfix) with ESMTP id 805822076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbgCOBgy (ORCPT
+        id S1727381AbgCOBg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:36:54 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:61944 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727334AbgCOBgy (ORCPT
+        Sat, 14 Mar 2020 21:36:59 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:43934 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbgCOBg6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:36:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584236213; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=jonzZp63L40u3yfPOPtIkP2E/IYQDyZzE0IebztJjEc=; b=ITfYkerg+ADEqcMsRnQv+rfReQnAwnMtGoi8AFn6bMM7Ofv9Ip910rVomXIFWx0ILUQSwIGo
- mpowVzATUI9vv0hyZzL98hPIKEF8nEvXihCRW+WVWSL1rQhQbaDfNYgAFyh+TN8kPzbLP9Zi
- 9kE4TsinVY++Dclf1py0zaZkGvc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6d277b.7fbaa34f7068-smtp-out-n03;
- Sat, 14 Mar 2020 18:50:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3A63AC433D2; Sat, 14 Mar 2020 18:50:34 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Sat, 14 Mar 2020 21:36:58 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5EBA0C433CB;
-        Sat, 14 Mar 2020 18:50:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5EBA0C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v6 3/3] clk: qcom: Add modem clock controller driver for SC7180
-Date:   Sun, 15 Mar 2020 00:19:58 +0530
-Message-Id: <1584211798-10332-4-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
-References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 56B208040D;
+        Sat, 14 Mar 2020 09:00:02 +0100 (CET)
+Date:   Sat, 14 Mar 2020 09:00:00 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Ondrej Jirman <megous@megous.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 3/5] drm: panel: add Xingbangda XBD599 panel
+Message-ID: <20200314080000.GE5783@ravnborg.org>
+References: <20200311163329.221840-1-icenowy@aosc.io>
+ <20200311163329.221840-4-icenowy@aosc.io>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311163329.221840-4-icenowy@aosc.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=Ndn_4ZrgrvPCaig-JTAA:9 a=CjuIK1q_8ugA:10 a=pHzHmUro8NiASowvMSCR:22
+        a=nt3jZW36AmriUCFCBwmW:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the modem clock controller found on SC7180
-based devices. This would allow modem drivers to probe and
-control their clocks.
+Hi Icenowy
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/Kconfig      |   9 +++
- drivers/clk/qcom/Makefile     |   1 +
- drivers/clk/qcom/mss-sc7180.c | 143 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 153 insertions(+)
- create mode 100644 drivers/clk/qcom/mss-sc7180.c
+A few details in the following.
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 15cdcdc..4225f86 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -280,6 +280,15 @@ config SC_GPUCC_7180
- 	  Say Y if you want to support graphics controller devices and
- 	  functionality such as 3D graphics.
+	Sam
 
-+config SC_MSS_7180
-+	tristate "SC7180 Modem Clock Controller"
-+	select SC_GCC_7180
-+	help
-+	  Support for the Modem Subsystem clock controller on Qualcomm
-+	  Technologies, Inc on SC7180 devices.
-+	  Say Y if you want to use the Modem branch clocks of the Modem
-+	  subsystem clock controller to reset the MSS subsystem.
-+
- config SC_VIDEOCC_7180
- 	tristate "SC7180 Video Clock Controller"
- 	select SC_GCC_7180
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 656a87e..9135592 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -50,6 +50,7 @@ obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
- obj-$(CONFIG_SC_DISPCC_7180) += dispcc-sc7180.o
- obj-$(CONFIG_SC_GCC_7180) += gcc-sc7180.o
- obj-$(CONFIG_SC_GPUCC_7180) += gpucc-sc7180.o
-+obj-$(CONFIG_SC_MSS_7180) += mss-sc7180.o
- obj-$(CONFIG_SC_VIDEOCC_7180) += videocc-sc7180.o
- obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
- obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
-diff --git a/drivers/clk/qcom/mss-sc7180.c b/drivers/clk/qcom/mss-sc7180.c
-new file mode 100644
-index 0000000..673fa1a
---- /dev/null
-+++ b/drivers/clk/qcom/mss-sc7180.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/pm_clock.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,mss-sc7180.h>
-+
-+#include "clk-regmap.h"
-+#include "clk-branch.h"
-+#include "common.h"
-+
-+static struct clk_branch mss_axi_nav_clk = {
-+	.halt_reg = 0x20bc,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x20bc,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "mss_axi_nav_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "gcc_mss_nav_axi",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch mss_axi_crypto_clk = {
-+	.halt_reg = 0x20cc,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x20cc,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "mss_axi_crypto_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "gcc_mss_mfab_axis",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static const struct regmap_config mss_regmap_config = {
-+	.reg_bits	= 32,
-+	.reg_stride	= 4,
-+	.val_bits	= 32,
-+	.fast_io	= true,
-+	.max_register	= 0x41aa0cc,
-+};
-+
-+static struct clk_regmap *mss_sc7180_clocks[] = {
-+	[MSS_AXI_CRYPTO_CLK] = &mss_axi_crypto_clk.clkr,
-+	[MSS_AXI_NAV_CLK] = &mss_axi_nav_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc mss_sc7180_desc = {
-+	.config = &mss_regmap_config,
-+	.clks = mss_sc7180_clocks,
-+	.num_clks = ARRAY_SIZE(mss_sc7180_clocks),
-+};
-+
-+static int mss_sc7180_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	pm_runtime_enable(&pdev->dev);
-+	ret = pm_clk_create(&pdev->dev);
-+	if (ret)
-+		goto disable_pm_runtime;
-+
-+	ret = pm_clk_add(&pdev->dev, "cfg_ahb");
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to acquire iface clock\n");
-+		goto destroy_pm_clk;
-+	}
-+
-+	ret = qcom_cc_probe(pdev, &mss_sc7180_desc);
-+	if (ret < 0)
-+		goto destroy_pm_clk;
-+
-+	return 0;
-+
-+destroy_pm_clk:
-+	pm_clk_destroy(&pdev->dev);
-+
-+disable_pm_runtime:
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return ret;
-+}
-+
-+static int mss_sc7180_remove(struct platform_device *pdev)
-+{
-+	pm_clk_destroy(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mss_sc7180_pm_ops = {
-+	SET_RUNTIME_PM_OPS(pm_clk_suspend, pm_clk_resume, NULL)
-+};
-+
-+static const struct of_device_id mss_sc7180_match_table[] = {
-+	{ .compatible = "qcom,sc7180-mss" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mss_sc7180_match_table);
-+
-+static struct platform_driver mss_sc7180_driver = {
-+	.probe		= mss_sc7180_probe,
-+	.remove		= mss_sc7180_remove,
-+	.driver		= {
-+		.name		= "sc7180-mss",
-+		.of_match_table = mss_sc7180_match_table,
-+		.pm = &mss_sc7180_pm_ops,
-+	},
-+};
-+
-+static int __init mss_sc7180_init(void)
-+{
-+	return platform_driver_register(&mss_sc7180_driver);
-+}
-+subsys_initcall(mss_sc7180_init);
-+
-+static void __exit mss_sc7180_exit(void)
-+{
-+	platform_driver_unregister(&mss_sc7180_driver);
-+}
-+module_exit(mss_sc7180_exit);
-+
-+MODULE_DESCRIPTION("QTI MSS SC7180 Driver");
-+MODULE_LICENSE("GPL v2");
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+On Thu, Mar 12, 2020 at 12:33:27AM +0800, Icenowy Zheng wrote:
+> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI IPS LCD panel made by
+> Xingbangda, which is used on PinePhone final assembled phones.
+> 
+> Add support for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  drivers/gpu/drm/panel/Kconfig                 |   9 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  .../gpu/drm/panel/panel-xingbangda-xbd599.c   | 367 ++++++++++++++++++
+>  3 files changed, 377 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-xingbangda-xbd599.c
+> 
+> +++ b/drivers/gpu/drm/panel/panel-xingbangda-xbd599.c
+> @@ -0,0 +1,367 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Xingbangda XBD599 MIPI-DSI panel driver
+> + *
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
+2020?
+
+> + *
+> + * Based on panel-rocktech-jh057n00900.c, which is:
+> + *   Copyright (C) Purism SPC 2019
+> + */
+> +
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/delay.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regulator/consumer.h>
+Sort alphabetically.
+
+> +
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_print.h>
+> +
+> +#define DRV_NAME "panel-xingbangda-xbd599"
+No reason for this indirection, it is only used once
+
+> +
+> +/* Manufacturer specific Commands send via DSI */
+> +#define ST7703_CMD_ALL_PIXEL_OFF 0x22
+> +#define ST7703_CMD_ALL_PIXEL_ON	 0x23
+> +#define ST7703_CMD_SETDISP	 0xB2
+> +#define ST7703_CMD_SETRGBIF	 0xB3
+> +#define ST7703_CMD_SETCYC	 0xB4
+> +#define ST7703_CMD_SETBGP	 0xB5
+> +#define ST7703_CMD_SETVCOM	 0xB6
+> +#define ST7703_CMD_SETOTP	 0xB7
+> +#define ST7703_CMD_SETPOWER_EXT	 0xB8
+> +#define ST7703_CMD_SETEXTC	 0xB9
+> +#define ST7703_CMD_SETMIPI	 0xBA
+> +#define ST7703_CMD_SETVDC	 0xBC
+> +#define ST7703_CMD_SETSCR	 0xC0
+> +#define ST7703_CMD_SETPOWER	 0xC1
+> +#define ST7703_CMD_UNK_C6	 0xC6
+> +#define ST7703_CMD_SETPANEL	 0xCC
+> +#define ST7703_CMD_SETGAMMA	 0xE0
+> +#define ST7703_CMD_SETEQ	 0xE3
+> +#define ST7703_CMD_SETGIP1	 0xE9
+> +#define ST7703_CMD_SETGIP2	 0xEA
+> +
+> +static const char * const regulator_names[] = {
+> +	"iovcc",
+> +	"vcc",
+> +};
+> +
+> +struct xbd599 {
+> +	struct device *dev;
+> +	struct drm_panel panel;
+> +	struct gpio_desc *reset_gpio;
+> +	struct regulator_bulk_data supplies[ARRAY_SIZE(regulator_names)];
+> +	bool prepared;
+> +};
+> +
+> +static inline struct xbd599 *panel_to_xbd599(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct xbd599, panel);
+> +}
+> +
+> +#define dsi_dcs_write_seq(dsi, cmd, seq...) do {			\
+> +		static const u8 d[] = { seq };				\
+> +		int ret;						\
+> +		ret = mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d));	\
+> +		if (ret < 0)						\
+> +			return ret;					\
+> +	} while (0)
+> +
+> +static int xbd599_init_sequence(struct xbd599 *ctx)
+> +{
+> +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> +	struct device *dev = ctx->dev;
+> +	int ret;
+> +
+> +	/*
+> +	 * Init sequence was supplied by the panel vendor.
+> +	 */
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC,
+> +			  0xF1, 0x12, 0x83);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI,
+> +			  0x33, 0x81, 0x05, 0xF9, 0x0E, 0x0E, 0x20, 0x00,
+> +			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x25,
+> +			  0x00, 0x91, 0x0a, 0x00, 0x00, 0x02, 0x4F, 0x11,
+> +			  0x00, 0x00, 0x37);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT,
+> +			  0x25, 0x22, 0x20, 0x03);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF,
+> +			  0x10, 0x10, 0x05, 0x05, 0x03, 0xFF, 0x00, 0x00,
+> +			  0x00, 0x00);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR,
+> +			  0x73, 0x73, 0x50, 0x50, 0x00, 0xC0, 0x08, 0x70,
+> +			  0x00);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP, 0xF0, 0x12, 0xF0);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ,
+> +			  0x00, 0x00, 0x0B, 0x0B, 0x10, 0x10, 0x00, 0x00,
+> +			  0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
+> +	dsi_dcs_write_seq(dsi, 0xC6, 0x01, 0x00, 0xFF, 0xFF, 0x00);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER,
+> +			  0x74, 0x00, 0x32, 0x32, 0x77, 0xF1, 0xFF, 0xFF,
+> +			  0xCC, 0xCC, 0x77, 0x77);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP, 0x07, 0x07);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM, 0x2C, 0x2C);
+> +	dsi_dcs_write_seq(dsi, 0xBF, 0x02, 0x11, 0x00);
+> +
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1,
+> +			  0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
+> +			  0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
+> +			  0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
+> +			  0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
+> +			  0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
+> +			  0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> +			  0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2,
+> +			  0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +			  0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
+> +			  0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
+> +			  0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> +			  0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
+> +			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +			  0x00, 0x00, 0x00 ,0x00, 0x00, 0x00, 0x03, 0x0A,
+> +			  0xA5, 0x00, 0x00, 0x00, 0x00);
+> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA,
+> +			  0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
+> +			  0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
+> +			  0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
+> +			  0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
+> +			  0x12, 0x18);
+> +	msleep(20);
+> +
+> +	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(dev, "Failed to exit sleep mode\n");
+> +		return ret;
+> +	}
+> +	msleep(250);
+> +
+> +	ret = mipi_dsi_dcs_set_display_on(dsi);
+> +	if (ret)
+> +		return ret;
+> +	msleep(50);
+> +
+> +	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
+> +	return 0;
+> +}
+> +
+> +static int xbd599_disable(struct drm_panel *panel)
+> +{
+> +	struct xbd599 *ctx = panel_to_xbd599(panel);
+> +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> +
+> +	return mipi_dsi_dcs_set_display_off(dsi);
+> +}
+The following is the same for many panels but anyway.
+
+The init order for a display is
+
+    prepare
+    enable
+
+    # Display is now fully operational
+
+    disable
+    unprepare
+
+    # display is now off and turned off (no power)
+
+So when reading panel drivers my personal preference is to read the
+functions in that order - this makes it easier to follow the sequence.
+
+Thats just my personal opinion - so feel free to ignore.
+
+> +
+> +static int xbd599_unprepare(struct drm_panel *panel)
+> +{
+> +	struct xbd599 *ctx = panel_to_xbd599(panel);
+> +
+> +	if (!ctx->prepared)
+> +		return 0;
+> +
+> +	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +	ctx->prepared = false;
+> +
+> +	return 0;
+> +}
+Maybe activate reset before power is turned off.
+So when power is turned on again later the panel is kept in reset.
+
+This would also make this a closer mirror of what is done in prepare()
+
+> +
+> +static int xbd599_enable(struct drm_panel *panel)
+> +{
+> +	struct xbd599 *ctx = panel_to_xbd599(panel);
+> +	int ret;
+> +
+> +	ret = xbd599_init_sequence(ctx);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
+> +			      ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int xbd599_prepare(struct drm_panel *panel)
+> +{
+> +	struct xbd599 *ctx = panel_to_xbd599(panel);
+> +	int ret;
+> +
+> +	if (ctx->prepared)
+> +		return 0;
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +	if (ret)
+> +		return ret;
+> +
+> +	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> +	usleep_range(20, 40);
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> +	msleep(20);
+> +
+> +	ctx->prepared = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_display_mode xbd599_default_mode = {
+> +	.hdisplay    = 720,
+> +	.hsync_start = 720 + 40,
+> +	.hsync_end   = 720 + 40 + 40,
+> +	.htotal	     = 720 + 40 + 40 + 40,
+> +	.vdisplay    = 1440,
+> +	.vsync_start = 1440 + 18,
+> +	.vsync_end   = 1440 + 18 + 10,
+> +	.vtotal	     = 1440 + 18 + 10 + 17,
+> +	.vrefresh    = 60,
+> +	.clock	     = 69000,
+> +	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> +
+> +	.width_mm    = 68,
+> +	.height_mm   = 136,
+> +	.type        = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
+> +};
+> +
+> +static int xbd599_get_modes(struct drm_panel *panel,
+> +			    struct drm_connector *connector)
+> +{
+> +	struct xbd599 *ctx = panel_to_xbd599(panel);
+> +	struct drm_display_mode *mode;
+> +
+> +	mode = drm_mode_duplicate(connector->dev, &xbd599_default_mode);
+> +	if (!mode) {
+> +		DRM_DEV_ERROR(ctx->dev, "Failed to add mode\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	drm_mode_set_name(mode);
+> +
+> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> +	connector->display_info.width_mm = mode->width_mm;
+> +	connector->display_info.height_mm = mode->height_mm;
+> +	drm_mode_probed_add(connector, mode);
+> +
+> +	return 1;
+> +}
+> +
+> +static const struct drm_panel_funcs xbd599_drm_funcs = {
+> +	.disable   = xbd599_disable,
+> +	.unprepare = xbd599_unprepare,
+> +	.enable    = xbd599_enable,
+> +	.prepare   = xbd599_prepare,
+> +	.get_modes = xbd599_get_modes,
+> +};
+> +
+> +static int xbd599_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct device *dev = &dsi->dev;
+> +	struct xbd599 *ctx;
+> +	int i, ret;
+> +
+> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++)
+> +		ctx->supplies[i].supply = regulator_names[i];
+> +
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
+> +				      ctx->supplies);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(&dsi->dev, "cannot get regulators\n");
+> +		return ret;
+> +	}
+> +
+> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +	if (IS_ERR(ctx->reset_gpio)) {
+> +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
+> +		return PTR_ERR(ctx->reset_gpio);
+> +	}
+> +
+> +	mipi_dsi_set_drvdata(dsi, ctx);
+> +
+> +	ctx->dev = dev;
+> +
+> +	dsi->lanes = 4;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> +
+> +	drm_panel_init(&ctx->panel, &dsi->dev, &xbd599_drm_funcs,
+> +		       DRM_MODE_CONNECTOR_DSI);
+> +
+> +	ret = drm_panel_of_backlight(&ctx->panel);
+> +	if (ret)
+> +		return ret;
+> +
+> +	drm_panel_add(&ctx->panel);
+> +
+> +	ret = mipi_dsi_attach(dsi);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?\n");
+> +		drm_panel_remove(&ctx->panel);
+> +		return ret;
+> +	}
+> +
+> +	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready\n",
+> +		     xbd599_default_mode.hdisplay,
+> +		     xbd599_default_mode.vdisplay,
+> +		     xbd599_default_mode.vrefresh,
+> +		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
+> +
+> +	return 0;
+> +}
+> +
+> +static void xbd599_shutdown(struct mipi_dsi_device *dsi)
+> +{
+> +	struct xbd599 *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	ret = xbd599_unprepare(&ctx->panel);
+
+Use drm_panel_unprepare().
+There may be, or may come functionality in drm_panel that is required.
+
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(&dsi->dev, "Failed to unprepare panel: %d\n",
+> +			      ret);
+> +}
+> +
+> +static int xbd599_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct xbd599 *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	xbd599_shutdown(dsi);
+> +
+> +	ret = mipi_dsi_detach(dsi);
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(&dsi->dev, "Failed to detach from DSI host: %d\n",
+> +			      ret);
+> +
+> +	drm_panel_remove(&ctx->panel);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id xbd599_of_match[] = {
+> +	{ .compatible = "xingbangda,xbd599", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, xbd599_of_match);
+> +
+> +static struct mipi_dsi_driver xbd599_driver = {
+> +	.probe	= xbd599_probe,
+> +	.remove = xbd599_remove,
+> +	.shutdown = xbd599_shutdown,
+> +	.driver = {
+> +		.name = DRV_NAME,
+> +		.of_match_table = xbd599_of_match,
+> +	},
+> +};
+> +module_mipi_dsi_driver(xbd599_driver);
+> +
+> +MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.io>");
+> +MODULE_DESCRIPTION("DRM driver for Xingbangda XBD599 MIPI DSI panel");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.24.1
