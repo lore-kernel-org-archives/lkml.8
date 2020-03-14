@@ -2,141 +2,128 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3E4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B156AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880402074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:10:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UFnJrZOt"
+	by mail.kernel.org (Postfix) with ESMTP id 907B4206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbgCNAKF (ORCPT
+        id S1727680AbgCNAYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:10:05 -0400
-Received: from ozlabs.org ([203.11.71.1]:58345 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726534AbgCNAKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:10:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48fNHF1kNzz9sPJ;
-        Sat, 14 Mar 2020 11:10:00 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584144601;
-        bh=T91XHMl+ZOPJKGof4hB+jxJrqw22lmyD6ou55Lz8oHs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UFnJrZOtOgcKsjnYHMMoIAREiArNDIah6KBnInIX7IE1V48LWTTFebUE77qvvOdAc
-         8WJAPk+pJqD8IUjgcPhlKhO01mCQcO6nLs9LEwfmvw3Pxr7Q/14Mjx/yQgtck1mqHd
-         evgGvm0daIq3ZebfVuzzUKb57WnnXPMtsCTM/mKwlBN1os7lpkV9J57oZbNBIzJO6h
-         9yvEq4Xtwi1lodLWrFBe30/5pfr805FG5wEJQuzypJwn8RNPLFx/m7z3xm19i19COB
-         ObuiYi0Fb6tW9p9nw9Oouu8WjIX/F8wHRi55r/YnPiaTiD6YYz4fi8odA2h0op/eUu
-         Tc5Mc1f2Bw0jg==
-Date:   Sat, 14 Mar 2020 11:09:54 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200314110954.580b58dd@canb.auug.org.au>
-In-Reply-To: <20200313125627.GA8518@MiWiFi-R3L-srv>
-References: <20200313214214.4d2e2af6@canb.auug.org.au>
-        <20200313125627.GA8518@MiWiFi-R3L-srv>
+        Fri, 13 Mar 2020 20:24:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48291 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgCNAYY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 20:24:24 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jCuah-0005UY-Sv; Sat, 14 Mar 2020 01:23:48 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 16D97101115; Sat, 14 Mar 2020 01:23:47 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/9] pci/switchtec: Don't abuse completion wait queue for poll
+In-Reply-To: <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com>
+References: <20200313174701.148376-1-bigeasy@linutronix.de> <20200313174701.148376-4-bigeasy@linutronix.de> <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com>
+Date:   Sat, 14 Mar 2020 01:23:47 +0100
+Message-ID: <87sgibeqcs.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/a5h5Lps4mlmLnYpyZaSyDtQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/a5h5Lps4mlmLnYpyZaSyDtQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Baoquan,
-
-On Fri, 13 Mar 2020 20:56:27 +0800 Baoquan He <bhe@redhat.com> wrote:
+Logan Gunthorpe <logang@deltatee.com> writes:
+> On 2020-03-13 11:46 a.m., Sebastian Andrzej Siewior wrote:
+>> The poll callback is abusing the completion wait queue and sticks it into
+>> poll_wait() to wake up pollers after a command has completed.
+>> 
+>> First of all it's a layering violation as it imposes restrictions on the
+>> inner workings of completions. Just because C allows to do so does not
+>> justify that in any way. The proper way to do such things is to post
+>> patches which extend the core infrastructure and not by silently abusing
+>> it.
 >
-> I made below change, but I can't triger these warnings. Could you try
-> below patch, see if it's works?
+> As I've said previously, I disagree with this approach.
 
-I needed to add "ARCH=3Dx86_64" to the "make allnoconfig" command line
-(and the subsequent "make") otherwise I get a 32 bit build.
+Feel free to do s.
 
-> From 9be668f1e30b6bb4ed5f4a07e7d3bb76d3f58f35 Mon Sep 17 00:00:00 2001
-> From: Baoquan He <bhe@redhat.com>
-> Date: Fri, 13 Mar 2020 20:25:54 +0800
-> Subject: [PATCH] mm/sparse.c: fix the building warning with !SPARSEMEM
->=20
-> Stephen reported below warnings are seen with allnoconfig on x86_64.
-> Fix it by making those dummy functions sub-section map handling visible
-> with CONFIG_SPARSEMEM enabled.
->=20
-> mm/sparse.c:311:12: warning: 'fill_subsection_map' defined but not used [=
--Wunused-function]
->   311 | static int fill_subsection_map(unsigned long pfn, unsigned long n=
-r_pages)
->       |            ^~~~~~~~~~~~~~~~~~~
-> mm/sparse.c:306:13: warning: 'is_subsection_map_empty' defined but not us=
-ed [-Wunused-function]
->   306 | static bool is_subsection_map_empty(struct mem_section *ms)
->       |             ^~~~~~~~~~~~~~~~~~~~~~~
-> mm/sparse.c:301:12: warning: 'clear_subsection_map' defined but not used =
-[-Wunused-function]
->   301 | static int clear_subsection_map(unsigned long pfn, unsigned long =
-nr_pages)
->       |            ^~~~~~~~~~~~~~~~~~~~
->=20
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  mm/sparse.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 362018e82e22..9e08d118719f 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -293,7 +293,7 @@ static int fill_subsection_map(unsigned long pfn, uns=
-igned long nr_pages)
-> =20
->  	return rc;
->  }
-> -#else
-> +#elif defined(CONFIG_SPARSEMEM)
->  void __init subsection_map_init(unsigned long pfn, unsigned long nr_page=
-s)
->  {
->  }
+> Open coding standard primitives sweeps issues under the rug and is a
+> step backwards for code quality. Calling it a layering violation is
+> just one opinion and if it is, the better solution would be to create
+> an interface you find appropriate so that it isn't one.
 
-This didn't make any difference as CONFIG_SPARSEMEM is set for the
-x86_64 allnoconfig build.
+There is no standard primitive which allows to poll on a completion.
 
---=20
-Cheers,
-Stephen Rothwell
+You decided that this is smart to do and just because C does not
+allow to hide implementation details this is not a justification for
+this at all.
 
---Sig_/a5h5Lps4mlmLnYpyZaSyDtQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Due to the limitations of C, the kernel has to rely on the assumption
+that developers know and respect the difference between API and
+implementation.
 
------BEGIN PGP SIGNATURE-----
+Relying on implementation details of an interface and then arguing that
+this is a standard primitive for the chosen purpose is just backwards.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5sINIACgkQAVBC80lX
-0Gz+Xgf+OUITkPZ+BRZ8jb3n3lyWYz2nibo99W9+r1lIY92Zel/LYe5JiHkXOv1r
-BXqZjRpJ6XI8jjfKyHukrFOJmRS24QqY9PCy2ldlndc6jSaRgyyD3XfPxzCiyMco
-BZHtDMAQY72ASshviO+3x6RlPcjhEEdxgA6f12G+hj/yvyjiXfO9/y98fkL9jjHR
-Z+PYonV5sVDCRtz7QeRh5OXEmTWgkp3ikNAYHFxNxw9PGcAyy6CwHCZ5GjIJsGC2
-zEF5/fGAEBBhJesPT13/HSdKdDVBA1cswvVfbzDSetj7cLnOu/zFyZoeqwmPXiPN
-rF7hJvRoq0Fg+OMb5sDnatxqUl4MvA==
-=kktS
------END PGP SIGNATURE-----
+What's even more hillarious is that you now request that we give you a
+replacement interface for something which was not an interface to use in
+the first place.
 
---Sig_/a5h5Lps4mlmLnYpyZaSyDtQ--
+>>  1) It cannot work with EPOLLEXCLUSIVE
+>
+> Why? You don't explain this. And I don't see how this patch would change
+> anything to do with the call to poll_wait(). All you've done is
+> open-code the completion.
+>
+> Not that it matters that much, having multiple waiters poll on this
+> interface can pretty much never happen. It only makes sense for the
+> process who submitted the write to poll on the interface.
+
+It does not matter whether your envisioned usage implies that it cannot
+happen. Fact is that there is no restriction. That means using this with
+the well documented semantics of poll(2) will result in failure. 
+
+>>  2) It's racy:
+>> 
+>>   poll()	      	  	 write()
+>>    switchtec_dev_poll()		   switchtec_dev_write()
+>>     poll_wait(&s->comp.wait);        mrpc_queue_cmd()
+>>     				       init_completion(&s->comp)
+>> 					 init_waitqueue_head(&s->comp.wait)
+>
+> That's a nice catch! But wouldn't an easier solution be to change the
+> code to use reinit_completion() instead of using the bug to justify a
+> different change?
+
+Sure taht can be cured by changing it to reinit, but that does not cure
+the abuse of implementation details. As Peter, who maintains the
+completion code says:
+
+  Relying on implementation details of locking primitives like that is
+  yuck.
+
+Thanks,
+
+        tglx
