@@ -2,211 +2,346 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5270BC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB3AC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A32F205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3EE7205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWQQM+Es"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0yygjl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbgCOCmu (ORCPT
+        id S1727427AbgCOCoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:42:50 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43439 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgCOCmt (ORCPT
+        Sat, 14 Mar 2020 22:44:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46810 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgCOCoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:42:49 -0400
-Received: by mail-qk1-f194.google.com with SMTP id x1so15210515qkx.10;
-        Sat, 14 Mar 2020 19:42:46 -0700 (PDT)
+        Sat, 14 Mar 2020 22:44:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w16so518144wrv.13;
+        Sat, 14 Mar 2020 19:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vc8LwrIaU40nI0L9rZtv7zvcU+o5GuwsQBOLTCK4qFI=;
-        b=OWQQM+EsX/WIldwdhGjM06LV5RrRYgpfmsg0veXZ5b1TbRwxXPK0G+WQbH1j1/L2e3
-         WVMPJDIpZH/IDd7nWjzggg03LB0+pgKuXyrM4YWKU83RqpkFLv4osM0SP36Yd9ttHUXY
-         Dveio6C8RFtOJ0nK3G1m6dGNn+ENhlyrEANU4viuG3hPzXpHAHcCOLm7mvyfoatCpxg5
-         Sp1pJoOdqMCYSFFy6f4AjVPkEtY933eukKKpmug2SRaZqoGbIF0WvkHyIMMzyrgMaYIh
-         ZzJxraxHiqWPV0u9qPQFucNts0nSW6OxBu8CGX6h4lxaE/5KvpRH2JAvjnHXM8nCLg1s
-         MXpw==
+        h=from:to:cc:subject:date:message-id;
+        bh=Jf+RrC6mz5nv84gZ0MzKVxOOXoDeU+y88CTt66LoldU=;
+        b=U0yygjl5lv+zcKei2t1sWcD+BUWDAMmKr9iCEAnQVE0fk7Wtgu4P5m6etE17I6XZjI
+         xtXo7DbXs3NsHWTZUy/uRdJr/MlZgBS+UbEV6sKqoZYY9iXpfKi/rQCQYqsESVbwU0Ml
+         ns61vfMXkveiwOHsDDeQFJEi+zgsZciREasdPaKYfxaYQmzKivCJ8A1H2vryAMVes2Xi
+         2RVJ5gfsSv5dg3V5FWauG+MgyCmbztrmI7eun7BHAvGYIIjcQzTwz1QSGSLeBOGfUjVY
+         17DxeajvcCm8jA6KuUFhCm1Tq7YQ9YwKfGtU9p2IkUSMitj5mxbkbpmD5WPnshMAi8Te
+         +jZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vc8LwrIaU40nI0L9rZtv7zvcU+o5GuwsQBOLTCK4qFI=;
-        b=NVhea6Ed0yAqP9ufxC82kq3x5AZWSiT31UCiLUbv2OMJgIDG/G+ZKnSNsmNE7qUeZW
-         KdRohrY/9Q3xnpV5Hsd9ZB5jud/biFFLNCns+5H56fjC0ZC63OZCe7DZksN87eY49fTd
-         kzc1xF32VC1+MyA2M1aPaCCG3IKMgSgxNn61QdCNOk8oqCRME4qzbW5tDpXl12zj74Ji
-         EkgfHsGqnMTm+ng6Fk6pz8YwPRNoPFHqnhCJoPjUqnCrWhwfGGhpMkV0pql0jKx03s+M
-         /2El1zNvMPOA1DLo+yiyuPT+FcWPN6BnPSN5B2EsMgOUFY/N0NtEnKWbKCauO8+3tJmm
-         OIcw==
-X-Gm-Message-State: ANhLgQ1IAqsmTNMTDOElPgNQi2Lf8OqSYurorlinp5CrzMzTaCWV/Cjs
-        IiRH1QsjFH8reraW95+E9jYyrg2iVEjaGjTJhhDQlebC
-X-Google-Smtp-Source: ADFU+vvqbJcRXoy8MLoV6dVlKl4R88lrkt8lrWmZMrkz8gdnvH1wWUt998hcX+ARQdd6OcDsbFBEZdJVYtnNc81xZ1Q=
-X-Received: by 2002:a02:8795:: with SMTP id t21mr13779924jai.126.1584192765365;
- Sat, 14 Mar 2020 06:32:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200310194854.831-1-linux.amoon@gmail.com> <20200310194854.831-3-linux.amoon@gmail.com>
-In-Reply-To: <20200310194854.831-3-linux.amoon@gmail.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Sat, 14 Mar 2020 19:02:33 +0530
-Message-ID: <CANAwSgR4fJK0uVANv-x-=iSL_hAKD8kvazACUsY9Meu5xonuqQ@mail.gmail.com>
-Subject: Re: [PATCHv3 2/5] ARM: dts: exynos: Add missing usbdrd3 suspend clk
-To:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Jf+RrC6mz5nv84gZ0MzKVxOOXoDeU+y88CTt66LoldU=;
+        b=O4EhgIk3DGffey/kWEqZBvMwREY/1ilWaPWKfyoQCH8s5vEpcdO0ZXQlVCoBswwFWy
+         UWZQ70YGi8MsxiPF8mQFnmcvEoBdWsr2O21rGDjcCKrSZy2iZ8FJK2nmMrgjTLhm8s0u
+         9ufzFUN7dgB8g2iv6e/Iaakca34wtxPEDQNlyrfsJgsBFdGgjOhCIbT27rFOK7kCaLOe
+         KglWMdeuTAD8zGOYPo/LPzvlduXx5hZjptMSFJPwHVL0zmdSg0eM5YumHZ9pX/NKtu4c
+         q4o9NCOXLRFsL25qNX+WN8NvUbX3gj7Z1aWy5ZIk3uAyX1jYuDdcrGnPcpxrOYw4R8jT
+         ugUA==
+X-Gm-Message-State: ANhLgQ0SzjBj9PXAzYiexbjvtg5fsrLOhYf8syoSKNOX+CGEkiRG/PIc
+        9Zo9sTjEvrGFnxRGZ5wGjBU34B7m
+X-Google-Smtp-Source: ADFU+vtOhAEKysrjqj79AasYhiG4LYUcsxu1ei3KOCiBhXnrGHF8BgM7nFE0owH/Xoq+tj06daAGsg==
+X-Received: by 2002:a17:906:4001:: with SMTP id v1mr8429ejj.36.1584208240461;
+        Sat, 14 Mar 2020 10:50:40 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2d83:b000:25e0:954:4866:25e4])
+        by smtp.gmail.com with ESMTPSA id b15sm2072157edn.69.2020.03.14.10.50.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2020 10:50:39 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH v2] MAINTAINERS: adjust to filesystem doc ReST conversion
+Date:   Sat, 14 Mar 2020 18:50:30 +0100
+Message-Id: <20200314175030.10436-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Mauro's patch series <cover.1581955849.git.mchehab+huawei@kernel.org>
+("[PATCH 00/44] Manually convert filesystem FS documents to ReST")
+converts many Documentation/filesystems/ files to ReST.
 
-On Wed, 11 Mar 2020 at 01:19, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Add new compatible strings for USBDRD3 for adding missing
-> suspend clk, exynos5422 usbdrd3 support two clk USBD300 and
-> SCLK_USBD300, so add missing suspemd_clk for Exynos542x DWC3 nodes.
->
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Since then, ./scripts/get_maintainer.pl --self-test complains with 27
+warnings on Documentation/filesystems/ of this kind:
 
-My assumption based on the FSYS clock source diagram below was bit wrong.
-[0] https://imgur.com/gallery/zAiBoyh
+  warning: no file matches F: Documentation/filesystems/...
 
-And again re-looking into the driver source code, it turn out their
-are *6 clock*
-Here is the correct mapping as per the Exynos5420 clock driver.
+Adjust MAINTAINERS entries to all files converted from .txt to .rst in the
+patch series and address the 27 warnings.
 
-USB-(phy@12100000)
-|___________________CLK_SCLK_USBD300
-|___________________CLK_SCLK_USBPHY300
+Link: https://lore.kernel.org/linux-erofs/cover.1581955849.git.mchehab+huawei@kernel.org
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+v1 -> v2:
+Patch v2 is now based on today's docs-next (now with base-commit below)
 
-USB-(phy@12500000)
-|___________________CLK_SCLK_USBD301
-|___________________CLK_SCLK_USBPHY301
+Jonathan, pick pick this patch v2 for docs-next.
 
-USB-(dwc3@12000000)
-|___________________CLK_USBD300
-USB-(dwc3@12400000)
-|___________________CLK_USBD301
+If still does not apply, let us reduce the churn---you can simply run
+this script if you want to produce the changes:
 
-Note: As per Exynos 5422 user manual, There are some more USB CLK
-configuration missing in GATE_IP_FSYS. So we could enable another dwc3 clk,
-If needed I would like too add this missing clk code and enable this
-clk for dwc3 driver.
+  ./scripts/get_maintainer.pl --self-test > findings
+  grep "Documentation\/filesystems/" findings | \
+  sed 's#^.*\(Documentation\/filesystems\/.*\.\)txt$#sed -i "s!\1txt!\1rst!" MAINTAINERS#' | sh
 
-For some reason we already use CLK_USBD300 and CLK_USBD301
-for PHY nodes, which lead to this confusion. So we need to update PHY clock
-CLK_USBD300 with CLK_SCLK_USBD300 and clock CLK_USBD301 with CLK_SCLK_USBD301.
 
-Please share your thought on linking PHY nodes above and add new DWC3 clock
-and enable this clock.
+ MAINTAINERS | 54 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
--Anand
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5ddc491bea55..38f58b85eb06 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -214,7 +214,7 @@ Q:	http://patchwork.kernel.org/project/v9fs-devel/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ericvh/v9fs.git
+ T:	git git://github.com/martinetd/linux.git
+ S:	Maintained
+-F:	Documentation/filesystems/9p.txt
++F:	Documentation/filesystems/9p.rst
+ F:	fs/9p/
+ F:	net/9p/
+ F:	include/net/9p/
+@@ -584,7 +584,7 @@ AFFS FILE SYSTEM
+ M:	David Sterba <dsterba@suse.com>
+ L:	linux-fsdevel@vger.kernel.org
+ S:	Odd Fixes
+-F:	Documentation/filesystems/affs.txt
++F:	Documentation/filesystems/affs.rst
+ F:	fs/affs/
+ 
+ AFS FILESYSTEM
+@@ -593,7 +593,7 @@ L:	linux-afs@lists.infradead.org
+ S:	Supported
+ F:	fs/afs/
+ F:	include/trace/events/afs.h
+-F:	Documentation/filesystems/afs.txt
++F:	Documentation/filesystems/afs.rst
+ W:	https://www.infradead.org/~dhowells/kafs/
+ 
+ AGPGART DRIVER
+@@ -3063,7 +3063,7 @@ M:	Luis de Bethencourt <luisbg@kernel.org>
+ M:	Salah Triki <salah.triki@gmail.com>
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/luisbg/linux-befs.git
+-F:	Documentation/filesystems/befs.txt
++F:	Documentation/filesystems/befs.rst
+ F:	fs/befs/
+ 
+ BFQ I/O SCHEDULER
+@@ -3077,7 +3077,7 @@ F:	Documentation/block/bfq-iosched.rst
+ BFS FILE SYSTEM
+ M:	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>
+ S:	Maintained
+-F:	Documentation/filesystems/bfs.txt
++F:	Documentation/filesystems/bfs.rst
+ F:	fs/bfs/
+ F:	include/uapi/linux/bfs_fs.h
+ 
+@@ -3610,7 +3610,7 @@ W:	http://btrfs.wiki.kernel.org/
+ Q:	http://patchwork.kernel.org/project/linux-btrfs/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mason/linux-btrfs.git
+ S:	Maintained
+-F:	Documentation/filesystems/btrfs.txt
++F:	Documentation/filesystems/btrfs.rst
+ F:	fs/btrfs/
+ F:	include/linux/btrfs*
+ F:	include/uapi/linux/btrfs*
+@@ -3906,7 +3906,7 @@ W:	http://ceph.com/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/sage/ceph-client.git
+ T:	git git://github.com/ceph/ceph-client.git
+ S:	Supported
+-F:	Documentation/filesystems/ceph.txt
++F:	Documentation/filesystems/ceph.rst
+ F:	fs/ceph/
+ 
+ CERTIFICATE HANDLING:
+@@ -4423,7 +4423,7 @@ F:	include/linux/cpuidle.h
+ CRAMFS FILESYSTEM
+ M:	Nicolas Pitre <nico@fluxnic.net>
+ S:	Maintained
+-F:	Documentation/filesystems/cramfs.txt
++F:	Documentation/filesystems/cramfs.rst
+ F:	fs/cramfs/
+ 
+ CREATIVE SB0540
+@@ -5938,7 +5938,7 @@ W:	http://ecryptfs.org
+ W:	https://launchpad.net/ecryptfs
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tyhicks/ecryptfs.git
+ S:	Supported
+-F:	Documentation/filesystems/ecryptfs.txt
++F:	Documentation/filesystems/ecryptfs.rst
+ F:	fs/ecryptfs/
+ 
+ EDAC-AMD64
+@@ -6254,7 +6254,7 @@ M:	Chao Yu <yuchao0@huawei.com>
+ L:	linux-erofs@lists.ozlabs.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
+-F:	Documentation/filesystems/erofs.txt
++F:	Documentation/filesystems/erofs.rst
+ F:	fs/erofs/
+ F:	include/trace/events/erofs.h
+ 
+@@ -6315,7 +6315,7 @@ EXT2 FILE SYSTEM
+ M:	Jan Kara <jack@suse.com>
+ L:	linux-ext4@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/filesystems/ext2.txt
++F:	Documentation/filesystems/ext2.rst
+ F:	fs/ext2/
+ F:	include/linux/ext2*
+ 
+@@ -6389,7 +6389,7 @@ L:	linux-f2fs-devel@lists.sourceforge.net
+ W:	https://f2fs.wiki.kernel.org/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git
+ S:	Maintained
+-F:	Documentation/filesystems/f2fs.txt
++F:	Documentation/filesystems/f2fs.rst
+ F:	Documentation/ABI/testing/sysfs-fs-f2fs
+ F:	fs/f2fs/
+ F:	include/linux/f2fs_fs.h
+@@ -7431,13 +7431,13 @@ F:	drivers/infiniband/hw/hfi1
+ HFS FILESYSTEM
+ L:	linux-fsdevel@vger.kernel.org
+ S:	Orphan
+-F:	Documentation/filesystems/hfs.txt
++F:	Documentation/filesystems/hfs.rst
+ F:	fs/hfs/
+ 
+ HFSPLUS FILESYSTEM
+ L:	linux-fsdevel@vger.kernel.org
+ S:	Orphan
+-F:	Documentation/filesystems/hfsplus.txt
++F:	Documentation/filesystems/hfsplus.rst
+ F:	fs/hfsplus/
+ 
+ HGA FRAMEBUFFER DRIVER
+@@ -8308,7 +8308,7 @@ M:	Jan Kara <jack@suse.cz>
+ R:	Amir Goldstein <amir73il@gmail.com>
+ L:	linux-fsdevel@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/filesystems/inotify.txt
++F:	Documentation/filesystems/inotify.rst
+ F:	fs/notify/inotify/
+ F:	include/linux/inotify.h
+ F:	include/uapi/linux/inotify.h
+@@ -11791,7 +11791,7 @@ W:	https://nilfs.sourceforge.io/
+ W:	https://nilfs.osdn.jp/
+ T:	git git://github.com/konis/nilfs2.git
+ S:	Supported
+-F:	Documentation/filesystems/nilfs2.txt
++F:	Documentation/filesystems/nilfs2.rst
+ F:	fs/nilfs2/
+ F:	include/trace/events/nilfs2.h
+ F:	include/uapi/linux/nilfs2_api.h
+@@ -11900,7 +11900,7 @@ L:	linux-ntfs-dev@lists.sourceforge.net
+ W:	http://www.tuxera.com/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/aia21/ntfs.git
+ S:	Supported
+-F:	Documentation/filesystems/ntfs.txt
++F:	Documentation/filesystems/ntfs.rst
+ F:	fs/ntfs/
+ 
+ NUBUS SUBSYSTEM
+@@ -12246,7 +12246,7 @@ OMFS FILESYSTEM
+ M:	Bob Copeland <me@bobcopeland.com>
+ L:	linux-karma-devel@lists.sourceforge.net
+ S:	Maintained
+-F:	Documentation/filesystems/omfs.txt
++F:	Documentation/filesystems/omfs.rst
+ F:	fs/omfs/
+ 
+ OMNIKEY CARDMAN 4000 DRIVER
+@@ -12495,8 +12495,8 @@ M:	Joseph Qi <joseph.qi@linux.alibaba.com>
+ L:	ocfs2-devel@oss.oracle.com (moderated for non-subscribers)
+ W:	http://ocfs2.wiki.kernel.org
+ S:	Supported
+-F:	Documentation/filesystems/ocfs2.txt
+-F:	Documentation/filesystems/dlmfs.txt
++F:	Documentation/filesystems/ocfs2.rst
++F:	Documentation/filesystems/dlmfs.rst
+ F:	fs/ocfs2/
+ 
+ ORANGEFS FILESYSTEM
+@@ -12506,7 +12506,7 @@ L:	devel@lists.orangefs.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hubcap/linux.git
+ S:	Supported
+ F:	fs/orangefs/
+-F:	Documentation/filesystems/orangefs.txt
++F:	Documentation/filesystems/orangefs.rst
+ 
+ ORINOCO DRIVER
+ L:	linux-wireless@vger.kernel.org
+@@ -13469,7 +13469,7 @@ S:	Maintained
+ F:	fs/proc/
+ F:	include/linux/proc_fs.h
+ F:	tools/testing/selftests/proc/
+-F:	Documentation/filesystems/proc.txt
++F:	Documentation/filesystems/proc.rst
+ 
+ PROC SYSCTL
+ M:	Luis Chamberlain <mcgrof@kernel.org>
+@@ -15738,7 +15738,7 @@ L:	squashfs-devel@lists.sourceforge.net (subscribers-only)
+ W:	http://squashfs.org.uk
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pkl/squashfs-next.git
+ S:	Maintained
+-F:	Documentation/filesystems/squashfs.txt
++F:	Documentation/filesystems/squashfs.rst
+ F:	fs/squashfs/
+ 
+ SRM (Alpha) environment access
+@@ -16181,7 +16181,7 @@ F:	drivers/platform/x86/system76_acpi.c
+ SYSV FILESYSTEM
+ M:	Christoph Hellwig <hch@infradead.org>
+ S:	Maintained
+-F:	Documentation/filesystems/sysv-fs.txt
++F:	Documentation/filesystems/sysv-fs.rst
+ F:	fs/sysv/
+ F:	include/linux/sysv_fs.h
+ 
+@@ -17046,7 +17046,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git next
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git fixes
+ W:	http://www.linux-mtd.infradead.org/doc/ubifs.html
+ S:	Supported
+-F:	Documentation/filesystems/ubifs.txt
++F:	Documentation/filesystems/ubifs.rst
+ F:	fs/ubifs/
+ 
+ UCLINUX (M68KNOMMU AND COLDFIRE)
+@@ -17065,7 +17065,7 @@ F:	arch/m68k/include/asm/*_no.*
+ UDF FILESYSTEM
+ M:	Jan Kara <jack@suse.com>
+ S:	Maintained
+-F:	Documentation/filesystems/udf.txt
++F:	Documentation/filesystems/udf.rst
+ F:	fs/udf/
+ 
+ UDRAW TABLET
+@@ -18504,7 +18504,7 @@ L:	linux-fsdevel@vger.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/zonefs.git
+ S:	Maintained
+ F:	fs/zonefs/
+-F:	Documentation/filesystems/zonefs.txt
++F:	Documentation/filesystems/zonefs.rst
+ 
+ ZPOOL COMPRESSED PAGE STORAGE API
+ M:	Dan Streetman <ddstreet@ieee.org>
 
-> ---
-> fix the commit message
-> ---
->  arch/arm/boot/dts/exynos5410.dtsi | 8 ++++----
->  arch/arm/boot/dts/exynos5420.dtsi | 8 ++++----
->  arch/arm/boot/dts/exynos54xx.dtsi | 4 ++--
->  3 files changed, 10 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-> index 2eab80bf5f3a..19845dcd528f 100644
-> --- a/arch/arm/boot/dts/exynos5410.dtsi
-> +++ b/arch/arm/boot/dts/exynos5410.dtsi
-> @@ -396,8 +396,8 @@ &trng {
->  };
->
->  &usbdrd3_0 {
-> -       clocks = <&clock CLK_USBD300>;
-> -       clock-names = "usbdrd30";
-> +       clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
-> +       clock-names = "usbdrd30", "usbdrd30_susp_clk";
->  };
->
->  &usbdrd_phy0 {
-> @@ -407,8 +407,8 @@ &usbdrd_phy0 {
->  };
->
->  &usbdrd3_1 {
-> -       clocks = <&clock CLK_USBD301>;
-> -       clock-names = "usbdrd30";
-> +       clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
-> +       clock-names = "usbdrd30", "usbdrd30_susp_clk";
->  };
->
->  &usbdrd_dwc3_1 {
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index b672080e7469..bd505256a223 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -1372,8 +1372,8 @@ &trng {
->  };
->
->  &usbdrd3_0 {
-> -       clocks = <&clock CLK_USBD300>;
-> -       clock-names = "usbdrd30";
-> +       clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
-> +       clock-names = "usbdrd30", "usbdrd30_susp_clk";
->  };
->
->  &usbdrd_phy0 {
-> @@ -1383,8 +1383,8 @@ &usbdrd_phy0 {
->  };
->
->  &usbdrd3_1 {
-> -       clocks = <&clock CLK_USBD301>;
-> -       clock-names = "usbdrd30";
-> +       clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
-> +       clock-names = "usbdrd30", "usbdrd30_susp_clk";
->  };
->
->  &usbdrd_dwc3_1 {
-> diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-> index 8aa5117e58ce..0aac6255de5d 100644
-> --- a/arch/arm/boot/dts/exynos54xx.dtsi
-> +++ b/arch/arm/boot/dts/exynos54xx.dtsi
-> @@ -143,7 +143,7 @@ hsi2c_7: i2c@12cd0000 {
->                 };
->
->                 usbdrd3_0: usb3-0 {
-> -                       compatible = "samsung,exynos5250-dwusb3";
-> +                       compatible = "samsung,exynos5420-dwusb3";
->                         #address-cells = <1>;
->                         #size-cells = <1>;
->                         ranges;
-> @@ -165,7 +165,7 @@ usbdrd_phy0: phy@12100000 {
->                 };
->
->                 usbdrd3_1: usb3-1 {
-> -                       compatible = "samsung,exynos5250-dwusb3";
-> +                       compatible = "samsung,exynos5420-dwusb3";
->                         #address-cells = <1>;
->                         #size-cells = <1>;
->                         ranges;
-> --
-> 2.25.1
->
+base-commit: 7d3d3254adaa61cba896f71497f56901deb618e5
+-- 
+2.17.1
+
