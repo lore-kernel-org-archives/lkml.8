@@ -2,74 +2,92 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7B0C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F39C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E369D206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6A82071B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584236759;
+	bh=kBHY2jnr4Ao5Mt4blUlY4YWqh4BYxoTo0sBXs/O8DHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c6nZiEI+hTjVqENUmyuxVgrkukpWrzQCBVB3UYPq/6UYtZCAh6Hw1DayAIX3jVJNN
+	 RB75fHTgiQhfosA+Sg9rSUI1Hmiui2LH2AcEXj5eJ05taSCJAItG3WFI00T7gT+K5t
+	 JTk+D+GqjxPwSXpKI0ey0oVkxmr7MD6mKwJKPS7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCOBpf (ORCPT
+        id S1727159AbgCOBp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:45:35 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48069 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgCOBpe (ORCPT
+        Sat, 14 Mar 2020 21:45:58 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42268 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbgCOBp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:45:34 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jDEZQ-0002vd-NZ; Sat, 14 Mar 2020 22:43:48 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jDEZP-0005Xp-Oz; Sat, 14 Mar 2020 22:43:47 +0100
-Date:   Sat, 14 Mar 2020 22:43:47 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: meson: Fix confusing indentation
-Message-ID: <20200314214347.dun6ith5zamaa3m6@pengutronix.de>
-References: <20200314113524.23031-1-krzk@kernel.org>
+        Sat, 14 Mar 2020 21:45:57 -0400
+Received: by mail-ed1-f65.google.com with SMTP id b21so6952550edy.9;
+        Sat, 14 Mar 2020 18:45:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oJNL3gJVarSfgnj/xZ8e1v4N3wwQZ3+G6UH5cn1DZKY=;
+        b=epp1F7RQF8dyE+jDoYIGqnJXXh3ngzWRGV7uzTbzk3TBCNgfaQaE8d4dP2ZLmY0DJ+
+         CqSokF0zE3/F9p9fRxEWpIMiAXrS/nCmyNHzSCTYQLcrYNzd7x5mfl90UwohECYXsfT/
+         T+cOD8uSccH4CUcKAp+o4BDtUl/fPJzpibrNPizUCc5kLAg8jOxbcszNVGkg7yL50sML
+         XWHS5I3LiyZZUDt2w7jvlfh5d8vZCDHfsE5tm1KoQYVXFSa5nJ92Prk7Xj1vWsCcdx5q
+         nTHX8yaD4nATlMCEq7WHQ5vQOa6lx5mcUGaDqjcV7+3e1HCe0KiC3s/YiNqLKt0rMpED
+         SxZw==
+X-Gm-Message-State: ANhLgQ0YjwXcGyf10wNoie90C2n2odVuDtz0YW+5EN9MCmd+CtcLW+Xg
+        AEAvenBETF7zE1U0DuWyu0acfLLf
+X-Google-Smtp-Source: ADFU+vsKOOL2UHib0/pNgwvknqu0ygBfBLObd+RRWf136IE+uExXy8WOyTcRRaS8oCCPzf515dqUtg==
+X-Received: by 2002:a17:906:9405:: with SMTP id q5mr16440276ejx.317.1584211552602;
+        Sat, 14 Mar 2020 11:45:52 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id v17sm350384edb.27.2020.03.14.11.45.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 14 Mar 2020 11:45:51 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 19:45:49 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/3] power: charger: max14577: Add proper dt-compatible
+ strings
+Message-ID: <20200314184549.GA20063@kozik-lap>
+References: <20200220145127.21273-1-m.szyprowski@samsung.com>
+ <CGME20200220145135eucas1p1ba181cef65c7a4f91a254ee35e022f08@eucas1p1.samsung.com>
+ <20200220145127.21273-3-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200314113524.23031-1-krzk@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200220145127.21273-3-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 12:35:24PM +0100, Krzysztof Kozlowski wrote:
-> Fix indentation of return block.  Smatch warning:
->     drivers/pwm/pwm-meson.c:139 meson_pwm_request() warn: inconsistent indenting
+On Thu, Feb 20, 2020 at 03:51:27PM +0100, Marek Szyprowski wrote:
+> Add device tree compatible strings and create proper modalias structures
+> to let this driver load automatically if compiled as module, because
+> max14577 MFD driver creates MFD cells with such compatible strings.
 > 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/power/supply/max14577_charger.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-This exists since commit 211ed630753d ("pwm: Add support for Meson PWM
-Controller") in 2016. Added Neil to Cc:.
+The approach is still being discussed (in patch #1) so this should be
+applied if patch #1 is also accepted. In such case:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-Thanks
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Best regards,
+Krzysztof
