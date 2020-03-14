@@ -2,132 +2,161 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF76C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FAEC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA4720578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RqqPZTQV"
+	by mail.kernel.org (Postfix) with ESMTP id 3B35820578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:36:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584243404;
+	bh=1iHyfexTZbT7INmo/oWXTm5fz6yrFI/Hp5Sgebw2ECE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WbQaRxEMSpNhBaaLxVveL/MkUsMad7yzeaVJC7AXhJegb2KmDA9Mibu3KHeklv9kx
+	 0sbi7niorz4wJHpTqLZ1t9F+/mHQTg3RbuxI0JbhCwC8AKkflG3vGs9OcxBKnb+oeA
+	 YqVSaplXLHVF0Jexm/hLEhMKr3PCvvXjl5fbFaEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgCODfV (ORCPT
+        id S1726506AbgCODgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:35:21 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39805 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726506AbgCODfV (ORCPT
+        Sat, 14 Mar 2020 23:36:43 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35863 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbgCODgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:35:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584243320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0LyD0PJgIGGLoQzoojfk9tWf5U8ULkM9R+XCQsoyJqs=;
-        b=RqqPZTQVjg390cDJb3QMUqUizuBobFPD2UFO9LMrPVFF+O9XBo5/DzKF5sP5hHK5uXZrPP
-        KX/ErysS+fmSAIFCCQG1Xn9NmKwdtk7kMJEQMyunWPlU6d7C7IHg2hUzTSdfmIjjEPmHTp
-        QhvUx45rgloTX9Z/IDH2BZCJwAjwTWk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-442-FmR8M-COMgqboDJOSxCuzQ-1; Sat, 14 Mar 2020 07:31:31 -0400
-X-MC-Unique: FmR8M-COMgqboDJOSxCuzQ-1
-Received: by mail-wr1-f70.google.com with SMTP id u12so3375773wrw.10
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 04:31:31 -0700 (PDT)
+        Sat, 14 Mar 2020 23:36:42 -0400
+Received: by mail-ed1-f67.google.com with SMTP id b18so12929555edu.3;
+        Sat, 14 Mar 2020 20:36:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0LyD0PJgIGGLoQzoojfk9tWf5U8ULkM9R+XCQsoyJqs=;
-        b=RblEegJmrElqLqiH5HY92oJcswvIWXCr4BK8Nxn7btUjoqMZ2xn0NENHvHkQtsZplA
-         CS5IeFMhT/BOTbePCl3rZSt5BhBdFirCifiNHUjY7bvq0hnOeqbd+GqJr+Hgbnc8RUza
-         3KftLesmKWmajitxFh6jbSzMt1NU2xmDpZjYudBR1h7D2KwEPi31UnnK0gwQnk7P//jY
-         rcS+s+nZG258nLs22O/SdrQYDPtBjGnBJpLTdx4OoeAili0LrrRjGx3D8qXstTdeZlRC
-         yny3HkeCu0U0ogw+RdYtyuz9EFivA23Pde+09M82b3GAPXCWhgqsxitLW4DknPwuwkrP
-         bzrg==
-X-Gm-Message-State: ANhLgQ1HnsaP2CHpO5yaSgtX7cicD7gkMZE6fB6j7ETYTk5Tebl3WR3m
-        0xxEv10j5P2gMRzJ1iHddWL0iXLnRwkIRQc4096O5uN7py6VmfvAQrCVP+U9VJSUC2bDrIhVko4
-        6V+mW6+jks57qBBC2WGH/R6Ar
-X-Received: by 2002:a1c:23d5:: with SMTP id j204mr16789896wmj.59.1584185490037;
-        Sat, 14 Mar 2020 04:31:30 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vs7P00MYsmC+SvAzqAncBQeg6TZFVmmUDSznYiD+XlMbi+A+TDwdXXwziZQe0yzu+wo3xeiRA==
-X-Received: by 2002:a1c:23d5:: with SMTP id j204mr16789874wmj.59.1584185489799;
-        Sat, 14 Mar 2020 04:31:29 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:7de8:5d90:2370:d1ac? ([2001:b07:6468:f312:7de8:5d90:2370:d1ac])
-        by smtp.gmail.com with ESMTPSA id y3sm47966512wrm.46.2020.03.14.04.31.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Mar 2020 04:31:29 -0700 (PDT)
-Subject: Re: [PATCH] KVM: X86: avoid meaningless kvm_apicv_activated() check
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-References: <1582597279-32297-1-git-send-email-linmiaohe@huawei.com>
- <87d0a2n8g9.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <7c0aedea-36dc-bd84-b7ba-1aa6d1cceb11@redhat.com>
-Date:   Sat, 14 Mar 2020 12:31:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HXvNDpxcelYwn8PoDas8bnx/K7bC0ycG2928PB68YGs=;
+        b=YKAAoy3guDILzf55rJrqHmS33DFr7gLhgpzlqAL2ccq2l5WsrnIE9qn161aqpjK7P4
+         j8oC9WlEOBkqHTQoL8/VvNP7LItZX00rcSqGiYtjFKRJdAa/TbjhzCDlI9iVnSzpOQ6S
+         6mbDdaTIwVEdoH9HX/IFMXbMeT0nYyAtYFbMpAvoJgCTkE3zf/jAyY2Jav/pARQfgb8G
+         KqE6eokb2XaJtLg45bt1aJAVK/nRPp50FygJ/5tGOu0kSKdKVVu70zimmVwXlhNQDLne
+         keKPDpQFl6J89nYScWw41RjBOcbNhN+fxDVWsifa1/gk2oUkPwRKtEMH/D3+nXBwdP0I
+         YV7g==
+X-Gm-Message-State: ANhLgQ14vXV6zipNzFSjRtlenpI2Gz32OQ5cniuzqAyTDkbanPQr6fap
+        uJBau2miUm6TxStwJXjRprkoXOQxI3o=
+X-Google-Smtp-Source: ADFU+vv8nT7z/vEu1bvfu6+AMeellIORI/K4LaHKfZcEsgQyhBKLzYnFTNlP0g88C9JmPdb6eGvarg==
+X-Received: by 2002:a17:907:429c:: with SMTP id ny20mr14725961ejb.278.1584183783358;
+        Sat, 14 Mar 2020 04:03:03 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id 94sm2657013eda.7.2020.03.14.04.03.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 14 Mar 2020 04:03:02 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 12:02:58 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jiri Slaby <jirislaby@gmail.com>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        virtualization@lists.linux-foundation.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 1/9] iomap: Constify ioreadX() iomem argument
+ (as in generic implementation)
+Message-ID: <20200314110258.GA16135@kozik-lap>
+References: <20200219175007.13627-1-krzk@kernel.org>
+ <20200219175007.13627-2-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87d0a2n8g9.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200219175007.13627-2-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/02/20 13:43, Vitaly Kuznetsov wrote:
-> If I'm not mistaken, the logic this function was supposed to implement
-> is: change the requested bit to the requested state and, if
-> kvm_apicv_activated() changed (we set the first bit or cleared the
-> last), proceed with KVM_REQ_APICV_UPDATE. What if we re-write it like
+On Wed, Feb 19, 2020 at 06:49:59PM +0100, Krzysztof Kozlowski wrote:
+> The ioreadX() and ioreadX_rep() helpers have inconsistent interface.  On
+> some architectures void *__iomem address argument is a pointer to const,
+> on some not.
 > 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 2103101eca78..b97b8ff4a789 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8027,19 +8027,19 @@ EXPORT_SYMBOL_GPL(kvm_vcpu_update_apicv);
->   */
->  void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
->  {
-> +       bool apicv_was_activated = kvm_apicv_activated(kvm);
-> +
->         if (!kvm_x86_ops->check_apicv_inhibit_reasons ||
->             !kvm_x86_ops->check_apicv_inhibit_reasons(bit))
->                 return;
->  
-> -       if (activate) {
-> -               if (!test_and_clear_bit(bit, &kvm->arch.apicv_inhibit_reasons) ||
-> -                   !kvm_apicv_activated(kvm))
-> -                       return;
-> -       } else {
-> -               if (test_and_set_bit(bit, &kvm->arch.apicv_inhibit_reasons) ||
-> -                   kvm_apicv_activated(kvm))
-> -                       return;
-> -       }
-> +       if (activate)
-> +               clear_bit(bit, &kvm->arch.apicv_inhibit_reasons);
-> +       else
-> +               set_bit(bit, &kvm->arch.apicv_inhibit_reasons);
-> +
-> +       if (kvm_apicv_activated(kvm) == apicv_was_activated)
-> +               return;
+> Implementations of ioreadX() do not modify the memory under the address
+> so they can be converted to a "const" version for const-safety and
+> consistency among architectures.
+> 
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Yes, I got to the same conclusion before seeing you message.  Another
-possibility is to use cmpxchg, which I slightly prefer because if there
-are multiple concurrent updates it has some possibilities of avoiding
-the atomic operation and consequent cacheline bouncing.  I've sent a patch.
+Hi Arnd,
 
-Paolo
+This patch touches multipel file systems so no one is brave enough to
+pick it up. However you are mentioned as maintainer of generic asm
+headers so maybe you could apply it to arm-soc?
 
+Best regards,
+Krzysztof
+
+
+> 
+> ---
+> 
+> Changes since v1:
+> 1. Constify also ioreadX_rep() and mmio_insX(),
+> 2. Squash lib+alpha+powerpc+parisc+sh into one patch for bisectability,
+> 3. Add Geert's review.
+> 4. Add Arnd's review.
+> ---
+>  arch/alpha/include/asm/core_apecs.h   |  6 +--
+>  arch/alpha/include/asm/core_cia.h     |  6 +--
+>  arch/alpha/include/asm/core_lca.h     |  6 +--
+>  arch/alpha/include/asm/core_marvel.h  |  4 +-
+>  arch/alpha/include/asm/core_mcpcia.h  |  6 +--
+>  arch/alpha/include/asm/core_t2.h      |  2 +-
+>  arch/alpha/include/asm/io.h           | 12 ++---
+>  arch/alpha/include/asm/io_trivial.h   | 16 +++---
+>  arch/alpha/include/asm/jensen.h       |  2 +-
+>  arch/alpha/include/asm/machvec.h      |  6 +--
+>  arch/alpha/kernel/core_marvel.c       |  2 +-
+>  arch/alpha/kernel/io.c                | 12 ++---
+>  arch/parisc/include/asm/io.h          |  4 +-
+>  arch/parisc/lib/iomap.c               | 72 +++++++++++++--------------
+>  arch/powerpc/kernel/iomap.c           | 28 +++++------
+>  arch/sh/kernel/iomap.c                | 22 ++++----
+>  include/asm-generic/iomap.h           | 28 +++++------
+>  include/linux/io-64-nonatomic-hi-lo.h |  4 +-
+>  include/linux/io-64-nonatomic-lo-hi.h |  4 +-
+>  lib/iomap.c                           | 30 +++++------
+>  20 files changed, 136 insertions(+), 136 deletions(-)
+> 
