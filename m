@@ -2,106 +2,73 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DATE_IN_PAST_12_24,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1983EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950FFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2BEE20739
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:20:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wOCV1qop"
+	by mail.kernel.org (Postfix) with ESMTP id 6C19D20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgCOEUv (ORCPT
+        id S1726769AbgCOEVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 00:20:51 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:28898 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgCOEUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 00:20:50 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48fYyz3cWFz9txPk;
-        Sat, 14 Mar 2020 08:26:35 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=wOCV1qop; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ja4ZH3fYw32p; Sat, 14 Mar 2020 08:26:35 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48fYyz2N73z9txPj;
-        Sat, 14 Mar 2020 08:26:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584170795; bh=GCMtTnndF9n61PXcYeOSu2bKjOaCnpQzS0ox12E/r/s=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=wOCV1qopX53qf7SOj4LCfFwkp5YuYtI2n7HuwNC8/rCUYAX1dqXIxKP+7LaXftY/K
-         66Aa4civy8g9ewjxdt/6y8Hzf1w5Nuk6aBIWaSehN3JmY7AwDQLsV6U/ZsHTUmyvHz
-         8eMcwi/v74+2eHKlIRJb27L9pLrTCRS9KlpN13FM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F5698B772;
-        Sat, 14 Mar 2020 08:26:36 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 1giGPQDHWGID; Sat, 14 Mar 2020 08:26:36 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8D4FC8B768;
-        Sat, 14 Mar 2020 08:26:34 +0100 (CET)
-Subject: Re: [PATCH v3] powerpc/fsl-85xx: fix compile error
-To:     WANG Wenhu <wenhu.wang@vivo.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com, trivial@kernel.org,
-        stable <stable@vger.kernel.org>
-References: <20200314051035.64552-1-wenhu.wang@vivo.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <bd9799ae-d306-a478-25ff-ec3c7f083cfe@c-s.fr>
-Date:   Sat, 14 Mar 2020 08:26:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 15 Mar 2020 00:21:14 -0400
+Received: from mail-qk1-f198.google.com ([209.85.222.198]:39432 "EHLO
+        mail-qk1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgCOEVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 00:21:14 -0400
+Received: by mail-qk1-f198.google.com with SMTP id a21so13518352qkg.6
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 21:21:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=H5UL55Jt0P8+lhekSBof6CJMLz8v0e26Cnd2rcAgXuU=;
+        b=EoIXp6VqlhKhTHUjA0WJwtcTeSfQ+tL3RBvIyqlXFGMEpt6yHXHvGVEpHoizUXn9Ti
+         N1gtkyvGnt6qOv8hc9uUt7CMoi7/E4hLMQQyuYfmN2ufT1r8CSBTpNa0CQGN/8AACU5s
+         7uczGc1UwnOli2FGqcBame6DWgdtwzbWORKf8suSTJix1xTUgRHeJQrgNKRoPBQMzl5t
+         B8U8gpadCH49unzzlIVaQr9vLbku/eZ98VSU/znWpb9XCUKi+vSd2dAqCO5vr7zpQlj6
+         HwF97Y2Wzk0gdA9zMOlPUsSjAKbHhcsiLHGrdIh1UcWMKZXAYB37XLI9kGUljY4l9CJK
+         AlNg==
+X-Gm-Message-State: ANhLgQ22qmGUC2/mrYHdjnCMHXCjDjBmk4V2XmwPVxKEQFaBN3y3pdjm
+        nQeuFPQSpGgDNhAhPNYuB95TKjkF1QHGIdHlIuQV6K4FAuY0
+X-Google-Smtp-Source: ADFU+vuMuZRQB4plQWTVVNLqwBcbrFI1SQwYA3uqfRjAyzEhpvXcwloMBXgVy/yGvQ7oZDstiPZt9V3wkVKoQhD/DqzkLaxTcBBW
 MIME-Version: 1.0
-In-Reply-To: <20200314051035.64552-1-wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:266:: with SMTP id x6mr15874404jaq.46.1584159902975;
+ Fri, 13 Mar 2020 21:25:02 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 21:25:02 -0700
+In-Reply-To: <CAM_iQpUo0L0+J7aGTvUsBWZ=A8cGxyN7oJVjqyent+9OCbJ_Jg@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000048ca0c05a0c8f8a8@google.com>
+Subject: Re: WARNING: ODEBUG bug in tcf_queue_work
+From:   syzbot <syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-Le 14/03/2020 à 06:10, WANG Wenhu a écrit :
-> Include "linux/of_address.h" to fix the compile error for
-> mpc85xx_l2ctlr_of_probe() when compiling fsl_85xx_cache_sram.c.
-> 
->    CC      arch/powerpc/sysdev/fsl_85xx_l2ctlr.o
-> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c: In function ‘mpc85xx_l2ctlr_of_probe’:
-> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:11: error: implicit declaration of function ‘of_iomap’; did you mean ‘pci_iomap’? [-Werror=implicit-function-declaration]
->    l2ctlr = of_iomap(dev->dev.of_node, 0);
->             ^~~~~~~~
->             pci_iomap
-> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:9: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
->    l2ctlr = of_iomap(dev->dev.of_node, 0);
->           ^
-> cc1: all warnings being treated as errors
-> scripts/Makefile.build:267: recipe for target 'arch/powerpc/sysdev/fsl_85xx_l2ctlr.o' failed
-> make[2]: *** [arch/powerpc/sysdev/fsl_85xx_l2ctlr.o] Error 1
-> 
-> Fixes: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
+Reported-and-tested-by: syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Tested on:
 
+commit:         29311b74 cls_route: remove the old filter from hashtable
+git tree:       https://github.com/congwang/linux.git tcindex
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8e8e51c36c1e1ca7
+dashboard link: https://syzkaller.appspot.com/bug?extid=9c2df9fd5e9445b74e01
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Note: testing is done by a robot and is best-effort only.
