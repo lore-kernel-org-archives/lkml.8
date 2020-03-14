@@ -2,87 +2,108 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05BFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324AEC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790BF206FA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 031542074C
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:07:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ezv+wSzf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgCNBGL (ORCPT
+        id S1727742AbgCNBHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 21:06:11 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51266 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgCNBGL (ORCPT
+        Fri, 13 Mar 2020 21:07:49 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45215 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgCNBHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 21:06:11 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCvFf-00B8aM-T5; Sat, 14 Mar 2020 01:06:08 +0000
-Date:   Sat, 14 Mar 2020 01:06:07 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCH v4 15/69] new step_into() flag: WALK_NOFOLLOW
-Message-ID: <20200314010607.GR23230@ZenIV.linux.org.uk>
-References: <20200313235303.GP23230@ZenIV.linux.org.uk>
- <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
- <20200313235357.2646756-15-viro@ZenIV.linux.org.uk>
- <CAHk-=widhgJ=hB=dOcQMJzPL9mX+8TdbcAspBXs4FSdiLk2jMw@mail.gmail.com>
+        Fri, 13 Mar 2020 21:07:48 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b22so5115541pls.12;
+        Fri, 13 Mar 2020 18:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/Gvx9Hu5CHDL2kz8sy1w9qMMWhvLKzmdkZ+ff9kTBsQ=;
+        b=Ezv+wSzfrAvGngOM/7Wm0cRtUt0odJIu/ck5ZnVoh7jud5b59FUloYYH4++JfDpEUD
+         x81UqroT3ZzeWiHISneHzrjDtInpLm83HxBlWeKtS3D4Bqr460uq2L0KeEjBII9yVdtg
+         GcsxxXCJhGnUmOk8M8EW3xqoqRKxjLAe/n1TdLXQQdTHTyl9UX2Z27GFKOBOdlczAwlu
+         XNZ3OMAUkZbiHGenf4Ixt9h8B47cOs2zFR385gG5PczOW8XGR+5a+ogHFKXL+3GBGUBG
+         ETA3DwjNg1qQKWfujbKX+6NG6HVZzeJ5PGYwMRdQIX72rQhHw2QfQk6ZlKqjMAGAsdHw
+         OEqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/Gvx9Hu5CHDL2kz8sy1w9qMMWhvLKzmdkZ+ff9kTBsQ=;
+        b=Y+C/Yqd+FgzccT6u5tzG2fkAsmGa/BRTS1gQk4n0f0pPVPkMPh40xvkRrZDP22K7Ae
+         zhqtUhuhK0O0Dkbn4VBAlfYzRtx5mU0qmnPGA2iDuY/+Za2xxY63aEtsQpuXNp0YdLVf
+         IQwK+BK7Ey6/YrLKgP01ZK0CwXRBQ3NdDWoSkoTQbsNZqMFxuj7oVo6I06eCTe1ivylZ
+         Isw/6AkJAGOx4iJLkthNnf+xPDx5H6hQH+VYtPaf5QZfG3SK8Ua2sYf/xvKZ51DEVFAF
+         DIN9XDoY7e/QoU0qaxv2w7r80WHt/oqd5nU1Z/g3WA8umH/cB834NrgJZYCAHLriNsF3
+         EWRw==
+X-Gm-Message-State: ANhLgQ2b1Aq9hmBxafd3uCVjUgVWwpkQjPvK0wZyewjA12molt39ZQsv
+        5mqvQ4Q2xK/ROWQY4etV+NE=
+X-Google-Smtp-Source: ADFU+vvq3Mn/UD2TKx9aTpeVf4l/BqUeXD0u/9e6D89fXHsd+F0Es5aMNULarLNIPEobzu+nIHI7aA==
+X-Received: by 2002:a17:902:740b:: with SMTP id g11mr2364168pll.166.1584148067728;
+        Fri, 13 Mar 2020 18:07:47 -0700 (PDT)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id 127sm40494300pfb.130.2020.03.13.18.07.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 18:07:46 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 06:37:44 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
+Message-ID: <20200314010744.GA5494@afzalpc>
+References: <20200304203144.GA4323@alpha.franken.de>
+ <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
+ <20200313164751.GA30134@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=widhgJ=hB=dOcQMJzPL9mX+8TdbcAspBXs4FSdiLk2jMw@mail.gmail.com>
+In-Reply-To: <20200313164751.GA30134@roeck-us.net>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 05:32:32PM -0700, Linus Torvalds wrote:
-> I mentioned this last time (perhaps for a different sequence):
-> 
-> On Fri, Mar 13, 2020 at 4:54 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> >         if (likely(!d_is_symlink(path->dentry)) ||
-> > -          !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW)) {
-> > +          !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW) ||
-> > +          flags & WALK_NOFOLLOW) {
-> 
-> Yes, I know that bitwise operations have higher precedence than the
-> logical ones. And I know & (and &&) have higher precedence than | (and
-> ||).
-> 
-> But I have to _think_ about it every time I see code like this.
-> 
-> I'd really prefer to see
-> 
->    if ((a & BIT) || (b & ANOTHER_BIT))
-> 
-> over the "equivalent" and shorter
-> 
->    if (a & BIT || b & ANOTHER_BIT)
-> 
-> Please make it explicit. It wasn't before either, but it _could_ be.
+[ + Nathan ]
 
-Not a problem (actually, I'd done that several commits later when I was
-rewriting the expression anyway).  Folded the following into it now:
+Hi Guenter, 
 
-diff --git a/fs/namei.c b/fs/namei.c
-index e47b376cf442..79f06be7f5d4 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1839,8 +1839,8 @@ static inline int step_into(struct nameidata *nd, struct path *path,
- 			    int flags, struct inode *inode, unsigned seq)
- {
- 	if (likely(!d_is_symlink(path->dentry)) ||
--	   !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW) ||
--	   flags & WALK_NOFOLLOW) {
-+	   !((flags & WALK_FOLLOW) || (nd->flags & LOOKUP_FOLLOW)) ||
-+	   (flags & WALK_NOFOLLOW)) {
- 		/* not a symlink or should not follow */
- 		path_to_nameidata(path, nd);
- 		nd->inode = inode;
+On Fri, Mar 13, 2020 at 09:47:51AM -0700, Guenter Roeck wrote:
+
+> This patch causes all my mips qemu emulations to hang during boot. This affects
+> all mips, mips64, mipsel, and mipsel64 emulations.
+
+Can you please apply,
+
+https://lkml.kernel.org/r/20200311152751.GA5044@afzalpc,
+
+on top of this patch & see if it fixes the issue. Else please let me
+know the qemu command line you are using.
+
+Nathan reported a similar issue, above fix fixes that issue.
+
+Regards
+afzal
