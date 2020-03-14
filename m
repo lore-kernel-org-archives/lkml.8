@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5655C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1710C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B842076E
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC0C20771
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:32:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="M6RYQ184"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="XXPxuMyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbgCOBb6 (ORCPT
+        id S1727446AbgCOBcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:31:58 -0400
+        Sat, 14 Mar 2020 21:32:01 -0400
 Received: from mail-mw2nam10on2123.outbound.protection.outlook.com ([40.107.94.123]:18974
         "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726571AbgCOBb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:31:57 -0400
+        id S1726130AbgCOBb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:31:59 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cojJv3p/eR1ANc5gSYB1my+VEV/vInaL85afCoHVcqPA5HAncSFCBjeC3aQXu0A+iCiYgde1EcBCq+PXQ6w91lrHQ3v49Asd/vW5ZLPGoKXZ5ZfZmNgh4YeO9bDwtl1cXvsDCcL9Pp8l5M1h0AhywOr43GIlr2BUrgXFr91hUWcWaTLew19jzB+YPHIe9u3BalPl3oyK23cmjQshAP0+MsJJ/uLQKnykWOljdNZmteatGGrd11aoQ9yjsEhMzRyJ5+BYH5AMDuO5u9fJKJKV/+UDvmVHfcf4xzFDxBGfR87Q+P3CC5E+S2+1tQmENPe9Z48+A/ZjuGli+ypQ92DKig==
+ b=L2ptAX07Ear5eGKRKtMNdnTFJB8SvsJkAivw5Fpuil+4uKiYpJx4sZwFwxMbZdAR22mdJr9CvOf/AnQw78HznVLLlYt2oICT6MGSWfFiuOEn8BDE5epgfulMvJlcQPS3sAeEIhSYyQa63qbcQ4qDr7QFMByqdDBUJmeqE4mHwXeKNRyJpqJT7okXEeH2CoNpUrIjMoNfWJjrFU5Rwn8OPw7ovg7S5wClmkmYabWxW+NgsKRML+GsggiOzD7n5T7NRuQCVqvkkzm1Gao7C/b98fOo76+ZwfvfwpuWmoujNVg0LiQ96NahRlNn124igjR6dgkDRflKaNZUOWEpSQhZMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lnmV7RNIdWV2USjZcsgo2mBK+tzYMj8qzsEyTKRcY2I=;
- b=j6xmT8W3bv1Hem40NOedh33mhXuIzei45vy5DnhsA0dJ785Cu9Ldev8n+kD+Oa2xhJZ5eK22XPfFJbqKyH0/dfYbjjURyxZoGfsIGCgnTRHPFmij9Tb4bi6VDBKiKVzHUKeRgvntiGq41RhuxJdC7b2QnUkS9JOCM/l5Ok6C0lK3iN/Y+n7sNrohIfQrCcSD9QatiRCFbS/379EJBSaWBI+PBVOoZ46bbMW66r7SFkZkAlkjnVY9UAS9cQfZH12hosipJfyv+FOCfybsGt+FExPTVQEi/tbZWJWHnf14/6jjlP0C8aS+Y+c05O1MCWWuMMAJVn158E/Hke4DkFOZng==
+ bh=suUSYXNguT8xfC9uFnqAshmgUQ1E8dkQZqoj55BbqbY=;
+ b=IeL38fYSx3741nlj2+QmzQ8Mvc/OZdGdSasK6XFopSAG91ZkBzXBB+3O4vOKEao3rhZYXIvEu5UN00LKLU/0Ddz1EWDm7Myrlou5Qal3Iu046/CipoXdQX8afPm46BzV6ufeUDynY8/xfFKEzmSPwDHCVxLo3mT7AqPPUyH83n+5mq3T3sSeLA/eAIOKYk8TDOtrB/6OkzLimGjqXFpYwHaTkvpIbXDNOBD/KdEqwzxoOV3v4sCS0gxtHs4iFaUYsUHblrt6zx58s/ud47nIeJZCar4VL0/SEmVKziyp8yxbW1FIjqQw7UG0jPI8fJJQMT756eTaA+MBH8C212K6Ag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lnmV7RNIdWV2USjZcsgo2mBK+tzYMj8qzsEyTKRcY2I=;
- b=M6RYQ184Qs+iE8y4mil0q+mpFM6T8wby56frsdwITcFLPPAMZgLZrdXOTkknyeUAjVZBEh55FWrmUf7p8SpkpofFc2531c+53P5xEUzv7htxGVSHS9kBE4ObVfahegVpojRvCrb6Vaw3EpRmuZLfXnrXLeASUAhRPrQ+pnGKs+s=
+ bh=suUSYXNguT8xfC9uFnqAshmgUQ1E8dkQZqoj55BbqbY=;
+ b=XXPxuMydiQ1jtACcs3hJGRgXQRcbdzFGrN8vYCh6bs3ZR2lGAoSxisjB9yxwY1xAzGg57Krf9hLGoQ2YXbOre3W1e97AfYyaumW8ay/aYCqYb6PBoarze2T6XkQf5RdwrFPP1EWQvVLb4Y0uo1WSHL94NRJlXm6P1yK3GLnIL4c=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=mikelley@microsoft.com; 
 Received: from SN6PR2101MB0927.namprd21.prod.outlook.com (2603:10b6:805:a::18)
  by SN6PR2101MB1632.namprd21.prod.outlook.com (2603:10b6:805:53::25) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.4; Sat, 14 Mar
- 2020 15:36:08 +0000
+ 2020 15:36:11 +0000
 Received: from SN6PR2101MB0927.namprd21.prod.outlook.com
  ([fe80::a819:6437:1733:17b3]) by SN6PR2101MB0927.namprd21.prod.outlook.com
  ([fe80::a819:6437:1733:17b3%9]) with mapi id 15.20.2835.008; Sat, 14 Mar 2020
- 15:36:08 +0000
+ 15:36:11 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
         catalin.marinas@arm.com, mark.rutland@arm.com, maz@kernel.org,
@@ -59,9 +59,9 @@ To:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
         jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com
 Cc:     mikelley@microsoft.com, sunilmut@microsoft.com,
         boqun.feng@gmail.com
-Subject: [PATCH v6 05/10] arm64: hyperv: Add interrupt handlers for VMbus and stimer
-Date:   Sat, 14 Mar 2020 08:35:14 -0700
-Message-Id: <1584200119-18594-6-git-send-email-mikelley@microsoft.com>
+Subject: [PATCH v6 07/10] arm64: hyperv: Initialize hypervisor on boot
+Date:   Sat, 14 Mar 2020 08:35:16 -0700
+Message-Id: <1584200119-18594-8-git-send-email-mikelley@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
 References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
@@ -71,208 +71,237 @@ X-ClientProxiedBy: MWHPR22CA0047.namprd22.prod.outlook.com
  (2603:10b6:805:a::18)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mhkkerneltest.corp.microsoft.com (131.107.159.247) by MWHPR22CA0047.namprd22.prod.outlook.com (2603:10b6:300:69::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Sat, 14 Mar 2020 15:36:07 +0000
+Received: from mhkkerneltest.corp.microsoft.com (131.107.159.247) by MWHPR22CA0047.namprd22.prod.outlook.com (2603:10b6:300:69::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Sat, 14 Mar 2020 15:36:10 +0000
 X-Mailer: git-send-email 1.8.3.1
 X-Originating-IP: [131.107.159.247]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8c1db6e2-a6d5-483c-94f5-08d7c82d6a79
+X-MS-Office365-Filtering-Correlation-Id: c7614329-0c00-4f7e-d8f7-08d7c82d6c43
 X-MS-TrafficTypeDiagnostic: SN6PR2101MB1632:|SN6PR2101MB1632:|SN6PR2101MB1632:
 X-MS-Exchange-Transport-Forked: True
 X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <SN6PR2101MB1632D8FCD9721C8BF4C46D8FD7FB0@SN6PR2101MB1632.namprd21.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <SN6PR2101MB1632B8939A8363F2388CA171D7FB0@SN6PR2101MB1632.namprd21.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
 X-Forefront-PRVS: 034215E98F
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(199004)(10290500003)(478600001)(2906002)(6486002)(36756003)(8936002)(66946007)(26005)(86362001)(2616005)(16526019)(186003)(956004)(66556008)(6636002)(66476007)(4326008)(7416002)(316002)(81166006)(8676002)(81156014)(52116002)(7696005)(6666004)(5660300002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1632;H:SN6PR2101MB0927.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(199004)(10290500003)(478600001)(2906002)(6486002)(36756003)(8936002)(66946007)(26005)(86362001)(2616005)(16526019)(186003)(956004)(66556008)(6636002)(66476007)(4326008)(7416002)(316002)(81166006)(8676002)(81156014)(52116002)(7696005)(5660300002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1632;H:SN6PR2101MB0927.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
 Received-SPF: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aoFXnvcDiFaFyVwZQSQIlyuSQSTa7+7p7MlAp2HghkvnbIw7f6GV65YI7ohg8/VdZ7fK/ElMR8M6Xe2pbjzH1Drvo7YqNU3WYzBHHyAW9kGmcrZpk7BoDBBzH/no+BXoZ8yumxie3fgX8Q3bdauxqbNQVLIR9AWXpV6QShXnRwT8vJQreth7IuuMverjQa4WFs9DAWkpF+KWHfLjrQqUXiw3fXSiCeRlMaZA46zQ1HI8IsBBmnD2/5Ug8UhHdWC8OqDUtCu4j3oyEY+vao8evu45fRFSvZolk8rlnS8vUBsujD1LtTdcSqdy/ZUkiY6YaSDz0btlTflmD0n76KEHk06p2mXXRpdcM9tN9wFU0ebRhJ1mnFUtd555v1TZQp3Yw/AD+23CNE1oybljM4fpfHhI11b+HQRpGxcxqGT6EIPckJ6VNpzT/61hHRQRiVAtWQFmMFSw9J2a2ygnLDPqAOi1ZYJRrHp4Gl+vt9yc59m85WsWMvauLgrVij4QflzL
-X-MS-Exchange-AntiSpam-MessageData: wuB6xx4jInRHd1pTkyLDxLhdDoOnRuur4OBCFBdWwqYNV1sFN80XzXfzGR9ZRdTeLG/wCMjX0gH7E6iA6g41K2FA6uUGDZYnzEmTrg7+0w5LDM5Q4YOa54sD4ECA64TKuk1Hvh2RcU5jrLMD0hTqbg==
+X-Microsoft-Antispam-Message-Info: jbdKXhJ3UWH/afnwm+RuDQnOGfVla2r0/EpU9HO0P5PNqVVCEnJNxhXTliCkLFiCAfqUReDRMACoZW1xiKdCVsBVKxIYrHGo7A4m7uOC9E/mnTHkNQHkXwCdgT2qVHud3sVsmmMGw1e4nvRUstnf7FHCP21zKCWC/B7XqwaNfLfsu/oZyzf0b9WRrJ4EgRDLXKHAc5rcWszRzQ7POb7f8A/GuQs+GrhMtqbM7/E7tbAzXijs1xZ9/IiRnz2W7dzeKO1B1+HK23fCvSjLqNsDyrefSX9NbcrahKlDiqf4MKA701zQ7g0KWPa7JzPOUpYxp1nIiOtkF+Wr8aPbYHRmutJE9Q8Tj1d+MUbLsiHYjNKlmgKy1Vb3bYnKA/e+b2/MZIF30PfEFI2VQyFps7/T2rHV8sSv2E4KPvRJF8mOk059lUtgMhzQudMEK4yT40iLe+0xV2n3wlWAC1NJeRLrQ9r6PIGtlRpq89WpOcR8vXh7eYJLKc4erD/2/vW/+LNE
+X-MS-Exchange-AntiSpam-MessageData: DSyP+WTImJ+VSt1fR6LhWW1ftQpIZDibGieByerPDDu0NBvlJhbWU4FuBSfKNPxVTb6E/w5nwmDfFy10E5xAYgbPIsVCf3tCRbEQfzifpCNzCzEMMy3NERnfXp8MkDKgres2rZBaznMCYkhk16hpwg==
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c1db6e2-a6d5-483c-94f5-08d7c82d6a79
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2020 15:36:08.3569
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7614329-0c00-4f7e-d8f7-08d7c82d6c43
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2020 15:36:11.3202
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sOq98IYyJLYDe8gN18irsZ/Zo+wEk0U5INplR5ZqDEf8JS0oGVxmWPWM4zte9ujpt/rI5TY6mTL4+N9OyCwjuQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: JTxqta3oby9k29BG38HStTtX2q1Z1D9txN8c9QmabRJsR3W9fWUqfkLnFejERxuhOgoaBagV2kZKpkrrfu3EuA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1632
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ARM64-specific code to set up and handle the interrupts
-generated by Hyper-V for VMbus messages and for stimer expiration.
-
-This code is architecture dependent and is mostly driven by
-architecture independent code in the VMbus driver and the
-Hyper-V timer clocksource driver.
+Add ARM64-specific code to initialize the Hyper-V
+hypervisor when booting as a guest VM. Provide functions
+and data structures indicating hypervisor status that
+are needed by VMbus driver.
 
 This code is built only when CONFIG_HYPERV is enabled.
 
 Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 ---
- arch/arm64/hyperv/Makefile   |   2 +-
- arch/arm64/hyperv/mshyperv.c | 139 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 140 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/hyperv/mshyperv.c
+ arch/arm64/hyperv/hv_core.c | 156 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 156 insertions(+)
 
-diff --git a/arch/arm64/hyperv/Makefile b/arch/arm64/hyperv/Makefile
-index 1697d30..87c31c0 100644
---- a/arch/arm64/hyperv/Makefile
-+++ b/arch/arm64/hyperv/Makefile
-@@ -1,2 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-y		:= hv_core.o
-+obj-y		:= hv_core.o mshyperv.o
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-new file mode 100644
-index 0000000..ae6ece6
---- /dev/null
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -0,0 +1,139 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Core routines for interacting with Microsoft's Hyper-V hypervisor,
-+ * including setting up VMbus and STIMER interrupts, and handling
-+ * crashes and kexecs. These interactions are through a set of
-+ * static "handler" variables set by the architecture independent
-+ * VMbus and STIMER drivers.
-+ *
-+ * Copyright (C) 2019, Microsoft, Inc.
-+ *
-+ * Author : Michael Kelley <mikelley@microsoft.com>
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/export.h>
-+#include <linux/interrupt.h>
-+#include <linux/kexec.h>
+diff --git a/arch/arm64/hyperv/hv_core.c b/arch/arm64/hyperv/hv_core.c
+index 8d6de9f..b496f59 100644
+--- a/arch/arm64/hyperv/hv_core.c
++++ b/arch/arm64/hyperv/hv_core.c
+@@ -13,14 +13,47 @@
+ #include <linux/types.h>
+ #include <linux/version.h>
+ #include <linux/export.h>
++#include <linux/vmalloc.h>
+ #include <linux/mm.h>
 +#include <linux/acpi.h>
-+#include <linux/ptrace.h>
-+#include <asm/hyperv-tlfs.h>
-+#include <asm/mshyperv.h>
++#include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/hyperv.h>
+ #include <linux/arm-smccc.h>
+ #include <linux/string.h>
++#include <linux/cpuhotplug.h>
++#include <linux/psci.h>
++#include <linux/sched_clock.h>
+ #include <asm-generic/bug.h>
+ #include <asm/hyperv-tlfs.h>
+ #include <asm/mshyperv.h>
++#include <asm/sysreg.h>
++#include <clocksource/hyperv_timer.h>
 +
-+static void (*vmbus_handler)(void);
-+static void (*hv_stimer0_handler)(void);
++static bool    hyperv_initialized;
 +
-+static int vmbus_irq;
-+static long __percpu *vmbus_evt;
-+static long __percpu *stimer0_evt;
++struct         ms_hyperv_info ms_hyperv __ro_after_init;
++EXPORT_SYMBOL_GPL(ms_hyperv);
 +
-+irqreturn_t hyperv_vector_handler(int irq, void *dev_id)
++u32            *hv_vp_index;
++EXPORT_SYMBOL_GPL(hv_vp_index);
++
++u32            hv_max_vp_index;
++EXPORT_SYMBOL_GPL(hv_max_vp_index);
++
++static int hv_cpu_init(unsigned int cpu)
 +{
-+	vmbus_handler();
-+	return IRQ_HANDLED;
-+}
++	u64 msr_vp_index;
 +
-+/* Must be done just once */
-+void hv_setup_vmbus_irq(void (*handler)(void))
-+{
-+	int result;
++	hv_get_vp_index(msr_vp_index);
 +
-+	vmbus_handler = handler;
-+	vmbus_irq = acpi_register_gsi(NULL, HYPERVISOR_CALLBACK_VECTOR,
-+				 ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_HIGH);
-+	if (vmbus_irq <= 0) {
-+		pr_err("Can't register Hyper-V VMBus GSI. Error %d",
-+			vmbus_irq);
-+		vmbus_irq = 0;
-+		return;
-+	}
-+	vmbus_evt = alloc_percpu(long);
-+	result = request_percpu_irq(vmbus_irq, hyperv_vector_handler,
-+			"Hyper-V VMbus", vmbus_evt);
-+	if (result) {
-+		pr_err("Can't request Hyper-V VMBus IRQ %d. Error %d",
-+			vmbus_irq, result);
-+		free_percpu(vmbus_evt);
-+		acpi_unregister_gsi(vmbus_irq);
-+		vmbus_irq = 0;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(hv_setup_vmbus_irq);
++	hv_vp_index[smp_processor_id()] = msr_vp_index;
 +
-+/* Must be done just once */
-+void hv_remove_vmbus_irq(void)
-+{
-+	if (vmbus_irq) {
-+		free_percpu_irq(vmbus_irq, vmbus_evt);
-+		free_percpu(vmbus_evt);
-+		acpi_unregister_gsi(vmbus_irq);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(hv_remove_vmbus_irq);
++	if (msr_vp_index > hv_max_vp_index)
++		hv_max_vp_index = msr_vp_index;
 +
-+/* Must be done by each CPU */
-+void hv_enable_vmbus_irq(void)
-+{
-+	enable_percpu_irq(vmbus_irq, 0);
-+}
-+EXPORT_SYMBOL_GPL(hv_enable_vmbus_irq);
-+
-+/* Must be done by each CPU */
-+void hv_disable_vmbus_irq(void)
-+{
-+	disable_percpu_irq(vmbus_irq);
-+}
-+EXPORT_SYMBOL_GPL(hv_disable_vmbus_irq);
-+
-+/* Routines to do per-architecture handling of STIMER0 when in Direct Mode */
-+
-+static irqreturn_t hv_stimer0_vector_handler(int irq, void *dev_id)
-+{
-+	if (hv_stimer0_handler)
-+		hv_stimer0_handler();
-+	return IRQ_HANDLED;
-+}
-+
-+int hv_setup_stimer0_irq(int *irq, int *vector, void (*handler)(void))
-+{
-+	int localirq;
-+	int result;
-+
-+	localirq = acpi_register_gsi(NULL, HV_STIMER0_IRQNR,
-+			ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_HIGH);
-+	if (localirq <= 0) {
-+		pr_err("Can't register Hyper-V stimer0 GSI. Error %d",
-+			localirq);
-+		*irq = 0;
-+		return -1;
-+	}
-+	stimer0_evt = alloc_percpu(long);
-+	result = request_percpu_irq(localirq, hv_stimer0_vector_handler,
-+					 "Hyper-V stimer0", stimer0_evt);
-+	if (result) {
-+		pr_err("Can't request Hyper-V stimer0 IRQ %d. Error %d",
-+			localirq, result);
-+		free_percpu(stimer0_evt);
-+		acpi_unregister_gsi(localirq);
-+		*irq = 0;
-+		return -1;
-+	}
-+
-+	hv_stimer0_handler = handler;
-+	*vector = HV_STIMER0_IRQNR;
-+	*irq = localirq;
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(hv_setup_stimer0_irq);
+ 
+ 
+ /*
+@@ -57,6 +90,117 @@ void hv_free_hyperv_page(unsigned long addr)
+ 
+ 
+ /*
++ * This function is invoked via the ACPI clocksource probe mechanism. We
++ * don't actually use any values from the ACPI GTDT table, but we set up
++ * the Hyper-V synthetic clocksource and do other initialization for
++ * interacting with Hyper-V the first time.  Using early_initcall to invoke
++ * this function is too late because interrupts are already enabled at that
++ * point, and hv_init_clocksource() must run before interrupts are enabled.
++ *
++ * 1. Setup the guest ID.
++ * 2. Get features and hints info from Hyper-V
++ * 3. Setup per-cpu VP indices.
++ * 4. Initialize the Hyper-V clocksource.
++ */
 +
-+void hv_remove_stimer0_irq(int irq)
++static int __init hyperv_init(struct acpi_table_header *table)
 +{
-+	hv_stimer0_handler = NULL;
-+	if (irq) {
-+		free_percpu_irq(irq, stimer0_evt);
-+		free_percpu(stimer0_evt);
-+		acpi_unregister_gsi(irq);
-+	}
++	struct hv_get_vp_register_output result;
++	u32	a, b, c, d;
++	u64	guest_id;
++	int	i, cpuhp;
++
++	/*
++	 * If we're in a VM on Hyper-V, the ACPI hypervisor_id field will
++	 * have the string "MsHyperV".
++	 */
++	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
++		return -EINVAL;
++
++	/* Setup the guest ID */
++	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
++	hv_set_vpreg(HV_REGISTER_GUEST_OSID, guest_id);
++
++	/* Get the features and hints from Hyper-V */
++	hv_get_vpreg_128(HV_REGISTER_PRIVILEGES_AND_FEATURES, &result);
++	ms_hyperv.features = lower_32_bits(result.registervaluelow);
++	ms_hyperv.misc_features = lower_32_bits(result.registervaluehigh);
++
++	hv_get_vpreg_128(HV_REGISTER_FEATURES, &result);
++	ms_hyperv.hints = lower_32_bits(result.registervaluelow);
++
++	pr_info("Hyper-V: Features 0x%x, misc features 0x%x, hints 0x%x\n",
++		ms_hyperv.features, ms_hyperv.misc_features, ms_hyperv.hints);
++
++	/*
++	 * Hyper-V on ARM64 doesn't support AutoEOI.  Add the hint
++	 * that tells architecture independent code not to use this
++	 * feature.
++	 */
++	ms_hyperv.hints |= HV_DEPRECATING_AEOI_RECOMMENDED;
++
++	/* Get information about the Hyper-V host version */
++	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION, &result);
++	a = lower_32_bits(result.registervaluelow);
++	b = upper_32_bits(result.registervaluelow);
++	c = lower_32_bits(result.registervaluehigh);
++	d = upper_32_bits(result.registervaluehigh);
++	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
++		b >> 16, b & 0xFFFF, a, d & 0xFFFFFF, c, d >> 24);
++
++	/* Allocate and initialize percpu VP index array */
++	hv_vp_index = kmalloc_array(num_possible_cpus(), sizeof(*hv_vp_index),
++				    GFP_KERNEL);
++	if (!hv_vp_index)
++		return -ENOMEM;
++
++	for (i = 0; i < num_possible_cpus(); i++)
++		hv_vp_index[i] = VP_INVAL;
++
++	cpuhp = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
++			"arm64/hyperv_init:online", hv_cpu_init, NULL);
++	if (cpuhp < 0)
++		goto free_vp_index;
++
++	hv_init_clocksource();
++	if (hv_stimer_alloc())
++		goto remove_cpuhp_state;
++
++	hyperv_initialized = true;
++	return 0;
++
++remove_cpuhp_state:
++	cpuhp_remove_state(cpuhp);
++free_vp_index:
++	kfree(hv_vp_index);
++	hv_vp_index = NULL;
++	return -EINVAL;
 +}
-+EXPORT_SYMBOL_GPL(hv_remove_stimer0_irq);
++TIMER_ACPI_DECLARE(hyperv, ACPI_SIG_GTDT, hyperv_init);
++
++
++/*
++ * Called from hv_init_clocksource() to do ARM64
++ * specific initialization of the sched clock
++ */
++void __init hv_setup_sched_clock(void *sched_clock)
++{
++	sched_clock_register(sched_clock, 64, HV_CLOCK_HZ);
++}
++
++/*
++ * This routine is called before kexec/kdump, it does the required cleanup.
++ */
++void hyperv_cleanup(void)
++{
++	/* Reset our OS id */
++	hv_set_vpreg(HV_REGISTER_GUEST_OSID, 0);
++
++}
++EXPORT_SYMBOL_GPL(hyperv_cleanup);
++
++
++/*
+  * hv_do_hypercall- Invoke the specified hypercall
+  */
+ u64 hv_do_hypercall(u64 control, void *input, void *output)
+@@ -260,3 +404,15 @@ void hyperv_report_panic_msg(phys_addr_t pa, size_t size)
+ 	       (HV_CRASH_CTL_CRASH_NOTIFY | HV_CRASH_CTL_CRASH_NOTIFY_MSG));
+ }
+ EXPORT_SYMBOL_GPL(hyperv_report_panic_msg);
++
++bool hv_is_hyperv_initialized(void)
++{
++	return hyperv_initialized;
++}
++EXPORT_SYMBOL_GPL(hv_is_hyperv_initialized);
++
++bool hv_is_hibernation_supported(void)
++{
++	return false;
++}
++EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
 -- 
 1.8.3.1
 
