@@ -2,123 +2,104 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F67FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6DDC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C047B206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1C2206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+liN5FZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVnhA2NE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgCOEKT (ORCPT
+        id S1726408AbgCOEM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 00:10:19 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38925 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgCOEKT (ORCPT
+        Sun, 15 Mar 2020 00:12:58 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38677 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgCOEM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 00:10:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f7so14380797wml.4;
-        Sat, 14 Mar 2020 21:10:17 -0700 (PDT)
+        Sun, 15 Mar 2020 00:12:57 -0400
+Received: by mail-pj1-f68.google.com with SMTP id m15so5784809pje.3;
+        Sat, 14 Mar 2020 21:12:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=7NszvAXb9CGNqwT7dYeN3INhVSTlKBvqRmiaZIGgUzM=;
-        b=n+liN5FZupOzuGmaL8W0VktGX+braNF2HwHqE4seR4kZiiex5TQZtj04W8EtxZmx4U
-         N7mE03CKIQLzpncNE7yyQ09H6quoTKYstglmWXP3LhUtIZFh0jpumW8LqsW4n0aYNu5E
-         9Zsda/e4+bVvPPea+hDL96ZY/Un+MMEko9W15c6R4h0gGHl1FKReRQ+O/qaUHi4rpz31
-         mE8oVXifg5I+uCgDvF8+B0njfnmctgZY6IZAk4BeeTta8N+fg++CYNS1dtGmFiAHuhNJ
-         h9ef3+9fGWIBNBEcI944HQfRxvk6l3tz04Tl6SJ4M+8dLIsYsa1ro7rfgL8rD96BGbKW
-         EFTw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1ZVo5FaZNwZELfh1VyA/NYtKv4jB3J6tMqy+qzZfMkg=;
+        b=nVnhA2NEI2n3kE+hDccvDAe54lL5OEEmJoYbzmpBtmSclCdLkwXqcVTaT914W+9f/i
+         cLIU6A1TePY6AVQrImGjwqZrui3qew0G5HywaBCcriKxA9XreaRrWPybDoG2X0Enyzqt
+         YJFybTAVrdXzZ2KLE7fD6lwg0zlT4OKIRNBD/T8Z82WQUvTqgOaj3gmFkpvCWoRPO2mE
+         x8YeGYiVPTzTxJvSzeg8BJmQPpfCyjGDWAoMkONyeaHtrG7k0y/CMvmX+dCsGVAEOeMq
+         WsZ4GMOFssiv1tCRX3UAavgF/+Co3V8o0yAgtDCjsXpQ6vM0VsQ5iEENipBnrsYxwgt0
+         o+1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=7NszvAXb9CGNqwT7dYeN3INhVSTlKBvqRmiaZIGgUzM=;
-        b=Tmlno+NuQnDfIWyxElYaw53OfcDweB5O4gV7uqc5XUONjouwFXkJKepnLOpXfHUweR
-         8Lf+0qmlovwbiCArmHdB8Dwl+NOdq1/V/HJMQdVeZ2FJ1KEeuTpQ1tnYBX3NsosQYCIW
-         AT9ddpWDsLofJgLlkJTKQ99DPlMxnCz4/3X+QqQqhxPYLYTaQQk3IgYRxR5hXIYtnv/g
-         ND1/QijKCNmT7699V512yMe8jz5HS/Jo63NFNXGcsQFB7naOKIpQyJr3OdDNLOO8AZql
-         Xj251NdVHoSaPqc2zoD0KEXSJMu+ahoY1SZjfyYvPnI5wcitSRfnjTJFswQWxm36l9GC
-         Okzw==
-X-Gm-Message-State: ANhLgQ0M4z43tTly+GEgvbFRzY4e8i4c5wXJmhxBhXwJmwob8HCyUkuo
-        v9NlcWsMox4bHAEMOBdDBDiQCZp+
-X-Google-Smtp-Source: ADFU+vttRMhC6z4KeEiI90Sln9kvzZ3oD5DpV2H2KhdjIUk7TSHX42UtdII4c1he6JrDUQ6cxbKKBQ==
-X-Received: by 2002:a7b:cb17:: with SMTP id u23mr16873136wmj.12.1584185482872;
-        Sat, 14 Mar 2020 04:31:22 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.174.5])
-        by smtp.gmail.com with ESMTPSA id n186sm454515wme.25.2020.03.14.04.31.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 14 Mar 2020 04:31:22 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     linmiaohe@huawei.com, vkuznets@redhat.com
-Subject: [PATCH] KVM: X86: correct meaningless kvm_apicv_activated() check
-Date:   Sat, 14 Mar 2020 12:31:20 +0100
-Message-Id: <1584185480-3556-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1ZVo5FaZNwZELfh1VyA/NYtKv4jB3J6tMqy+qzZfMkg=;
+        b=Pm68E2ZzP5Ug7rqu2/WRzx+Bymrvvzm1jrh/FfBfHdD3dUbGPIhiD3F8zRqQEGSO/+
+         Ik1aWa2stX3BU/cMahnnbbFHHeNu3Hp/TtfIsqLrseXkdgJMDpqlo+qE9ZPSRyyViKyI
+         CcAIIb0b/XtgGEO3pdECk++Q4hZmp5ZrVo8wJOlvl+hYz+9CFCBkGEP+xiUy4f4Mils0
+         Bbr601eCZcDsOXoBYZp2peh45MbjAtU7aDGfGrP5eimOdC0CZVS9wBTv8ErDM/N7tSpv
+         1km53+W3nSPkE/RZUj2ufhOUSXDJH6gVr3sz6R8/p6l6BhO8puxb2ZKQojlYzKv0UYi/
+         mhpg==
+X-Gm-Message-State: ANhLgQ2Uecd+0HtnfZ0C896vG2rQMi/jSlr1UimXlAJp+Y5IxauQTy9V
+        lMRB2gSc+KG54KVh6NJIp5adlzUO
+X-Google-Smtp-Source: ADFU+vt+7EZpRr3OvR5XsOBvmt7UW8WcXEsqh2M7neVxm3k/Vj9VBulsoXLvHSBinQtdJv+jQgklSw==
+X-Received: by 2002:a62:7696:: with SMTP id r144mr18006093pfc.177.1584163620366;
+        Fri, 13 Mar 2020 22:27:00 -0700 (PDT)
+Received: from localhost ([216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id j38sm54350554pgi.51.2020.03.13.22.26.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 22:26:59 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org, hminas@synopsys.com,
+        mathias.nyman@intel.com, bgolaszewski@baylibre.com, arnd@arndb.de,
+        geert@linux-m68k.org, mchehab+samsung@kernel.org,
+        treding@nvidia.com, tglx@linutronix.de, suzuki.poulose@arm.com,
+        hdegoede@redhat.com, linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v2 2/4] usb: host: xhci-plat: convert to devm_platform_ioremap_and_get_resource
+Date:   Sat, 14 Mar 2020 13:26:36 +0800
+Message-Id: <20200314052638.6008-3-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200314052638.6008-1-zhengdejin5@gmail.com>
+References: <20200314052638.6008-1-zhengdejin5@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After test_and_set_bit() for kvm->arch.apicv_inhibit_reasons, we will
-always get false when calling kvm_apicv_activated() because it's sure
-apicv_inhibit_reasons do not equal to 0.
+Use devm_platform_ioremap_and_get_resource() to simplify code, which
+contains platform_get_resource() and devm_ioremap_resource(), it also
+get the resource for use by the following code.
 
-What the code wants to do, is check whether APICv was *already* active
-and if so skip the costly request; we can do this using cmpxchg.
-
-Reported-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- arch/x86/kvm/x86.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/usb/host/xhci-plat.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a7cb85231330..49efa4529662 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8049,19 +8049,26 @@ void kvm_vcpu_update_apicv(struct kvm_vcpu *vcpu)
-  */
- void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
- {
-+	unsigned long old, new, expected;
-+
- 	if (!kvm_x86_ops->check_apicv_inhibit_reasons ||
- 	    !kvm_x86_ops->check_apicv_inhibit_reasons(bit))
- 		return;
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index d90cd5ec09cf..2852afa69ee9 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -219,8 +219,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 		goto disable_runtime;
+ 	}
  
--	if (activate) {
--		if (!test_and_clear_bit(bit, &kvm->arch.apicv_inhibit_reasons) ||
--		    !kvm_apicv_activated(kvm))
--			return;
--	} else {
--		if (test_and_set_bit(bit, &kvm->arch.apicv_inhibit_reasons) ||
--		    kvm_apicv_activated(kvm))
--			return;
--	}
-+	old = READ_ONCE(kvm->arch.apicv_inhibit_reasons);
-+	do {
-+		expected = new = old;
-+		if (activate)
-+			__clear_bit(bit, &new);
-+		else
-+			__set_bit(bit, &new);
-+		if (new == old)
-+			break;
-+		old = cmpxchg(&kvm->arch.apicv_inhibit_reasons, expected, new);
-+	} while (old != expected);
-+
-+	if ((old == 0) == (new == 0))
-+		return;
- 
- 	trace_kvm_apicv_update_request(activate, bit);
- 	if (kvm_x86_ops->pre_update_apicv_exec_ctrl)
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	hcd->regs = devm_ioremap_resource(&pdev->dev, res);
++	hcd->regs = devm_platform_ioremap_and_get_resource(pdev, 0, &res);
+ 	if (IS_ERR(hcd->regs)) {
+ 		ret = PTR_ERR(hcd->regs);
+ 		goto put_hcd;
 -- 
-1.8.3.1
+2.25.0
 
