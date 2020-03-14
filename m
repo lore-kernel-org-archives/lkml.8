@@ -2,112 +2,99 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8156BC0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01229C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5297C2051A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23DC2051A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MeALrmAr"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qrvZ3ct8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbgCOCHR (ORCPT
+        id S1727677AbgCOCHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:07:17 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34735 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgCOCHQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:07:16 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i24so13505641eds.1;
-        Sat, 14 Mar 2020 19:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=owNdHbXOWvXX+OlxzZcv65vzJGoyLsxbbtN7CwBZUdI=;
-        b=MeALrmArJtRbuiamFVBTOFlHV4itXzG5e8wOZhzp68mdH9SHNTMTC4ozlazK8OxMF8
-         zKdTSjVj40QQY2vPxc0ESGrfym+h6/rk/Gb6wx2jbAVven+pAHY9+d8d9Cc9+WJrvzHX
-         pUlq3KoqK+GXX7lqf3w9udtpZ6EIMz8q+r7V9d7bB1fjPAZv15DyNmQ4sauXIhPkhXsh
-         oUFZ3dwmI7skBYGeGjsYPwSD7zsIII3Kffz3BIaXjSpB1w+Akk7yCwA6Rwj2A1Zm6VsM
-         Epf03zpI6QxSBN0SzFGjoFL6RxhWl3HCs14VOFKaFon7EfpwNe5kh/z6WXQADNUzeGaZ
-         TZfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=owNdHbXOWvXX+OlxzZcv65vzJGoyLsxbbtN7CwBZUdI=;
-        b=TEGdCApc7hXJ6lRliZ16q+GrwRmG93k/YoUPoCJ9n8Dp6+dnPhKqe4m05ikvzus1F+
-         bLw8y4n9KLtiR3uajgo6o0HhSaxV0ev7MYr+B5Hin2pLIy30B4O/5in/DedDEHih8ZZe
-         PUWjrsXBRGcPyozKCuP91VWTGBi5aMvorZQvjrijfBx7MdMAtoGXO0mIHTiFhYH2Rkwh
-         cE+E3MzwtK+1zabHa9JQhTSoszCdfJVKkXIkPjLj29CKTEWPNU9eERTxh8hxeAJqrxc4
-         9sgAjwrkvwCqbOsLe1XWASDiixm5t9LbC+MZF5K2ecGAo70+JX/vrEga4uGcrwwjm/AU
-         xbDw==
-X-Gm-Message-State: ANhLgQ19xJNSBFdDpis7bnMWQ+akZY9DeKTjO7iIg2HGx1SWcCBEYGEG
-        AVAXJfxbi9baBDdvF9owL8IILfTe
-X-Google-Smtp-Source: ADFU+vsoCpaYAcicq37YrSeOXYcEWIKD99iwmm+7yeuQpkomIFb41onnAG26ZzpxMyrKYrbL8FB2qg==
-X-Received: by 2002:a17:906:54b:: with SMTP id k11mr16615900eja.179.1584195978147;
-        Sat, 14 Mar 2020 07:26:18 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d83:b000:18:83ff:47cd:7417])
-        by smtp.gmail.com with ESMTPSA id v13sm751777edr.88.2020.03.14.07.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2020 07:26:17 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: correct typo in new NXP LAYERSCAPE GEN4
-Date:   Sat, 14 Mar 2020 15:25:59 +0100
-Message-Id: <20200314142559.13505-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 14 Mar 2020 22:07:39 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51809 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727566AbgCOCHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:07:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ffVF0jzxz9sPF;
+        Sat, 14 Mar 2020 21:50:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584183030;
+        bh=FH952WJu0tC2cJHlEJcqvTFIqkewn2RqDAMQP+CMBsI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qrvZ3ct8fNKwsBUCRvjX3oC2+FibfJ3kFNEopUy8ytNjpdiuBCSGnZ81UqkNA43LA
+         ZeLf1KzL+g/496ePvfcSwZt50InEByrSkxJE9EGU7eFyOLQixjrGEu73KIYZiABHIE
+         ddPWctCuOTGGwHstbjQrSuXMpNU/i0rwYXMnWZRnP5gqijzPI1JT2E4+xZ6lcffrGZ
+         H6VYLQ1jkIJrYndSkuqeiVWiN2vnagWxQS3NvO4A6jvo0vJNvH0cOEdRTLnM0+O0dC
+         PvjLc3v31D3wUYeL/X0ec32EUtACRLDb8F6kePkFYByTNrCIjuFcbIQOky4VF00AGD
+         gKY6KLN1UCL4g==
+Date:   Sat, 14 Mar 2020 21:50:23 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: linux-next: Fixes tag needs some work in the sound-asoc tree
+Message-ID: <20200314215023.36d41bb9@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/JidOrxxZIwyci3zaP.++HE7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 3edeb49525bb ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4
-controller") includes a new entry in MAINTAINERS, but slipped in a typo in
-one of the file entries.
+--Sig_/JidOrxxZIwyci3zaP.++HE7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
+Hi all,
 
-  warning: no file matches F: \
-    drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
+n commit
 
-Correct the typo in PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER.
+  5c82813ce43e ("ASoC: Intel: boards: drop reverse deps for SND_HDA_CODEC_H=
+DMI")
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-applies cleanly on next-20200313
+Fixes tag
 
-Hou, please ack.
-Rob, please pick this patch (it is not urgent, though).
+  Fixes: aa2b4a5 ('ASoC: Intel: boards: fix incorrect HDMI Kconfig dependen=
+cy')
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+has these problem(s):
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 32a95d162f06..77eede976d0f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12858,7 +12858,7 @@ L:	linux-pci@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
--F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
-+F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
- 
- PCI DRIVER FOR GENERIC OF HOSTS
- M:	Will Deacon <will@kernel.org>
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
 
-base-commit: 2e602db729948ce577bf07e2b113f2aa806b62c7
--- 
-2.17.1
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/JidOrxxZIwyci3zaP.++HE7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5stu8ACgkQAVBC80lX
+0Gw3mgf8CMSfxE1yDJu/d/r8M8C2FnqFqDSRBniWr4Vz+wgPpheArQ/qEF2c3EH3
++QR9AIJmuPFRi4fFF/dGiAGVEPjytY2IyMWVJnvUwcyopMJBURX3RF6gupstaibX
+k14+ek1ofJVmD3lnTL/KZK8XWdBtUAwT8MsYqQ0e4Qp99cC5BSkHaaS2oBfa4XEW
+yZpU98Xh0C4i1GTu3Vlo/AKA7uhFF7rTtcGQawE0cl8BVa8p6vH8RYTqfLBAPyEw
+w3UrEIpOGKdS9oBif6cZ0NwbSsN7KeLPcB/UrAGGi6wDDWVEjx2JTIA8YEE2ai/X
+f3R1Z4f5WWLuGJqhhSmnAgP2SB9TmQ==
+=CU9u
+-----END PGP SIGNATURE-----
+
+--Sig_/JidOrxxZIwyci3zaP.++HE7--
