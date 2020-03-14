@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DC4C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BC4C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E2F2076A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FFA2076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:13:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgCOCNm (ORCPT
+        id S1727799AbgCOCNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:13:42 -0400
+        Sat, 14 Mar 2020 22:13:41 -0400
 Received: from mga14.intel.com ([192.55.52.115]:41895 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbgCOCNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:13:38 -0400
-IronPort-SDR: npGp+F9Wgxv+K+5FdaLHx6c5Q+wAKyWvtyTtvfJTUun6x16YUPTKjCU1Ld2kQmldZvAL/qmmEx
- B+j9u1bsgk1w==
+        id S1727574AbgCOCNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:13:39 -0400
+IronPort-SDR: 8w94JfkDG2xmB8Zj3qCbdxkKzPnQN04wZn6ZS/xI3IsK8viv/EfahGDqaeNSuSkNtHez/ghzQQ
+ /+dbxaWPK9pQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 00:52:00 -0700
-IronPort-SDR: NqpETWF9PjHmdEwtXkD9iSSe6yB3S/7nAl9vxSwu7QqlFpCi5jPm2gjrrq1xiW4IW3rfMvdLvR
- NIABgARz6Yww==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 00:52:12 -0700
+IronPort-SDR: 1kMrL2DKDmDEcoNhUZ/5FfRaCFdM0wYRIxRufPV34/znYIGFPlNv/tH9OuPwI1r/nKcOtdJx9h
+ kAA2ssd+TzMg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,551,1574150400"; 
-   d="scan'208";a="416537556"
+   d="scan'208";a="416537608"
 Received: from lxy-clx-4s.sh.intel.com ([10.239.43.160])
-  by orsmga005.jf.intel.com with ESMTP; 14 Mar 2020 00:51:55 -0700
+  by orsmga005.jf.intel.com with ESMTP; 14 Mar 2020 00:52:08 -0700
 From:   Xiaoyao Li <xiaoyao.li@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -45,9 +45,9 @@ Cc:     peterz@infradead.org, fenghua.yu@intel.com,
         Jim Mattson <jmattson@google.com>, x86@kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v4 03/10] x86/split_lock: Re-define the kernel param option for split_lock_detect
-Date:   Sat, 14 Mar 2020 15:34:07 +0800
-Message-Id: <20200314073414.184213-4-xiaoyao.li@intel.com>
+Subject: [PATCH v4 06/10] kvm: x86: Emulate split-lock access as a write
+Date:   Sat, 14 Mar 2020 15:34:10 +0800
+Message-Id: <20200314073414.184213-7-xiaoyao.li@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200314073414.184213-1-xiaoyao.li@intel.com>
 References: <20200314073414.184213-1-xiaoyao.li@intel.com>
@@ -58,99 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change sld_off to sld_disable, which means disabling feature split lock
-detection and it cannot be used in kernel nor can kvm expose it guest.
-Of course, the X86_FEATURE_SPLIT_LOCK_DETECT is not set.
+If split lock detect is enabled (warn/fatal), #AC handler calls die()
+when split lock happens in kernel.
 
-Add a new optioin sld_kvm_only, which means kernel turns split lock
-detection off, but kvm can expose it to guest.
+Malicous guest can exploit the KVM emulator to trigger split lock #AC
+in kernel[1]. So just emulating the access as a write if it's a
+split-lock access (the same as access spans page) to avoid malicious
+attacking kernel.
 
+More discussion can be found [2][3].
+
+[1] https://lore.kernel.org/lkml/8c5b11c9-58df-38e7-a514-dc12d687b198@redhat.com/
+[2] https://lkml.kernel.org/r/20200131200134.GD18946@linux.intel.com
+[3] https://lkml.kernel.org/r/20200227001117.GX9940@linux.intel.com
+
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  5 ++++-
- arch/x86/kernel/cpu/intel.c                   | 22 ++++++++++++++-----
- 2 files changed, 21 insertions(+), 6 deletions(-)
+ arch/x86/kvm/x86.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 1ee2d1e6d89a..2b922061ff08 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4666,7 +4666,10 @@
- 			instructions that access data across cache line
- 			boundaries will result in an alignment check exception.
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5de200663f51..1a0e6c0b1b39 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5873,6 +5873,7 @@ static int emulator_cmpxchg_emulated(struct x86_emulate_ctxt *ctxt,
+ {
+ 	struct kvm_host_map map;
+ 	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
++	u64 page_line_mask = PAGE_MASK;
+ 	gpa_t gpa;
+ 	char *kaddr;
+ 	bool exchanged;
+@@ -5887,7 +5888,11 @@ static int emulator_cmpxchg_emulated(struct x86_emulate_ctxt *ctxt,
+ 	    (gpa & PAGE_MASK) == APIC_DEFAULT_PHYS_BASE)
+ 		goto emul_write;
  
--			off	- not enabled
-+			disable	- disabled, neither kernel nor kvm can use it.
+-	if (((gpa + bytes - 1) & PAGE_MASK) != (gpa & PAGE_MASK))
++	if (split_lock_detect_on())
++		page_line_mask = ~(cache_line_size() - 1);
 +
-+			kvm_only - off in kernel but kvm can expose it to
-+				   guest for debug/testing scenario.
++	/* when write spans page or spans cache when SLD enabled */
++	if (((gpa + bytes - 1) & page_line_mask) != (gpa & page_line_mask))
+ 		goto emul_write;
  
- 			warn	- the kernel will emit rate limited warnings
- 				  about applications triggering the #AC
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 4b3245035b5a..3eeab717a0d0 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -35,7 +35,8 @@
- 
- enum split_lock_detect_state {
- 	sld_not_exist = 0,
--	sld_off,
-+	sld_disable,
-+	sld_kvm_only,
- 	sld_warn,
- 	sld_fatal,
- };
-@@ -973,7 +974,8 @@ static const struct {
- 	const char			*option;
- 	enum split_lock_detect_state	state;
- } sld_options[] __initconst = {
--	{ "off",	sld_off   },
-+	{ "disable",	sld_disable },
-+	{ "kvm_only",	sld_kvm_only },
- 	{ "warn",	sld_warn  },
- 	{ "fatal",	sld_fatal },
- };
-@@ -1004,10 +1006,14 @@ static void __init split_lock_setup(void)
- 	}
- 
- 	switch (sld_state) {
--	case sld_off:
-+	case sld_disable:
- 		pr_info("disabled\n");
- 		break;
- 
-+	case sld_kvm_only:
-+		pr_info("off in kernel, but kvm can expose it to guest\n");
-+		break;
-+
- 	case sld_warn:
- 		pr_info("warning about user-space split_locks\n");
- 		break;
-@@ -1062,7 +1068,13 @@ static void split_lock_init(struct cpuinfo_x86 *c)
- 	test_ctrl_val = val;
- 
- 	switch (sld_state) {
--	case sld_off:
-+	case sld_disable:
-+		if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val & ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
-+			goto msr_broken;
-+		return;
-+	case sld_kvm_only:
-+		if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val | MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
-+			goto msr_broken;
- 		if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val & ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
- 			goto msr_broken;
- 		break;
-@@ -1087,7 +1099,7 @@ static void split_lock_init(struct cpuinfo_x86 *c)
- 	 * funny things and you get to keep whatever pieces.
- 	 */
- 	pr_warn_once("MSR fail -- disabled\n");
--	sld_state = sld_off;
-+	sld_state = sld_disable;
- }
- 
- bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+ 	if (kvm_vcpu_map(vcpu, gpa_to_gfn(gpa), &map))
 -- 
 2.20.1
 
