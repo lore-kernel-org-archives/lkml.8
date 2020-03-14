@@ -2,161 +2,217 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C20C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6628DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8142F2071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="i8uOfsS2";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="AM2Ezy8x"
+	by mail.kernel.org (Postfix) with ESMTP id 3F2882076D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgCOCXF (ORCPT
+        id S1727843AbgCOCXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:23:05 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:41894 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727469AbgCOCXF (ORCPT
+        Sat, 14 Mar 2020 22:23:09 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:41383 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727324AbgCOCXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:23:05 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7594FC00C9;
-        Sat, 14 Mar 2020 19:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1584213312; bh=XzRMDYaq/XurOrDSPXouq7nYDVGUaZWwN0mTRrVM3kE=;
-        h=From:To:CC:Subject:Date:From;
-        b=i8uOfsS2BbSrfq63FghcviT+4sldV8vzc03BwBemmA0I9Wfu9HXcWO0S60bS66LJh
-         9MomLwhM9t/LPsP4d6mD0gRdRG/ipyg0rDeSgRqBo5VbmfqgIp90Rw/1i53rkaECRT
-         zx6iQrRtyqxGL4kj8GiHB9cVKbV5pQ096CAwg0uVXiZIE4RZk3kjJr5kBKgwMeXARD
-         zLVt7M9Yu0s7WTsDz0Fpmscwnyq1WFQq2HiyAyvfnMuEFsaboZvp73kI4jOnxyXtF6
-         zQ6jwBvv+s9HlOsbZzDk8XwE6yVM7pQO+k7VV+Clxi1FUQjV0P00i4UaSaHoQgEJNF
-         gk9L3RD6HPI/A==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 1FCF7A00DA;
-        Sat, 14 Mar 2020 19:15:05 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Sat, 14 Mar 2020 12:15:04 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Sat, 14 Mar 2020 12:15:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bV58lTcLNFDKJIWzZU0tWpcXuJ0GyDAcJOwzeBkHMqCvnpb1Ar6r5xI4B+iSPXJo557gug+/99RjLyP5THx3ENu/7RZBJzbEjhBQHppLmcbgRU1DN1wfcUCl0MEfIZp1AFjFb2LV2eAaCfNwRYf7Q34Saig/KKf4avWGGMqoBO8H7qhmBvTF9KvsSH7a3lyIekegt3CRHLSVu4e6yvksWe60fsTq2+ZAQsE4J1Y6TqX3V6c7zXY8J04fNFzH3vlzL36wYk+EVhtABtn1aplutIP3G+HaxciGNw5dy8qaucIADt6/ks9scEGC4P4Mr7U+7iuS6ZNUduCBN7qnPzdC6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XzRMDYaq/XurOrDSPXouq7nYDVGUaZWwN0mTRrVM3kE=;
- b=HbTtLoATeyasRj5lJSDZY+k0uh6c6CpvU3M3ozKhOL5Evze8rZRTuwmXKvuOmkmxWQ4tLQQJZ3iRNMMXtmBdO2gdEHwz1gGFDCZPgOFmszr8etwd2vBFJFXreCG2djvuQ+gM6ZWpaQs6FhlBl+bCDrDfjI3A22QPw21ZQ1QgBtIJQ6h1Cj87CGhDPRj98rp0fiYOhBQhd5W5J32JH4C/PUzrIFIhSkNmM+2ljAWtnNzMVtsTCirazL0fvYs+cwxDeMzYUVdjEIdpmT8Rln4pBWU3SAV2X/Zm1P7n2sB0d0T1/kWpXf7WPQN09kqRq6oxoSK/6h1MBWCnzXuwUhIr4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XzRMDYaq/XurOrDSPXouq7nYDVGUaZWwN0mTRrVM3kE=;
- b=AM2Ezy8xXFs3oBZkc/L4EfRUFg2P8WBhw2c3bgy7jG10IFGDc/fdpB115VPYqUT/adalfF1medQm5v6G7GGlg/1dEcZABiQYerrg+HMCO6eOc9gR3WHdmf7Vr2BkoTmd1qAi94Du5d0jgcTd5md+DQjRiMt/QvCyyBYyQK4eWEk=
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
- by BYAPR12MB3605.namprd12.prod.outlook.com (2603:10b6:a03:ae::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21; Sat, 14 Mar
- 2020 19:15:03 +0000
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2793.023; Sat, 14 Mar 2020
- 19:15:03 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     arcml <linux-snps-arc@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] ARC updates for 5.6-rc6
-Thread-Topic: [GIT PULL] ARC updates for 5.6-rc6
-Thread-Index: AQHV+jTcjdMOGsQR2E2cWJ4esMeuug==
-Date:   Sat, 14 Mar 2020 19:15:03 +0000
-Message-ID: <e38a57cc-3744-e3b8-3c5f-b96b218aebd4@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-originating-ip: [24.7.46.224]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fa34e1a1-9082-4e77-49a4-08d7c84bff9a
-x-ms-traffictypediagnostic: BYAPR12MB3605:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB36054CC4B8E3A456376EA4C6B6FB0@BYAPR12MB3605.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1332;
-x-forefront-prvs: 034215E98F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(39850400004)(396003)(136003)(376002)(199004)(76116006)(66476007)(66556008)(64756008)(66446008)(66946007)(2616005)(2906002)(71200400001)(26005)(31696002)(15650500001)(8936002)(6506007)(31686004)(54906003)(81156014)(8676002)(81166006)(4326008)(316002)(6486002)(5660300002)(6512007)(478600001)(36756003)(86362001)(6916009)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3605;H:BYAPR12MB3592.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cmD0eAC95cQU0esdB+RVU2UTUE42qw4DQtW+3jdXHEQABtE6eCklt34BOlLsQXDf5/Sp5hLuUViyuIRP/85WUE4ShILiPADf4Qhu+FKWCL8ycaxD15VzoGjw8Qy9RZ1e+oXfn+bwW8iqH7RNrUNZm2UrsPp/xc5sAF/fTxVqINl3TrXCk1K8sPYNDHZuX9Ohu5U1GMgISuA0xLjUjPzvjKssZpTuop90+mcblqHOV7amDqhN6u1IkFxc6QTW5Hs49J5e8d7UYoIs3JC8DzdTDyD4ORQSCF/Ze3w3EHTseUIbFvObAZhBjhUxRJbTKiURBsEKPu6badW1ckA1SbWJiuMosYtSp/HHtucofuOHu8l42GrjFRz1rlckxLZKrMxHpcogU4ZZqYqmPbpWlynWxxy8XgPR7T0kTbuG09GcOWhWWnvk9pN/KVC8k6TEaQhE
-x-ms-exchange-antispam-messagedata: FRCS/KLR9NjECP+7S8+IkYtSU0roJRs1CKlYsmwsL/aFBHiVe/bNuOzixETUzF4yGavqxGe+ZmW7FiYs9RLGneHJuC6JOMRHzzsdqgorrih1HCIl1wHOoZMsOwcqQlMvdmM9dlN43ndur/oNxedLxA==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BD5149BCE2ECA1489862D34AFD57BE80@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sat, 14 Mar 2020 22:23:09 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 10950ab98b3957dd; Sat, 14 Mar 2020 11:23:06 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Len Brown <lenb@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] ACPI: sysfs: copy ACPI data using io memory copying
+Date:   Sat, 14 Mar 2020 11:23:05 +0100
+Message-ID: <2440284.4js2fAD822@kreacher>
+In-Reply-To: <20200312111345.1057569-1-colin.king@canonical.com>
+References: <20200312111345.1057569-1-colin.king@canonical.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa34e1a1-9082-4e77-49a4-08d7c84bff9a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2020 19:15:03.1309
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AjtJnAFBml3y6n1UppnR+9CCtqsMuqkvH2HjcKTRH1Y6TlBOXkWo5NhRaD8cxRTvlKv+4nbM8XUu1PjdhL485A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3605
-X-OriginatorOrg: synopsys.com
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNCkJ1bmNoIG9mIG1pc2NsbCBmaXhlcyBmb3IgQVJDIHdoaWNoIGhhdmUgYmVl
-biBwaWxpbmcgdXAgYW5kIG1heSBnbyBpbiBzb29uZXIgdGhhbg0KbGF0ZXIuDQoNClBsZWFzZSBw
-dWxsLg0KDQpUaHgsDQotVmluZWV0DQoNCi0tLS0tLS0tLS0tLS0tLT4NClRoZSBmb2xsb3dpbmcg
-Y2hhbmdlcyBzaW5jZSBjb21taXQgYmI2ZDNmYjM1NGM1ZWU4ZDZiZGUyZDU3NmViNzIyMGVhMDk4
-NjJiOToNCg0KICBMaW51eCA1LjYtcmMxICgyMDIwLTAyLTA5IDE2OjA4OjQ4IC0wODAwKQ0KDQph
-cmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3NpdG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQua2Vy
-bmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdmd1cHRhL2FyYy5naXQvIHRhZ3MvYXJj
-LTUuNi1yYzYNCg0KZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvIDhkOTJlOTkyYTc4NWYz
-NWQyM2Y4NDUyMDZjZjhjNmNhZmJjMjY0ZTA6DQoNCiAgQVJDOiBkZWZpbmUgX19BTElHTl9TVFIg
-YW5kIF9fQUxJR04gc3ltYm9scyBmb3IgQVJDICgyMDIwLTAzLTExIDEwOjA3OjE1IC0wNzAwKQ0K
-DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tDQpBUkMgZml4ZXMgZm9yIDUuNi1yYzYNCg0KIC0gRml4IF9fQUxJR05fU1RSIGFu
-ZCBfX0FMSUdOIHRvIG5vdCBqdW5rIHBhZGRpbmcNCg0KIC0gTWlzY2xsIEtjb25maWcgY2xlYW51
-cHMsIGhlYWRlciB1cGRhdGVzDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkV1Z2VuaXkgUGFsdHNldiAoMSk6DQogICAg
-ICBBUkM6IGRlZmluZSBfX0FMSUdOX1NUUiBhbmQgX19BTElHTiBzeW1ib2xzIGZvciBBUkMNCg0K
-R2VlcnQgVXl0dGVyaG9ldmVuICgxKToNCiAgICAgIEFSQzogUmVwbGFjZSA8bGludXgvY2xrLXBy
-b3ZpZGVyLmg+IGJ5IDxsaW51eC9vZl9jbGsuaD4NCg0KS3J6eXN6dG9mIEtvemxvd3NraSAoMSk6
-DQogICAgICBBUkM6IENsZWFudXAgb2xkIEtjb25maWcgSU8gc2NoZWR1bGVyIG9wdGlvbnMNCg0K
-UmFuZHkgRHVubGFwICgxKToNCiAgICAgIEFSQzogZml4IHNvbWUgS2NvbmZpZyB0eXBvcw0KDQpW
-aW5lZXQgR3VwdGEgKDIpOg0KICAgICAgQVJDOiBmcHU6IGZpeCByYW5kY29uZmlnIGJ1aWxkIGVy
-cm9yIHJlcG9ydGVkIGJ5IDAtZGF5IHRlc3Qgc2VydmljZQ0KICAgICAgQVJDOiBzaG93X3JlZ3M6
-IHJlZHVjZSBsaW5lcyBvZiBvdXRwdXQNCg0KIGFyY2gvYXJjL0tjb25maWcgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICA0ICsrLS0NCiBhcmNoL2FyYy9jb25maWdzL25wc19kZWZjb25maWcg
-ICAgICAgICAgICAgfCAgMiAtLQ0KIGFyY2gvYXJjL2NvbmZpZ3MvbnNpbW9zY2lfZGVmY29uZmln
-ICAgICAgICB8ICAyIC0tDQogYXJjaC9hcmMvY29uZmlncy9uc2ltb3NjaV9oc19kZWZjb25maWcg
-ICAgIHwgIDIgLS0NCiBhcmNoL2FyYy9jb25maWdzL25zaW1vc2NpX2hzX3NtcF9kZWZjb25maWcg
-fCAgMiAtLQ0KIGFyY2gvYXJjL2luY2x1ZGUvYXNtL2ZwdS5oICAgICAgICAgICAgICAgICB8ICAy
-ICsrDQogYXJjaC9hcmMvaW5jbHVkZS9hc20vbGlua2FnZS5oICAgICAgICAgICAgIHwgIDIgKysN
-CiBhcmNoL2FyYy9rZXJuZWwvc2V0dXAuYyAgICAgICAgICAgICAgICAgICAgfCAgMiArLQ0KIGFy
-Y2gvYXJjL2tlcm5lbC90cm91Ymxlc2hvb3QuYyAgICAgICAgICAgICB8IDI3ICsrKysrKysrKysr
-Ky0tLS0tLS0tLS0tLS0tLQ0KIDkgZmlsZXMgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMjYg
-ZGVsZXRpb25zKC0pDQo=
+On Thursday, March 12, 2020 12:13:45 PM CET Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Reading ACPI data on ARM64 at a non-aligned offset from
+> /sys/firmware/acpi/tables/data/BERT will cause a splat because
+> the data is I/O memory mapped and being read with just a memcpy.
+> Fix this by introducing an I/O variant of memory_read_from_buffer
+> and using I/O memory mapped copies instead.
+> 
+> Fixes the following splat:
+> 
+> [  439.789355] Unable to handle kernel paging request at virtual address ffff800041ac0007
+> [  439.797275] Mem abort info:
+> [  439.800078]   ESR = 0x96000021
+> [  439.803131]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [  439.808437]   SET = 0, FnV = 0
+> [  439.811486]   EA = 0, S1PTW = 0
+> [  439.814621] Data abort info:
+> [  439.817489]   ISV = 0, ISS = 0x00000021
+> [  439.821319]   CM = 0, WnR = 0
+> [  439.824282] swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000817fc000
+> [  439.830979] [ffff800041ac0007] pgd=000000bffcfff003, pud=0000009f27cee003, pmd=000000bf4b993003, pte=0068000080280703
+> [  439.841584] Internal error: Oops: 96000021 [#1] SMP
+> [  439.846449] Modules linked in: nls_iso8859_1 dm_multipath scsi_dh_rdac scsi_dh_emc scsi_dh_alua ipmi_ssif input_leds joydev ipmi_devintf ipmi_msghandler thunderx2_pmu sch_fq_codel ip_tables x_tables autofs4 btrfs zstd_compress raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor xor_neon raid6_pq libcrc32c raid1 raid0 multipath linear i2c_smbus ast i2c_algo_bit crct10dif_ce drm_vram_helper uas ttm ghash_ce drm_kms_helper sha2_ce syscopyarea sha256_arm64 qede sysfillrect mpt3sas sha1_ce sysimgblt fb_sys_fops raid_class qed drm scsi_transport_sas usb_storage ahci crc8 gpio_xlp i2c_xlp9xx hid_generic usbhid hid aes_neon_bs aes_neon_blk aes_ce_blk crypto_simd cryptd aes_ce_cipher
+> [  439.908474] CPU: 2 PID: 3926 Comm: a.out Not tainted 5.4.0-14-generic #17-Ubuntu
+> [  439.915855] Hardware name: To be filled by O.E.M. Saber/Saber, BIOS 0ACKL027 07/01/2019
+> [  439.923844] pstate: 80400009 (Nzcv daif +PAN -UAO)
+> [  439.928625] pc : __memcpy+0x90/0x180
+> [  439.932192] lr : memory_read_from_buffer+0x64/0x88
+> [  439.936968] sp : ffff8000350dbc70
+> [  439.940270] x29: ffff8000350dbc70 x28: ffff009e9c444b00
+> [  439.945568] x27: 0000000000000000 x26: 0000000000000000
+> [  439.950866] x25: 0000000056000000 x24: ffff800041ac0000
+> [  439.956164] x23: ffff009ea163f980 x22: 0000000000000007
+> [  439.961462] x21: ffff8000350dbce8 x20: 000000000000000e
+> [  439.966760] x19: 0000000000000007 x18: ffff8000112f64a8
+> [  439.972058] x17: 0000000000000000 x16: 0000000000000000
+> [  439.977355] x15: 0000000080280000 x14: ffff800041aed000
+> [  439.982653] x13: ffff009ee9fa2840 x12: ffff800041ad1000
+> [  439.987951] x11: ffff8000115e1360 x10: ffff8000115e1360
+> [  439.993248] x9 : 0000000000010000 x8 : ffff800011ad2658
+> [  439.998546] x7 : ffff800041ac0000 x6 : ffff009ea163f980
+> [  440.003844] x5 : 0140000000000000 x4 : 0000000000010000
+> [  440.009141] x3 : ffff800041ac0000 x2 : 0000000000000007
+> [  440.014439] x1 : ffff800041ac0007 x0 : ffff009ea163f980
+> [  440.019737] Call trace:
+> [  440.022173]  __memcpy+0x90/0x180
+> [  440.025392]  acpi_data_show+0x54/0x80
+> [  440.029044]  sysfs_kf_bin_read+0x6c/0xa8
+> [  440.032954]  kernfs_file_direct_read+0x90/0x2d0
+> [  440.037470]  kernfs_fop_read+0x68/0x78
+> [  440.041210]  __vfs_read+0x48/0x90
+> [  440.044511]  vfs_read+0xd0/0x1a0
+> [  440.047726]  ksys_read+0x78/0x100
+> [  440.051028]  __arm64_sys_read+0x24/0x30
+> [  440.054852]  el0_svc_common.constprop.0+0xdc/0x1d8
+> [  440.059629]  el0_svc_handler+0x34/0xa0
+> [  440.063366]  el0_svc+0x10/0x14
+> [  440.066411] Code: 36180062 f8408423 f80084c3 36100062 (b8404423)
+> [  440.072492] ---[ end trace 45fb374e8d2d800e ]---
+> 
+> A simple reproducer is as follows:
+> 
+> #include <sys/types.h>
+> #include <sys/stat.h>
+> #include <fcntl.h>
+> #include <unistd.h>
+> #include <stdio.h>
+> #include <string.h>
+> 
+> int main(void)
+> {
+>         int fd;
+>         char buffer[7];
+>         ssize_t n;
+> 
+>         fd = open("/sys/firmware/acpi/tables/data/BERT", O_RDONLY);
+>         if (fd < 0) {
+>                 perror("open failed");
+>                 return -1;
+>         }
+>         do {
+>                 n = read(fd, buffer, sizeof(buffer));
+>         } while (n > 0);
+> 
+>         return 0;
+> }
+> 
+> BugLink: https://bugs.launchpad.net/bugs/1866772
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/acpi/sysfs.c   |  2 +-
+>  fs/libfs.c             | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/string.h |  2 ++
+>  3 files changed, 36 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+> index c60d2c6d31d6..fb9e216cb8c0 100644
+> --- a/drivers/acpi/sysfs.c
+> +++ b/drivers/acpi/sysfs.c
+> @@ -446,7 +446,7 @@ static ssize_t acpi_data_show(struct file *filp, struct kobject *kobj,
+>  	base = acpi_os_map_memory(data_attr->addr, data_attr->attr.size);
+>  	if (!base)
+>  		return -ENOMEM;
+> -	rc = memory_read_from_buffer(buf, count, &offset, base,
+> +	rc = memory_read_from_io_buffer(buf, count, &offset, base,
+>  				     data_attr->attr.size);
+>  	acpi_os_unmap_memory(base, data_attr->attr.size);
+>  
+> diff --git a/fs/libfs.c b/fs/libfs.c
+> index c686bd9caac6..3e112c51ce7b 100644
+> --- a/fs/libfs.c
+> +++ b/fs/libfs.c
+> @@ -800,6 +800,39 @@ ssize_t memory_read_from_buffer(void *to, size_t count, loff_t *ppos,
+>  }
+>  EXPORT_SYMBOL(memory_read_from_buffer);
+>  
+> +/**
+> + * memory_read_from_io_buffer - copy data from a io memory mapped buffer
+> + * @to: the kernel space buffer to read to
+> + * @count: the maximum number of bytes to read
+> + * @ppos: the current position in the buffer
+> + * @from: the buffer to read from
+> + * @available: the size of the buffer
+> + *
+> + * The memory_read_from_buffer() function reads up to @count bytes from the
+> + * io memory mappy buffer @from at offset @ppos into the kernel space address
+> + * starting at @to.
+> + *
+> + * On success, the number of bytes read is returned and the offset @ppos is
+> + * advanced by this number, or negative value is returned on error.
+> + **/
+> +ssize_t memory_read_from_io_buffer(void *to, size_t count, loff_t *ppos,
+> +				   const void *from, size_t available)
+> +{
+> +	loff_t pos = *ppos;
+> +
+> +	if (pos < 0)
+> +		return -EINVAL;
+> +	if (pos >= available)
+> +		return 0;
+> +	if (count > available - pos)
+> +		count = available - pos;
+> +	memcpy_fromio(to, from + pos, count);
+> +	*ppos = pos + count;
+> +
+> +	return count;
+> +}
+> +EXPORT_SYMBOL(memory_read_from_io_buffer);
+> +
+>  /*
+>   * Transaction based IO.
+>   * The file expects a single write which triggers the transaction, and then
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 6dfbb2efa815..0c6ec2aa3909 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -216,6 +216,8 @@ int bprintf(u32 *bin_buf, size_t size, const char *fmt, ...) __printf(3, 4);
+>  
+>  extern ssize_t memory_read_from_buffer(void *to, size_t count, loff_t *ppos,
+>  				       const void *from, size_t available);
+> +extern ssize_t memory_read_from_io_buffer(void *to, size_t count, loff_t *ppos,
+> +					  const void *from, size_t available);
+>  
+>  int ptr_to_hashval(const void *ptr, unsigned long *hashval_out);
+>  
+> 
+
+Applied as 5.7 material, thanks!
+
+
+
+
