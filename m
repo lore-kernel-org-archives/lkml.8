@@ -2,154 +2,184 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7888EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 06:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211D0C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 06:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6A7206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 06:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06BA206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 06:21:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f/bl7Gzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgCOGJX (ORCPT
+        id S1727243AbgCOGU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 02:09:23 -0400
-Received: from m17617.mail.qiye.163.com ([59.111.176.17]:59772 "EHLO
-        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgCOGJX (ORCPT
+        Sun, 15 Mar 2020 02:20:58 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36894 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgCOGU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 02:09:23 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 8C94D260F36;
-        Sun, 15 Mar 2020 14:09:08 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>
-Subject: [PATCH v2,RESEND] doc: zh_CN: fix style problems for io_ordering.txt
-Date:   Sat, 14 Mar 2020 23:08:55 -0700
-Message-Id: <20200315060857.82880-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 15 Mar 2020 02:20:58 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02EIGXJJ057712;
+        Sat, 14 Mar 2020 13:16:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584209793;
+        bh=1lwJPvwq3CWt6lu29dsx5P0wKL1ky88ljQV85C0kOk0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=f/bl7Gzgbcnd3eMLfvWxPNyl/ky5CJ0W2N/4ATfZ30oW4ndD5ECenql2F53YUBqxB
+         UZP0B+1dV62iPIKhcczvEDn6kTI8OAqQOKHJFzhXmABPkm8fA8MbC3Dd4+O/CvyMLW
+         +nB1k/M/k6Mh2vhjPd/pHFSyWM9b2DVdoIfEmIZw=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02EIGXGo005896;
+        Sat, 14 Mar 2020 13:16:33 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 14
+ Mar 2020 13:16:33 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sat, 14 Mar 2020 13:16:33 -0500
+Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02EIGVZR040802;
+        Sat, 14 Mar 2020 13:16:31 -0500
+Subject: Re: [PATCH v2] dt-bindings: display: ti: Fix dtc unit-address
+ warnings in examples
+To:     Rob Herring <robh@kernel.org>, <dri-devel@lists.freedesktop.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+References: <20200313180727.23044-1-robh@kernel.org>
+From:   Jyri Sarha <jsarha@ti.com>
+Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0699349c-83a8-fb34-2287-ed02b26bfe4d@ti.com>
+Date:   Sat, 14 Mar 2020 20:16:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVPSUxCQkJCTEhJQkxKSVlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NAw6MRw4GjgzEjdLLU4VSRAZ
-        GjQKFAtVSlVKTkNPSU5JTk5KS01JVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQU9NTU03Bg++
-X-HM-Tid: 0a70dccf76c39375kuws8c94d260f36
+In-Reply-To: <20200313180727.23044-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Problems exist in the Chinese translation of io_ordering.txt.
-Partly for the difference between Chinese and English character
-encoding format, and the others are of the failure to comply
-with the ReST markups.
+On 13/03/2020 20:07, Rob Herring wrote:
+> Extra dtc warnings (roughly what W=1 enables) are now enabled by default
+> when building the binding examples. These were fixed treewide in
+> 5.6-rc5, but some new display bindings have been added with new
+> warnings:
+> 
+> Documentation/devicetree/bindings/display/ti/ti,am65x-dss.example.dts:21.27-49.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
+> Documentation/devicetree/bindings/display/ti/ti,j721e-dss.example.dts:21.27-72.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
+> Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dts:20.27-42.11: Warning (unit_address_format): /example-0/dss@02540000: unit name should not have leading 0s
+> 
+> Cc: Jyri Sarha <jsarha@ti.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
----
-v2: resend for the failure of delivering.
+Acked-by: Jyri Sarha <jsarha@ti.com>
 
- .../translations/zh_CN/io_ordering.txt        | 72 ++++++++++++-------
- 1 file changed, 46 insertions(+), 26 deletions(-)
+> ---
+> v2:
+>  - Drop panel fixes as there's another patch fixing the 3 panels plus
+>    others.
+> ---
+>  Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
+>  Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 2 +-
+>  Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml   | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> index cac61a998203..aa5543a64526 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> @@ -121,7 +121,7 @@ examples:
+>      #include <dt-bindings/interrupt-controller/irq.h>
+>      #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>  
+> -    dss: dss@04a00000 {
+> +    dss: dss@4a00000 {
+>              compatible = "ti,am65x-dss";
+>              reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
+>                      <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> index ade9b2f513f5..6d47cd7206c2 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> @@ -154,7 +154,7 @@ examples:
+>      #include <dt-bindings/interrupt-controller/irq.h>
+>      #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>  
+> -    dss: dss@04a00000 {
+> +    dss: dss@4a00000 {
+>              compatible = "ti,j721e-dss";
+>              reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
+>                      <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> index 385bd060ccf9..7cb37053e95b 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> @@ -81,7 +81,7 @@ examples:
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>      #include <dt-bindings/interrupt-controller/irq.h>
+>  
+> -    dss: dss@02540000 {
+> +    dss: dss@2540000 {
+>              compatible = "ti,k2g-dss";
+>              reg =   <0x02540000 0x400>,
+>                      <0x02550000 0x1000>,
+> 
 
-diff --git a/Documentation/translations/zh_CN/io_ordering.txt b/Documentation/translations/zh_CN/io_ordering.txt
-index 1f8127bdd415..080ed2911db0 100644
---- a/Documentation/translations/zh_CN/io_ordering.txt
-+++ b/Documentation/translations/zh_CN/io_ordering.txt
-@@ -29,39 +29,59 @@ Documentation/io_ordering.txt 的中文翻译
- 这也可以保证后面的写操作只在前面的写操作之后到达设备（这非常类似于内存
- 屏障操作，mb()，不过仅适用于I/O）。
- 
-+A more concrete example from a hypothetical device driver::
-+
-+		...
-+	CPU A:  spin_lock_irqsave(&dev_lock, flags)
-+	CPU A:  val = readl(my_status);
-+	CPU A:  ...
-+	CPU A:  writel(newval, ring_ptr);
-+	CPU A:  spin_unlock_irqrestore(&dev_lock, flags)
-+		...
-+	CPU B:  spin_lock_irqsave(&dev_lock, flags)
-+	CPU B:  val = readl(my_status);
-+	CPU B:  ...
-+	CPU B:  writel(newval2, ring_ptr);
-+	CPU B:  spin_unlock_irqrestore(&dev_lock, flags)
-+		...
-+
-+
- 假设一个设备驱动程的具体例子：
-+::
- 
-+		...
-+	CPU A:  spin_lock_irqsave(&dev_lock, flags)
-+	CPU A:  val = readl(my_status);
-+	CPU A:  ...
-+	CPU A:  writel(newval, ring_ptr);
-+	CPU A:  spin_unlock_irqrestore(&dev_lock, flags)
-+		...
-+	CPU B:  spin_lock_irqsave(&dev_lock, flags)
-+	CPU B:  val = readl(my_status);
-+	CPU B:  ...
-+	CPU B:  writel(newval2, ring_ptr);
-+	CPU B:  spin_unlock_irqrestore(&dev_lock, flags)
-         ...
--CPU A:  spin_lock_irqsave(&dev_lock, flags)
--CPU A:  val = readl(my_status);
--CPU A:  ...
--CPU A:  writel(newval, ring_ptr);
--CPU A:  spin_unlock_irqrestore(&dev_lock, flags)
--        ...
--CPU B:  spin_lock_irqsave(&dev_lock, flags)
--CPU B:  val = readl(my_status);
--CPU B:  ...
--CPU B:  writel(newval2, ring_ptr);
--CPU B:  spin_unlock_irqrestore(&dev_lock, flags)
--        ...
-+
- 
- 上述例子中，设备可能会先接收到newval2的值，然后接收到newval的值，问题就
- 发生了。不过很容易通过下面方法来修复：
-+::
- 
--        ...
--CPU A:  spin_lock_irqsave(&dev_lock, flags)
--CPU A:  val = readl(my_status);
--CPU A:  ...
--CPU A:  writel(newval, ring_ptr);
--CPU A:  (void)readl(safe_register); /* 配置寄存器？*/
--CPU A:  spin_unlock_irqrestore(&dev_lock, flags)
--        ...
--CPU B:  spin_lock_irqsave(&dev_lock, flags)
--CPU B:  val = readl(my_status);
--CPU B:  ...
--CPU B:  writel(newval2, ring_ptr);
--CPU B:  (void)readl(safe_register); /* 配置寄存器？*/
--CPU B:  spin_unlock_irqrestore(&dev_lock, flags)
-+		...
-+	CPU A:  spin_lock_irqsave(&dev_lock, flags)
-+	CPU A:  val = readl(my_status);
-+	CPU A:  ...
-+	CPU A:  writel(newval, ring_ptr);
-+	CPU A:  (void)readl(safe_register); /* 配置寄存器？*/
-+	CPU A:  spin_unlock_irqrestore(&dev_lock, flags)
-+		...
-+	CPU B:  spin_lock_irqsave(&dev_lock, flags)
-+	CPU B:  val = readl(my_status);
-+	CPU B:  ...
-+	CPU B:  writel(newval2, ring_ptr);
-+	CPU B:  (void)readl(safe_register); /* 配置寄存器？*/
-+	CPU B:  spin_unlock_irqrestore(&dev_lock, flags)
- 
- 在解决方案中，读取safe_register寄存器，触发IO芯片清刷未处理的写操作，
- 再处理后面的读操作，防止引发数据不一致问题。
+
 -- 
-2.17.1
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
