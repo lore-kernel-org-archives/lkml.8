@@ -2,99 +2,156 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA81C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBCEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290F22074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584147073;
-	bh=tlCJtAe3msJiqNgtKRj65iWpE19bpZNu0eyGfsjoQ5A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BQtcvV3wHotI+IsftsneUmQg2dkJL6ZQj8QmwMZ51pkPQJNPji+TJPVtFM0sGmTtU
-	 irBZIm+jCUl4IwRln/du4Kz5txG01Sy7VKPH2Ewk+rDTQyxjUZE+HD2T3JhS4+VnhD
-	 23IfNZt5v/7mAoisFEMgwYnSROoaHJb+AqFQxMH8=
+	by mail.kernel.org (Postfix) with ESMTP id 3A2B12074C
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:53:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UrNFuATq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbgCNAvL (ORCPT
+        id S1727767AbgCNAxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:51:11 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37747 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgCNAvL (ORCPT
+        Fri, 13 Mar 2020 20:53:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47897 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727629AbgCNAxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:51:11 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j11so9361623lfg.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:51:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N5w4U+mOCcTiVuYDq+MXzMGJDsYiXTEA/liBKIfgsNo=;
-        b=CuZ6m+O8ocHYyKfETYioICJSPSG6jO2l5sVNRexToIRXGGlWfI0a1s0ftc+276o4kL
-         +uJLTjdL3K3G1tQ4MaaU3TpK73x5dELWgmEQvjyRbEV+XaVWnseYbRydLcyLf9Ta4Gzj
-         hdHX62pz+h52pKbzWGSD8FI7QHQkc8een7N4U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N5w4U+mOCcTiVuYDq+MXzMGJDsYiXTEA/liBKIfgsNo=;
-        b=Eye2JxuLP/Wy87T6Xjhx49nUavSPm7bf/DHvu6fSUZ2IujnNqA/mhRMwmvYUU8Ta5w
-         ySN3NCIERCKJwB0u72HCpb/ZidsOMcYnQcitf59IutuF/Q2u7d3EZC7igRz7ji2m7dyZ
-         M+RgSXB/+p2RI18nWr/J0lWHRfNVF8HjXfS2vSrdo3A/vnEjADb3ageSCix5WC8ahXZG
-         /2Ves5umJoWgHmlWiRb8utmOCGsi1QzhZp9RrFf+T8BOBjzUje/3BUj58JL9m4cXeDdB
-         jWgTaRvO1OE8Wcc3C0o+W/3nLxHMmSZikg0PVpCHgCeVuzbfh2qw7yLt4KAvhyQDqOwM
-         z7zA==
-X-Gm-Message-State: ANhLgQ2PpojmcpNuy3WMiyHtJzncfv2zvM9j70cD2Gm/BUZSsIwl52tg
-        Oh5tvb5nop2s+pdwkxcfjUCFbYzcAns=
-X-Google-Smtp-Source: ADFU+vvClD5X8m7RSAw6MTWi1dWzO50aznYA+oqzNVTwpRoNlKVT+Ee7g0kIhvet/NJ0XzrQCe8xXQ==
-X-Received: by 2002:a19:fc1d:: with SMTP id a29mr10179994lfi.209.1584147068271;
-        Fri, 13 Mar 2020 17:51:08 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id f9sm10249481ljo.73.2020.03.13.17.51.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 17:51:07 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id 19so12519309ljj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:51:07 -0700 (PDT)
-X-Received: by 2002:a05:651c:555:: with SMTP id q21mr9713597ljp.241.1584147066920;
- Fri, 13 Mar 2020 17:51:06 -0700 (PDT)
+        Fri, 13 Mar 2020 20:53:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584147224;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y9gJ39nM22R6BINLHw3+oLq/uGsj2PXaZMR61+u7WNg=;
+        b=UrNFuATqm2haZeZ0wBboASLjVwF2k6+ReBMRzrPrzWYMuTkJzbsV4Msil5fDqRhUsfF8Sq
+        MUhqVKOxbwpR/G6meJOBKOHNigZbCV4m2HoQQrN5Ksb7AMmI2bkgNevmUadXTXZwSX4Tna
+        bjKK+eOWCy1Z6YLoQ0A4Q9BcgQSd/Jg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-150-ezN-Em1yPKWNPoaIkECnTA-1; Fri, 13 Mar 2020 20:53:42 -0400
+X-MC-Unique: ezN-Em1yPKWNPoaIkECnTA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC6AE477;
+        Sat, 14 Mar 2020 00:53:40 +0000 (UTC)
+Received: from localhost (ovpn-12-20.pek2.redhat.com [10.72.12.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 89D335DA2C;
+        Sat, 14 Mar 2020 00:53:37 +0000 (UTC)
+Date:   Sat, 14 Mar 2020 08:53:34 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, willy@infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
+        richard.weiyang@gmail.com
+Subject: Re: [PATCH v3] mm/sparse.c: Use kvmalloc_node/kvfree to alloc/free
+ memmap for the classic sparse
+Message-ID: <20200314005334.GO27711@MiWiFi-R3L-srv>
+References: <20200312130822.6589-1-bhe@redhat.com>
+ <20200312141749.GL27711@MiWiFi-R3L-srv>
+ <20200313145619.GD21007@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200223011154.GY23230@ZenIV.linux.org.uk> <20200301215125.GA873525@ZenIV.linux.org.uk>
- <20200313235303.GP23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200313235303.GP23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 13 Mar 2020 17:50:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whainTcvgF01vsSmN+y7s7U1qMA-QbM5qFQ3s4xQHwaJw@mail.gmail.com>
-Message-ID: <CAHk-=whainTcvgF01vsSmN+y7s7U1qMA-QbM5qFQ3s4xQHwaJw@mail.gmail.com>
-Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v4)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313145619.GD21007@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 4:53 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
->         Review and testing would be _very_ welcome;
+On 03/13/20 at 03:56pm, Michal Hocko wrote:
+> On Thu 12-03-20 22:17:49, Baoquan He wrote:
+> > This change makes populate_section_memmap()/depopulate_section_memmap
+> > much simpler.
+> 
+> Not only and you should make it more explicit. It also tries to allocate
+> memmaps from the target numa node so this is a functional change. I
+> would prefer to have that in a separate patch in case we hit some weird
+> NUMA setups which would choke on memory less nodes and similar horrors.
 
-I didn't notice anythign else than the few things I sent out to
-individual patches.
+Yes, splitting sounds more reasonable, I would love to do that. One
+question is I noticed Andrew had picked this into -mm tree, if I post a
+new patchset including these two small patches, whether it's convenient
+to drop the old one and get these two merged.
 
-But I have to say, 69 patches is too long of a series to review. I
-think you could send them out as multiple series (you describe them
-that way anyway - parts 1-7) with a day in between.
+Sorry, I don't know very well how this works in mm maintaining.
 
-Because my eyes were starting to glaze over about halfway in the series.
+> 
+> > Suggested-by: Michal Hocko <mhocko@kernel.org>
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> 
+> I do not see any reason this shouldn't work. Btw. did you get to test
+> it?
+> 
+> Feel free to add
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> to both patches if you go and split.
+> 
+> > ---
+> > v2->v3:
+> >   Remove __GFP_NOWARN and use array_size when calling kvmalloc_node()
+> >   per Matthew's comments.
+> > 
+> >  mm/sparse.c | 27 +++------------------------
+> >  1 file changed, 3 insertions(+), 24 deletions(-)
+> > 
+> > diff --git a/mm/sparse.c b/mm/sparse.c
+> > index bf6c00a28045..bb99633575b5 100644
+> > --- a/mm/sparse.c
+> > +++ b/mm/sparse.c
+> > @@ -734,35 +734,14 @@ static void free_map_bootmem(struct page *memmap)
+> >  struct page * __meminit populate_section_memmap(unsigned long pfn,
+> >  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+> >  {
+> > -	struct page *page, *ret;
+> > -	unsigned long memmap_size = sizeof(struct page) * PAGES_PER_SECTION;
+> > -
+> > -	page = alloc_pages(GFP_KERNEL|__GFP_NOWARN, get_order(memmap_size));
+> > -	if (page)
+> > -		goto got_map_page;
+> > -
+> > -	ret = vmalloc(memmap_size);
+> > -	if (ret)
+> > -		goto got_map_ptr;
+> > -
+> > -	return NULL;
+> > -got_map_page:
+> > -	ret = (struct page *)pfn_to_kaddr(page_to_pfn(page));
+> > -got_map_ptr:
+> > -
+> > -	return ret;
+> > +	return kvmalloc_node(array_size(sizeof(struct page),
+> > +			PAGES_PER_SECTION), GFP_KERNEL, nid);
+> >  }
+> >  
+> >  static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_pages,
+> >  		struct vmem_altmap *altmap)
+> >  {
+> > -	struct page *memmap = pfn_to_page(pfn);
+> > -
+> > -	if (is_vmalloc_addr(memmap))
+> > -		vfree(memmap);
+> > -	else
+> > -		free_pages((unsigned long)memmap,
+> > -			   get_order(sizeof(struct page) * PAGES_PER_SECTION));
+> > +	kvfree(pfn_to_page(pfn));
+> >  }
+> >  
+> >  static void free_map_bootmem(struct page *memmap)
+> > -- 
+> > 2.17.2
+> > 
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
+> 
 
-But don't do it for this version. If you do a #5. But it would be good
-to be in -next regardless of whether you do a #5 or not.
-
-                 Linus
