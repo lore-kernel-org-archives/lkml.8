@@ -2,163 +2,90 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DATE_IN_PAST_12_24,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC87C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F49AC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8B220578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C093A20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:37:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="SG5VD3z4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgCODhL (ORCPT
+        id S1727554AbgCODhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:37:11 -0400
-Received: from mail-qv1-f69.google.com ([209.85.219.69]:55159 "EHLO
-        mail-qv1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCODhL (ORCPT
+        Sat, 14 Mar 2020 23:37:35 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46390 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCODhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:37:11 -0400
-Received: by mail-qv1-f69.google.com with SMTP id s7so12627487qvl.21
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 20:37:08 -0700 (PDT)
+        Sat, 14 Mar 2020 23:37:35 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w12so6210377pll.13
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 20:37:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=/+9Q8TJ7jtUHpxRJyGUZ1bL86SBe7tVjOmhbbOA4p4w=;
+        b=SG5VD3z4MI8OduY4+2c3wYVTGDxZx6rfjOy9JvWLiHNHsY2hQyAoP0lwTCXSev6QbO
+         ROubWXIRQkgbTJ2+P2NPwnxQAY5jSgsq9oNiRl6qOQO/u3mz/NKMzUiyFaxap0XDRYb6
+         7OU8qGPjTqzxy+OwjkGyUlU9h6kWIB3H7s8mEMK/rPlLR51mo5OWHJs74cop8QLPfT/M
+         8G+6wBz5Rvc2qvVTMnuPdBquQbW9CwJksbbU/Kqx3lyrrMq9BBBbh9BTuD7+eOTroTsM
+         M/+Hlfot730nD9afcqDOp6rhHNZPe9QxozAI2p3v21Lkcu5LrtghZVuXsyC9Qd5P97o3
+         0bNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pprWkeLcDDK7OkQ2Y9iXM9XZrZXSn7f3XX4nhoo6rSw=;
-        b=oLPbRMyELsIqn2H5B3V8RWcWr04VuLI37tyyglk1Yr/CuGqOsmdrjzjR3viPLBhUm6
-         7hjMx0quK7Dys/gRPG3e09vnLbu4Jg4gjKRPlWy7hmG52MdxnXZ1Oc+AK4WWo2AGOktm
-         gOloyPtw0by3lAkvjLRKuxLlz4UDXoW5agreMHU4c51WwEMIl9fllc+vKUisX04cTuyK
-         1gHwYGQ3Iz28ik7i1YkMoRitx8R/U4ohz/HQaGR8dmG5JjXLXDH38LSv4RjzwnaN488q
-         RMLCqwzqLsV1CjERsRKplTf57HMt7t5byaPpZpByc3XEDXv3XmJUh27UEnXTUCTGY1WQ
-         05dg==
-X-Gm-Message-State: ANhLgQ0DbrRe22aEZv6C2/dMfO/vg2da1M6DGVGiITsGsPVYFxVBB7Ca
-        UxlivwZU3XYdhwIZzc8WA5dcgYl3ZvtLf7c+n+5QpRmV1dIi
-X-Google-Smtp-Source: ADFU+vu2SXA/dKpQ43odLnhOnSlKUPuNIrM34J+wCtnsfBmqnncXyUprk3FWCWZot0YxZl1vOGPZQCGFQ14BqT55KcFyz/7xGn41
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/+9Q8TJ7jtUHpxRJyGUZ1bL86SBe7tVjOmhbbOA4p4w=;
+        b=WKtIOIjSgJJFIWSsFvy1A5k38b8s+ZMZ02mLL/NNfegILc6uztb6CVTsFtBW0Njdac
+         TsjYZpqTH5aRgQsxIEDYXyor8VTH3pseV3LR6z35gZAcBODlKfKj3TOqjnHPaJFlYES0
+         /gnqwTrzyu1S0roI1mayhPbme+ZRfMp+dl4J9LFcK6kmEEMHd3vF0CbgG1tpReQnUC7h
+         zpN+/59et8swk2E6kb9T1/wwDTfY06RIIatpLDZpSfj6TgsLGy8n2x3iosudL0ozorYx
+         nOwUM35ZBF8uZVf2epM2GSac1DEMpqtHcqAinYJBhkqtrhx1N1XbRN5XlP6BLa7hc/qX
+         SzJQ==
+X-Gm-Message-State: ANhLgQ3k2DYSWclMqhp5O8cfW/03Fuv0fmcJlSnr6GtcFJ9qig3awYCU
+        +7PhaDsoJTTwjPR+QqLYkGLWlRomkV7+RA==
+X-Google-Smtp-Source: ADFU+vtUob9/wk2Xo5IPPKPI0Pio7lMK+3XwsB2YuJ0xrn4KtFRW2bv81Vj2/I2bo284+Z7N4zVwcw==
+X-Received: by 2002:aa7:8b03:: with SMTP id f3mr20486548pfd.133.1584201520387;
+        Sat, 14 Mar 2020 08:58:40 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id n7sm3779560pgm.28.2020.03.14.08.58.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Mar 2020 08:58:39 -0700 (PDT)
+Subject: Re: [PATCH 5.6] io_uring: NULL-deref for IOSQE_{ASYNC,DRAIN}
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <3fff749b19ae1c3c2d59e88462a8a5bfc9e6689f.1584127615.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <62bc8817-5777-7f79-3c27-028a770e2f3b@kernel.dk>
+Date:   Sat, 14 Mar 2020 09:58:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:8645:: with SMTP id e63mr14230111jai.14.1584172630425;
- Sat, 14 Mar 2020 00:57:10 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 00:57:10 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e642a905a0cbee6e@google.com>
-Subject: linux-next test error: WARNING: suspicious RCU usage in ovs_ct_exit
-From:   syzbot <syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dev@openvswitch.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3fff749b19ae1c3c2d59e88462a8a5bfc9e6689f.1584127615.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 3/13/20 1:29 PM, Pavel Begunkov wrote:
+> Processing links, io_submit_sqe() prepares requests, drops sqes, and
+> passes them with sqe=NULL to io_queue_sqe(). There IOSQE_DRAIN and/or
+> IOSQE_ASYNC requests will go through the same prep, which doesn't expect
+> sqe=NULL and fail with NULL pointer deference.
+> 
+> Always do full prepare including io_alloc_async_ctx() for linked
+> requests, and then it can skip the second preparation.
 
-syzbot found the following crash on:
+Thanks, applied.
 
-HEAD commit:    2e602db7 Add linux-next specific files for 20200313
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16669919e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cf2879fc1055b886
-dashboard link: https://syzkaller.appspot.com/bug?extid=7ef50afd3a211f879112
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+-- 
+Jens Axboe
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com
-
-=============================
-WARNING: suspicious RCU usage
-5.6.0-rc5-next-20200313-syzkaller #0 Not tainted
------------------------------
-net/openvswitch/conntrack.c:1898 RCU-list traversed in non-reader section!!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-3 locks held by kworker/u4:3/127:
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: __write_once_size include/linux/compiler.h:250 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: set_work_data kernel/workqueue.c:615 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: process_one_work+0x82a/0x1690 kernel/workqueue.c:2237
- #1: ffffc900013a7dd0 (net_cleanup_work){+.+.}, at: process_one_work+0x85e/0x1690 kernel/workqueue.c:2241
- #2: ffffffff8a54df08 (pernet_ops_rwsem){++++}, at: cleanup_net+0x9b/0xa50 net/core/net_namespace.c:551
-
-stack backtrace:
-CPU: 0 PID: 127 Comm: kworker/u4:3 Not tainted 5.6.0-rc5-next-20200313-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- ovs_ct_limit_exit net/openvswitch/conntrack.c:1898 [inline]
- ovs_ct_exit+0x3db/0x558 net/openvswitch/conntrack.c:2295
- ovs_exit_net+0x1df/0xba0 net/openvswitch/datapath.c:2469
- ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:172
- cleanup_net+0x511/0xa50 net/core/net_namespace.c:589
- process_one_work+0x94b/0x1690 kernel/workqueue.c:2266
- worker_thread+0x96/0xe20 kernel/workqueue.c:2412
- kthread+0x357/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-tipc: TX() has been purged, node left!
-
-=============================
-WARNING: suspicious RCU usage
-5.6.0-rc5-next-20200313-syzkaller #0 Not tainted
------------------------------
-net/ipv4/ipmr.c:1757 RCU-list traversed in non-reader section!!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-4 locks held by kworker/u4:3/127:
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: __write_once_size include/linux/compiler.h:250 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: set_work_data kernel/workqueue.c:615 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: process_one_work+0x82a/0x1690 kernel/workqueue.c:2237
- #1: ffffc900013a7dd0 (net_cleanup_work){+.+.}, at: process_one_work+0x85e/0x1690 kernel/workqueue.c:2241
- #2: ffffffff8a54df08 (pernet_ops_rwsem){++++}, at: cleanup_net+0x9b/0xa50 net/core/net_namespace.c:551
- #3: ffffffff8a559c80 (rtnl_mutex){+.+.}, at: ip6gre_exit_batch_net+0x88/0x700 net/ipv6/ip6_gre.c:1602
-
-stack backtrace:
-CPU: 1 PID: 127 Comm: kworker/u4:3 Not tainted 5.6.0-rc5-next-20200313-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- ipmr_device_event+0x240/0x2b0 net/ipv4/ipmr.c:1757
- notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
- call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
- call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
- call_netdevice_notifiers net/core/dev.c:1974 [inline]
- rollback_registered_many+0x75c/0xe70 net/core/dev.c:8810
- unregister_netdevice_many.part.0+0x16/0x1e0 net/core/dev.c:9966
- unregister_netdevice_many+0x36/0x50 net/core/dev.c:9965
- ip6gre_exit_batch_net+0x4e8/0x700 net/ipv6/ip6_gre.c:1605
- ops_exit_list.isra.0+0x103/0x150 net/core/net_namespace.c:175
- cleanup_net+0x511/0xa50 net/core/net_namespace.c:589
- process_one_work+0x94b/0x1690 kernel/workqueue.c:2266
- worker_thread+0x96/0xe20 kernel/workqueue.c:2412
- kthread+0x357/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
