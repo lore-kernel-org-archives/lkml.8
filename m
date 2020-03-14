@@ -2,75 +2,87 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E8CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58CBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D662074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9382074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 03:12:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAAimfC0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W6ezz92F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgCNDGa (ORCPT
+        id S1726734AbgCNDMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 23:06:30 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36524 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgCNDG3 (ORCPT
+        Fri, 13 Mar 2020 23:12:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33997 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgCNDMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 23:06:29 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k18so11697082oib.3;
-        Fri, 13 Mar 2020 20:06:29 -0700 (PDT)
+        Fri, 13 Mar 2020 23:12:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 23so6452450pfj.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 20:12:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FIpHicZ3t9iIlvAbQDoq7yMgDqITyaH5TIJrz/BqXnM=;
-        b=NAAimfC0p9VaenVIBoNc/nXoUJmTfCBBHj9MpZpCP7nHRHcLBzmm6zUeHIBZvVtWRt
-         mJ5R3vyondjX/f0i3lscFfQ5x2Nbau1h3IfKZw4q6ejGhglYAXNCxRJZe1YV1MOxukPD
-         +FayuF/OqdlrlnEVzzfre8Yaok9gij1C3LmCcUAZJZw79Akd04ifEGqhJM50bffXCVnl
-         vEQrcXfsuKn07yLI80azzBdAtJmEdMQ+LXmejItwaKiwjuKjcnpaZXMtPHsxQdi69Pqj
-         XNCoZWP8/2wQORG18Y9CcYRNpe+2SQwNRpDZTAq+8lpGZlKJUphCV0fEjr0plp3buouR
-         YITg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=a4vxLIWWizY4c94tKl8VxzoeCXjGcvdAGAK/KKBIiws=;
+        b=W6ezz92Fnc3Q/6TEc9BYLSA6xe+WA9hEJXfgEQZIyFIsHVOW2NBbH5DPiqAJcu5JuP
+         89pFOrYQQjN250fN/yIJqbyrY/PL2EEyLT0eNefPLUNFyPanFZWHpCahR/d0OOLoVWkK
+         KJRWch1vHZa9uSzMPyR92lWlIsKeosUfl0jqI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FIpHicZ3t9iIlvAbQDoq7yMgDqITyaH5TIJrz/BqXnM=;
-        b=ugHzi2zA2tsQGLvRER3WGtAIYDIO7Mw7eKptjM8isy7aWMbl5858v646QBqAvNvKR7
-         dbDzDNl2FCQJMQeBp9D90cD1oXjLp+4/zBhkQxMypYIUonKLfc3c5X+mfhR8DEb6q1Nj
-         d4o4HjXToDswQXB5KQTS8qYggb0Hoc7VdJEXZbfDLqGcQNJ57D8qpaIoeljypAGkysG9
-         eZmVjnpP8HHpVzNTjTfdoJYJe2KdxLrfNhqCfVrrYb0c4ilnzTulNHtcaL4IYQe36UzH
-         IyBvMrMKCVqxrn9SpD8ZCB3k46IogAVLVxMBHyIpRmDVTN0HMG3Pum2N1yKUYe6xCkIQ
-         TMwQ==
-X-Gm-Message-State: ANhLgQ1D1O+0jmumXK+PBn4Ttk77QE81oTR0LDS6i0cAPT88zoaXOAyY
-        GXxMqbvxTlnzobirdwOPg2NtV1/0R2IcQPf8HjQ=
-X-Google-Smtp-Source: ADFU+vv+zz6mLJGMtBLZeG/y3TyjgadbSgFd0aMkwIDIez8u0HV/7xNg+u9i1KofFi51L+0wEWOj9FIqxKLcdYC4LuU=
-X-Received: by 2002:aca:d489:: with SMTP id l131mr9876433oig.5.1584155189018;
- Fri, 13 Mar 2020 20:06:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=a4vxLIWWizY4c94tKl8VxzoeCXjGcvdAGAK/KKBIiws=;
+        b=FYmtOzfXi4CZqH4F763Pgj8B6B8YzE5BvoirWXSh0EnYTO6GkK0RQFzt/vQRZ4FLLp
+         TvEP5kSC2j9jX3hRC5g+qw8OrDJ7xTYtx2f0bucCSMUu1ReWKw/DWSY5CRD3n9LEHSG5
+         81zcZd+VcJo+6/0kjPetcon7/3bo4i00e4bizr7hxLoXHWpBWorx8KX23xaXntZUJzxu
+         PzWh5ufmxGlGLkClO0rHJ8OLdgwpZr3qf7rNTLixxXbBJD68WCDedgV4IwnQk8ng1wdC
+         HiiaCha8C3cNu57CMC7Bg1UmxefuTiDpl3NPSg/xFLsBwrDQI6YfYyzg4XuYCwcyvfWM
+         tGoA==
+X-Gm-Message-State: ANhLgQ0djKZaounuNmN2/iMYajP8qcRQWnLBTgpxLL3eZTKO53pSeTUB
+        7KXvoY5xeVdyjTTQ2SxCCGk32Q==
+X-Google-Smtp-Source: ADFU+vs4x5cG7qYmSSdMh7Lt9j4AbCiuf8O4X5jvNemXHgiKvZMzloMDqnCWSAI9GJ6X1EWvJR70AA==
+X-Received: by 2002:a63:3193:: with SMTP id x141mr16084059pgx.311.1584155572098;
+        Fri, 13 Mar 2020 20:12:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k3sm2188966pgr.40.2020.03.13.20.12.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 20:12:51 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 20:12:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org, mcgrof@kernel.org, yzaikin@google.com,
+        tglx@linutronix.de, kernel@gpiccoli.net
+Subject: Re: [PATCH] kernel/hung_task.c: Introduce sysctl to print all traces
+ when a hung task is detected
+Message-ID: <202003132011.8143A71FE@keescook>
+References: <20200310155650.17968-1-gpiccoli@canonical.com>
+ <ef3b3e9a-9d58-60ec-d638-88ad57d29aec@canonical.com>
 MIME-Version: 1.0
-References: <000000000000bf5ff105a01fef33@google.com>
-In-Reply-To: <000000000000bf5ff105a01fef33@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Fri, 13 Mar 2020 20:06:18 -0700
-Message-ID: <CAM_iQpUo0L0+J7aGTvUsBWZ=A8cGxyN7oJVjqyent+9OCbJ_Jg@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in tcf_queue_work
-To:     syzbot <syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ef3b3e9a-9d58-60ec-d638-88ad57d29aec@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz test: https://github.com/congwang/linux.git tcindex
+On Fri, Mar 13, 2020 at 02:23:37PM -0300, Guilherme G. Piccoli wrote:
+> Kees / Testsuo, are you OK with this patch once I resend with the
+> suggestions you gave me?
+
+I think so, yes. Send a v2 (to akpm with us in CC).
+
+> Is there anybody else I should loop in the patch that should take a
+> look? Never sent sysctl stuff before, sorry if I forgot somebody heheh
+
+akpm usually takes these kinds of things.
+
+-- 
+Kees Cook
