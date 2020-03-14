@@ -2,125 +2,114 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64083C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0DFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360062074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OWlp8EXr"
+	by mail.kernel.org (Postfix) with ESMTP id CFBD32074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584146429;
+	bh=6XBzNk9f4cBp+6gsTMIq5tmmgeRde+XSt+QOe7pklG8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ahPSLFgPqG2Qi3wrA4YiOsrs/LQ0yjLs0xKYjudcJUM0i0ybqRHMkvFBHzZw+bPhy
+	 tUWbibAK6KQHxNDQU0COXhwmawcpHwE3us0ihSr55+MJ840JcB2o4cezEko7fJ8SKC
+	 IlyPZ3Nsb4bjCNVwBC2ihTsa+JhEHoZW8Rm0Yqd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbgCNAfQ (ORCPT
+        id S1727693AbgCNAkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:35:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36231 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727690AbgCNAfP (ORCPT
+        Fri, 13 Mar 2020 20:40:23 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43493 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbgCNAkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:35:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584146114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=btIWlwHO4JU3aOAw46JleS0jrUoaiiuQDvpeGyEbgqA=;
-        b=OWlp8EXrXxReIMtcV4rmOqSfe8xssxgC+R8ls8QyF7O1tIRKT6SZWCmU6No3kjwJvHuMs/
-        KJwYNj3gsZ+J6jKpP0BxfWenFw4n1e33IgfG9WZHL9qM4GZoI3Lire2dW9Jb64HXhpB4s6
-        b3SbHCDVucVT4di+SmA64SMIaDfxl3s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-cpvF39fAP22Ln-wvLpPAJw-1; Fri, 13 Mar 2020 20:35:12 -0400
-X-MC-Unique: cpvF39fAP22Ln-wvLpPAJw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55209184D264;
-        Sat, 14 Mar 2020 00:35:11 +0000 (UTC)
-Received: from localhost (ovpn-12-20.pek2.redhat.com [10.72.12.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B270B8FBE1;
-        Sat, 14 Mar 2020 00:35:10 +0000 (UTC)
-Date:   Sat, 14 Mar 2020 08:35:07 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200314003507.GN27711@MiWiFi-R3L-srv>
-References: <20200313214214.4d2e2af6@canb.auug.org.au>
- <20200313125627.GA8518@MiWiFi-R3L-srv>
- <20200314110954.580b58dd@canb.auug.org.au>
+        Fri, 13 Mar 2020 20:40:23 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r7so12514487ljp.10
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JqSpkfWgbM1F3EW77t+yz+x0olHI1MIS3rmLQvUjsfY=;
+        b=h0Tz0gWq3PbDuwAlu8mqUD6SjZrPMaRqc/j4UZj9jQmUowcFOJJIi9ZCL8z83J1tXE
+         7Au04VqmCECr7JqBbrxgltGl9GD8U4c5Fd2GyuYbKWoDz44wGtx5f6hrTX4vk7/Z25K2
+         eP89+Og4D6pSQCoVRZqpyW94FiDJOnuSc0uxA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JqSpkfWgbM1F3EW77t+yz+x0olHI1MIS3rmLQvUjsfY=;
+        b=kr0zyuVIsdSLASlCpQIEb3azy2Jc1Ml3WPvBS1SCbrqpAD48T6tYlXLjVdB5jTzzF1
+         eWt6id5Ee8+hrEcaJv2qJzgwQIkLmXA/c2TYvzJ79OKsfdDI7/u4LQyFC3+2LEXtiRVd
+         8bqlvEUC5Npm6dS0zSXf8LWL4J2JeIWi/0Pui3cIsRiAFCndB4L5l72HMuiTxQazN39M
+         Gi/xRANYVgdlqWydqfHaBKmlm1vp970e7q74Dr/hk3VoyBX/9OzePya6H/8tOT4OcYZE
+         v9bwuXwsMx3yhfEORPctjuDj4Lma83Q5ckYAy8292G0KxfzqysyWaNPRHjbk7GSIca/0
+         +SVw==
+X-Gm-Message-State: ANhLgQ2m0bEgor2rp3E9TyW89Epcaqne5M6t8PHJA6jp2RsmLd9D/5Wz
+        dTzVqGo4nV50EnIH6MMAXOFKsO6+1Hs=
+X-Google-Smtp-Source: ADFU+vuOIPTrogx32ItSzjOZoa5s5+y/1NTk/C+CFkxSdLXPvMCUC2QApnqDYeByFOjSeCeSH6dxoQ==
+X-Received: by 2002:a2e:9949:: with SMTP id r9mr8216866ljj.135.1584146420366;
+        Fri, 13 Mar 2020 17:40:20 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id r15sm3217009lfp.93.2020.03.13.17.40.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 17:40:19 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 5so2226332lfr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:40:19 -0700 (PDT)
+X-Received: by 2002:ac2:5508:: with SMTP id j8mr10082934lfk.31.1584146418864;
+ Fri, 13 Mar 2020 17:40:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200314110954.580b58dd@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200313235303.GP23230@ZenIV.linux.org.uk> <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
+ <20200313235357.2646756-20-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20200313235357.2646756-20-viro@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 13 Mar 2020 17:40:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjQjL+W66NZ=+Rc_ibEznmt9bcY5MjxgLkqV1DtrFM4ow@mail.gmail.com>
+Message-ID: <CAHk-=wjQjL+W66NZ=+Rc_ibEznmt9bcY5MjxgLkqV1DtrFM4ow@mail.gmail.com>
+Subject: Re: [RFC][PATCH v4 20/69] merging pick_link() with get_link(), part 2
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/14/20 at 11:09am, Stephen Rothwell wrote:
-> Hi Baoquan,
-> 
-> On Fri, 13 Mar 2020 20:56:27 +0800 Baoquan He <bhe@redhat.com> wrote:
-> >
-> > I made below change, but I can't triger these warnings. Could you try
-> > below patch, see if it's works?
-> 
-> I needed to add "ARCH=x86_64" to the "make allnoconfig" command line
-> (and the subsequent "make") otherwise I get a 32 bit build.
+Hmm..
 
-Ok, I now see the warnings with 'allnoconfig ARCH=x86_64', thanks.
+On Fri, Mar 13, 2020 at 4:55 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>@@ -2370,10 +2375,9 @@ static int path_lookupat(struct nameidata *nd, unsigned flags, struct path *path
+> +       while (!(err = link_path_walk(s, nd)) &&
+> +              (s = lookup_last(nd)) != NULL)
+> +               ;
 
-> 
-> > From 9be668f1e30b6bb4ed5f4a07e7d3bb76d3f58f35 Mon Sep 17 00:00:00 2001
-> > From: Baoquan He <bhe@redhat.com>
-> > Date: Fri, 13 Mar 2020 20:25:54 +0800
-> > Subject: [PATCH] mm/sparse.c: fix the building warning with !SPARSEMEM
-> > 
-> > Stephen reported below warnings are seen with allnoconfig on x86_64.
-> > Fix it by making those dummy functions sub-section map handling visible
-> > with CONFIG_SPARSEMEM enabled.
-> > 
-> > mm/sparse.c:311:12: warning: 'fill_subsection_map' defined but not used [-Wunused-function]
-> >   311 | static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
-> >       |            ^~~~~~~~~~~~~~~~~~~
-> > mm/sparse.c:306:13: warning: 'is_subsection_map_empty' defined but not used [-Wunused-function]
-> >   306 | static bool is_subsection_map_empty(struct mem_section *ms)
-> >       |             ^~~~~~~~~~~~~~~~~~~~~~~
-> > mm/sparse.c:301:12: warning: 'clear_subsection_map' defined but not used [-Wunused-function]
-> >   301 | static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
-> >       |            ^~~~~~~~~~~~~~~~~~~~
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  mm/sparse.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/sparse.c b/mm/sparse.c
-> > index 362018e82e22..9e08d118719f 100644
-> > --- a/mm/sparse.c
-> > +++ b/mm/sparse.c
-> > @@ -293,7 +293,7 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
-> >  
-> >  	return rc;
-> >  }
-> > -#else
-> > +#elif defined(CONFIG_SPARSEMEM)
-> >  void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
-> >  {
-> >  }
-> 
-> This didn't make any difference as CONFIG_SPARSEMEM is set for the
-> x86_64 allnoconfig build.
+There's two copies of that loop (the other being in path_openat()). Is
+there a reason why it's written that odd way?
 
-You are right, CONFIG_SPARSEMEM is set for x86_64. I will work out a
-patch after testing. Thanks for these details.
+Why is the loop body empty, when the *natural* way to write that would
+seem to be
 
+        while (!(err = link_path_walk(s, nd))) {
+                s = lookup_last(nd));
+                if (!s)
+                        break;
+        }
+
+which may be a few lines longer, but a lot more legible.
+
+I don't think you should use assignments in tests, unless strictly
+required. Yes, that "err = ..." part almost has to be written that
+way, but the "s = ..." part doesn't seem to have any reason for being
+in the conditional.
+
+And I'm only reading the patches, so once again: maybe I'm messing up
+by mis-reading something. And maybe you have some reason for that
+pattern.
+
+                     Linus
