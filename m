@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34930C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18B6C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D0720575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CEA20575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584239059;
-	bh=pyfoelTFUrUS8nqrG9mSLUHYjidpQeeIpDUHP53gjl8=;
+	s=default; t=1584239062;
+	bh=UWIFamZriIq7pwiuAN2fl1MmSck4XAGVejYX5mG6Jxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVTgTMkyGVd8JmFlne5Q/sTwqpYo6X4DREXJv46IP5lat05ySkcz3ZveNuyiRZJiw
-	 TRelC59PLUf9+2FMs+3x30KMlb8mjzifkdhjYNRXy3JGZZBXz1HP1y6oCNSxb7Ynve
-	 HjOBK1Ii+kWtFLGY82SGqWSFfG2Y4jxBvT43rUKo=
+	b=04SITyL8d21InPdnMWTIWXksz2qk20fdRfSNfvvJpEEqfvSaeOANlU52bMv0lOTb7
+	 OrOT2xaWj5wf6wTaFjK29K9vxAiP54sOEFvgjRgGYX4u5a9AG0OTk983XmnoPGvYlI
+	 Gsygvmbb2BsJbpTAuH7ljXeygsxtLKK7vEEljcvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgCOCYS (ORCPT
+        id S1727806AbgCOCYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:24:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
+        Sat, 14 Mar 2020 22:24:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbgCOCYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:24:13 -0400
+        id S1727944AbgCOCYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:24:15 -0400
 Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E74A208E4;
-        Sat, 14 Mar 2020 21:36:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B195B20838;
+        Sat, 14 Mar 2020 21:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1584221808;
-        bh=pyfoelTFUrUS8nqrG9mSLUHYjidpQeeIpDUHP53gjl8=;
+        bh=UWIFamZriIq7pwiuAN2fl1MmSck4XAGVejYX5mG6Jxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aA9JmKx1AmQXReCs2UQdldQBufumaqmJDrCrYtVKn6syEOSmoATH6+XhoxpvcRmXJ
-         0oz3ax0QyyKCptQro3j57gRu6VCvZHsOksbiwy4EP7j0ffqm8Up+Ixtjgw39Ijh0Fu
-         AdDY9p+FDl2sWJEk82BqZUEicW1PvaGdrplaqKHQ=
+        b=AvTfc8sqkulB3uIPpZNdObWRiomad5SEfy3ynWmovFPeS/Yd49cABntT1I+dx0iWB
+         aPFND4R8F+u8hEYJubREDBRDtRB7r9yGPwLvDMDglKzQmLAOfGYjUkQoJ2PqJk/LUk
+         EDuobPpXenbOaz0CDl5diR9aXB9dGh2PpxTFlzTw=
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
@@ -48,10 +48,10 @@ Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
         Jessica Yu <jeyu@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>
-Subject: [PATCH v3 3/5] docs: admin-guide: document the kernel.modprobe sysctl
-Date:   Sat, 14 Mar 2020 14:34:24 -0700
-Message-Id: <20200314213426.134866-4-ebiggers@kernel.org>
+        NeilBrown <neilb@suse.com>, stable@vger.kernel.org
+Subject: [PATCH v3 1/5] kmod: make request_module() return an error when autoloading is disabled
+Date:   Sat, 14 Mar 2020 14:34:22 -0700
+Message-Id: <20200314213426.134866-2-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200314213426.134866-1-ebiggers@kernel.org>
 References: <20200314213426.134866-1-ebiggers@kernel.org>
@@ -64,67 +64,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-Document the kernel.modprobe sysctl in the same place that all the other
-kernel.* sysctls are documented.  Make sure to mention how to use this
-sysctl to completely disable module autoloading, and how this sysctl
-relates to CONFIG_STATIC_USERMODEHELPER.
+It's long been possible to disable kernel module autoloading completely
+(while still allowing manual module insertion) by setting
+/proc/sys/kernel/modprobe to the empty string.  This can be preferable
+to setting it to a nonexistent file since it avoids the overhead of an
+attempted execve(), avoids potential deadlocks, and avoids the call to
+security_kernel_module_request() and thus on SELinux-based systems
+eliminates the need to write SELinux rules to dontaudit module_request.
 
+However, when module autoloading is disabled in this way,
+request_module() returns 0.  This is broken because callers expect 0 to
+mean that the module was successfully loaded.
+
+Apparently this was never noticed because this method of disabling
+module autoloading isn't used much, and also most callers don't use the
+return value of request_module() since it's always necessary to check
+whether the module registered its functionality or not anyway.  But
+improperly returning 0 can indeed confuse a few callers, for example
+get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
+
+	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
+		fs = __get_fs_type(name, len);
+		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
+	}
+
+This is easily reproduced with:
+
+	echo > /proc/sys/kernel/modprobe
+	mount -t NONEXISTENT none /
+
+It causes:
+
+	request_module fs-NONEXISTENT succeeded, but still no fs?
+	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
+	[...]
+
+This should actually use pr_warn_once() rather than WARN_ONCE(), since
+it's also user-reachable if userspace immediately unloads the module.
+Regardless, request_module() should correctly return an error when it
+fails.  So let's make it return -ENOENT, which matches the error when
+the modprobe binary doesn't exist.
+
+I've also sent patches to document and test this case.
+
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: stable@vger.kernel.org
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jeff Vander Stoep <jeffv@google.com>
 Cc: Jessica Yu <jeyu@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
 Cc: NeilBrown <neilb@suse.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- Documentation/admin-guide/sysctl/kernel.rst | 25 ++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+ kernel/kmod.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index def074807cee9..e3c15660ee5d9 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -49,7 +49,7 @@ show up in /proc/sys/kernel:
- - kexec_load_disabled
- - kptr_restrict
- - l2cr                        [ PPC only ]
--- modprobe                    ==> Documentation/debugging-modules.txt
-+- modprobe
- - modules_disabled
- - msg_next_id		      [ sysv ipc ]
- - msgmax
-@@ -444,6 +444,29 @@ l2cr: (PPC only)
- This flag controls the L2 cache of G3 processor boards. If
- 0, the cache is disabled. Enabled if nonzero.
+diff --git a/kernel/kmod.c b/kernel/kmod.c
+index bc6addd9152b4..a2de58de6ab62 100644
+--- a/kernel/kmod.c
++++ b/kernel/kmod.c
+@@ -120,7 +120,7 @@ static int call_modprobe(char *module_name, int wait)
+  * invoke it.
+  *
+  * If module auto-loading support is disabled then this function
+- * becomes a no-operation.
++ * simply returns -ENOENT.
+  */
+ int __request_module(bool wait, const char *fmt, ...)
+ {
+@@ -137,7 +137,7 @@ int __request_module(bool wait, const char *fmt, ...)
+ 	WARN_ON_ONCE(wait && current_is_async());
  
-+modprobe:
-+=========
-+
-+The path to the usermode helper for autoloading kernel modules, by
-+default "/sbin/modprobe".  This binary is executed when the kernel
-+requests a module.  For example, if userspace passes an unknown
-+filesystem type to mount(), then the kernel will automatically request
-+the corresponding filesystem module by executing this usermode helper.
-+This usermode helper should insert the needed module into the kernel.
-+
-+This sysctl only affects module autoloading.  It has no effect on the
-+ability to explicitly insert modules.
-+
-+If this sysctl is set to the empty string, then module autoloading is
-+completely disabled.  The kernel will not try to execute a usermode
-+helper at all, nor will it call the kernel_module_request LSM hook.
-+
-+If CONFIG_STATIC_USERMODEHELPER=y is set in the kernel configuration,
-+then the configured static usermode helper overrides this sysctl,
-+except that the empty string is still accepted to completely disable
-+module autoloading as described above.
-+
-+Also see Documentation/debugging-modules.txt.
+ 	if (!modprobe_path[0])
+-		return 0;
++		return -ENOENT;
  
- modules_disabled:
- =================
+ 	va_start(args, fmt);
+ 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
 -- 
 2.25.1
 
