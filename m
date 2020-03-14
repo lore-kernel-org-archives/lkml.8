@@ -2,149 +2,75 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DATE_IN_PAST_24_48,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B633C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDE9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02BEC2051A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gywJFKfa"
+	by mail.kernel.org (Postfix) with ESMTP id 6B70320722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgCOFKG (ORCPT
+        id S1726948AbgCOFPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 01:10:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43911 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgCOFKG (ORCPT
+        Sun, 15 Mar 2020 01:15:17 -0400
+Received: from mail-pj1-f70.google.com ([209.85.216.70]:52406 "EHLO
+        mail-pj1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbgCOFPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 01:10:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f8so6273802plt.10
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 22:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s23IqWHm+4YdBVxKLV9+dw8Ig+I7LwtH5N9j7UZLiqw=;
-        b=gywJFKfavAY6uDxQ1Kn0OAm3rMpvfeGnfRwPr6mM4K357+Tqw7gKU9/7B+vt238ul2
-         Amfm9bNE72ozNWizh+w2aP/kWBeJqVSs1FJTS2Md8gY8+bay6u4VN4/icM1KOjsJLhd4
-         eGbFUDxbkuc429CbwOOYi9Qg6bMvFuCHnsN0dEbHm9+bBoN42v5m/5GPEpIn7t+iI5Ih
-         fF+ITWKQDKHSQbjIFK0UFAO7fjiXyVcROk5WquJpSX8ndKSDQlS8raW0Dn26fqHaVVWV
-         axW7fBSstLcX2WZaUEx5D8FT4RRCAeY/SDk7gQ1knLr18ltOh6vr/84wf6N4M0kCEWBx
-         LwZQ==
+        Sun, 15 Mar 2020 01:15:16 -0400
+Received: by mail-pj1-f70.google.com with SMTP id hg14so4542712pjb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 22:15:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s23IqWHm+4YdBVxKLV9+dw8Ig+I7LwtH5N9j7UZLiqw=;
-        b=ZNq693ympFX2H21iQZacsjIxNHnEdhNtYK981uFLA/rmo2/qzAsNcWFKXYppRua3B7
-         OU9Hei2nfEg/HFC9cydpicAHX2GzmzCUUJk23yT5K6WFMcPdNianK8z6v0kB3OYZEuvN
-         8HhAM1AhuywZF/qLriyJvBTTtD9VcVqiu7xUNA9ycifIIvgmkh3NA4avxvzkQTRSSCSJ
-         MuEf0YHT2SlF3jrxQzkg16h7KK4J74hV471qEAimxGhODPbXJ+eN8/6dz3ma5zkD9UJf
-         4jLuaQb0QWan+FwAu1t1LfLehayrEkqiMVgDhXwp9OEP7Hq4unAIqMo5uVPrxiiGMSKF
-         Yhgw==
-X-Gm-Message-State: ANhLgQ1YvtfPdVhuE9qbjSnEbKgk6exFQlBPdkj3yTT/XQSV5Q9mXsDD
-        4+gUsLoauwfCGHECfxLWtzSHrg==
-X-Google-Smtp-Source: ADFU+vsMXczaHvc9ZvzzvJSkN74Xjwxdnlfpp2mPgcBJRSn9WVH2LDUgXcaEIowRj5ftZRBu8+IkNQ==
-X-Received: by 2002:a17:902:8f8e:: with SMTP id z14mr21109002plo.195.1584249003475;
-        Sat, 14 Mar 2020 22:10:03 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v67sm19168821pfc.120.2020.03.14.22.10.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2020 22:10:02 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] arm64: defconfig: Enable Qualcomm SDM845 audio configs
-Date:   Sat, 14 Mar 2020 22:08:27 -0700
-Message-Id: <20200315050827.1575421-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=/CZuM0+mbO6NyqR+mLDX0oKlbyLZj3NtZHFhJDcGVng=;
+        b=HGgcsCquxH8cxMR4OGyivFDVMm+XTBlYjrq/iGY6nt5DRop4mPDZyt7NZRIy+3VZdw
+         l4o4cdwAo2w7fdtIMhURwhSXRC3nisBlwi4Bz/Mo+KR5/xpFaw08tO6j9nZioSW29KhT
+         4Pmi+yeFWu5fOo+HS52rbHKrAKzqaEuI3SzriaEy5z6KDQP2d6ipflTj1EQlXl3w2gyi
+         zfp4m++/6jWUyQg5+lO196NVbjJ9hel7p+5vlBM2urEHs5bmwVwawZfO2FhJihmZV3qZ
+         u1x/RujylRCHylf+hJ3qy4RkbROvJOndhpQHl4Q3/ebR/DqW+PmjAWL5V/HAfLZ8s8dm
+         YlnQ==
+X-Gm-Message-State: ANhLgQ2ksD1Zj194mz2ZZ1XZ1/C6MGUNQyIl5oNhp5OuKq0XKkETQcp4
+        O3b9JLapxAJtz3zZufE3DPNOTjvsLfFpJ7z53goZmejsYbCW
+X-Google-Smtp-Source: ADFU+vsd7B6zM7k661+N9RLASlT7wDY115i+NOnn4ChlOdfINGGNLgluD9/L+k0eJ+9HakWUkF332HYt3wzwxnDAhQKyCHW7keRq
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:79cf:: with SMTP id u198mr2189717ilc.23.1584158642104;
+ Fri, 13 Mar 2020 21:04:02 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 21:04:02 -0700
+In-Reply-To: <CADG63jCSHu7dQ118GEuhXBi0H4CW3cBqB5F2qKiyeVzNb0U+wg@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000021721505a0c8ad76@google.com>
+Subject: Re: WARNING: refcount bug in sctp_wfree
+From:   syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>
+To:     anenbupt@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable soundwire, slimbus frameworks, the machine driver and the codec
-drivers for WCD934x and WSA881x used on varios SDM845 based designs.
+Hello,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/configs/defconfig | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+syzbot tried to test the proposed patch but build/boot failed:
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 0a8a2ad94bef..f186d0424619 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -436,6 +436,7 @@ CONFIG_GPIO_MB86S7X=y
- CONFIG_GPIO_PL061=y
- CONFIG_GPIO_RCAR=y
- CONFIG_GPIO_UNIPHIER=y
-+CONFIG_GPIO_WCD934X=m
- CONFIG_GPIO_XGENE=y
- CONFIG_GPIO_XGENE_SB=y
- CONFIG_GPIO_MAX732X=y
-@@ -501,6 +502,7 @@ CONFIG_MFD_SPMI_PMIC=y
- CONFIG_MFD_RK808=y
- CONFIG_MFD_SEC_CORE=y
- CONFIG_MFD_ROHM_BD718XX=y
-+CONFIG_MFD_WCD934X=m
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_AXP20X=y
- CONFIG_REGULATOR_BD718XX=y
-@@ -604,6 +606,7 @@ CONFIG_SND_HDA_CODEC_HDMI=m
- CONFIG_SND_SOC=y
- CONFIG_SND_BCM2835_SOC_I2S=m
- CONFIG_SND_MESON_AXG_SOUND_CARD=m
-+CONFIG_SND_SOC_SDM845=m
- CONFIG_SND_SOC_ROCKCHIP=m
- CONFIG_SND_SOC_ROCKCHIP_SPDIF=m
- CONFIG_SND_SOC_ROCKCHIP_RT5645=m
-@@ -616,6 +619,8 @@ CONFIG_SND_SOC_ES7134=m
- CONFIG_SND_SOC_ES7241=m
- CONFIG_SND_SOC_PCM3168A_I2C=m
- CONFIG_SND_SOC_TAS571X=m
-+CONFIG_SND_SOC_WCD934X=m
-+CONFIG_SND_SOC_WSA881X=m
- CONFIG_SND_SIMPLE_CARD=m
- CONFIG_SND_AUDIO_GRAPH_CARD=m
- CONFIG_I2C_HID=m
-@@ -782,6 +787,8 @@ CONFIG_QCOM_SYSMON=m
- CONFIG_RPMSG_QCOM_GLINK_RPM=y
- CONFIG_RPMSG_QCOM_GLINK_SMEM=m
- CONFIG_RPMSG_QCOM_SMD=y
-+CONFIG_SOUNDWIRE=m
-+CONFIG_SOUNDWIRE_QCOM=m
- CONFIG_OWL_PM_DOMAINS=y
- CONFIG_RASPBERRYPI_POWER=y
- CONFIG_IMX_SCU_SOC=y
-@@ -797,6 +804,7 @@ CONFIG_QCOM_SMD_RPM=y
- CONFIG_QCOM_SMP2P=y
- CONFIG_QCOM_SMSM=y
- CONFIG_QCOM_SOCINFO=m
-+CONFIG_QCOM_APR=m
- CONFIG_ARCH_R8A774A1=y
- CONFIG_ARCH_R8A774B1=y
- CONFIG_ARCH_R8A774C0=y
-@@ -883,6 +891,9 @@ CONFIG_FPGA_REGION=m
- CONFIG_OF_FPGA_REGION=m
- CONFIG_TEE=y
- CONFIG_OPTEE=y
-+CONFIG_SLIMBUS=m
-+CONFIG_SLIM_QCOM_CTRL=m
-+CONFIG_SLIM_QCOM_NGD_CTRL=m
- CONFIG_EXT2_FS=y
- CONFIG_EXT3_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
--- 
-2.24.0
+failed to checkout kernel repo https://github.com/hqj/hqjagain_test.git/scup_wfree: failed to run ["git" "fetch" "https://github.com/hqj/hqjagain_test.git" "scup_wfree"]: exit status 128
+fatal: couldn't find remote ref scup_wfree
+
+
+
+Tested on:
+
+commit:         [unknown 
+git tree:       https://github.com/hqj/hqjagain_test.git scup_wfree
+dashboard link: https://syzkaller.appspot.com/bug?extid=cea71eec5d6de256d54d
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
