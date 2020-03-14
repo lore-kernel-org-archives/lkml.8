@@ -2,74 +2,59 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97525C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34930C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFA22071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8W0+FWW"
+	by mail.kernel.org (Postfix) with ESMTP id F0D0720575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584239059;
+	bh=pyfoelTFUrUS8nqrG9mSLUHYjidpQeeIpDUHP53gjl8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XVTgTMkyGVd8JmFlne5Q/sTwqpYo6X4DREXJv46IP5lat05ySkcz3ZveNuyiRZJiw
+	 TRelC59PLUf9+2FMs+3x30KMlb8mjzifkdhjYNRXy3JGZZBXz1HP1y6oCNSxb7Ynve
+	 HjOBK1Ii+kWtFLGY82SGqWSFfG2Y4jxBvT43rUKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgCOCXx (ORCPT
+        id S1727998AbgCOCYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:23:53 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35291 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbgCOCXw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:23:52 -0400
-Received: by mail-il1-f196.google.com with SMTP id v6so1926964ilq.2;
-        Sat, 14 Mar 2020 19:23:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bolGqQxhWdWgpU69XRMnXiz0W60KCuDWQ2z7xXlvj8E=;
-        b=B8W0+FWWYJN6WqgwttmprjGZlMBoY9aBQyq3jJHauz+tUTSsJhMYccjD+haAXovvGZ
-         uYXGReUyVM1xMUHz3ikiugYUTqM/xfrZ7UL0yCorZWLbFGaH1aDbuLd42pj/acAqqMB3
-         +eyDeQGvDxDBAdHnGnSwSzVdxtyO6/Qy0AXC4tzz8LhVC7Am4Xx0/oUj9yy1JVdgwa+7
-         +2QuCA5Ui1x6YchRfuADgUBNsIM//sAEWH+2qGt6yybMQkivhoWBT9qJtu4qrPx99D2V
-         rEomakD2K2od0Yj6D2pmWeA7JINHnwt6y3bumHe65bYWQFO7MLY2xnoJSt3/nIt0y3zh
-         AXCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bolGqQxhWdWgpU69XRMnXiz0W60KCuDWQ2z7xXlvj8E=;
-        b=HjKgulUOENWpZZq+XviiRaQl7WV+JHPQFznUdb6hhmCx5THRDmdTuetzcZh9NTyGDV
-         V0Vz5AgTsj7GdGYjGQ/oOoDby2I11DxhBdNAJo7gQudYqpKYUQrsBnvGhQTgnhCfUEMN
-         Ux3LnZ/IQ+AWytnXzbAtiyqeZA1zWplVQKS1VPEJxRBjUenMd/hX0qbStDVzKuNc++mg
-         nAxLJyYLdT7cK3puT3hE3iOV6MVm94gaj4N6UUFxAE/9333B3jkp2etyUWWhr2RQCJGj
-         fR3QLYdVEJns3e511VGY97GUkxGHuVRN9EI0gmgQlZzCAJeuPcyuDne3R2Cs863Mr/Fe
-         S8DQ==
-X-Gm-Message-State: ANhLgQ3KuhoxN682wS6XUZ936V28UtF8XiGj15gxW/vJXAflm1MM0HQl
-        R74NePzBv72r+8uU4KZ/1VjtAUO5
-X-Google-Smtp-Source: ADFU+vv29Ok1TmkzoC9UWO3LDApVs8zw0AH3uafkrwoNY+zDHYFb5jJpLgUc2dBlZokjE3JuF1U5yg==
-X-Received: by 2002:a63:f243:: with SMTP id d3mr16185919pgk.254.1584163628426;
-        Fri, 13 Mar 2020 22:27:08 -0700 (PDT)
-Received: from localhost ([216.24.188.11])
-        by smtp.gmail.com with ESMTPSA id z20sm29316118pge.62.2020.03.13.22.27.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 22:27:08 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org, hminas@synopsys.com,
-        mathias.nyman@intel.com, bgolaszewski@baylibre.com, arnd@arndb.de,
-        geert@linux-m68k.org, mchehab+samsung@kernel.org,
-        treding@nvidia.com, tglx@linutronix.de, suzuki.poulose@arm.com,
-        hdegoede@redhat.com, linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v2 4/4] usb: dwc2: convert to devm_platform_ioremap_and_get_resource
-Date:   Sat, 14 Mar 2020 13:26:38 +0800
-Message-Id: <20200314052638.6008-5-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200314052638.6008-1-zhengdejin5@gmail.com>
-References: <20200314052638.6008-1-zhengdejin5@gmail.com>
+        Sat, 14 Mar 2020 22:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727911AbgCOCYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:24:13 -0400
+Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E74A208E4;
+        Sat, 14 Mar 2020 21:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584221808;
+        bh=pyfoelTFUrUS8nqrG9mSLUHYjidpQeeIpDUHP53gjl8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aA9JmKx1AmQXReCs2UQdldQBufumaqmJDrCrYtVKn6syEOSmoATH6+XhoxpvcRmXJ
+         0oz3ax0QyyKCptQro3j57gRu6VCvZHsOksbiwy4EP7j0ffqm8Up+Ixtjgw39Ijh0Fu
+         AdDY9p+FDl2sWJEk82BqZUEicW1PvaGdrplaqKHQ=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        NeilBrown <neilb@suse.com>
+Subject: [PATCH v3 3/5] docs: admin-guide: document the kernel.modprobe sysctl
+Date:   Sat, 14 Mar 2020 14:34:24 -0700
+Message-Id: <20200314213426.134866-4-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200314213426.134866-1-ebiggers@kernel.org>
+References: <20200314213426.134866-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,29 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_and_get_resource() to simplify code, which
-contains platform_get_resource() and devm_ioremap_resource(), it also
-get the resource for use by the following code.
+From: Eric Biggers <ebiggers@google.com>
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Document the kernel.modprobe sysctl in the same place that all the other
+kernel.* sysctls are documented.  Make sure to mention how to use this
+sysctl to completely disable module autoloading, and how this sysctl
+relates to CONFIG_STATIC_USERMODEHELPER.
+
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jeff Vander Stoep <jeffv@google.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: NeilBrown <neilb@suse.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- drivers/usb/dwc2/platform.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/admin-guide/sysctl/kernel.rst | 25 ++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index 3c6ce09a6db5..56eec2b95eaf 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -392,8 +392,7 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 		return retval;
- 	}
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index def074807cee9..e3c15660ee5d9 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -49,7 +49,7 @@ show up in /proc/sys/kernel:
+ - kexec_load_disabled
+ - kptr_restrict
+ - l2cr                        [ PPC only ]
+-- modprobe                    ==> Documentation/debugging-modules.txt
++- modprobe
+ - modules_disabled
+ - msg_next_id		      [ sysv ipc ]
+ - msgmax
+@@ -444,6 +444,29 @@ l2cr: (PPC only)
+ This flag controls the L2 cache of G3 processor boards. If
+ 0, the cache is disabled. Enabled if nonzero.
  
--	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
--	hsotg->regs = devm_ioremap_resource(&dev->dev, res);
-+	hsotg->regs = devm_platform_ioremap_and_get_resource(dev, 0, &res);
- 	if (IS_ERR(hsotg->regs))
- 		return PTR_ERR(hsotg->regs);
++modprobe:
++=========
++
++The path to the usermode helper for autoloading kernel modules, by
++default "/sbin/modprobe".  This binary is executed when the kernel
++requests a module.  For example, if userspace passes an unknown
++filesystem type to mount(), then the kernel will automatically request
++the corresponding filesystem module by executing this usermode helper.
++This usermode helper should insert the needed module into the kernel.
++
++This sysctl only affects module autoloading.  It has no effect on the
++ability to explicitly insert modules.
++
++If this sysctl is set to the empty string, then module autoloading is
++completely disabled.  The kernel will not try to execute a usermode
++helper at all, nor will it call the kernel_module_request LSM hook.
++
++If CONFIG_STATIC_USERMODEHELPER=y is set in the kernel configuration,
++then the configured static usermode helper overrides this sysctl,
++except that the empty string is still accepted to completely disable
++module autoloading as described above.
++
++Also see Documentation/debugging-modules.txt.
  
+ modules_disabled:
+ =================
 -- 
-2.25.0
+2.25.1
 
