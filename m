@@ -2,83 +2,93 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FE0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F10C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB3F2074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584152797;
-	bh=AcJjJyWn5ByJbwtEz4BGq+xcuACI0IwUCrM4Q1XGnMI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rZYCuxpu1cRc+ZHvTYIQBSGU+3Y0JjyxoK814HbcTEj6ps//vMTLF3kC/4vMyqFsk
-	 tfqi5em0gvb4GF1SQ6GhHKNezXAwHrY3lUcXTESrV/UQ+TIhbmwgRGPkW0SYBdg547
-	 WmJrEDZmJxDWdSq0DtgTi/p4bLydeQij2MsjiN7g=
+	by mail.kernel.org (Postfix) with ESMTP id D28FA20663
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgCNC0g (ORCPT
+        id S1726710AbgCNC1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 22:26:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbgCNC0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 22:26:35 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B512720663;
-        Sat, 14 Mar 2020 02:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584152795;
-        bh=AcJjJyWn5ByJbwtEz4BGq+xcuACI0IwUCrM4Q1XGnMI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qT5imk+Rcv0q6OLRfWaLfXPZCf0ymZ01i/IhtVZHGCwljz0IDWJI9COcx3oi5UT5Q
-         bW/4Ukk85xOZwWH6vMnWDH+h8vBDQAAS8yN/g7pqrs/Aw6HqDkwJ37fGs9G+PtiWlo
-         o7eRZB/q5Z14t+K41rknCavEVQAZcS9wGwEgSD+U=
-Date:   Fri, 13 Mar 2020 19:26:32 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Alexander Bersenev <bay@hackerdom.ru>
-Cc:     Oliver Neukum <oliver@neukum.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] cdc_ncm: Fix the build warning
-Message-ID: <20200313192632.7900a288@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200313213823.178435-2-bay@hackerdom.ru>
-References: <20200313213823.178435-1-bay@hackerdom.ru>
-        <20200313213823.178435-2-bay@hackerdom.ru>
+        Fri, 13 Mar 2020 22:27:18 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:52452 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbgCNC1S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 22:27:18 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCwW4-00BARd-OM; Sat, 14 Mar 2020 02:27:08 +0000
+Date:   Sat, 14 Mar 2020 02:27:08 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v4)
+Message-ID: <20200314022708.GS23230@ZenIV.linux.org.uk>
+References: <20200223011154.GY23230@ZenIV.linux.org.uk>
+ <20200301215125.GA873525@ZenIV.linux.org.uk>
+ <20200313235303.GP23230@ZenIV.linux.org.uk>
+ <CAHk-=whainTcvgF01vsSmN+y7s7U1qMA-QbM5qFQ3s4xQHwaJw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whainTcvgF01vsSmN+y7s7U1qMA-QbM5qFQ3s4xQHwaJw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 14 Mar 2020 02:38:21 +0500 Alexander Bersenev wrote:
-> The ndp32->wLength is two bytes long, so replace cpu_to_le32 with cpu_to_le16.
+On Fri, Mar 13, 2020 at 05:50:51PM -0700, Linus Torvalds wrote:
+> On Fri, Mar 13, 2020 at 4:53 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> >         Review and testing would be _very_ welcome;
+> 
+> I didn't notice anythign else than the few things I sent out to
+> individual patches.
+> 
+> But I have to say, 69 patches is too long of a series to review. I
+> think you could send them out as multiple series (you describe them
+> that way anyway - parts 1-7) with a day in between.
 
-missing signoff
+A week of fun?  OK...
 
-> diff --git a/drivers/net/usb/cdc_ncm.c b/drivers/net/usb/cdc_ncm.c
-> index 5569077bd5b8..8929669b5e6d 100644
-> --- a/drivers/net/usb/cdc_ncm.c
-> +++ b/drivers/net/usb/cdc_ncm.c
-> @@ -1172,7 +1172,7 @@ static struct usb_cdc_ncm_ndp32 *cdc_ncm_ndp32(struct cdc_ncm_ctx *ctx, struct s
->  		ndp32 = ctx->delayed_ndp32;
->  
->  	ndp32->dwSignature = sign;
-> -	ndp32->wLength = cpu_to_le32(sizeof(struct usb_cdc_ncm_ndp32) + sizeof(struct usb_cdc_ncm_dpe32));
-> +	ndp32->wLength = cpu_to_le16(sizeof(struct usb_cdc_ncm_ndp32) + sizeof(struct usb_cdc_ncm_dpe32));
->  	return ndp32;
+> Because my eyes were starting to glaze over about halfway in the series.
+> 
+> But don't do it for this version. If you do a #5. But it would be good
+> to be in -next regardless of whether you do a #5 or not.
 
-Isn't this code added in the previous patch? Why not squash them
-together?
+FWIW, I've dealt with bisect hazards and I'll probably reorder #56 after
+#57/#58, to get the stuff that deals with stack allocation (#56, #59..61)
+together, without "reduce the exposure to weird struct path instances"
+(57 and 58) mixed in the middle of that.
+
+As for the rest...  I'm not sure that choose_mountpoint{,_rcu}()
+is inserted into the right place in text - might be better next to
+follow_up().  There's also a couple of pick_link() pieces worth separate
+helpers, but I'd rather leave that for the next cycle - the series is
+bloody long as it is.
+
+I'm not going to throw the immediate prereqs for ->atomic_open() calling
+conventions change into that pile - they don't harm anything, but they
+are unmotivated without the next step (method signature change) and it's
+really too late in the cycle for that.  That's going to be a separate
+series, probably for the next cycle.  Changes to instances are not
+huge; ceph is the worst by far and that's only +27/-22 lines.  So I don't
+think there will be a lot of conflicts to cope with in the next cycle,
+especially since ceph side of things looks like we want to do some
+refactoring first, with much smaller changeover on top of that.  That
+refactoring itself won't have prereqs at all, so that can be dealt with
+sanely and that'll soak most of the potential conflicts in.
+
+There are other potential refactorings/cleanups, but that's definitely
+not for this cycle.  So... short of regressions found in that series
+that's probably close to what I'll have for the coming window in
+this branch.  If I see something else in there that can be usefully
+cleaned up, I'll keep it for after -rc1...
+
+Next: context switch to uaccess series and getting that patchbomb ready.
+Oh, well...
