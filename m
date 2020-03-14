@@ -2,176 +2,173 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3007C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC19C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC61820637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:30:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t585HK57"
+	by mail.kernel.org (Postfix) with ESMTP id CF24120637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbgCOBal (ORCPT
+        id S1727281AbgCOBal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 14 Mar 2020 21:30:41 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42911 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbgCOBaj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:30:39 -0400
-Received: by mail-lf1-f67.google.com with SMTP id t21so11016920lfe.9
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 18:30:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=fG43TRcFX02CHpl1ju0p1hH2hHWyQ0E0bWwnw/Nir1U=;
-        b=t585HK579iJodlziT0sq5icnn297c5/BmagqT578c0bsng8NpAfETty0BDZvJmCoOf
-         GujiHKTZvwz6GIeTh7ovIZ2OQyDU7VTvNQt8+i5ay7OjqmSco8v7ELoknfURUVw6AZQ4
-         DQZTcB+T7fq1eKeKEoAa6sQoHw1FOIE7MtQNQ/p0ZjSY8HbjWvwoU7VkBmvNFdCg+eyq
-         Dxwn0Tni5VNNGXOn9H7cErqmhi7srHq6hdxLCXUoOUqrsx1FkHBicyBK74rPBZjJeUSN
-         ewFZCOrqpy/PBcfV215eE2cUUO6oyb0+DWI1pvQGfGu2o/6o5F5mCyQgpmRjWUIDrztI
-         ohwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fG43TRcFX02CHpl1ju0p1hH2hHWyQ0E0bWwnw/Nir1U=;
-        b=uO4YZ/xeeLwQR8VsIvhpZ5P3m3t7kS60M2nJsL0Y6zgMYnyoR5pLbUzzFbSaQwaQsr
-         y3BE9JVIrncAsjGsSEUrkwHO1kWo/EH1csR06zMqXPHcHEG1uPg174Z1cjVUrvedKax8
-         smHFhDPtJMsk9Fp3MVRwyyUZpDb6BTIHnJeZhFpVyJ6x+i4RiFJBLLjBq5RyMXcVF/pQ
-         hISihGZmLyECjEq+7x00Piqxw/IiWUnZmWJQ7qMaC/zmzSMuSdV18CqxmJbb7UXFwALP
-         a58qiF8Jh10dhR5VGQ777ybEXxUJ7xfahK4yv9N45KGarOjjr/7pU9UicdwoQNmjYlI7
-         McJw==
-X-Gm-Message-State: ANhLgQ3NdcPA/aPBmUS8YTb0NZVyY7SYKhVAPQuD++kETUHF/rBn6JD0
-        uoWzKIbBGN0y/SsYB4cYKnnq/hV8gIsFJw==
-X-Google-Smtp-Source: ADFU+vu4VNNdNZOKSRjqN04kRvn9eQGaPZRdN/74s/CnmaGXujaf9w/G6XDBIc/lm1vV3UMAuRO9EA==
-X-Received: by 2002:adf:bc87:: with SMTP id g7mr26199173wrh.121.1584221806858;
-        Sat, 14 Mar 2020 14:36:46 -0700 (PDT)
-Received: from localhost.localdomain (IGLD-80-230-79-184.inter.net.il. [80.230.79.184])
-        by smtp.gmail.com with ESMTPSA id 9sm22785043wmx.32.2020.03.14.14.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2020 14:36:46 -0700 (PDT)
-From:   Gilad Wharton Kleinman <dkgs1998@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Gilad Wharton Kleinman <dkgs1998@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/module: Fixed bug allowing invalid relocation addresses.
-Date:   Sat, 14 Mar 2020 23:36:26 +0200
-Message-Id: <20200314213626.30936-1-dkgs1998@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Received: from mail-oln040092065107.outbound.protection.outlook.com ([40.92.65.107]:16462
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726680AbgCOB3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:29:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SgA6EBaojAjsbYUZkCAQrEFbzgUo3q4xT5fS5ak+pDgKm4cn8sWysNdVmSYe9fNOJWx81lA7cVjAC/sLuFb9yLJFgihlKiOn38WHYfaKaJJ5KhoYqV9R6+wW/lhKmR7mdhUJqsf9Vcp3o2eg9Z7E8N3ZvjEmmUxzWTNDRmm+rjGdSr+l/Tf8ihODLlLvbxbwpjJF4lhpwY8Xsszf2qWzeMZXaWkTXFexO35z1WWVU+tOqTRxpouG3JEDpy0OuUErnwIoZR+A6baTab8h+XiaNKoZAZwA+pg2wP4HXMPMsGKadSz9L9b4z3KPyLoIo5k8uPeRREMphe0JeAukcP5glQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=meX3nDI9o3TzXq867HU1KY3Z19ClxKI7SASWGcBAVMY=;
+ b=VICr7+cdW53RWeCIuv9W+Zt05MmTVwaNvUB+w9qPlQXCX9fjw8KPlMv5pS/aV31/uIOOpxVRdg6CEv3GWY8d3X2Km38nYpoksJZtFJhcjN7zO2Jb/DWhKTnYpMcOM/ju/6reZDfSqzmb90OFoIhrontmBwnhPnZlUjbYJoyqZ568AVH8gpCrESW78hFKqnBDqRjsplYe2bChe29xuku/ZRA0zukeoObaVFmYAdpFkdtDGVGuvnY1jXqUwrMKIel8kgt1kD7Upm6babBz6D/aJNiNGGLeT9bxSTW8YK+VQv+ZzfGIizGqjna071SiYuv7Gb8SkfpuNpDlueXd6HGlnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
+ dkim=pass header.d=hotmail.de; arc=none
+Received: from HE1EUR01FT018.eop-EUR01.prod.protection.outlook.com
+ (2a01:111:e400:7e18::3b) by
+ HE1EUR01HT032.eop-EUR01.prod.protection.outlook.com (2a01:111:e400:7e18::319)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Sat, 14 Mar
+ 2020 09:12:14 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.0.51) by
+ HE1EUR01FT018.mail.protection.outlook.com (10.152.0.175) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14 via Frontend Transport; Sat, 14 Mar 2020 09:12:14 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:51FA84E8CBF5BA95130215CF09FD6D30ABCD365C58E1B3571D0B5C3CA68972C6;UpperCasedChecksum:724E1E87A544DDE79417B7EE4D3A18DAB804C958AA3068EAD60B899BA2E053FB;SizeAsReceived:9923;Count:50
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2814.018; Sat, 14 Mar 2020
+ 09:12:14 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+Subject: [PATCH] pidfd: Use new infrastructure to fix deadlocks in execve
+To:     Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sargun Dhillon <sargun@sargun.me>
+References: <877dztz415.fsf@x220.int.ebiederm.org>
+ <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
+ <87k13txnig.fsf@x220.int.ebiederm.org>
+ <20200310085540.pztaty2mj62xt2nm@wittgenstein>
+ <87wo7svy96.fsf_-_@x220.int.ebiederm.org>
+ <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
+ <87k13sui1p.fsf@x220.int.ebiederm.org>
+ <CAG48ez2vRgaEVJ=Rs8gn6HkGO6syL8MpSOUq7BNN+OUE1uYxCA@mail.gmail.com>
+ <CAG48ez1LjW1xAGe-5tNtstCWxG2bkiHaQUMOcJNjx=z-2Wc2Jw@mail.gmail.com>
+ <87lfo8rkqo.fsf@x220.int.ebiederm.org> <202003111148.19578AA@keescook>
+Message-ID: <AM6PR03MB51706BB74E5588128CD62D64E4FB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Sat, 14 Mar 2020 10:12:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+In-Reply-To: <202003111148.19578AA@keescook>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ZRAP278CA0011.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:10::21) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+X-Microsoft-Original-Message-ID: <23b22eca-8f06-6036-c51c-6a87f559c2f6@hotmail.de>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.101] (92.77.140.102) by ZRAP278CA0011.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:10::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.16 via Frontend Transport; Sat, 14 Mar 2020 09:12:12 +0000
+X-Microsoft-Original-Message-ID: <23b22eca-8f06-6036-c51c-6a87f559c2f6@hotmail.de>
+X-TMN:  [TOOIoRbPJhaUmm2QCnSS9uc4EfUfaL77]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: a164edd3-e313-422a-b43f-08d7c7f7c8f6
+X-MS-TrafficTypeDiagnostic: HE1EUR01HT032:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: znmYawuvz+lGrWm1cAxK0euN4MrulX7G+PBhM1sc4edD5nzygIAKiwLMSzOnY7xsThbpCks1WljtEa5ZWBweKKL0XGp+bHawdpEBboevWTU8fpcUS8FStquC7+4SWJqyRkqiO+0oGBVXcm60KDThihFebKaL0n+VwITjQeQN5naqeDUW4M1pWgtmRnqsJmj9
+X-MS-Exchange-AntiSpam-MessageData: y+wj5sYdckEoDefowsMI3A9TmwPKNEM7n8/Hf4DKDIMVJ8cJSvf+RZgVU4VB/9wB5Vl+1yIW+wgrGsdwV0TJiP2YZVCtf2ghS55wN32nc7BLPdlvNs5SaHDcRXxNKk+Q3i7Zbey9yDoqcYY10YSgnw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a164edd3-e313-422a-b43f-08d7c7f7c8f6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2020 09:12:14.1943
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a kernel module with a bad relocation offset is loaded to a x86 kernel,
-the kernel will apply the relocation to a address not inside the module
-(resulting in memory in the kernel being overridden).
+This changes __pidfd_fget to use the new exec_update_mutex
+instead of cred_guard_mutex.
 
-Signed-off-by: Gilad Wharton Kleinman <dkgs1998@gmail.com>
+This should be safe, as the credentials do not change
+before exec_update_mutex is locked.  Therefore whatever
+file access is possible with holding the cred_guard_mutex
+here is also possbile with the exec_update_mutex.
+
+Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 ---
- arch/x86/kernel/module.c | 57 +++++++++++++++++++++++++++++++++++++---
- 1 file changed, 53 insertions(+), 4 deletions(-)
+ kernel/pid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-index d5c72cb877b3..0929b614b62a 100644
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -96,10 +96,19 @@ int apply_relocate(Elf32_Shdr *sechdrs,
- 	Elf32_Rel *rel = (void *)sechdrs[relsec].sh_addr;
- 	Elf32_Sym *sym;
- 	uint32_t *location;
-+	Elf32_Word section_size;
+This replaces Eric's "[PATCH] pidfd: Stop taking cred_guard_mutex"
+
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 0f4ecb5..04821f4 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -584,7 +584,7 @@ static struct file *__pidfd_fget(struct task_struct *task, int fd)
+ 	struct file *file;
+ 	int ret;
  
- 	DEBUGP("Applying relocate section %u to %u\n",
- 	       relsec, sechdrs[relsec].sh_info);
- 	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rel); i++) {
-+
-+		section_size = sechdrs[sechdrs[relsec].sh_info].sh_size;
-+		if (section_size < rel[i].r_offset + sizeof(u32)) {
-+			pr_err("%s: Relocation offset %u is not in section (section len %u)\n",
-+				me->name, rel[i].r_offset, section_size);
-+			return -ENOEXEC;
-+		}
-+
- 		/* This is where to make the change */
- 		location = (void *)sechdrs[sechdrs[relsec].sh_info].sh_addr
- 			+ rel[i].r_offset;
-@@ -126,6 +135,47 @@ int apply_relocate(Elf32_Shdr *sechdrs,
- 	return 0;
+-	ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
++	ret = mutex_lock_killable(&task->signal->exec_update_mutex);
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
+@@ -593,7 +593,7 @@ static struct file *__pidfd_fget(struct task_struct *task, int fd)
+ 	else
+ 		file = ERR_PTR(-EPERM);
+ 
+-	mutex_unlock(&task->signal->cred_guard_mutex);
++	mutex_unlock(&task->signal->exec_update_mutex);
+ 
+ 	return file ?: ERR_PTR(-EBADF);
  }
- #else /*X86_64*/
-+
-+bool is_reloc_addr_valid(Elf64_Shdr *sechdrs,
-+			unsigned int relsec,
-+			Elf64_Rela rel,
-+			struct module *me)
-+{
-+	unsigned int rel_size;
-+	Elf64_Xword section_size = sechdrs[sechdrs[relsec].sh_info].sh_size;
-+
-+	switch (ELF64_R_TYPE(rel.r_info)) {
-+	case R_X86_64_NONE:
-+		return true;
-+
-+	case R_X86_64_64:
-+	case R_X86_64_PC64:
-+		rel_size = sizeof(u64);
-+		break;
-+
-+	case R_X86_64_32:
-+	case R_X86_64_32S:
-+	case R_X86_64_PC32:
-+	case R_X86_64_PLT32:
-+		rel_size = sizeof(u32);
-+		break;
-+
-+	default:
-+		pr_err("%s: Unknown rela relocation: %llu\n",
-+				me->name, ELF64_R_TYPE(rel.r_info));
-+		return false;
-+	}
-+
-+	if (section_size < rel.r_offset + rel_size) {
-+		pr_err("%s: Relocation offset %llu and of length %u, is not in section (section len %llu)\n",
-+			me->name, rel.r_offset,
-+			rel_size, section_size);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- int apply_relocate_add(Elf64_Shdr *sechdrs,
- 		   const char *strtab,
- 		   unsigned int symindex,
-@@ -141,6 +191,9 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 	DEBUGP("Applying relocate section %u to %u\n",
- 	       relsec, sechdrs[relsec].sh_info);
- 	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rel); i++) {
-+		if (!is_reloc_addr_valid(sechdrs, relsec, rel[i], me))
-+			return -ENOEXEC;
-+
- 		/* This is where to make the change */
- 		loc = (void *)sechdrs[sechdrs[relsec].sh_info].sh_addr
- 			+ rel[i].r_offset;
-@@ -195,10 +248,6 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 			val -= (u64)loc;
- 			*(u64 *)loc = val;
- 			break;
--		default:
--			pr_err("%s: Unknown rela relocation: %llu\n",
--			       me->name, ELF64_R_TYPE(rel[i].r_info));
--			return -ENOEXEC;
- 		}
- 	}
- 	return 0;
 -- 
-2.17.1
-
+1.9.1
