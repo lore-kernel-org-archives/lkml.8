@@ -2,92 +2,95 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1968C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF3CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF28206FA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8A82074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584148522;
+	bh=K5BEDgn6puHQRO0je2cYxXMrBtW98BD3fqUabckzk5w=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=mKYctPhHqIVvPmOEA0f8HzgGhq+xGuWmAD4Iwk+nNOVrcZJ2W3hlgItBTRDgUznJR
+	 LjzUSKR2xh7CXU3i3yPn4TJtOYe4tTVprl0tXLQ8rl/RXpZ6cjW4yM4djwLMNDKXNP
+	 eek1PoIgAvuxbbWAiogVRCzHatmUxdi8g1NtrBCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgCNBNF (ORCPT
+        id S1727364AbgCNBPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 21:13:05 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14194 "EHLO mga04.intel.com"
+        Fri, 13 Mar 2020 21:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgCNBNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 21:13:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 18:13:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,550,1574150400"; 
-   d="scan'208";a="354494863"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.137]) ([10.254.208.137])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Mar 2020 18:13:02 -0700
-Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>,
-        Derrick Jonathan <jonathan.derrick@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 0/6] Replace private domain with per-group default
-To:     Joerg Roedel <joro@8bytes.org>
-References: <20200307062014.3288-1-baolu.lu@linux.intel.com>
- <20200310111503.GF3794@8bytes.org>
- <cd0f526c-da68-ef59-580f-665ad08a395f@linux.intel.com>
- <20200313133644.GO3794@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <59e83b11-1483-5e18-6380-7934166268c4@linux.intel.com>
-Date:   Sat, 14 Mar 2020 09:13:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726637AbgCNBPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 21:15:21 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 847142074A;
+        Sat, 14 Mar 2020 01:15:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584148520;
+        bh=K5BEDgn6puHQRO0je2cYxXMrBtW98BD3fqUabckzk5w=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=I1134r+WeW0fPSfteZUhZTBJUUswIxI3xGHFaFmklgV841fyHQse4/vEp2Sk/8+jN
+         /CxPMJ5i9S4NBggC2DR3/tbk1KjRCV13i55wmMW6DkdfJBr2lL4fvosAVe5b/C9Wsu
+         wk7DqbYo7OD2GPl0yi+A3BX+KZJykLpGQatOwxSA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200313133644.GO3794@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <00e201d5f97d$3e76a9d0$bb63fd70$@gmail.com>
+References: <20200313185406.10029-1-ansuelsmth@gmail.com> <158413140244.164562.11497203149584037524@swboyd.mtv.corp.google.com> <00e201d5f97d$3e76a9d0$bb63fd70$@gmail.com>
+Subject: Re: R: [PATCH] ipq806x: gcc: Added the enable regs and mask for PRNG
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     'Abhishek Sahu' <absahu@codeaurora.org>,
+        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Michael Turquette' <mturquette@baylibre.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     agross@kernel.org, ansuelsmth@gmail.com
+Date:   Fri, 13 Mar 2020 18:15:19 -0700
+Message-ID: <158414851968.164562.17479742036394576642@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/13 21:36, Joerg Roedel wrote:
-> On Wed, Mar 11, 2020 at 02:50:39PM +0800, Lu Baolu wrote:
->> On 2020/3/10 19:15, Joerg Roedel wrote:
->>> Hi Baolu,
->>>
->>> On Sat, Mar 07, 2020 at 02:20:08PM +0800, Lu Baolu wrote:
->>>> Lu Baolu (5):
->>>>     iommu: Configure default domain with dev_def_domain_type
->>>>     iommu/vt-d: Don't force 32bit devices to uses DMA domain
->>>>     iommu/vt-d: Don't force PCI sub-hierarchy to use DMA domain
->>>>     iommu/vt-d: Add dev_def_domain_type callback
->>>>     iommu/vt-d: Apply per-device dma_ops
->>>>
->>>> Sai Praneeth Prakhya (1):
->>>>     iommu: Add dev_def_domain_type() callback in iommu_ops
->>>
->>> I like this patch-set, but I fear some regressions from patch
->>> "iommu/vt-d: Don't force 32bit devices to uses DMA domain". Have you
->>> tested this series on a couple of machines, ideally even older ones from
->>> the first generation of VT-d hardware?
->>
->> The oldest hardware I have is Ivy Bridge. :-) Actually, The effect of
->> using identity domain for 32-bit devices is the same as that of adding
->> intel_iommu=off in the kernel parameter. Hence, if there is any
->> regression, people should also find it with intel_iommu=off.
->> intel_iommu=off support is added at the very beginning of VT-d driver.
-> 
-> Okay, I will also do some testing on it, one of my VT-d machines is a
-> Haswell. Please send a new version with the recent comments addressed.
+Quoting ansuelsmth@gmail.com (2020-03-13 14:20:36)
+>=20
+>=20
+> > -----Messaggio originale-----
+> > Da: Stephen Boyd <sboyd@kernel.org>
+> > Inviato: venerd=C3=AC 13 marzo 2020 21:30
+> > A: Ansuel Smith <ansuelsmth@gmail.com>; agross@kernel.org
+> > Cc: Ansuel Smith <ansuelsmth@gmail.com>; Abhishek Sahu
+> > <absahu@codeaurora.org>; Bjorn Andersson
+> > <bjorn.andersson@linaro.org>; Michael Turquette
+> > <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org; linux-
+> > clk@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Oggetto: Re: [PATCH] ipq806x: gcc: Added the enable regs and mask for
+> > PRNG
+> >=20
+> > Quoting Ansuel Smith (2020-03-13 11:54:06)
+> > > kernel got hanged while reading from /dev/hwrng at the
+> > > time of PRNG clock enable
+> > >
+> > > Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> >=20
+> > Is Abhishek the author? Otherwise the tag chain here looks wrong.
+> >=20
+>=20
+> Yes Abhishek is the author.
+>=20
+> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> >=20
+> > Is there some Fixes: tag we can get here too?
+> >=20
+>=20
+> Think  I should put the commit that added the gcc. Right?
+>=20
 
-Sure.
-
-Best regards,
-baolu
+Yes.
