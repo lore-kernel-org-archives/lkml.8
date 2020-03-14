@@ -2,90 +2,65 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB08C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2180C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF6E2074C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584147348;
-	bh=RLYRpy4622gRvx6hFmcjZnEGqbbP+eDGQEflbxTRy7I=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=uEUs16fgi9QZzDkrGt59Zu0a6rtjjpYsci92TqLfyoGYbDoFGvaZnodYiLbIrAo+w
-	 ZY4vM0YryiWvgj373fzoCgsedluzbgaWcng5N2l4oj8ycddvbIIQhBxnu9X4jULvs3
-	 DEQmgDWB9++ETuQDf8aIkdk4HrkRohYAzs9spiCU=
+	by mail.kernel.org (Postfix) with ESMTP id AA4BD206FA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgCNAzr (ORCPT
+        id S1727711AbgCNBAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:55:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727771AbgCNAzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:55:06 -0400
-Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA4FE2074B;
-        Sat, 14 Mar 2020 00:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584147306;
-        bh=RLYRpy4622gRvx6hFmcjZnEGqbbP+eDGQEflbxTRy7I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GFpz8cjlMp1NrEmyKMHrmVI3Hs7alzAK/i2Saz66kE9mSYahRWSh7+2xsst17qvgt
-         sqbavoBxkN7P5wtcqPSjwXNWaQreEae/ZFzwEhNKBVS56E5/DP37uzk20E1Yy0VP3C
-         QdOGidw7X3zHbw3ma2K8KhghQ1fdWGABBHHEhmmU=
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     shuah@kernel.org, keescook@chromium.org
-Cc:     luto@amacapital.net, wad@chromium.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH v2 0/4] kselftest: add fixture parameters
-Date:   Fri, 13 Mar 2020 17:54:57 -0700
-Message-Id: <20200314005501.2446494-1-kuba@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Fri, 13 Mar 2020 21:00:55 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:51198 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgCNBAz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 21:00:55 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCvAV-00B8Rf-AJ; Sat, 14 Mar 2020 01:00:47 +0000
+Date:   Sat, 14 Mar 2020 01:00:47 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH v4 12/69] teach handle_mounts() to handle RCU mode
+Message-ID: <20200314010047.GQ23230@ZenIV.linux.org.uk>
+References: <20200313235303.GP23230@ZenIV.linux.org.uk>
+ <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
+ <20200313235357.2646756-12-viro@ZenIV.linux.org.uk>
+ <CAHk-=whGqaTtjP-0PkWrTsbbwPihazCx1oeSsLTSB6itZzbZiA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whGqaTtjP-0PkWrTsbbwPihazCx1oeSsLTSB6itZzbZiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Fri, Mar 13, 2020 at 05:28:12PM -0700, Linus Torvalds wrote:
+> Oh, and here you accidentally fix the problem I pointed out about
+> patch 11, as you move the code:
+> 
+> On Fri, Mar 13, 2020 at 4:54 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > +               if (unlikely(!*inode))
+> > +                       return -ENOENT;
+> 
+> Correct test added.
+> 
+> > -                       if (unlikely(!inode))
+> > -                               return -ENOENT;
+> 
+> Incorrect test removed.
+> 
+> And again, maybe I'm misreading the patch. But it does look like it's
+> wrong in the middle of the series, which would make bisection if
+> there's some related bug "interesting".
 
-This set is an attempt to make running tests for different
-sets of data easier. The direct motivation is the tls
-test which we'd like to run for TLS 1.2 and TLS 1.3,
-but currently there is no easy way to invoke the same
-tests with different parameters.
-
-Tested all users of kselftest_harness.h.
-
-v2:
- - don't run tests by fixture
- - don't pass params as an explicit argument
-
-Note that we loose a little bit of type safety
-without passing parameters as an explicit argument.
-If user puts the name of the wrong fixture as argument
-to CURRENT_FIXTURE() it will happily cast the type.
-
-Jakub Kicinski (4):
-  selftests/seccomp: use correct FIXTURE macro
-  kselftest: create fixture objects
-  kselftest: add fixture parameters
-  selftests: tls: run all tests for TLS 1.2 and TLS 1.3
-
- Documentation/dev-tools/kselftest.rst         |   3 +-
- tools/testing/selftests/kselftest_harness.h   | 156 ++++++++++++++++--
- tools/testing/selftests/net/tls.c             |  93 ++---------
- tools/testing/selftests/seccomp/seccomp_bpf.c |  10 +-
- 4 files changed, 168 insertions(+), 94 deletions(-)
-
--- 
-2.24.1
-
+Bisect hazard on botched reordering, actually.  Fixed (IOW, that should've
+been if (!*inode) already in #11).
