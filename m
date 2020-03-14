@@ -2,407 +2,306 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841A4C5ACC0
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21198C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4807E2074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mJ6G8Uvt"
+	by mail.kernel.org (Postfix) with ESMTP id DEE382074F
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584147317;
+	bh=1PE5F9GBO7z+taYxIwLOk+XjIk+3OynVr7wbWiBe/IY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rFTlMsuUjRd+oablXoG6+jAuCYXwGEgrlja+nBGXXtiRXgbf77N64EVKjmvZJCQ/9
+	 /vAcJGAbcQqHQYfJY6VGbT8IeScZMKlXPQydDLCoDlWG2+Ho6LDKddvUMVFfdBDS1g
+	 qMVxJmz3dcyxkpnIfJg0MERMFIAxKUnJy9osMgRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgCNAzH (ORCPT
+        id S1727841AbgCNAzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:55:07 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:29821 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727629AbgCNAzG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:55:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584147304; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=nALwPpErI0tmpPl/u2qgJ2QyUPPUBMZvO++osQxPMNI=; b=mJ6G8UvtOVsWUAeYGPZ//9tDmFRViZCVxAZcM8zcVHUHlDWYEMy/7jY7Fvwgigve2LKI+rMU
- UWz23+I9YArMFamNbUm1fcYtrR/l7ojFYSRUmuUKv+Asx2HBVEmBeE1D3e02BxbX8Eswqwn5
- aQln8CYqAStwB7XUsOld1Lm2sTo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6c2b68.7f142f6f0030-smtp-out-n01;
- Sat, 14 Mar 2020 00:55:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A38C9C44792; Sat, 14 Mar 2020 00:55:02 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 13 Mar 2020 20:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727804AbgCNAzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 20:55:08 -0400
+Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 795B4C43636;
-        Sat, 14 Mar 2020 00:55:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 795B4C43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
-Date:   Fri, 13 Mar 2020 17:54:51 -0700
-Message-Id: <1584147293-6763-3-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
-References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED6C2076B;
+        Sat, 14 Mar 2020 00:55:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584147307;
+        bh=1PE5F9GBO7z+taYxIwLOk+XjIk+3OynVr7wbWiBe/IY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MR3t5A8Sqqzn8lj28eViideZffAcUJuBxfFfM7fHLl5VmWcV62r0tvWxdgWEYrvVa
+         PU8RUp/I38HPR5vHrLBWqnq9QJVFeQbgRwc7VUZoLN2u+eCbqW1gdLbmfVs5URc+j6
+         35LLjh02QHlX2J6chXoMG093FfalrgBeDAf++hUg=
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     shuah@kernel.org, keescook@chromium.org
+Cc:     luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH v2 3/4] kselftest: add fixture parameters
+Date:   Fri, 13 Mar 2020 17:55:00 -0700
+Message-Id: <20200314005501.2446494-4-kuba@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200314005501.2446494-1-kuba@kernel.org>
+References: <20200314005501.2446494-1-kuba@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the SNPS FemtoPHY driver used in QCOM SOCs.  There
-are potentially multiple instances of this UTMI PHY on the
-SOC, all which can utilize this driver.
+Allow users to pass parameters to fixtures.
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+Each test will be run once for each set of
+its fixture parameter sets (or once if none).
+
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+--
+v2:
+ - don't pass params to functions, use a member
+   of _metadata instead
 ---
- drivers/phy/qualcomm/Kconfig             |  10 ++
- drivers/phy/qualcomm/Makefile            |   1 +
- drivers/phy/qualcomm/phy-qcom-snps-7nm.c | 294 +++++++++++++++++++++++++++++++
- 3 files changed, 305 insertions(+)
- create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+ Documentation/dev-tools/kselftest.rst       |   3 +-
+ tools/testing/selftests/kselftest_harness.h | 133 ++++++++++++++++++--
+ 2 files changed, 126 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
-index e46824d..3158c14 100644
---- a/drivers/phy/qualcomm/Kconfig
-+++ b/drivers/phy/qualcomm/Kconfig
-@@ -85,6 +85,16 @@ config PHY_QCOM_USB_HS
- 	  Support for the USB high-speed ULPI compliant phy on Qualcomm
- 	  chipsets.
+diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
+index 61ae13c44f91..8aff58d11937 100644
+--- a/Documentation/dev-tools/kselftest.rst
++++ b/Documentation/dev-tools/kselftest.rst
+@@ -301,7 +301,8 @@ Helpers
  
-+config PHY_QCOM_USB_SNPS_HS_7NM
-+	tristate "Qualcomm 7nm USB HS PHY module"
-+	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-+	select GENERIC_PHY
-+	help
-+	  Enable support for the USB high-speed SNPS phy on Qualcomm 7nm
-+	  chipsets.  This PHY has differences in the register map compared
-+	  to the 28nm variant.  The PHY is paired with a Synopsys DWC3 USB
-+	  controller on MSM SOCs.
+ .. kernel-doc:: tools/testing/selftests/kselftest_harness.h
+     :functions: TH_LOG TEST TEST_SIGNAL FIXTURE FIXTURE_DATA FIXTURE_SETUP
+-                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN
++                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN FIXTURE_PARAMS
++                FIXTURE_PARAMS_ADD CURRENT_PARAMS
+ 
+ Operators
+ ---------
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 66c2397d8c51..b7e1ecda441c 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -214,6 +214,7 @@
+  * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
+  */
+ #define FIXTURE(fixture_name) \
++	FIXTURE_PARAMS(fixture_name); \
+ 	static struct __fixture_metadata _##fixture_name##_fixture_object = \
+ 		{ .name =  #fixture_name, }; \
+ 	static void __attribute__((constructor)) \
+@@ -246,6 +247,7 @@
+ 	void fixture_name##_setup( \
+ 		struct __test_metadata __attribute__((unused)) *_metadata, \
+ 		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
 +
- config PHY_QCOM_USB_HSIC
- 	tristate "Qualcomm USB HSIC ULPI PHY module"
- 	depends on USB_ULPI_BUS
-diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
-index 283251d..06bdb40 100644
---- a/drivers/phy/qualcomm/Makefile
-+++ b/drivers/phy/qualcomm/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
- obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
- obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
-+obj-$(CONFIG_PHY_QCOM_USB_SNPS_HS_7NM)		+= phy-qcom-snps-7nm.o
-diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-new file mode 100644
-index 0000000..8d4ba53
---- /dev/null
-+++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+ /**
+  * FIXTURE_TEARDOWN(fixture_name)
+  * *_metadata* is included so that EXPECT_* and ASSERT_* work correctly.
+@@ -267,6 +269,72 @@
+ 		struct __test_metadata __attribute__((unused)) *_metadata, \
+ 		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
+ 
++/**
++ * FIXTURE_PARAMS(fixture_name) - Optionally called once per fixture
++ * to declare fixture parameters
++ *
++ * @fixture_name: fixture name
++ *
++ * .. code-block:: c
++ *
++ *     FIXTURE_PARAMS(datatype name) {
++ *       type property1;
++ *       ...
++ *     };
++ *
++ * Defines type of constant parameters provided to FIXTURE_SETUP() and TEST_F()
++ * as *params*.
 + */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
-+
-+#define USB2_PHY_USB_PHY_UTMI_CTRL0		(0x3c)
-+#define OPMODE_MASK					GENMASK(4, 3)
-+#define OPMODE_NORMAL				(0x00)
-+#define OPMODE_NONDRIVING			BIT(3)
-+#define SLEEPM						BIT(0)
-+#define TERMSEL						BIT(5)
-+
-+#define USB2_PHY_USB_PHY_UTMI_CTRL1		(0x40)
-+#define XCVRSEL						BIT(0)
-+
-+#define USB2_PHY_USB_PHY_UTMI_CTRL5		(0x50)
-+#define POR							BIT(1)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0	(0x54)
-+#define RETENABLEN							BIT(3)
-+#define FSEL_MASK							GENMASK(7, 5)
-+#define FSEL_DEFAULT						(0x3 << 4)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1	(0x58)
-+#define VBUSVLDEXTSEL0						BIT(4)
-+#define PLLBTUNE							BIT(5)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2	(0x5c)
-+#define VREGBYPASS							BIT(0)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL1	(0x60)
-+#define VBUSVLDEXT0					BIT(0)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL2	(0x64)
-+#define USB2_AUTO_RESUME			BIT(0)
-+#define USB2_SUSPEND_N				BIT(2)
-+#define USB2_SUSPEND_N_SEL			BIT(3)
-+
-+#define USB2_PHY_USB_PHY_CFG0					(0x94)
-+#define UTMI_PHY_DATAPATH_CTRL_OVERRIDE_EN	BIT(0)
-+#define UTMI_PHY_CMN_CTRL_OVERRIDE_EN		BIT(1)
-+
-+#define USB2_PHY_USB_PHY_REFCLK_CTRL	(0xa0)
-+#define REFCLK_SEL_MASK				GENMASK(1, 0)
-+#define REFCLK_SEL_DEFAULT			(0x2 << 0)
-+
-+static const char * const qcom_snps_hsphy_vreg_names[] = {
-+	"vdda-pll", "vdda33", "vdda18",
-+};
-+
-+#define SNPS_HS_NUM_VREGS		ARRAY_SIZE(qcom_snps_hsphy_vreg_names)
++#define FIXTURE_PARAMS(fixture_name) struct _fixture_params_##fixture_name
 +
 +/**
-+ * struct qcom_snps_hsphy - structure holding snps hs phy attributes
++ * FIXTURE_PARAMS_ADD(fixture_name, params_name) - Called once per fixture
++ * params to setup the data and register
 + *
-+ * @phy: generic phy
-+ * @base: iomapped memory space for qubs2 phy
++ * @fixture_name: fixture name
++ * @params_name: name of the parameter set
 + *
-+ * @cfg_ahb_clk: AHB2PHY interface clock
-+ * @ref_clk: phy reference clock
-+ * @iface_clk: phy interface clock
-+ * @phy_reset: phy reset control
-+ * @vregs: regulator supplies bulk data
-+
-+ * @phy_initialized: if PHY has been initialized correctly
++ * .. code-block:: c
 + *
++ *     FIXTURE_ADD(datatype name) {
++ *       .property1 = val1;
++ *       ...
++ *     };
++ *
++ * Defines an instance of parameters accessible in FIXTURE_SETUP(),
++ * FIXTURE_TEARDOWN() and TEST_F(). Tests will be run once for each
++ * parameter set.
 + */
-+struct qcom_snps_hsphy {
-+	struct phy *phy;
-+	void __iomem *base;
++#define FIXTURE_PARAMS_ADD(fixture_name, params_name) \
++	extern FIXTURE_PARAMS(fixture_name) \
++		_##fixture_name##_##params_name##_params; \
++	static struct __fixture_params_metadata \
++		_##fixture_name##_##params_name##_object = \
++		{ .name = #params_name, \
++		  .data = &_##fixture_name##_##params_name##_params}; \
++	static void __attribute__((constructor)) \
++		_register_##fixture_name##_##params_name(void) \
++	{ \
++		__register_fixture_params(&_##fixture_name##_fixture_object, \
++			&_##fixture_name##_##params_name##_object);	\
++	} \
++	FIXTURE_PARAMS(fixture_name) _##fixture_name##_##params_name##_params =
 +
-+	struct clk *cfg_ahb_clk;
-+	struct clk *ref_clk;
-+	struct reset_control *phy_reset;
-+	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
++/**
++ * CURRENT_PARAMS(fixture_name) - Access fixture parameters of the current test
++ *
++ * @fixture_name: fixture name
++ *
++ * .. code-block:: c
++ *
++ *     CURRENT_PARAMS(fixture name)->property1
++ *
++ * Helper macro for accessing parameters of current test. Can be used inside
++ * FIXTURE_SETUP(), FIXTURE_TEARDOWN() and TEST_F().
++ */
++#define CURRENT_PARAMS(fixture_name) \
++	((const FIXTURE_PARAMS(fixture_name) *) _metadata->current_params->data)
 +
-+	bool phy_initialized;
+ /**
+  * TEST_F(fixture_name, test_name) - Emits test registration and helpers for
+  * fixture-based test cases
+@@ -638,11 +706,13 @@
+ 
+ /* Contains all the information for test execution and status checking. */
+ struct __fixture_metadata;
++struct __fixture_params_metadata;
+ 
+ struct __test_metadata {
+ 	const char *name;
+ 	void (*fn)(struct __test_metadata *);
+ 	struct __fixture_metadata *fixture;
++	struct __fixture_params_metadata *current_params;
+ 	int termsig;
+ 	int passed;
+ 	int trigger; /* extra handler after the evaluation */
+@@ -696,10 +766,41 @@ static inline void __register_test(struct __test_metadata *t)
+ /* Contains all the information about a fixture */
+ struct __fixture_metadata {
+ 	const char *name;
++	struct __fixture_params_metadata *params;
+ } _fixture_global __attribute__((unused)) = {
+ 	.name = "global",
+ };
+ 
++struct __fixture_params_metadata {
++	const char *name;
++	const void *data;
++	struct __fixture_params_metadata *prev, *next;
 +};
 +
-+static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
-+				    u32 mask, u32 val)
++static inline void
++__register_fixture_params(struct __fixture_metadata *f,
++			  struct __fixture_params_metadata *p)
 +{
-+	u32 reg;
-+
-+	reg = readl(base + offset);
-+	reg &= ~mask;
-+	reg |= val & mask;
-+	writel(reg, base + offset);
-+
-+	/* Ensure above write is completed */
-+	readl(base + offset);
++	/* Circular linked list where only prev is circular. */
++	if (f->params == NULL) {
++		f->params = p;
++		p->next = NULL;
++		p->prev = p;
++		return;
++	}
++	if (__constructor_order == _CONSTRUCTOR_ORDER_FORWARD) {
++		p->next = NULL;
++		p->prev = f->params->prev;
++		p->prev->next = p;
++		f->params->prev = p;
++	} else {
++		p->next = f->params;
++		p->next->prev = p;
++		p->prev = p;
++		f->params = p;
++	}
 +}
 +
-+static int qcom_snps_hsphy_init(struct phy *phy)
-+{
-+	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
-+	int ret;
+ static inline int __bail(int for_realz, bool no_print, __u8 step)
+ {
+ 	if (for_realz) {
+@@ -711,14 +812,21 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
+ }
+ 
+ void __run_test(struct __fixture_metadata *f,
++		struct __fixture_params_metadata *p,
+ 		struct __test_metadata *t)
+ {
+ 	pid_t child_pid;
+ 	int status;
+ 
++	/* reset test struct */
+ 	t->passed = 1;
+ 	t->trigger = 0;
+-	printf("[ RUN      ] %s.%s\n", f->name, t->name);
++	t->step = 0;
++	t->no_print = 0;
 +
-+	dev_vdbg(&phy->dev, "%s(): Initializing SNPS HS phy\n", __func__);
++	t->current_params = p;
 +
-+	/* turn on regulator supplies */
-+	ret = regulator_bulk_enable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-+	if (ret)
-+		return ret;
++	printf("[ RUN      ] %s%s.%s\n", f->name, p->name, t->name);
+ 	alarm(t->timeout);
+ 	child_pid = fork();
+ 	if (child_pid < 0) {
+@@ -767,14 +875,17 @@ void __run_test(struct __fixture_metadata *f,
+ 				status);
+ 		}
+ 	}
+-	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
+-	       f->name, t->name);
++	printf("[     %4s ] %s%s.%s\n", (t->passed ? "OK" : "FAIL"),
++	       f->name, p->name, t->name);
+ 	alarm(0);
+ }
+ 
+ static int test_harness_run(int __attribute__((unused)) argc,
+ 			    char __attribute__((unused)) **argv)
+ {
++	struct __fixture_params_metadata no_param = { .name = "", };
++	struct __fixture_params_metadata *p;
++	struct __fixture_metadata *f;
+ 	struct __test_metadata *t;
+ 	int ret = 0;
+ 	unsigned int count = 0;
+@@ -784,12 +895,16 @@ static int test_harness_run(int __attribute__((unused)) argc,
+ 	printf("[==========] Running %u tests from %u test cases.\n",
+ 	       __test_count, __fixture_count + 1);
+ 	for (t = __test_list; t; t = t->next) {
+-		count++;
+-		__run_test(t->fixture, t);
+-		if (t->passed)
+-			pass_count++;
+-		else
+-			ret = 1;
++		f = t->fixture;
 +
-+	/* enable ahb interface clock to program phy */
-+	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
-+	if (ret) {
-+		dev_err(&phy->dev, "failed to enable cfg ahb clock, %d\n", ret);
-+		goto poweroff_phy;
-+	}
-+
-+	/* Perform phy reset */
-+	ret = reset_control_assert(hsphy->phy_reset);
-+	if (ret) {
-+		dev_err(&phy->dev, "failed to assert phy_reset, %d\n", ret);
-+		goto disable_ahb_clk;
-+	}
-+
-+	/* 100 us delay to keep PHY in reset mode */
-+	usleep_range(100, 150);
-+
-+	ret = reset_control_deassert(hsphy->phy_reset);
-+	if (ret) {
-+		dev_err(&phy->dev, "failed to de-assert phy_reset, %d\n", ret);
-+		goto disable_ahb_clk;
-+	}
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
-+							UTMI_PHY_CMN_CTRL_OVERRIDE_EN,
-+							UTMI_PHY_CMN_CTRL_OVERRIDE_EN);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
-+							POR, POR);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0,
-+							FSEL_MASK, 0);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
-+					PLLBTUNE, PLLBTUNE);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_REFCLK_CTRL,
-+					REFCLK_SEL_DEFAULT, REFCLK_SEL_MASK);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
-+					VBUSVLDEXTSEL0, VBUSVLDEXTSEL0);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL1,
-+					VBUSVLDEXT0, VBUSVLDEXT0);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2,
-+					VREGBYPASS, VREGBYPASS);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-+					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N,
-+					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL0,
-+					SLEEPM, SLEEPM);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
-+					POR, 0);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-+					USB2_SUSPEND_N_SEL, 0);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
-+					UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
-+
-+	hsphy->phy_initialized = true;
-+
-+	return 0;
-+
-+disable_ahb_clk:
-+	clk_disable_unprepare(hsphy->cfg_ahb_clk);
-+poweroff_phy:
-+	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-+
-+	return ret;
-+}
-+
-+static int qcom_snps_hsphy_exit(struct phy *phy)
-+{
-+	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
-+
-+	reset_control_assert(hsphy->phy_reset);
-+	clk_disable_unprepare(hsphy->cfg_ahb_clk);
-+	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-+	hsphy->phy_initialized = false;
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops qcom_snps_hsphy_gen_ops = {
-+	.init		= qcom_snps_hsphy_init,
-+	.exit		= qcom_snps_hsphy_exit,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id qcom_snps_hsphy_of_match_table[] = {
-+	{
-+		.compatible	= "qcom,sm8150-usb-hs-phy",
-+	},
-+	{
-+		.compatible	= "qcom,usb-snps-hs-7nm-phy",
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
-+
-+static int qcom_snps_hsphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct qcom_snps_hsphy *hsphy;
-+	struct phy_provider *phy_provider;
-+	struct phy *generic_phy;
-+	struct resource *res;
-+	int ret, i;
-+	int num;
-+
-+	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
-+	if (!hsphy)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	hsphy->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(hsphy->base))
-+		return PTR_ERR(hsphy->base);
-+
-+	hsphy->ref_clk = devm_clk_get(dev, "ref");
-+	if (IS_ERR(hsphy->ref_clk)) {
-+		ret = PTR_ERR(hsphy->ref_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get ref clk, %d\n", ret);
-+		return ret;
-+	}
-+
-+	hsphy->phy_reset = devm_reset_control_get_by_index(&pdev->dev, 0);
-+	if (IS_ERR(hsphy->phy_reset)) {
-+		dev_err(dev, "failed to get phy core reset\n");
-+		return PTR_ERR(hsphy->phy_reset);
-+	}
-+
-+	num = ARRAY_SIZE(hsphy->vregs);
-+	for (i = 0; i < num; i++)
-+		hsphy->vregs[i].supply = qcom_snps_hsphy_vreg_names[i];
-+
-+	ret = devm_regulator_bulk_get(dev, num, hsphy->vregs);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get regulator supplies: %d\n",
-+				ret);
-+		return ret;
-+	}
-+
-+	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
-+	if (IS_ERR(generic_phy)) {
-+		ret = PTR_ERR(generic_phy);
-+		dev_err(dev, "failed to create phy, %d\n", ret);
-+		return ret;
-+	}
-+	hsphy->phy = generic_phy;
-+
-+	dev_set_drvdata(dev, hsphy);
-+	phy_set_drvdata(generic_phy, hsphy);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (!IS_ERR(phy_provider))
-+		dev_info(dev, "Registered Qcom-SNPS HS phy\n");
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static struct platform_driver qcom_snps_hsphy_driver = {
-+	.probe		= qcom_snps_hsphy_probe,
-+	.driver = {
-+		.name	= "qcom-snps-hs-7nm-phy",
-+		.of_match_table = qcom_snps_hsphy_of_match_table,
-+	},
-+};
-+
-+module_platform_driver(qcom_snps_hsphy_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm 7nm USB HS PHY driver");
-+MODULE_LICENSE("GPL v2");
++		for (p = f->params ?: &no_param; p; p = p->next) {
++			count++;
++			__run_test(f, p, t);
++			if (t->passed)
++				pass_count++;
++			else
++				ret = 1;
++		}
+ 	}
+ 	printf("[==========] %u / %u tests passed.\n", pass_count, count);
+ 	printf("[  %s  ]\n", (ret ? "FAILED" : "PASSED"));
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.24.1
+
