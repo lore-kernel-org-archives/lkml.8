@@ -2,71 +2,221 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3CFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A443C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F756206E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:09:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZr+4+Fz"
+	by mail.kernel.org (Postfix) with ESMTP id 42F43206E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584151955;
+	bh=2kZ/Ix9VtKRzt7pySpx+QAFvVZ9F4ASqSH8H+xICraU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UyIbDQVBF2JnBA+GylUoU00SWOkzTNSAY1wJIuRBKP7zxAybgDU6OnwFhm0FcKGIZ
+	 oStJEuTsCubMCFu/C9vCA12aAILbITW1oMLoNgJaTi6X5vsmfQTFFYPLBFOcTl0t15
+	 AzekymK1CbJL7si0G8F2/4zFkOVQs92gGUeZyaQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgCNCJt (ORCPT
+        id S1726646AbgCNCMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 22:09:49 -0400
-Received: from mail-ua1-f43.google.com ([209.85.222.43]:36286 "EHLO
-        mail-ua1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgCNCJt (ORCPT
+        Fri, 13 Mar 2020 22:12:34 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:60521 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbgCNCMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 22:09:49 -0400
-Received: by mail-ua1-f43.google.com with SMTP id 8so4403067uar.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 19:09:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sPbWWV08r2ldSiJHPQJ01Rn4O0B3sSDdcrAcKmWph1g=;
-        b=bZr+4+FziGyljaoYQA83s9KxKUprDcm5d+73PBGk95VzO4aJbtzYO+g42+UfhmEVsk
-         0Hp4DTj9WQK3PIKoAxuSJEYoM2gKUI+1DHOFZe41DUR1BXGrekOc+U5v+rnfulgnZXEZ
-         6ZFcG1FoSSrYsqOEoqm4834VspYiTeTXzXr5HAMK8clCOiGq0V//9Odv7gjd1YPfoO5M
-         aK8baFAcKxcPo5lcLS3WdIJAnLoeKzgjOMNVwKgHjJR1uALhs8fljaDNEh4bVVB10MzZ
-         NhYeKerRjQRX7rM2gyvPbYZzLd89+KeV4im+xMlGV2uWfkURPH8W9AmpT043/Om2GobY
-         nDlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sPbWWV08r2ldSiJHPQJ01Rn4O0B3sSDdcrAcKmWph1g=;
-        b=U6GapM5T+hB3LJOlKMNuEScHrntJtg1rkFwSmMC8wozylVnWji5yeV9vqi7TS/UVE7
-         qrWGq1krNDM+pLK1Xu5Sy3ym6ho7J0GRW8HDlcGOPlBDPQ9aS9AvZUnI96jfvG6BGVe3
-         vIitFGcn87RW4Gc/r5Ab0n/zhszI52d4zRv5Pw1NfC0LX1mBHO859oBGp+LSsa0s3lAU
-         4nqBB1MyPtpBySXSYCX0q8FCvcBcVj7ByvXDCd5weYPo5yO/tNMJfsKgYKKuxu6E0qZk
-         r9n/tGAYw6vWjuJRPasQJWM+dxmjZDXkhs2KzTbGUUzg51FYwiFVDGspD0CRNp4s++5D
-         7TVQ==
-X-Gm-Message-State: ANhLgQ1pfiFXP1dxCHnc/Z5INHOCNzzrJHzAEJ7qiszZmYs4gNKs0R1Y
-        e2r2KAANZxBHWPDc8ct1kunTAKylqEASHLgyCfA=
-X-Google-Smtp-Source: ADFU+vsXHY48gs2M7YHj32iDdaterKb43Dy83U6vKnQVQIKEhjuzjrbH8f0deEdjEnmklpzykeotJ+1E5v6fDxz/J/o=
-X-Received: by 2002:ab0:2e91:: with SMTP id f17mr6601281uaa.22.1584151788140;
- Fri, 13 Mar 2020 19:09:48 -0700 (PDT)
+        Fri, 13 Mar 2020 22:12:33 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 02E2CP2u023350;
+        Sat, 14 Mar 2020 11:12:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 02E2CP2u023350
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584151946;
+        bh=GhT3aXuBvPthoFeT4yZR0mqs1IRA+1JuQlU0tGqcrJU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kYQwFuACp+DPevM5oQFXs9Ib6OTUSSam0ZTV7rTNcw9h2UmGRpoXSQWJzzWmAFFWa
+         /pKr6xsxkhTPXiIpsUAuCSTinXh1eFbsrDVXJT2HlY6oRQsBX1GL7vxRZQ2k3uptTY
+         xbz2DLLnIzlc6iTZ9HnYEOVEGpUSaoCnUOXjhaUio3XxRgw9SXeY2jvovk7mOryfj/
+         465yfohXBjEKhe6wX4e6IJaigie0xm5M3R0wEgA1XQm1HcafG3Y8LKxL6UKe+Eit3O
+         yi8NExOc8SP+qWN5JLR2N/Uo8eHIwDCH9uwHkNiwofQmfJMti2SdP22h3qS4WZCRoF
+         82LamnoRKB2/g==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id n27so7675171vsa.0;
+        Fri, 13 Mar 2020 19:12:25 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3fr3P+CshaprNTEKBMu5e0HpzULM49LC2t4fF4GYwr5xBkO4+c
+        ROb/hwWcZOH0fP39QrzB+9bPtHzLk+hARt/zHsc=
+X-Google-Smtp-Source: ADFU+vtaZyYpm3dCRe0vFXfXoe7d1/Tma6ScVCnWx2otGG1rDf5iFDKV1/k6kjd53me7l49arctAbI5aKKSU9W6+5+Q=
+X-Received: by 2002:a67:eb91:: with SMTP id e17mr6970094vso.179.1584151944414;
+ Fri, 13 Mar 2020 19:12:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000002e20b9059fee8a94@google.com>
-In-Reply-To: <0000000000002e20b9059fee8a94@google.com>
-From:   Qiujun Huang <anenbupt@gmail.com>
-Date:   Sat, 14 Mar 2020 10:09:36 +0800
-Message-ID: <CADG63jAAgdzmVQGHhxAY-diyMisXenTpd02StvwJytqkjGeSuw@mail.gmail.com>
-Subject: Re: WARNING in idr_destroy
-To:     syzbot <syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        mripard@kernel.org, syzkaller-bugs@googlegroups.com
+References: <20200311170120.12641-1-jeyu@kernel.org>
+In-Reply-To: <20200311170120.12641-1-jeyu@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 14 Mar 2020 11:11:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT-xdMZbK5UeVvm6S-WNimMMKO3b=jkJsU29z6ULPjs_Q@mail.gmail.com>
+Message-ID: <CAK7LNAT-xdMZbK5UeVvm6S-WNimMMKO3b=jkJsU29z6ULPjs_Q@mail.gmail.com>
+Subject: Re: [PATCH v2] modpost: move the namespace field in Module.symvers last
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz test: https://github.com/hqj/hqjagain_test.git drm
+On Thu, Mar 12, 2020 at 2:02 AM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> In order to preserve backwards compatability with kmod tools, we have to
+> move the namespace field in Module.symvers last, as the depmod -e -E
+> option looks at the first three fields in Module.symvers to check symbol
+> versions (and it's expected they stay in the original order of crc,
+> symbol, module).
+>
+> In addition, update an ancient comment above read_dump() in modpost that
+> suggested that the export type field in Module.symvers was optional. I
+> suspect that there were historical reasons behind that comment that are
+> no longer accurate. We have been unconditionally printing the export
+> type since 2.6.18 (commit bd5cbcedf44), which is over a decade ago now.
+>
+> Fix up read_dump() to treat each field as non-optional. I suspect the
+> original read_dump() code treated the export field as optional in order
+> to support pre <= 2.6.18 Module.symvers (which did not have the export
+> type field). Note that although symbol namespaces are optional, the
+> field will not be omitted from Module.symvers if a symbol does not have
+> a namespace. In this case, the field will simply be empty and the next
+> delimiter or end of line will follow.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
+> Tested-by: Matthias Maennich <maennich@google.com>
+> Reviewed-by: Matthias Maennich <maennich@google.com>
+> Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+
+
+While I am not opposed to this fix,
+I did not even notice Module.symvers was official interface.
+
+Kbuild invokes scripts/depmod.sh to finalize
+the 'make modules_install', but I do not see the -E
+option being used there.
+
+I do not see Module.symvers installed in
+/lib/modules/$(uname -r)/.
+
+
+
+
+
+> ---
+> v2:
+>
+>   - Explain the changes to read_dump() and the comment (and provide
+>     historical context) in the commit message. (Lucas De Marchi)
+>
+>  Documentation/kbuild/modules.rst |  4 ++--
+>  scripts/export_report.pl         |  2 +-
+>  scripts/mod/modpost.c            | 24 ++++++++++++------------
+>  3 files changed, 15 insertions(+), 15 deletions(-)
+>
+> diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
+> index 69fa48ee93d6..e0b45a257f21 100644
+> --- a/Documentation/kbuild/modules.rst
+> +++ b/Documentation/kbuild/modules.rst
+> @@ -470,9 +470,9 @@ build.
+>
+>         The syntax of the Module.symvers file is::
+>
+> -       <CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
+> +       <CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
+>
+> -       0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
+> +       0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
+>
+>         The fields are separated by tabs and values may be empty (e.g.
+>         if no namespace is defined for an exported symbol).
+> diff --git a/scripts/export_report.pl b/scripts/export_report.pl
+> index 548330e8c4e7..feb3d5542a62 100755
+> --- a/scripts/export_report.pl
+> +++ b/scripts/export_report.pl
+> @@ -94,7 +94,7 @@ if (defined $opt{'o'}) {
+>  #
+>  while ( <$module_symvers> ) {
+>         chomp;
+> -       my (undef, $symbol, $namespace, $module, $gpl) = split('\t');
+> +       my (undef, $symbol, $module, $gpl, $namespace) = split('\t');
+>         $SYMBOL { $symbol } =  [ $module , "0" , $symbol, $gpl];
+>  }
+>  close($module_symvers);
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index a3d8370f9544..e1963ef8c07c 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -2421,7 +2421,7 @@ static void write_if_changed(struct buffer *b, const char *fname)
+>  }
+>
+>  /* parse Module.symvers file. line format:
+> - * 0x12345678<tab>symbol<tab>module[[<tab>export]<tab>something]
+> + * 0x12345678<tab>symbol<tab>module<tab>export<tab>namespace
+>   **/
+>  static void read_dump(const char *fname, unsigned int kernel)
+>  {
+> @@ -2434,7 +2434,7 @@ static void read_dump(const char *fname, unsigned int kernel)
+>                 return;
+>
+>         while ((line = get_next_line(&pos, file, size))) {
+> -               char *symname, *namespace, *modname, *d, *export, *end;
+> +               char *symname, *namespace, *modname, *d, *export;
+>                 unsigned int crc;
+>                 struct module *mod;
+>                 struct symbol *s;
+> @@ -2442,16 +2442,16 @@ static void read_dump(const char *fname, unsigned int kernel)
+>                 if (!(symname = strchr(line, '\t')))
+>                         goto fail;
+>                 *symname++ = '\0';
+> -               if (!(namespace = strchr(symname, '\t')))
+> -                       goto fail;
+> -               *namespace++ = '\0';
+> -               if (!(modname = strchr(namespace, '\t')))
+> +               if (!(modname = strchr(symname, '\t')))
+>                         goto fail;
+>                 *modname++ = '\0';
+> -               if ((export = strchr(modname, '\t')) != NULL)
+> -                       *export++ = '\0';
+> -               if (export && ((end = strchr(export, '\t')) != NULL))
+> -                       *end = '\0';
+> +               if (!(export = strchr(modname, '\t')))
+> +                       goto fail;
+> +               *export++ = '\0';
+> +               if (!(namespace = strchr(export, '\t')))
+> +                       goto fail;
+> +               *namespace++ = '\0';
+> +
+>                 crc = strtoul(line, &d, 16);
+>                 if (*symname == '\0' || *modname == '\0' || *d != '\0')
+>                         goto fail;
+> @@ -2502,9 +2502,9 @@ static void write_dump(const char *fname)
+>                                 namespace = symbol->namespace;
+>                                 buf_printf(&buf, "0x%08x\t%s\t%s\t%s\t%s\n",
+>                                            symbol->crc, symbol->name,
+> -                                          namespace ? namespace : "",
+>                                            symbol->module->name,
+> -                                          export_str(symbol->export));
+> +                                          export_str(symbol->export),
+> +                                          namespace ? namespace : "");
+>                         }
+>                         symbol = symbol->next;
+>                 }
+> --
+> 2.16.4
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
