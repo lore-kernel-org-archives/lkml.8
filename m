@@ -2,122 +2,145 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88776C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD17C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1EC20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:40:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cuhKXD2J"
+	by mail.kernel.org (Postfix) with ESMTP id D763020722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584243652;
+	bh=zZ9bAR3baPAPuE8evlBpnNMKiF2jY5NR9uiWv2PkB4c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2BbMBafsmdoyLAkR7AZzXYCK4sfTGWC6ntUEtlfFwQI0UaIhhK+h/G5UNo8Q2Bykv
+	 az46fwmJ7yao40pnkiI2FCIeTZfRbXg75T5HbdYfyZ8HpFF6uVFhshqg+3YflZ0Qfg
+	 N+qNgpbKT4w/EW5VIHhDDpnJZq4mV+KVveYQ1cfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgCODkM (ORCPT
+        id S1727557AbgCODkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:40:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24398 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726668AbgCODkL (ORCPT
+        Sat, 14 Mar 2020 23:40:51 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37486 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbgCODkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:40:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584243610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7mUmgqOIFOdKgmbkoQ0zespckuiZdF8ycwVxiswURFM=;
-        b=cuhKXD2JoWMcCLwfw5DqmA6ZZvk1QBAp0wZrhs4q2gkrPjV/ObUMLEjeWEiY+LaHsQ0v84
-        RlgxXKYrIS8Rp0nkg+BcsCO+2YLdRhwJJEQJvyQ69gclcHE1Rgftfk4jnvNIr2xB4se6kN
-        jXSfQBliixw0AcywWJmRCYXAkUqqCaY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-156-Pw3YuW3APQWkuirTtbakpw-1; Sat, 14 Mar 2020 07:37:44 -0400
-X-MC-Unique: Pw3YuW3APQWkuirTtbakpw-1
-Received: by mail-wr1-f69.google.com with SMTP id u12so3382473wrw.10
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 04:37:44 -0700 (PDT)
+        Sat, 14 Mar 2020 23:40:51 -0400
+Received: by mail-qk1-f193.google.com with SMTP id z25so15299879qkj.4;
+        Sat, 14 Mar 2020 20:40:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7mUmgqOIFOdKgmbkoQ0zespckuiZdF8ycwVxiswURFM=;
-        b=UNWq+U1vxabWfBv98hiapV9uQIIBj6lNk/PkTpWmnZhRxBpAhCgWcALKaiapKy+i6f
-         Ycimovx++pP1XuNdqfdWLVaPGe1shCiJeym+C/o5vnUPbiUisUs26bjVn7xUqoJ6r8cM
-         LXg4rqkJBVKPRfX4opqNC3Re3bnwJBwwqmuBVgeFQLkTPoIPcpz29cppJKQWHLSWv3rr
-         qB+zY6elsL3SqQzy8ndxhzQkr/w8ZVpagUp0YCfmNTW/0QxvO4n/OGpUpnF0y5hSqNNL
-         SNpjBXDUAwYa4erFrrgfgMBUuC+E7lGiLZXAou1APIRERZYD3vH40Rrvyhm8BEupZYv5
-         T03A==
-X-Gm-Message-State: ANhLgQ2dr1e7fjkU6G3Ww8EEFaQ+bZZcfCUuCfqs9gGsKyvTqn1qLuZ9
-        O+ZbADSYgKCzo/SsPJb1UM/NHhRmjVOtaAXXIafPfcC105vjNxsSYWVXRodpSL21/eI9t8HqGQQ
-        jZOsiAk6PA2i9dR79Ifu/z32M
-X-Received: by 2002:a5d:6a0e:: with SMTP id m14mr24146631wru.202.1584185863205;
-        Sat, 14 Mar 2020 04:37:43 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtNGoRby/wRfjauVrobYr5jBC5s8q6oSM+F2dujPpEvIkjrwFi5vDmCl73ddSAQ4SsdWa43Zw==
-X-Received: by 2002:a5d:6a0e:: with SMTP id m14mr24146612wru.202.1584185862992;
-        Sat, 14 Mar 2020 04:37:42 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:7de8:5d90:2370:d1ac? ([2001:b07:6468:f312:7de8:5d90:2370:d1ac])
-        by smtp.gmail.com with ESMTPSA id f17sm76798128wrj.28.2020.03.14.04.37.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Mar 2020 04:37:42 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] kvm: selftests: Introduce TEST_FAIL and convert
-To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        sean.j.christopherson@intel.com, shuah@kernel.org,
-        tglx@linutronix.de, thuth@redhat.com
-References: <20200310025059.9301-1-wainersm@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <61b30d46-316c-5ef6-179f-fc394d352766@redhat.com>
-Date:   Sat, 14 Mar 2020 12:37:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xWfNlXspNXP/Z3scX2GkjvDWCTPuiHmONTso2D85LQ0=;
+        b=sGtaPxoOYlnTE5+b5zUoJ5Qn4z0EdmGqcfdkyzpvc+A+oNj2ctggTsHy7R5k5KZaSS
+         bJmMY5PSsrpz4laFSZ4Cvu1/UjYJvYiDHDndj8EmjUyw16JFuCWraRfLM2fLieGE1rw/
+         t4GXZD+7QD+JKa0naTB5pkynZPCLuLQGIggS7Itm3YqeYqhRene0PWAK7SwTR5eN9yQl
+         +vJlMoXeZ6j0Q6fHxZXu9BH5N9pQBpt0VboKIs4enjv3glrDqAwo24UUnZ50iNeQXMLS
+         LYpw3WcitaT3FUhFNW5aVWy/LP1RCkHJmHHxiXiFyS60KPOk0PPhc36PkRXhY7LOVeLY
+         VzFA==
+X-Gm-Message-State: ANhLgQ3XMB+dMlygbKdQ6riMKlTY/fWvpG4+Pa5qXNxz0mSZPa0BgrSc
+        UYxcEye81dVp7IqW0xfZETMUf2fnx688Aje0f6bitg==
+X-Google-Smtp-Source: ADFU+vt9NbYnSnppxGI7xOTmGfRR3RSs/QZOhkMGUVuMhiPSyyT3vdhguRYt/HjQ0hyrQs/pQ8sEHfBxb3po2QAZY0w=
+X-Received: by 2002:a9d:1d07:: with SMTP id m7mr6029839otm.167.1584182450168;
+ Sat, 14 Mar 2020 03:40:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200310025059.9301-1-wainersm@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200304113248.1143057-1-mail@maciej.szmigiero.name>
+ <20200312161751.GA5245@fuller.cnet> <CAJZ5v0jLOKj5LN5Kmredixomer4BKdBPNwP7gOf7A0tS_WMbDQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jLOKj5LN5Kmredixomer4BKdBPNwP7gOf7A0tS_WMbDQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 14 Mar 2020 11:40:38 +0100
+Message-ID: <CAJZ5v0gSLR+K2698rwbv0j9-sbSNX98HUFDQfTHoom+gYtHrdw@mail.gmail.com>
+Subject: Re: [PATCH v2] cpuidle-haltpoll: allow force loading on hosts without
+ the REALTIME hint
+To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        kvm-devel <kvm@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/03/20 03:50, Wainer dos Santos Moschetta wrote:
-> Introduce the TEST_FAIL macro and change the tests/utilities
-> to use it.
-> 
-> v1 -> v2:
-> - Completed the conversion to TEST_FAIL.
-> 
-> v1:
-> - [RFC PATCH 0/1] kvm: selftests: Add TEST_FAIL macro
->   https://lore.kernel.org/kvm/20200305172532.9360-1-wainersm@redhat.com/
-> 
-> Wainer dos Santos Moschetta (2):
->   selftests: kvm: Introduce the TEST_FAIL macro
->   selftests: kvm: Uses TEST_FAIL in tests/utilities
-> 
->  tools/testing/selftests/kvm/dirty_log_test.c  |  7 +++----
->  .../testing/selftests/kvm/include/test_util.h |  3 +++
->  .../selftests/kvm/lib/aarch64/processor.c     | 17 +++++++--------
->  .../testing/selftests/kvm/lib/aarch64/ucall.c |  2 +-
->  tools/testing/selftests/kvm/lib/io.c          | 12 +++++------
->  tools/testing/selftests/kvm/lib/kvm_util.c    | 21 ++++++++-----------
->  .../selftests/kvm/lib/x86_64/processor.c      |  5 ++---
->  .../kvm/x86_64/cr4_cpuid_sync_test.c          |  4 ++--
->  .../testing/selftests/kvm/x86_64/evmcs_test.c |  6 +++---
->  .../testing/selftests/kvm/x86_64/state_test.c |  6 +++---
->  .../selftests/kvm/x86_64/svm_vmcall_test.c    |  6 ++----
->  .../kvm/x86_64/vmx_close_while_nested_test.c  |  4 ++--
->  .../selftests/kvm/x86_64/vmx_dirty_log_test.c |  6 +++---
->  .../kvm/x86_64/vmx_tsc_adjust_test.c          |  4 ++--
->  14 files changed, 49 insertions(+), 54 deletions(-)
-> 
+On Fri, Mar 13, 2020 at 6:49 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Mar 12, 2020 at 5:36 PM Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> >
+> > On Wed, Mar 04, 2020 at 12:32:48PM +0100, Maciej S. Szmigiero wrote:
+> > > From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
+> > >
+> > > Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
+> > > when dedicated physical CPUs are available") the cpuidle-haltpoll driver
+> > > could also be used in scenarios when the host does not advertise the
+> > > KVM_HINTS_REALTIME hint.
+> > >
+> > > While the behavior introduced by the aforementioned commit makes sense as
+> > > the default there are cases where the old behavior is desired, for example,
+> > > when other kernel changes triggered by presence by this hint are unwanted,
+> > > for some workloads where the latency benefit from polling overweights the
+> > > loss from idle CPU capacity that otherwise would be available, or just when
+> > > running under older Qemu versions that lack this hint.
+> > >
+> > > Let's provide a typical "force" module parameter that allows restoring the
+> > > old behavior.
+> > >
+> > > Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
+> > > ---
+> > >  drivers/cpuidle/cpuidle-haltpoll.c | 12 ++++++++++--
+> > >  1 file changed, 10 insertions(+), 2 deletions(-)
+> > >
+> > > Changes from v1:
+> > > Make the module parameter description more general, don't unnecessarily
+> > > break a line in haltpoll_init().
+> > >
+> > > diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+> > > index b0ce9bc78113..db124bc1ca2c 100644
+> > > --- a/drivers/cpuidle/cpuidle-haltpoll.c
+> > > +++ b/drivers/cpuidle/cpuidle-haltpoll.c
+> > > @@ -18,6 +18,10 @@
+> > >  #include <linux/kvm_para.h>
+> > >  #include <linux/cpuidle_haltpoll.h>
+> > >
+> > > +static bool force __read_mostly;
+> > > +module_param(force, bool, 0444);
+> > > +MODULE_PARM_DESC(force, "Load unconditionally");
+> > > +
+> > >  static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
+> > >  static enum cpuhp_state haltpoll_hp_state;
+> > >
+> > > @@ -90,6 +94,11 @@ static void haltpoll_uninit(void)
+> > >       haltpoll_cpuidle_devices = NULL;
+> > >  }
+> > >
+> > > +static bool haltpool_want(void)
+> > > +{
+> > > +     return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
+> > > +}
+> > > +
+> > >  static int __init haltpoll_init(void)
+> > >  {
+> > >       int ret;
+> > > @@ -101,8 +110,7 @@ static int __init haltpoll_init(void)
+> > >
+> > >       cpuidle_poll_state_init(drv);
+> > >
+> > > -     if (!kvm_para_available() ||
+> > > -             !kvm_para_has_hint(KVM_HINTS_REALTIME))
+> > > +     if (!kvm_para_available() || !haltpool_want())
+> > >               return -ENODEV;
+> > >
+> > >       ret = cpuidle_register_driver(drv);
+> >
+> > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+>
+> I'm taking this as a Reviewed-by, thanks!
 
-Queued, thanks.
-
-Paolo
-
+Patch applied as 5.7 material, thanks!
