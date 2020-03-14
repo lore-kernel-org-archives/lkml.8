@@ -2,160 +2,95 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32328C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E532C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7BE205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B63B205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584239091;
-	bh=ZxxGTjlO7NBT1wg1m3B0rlTJ0Dra1Fpr72IGr/O4DX8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0Tar8gzLQVBl6Jo674L0EGkmfBASMLtRyUGXNlFTZAk8BYQd3a64UwgOKd7qpbIk
-	 4+uGowh+/qwFKup7jtMxyKWAsQHorDXBamEjY1Qn90yffC1Q7K5nazruaNgLj+Fk2r
-	 d91eAHfKMC5wczW7y6nrxbwjkLNVJ2E1bKoqB2rk=
+	s=default; t=1584239096;
+	bh=PG8ONfwbNIWRFQWv4oK7dPOCnqVwMfGzzAEvdN+LO3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wK3pZZqoAyA65J62aQYgdHl2m/7L0G9hWEQNi+XTR78jzLZaLZ/A5NuBIySn3uGlk
+	 IWr/CzUlTSNJDtXoXaomwtevcCvnDgRvOZoopbmjVXvXY+WwZXfZ3sfbpZSGu36s8+
+	 JPHqXCNQxhl68L9xUlq1/pyMggwlE+xuoU6iCb+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgCOCYt (ORCPT
+        id S1728070AbgCOCYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39098 "EHLO mail.kernel.org"
+        Sat, 14 Mar 2020 22:24:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727931AbgCOCYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727937AbgCOCYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 14 Mar 2020 22:24:14 -0400
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (unknown [122.167.115.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F77020871;
-        Sat, 14 Mar 2020 21:36:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53C9420752;
+        Sat, 14 Mar 2020 09:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584221809;
-        bh=ZxxGTjlO7NBT1wg1m3B0rlTJ0Dra1Fpr72IGr/O4DX8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n4wuNEKXZchKmweKLq4FIo5pf18vP9fJuZTj9v/SsvJ4wuMgkvrbAqR8RTcRjPixQ
-         jgNp3xa9zNt7U6vzd427av9gdPoiGeXDiqRo382SQceiCTHBID/UYSCIDFkQ1LoM47
-         GMNTwd4u/JpGTzgxBV67nejuG5Ykzy2BQifLvU5k=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>
-Subject: [PATCH v3 5/5] selftests: kmod: test disabling module autoloading
-Date:   Sat, 14 Mar 2020 14:34:26 -0700
-Message-Id: <20200314213426.134866-6-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200314213426.134866-1-ebiggers@kernel.org>
-References: <20200314213426.134866-1-ebiggers@kernel.org>
+        s=default; t=1584179428;
+        bh=PG8ONfwbNIWRFQWv4oK7dPOCnqVwMfGzzAEvdN+LO3U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ir4zF9+pvZAZ/J+1AxyFqo1b036riCM3vscJfbL/WizEfB8/vYi+ZB3U9rL2Fur2Z
+         DmH+xQmT9F4WQImtm4/e5aO3kf0mVXaipMohN0g9iOujAVug2SGdGPrZhsxYx6Y04q
+         sKbbsmezewvgvZIIseJi5ZP/2RxX1A61TzVrIkV0=
+Date:   Sat, 14 Mar 2020 15:20:19 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
+        Rander Wang <rander.wang@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+Subject: Re: [PATCH 03/16] soundwire: cadence: add interface to check clock
+ status
+Message-ID: <20200314095019.GQ4885@vkoul-mobl>
+References: <20200311184128.4212-1-pierre-louis.bossart@linux.intel.com>
+ <20200311184128.4212-4-pierre-louis.bossart@linux.intel.com>
+ <20200313120607.GE4885@vkoul-mobl>
+ <816cc363-5b49-9b04-54a4-be4f53001cc5@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <816cc363-5b49-9b04-54a4-be4f53001cc5@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On 13-03-20, 11:31, Pierre-Louis Bossart wrote:
+> 
+> 
+> > > +/**
+> > > + * sdw_cdns_is_clock_stop: Check clock status
+> > > + *
+> > > + * @cdns: Cadence instance
+> > > + */
+> > > +bool sdw_cdns_is_clock_stop(struct sdw_cdns *cdns)
+> > > +{
+> > > +	u32 status;
+> > > +
+> > > +	status = cdns_readl(cdns, CDNS_MCP_STAT) & CDNS_MCP_STAT_CLK_STOP;
+> > > +	if (status) {
+> > > +		dev_dbg(cdns->dev, "Clock is stopped\n");
+> > > +		return true;
+> > > +	}
+> > 
+> > This can be further optimized to:
+> > 
+> >          return !!(cdns_readl(cdns, CDNS_MCP_STAT) & CDNS_MCP_STAT_CLK_STOP);
+> 
+> The logs are very useful for debug.
 
-Test that request_module() fails with -ENOENT when
-/proc/sys/kernel/modprobe contains (a) a nonexistent path, and (b) an
-empty path.
+You have this log also in caller function.
 
-Case (b) is a regression test for the patch "kmod: make request_module()
-return an error when autoloading is disabled".
-
-Tested with 'kmod.sh -t 0010 && kmod.sh -t 0011', and also simply with
-'kmod.sh' to run all kmod tests.
-
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: NeilBrown <neilb@suse.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- tools/testing/selftests/kmod/kmod.sh | 30 ++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 315a43111e046..3702dbcc90a77 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -61,6 +61,8 @@ ALL_TESTS="$ALL_TESTS 0006:10:1"
- ALL_TESTS="$ALL_TESTS 0007:5:1"
- ALL_TESTS="$ALL_TESTS 0008:150:1"
- ALL_TESTS="$ALL_TESTS 0009:150:1"
-+ALL_TESTS="$ALL_TESTS 0010:1:1"
-+ALL_TESTS="$ALL_TESTS 0011:1:1"
- 
- # Kselftest framework requirement - SKIP code is 4.
- ksft_skip=4
-@@ -149,6 +151,7 @@ function load_req_mod()
- 
- test_finish()
- {
-+	echo "$MODPROBE" > /proc/sys/kernel/modprobe
- 	echo "Test completed"
- }
- 
-@@ -443,6 +446,30 @@ kmod_test_0009()
- 	config_expect_result ${FUNCNAME[0]} SUCCESS
- }
- 
-+kmod_test_0010()
-+{
-+	kmod_defaults_driver
-+	config_num_threads 1
-+	echo "/KMOD_TEST_NONEXISTENT" > /proc/sys/kernel/modprobe
-+	config_trigger ${FUNCNAME[0]}
-+	config_expect_result ${FUNCNAME[0]} -ENOENT
-+	echo "$MODPROBE" > /proc/sys/kernel/modprobe
-+}
-+
-+kmod_test_0011()
-+{
-+	kmod_defaults_driver
-+	config_num_threads 1
-+	# This causes the kernel to not even try executing modprobe.  The error
-+	# code is still -ENOENT like when modprobe doesn't exist, so we can't
-+	# easily test for the exact difference.  But this still is a useful test
-+	# since there was a bug where request_module() returned 0 in this case.
-+	echo > /proc/sys/kernel/modprobe
-+	config_trigger ${FUNCNAME[0]}
-+	config_expect_result ${FUNCNAME[0]} -ENOENT
-+	echo "$MODPROBE" > /proc/sys/kernel/modprobe
-+}
-+
- list_tests()
- {
- 	echo "Test ID list:"
-@@ -460,6 +487,8 @@ list_tests()
- 	echo "0007 x $(get_test_count 0007) - multithreaded tests with default setup test request_module() and get_fs_type()"
- 	echo "0008 x $(get_test_count 0008) - multithreaded - push kmod_concurrent over max_modprobes for request_module()"
- 	echo "0009 x $(get_test_count 0009) - multithreaded - push kmod_concurrent over max_modprobes for get_fs_type()"
-+	echo "0010 x $(get_test_count 0010) - test nonexistent modprobe path"
-+	echo "0011 x $(get_test_count 0011) - test completely disabling module autoloading"
- }
- 
- usage()
-@@ -616,6 +645,7 @@ test_reqs
- allow_user_defaults
- load_req_mod
- 
-+MODPROBE=$(</proc/sys/kernel/modprobe)
- trap "test_finish" EXIT
- 
- parse_args $@
 -- 
-2.25.1
-
+~Vinod
