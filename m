@@ -2,108 +2,102 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2079C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF35C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A80B2074C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:28:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bonedaddy.net header.i=@bonedaddy.net header.b="V9jN3B8T"
+	by mail.kernel.org (Postfix) with ESMTP id EC5172074C
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584145714;
+	bh=aEyIah5anxqxw7dr2IcrDi3LMEkx1zYZ239mnRvw7qU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hEBxNxlZa2DLzgVq0slvCWQsLd3O0EjNRn0VdSLrcpRHOCXTGgeOgTzp8Clz7fdYN
+	 LlMBmei5VGompOyLesJR52EsCHBrFSC0afDyT/arQtpNvcJlxxCiRJ/t6MaBm8/CO8
+	 xHqGNjnV9iMK2lNDtwRjHH65wf7FZ70dVptsuf2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgCNA2S (ORCPT
+        id S1727740AbgCNA2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:28:18 -0400
-Received: from smtp.bonedaddy.net ([45.33.94.42]:51950 "EHLO
-        smtp.bonedaddy.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgCNA2S (ORCPT
+        Fri, 13 Mar 2020 20:28:32 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33060 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgCNA2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:28:18 -0400
-Received: from chianamo (n58-108-121-150.per1.wa.optusnet.com.au [58.108.121.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: pabs3@bonedaddy.net)
-        by smtp.bonedaddy.net (Postfix) with ESMTPSA id 11C5D180041;
-        Fri, 13 Mar 2020 20:28:39 -0400 (EDT)
-Authentication-Results: smtp.bonedaddy.net; dmarc=fail (p=none dis=none) header.from=bonedaddy.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bonedaddy.net;
-        s=mail; t=1584145722;
-        bh=Van/qq/UEi1MHg1iu9xFROdDFHfNv7eGJfIR+wXt32A=;
-        h=Subject:From:To:Cc:In-Reply-To:References:Date;
-        b=V9jN3B8TfFigALFcgqQcr/mNNnZBcMT3WtDwqXBdtMRQMdP79czio7WwEWJUut6DM
-         UGEqXYJigPO6abienhmS9UdDmXcVXKnI7GZ3fQ6ZT7b6p029cKNXZE+HiI6hNqj1RI
-         fKSynT0kpD+h71HAJqdvCbuLsNGihJ4SIAisj5fxmydy62jCRrPHDsX7n1RnRuZyTB
-         04ZcUXPmnnrnI4x8z5vtp1RDGCcFB+q3aKR5YqR7pBRCzUXz2ft9ESU0drPzAlbbDz
-         nl8qguR3UnJlW2o1aMKlqVDBJVazQAOrK0H0tzdBhA11PCFpY4GumKD2yAvV0CtlWb
-         /FW4tdazjtdOA==
-Message-ID: <fa636317af3a38badff322ca11e437701154b1be.camel@bonedaddy.net>
-Subject: Re: [PATCH 0/1] coredump: Fix null pointer dereference when
- kernel.core_pattern is "|"
-From:   Paul Wise <pabs3@bonedaddy.net>
-To:     Matthew Ruffell <matthew.ruffell@canonical.com>,
-        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Neil Horman <nhorman@tuxdriver.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jakub Wilk <jwilk@jwilk.net>
-In-Reply-To: <87a47997-3cde-bc86-423b-6154849183e9@canonical.com>
-References: <20200220051015.14971-1-matthew.ruffell@canonical.com>
-         <645fcbdfdd1321ff3e0afaafe7eccfd034e57748.camel@bonedaddy.net>
-         <87a47997-3cde-bc86-423b-6154849183e9@canonical.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-wjM/VlUgqSfA/5jsqClr"
-Date:   Sat, 14 Mar 2020 08:28:10 +0800
+        Fri, 13 Mar 2020 20:28:32 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f13so12520816ljp.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pRmNolcxLqc+tNnnflJ/n3joETbYpRnOE13OAQ+0j2c=;
+        b=cRJcS5iL6D7pulFWso9kzk1dWyABFXOyNGG88VjNsF84X0gt+v0c11QVPFVDYWRXf8
+         CSOkNeWYjeGmaUh0kvfgC6E3MPHJd255SwAfMJz6MgK/ZxktMeYvYYYvDiu8QvNb7sTV
+         +GznvZmF4/9MkIGyzdbamSO0U+8fhQMTk7x0I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pRmNolcxLqc+tNnnflJ/n3joETbYpRnOE13OAQ+0j2c=;
+        b=obo0h2wCvgTnqHh8H4be0fT6hM/jDNVuK57ZyabJqCb2Gh2jn9ggxyc3L4vubvZGpU
+         St1DD+M/9hIw4g58MNvPRcJJ2DoEAUlWg3Oyw2xA2kdbRU4IhZipKNvloJyAClXZRQXw
+         f3kRdxZSFd/GXwFOvyfJT/U6juaGEj3jjKovnLwB8MImmBhG+xYfv5E6i3XmPmhVL80l
+         Ow2j6Z3hdOoxOdwwpe/XuzdA/PcJMJdJhnSXKefHnBkt1nn0Juebw93gMxCO0UJ1rZL/
+         rs5P9Ce3v62za2UjirRVMiS5DYhGtWHimbhUKOQI1EybtM+EvHMXM4relRrN9T6u5cmd
+         pbZg==
+X-Gm-Message-State: ANhLgQ2bDU8NvzY/AwVoJvvLxoXyTIdh0mElEJ66JOAICx8sxg7IHQNe
+        76QHEZ6Jfz0BwylWxgeW07IVy0zocvI=
+X-Google-Smtp-Source: ADFU+vsAjRnugkgsTd/wyEtcNZ+GLLTtHtNMjWUhXi6o37V8Yc2rGzYgSjabuODpNUBXOl/Xj/Zhgw==
+X-Received: by 2002:a2e:86ca:: with SMTP id n10mr799673ljj.219.1584145709134;
+        Fri, 13 Mar 2020 17:28:29 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id v18sm20158499lfe.73.2020.03.13.17.28.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 17:28:28 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id n20so5987313lfl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:28:28 -0700 (PDT)
+X-Received: by 2002:a05:6512:3044:: with SMTP id b4mr1855996lfb.10.1584145708028;
+ Fri, 13 Mar 2020 17:28:28 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Evolution 3.34.1-4 
+References: <20200313235303.GP23230@ZenIV.linux.org.uk> <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
+ <20200313235357.2646756-12-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20200313235357.2646756-12-viro@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 13 Mar 2020 17:28:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whGqaTtjP-0PkWrTsbbwPihazCx1oeSsLTSB6itZzbZiA@mail.gmail.com>
+Message-ID: <CAHk-=whGqaTtjP-0PkWrTsbbwPihazCx1oeSsLTSB6itZzbZiA@mail.gmail.com>
+Subject: Re: [RFC][PATCH v4 12/69] teach handle_mounts() to handle RCU mode
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Oh, and here you accidentally fix the problem I pointed out about
+patch 11, as you move the code:
 
---=-wjM/VlUgqSfA/5jsqClr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 13, 2020 at 4:54 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> +               if (unlikely(!*inode))
+> +                       return -ENOENT;
 
-On Tue, 2020-03-10 at 11:34 +1300, Matthew Ruffell wrote:
+Correct test added.
 
-> Can I please get some feedback on this patch? Would be good to clear
-> up the null pointer dereference.
+> -                       if (unlikely(!inode))
+> -                               return -ENOENT;
 
-I had a thought about it, instead of using strlen, what about checking
-that the first item in the array is NUL or not? In the normal case this
-should be faster than strlen.
+Incorrect test removed.
 
---=20
-bye,
-pabs
+And again, maybe I'm misreading the patch. But it does look like it's
+wrong in the middle of the series, which would make bisection if
+there's some related bug "interesting".
 
-https://bonedaddy.net/pabs3/
-
---=-wjM/VlUgqSfA/5jsqClr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEYQsotVz8/kXqG1Y7MRa6Xp/6aaMFAl5sJRcACgkQMRa6Xp/6
-aaOUCQ/9HWhAyOFpANVuKcuFZJ8krfZikVbHQzgXUc3lFnW+vWPuHfBlPtk0tsNR
-L8zxu1mmjaD87+bp6HWGi2diWJokQLf0EnfY3qhOF3q9GC7Dp5wgMznt7/oxbNCU
-PubopAaER5HYpgTdJrsQNskeKNxKUpynnyR3y7nJpbbslxFXUnNM2VlDYa/YIUN2
-Zz8CVPzqZnMwlU9PquwZYqutX+h2P++yv+67U0dlTDxmr+L/QAhuKF33szHEYa2L
-3HSoVj+Uu0CsIfkq6xijztcnWkrbotsBugEtHO/3P/2LMoj7zDAWD80RG0YZ/Pzd
-uP3fS88gmTSynr5CKrcdhdCSh2v8FnidwhFX2VWurvb2eSWqnx5l6nW1KqIvYCTd
-TnscH9UZXPk9l84UTRMIxiKKTJVfqeZT1+1mlT4KFHSiOQ2jECvUiO2jKHr/3A1a
-kiNEVzGAY68G7c3uwTVOe77NEp32O02Nw3VY0e/F4l6GGvRP+/GaZNiCbhs36UTs
-wxMzv+cu0g9BigoiEh8RlgG7+OxUDqPl1f1RefOPRcz102ZX0r3n7yAR7zI26Qv4
-cz0NG1nQtfVrMFy7bnB+s1Vvt8K/qlMljK2eto9Op9mFC4q7ehjTY+3qlZS+uDj5
-CyWWwjuQD77Oh9zPviEIpZQ8cPweBlBeu5UDZvLiG0+/Qc8W34w=
-=J9Qs
------END PGP SIGNATURE-----
-
---=-wjM/VlUgqSfA/5jsqClr--
-
+                Linus
