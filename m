@@ -2,154 +2,99 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5599C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA81C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0BD2074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:43:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UQw0O3pb"
+	by mail.kernel.org (Postfix) with ESMTP id 290F22074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 00:51:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584147073;
+	bh=tlCJtAe3msJiqNgtKRj65iWpE19bpZNu0eyGfsjoQ5A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BQtcvV3wHotI+IsftsneUmQg2dkJL6ZQj8QmwMZ51pkPQJNPji+TJPVtFM0sGmTtU
+	 irBZIm+jCUl4IwRln/du4Kz5txG01Sy7VKPH2Ewk+rDTQyxjUZE+HD2T3JhS4+VnhD
+	 23IfNZt5v/7mAoisFEMgwYnSROoaHJb+AqFQxMH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgCNAnk (ORCPT
+        id S1727737AbgCNAvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:43:40 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45114 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727695AbgCNAnk (ORCPT
+        Fri, 13 Mar 2020 20:51:11 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37747 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgCNAvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 20:43:40 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02E0hcbl090466;
-        Fri, 13 Mar 2020 19:43:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584146618;
-        bh=pPGfl1/MfmLCax7BhN6s6oSzE9jBgXIiLPf5nVaagEI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=UQw0O3pboRXiJCKg5Sg/S7ehhpupRltTIvHm9kn1yNzGpGUwNC6vQTzQfgCht4u7J
-         oiHk2/dUjCZWAGcNOuHfMwCdJdg4rrlzP8thZCncGNrjcOo0ijO3JriLb0AlgTzHLE
-         gwr9lMMAMA4D/iZmmIJ2cZq7H3cbo6LTvi5B2Abw=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02E0hc6Q055650
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Mar 2020 19:43:38 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 19:43:38 -0500
-Received: from localhost.localdomain (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 19:43:38 -0500
-Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02E0hcSQ123457;
-        Fri, 13 Mar 2020 19:43:38 -0500
-Received: from localhost (irmo.dhcp.ti.com [128.247.81.254])
-        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 02E0hcwQ116067;
-        Fri, 13 Mar 2020 19:43:38 -0500
-From:   Suman Anna <s-anna@ti.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suman Anna <s-anna@ti.com>, "Andrew F. Davis" <afd@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv8 RESEND 05/15] remoteproc/omap: Add the rproc ops .da_to_va() implementation
-Date:   Fri, 13 Mar 2020 19:43:37 -0500
-Message-ID: <20200314004337.26556-1-s-anna@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200313081718.30612-6-t-kristo@ti.com>
-References: <20200313081718.30612-6-t-kristo@ti.com>
+        Fri, 13 Mar 2020 20:51:11 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j11so9361623lfg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:51:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N5w4U+mOCcTiVuYDq+MXzMGJDsYiXTEA/liBKIfgsNo=;
+        b=CuZ6m+O8ocHYyKfETYioICJSPSG6jO2l5sVNRexToIRXGGlWfI0a1s0ftc+276o4kL
+         +uJLTjdL3K3G1tQ4MaaU3TpK73x5dELWgmEQvjyRbEV+XaVWnseYbRydLcyLf9Ta4Gzj
+         hdHX62pz+h52pKbzWGSD8FI7QHQkc8een7N4U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N5w4U+mOCcTiVuYDq+MXzMGJDsYiXTEA/liBKIfgsNo=;
+        b=Eye2JxuLP/Wy87T6Xjhx49nUavSPm7bf/DHvu6fSUZ2IujnNqA/mhRMwmvYUU8Ta5w
+         ySN3NCIERCKJwB0u72HCpb/ZidsOMcYnQcitf59IutuF/Q2u7d3EZC7igRz7ji2m7dyZ
+         M+RgSXB/+p2RI18nWr/J0lWHRfNVF8HjXfS2vSrdo3A/vnEjADb3ageSCix5WC8ahXZG
+         /2Ves5umJoWgHmlWiRb8utmOCGsi1QzhZp9RrFf+T8BOBjzUje/3BUj58JL9m4cXeDdB
+         jWgTaRvO1OE8Wcc3C0o+W/3nLxHMmSZikg0PVpCHgCeVuzbfh2qw7yLt4KAvhyQDqOwM
+         z7zA==
+X-Gm-Message-State: ANhLgQ2PpojmcpNuy3WMiyHtJzncfv2zvM9j70cD2Gm/BUZSsIwl52tg
+        Oh5tvb5nop2s+pdwkxcfjUCFbYzcAns=
+X-Google-Smtp-Source: ADFU+vvClD5X8m7RSAw6MTWi1dWzO50aznYA+oqzNVTwpRoNlKVT+Ee7g0kIhvet/NJ0XzrQCe8xXQ==
+X-Received: by 2002:a19:fc1d:: with SMTP id a29mr10179994lfi.209.1584147068271;
+        Fri, 13 Mar 2020 17:51:08 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id f9sm10249481ljo.73.2020.03.13.17.51.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 17:51:07 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 19so12519309ljj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 17:51:07 -0700 (PDT)
+X-Received: by 2002:a05:651c:555:: with SMTP id q21mr9713597ljp.241.1584147066920;
+ Fri, 13 Mar 2020 17:51:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200223011154.GY23230@ZenIV.linux.org.uk> <20200301215125.GA873525@ZenIV.linux.org.uk>
+ <20200313235303.GP23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200313235303.GP23230@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 13 Mar 2020 17:50:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whainTcvgF01vsSmN+y7s7U1qMA-QbM5qFQ3s4xQHwaJw@mail.gmail.com>
+Message-ID: <CAHk-=whainTcvgF01vsSmN+y7s7U1qMA-QbM5qFQ3s4xQHwaJw@mail.gmail.com>
+Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v4)
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An implementation for the rproc ops .da_to_va() has been added
-that provides the address translation between device addresses
-to kernel virtual addresses for internal RAMs present on that
-particular remote processor device. The implementation provides
-the translations based on the addresses parsed and stored during
-the probe.
+On Fri, Mar 13, 2020 at 4:53 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+>         Review and testing would be _very_ welcome;
 
-This ops gets invoked by the exported rproc_da_to_va() function
-and allows the remoteproc core's ELF loader to be able to load
-program data directly into the internal memories.
+I didn't notice anythign else than the few things I sent out to
+individual patches.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Andrew F. Davis <afd@ti.com>
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
-v8-Resend: Updated to fix compilation issues against rproc-next
+But I have to say, 69 patches is too long of a series to review. I
+think you could send them out as multiple series (you describe them
+that way anyway - parts 1-7) with a day in between.
 
- drivers/remoteproc/omap_remoteproc.c | 40 ++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Because my eyes were starting to glaze over about halfway in the series.
 
-diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index cdcc9c227b96..6091666697ed 100644
---- a/drivers/remoteproc/omap_remoteproc.c
-+++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -245,10 +245,50 @@ static int omap_rproc_stop(struct rproc *rproc)
- 	return 0;
- }
- 
-+/**
-+ * omap_rproc_da_to_va() - internal memory translation helper
-+ * @rproc: remote processor to apply the address translation for
-+ * @da: device address to translate
-+ * @len: length of the memory buffer
-+ *
-+ * Custom function implementing the rproc .da_to_va ops to provide address
-+ * translation (device address to kernel virtual address) for internal RAMs
-+ * present in a DSP or IPU device). The translated addresses can be used
-+ * either by the remoteproc core for loading, or by any rpmsg bus drivers.
-+ *
-+ * Return: translated virtual address in kernel memory space on success,
-+ *         or NULL on failure.
-+ */
-+static void *omap_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
-+{
-+	struct omap_rproc *oproc = rproc->priv;
-+	int i;
-+	u32 offset;
-+
-+	if (len == 0)
-+		return NULL;
-+
-+	if (!oproc->num_mems)
-+		return NULL;
-+
-+	for (i = 0; i < oproc->num_mems; i++) {
-+		if (da >= oproc->mem[i].dev_addr && da + len <=
-+		    oproc->mem[i].dev_addr + oproc->mem[i].size) {
-+			offset = da - oproc->mem[i].dev_addr;
-+			/* __force to make sparse happy with type conversion */
-+			return (__force void *)(oproc->mem[i].cpu_addr +
-+						offset);
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
- static const struct rproc_ops omap_rproc_ops = {
- 	.start		= omap_rproc_start,
- 	.stop		= omap_rproc_stop,
- 	.kick		= omap_rproc_kick,
-+	.da_to_va	= omap_rproc_da_to_va,
- };
- 
- static const struct omap_rproc_mem_data ipu_mems[] = {
--- 
-2.23.0
+But don't do it for this version. If you do a #5. But it would be good
+to be in -next regardless of whether you do a #5 or not.
 
+                 Linus
