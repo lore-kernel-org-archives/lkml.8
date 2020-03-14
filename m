@@ -2,123 +2,71 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2903DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEA3C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057822076D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812FE2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgCOCOE (ORCPT
+        id S1727868AbgCOCOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:14:04 -0400
-Received: from mga14.intel.com ([192.55.52.115]:41898 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727757AbgCOCNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:13:39 -0400
-IronPort-SDR: RJUGGrjMJ89GWXk0Wqjvrh5fOAgfXqGgr7ZEs+2NAlw9PdAzX9DE+nNVPp+pQC1NWU52BAuJuB
- Poc+azRGR6/Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 00:52:25 -0700
-IronPort-SDR: 3BP0n+TxPQ1bzWSK5j4bXlycV6foOk8KVYvIpuw29cCDRFK6ruSrrdNywwODy+t6BHzPXXMnb/
- LY3W/086UVQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,551,1574150400"; 
-   d="scan'208";a="416537645"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.160])
-  by orsmga005.jf.intel.com with ESMTP; 14 Mar 2020 00:52:21 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com
-Cc:     peterz@infradead.org, fenghua.yu@intel.com,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v4 09/10] kvm: vmx: Enable MSR_TEST_CTRL for intel guest
-Date:   Sat, 14 Mar 2020 15:34:13 +0800
-Message-Id: <20200314073414.184213-10-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200314073414.184213-1-xiaoyao.li@intel.com>
-References: <20200314073414.184213-1-xiaoyao.li@intel.com>
+        Sat, 14 Mar 2020 22:14:07 -0400
+Received: from smtprelay0232.hostedemail.com ([216.40.44.232]:55380 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727757AbgCOCOG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:14:06 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave02.hostedemail.com (Postfix) with ESMTP id 8B93B1802641A
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 19:07:37 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 5666337F1;
+        Sat, 14 Mar 2020 19:07:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: toad24_7ca951af45d3c
+X-Filterd-Recvd-Size: 1375
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 14 Mar 2020 19:07:36 +0000 (UTC)
+Message-ID: <24c572ea7dd0efaa12b6331f78822431a371b12f.camel@perches.com>
+Subject: vim: linux-kernel: Add "fallthrough" as a keyword
+From:   Joe Perches <joe@perches.com>
+To:     Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Date:   Sat, 14 Mar 2020 12:05:51 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only enabling the read and write zero of MSR_TEST_CTRL. This makes
-MSR_TEST_CTRL always available for intel guest, but guset cannot write any
-value to it except zero.
+Add fallthrough as a keyword for source code highlighting as
+fallthrough was added as a pseudo-keyword macro to replace the
+various forms of switch/case /* fallthrough */ comments.
 
-This matches the truth that most Intel CPUs support MSR_TEST_CTRL, and
-it also alleviates the effort to handle wrmsr/rdmsr when exposing split
-lock detect to guest in the following patch.
-
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Signed-off-by: Joe Perches <joe@perches.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 10 ++++++++++
- arch/x86/kvm/vmx/vmx.h |  1 +
- 2 files changed, 11 insertions(+)
+ plugin/linuxsty.vim | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 3fb132ad489d..107c873b23c2 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1831,6 +1831,9 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	u32 index;
+diff --git a/plugin/linuxsty.vim b/plugin/linuxsty.vim
+index 18b28..44824 100644
+--- a/plugin/linuxsty.vim
++++ b/plugin/linuxsty.vim
+@@ -69,6 +69,7 @@ function s:LinuxFormatting()
+ endfunction
  
- 	switch (msr_info->index) {
-+	case MSR_TEST_CTRL:
-+		msr_info->data = vmx->msr_test_ctrl;
-+		break;
- #ifdef CONFIG_X86_64
- 	case MSR_FS_BASE:
- 		msr_info->data = vmcs_readl(GUEST_FS_BASE);
-@@ -1984,6 +1987,12 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	u32 index;
- 
- 	switch (msr_index) {
-+	case MSR_TEST_CTRL:
-+		if (data)
-+			return 1;
-+
-+		vmx->msr_test_ctrl = data;
-+		break;
- 	case MSR_EFER:
- 		ret = kvm_set_msr_common(vcpu, msr_info);
- 		break;
-@@ -4283,6 +4292,7 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 
- 	vmx->rmode.vm86_active = 0;
- 	vmx->spec_ctrl = 0;
-+	vmx->msr_test_ctrl = 0;
- 
- 	vmx->msr_ia32_umwait_control = 0;
- 
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index e64da06c7009..f679453dcab8 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -225,6 +225,7 @@ struct vcpu_vmx {
- #endif
- 
- 	u64		      spec_ctrl;
-+	u64		      msr_test_ctrl;
- 	u32		      msr_ia32_umwait_control;
- 
- 	u32 secondary_exec_control;
--- 
-2.20.1
+ function s:LinuxKeywords()
++    syn keyword cStatement fallthrough
+     syn keyword cOperator likely unlikely
+     syn keyword cType u8 u16 u32 u64 s8 s16 s32 s64
+     syn keyword cType __u8 __u16 __u32 __u64 __s8 __s16 __s32 __s64
 
