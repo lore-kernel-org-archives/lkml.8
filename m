@@ -2,147 +2,166 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18B6C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97324C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CEA20575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6FD20575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584239062;
-	bh=UWIFamZriIq7pwiuAN2fl1MmSck4XAGVejYX5mG6Jxs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04SITyL8d21InPdnMWTIWXksz2qk20fdRfSNfvvJpEEqfvSaeOANlU52bMv0lOTb7
-	 OrOT2xaWj5wf6wTaFjK29K9vxAiP54sOEFvgjRgGYX4u5a9AG0OTk983XmnoPGvYlI
-	 Gsygvmbb2BsJbpTAuH7ljXeygsxtLKK7vEEljcvI=
+	s=default; t=1584239064;
+	bh=dQfzPYyCYdN+44zCm9AjIC54G7c/pVQL8vwGNg36xK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e0goWF+GRIs49LKwxY5PDGnx7hYsZeDfjXYk87vkuETmqFcbTxbcugZvr98NowA8x
+	 U85sPpEJpD7rIhQpXjJOxa8pi7RP1l8cC8K0P8MdQqtwJNOWiMQ30BJ0sf0+XC+b6t
+	 T6qRPB4bB87h1MDhruR78xMDmqdIId4D8IRmLMAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgCOCYV (ORCPT
+        id S1728008AbgCOCYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:24:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39102 "EHLO mail.kernel.org"
+        Sat, 14 Mar 2020 22:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbgCOCYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:24:15 -0400
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727917AbgCOCYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:24:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B195B20838;
-        Sat, 14 Mar 2020 21:36:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0CDC2073E;
+        Sat, 14 Mar 2020 11:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584221808;
-        bh=UWIFamZriIq7pwiuAN2fl1MmSck4XAGVejYX5mG6Jxs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AvTfc8sqkulB3uIPpZNdObWRiomad5SEfy3ynWmovFPeS/Yd49cABntT1I+dx0iWB
-         aPFND4R8F+u8hEYJubREDBRDtRB7r9yGPwLvDMDglKzQmLAOfGYjUkQoJ2PqJk/LUk
-         EDuobPpXenbOaz0CDl5diR9aXB9dGh2PpxTFlzTw=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>, stable@vger.kernel.org
-Subject: [PATCH v3 1/5] kmod: make request_module() return an error when autoloading is disabled
-Date:   Sat, 14 Mar 2020 14:34:22 -0700
-Message-Id: <20200314213426.134866-2-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200314213426.134866-1-ebiggers@kernel.org>
-References: <20200314213426.134866-1-ebiggers@kernel.org>
+        s=default; t=1584184825;
+        bh=dQfzPYyCYdN+44zCm9AjIC54G7c/pVQL8vwGNg36xK8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ztNmQ9imaYg944LP2Tp1jJ8ZgvjqCngYPQRGC11tXYfpCbCRmX3lG6VlrNhesKoiL
+         2jq4LXNkX4Yb0W7o68AWIZup5z+o12xuG9ESxbf7yoT1mGRh7uQotFPOSRNMjiMtiy
+         zqzD4xyg/t8ifygN/+2fSg+esmPPWYBk9U4Jz0X0=
+Date:   Sat, 14 Mar 2020 12:20:22 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ruslan Bilovol <ruslan.bilovol@gmail.com>
+Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        bodong@mellanox.com, ddutile@redhat.com, rbilovol@cisco.com
+Subject: Re: [PATCH v3 1/4] PCI: sysfs: Define device attributes with
+ DEVICE_ATTR*
+Message-ID: <20200314112022.GA53794@kroah.com>
+References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190815153352.86143-2-skunberg.kelsey@gmail.com>
+ <CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Sat, Mar 14, 2020 at 12:51:47PM +0200, Ruslan Bilovol wrote:
+> On Thu, Aug 15, 2019 at 7:01 PM Kelsey Skunberg
+> <skunberg.kelsey@gmail.com> wrote:
+> >
+> > Defining device attributes should be done through the helper
+> > DEVICE_ATTR_RO(), DEVICE_ATTR_WO(), or similar. Change all instances using
+> > __ATTR* to now use its equivalent DEVICE_ATTR*.
+> >
+> > Example of old:
+> >
+> > static struct device_attribute dev_name_##_attr=__ATTR_RO(_name);
+> >
+> > Example of new:
+> >
+> > static DEVICE_ATTR_RO(_name);
+> >
+> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > ---
+> >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
+> >  1 file changed, 27 insertions(+), 32 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > index 965c72104150..8af7944fdccb 100644
+> > --- a/drivers/pci/pci-sysfs.c
+> > +++ b/drivers/pci/pci-sysfs.c
+> > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
+> >         }
+> >         return count;
+> >  }
+> > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
+> > -                                                       (S_IWUSR|S_IWGRP),
+> > -                                                       NULL, dev_rescan_store);
+> > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
+> >
+> >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> >                             const char *buf, size_t count)
+> > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> >                 pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+> >         return count;
+> >  }
+> > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+> > -                                                       (S_IWUSR|S_IWGRP),
+> > -                                                       NULL, remove_store);
+> > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
+> > +                                 remove_store);
+> >
+> >  static ssize_t dev_bus_rescan_store(struct device *dev,
+> >                                     struct device_attribute *attr,
+> > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
+> >         }
+> >         return count;
+> >  }
+> > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
+> > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
+> 
+> This patch renamed 'rescan' to 'bus_rescan' and broke my userspace application.
+> There is also mismatch now between real functionality and documentation
+> Documentation/ABI/testing/sysfs-bus-pci which still contains old "rescan"
+> descriptions.
+> 
+> Another patch from this patch series also renamed 'rescan' to 'dev_rescan'
+> 
+> Here is a comparison between two stable kernels (with and without this
+> patch series):
+> 
+> v5.4
+> # find /sys -name '*rescan'
+> /sys/devices/pci0000:00/0000:00:01.2/dev_rescan
+> /sys/devices/pci0000:00/0000:00:01.0/dev_rescan
+> /sys/devices/pci0000:00/0000:00:04.0/dev_rescan
+> /sys/devices/pci0000:00/0000:00:00.0/dev_rescan
+> /sys/devices/pci0000:00/pci_bus/0000:00/bus_rescan
+> /sys/devices/pci0000:00/0000:00:01.3/dev_rescan
+> /sys/devices/pci0000:00/0000:00:03.0/dev_rescan
+> /sys/devices/pci0000:00/0000:00:01.1/dev_rescan
+> /sys/devices/pci0000:00/0000:00:02.0/dev_rescan
+> /sys/devices/pci0000:00/0000:00:05.0/dev_rescan
+> /sys/bus/pci/rescan
+> 
+> v4.19
+> # find /sys -name '*rescan'
+> /sys/devices/pci0000:00/0000:00:01.2/rescan
+> /sys/devices/pci0000:00/0000:00:01.0/rescan
+> /sys/devices/pci0000:00/0000:00:04.0/rescan
+> /sys/devices/pci0000:00/0000:00:00.0/rescan
+> /sys/devices/pci0000:00/pci_bus/0000:00/rescan
+> /sys/devices/pci0000:00/0000:00:01.3/rescan
+> /sys/devices/pci0000:00/0000:00:03.0/rescan
+> /sys/devices/pci0000:00/0000:00:01.1/rescan
+> /sys/devices/pci0000:00/0000:00:02.0/rescan
+> /sys/devices/pci0000:00/0000:00:05.0/rescan
+> /sys/bus/pci/rescan
+> 
+> Do we maintain this kind of API as non-changeable?
 
-It's long been possible to disable kernel module autoloading completely
-(while still allowing manual module insertion) by setting
-/proc/sys/kernel/modprobe to the empty string.  This can be preferable
-to setting it to a nonexistent file since it avoids the overhead of an
-attempted execve(), avoids potential deadlocks, and avoids the call to
-security_kernel_module_request() and thus on SELinux-based systems
-eliminates the need to write SELinux rules to dontaudit module_request.
+Yeah, that's a bug and should be fixed, sorry for missing that on
+review.
 
-However, when module autoloading is disabled in this way,
-request_module() returns 0.  This is broken because callers expect 0 to
-mean that the module was successfully loaded.
+Kelsey, can you fix this up?
 
-Apparently this was never noticed because this method of disabling
-module autoloading isn't used much, and also most callers don't use the
-return value of request_module() since it's always necessary to check
-whether the module registered its functionality or not anyway.  But
-improperly returning 0 can indeed confuse a few callers, for example
-get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
+thanks,
 
-	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
-		fs = __get_fs_type(name, len);
-		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-	}
-
-This is easily reproduced with:
-
-	echo > /proc/sys/kernel/modprobe
-	mount -t NONEXISTENT none /
-
-It causes:
-
-	request_module fs-NONEXISTENT succeeded, but still no fs?
-	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
-	[...]
-
-This should actually use pr_warn_once() rather than WARN_ONCE(), since
-it's also user-reachable if userspace immediately unloads the module.
-Regardless, request_module() should correctly return an error when it
-fails.  So let's make it return -ENOENT, which matches the error when
-the modprobe binary doesn't exist.
-
-I've also sent patches to document and test this case.
-
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: stable@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: NeilBrown <neilb@suse.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- kernel/kmod.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/kmod.c b/kernel/kmod.c
-index bc6addd9152b4..a2de58de6ab62 100644
---- a/kernel/kmod.c
-+++ b/kernel/kmod.c
-@@ -120,7 +120,7 @@ static int call_modprobe(char *module_name, int wait)
-  * invoke it.
-  *
-  * If module auto-loading support is disabled then this function
-- * becomes a no-operation.
-+ * simply returns -ENOENT.
-  */
- int __request_module(bool wait, const char *fmt, ...)
- {
-@@ -137,7 +137,7 @@ int __request_module(bool wait, const char *fmt, ...)
- 	WARN_ON_ONCE(wait && current_is_async());
- 
- 	if (!modprobe_path[0])
--		return 0;
-+		return -ENOENT;
- 
- 	va_start(args, fmt);
- 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
--- 
-2.25.1
-
+greg k-h
