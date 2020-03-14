@@ -2,82 +2,146 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC64C0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96903C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDFB4206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7342D206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgCOBxv (ORCPT
+        id S1727598AbgCOByR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:53:51 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51804 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726643AbgCOBxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:53:51 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 53A42D97348215CCE5A9;
-        Sat, 14 Mar 2020 18:06:23 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Sat, 14 Mar 2020
- 18:06:13 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>,
-        <luiz.von.dentz@intel.com>
-CC:     <linux-bluetooth@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] Bluetooth: L2CAP: remove set but not used variable 'credits'
-Date:   Sat, 14 Mar 2020 18:06:06 +0800
-Message-ID: <20200314100606.41532-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 14 Mar 2020 21:54:17 -0400
+Received: from sauhun.de ([88.99.104.3]:38226 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727519AbgCOByQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:54:16 -0400
+Received: from localhost (p5486CB31.dip0.t-ipconnect.de [84.134.203.49])
+        by pokefinder.org (Postfix) with ESMTPSA id D24CC2C1EFA;
+        Sat, 14 Mar 2020 22:08:52 +0100 (CET)
+Date:   Sat, 14 Mar 2020 22:08:49 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for v5.6
+Message-ID: <20200314210830.GA1730@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-net/bluetooth/l2cap_core.c: In function l2cap_ecred_conn_req:
-net/bluetooth/l2cap_core.c:5848:6: warning: variable credits set but not used [-Wunused-but-set-variable]
 
-commit 15f02b910562 ("Bluetooth: L2CAP: Add initial code for Enhanced Credit Based Mode")
-involved this unused variable, remove it.
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/bluetooth/l2cap_core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Linus,
 
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 5e6e35ab44dd..8b0fca39989d 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -5845,7 +5845,7 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
- 		__le16 dcid[5];
- 	} __packed pdu;
- 	struct l2cap_chan *chan, *pchan;
--	u16 credits, mtu, mps;
-+	u16 mtu, mps;
- 	__le16 psm;
- 	u8 result, len = 0;
- 	int i, num_scid;
-@@ -5868,7 +5868,6 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
- 	}
- 
- 	psm  = req->psm;
--	credits = 0;
- 
- 	BT_DBG("psm 0x%2.2x mtu %u mps %u", __le16_to_cpu(psm), mtu, mps);
- 
--- 
-2.20.1
+I2C has quite some regression fixes this time. One is also related to
+watchdogs, we have proper acks from Guenter for them.
+
+Please pull.
+
+Thanks,
+
+   Wolfram
 
 
+The following changes since commit 2c523b344dfa65a3738e7039832044aa133c75fb:
+
+  Linux 5.6-rc5 (2020-03-08 17:44:44 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
+
+for you to fetch changes up to 92bd1f2e1eed493a73a19012a3a7f1feed0883ff:
+
+  Merge tag 'at24-fixes-for-v5.6-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into i2c/for-current (2020-03-13 16:32:28 +0100)
+
+----------------------------------------------------------------
+Hamish Martin (1):
+      i2c: gpio: suppress error on probe defer
+
+Jarkko Nikula (1):
+      i2c: designware-pci: Fix BUG_ON during device removal
+
+Michael Auchter (1):
+      misc: eeprom: at24: fix regulator underflow
+
+Mika Westerberg (3):
+      watchdog: iTCO_wdt: Export vendorsupport
+      watchdog: iTCO_wdt: Make ICH_RES_IO_SMI optional
+      i2c: i801: Do not add ICH_RES_IO_SMI for the iTCO_wdt device
+
+Wolfram Sang (3):
+      macintosh: windfarm: fix MODINFO regression
+      i2c: acpi: put device when verifying client fails
+      Merge tag 'at24-fixes-for-v5.6-rc6' of git://git.kernel.org/.../brgl/linux into i2c/for-current
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      (Rev.) i2c: acpi: put device when verifying client fails
+      (Rev.) i2c: designware-pci: Fix BUG_ON during device removal
+
+Erhard Furtner (1):
+      (Test) macintosh: windfarm: fix MODINFO regression
+
+Geert Uytterhoeven (1):
+      (Rev.) i2c: acpi: put device when verifying client fails
+
+Guenter Roeck (3):
+      (Rev.) i2c: i801: Do not add ICH_RES_IO_SMI for the iTCO_wdt device
+      (Rev.) watchdog: iTCO_wdt: Make ICH_RES_IO_SMI optional
+      (Rev.) watchdog: iTCO_wdt: Export vendorsupport
+
+ drivers/i2c/busses/i2c-designware-pcidrv.c  |  1 +
+ drivers/i2c/busses/i2c-gpio.c               |  2 +-
+ drivers/i2c/busses/i2c-i801.c               | 45 ++++++++---------------------
+ drivers/i2c/i2c-core-acpi.c                 | 10 ++++++-
+ drivers/macintosh/windfarm_ad7417_sensor.c  |  7 +++++
+ drivers/macintosh/windfarm_fcu_controls.c   |  7 +++++
+ drivers/macintosh/windfarm_lm75_sensor.c    | 16 +++++++++-
+ drivers/macintosh/windfarm_lm87_sensor.c    |  7 +++++
+ drivers/macintosh/windfarm_max6690_sensor.c |  7 +++++
+ drivers/macintosh/windfarm_smu_sat.c        |  7 +++++
+ drivers/misc/eeprom/at24.c                  |  3 +-
+ drivers/watchdog/iTCO_vendor.h              |  2 ++
+ drivers/watchdog/iTCO_vendor_support.c      | 16 +++++-----
+ drivers/watchdog/iTCO_wdt.c                 | 28 ++++++++++--------
+ 14 files changed, 102 insertions(+), 56 deletions(-)
+
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5tR8oACgkQFA3kzBSg
+Kbb8/g/8DRq7gPMUREIBT75XgWatigy4B5N5doEp744rN6UNdHtJ19NANM+vMH3c
+YBX07YCQ9jLbXS95ewkMUMvpsCJKJ/Du1SYjvgnu1NpuTqqpmOWSmy1cCLRpAknp
+tKMUI8Wr7pMFDomO+er1DM7/ccSXgtcyiA2qDvSXqqw5B+AS4jmM3Qcpju5FsVVY
+dEjNUM3E9bVNi4Npqixe7QAdkPl8/Q4MgwD63enxj5ghL8DZrBPl6QeGkE404PCs
+dsnyycdxBtM4UeMItXzjfaPhWWVOwMnvtW5ggurVhoKs6Ydv51YIyZelvx6IkZv5
+hTULfhs+b4KG5VgjvjhEbiebshAvDP4/LiL7iafHU8tA05wx6k62OvBV6185wo0p
+YIbopI1usa1+Qurwyrcb583Dq50BfxeWWI+RvbHlyN3MhQlTc/ZNGcwg1WlFGh7Q
+i0GJPCuhJMkJd+MqML2DCHu/ep/N2SOAA185I3uuQCPR5ZPMNVbI3Xv3gd+CYZ9p
+Lh2NW4+1EPocvVPvQoWAUgqCYABoptalFuzQqaMvLEpMOVjyVVhIit7wlHlZ/YeX
+kKa7gSK4hPXNl0NnW25jPl6nH+cHGi0PcibYbDfMGZBB8uPYqZ30DcpwVXiRGxAL
+IH5aJ83CGzpvOlQr9tkPO2n9A4peRe7ozPYSYtcDLUkV1CxlTGE=
+=6aWb
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
