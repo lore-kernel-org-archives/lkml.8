@@ -2,108 +2,103 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324AEC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FDAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031542074C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:07:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ezv+wSzf"
+	by mail.kernel.org (Postfix) with ESMTP id 4E27B206FA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 01:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgCNBHt (ORCPT
+        id S1727719AbgCNBJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 21:07:49 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45215 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgCNBHs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 21:07:48 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b22so5115541pls.12;
-        Fri, 13 Mar 2020 18:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/Gvx9Hu5CHDL2kz8sy1w9qMMWhvLKzmdkZ+ff9kTBsQ=;
-        b=Ezv+wSzfrAvGngOM/7Wm0cRtUt0odJIu/ck5ZnVoh7jud5b59FUloYYH4++JfDpEUD
-         x81UqroT3ZzeWiHISneHzrjDtInpLm83HxBlWeKtS3D4Bqr460uq2L0KeEjBII9yVdtg
-         GcsxxXCJhGnUmOk8M8EW3xqoqRKxjLAe/n1TdLXQQdTHTyl9UX2Z27GFKOBOdlczAwlu
-         XNZ3OMAUkZbiHGenf4Ixt9h8B47cOs2zFR385gG5PczOW8XGR+5a+ogHFKXL+3GBGUBG
-         ETA3DwjNg1qQKWfujbKX+6NG6HVZzeJ5PGYwMRdQIX72rQhHw2QfQk6ZlKqjMAGAsdHw
-         OEqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/Gvx9Hu5CHDL2kz8sy1w9qMMWhvLKzmdkZ+ff9kTBsQ=;
-        b=Y+C/Yqd+FgzccT6u5tzG2fkAsmGa/BRTS1gQk4n0f0pPVPkMPh40xvkRrZDP22K7Ae
-         zhqtUhuhK0O0Dkbn4VBAlfYzRtx5mU0qmnPGA2iDuY/+Za2xxY63aEtsQpuXNp0YdLVf
-         IQwK+BK7Ey6/YrLKgP01ZK0CwXRBQ3NdDWoSkoTQbsNZqMFxuj7oVo6I06eCTe1ivylZ
-         Isw/6AkJAGOx4iJLkthNnf+xPDx5H6hQH+VYtPaf5QZfG3SK8Ua2sYf/xvKZ51DEVFAF
-         DIN9XDoY7e/QoU0qaxv2w7r80WHt/oqd5nU1Z/g3WA8umH/cB834NrgJZYCAHLriNsF3
-         EWRw==
-X-Gm-Message-State: ANhLgQ2b1Aq9hmBxafd3uCVjUgVWwpkQjPvK0wZyewjA12molt39ZQsv
-        5mqvQ4Q2xK/ROWQY4etV+NE=
-X-Google-Smtp-Source: ADFU+vvq3Mn/UD2TKx9aTpeVf4l/BqUeXD0u/9e6D89fXHsd+F0Es5aMNULarLNIPEobzu+nIHI7aA==
-X-Received: by 2002:a17:902:740b:: with SMTP id g11mr2364168pll.166.1584148067728;
-        Fri, 13 Mar 2020 18:07:47 -0700 (PDT)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id 127sm40494300pfb.130.2020.03.13.18.07.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 18:07:46 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 06:37:44 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        John Crispin <john@phrozen.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
-Message-ID: <20200314010744.GA5494@afzalpc>
-References: <20200304203144.GA4323@alpha.franken.de>
- <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
- <20200313164751.GA30134@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313164751.GA30134@roeck-us.net>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+        Fri, 13 Mar 2020 21:09:45 -0400
+Received: from mga07.intel.com ([134.134.136.100]:43136 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726853AbgCNBJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 21:09:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 18:09:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,550,1574150400"; 
+   d="scan'208";a="266912386"
+Received: from allen-box.sh.intel.com ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Mar 2020 18:09:41 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        kevin.tian@intel.com,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Daniel Drake <drake@endlessm.com>,
+        Derrick Jonathan <jonathan.derrick@intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v2 0/6] Replace private domain with per-group default domain
+Date:   Sat, 14 Mar 2020 09:06:59 +0800
+Message-Id: <20200314010705.30711-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ + Nathan ]
+Some devices are reqired to use a specific type (identity or dma)
+of default domain when they are used with a vendor iommu. When the
+system level default domain type is different from it, the vendor
+iommu driver has to request a new default domain with either
+iommu_request_dma_domain_for_dev() or iommu_request_dm_for_dev()
+in the add_dev() callback. Unfortunately, these two helpers only
+work when the group hasn't been assigned to any other devices,
+hence, some vendor iommu driver has to use a private domain if
+it fails to request a new default one.
 
-Hi Guenter, 
+This patch series aims to remove the private domain requirement
+in vendor iommu driver with enabling the iommu generic code to
+support configuring per-group default domain. It introduces a
+new callback in iommu_ops, named def_domain_type(), so that
+the iommu generic code could check whether a device is required
+to use any specific type of default domain during the process of
+device probing.
 
-On Fri, Mar 13, 2020 at 09:47:51AM -0700, Guenter Roeck wrote:
+If unlikely a device requires a special default domain type other
+than that in use, iommu probe procedure will either allocate a new
+domain according to the specified domain type, or (if the group has
+other devices sitting in it) change the default domain. The vendor
+iommu driver which exposes the def_domain_type callback should
+guarantee that there're no multiple devices belonging to a same
+group require differnt types of default domain.
 
-> This patch causes all my mips qemu emulations to hang during boot. This affects
-> all mips, mips64, mipsel, and mipsel64 emulations.
+Please help to review.
 
-Can you please apply,
+Best regards,
+baolu
 
-https://lkml.kernel.org/r/20200311152751.GA5044@afzalpc,
+Change log:
+v1->v2:
+ - Rename the iommu ops callback to def_domain_type
 
-on top of this patch & see if it fixes the issue. Else please let me
-know the qemu command line you are using.
+Lu Baolu (5):
+  iommu: Configure default domain with def_domain_type
+  iommu/vt-d: Don't force 32bit devices to uses DMA domain
+  iommu/vt-d: Don't force PCI sub-hierarchy to use DMA domain
+  iommu/vt-d: Add def_domain_type callback
+  iommu/vt-d: Apply per-device dma_ops
 
-Nathan reported a similar issue, above fix fixes that issue.
+Sai Praneeth Prakhya (1):
+  iommu: Add def_domain_type() callback in iommu_ops
 
-Regards
-afzal
+ drivers/iommu/intel-iommu.c | 453 +++---------------------------------
+ drivers/iommu/iommu.c       |  93 +++++++-
+ include/linux/iommu.h       |   6 +
+ 3 files changed, 126 insertions(+), 426 deletions(-)
+
+-- 
+2.17.1
+
