@@ -2,248 +2,140 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A199FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E54FC1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0442071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4389A2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NezFK0Pk"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZeR190iG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgCOCXR (ORCPT
+        id S1727884AbgCOCXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:23:17 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44894 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbgCOCXQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:23:16 -0400
-Received: by mail-oi1-f194.google.com with SMTP id d62so13914514oia.11;
-        Sat, 14 Mar 2020 19:23:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cVd0T/lkJIQMcnf47wqj1DGNWmGfXLMr7G4/TmjDEbI=;
-        b=NezFK0PkdNYgc/HhvvGKFE4kqmDhvdIdrnNyBDcImMARCEYwJsvNU2ExxHTiY4/yM+
-         aq2yhTsT2d16GSuDZM2I0UhlbUy7trGQwagdhL3qfoWXZS8jA6fzbE2URXgusuceft+C
-         uzUksQwsywG/tpG7lSQj9q+ZYfiymHQov/pzTmZjyXiuV3P3WKJR+RCRI85CLRSAbwTM
-         m+wf+rUXjg5vJw/dEZB/MX72NDQefmhN3LXzB42GmHsywkiWTto7VJkmnqiHHZWoeRs+
-         KSCH5/5v0R20OMJwr7gJoCfXL/1w1ET+RN3U7LAG32sJz6r/WSMZcg7vZGvf+ysfD7iy
-         H+yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cVd0T/lkJIQMcnf47wqj1DGNWmGfXLMr7G4/TmjDEbI=;
-        b=fi4iNNLGlwJTenuKbAVA5TH7aGjP3DsuHuSrIo0zzrCiMafRkVQQUKFVeBovUwDmIB
-         EtGAdjd+fO48Kxc0F816YXaVbTlsc2Xwh1yBaZALxMuV27KKlKPwqo1vrWOLS4lJ3iev
-         VqZCsgB0xdmL+gNAY7nJA7UiCTrUNj5p4rrmZLTxJIeyE9FY27tR8TqrY12p0iv5dZwf
-         1r/OtxHAkMSavqqegI7G+bhvVdVlYZySlxtArW959YoDzrJm3NiWIA3hkhT4/fjzHVcG
-         Z+tqpuMf1Ov+a5Alr6Mbmr+HP3KPz79sWh+OBMS7obPHKYIX/qtXzQIr7Kcqxg1je1Q0
-         lnwQ==
-X-Gm-Message-State: ANhLgQ3Km4Iapa1WXiVVpmOtwzu2Liq1uxsTmje3C+IlplKsgcNPKjx6
-        X7vQ6IKrIV7W9s6JNWEiByGuZyji
-X-Google-Smtp-Source: ADFU+vv490wYE3mVbotqwz88Dy7Kl7JWhJErp73WcHrtcIUHVEtNpz2EmmUE2GoZpTojSdnuQWdliw==
-X-Received: by 2002:a17:90a:a511:: with SMTP id a17mr16097664pjq.178.1584206355021;
-        Sat, 14 Mar 2020 10:19:15 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e24sm6485606pfi.200.2020.03.14.10.19.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 14 Mar 2020 10:19:14 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 10:19:12 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        John Crispin <john@phrozen.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] MIPS: pass non-NULL dev_id on shared request_irq()
-Message-ID: <20200314171912.GA24092@roeck-us.net>
-References: <20200304203144.GA4323@alpha.franken.de>
- <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
- <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
- <20200311090308.GA5060@afzalpc>
- <20200311104217.GA10615@alpha.franken.de>
- <20200311131210.GA5115@afzalpc>
- <20200311160307.GA15464@alpha.franken.de>
- <20200311163249.GA4984@afzalpc>
- <20200313121138.GA5985@afzalpc>
- <20200314081312.GA4948@afzalpc>
+        Sat, 14 Mar 2020 22:23:39 -0400
+Received: from mout.gmx.net ([212.227.17.22]:51867 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727324AbgCOCXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:23:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1584239017;
+        bh=V0rq/NHA00NI5YnNp0x0uYL1fI/UE5EKZlIF0XhdxTc=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ZeR190iGYErOkG14DcPyoWDG+9wpU8BlYLQ9OLybGJThewuUgYJ6UMzX6T477ux4o
+         jdQJ+1Bfa6Z23DfK+2wruSxlbisp0VGoM3cFjyeCCEFgbvRIjHAj944c/KDsiEQssz
+         HI06DIO7boJTCRUOT5OaYVNjN0ehRbSD6EqBOUJM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MmULx-1jdSIk43NZ-00iWkv; Sat, 14 Mar 2020 17:48:20 +0100
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Forest Bond <forest@alittletooquiet.net>
+Cc:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: vt6656: Use ARRAY_SIZE instead of hardcoded size
+Date:   Sat, 14 Mar 2020 17:47:54 +0100
+Message-Id: <20200314164754.8531-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200314081312.GA4948@afzalpc>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VqoulxDnv12K6z91LHZ6YrGqLdCMqF0Pa57KICKH3pdWYb9OcmH
+ n+5VUMqHAwm75wJO38WkU/60n0tF2eZLwYkBW1d6yEGF7T05XxDjhljoF+sP9aKvmX+fRaT
+ Xh6y+PORdU4K3oA+v75KzDJLQLu8/+Y7io9eHAs0ytG9mIcivfooyZZpnptHw5zilPSPHAj
+ 3LGPGTQBflZSM8MAK/x9Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5MeGT5rzhdw=:UeLno0Lm86hQkseI50F2fv
+ Q7mJ+xDjrwGQXfTnAlwMqmozrcYDxV7HU3l2O44g3swEraqtsCUOdU6DvSMWUFG5SnE9AJthm
+ Wfbad9RVEoDDPSSddrTLntMG831rrnMpBSc3km4aFLqI2QkIKzYpkiGny1H3axz1M94ylmNAF
+ sHPcDRKYZGZmBlRgfKRVdk/5wE5e5iqbW2wTqq6esfV7lRhzmONfMGyXqqrKUqJ1YTxZNG27x
+ ykFOqQm7qf+1mpgaSJL9QKZ+maFbMSJiEoEtLcGw8QY0lSUWTjFJjA6JowfKMgk5Yzdfclx3k
+ enQec4gF9wr7FJQf5lBsUCuJVqcMiInSBYT3ZmL5dsAu0kXOG0z7b/ZxEQb3ASrhZAblx9BiB
+ i065C3/m1UzEyFOmOI3AyqjyxY+pwswct1VqG/pM2FdtExfCSdPrjBC9yAzHi3d0KkuRWIH/q
+ oSedUNMqCVMh6jtWMzzI7Mkt5zuSl/xnJBBh5oG6WjX9q8LSgQohoapdRUQ3lojxEAAD6ES/0
+ AJs7Fzy2kPOJVTo4v2c2hSbteSETjXPlttLFiQlG/iVqj2bmY6NsVtsJhnB1ip/Wj8TF2tK58
+ zTkCUp0fS7wkdDhIc9KSR2XfqccF2VkQ5U4S9msGNQmloFok8vTURzSsYKkQ4Sns2rR0wFY//
+ i7yv0WFbpXuQd4EaUr6Y2Yg24oc6Nr9NAvlz2d6j1YfzuQpveJbH5YWX1VCqS8v1c01KK1ikB
+ w2nEwMojsavzhY7N1Pcu3e2dKg+BbIBNn32bwszn99FwUUd2S1u50cd8wD4mB4Fo5mWPL2NWr
+ 1/D/NPWhAvHrFCiwbr5B2SeEP5SXnxhOu16L2CMnQ9tcEOK9jIUFOEkHp0WPfqpgHLkf0rrPR
+ 9HqZhXNwc8bR+Z7oE6qOX0AD4cBMNUPpQ97fKdD/pVHpZfyzxm7+IkxeRYHeDeQXiJNsQUVI0
+ SMLnM9c3aH31ZpJqQq3LljpQi49xilDpZSjY8CcPcH7psoxbwxsSPUIS81xie0ckzU6lJo42R
+ WsBiD9enAMCp9xDjZ3QNWIzl0HLfKVqdLXX6u/gOA/msReL82gGnyqEpiQ0S7k+PR5vvoCL/P
+ vbzs9zkv/hzpNYk1omaaByinFJPHcnOcwsEzhSZW+dzS8NlgnVD3T4GHSiuL5a9BMhlbtk1aK
+ ZIskCZrC4HvaW4/Z8YYFgs/zPd70vuLsS6wG9L7UEbnx+IfCg2v7rWTLnTJJHs3G+kmDY49Gd
+ bovUhfy7dQaVBDch2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 01:43:12PM +0530, afzal mohammed wrote:
-> Recently all usages of setup_irq() was replaced by request_irq().
-> request_irq() does a few sanity checks that were not done in
-> setup_irq(), if they fail irq registration will fail. One of the check
-> is to ensure that non-NULL dev_id is passed in the case of shared irq.
-> This caused malta on qemu to hang.
-> 
-> Fix it by passing handler as dev_id to all request_irq()'s that are
-> shared. For sni, instead of passing non-NULL dev_id, remove shared irq
-> flags.
-> 
-> Fixes: ac8fd122e070 ("MIPS: Replace setup_irq() by request_irq()")
-> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-> Suggested-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Use ARRAY_SIZE to replace the hardcoded size so we will never have a
+mismatch.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+ drivers/staging/vt6656/main_usb.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-> ---
-> 
-> v2:
->  * use handler for dev_id
->  * remove shared irq flags for sni
-> 
->  arch/mips/dec/setup.c                 | 2 +-
->  arch/mips/kernel/cevt-r4k.c           | 3 ++-
->  arch/mips/loongson2ef/lemote-2f/irq.c | 2 +-
->  arch/mips/pmcs-msp71xx/msp_time.c     | 2 +-
->  arch/mips/sni/a20r.c                  | 4 ++--
->  arch/mips/sni/pcit.c                  | 8 ++++----
->  arch/mips/sni/rm200.c                 | 6 +++---
->  7 files changed, 14 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/mips/dec/setup.c b/arch/mips/dec/setup.c
-> index c8bbac0c5051..d4e868b828e5 100644
-> --- a/arch/mips/dec/setup.c
-> +++ b/arch/mips/dec/setup.c
-> @@ -758,7 +758,7 @@ void __init arch_init_irq(void)
->  	/* Register the bus error interrupt. */
->  	if (dec_interrupt[DEC_IRQ_BUS] >= 0 && busirq_handler) {
->  		if (request_irq(dec_interrupt[DEC_IRQ_BUS], busirq_handler,
-> -				busirq_flags, "bus error", NULL))
-> +				busirq_flags, "bus error", busirq_handler))
->  			pr_err("Failed to register bus error interrupt\n");
->  	}
->  	/* Register the HALT interrupt. */
-> diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
-> index 64e917dfe6b2..17a9cbb8b3df 100644
-> --- a/arch/mips/kernel/cevt-r4k.c
-> +++ b/arch/mips/kernel/cevt-r4k.c
-> @@ -292,7 +292,8 @@ int r4k_clockevent_init(void)
->  
->  	cp0_timer_irq_installed = 1;
->  
-> -	if (request_irq(irq, c0_compare_interrupt, flags, "timer", NULL))
-> +	if (request_irq(irq, c0_compare_interrupt, flags, "timer",
-> +			c0_compare_interrupt))
->  		pr_err("Failed to request irq %d (timer)\n", irq);
->  
->  	return 0;
-> diff --git a/arch/mips/loongson2ef/lemote-2f/irq.c b/arch/mips/loongson2ef/lemote-2f/irq.c
-> index 34e15e8b7a8f..6f00579971a3 100644
-> --- a/arch/mips/loongson2ef/lemote-2f/irq.c
-> +++ b/arch/mips/loongson2ef/lemote-2f/irq.c
-> @@ -109,7 +109,7 @@ void __init mach_init_irq(void)
->  
->  	/* setup north bridge irq (bonito) */
->  	if (request_irq(LOONGSON_NORTH_BRIDGE_IRQ, ip6_action,
-> -			IRQF_SHARED | IRQF_NO_THREAD, "cascade", NULL))
-> +			IRQF_SHARED | IRQF_NO_THREAD, "cascade", ip6_action))
->  		pr_err("Failed to register north bridge cascade interrupt\n");
->  	/* setup source bridge irq (i8259) */
->  	if (request_irq(LOONGSON_SOUTH_BRIDGE_IRQ, no_action,
-> diff --git a/arch/mips/pmcs-msp71xx/msp_time.c b/arch/mips/pmcs-msp71xx/msp_time.c
-> index baf0da8b4c98..9c629829f447 100644
-> --- a/arch/mips/pmcs-msp71xx/msp_time.c
-> +++ b/arch/mips/pmcs-msp71xx/msp_time.c
-> @@ -81,7 +81,7 @@ unsigned int get_c0_compare_int(void)
->  	/* MIPS_MT modes may want timer for second VPE */
->  	if ((get_current_vpe()) && !tim_installed) {
->  		if (request_irq(MSP_INT_VPE1_TIMER, c0_compare_interrupt, flags,
-> -				"timer", NULL))
-> +				"timer", c0_compare_interrupt))
->  			pr_err("Failed to register timer interrupt\n");
->  		tim_installed++;
->  	}
-> diff --git a/arch/mips/sni/a20r.c b/arch/mips/sni/a20r.c
-> index ba966d62fb4b..0ecffb65fd6d 100644
-> --- a/arch/mips/sni/a20r.c
-> +++ b/arch/mips/sni/a20r.c
-> @@ -222,8 +222,8 @@ void __init sni_a20r_irq_init(void)
->  		irq_set_chip_and_handler(i, &a20r_irq_type, handle_level_irq);
->  	sni_hwint = a20r_hwint;
->  	change_c0_status(ST0_IM, IE_IRQ0);
-> -	if (request_irq(SNI_A20R_IRQ_BASE + 3, sni_isa_irq_handler,
-> -			IRQF_SHARED, "ISA", NULL))
-> +	if (request_irq(SNI_A20R_IRQ_BASE + 3, sni_isa_irq_handler, 0, "ISA",
-> +			NULL))
->  		pr_err("Failed to register ISA interrupt\n");
->  }
->  
-> diff --git a/arch/mips/sni/pcit.c b/arch/mips/sni/pcit.c
-> index 4a850ab03398..b331fe22c529 100644
-> --- a/arch/mips/sni/pcit.c
-> +++ b/arch/mips/sni/pcit.c
-> @@ -244,8 +244,8 @@ void __init sni_pcit_irq_init(void)
->  	*(volatile u32 *)SNI_PCIT_INT_REG = 0;
->  	sni_hwint = sni_pcit_hwint;
->  	change_c0_status(ST0_IM, IE_IRQ1);
-> -	if (request_irq(SNI_PCIT_INT_START + 6, sni_isa_irq_handler,
-> -			IRQF_SHARED, "ISA", NULL))
-> +	if (request_irq(SNI_PCIT_INT_START + 6, sni_isa_irq_handler, 0, "ISA",
-> +			NULL))
->  		pr_err("Failed to register ISA interrupt\n");
->  }
->  
-> @@ -259,8 +259,8 @@ void __init sni_pcit_cplus_irq_init(void)
->  	*(volatile u32 *)SNI_PCIT_INT_REG = 0x40000000;
->  	sni_hwint = sni_pcit_hwint_cplus;
->  	change_c0_status(ST0_IM, IE_IRQ0);
-> -	if (request_irq(MIPS_CPU_IRQ_BASE + 3, sni_isa_irq_handler,
-> -			IRQF_SHARED, "ISA", NULL))
-> +	if (request_irq(MIPS_CPU_IRQ_BASE + 3, sni_isa_irq_handler, 0, "ISA",
-> +			NULL))
->  		pr_err("Failed to register ISA interrupt\n");
->  }
->  
-> diff --git a/arch/mips/sni/rm200.c b/arch/mips/sni/rm200.c
-> index ba1f2fc6a43e..d84744ca871d 100644
-> --- a/arch/mips/sni/rm200.c
-> +++ b/arch/mips/sni/rm200.c
-> @@ -473,10 +473,10 @@ void __init sni_rm200_irq_init(void)
->  	sni_hwint = sni_rm200_hwint;
->  	change_c0_status(ST0_IM, IE_IRQ0);
->  	if (request_irq(SNI_RM200_INT_START + 0, sni_rm200_i8259A_irq_handler,
-> -			IRQF_SHARED, "onboard ISA", NULL))
-> +			0, "onboard ISA", NULL))
->  		pr_err("Failed to register onboard ISA interrupt\n");
-> -	if (request_irq(SNI_RM200_INT_START + 1, sni_isa_irq_handler,
-> -			IRQF_SHARED, "ISA", NULL))
-> +	if (request_irq(SNI_RM200_INT_START + 1, sni_isa_irq_handler, 0, "ISA",
-> +			NULL))
->  		pr_err("Failed to register ISA interrupt\n");
->  }
->  
-> -- 
-> 2.18.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/ma=
+in_usb.c
+index 5e48b3ddb94c..4370941ffc04 100644
+=2D-- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -23,6 +23,7 @@
+
+ #include <linux/etherdevice.h>
+ #include <linux/file.h>
++#include <linux/kernel.h>
+ #include "device.h"
+ #include "card.h"
+ #include "baseband.h"
+@@ -116,6 +117,7 @@ static int vnt_init_registers(struct vnt_private *priv=
+)
+ 	int ii;
+ 	u8 tmp;
+ 	u8 calib_tx_iq =3D 0, calib_tx_dc =3D 0, calib_rx_iq =3D 0;
++	const int n_cck_pwr_tbl =3D ARRAY_SIZE(priv->cck_pwr_tbl);
+
+ 	dev_dbg(&priv->usb->dev, "---->INIbInitAdapter. [%d][%d]\n",
+ 		DEVICE_INIT_COLD, priv->packet_type);
+@@ -145,7 +147,7 @@ static int vnt_init_registers(struct vnt_private *priv=
+)
+
+ 	init_cmd->init_class =3D DEVICE_INIT_COLD;
+ 	init_cmd->exist_sw_net_addr =3D priv->exist_sw_net_addr;
+-	for (ii =3D 0; ii < 6; ii++)
++	for (ii =3D 0; ii < ARRAY_SIZE(init_cmd->sw_net_addr); ii++)
+ 		init_cmd->sw_net_addr[ii] =3D priv->current_net_addr[ii];
+ 	init_cmd->short_retry_limit =3D priv->short_retry_limit;
+ 	init_cmd->long_retry_limit =3D priv->long_retry_limit;
+@@ -184,7 +186,7 @@ static int vnt_init_registers(struct vnt_private *priv=
+)
+ 	priv->cck_pwr =3D priv->eeprom[EEP_OFS_PWR_CCK];
+ 	priv->ofdm_pwr_g =3D priv->eeprom[EEP_OFS_PWR_OFDMG];
+ 	/* load power table */
+-	for (ii =3D 0; ii < 14; ii++) {
++	for (ii =3D 0; ii < n_cck_pwr_tbl; ii++) {
+ 		priv->cck_pwr_tbl[ii] =3D
+ 			priv->eeprom[ii + EEP_OFS_CCK_PWR_TBL];
+ 		if (priv->cck_pwr_tbl[ii] =3D=3D 0)
+@@ -200,7 +202,7 @@ static int vnt_init_registers(struct vnt_private *priv=
+)
+ 	 * original zonetype is USA, but custom zonetype is Europe,
+ 	 * then need to recover 12, 13, 14 channels with 11 channel
+ 	 */
+-	for (ii =3D 11; ii < 14; ii++) {
++	for (ii =3D 11; ii < n_cck_pwr_tbl; ii++) {
+ 		priv->cck_pwr_tbl[ii] =3D priv->cck_pwr_tbl[10];
+ 		priv->ofdm_pwr_tbl[ii] =3D priv->ofdm_pwr_tbl[10];
+ 	}
+=2D-
+2.20.1
+
