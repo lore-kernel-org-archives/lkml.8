@@ -2,218 +2,130 @@ Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB45EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DD1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793782074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6362074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 02:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ly0Mizdi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgCNCbQ (ORCPT
+        id S1726720AbgCNCn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 22:31:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34424 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbgCNCbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 22:31:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id F36DFAFE0;
-        Sat, 14 Mar 2020 02:31:11 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 14 Mar 2020 13:31:03 +1100
-Cc:     yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
-In-Reply-To: <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
-References: <20200308140314.GQ5972@shao2-debian>
- <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
- <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
- <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
- <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
- <87blp5urwq.fsf@notabene.neil.brown.name>
- <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
- <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
- <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
- <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
- <878sk7vs8q.fsf@notabene.neil.brown.name>
- <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
- <875zfbvrbm.fsf@notabene.neil.brown.name>
- <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
- <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
- <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
- <87v9nattul.fsf@notabene.neil.brown.name>
- <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
- <87o8t2tc9s.fsf@notabene.neil.brown.name>
- <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
- <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
-Message-ID: <877dznu0pk.fsf@notabene.neil.brown.name>
+        Fri, 13 Mar 2020 22:43:29 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43578 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgCNCn2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 22:43:28 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c144so6401360pfb.10;
+        Fri, 13 Mar 2020 19:43:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gTv57bmUMayhCzk1O5/3xfBPFk4Ei/L2Uv/w0qE0Uv0=;
+        b=ly0MizdiHMFMcicd+GU7QtHM+8WzWpkV44Hh1TPHgoTYKre3lIteHxI+yfpTc4IfDO
+         Q79BIqjwGKKYV2U/x/Q0zMTj0z9Mwxd7ZDhfUox6MU2b7qyDUQsgTMeVwoQHD4PxPpi/
+         dFoMfwlJibJQE+lqeuTgQN4hti/Kf+eeL3abrBrKCPaebccbIGQ2HGqfNFpMoYvkjJJJ
+         MYXH+MDVrxTTOmfcgrIRSyFIV/nm9nD911k1jQX51CWlNeGmhIol4O42qCtA6oe8ZCxs
+         dbEbXgeNpU3svP3K8vWceBRk41dMDyglZtlUMLQ/8kNUbylEOLd+F1s+XzHEyChALtle
+         VchQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gTv57bmUMayhCzk1O5/3xfBPFk4Ei/L2Uv/w0qE0Uv0=;
+        b=CIbxZ1WaM2z03DQ4OMzP6LTKs6bKvBlY5/4J9FqHJnu0Da0fFxCf1L9A2AM++kWwGB
+         TivjQWPjLBbIJwGmiZOWp6gUT8MYa1lkYwMeURcCz10qN8HdXshKRJAZQnlC7BqCdTWI
+         RAr5QyVcJqED+PLfqc5CfZSHhu6FLqo/EJFvMptQM7YuElvK4mwLysdwb/vtp9b8aL2Z
+         QFcfqIHrPlnJKvvhQtKjmdFeXRFCjvKUje+sFD2BUKdUUrVk2rLxwmjmZIJKuOQRVXw8
+         4z/xjnQIg5KuflQEqQ4GQkmfCiSN1EY9OopKRaIGwpLwXuVDlylY+VCZSvjS2C+PcAqe
+         O1jA==
+X-Gm-Message-State: ANhLgQ1Zo54a3VtPxEJs9XP3xst1dS3Z5VXGeW9CMXMcYUtmKN6eTmyZ
+        KgdyI36RrOX0Bglal2/0ow0=
+X-Google-Smtp-Source: ADFU+vvOwDoGiIm44wVUxc27PMRID193NOa35a03TjsbfiGuiRz7u+J3vD+Y8CcNtvCEvxL7rQBNZQ==
+X-Received: by 2002:aa7:9a95:: with SMTP id w21mr2061733pfi.57.1584153805842;
+        Fri, 13 Mar 2020 19:43:25 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:1661])
+        by smtp.gmail.com with ESMTPSA id w9sm6137719pfd.94.2020.03.13.19.43.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 19:43:25 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 19:43:22 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, kernel-team@fb.com,
+        ast@kernel.org, daniel@iogearbox.net, mcgrof@kernel.org,
+        keescook@chromium.org, yzaikin@google.com, peterz@infradead.org,
+        bristot@redhat.com, mingo@kernel.org
+Subject: Re: [RFC bpf-next 0/2] sharing bpf runtime stats with /dev/bpf_stats
+Message-ID: <20200314024322.vymr6qkxsf6nzpum@ast-mbp.dhcp.thefacebook.com>
+References: <20200314003518.3114452-1-songliubraving@fb.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200314003518.3114452-1-songliubraving@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 13, 2020 at 05:35:16PM -0700, Song Liu wrote:
+> Motivation (copied from 2/2):
+> 
+> ======================= 8< =======================
+> Currently, sysctl kernel.bpf_stats_enabled controls BPF runtime stats.
+> Typical userspace tools use kernel.bpf_stats_enabled as follows:
+> 
+>   1. Enable kernel.bpf_stats_enabled;
+>   2. Check program run_time_ns;
+>   3. Sleep for the monitoring period;
+>   4. Check program run_time_ns again, calculate the difference;
+>   5. Disable kernel.bpf_stats_enabled.
+> 
+> The problem with this approach is that only one userspace tool can toggle
+> this sysctl. If multiple tools toggle the sysctl at the same time, the
+> measurement may be inaccurate.
+> 
+> To fix this problem while keep backward compatibility, introduce
+> /dev/bpf_stats. sysctl kernel.bpf_stats_enabled will only change the
+> lowest bit of the static key. /dev/bpf_stats, on the other hand, adds 2
+> to the static key for each open fd. The runtime stats is enabled when
+> kernel.bpf_stats_enabled == 1 or there is open fd to /dev/bpf_stats.
+> 
+> With /dev/bpf_stats, user space tool would have the following flow:
+> 
+>   1. Open a fd to /dev/bpf_stats;
+>   2. Check program run_time_ns;
+>   3. Sleep for the monitoring period;
+>   4. Check program run_time_ns again, calculate the difference;
+>   5. Close the fd.
+> ======================= 8< =======================
+> 
+> 1/2 adds a few new API to jump_label.
+> 2/2 adds the /dev/bpf_stats and adjust kernel.bpf_stats_enabled handler.
+> 
+> Please share your comments.
 
-On Fri, Mar 13 2020, Jeff Layton wrote:
+Conceptually makes sense to me. Few comments:
+1. I don't understand why +2 logic is necessary.
+Just do +1 for every FD and change proc_do_static_key() from doing
+explicit enable/disable to do +1/-1 as well on transition from 0->1 and 1->0.
+The handler would need to check that 1->1 and 0->0 is a nop.
 
-> On Thu, 2020-03-12 at 09:07 -0700, Linus Torvalds wrote:
->> On Wed, Mar 11, 2020 at 9:42 PM NeilBrown <neilb@suse.de> wrote:
->> > It seems that test_and_set_bit_lock() is the preferred way to handle
->> > flags when memory ordering is important
->>=20
->> That looks better.
->>=20
->> The _preferred_ way is actually the one I already posted: do a
->> "smp_store_release()" to store the flag (like a NULL pointer), and a
->> smp_load_acquire() to load it.
->>=20
->> That's basically optimal on most architectures (all modern ones -
->> there are bad architectures from before people figured out that
->> release/acquire is better than separate memory barriers), not needing
->> any atomics and only minimal memory ordering.
->>=20
->> I wonder if a special flags value (keeping it "unsigned int" to avoid
->> the issue Jeff pointed out) might be acceptable?
->>=20
->> IOW, could we do just
->>=20
->>         smp_store_release(&waiter->fl_flags, FL_RELEASED);
->>=20
->> to say that we're done with the lock? Or do people still look at and
->> depend on the flag values at that point?
->
-> I think nlmsvc_grant_block does. We could probably work around it
-> there, but we'd need to couple this change with some clear
-> documentation to make it clear that you can't rely on fl_flags after
-> locks_delete_block returns.
->
-> If avoiding new locks is preferred here (and I'm fine with that), then
-> maybe we should just go with the patch you sent originally (along with
-> changing the waiters to wait on fl_blocked_member going empty instead
-> of the fl_blocker going NULL)?
+2. /dev is kinda awkward. May be introduce a new bpf command that returns fd?
 
-I agree.  I've poked at this for a while and come to the conclusion that
-I cannot really come up with anything that is structurally better than
-your patch.
-The idea of list_del_init_release() and list_empty_acquire() is growing
-on me though.  See below.
-
-list_empty_acquire() might be appropriate for waitqueue_active(), which
-is documented as requiring a memory barrier, but in practice seems to
-often be used without one.
-
-But I'm happy for you to go with your patch that changes all the wait
-calls.
-
-NeilBrown
-
-
-
-diff --git a/fs/locks.c b/fs/locks.c
-index 426b55d333d5..2e5eb677c324 100644
-=2D-- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -174,6 +174,20 @@
-=20
- #include <linux/uaccess.h>
-=20
-+/* Should go in list.h */
-+static inline int list_empty_acquire(const struct list_head *head)
-+{
-+	return smp_load_acquire(&head->next) =3D=3D head;
-+}
-+
-+static inline void list_del_init_release(struct list_head *entry)
-+{
-+	__list_del_entry(entry);
-+	entry->prev =3D entry;
-+	smp_store_release(&entry->next, entry);
-+}
-+
-+
- #define IS_POSIX(fl)	(fl->fl_flags & FL_POSIX)
- #define IS_FLOCK(fl)	(fl->fl_flags & FL_FLOCK)
- #define IS_LEASE(fl)	(fl->fl_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT))
-@@ -724,7 +738,6 @@ static void locks_delete_global_blocked(struct file_loc=
-k *waiter)
- static void __locks_delete_block(struct file_lock *waiter)
- {
- 	locks_delete_global_blocked(waiter);
-=2D	list_del_init(&waiter->fl_blocked_member);
- 	waiter->fl_blocker =3D NULL;
- }
-=20
-@@ -740,6 +753,11 @@ static void __locks_wake_up_blocks(struct file_lock *b=
-locker)
- 			waiter->fl_lmops->lm_notify(waiter);
- 		else
- 			wake_up(&waiter->fl_wait);
-+		/*
-+		 * Tell the world that we're done with it - see comment at
-+		 * top of locks_delete_block().
-+		 */
-+		list_del_init_release(&waiter->fl_blocked_member);
- 	}
- }
-=20
-@@ -753,6 +771,25 @@ int locks_delete_block(struct file_lock *waiter)
- {
- 	int status =3D -ENOENT;
-=20
-+	/*
-+	 * If fl_blocker is NULL, it won't be set again as this thread
-+	 * "owns" the lock and is the only one that might try to claim
-+	 * the lock.  So it is safe to test fl_blocker locklessly.
-+	 * Also if fl_blocker is NULL, this waiter is not listed on
-+	 * fl_blocked_requests for some lock, so no other request can
-+	 * be added to the list of fl_blocked_requests for this
-+	 * request.  So if fl_blocker is NULL, it is safe to
-+	 * locklessly check if fl_blocked_requests is empty.  If both
-+	 * of these checks succeed, there is no need to take the lock.
-+	 * However, some other thread could still be in__locks_wake_up_blocks()
-+	 * and may yet access 'waiter', so we cannot return and possibly
-+	 * free the 'waiter' unless we check that __locks_wake_up_blocks()
-+	 * is done.  For that we carefully test fl_blocked_member.
-+	 */
-+	if (waiter->fl_blocker =3D=3D NULL &&
-+	    list_empty(&waiter->fl_blocked_requests) &&
-+	    list_empty_acquire(&waiter->fl_blocked_member))
-+		return status;
- 	spin_lock(&blocked_lock_lock);
- 	if (waiter->fl_blocker)
- 		status =3D 0;
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5sQegACgkQOeye3VZi
-gbluQRAAps4nkshRrtzTBc/v8ODs6HYzjGtx1s7pOs5rLUopMQGSptHO4V0+zjNg
-k+qFRxvgRSWW8DJvUbGDCcFDV/WLBIOHtUBkHcpMqXSqzxG29exotvEBuc07SfbC
-BFsAbvLB6pZLutYK6flTrzdMyAO5Wm06QYmLMTtVJQnMvPsaaQqVozFB2KVZ+LgC
-eEEx/TDtqhy6PaGln05nP3PC8GhbD+wMzNJ+tLorij03cFEfS+IffVOoM0Q9oq/H
-Pdxp7lZOPv5ehcLo0lSgTkPSdTkWGq3QFZGnwNFAruube+9O/aZ4LeaMroyJnB4G
-ti90+fSkwur3RpbZvdMK96PwSTy32b9tY5aOiQe7tFav3YIvwlE6fzdaudOC2hNI
-2BNor28ITovR8uCB4lUb8i8qAXx6JE988NnZ2j2LQGZeGU+EL2Ca4klUokqjwN6m
-/xCLj0rn8LNsZgWnv8Qusgfd1i4+CyPZ8+CcodzdM2npeYp3jgmjvdKh29F6MkJP
-FG9q0gIcfeb5id3lAUI4MWSb3r+sZmmQvqD19rIDQuCiqbIo1NTm7wlmMrYCkgH/
-1J87in7/fgop/NADnFrtHyVF9Thi9tU4WOttL1r1ldjLGcilqURxI18jf82+LYbC
-yugocrnF0Xw3+tfZycJSAJ2JhZkNeOEp7MUoRcdcJXcfksIx6wo=
-=4Ppj
------END PGP SIGNATURE-----
---=-=-=--
+3. Instead of 1 and 2 tweak sysctl to do ++/-- unconditionally?
+ Like repeated sysctl kernel.bpf_stats_enabled=1 will keep incrementing it
+ and would need equal amount of sysctl kernel.bpf_stats_enabled=0 to get
+ it back to zero where it will stay zero even if users keep spamming
+ sysctl kernel.bpf_stats_enabled=0.
+ This way current services that use sysctl will keep working as-is.
+ Multiple services that currently collide on sysctl will magically start
+ working without any changes to them. It is still backwards compatible.
