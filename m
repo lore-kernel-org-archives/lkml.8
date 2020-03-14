@@ -2,117 +2,106 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0197C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD849C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 694BA20575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FADD20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584239112;
-	bh=xmE3yElXSaLPkHmEr4QxRVGER8+rZ3BdqvEa3ZNkdF8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G4dqbj8z+O/GS2US1rATOhUabRPoIr25hYZBC6oAykoXGPS27AXVDzNkGslNj5B4t
-	 RSqZTjXsZ9OJWG1WDeQi6RksaZfzt76iafuEn3K4z3KsTpa0Vzg+koQMZQFZA1g4Vs
-	 RkzNn/MiuV7Fq/Bc0OL1imTPWzJGvfEGsgHpEihE=
+	s=default; t=1584239114;
+	bh=+pW3YzUyH0cg/KHykqp6AOMoambL+e3V8FJ78cxYe98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ipM+rb6H/k4GV3r0vcamiSnbI0SOoJKP7qZF+zWlkDlX4AER3qiylhRhHzxMGhM/0
+	 SYLbLaX5u0ZQDi6n0QVD8tByszCuzbbo5CHBuyi1oFiavqVdEnwYKqOY0sDsr+L3Fq
+	 BvsfZrXKiHsxYKLSpmmxSCzjDpOOfucWC8omm0Dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgCOCZL (ORCPT
+        id S1728101AbgCOCZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39094 "EHLO mail.kernel.org"
+        Sat, 14 Mar 2020 22:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727915AbgCOCYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727919AbgCOCYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 14 Mar 2020 22:24:13 -0400
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (unknown [122.167.115.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 145F7208D6;
-        Sat, 14 Mar 2020 21:36:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21A8120753;
+        Sat, 14 Mar 2020 09:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584221809;
-        bh=xmE3yElXSaLPkHmEr4QxRVGER8+rZ3BdqvEa3ZNkdF8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0MEecr+36WP4z93qOCDFo9M69v6/l1BsgQinH+aiEM4rai3GplQEwS8cb+UrHWBk
-         LsqY7T7PRhGCBhj3hbkypJk1PTzpzF4Qmy5BvyYEmoTgqmtQyg6GZA8AffyAVDPuGa
-         JWdTj9Kjh3KSqiPNO/9FY/K6EfErk3WztFDe5IIY=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>
-Subject: [PATCH v3 4/5] selftests: kmod: fix handling test numbers above 9
-Date:   Sat, 14 Mar 2020 14:34:25 -0700
-Message-Id: <20200314213426.134866-5-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200314213426.134866-1-ebiggers@kernel.org>
-References: <20200314213426.134866-1-ebiggers@kernel.org>
+        s=default; t=1584179537;
+        bh=+pW3YzUyH0cg/KHykqp6AOMoambL+e3V8FJ78cxYe98=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UI4gKwVbJiR+VoSLoyLynOf8+KRReIEuPsKxngmstltQhAlnUa/Ilta/1JSx1Y9TY
+         ZFv+yJHLGutB2tkbph8fpenwAHqWFlGPf7GbxDzVsHgGStSQSgcG4VF3n4sw6MbG5n
+         pDh07RrXWdCrpKcmXEyEFIJG/OL+zEunNP8WR1Ew=
+Date:   Sat, 14 Mar 2020 15:22:06 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
+        Rander Wang <rander.wang@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+Subject: Re: [PATCH 05/16] soundwire: cadence: add clock_stop/restart routines
+Message-ID: <20200314095206.GR4885@vkoul-mobl>
+References: <20200311184128.4212-1-pierre-louis.bossart@linux.intel.com>
+ <20200311184128.4212-6-pierre-louis.bossart@linux.intel.com>
+ <20200313122156.GG4885@vkoul-mobl>
+ <6d38a58a-a840-169a-1078-e10c278c11fd@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d38a58a-a840-169a-1078-e10c278c11fd@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On 13-03-20, 12:07, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 3/13/20 7:21 AM, Vinod Koul wrote:
+> > On 11-03-20, 13:41, Pierre-Louis Bossart wrote:
+> > 
+> > > @@ -225,12 +225,30 @@ static int cdns_clear_bit(struct sdw_cdns *cdns, int offset, u32 value)
+> > >   			return 0;
+> > >   		timeout--;
+> > > -		udelay(50);
+> > > +		usleep_range(50, 100);
+> > 
+> > this seems okay change, but unrelated to this patch
+> 
+> ok. It doesn't really matter anyway, this function is removed in Patch 8
 
-get_test_count() and get_test_enabled() were broken for test numbers
-above 9 due to awk interpreting a field specification like '$0010' as
-octal rather than decimal.  Fix it by stripping the leading zeroes.
+Ok pls drop from here.
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: NeilBrown <neilb@suse.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+> > > +int sdw_cdns_clock_stop(struct sdw_cdns *cdns, bool block_wake)
+> > > +{
+> > > +	bool slave_present = false;
+> > > +	struct sdw_slave *slave;
+> > > +	u32 status;
+> > > +	int ret;
+> > > +
+> > > +	/* Check suspend status */
+> > > +	status = cdns_readl(cdns, CDNS_MCP_STAT);
+> > > +	if (status & CDNS_MCP_STAT_CLK_STOP) {
+> > > +		dev_dbg(cdns->dev, "Clock is already stopped\n");
+> > > +		return 1;
+> > 
+> > return of 1..? Does that indicate success/fail..?
+> 
+> success. I guess it could be moved as 0.
 
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 8b944cf042f6c..315a43111e046 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -505,18 +505,23 @@ function test_num()
- 	fi
- }
- 
--function get_test_count()
-+function get_test_data()
- {
- 	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	local field_num=$(echo $1 | sed 's/^0*//')
-+	echo $ALL_TESTS | awk '{print $'$field_num'}'
-+}
-+
-+function get_test_count()
-+{
-+	TEST_DATA=$(get_test_data $1)
- 	LAST_TWO=${TEST_DATA#*:*}
- 	echo ${LAST_TWO%:*}
- }
- 
- function get_test_enabled()
- {
--	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	TEST_DATA=$(get_test_data $1)
- 	echo ${TEST_DATA#*:*:}
- }
- 
+That would be better. We use 0 for success everywhere and -ve error
+codes.
+
 -- 
-2.25.1
-
+~Vinod
