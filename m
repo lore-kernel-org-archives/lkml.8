@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65721C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF962C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3511420771
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD0720771
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gXm6Gtm4"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Xq7cxraS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgCOBcD (ORCPT
+        id S1726824AbgCOBcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:32:03 -0400
+        Sat, 14 Mar 2020 21:32:13 -0400
 Received: from mail-mw2nam10on2123.outbound.protection.outlook.com ([40.107.94.123]:18974
         "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727435AbgCOBcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:32:01 -0400
+        id S1727401AbgCOBbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:31:53 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GupV7cE44Q6XCYtRH1CRqGmAZJeKH+Boo6JBM2aCYgOdRD0qxz83131HKTkkxWQpnKVqSwJzjm4384Gk0c+wBqaWyD1X1ozFedlaXHybOjiYoklBlJOIVH3KnPVMxtuMuHBPYAszOsdnMn+p9NngfO+flIefoiygn7QUacZOuho4hhaDd9BNxDWPZSg5b7wBQKS9RAcYgUDhL2fZv0PZ9w9ufC1OjqH8ssSmaflNYx7tN4t9iUpwmrfpWkMsR1UQTUtvTtF+PRc0qydRVeOK59maTMZWcZrjVMVUwp7/t0xFDIp147UWMbf3do+2UQueMlVf8pcnUk5a1fTNAiKR6A==
+ b=WN8Ehu4TOAFLkoX6fUVUNF8K2d3matrnLwfO4PeoXtb2ulwiCFNvDh1qXSW1Oh1VIdXdGq6xW4pjoGTs5rmFkEmpNrN/ZCUH2zOTu6Z2k9Lin1lPIsRUI0P+kZvbSG/G41jflfekJITc+LtXyCtGeP8vslIfS6U+nkD7jYpqy5+S8fJLbv/y3UICRRMGx0vfT/n+ruSfhGF+WSbpyFYSoCe3ZAVqpBauuK9q9cKY4FLGdUcLX3OCdk90jrZCAkMhJaOpqU+tA8PKqo9dmrbrrTPKTjmHsymqXG+7e3V53lLlNiOfJRmPzXw0uk45W7LDca/rLY+JH16WbOexSuSiXw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mI2g93bs0EJBL5NI/4tVGZ1opEWhoTs3mBeo+EAQeQI=;
- b=K566kEjZ5aGLWXEUpfgMJI2D2PglNnOtlkIaPm2xtqxoMcoZmHtn41NyrhgI9NsOAecc0yvOKr7YqCi0SnXd/T2GmPdmlwg5snXmY+6xNZMam0QbulOyQJJaxN/NKU85/gZu/mWu70RgAFV7HtkfULfwztdfzv6envuPRYZ27rhXTYh7/HgWECu8fHiB6+qLmFJ9rU5evppRIlmrvELLewGyK+O5ENp4I66/qXSgpDiroXuw/JCbNu03FIqW7/3IR+auXp76n7FGszNdR9sNP/39+yIRE/Pf87JfiwsGX/rtI3Suvo7W3hDtqjnrO885W6VP6lmfY3kFWJgxm8DzOA==
+ bh=t2V69NKeaHto3g1dhRW/YvOGh1RIGqgL7YLwR1BORBM=;
+ b=nXjVWcu+vyTuntoWdADYZpFPrVEjfLoMc1eUKrII1yYwxhVFDVISdvf0WZoMltEjVfEMlSjvOPIg60Wor9iUp/xbmRNGqJjBhUWgNJmrSJcOzjx4cHXiv/0TwZmEneU9tQJipxKtalZZEQpCNGULJ1PGYGIemvpcttZtieRagk+PJxIlc1Z7/sfqFveIeXD0cpXu5EIoXr6Xikhn6QXpCh34J+O3U31KJntblzZKoVAfV9tKVWLNXSmIrCU5JvkHvFChvC7I4u20mGyghn6L/wX2IS/C6DauXgqkwsY1oBZIq4+pWSzDfi/Zs+DjscwKib0H9ePCZZM12wvh26A8LQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mI2g93bs0EJBL5NI/4tVGZ1opEWhoTs3mBeo+EAQeQI=;
- b=gXm6Gtm4ISDyJ4OHcuVp47bPVrYQnzBnhnuvqBDerXqoDXwlexuHMUR50pWkdGJndSiwKXvuWHXnnM32/FDRiwVcoD5URPTa7hEKx4BJ6G4r5BBo81SOnLqhVDefGu1Zp/i+axq4E1GYTqcv9h71+b+m62GHT1RTuCHL5D0ZoR8=
+ bh=t2V69NKeaHto3g1dhRW/YvOGh1RIGqgL7YLwR1BORBM=;
+ b=Xq7cxraSh/D5JHZe7aYoPO0iNxPIfiK/eE+TOsqL6lz5TB7kmb0RSISiG66REZsrRw8q8dM7DN70yeSOkzUDLPBPp+jZE6dV4Tp0pSFLn/PZlMwOFcIAZzacWEy+PmL6Wua0dWU2UWYaFfIe2e5kumDue7BWL7Swto2LVsNo0BA=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=mikelley@microsoft.com; 
 Received: from SN6PR2101MB0927.namprd21.prod.outlook.com (2603:10b6:805:a::18)
  by SN6PR2101MB1632.namprd21.prod.outlook.com (2603:10b6:805:53::25) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.4; Sat, 14 Mar
- 2020 15:36:10 +0000
+ 2020 15:36:07 +0000
 Received: from SN6PR2101MB0927.namprd21.prod.outlook.com
  ([fe80::a819:6437:1733:17b3]) by SN6PR2101MB0927.namprd21.prod.outlook.com
  ([fe80::a819:6437:1733:17b3%9]) with mapi id 15.20.2835.008; Sat, 14 Mar 2020
- 15:36:10 +0000
+ 15:36:07 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
         catalin.marinas@arm.com, mark.rutland@arm.com, maz@kernel.org,
@@ -59,9 +59,9 @@ To:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
         jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com
 Cc:     mikelley@microsoft.com, sunilmut@microsoft.com,
         boqun.feng@gmail.com
-Subject: [PATCH v6 06/10] arm64: hyperv: Add kexec and panic handlers
-Date:   Sat, 14 Mar 2020 08:35:15 -0700
-Message-Id: <1584200119-18594-7-git-send-email-mikelley@microsoft.com>
+Subject: [PATCH v6 04/10] arm64: hyperv: Add memory alloc/free functions for Hyper-V size pages
+Date:   Sat, 14 Mar 2020 08:35:13 -0700
+Message-Id: <1584200119-18594-5-git-send-email-mikelley@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
 References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
@@ -71,162 +71,119 @@ X-ClientProxiedBy: MWHPR22CA0047.namprd22.prod.outlook.com
  (2603:10b6:805:a::18)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mhkkerneltest.corp.microsoft.com (131.107.159.247) by MWHPR22CA0047.namprd22.prod.outlook.com (2603:10b6:300:69::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Sat, 14 Mar 2020 15:36:08 +0000
+Received: from mhkkerneltest.corp.microsoft.com (131.107.159.247) by MWHPR22CA0047.namprd22.prod.outlook.com (2603:10b6:300:69::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Sat, 14 Mar 2020 15:36:05 +0000
 X-Mailer: git-send-email 1.8.3.1
 X-Originating-IP: [131.107.159.247]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5bc55ea7-d86c-44ea-e03d-08d7c82d6b5d
+X-MS-Office365-Filtering-Correlation-Id: 86ef4915-8e75-4bbf-dcdb-08d7c82d6999
 X-MS-TrafficTypeDiagnostic: SN6PR2101MB1632:|SN6PR2101MB1632:|SN6PR2101MB1632:
 X-MS-Exchange-Transport-Forked: True
 X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <SN6PR2101MB16329F6537CD030137E1CFE0D7FB0@SN6PR2101MB1632.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Microsoft-Antispam-PRVS: <SN6PR2101MB16328E4EB44CFFD346077C4DD7FB0@SN6PR2101MB1632.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
 X-Forefront-PRVS: 034215E98F
 X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(199004)(10290500003)(478600001)(2906002)(6486002)(36756003)(8936002)(66946007)(26005)(86362001)(2616005)(16526019)(186003)(956004)(66556008)(6636002)(66476007)(4326008)(7416002)(316002)(81166006)(8676002)(81156014)(52116002)(7696005)(6666004)(5660300002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1632;H:SN6PR2101MB0927.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
 Received-SPF: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 31j413vFbttxrXeHZSZIwLS1zTJ8CMRqWeIebYMJqpg6SLmIfBf8yeYGZLWhwMmsuDcvp/6s/LLcbewpXAjRKBi+jBwRSzYefq4clJuLqED1QeNTutU1vukfJTF5W0+cEgI4TNKVHAowxkNqfIzdxzuXGjYuBK1DhqlonSGCuuZo8DB/FMd59YS1FXCzI85sptREoS1QIktV6u2YGo6zjTDulBr54WemnexlW1nAyY2aql71QIhW0Vx9UV9IE1yZQbpcpgJO1xwVtKoduh6yySziLkp80xZXNZSrWiCHgUBv+D+jNRCEKehrzDrvZmGpAcqfCHKiI8M+s5myw4rz1okg/xp620zT9uu1EDZ9po5x1mFpHDALmriHa1XlOJW42jlw38CqXlDT8fByr43Z9KdJqBMgAgmp/1nb7TQO0cFqvDYd40lyiwtiWLp6q1rX1WIkafjGfPblNANhg+SLeBhJv2SMLh16sQ9idVeI14RFxHvbfJXuAHCMe8mpD+Os
-X-MS-Exchange-AntiSpam-MessageData: FX+ozvb70ObrmKn/ItO4NYPeBv3suvNKjQ/7l/ZmusXQr4evaw9BqNfhkxn7hEaEVNweW2cFAbyUcCACCtUzS2cC9TOOVqWYPlzY8SpPaqyoNBP7Y8uHVbh78JW2BLZjmLMqFAGZHHuuXBr+cj9CHw==
+X-Microsoft-Antispam-Message-Info: xJTg6sD5zPlTVyE446APU6nwIRyZQF9KoJPCDN60PmHqCjj6OdxpIHhoerG0bvkItNUfMkn3SoT6JR0D8L2BmLNwHJetq7E+lMjPXk62wPHdrOtkogyuNenslbOOTb5Js5GHh9yb0AtTMPTeVPcTlOPQOWFJQZxY1EsjgPWrHlJIf+FBC0GfeOlD0jPBWZhfksa6hnutnRFChWpBRr2cROosu5o/vx9dHbysW2V6z8ooUbIbOo7RzHuEquew0xe0E/9l4AY2+S1+a73yaEY/hlNMEbM7V7blN99c4QLLRD4cnFCmCucvin0ufBUEh8prlUP78KKgqE+oh14j61JLegQVW6m1I5P92BL6qcHSDYiNZQFVLbvmSv2WfF5pYTL41PNWnJfAODDXF/S+tlIeHACvsOT+32fiTtDsYRSQenNzjUQBVA3TFtjMdhuxzIag9rj0yc9qjDUo9gJwndR4+UOPzhWqaQxA+Cfmv6IKVtwodj344zCa+QK8ZSaRlD1U
+X-MS-Exchange-AntiSpam-MessageData: CKq4bdrQuYVxw3um1J8bYVSNJ7VkvkENgp/rfN/B0ufJArfh4aYIy1U5To3A06RM5f/lFR2xqsgZgOd/sVkVn+g3xUGLRFrg1V7tzY5thAHV/pfQBjasaA1Wl5gKFNYWKN4ZfwGSJjDeMccV/aQzNg==
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5bc55ea7-d86c-44ea-e03d-08d7c82d6b5d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2020 15:36:09.8531
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86ef4915-8e75-4bbf-dcdb-08d7c82d6999
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2020 15:36:06.8578
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hmwZBAw1Otpve2dD2AqtbuvFxa4QxNWeIjbFQ5ZG4EJRtmz/JkIhZ9QZBV0gZaV60BKagd9r/dGxaYXCoZEUtw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5C0DXU9F/QfEdL2v8CKLs1UHzUYhWNqkJtrpzXgun5cAi4L32noayJ6xW3V78QOt/jxsAiIZ9/SvuW6+UazfJg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1632
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add functions to set up and remove kexec and panic
-handlers, and to inform Hyper-V about a guest panic.
-These functions are called from architecture independent
-code in the VMbus driver.
+Add ARM64-specific code to allocate memory with HV_HYP_PAGE_SIZE
+size and alignment. These are for use when pages need to be shared
+with Hyper-V. Separate functions are needed as the page size used
+by Hyper-V may not be the same as the guest page size.
 
 This code is built only when CONFIG_HYPERV is enabled.
 
 Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 ---
- arch/arm64/hyperv/hv_core.c  | 61 ++++++++++++++++++++++++++++++++++++++++++++
- arch/arm64/hyperv/mshyperv.c | 26 +++++++++++++++++++
- 2 files changed, 87 insertions(+)
+ arch/arm64/hyperv/hv_core.c    | 34 ++++++++++++++++++++++++++++++++++
+ include/asm-generic/mshyperv.h |  5 +++++
+ 2 files changed, 39 insertions(+)
 
 diff --git a/arch/arm64/hyperv/hv_core.c b/arch/arm64/hyperv/hv_core.c
-index 4aa6b8f..8d6de9f 100644
+index 272c348..4aa6b8f 100644
 --- a/arch/arm64/hyperv/hv_core.c
 +++ b/arch/arm64/hyperv/hv_core.c
-@@ -199,3 +199,64 @@ void hv_get_vpreg_128(u32 msr, struct hv_get_vp_register_output *res)
- 	kfree(output);
- }
- EXPORT_SYMBOL_GPL(hv_get_vpreg_128);
+@@ -17,12 +17,46 @@
+ #include <linux/slab.h>
+ #include <linux/hyperv.h>
+ #include <linux/arm-smccc.h>
++#include <linux/string.h>
+ #include <asm-generic/bug.h>
+ #include <asm/hyperv-tlfs.h>
+ #include <asm/mshyperv.h>
+ 
+ 
+ /*
++ * Functions for allocating and freeing memory with size and
++ * alignment HV_HYP_PAGE_SIZE. These functions are needed because
++ * the guest page size may not be the same as the Hyper-V page
++ * size. We depend upon kmalloc() aligning power-of-two size
++ * allocations to the allocation size boundary, so that the
++ * allocated memory appears to Hyper-V as a page of the size
++ * it expects.
++ *
++ * These functions are used by arm64 specific code as well as
++ * arch independent Hyper-V drivers.
++ */
 +
-+void hyperv_report_panic(struct pt_regs *regs, long err)
++void *hv_alloc_hyperv_page(void)
 +{
-+	static bool panic_reported;
-+	u64 guest_id;
-+
-+	/*
-+	 * We prefer to report panic on 'die' chain as we have proper
-+	 * registers to report, but if we miss it (e.g. on BUG()) we need
-+	 * to report it on 'panic'.
-+	 */
-+	if (panic_reported)
-+		return;
-+	panic_reported = true;
-+
-+	guest_id = hv_get_vpreg(HV_REGISTER_GUEST_OSID);
-+
-+	/*
-+	 * Hyper-V provides the ability to store only 5 values.
-+	 * Pick the passed in error value, the guest_id, and the PC.
-+	 * The first two general registers are added arbitrarily.
-+	 */
-+	hv_set_vpreg(HV_REGISTER_CRASH_P0, err);
-+	hv_set_vpreg(HV_REGISTER_CRASH_P1, guest_id);
-+	hv_set_vpreg(HV_REGISTER_CRASH_P2, regs->pc);
-+	hv_set_vpreg(HV_REGISTER_CRASH_P3, regs->regs[0]);
-+	hv_set_vpreg(HV_REGISTER_CRASH_P4, regs->regs[1]);
-+
-+	/*
-+	 * Let Hyper-V know there is crash data available
-+	 */
-+	hv_set_vpreg(HV_REGISTER_CRASH_CTL, HV_CRASH_CTL_CRASH_NOTIFY);
++	BUILD_BUG_ON(PAGE_SIZE <  HV_HYP_PAGE_SIZE);
++	return kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
 +}
-+EXPORT_SYMBOL_GPL(hyperv_report_panic);
++EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
++
++void *hv_alloc_hyperv_zeroed_page(void)
++{
++	return kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
++}
++EXPORT_SYMBOL_GPL(hv_alloc_hyperv_zeroed_page);
++
++void hv_free_hyperv_page(unsigned long addr)
++{
++	kfree((void *)addr);
++}
++EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
++
 +
 +/*
-+ * hyperv_report_panic_msg - report panic message to Hyper-V
-+ * @pa: physical address of the panic page containing the message
-+ * @size: size of the message in the page
-+ */
-+void hyperv_report_panic_msg(phys_addr_t pa, size_t size)
-+{
-+	/*
-+	 * P3 to contain the physical address of the panic page & P4 to
-+	 * contain the size of the panic data in that page. Rest of the
-+	 * registers are no-op when the NOTIFY_MSG flag is set.
-+	 */
-+	hv_set_vpreg(HV_REGISTER_CRASH_P0, 0);
-+	hv_set_vpreg(HV_REGISTER_CRASH_P1, 0);
-+	hv_set_vpreg(HV_REGISTER_CRASH_P2, 0);
-+	hv_set_vpreg(HV_REGISTER_CRASH_P3, pa);
-+	hv_set_vpreg(HV_REGISTER_CRASH_P4, size);
-+
-+	/*
-+	 * Let Hyper-V know there is crash data available along with
-+	 * the panic message.
-+	 */
-+	hv_set_vpreg(HV_REGISTER_CRASH_CTL,
-+	       (HV_CRASH_CTL_CRASH_NOTIFY | HV_CRASH_CTL_CRASH_NOTIFY_MSG));
-+}
-+EXPORT_SYMBOL_GPL(hyperv_report_panic_msg);
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index ae6ece6..c58940d 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -23,6 +23,8 @@
+  * hv_do_hypercall- Invoke the specified hypercall
+  */
+ u64 hv_do_hypercall(u64 control, void *input, void *output)
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index b3f1082..1a7c4c5 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -99,6 +99,11 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
+ void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
+ void hv_remove_crash_handler(void);
  
- static void (*vmbus_handler)(void);
- static void (*hv_stimer0_handler)(void);
-+static void (*hv_kexec_handler)(void);
-+static void (*hv_crash_handler)(struct pt_regs *regs);
- 
- static int vmbus_irq;
- static long __percpu *vmbus_evt;
-@@ -137,3 +139,27 @@ void hv_remove_stimer0_irq(int irq)
- 	}
- }
- EXPORT_SYMBOL_GPL(hv_remove_stimer0_irq);
++void *hv_alloc_hyperv_page(void);
++void *hv_alloc_hyperv_zeroed_page(void);
++void hv_free_hyperv_page(unsigned long addr);
 +
-+void hv_setup_kexec_handler(void (*handler)(void))
-+{
-+	hv_kexec_handler = handler;
-+}
-+EXPORT_SYMBOL_GPL(hv_setup_kexec_handler);
 +
-+void hv_remove_kexec_handler(void)
-+{
-+	hv_kexec_handler = NULL;
-+}
-+EXPORT_SYMBOL_GPL(hv_remove_kexec_handler);
-+
-+void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs))
-+{
-+	hv_crash_handler = handler;
-+}
-+EXPORT_SYMBOL_GPL(hv_setup_crash_handler);
-+
-+void hv_remove_crash_handler(void)
-+{
-+	hv_crash_handler = NULL;
-+}
-+EXPORT_SYMBOL_GPL(hv_remove_crash_handler);
+ #if IS_ENABLED(CONFIG_HYPERV)
+ /*
+  * Hypervisor's notion of virtual processor ID is different from
 -- 
 1.8.3.1
 
