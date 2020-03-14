@@ -6,124 +6,148 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B95EC0044D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F38C0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6C920578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A978B20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 02:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584240547;
-	bh=gnI3uxG2MjcP5dcmf2YwXbK59YkgPYCt3bzD1i2Vj6Y=;
+	s=default; t=1584240559;
+	bh=fKa0Mj8D7EWiXfNH1vC9ZFdeWq+GvZo2dX8M3sXOIWQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mkon82v38QVzSq883EI3AqaAy2VxSYxxUYYa87h0HI52o11UVfiZh2RoaT68WaK5E
-	 eOLqQVMc12GJHhvyTy2dgYbupXlx7hP74hWAMlLZrcA0/3SVWAzE5wTfjzj2+PkDi1
-	 FzO9u/O/LxG2a0sBDcADU4RfnLEa2xoHRm7C9mAg=
+	b=ss4tvG3uaJIdFVP7v3ZK34Ji7+RAHM+TvqrUg229hb6nsB2FMm3Scz0E8HAtsRc2k
+	 WIjBzKCxjx+4z07FSwZgsw/w1itggAHp/AafP3H7hqo0klbgMFc2m7ieiFhVvFJIf/
+	 Z9VnO93elyXCUuEk8mSn1v9PoTMAxhEp/Nhw7Blk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbgCOCtG (ORCPT
+        id S1727628AbgCOCtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:49:06 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37333 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgCOCtF (ORCPT
+        Sat, 14 Mar 2020 22:49:18 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40612 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgCOCtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:49:05 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b23so17427398edx.4
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 19:49:02 -0700 (PDT)
+        Sat, 14 Mar 2020 22:49:18 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 19so14785308ljj.7
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 19:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YPgN4l93OeEWMDSYtyHK2xEec1H49aBedq26BrSDmkA=;
-        b=eAS3kn7vfdKKx02/krekDoFV619IUUiDr+1OClPUae5Ij8mqsEA+MjuC5/3521kbs7
-         dxE5vpUPD0EmtOE4s6uxCLkrZDRvo36YV0uzX/AMD4xWRqc6VgorbY3sI9ARwyAXHRcr
-         7ixd9w7pQfxwxGBFVI6FnfuMgRvvfwKxQgyx4=
+        bh=gNAFSM2e1+znwd/oK9GqPEFWnZPCXJOYSC3o4R7VRNY=;
+        b=XmKJHhBn38vYPYW5Qw9NYbOmHlLhlGbMUnho47mHIiguKzuelMDN6CDf+xfm0al7z0
+         mhcACnrAah8QVEpIZpnR9mCR0ilV+pTCciPD61XwhA2JptKErlcb+6K96hJ8XT5oymeB
+         WnZpWU1cbZc0qURpjpCma+Gj+Ll56cjVy3Bmo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YPgN4l93OeEWMDSYtyHK2xEec1H49aBedq26BrSDmkA=;
-        b=K88v4iC9+VZGh13qYPs4+gsUtXREnl9muHdXtVX4mYKQfrJYksxN11B4z7GPmnxEuq
-         IdEZd00Zqgtzt1UREG2ZlFPmE2PNR5FtbrfbwcFSuztAnNtyiFGatVi0VViY0aJjzTpx
-         Yt6PWcDca6txfUrj+Eglhfu1vyPn5vS/WnJG8HOhvAgio1H5SaXAUcKo0msf0rHW5K9/
-         69dycFsX8Dy58O2+0+69CNRWgnnK/N75+V6FtmS3KzOK68SwtxxMDXs9o52x7qDsTDPU
-         0AQDHrPaosTDNNvwINSHdGnOk0BouG4o/xxtSygeDpWRqREkIj7txeDHSWd/2Nc+XFgf
-         7Kyg==
-X-Gm-Message-State: ANhLgQ0ynfglMLID2/akBfAsVQ0pDIRQkCNosqqj2PeL3vp0Vc2dJmry
-        RjhJ716dp8vtP2VKVLxnv5xirSaplaU=
-X-Google-Smtp-Source: ADFU+vtD+aoGapK2USi68QzXp6dP2USYVZwF0NIn0sNn9e5wumkzLIbgjrdYfVyPVczxsHAluWigIQ==
-X-Received: by 2002:ac2:53b8:: with SMTP id j24mr11718626lfh.79.1584200426093;
-        Sat, 14 Mar 2020 08:40:26 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id h10sm3451859ljg.38.2020.03.14.08.40.24
+        bh=gNAFSM2e1+znwd/oK9GqPEFWnZPCXJOYSC3o4R7VRNY=;
+        b=lVexekRwaIg8W3QqoAtOZv/cvZkbHrVsIgYKbZzN1HD3w7ICnZ6QTojYqbTN4QPYHd
+         aBb0O7d22VHJevxru4Cc6RbnNmT1FpJmLA36h3wLTVNPiKtkUIKW8fZ5MbUOVYffNpa+
+         W8gWVTruVtCmEOpiM4x4APeXPHquOJrYTvYWz9kjxliJnK8mxjFRry7lxRl3qcfYglK7
+         gY6Pi/7VmECyILdYyYxoZyqsopmK7/3T+8gG3mx40zT+yJIHH5CKfRpP+IU2EOGikh8b
+         w4JMUgV/1KsFx7+fvo9xXVDg6yeI3LyA/fRf//cCzWWOzj6kSF5jyLkKwYPYIDIvnUz5
+         StUQ==
+X-Gm-Message-State: ANhLgQ0w5x8fI0MLoCMhEWC9ys9eFQcSsM9BD3vbABxSWMdRpWC97Wgq
+        IzkYNsYtsctqGizJtnJ9MeiuNJ0JHLg=
+X-Google-Smtp-Source: ADFU+vsDariyxD3KYgVI0S/8ZaHdPvu0tDalrmUkEuDejy3P0lVXJJ9Rd0/9rAbtq6m/0oWHU/UbUg==
+X-Received: by 2002:a05:6512:31d3:: with SMTP id j19mr11623730lfe.178.1584201502855;
+        Sat, 14 Mar 2020 08:58:22 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id g25sm31198182ljn.107.2020.03.14.08.58.21
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Mar 2020 08:40:25 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id u12so13883656ljo.2
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 08:40:24 -0700 (PDT)
-X-Received: by 2002:a05:651c:555:: with SMTP id q21mr11396356ljp.241.1584200424436;
- Sat, 14 Mar 2020 08:40:24 -0700 (PDT)
+        Sat, 14 Mar 2020 08:58:21 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id f13so13912897ljp.0
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 08:58:21 -0700 (PDT)
+X-Received: by 2002:a2e:6819:: with SMTP id c25mr11582038lja.16.1584201500891;
+ Sat, 14 Mar 2020 08:58:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200313174701.148376-1-bigeasy@linutronix.de> <20200313174701.148376-6-bigeasy@linutronix.de>
-In-Reply-To: <20200313174701.148376-6-bigeasy@linutronix.de>
+References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+ <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+ <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+ <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
+ <87blp5urwq.fsf@notabene.neil.brown.name> <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+ <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com> <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
+ <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
+ <878sk7vs8q.fsf@notabene.neil.brown.name> <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+ <875zfbvrbm.fsf@notabene.neil.brown.name> <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+ <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
+ <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
+ <87v9nattul.fsf@notabene.neil.brown.name> <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
+ <87o8t2tc9s.fsf@notabene.neil.brown.name> <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
+ <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org> <877dznu0pk.fsf@notabene.neil.brown.name>
+In-Reply-To: <877dznu0pk.fsf@notabene.neil.brown.name>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 14 Mar 2020 08:40:08 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgO1Fn88+1K9V7=mfBNOttkGkFakGxp_QEsokZU2ywUvg@mail.gmail.com>
-Message-ID: <CAHk-=wgO1Fn88+1K9V7=mfBNOttkGkFakGxp_QEsokZU2ywUvg@mail.gmail.com>
-Subject: Re: [PATCH 5/9] completion: Use simple wait queues
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+Date:   Sat, 14 Mar 2020 08:58:04 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
+Message-ID: <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jeff Layton <jlayton@kernel.org>, yangerkun <yangerkun@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 10:47 AM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
+On Fri, Mar 13, 2020 at 7:31 PM NeilBrown <neilb@suse.de> wrote:
 >
-> Replace the wait queue in the completion with a simple wait queue (swait),
+> The idea of list_del_init_release() and list_empty_acquire() is growing
+> on me though.  See below.
 
-This is almost certainly completely and utterly wrong.
+This does look like a promising approach.
 
-Every time somebody uses those horrible swait queues, the end result is buggy.
+However:
 
-Don't do it.
+> +       if (waiter->fl_blocker == NULL &&
+> +           list_empty(&waiter->fl_blocked_requests) &&
+> +           list_empty_acquire(&waiter->fl_blocked_member))
+> +               return status;
 
-And most definitely, don't do it like this, which seems to be entirely
-mindlessly just randomly changing things by some brute force in
-multiple places.
+This does not seem sensible to me.
 
-The swait semantics are completely different from the normal
-wait-queue semantics, and generally not in good ways.
+The thing is, the whole point about "acquire" semantics is that it
+should happen _first_ - because a load-with-acquire only orders things
+_after_ it.
 
-There's a *REASON* why the comment at the top of <linux/swait.h> starts with
+So testing some other non-locked state before testing the load-acquire
+state makes little sense: it means that the other tests you do are
+fundamentally unordered and nonsensical in an unlocked model.
 
- * BROKEN wait-queues.
- *
- * These "simple" wait-queues are broken garbage, and should never be
- * used. The comments below claim that they are "similar" to regular
- * wait-queues, but the semantics are actually completely different, and
- * every single user we have ever had has been buggy (or pointless).
+So _if_ those other tests matter (do they?), then they should be after
+the acquire test (because they test things that on the writer side are
+set before the "store-release"). Otherwise you're testing random
+state.
 
-and before you do a conversion, you need to spend a _lot_ of time
-thinking about why that is the case.
+And if they don't matter, then they shouldn't exist at all.
 
-And _after_ you do the conversion, you damn well need to explain why
-it's safe. Not just state that it's a good idea.
+IOW, if you depend on ordering, then the _only_ ordering that exists is:
 
-For example, this patch just randomly changes wait events to the swait
-event _exclusive_ waits. With not a single explanation of why that
-would be ok.
+ - writer side: writes done _before_ the smp_store_release() are visible
 
-I want an explanation for EVERY SINGLE CASE. Because people have done
-this kind of conversion before, and it's been buggy garbage before. I
-want to see that people actually thought about what the semantic
-differences were, and _documented_ that thinking process.
+ - to the reader side done _after_ the smp_load_acquire()
 
-            Linus
+and absolutely no other ordering exists or makes sense to test for.
+
+That limited ordering guarantee is why a store-release -> load-acquire
+is fundamentally cheaper than any other serialization.
+
+So the optimistic "I don't need to do anything" case should start ouf with
+
+        if (list_empty_acquire(&waiter->fl_blocked_member)) {
+
+and go from there. Does it actually need to do anything else at all?
+But if it does need to check the other fields, they should be checked
+after that acquire.
+
+Also, it worries me that the comment talks about "if fl_blocker is
+NULL". But it realy now is that fl_blocked_member list being empty
+that is the real serialization test, adn that's the one that the
+comment should primarily talk about.
+
+                Linus
