@@ -2,222 +2,66 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22841C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5DAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011EE205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A975205ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgCOOKP convert rfc822-to-8bit (ORCPT
+        id S1728230AbgCOOLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 10:10:15 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:40674 "EHLO gloria.sntech.de"
+        Sun, 15 Mar 2020 10:11:39 -0400
+Received: from gentwo.org ([3.19.106.255]:43644 "EHLO gentwo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgCOOKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 10:10:14 -0400
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jDTxm-0005ZQ-HP; Sun, 15 Mar 2020 15:09:58 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Johan Jonker <jbx6244@gmail.com>, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] dt-bindings: iio: adc: convert rockchip saradc bindings to yaml
-Date:   Sun, 15 Mar 2020 15:09:56 +0100
-Message-ID: <1892398.6xOoJH07Ba@diego>
-In-Reply-To: <20200315112223.07dd863b@archlinux>
-References: <20200313132926.10543-1-jbx6244@gmail.com> <20200315112223.07dd863b@archlinux>
+        id S1727778AbgCOOLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 10:11:39 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 8C64E3F7A9; Sun, 15 Mar 2020 14:11:38 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 8B71A3F6EC;
+        Sun, 15 Mar 2020 14:11:38 +0000 (UTC)
+Date:   Sun, 15 Mar 2020 14:11:38 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Kees Cook <keescook@chromium.org>
+cc:     David Laight <David.Laight@ACULAB.COM>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Vitaly Nikolenko <vnik@duasynt.com>,
+        Silvio Cesare <silvio.cesare@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] slub: Relocate freelist pointer to middle of object
+In-Reply-To: <202003111039.24B8A0B@keescook>
+Message-ID: <alpine.DEB.2.21.2003151410220.14449@www.lameter.com>
+References: <202003051624.AAAC9AECC@keescook> <alpine.DEB.2.21.2003081919290.14266@www.lameter.com> <6fbf67b5936a44feaf9ad5b58d39082b@AcuMS.aculab.com> <202003111039.24B8A0B@keescook>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+On Wed, 11 Mar 2020, Kees Cook wrote:
 
-Am Sonntag, 15. März 2020, 12:22:23 CET schrieb Jonathan Cameron:
-> On Fri, 13 Mar 2020 14:29:24 +0100
-> Johan Jonker <jbx6244@gmail.com> wrote:
-> 
-> > Current dts files with 'saradc' nodes are manually verified.
-> > In order to automate this process rockchip-saradc.txt
-> > has to be converted to yaml.
-> > 
-> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> 
-> Hi Johan,
-> 
-> A question inline which may just be my lack of yaml knowledge
-> showing itself!
-> 
-> Jonathan
-> 
-> > ---
-> >  .../bindings/iio/adc/rockchip-saradc.txt           | 37 ----------
-> >  .../bindings/iio/adc/rockchip-saradc.yaml          | 79 ++++++++++++++++++++++
-> >  2 files changed, 79 insertions(+), 37 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> > deleted file mode 100644
-> > index c2c50b598..000000000
-> > --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> > +++ /dev/null
-> > @@ -1,37 +0,0 @@
-> > -Rockchip Successive Approximation Register (SAR) A/D Converter bindings
-> > -
-> > -Required properties:
-> > -- compatible: should be "rockchip,<name>-saradc" or "rockchip,rk3066-tsadc"
-> > -   - "rockchip,saradc": for rk3188, rk3288
-> > -   - "rockchip,rk3066-tsadc": for rk3036
-> > -   - "rockchip,rk3328-saradc", "rockchip,rk3399-saradc": for rk3328
-> > -   - "rockchip,rk3399-saradc": for rk3399
-> > -   - "rockchip,rv1108-saradc", "rockchip,rk3399-saradc": for rv1108
-> > -
-> > -- reg: physical base address of the controller and length of memory mapped
-> > -       region.
-> > -- interrupts: The interrupt number to the cpu. The interrupt specifier format
-> > -              depends on the interrupt controller.
-> > -- clocks: Must contain an entry for each entry in clock-names.
-> > -- clock-names: Shall be "saradc" for the converter-clock, and "apb_pclk" for
-> > -               the peripheral clock.
-> > -- vref-supply: The regulator supply ADC reference voltage.
-> > -- #io-channel-cells: Should be 1, see ../iio-bindings.txt
-> > -
-> > -Optional properties:
-> > -- resets: Must contain an entry for each entry in reset-names if need support
-> > -	  this option. See ../reset/reset.txt for details.
-> > -- reset-names: Must include the name "saradc-apb".
-> > -
-> > -Example:
-> > -	saradc: saradc@2006c000 {
-> > -		compatible = "rockchip,saradc";
-> > -		reg = <0x2006c000 0x100>;
-> > -		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> > -		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-> > -		clock-names = "saradc", "apb_pclk";
-> > -		resets = <&cru SRST_SARADC>;
-> > -		reset-names = "saradc-apb";
-> > -		#io-channel-cells = <1>;
-> > -		vref-supply = <&vcc18>;
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-> > new file mode 100644
-> > index 000000000..2908788b3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-> > @@ -0,0 +1,79 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/adc/rockchip-saradc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Rockchip Successive Approximation Register (SAR) A/D Converter
-> > +
-> > +maintainers:
-> > +  - Heiko Stuebner <heiko@sntech.de>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - const: rockchip,saradc
-> > +      - const: rockchip,rk3066-tsadc
-> > +      - const: rockchip,rk3399-saradc
-> > +      - items:
-> > +          - enum:
-> > +            - rockchip,rk3328-saradc
-> > +            - rockchip,rv1108-saradc
-> > +          - const: rockchip,rk3399-saradc
-> 
-> My yaml knowledge isn't great.  Why do we have this nested
-> structure rather than a straight forward list?
+> > Sounds good. You could even randomize the position to avoid attacks on via
+> > the freelist pointer.
+>
+> That's a good point. "offset" is just calculated once, and for many
+> slabs, the available space is quite large. I wonder what the best
 
-That should be the
-- one of rk3328-saradc / rv1108-saradc
-- plus always rk3399-saradc
+Correct.
 
-i.e. both rk3328 and rv1108 are compatible with the rk3399-saradc variant
-(at least if no flaws get found at some point) so have the double compatible
+> practice might be for how far from the edge to stay. Hmmm. Maybe simply
+> carve it into thirds, and randomize the offset within the middle third?
 
-compatible = "rockchip,rk3328-saradc", "rockchip,rk3399-saradc"
-compatible = "rockchip,rv1108-saradc", "rockchip,rk3399-saradc"
-
-
-Heiko
-
-
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: converter clock
-> > +      - description: peripheral clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: saradc
-> > +      - const: apb_pclk
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  reset-names:
-> > +    const: saradc-apb
-> > +
-> > +  vref-supply:
-> > +    description:
-> > +      The regulator supply for the ADC reference voltage.
-> > +
-> > +  "#io-channel-cells":
-> > +    const: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - vref-supply
-> > +  - "#io-channel-cells"
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/rk3288-cru.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    saradc: saradc@2006c000 {
-> > +      compatible = "rockchip,saradc";
-> > +      reg = <0x2006c000 0x100>;
-> > +      interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> > +      clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-> > +      clock-names = "saradc", "apb_pclk";
-> > +      resets = <&cru SRST_SARADC>;
-> > +      reset-names = "saradc-apb";
-> > +      vref-supply = <&vcc18>;
-> > +      #io-channel-cells = <1>;
-> > +    };
-> 
-> 
-
-
-
-
+Take off the first and last word and randomize within the space that is
+left?
