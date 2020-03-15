@@ -2,176 +2,92 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E97C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C50DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 13:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2EC206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B8E2072A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 13:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bPQ9s8Qp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OwCicZqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgCOM54 (ORCPT
+        id S1728579AbgCONBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 08:57:56 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47258 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728521AbgCOM54 (ORCPT
+        Sun, 15 Mar 2020 09:01:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56657 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728541AbgCONBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 08:57:56 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 60B0B2D6;
-        Sun, 15 Mar 2020 13:57:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584277074;
-        bh=E2pgR3NfJCMiqQdqlWm+CZBOWjacnfLUtHs9QxoDukM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bPQ9s8QpqmDcThQ2+8ALydiMBkt5HBz2jYJPafy8PEZus24M69Lr2NwdgzpwBnyle
-         uJb6aBbHb/vkaxNP9++fPgn8cTQGVzNpZ9DaT+J2UOZa9SEJ+2JyMf1CHsM/MeSIWg
-         T6XI2Ny4US+uh8NLgpsgLt1RXGp02i8jy1uAx1bo=
-Date:   Sun, 15 Mar 2020 14:57:50 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Niklas <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 2/2] media: rcar-csi2: Let the driver handle fwnode
- matching using match_custom callback
-Message-ID: <20200315125750.GD4732@pendragon.ideasonboard.com>
-References: <20200315102724.26850-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200315102724.26850-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200315102956.GA4732@pendragon.ideasonboard.com>
- <CA+V-a8sYT+okN_WKY-FEcgD7Znyvh3JeMyuZgBxwPLiseiP_1A@mail.gmail.com>
+        Sun, 15 Mar 2020 09:01:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584277296;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Vu5zsudYYqS5yEggDJZCdE3LfHp+URDrrnpUuluAkU=;
+        b=OwCicZqnkgWJub2BpzAjUfu9nwy4meCOIpYYO49NK/Eu3UH8snxdMDnMz+PiXT2Hojor4C
+        17rTYdH3fzTn5Cvj0f2l1nMOL0LWKmyC5e4pTVoamL+HOOosv1eq5SfKVIke1t5oUE44ti
+        tF6QB+jOV6JiMCzCaPAi36ihsIBbPJ8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-VhV55TBoPV-qeirjvcTtSg-1; Sun, 15 Mar 2020 09:01:34 -0400
+X-MC-Unique: VhV55TBoPV-qeirjvcTtSg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EAFED13EA;
+        Sun, 15 Mar 2020 13:01:32 +0000 (UTC)
+Received: from localhost (ovpn-12-79.pek2.redhat.com [10.72.12.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D4E792718C;
+        Sun, 15 Mar 2020 13:01:29 +0000 (UTC)
+Date:   Sun, 15 Mar 2020 21:01:27 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, willy@infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
+        richard.weiyang@gmail.com
+Subject: Re: [PATCH v3] mm/sparse.c: Use kvmalloc_node/kvfree to alloc/free
+ memmap for the classic sparse
+Message-ID: <20200315130127.GB3486@MiWiFi-R3L-srv>
+References: <20200312130822.6589-1-bhe@redhat.com>
+ <20200312141749.GL27711@MiWiFi-R3L-srv>
+ <20200313145619.GD21007@dhcp22.suse.cz>
+ <20200314005334.GO27711@MiWiFi-R3L-srv>
+ <20200314125638.GC10912@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+V-a8sYT+okN_WKY-FEcgD7Znyvh3JeMyuZgBxwPLiseiP_1A@mail.gmail.com>
+In-Reply-To: <20200314125638.GC10912@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
-
-On Sun, Mar 15, 2020 at 12:10:14PM +0000, Lad, Prabhakar wrote:
-> On Sun, Mar 15, 2020 at 10:30 AM Laurent Pinchart wrote:
-> > On Sun, Mar 15, 2020 at 10:27:24AM +0000, Lad Prabhakar wrote:
-> > > The rcar-csi2 driver uses the v4l2-async framework to do endpoint matching
-> > > instead of node matching. This is needed as it needs to work with the
-> > > adv748x driver which register it self in v4l2-async using endpoints
-> > > instead of nodes. The reason for this is that from a single DT node it
-> > > creates multiple subdevices, one for each endpoint.
-> > >
-> > > But when using subdevs which register itself in v4l2-async using nodes,
-> > > the rcar-csi2 driver failed to find the matching endpoint because the
-> > > match.fwnode was pointing to remote endpoint instead of remote parent
-> > > port.
-> > >
-> > > This commit adds support in rcar-csi2 driver to handle both the cases
-> > > where subdev registers in v4l2-async using endpoints/nodes, by using
-> > > match_type as V4L2_ASYNC_MATCH_CUSTOM and implementing the match()
-> > > callback to compare the fwnode of either remote/parent.
-> >
-> > This is not the way to go. The v4l2-async framework needs to be fixed
-> > instead, so that fwnode match will do the right thing automatically
-> > regardless of whether the node is a device node or and endpoint node.
->
-> OK, so moving forward should the v4l2-async do strictly endpoint
-> matching only or both nodes/endpoints. fwnode in all the bridge
-> drivers be replaced to remote endpoints ?
-
-Long term I think everything should use endpoint matching, but to get
-there we shouldn't transition all drivers in one go. I've submitted a
-patch to v4l2-async that I believe will fix your problem and allow for a
-smooth transition. Could you give it a try ?
-
-> Looking at the adv7604 its registered as node to v4l2-async which can
-> have upto 3 endpoints, adv748x is the single driver which registers
-> itself as endpoint to v4l2-async, and rest of the other subdevices
-> have single endpoint and are registered as node to v4l2-async. How
-> would you suggest to handle these cases.
+On 03/14/20 at 01:56pm, Michal Hocko wrote:
+> On Sat 14-03-20 08:53:34, Baoquan He wrote:
+> > On 03/13/20 at 03:56pm, Michal Hocko wrote:
+> > > On Thu 12-03-20 22:17:49, Baoquan He wrote:
+> > > > This change makes populate_section_memmap()/depopulate_section_memmap
+> > > > much simpler.
+> > > 
+> > > Not only and you should make it more explicit. It also tries to allocate
+> > > memmaps from the target numa node so this is a functional change. I
+> > > would prefer to have that in a separate patch in case we hit some weird
+> > > NUMA setups which would choke on memory less nodes and similar horrors.
+> > 
+> > Yes, splitting sounds more reasonable, I would love to do that. One
+> > question is I noticed Andrew had picked this into -mm tree, if I post a
+> > new patchset including these two small patches, whether it's convenient
+> > to drop the old one and get these two merged.
 > 
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  drivers/media/platform/rcar-vin/rcar-csi2.c | 46 +++++++++++++++++++--
-> > >  1 file changed, 43 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > index faa9fb23a2e9..1bbf05e9f025 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > @@ -808,6 +808,46 @@ static int rcsi2_parse_v4l2(struct rcar_csi2 *priv,
-> > >       return 0;
-> > >  }
-> > >
-> > > +static bool rcsi2_asd_match(struct v4l2_subdev *sd,
-> > > +                         struct v4l2_async_subdev *asd)
-> > > +{
-> > > +     struct rcar_csi2 *priv = (struct rcar_csi2 *)asd->match.custom.priv;
-> > > +     struct fwnode_handle *remote_endpoint;
-> > > +     struct fwnode_handle *subdev_endpoint;
-> > > +     struct device_node *np;
-> > > +     bool matched = false;
-> > > +
-> > > +     np = of_graph_get_endpoint_by_regs(priv->dev->of_node, 0, 0);
-> > > +     if (!np) {
-> > > +             dev_err(priv->dev, "Not connected to subdevice\n");
-> > > +             return matched;
-> > > +     }
-> > > +
-> > > +     remote_endpoint =
-> > > +             fwnode_graph_get_remote_endpoint(of_fwnode_handle(np));
-> > > +     if (!remote_endpoint) {
-> > > +             dev_err(priv->dev, "Failed to get remote endpoint\n");
-> > > +             of_node_put(np);
-> > > +             return matched;
-> > > +     }
-> > > +     of_node_put(np);
-> > > +
-> > > +     if (sd->fwnode != dev_fwnode(sd->dev)) {
-> > > +             if (remote_endpoint == sd->fwnode)
-> > > +                     matched = true;
-> > > +     } else {
-> > > +             subdev_endpoint =
-> > > +                   fwnode_graph_get_next_endpoint(dev_fwnode(sd->dev), NULL);
-> > > +             if (remote_endpoint == subdev_endpoint)
-> > > +                     matched = true;
-> > > +             fwnode_handle_put(subdev_endpoint);
-> > > +     }
-> > > +
-> > > +     fwnode_handle_put(remote_endpoint);
-> > > +
-> > > +     return matched;
-> > > +}
-> > > +
-> > >  static int rcsi2_parse_dt(struct rcar_csi2 *priv)
-> > >  {
-> > >       struct device_node *ep;
-> > > @@ -833,9 +873,9 @@ static int rcsi2_parse_dt(struct rcar_csi2 *priv)
-> > >               return ret;
-> > >       }
-> > >
-> > > -     priv->asd.match.fwnode =
-> > > -             fwnode_graph_get_remote_endpoint(of_fwnode_handle(ep));
-> > > -     priv->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
-> > > +     priv->asd.match.custom.match = &rcsi2_asd_match;
-> > > +     priv->asd.match.custom.priv = priv;
-> > > +     priv->asd.match_type = V4L2_ASYNC_MATCH_CUSTOM;
-> > >
-> > >       of_node_put(ep);
-> > >
+> Andrew usually just drops the previous version and replaces it by the
+> new one. So just post a new version. Thanks!
 
--- 
-Regards,
+I see, will post a new version, thanks.
 
-Laurent Pinchart
