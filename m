@@ -2,82 +2,77 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA709C18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D93C18E5B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802CE206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0A8206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:38:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="cj9KAAvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgCOScb (ORCPT
+        id S1728682AbgCOSiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 14:32:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:34626 "EHLO foss.arm.com"
+        Sun, 15 Mar 2020 14:38:07 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:48245 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbgCOScb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 14:32:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E967D1FB;
-        Sun, 15 Mar 2020 11:32:29 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BEC763F67D;
-        Sun, 15 Mar 2020 11:32:26 -0700 (PDT)
-Date:   Sun, 15 Mar 2020 18:32:16 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 21/26] arm64: Introduce asm/vdso/arch_timer.h
-Message-ID: <20200315183151.GE32205@mbp>
-References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
- <20200313154345.56760-22-vincenzo.frascino@arm.com>
+        id S1728235AbgCOSiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 14:38:07 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48gSqK13NPzw;
+        Sun, 15 Mar 2020 19:38:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1584297485; bh=wwHl4ckQVVyEhjv3zlUJvCyhzJS+DJkqAAlUhZ0JEtc=;
+        h=Date:From:Subject:To:Cc:From;
+        b=cj9KAAvrmBshazU43V+ZM8S8apAfivsy/u8csZwZC+zil0QzrdOM0Is1uUrNLJL20
+         uGQdsYQJXzqqFk2+IgbzoyvL5/78MmT8akciCiuroTd2lqWrLndMHWRQ4v0BFoPAPJ
+         h8YRR43KkbF8a3jyupMw3Jze0LGHHujdn+RWv3hnJzXW5ajp0qmHn4/vsKB+VKDl2p
+         RWrV3JUnScZGQqZfXM18HjzHRsIsYnlybINU74LuW7TfCWGmw+/XkgpadJgp9Obk7K
+         pqSH1L786H9t7M79SWphah1VjHl3psnesVvQp059VZZHqSBNwpHs8LRII4nmisY2Nb
+         NMDr8O5YgPhrQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 15 Mar 2020 19:38:04 +0100
+Message-Id: <cover.1584296940.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 0/3] clk: at91: support configuring PCKx parent via DT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313154345.56760-22-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 03:43:40PM +0000, Vincenzo Frascino wrote:
-> The vDSO library should only include the necessary headers required for
-> a userspace library (UAPI and a minimal set of kernel headers). To make
-> this possible it is necessary to isolate from the kernel headers the
-> common parts that are strictly necessary to build the library.
-> 
-> Introduce asm/vdso/arch_timer.h to contain all the arm64 specific
-> code. This allows to replace the second isb() in __arch_get_hw_counter()
-> with a fake dependent stack read of the counter which improves the vdso
-> library peformances of ~4.5%. Below the results of vdsotest [1] ran for
-> 100 iterations.
+This series extends AT91 with clock references to PCKx and PLLA/AUDIOPLL.
 
-The subject seems to imply a non-functional change but as you read, it
-gets a lot more complicated. Could you keep the functional change
-separate from the header clean-up, maybe submit it as an independent
-patch? And it shouldn't go in without Will's ack ;).
+First patch simplifies clock table allocation. Next two update the table
+with missing clock pointers and IDs.
+
+Michał Mirosław (3):
+  clk: at91: optimize pmc data allocation
+  clk: at91: allow setting PCKx parent via DT
+  clk: at91: sama5d2: allow setting all PMC clock parents via DT
+
+ drivers/clk/at91/at91sam9260.c   |  7 +++--
+ drivers/clk/at91/at91sam9rl.c    |  6 +++--
+ drivers/clk/at91/at91sam9x5.c    |  6 +++--
+ drivers/clk/at91/pmc.c           | 44 ++++++++++++--------------------
+ drivers/clk/at91/pmc.h           |  8 ++++--
+ drivers/clk/at91/sama5d2.c       | 12 ++++++---
+ drivers/clk/at91/sama5d4.c       |  6 +++--
+ include/dt-bindings/clock/at91.h |  3 +++
+ 8 files changed, 52 insertions(+), 40 deletions(-)
 
 -- 
-Catalin
+2.20.1
+
