@@ -2,143 +2,143 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D33C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321EDC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1D9206B1
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584295164;
-	bh=ooTtotCxj4FN51+o+o5KvI92R+015dWBAK0qfGoPVHQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=DLseC7+alZVtrLMiaKF7fnmc/JTS3Oj+zhKYDFDjLscO+Vw8M9bn9ldjP1+bfQdn9
-	 z5S3DP/zWVf1SgnBZmJLMeSeKaEkmmsm9gl5R+o5qeP5vzXJtGKyzvr1kysYkwuzmr
-	 uA00ryhqo/He95vGR4kXOxpGE6L+MSayV4LmfHfY=
+	by mail.kernel.org (Postfix) with ESMTP id 02FC120722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:03:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ug+Z9F6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgCOR7X (ORCPT
+        id S1729024AbgCOSD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 13:59:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbgCOR7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 13:59:22 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 15 Mar 2020 14:03:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24696 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729001AbgCOSD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 14:03:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584295407;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=95xS5t+H142XA8BZ5Nj0h/jFaSeDCZFMkwS3z1buK24=;
+        b=Ug+Z9F6pNwWQnbsVJnHxRNEfNlyCY7XHsPl42Rz1nGp8SoHm3YMrEWPgE3AXPnr5WRhc0d
+        DASJ/g3siSvAygTYXFB5ou3gtWgx8/XxllaDhGFctF0C5zxBMU4C7bSX7T7fF2A6vMt3fB
+        i5GYORDtQIsznF8xiLbKMMjGxawdbzw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-79-gCc6QIcbPKqCpfSpZoO_7Q-1; Sun, 15 Mar 2020 14:03:24 -0400
+X-MC-Unique: gCc6QIcbPKqCpfSpZoO_7Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4A8B20658;
-        Sun, 15 Mar 2020 17:59:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584295161;
-        bh=ooTtotCxj4FN51+o+o5KvI92R+015dWBAK0qfGoPVHQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=GopWpZgPHmRn4mrjcnQ7gPbZ4szw44CQmgy2sEjgpcaRbaeeMU42Ac8PjZhRfQEIa
-         02A4YCtsL/kgRPzmnP6HAMD0ttXJqWjPDfRSWrrQjsP0MdLDuZOULEp4kkGa0T+1B6
-         bMntSkij3K+OtrzPag5fO9lP43/l/PPeYRS/pfkI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A6F5635226D7; Sun, 15 Mar 2020 10:59:21 -0700 (PDT)
-Date:   Sun, 15 Mar 2020 10:59:21 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        rcu <rcu@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@fb.com>, Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>
-Subject: Re: [PATCH RFC tip/core/rcu 0/16] Prototype RCU usable from idle,
- exception, offline
-Message-ID: <20200315175921.GT3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
- <20200313144145.GA31604@lenoir>
- <20200313154243.GU3199@paulmck-ThinkPad-P72>
- <2062731308.28584.1584294305768.JavaMail.zimbra@efficios.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8E0F477;
+        Sun, 15 Mar 2020 18:03:22 +0000 (UTC)
+Received: from treble (ovpn-120-135.rdu2.redhat.com [10.10.120.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2627560C81;
+        Sun, 15 Mar 2020 18:03:22 +0000 (UTC)
+Date:   Sun, 15 Mar 2020 13:03:20 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [RFC][PATCH 15/16] objtool: Implement noinstr validation
+Message-ID: <20200315180320.cgy2ealklbjlx4g7@treble>
+References: <20200312134107.700205216@infradead.org>
+ <20200312135042.288201372@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2062731308.28584.1584294305768.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200312135042.288201372@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 01:45:05PM -0400, Mathieu Desnoyers wrote:
-> ----- On Mar 13, 2020, at 11:42 AM, paulmck paulmck@kernel.org wrote:
+On Thu, Mar 12, 2020 at 02:41:22PM +0100, Peter Zijlstra wrote:
+> Validate that any call out of .noinstr.text is in between
+> instr_begin() and instr_end() annotations.
 > 
-> > On Fri, Mar 13, 2020 at 03:41:46PM +0100, Frederic Weisbecker wrote:
-> >> On Thu, Mar 12, 2020 at 11:16:18AM -0700, Paul E. McKenney wrote:
-> >> > Hello!
-> >> > 
-> >> > This series provides two variants of Tasks RCU, a rude variant inspired
-> >> > by Steven Rostedt's use of schedule_on_each_cpu(), and a tracing variant
-> >> > requested by the BPF folks and perhaps also of use for other tracing
-> >> > use cases.
-> >> > 
-> >> > The tracing variant has explicit read-side markers to permit finite grace
-> >> > periods even given in-kernel loops in PREEMPT=n builds It also protects
-> >> > code in the idle loop, on exception entry/exit paths, and on the various
-> >> > CPU-hotplug online/offline code paths, thus having protection properties
-> >> > similar to SRCU.  However, unlike SRCU, this variant avoids expensive
-> >> > instructions in the read-side primitives, thus having read-side overhead
-> >> > similar to that of preemptible RCU.
-> >> > 
-> >> > There are of course downsides.  The grace-period code can send IPIs to
-> >> > CPUs, even when those CPUs are in the idle loop or in nohz_full userspace.
-> >> > It is necessary to scan the full tasklist, much as for Tasks RCU.  There
-> >> > is a single callback queue guarded by a single lock, again, much as for
-> >> > Tasks RCU.  If needed, these downsides can be at least partially remedied
-> >> 
-> >> So what we trade to fix the issues we are having with tracing against extended
-> >> grace periods, we lose in CPU isolation. That worries me a bit as tracing can
-> >> be thoroughly used with nohz_full and CPU isolation.
-> > 
-> > First, disturbing nohz_full CPUs can be avoided by the sysadm simply
-> > refusing to remove tracepoints while sensitive applications are running
-> > on nohz_full CPUs.
+> This annotation is useful to ensure correct behaviour wrt tracing
+> sensitive code like entry/exit and idle code. When we run code in a
+> sensitive context we want a guarantee no unknown code is ran.
 > 
-> I doubt this approach will survive real-life.
+> Since this validation relies on knowing the section of call
+> destination symbols, we must run it on vmlinux.o instead of on
+> individual object files.
+> 
+> Add the -i "noinstr validation only" option because:
+> 
+>  - vmlinux.o isn't 'clean' vs the existing validations
+>  - skipping the other validations (which have already been done
+>    earlier in the build) saves around a second of runtime.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Nothing survives real life, at least not indefinitely.  ;-)
+I find the phrase "noinstr" to be WAY too ambiguous.  To my brain it
+clearly stands for "no instructions" and I have to do a double take
+every time I read it.
 
-> > Second, for non-CPU-bound real-time programs with mostly-idle CPUs,
-> > I should be able to decrease the likelihood of sending IPIs pretty much
-> > to zero.
-> > 
-> > Or am I missing something here?
-> 
-> I would recommend considering the following alternative for this tracing-rcu
-> flavor:
-> 
-> - For all CPUs which are not nohz_full:
->   - Implement fast RCU read-side which only requires compiler barriers,
->   - Use IPIs to each of those CPUs when doing a grace period.
-> 
-> - For all nohz_full CPUS:
->   - Dynamically detect CPUs which are nohz_full,
->   - Implement slower RCU read-side with memory barriers,
->   - No need to issue any IPI to those CPUs when doing the grace period.
-> 
-> This should cover all use-cases: staying fast for the common case, without
-> disturbing RT workloads.
-> 
-> Thoughts ?
+And "read_instr_hints" reads as "read_instruction_hints()".
 
-I will certainly add this to my list of potential solutions, and thank
-you for pointing me at it!
+Can we come up with a more readable name?  Why not just "notrace"?
 
-							Thanx, Paul
+The trace begin/end annotations could be
+
+  trace_allow_begin()
+  trace_allow_end()
+
+Also -- what happens when a function belongs in both .notrace.text and
+in one of the other special-purpose sections like .sched.text,
+.meminit.text or .entry.text?
+
+Maybe storing pointers to the functions, like NOKPROBE_SYMBOL does,
+would be better than putting the functions in a separate section.
+
+> ---
+>  tools/objtool/builtin-check.c |    4 -
+>  tools/objtool/builtin.h       |    2 
+>  tools/objtool/check.c         |  155 ++++++++++++++++++++++++++++++++++++------
+>  tools/objtool/check.h         |    3 
+>  4 files changed, 140 insertions(+), 24 deletions(-)
+> 
+> --- a/tools/objtool/builtin-check.c
+> +++ b/tools/objtool/builtin-check.c
+> @@ -17,7 +17,7 @@
+>  #include "builtin.h"
+>  #include "check.h"
+>  
+> -bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
+> +bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, noinstr, vmlinux;
+>  
+>  static const char * const check_usage[] = {
+>  	"objtool check [<options>] file.o",
+> @@ -32,6 +32,8 @@ const struct option check_options[] = {
+>  	OPT_BOOLEAN('b', "backtrace", &backtrace, "unwind on error"),
+>  	OPT_BOOLEAN('a', "uaccess", &uaccess, "enable uaccess checking"),
+>  	OPT_BOOLEAN('s', "stats", &stats, "print statistics"),
+> +	OPT_BOOLEAN('i', "noinstr", &noinstr, "noinstr validation only"),
+> +	OPT_BOOLEAN('l', "vmlinux", &vmlinux, "vmlinux.o validation"),
+>  	OPT_END(),
+>  };
+
+It seems like there should be an easy way to auto-detect vmlinux.o,
+without needing a cmdline option.
+
+For example, if the file name is "vmlinux.o" :-)
+
+Also, maybe we can just hard-code the fact that vmlinux.o is always
+noinstr-only.  Over time we'll probably need to move more per-.o
+functionalities to vmlinux.o and I think we should avoid creating a
+bunch of cmdline options.
+
+-- 
+Josh
+
