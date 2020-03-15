@@ -2,40 +2,39 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FA1C10DCE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1655C2BB1D
 	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 07:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A4720722
+	by mail.kernel.org (Postfix) with ESMTP id 7BF21206E9
 	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 07:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X4ZzG6l2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lVXJbQWZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgCOHPg (ORCPT
+        id S1727823AbgCOHPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 03:15:36 -0400
+        Sun, 15 Mar 2020 03:15:37 -0400
 Received: from bombadil.infradead.org ([198.137.202.133]:49192 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbgCOHPe (ORCPT
+        with ESMTP id S1727670AbgCOHPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 03:15:34 -0400
+        Sun, 15 Mar 2020 03:15:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Sender:Reply-To:Content-ID:Content-Description;
-        bh=geChFULqiY9Qc5SvHVzZJBad8vXBVakwRLiv7qGppg4=; b=X4ZzG6l2kt6LRNml+3PFZwy6FU
-        XeJ297XxbtTXbNwsU7xOEUT2qsnoYDV8tE9+0HZuP6EJNNjbTmdttTl3q+M3vJEeqDVFRRRGh5ye8
-        0QdJOjuOAqW/q0Bp/dS4Jcq8gE3w72u3wh+gS9nbovQVOdQQIkY/qpLL1Nc6WqR+TspJsZN4h6khF
-        5nuQ5AXmif64N5/VPrM2DXs/WekAJcW+oGhPSjeK9v5giDPmeJMXlf7hsvEFxLAOX1qU45XvAa9zB
-        /wlh3mRWmU/MK242NQy8FX9bh1l7ps0zA8oJl3AB4vg8GebzVoWJRQBqvQkpitIQS+mku+zkmhiNg
-        UgTuGGqw==;
+        d=infradead.org; s=bombadil.20170209; h=Message-Id:Date:Subject:Cc:To:From:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=M43Fclutcops3LTjLdBwRIG7fc6qs+/SivGL6t7wtcQ=; b=lVXJbQWZKeohEKZYCbB4VhDVV/
+        XsMhxq3ZNhrJcH+HIjJOQHNOsyeBe6gyt/qf17MIyA30PaqWRrm5Vdf7f8V0BLXsHIMfNCUAwWOfX
+        Hdv6oCUPEO/gWtLLMSrlPwujR4mKGfHvDB9Th85vsLEPxrICNf428R4H+9NcuNKn1cXLuVn8DBQYr
+        PAKt5dFeWs/7RigXJ6QKkltkEKahOwGjNOKiF33VFufb5+yh6yGONB+L8n5sjZWUPF4pihtmPa/Bl
+        PgfmRJNOnrkswUYLJn9gG7nD5o31pDXVK1s1qG1KXOHs3Y9QTWvqVhE7CGYAFSl9SPVAgZE8rnGVH
+        Ya3xZTQw==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jDKbE-0003dY-L5; Sun, 15 Mar 2020 04:10:04 +0000
+        id 1jDKbE-0003dY-6j; Sun, 15 Mar 2020 04:10:04 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
@@ -43,48 +42,32 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         Antonino Daplas <adaplas@gmail.com>,
         Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
-Subject: [PATCH 1/6] fbdev: fbmon: fix -Wextra build warnings
-Date:   Sat, 14 Mar 2020 21:09:57 -0700
-Message-Id: <20200315041002.24473-2-rdunlap@infradead.org>
+Subject: fbdev: fix -Wextra build warnings
+Date:   Sat, 14 Mar 2020 21:09:56 -0700
+Message-Id: <20200315041002.24473-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200315041002.24473-1-rdunlap@infradead.org>
-References: <20200315041002.24473-1-rdunlap@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When 'DEBUG' is not defined, modify the DPRINTK() macro to use the
-no_printk() macro instead of using <empty>.
-This fixes a build warning when -Wextra is used and provides
-printk format checking:
+This patch series fixes warnings in fbdev that are found when
+-Wextra is used. In fixing these, there were a few other build
+errors discovered (mostly caused by bitrot) and fixed.
 
-../drivers/video/fbdev/core/fbmon.c:812:47: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../drivers/video/fbdev/core/fbmon.c:842:24: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
-../drivers/video/fbdev/core/fbmon.c:847:24: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+[PATCH 1/6] fbdev: fbmon: fix -Wextra build warnings
+[PATCH 2/6] fbdev: aty: fix -Wextra build warning
+[PATCH 3/6] fbdev: matrox: fix -Wextra build warnings
+[PATCH 4/6] fbdev: savage: fix -Wextra build warning
+[PATCH 5/6] fbdev: pm[23]fb.c: fix -Wextra build warnings and errors
+[PATCH 6/6] fbdev: via: fix -Wextra build warning and format warning
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
----
-Alternative: use pr_debug() so that CONFIG_DYNAMIC_DEBUG can be used
-at these sites.
-
- drivers/video/fbdev/core/fbmon.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- linux-next-20200313.orig/drivers/video/fbdev/core/fbmon.c
-+++ linux-next-20200313/drivers/video/fbdev/core/fbmon.c
-@@ -44,7 +44,7 @@
- #ifdef DEBUG
- #define DPRINTK(fmt, args...) printk(fmt,## args)
- #else
--#define DPRINTK(fmt, args...)
-+#define DPRINTK(fmt, args...) no_printk(fmt, ##args)
- #endif
- 
- #define FBMON_FIX_HEADER  1
+ drivers/video/fbdev/aty/atyfb_base.c       |    2 +-
+ drivers/video/fbdev/core/fbmon.c           |    2 +-
+ drivers/video/fbdev/matrox/matroxfb_base.h |    2 +-
+ drivers/video/fbdev/pm2fb.c                |    2 +-
+ drivers/video/fbdev/pm3fb.c                |    8 ++++----
+ drivers/video/fbdev/savage/savagefb.h      |    2 +-
+ drivers/video/fbdev/via/debug.h            |    6 ++++--
+ drivers/video/fbdev/via/viafbdev.c         |    2 +-
+ 8 files changed, 14 insertions(+), 12 deletions(-)
