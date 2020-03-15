@@ -2,88 +2,185 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9231CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D9FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7341B20739
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C3E20575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ysAKBEQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgCOKDE (ORCPT
+        id S1728237AbgCOKEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:03:04 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49936 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgCOKDE (ORCPT
+        Sun, 15 Mar 2020 06:04:24 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:50276 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728197AbgCOKEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:03:04 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jDQ6Y-0007T9-0n; Sun, 15 Mar 2020 11:02:46 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 09DCD101305; Sun, 15 Mar 2020 11:02:45 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>
-Subject: Re: [PATCH v3 00/26] Introduce common headers for vDSO
-In-Reply-To: <693b6a61-b5f6-2744-1579-b356e6510547@gmail.com>
-References: <20200313154345.56760-1-vincenzo.frascino@arm.com> <693b6a61-b5f6-2744-1579-b356e6510547@gmail.com>
-Date:   Sun, 15 Mar 2020 11:02:45 +0100
-Message-ID: <87fteadjga.fsf@nanos.tec.linutronix.de>
+        Sun, 15 Mar 2020 06:04:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1584266661; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=OPgCFclnK+dYLWIKySdQ0LeSCQYlJQFqnweXUYr2lRo=;
+        b=ysAKBEQwfZwp6cOlmO4u+3BgcS/CCdEDygsjhdOMkCSKoxy6/WEn1P5MGahPXsWKU3c7W8
+        Rd/6leiWLqbLWtQdq/U3ztJJX7cEoDhYyqRou0GzIyYMSQmrGUwYYTR1yWU/HRiUQIQ/tC
+        /POQvZVhIAQWEplzYVD3EJg05swJNRs=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Nick Dyer <nick@shmanahar.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] dt-bindings: input: Update atmel,maxtouch.txt to YAML
+Date:   Sun, 15 Mar 2020 11:04:15 +0100
+Message-Id: <20200315100416.14151-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry Safonov <0x7f454c46@gmail.com> writes:
-> I like the idea, but I'm wondering if we could have less-grained
-> headers? Like, AFAICS the patches create headers < 10 lines and even
-> mostly < 5 lines.. I like that header's names perfectly describe what's
-> inside, but I'm not sure how effective to have a lot of extra-small
-> includes.
+Update atmel,maxtouch.txt to YAML. The new 'vdd-supply' property was
+added in the process.
 
-If that goes all into a big header then the headers from where the bits and
-pieces are split out would have all to include this big header which
-might result in other include dependency nightmares.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ .../bindings/input/atmel,maxtouch.txt         | 41 -----------
+ .../bindings/input/atmel,maxtouch.yaml        | 68 +++++++++++++++++++
+ 2 files changed, 68 insertions(+), 41 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+ create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
 
->>  create mode 100644 include/vdso/time.h
->>  create mode 100644 include/vdso/time32.h
->>  create mode 100644 include/vdso/time64.h
->
-> Maybe we could made them less-grained?
->
-> I.e, time32 + time64 + time.h => time.h?
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+deleted file mode 100644
+index c88919480d37..000000000000
+--- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-Atmel maXTouch touchscreen/touchpad
+-
+-Required properties:
+-- compatible:
+-    atmel,maxtouch
+-
+-    The following compatibles have been used in various products but are
+-    deprecated:
+-	atmel,qt602240_ts
+-	atmel,atmel_mxt_ts
+-	atmel,atmel_mxt_tp
+-	atmel,mXT224
+-
+-- reg: The I2C address of the device
+-
+-- interrupts: The sink for the touchpad's IRQ output
+-    See ../interrupt-controller/interrupts.txt
+-
+-Optional properties for main touchpad device:
+-
+-- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
+-    on GPIO bit changes. An array of up to 8 entries can be provided
+-    indicating the Linux keycode mapped to each bit of the status byte,
+-    starting at the LSB. Linux keycodes are defined in
+-    <dt-bindings/input/input.h>.
+-
+-    Note: the numbering of the GPIOs and the bit they start at varies between
+-    maXTouch devices. You must either refer to the documentation, or
+-    experiment to determine which bit corresponds to which input. Use
+-    KEY_RESERVED for unused padding values.
+-
+-- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
+-
+-Example:
+-
+-	touch@4b {
+-		compatible = "atmel,maxtouch";
+-		reg = <0x4b>;
+-		interrupt-parent = <&gpio>;
+-		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+-	};
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+new file mode 100644
+index 000000000000..1b138a9836bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Atmel maXTouch touchscreen/touchpad DT bindings
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  compatible:
++    enum:
++      - atmel,maxtouch
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vdd-supply:
++    description: Phandle to regulator providing power to the touchscreen
++
++  linux,gpio-keymap:
++    minItems: 1
++    maxItems: 8
++    description: >
++      When enabled, the SPT_GPIOPWN_T19 object sends messages
++      on GPIO bit changes. An array of up to 8 entries can be provided
++      indicating the Linux keycode mapped to each bit of the status byte,
++      starting at the LSB. Linux keycodes are defined in
++      <dt-bindings/input/input.h>.
++
++      Note: the numbering of the GPIOs and the bit they start at varies between
++      maXTouch devices. You must either refer to the documentation, or
++      experiment to determine which bit corresponds to which input. Use
++      KEY_RESERVED for unused padding values.
++
++  reset-gpios:
++    description: GPIO specifier for the touchscreen's reset pin (active low)
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      mxt224-touchscreen@4a {
++        compatible = "atmel,maxtouch";
++        reg = <0x4a>;
++
++        interrupt-parent = <&gpx0>;
++        interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
++
++        vdd-supply = <&tsp_reg>;
++      };
++    };
+-- 
+2.25.1
 
-Then you end up with ifdeffery. I like the clear separation.
-
-Thanks,
-
-        tglx
