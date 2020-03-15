@@ -2,269 +2,106 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81847C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33ADC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59855206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584268085;
-	bh=SinDE6ao+AVMlHMf0LA1ju7l1TWQay+Xe7k5LIe/niQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xFxxD+/0M4aDhrh1XL6rP+1qJqZ6GYu+wkc48XxftnkB7XmUyTQN7VGJZ5T5EjZr1
-	 0JbwjDsmuKGznIp/84dEfeQVRHsp57ayyzORKItqDggl1qp3D9Rx29V4mCO+O7zxWb
-	 KSmLj/c07O81+ipQEXlh1EIZEBa3ru5k5nG2LkpE=
+	by mail.kernel.org (Postfix) with ESMTP id A744120578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:28:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7HfmL36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgCOK2E (ORCPT
+        id S1728301AbgCOK2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728234AbgCOK2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:28:04 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E3E920578;
-        Sun, 15 Mar 2020 10:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584268082;
-        bh=SinDE6ao+AVMlHMf0LA1ju7l1TWQay+Xe7k5LIe/niQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fKoNidTdAXuxPUl4g7jI6GYD+J8juaHomYGarIgbu0HasebQa1TPVSx2dmCbHIUMk
-         QH5k/a2T4sAomx5hMoz/m697U68ZW9TsnOJATqsYo9x+Mb9Xtsg2Sc1Sfl84DxzrBO
-         p54IilaccOLIYDBf8IuxCFguflm4GXMF7QJNgdeI=
-Date:   Sun, 15 Mar 2020 10:27:57 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200315102757.5953b2e8@archlinux>
-In-Reply-To: <20200315000013.4440-3-sravanhome@gmail.com>
-References: <20200315000013.4440-1-sravanhome@gmail.com>
-        <20200315000013.4440-3-sravanhome@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Mar 2020 06:28:55 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42055 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgCOK2z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 06:28:55 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h8so7865892pgs.9;
+        Sun, 15 Mar 2020 03:28:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=0A0RJ57z71mMYdjUo91V4iXY17Ap84PMGG8CkVMa8K8=;
+        b=o7HfmL36BaFVUjlrx47sFcrPUOsclmtBsW618s/oG1LJSJy/8MF9YCDZaGYEakuyt7
+         HpKN9Kj6MbD9Xx44V9Ipmbb/y8nStV7zwJ1IqgfELJtx1A3Fsqc1j0HrzaANMB1eYnmx
+         XNjGUpQtGSQ6S7lXhsRzEDONXzpDd/7RS0ddbYsrqvWvZoUOryZtpyOMblYvumwIm1Xm
+         DbQKQhKAio3jnJE08YCx14oCa7oYG9yBVamrzkPbNiXITm7cvfzNIR2T9HkdUa5+2N/+
+         zjobqZ9vdZVPyhtnSBkqmf/DBzmKaX+qFs5tkSh5pdMzecHsWdPaRDmMfXHZ7ajx8VOy
+         xgjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=0A0RJ57z71mMYdjUo91V4iXY17Ap84PMGG8CkVMa8K8=;
+        b=ApYu7/RAk4vKrD6D5jOpNz+IbtS8E7XnGIINXBe4BGmb0/xkm2NEy/Ns4Wp5FHV+9n
+         eHu4jkX+9Lmzq7hK0TjKFWvPg7Z48Fjegtf6wEcbJ3SohqfYA5rAgMd2pi/7TzaVSSVc
+         pTmxkCqdGFgkvjbsJb9tRrc7/+29FoyqQ3p+W7/TqCEcsL9OG8A+s0joyQTXHSPyKSRE
+         SmFNc5mK6BlwnsCoR5iz57vNcO/SwkPRRA9xc5OkNU+VPtC88XvmnF5YM4+RbqRX7x4Z
+         v532ZB+lG3NCYIGwpCyBCzHUWxlVEIxodZYaafqJ6dhLNIeXlTRLnCuQFJDNrWp6E5oD
+         l4zQ==
+X-Gm-Message-State: ANhLgQ1nNE3nu+zx6lDkQcTFTsx2bJ0S7yIV5rYtn6pM2Rp/1fLSUcC1
+        i+/hPf1bXwKkBbJdFuEBSDHuRd2Mc2o=
+X-Google-Smtp-Source: ADFU+vu7f2zVxM/NDDw9ipVY18qNybJyCPLvi20SuVj6ZfITcqGgfSSd+h1OAUp0pRgO16x+ynwmwQ==
+X-Received: by 2002:a63:fc56:: with SMTP id r22mr21746883pgk.147.1584268134549;
+        Sun, 15 Mar 2020 03:28:54 -0700 (PDT)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id x6sm62618646pfi.83.2020.03.15.03.28.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Mar 2020 03:28:54 -0700 (PDT)
+Date:   Sun, 15 Mar 2020 15:58:48 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] USB: atm: Use the correct style for SPDX License Identifier
+Message-ID: <20200315102844.GA3460@nishad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Mar 2020 01:00:10 +0100
-Saravanan Sekar <sravanhome@gmail.com> wrote:
+This patch corrects the SPDX License Identifier style in
+header file related to USB DSL modem support drivers.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-> mp2629 is a highly-integrated switching-mode battery charge management
-> device for single-cell Li-ion or Li-polymer battery.
-> 
-> Add MFD core enables chip access for ADC driver for battery readings,
-> and a power supply battery-charger driver
-> 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->  drivers/mfd/Kconfig        |  9 ++++
->  drivers/mfd/Makefile       |  2 +
->  drivers/mfd/mp2629.c       | 96 ++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mp2629.h | 32 +++++++++++++
->  4 files changed, 139 insertions(+)
->  create mode 100644 drivers/mfd/mp2629.c
->  create mode 100644 include/linux/mfd/mp2629.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 3c547ed575e6..f3f0a2908f16 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
->  	help
->  	  Select this if your MC13xxx is connected via an I2C bus.
->  
-> +config MFD_MP2629
-> +	bool "Monolithic power system MP2629 ADC and Battery charger"
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +	help
-> +	  Select this option to enable support for Monolithic power system
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-Monolithic Power Systems
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/usb/atm/usbatm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	  Battery charger. This provides ADC, thermal, Battery charger power
-
-battery (both instances don't need a capital)
-
-> +	  management functions on the systems.
-> +
->  config MFD_MXS_LRADC
->  	tristate "Freescale i.MX23/i.MX28 LRADC"
->  	depends on ARCH_MXS || COMPILE_TEST
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index f935d10cbf0f..d6c210f96d02 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -170,6 +170,8 @@ obj-$(CONFIG_MFD_MAX8925)	+= max8925.o
->  obj-$(CONFIG_MFD_MAX8997)	+= max8997.o max8997-irq.o
->  obj-$(CONFIG_MFD_MAX8998)	+= max8998.o max8998-irq.o
->  
-> +obj-$(CONFIG_MFD_MP2629)	+= mp2629.o
-> +
->  pcf50633-objs			:= pcf50633-core.o pcf50633-irq.o
->  obj-$(CONFIG_MFD_PCF50633)	+= pcf50633.o
->  obj-$(CONFIG_PCF50633_ADC)	+= pcf50633-adc.o
-> diff --git a/drivers/mfd/mp2629.c b/drivers/mfd/mp2629.c
-> new file mode 100644
-> index 000000000000..47a37eadf25d
-> --- /dev/null
-> +++ b/drivers/mfd/mp2629.c
-> @@ -0,0 +1,96 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * MP2629 MFD Driver for ADC and battery charger
-> + *
-> + * Copyright 2020 Monolithic Power Systems, Inc
-> + *
-> + * Author: Saravanan Sekar <sravanhome@gmail.com>
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/i2c.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/irq.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/mp2629.h>
-> +
-> +enum {
-> +	MP2629_MFD_ADC,
-> +	MP2629_MFD_CHARGER,
-> +	MP2629_MFD_MAX
-> +};
-> +
-> +static const struct mfd_cell mp2629mfd[] = {
-> +	[MP2629_MFD_ADC] = {
-> +		.name = "mp2629_adc",
-> +		.of_compatible = "mps,mp2629_adc",
-> +	},
-> +	[MP2629_MFD_CHARGER] = {
-> +		.name = "mp2629_charger",
-> +		.of_compatible = "mps,mp2629_charger",
-> +	}
-> +};
-> +
-> +static const struct regmap_config mp2629_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = 0x17,
-> +};
-> +
-> +static int mp2629_probe(struct i2c_client *client)
-> +{
-> +	struct mp2629_info *info;
-> +	int ret;
-> +
-> +	info = devm_kzalloc(&client->dev, sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	info->dev = &client->dev;
-> +	info->irq = client->irq;
-
-This surprises me a bit given the irq isn't used in this driver at all.
-Should it perhaps be provided directly to the child that uses it?
-(Not sure myself, Lee?)
-
-> +	i2c_set_clientdata(client, info);
-> +
-> +	info->regmap = devm_regmap_init_i2c(client, &mp2629_regmap_config);
-> +	if (IS_ERR(info->regmap)) {
-> +		dev_err(info->dev, "Failed to allocate regmap!\n");
-> +		return PTR_ERR(info->regmap);
-> +	}
-> +
-> +	ret = devm_mfd_add_devices(info->dev, PLATFORM_DEVID_NONE, mp2629mfd,
-> +				ARRAY_SIZE(mp2629mfd), NULL,
-> +				0, NULL);
-> +	if (ret)
-> +		dev_err(info->dev, "Failed to add mfd %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id mp2629_of_match[] = {
-> +	{ .compatible = "mps,mp2629"},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mp2629_of_match);
-> +
-> +static const struct i2c_device_id mp2629_id[] = {
-> +	{ "mp2629", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, mp2629_id);
-> +
-> +static struct i2c_driver mp2629_driver = {
-> +	.driver = {
-> +		.name = "mp2629",
-> +		.of_match_table = mp2629_of_match,
-> +	},
-> +	.probe_new	= mp2629_probe,
-> +	.id_table	= mp2629_id,
-> +};
-> +module_i2c_driver(mp2629_driver);
-> +
-> +MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
-> +MODULE_DESCRIPTION("MP2629 Battery charger mfd driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/mfd/mp2629.h b/include/linux/mfd/mp2629.h
-> new file mode 100644
-> index 000000000000..32f0737f245e
-> --- /dev/null
-> +++ b/include/linux/mfd/mp2629.h
-> @@ -0,0 +1,32 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * mp2629.h  - register definitions for mp2629 charger
-> + *
-> + * Copyright 2020 Monolithic Power Systems, Inc
-> + *
-> + */
-> +
-> +#ifndef __MP2629_H__
-> +#define __MP2629_H__
-> +
-> +#include <linux/types.h>
-> +
-> +struct device;
-> +struct regmap;
-> +
-> +struct mp2629_info {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	int irq;
-> +};
-> +
-> +enum mp2629_adc_chan {
-> +	MP2629_BATT_VOLT,
-> +	MP2629_SYSTEM_VOLT,
-> +	MP2629_INPUT_VOLT,
-> +	MP2629_BATT_CURRENT,
-> +	MP2629_INPUT_CURRENT,
-> +	MP2629_ADC_CHAN_END
-> +};
-
-This enum isn't used in this patch. I'd slightly prefer it to be introduced
-with the first user.
-
-> +
-> +#endif
+diff --git a/drivers/usb/atm/usbatm.h b/drivers/usb/atm/usbatm.h
+index 8725755bd53d..d96658e2e209 100644
+--- a/drivers/usb/atm/usbatm.h
++++ b/drivers/usb/atm/usbatm.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /******************************************************************************
+  *  usbatm.h - Generic USB xDSL driver core
+  *
+-- 
+2.17.1
 
