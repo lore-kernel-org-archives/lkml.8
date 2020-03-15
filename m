@@ -3,82 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB1BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04ABC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CC42072A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6042F205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584263284;
-	bh=y6+MMKtpoEZmXy95dogV64Elb9/FiBkAOb+wY0NQTiQ=;
+	s=default; t=1584263612;
+	bh=fYa0ZgT8KCmLMLHuyJeJEYGflGdQ+GXgqFT7ttaJ+H4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=cLf020S/zYCabgvFsOvq8zFW4pML+F422a81D4Wpve4idh6NeJJ/fjwvehhkDG6RR
-	 PMwjo7MpQ+HSTqsqphywucOuktPnsJ/Sizsf8Gohi4i312EeLJ/4ZvWuaQv+GSDNa+
-	 JbXXRgGA2SWH+cGpd1gUKPG+lisOjhYuBMkfqpcw=
+	b=vGzv1MaeupeeoCMvTKj5JwHhTIH/bKmQZi+TmkC97GGmQupFgQ9bqDu7Yy1tPdOWJ
+	 gixi8THSigQyJKZ6LZhH+681jG2NeOdQJlNTRMB2/azH23ib8Gbbj7iFwT3AJANOBx
+	 OLMZVCEvPjhxCQAD2vwaTZ1hKYCJ1pO7MdzFxsdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgCOJIC (ORCPT
+        id S1728097AbgCOJNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:08:02 -0400
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:39971 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbgCOJIB (ORCPT
+        Sun, 15 Mar 2020 05:13:31 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33039 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbgCOJNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:08:01 -0400
-Received: by mail-lj1-f180.google.com with SMTP id 19so15194544ljj.7;
-        Sun, 15 Mar 2020 02:07:57 -0700 (PDT)
+        Sun, 15 Mar 2020 05:13:30 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c20so11458693lfb.0;
+        Sun, 15 Mar 2020 02:13:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=y6+MMKtpoEZmXy95dogV64Elb9/FiBkAOb+wY0NQTiQ=;
-        b=GCmgHqZu2FiKQ9x5fdyChDRTbh5m6hACNY9cSE9p+G9yst/lxtrR6fu2HirmNmqCVD
-         6ESh+qAyTC6D7/OTK9kCKHFntLtgo8FxwnZNGA+ez0uQrHBYvrh+1C+w/bMwQCdBK6Ui
-         ++C98mbgoHIG1mrw6vah91ctjecktALiI9upUbaAgCZ7dJZS3vW9JbYIRLshLoCxQSNh
-         zZMLUcI+/nA1Jn3i5LG1424xo9uSUswtciICs+Fwv6lME+7wAkKvR0biu7XYGh6DR0si
-         92Kia2rDJHNVfBREXeeuSpXhjRgfAc/IJ+5BrWej7o7kN0VoO4nMb7jHDpfHAklFu1kA
-         sv0g==
+        bh=UghuRGGoBIV+FWQNja4tOmhBFo0fndDmk5q2GT0GtOQ=;
+        b=OE8rpn8bhJf6/2wBB0yTz/U4GXx+xKixWRRwr2wc5+EqGaZFRPriQK1OrVqsX1oZuZ
+         wat6Cqp3HQJMcSAo0401k+5UcTCTBgyYVJ491vPpFJ10o54BSxxjW40dwzq+iYSkPorX
+         XsVnx7J5zD7iJEcLb1S0O/ZQ1EodC/17BMHDiF5Ix9aD4p7FoszX+PZYal5s7+pnxQVI
+         SADdSdNusXj0nb4kcbhOw3iMj0LF1FvgvgbTdhcb8AWcLBsR+SB4tqBnX/wyzb7h+Ma+
+         z7Gl0bi5Jl/ZTnOXMwvjWLPgwrNSwkrXcu9KvMyta2+aRIRgkv1K7mQkiK6gQrqTkWq4
+         vxLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
          :date:message-id:mime-version;
-        bh=y6+MMKtpoEZmXy95dogV64Elb9/FiBkAOb+wY0NQTiQ=;
-        b=HsowH3ssfMAT8bRdXEGIGfK7IKy3BVL5mwJJbEIENtVR632pLmVKocGyo9N/Exu8C3
-         WewJ7CuCJax1UnPAFOAkWg4zgUF28sZA3696spMlaAIHD/S4LbnhfvADMihaNkewNrpx
-         xusjvzVMRS7re8fo+lL+4/8q+0Xs1aJjxeVL+BihGfGvDZHcKrxx9g/N9U8SRwo/eFpt
-         o2LK2e3PN4TAY7GjpCWuW9Njv991EYmcyvQQDwjslNQ2TWDPtf61QHHGhodHqA+1CQco
-         hCcDVprnxvWZpWZ7wwWmIOPaLfyqG83JAzwkq0B6ak6QoumyNU89BSJ0r3rQjFeJN7RF
-         zMFw==
-X-Gm-Message-State: ANhLgQ2razJgbBiiQ+r/HHkaIiB8q+l+aUbMmPhPX10OTiocQa/3uPpa
-        /t07l8P89+jdISAIHZ4VUfw=
-X-Google-Smtp-Source: ADFU+vuUSjXZF4c+u/QwxIVHdBy2Qc8AarnVKoDp5c4eZz6oJTz+TOypteEeXK400S89WyQzo08rKw==
-X-Received: by 2002:a2e:9ac5:: with SMTP id p5mr13400772ljj.200.1584263276934;
-        Sun, 15 Mar 2020 02:07:56 -0700 (PDT)
+        bh=UghuRGGoBIV+FWQNja4tOmhBFo0fndDmk5q2GT0GtOQ=;
+        b=FdObk1E7dRm8IRzgSNvKJ0LZPDnzLdVA9eaoznAabN/ietdnfkJ1dvEATTwAMjWRhN
+         3831BLBtbqHW6Lla0/POcSogAcPiPzvvUd0/WM/PeEa9MSVkUQrlSE6MNOokKxo0pSoE
+         b3za459FJiT6DodDXqT3W2Q8Sa0g3rSjmHwaeYBoIILi818qPpxZ7BjTA538OJvWJWK3
+         G0UTRJuks9LWq1SxLZNl4BbsdIDPq5t6hngnP5CAajKZYWNhePKrw5qR5rYSaHlXvmwE
+         nS6YKuI33ROPAqaDo04iggwlX6U5g0Rbm8OC0nR99f8/IpkeOwfWD7mn4mpiDIavVjfR
+         6oDg==
+X-Gm-Message-State: ANhLgQ1zIIsgbyq+4yhTB5aFaH2SahOHc+wx4vfDimg3p8Bl2NKePlrA
+        WPhuVtfQ45yxydFjkkXLVwTyC1EPdlcH+Q==
+X-Google-Smtp-Source: ADFU+vuNDwTV7TTjN789yXI4ocNKIO9XgqEucfCM596o81rTq4IFGZQFRVlPG9sow75NRuUBkLG/qg==
+X-Received: by 2002:ac2:41c2:: with SMTP id d2mr7639986lfi.164.1584263608304;
+        Sun, 15 Mar 2020 02:13:28 -0700 (PDT)
 Received: from saruman (88-113-215-213.elisa-laajakaista.fi. [88.113.215.213])
-        by smtp.gmail.com with ESMTPSA id k203sm614368lfd.7.2020.03.15.02.07.54
+        by smtp.gmail.com with ESMTPSA id s10sm5099137ljp.87.2020.03.15.02.13.26
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Mar 2020 02:07:55 -0700 (PDT)
+        Sun, 15 Mar 2020 02:13:27 -0700 (PDT)
 From:   Felipe Balbi <balbi@kernel.org>
-To:     Anand Moon <linux.amoon@gmail.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv3 1/5] devicetree: bindings: exynos: Add new compatible for Exynos5420 dwc3 clocks support
-In-Reply-To: <20200310194854.831-2-linux.amoon@gmail.com>
-References: <20200310194854.831-1-linux.amoon@gmail.com> <20200310194854.831-2-linux.amoon@gmail.com>
-Date:   Sun, 15 Mar 2020 11:07:50 +0200
-Message-ID: <87lfo2f0k9.fsf@kernel.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>,
+        gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: Re: [RFC PATCH] usb: dwc3: enable runtime PM for drd role switch / extcon
+In-Reply-To: <20200312143038.11719-1-martin.kepplinger@puri.sm>
+References: <20200312143038.11719-1-martin.kepplinger@puri.sm>
+Date:   Sun, 15 Mar 2020 11:13:22 +0200
+Message-ID: <87fteaf0b1.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -91,25 +82,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-
 Hi,
 
-Anand Moon <linux.amoon@gmail.com> writes:
+(for commit logs, please break your lines at 72 characters)
 
-> Add the new compatible string for Exynos5422 DWC3 to support
-> enable/disable of core and suspend clk by DWC3 driver.
-> Also updated the clock names for compatible samsung,exynos5420-dwusb3.
+Martin Kepplinger <martin.kepplinger@puri.sm> writes:
+
+> Note: runtime PM currently needs to be enabled ("auto") manually via
+> sysfs as its power/control is set to "on" by the driver.
+
+Right, that's on purpose
+
+> When runtime PM enabled, dwc3 currently doesn't resume when a cable is
+> connected.  It only suspends after a cable is disconnected.
 >
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> When using an extcon driver (for a different chip on the board), dwc3
+> can register a hook for that. (Still undocumented -> TODO?).
+>
+> Make sure, dwc3 is resumed when "set_mode" is being called by drd.
+>
+> this is only a question about what's missing to properly keep runtime
+> PM enabled for dwc3 and if my change makes any sense at all. It seems
+> to work fine for me...
+>
+> I'm glad about any hints on how to keep runtime PM enabled (at least when
+> having an extcon hook set up).
 
-What is the dependency here?
+You need to remember that what you write here is going to be placed in
+the commit log and will survive forever in the history of the
+project. Can you be a little bit more technical? For example, why did
+you change the asynchronous pm_runtime_put() to synchronous versions?
+Why was that necessary?
 
-checking file Documentation/devicetree/bindings/usb/exynos-usb.txt
-Hunk #2 FAILED at 84.
-1 out of 2 hunks FAILED
+Also, you're missing your Signed-off-by line. Please, read the
+documentation about how to write patches.
 
-Applying on top of v5.6-rc5
+> thanks,
+>                                 martin
+> ---
+>  drivers/usb/dwc3/core.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 1d85c42b9c67..201b712bd961 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -118,6 +118,9 @@ static void __dwc3_set_mode(struct work_struct *work)
+>  	unsigned long flags;
+>  	int ret;
+>=20=20
+> +	pm_runtime_mark_last_busy(dwc->dev);
+> +	pm_runtime_put_sync_autosuspend(dwc->dev);
+
+why synchronous?
+
+> +
+>  	if (dwc->dr_mode !=3D USB_DR_MODE_OTG)
+>  		return;
+>=20=20
+> @@ -196,6 +199,8 @@ void dwc3_set_mode(struct dwc3 *dwc, u32 mode)
+>  {
+>  	unsigned long flags;
+>=20=20
+> +	pm_runtime_get_sync(dwc->dev);
+
+why get here and put on another function?
+
+> +
+>  	spin_lock_irqsave(&dwc->lock, flags);
+>  	dwc->desired_dr_role =3D mode;
+>  	spin_unlock_irqrestore(&dwc->lock, flags);
+> @@ -1552,7 +1557,7 @@ static int dwc3_probe(struct platform_device *pdev)
+>  		goto err5;
+>=20=20
+>  	dwc3_debugfs_init(dwc);
+> -	pm_runtime_put(dev);
+> +	pm_runtime_put_sync(dev);
+
+why the conversion to synchronous?
 
 =2D-=20
 balbi
@@ -119,18 +169,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl5t8GYACgkQzL64meEa
-mQZ5gw//fmJazamjVuJq52Gz3zIUmYUKhW/T27bH63LVJszVMLh4qdWsfS5siOsU
-XQ5aozi1Djet7rUC8tPkW85WGs2J4/Mb8BiKZTCAX/XPVRprQHdZhUk3tkSYpdHE
-xuXowbKt1rXkSS5lkJ792SOI6SlxISKDHmS5ELzA5S9dhHgRarmMioEcVySR6O0/
-vw58f1r0jlU1MGjGOMkIeJ//tldiv+mK5gw1159zcSbj0KuLBwD0QnRG9uPYsUhg
-TjO8bfdAnjdouYZtRTaB0CDcxU1c4v4UUgnVJ8BI4ABAspn6IC+CUnQkuqs7TXy8
-Tf0f92uXywtUztxGTBGkx+IWy7aAutt+/L+FDoIc59VKibsBIOqFfZcBiHpk/oim
-adfVmFrJ+6/HOKZ+56t/Et7NkhFJd+Qj1LN9VGcUSYt+1/0wJSppCEjN8iiXR+po
-W9rdxgRROxFaxsquO09VFaFO/o35B+X7Pxa9aUQbL8Lgk5LztqxeXMS7J158WTVW
-5WZGFq8Pn6P3F9oRIgy545hK9I/42UTlLRSEdVcyBTo9XmZ9USmBVzE5SkiZwYdb
-wSbyfXxFSuu8mia3MzJIkMvjnsKpLm7MQlo35TKeGqW7TCgOmmwNLDpj2Rp7JdW3
-HtzvRCKh93ytLgrfYMLVUjVKDewQBVc7v+aofdkagMprUcrNrlI=
-=7hzO
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl5t8bIACgkQzL64meEa
+mQakMw/+JBJsuNCsHdTwzzkUPzdrQhbOijneHyRWoV1l1SRSkouGw64jbY5hjNgi
+r9tWUq5gcxoEhPqvnl+Ay/qoZE81hAFZPK0qgng9rfDEFi99R26zZrr66SbZmoAi
+FJAZgYmLN8xeqaU+wjBTiEaj72+FYHRlFvUDzi/9ZcjNwJiyv8QREGl4J03OTwRy
+6XDFNyWe9kTs0dP7J71OUn2P037qBj78SRBhGkZwUjEMvfLXDmpA1yBovzHVV0tD
+ysuVOYrCESLMgZVNDF33gEtRjuZIZXxCuNUqUpDBd3IE4i9uxfNIrfP73HkDp6mS
+jFGv8ee6kOup8jJUUFPJleBztFzZaa31kysdX+8nR4sa6tikdkoF8v0AHjbQdEjL
+hF1SilSACtkBj+OduYR2xhHQkonGhB6V9Ygi15BpshZt94VYIwWslTKn7cJA9CJe
+w+lA6y87H2CtE8/iIvvYmIF8mkQe2Q46wcMYpX3canfHnNePGbvtXJf6gl12TmQ3
+HgAG6vkAriYUu9vUCKRxLTVuTMCiFBacXjHAYQnFwXXgRWCKE9eWl5ZghnPXI285
+3879mS+07bTH2hO/8CKkhHvz0dCV38tuMTGdj1RZcKzuPn6nSrP9CBoPFPmv03aU
+JYv997O4NCp4eedoI/SWIG2xEbb40h8rP1lH8YIeJILGt6mwuro=
+=g/OV
 -----END PGP SIGNATURE-----
 --=-=-=--
