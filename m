@@ -8,63 +8,78 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F676C18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27E5C18E5B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B42420575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9457F20575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ik8+vL2l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YuD16aQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbgCOSpE (ORCPT
+        id S1728806AbgCOSsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 14:45:04 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44226 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbgCOSpD (ORCPT
+        Sun, 15 Mar 2020 14:48:11 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38106 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgCOSsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 14:45:03 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z3so1605565edq.11;
-        Sun, 15 Mar 2020 11:45:01 -0700 (PDT)
+        Sun, 15 Mar 2020 14:48:11 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h5so19254988edn.5;
+        Sun, 15 Mar 2020 11:48:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DV5BEbM3rTUALdhJ9An58mS3H5uNq7pBXvvBUltUgJ4=;
-        b=ik8+vL2lKLCHqZgPWvDo/gQDeLyaKgbJISwD+bPXyAJ8IG3wg2k4bv7aDxNA8ZToxi
-         XTKR73z035lglyqnsBe2NaHjQKRbDg8ZX9B/H0ixYctRaSIhNv0auz9Z6ofyiMgpl9Ee
-         g/DAdxhjoYBJ5fq1ldopR/2oDPsFvKnM0cN+hJfL/abaXJG0I5k6oTcq03EXQhCnJzwC
-         crrDk4508XyQlVn+0ETTRc3QR+WfvIT0ytnKLeSoibj4jTQExcXcLs/6qkTJDXgC33ph
-         Hxe7hNFyzh0YeZ8+zUtN9/KlXO/tZy/UKf3imoRle0/p3dx8BdmJUHZggvu5KDTywK1X
-         yNqA==
+        bh=G6L4EvN7lm7DYZ/YO34UEbURBIXNGU7BBcJMyT2iJ0g=;
+        b=YuD16aQPHLcB1g+JHpV2HSofbb0M4T2Gh2VdChud9ij53FcV9Wr6UhX/YqP3+CKuRa
+         Ya8fF300zL6ZJ91tN7l7sGP+UD5Ta6rIoyAHuY1YJyjeFB0sHJswwOyuwIFto9Op8XC1
+         ppzXJZ+pcUQpNHfgGMSLxx/kbtCVZf6oTDUYXQwSQUQz1MwZBQea5SbR26NYVllr7CFH
+         43j7rIrjLm7zpf7EwZqrUAyJrWnWP+M3aqnZcUw1LyYH2W/VxNjgLwpE7aQgTIR+mtpR
+         rVZOZ/4ZCA63bfxFpvd1HuXnBIYIe2nKKtyJHswyVstmKpwZF9RZyzXJD84C+kVONgGL
+         j8xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=DV5BEbM3rTUALdhJ9An58mS3H5uNq7pBXvvBUltUgJ4=;
-        b=d0YvgW7QO2LOsx6Ym4LA+e6V5ua8RP4P1Mdy9tZq7rYNavn0o/S1BphE17PxyJUcSt
-         VAPcelmjQRp5P4arpogUtnarwRP5B5oVwEQ+WsmU8t+bwvEx7IqTMEE/P43Mk0HX0TDL
-         7rOp84IY/4RFZ1/iNN+Wl6fqeORwv4HMkSwzOsYOQiz698EpcX0pn6Ml4A4r6RzzS9bB
-         k9fwsRYQiki9QGlsYF0PVZU4CMmaaibLgvf/bSsyiptnhueQxdMsoLUD8M2RD2QLBNFK
-         3jsvUslh9inL8SxP0XMyhDewQF24uQjb0085mTbqnqAZUfMfsd6dNkA8uJjXE4SYFaQy
-         88qQ==
-X-Gm-Message-State: ANhLgQ1XeGKLFavlJZu6FiMycp24WH2oB+NiTw4HXa9rkqk1NwTWoSf8
-        PM0HhwJA7HDBfnq/On93ULc=
-X-Google-Smtp-Source: ADFU+vsg+qu8jwpCx27SdoqzOEnc8R8j34mccTm3qWECMbyHeaJjqKmQRvF/RW7FJHOn7idAJ5WwsA==
-X-Received: by 2002:a17:906:16c2:: with SMTP id t2mr19714431ejd.256.1584297900418;
-        Sun, 15 Mar 2020 11:45:00 -0700 (PDT)
+        bh=G6L4EvN7lm7DYZ/YO34UEbURBIXNGU7BBcJMyT2iJ0g=;
+        b=ZGvR8IvT9ItmzObkWKNWb367z9MIPTjjM/JPeHs2qh/BckIWB2He5QiqQOUZuyhfXc
+         C1EXb9csM4DzTuoCyvMpwfRqCrmACfknvI5Uv+T2Qa2Dw8DG5COMyVgQkqLp94YVcIeW
+         E/EqN1sPUEwn+b6xZOvSXD36Z3dDHitdseAnZTl8TMAT+XG0L604+/+h7ux+MgCa6A+I
+         bgTNgWlthDv5RIpzrxykd5ZG1zmt9xU7c7+Ywmb5V14wozleHaO30k5qyULm2VmArb9I
+         /08RuTqZiNOyjnRxDXjOsC3JhJQ74mfukOnP/5TowUTZIeOgrSDv0ZgpK4/+elFgFJBl
+         nvFg==
+X-Gm-Message-State: ANhLgQ3p9t2EqYVthC8mTIv4sNFrrEi5a4uil3ymrz2DI1xpQeIyRd81
+        3WBx31sDScfX3BcMJOZ+7AM=
+X-Google-Smtp-Source: ADFU+vtP1YosyF+LTRKbGIgs5rzng+w8/ziq3PBGSYmK6s5kGkMdiiXqFsDXjGa49UWRRbqC6Di8qQ==
+X-Received: by 2002:a50:ce01:: with SMTP id y1mr4442030edi.47.1584298087756;
+        Sun, 15 Mar 2020 11:48:07 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id s12sm340920ejm.73.2020.03.15.11.44.59
+        by smtp.gmail.com with ESMTPSA id l9sm1661803edt.93.2020.03.15.11.48.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Mar 2020 11:44:59 -0700 (PDT)
-Subject: Re: [PATCH 1/1] dt-bindings: cpu: Add a support cpu type for
- cortex-a75
-To:     Hanks Chen <hanks.chen@mediatek.com>,
+        Sun, 15 Mar 2020 11:48:07 -0700 (PDT)
+Subject: Re: [PATCH v3 3/4] arm64: dts: add RTC nodes for MT2712
+To:     Ran Bi <ran.bi@mediatek.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com
-References: <1584284885-20836-1-git-send-email-hanks.chen@mediatek.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Flora Fu <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+References: <20200226051303.22560-1-ran.bi@mediatek.com>
+ <20200226051303.22560-4-ran.bi@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -140,12 +155,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <f1b8239a-a68f-bd50-585e-26109850a1fc@gmail.com>
-Date:   Sun, 15 Mar 2020 19:44:58 +0100
+Message-ID: <af1a3c83-62e4-0ead-c942-786489bf3d56@gmail.com>
+Date:   Sun, 15 Mar 2020 19:48:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1584284885-20836-1-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <20200226051303.22560-4-ran.bi@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -154,34 +169,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your patch.
 
-On 15/03/2020 16:08, Hanks Chen wrote:
-> [Detail]
 
-This line is not needed.
-
-> Add arm cpu type cortex-a75.
+On 26/02/2020 06:13, Ran Bi wrote:
+> This patch add device node for MT2712 RTC.
 > 
-> Change-Id: I2b05948915acfa6a04a0b8fa88684a12b6d5c2ca
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
 
-No Change-Id in upstream kernel patches please.
+Applied to v5.6-next/dts64
 
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+Thanks!
+
 > ---
->  Documentation/devicetree/bindings/arm/cpus.yaml |    1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> index c23c24f..51b75f7 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> @@ -128,6 +128,7 @@ properties:
->        - arm,cortex-a57
->        - arm,cortex-a72
->        - arm,cortex-a73
-> +      - arm,cortex-a75
->        - arm,cortex-m0
->        - arm,cortex-m0+
->        - arm,cortex-m1
+> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> index 43307bad3f0d..31166c17c39a 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> @@ -303,6 +303,12 @@ uart5: serial@1000f000 {
+>  		status = "disabled";
+>  	};
+>  
+> +	rtc: rtc@10011000 {
+> +		compatible = "mediatek,mt2712-rtc";
+> +		reg = <0 0x10011000 0 0x1000>;
+> +		interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+>  	spis1: spi@10013000 {
+>  		compatible = "mediatek,mt2712-spi-slave";
+>  		reg = <0 0x10013000 0 0x100>;
 > 
