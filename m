@@ -2,138 +2,162 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E805AC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188B0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA74206EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584264539;
-	bh=a3TDzGbEzkSLeXinw82ULYy0g3/qKx/I5ol4xjHP/jo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hEj7zL82aKXdZ+u+lD0IZQJmIy2e1T8Gxz1GTF+5YUs7Frui9kCuTl3p1llKOSxXT
-	 cnLbROZ0W2lrmiU/05RQT22KXe21H/RkwzgAfxWp77Jljs8fKuQErYjWLL+DqZP8ag
-	 8Yi+SxaupphfjlihXwPGry2mxLxilwg0dLNwNFxs=
+	by mail.kernel.org (Postfix) with ESMTP id ECB24206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgCOJ26 (ORCPT
+        id S1728188AbgCOJ3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgCOJ26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:28:58 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201A6206B1;
-        Sun, 15 Mar 2020 09:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584264537;
-        bh=a3TDzGbEzkSLeXinw82ULYy0g3/qKx/I5ol4xjHP/jo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FfBA9KivPcq2i/xkl3X4fU7JAbz8h0yxx+oZqKHJQ5x7jhklsgxMuE/2WvFgDiDBF
-         o7pdSPWOsANpZFUiHJvKEQwTSbzIyjb1W1C4fGD8h5sY3pHDt+HBI+v9WXsl+WrQ9x
-         ZyIDeRFLkXWNBlDSNIV+zjywyMF69vj0Bi3mF12w=
-Date:   Sun, 15 Mar 2020 09:28:52 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Rob Herring <robh@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] dt-bindings: input: Add docs for ADC driven
- joystick.
-Message-ID: <20200315092852.2d2ecebb@archlinux>
-In-Reply-To: <bb188a58f29dfedcf56bb420f07a6813@artur-rojek.eu>
-References: <20200307211412.44148-1-contact@artur-rojek.eu>
-        <20200307211412.44148-4-contact@artur-rojek.eu>
-        <20200309203814.GA29255@bogus>
-        <bb188a58f29dfedcf56bb420f07a6813@artur-rojek.eu>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Mar 2020 05:29:07 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:9692 "EHLO
+        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgCOJ3G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 05:29:06 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 75D892614CB;
+        Sun, 15 Mar 2020 17:28:56 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Wang Wenhu <wenhu.wang@vivo.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org,
+        "Tobin C. Harding" <tobin@kernel.org>
+Cc:     kernel@vivo.com
+Subject: [PATCH 2/2] doc: zh_CN: add translation for virtiofs
+Date:   Sun, 15 Mar 2020 02:28:00 -0700
+Message-Id: <20200315092810.87008-3-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200315092810.87008-1-wenhu.wang@vivo.com>
+References: <20200315092810.87008-1-wenhu.wang@vivo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVCT0pCQkJCSklJTUpCTVlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mgg6GDo5EjgzDjcOLEg#HDEp
+        KigKFC9VSlVKTkNPSU1PTk9JSUpLVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQU1PTE43Bg++
+X-HM-Tid: 0a70dd8663dd9375kuws75d892614cb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 09 Mar 2020 22:41:00 +0100
-Artur Rojek <contact@artur-rojek.eu> wrote:
+Translate virtiofs.rst in Documentation/filesystems/ into Chinese.
 
-> Hi Rob,
-> 
-> On 2020-03-09 21:38, Rob Herring wrote:
-> > On Sat,  7 Mar 2020 22:14:11 +0100, Artur Rojek wrote:  
-> >> Add documentation for the adc-joystick driver, used to provide support
-> >> for joysticks connected over ADC.
-> >> 
-> >> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> >> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> >> ---
-> >> 
-> >>  Changes:
-> >> 
-> >>  v2: - Add `reg` property to axis subnode in order to enumerate the 
-> >> axes,
-> >>      - rename `linux,abs-code` property to `linux,code`,
-> >>      - drop `linux,` prefix from the remaining properties of axis 
-> >> subnode
-> >> 
-> >>  v3: no change
-> >> 
-> >>  v4: - remove "bindings" from the unique identifier string,
-> >>      - replace `|` with `>` for all description properties,
-> >>      - specify the number of items for `io-channels`,
-> >>      - correct the regex pattern of `axis` property,
-> >>      - specify the value range of `reg` property for each axis,
-> >>      - put `abs-range` properties under `allOf`
-> >> 
-> >>  .../bindings/input/adc-joystick.yaml          | 121 
-> >> ++++++++++++++++++
-> >>  1 file changed, 121 insertions(+)
-> >>  create mode 100644 
-> >> Documentation/devicetree/bindings/input/adc-joystick.yaml
-> >>   
-> > 
-> > My bot found errors running 'make dt_binding_check' on your patch:  
-> Like with the previous versions of this patch set, the DTS example 
-> requires that
-> patch [2/5] is applied first. When that is done, the DT check does 
-> succeed here.
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+---
+ Documentation/filesystems/virtiofs.rst        |  2 +
+ .../translations/zh_CN/filesystems/index.rst  |  2 +
+ .../zh_CN/filesystems/virtiofs.rst            | 62 +++++++++++++++++++
+ 3 files changed, 66 insertions(+)
+ create mode 100644 Documentation/translations/zh_CN/filesystems/virtiofs.rst
 
-Fair enough as far as I am concerned.   There were enough comments
-from Rob in the previous version though that I'd definitely like
-him to take another look before I pick this series up.
-
-Thanks,
-
-Jonathan
-
-> 
-> Regards,
-> Artur
-> > 
-> > Error:
-> > Documentation/devicetree/bindings/input/adc-joystick.example.dts:22.31-32
-> > syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > scripts/Makefile.lib:311: recipe for target
-> > 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml'
-> > failed
-> > make[1]: ***
-> > [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml]
-> > Error 1
-> > Makefile:1262: recipe for target 'dt_binding_check' failed
-> > make: *** [dt_binding_check] Error 2
-> > 
-> > See https://patchwork.ozlabs.org/patch/1250951
-> > Please check and re-submit.  
+diff --git a/Documentation/filesystems/virtiofs.rst b/Documentation/filesystems/virtiofs.rst
+index 4f338e3cb3f7..7c4301d962f8 100644
+--- a/Documentation/filesystems/virtiofs.rst
++++ b/Documentation/filesystems/virtiofs.rst
+@@ -1,3 +1,5 @@
++.. _virtiofs_index:
++
+ .. SPDX-License-Identifier: GPL-2.0
+ 
+ ===================================================
+diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
+index a47dd86d6196..205680ec790d 100644
+--- a/Documentation/translations/zh_CN/filesystems/index.rst
++++ b/Documentation/translations/zh_CN/filesystems/index.rst
+@@ -25,3 +25,5 @@ Linux Kernel中的文件系统
+ 
+ .. toctree::
+    :maxdepth: 2
++
++   virtiofs
+diff --git a/Documentation/translations/zh_CN/filesystems/virtiofs.rst b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
+new file mode 100644
+index 000000000000..2a36cd417f8b
+--- /dev/null
++++ b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
+@@ -0,0 +1,62 @@
++.. raw:: latex
++
++	\renewcommand\thesection*
++	\renewcommand\thesubsection*
++
++.. include:: ../disclaimer-zh_CN.rst
++
++:Original: :ref:`Documentation/filesystems/virtiofs.rst <virtiofs_index>`
++
++译者
++::
++
++	中文版维护者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
++	中文版翻译者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
++	中文版校译者:  王文虎 Wang Wenhu <wenhu.wang@vivo.com>
++
++.. SPDX-License-Identifier: GPL-2.0
++
++===========================================
++virtiofs: virtio-fs 主机<->客机共享文件系统
++===========================================
++
++- Copyright (C) 2019 Red Hat, Inc. （译者注：英文版版权信息）
++
++介绍
++====
++Linux的virtiofs文件系统实现了一个半虚拟化VIRTIO类型“virtio-fs”设备的驱动，通过该\
++类型设备实现客机<->主机文件系统共享。它允许客机挂载一个已经导出到主机的目录。
++
++客机通常需要访问主机或者远程系统上的文件。使用场景包括：在新客机安装时让文件对其\
++可见；从主机上的根文件系统启动；对无状态或临时客机提供持久存储和在客机之间共享目录。
++
++尽管在某些任务可能通过使用已有的网络文件系统完成，但是却需要非常难以自动化的配置\
++步骤，且将存储网络暴露给客机。而virtio-fs设备通过提供不经过网络的文件系统访问文件\
++的设计方式解决了这些问题。
++
++另外，virto-fs设备发挥了主客机共存的优点提高了性能，并且提供了网络文件系统所不具备
++的一些语义功能。
++
++用法
++====
++以``myfs``标签将文件系统挂载到``/mnt``:
++
++.. code-block:: sh
++
++  guest# mount -t virtiofs myfs /mnt
++
++请查阅 https://virtio-fs.gitlab.io/ 了解配置QEMU和virtiofsd守护程序的详细信息。
++
++内幕
++====
++由于virtio-fs设备将FUSE协议用于文件系统请求，因此Linux的virtiofs文件系统与FUSE文\
++件系统客户端紧密集成在一起。客机充当FUSE客户端而主机充当FUSE服务器，内核与用户空\
++间之间的/dev/fuse接口由virtio-fs设备接口代替。
++
++FUSE请求被置于虚拟队列中由主机处理。主机填充缓冲区中的响应部分，而客机处理请求的完成部分。
++
++将/dev/fuse映射到虚拟队列需要解决/dev/fuse和虚拟队列之间语义上的差异。每次读取\
++/dev/fuse设备时，FUSE客户端都可以选择要传输的请求，从而可以使某些请求优先于其他\
++请求。虚拟队列有其队列语义，无法更改已入队请求的顺序。在虚拟队列已满的情况下尤
++其关键，因为此时不可能加入高优先级的请求。为了解决此差异，virtio-fs设备采用“hiprio”\
++（高优先级）虚拟队列，专门用于有别于普通请求的高优先级请求。
+-- 
+2.17.1
 
