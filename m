@@ -2,143 +2,156 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FDDC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA895C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF6B205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+ZgyUWz"
+	by mail.kernel.org (Postfix) with ESMTP id 95C2D205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgCOJqp (ORCPT
+        id S1728198AbgCOJsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:46:45 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35112 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbgCOJqo (ORCPT
+        Sun, 15 Mar 2020 05:48:12 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34083 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbgCOJsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:46:44 -0400
-Received: by mail-io1-f68.google.com with SMTP id h8so14117216iob.2;
-        Sun, 15 Mar 2020 02:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GNFfXHO2uILPgu0B1T3kwaBgaXjP+dlED6DVNl3sNIg=;
-        b=I+ZgyUWzIa8Yxi+0xMqH9yaVxAhiEOypJ/WXcO5ujz84CdXXQxL2d1ab/itSy71+MY
-         v1zS6OgxvE0Bn+Qa0JXfcz8RKJwprkoMCBipzhzZlHWCugVSwinT5j3lnrH2WDYlwZ01
-         eYOr9xN2OR+z2u3VNz+TrTa75FmvLhds4/9O2wY6HbEzs0xPbUZ28UtXN7LT2TXhup6Y
-         pkBRtDX0RpzM5wTDCNpUYBgBjIeYHAnSJprQYhPVixRf+4+i5CWwFDcVCSryxTo7o+n+
-         QvVX5JRwWD/Ek/EyR8q7MTRXZ3swX8IoaPhhLPo/I0oYQ9PA+4e/gT6RGNbVnejmq4aN
-         w9FA==
+        Sun, 15 Mar 2020 05:48:12 -0400
+Received: by mail-oi1-f194.google.com with SMTP id g6so14524762oiy.1;
+        Sun, 15 Mar 2020 02:48:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GNFfXHO2uILPgu0B1T3kwaBgaXjP+dlED6DVNl3sNIg=;
-        b=icy7SZW6XbPVFapP/3jpqqK8cP45v9BhR5hqZv6+2LAKRg88qcGHntKcEP3RniUpm2
-         8LEX+pWrbaIZUospvcpto38IreGhQ6xer/WAe1etFMNVybjtQysb8/oteh868wW8gVD6
-         djQisSMwIE7RgIMkRyUQdUFRQxAPzMO/TGyabuDy/pH8g0mzuow9RekefDDOvIKmhFtT
-         Ql63wtn/xoKo30da9oWb1tdPIAE0IkoPw/kN0nduV4o4Uras2GMXvGGLqsh6ETjdk0or
-         wMpz1snJ3Hfx1fwq5s8YmpJtLFiLt+k82n8rmtN/grRziuuZN+E1ZkiXsZbyJxbQIgQv
-         4WmQ==
-X-Gm-Message-State: ANhLgQ2BBjXijrw6M21cpRQEQNHUxd5BN44RVqMBAnYjTMCbNGJ0a3a1
-        iYFOfYGgS3QSr5DJsQTsFZFdMMj7VjMSNlgyPPg=
-X-Google-Smtp-Source: ADFU+vsewoQ8rLqcke0ekgyn+gsES6vdYQVgDzjdOdmXOPVuxzoaksZJ3jLUICWiRwD3y5hXFyjeMrRhGfoBBlDZBWk=
-X-Received: by 2002:a6b:f311:: with SMTP id m17mr19317386ioh.128.1584265603378;
- Sun, 15 Mar 2020 02:46:43 -0700 (PDT)
+        bh=V+LODFo2fy0kDMGy85X+h9jjQYAdzhfINocSjcve4S0=;
+        b=pvn2QogDI6jWWm9fX8QHMjFO7Brtp7rxngbmu2uleAfv2dx6vqTrVPnTXX3eurC7f1
+         34Gu2JhrfqYxu/KT24K+iysjUgO7JEq1kfN7Df/hfqYeSy/tqxVGnRPSwusFpN6A2U50
+         gXp3nmc3J749l7+7xjQQvhMjkn79nHokqIxcyAeFN14q/k/A9MYem9yB4i4Xx4STRzgb
+         lAikCzTH7cI9GiIzaNyjrhCdBKEqjk0qLRmTkybUQxSLSaEse0NTWgQT2z6GlOJv82Ut
+         cUILnmLBUudf6M95AzGhY61r5D73Vy4lz2xHUt7qSYqkw2RKuFCx/bQLGMIO9HXtU+2D
+         RWkQ==
+X-Gm-Message-State: ANhLgQ0jZJHQ8rFBCbu1c4ks9667t4Exm9f/B8PMQsZIrf2tZlQ+2uAn
+        qeg0q3l+GWqWDFAXU81wPp42mP+hOpgHwput9bRSC/Nj
+X-Google-Smtp-Source: ADFU+vuz4qFn0EvbpJhx4q1r3ECpJm4MVPpr63RkM9TAWxt5VDdFu8JNApIGRhZEd++gVv6aHEmpdBMDCW+xs8RJQJk=
+X-Received: by 2002:aca:ad93:: with SMTP id w141mr13930641oie.54.1584265691223;
+ Sun, 15 Mar 2020 02:48:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200310194854.831-1-linux.amoon@gmail.com> <20200310194854.831-3-linux.amoon@gmail.com>
- <CANAwSgR4fJK0uVANv-x-=iSL_hAKD8kvazACUsY9Meu5xonuqQ@mail.gmail.com> <20200314182010.GB17580@kozik-lap>
-In-Reply-To: <20200314182010.GB17580@kozik-lap>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Sun, 15 Mar 2020 15:16:33 +0530
-Message-ID: <CANAwSgS1+6Dzv2XbmMUR40AbJePxUzWkKkBC1W9hBMGzaMWP3w@mail.gmail.com>
-Subject: Re: [PATCHv3 2/5] ARM: dts: exynos: Add missing usbdrd3 suspend clk
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
+References: <20200314052638.6008-1-zhengdejin5@gmail.com> <20200314052638.6008-2-zhengdejin5@gmail.com>
+In-Reply-To: <20200314052638.6008-2-zhengdejin5@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sun, 15 Mar 2020 10:47:59 +0100
+Message-ID: <CAMuHMdVvjvR4J-nB8zmJVH62VGvPPnsLX0+X=aC9p_Dnh_AJ9A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] drivers: provide devm_platform_ioremap_and_get_resource()
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Hi Dejin,
 
-On Sat, 14 Mar 2020 at 23:50, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Sat, Mar 14, 2020 at 6:26 AM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+> Since commit "drivers: provide devm_platform_ioremap_resource()",
+> It was wrap platform_get_resource() and devm_ioremap_resource() as
+> single helper devm_platform_ioremap_resource(). but now, many drivers
+> still used platform_get_resource() and devm_ioremap_resource()
+> together in the kernel tree. The reason can not be replaced is they
+> still need use the resource variables obtained by platform_get_resource().
+> so provide this helper.
 >
-> On Sat, Mar 14, 2020 at 07:02:33PM +0530, Anand Moon wrote:
-> > Hi Krzysztof,
-> >
-> > On Wed, 11 Mar 2020 at 01:19, Anand Moon <linux.amoon@gmail.com> wrote:
-> > >
-> > > Add new compatible strings for USBDRD3 for adding missing
-> > > suspend clk, exynos5422 usbdrd3 support two clk USBD300 and
-> > > SCLK_USBD300, so add missing suspemd_clk for Exynos542x DWC3 nodes.
-> > >
-> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> >
-> > My assumption based on the FSYS clock source diagram below was bit wrong.
-> > [0] https://imgur.com/gallery/zAiBoyh
-> >
-> > And again re-looking into the driver source code, it turn out their
-> > are *6 clock*
-> > Here is the correct mapping as per the Exynos5420 clock driver.
-> >
-> > USB-(phy@12100000)
-> > |___________________CLK_SCLK_USBD300
-> > |___________________CLK_SCLK_USBPHY300
-> >
-> > USB-(phy@12500000)
-> > |___________________CLK_SCLK_USBD301
-> > |___________________CLK_SCLK_USBPHY301
-> >
-> > USB-(dwc3@12000000)
-> > |___________________CLK_USBD300
-> > USB-(dwc3@12400000)
-> > |___________________CLK_USBD301
-> >
-> > Note: As per Exynos 5422 user manual, There are some more USB CLK
-> > configuration missing in GATE_IP_FSYS. So we could enable another dwc3 clk,
-> > If needed I would like too add this missing clk code and enable this
-> > clk for dwc3 driver.
-> >
-> > For some reason we already use CLK_USBD300 and CLK_USBD301
-> > for PHY nodes, which lead to this confusion. So we need to update PHY clock
-> > CLK_USBD300 with CLK_SCLK_USBD300 and clock CLK_USBD301 with CLK_SCLK_USBD301.
-> >
-> > Please share your thought on linking PHY nodes above and add new DWC3 clock
-> > and enable this clock.
->
-> The real clock topology of Exynos5422 is not properly reflected in the
-> kernel. However cleaning this up is quite big task.
->
->
-> Best regards,
-> Krzysztof
->
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
-I would like to fix all my patches with new finding and submit them
-once again for review.
+Thanks for your patch!
 
--Anand
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -62,6 +62,24 @@ struct resource *platform_get_resource(struct platform_device *dev,
+>  EXPORT_SYMBOL_GPL(platform_get_resource);
+>
+>  #ifdef CONFIG_HAS_IOMEM
+> +/**
+> + * devm_platform_ioremap_and_get_resource - call devm_ioremap_resource() for a
+> + *                                         platform device and get resource
+> + *
+> + * @pdev: platform device to use both for memory resource lookup as well as
+> + *        resource management
+> + * @index: resource index
+> + * @res: get the resource
+> + */
+> +void __iomem *
+> +devm_platform_ioremap_and_get_resource(struct platform_device *pdev,
+> +                               unsigned int index, struct resource **res)
+> +{
+> +       *res = platform_get_resource(pdev, IORESOURCE_MEM, index);
+> +       return devm_ioremap_resource(&pdev->dev, *res);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_platform_ioremap_and_get_resource);
+
+As this duplicates most of the implementation of
+devm_platform_ioremap_resource(),
+I think it would be better to make res optional:
+
+    void __iomem *
+    devm_platform_ioremap_and_get_resource(struct platform_device *pdev,
+                                           unsigned int index, struct
+resource **resp)
+    {
+            struct resource **res;
+
+            res = platform_get_resource(pdev, IORESOURCE_MEM, index);
+            if (resp)
+                    *resp = res;
+            return devm_ioremap_resource(&pdev->dev, *res);
+    }
+
+And implement devm_platform_ioremap_resource() by calling
+devm_platform_ioremap_and_get_resource() with resp = NULL.
+Whether the best way to do that is as an exported functions, or as an
+inlined function, is to be seen (measure impact on kernel size).
+
+> +
+>  /**
+>   * devm_platform_ioremap_resource - call devm_ioremap_resource() for a platform
+>   *                                 device
+> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> index 276a03c24691..5fd1977e3eaf 100644
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -55,6 +55,9 @@ extern struct device *
+>  platform_find_device_by_driver(struct device *start,
+>                                const struct device_driver *drv);
+>  extern void __iomem *
+> +devm_platform_ioremap_and_get_resource(struct platform_device *pdev,
+> +                               unsigned int index, struct resource **res);
+> +extern void __iomem *
+>  devm_platform_ioremap_resource(struct platform_device *pdev,
+>                                unsigned int index);
+>  extern void __iomem *
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
