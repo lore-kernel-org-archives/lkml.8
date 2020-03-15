@@ -2,133 +2,170 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E02C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7278FC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6758820578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYL22yiZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4B1F2205ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgCOLmE (ORCPT
+        id S1728416AbgCOLou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 07:42:04 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43719 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728388AbgCOLmE (ORCPT
+        Sun, 15 Mar 2020 07:44:50 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:31580 "EHLO
+        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728399AbgCOLot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 07:42:04 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b2so11437601wrj.10;
-        Sun, 15 Mar 2020 04:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1/ZHbzhy9ZS6xkEyqLUuxEAb0cu6PN2SW3D1r8A2qMc=;
-        b=CYL22yiZGuQWaFMI80Lnyz6zKBuvCA1vLnrsyprbyfDKPvU68JGT/8lnKlRtOeHRrs
-         PCzx2AXXoSNXJjvsoaoTNrb6YpunoMztM627obntcXmK9AqEdIotWSmsi3CEMfkmVK/x
-         3TjDkeOl6buV5JOGSjGoE1fzC/a2iODPuqhtGEiwoujw3DrACNpTvJ65FeVCmVGiIElA
-         AoVOMauoQDB6brvIcYEbt8HorjnfTEAv+WRZ6tNUGDhceRJuBOrRRCPKURNC1E0Q0q3X
-         kRHBU9M3POheEj4IHOCMamxJbXKrDQCJVQ6zjxlInmvei8Uao8vYjGsRarU4RK12ZLiQ
-         lMjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1/ZHbzhy9ZS6xkEyqLUuxEAb0cu6PN2SW3D1r8A2qMc=;
-        b=ViRCdrsIz3+D3YInDrMdopRIl6a67ycwEiNJayjc7i3SZ27r+NZWiUnn5P80vhyXrJ
-         dkDuI3BsrVfOh41VFJjwRyY4NcD2GXJS8Bzyntmetgg3hv/zJ7bERYLPMqif+QsiglIg
-         AZ7lgY+qX3cp96KHt3/dIkFudWyc8XHxCj0IESdWM1eKzQpr2wE8am+QPOUWQ7fy7zk9
-         XY/6pf7NSY3Gs6l74hOpLGIUDspz1gb1fhRZjf/BiC1RthYIRM5z6lObzgIpsykGStFc
-         BLPT3D3c9yCc7qvRCvbr46bJWQFf/86n4jRSanDOdOnBe6h+kzOmViBMFFqXH62YQTs5
-         x1zg==
-X-Gm-Message-State: ANhLgQ3Sg/7H+m5I5xyLJo54vizvwnvLRaQ/4noFaYLE3N/4otByRLeU
-        O1mEtyNv7X4NgWfGzmdQ0ZE=
-X-Google-Smtp-Source: ADFU+vtLUukSDpR6qCxADVGIk6FxacYCaf2ESN9kHLB694036g9VQPYauVxD8imcZJezCiTJswjfaA==
-X-Received: by 2002:a5d:410a:: with SMTP id l10mr27637506wrp.380.1584272522014;
-        Sun, 15 Mar 2020 04:42:02 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2510:d000:2c12:3438:7cb7:556d])
-        by smtp.gmail.com with ESMTPSA id 9sm25268665wmx.32.2020.03.15.04.42.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 04:42:01 -0700 (PDT)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH] media: am437x-vpfe: Make use of to_vpfe() to get a pointer to vpfe_device
-Date:   Sun, 15 Mar 2020 11:41:46 +0000
-Message-Id: <20200315114146.8404-1-prabhakar.csengg@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 15 Mar 2020 07:44:49 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 4BF8D26159E;
+        Sun, 15 Mar 2020 19:44:32 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Jaskaran Singh <jaskaransingh7654321@gmail.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Wang Wenhu <wenhu.wang@vivo.com>,
+        "Tobin C. Harding" <tobin@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     kernel@vivo.com
+Subject: [PATCH v2,2/2] doc: zh_CN: add translation for virtiofs
+Date:   Sun, 15 Mar 2020 04:43:28 -0700
+Message-Id: <20200315114339.88384-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200315092810.87008-3-wenhu.wang@vivo.com>
+References: <20200315092810.87008-3-wenhu.wang@vivo.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVNSktLS0tKSEhOSk9PWVdZKFlBSE
+        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NDI6Phw4ITgzMDcPFR5DHUI6
+        HykwCzhVSlVKTkNPSUxJTUxCS0lCVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQU1NQkw3Bg++
+X-HM-Tid: 0a70de0288639375kuws4bf8d26159e
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch makes use of to_vpfe() to get a pointer to vpfe_device
+Translate virtiofs.rst in Documentation/filesystems/ into Chinese.
 
-Signed-off-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+v2:
+ - add a blank line in the end of index.rst to index virtiofs.rst
+ - Asked-by Stefan Hajnoczi
+  - Link:https://lore.kernel.org/linux-doc/20200315101215.GA325031@stefanha-x1.localdomain/1-a.txt
 
-diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index e14a2933144b..66079cc41f38 100644
---- a/drivers/media/platform/am437x/am437x-vpfe.c
-+++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -325,7 +325,7 @@ static void vpfe_ccdc_restore_defaults(struct vpfe_ccdc *ccdc)
+---
+ Documentation/filesystems/virtiofs.rst        |  2 +
+ .../translations/zh_CN/filesystems/index.rst  |  3 +
+ .../zh_CN/filesystems/virtiofs.rst            | 62 +++++++++++++++++++
+ 3 files changed, 67 insertions(+)
+ create mode 100644 Documentation/translations/zh_CN/filesystems/virtiofs.rst
+
+diff --git a/Documentation/filesystems/virtiofs.rst b/Documentation/filesystems/virtiofs.rst
+index 4f338e3cb3f7..7c4301d962f8 100644
+--- a/Documentation/filesystems/virtiofs.rst
++++ b/Documentation/filesystems/virtiofs.rst
+@@ -1,3 +1,5 @@
++.. _virtiofs_index:
++
+ .. SPDX-License-Identifier: GPL-2.0
  
- static int vpfe_ccdc_close(struct vpfe_ccdc *ccdc, struct device *dev)
- {
--	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
-+	struct vpfe_device *vpfe = to_vpfe(ccdc);
- 	u32 dma_cntl, pcr;
+ ===================================================
+diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
+index a47dd86d6196..69f38df8c4bd 100644
+--- a/Documentation/translations/zh_CN/filesystems/index.rst
++++ b/Documentation/translations/zh_CN/filesystems/index.rst
+@@ -25,3 +25,6 @@ Linux Kernel中的文件系统
  
- 	pcr = vpfe_reg_read(ccdc, VPFE_PCR);
-@@ -349,7 +349,7 @@ static int vpfe_ccdc_close(struct vpfe_ccdc *ccdc, struct device *dev)
- 
- static int vpfe_ccdc_set_params(struct vpfe_ccdc *ccdc, void __user *params)
- {
--	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
-+	struct vpfe_device *vpfe = to_vpfe(ccdc);
- 	struct vpfe_ccdc_config_params_raw raw_params;
- 	int x;
- 
-@@ -505,7 +505,7 @@ vpfe_ccdc_config_black_compense(struct vpfe_ccdc *ccdc,
-  */
- static void vpfe_ccdc_config_raw(struct vpfe_ccdc *ccdc)
- {
--	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
-+	struct vpfe_device *vpfe = to_vpfe(ccdc);
- 	struct vpfe_ccdc_config_params_raw *config_params =
- 				&ccdc->ccdc_cfg.bayer.config_params;
- 	struct ccdc_params_raw *params = &ccdc->ccdc_cfg.bayer;
-@@ -610,7 +610,7 @@ static inline enum ccdc_buftype vpfe_ccdc_get_buftype(struct vpfe_ccdc *ccdc)
- 
- static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
- {
--	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
-+	struct vpfe_device *vpfe = to_vpfe(ccdc);
- 
- 	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
- 		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
-@@ -742,7 +742,7 @@ static inline void vpfe_set_sdr_addr(struct vpfe_ccdc *ccdc, unsigned long addr)
- static int vpfe_ccdc_set_hw_if_params(struct vpfe_ccdc *ccdc,
- 				      struct vpfe_hw_if_param *params)
- {
--	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
-+	struct vpfe_device *vpfe = to_vpfe(ccdc);
- 
- 	ccdc->ccdc_cfg.if_type = params->if_type;
- 
+ .. toctree::
+    :maxdepth: 2
++
++   virtiofs
++
+diff --git a/Documentation/translations/zh_CN/filesystems/virtiofs.rst b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
+new file mode 100644
+index 000000000000..2a36cd417f8b
+--- /dev/null
++++ b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
+@@ -0,0 +1,62 @@
++.. raw:: latex
++
++	\renewcommand\thesection*
++	\renewcommand\thesubsection*
++
++.. include:: ../disclaimer-zh_CN.rst
++
++:Original: :ref:`Documentation/filesystems/virtiofs.rst <virtiofs_index>`
++
++译者
++::
++
++	中文版维护者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
++	中文版翻译者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
++	中文版校译者:  王文虎 Wang Wenhu <wenhu.wang@vivo.com>
++
++.. SPDX-License-Identifier: GPL-2.0
++
++===========================================
++virtiofs: virtio-fs 主机<->客机共享文件系统
++===========================================
++
++- Copyright (C) 2019 Red Hat, Inc. （译者注：英文版版权信息）
++
++介绍
++====
++Linux的virtiofs文件系统实现了一个半虚拟化VIRTIO类型“virtio-fs”设备的驱动，通过该\
++类型设备实现客机<->主机文件系统共享。它允许客机挂载一个已经导出到主机的目录。
++
++客机通常需要访问主机或者远程系统上的文件。使用场景包括：在新客机安装时让文件对其\
++可见；从主机上的根文件系统启动；对无状态或临时客机提供持久存储和在客机之间共享目录。
++
++尽管在某些任务可能通过使用已有的网络文件系统完成，但是却需要非常难以自动化的配置\
++步骤，且将存储网络暴露给客机。而virtio-fs设备通过提供不经过网络的文件系统访问文件\
++的设计方式解决了这些问题。
++
++另外，virto-fs设备发挥了主客机共存的优点提高了性能，并且提供了网络文件系统所不具备
++的一些语义功能。
++
++用法
++====
++以``myfs``标签将文件系统挂载到``/mnt``:
++
++.. code-block:: sh
++
++  guest# mount -t virtiofs myfs /mnt
++
++请查阅 https://virtio-fs.gitlab.io/ 了解配置QEMU和virtiofsd守护程序的详细信息。
++
++内幕
++====
++由于virtio-fs设备将FUSE协议用于文件系统请求，因此Linux的virtiofs文件系统与FUSE文\
++件系统客户端紧密集成在一起。客机充当FUSE客户端而主机充当FUSE服务器，内核与用户空\
++间之间的/dev/fuse接口由virtio-fs设备接口代替。
++
++FUSE请求被置于虚拟队列中由主机处理。主机填充缓冲区中的响应部分，而客机处理请求的完成部分。
++
++将/dev/fuse映射到虚拟队列需要解决/dev/fuse和虚拟队列之间语义上的差异。每次读取\
++/dev/fuse设备时，FUSE客户端都可以选择要传输的请求，从而可以使某些请求优先于其他\
++请求。虚拟队列有其队列语义，无法更改已入队请求的顺序。在虚拟队列已满的情况下尤
++其关键，因为此时不可能加入高优先级的请求。为了解决此差异，virtio-fs设备采用“hiprio”\
++（高优先级）虚拟队列，专门用于有别于普通请求的高优先级请求。
 -- 
-2.20.1
+2.17.1
 
