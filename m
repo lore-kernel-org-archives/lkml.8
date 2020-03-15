@@ -2,663 +2,111 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A3DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 22:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60ECC10F29
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 22:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE4F7206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 22:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584310877;
-	bh=oJVo0bDguNyiwujMEr5Wk/alDn8NHiQUWgqzOYpXmDk=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=NrSWdoHUoXpYRSSUDqqGHXAww1nDJ3V+vRbU2uYuAe5SSiMvvTQUHy4aMS+cttfC/
-	 SHWB5ud+EKYSm7707Dll5SoOPvQE+GTfkKEnjrikZ4B6xTHdEqkI3V8n4xvnJ9uoO6
-	 5nOIAqJ5gFKTO8HSmvyhvRgYEILG602j8euCPdlA=
+	by mail.kernel.org (Postfix) with ESMTP id B635D205ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 22:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgCOWTa (ORCPT
+        id S1729304AbgCOWyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 18:19:30 -0400
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:40236 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgCOWTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 18:19:30 -0400
-Received: by mail-lj1-f172.google.com with SMTP id 19so16442399ljj.7
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 15:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=z5KhTbHiy1+UK+HA4ylAG0ayT+u/W+IhTXKEbMJxZwg=;
-        b=L62EtOOaqSeYqqLPlMnk62rzHkbPUxRnLZLD33LNvdeIeHzdHRvyZEywcrEAVOMExB
-         wZHgKXfl76bHjwcCZ26sLncGXtELpEFPn+f/6hCbCG1/LS1v+gIq4heVxiV0/MjFouMN
-         WMpJLMbRulwYbL4yojtmTWObUx66A9Wo/Pox4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=z5KhTbHiy1+UK+HA4ylAG0ayT+u/W+IhTXKEbMJxZwg=;
-        b=mJeO/0Qv3tp6q2YlHyAhVIbRmD2MzTvCRiHxTyjB768ceoBlQtrd8Ti9HZjxF8RJnD
-         g1Cc/Crnzz3hH7tquatYWwtoKIz18gb7pXbnvBLqp4viqsYBUwZqgwHUkX6xnURPdSap
-         M7nvHIp1JbO1lPGhJkuy6KFpUl0eOFkmP0nVpMGHVuiunaaQo0R3V3aLoVH17wrpxhx6
-         otBnRyR8NciupRfFI0HJbnDKhrbqfI9ii9uUc65Qns0ENLHjOiNFOENHmMsO99crL59J
-         WGKOwA1bLcV/FHbE6WO95WeTgFMs/Tfxpd4GjtH72MOIm2//Oa+QQhScuEev4SO3qrye
-         At7A==
-X-Gm-Message-State: ANhLgQ31GOHygSqt+8k29ys0KiAyyDJMKNUY4TA8W2U9fgvOJP+FjO8v
-        AWch6fETq9DYaZYZkgNtaUuEUoyYncs=
-X-Google-Smtp-Source: ADFU+vtGpDi7CA80AsV02wWccUQaqoMJO0A/AdIRAr7MzP+TqeegSRXsemnQzFM+c7/N4xYzxjkqNA==
-X-Received: by 2002:a2e:85cb:: with SMTP id h11mr10676067ljj.55.1584310765180;
-        Sun, 15 Mar 2020 15:19:25 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id c22sm14707604lfm.25.2020.03.15.15.19.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Mar 2020 15:19:24 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id e18so16472141ljn.12
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 15:19:24 -0700 (PDT)
-X-Received: by 2002:a2e:9b07:: with SMTP id u7mr889041lji.265.1584310763732;
- Sun, 15 Mar 2020 15:19:23 -0700 (PDT)
+        Sun, 15 Mar 2020 18:54:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:17724 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729289AbgCOWyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 18:54:49 -0400
+IronPort-SDR: msDA0z2FmERdC0az68Nz6WpGd5J0xNiNXwB7WtiKtl6K/h8fxIG3ZyyDVxwfJWleoOxS7Nh7Mh
+ FCCkIrWzOtUA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2020 15:54:48 -0700
+IronPort-SDR: q2EG/JiCttc6d/8TXdcFTU0FuxuXu0mvEotBumngkuu10QZUpzjeF5b/bxQVvPy1kw8vM3hHHZ
+ gC/MxoxvsYkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,558,1574150400"; 
+   d="scan'208";a="278840400"
+Received: from babayass-mobl.ger.corp.intel.com (HELO localhost) ([10.249.90.210])
+  by fmsmga002.fm.intel.com with ESMTP; 15 Mar 2020 15:54:44 -0700
+Date:   Mon, 16 Mar 2020 00:54:43 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        jmorris@namei.org, dhowells@redhat.com
+Subject: [GIT PULL] tpmdd updates for Linux v5.7
+Message-ID: <20200315225443.GA1413900@linux.intel.com>
 MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 15 Mar 2020 15:19:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whcVTGVPtvdb9SdCcjLawG6tLvbNWfWB_Y6=QhovFy2rg@mail.gmail.com>
-Message-ID: <CAHk-=whcVTGVPtvdb9SdCcjLawG6tLvbNWfWB_Y6=QhovFy2rg@mail.gmail.com>
-Subject: Linux 5.6-rc6
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Another week, another rc.
+Hi,
 
-Things look normal - all the stats look like they usually do at this point.
+Just a bunch of local fixes here and there.
 
-The full patch is about 60% driver changes (gpu, networking, s390
-stand out, but there's noise all over), with the rest being tooling
-(mainly perf), networking, arch updates (mainly x86, but some arc,
-mips and s390 too), and misc core updates.
+/Jarkko
 
-Diffstat looks normal, and the number of commits is right in the
-middle of the usual range too. And I don't think any of the commits
-look all that strange either - it's all pretty small.
+The following changes since commit 0d81a3f29c0afb18ba2b1275dcccf21e0dd4da38:
 
-So please test,
+  Merge tag 'drm-fixes-2020-03-13' of git://anongit.freedesktop.org/drm/drm (2020-03-12 18:05:19 -0700)
 
-            Linus
+are available in the Git repository at:
 
----
+  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20200316
 
-Al Viro (2):
-      gfs2_atomic_open(): fix O_EXCL|O_CREAT handling on cold dcache
-      cifs_atomic_open(): fix double-put on late allocation failure
+for you to fetch changes up to 2e356101e72ab1361821b3af024d64877d9a798d:
 
-Amir Goldstein (2):
-      ovl: fix lock in ovl_llseek()
-      ovl: fix some xino configurations
+  KEYS: reaching the keys quotas correctly (2020-03-15 20:59:50 +0200)
 
-Amol Grover (2):
-      iommu/vt-d: Fix RCU list debugging warnings
-      net: caif: Add lockdep expression to RCU traversal primitive
+----------------------------------------------------------------
+tpmdd updates for Linux v5.7
 
-Andrea Parri (1):
-      workqueue: Document (some) memory-ordering properties of
-{queue,schedule}_work()
+----------------------------------------------------------------
+Alexandru Ardelean (1):
+      tpm_tis_spi: use new 'delay' structure for SPI transfer delays
 
-Andrew Lunn (2):
-      net: dsa: Don't instantiate phylink for CPU/DSA ports unless needed
-      net: dsa: mv88e6xxx: Add missing mask of ATU occupancy register
+Lukas Bulwahn (1):
+      MAINTAINERS: adjust to trusted keys subsystem creation
 
-Anson Huang (1):
-      clk: imx8mn: Fix incorrect clock defines
+Matthew Garrett (1):
+      tpm: Don't make log failures fatal
 
-Arnaldo Carvalho de Melo (5):
-      perf tests bp_account: Make global variable static
-      perf env: Do not return pointers to local variables
-      perf parse-events: Use asprintf() instead of strncpy() to read
-tracepoint files
-      perf bench: Share some global variables to fix build with gcc 10
-      perf symbols: Don't try to find a vmlinux file when looking for
-kernel modules
+Sergiu Cuciurean (1):
+      tpm: tpm_tis_spi_cr50: use new structure for SPI transfer delays
 
-Artem Savkov (1):
-      ftrace: Return the first found result in lookup_rec()
+Stefan Berger (3):
+      tpm: of: Handle IBM,vtpm20 case when getting log parameters
+      tpm: ibmvtpm: Wait for buffer to be set before proceeding
+      tpm: ibmvtpm: Add support for TPM2
 
-Ben Chuang (1):
-      mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x
+Vasily Averin (2):
+      tpm: tpm1_bios_measurements_next should increase position index
+      tpm: tpm2_bios_measurements_next should increase position index
 
-Can Guo (1):
-      scsi: ufs: Fix possible unclocked access to auto hibern8 timer regist=
-er
+Yang Xu (1):
+      KEYS: reaching the keys quotas correctly
 
-Charles Keepax (2):
-      pinctrl: core: Remove extra kref_get which blocks hogs being freed
-      pinctrl: madera: Add missing call to pinctrl_unregister_mappings
-
-Chris Packham (1):
-      net: mvmdio: avoid error message for optional IRQ
-
-Chris Wilson (5):
-      drm/i915: Actually emit the await_start
-      drm/i915: Return early for await_start on same timeline
-      drm/i915/execlists: Enable timeslice on partial virtual engine dequeu=
-e
-      drm/i915/gt: Close race between cacheline_retire and free
-      drm/i915: Defer semaphore priority bumping to a workqueue
-
-Christian Borntraeger (1):
-      KVM: s390: Also reset registers in sync regs for initial cpu reset
-
-Christian Brauner (1):
-      pid: make ENOMEM return value more obvious
-
-Christoph Hellwig (1):
-      driver code: clarify and fix platform device DMA mask allocation
-
-Colin Ian King (1):
-      net: systemport: fix index check to avoid an array out of bounds acce=
-ss
-
-Corey Minyard (1):
-      pid: Fix error return value in some cases
-
-Cyril Hrubis (1):
-      sys/sysinfo: Respect boottime inside time namespace
-
-Dajun Jin (1):
-      drivers/of/of_mdio.c:fix of_mdiobus_register()
-
-Dan Carpenter (1):
-      net: nfc: fix bounds checking bugs on "pipe"
-
-Dan Moulding (1):
-      iwlwifi: mvm: Do not require PHY_SKU NVM section for 3168 devices
-
-Daniel Drake (1):
-      iommu/vt-d: Ignore devices with out-of-spec domain number
-
-Davide Caratti (1):
-      tc-testing: add ETS scheduler to tdc build configuration
-
-Dmitry Bogdanov (2):
-      net: macsec: update SCI upon MAC address change.
-      net: macsec: invoke mdo_upd_secy callback when mac address changed
-
-Dmitry Yakunin (2):
-      inet_diag: return classid for all socket types
-      cgroup, netclassid: periodically release file_lock on classid updatin=
-g
-
-Dominik Czarnota (1):
-      sxgbe: Fix off by one in samsung driver strncpy size arg
-
-Edward Cree (1):
-      sfc: detach from cb_page in efx_copy_channel()
-
-Edwin Peer (1):
-      bnxt_en: fix error handling when flashing from file
-
-Eric Biggers (1):
-      fscrypt: don't evict dirty inodes after removing key
-
-Eric Dumazet (5):
-      slip: make slhc_compress() more robust against malicious packets
-      bonding/alb: make sure arp header is pulled before accessing it
-      gre: fix uninit-value in __iptunnel_pull_header
-      ipvlan: do not use cond_resched_rcu() in ipvlan_process_multicast()
-      net: memcg: fix lockdep splat in inet_csk_accept()
-
-Eugeniy Paltsev (1):
-      ARC: define __ALIGN_STR and __ALIGN symbols for ARC
-
-Felix Fietkau (1):
-      mt76: fix array overflow on receiving too many fragments for a packet
-
-Florian Westphal (2):
-      netfilter: nf_tables: free flowtable hooks on hook register error
-      netfilter: nf_tables: fix infinite loop when expr is not available
-
-Geert Uytterhoeven (2):
-      ARC: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-      of: clk: Make of_clk_get_parent_{count,name}() parameter const
-
-Gustavo A. R. Silva (1):
-      auxdisplay: charlcd: replace zero-length array with flexible-array me=
-mber
-
-H. Nikolaus Schaller (2):
-      MIPS: DTS: CI20: fix PMU definitions for ACT8600
-      MIPS: DTS: CI20: fix interrupt for pcf8563 RTC
-
-Haiwei Li (1):
-      KVM: SVM: Fix the svm vmexit code for WRMSR
-
-Halil Pasic (2):
-      virtio-blk: fix hw_queue stopped on arbitrary error
-      virtio-blk: improve virtqueue error to BLK_STS
-
-Hamish Martin (1):
-      i2c: gpio: suppress error on probe defer
-
-Hangbin Liu (5):
-      net/ipv6: use configured metric when add peer route
-      net/ipv6: need update peer route when modify metric
-      net/ipv6: remove the old peer route if change it to a new one
-      selftests/net/fib_tests: update addr_metric_test for peer route testi=
-ng
-      ipv6/addrconf: call ipv6_mc_up() for non-Ethernet interface
-
-Hans de Goede (3):
-      iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_taint
-      iommu/vt-d: dmar_parse_one_rmrr: replace WARN_TAINT with pr_warn
-+ add_taint
-      iommu/vt-d: quirk_ioat_snb_local_iommu: replace WARN_TAINT with
-pr_warn + add_taint
-
-Hauke Mehrtens (1):
-      phylink: Improve error message when validate failed
-
-Hawking Zhang (1):
-      drm/amdgpu: correct ROM_INDEX/DATA offset for VEGA20
-
-Heiner Kallweit (2):
-      net: phy: avoid clearing PHY interrupts twice in irq handler
-      net: phy: fix MDIO bus PM PHY resuming
-
-Hersen Wu (1):
-      drm/amdgpu/powerplay: nv1x, renior copy dcn clock settings of
-watermark to smu during boot up
-
-Hillf Danton (1):
-      workqueue: don't use wq_select_unbound_cpu() for bound works
-
-Ian Rogers (1):
-      tools: Fix off-by 1 relative directory includes
-
-Jacob Keller (1):
-      devlink: remove trigger command from devlink-region.rst
-
-Jakub Kicinski (26):
-      devlink: validate length of param values
-      devlink: validate length of region addr/len
-      fib: add missing attribute validation for tun_id
-      nl802154: add missing attribute validation
-      nl802154: add missing attribute validation for dev_type
-      can: add missing attribute validation for termination
-      macsec: add missing attribute validation for port
-      openvswitch: add missing attribute validation for hash
-      net: fq: add missing attribute validation for orphan mask
-      net: taprio: add missing attribute validation for txtime delay
-      team: add missing attribute validation for port ifindex
-      team: add missing attribute validation for array index
-      tipc: add missing attribute validation for MTU property
-      nfc: add missing attribute validation for SE API
-      nfc: add missing attribute validation for deactivate target
-      nfc: add missing attribute validation for vendor subcommand
-      netfilter: cthelper: add missing attribute validation for cthelper
-      netfilter: nft_payload: add missing attribute validation for
-payload csum flags
-      netfilter: nft_tunnel: add missing attribute validation for tunnels
-      MAINTAINERS: remove bouncing pkaustub@cisco.com from enic
-      MAINTAINERS: update cxgb4vf maintainer to Vishal
-      nl80211: add missing attribute validation for critical protocol indic=
-ation
-      nl80211: add missing attribute validation for beacon report scanning
-      nl80211: add missing attribute validation for channel switch
-      net: fec: validate the new settings in fec_enet_set_coalesce()
-      MAINTAINERS: remove Sathya Perla as Emulex NIC maintainer
-
-Jann Horn (1):
-      afs: Use kfree_rcu() instead of casting kfree() to rcu_callback_t
-
-Jarkko Nikula (1):
-      i2c: designware-pci: Fix BUG_ON during device removal
-
-Jason A. Donenfeld (2):
-      crypto: x86/curve25519 - support assemblers with no adx support
-      KVM: fix Kconfig menu text for -Werror
-
-Jens Axboe (1):
-      io_uring: ensure RCU callback ordering with rcu_barrier()
-
-Jian Shen (4):
-      net: hns3: fix a not link up issue when fibre port supports autoneg
-      net: hns3: fix VF VLAN table entries inconsistent issue
-      net: hns3: fix RMW issue for VLAN filter switch
-      net: hns3: clear port base VLAN when unload PF
-
-Jiang Lidong (1):
-      veth: ignore peer tx_dropped when counting local rx_dropped
-
-Jiri Wiesner (1):
-      ipvlan: do not add hardware address of master to its unicast filter l=
-ist
-
-John Garry (1):
-      perf jevents: Fix leak of mapfile memory
-
-Jonas Gorski (1):
-      net: phy: bcm63xx: fix OOPS due to missing driver name
-
-Jonathan Neusch=C3=A4fer (2):
-      docs: networking: net_failover: Fix a few typos
-      rhashtable: Document the right function parameters
-
-Julian Wiedmann (6):
-      s390/qeth: don't reset default_out_queue
-      s390/qeth: handle error when backing RX buffer
-      s390/qeth: cancel RX reclaim work earlier
-      s390/qeth: use page pointers to manage RX buffer pool
-      s390/qeth: refactor buffer pool code
-      s390/qeth: implement smarter resizing of the RX buffer pool
-
-Juliet Kim (1):
-      ibmvnic: Do not process device remove during device reset
-
-Karsten Graul (1):
-      net/smc: cancel event worker during device removal
-
-Kim Phillips (1):
-      perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT =
-flag
-
-Krzysztof Kozlowski (2):
-      ARC: Cleanup old Kconfig IO scheduler options
-      auxdisplay: Fix Kconfig indentation
-
-Leonard Crestez (1):
-      pinctrl: imx: scu: Align imx sc msg structs to 4
-
-Linus Torvalds (1):
-      Linux 5.6-rc6
-
-Linus Walleij (2):
-      pinctrl: qcom: ssbi-gpio: Fix fwspec parsing bug
-      pinctrl: qcom: Assign irq_eoi conditionally
-
-Lyude Paul (4):
-      drm/dp_mst: Rename drm_dp_mst_is_dp_mst_end_device() to be less redun=
-dant
-      drm/dp_mst: Use full_pbn instead of available_pbn for bandwidth check=
-s
-      drm/dp_mst: Reprobe path resources in CSN handler
-      drm/dp_mst: Rewrite and fix bandwidth limit checks
-
-Madalin Bucur (4):
-      dt-bindings: net: FMan erratum A050385
-      arm64: dts: ls1043a: FMan erratum A050385
-      fsl/fman: detect FMan erratum A050385
-      dpaa_eth: FMan erratum A050385 workaround
-
-Mahesh Bandewar (3):
-      ipvlan: don't deref eth hdr before checking it's set
-      ipvlan: add cond_resched_rcu() while processing muticast backlog
-      macvlan: add cond_resched() during multicast processing
-
-Marc Zyngier (2):
-      iommu/dma: Fix MSI reservation allocation
-      irqchip/gic-v3: Workaround Cavium erratum 38539 when reading GICD_TYP=
-ER2
-
-Marek Szyprowski (1):
-      drm/exynos: Fix cleanup of IOMMU related objects
-
-Martin Leung (1):
-      drm/amd/display: update soc bb for nv14
-
-Masanari Iida (3):
-      linux-next: DOC: RDS: Fix a typo in rds.txt
-      ktest: Fix some typos in sample.conf
-      ktest: Fix typos in ktest.pl
-
-Mathias Kresin (1):
-      pinctrl: falcon: fix syntax error
-
-Matthew Auld (1):
-      drm/i915: be more solid in checking the alignment
-
-Megha Dey (2):
-      iommu/vt-d: Fix debugfs register reads
-      iommu/vt-d: Populate debugfs if IOMMUs are detected
-
-Michael Auchter (1):
-      misc: eeprom: at24: fix regulator underflow
-
-Michal Koutn=C3=BD (1):
-      cgroup: Iterate tasks that did not finish do_exit()
-
-Miguel Ojeda (1):
-      clang-format: Update with the latest for_each macro list
-
-Mika Westerberg (3):
-      watchdog: iTCO_wdt: Export vendorsupport
-      watchdog: iTCO_wdt: Make ICH_RES_IO_SMI optional
-      i2c: i801: Do not add ICH_RES_IO_SMI for the iTCO_wdt device
-
-Mike Gilbert (1):
-      cpupower: avoid multiple definition with gcc -fno-common
-
-Miklos Szeredi (2):
-      fuse: fix stack use after return
-      ovl: fix lockdep warning for async write
-
-Ming Lei (1):
-      blk-mq: insert flush request to the front of dispatch queue
-
-Nathan Chancellor (2):
-      virtio_balloon: Adjust label in virtballoon_probe
-      dpaa_eth: Remove unnecessary boolean expression in dpaa_get_headroom
-
-Nick Desaulniers (1):
-      perf diff: Fix undefined string comparision spotted by clang's
--Wstring-compare
-
-Nicolas Belin (1):
-      pinctrl: meson-gxl: fix GPIOX sdio pins
-
-Nicolas Cavallari (1):
-      mac80211: Do not send mesh HWMP PREQ if HWMP is disabled
-
-Nitesh Narayan Lal (1):
-      KVM: x86: Initializing all kvm_lapic_irq fields in ioapic_write_indir=
-ect
-
-Pablo Neira Ayuso (3):
-      netlink: Use netlink header as base to calculate bad attribute offset
-      netfilter: nf_tables: dump NFTA_CHAIN_FLAGS attribute
-      netfilter: nft_chain_nat: inet family is missing module ownership
-
-Paolo Abeni (1):
-      mptcp: always include dack if possible.
-
-Paolo Lungaroni (1):
-      seg6: fix SRv6 L2 tunnels to use IANA-assigned protocol number
-
-Paul Cercueil (1):
-      MIPS: Fix CONFIG_MIPS_CMDLINE_DTB_EXTEND handling
-
-Peter Xu (1):
-      x86/vector: Remove warning on managed interrupt migration
-
-Peter Zijlstra (1):
-      futex: Fix inode life-time issue
-
-Qian Cai (3):
-      cgroup: fix psi_show() crash on 32bit ino archs
-      iommu/vt-d: Fix RCU-list bugs in intel_iommu_init()
-      iommu/vt-d: Silence RCU-list debugging warnings
-
-Randy Dunlap (2):
-      ARC: fix some Kconfig typos
-      atm: nicstar: fix if-statement empty body warning
-
-Remi Pommarel (1):
-      net: stmmac: dwmac1000: Disable ACS if enhanced descs are not used
-
-Robin Murphy (1):
-      iommu/io-pgtable-arm: Fix IOVA validation for 32-bit
-
-Russell King (2):
-      net: dsa: mv88e6xxx: fix lockup on warm boot
-      net: dsa: fix phylink_start()/phylink_stop() calls
-
-Scott Mayhew (4):
-      NFS: Ensure the fs_context has the correct fs_type before mounting
-      NFS: Don't hard-code the fs_type when submounting
-      NFS: Fix leak of ctx->nfs_server.hostname
-      nfs: add minor version to nfs_server_key for fscache
-
-Sean Christopherson (1):
-      KVM: VMX: Condition ENCLS-exiting enabling on CPU support for SGX1
-
-Shakeel Butt (2):
-      cgroup: memcg: net: do not associate sock with unrelated cgroup
-      net: memcg: late association of sock to memcg
-
-Shannon Nelson (1):
-      ionic: fix vf op lock usage
-
-Shin'ichiro Kawasaki (1):
-      block: Fix partition support for host aware zoned block devices
-
-Stefan Haberland (1):
-      s390/dasd: fix data corruption for thin provisioned devices
-
-Stephen Boyd (1):
-      mmc: sdhci-msm: Mark sdhci_msm_cqe_disable static
-
-Steven Rostedt (VMware) (2):
-      ktest: Make default build option oldconfig not randconfig
-      ktest: Add timeout for ssh sync testing
-
-Suman Anna (1):
-      virtio_ring: Fix mem leak with vring_new_virtqueue()
-
-Suravee Suthikulpanit (1):
-      iommu/amd: Fix IOMMU AVIC not properly update the is_run bit in IRTE
-
-Sven Eckelmann (1):
-      batman-adv: Don't schedule OGM for disabled interface
-
-Takashi Iwai (1):
-      ipmi_si: Avoid spurious errors for optional IRQs
-
-Taniya Das (2):
-      clk: qcom: videocc: Update the clock flag for video_cc_vcodec0_core_c=
-lk
-      clk: qcom: dispcc: Remove support of disp_cc_mdss_rscc_ahb_clk
-
-Tejun Heo (1):
-      blk-iocost: fix incorrect vtime comparison in iocg_is_idle()
-
-Thomas Bogendoerfer (1):
-      MAINTAINERS: Correct MIPS patchwork URL
-
-Thomas Gleixner (2):
-      x86/mce/therm_throt: Undo thermal polling properly on CPU offline
-      futex: Unbreak futex hashing
-
-Tina Zhang (2):
-      drm/i915/gvt: Fix emulated vbt size issue
-      drm/i915/gvt: Fix dma-buf display blur issue on CFL
-
-Tom Lendacky (1):
-      x86/ioremap: Map EFI runtime services data as encrypted for SEV
-
-Tom Zhao (1):
-      sfc: complete the next packet when we receive a timestamp
-
-Tommi Rantala (3):
-      perf top: Fix stdio interface input handling with glibc 2.28+
-      perf bench futex-wake: Restore thread count default to online CPU cou=
-nt
-      perf bench: Clear struct sigaction before sigaction() syscall
-
-Tony Luck (1):
-      x86/mce: Fix logic and comments around MSR_PPIN_CTL
-
-Tycho Andersen (1):
-      cgroup1: don't call release_agent when it is ""
-
-Ulf Hansson (5):
-      mmc: core: Allow host controllers to require R1B for CMD6
-      mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
-      mmc: sdhci-omap: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
-      mmc: sdhci-tegra: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUS=
-Y
-      mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command
-
-Vasily Averin (6):
-      cgroup-v1: cgroup_pidlist_next should update position index
-      cgroup: cgroup_procs_next should increase position index
-      netfilter: nf_conntrack: ct_cpu_seq_next should increase position ind=
-ex
-      netfilter: synproxy: synproxy_cpu_seq_next should increase position i=
-ndex
-      netfilter: xt_recent: recent_seq_next should increase position index
-      netfilter: x_tables: xt_mttg_seq_next should increase position index
-
-Vasundhara Volam (1):
-      bnxt_en: reinitialize IRQs when MTU is modified
-
-Vineet Gupta (2):
-      ARC: fpu: fix randconfig build error reported by 0-day test service
-      ARC: show_regs: reduce lines of output
-
-Vinicius Costa Gomes (1):
-      taprio: Fix sending packets without dequeueing them
-
-Vishal Kulkarni (1):
-      cxgb4: fix checks for max queues to allocate
-
-Vitaly Kuznetsov (3):
-      KVM: x86: clear stale x86_emulate_ctxt->intercept value
-      KVM: x86: remove stale comment from struct x86_emulate_ctxt
-      KVM: nVMX: avoid NULL pointer dereference with incorrect EVMCS GPAs
-
-Vladimir Oltean (2):
-      net: dsa: sja1105: Don't destroy not-yet-created xmit_worker
-      net: mscc: ocelot: properly account for VLAN header length when
-setting MRU
-
-Vladis Dronov (2):
-      efi: Fix a race and a buffer overflow while reading efivars via sysfs
-      efi: Add a sanity check to efivar_store_raw()
-
-Wanpeng Li (1):
-      KVM: X86: Fix dereference null cpufreq policy
-
-Wen Xiong (1):
-      scsi: ipr: Fix softlockup when rescanning devices in petitboot
-
-Willem de Bruijn (1):
-      net/packet: tpacket_rcv: do not increment ring index on drop
-
-Wolfram Sang (2):
-      macintosh: windfarm: fix MODINFO regression
-      i2c: acpi: put device when verifying client fails
-
-Yangtao Li (1):
-      auxdisplay: img-ascii-lcd: convert to devm_platform_ioremap_resource
-
-Yonghyun Hwang (1):
-      iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys() for huge page
-
-Yonglong Liu (1):
-      net: hns3: fix "tc qdisc del" failed issue
-
-You-Sheng Yang (1):
-      r8152: check disconnect status after long sleep
-
-Zhenyu Wang (1):
-      drm/i915/gvt: Fix unnecessary schedule timer when no vGPU exits
-
-Zhenzhong Duan (1):
-      iommu/vt-d: Fix the wrong printing in RHSA parsing
+ MAINTAINERS                         |  4 ++--
+ drivers/char/tpm/eventlog/common.c  | 12 ++++--------
+ drivers/char/tpm/eventlog/of.c      |  3 ++-
+ drivers/char/tpm/eventlog/tpm1.c    |  2 +-
+ drivers/char/tpm/eventlog/tpm2.c    |  2 +-
+ drivers/char/tpm/tpm-chip.c         |  4 +---
+ drivers/char/tpm/tpm.h              |  3 ++-
+ drivers/char/tpm/tpm2-cmd.c         |  2 +-
+ drivers/char/tpm/tpm_ibmvtpm.c      | 17 +++++++++++++++++
+ drivers/char/tpm/tpm_ibmvtpm.h      |  1 +
+ drivers/char/tpm/tpm_tis_spi_cr50.c |  7 ++++++-
+ drivers/char/tpm/tpm_tis_spi_main.c |  3 ++-
+ security/keys/key.c                 |  2 +-
+ security/keys/keyctl.c              |  4 ++--
+ 14 files changed, 43 insertions(+), 23 deletions(-)
