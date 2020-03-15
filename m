@@ -2,166 +2,153 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72383C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB693C10F29
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4863B20575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584287423;
-	bh=NRB9R6tu32z8WFealdCcR4r0Ghn1cI6ttGf2yRUeg/I=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SEmRtp1uX35cfqq7KcabJpBbfOo3XUEJ0q4gElEePbawsA3Z/Abp2LezSOcwe0Xa6
-	 r+qo0kPBiO9HxamD9HB+RAAc02kiKeIYoDJC0Sc6sZ1X+93G87SWTIP8UNZLmTTmmE
-	 VxO0oYgjU1Wb/wsYTEOPxUWEXEIb4q6JMsasTVfk=
+	by mail.kernel.org (Postfix) with ESMTP id AE7D620575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgCOPuW (ORCPT
+        id S1728901AbgCOPuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:50:22 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:48729 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728310AbgCOPuV (ORCPT
+        Sun, 15 Mar 2020 11:50:24 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:23002 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728634AbgCOPuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:50:21 -0400
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 02FFnsYW028305;
-        Mon, 16 Mar 2020 00:49:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 02FFnsYW028305
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584287394;
-        bh=DXSJAQYV+K0M5wfTtzFMast16/HPOG8d+XP8Fy1ApxU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tfqCX3RMCkBadXSFbWsEHy6hJ0kHWD78afZDuq275jnzivm7s4zzBYtwbQFmquZzz
-         mYqV5B98M6vxe+zXg7V1IYJ21CBrHyqhTs2YtcX32D9qukaYMywOAJaphqFB3EPLg3
-         fqRRfUMaHBugriwrNRshJGZKyk4A2mdc9k8Q58gKNQR8Wu6EcMVHaTTc3yD3IHU8aw
-         eRjm84BYG97Jw5UT5osVGXcT+2Vd2T/vAHSHWC9Z0sQajdiaEEzF/vJBy1Ln+df+I3
-         4z6cGN++KzZvXSfBuTHyRzW3uMZR9FZ7CZ1ztSUeJBpaTrxL8UlQsMUbwjuQaGfCbj
-         0HqyC6K8u/eUA==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Johan Hovold <johan@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH] usb: get rid of 'choice' for legacy gadget drivers
-Date:   Mon, 16 Mar 2020 00:49:48 +0900
-Message-Id: <20200315154948.26569-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sun, 15 Mar 2020 11:50:23 -0400
+Received: from localhost.localdomain ([93.22.37.174])
+        by mwinf5d79 with ME
+        id EfqG2200B3lSDvh03fqGhy; Sun, 15 Mar 2020 16:50:18 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 15 Mar 2020 16:50:18 +0100
+X-ME-IP: 93.22.37.174
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     vkoul@kernel.org, dan.j.williams@intel.com, peter.ujfalusi@ti.com,
+        grygorii.strashko@ti.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] dmaengine: ti: k3-udma: Fix an error handling path in 'k3_udma_glue_cfg_rx_flow()'
+Date:   Sun, 15 Mar 2020 16:50:15 +0100
+Message-Id: <20200315155015.27303-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/usb/gadget/legacy/Kconfig creates a 'choice' inside another
-'choice'.
+All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
+function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
 
-The outer choice: line 17 "USB Gadget precomposed configurations"
-The inner choice: line 484 "EHCI Debug Device mode"
+This not correct because this function has a 'channel->flows_ready--;' at
+the end, but 'flows_ready' has not been incremented here, when we branch to
+the error handling path.
 
-I wondered why the whole legacy gadget drivers reside in such a big
-choice block.
+In order to keep a correct value in 'flows_ready', un-roll
+'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
+at the correct places when an error is detected.
 
-This dates back to 2003, "[PATCH] USB: fix for multiple definition of
-`usb_gadget_get_string'". [1]
+Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
 
-At that time, the global function, usb_gadget_get_string(), was linked
-into multiple drivers. That was why only one driver was able to become
-built-in at the same time.
-
-Later, commit a84d9e5361bc ("usb: gadget: start with libcomposite")
-moved usb_gadget_get_string() to a separate module, libcomposite.ko
-instead of including usbstring.c from multiple modules.
-
-More and more refactoring was done, and after commit 1bcce939478f
-("usb: gadget: multi: convert to new interface of f_mass_storage"),
-you can link multiple gadget drivers into vmlinux without causing
-multiple definition error.
-
-This is the only user of the nested choice structure ever. Removing
-this mess will make some Kconfig cleanups possible.
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=fee4cf49a81381e072c063571d1aadbb29207408
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
+Not sure that the last point of the description is correct. Maybe, the
+'xudma_rflow_put / return -ENODEV;' should be kept in order not to
+override 'flow->udma_rflow'.
+---
+ drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
- drivers/usb/gadget/legacy/Kconfig | 48 ++++++++++++++-----------------
- 1 file changed, 22 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/usb/gadget/legacy/Kconfig b/drivers/usb/gadget/legacy/Kconfig
-index 6e7e1a9202e6..cc20f61d48a0 100644
---- a/drivers/usb/gadget/legacy/Kconfig
-+++ b/drivers/usb/gadget/legacy/Kconfig
-@@ -13,32 +13,28 @@
- # With help from a special transceiver and a "Mini-AB" jack, systems with
- # both kinds of controller can also support "USB On-the-Go" (CONFIG_USB_OTG).
- #
-+# A Linux "Gadget Driver" talks to the USB Peripheral Controller
-+# driver through the abstract "gadget" API.  Some other operating
-+# systems call these "client" drivers, of which "class drivers"
-+# are a subset (implementing a USB device class specification).
-+# A gadget driver implements one or more USB functions using
-+# the peripheral hardware.
-+#
-+# Gadget drivers are hardware-neutral, or "platform independent",
-+# except that they sometimes must understand quirks or limitations
-+# of the particular controllers they work with.  For example, when
-+# a controller doesn't support alternate configurations or provide
-+# enough of the right types of endpoints, the gadget driver might
-+# not be able work with that controller, or might need to implement
-+# a less common variant of a device class protocol.
-+#
-+# The available choices each represent a single precomposed USB
-+# gadget configuration. In the device model, each option contains
-+# both the device instantiation as a child for a USB gadget
-+# controller, and the relevant drivers for each function declared
-+# by the device.
+diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+index dbccdc7c0ed5..890573eb1625 100644
+--- a/drivers/dma/ti/k3-udma-glue.c
++++ b/drivers/dma/ti/k3-udma-glue.c
+@@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 	if (IS_ERR(flow->udma_rflow)) {
+ 		ret = PTR_ERR(flow->udma_rflow);
+ 		dev_err(dev, "UDMAX rflow get err %d\n", ret);
+-		goto err;
++		goto err_return;
+ 	}
  
--choice
--	tristate "USB Gadget precomposed configurations"
--	default USB_ETH
--	optional
--	help
--	  A Linux "Gadget Driver" talks to the USB Peripheral Controller
--	  driver through the abstract "gadget" API.  Some other operating
--	  systems call these "client" drivers, of which "class drivers"
--	  are a subset (implementing a USB device class specification).
--	  A gadget driver implements one or more USB functions using
--	  the peripheral hardware.
--
--	  Gadget drivers are hardware-neutral, or "platform independent",
--	  except that they sometimes must understand quirks or limitations
--	  of the particular controllers they work with.  For example, when
--	  a controller doesn't support alternate configurations or provide
--	  enough of the right types of endpoints, the gadget driver might
--	  not be able work with that controller, or might need to implement
--	  a less common variant of a device class protocol.
--
--	  The available choices each represent a single precomposed USB
--	  gadget configuration. In the device model, each option contains
--	  both the device instantiation as a child for a USB gadget
--	  controller, and the relevant drivers for each function declared
--	  by the device.
-+menu "USB Gadget precomposed configurations"
+ 	if (flow->udma_rflow_id != xudma_rflow_get_id(flow->udma_rflow)) {
+-		xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto err_rflow_put;
+ 	}
  
- config USB_ZERO
- 	tristate "Gadget Zero (DEVELOPMENT)"
-@@ -516,4 +512,4 @@ config USB_G_WEBCAM
- 	  Say "y" to link the driver statically, or "m" to build a
- 	  dynamically linked module called "g_webcam".
+ 	/* request and cfg rings */
+@@ -592,7 +592,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 	if (!flow->ringrx) {
+ 		ret = -ENODEV;
+ 		dev_err(dev, "Failed to get RX ring\n");
+-		goto err;
++		goto err_rflow_put;
+ 	}
  
--endchoice
-+endmenu
+ 	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
+@@ -600,19 +600,19 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 	if (!flow->ringrxfdq) {
+ 		ret = -ENODEV;
+ 		dev_err(dev, "Failed to get RXFDQ ring\n");
+-		goto err;
++		goto err_ringrx_free;
+ 	}
+ 
+ 	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
+-		goto err;
++		goto err_ringrxfdq_free;
+ 	}
+ 
+ 	ret = k3_ringacc_ring_cfg(flow->ringrxfdq, &flow_cfg->rxfdq_cfg);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to cfg ringrxfdq %d\n", ret);
+-		goto err;
++		goto err_ringrxfdq_free;
+ 	}
+ 
+ 	if (rx_chn->remote) {
+@@ -662,7 +662,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 	if (ret) {
+ 		dev_err(dev, "flow%d config failed: %d\n", flow->udma_rflow_id,
+ 			ret);
+-		goto err;
++		goto err_ringrxfdq_free;
+ 	}
+ 
+ 	rx_chn->flows_ready++;
+@@ -670,8 +670,18 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 		flow->udma_rflow_id, rx_chn->flows_ready);
+ 
+ 	return 0;
+-err:
+-	k3_udma_glue_release_rx_flow(rx_chn, flow_idx);
++
++err_ringrxfdq_free:
++	k3_ringacc_ring_free(flow->ringrxfdq);
++
++err_ringrx_free:
++	k3_ringacc_ring_free(flow->ringrx);
++
++err_rflow_put:
++	xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
++	flow->udma_rflow = NULL;
++
++err_return:
+ 	return ret;
+ }
+ 
 -- 
-2.17.1
+2.20.1
 
