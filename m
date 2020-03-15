@@ -2,60 +2,61 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FC7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F91EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31EF20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F3B20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLjEFbXF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="am6oQ6Qg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgCOK1k (ORCPT
+        id S1728271AbgCOK1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 15 Mar 2020 06:27:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37631 "EHLO
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38745 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbgCOK1j (ORCPT
+        with ESMTP id S1728141AbgCOK1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 15 Mar 2020 06:27:39 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 6so17541053wre.4;
-        Sun, 15 Mar 2020 03:27:37 -0700 (PDT)
+Received: by mail-wr1-f65.google.com with SMTP id x11so12801859wrv.5;
+        Sun, 15 Mar 2020 03:27:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pqm0PezCCdfuI97ApKbyt3LnL9VFZxah2FPqIKHnX0w=;
-        b=VLjEFbXFE5x9GBhCgoIExA0aVaVqvPUcT4E5pbWxZyUDXbzuiQJlTuiWbO9urbHkwu
-         VT83BtZpyfUhpFSW4u+uB9LPlDu3fiQe0VzopeQDDdzBkU6Wr2k+BawCN02a/cXqnD4O
-         AxwYkfYNe5PoOFYi8JK/jMwcI/FdszMm5Er/RAA7lNp0vbBVcu1xBLYQA7Jx6PBK+ge+
-         x30eBLdeYa+6umoOgegu3FkSwCiIYCDb95jMmgzvvoyqiD8UVBMd15LrxQ/xBjaJqkNO
-         xyRatiuZBPdRRNJ9/IdrXiNQvHNHrKGMLqNj4rVG/n+dRPjPYVA8RqTfMRgMpSUesgKZ
-         T1EQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FwtzcC8IW9tEsin9GPZR2uWGtkHPFjBYYOq6bNXXxpw=;
+        b=am6oQ6Qgb8gpvC5ELOHohR0HLqW9UAY/kQkNaQvn8HLe8PvWC2l8xjIRpb0arNo/AN
+         SkCp7IoCdBWOBuMl10wBbc5uhI3Nky+R90bR0IGIku2/0yCo1Uf4cPXISFZJSnKZSFk0
+         IJthdtVEEMVnd2YVE39B8FUq/eVWPv8e/cuJxxCJw6AjIH9RXxPi9U+l0M54NsxzwT8P
+         YKcaURK+XLvfN1l08nMNEjMgyokzsdPd6KwxLozvfdk/t56395aei9foEvOZrHyMHctb
+         +1gHLK/gp3d+DFD45UMLOIJWpFW6DSDmMadtP7Gx/ZjL30gmMdq2bKvDAchsSankBWhK
+         xxGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pqm0PezCCdfuI97ApKbyt3LnL9VFZxah2FPqIKHnX0w=;
-        b=V1EgUAM5Q3a9iG22q1x2KMoVV+8VIHOgL9+CxHbuyNuc1DgAfe6ssPGqvAASkWSNye
-         u5O3adMnb7DUgyh2FwdQbSuqX0joa8g/gr+rzgLEHKI04BihPsZHXxtOfQo+Ce75IwIu
-         Y/W0psVU2Ls3KJIF+aPjfRhuM8sx8gyyXx58vb9Kx2S945aNMg0ZOPQDEeqqHGa6dWiY
-         z5KmUgT1PQCvnDySC32heteZjgr1reEzRBAKAcJ10x8qdRU/YKOLXTKbZ5C8WvzaSX93
-         ToAo41gFh1DGizPJpE+dvV/Uk8P0VtY4h0mJiH+zENxAPvxdj/eMeKEzfCIqpM94ushN
-         V10A==
-X-Gm-Message-State: ANhLgQ3b+VhYPxmngLhUtKIFWgknqLDXOwsmfGPPOyW7fO6dNTIranfD
-        b97QsTXm8VfNfJT8OuS5SnI=
-X-Google-Smtp-Source: ADFU+vsTmcIviMV4vJ/hno2hqUEhcSA8Lnh1f0YRw4PvD2ZwSES5j/oCoHOFQUtz2x7upZ+fBX1KWw==
-X-Received: by 2002:adf:cf08:: with SMTP id o8mr27979007wrj.192.1584268056357;
-        Sun, 15 Mar 2020 03:27:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FwtzcC8IW9tEsin9GPZR2uWGtkHPFjBYYOq6bNXXxpw=;
+        b=U4WyqCDYy+3KvKSypTfvzlDornB2aX3qgEUkXAOg/EEPl0wiRXMu8garMCQEu+BnG5
+         BAf0K8O14zV4x4LP2s+iUdyhj8WFUshIoEFMddeSDKvTL4ujakjWx+d8TyCNqxjB8GsL
+         kM4HmZ739HGshKKA8N1/xJRw6WH8+NN680KY3py+X951xT8H8NFe1OUZxjFahDNVQB35
+         h1m8sPqVBioKdij1kmVmvppfaK8jJSoe402CdngxwKqsoUGHBh9a63n5pIugLaqHN8ar
+         I1Pr6sTvoOum/SV/qcqKtLlrBUeXwuRU5Bd8ePkleu8E0JWM0D6yWJr9rrvpWDzPdoOI
+         oAhQ==
+X-Gm-Message-State: ANhLgQ11ge5I6XMYhfmgkl/XBjHjzpbQHQ8GdVlWCO2hn94+0Sgeknwq
+        9DwZIkHuKKORZOPhNoShamg=
+X-Google-Smtp-Source: ADFU+vuJv4kBkZEOnJbIlq3eEi685L26EqBo3hYHwhnfeY9y/Gz0D/sNPSZrEhapWICATb4anJxfPQ==
+X-Received: by 2002:adf:b19e:: with SMTP id q30mr28969014wra.163.1584268057577;
+        Sun, 15 Mar 2020 03:27:37 -0700 (PDT)
 Received: from prasmi.home ([2a00:23c8:2510:d000:2c12:3438:7cb7:556d])
-        by smtp.gmail.com with ESMTPSA id z129sm25765190wmb.7.2020.03.15.03.27.35
+        by smtp.gmail.com with ESMTPSA id z129sm25765190wmb.7.2020.03.15.03.27.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 03:27:35 -0700 (PDT)
+        Sun, 15 Mar 2020 03:27:36 -0700 (PDT)
 From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Niklas <niklas.soderlund@ragnatech.se>,
@@ -66,10 +67,12 @@ To:     Niklas <niklas.soderlund@ragnatech.se>,
 Cc:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 0/2] rcar-csi2: make use V4L2_ASYNC_MATCH_CUSTOM to do fwnode matching
-Date:   Sun, 15 Mar 2020 10:27:22 +0000
-Message-Id: <20200315102724.26850-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 1/2] media: v4l2-async: Pass pointer to struct v4l2_subdev in match_custom callback
+Date:   Sun, 15 Mar 2020 10:27:23 +0000
+Message-Id: <20200315102724.26850-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200315102724.26850-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200315102724.26850-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,24 +80,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Passing a pointer to struct device for the match_custom callback is of no
+use as in the bridge driver to match the fwnode, so instead pass the
+struct v4l2_subdev pointer so that the bridge driver has enough
+information to match against the subdevices.
 
-This patch series adds support for fwnode matching to be handled by rcar-csi2 driver.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/media/v4l2-core/v4l2-async.c | 2 +-
+ include/media/v4l2-async.h           | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
-Prabhakar
-
-Lad Prabhakar (2):
-  media: v4l2-async: Pass pointer to struct v4l2_subdev in match_custom
-    callback
-  media: rcar-csi2: Let the driver handle fwnode matching using
-    match_custom callback
-
- drivers/media/platform/rcar-vin/rcar-csi2.c | 46 +++++++++++++++++++--
- drivers/media/v4l2-core/v4l2-async.c        |  2 +-
- include/media/v4l2-async.h                  |  4 +-
- 3 files changed, 46 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+index 8bde33c21ce4..f897d4025f97 100644
+--- a/drivers/media/v4l2-core/v4l2-async.c
++++ b/drivers/media/v4l2-core/v4l2-async.c
+@@ -80,7 +80,7 @@ static bool match_custom(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+ 		/* Match always */
+ 		return true;
+ 
+-	return asd->match.custom.match(sd->dev, asd);
++	return asd->match.custom.match(sd, asd);
+ }
+ 
+ static LIST_HEAD(subdev_list);
+diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+index 8319284c93cb..8c014e3bbd6c 100644
+--- a/include/media/v4l2-async.h
++++ b/include/media/v4l2-async.h
+@@ -86,8 +86,8 @@ struct v4l2_async_subdev {
+ 			unsigned short address;
+ 		} i2c;
+ 		struct {
+-			bool (*match)(struct device *dev,
+-				      struct v4l2_async_subdev *sd);
++			bool (*match)(struct v4l2_subdev *sd,
++				      struct v4l2_async_subdev *asd);
+ 			void *priv;
+ 		} custom;
+ 	} match;
 -- 
 2.20.1
 
