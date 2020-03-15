@@ -2,72 +2,94 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01E8C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD4CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79CA420663
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:08:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OFxgpzsL"
+	by mail.kernel.org (Postfix) with ESMTP id 35857206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbgCOPIS (ORCPT
+        id S1728808AbgCOPQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:08:18 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62992 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728223AbgCOPIS (ORCPT
+        Sun, 15 Mar 2020 11:16:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50144 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728798AbgCOPQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:08:18 -0400
-X-UUID: 76f36b23b4154017ba3abadc0af0d807-20200315
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+CvUngamV2VX3eNG/af1GoftRg2IFOk1is4zBfIJFy0=;
-        b=OFxgpzsLsAqSkkntwnUnK5cn2Dm+E94AGIngfCe1rhb/jsDWDFJLJSUIuWCABYlx0Xv9w9GugAcghFBuClwhXGV1GIN4WYtPlWYKNMBx/UTTwGc2URnwGeN7uVbc4+rwzA7hreuLC2/FnnoAoWHlYwle7QuNe9T69/IKRjkS9Ck=;
-X-UUID: 76f36b23b4154017ba3abadc0af0d807-20200315
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 564303256; Sun, 15 Mar 2020 23:08:09 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 15 Mar 2020 23:07:33 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 15 Mar 2020 23:07:31 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>
-Subject: [PATCH 1/1] dt-bindings: cpu: Add a support cpu type for cortex-a75
-Date:   Sun, 15 Mar 2020 23:08:05 +0800
-Message-ID: <1584284885-20836-1-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 860C1638F459CC376E4B34BE0F369F4CB84B24E6D4543CE68454EA5693FFD5262000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Sun, 15 Mar 2020 11:16:11 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jDUzq-0001iT-6S; Sun, 15 Mar 2020 16:16:10 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 458FD1013B3;
+        Sun, 15 Mar 2020 16:16:09 +0100 (CET)
+Date:   Sun, 15 Mar 2020 15:14:38 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] timers/urgent for 5.6-rc6
+References: <158428527861.14940.12920965330771600615.tglx@nanos.tec.linutronix.de>
+Message-ID: <158428527863.14940.3868391100636020882.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-W0RldGFpbF0NCkFkZCBhcm0gY3B1IHR5cGUgY29ydGV4LWE3NS4NCg0KQ2hhbmdlLUlkOiBJMmIw
-NTk0ODkxNWFjZmE2YTA0YTBiOGZhODg2ODRhMTJiNmQ1YzJjYQ0KU2lnbmVkLW9mZi1ieTogSGFu
-a3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQotLS0NCiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMueWFtbCB8ICAgIDEgKw0KIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2FybS9jcHVzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL2NwdXMueWFtbA0KaW5kZXggYzIzYzI0Zi4uNTFiNzVmNyAxMDA2NDQNCi0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vY3B1cy55YW1sDQorKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMueWFtbA0KQEAgLTEyOCw2ICsx
-MjgsNyBAQCBwcm9wZXJ0aWVzOg0KICAgICAgIC0gYXJtLGNvcnRleC1hNTcNCiAgICAgICAtIGFy
-bSxjb3J0ZXgtYTcyDQogICAgICAgLSBhcm0sY29ydGV4LWE3Mw0KKyAgICAgIC0gYXJtLGNvcnRl
-eC1hNzUNCiAgICAgICAtIGFybSxjb3J0ZXgtbTANCiAgICAgICAtIGFybSxjb3J0ZXgtbTArDQog
-ICAgICAgLSBhcm0sY29ydGV4LW0xDQotLSANCjEuNy45LjUNCg==
+Linus,
+
+please pull the latest timers/urgent branch from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2020-03-15
+
+up to:  ecc421e05bab: sys/sysinfo: Respect boottime inside time namespace
+
+
+A single fix adding the missing time namespace adjustment in sys/sysinfo
+which caused sys/sysinfo to be inconsistent with /proc/uptime when read
+from a task inside a time namespace.
+
+
+Thanks,
+
+	tglx
+
+------------------>
+Cyril Hrubis (1):
+      sys/sysinfo: Respect boottime inside time namespace
+
+
+ kernel/sys.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/sys.c b/kernel/sys.c
+index f9bc5c303e3f..d325f3ab624a 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -47,6 +47,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/kprobes.h>
+ #include <linux/user_namespace.h>
++#include <linux/time_namespace.h>
+ #include <linux/binfmts.h>
+ 
+ #include <linux/sched.h>
+@@ -2546,6 +2547,7 @@ static int do_sysinfo(struct sysinfo *info)
+ 	memset(info, 0, sizeof(struct sysinfo));
+ 
+ 	ktime_get_boottime_ts64(&tp);
++	timens_add_boottime(&tp);
+ 	info->uptime = tp.tv_sec + (tp.tv_nsec ? 1 : 0);
+ 
+ 	get_avenrun(info->loads, 0, SI_LOAD_SHIFT - FSHIFT);
 
