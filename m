@@ -2,197 +2,118 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F73C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BC0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69A320751
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A1A20674
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbgCOLAl (ORCPT
+        id S1728347AbgCOLB5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 07:00:41 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:41978 "EHLO mail.manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728234AbgCOLAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 07:00:40 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 98C0837827DA;
-        Sun, 15 Mar 2020 12:00:38 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vEPWKCNnrgeS; Sun, 15 Mar 2020 12:00:36 +0100 (CET)
-Subject: Re: [PATCH v4 3/3] power: supply: add CellWise cw2015 fuel gauge
- driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200312222448.25097-1-t.schramm@manjaro.org>
- <20200312222448.25097-4-t.schramm@manjaro.org>
- <20200313091124.GP1922688@smile.fi.intel.com>
-From:   Tobias Schramm <t.schramm@manjaro.org>
-Autocrypt: addr=tobias@t-sys.eu; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <fd75f94b-8e08-97da-a396-6df61c6fd89f@manjaro.org>
-Date:   Sun, 15 Mar 2020 12:00:35 +0100
-MIME-Version: 1.0
-In-Reply-To: <20200313091124.GP1922688@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
-Content-Transfer-Encoding: 8bit
+        Sun, 15 Mar 2020 07:01:57 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:9059 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgCOLB5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 07:01:57 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.9]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5e6e0b0862b-c9319; Sun, 15 Mar 2020 19:01:28 +0800 (CST)
+X-RM-TRANSID: 2eec5e6e0b0862b-c9319
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [10.0.0.249] (unknown[112.0.145.8])
+        by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee55e6e0b07b40-1577c;
+        Sun, 15 Mar 2020 19:01:28 +0800 (CST)
+X-RM-TRANSID: 2ee55e6e0b07b40-1577c
+Content-Type: text/plain; charset=gb2312
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH] ipvs: optimize tunnel dumps for icmp errors
+From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+In-Reply-To: <alpine.LFD.2.21.2003151003190.3987@ja.home.ssi.bg>
+Date:   Sun, 15 Mar 2020 19:01:26 +0800
+Cc:     Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <B4979BD7-480A-43B3-B693-B7839FAF08D2@cmss.chinamobile.com>
+References: <1584253087-8316-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+ <alpine.LFD.2.21.2003151003190.3987@ja.home.ssi.bg>
+To:     Julian Anastasov <ja@ssi.bg>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
 
-thanks for your feedback. Please find my comments inline.
-
-> 
->> +				dev_err(cw_bat->dev,
->> +					 "Failed to upload battery info\n");
-> 
-> Indentation of the second line.
-> 
-I've seen quite a few different indentation styles used in kernel
-source. Personally I'd indent like this:
-
-		dev_warn(cw_bat->dev,
-			 "some long error message");
-
-However coding-style.rst specifies that spaces are never to be used for
-indentation. May I assume they are ok for alignment though?
-
-
-> And I'm thinking that we may refactor this function. So,
-> 
-> 	length = ..._count_u8(...);
-> 	if (length < 0) {
-> 		dev_warn(...);
-> 	} else if (length != ...) {
-> 		dev_err(...);
-> 		...
-> 	} else {
-> 		...
-> 	}
+> On 2020年3月15日, at 下午4:17, Julian Anastasov <ja@ssi.bg> wrote:
 > 
 > 
+> 	Hello,
 > 
->> +		if (length != CW2015_SIZE_BATINFO) {
->> +			dev_err(cw_bat->dev, "battery-profile must be %d bytes",
->> +				CW2015_SIZE_BATINFO);
->> +			return -EINVAL;
->> +		}
->> +
->> +		cw_bat->bat_profile = devm_kzalloc(dev, length, GFP_KERNEL);
->> +		if (!cw_bat->bat_profile) {
->> +			dev_err(cw_bat->dev,
->> +				"Failed to allocate memory for battery config info");
->> +			return -ENOMEM;
->> +		}
->> +
->> +		ret = device_property_read_u8_array(dev,
->> +						"cellwise,battery-profile",
->> +						cw_bat->bat_profile,
->> +						length);
->> +		if (ret)
->> +			return ret;
->> +	} else {
->> +		dev_warn(cw_bat->dev,
->> +			"No battery-profile found, rolling with current flash contents");
->> +	}
->> +
+> On Sun, 15 Mar 2020, Haishuang Yan wrote:
 > 
-> ...and here...
+>> After strip GRE/UDP tunnel header for icmp errors, it's better to show
+>> "ICMP for GRE/UDP" instead of "ICMP for IPIP" in debug message.
+>> 
+>> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+>> ---
+>> net/netfilter/ipvs/ip_vs_core.c | 41 +++++++++++++++++++++++------------------
+>> 1 file changed, 23 insertions(+), 18 deletions(-)
+>> 
+>> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+>> index 512259f..f39ae6b 100644
+>> --- a/net/netfilter/ipvs/ip_vs_core.c
+>> +++ b/net/netfilter/ipvs/ip_vs_core.c
 > 
->> +	cw_bat->poll_interval_ms = CW2015_DEFAULT_POLL_INTERVAL_MS;
->> +	ret = device_property_read_u32(dev, "cellwise,monitor-interval-ms", &value);
->> +	if (ret >= 0) {
->> +		dev_dbg(cw_bat->dev, "Overriding default monitor-interval with %u ms",
->> +			value);
->> +		cw_bat->poll_interval_ms = value;
->> +	}
+>> @@ -1703,8 +1707,8 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+>> 		return NF_ACCEPT; /* The packet looks wrong, ignore */
+>> 	raddr = (union nf_inet_addr *)&cih->daddr;
+>> 
+>> -	/* Special case for errors for IPIP packets */
+>> -	ipip = false;
+>> +	/* Special case for errors for IPIP/UDP/GRE tunnel packets */
+>> +	tunnel = false;
 > 
-> 	ret = device_property_read_u32(dev, "cellwise,monitor-interval-ms", &cw_bat->poll_interval_ms);
-> 	if (ret) {
-> 		dev_dbg(cw_bat->dev, "Use default\n");
-> 		cw_bat->poll_interval_ms = CW2015_DEFAULT_POLL_INTERVAL_MS;
-> 	}
+> 	At this point it is safe to store cih->protocol in some new
+> var, eg. outer_proto...
 > 
-> What do you think?
+>> @@ -1809,17 +1813,18 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+>> 			u32 mtu = ntohs(ic->un.frag.mtu);
+>> 			__be16 frag_off = cih->frag_off;
+>> 
+>> -			/* Strip outer IP and ICMP, go to IPIP header */
+>> +			/* Strip outer IP and ICMP, go to IPIP/UDP/GRE header */
+>> 			if (pskb_pull(skb, ihl + sizeof(_icmph)) == NULL)
+>> -				goto ignore_ipip;
+>> +				goto ignore_tunnel;
+>> 			offset2 -= ihl + sizeof(_icmph);
+>> 			skb_reset_network_header(skb);
+>> -			IP_VS_DBG(12, "ICMP for IPIP %pI4->%pI4: mtu=%u\n",
+>> -				&ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr, mtu);
+>> +			IP_VS_DBG(12, "ICMP for %s %pI4->%pI4: mtu=%u\n",
+>> +				  ip_vs_proto_name(cih->protocol),
 > 
-Looks good to me. I'll use it just like that.
+> 	Because here cih points to the embedded UDP/TCP/SCTP IP header, so
+> we can not see GRE here. Or it is even better if we do not add more code 
+> to ip_vs_proto_name(), just use char *outer_proto and assign it with 
+> "IPIP" (where ipip was set) and "UDP"/"GRE" (where ulen was set) and print
+> outer_proto here.
+Yes, you’re right. I will send v2 commit according to your suggestion, thanks
+very much.
 
 > 
->> +	int ret;
->> +	struct cw_battery *cw_bat;
+>> +				  &ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr, mtu);
 > 
->> +	struct power_supply_config psy_cfg = { };
+> Regards
 > 
-> Don't you need 0 here?
+> --
+> Julian Anastasov <ja@ssi.bg>
 > 
-Yeah, that would be better. Think empty initializers are a GNU extension.
 
 
-Best Regards,
 
-Tobias
