@@ -2,76 +2,92 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5363FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77519C18E5B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17AAF20637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B80E205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cGhe2zh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgCOTmt (ORCPT
+        id S1729067AbgCOTuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 15:42:49 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:52908 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbgCOTmt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 15:42:49 -0400
-Received: from localhost.localdomain ([93.22.37.174])
-        by mwinf5d57 with ME
-        id Ejij2200K3lSDvh03jijNx; Sun, 15 Mar 2020 20:42:47 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 15 Mar 2020 20:42:47 +0100
-X-ME-IP: 93.22.37.174
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, dianders@chromium.org
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] drm/msm: Fix an error handling path 'msm_drm_init()'
-Date:   Sun, 15 Mar 2020 20:42:39 +0100
-Message-Id: <20200315194239.28785-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 15 Mar 2020 15:50:23 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:40486 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727329AbgCOTuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 15:50:22 -0400
+Received: from zn.tnic (p200300EC2F28D000ACB9AA06AD32AB36.dip0.t-ipconnect.de [IPv6:2003:ec:2f28:d000:acb9:aa06:ad32:ab36])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9346E1EC027B;
+        Sun, 15 Mar 2020 20:50:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584301820;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=17Mj+NXZZqXgw9A9yH5A54NytjZGqmWKL11usy+lGKE=;
+        b=cGhe2zh6Z5MfYnkcm812fY0mGNV4bikyhGUZz4pjtjPGwIZBC+Djdj3qubwnXODOtdvcOb
+        PjhR+fsyiYZ/wkkj27llHp6ISA+/UhVhO5Xqz9rOwClVs3Df1TGansURqGMMY8lhbdB8yS
+        yYd+BdoR0b0lr3PyAvXYVueBROvlzZc=
+Date:   Sun, 15 Mar 2020 20:50:24 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sherry Sun <sherry.sun@nxp.com>
+Cc:     mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
+        rrichter@marvell.com, michal.simek@xilinx.com,
+        manish.narani@xilinx.com, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com, frank.li@nxp.com
+Subject: Re: [PATCH v2] EDAC: synopsys: Fix the wrong call of pinf->col
+ parameter
+Message-ID: <20200315195024.GB10926@zn.tnic>
+References: <1582856183-5007-1-git-send-email-sherry.sun@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1582856183-5007-1-git-send-email-sherry.sun@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If this memory allocation fails, we have to go through the error handling
-path to perform some clean-up, as already done in other other paths of
-this function.
+On Fri, Feb 28, 2020 at 10:16:23AM +0800, Sherry Sun wrote:
+> Since ZynqMP platform call zynqmp_get_error_info() function to get ce/ue
+> information. In this function, pinf->col parameter is not used, this
+> parameter is only used by Zynq platforme in zynq_get_error_info(). So
+> here pinf->col should not be called and printed for ZynqMP, need remove
+> it.
 
-Fixes: db735fc4036b ("drm/msm: Set dma maximum segment size for mdss")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/gpu/drm/msm/msm_drv.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Err, the interrupt handler intr_handler() calls the ->get_error_info()
+function pointer and then calls handle_error(). I.e, the same path
+ending in handle_error() is called on both: Zynq and ZynqMP, one through
+the interrupt and the other through the poller.
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 2a82c23a6e4d..29295dee2a2e 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -444,8 +444,10 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
- 	if (!dev->dma_parms) {
- 		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
- 					      GFP_KERNEL);
--		if (!dev->dma_parms)
--			return -ENOMEM;
-+		if (!dev->dma_parms) {
-+			ret = -ENOMEM;
-+			goto err_msm_uninit;
-+		}
- 	}
- 	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
- 
+Because it looks like the interrupt support is only on ZynqMP? I'm
+looking at that DDR_ECC_INTR_SUPPORT thing.
+
+If so, then you need to rename the interrupt handler to
+zynqmp_intr_handler().
+
+And normal Zynq platform uses check_errors() which then calls
+handle_error().
+
+So still not good enough: you probably "fixed" it on ZynqMP but broke
+it on Zynq because check_errors() calls ->get_error_info() which is
+zynq_get_error_info() and will have populated pinf->col.
+
+You need to differentiate between Zynq and ZynqMP in handle_error() and
+issue the proper string depending on the platform.
+
+AFAICT.
+
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
