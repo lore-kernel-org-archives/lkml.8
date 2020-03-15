@@ -2,185 +2,197 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C955C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F73C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35ECC206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584269921;
-	bh=GKvZg20vaGmZ0h4NBf/C9EDtK/ii4Ksp0xz+3VPzmhM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WEO5rFAQZYOWc2nEmC0XAAkm79TCbZpo1ZbPRznAs3NvXBgPp90/64E1uzmb2sbvn
-	 9Q4+HjY3zfYrLaxU2ANtmSLmJGifGbacvno0GXQ51EwnMGHILlLssz4s2W6oiJy50C
-	 IK0yBwGkWT2tDmxOjHTQdq8D63TnL19RvxViNDNI=
+	by mail.kernel.org (Postfix) with ESMTP id D69A320751
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgCOK6k (ORCPT
+        id S1728340AbgCOLAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:58:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 07:00:41 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:41978 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728234AbgCOK6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:58:40 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E757E206BE;
-        Sun, 15 Mar 2020 10:58:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584269918;
-        bh=GKvZg20vaGmZ0h4NBf/C9EDtK/ii4Ksp0xz+3VPzmhM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FD3xSF49EZqCtfgRx4gsGhywyNgjqk5rW1lcjV/lJBiDw4GQIx9qrLjpPOykh2+10
-         Pyl4H6LO0Oee2K5LtcFwJGXOqr9/v5sRjLRSwbNCRyFIuXvQ0B9srUvcmyy25Rx65c
-         wmihRAgNYeB8EjLFWxBQBiY5CfC9zjr5f1myB7Ms=
-Date:   Sun, 15 Mar 2020 10:58:34 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, mark.rutland@arm.com, sre@kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        id S1728234AbgCOLAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 07:00:40 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 98C0837827DA;
+        Sun, 15 Mar 2020 12:00:38 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vEPWKCNnrgeS; Sun, 15 Mar 2020 12:00:36 +0100 (CET)
+Subject: Re: [PATCH v4 3/3] power: supply: add CellWise cw2015 fuel gauge
+ driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: iio: tsl2563: convert bindings to YAML
-Message-ID: <20200315105834.7a5f4475@archlinux>
-In-Reply-To: <20200314134237.12187-1-nish.malpani25@gmail.com>
-References: <20200314134237.12187-1-nish.malpani25@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+References: <20200312222448.25097-1-t.schramm@manjaro.org>
+ <20200312222448.25097-4-t.schramm@manjaro.org>
+ <20200313091124.GP1922688@smile.fi.intel.com>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Autocrypt: addr=tobias@t-sys.eu; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <fd75f94b-8e08-97da-a396-6df61c6fd89f@manjaro.org>
+Date:   Sun, 15 Mar 2020 12:00:35 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200313091124.GP1922688@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 14 Mar 2020 19:12:37 +0530
-Nishant Malpani <nish.malpani25@gmail.com> wrote:
+Hi Andy,
 
-> Convert the TSL2563 device tree bindings to the new YAML format.
-> 
-> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
-> ---
-> 
-> The link for the datasheet is not attached in the binding document
-> because it was not available on the manufacturer's (AMS) website [1].
-
-Very old part now, though plenty of them in circulation or least there
-used to be.  I have though not powered up that board for a while.
-
-When doing these conversions, do sanity check them against the driver
-as the old docs aren't always entirely accurate ;)
-
-Jonathan
+thanks for your feedback. Please find my comments inline.
 
 > 
-> [1] https://ams.com/ambient-light-sensors
-> ---
->  .../devicetree/bindings/iio/light/tsl2563.txt | 19 --------
->  .../bindings/iio/light/tsl2563.yaml           | 46 +++++++++++++++++++
->  2 files changed, 46 insertions(+), 19 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+>> +				dev_err(cw_bat->dev,
+>> +					 "Failed to upload battery info\n");
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-> deleted file mode 100644
-> index f91e809e736e..000000000000
-> --- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-> +++ /dev/null
-> @@ -1,19 +0,0 @@
-> -* AMS TAOS TSL2563 ambient light sensor
-> -
-> -Required properties:
-> -
-> -  - compatible : should be "amstaos,tsl2563"
-> -  - reg : the I2C address of the sensor
-> -
-> -Optional properties:
-> -
-> -  - amstaos,cover-comp-gain : integer used as multiplier for gain
-> -                              compensation (default = 1)
-> -
-> -Example:
-> -
-> -tsl2563@29 {
-> -	compatible = "amstaos,tsl2563";
-> -	reg = <0x29>;
-> -	amstaos,cover-comp-gain = <16>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
-> new file mode 100644
-> index 000000000000..2a70b8d62760
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/light/tsl2563.yaml#
+> Indentation of the second line.
+> 
+I've seen quite a few different indentation styles used in kernel
+source. Personally I'd indent like this:
 
-Convention is now to name files and this with the manufacturer part
-as well.
+		dev_warn(cw_bat->dev,
+			 "some long error message");
 
-light/amstaos,tsl2563.yaml
+However coding-style.rst specifies that spaces are never to be used for
+indentation. May I assume they are ok for alignment though?
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AMS TAOS TSL2563 ambient light sensor
-> +
-> +maintainers:
-> +  - Sebastian Reichel <sre@kernel.org>
-> +
-> +description: |
-> +  Ambient light sensor with an i2c interface.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amstaos,tsl2563
 
-The original binding was wrong on this.   Check the driver :)
-I'm a bit embarrassed I never noticed during review as I have
-a tsl2561, be it on a board that was never converted to DT.
+> And I'm thinking that we may refactor this function. So,
+> 
+> 	length = ..._count_u8(...);
+> 	if (length < 0) {
+> 		dev_warn(...);
+> 	} else if (length != ...) {
+> 		dev_err(...);
+> 		...
+> 	} else {
+> 		...
+> 	}
+> 
+> 
+> 
+>> +		if (length != CW2015_SIZE_BATINFO) {
+>> +			dev_err(cw_bat->dev, "battery-profile must be %d bytes",
+>> +				CW2015_SIZE_BATINFO);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		cw_bat->bat_profile = devm_kzalloc(dev, length, GFP_KERNEL);
+>> +		if (!cw_bat->bat_profile) {
+>> +			dev_err(cw_bat->dev,
+>> +				"Failed to allocate memory for battery config info");
+>> +			return -ENOMEM;
+>> +		}
+>> +
+>> +		ret = device_property_read_u8_array(dev,
+>> +						"cellwise,battery-profile",
+>> +						cw_bat->bat_profile,
+>> +						length);
+>> +		if (ret)
+>> +			return ret;
+>> +	} else {
+>> +		dev_warn(cw_bat->dev,
+>> +			"No battery-profile found, rolling with current flash contents");
+>> +	}
+>> +
+> 
+> ...and here...
+> 
+>> +	cw_bat->poll_interval_ms = CW2015_DEFAULT_POLL_INTERVAL_MS;
+>> +	ret = device_property_read_u32(dev, "cellwise,monitor-interval-ms", &value);
+>> +	if (ret >= 0) {
+>> +		dev_dbg(cw_bat->dev, "Overriding default monitor-interval with %u ms",
+>> +			value);
+>> +		cw_bat->poll_interval_ms = value;
+>> +	}
+> 
+> 	ret = device_property_read_u32(dev, "cellwise,monitor-interval-ms", &cw_bat->poll_interval_ms);
+> 	if (ret) {
+> 		dev_dbg(cw_bat->dev, "Use default\n");
+> 		cw_bat->poll_interval_ms = CW2015_DEFAULT_POLL_INTERVAL_MS;
+> 	}
+> 
+> What do you think?
+> 
+Looks good to me. I'll use it just like that.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  amstaos,cover-comp-gain:
-> +    description: Multiplier for gain compensation
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [1, 16]
+> 
+>> +	int ret;
+>> +	struct cw_battery *cw_bat;
+> 
+>> +	struct power_supply_config psy_cfg = { };
+> 
+> Don't you need 0 here?
+> 
+Yeah, that would be better. Think empty initializers are a GNU extension.
 
-Not sure it's that restricted...  or to be honest what
-that is for at all.  Superficially it looks like
-a multiplier to change the 'range' of the the sysfs control.
 
-I wonder if anyone cares or if we can just start ignoring that going
-forwards?  Sebastian, anyone else?
+Best Regards,
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      light-sensor@29 {
-> +        compatible = "amstaos,tsl2563";
-> +        reg = <0x29>;
-> +        amstaos,cover-comp-gain = <16>;
-> +      };
-> +    };
-> +...
-
+Tobias
