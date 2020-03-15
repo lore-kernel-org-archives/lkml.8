@@ -1,123 +1,101 @@
-Return-Path: <SRS0=4VRK=47=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392E6C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 04:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F9DC0044D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198B12074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Mar 2020 04:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BD4206EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCNECE (ORCPT
+        id S1726616AbgCOB2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 00:02:04 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:47284 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgCNECD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 00:02:03 -0400
-Received: by mail-io1-f71.google.com with SMTP id w21so7973272iod.14
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 21:02:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=DBwJriMlM9SYUClSqGmnORw3G1P+BJ+ON7TkScNMz64=;
-        b=qvUbrecGxZJiY+SStSGTV6+lGSkQuF2javDW+5whF2sDoKYZTdAjMgWg2C8/T2EL5Q
-         JxHRWp4bVQN5QjBCsGGsGbBc6CBZYJEHn4i7W/7JAeSl7qSRPSHvQ/Voz4S38bw56d4p
-         UCSGCEYvZ1Qhu3OU4fY8ITU8+ki2j1oHhiUbhKh+Q9oXjRp4ZcLY7r/Wc39mHij40onI
-         J08MO+fCvGQpduvla+25tDqY9m9k5Uentv/R+SbtUR7r1htQuxP04ZS+76jsNQhqARVx
-         G3ol7tIgjAj8xX/DOSBTUsVbuBnJsAo5imRQuc7mV5FCBZxMqw3enKCjqSwYe+lvd99c
-         XLUA==
-X-Gm-Message-State: ANhLgQ2vsKPvOqS22Epk2OYuGRm3bYKbqlfEW3mvwZlL7+GBQVXslbob
-        mX/f5srdZoRp2OlGXJF4spgmf2uVxbfLDe3X+bvTAG32zzCU
-X-Google-Smtp-Source: ADFU+vupJLHw9fKO6B9jem1RLsOpvP0yw016OzW99SMSpx+q9uZCRPWMRqTG7xOR9vmrUCIgfyVfcZ99FmWJLbDMHyXGyXn7HJbj
+        Sat, 14 Mar 2020 21:28:41 -0400
+Received: from mga05.intel.com ([192.55.52.43]:28478 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgCOB2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:28:40 -0400
+IronPort-SDR: OSHhI0BtLsbUJhS4gyun97prmK0J/hx0AYK7hvzgnl4XNfQdfVmrPx/wT7RiuxBcVBeuw2ygkA
+ 6hnZsgkxaBjg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 18:25:35 -0700
+IronPort-SDR: 7dXMEkMlPBhCsDZMMGbFY2QSBSl03GSPFEkuh4wHq6I0PEu1I9WX6dq7pEhJpxQ+ewL9QtLlQ4
+ EAHtV3T75Gow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,554,1574150400"; 
+   d="scan'208";a="278653419"
+Received: from mbenhamu-mobl2.ger.corp.intel.com (HELO localhost) ([10.251.177.145])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Mar 2020 18:25:25 -0700
+Date:   Sun, 15 Mar 2020 03:25:23 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200315012523.GC208715@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:afc1:: with SMTP id v62mr16687352ill.308.1584158522545;
- Fri, 13 Mar 2020 21:02:02 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 21:02:02 -0700
-In-Reply-To: <CADG63jAAgdzmVQGHhxAY-diyMisXenTpd02StvwJytqkjGeSuw@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000011efd05a0c8a609@google.com>
-Subject: Re: WARNING in idr_destroy
-From:   syzbot <syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com>
-To:     airlied@linux.ie, anenbupt@gmail.com, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Mar 11, 2020 at 01:30:07PM -0400, Nathaniel McCallum wrote:
+> Currently, the selftest has a wrapper around
+> __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
+> registers (CSRs), though it uses none of them. Then it calls this
+> function which uses %rbx but preserves none of the CSRs. Then it jumps
+> into an enclave which zeroes all these registers before returning.
+> Thus:
+> 
+>   1. wrapper saves all CSRs
+>   2. wrapper repositions stack arguments
+>   3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
+>   4. selftest zeros all CSRs
+>   5. wrapper loads all CSRs
+> 
+> I'd like to propose instead that the enclave be responsible for saving
+> and restoring CSRs. So instead of the above we have:
+>   1. __vdso_sgx_enter_enclave() saves %rbx
+>   2. enclave saves CSRs
+>   3. enclave loads CSRs
+>   4. __vdso_sgx_enter_enclave() loads %rbx
+> 
+> I know that lots of other stuff happens during enclave transitions,
+> but at the very least we could reduce the number of instructions
+> through this critical path.
 
-syzbot has tested the proposed patch but the reproducer still triggered crash:
-WARNING in idr_destroy
+What Jethro said and also that it is a good general principle to cut
+down the semantics of any vdso as minimal as possible.
 
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
-R13: 0000000000000203 R14: 00000000004c3e56 R15: 0000000000000008
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 9261 at lib/radix-tree.c:682 radix_tree_free_nodes lib/radix-tree.c:682 [inline]
-WARNING: CPU: 1 PID: 9261 at lib/radix-tree.c:682 idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9261 Comm: syz-executor.2 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- panic+0x264/0x7a9 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1b6/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:radix_tree_free_nodes lib/radix-tree.c:682 [inline]
-RIP: 0010:idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
-Code: 53 5f f9 48 89 df 48 c7 c6 10 73 17 88 e8 ca 6c 4c f9 4c 3b 65 b8 74 57 e8 7f 53 5f f9 4d 89 fc e9 67 ff ff ff e8 72 53 5f f9 <0f> 0b eb d5 89 f9 80 e1 07 38 c1 7c 84 e8 e0 85 9c f9 e9 7a ff ff
-RSP: 0018:ffffc90001e47ba0 EFLAGS: 00010293
-RAX: ffffffff8817cc0e RBX: ffff8880914be458 RCX: ffff8880a6fee040
-RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff8880914be448
-RBP: ffffc90001e47be8 R08: ffffffff8817cb80 R09: ffffed10130a7981
-R10: ffffed10130a7981 R11: 0000000000000000 R12: ffff8880914be440
-R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
- drm_mode_create_lease_ioctl+0x133c/0x1860 drivers/gpu/drm/drm_lease.c:585
- drm_ioctl_kernel+0x2cf/0x410 drivers/gpu/drm/drm_ioctl.c:786
- drm_ioctl+0x52f/0x890 drivers/gpu/drm/drm_ioctl.c:886
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl fs/ioctl.c:763 [inline]
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl+0x113/0x190 fs/ioctl.c:770
- __x64_sys_ioctl+0x7b/0x90 fs/ioctl.c:770
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f833d7e0c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f833d7e16d4 RCX: 000000000045c479
-RDX: 0000000020000040 RSI: ffffffffffffffc6 RDI: 0000000000000003
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
-R13: 0000000000000203 R14: 00000000004c3e56 R15: 0000000000000008
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+I.e. even if saving RBX would make somehow sense it *can* be left
+out without loss in terms of what can be done with the vDSO.
 
-
-Tested on:
-
-commit:         48d976f6 drm/lease: fix WARNING in idr_destroy
-git tree:       https://github.com/hqj/hqjagain_test.git drm
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a15753e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cec95cb58b6f6294
-dashboard link: https://syzkaller.appspot.com/bug?extid=05835159fe322770fe3d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
+/Jarkko
