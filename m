@@ -2,135 +2,105 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A93C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEABC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC9220575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:12:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGiYoRT5"
+	by mail.kernel.org (Postfix) with ESMTP id BF827206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584267222;
+	bh=gwrJ6sYrbxhdQYlWtybDyVw2aNJ2RBxviyhLDiHE2Q8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=R3aooWxJFWad2oH5RE9MfcHmABTvfKOjQA4snEwwG+8bda3bnm0PRdtHSP/Fj1hUV
+	 3RM5IAp3F3D+nACSpc1ft7s3hX0tcIu69ytLmLLNhNX1boW72SSdalGjQALBgHq5L3
+	 DhnFBww0sDivauYhv/kxSMZlR6lG6/GS4WdBA1CM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgCOKM1 (ORCPT
+        id S1728254AbgCOKNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:12:27 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33702 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgCOKM0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:12:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584267144;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8fYeknRcTWmnQg8ZYRz0ZJkyEQG95MNGzU7Kd6SLL+M=;
-        b=KGiYoRT5/pHTLCbsXHXyfUGwxRTA05LKHRjQn8elcem/8l8E1ZlqCjCul7ZyD6/ILYJZiM
-        IHak6IkjZZppYKHNj6MvnphMorjHoiv5bXn0qxGl/f5h/qs8c5F3RC2eNpLoYWC69JBSqx
-        snyxBOBc7a1BvUr1Prkk34/EqGw6dzs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-ojHza0DOPKSAkDn91LjYXg-1; Sun, 15 Mar 2020 06:12:21 -0400
-X-MC-Unique: ojHza0DOPKSAkDn91LjYXg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 15 Mar 2020 06:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728209AbgCOKNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 06:13:41 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A3A91005512;
-        Sun, 15 Mar 2020 10:12:18 +0000 (UTC)
-Received: from localhost (ovpn-116-26.ams2.redhat.com [10.36.116.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1792A5C1B2;
-        Sun, 15 Mar 2020 10:12:16 +0000 (UTC)
-Date:   Sun, 15 Mar 2020 10:12:15 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Eric Biggers <ebiggers@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, kernel@vivo.com
-Subject: Re: [PATCH 0/2] doc: zh_CN: facilitate translation for filesystems
-Message-ID: <20200315101215.GA325031@stefanha-x1.localdomain>
-References: <20200315092810.87008-1-wenhu.wang@vivo.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id D865220575;
+        Sun, 15 Mar 2020 10:13:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584267221;
+        bh=gwrJ6sYrbxhdQYlWtybDyVw2aNJ2RBxviyhLDiHE2Q8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=r533RQNGnq5xSHcTxObw+9A8llarsP+7Q97TxaaPxjxkkPkxrFWt81iWLDpQpXfT5
+         ufTayVCgMf/T2545wPrz3CSlPXKLRk9DrRelhD5PcBqcwpfognUg8VJkmLdZL6J6F3
+         BuUwMgcOjVoWo7o0EXcdCPkZXRAjGd6ue29Z4YSI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jDQH4-00Cqr9-Qt; Sun, 15 Mar 2020 10:13:38 +0000
 MIME-Version: 1.0
-In-Reply-To: <20200315092810.87008-1-wenhu.wang@vivo.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 15 Mar 2020 10:13:38 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Salter <msalter@redhat.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Tim Harvey <tharvey@gateworks.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] irqchip fixes for 5.6, take #2
+In-Reply-To: <20200315084846.h222n5pf4jvpojec@wunner.de>
+References: <20200314103000.2413-1-maz@kernel.org>
+ <20200315084846.h222n5pf4jvpojec@wunner.de>
+Message-ID: <76dcc2d8532f8e3a87bf03469b9c2c19@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: lukas@wunner.de, tglx@linutronix.de, catalin.marinas@arm.com, msalter@redhat.com, rrichter@marvell.com, tharvey@gateworks.com, jason@lakedaemon.net, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Lukas,
 
-On Sun, Mar 15, 2020 at 02:27:58AM -0700, Wang Wenhu wrote:
-> This patch series set up the basic facility for the translation work
-> of the docs residing on filesystems into Chinese, indexing the filesystem=
-s
-> directory and adding one indexed translation into it. The virtiofs.rst
-> added is not only a translation itself but also an simple example that
-> future developers would take.
->=20
-> The detailed diff info also shows the basic essential markups of
-> the toctree and reStructuredText, at least for the most simple occasions.
-> More translations of filesystems are on their way, and futher,
-> of more subsystems.
->=20
-> ---
-> Wang Wenhu (2):
->   doc: zh_CN: index files in filesystems subdirectory
->   doc: zh_CN: add translation for virtiofs
->=20
->  Documentation/filesystems/index.rst           |  2 +
->  Documentation/filesystems/virtiofs.rst        |  2 +
->  .../translations/zh_CN/filesystems/index.rst  | 29 +++++++++
->  .../zh_CN/filesystems/virtiofs.rst            | 62 +++++++++++++++++++
->  Documentation/translations/zh_CN/index.rst    |  1 +
->  5 files changed, 96 insertions(+)
->  create mode 100644 Documentation/translations/zh_CN/filesystems/index.rs=
-t
->  create mode 100644 Documentation/translations/zh_CN/filesystems/virtiofs=
-.rst
->=20
-> --=20
-> 2.17.1
->=20
+On 2020-03-15 08:48, Lukas Wunner wrote:
+> On Sat, Mar 14, 2020 at 10:30:00AM +0000, Marc Zyngier wrote:
+>> This is hopefully the last irqchip update for 5.6. This time, a single
+>> patch working around a hardware issue on the Cavium ThunderX and its
+>> derivatives.
+> 
+> Hm, I was hoping to see the BCM2835 irqchip fix in this pull:
+> 
+> https://lore.kernel.org/lkml/f97868ba4e9b86ddad71f44ec9d8b3b7d8daa1ea.1582618537.git.lukas@wunner.de/
+> 
+> That patch fixes a pretty grave issue so I'd be really grateful
+> if anyone could pick it up (or provide feedback why it can't be
+> picked up just yet).
 
-I am not a Chinese speaker but thank you for translation the
-documentation!
+Whilst I don't dispute that this patch addresses a serious issue,
+it is in no way an urgent fix -- the issue is already 7.5 year old,
+so a couple of week delay isn't going to change the world. Also,
+the system does work without this fix, so I'm quite confident
+leaving it for 5.7.
 
-Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
+But thanks for this email anyway, as it reminded me that although
+I had picked that patch for 5.7, I didn't apply it just yet. This
+is now fixed, and the patch should be picked up by -next shortly.
 
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5t/38ACgkQnKSrs4Gr
-c8i7pggAxFGK9yalFhtI40r+K7LMZVxPGH3zc20Ho6hCuGGbk0pnrVxuDOyAsgTo
-w809N9Ypju11BY4lh8vzpA8wmi+mrjCI1I+/Md87gv+vIuur17n6v895rHas9rkh
-VN6uRiHTxQR/zaDSaUM3yrR/KDCqHqe26T77B8//ope+JTqpWRNrhNccDtz5x/Kt
-BVWkyKGmHwKK2LZm3OkHHYXhZx519RS6gBrxbzSySnBbwPbBWcY75et0o8c3FSJP
-qh/pJ8keEtMEKVj/EGTZ2B9MN5d4nSi1yhxVizGHWkeDJ/yg6/l2kMKQ7MzAxPIP
-iM5LDusm9auID4W1sU3363No0ZF+4Q==
-=Sx9O
------END PGP SIGNATURE-----
-
---SLDf9lqlvOQaIe6s--
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
