@@ -2,212 +2,166 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1152C5ACC0
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72383C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C78206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:49:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Me4+/e8+"
+	by mail.kernel.org (Postfix) with ESMTP id 4863B20575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584287423;
+	bh=NRB9R6tu32z8WFealdCcR4r0Ghn1cI6ttGf2yRUeg/I=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SEmRtp1uX35cfqq7KcabJpBbfOo3XUEJ0q4gElEePbawsA3Z/Abp2LezSOcwe0Xa6
+	 r+qo0kPBiO9HxamD9HB+RAAc02kiKeIYoDJC0Sc6sZ1X+93G87SWTIP8UNZLmTTmmE
+	 VxO0oYgjU1Wb/wsYTEOPxUWEXEIb4q6JMsasTVfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgCOPtO (ORCPT
+        id S1728889AbgCOPuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:49:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41147 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728310AbgCOPtO (ORCPT
+        Sun, 15 Mar 2020 11:50:22 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:48729 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728310AbgCOPuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:49:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so6707025plr.8;
-        Sun, 15 Mar 2020 08:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
-         :user-agent;
-        bh=MW4ux0I+GyqaNHf8jyq7RkRLR8j0nzzH5Orr98SC3Bk=;
-        b=Me4+/e8+YYinsGoU2SK5svWHv8GAj8peaX5juLZZBSz9XQEgQM7MiBRkvvBWybHB2D
-         n7Hj9q85eTVQk+3LEhoaxjqyllVtOhy++9saSGX5JJHplUB+JaiU8/QmM/Kr5JtLDo5a
-         5qvYLc420a8KXIMEq1z1FEySsJ6B4xLpCcbqqJ83YcQjpMc99JFwyx+yy21207MsQn6+
-         yvdf1oeIpSeFenOOPOsaBloZufrhuwcjflrXG3JTSnRXkCwDWzJT0Xagq5TYqMSZn1Kr
-         SEgPc9zNxklU33deENuCIDKSrXncxVjjqyg5s8cSPaomqGE0Z6HplyQvMXFTWtAp4KeO
-         0c8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
-         :content-disposition:user-agent;
-        bh=MW4ux0I+GyqaNHf8jyq7RkRLR8j0nzzH5Orr98SC3Bk=;
-        b=BzExF8+iEsDSNoxa2M4+TIC1W6VdreXPKLciog+ldi7b5bPCYZl94PJ3vH+WJgnSHp
-         pyZPhvULDaYujVnKDr3CD+F8oZrTrmNihWcRnePQ9uw1+RMrWHuF3azFUVo4HEiAO8Or
-         toC86fIcoAS2G/J66z5NnpHIb7aBMYvlqCpe95PIRknEGWI2scV/+lT0F52HGyYFlOQe
-         Nrs3B/3MHayONrxSDdNgHyjB4sbDg/p/I6mHEiTgEJF6deTgQ0SsU5JO3mc12G3XOhRd
-         dAdUFTKe5oziU2Ug1rRqdklnErKWfG+xFA17zso9R9wXGtmFcXeAqWawGf8ermme668i
-         Ta/A==
-X-Gm-Message-State: ANhLgQ1zI42wpWDqLJdSwZ4SdZlUqaZbU7NfD9lDuMqR/Wmw1h1EiW9p
-        dERqy+CgY0K/7SLr9ImS/7A=
-X-Google-Smtp-Source: ADFU+vv1rsv8/m0NLGEdrFxI7EBc6wqekLEehzriT+4p/HaNUef8fr7huWQZZnIFL7dAo7+gn5LFnQ==
-X-Received: by 2002:a17:90a:a40f:: with SMTP id y15mr8345690pjp.143.1584287352875;
-        Sun, 15 Mar 2020 08:49:12 -0700 (PDT)
-Received: from SARKAR ([43.224.157.36])
-        by smtp.gmail.com with ESMTPSA id 144sm11473016pfx.184.2020.03.15.08.49.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 08:49:12 -0700 (PDT)
-Message-ID: <5e6e4e78.1c69fb81.511f5.83ac@mx.google.com>
-X-Google-Original-Message-ID: <20200315154908.GA15864@rohitsarkar5398@gmail.com>
-Date:   Sun, 15 Mar 2020 21:19:08 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jic23@kernel.org, dragos.bogdan@analog.com
-Subject: [PATCH v6] iio: adc: max1363: replace uses of mlock
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sun, 15 Mar 2020 11:50:21 -0400
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id 02FFnsYW028305;
+        Mon, 16 Mar 2020 00:49:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 02FFnsYW028305
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584287394;
+        bh=DXSJAQYV+K0M5wfTtzFMast16/HPOG8d+XP8Fy1ApxU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tfqCX3RMCkBadXSFbWsEHy6hJ0kHWD78afZDuq275jnzivm7s4zzBYtwbQFmquZzz
+         mYqV5B98M6vxe+zXg7V1IYJ21CBrHyqhTs2YtcX32D9qukaYMywOAJaphqFB3EPLg3
+         fqRRfUMaHBugriwrNRshJGZKyk4A2mdc9k8Q58gKNQR8Wu6EcMVHaTTc3yD3IHU8aw
+         eRjm84BYG97Jw5UT5osVGXcT+2Vd2T/vAHSHWC9Z0sQajdiaEEzF/vJBy1Ln+df+I3
+         4z6cGN++KzZvXSfBuTHyRzW3uMZR9FZ7CZ1ztSUeJBpaTrxL8UlQsMUbwjuQaGfCbj
+         0HqyC6K8u/eUA==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Johan Hovold <johan@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH] usb: get rid of 'choice' for legacy gadget drivers
+Date:   Mon, 16 Mar 2020 00:49:48 +0900
+Message-Id: <20200315154948.26569-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace usage indio_dev's mlock with either local lock or
-iio_device_claim_direct_mode.
+drivers/usb/gadget/legacy/Kconfig creates a 'choice' inside another
+'choice'.
 
-Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+The outer choice: line 17 "USB Gadget precomposed configurations"
+The inner choice: line 484 "EHCI Debug Device mode"
+
+I wondered why the whole legacy gadget drivers reside in such a big
+choice block.
+
+This dates back to 2003, "[PATCH] USB: fix for multiple definition of
+`usb_gadget_get_string'". [1]
+
+At that time, the global function, usb_gadget_get_string(), was linked
+into multiple drivers. That was why only one driver was able to become
+built-in at the same time.
+
+Later, commit a84d9e5361bc ("usb: gadget: start with libcomposite")
+moved usb_gadget_get_string() to a separate module, libcomposite.ko
+instead of including usbstring.c from multiple modules.
+
+More and more refactoring was done, and after commit 1bcce939478f
+("usb: gadget: multi: convert to new interface of f_mass_storage"),
+you can link multiple gadget drivers into vmlinux without causing
+multiple definition error.
+
+This is the only user of the nested choice structure ever. Removing
+this mess will make some Kconfig cleanups possible.
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=fee4cf49a81381e072c063571d1aadbb29207408
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
-Changelog v5 -> v6
-* Minor failure handling fixes
 
-Changelog v4 -> v5
-* Use local lock too at places where driver state needs to be protected.
+ drivers/usb/gadget/legacy/Kconfig | 48 ++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 26 deletions(-)
 
-Changelog v3 -> v4
-* Fix indentation
-
-Changelog v2 -> v3
-* use iio_device_claim_direct when switching modes
-* replace mlock usage in max1363_write_event_config
-
-Changelog v1 -> v2
-* Fix indentation
-
- drivers/iio/adc/max1363.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-index 5c2cc61b666e..647c99ae9fbe 100644
---- a/drivers/iio/adc/max1363.c
-+++ b/drivers/iio/adc/max1363.c
-@@ -150,6 +150,7 @@ struct max1363_chip_info {
-  * @current_mode:	the scan mode of this chip
-  * @requestedmask:	a valid requested set of channels
-  * @reg:		supply regulator
-+ * @lock		lock to ensure state is consistent
-  * @monitor_on:		whether monitor mode is enabled
-  * @monitor_speed:	parameter corresponding to device monitor speed setting
-  * @mask_high:		bitmask for enabled high thresholds
-@@ -169,6 +170,7 @@ struct max1363_state {
- 	const struct max1363_mode	*current_mode;
- 	u32				requestedmask;
- 	struct regulator		*reg;
-+	struct mutex			lock;
+diff --git a/drivers/usb/gadget/legacy/Kconfig b/drivers/usb/gadget/legacy/Kconfig
+index 6e7e1a9202e6..cc20f61d48a0 100644
+--- a/drivers/usb/gadget/legacy/Kconfig
++++ b/drivers/usb/gadget/legacy/Kconfig
+@@ -13,32 +13,28 @@
+ # With help from a special transceiver and a "Mini-AB" jack, systems with
+ # both kinds of controller can also support "USB On-the-Go" (CONFIG_USB_OTG).
+ #
++# A Linux "Gadget Driver" talks to the USB Peripheral Controller
++# driver through the abstract "gadget" API.  Some other operating
++# systems call these "client" drivers, of which "class drivers"
++# are a subset (implementing a USB device class specification).
++# A gadget driver implements one or more USB functions using
++# the peripheral hardware.
++#
++# Gadget drivers are hardware-neutral, or "platform independent",
++# except that they sometimes must understand quirks or limitations
++# of the particular controllers they work with.  For example, when
++# a controller doesn't support alternate configurations or provide
++# enough of the right types of endpoints, the gadget driver might
++# not be able work with that controller, or might need to implement
++# a less common variant of a device class protocol.
++#
++# The available choices each represent a single precomposed USB
++# gadget configuration. In the device model, each option contains
++# both the device instantiation as a child for a USB gadget
++# controller, and the relevant drivers for each function declared
++# by the device.
  
- 	/* Using monitor modes and buffer at the same time is
- 	   currently not supported */
-@@ -364,7 +366,11 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
- 	struct max1363_state *st = iio_priv(indio_dev);
- 	struct i2c_client *client = st->client;
+-choice
+-	tristate "USB Gadget precomposed configurations"
+-	default USB_ETH
+-	optional
+-	help
+-	  A Linux "Gadget Driver" talks to the USB Peripheral Controller
+-	  driver through the abstract "gadget" API.  Some other operating
+-	  systems call these "client" drivers, of which "class drivers"
+-	  are a subset (implementing a USB device class specification).
+-	  A gadget driver implements one or more USB functions using
+-	  the peripheral hardware.
+-
+-	  Gadget drivers are hardware-neutral, or "platform independent",
+-	  except that they sometimes must understand quirks or limitations
+-	  of the particular controllers they work with.  For example, when
+-	  a controller doesn't support alternate configurations or provide
+-	  enough of the right types of endpoints, the gadget driver might
+-	  not be able work with that controller, or might need to implement
+-	  a less common variant of a device class protocol.
+-
+-	  The available choices each represent a single precomposed USB
+-	  gadget configuration. In the device model, each option contains
+-	  both the device instantiation as a child for a USB gadget
+-	  controller, and the relevant drivers for each function declared
+-	  by the device.
++menu "USB Gadget precomposed configurations"
  
--	mutex_lock(&indio_dev->mlock);
-+	ret = iio_device_claim_direct_mode(indio_dev);
-+	mutex_lock(&st->lock);
-+
-+	if (ret < 0)
-+		goto error_ret;
- 	/*
- 	 * If monitor mode is enabled, the method for reading a single
- 	 * channel will have to be rather different and has not yet
-@@ -372,7 +378,7 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
- 	 *
- 	 * Also, cannot read directly if buffered capture enabled.
- 	 */
--	if (st->monitor_on || iio_buffer_enabled(indio_dev)) {
-+	if (st->monitor_on) {
- 		ret = -EBUSY;
- 		goto error_ret;
- 	}
-@@ -404,8 +410,9 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
- 		data = rxbuf[0];
- 	}
- 	*val = data;
-+
- error_ret:
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 	return ret;
+ config USB_ZERO
+ 	tristate "Gadget Zero (DEVELOPMENT)"
+@@ -516,4 +512,4 @@ config USB_G_WEBCAM
+ 	  Say "y" to link the driver statically, or "m" to build a
+ 	  dynamically linked module called "g_webcam".
  
- }
-@@ -705,9 +712,9 @@ static ssize_t max1363_monitor_store_freq(struct device *dev,
- 	if (!found)
- 		return -EINVAL;
- 
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->lock);
- 	st->monitor_speed = i;
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 
- 	return 0;
- }
-@@ -810,12 +817,12 @@ static int max1363_read_event_config(struct iio_dev *indio_dev,
- 	int val;
- 	int number = chan->channel;
- 
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->lock);
- 	if (dir == IIO_EV_DIR_FALLING)
- 		val = (1 << number) & st->mask_low;
- 	else
- 		val = (1 << number) & st->mask_high;
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 
- 	return val;
- }
-@@ -962,7 +969,12 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
- 	u16 unifiedmask;
- 	int number = chan->channel;
- 
--	mutex_lock(&indio_dev->mlock);
-+	ret = iio_device_claim_direct_mode(indio_dev);
-+	mutex_lock(&st->lock);
-+
-+	if (ret < 0)
-+		goto error_ret;
-+
- 	unifiedmask = st->mask_low | st->mask_high;
- 	if (dir == IIO_EV_DIR_FALLING) {
- 
-@@ -989,7 +1001,7 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
- 
- 	max1363_monitor_mode_update(st, !!(st->mask_high | st->mask_low));
- error_ret:
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 
- 	return ret;
- }
-@@ -1587,6 +1599,7 @@ static int max1363_probe(struct i2c_client *client,
- 
- 	st = iio_priv(indio_dev);
- 
-+	mutex_init(&st->lock);
- 	st->reg = devm_regulator_get(&client->dev, "vcc");
- 	if (IS_ERR(st->reg)) {
- 		ret = PTR_ERR(st->reg);
+-endchoice
++endmenu
 -- 
-2.23.0.385.gbc12974a89
+2.17.1
 
