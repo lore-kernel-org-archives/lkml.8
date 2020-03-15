@@ -2,93 +2,85 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8032AC10F29
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 21:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD77BC5ACBF
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 21:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436532051A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 21:30:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTniCmoK"
+	by mail.kernel.org (Postfix) with ESMTP id 8D945206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 21:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgCOV37 (ORCPT
+        id S1729233AbgCOVcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 17:29:59 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56789 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729166AbgCOV37 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 17:29:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584307798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nCZjjXhZtIZTco2GVuY9U8dtD4rKbgr/KTIhT3OsK/I=;
-        b=MTniCmoK8te0pj45YyeqTCV3YSQ5yLUYxEuonWQv263mTR4lQv+A9e28nIRp49NFs02EsV
-        4oHNqPvN4AhVRUmESBZEiGQXEOp1gDEC65jg8Vizu8Ypt4sm7W/9Ff8cqTM1DAnkTYcT+n
-        bHibl88nLQlYqmTS3K0huKNTihQFD34=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-4bSSCoquNZ2P3989GY5_Pg-1; Sun, 15 Mar 2020 17:29:54 -0400
-X-MC-Unique: 4bSSCoquNZ2P3989GY5_Pg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E82BA800D50;
-        Sun, 15 Mar 2020 21:29:52 +0000 (UTC)
-Received: from elisabeth (ovpn-200-18.brq.redhat.com [10.40.200.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B737B60BFB;
-        Sun, 15 Mar 2020 21:29:46 +0000 (UTC)
-Date:   Sun, 15 Mar 2020 22:29:38 +0100
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     Shreeya Patel <shreeya.patel23498@gmail.com>
-Cc:     adham.abozaeid@microchip.com, ajay.kathat@microchip.com,
-        linux-wireless@vger.kernel.org, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com, daniel.baluta@gmail.com,
-        nramas@linux.microsoft.com, hverkuil@xs4all.nl
-Subject: Re: [Outreachy kernel] [PATCH] Staging: wilc1000: cfg80211: Use
- kmemdup instead of kmalloc and memcpy
-Message-ID: <20200315222938.23a9faec@elisabeth>
-In-Reply-To: <20200313112451.25610-1-shreeya.patel23498@gmail.com>
-References: <20200313112451.25610-1-shreeya.patel23498@gmail.com>
-Organization: Red Hat
+        Sun, 15 Mar 2020 17:32:55 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61462 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729166AbgCOVcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 17:32:55 -0400
+IronPort-SDR: B+34pgH3LFrNzyvCTPtmJ6rkhbIVmRUrwa6TIWv2OtT77T+MGQnk5jFbTnbsUfYr8GRQtjsuTH
+ SOfzFKI9NYew==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2020 14:32:54 -0700
+IronPort-SDR: TrK/OBbbo2SS27DbEO5B+xBXL4aYlz0x6ARhVedaFludoKk+waMQQu51KAcrpTdC0fBhLL1Tf+
+ rnsRmDviZR/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,557,1574150400"; 
+   d="scan'208";a="443089525"
+Received: from babayass-mobl.ger.corp.intel.com (HELO localhost) ([10.249.90.210])
+  by fmsmga005.fm.intel.com with ESMTP; 15 Mar 2020 14:32:47 -0700
+Date:   Sun, 15 Mar 2020 23:32:45 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v3 2/3] KEYS: Avoid false positive ENOMEM error on key
+ read
+Message-ID: <20200315213245.GF224162@linux.intel.com>
+References: <20200313152102.1707-1-longman@redhat.com>
+ <20200313152102.1707-3-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313152102.1707-3-longman@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020 16:54:51 +0530
-Shreeya Patel <shreeya.patel23498@gmail.com> wrote:
+On Fri, Mar 13, 2020 at 11:21:01AM -0400, Waiman Long wrote:
+> -		 * Read methods will just return the required length
+> -		 * without any copying if the provided length isn't big
+> -		 * enough.
+> +		 * We don't want an erronous -ENOMEM error due to an
+> +		 * arbitrary large user-supplied buflen. So if buflen
+> +		 * exceeds a threshold (1024 bytes in this case), we call
+> +		 * the read method twice. The first time to get the buffer
+> +		 * length and the second time to read out the key data.
+> +		 *
+> +		 * N.B. All the read methods will return the required
+> +		 *      buffer length with a NULL input buffer or when
+> +		 *      the input buffer length isn't large enough.
+>  		 */
+> +		if (buflen <= 0x400) {
 
-> Replace calls to kmalloc followed by a memcpy with a direct call to
-> kmemdup.
-> 
-> The Coccinelle semantic patch used to make this change is as follows:
-> @@
-> expression from,to,size,flag;
-> statement S;
-> @@
-> 
-> -  to = \(kmalloc\|kzalloc\)(size,flag);
-> +  to = kmemdup(from,size,flag);
->    if (to==NULL || ...) S
-> -  memcpy(to, from, size);
-> 
-> Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
+1. The overwhelmingly long comment. Will be destined to rotten.
+2. Magic number.
+3. The cap must be updated both in comment and code, and not only
+   that, but the numbers use a different base (dec and hex).
 
-Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
-
--- 
-Stefano
-
+/Jarkko
