@@ -2,150 +2,99 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72829C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FC7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4568A206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584267675;
-	bh=qSrdTdk+Bozzx6kRvjzqGnSnWYLTir83lwA0ikq8NP8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jKPKOPJ24Q60saCuWUdhMCRTe2f9Gs1AdgN0WyBXzvQop34ByPUCmkB+scR5QP1ci
-	 clT1qwjTz3NP+dN9lWu4JhVnEA/kBKMA524ee9vQ2x12q++49g9WztJQ8wB2B2Cx1B
-	 RA1ihkUsjx/hKQUzpMLdKmJ+QXBVWhCYlSIcCJOM=
+	by mail.kernel.org (Postfix) with ESMTP id B31EF20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:27:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLjEFbXF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgCOKVN (ORCPT
+        id S1728262AbgCOK1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728141AbgCOKVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:21:13 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ACB720578;
-        Sun, 15 Mar 2020 10:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584267672;
-        bh=qSrdTdk+Bozzx6kRvjzqGnSnWYLTir83lwA0ikq8NP8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KKGydK0cx0rTn8tjYeYi2WvlhSlF54CgzfR17XqNMjbHbZOYRmFKMLCw6vDQzPpPB
-         ElCG+Qo7LqS7Aek/8dBcIBiAb/Mr/fjjPBkMxTUGfCvj+5PsvebTKRH5orPr4jwEu1
-         qmDZ74IV1bi+WwHdy3mJdiNNVBKdyDgiaj+2tkqg=
-Date:   Sun, 15 Mar 2020 10:21:07 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: mfd: add document bindings for
- mp2629
-Message-ID: <20200315102107.5c174611@archlinux>
-In-Reply-To: <20200315000013.4440-2-sravanhome@gmail.com>
-References: <20200315000013.4440-1-sravanhome@gmail.com>
-        <20200315000013.4440-2-sravanhome@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Mar 2020 06:27:40 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37631 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbgCOK1j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 06:27:39 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 6so17541053wre.4;
+        Sun, 15 Mar 2020 03:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pqm0PezCCdfuI97ApKbyt3LnL9VFZxah2FPqIKHnX0w=;
+        b=VLjEFbXFE5x9GBhCgoIExA0aVaVqvPUcT4E5pbWxZyUDXbzuiQJlTuiWbO9urbHkwu
+         VT83BtZpyfUhpFSW4u+uB9LPlDu3fiQe0VzopeQDDdzBkU6Wr2k+BawCN02a/cXqnD4O
+         AxwYkfYNe5PoOFYi8JK/jMwcI/FdszMm5Er/RAA7lNp0vbBVcu1xBLYQA7Jx6PBK+ge+
+         x30eBLdeYa+6umoOgegu3FkSwCiIYCDb95jMmgzvvoyqiD8UVBMd15LrxQ/xBjaJqkNO
+         xyRatiuZBPdRRNJ9/IdrXiNQvHNHrKGMLqNj4rVG/n+dRPjPYVA8RqTfMRgMpSUesgKZ
+         T1EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pqm0PezCCdfuI97ApKbyt3LnL9VFZxah2FPqIKHnX0w=;
+        b=V1EgUAM5Q3a9iG22q1x2KMoVV+8VIHOgL9+CxHbuyNuc1DgAfe6ssPGqvAASkWSNye
+         u5O3adMnb7DUgyh2FwdQbSuqX0joa8g/gr+rzgLEHKI04BihPsZHXxtOfQo+Ce75IwIu
+         Y/W0psVU2Ls3KJIF+aPjfRhuM8sx8gyyXx58vb9Kx2S945aNMg0ZOPQDEeqqHGa6dWiY
+         z5KmUgT1PQCvnDySC32heteZjgr1reEzRBAKAcJ10x8qdRU/YKOLXTKbZ5C8WvzaSX93
+         ToAo41gFh1DGizPJpE+dvV/Uk8P0VtY4h0mJiH+zENxAPvxdj/eMeKEzfCIqpM94ushN
+         V10A==
+X-Gm-Message-State: ANhLgQ3b+VhYPxmngLhUtKIFWgknqLDXOwsmfGPPOyW7fO6dNTIranfD
+        b97QsTXm8VfNfJT8OuS5SnI=
+X-Google-Smtp-Source: ADFU+vsTmcIviMV4vJ/hno2hqUEhcSA8Lnh1f0YRw4PvD2ZwSES5j/oCoHOFQUtz2x7upZ+fBX1KWw==
+X-Received: by 2002:adf:cf08:: with SMTP id o8mr27979007wrj.192.1584268056357;
+        Sun, 15 Mar 2020 03:27:36 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2510:d000:2c12:3438:7cb7:556d])
+        by smtp.gmail.com with ESMTPSA id z129sm25765190wmb.7.2020.03.15.03.27.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Mar 2020 03:27:35 -0700 (PDT)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Niklas <niklas.soderlund@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/2] rcar-csi2: make use V4L2_ASYNC_MATCH_CUSTOM to do fwnode matching
+Date:   Sun, 15 Mar 2020 10:27:22 +0000
+Message-Id: <20200315102724.26850-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Mar 2020 01:00:09 +0100
-Saravanan Sekar <sravanhome@gmail.com> wrote:
+Hi All,
 
-> Add device tree binding information for mp2629 mfd driver.
-> 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-Trivial inline.
+This patch series adds support for fwnode matching to be handled by rcar-csi2 driver.
 
-> ---
->  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> new file mode 100644
-> index 000000000000..f5b8c73123c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
-> +
-> +maintainers:
-> +  - Saravanan Sekar <sravanhome@gmail.com>
-> +
-> +description: |
-> +  MP2629 is an PMIC providing battery charging and power supply for smartphones,
-> +  Wireless camera and portable devices. Chip is contrlled over I2C.
+Thanks,
+Prabhakar
 
-wireless (odd capitalization)
+Lad Prabhakar (2):
+  media: v4l2-async: Pass pointer to struct v4l2_subdev in match_custom
+    callback
+  media: rcar-csi2: Let the driver handle fwnode matching using
+    match_custom callback
 
-> +
-> +  The MFD device handles battery charger controller and ADC IIO device for
-> +  battery, system voltage
-> +
-> +properties:
-> +  compatible:
-> +    const: mps,mp2629
-> +
-> +  reg:
-> +    description:
-> +      I2C device address.
+ drivers/media/platform/rcar-vin/rcar-csi2.c | 46 +++++++++++++++++++--
+ drivers/media/v4l2-core/v4l2-async.c        |  2 +-
+ include/media/v4l2-async.h                  |  4 +-
+ 3 files changed, 46 insertions(+), 6 deletions(-)
 
-Could drop the description. It's a standard element for an i2c device.
-
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is the IRQ number, the second cell is the trigger type.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/input/linux-event-codes.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        pmic@4b {
-> +            compatible = "mps,mp2629";
-> +            reg = <0x4b>;
-> +
-> +            interrupt-controller;
-> +            interrupt-parent = <&gpio2>;
-> +            #interrupt-cells = <2>;
-> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> +    };
+-- 
+2.20.1
 
