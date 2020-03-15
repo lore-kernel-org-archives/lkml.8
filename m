@@ -2,351 +2,118 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CA3C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A317C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B843B206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584268634;
-	bh=8ewgQI9pG9wLRFwqtLXiXuC4GTAAmEpzIuxYDhYuYSE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dvqLpoy2N6sV6R4vOXYgn7N2706hOEI6UHgb8j9xS+F3W6h2g4yKaiQNLHj0HfITn
-	 8kwghaEJ3GUyitTP7usmiJmAabgkdFUd/MRoHzdnfD+vPfk13IWRF7zanTuXVE0Sf7
-	 QZ5dQZOvMZN6q2wdP7ZBEy50qOcvej9FAuXKdV8k=
+	by mail.kernel.org (Postfix) with ESMTP id 5D6BA205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PT6LwBXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgCOKhN (ORCPT
+        id S1728293AbgCOKkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:37:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728247AbgCOKhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:37:13 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BC22205C9;
-        Sun, 15 Mar 2020 10:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584268631;
-        bh=8ewgQI9pG9wLRFwqtLXiXuC4GTAAmEpzIuxYDhYuYSE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uxnzAk91plFRI/6jhSqY9unSOt5xrHPelR2q0jTl64d8s5C/iRvBAEga1GRTIdtjx
-         gRdBMjn4vsSLrZcR8YEmMnAxOZCu5cBb6K4QUw69zHFLyi0wexMqW52U2cPVTjHQoF
-         /TnNw7bt4q/3vm9NfHEmNdPdEuKZD1pWbZXTrVWQ=
-Date:   Sun, 15 Mar 2020 10:37:06 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] iio: adc: mp2629: Add support for mp2629 ADC
- driver
-Message-ID: <20200315103706.38177792@archlinux>
-In-Reply-To: <20200315000013.4440-4-sravanhome@gmail.com>
-References: <20200315000013.4440-1-sravanhome@gmail.com>
-        <20200315000013.4440-4-sravanhome@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Mar 2020 06:40:35 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37022 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgCOKke (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 06:40:34 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 3so283188pff.4;
+        Sun, 15 Mar 2020 03:40:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=T7dEPiegWbPiC/e8VCxdOs7BMWZRGg4BajPSzkAJ79A=;
+        b=PT6LwBXzBxTzYMzucRCwoGeBZk33sN+EHTmC1uk4Hg821fnJii6OIeoshvDJAQNknr
+         95MrZdMIOnDEa1coNZH4+qIP10Xq+XkzMyFA8eMVRmgn42j72io+RHZVSv7B2dTO59QL
+         E3OYpSlnZzUGkFnPsPoZmopW0fdOuTirZwIJZZOH4kha+DCYDh2KF58Ki7ussBouw+Lf
+         pLWd3T+g39ihnN8xakwd44ipPUsZAqk+84FEdPjFAbDYS0JZWdVQ9/nc4ndkgdxr0JsZ
+         LStBnmZ/+tpulQJH718WSJXDSgUVSs4k1g2BxwxFNBg8zq6OA2Df4dELbrHOXSpvECFI
+         S8NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=T7dEPiegWbPiC/e8VCxdOs7BMWZRGg4BajPSzkAJ79A=;
+        b=ZPhkXJs3SRaPA9PpbXbnj2C4zPkLHJ/HvQWp1fo1nM7I7Bot4m7xwxPE6H4t04e7ge
+         DQrc8yQ9/2faU1dKfkfTClRQQ3Oh3LbEh5kF+jIY/kfhzfp7YgByffmNwXDkj3hnXFpR
+         LWyS2yEWIQ00mzejEVBSm5v7jFAxPhbBcg+HRtWF95cuL3mMW9lIvvjSTbpDqcPjRrp9
+         ppsTmmvuCfB2V4RqJ04CJfb+bu4EEi0I+Jz7DXg+8x9bJh0mni7TIpSsmERzORpnhex6
+         xo7/Umk9qbNjOGk8O/JyKiIKLVJmrI9BNxzC6N7DKwQIqmN7dOLp0Ms0ZsOwptcr1s1w
+         JUSA==
+X-Gm-Message-State: ANhLgQ0j2zygEpkPilZw8TigNn/8MfQuOfpqGFdGfneQZBQWlAheufZn
+        LLkRbLPqks9+votWgldajJk=
+X-Google-Smtp-Source: ADFU+vvVkfsWWx9bDF7jJ+1hCc1UmO7HGa/pA+p2CV8UhLred92GOVKH7FUAZxxXGAmYGBwOzomFnQ==
+X-Received: by 2002:a05:6a00:41:: with SMTP id i1mr21751857pfk.275.1584268833632;
+        Sun, 15 Mar 2020 03:40:33 -0700 (PDT)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id c15sm17022690pja.30.2020.03.15.03.40.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Mar 2020 03:40:33 -0700 (PDT)
+Date:   Sun, 15 Mar 2020 16:10:26 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Peter Korsgaard <jacmet@sunsite.dk>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] USB: c67x00: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20200315104022.GA3998@nishad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Mar 2020 01:00:11 +0100
-Saravanan Sekar <sravanhome@gmail.com> wrote:
+This patch corrects the SPDX License Identifier style in
+header files related to Cypress C67X00 USB Controller.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-> Add support for 8-bit resolution ADC readings for input power
-> supply and battery charging measurement. Provides voltage, current
-> readings to mp2629 power supply driver.
-> 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-The IIO parts seems fine (minor comments inline) but I'm not keep on
-directly accessing the internals of the mfd device info structure.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/usb/c67x00/c67x00-hcd.h | 2 +-
+ drivers/usb/c67x00/c67x00.h     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-To my mind that should be opaque to the child drivers so as to provide
-clear structure to any such accesses.
-
-Jonathan
-
-
-> ---
->  drivers/iio/adc/Kconfig      |  10 ++
->  drivers/iio/adc/Makefile     |   1 +
->  drivers/iio/adc/mp2629_adc.c | 209 +++++++++++++++++++++++++++++++++++
->  3 files changed, 220 insertions(+)
->  create mode 100644 drivers/iio/adc/mp2629_adc.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 82e33082958c..ef0c0cd31855 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -680,6 +680,16 @@ config MESON_SARADC
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called meson_saradc.
->  
-> +config MP2629_ADC
-> +	tristate "Monolithic MP2629 ADC driver"
-> +	depends on MFD_MP2629
-> +	help
-> +	  Say yes to have support for battery charger IC MP2629 ADC device
-> +	  accessed over I2C.
-> +
-> +	  This driver provides ADC conversion of system, input power supply
-> +	  and battery voltage & current information.
-> +
->  config NAU7802
->  	tristate "Nuvoton NAU7802 ADC driver"
->  	depends on I2C
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 919228900df9..f14416c245a6 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -64,6 +64,7 @@ obj-$(CONFIG_MCP3911) += mcp3911.o
->  obj-$(CONFIG_MEDIATEK_MT6577_AUXADC) += mt6577_auxadc.o
->  obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
->  obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
-> +obj-$(CONFIG_MP2629_ADC) += mp2629_adc.o
->  obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
->  obj-$(CONFIG_NAU7802) += nau7802.o
->  obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
-> diff --git a/drivers/iio/adc/mp2629_adc.c b/drivers/iio/adc/mp2629_adc.c
-> new file mode 100644
-> index 000000000000..1a99196624ed
-> --- /dev/null
-> +++ b/drivers/iio/adc/mp2629_adc.c
-> @@ -0,0 +1,209 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * MP2629 Driver for ADC
-> + *
-> + * Copyright 2020 Monolithic Power Systems, Inc
-> + *
-> + * Author: Saravanan Sekar <sravanhome@gmail.com>
-> + */
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/of_device.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/machine.h>
-> +#include <linux/iio/driver.h>
-> +#include <linux/mfd/mp2629.h>
-> +
-> +#define	MP2629_REG_ADC_CTRL		0x03
-> +#define	MP2629_REG_BATT_VOLT		0x0e
-> +#define	MP2629_REG_SYSTEM_VOLT		0x0f
-> +#define	MP2629_REG_INPUT_VOLT		0x11
-> +#define	MP2629_REG_BATT_CURRENT		0x12
-> +#define	MP2629_REG_INPUT_CURRENT	0x13
-> +
-> +#define	MP2629_ADC_START		BIT(7)
-> +#define MP2629_ADC_CONTINUOUS		BIT(6)
-
-Odd alignment.
-
-> +
-> +#define MP2629_MAP(_mp, _mpc) IIO_MAP(#_mp, "mp2629_charger", "mp2629-"_mpc)
-> +
-> +#define MP2629_ADC_CHAN(_ch, _type) {				\
-> +	.type = _type,						\
-> +	.indexed = 1,						\
-> +	.datasheet_name = #_ch,					\
-> +	.channel = MP2629_ ## _ch,				\
-> +	.address = MP2629_REG_ ## _ch,				\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-> +}
-> +
-> +static struct iio_chan_spec mp2629_channels[] = {
-> +	MP2629_ADC_CHAN(BATT_VOLT, IIO_VOLTAGE),
-> +	MP2629_ADC_CHAN(SYSTEM_VOLT, IIO_VOLTAGE),
-> +	MP2629_ADC_CHAN(INPUT_VOLT, IIO_VOLTAGE),
-> +	MP2629_ADC_CHAN(BATT_CURRENT, IIO_CURRENT),
-> +	MP2629_ADC_CHAN(INPUT_CURRENT, IIO_CURRENT)
-> +};
-> +
-> +struct mp2629_adc {
-> +	struct mp2629_info *info;
-> +	struct device *dev;
-> +};
-> +
-> +static struct iio_map mp2629_adc_maps[] = {
-> +	MP2629_MAP(BATT_VOLT, "batt-volt"),
-> +	MP2629_MAP(SYSTEM_VOLT, "system-volt"),
-> +	MP2629_MAP(INPUT_VOLT, "input-volt"),
-> +	MP2629_MAP(BATT_CURRENT, "batt-current"),
-> +	MP2629_MAP(INPUT_CURRENT, "input-current")
-> +};
-> +
-> +static int mp2629_read_raw(struct iio_dev *indio_dev,
-> +			struct iio_chan_spec const *chan,
-> +			int *val, int *val2, long mask)
-> +{
-> +	struct mp2629_adc *adc_info = iio_priv(indio_dev);
-> +	struct mp2629_info *info = adc_info->info;
-> +	unsigned int rval;
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = regmap_read(info->regmap, chan->address, &rval);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (chan->address == MP2629_INPUT_VOLT)
-> +			rval &= 0x7f;
-> +		*val = rval;
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		switch (chan->channel) {
-> +		case MP2629_BATT_VOLT:
-> +		case MP2629_SYSTEM_VOLT:
-> +			*val = 20;
-> +			return IIO_VAL_INT;
-> +
-> +		case MP2629_INPUT_VOLT:
-> +			*val = 60;
-> +			return IIO_VAL_INT;
-> +
-> +		case MP2629_BATT_CURRENT:
-> +			*val = 175;
-> +			*val2 = 10;
-> +			return IIO_VAL_FRACTIONAL;
-> +
-> +		case MP2629_INPUT_CURRENT:
-> +			*val = 133;
-> +			*val2 = 10;
-> +			return IIO_VAL_FRACTIONAL;
-> +
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct iio_info mp2629_adc_info = {
-> +	.read_raw = &mp2629_read_raw,
-> +};
-> +
-> +static int mp2629_adc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct mp2629_info *info = dev_get_drvdata(dev->parent);
-> +	struct mp2629_adc *adc_info;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc_info));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	adc_info = iio_priv(indio_dev);
-> +	platform_set_drvdata(pdev, indio_dev);
-> +	adc_info->info = info;
-> +	adc_info->dev = dev;
-> +
-> +	ret = iio_map_array_register(indio_dev, mp2629_adc_maps);
-> +	if (ret) {
-> +		dev_err(dev, "IIO maps register fail: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	indio_dev->name = dev_name(dev);
-> +	indio_dev->dev.parent = dev;
-> +	indio_dev->dev.of_node = pdev->dev.of_node;
-> +	indio_dev->channels = mp2629_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(mp2629_channels);
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->info = &mp2629_adc_info;
-> +
-> +	ret = regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
-> +				MP2629_ADC_START | MP2629_ADC_CONTINUOUS,
-> +				MP2629_ADC_START | MP2629_ADC_CONTINUOUS);
-> +	if (ret) {
-> +		dev_err(dev, "adc enable fail: %d\n", ret);
-> +		goto fail_unmap;
-> +	}
-> +
-> +	ret = devm_iio_device_register(dev, indio_dev);
-> +	if (ret) {
-> +		dev_err(dev, "IIO device register fail: %d\n", ret);
-> +		goto fail_unmap;
-
-Should we not be turning the device off like we do in remove?
-
-> +	}
-> +
-> +	return 0;
-> +
-> +fail_unmap:
-> +	iio_map_array_unregister(indio_dev);
-> +	return ret;
-> +}
-> +
-> +static int mp2629_adc_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct mp2629_adc *adc_info = iio_priv(indio_dev);
-> +	struct mp2629_info *info = adc_info->info;
-
-This mess in layering with the children directly using the parents
-regmap is a little concerning.  It means that the 3 drivers
-really aren't very well separated and can't really be reviewed
-independently (not a good thing). 
-
-It might just be a question of providing a wrapper in the mfd driver
-code so we at least have some visibility that this is going on.
-
-> +
-> +	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
-> +					 MP2629_ADC_CONTINUOUS, 0);
-> +	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
-> +					 MP2629_ADC_START, 0);
-> +
-> +	iio_map_array_unregister(indio_dev);
-> +	iio_device_unregister(indio_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mp2629_adc_of_match[] = {
-> +	{ .compatible = "mps,mp2629_adc"},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, mp2629_adc_of_match);
-> +
-> +static struct platform_driver mp2629_adc_driver = {
-> +	.driver = {
-> +		.name = "mp2629_adc",
-> +		.of_match_table = mp2629_adc_of_match,
-> +	},
-> +	.probe		= mp2629_adc_probe,
-> +	.remove		= mp2629_adc_remove,
-> +};
-> +module_platform_driver(mp2629_adc_driver);
-> +
-> +MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
-> +MODULE_DESCRIPTION("MP2629 ADC driver");
-> +MODULE_LICENSE("GPL");
+diff --git a/drivers/usb/c67x00/c67x00-hcd.h b/drivers/usb/c67x00/c67x00-hcd.h
+index 3b181d4c7a03..6b6b04a3fe0f 100644
+--- a/drivers/usb/c67x00/c67x00-hcd.h
++++ b/drivers/usb/c67x00/c67x00-hcd.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * c67x00-hcd.h: Cypress C67X00 USB HCD
+  *
+diff --git a/drivers/usb/c67x00/c67x00.h b/drivers/usb/c67x00/c67x00.h
+index 7ce10928b037..a4456d0fffa9 100644
+--- a/drivers/usb/c67x00/c67x00.h
++++ b/drivers/usb/c67x00/c67x00.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * c67x00.h: Cypress C67X00 USB register and field definitions
+  *
+-- 
+2.17.1
 
