@@ -2,79 +2,225 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D5EC18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2A6C18E5B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E84206B1
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 175FE20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584296151;
+	bh=q/mdVrbaFEPnsHVdyTsaw/hsSwbkVrdYfQPhvan8LrM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qu0cxrrkz8UQiNC5YbY8xkFsBNTbVVxW+3sdODmmB2zIuYRwFkJThMtBVH9IatRJK
+	 Qp7hs4yefFEXbyx8tOSuz7dDBsbroxMHu+z5LOPnFc9ZZerCboNAHq9qSFSDgVXcAi
+	 QK0U92qCkcC1SR2V5O6hUc2BQJpPuwEovRBGcIbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgCOSOv (ORCPT
+        id S1729062AbgCOSPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 14:14:51 -0400
-Received: from mga11.intel.com ([192.55.52.93]:49683 "EHLO mga11.intel.com"
+        Sun, 15 Mar 2020 14:15:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbgCOSOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 14:14:50 -0400
-IronPort-SDR: JJS1KShbjfpiUAy1pzVLffCmtYsgXfZGPbvYy7A+1QOga0VVZs/OH2Mlf5bin8H5/TL9/qdKqg
- v9Qh+HE5cyRg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2020 11:14:49 -0700
-IronPort-SDR: S7JlCLgnKLniOLwGJWA3ufxlOWM4qy471wRdfKsVmjvmwsog/+18oo2JQS7jQYmkSYSrP6XMDK
- 8jLRkZJD6AxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,557,1574150400"; 
-   d="scan'208";a="235824287"
-Received: from babayass-mobl.ger.corp.intel.com (HELO localhost) ([10.249.90.210])
-  by fmsmga007.fm.intel.com with ESMTP; 15 Mar 2020 11:14:47 -0700
-Date:   Sun, 15 Mar 2020 20:14:45 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: linux-next: Fixes tag needs some work in the tpmdd tree
-Message-ID: <20200315181445.GB224162@linux.intel.com>
-References: <20200314215307.1c5f4a45@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200314215307.1c5f4a45@canb.auug.org.au>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1729030AbgCOSPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 14:15:49 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9082206B1;
+        Sun, 15 Mar 2020 18:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584296148;
+        bh=q/mdVrbaFEPnsHVdyTsaw/hsSwbkVrdYfQPhvan8LrM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eR5MFeqreycD2VC3I2bu6e/DElwBPgtuFyuRX5oRaxyoSW0rII7pfatrziBOdbzNi
+         6wfwaPM9Uw+IZQ9Vce8GnMClENqodPAEPH4brijlD+3v+c87owNiVxSLb7lcBm53SD
+         wURiXqizBWXsw05Hy3tY8FRBuCqzDC1g4zsrOKaA=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jDXne-00Cv06-UB; Sun, 15 Mar 2020 18:15:47 +0000
+Date:   Sun, 15 Mar 2020 18:15:44 +0000
+Message-ID: <86tv2pzdpr.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
+        catalin.marinas@arm.com, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arch@vger.kernel.org,
+        olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com,
+        jasowang@redhat.com, marcelo.cerri@canonical.com,
+        kys@microsoft.com, sunilmut@microsoft.com, boqun.feng@gmail.com
+Subject: Re: [PATCH v6 06/10] arm64: hyperv: Add kexec and panic handlers
+In-Reply-To: <1584200119-18594-7-git-send-email-mikelley@microsoft.com>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+        <1584200119-18594-7-git-send-email-mikelley@microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: mikelley@microsoft.com, will@kernel.org, ardb@kernel.org, arnd@arndb.de, catalin.marinas@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org, linux-arch@vger.kernel.org, olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com, jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com, sunilmut@microsoft.com, boqun.feng@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 09:53:07PM +1100, Stephen Rothwell wrote:
-> Hi all,
+On Sat, 14 Mar 2020 15:35:15 +0000,
+Michael Kelley <mikelley@microsoft.com> wrote:
 > 
-> In commit
+> Add functions to set up and remove kexec and panic
+> handlers, and to inform Hyper-V about a guest panic.
+> These functions are called from architecture independent
+> code in the VMbus driver.
 > 
->   606c8d992ba5 ("tpm: ibmvtpm: Wait for buffer to be set before proceeding")
+> This code is built only when CONFIG_HYPERV is enabled.
 > 
-> Fixes tag
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  arch/arm64/hyperv/hv_core.c  | 61 ++++++++++++++++++++++++++++++++++++++++++++
+>  arch/arm64/hyperv/mshyperv.c | 26 +++++++++++++++++++
+>  2 files changed, 87 insertions(+)
 > 
->   Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
-> 
-> has these problem(s):
-> 
->   - Subject does not match target commit subject
->     Just use
-> 	git log -1 --format='Fixes: %h ("%s")'
-> 
+> diff --git a/arch/arm64/hyperv/hv_core.c b/arch/arm64/hyperv/hv_core.c
+> index 4aa6b8f..8d6de9f 100644
+> --- a/arch/arm64/hyperv/hv_core.c
+> +++ b/arch/arm64/hyperv/hv_core.c
+> @@ -199,3 +199,64 @@ void hv_get_vpreg_128(u32 msr, struct hv_get_vp_register_output *res)
+>  	kfree(output);
+>  }
+>  EXPORT_SYMBOL_GPL(hv_get_vpreg_128);
+> +
+> +void hyperv_report_panic(struct pt_regs *regs, long err)
+> +{
+> +	static bool panic_reported;
+> +	u64 guest_id;
+> +
+> +	/*
+> +	 * We prefer to report panic on 'die' chain as we have proper
+> +	 * registers to report, but if we miss it (e.g. on BUG()) we need
+> +	 * to report it on 'panic'.
+> +	 */
+> +	if (panic_reported)
+> +		return;
+> +	panic_reported = true;
+
+How does this work when multiple vcpus are crashing at once? Are you
+guaranteed to be single-threaded at this point?
+
+> +
+> +	guest_id = hv_get_vpreg(HV_REGISTER_GUEST_OSID);
+> +
+> +	/*
+> +	 * Hyper-V provides the ability to store only 5 values.
+> +	 * Pick the passed in error value, the guest_id, and the PC.
+> +	 * The first two general registers are added arbitrarily.
+> +	 */
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P0, err);
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P1, guest_id);
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P2, regs->pc);
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P3, regs->regs[0]);
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P4, regs->regs[1]);
+
+How about reporting useful information, a pointer to some data
+structure describing the fault? As it is, the usefulness of this is
+pretty dubious.
+
+> +
+> +	/*
+> +	 * Let Hyper-V know there is crash data available
+> +	 */
+> +	hv_set_vpreg(HV_REGISTER_CRASH_CTL, HV_CRASH_CTL_CRASH_NOTIFY);
+> +}
+> +EXPORT_SYMBOL_GPL(hyperv_report_panic);
+> +
+> +/*
+> + * hyperv_report_panic_msg - report panic message to Hyper-V
+> + * @pa: physical address of the panic page containing the message
+> + * @size: size of the message in the page
+> + */
+> +void hyperv_report_panic_msg(phys_addr_t pa, size_t size)
+> +{
+> +	/*
+> +	 * P3 to contain the physical address of the panic page & P4 to
+> +	 * contain the size of the panic data in that page. Rest of the
+> +	 * registers are no-op when the NOTIFY_MSG flag is set.
+> +	 */
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P0, 0);
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P1, 0);
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P2, 0);
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P3, pa);
+> +	hv_set_vpreg(HV_REGISTER_CRASH_P4, size);
+> +
+> +	/*
+> +	 * Let Hyper-V know there is crash data available along with
+> +	 * the panic message.
+> +	 */
+> +	hv_set_vpreg(HV_REGISTER_CRASH_CTL,
+> +	       (HV_CRASH_CTL_CRASH_NOTIFY | HV_CRASH_CTL_CRASH_NOTIFY_MSG));
+> +}
+> +EXPORT_SYMBOL_GPL(hyperv_report_panic_msg);
+> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+> index ae6ece6..c58940d 100644
+> --- a/arch/arm64/hyperv/mshyperv.c
+> +++ b/arch/arm64/hyperv/mshyperv.c
+> @@ -23,6 +23,8 @@
+>  
+>  static void (*vmbus_handler)(void);
+>  static void (*hv_stimer0_handler)(void);
+> +static void (*hv_kexec_handler)(void);
+> +static void (*hv_crash_handler)(struct pt_regs *regs);
+
+Why is this in the arch-specific code? Yes, it lives in the x86 arch
+code too, but I don't see what prevents it from being moved to the
+vmbus_drv.c code.
+
+>  
+>  static int vmbus_irq;
+>  static long __percpu *vmbus_evt;
+> @@ -137,3 +139,27 @@ void hv_remove_stimer0_irq(int irq)
+>  	}
+>  }
+>  EXPORT_SYMBOL_GPL(hv_remove_stimer0_irq);
+> +
+> +void hv_setup_kexec_handler(void (*handler)(void))
+> +{
+> +	hv_kexec_handler = handler;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_setup_kexec_handler);
+> +
+> +void hv_remove_kexec_handler(void)
+> +{
+> +	hv_kexec_handler = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_remove_kexec_handler);
+> +
+> +void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs))
+> +{
+> +	hv_crash_handler = handler;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_setup_crash_handler);
+> +
+> +void hv_remove_crash_handler(void)
+> +{
+> +	hv_crash_handler = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_remove_crash_handler);
 > -- 
-> Cheers,
-> Stephen Rothwell
+> 1.8.3.1
+> 
+> 
 
-Thanks, has been fixed now.
+Thanks,
 
-Stefan, please do modify the short summary next time when you add a
-fixes tag. Thanks.
+	M.
 
-/Jarkko
+-- 
+Jazz is not dead, it just smells funny.
