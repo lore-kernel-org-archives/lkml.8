@@ -2,75 +2,124 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DATE_IN_PAST_24_48,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDE9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB65AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B70320722
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94F220722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgCOFPR (ORCPT
+        id S1727074AbgCOFWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 01:15:17 -0400
-Received: from mail-pj1-f70.google.com ([209.85.216.70]:52406 "EHLO
-        mail-pj1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbgCOFPQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 01:15:16 -0400
-Received: by mail-pj1-f70.google.com with SMTP id hg14so4542712pjb.2
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 22:15:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=/CZuM0+mbO6NyqR+mLDX0oKlbyLZj3NtZHFhJDcGVng=;
-        b=HGgcsCquxH8cxMR4OGyivFDVMm+XTBlYjrq/iGY6nt5DRop4mPDZyt7NZRIy+3VZdw
-         l4o4cdwAo2w7fdtIMhURwhSXRC3nisBlwi4Bz/Mo+KR5/xpFaw08tO6j9nZioSW29KhT
-         4Pmi+yeFWu5fOo+HS52rbHKrAKzqaEuI3SzriaEy5z6KDQP2d6ipflTj1EQlXl3w2gyi
-         zfp4m++/6jWUyQg5+lO196NVbjJ9hel7p+5vlBM2urEHs5bmwVwawZfO2FhJihmZV3qZ
-         u1x/RujylRCHylf+hJ3qy4RkbROvJOndhpQHl4Q3/ebR/DqW+PmjAWL5V/HAfLZ8s8dm
-         YlnQ==
-X-Gm-Message-State: ANhLgQ2ksD1Zj194mz2ZZ1XZ1/C6MGUNQyIl5oNhp5OuKq0XKkETQcp4
-        O3b9JLapxAJtz3zZufE3DPNOTjvsLfFpJ7z53goZmejsYbCW
-X-Google-Smtp-Source: ADFU+vsd7B6zM7k661+N9RLASlT7wDY115i+NOnn4ChlOdfINGGNLgluD9/L+k0eJ+9HakWUkF332HYt3wzwxnDAhQKyCHW7keRq
+        Sun, 15 Mar 2020 01:22:52 -0400
+Received: from mga18.intel.com ([134.134.136.126]:47872 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726648AbgCOFWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 01:22:52 -0400
+IronPort-SDR: shfi8IrWR+MfHV7aMo+c+nuQq5zwfGkLptUmJK+Xpsjy2zMy/vhEMPuNAcuHGHwu+yL5+k/W6S
+ ysYgaE0Q6Vew==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 22:22:51 -0700
+IronPort-SDR: Wx4fi8F+f85aXxZT0DhhIKXnwUcDXqKKzoQQL+P7Cg82WU15mt5BzYm20FmZGuC+aEaNTaACjN
+ DBLO6XyLPULA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,555,1574150400"; 
+   d="scan'208";a="267194195"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.160])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Mar 2020 22:22:47 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH v5 0/9] x86/split_lock: Add feature split lock detection
+Date:   Sun, 15 Mar 2020 13:05:08 +0800
+Message-Id: <20200315050517.127446-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:79cf:: with SMTP id u198mr2189717ilc.23.1584158642104;
- Fri, 13 Mar 2020 21:04:02 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 21:04:02 -0700
-In-Reply-To: <CADG63jCSHu7dQ118GEuhXBi0H4CW3cBqB5F2qKiyeVzNb0U+wg@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000021721505a0c8ad76@google.com>
-Subject: Re: WARNING: refcount bug in sctp_wfree
-From:   syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>
-To:     anenbupt@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This series aims to add the virtualization of split lock detection for
+guest, while containing some fixes of native kernel split lock handling. 
 
-syzbot tried to test the proposed patch but build/boot failed:
+Note, this series is based on the kernel patch[1].
 
-failed to checkout kernel repo https://github.com/hqj/hqjagain_test.git/scup_wfree: failed to run ["git" "fetch" "https://github.com/hqj/hqjagain_test.git" "scup_wfree"]: exit status 128
-fatal: couldn't find remote ref scup_wfree
+Patch 1 is the fix and enhancement for kernel split lock detction. It
+ensures X86_FEATURE_SPLIT_LOCK_DETECT flag is set after verifying the
+feature is really supported. And it explicitly turn off split lock when
+sld_off instead of assuming BIOS/firmware leaves it cleared.
 
+Patch 2 optimizes the runtime MSR accessing.
 
+Patch 3-4 are the preparation for enabling split lock detection
+virtualization in KVM.
 
-Tested on:
+Patch 5 fixes the issue tht malicious guest may exploit kvm emulator to
+attcact host kernel.
 
-commit:         [unknown 
-git tree:       https://github.com/hqj/hqjagain_test.git scup_wfree
-dashboard link: https://syzkaller.appspot.com/bug?extid=cea71eec5d6de256d54d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+Patch 6 handles guest's split lock when host truns split lock detect on.
+
+Patch 7-9 implement the virtualization of split lock detection in kvm.
+
+[1]: https://lore.kernel.org/lkml/158031147976.396.8941798847364718785.tip-bot2@tip-bot2/ 
+
+v5:
+ - Use X86_FEATURE_SPLIT_LOCK_DETECT flag in kvm to ensure split lock
+   detection is really supported.
+ - Add and export sld related helper functions in their related usecase 
+   kvm patches.
+
+v4:
+ - Add patch 1 to rework the initialization flow of split lock
+   detection.
+ - Drop percpu MSR_TEST_CTRL cache, just use a static variable to cache
+   the reserved/unused bit of MSR_TEST_CTRL. [Sean]
+ - Add new option for split_lock_detect kernel param.
+ - Changlog refinement. [Sean]
+ - Add a new patch to enable MSR_TEST_CTRL for intel guest. [Sean]
+
+Xiaoyao Li (9):
+  x86/split_lock: Rework the initialization flow of split lock detection
+  x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
+  x86/split_lock: Re-define the kernel param option for
+    split_lock_detect
+  x86/split_lock: Export handle_user_split_lock()
+  kvm: x86: Emulate split-lock access as a write
+  kvm: vmx: Extend VMX's #AC interceptor to handle split lock #AC
+    happens in guest
+  kvm: x86: Emulate MSR IA32_CORE_CAPABILITIES
+  kvm: vmx: Enable MSR_TEST_CTRL for intel guest
+  x86: vmx: virtualize split lock detection
+
+ .../admin-guide/kernel-parameters.txt         |   5 +-
+ arch/x86/include/asm/cpu.h                    |  23 +++-
+ arch/x86/include/asm/kvm_host.h               |   1 +
+ arch/x86/kernel/cpu/intel.c                   | 119 +++++++++++++-----
+ arch/x86/kernel/traps.c                       |   2 +-
+ arch/x86/kvm/cpuid.c                          |   7 +-
+ arch/x86/kvm/vmx/vmx.c                        |  75 ++++++++++-
+ arch/x86/kvm/vmx/vmx.h                        |   1 +
+ arch/x86/kvm/x86.c                            |  42 ++++++-
+ 9 files changed, 229 insertions(+), 46 deletions(-)
+
+-- 
+2.20.1
 
