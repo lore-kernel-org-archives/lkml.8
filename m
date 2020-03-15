@@ -3,123 +3,165 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D45C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA844C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A985C206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E6A206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:55:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="twQyM+1l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ytc0lS9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgCOKx7 (ORCPT
+        id S1728325AbgCOKzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:53:59 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:45238 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgCOKx6 (ORCPT
+        Sun, 15 Mar 2020 06:55:18 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55003 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgCOKzS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:53:58 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4D6D02D6;
-        Sun, 15 Mar 2020 11:53:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584269636;
-        bh=tHZj7k528VQp787Iu7lw15HaxCaHUWTuuW+O8lIRCV0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=twQyM+1lGITMQqyxXCOzCVjNxdRkFDEN5Q+XB7scUmWhUwBhnFmAx/7FRLsXJe09t
-         3c+eJ6c0MTWuKvkh/Wa+144xmukaiIwjDTSe1D4n6VXiu/EFm6qlCHllgISiac3x8n
-         W4aiRKx5AIlyOz82CjnfeLQxDBSudePE3vgLvhLA=
-Date:   Sun, 15 Mar 2020 12:53:45 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 2/3] dt-bindings: leds: Add binding for sgm3140
-Message-ID: <20200315105345.GB4732@pendragon.ideasonboard.com>
-References: <20200309203558.305725-1-luca@z3ntu.xyz>
- <20200309203558.305725-3-luca@z3ntu.xyz>
- <4f848ab3-0e76-ae63-0771-758b1eaa0660@ti.com>
- <3051566.44csPzL39Z@g550jk>
+        Sun, 15 Mar 2020 06:55:18 -0400
+Received: by mail-pj1-f66.google.com with SMTP id np16so6523100pjb.4;
+        Sun, 15 Mar 2020 03:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=qIYlGm4yxuJWPGZE9jBq7SClwzl5SsZAe4AqIxxnJxw=;
+        b=Ytc0lS9YIYTtXj0J3ndnY9qI6fhM69eKrhKeJ5hWX7SeOO/4qrOucPykSm86CZNO8A
+         s/cwNwQwBvzidl9CI6IhyG44/yBrU+4+zrHEI7pMeo8jauUmWDcdGSe8oPOqm60mngsh
+         IjaJvwxItnBtcLy7FjbinFyXmDxPa0hsdOOMGBuGw1NXGBey3CvcBlOWREWvIDBlKFM4
+         pmc3VmBp9GHVODEGzIibmrVO83GA4HTOczijkd1We60WzCZSB4ufS30e9uZ9elP2uPdy
+         F/11X6sogex+WjgabQT3H+1L767Pk8EzB003F5exqaqQIOCLNWzjBfMZy/XjkwdJ9sfd
+         KIbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qIYlGm4yxuJWPGZE9jBq7SClwzl5SsZAe4AqIxxnJxw=;
+        b=aVJp7gopYw+ZNNTGorRr3ekHBFNBKMyrvU+7uQK8bJRQUf2HpHdVf1RMh5QfqfW16y
+         Jyd1oJwxBCuPhBtjF4STnoxqva4/TxZdyFRbTAJIyjhF2+Oe0QtblqFotd7JSm6zqr0f
+         41RW/S/gzYoFk7M2+aH49r2zpZgfoFrWutXCq5OwwFnB7YYyXejxPOddzZd1Va852CYN
+         GtTSFMh7UvEy9sUHx8JZn/79pTCAx2QZuDaNk2CjyoOvI9A4UEomYMVGbLgOL4l4KFvg
+         k/RVQzp68ftnBZ+yFx1wJa/7wW6kjjYxhn5GEkESV8/EX6c1bEP07F7su5lezaJ8ddJE
+         VsNg==
+X-Gm-Message-State: ANhLgQ24HHYduFIMo4IsJpt4/fUFopeIKWL+C+xAkWPojB4YWGYdHFJT
+        UOoqhwERVyRrjx3PiXddghY=
+X-Google-Smtp-Source: ADFU+vvvi9/IwQKAHenUTXb90ToqvygF+HzJRijet4tByzTJotX9aoip3MjS9Alg2JwZYozZzCUysA==
+X-Received: by 2002:a17:90a:9a90:: with SMTP id e16mr19401817pjp.164.1584269715129;
+        Sun, 15 Mar 2020 03:55:15 -0700 (PDT)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id j17sm18311949pfr.176.2020.03.15.03.55.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Mar 2020 03:55:14 -0700 (PDT)
+Date:   Sun, 15 Mar 2020 16:25:07 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Peter Chen <Peter.Chen@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] USB: chipidea: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20200315105503.GA4440@nishad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3051566.44csPzL39Z@g550jk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luca,
+This patch corrects the SPDX License Identifier style in
+header files related to ChipIdea Highspeed Dual Role Controller.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-On Sun, Mar 15, 2020 at 11:47:36AM +0100, Luca Weiss wrote:
-> On Mittwoch, 11. März 2020 13:49:35 CET Dan Murphy wrote:
-> > On 3/9/20 3:35 PM, Luca Weiss wrote:
-> > > Add YAML devicetree binding for SGMICRO SGM3140 charge pump used for
-> > > camera flash LEDs.
-> > > 
-> > > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> > > ---
-> > > Changes since RFC:
-> > > - new patch
-> > > 
-> > > I'm not sure about the completeness of this binding as it doesn't
-> > > mention the led subnode at all.
-> > > The only existing led yaml binding is leds/leds-max77650.yaml which
-> > > mentions the subnode but duplicates properties from documented in
-> > > leds/common.txt.
-> > > 
-> > >   .../bindings/leds/leds-sgm3140.yaml           | 53 +++++++++++++++++++
-> > >   1 file changed, 53 insertions(+)
-> > >   create mode 100644
-> > >   Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-> > > b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml new file mode
-> > > 100644
-> > > index 000000000000..be9384573d02
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-> > > @@ -0,0 +1,53 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/leds/leds-sgm3140.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: SGMICRO SGM3140 500mA Buck/Boost Charge Pump LED Driver
-> > > +
-> > > +maintainers:
-> > > +  - Luca Weiss <luca@z3ntu.xyz>
-> > > +
-> > > +description: |
-> > > +  The SGM3140 is a current-regulated charge pump which can regulate two
-> > > current +  levels for Flash and Torch modes.
-> > > +
-> > > +  It is controlled with two GPIO pins.
-> > 
-> > Please define "It".  Not sure what is controlled here.
-> > 
-> 
-> "It" means the SGM3140. Not sure how else to write that or what the correct 
-> term for such a component is.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-Maybe "The device" ? I think Dan's concern is that he wasn't sure if
-"It" referred to "the device" or to "flash and torch modes".
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/usb/chipidea/bits.h        | 2 +-
+ drivers/usb/chipidea/ci.h          | 2 +-
+ drivers/usb/chipidea/ci_hdrc_imx.h | 2 +-
+ drivers/usb/chipidea/otg.h         | 2 +-
+ drivers/usb/chipidea/otg_fsm.h     | 2 +-
+ drivers/usb/chipidea/udc.h         | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
+index 98da99510be7..b1540ce93264 100644
+--- a/drivers/usb/chipidea/bits.h
++++ b/drivers/usb/chipidea/bits.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * bits.h - register bits of the ChipIdea USB IP core
+  *
+diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
+index d49d5e1235d0..644ecaef17ee 100644
+--- a/drivers/usb/chipidea/ci.h
++++ b/drivers/usb/chipidea/ci.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * ci.h - common structures, functions, and macros of the ChipIdea driver
+  *
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.h b/drivers/usb/chipidea/ci_hdrc_imx.h
+index de2aac9a2868..c2051aeba13f 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.h
++++ b/drivers/usb/chipidea/ci_hdrc_imx.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright 2012 Freescale Semiconductor, Inc.
+  */
+diff --git a/drivers/usb/chipidea/otg.h b/drivers/usb/chipidea/otg.h
+index 4f8b8179ec96..5e7a6e571dd2 100644
+--- a/drivers/usb/chipidea/otg.h
++++ b/drivers/usb/chipidea/otg.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2013-2014 Freescale Semiconductor, Inc.
+  *
+diff --git a/drivers/usb/chipidea/otg_fsm.h b/drivers/usb/chipidea/otg_fsm.h
+index 2b49d29bf2fb..1f5c5ae0e71e 100644
+--- a/drivers/usb/chipidea/otg_fsm.h
++++ b/drivers/usb/chipidea/otg_fsm.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2014 Freescale Semiconductor, Inc.
+  *
+diff --git a/drivers/usb/chipidea/udc.h b/drivers/usb/chipidea/udc.h
+index e023735d94b7..ebb11b625bb8 100644
+--- a/drivers/usb/chipidea/udc.h
++++ b/drivers/usb/chipidea/udc.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * udc.h - ChipIdea UDC structures
+  *
 -- 
-Regards,
+2.17.1
 
-Laurent Pinchart
