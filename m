@@ -2,121 +2,127 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAB5C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3293C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7518520578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74ADA20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsMP5ZfF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QX+syxtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgCOPZL (ORCPT
+        id S1728826AbgCOPZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:25:11 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41555 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbgCOPZL (ORCPT
+        Sun, 15 Mar 2020 11:25:19 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37811 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728794AbgCOPZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:25:11 -0400
-Received: by mail-il1-f194.google.com with SMTP id l14so13945871ilj.8;
-        Sun, 15 Mar 2020 08:25:10 -0700 (PDT)
+        Sun, 15 Mar 2020 11:25:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 3so518336pff.4;
+        Sun, 15 Mar 2020 08:25:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8oElHQLKFLOVtRHqu7xiZ6PSJACuRnWmCrjsIOT03/4=;
-        b=RsMP5ZfF9Kle+rjBS3Bso6AHBFITrbE13HUp2ObAa4PaLpubX0IyO20urbKNQZ8QzO
-         zyawLivUZMOXmEf4KS1gockamB5ifWcK8RDanr4T91XtPkH5uqz3rQkJuTN29cfWqPbo
-         UetMtw8CUEnybaWElSX6cG1rLsDBv9M8fdTLj8NPJFE16pwbaVq9cVWA4uz7b76daa0o
-         JOFelYtJ96GsHGmlh0CnSFIMH+ubQ4nER8Nckilais8GLUoMFOPtDNa0hT5zBIWZUkDE
-         7TeitOReluipDTZmFIWdjKp9FiDr+lWqjIq0utvdsGanqMtRlVOq6xPtcmqtTp0FDcdD
-         QTvQ==
+        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
+         :user-agent;
+        bh=OZDiihJ3OBBRg2OIBgYZpbzLQGD8FEl/aXEB9troNrk=;
+        b=QX+syxtcf4GjKjCDWFlesV29F0cBOtMntwqXN5uZUar72ElN03mFqOQENkbtOvbE3r
+         i2MEkW5/ieqzSaHZ6DdxfJRTN54XWIQHLVf15BMOoZ39XaU58QYkHo1JCv6yTeCeUCC/
+         kZBKlLf/iwUA4LSnsSXi5Xi8K8iFRZBckcRd6j88GDMUTLMprslKd8dzYmx1eHygkQxt
+         wbPjW4Hizn3C9+n6sUim89qqAn1gHwfSGNjOKEeuvOp1uMjerSsGwIyMxKmYbZw9gPfM
+         ksodhVrtnAMA8QGmnwdRrXRpwKCJ+yuiknoQqlDQWMd1hcDzpyZ9qqOgcVcuf/GR5cXw
+         oQgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8oElHQLKFLOVtRHqu7xiZ6PSJACuRnWmCrjsIOT03/4=;
-        b=Swtw7IwfnYlS0YRdoyUeCqZ1PTZJmek7FEIwdGAE21fviXzdZArH0txierQFwuYMRc
-         60wE6RINAZN8FtsRaDWtD6gkdBv2e03CyomAnYzguw0shbqwzmvHuGs3QMQuBtJhQCIz
-         RK1oSrvYZQaykzlY+s14ihhLppK11rSLbBUzhjEricvR27NIciv3XjORce7st9g18sp3
-         uLIXIP6FZZr3niuhVLrfIVHzqAJN1uosuk2XYT8xPxaqvvKtH2flxNvznMfPtfZrsrma
-         /ZBm5XtSA/OgxEFhg3Oxz5owAeLt1omQQCALioYSDpwxlBORGEfA97uKujTpXSeabvc5
-         ZB2w==
-X-Gm-Message-State: ANhLgQ0g5/RWH/41UwHrwom49gGvxpyv0jOkE1pGeQwR/f9/wLdggqW9
-        ir7IjnPqemwKdB6wAl5l2EEZGkNRwEfzFj4oAcA=
-X-Google-Smtp-Source: ADFU+vt9/0tLT5TMHQJuvt7jSFZQO9BbU2DRVErpzh0iupQQjp//EFou6F5rBpQO/z0gYMAYYRnt+hMR7/PR6UXiFmE=
-X-Received: by 2002:a92:8f53:: with SMTP id j80mr17379957ild.171.1584285909944;
- Sun, 15 Mar 2020 08:25:09 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
+         :content-disposition:user-agent;
+        bh=OZDiihJ3OBBRg2OIBgYZpbzLQGD8FEl/aXEB9troNrk=;
+        b=FnxhqXEBTutJZT74PgEM/eksr2DgMiHV9fHcgkaohw+95HDnIjcF+4bSHoZrC1HDdd
+         SnhcCgzi+IVmv4V0CFfbsGiV3ABlP2OfQM/3e1//4f1yocoCGKcfgcAaZvovownWtJem
+         pFWNc8P/OdB738tAGjfV3tO1f3eavie9uwuv9iwVZuEYSOKb0sK6DjmcdMW1fmIl5N2n
+         sFQCHoeJCnJoO4ej1jlPy0jxpKHijxDFU7goUKttvRjkbiCZveFIr7jMMwFX1ATzmyN4
+         z9j/yXSavj7wF3yQSk8ufJQUIVPNlyGWAAKc6ZWgv2p/g4Gpt0qvMqC9+Q37ZTas2DGS
+         uSoA==
+X-Gm-Message-State: ANhLgQ31Qt/iffkb1EuKH+XzCFG7op3GK9ArstqMOOIHVrPM9S0yFgi1
+        6qKJAOt9XaL07VCeVcXiquj/MW0/mDG/sg==
+X-Google-Smtp-Source: ADFU+vuRzHjAMFvBgD34pBjb6od/bFzqiSRchqVitpfWqkx3vPp9jB8ejHAhhT4dhtHDNo9AQ08D+A==
+X-Received: by 2002:a62:1dcd:: with SMTP id d196mr22287689pfd.296.1584285918156;
+        Sun, 15 Mar 2020 08:25:18 -0700 (PDT)
+Received: from SARKAR ([43.224.157.36])
+        by smtp.gmail.com with ESMTPSA id s18sm26154569pfe.15.2020.03.15.08.25.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Mar 2020 08:25:17 -0700 (PDT)
+Message-ID: <5e6e48dd.1c69fb81.11507.523e@mx.google.com>
+X-Google-Original-Message-ID: <20200315152512.GA8096@rohitsarkar5398@gmail.com>
+Date:   Sun, 15 Mar 2020 20:55:12 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     linux-iio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, alexandru.Ardelean@analog.com,
+        dragos.bogdan@analog.com,
+        Matt Ranostay <matt.ranostay@konsulko.com>, jic23@kernel.org,
+        rohitsarkar5398@gmail.com
+Subject: [PATCH v2] iio: health: max30100: use generic property handler
 MIME-Version: 1.0
-References: <1583920112-2680-1-git-send-email-simhavcs@gmail.com> <20200312151752.GA7490@bogus>
-In-Reply-To: <20200312151752.GA7490@bogus>
-From:   Vinay Simha B N <simhavcs@gmail.com>
-Date:   Sun, 15 Mar 2020 20:54:58 +0530
-Message-ID: <CAGWqDJ7DP3DuR7EWT6Ni8YxN3Adg3RgJZut6+AtpAak_HB=QCQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rob,
+Instead of of_property_read_xxx use device_property_read_xxx as it is
+compatible with ACPI too as opposed to only device tree.
 
-i do not get the error when running 'make dt_binding_check' in my
-build environment
-Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+---
+Changelog
+v1 -> v2
+- remove of_match_ptr to make it possible to use PRP0001 ACPI based
+  bindings
+ drivers/iio/health/max30100.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-is there any tool available similar to  scripts/checkpatch.pl -f
-<file> , for yaml files?
-
-On Thu, Mar 12, 2020 at 8:47 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, 11 Mar 2020 15:18:24 +0530, Vinay Simha BN wrote:
-> > Add yaml documentation for DSI/LVDS tc358775 bridge
-> >
-> > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> >
-> > ---
-> > v1:
-> >  Initial version
-> > ---
-> >  .../bindings/display/bridge/toshiba-tc358775.yaml  | 174 +++++++++++++++++++++
-> >  1 file changed, 174 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> >
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml:  while scanning for the next token
-> found character that cannot start any token
->   in "<unicode string>", line 11, column 1
-> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts' failed
-> make[1]: *** [Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> warning: no schema found in file: Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml: ignoring, error parsing file
-> Makefile:1262: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
-> See https://patchwork.ozlabs.org/patch/1252753
-> Please check and re-submit.
-
-
-
+diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+index 84010501762d..546fc37ad75d 100644
+--- a/drivers/iio/health/max30100.c
++++ b/drivers/iio/health/max30100.c
+@@ -16,7 +16,7 @@
+ #include <linux/irq.h>
+ #include <linux/i2c.h>
+ #include <linux/mutex.h>
+-#include <linux/of.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ #include <linux/iio/iio.h>
+ #include <linux/iio/buffer.h>
+@@ -267,11 +267,10 @@ static int max30100_get_current_idx(unsigned int val, int *reg)
+ static int max30100_led_init(struct max30100_data *data)
+ {
+ 	struct device *dev = &data->client->dev;
+-	struct device_node *np = dev->of_node;
+ 	unsigned int val[2];
+ 	int reg, ret;
+ 
+-	ret = of_property_read_u32_array(np, "maxim,led-current-microamp",
++	ret = device_property_read_u32_array(dev, "maxim,led-current-microamp",
+ 					(unsigned int *) &val, 2);
+ 	if (ret) {
+ 		/* Default to 24 mA RED LED, 50 mA IR LED */
+@@ -502,7 +501,7 @@ MODULE_DEVICE_TABLE(of, max30100_dt_ids);
+ static struct i2c_driver max30100_driver = {
+ 	.driver = {
+ 		.name	= MAX30100_DRV_NAME,
+-		.of_match_table	= of_match_ptr(max30100_dt_ids),
++		.of_match_table	= max30100_dt_ids,
+ 	},
+ 	.probe		= max30100_probe,
+ 	.remove		= max30100_remove,
 -- 
-regards,
-vinaysimha
+2.23.0.385.gbc12974a89
+
