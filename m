@@ -2,92 +2,121 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F37C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 08:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECCBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 08:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4F420575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 08:33:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUjQj0Qa"
+	by mail.kernel.org (Postfix) with ESMTP id E32872072A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 08:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgCOIdF (ORCPT
+        id S1728066AbgCOImd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 04:33:05 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36312 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbgCOIdF (ORCPT
+        Sun, 15 Mar 2020 04:42:33 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:49448 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgCOImd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 04:33:05 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z4so1984867pgu.3;
-        Sun, 15 Mar 2020 01:33:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Mc91MOfwvy0Krn8xqZ+9eQ5qoxXVwyTfd8xLMYOaUhA=;
-        b=gUjQj0QaIXIolLufw1MTw01hCZkugAmnahw2dGNurUXkraFV5bat8RP+TeYi1QIzZL
-         mSvJJ8/LRjA8PSZ8duqmQL/aDIDF34HdZgrquYdObEr1R4WgPZu4WSadOSTqAKJcxsE8
-         ErgjJuvy96CEOlsNqNqZqW2thet038HemrXGGZfHDykopdtjJRBVd9IC+fBhO+bHTpRG
-         kx5BkKJCt4YB7DSfAohiADTPfBKk2Kkx8CogvwULf6fK+zSq0N3rK1UuvtBHzwq8Kird
-         7vpiovZpK2myt8Bj0G1VjIa6gXu/ZwjSL8ietEMafWBZTdrPBQH6kR8lvyY7fuD9TDYD
-         TFPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Mc91MOfwvy0Krn8xqZ+9eQ5qoxXVwyTfd8xLMYOaUhA=;
-        b=fTcfTyzczXCeeRAmUdDIx0HseT3zgxlhhA5qP0NVYSxdRJ7QXLAYgiMPwbfVx1JBC+
-         7CqK5PUnXwmBIQbL3/jmZyz5bYhd8q10hDeAXAAAxctEeGq5NaHrLFONqR7DEo31lJMd
-         1veU+wYwZkcMpXNrZlJxdwXGHDlPzQl9+ck4ndZuLcLzO5vHlAjPvwtoPRjP+5lXp8wg
-         uG2FhkYMk8IkQtz56moXGL+9ww6URgKro77UKngmK4Jx9oEnfOB+jEV1DiZIN6u4CuIX
-         wuw4ZuMpJC5pFHkFvLWSF9XwUvo/fWIGqHHJKGzyEyJhfue+5baqUedPlJw446hmSNGG
-         SbAQ==
-X-Gm-Message-State: ANhLgQ1QxZhbIMLwI20LTLCfjX1KiuPlQEYLe66bWwOsMkX4EjhmEkN1
-        lTZ5HPPbqZde5TUn9YdpSAAGwmBbCnTcyQ==
-X-Google-Smtp-Source: ADFU+vtCxwSyuEhkrTP4rZfIOCpK8kOyO8QPh77dTyImimqs3E4RAkEVtdIznCjghWxOgUwXb+vm+g==
-X-Received: by 2002:a63:6c8a:: with SMTP id h132mr19335055pgc.301.1584261181934;
-        Sun, 15 Mar 2020 01:33:01 -0700 (PDT)
-Received: from ubuntu-18.04-x8664 ([128.1.49.85])
-        by smtp.gmail.com with ESMTPSA id c207sm23181609pfb.47.2020.03.15.01.32.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 01:33:01 -0700 (PDT)
-From:   Wenbo Zhang <ethercflow@gmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ethercflow@gmail.com
-Subject: [PATCH] bpf: Fix ___bpf_kretprobe_args1(x) macro definition.
-Date:   Sun, 15 Mar 2020 04:32:52 -0400
-Message-Id: <20200315083252.22274-1-ethercflow@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 15 Mar 2020 04:42:33 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 675BA1C032D; Sun, 15 Mar 2020 09:42:31 +0100 (CET)
+Date:   Sun, 15 Mar 2020 09:42:30 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH] leds: ariel: Add driver for status LEDs on Dell Wyse 3020
+Message-ID: <20200315084230.GA1996@amd>
+References: <20200314105652.351708-1-lkundrak@v3.sk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Content-Disposition: inline
+In-Reply-To: <20200314105652.351708-1-lkundrak@v3.sk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use PT_REGS_RC instead of PT_REGS_RET to get ret currectly.
 
-Signed-off-by: Wenbo Zhang <ethercflow@gmail.com>
----
- tools/lib/bpf/bpf_tracing.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/tools/lib/bpf/bpf_tracing.h b/tools/lib/bpf/bpf_tracing.h
-index b0c9ae5c73b5..f3f3c3fb98cb 100644
---- a/tools/lib/bpf/bpf_tracing.h
-+++ b/tools/lib/bpf/bpf_tracing.h
-@@ -390,7 +390,7 @@ ____##name(struct pt_regs *ctx, ##args)
- 
- #define ___bpf_kretprobe_args0() ctx
- #define ___bpf_kretprobe_args1(x) \
--	___bpf_kretprobe_args0(), (void *)PT_REGS_RET(ctx)
-+	___bpf_kretprobe_args0(), (void *)PT_REGS_RC(ctx)
- #define ___bpf_kretprobe_args(args...) \
- 	___bpf_apply(___bpf_kretprobe_args, ___bpf_narg(args))(args)
- 
--- 
-2.17.1
+Hi!
 
+> This adds support for controlling the LEDs attached to the Embedded
+> Controller on a Dell Wyse 3020 "Ariel" board.
+>=20
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+
+Does not look bad.
+
+> +static int ariel_led_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct ariel_led *leds;
+> +	struct regmap *ec_ram;
+> +	int ret;
+> +
+> +	leds =3D devm_kcalloc(dev, 3, sizeof(*leds), GFP_KERNEL);
+> +	if (!leds)
+> +		return -ENOMEM;
+> +
+> +	ec_ram =3D dev_get_regmap(dev->parent, "ec_ram");
+> +	if (!ec_ram)
+> +		return -ENODEV;
+> +
+> +	leds[0].ec_ram =3D ec_ram;
+> +	leds[0].ec_index =3D EC_BLUE_LED;
+> +	leds[0].led_cdev.name =3D "ariel:blue:power",
+> +	leds[0].led_cdev.brightness_get =3D ariel_led_get;
+> +	leds[0].led_cdev.brightness_set =3D ariel_led_set;
+> +	leds[0].led_cdev.blink_set =3D ariel_blink_set;
+> +	leds[0].led_cdev.default_trigger =3D "default-on";
+
+Move common settings to a loop?
+
+Definitely delete "ariel:" prefix.
+
+> +	leds[1].led_cdev.name =3D "ariel:amber:status",
+> +	leds[2].led_cdev.name =3D "ariel:green:status",
+
+Do the LEDs have some label, or some kind of common function? Calling
+it ":status" is not too useful...
+
+> +	ret =3D devm_led_classdev_register(dev, &leds[2].led_cdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(dev, "Dell Wyse 3020 LEDs\n");
+> +	return 0;
+> +}
+
+Just return ret; no need to print anything into the syslog.
+
+Thanks!
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl5t6nYACgkQMOfwapXb+vKBcgCgkvL/uHuv1zBBuhBprXU+YYXO
+d84AoJ4BntW5hVTLpp469AW68EFnIwXW
+=goUQ
+-----END PGP SIGNATURE-----
+
+--rwEMma7ioTxnRzrJ--
