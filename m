@@ -4,878 +4,481 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794F9C10F29
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9693C18E5B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38954206B1
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94988206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgCOTTg (ORCPT
+        id S1729069AbgCOTVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 15:19:36 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:51318 "EHLO mail.manjaro.org"
+        Sun, 15 Mar 2020 15:21:16 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2018 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729028AbgCOTTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 15:19:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 872F73782847;
-        Sun, 15 Mar 2020 20:19:29 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id U9qYynkKTRMd; Sun, 15 Mar 2020 20:19:25 +0100 (CET)
-From:   Tobias Schramm <t.schramm@manjaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        id S1728481AbgCOTVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 15:21:16 -0400
+IronPort-SDR: Aqpag6VQIDpLKkgDSFykKEclXYYQue574wUp9oZKTmVtrHRoCL0o1SHrY7Zu0Qb9+pSpFtuFC6
+ 7769VXvHF5EQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2020 12:21:15 -0700
+IronPort-SDR: kb9ib2qz0FKHsq5anxlqH3yUGtvN8ce8D0OsaspMFOBwdns2LTEuI9QqnecxdcblYydV6HB+pn
+ LiCXU5QGXf4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,557,1574150400"; 
+   d="scan'208";a="444898734"
+Received: from babayass-mobl.ger.corp.intel.com (HELO localhost) ([10.249.90.210])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Mar 2020 12:21:06 -0700
+Date:   Sun, 15 Mar 2020 21:21:04 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH v5 3/3] power: supply: add CellWise cw2015 fuel gauge driver
-Date:   Sun, 15 Mar 2020 20:19:14 +0100
-Message-Id: <20200315191914.118565-4-t.schramm@manjaro.org>
-In-Reply-To: <20200315191914.118565-1-t.schramm@manjaro.org>
-References: <20200315191914.118565-1-t.schramm@manjaro.org>
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v3 1/3] KEYS: Don't write out to userspace while holding
+ key semaphore
+Message-ID: <20200315192104.GD224162@linux.intel.com>
+References: <20200313152102.1707-1-longman@redhat.com>
+ <20200313152102.1707-2-longman@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313152102.1707-2-longman@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a driver for the CellWise cw2015 fuel gauge.
+On Fri, Mar 13, 2020 at 11:21:00AM -0400, Waiman Long wrote:
+> A lockdep circular locking dependency report was seen when running a
+> keyutils test:
+> 
+> [12537.027242] ======================================================
+> [12537.059309] WARNING: possible circular locking dependency detected
+> [12537.088148] 4.18.0-147.7.1.el8_1.x86_64+debug #1 Tainted: G OE    --------- -  -
+> [12537.125253] ------------------------------------------------------
+> [12537.153189] keyctl/25598 is trying to acquire lock:
+> [12537.175087] 000000007c39f96c (&mm->mmap_sem){++++}, at: __might_fault+0xc4/0x1b0
+> [12537.208365]
+> [12537.208365] but task is already holding lock:
+> [12537.234507] 000000003de5b58d (&type->lock_class){++++}, at: keyctl_read_key+0x15a/0x220
+> [12537.270476]
+> [12537.270476] which lock already depends on the new lock.
+> [12537.270476]
+> [12537.307209]
+> [12537.307209] the existing dependency chain (in reverse order) is:
+> [12537.340754]
+> [12537.340754] -> #3 (&type->lock_class){++++}:
+> [12537.367434]        down_write+0x4d/0x110
+> [12537.385202]        __key_link_begin+0x87/0x280
+> [12537.405232]        request_key_and_link+0x483/0xf70
+> [12537.427221]        request_key+0x3c/0x80
+> [12537.444839]        dns_query+0x1db/0x5a5 [dns_resolver]
+> [12537.468445]        dns_resolve_server_name_to_ip+0x1e1/0x4d0 [cifs]
+> [12537.496731]        cifs_reconnect+0xe04/0x2500 [cifs]
+> [12537.519418]        cifs_readv_from_socket+0x461/0x690 [cifs]
+> [12537.546263]        cifs_read_from_socket+0xa0/0xe0 [cifs]
+> [12537.573551]        cifs_demultiplex_thread+0x311/0x2db0 [cifs]
+> [12537.601045]        kthread+0x30c/0x3d0
+> [12537.617906]        ret_from_fork+0x3a/0x50
+> [12537.636225]
+> [12537.636225] -> #2 (root_key_user.cons_lock){+.+.}:
+> [12537.664525]        __mutex_lock+0x105/0x11f0
+> [12537.683734]        request_key_and_link+0x35a/0xf70
+> [12537.705640]        request_key+0x3c/0x80
+> [12537.723304]        dns_query+0x1db/0x5a5 [dns_resolver]
+> [12537.746773]        dns_resolve_server_name_to_ip+0x1e1/0x4d0 [cifs]
+> [12537.775607]        cifs_reconnect+0xe04/0x2500 [cifs]
+> [12537.798322]        cifs_readv_from_socket+0x461/0x690 [cifs]
+> [12537.823369]        cifs_read_from_socket+0xa0/0xe0 [cifs]
+> [12537.847262]        cifs_demultiplex_thread+0x311/0x2db0 [cifs]
+> [12537.873477]        kthread+0x30c/0x3d0
+> [12537.890281]        ret_from_fork+0x3a/0x50
+> [12537.908649]
+> [12537.908649] -> #1 (&tcp_ses->srv_mutex){+.+.}:
+> [12537.935225]        __mutex_lock+0x105/0x11f0
+> [12537.954450]        cifs_call_async+0x102/0x7f0 [cifs]
+> [12537.977250]        smb2_async_readv+0x6c3/0xc90 [cifs]
+> [12538.000659]        cifs_readpages+0x120a/0x1e50 [cifs]
+> [12538.023920]        read_pages+0xf5/0x560
+> [12538.041583]        __do_page_cache_readahead+0x41d/0x4b0
+> [12538.067047]        ondemand_readahead+0x44c/0xc10
+> [12538.092069]        filemap_fault+0xec1/0x1830
+> [12538.111637]        __do_fault+0x82/0x260
+> [12538.129216]        do_fault+0x419/0xfb0
+> [12538.146390]        __handle_mm_fault+0x862/0xdf0
+> [12538.167408]        handle_mm_fault+0x154/0x550
+> [12538.187401]        __do_page_fault+0x42f/0xa60
+> [12538.207395]        do_page_fault+0x38/0x5e0
+> [12538.225777]        page_fault+0x1e/0x30
+> [12538.243010]
+> [12538.243010] -> #0 (&mm->mmap_sem){++++}:
+> [12538.267875]        lock_acquire+0x14c/0x420
+> [12538.286848]        __might_fault+0x119/0x1b0
+> [12538.306006]        keyring_read_iterator+0x7e/0x170
+> [12538.327936]        assoc_array_subtree_iterate+0x97/0x280
+> [12538.352154]        keyring_read+0xe9/0x110
+> [12538.370558]        keyctl_read_key+0x1b9/0x220
+> [12538.391470]        do_syscall_64+0xa5/0x4b0
+> [12538.410511]        entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+> [12538.435535]
+> [12538.435535] other info that might help us debug this:
+> [12538.435535]
+> [12538.472829] Chain exists of:
+> [12538.472829]   &mm->mmap_sem --> root_key_user.cons_lock --> &type->lock_class
+> [12538.472829]
+> [12538.524820]  Possible unsafe locking scenario:
+> [12538.524820]
+> [12538.551431]        CPU0                    CPU1
+> [12538.572654]        ----                    ----
+> [12538.595865]   lock(&type->lock_class);
+> [12538.613737]                                lock(root_key_user.cons_lock);
+> [12538.644234]                                lock(&type->lock_class);
+> [12538.672410]   lock(&mm->mmap_sem);
+> [12538.687758]
+> [12538.687758]  *** DEADLOCK ***
+> [12538.687758]
+> [12538.714455] 1 lock held by keyctl/25598:
+> [12538.732097]  #0: 000000003de5b58d (&type->lock_class){++++}, at: keyctl_read_key+0x15a/0x220
+> [12538.770573]
+> [12538.770573] stack backtrace:
+> [12538.790136] CPU: 2 PID: 25598 Comm: keyctl Kdump: loaded Tainted: G
+> [12538.844855] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 12/27/2015
+> [12538.881963] Call Trace:
+> [12538.892897]  dump_stack+0x9a/0xf0
+> [12538.907908]  print_circular_bug.isra.25.cold.50+0x1bc/0x279
+> [12538.932891]  ? save_trace+0xd6/0x250
+> [12538.948979]  check_prev_add.constprop.32+0xc36/0x14f0
+> [12538.971643]  ? keyring_compare_object+0x104/0x190
+> [12538.992738]  ? check_usage+0x550/0x550
+> [12539.009845]  ? sched_clock+0x5/0x10
+> [12539.025484]  ? sched_clock_cpu+0x18/0x1e0
+> [12539.043555]  __lock_acquire+0x1f12/0x38d0
+> [12539.061551]  ? trace_hardirqs_on+0x10/0x10
+> [12539.080554]  lock_acquire+0x14c/0x420
+> [12539.100330]  ? __might_fault+0xc4/0x1b0
+> [12539.119079]  __might_fault+0x119/0x1b0
+> [12539.135869]  ? __might_fault+0xc4/0x1b0
+> [12539.153234]  keyring_read_iterator+0x7e/0x170
+> [12539.172787]  ? keyring_read+0x110/0x110
+> [12539.190059]  assoc_array_subtree_iterate+0x97/0x280
+> [12539.211526]  keyring_read+0xe9/0x110
+> [12539.227561]  ? keyring_gc_check_iterator+0xc0/0xc0
+> [12539.249076]  keyctl_read_key+0x1b9/0x220
+> [12539.266660]  do_syscall_64+0xa5/0x4b0
+> [12539.283091]  entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+> 
+> One way to prevent this deadlock scenario from happening is to not
+> allow writing to userspace while holding the key semaphore. Instead,
+> an internal buffer is allocated for getting the keys out from the
+> read method first before copying them out to userspace without holding
+> the lock.
+> 
+> That requires taking out the __user modifier from the read methods as
+> well as additional changes to not use any userspace write helpers.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  include/linux/key-type.h                  |  2 +-
+>  security/keys/big_key.c                   | 11 ++---
+>  security/keys/encrypted-keys/encrypted.c  |  7 ++-
+>  security/keys/keyctl.c                    | 57 +++++++++++++++++++----
+>  security/keys/keyring.c                   |  6 +--
+>  security/keys/request_key_auth.c          |  7 ++-
+>  security/keys/trusted-keys/trusted_tpm1.c | 14 +-----
+>  security/keys/user_defined.c              |  5 +-
+>  8 files changed, 65 insertions(+), 44 deletions(-)
+> 
+> diff --git a/include/linux/key-type.h b/include/linux/key-type.h
+> index 4ded94bcf274..2ab2d6d6aeab 100644
+> --- a/include/linux/key-type.h
+> +++ b/include/linux/key-type.h
+> @@ -127,7 +127,7 @@ struct key_type {
+>  	 *   much is copied into the buffer
+>  	 * - shouldn't do the copy if the buffer is NULL
+>  	 */
+> -	long (*read)(const struct key *key, char __user *buffer, size_t buflen);
+> +	long (*read)(const struct key *key, char *buffer, size_t buflen);
+>  
+>  	/* handle request_key() for this type instead of invoking
+>  	 * /sbin/request-key (optional)
+> diff --git a/security/keys/big_key.c b/security/keys/big_key.c
+> index 001abe530a0d..82008f900930 100644
+> --- a/security/keys/big_key.c
+> +++ b/security/keys/big_key.c
+> @@ -352,7 +352,7 @@ void big_key_describe(const struct key *key, struct seq_file *m)
+>   * read the key data
+>   * - the key's semaphore is read-locked
+>   */
+> -long big_key_read(const struct key *key, char __user *buffer, size_t buflen)
+> +long big_key_read(const struct key *key, char *buffer, size_t buflen)
+>  {
+>  	size_t datalen = (size_t)key->payload.data[big_key_len];
+>  	long ret;
+> @@ -391,9 +391,8 @@ long big_key_read(const struct key *key, char __user *buffer, size_t buflen)
+>  
+>  		ret = datalen;
+>  
+> -		/* copy decrypted data to user */
+> -		if (copy_to_user(buffer, buf->virt, datalen) != 0)
+> -			ret = -EFAULT;
+> +		/* copy out decrypted data */
+> +		memcpy(buffer, buf->virt, datalen);
+>  
+>  err_fput:
+>  		fput(file);
+> @@ -401,9 +400,7 @@ long big_key_read(const struct key *key, char __user *buffer, size_t buflen)
+>  		big_key_free_buffer(buf);
+>  	} else {
+>  		ret = datalen;
+> -		if (copy_to_user(buffer, key->payload.data[big_key_data],
+> -				 datalen) != 0)
+> -			ret = -EFAULT;
+> +		memcpy(buffer, key->payload.data[big_key_data], datalen);
+>  	}
+>  
+>  	return ret;
+> diff --git a/security/keys/encrypted-keys/encrypted.c b/security/keys/encrypted-keys/encrypted.c
+> index 60720f58cbe0..f6797ba44bf7 100644
+> --- a/security/keys/encrypted-keys/encrypted.c
+> +++ b/security/keys/encrypted-keys/encrypted.c
+> @@ -902,14 +902,14 @@ static int encrypted_update(struct key *key, struct key_preparsed_payload *prep)
+>  }
+>  
+>  /*
+> - * encrypted_read - format and copy the encrypted data to userspace
+> + * encrypted_read - format and copy out the encrypted data
+>   *
+>   * The resulting datablob format is:
+>   * <master-key name> <decrypted data length> <encrypted iv> <encrypted data>
+>   *
+>   * On success, return to userspace the encrypted key datablob size.
+>   */
+> -static long encrypted_read(const struct key *key, char __user *buffer,
+> +static long encrypted_read(const struct key *key, char *buffer,
+>  			   size_t buflen)
+>  {
+>  	struct encrypted_key_payload *epayload;
+> @@ -957,8 +957,7 @@ static long encrypted_read(const struct key *key, char __user *buffer,
+>  	key_put(mkey);
+>  	memzero_explicit(derived_key, sizeof(derived_key));
+>  
+> -	if (copy_to_user(buffer, ascii_buf, asciiblob_len) != 0)
+> -		ret = -EFAULT;
+> +	memcpy(buffer, ascii_buf, asciiblob_len);
+>  	kzfree(ascii_buf);
+>  
+>  	return asciiblob_len;
+> diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+> index 9b898c969558..81f68e434b9f 100644
+> --- a/security/keys/keyctl.c
+> +++ b/security/keys/keyctl.c
+> @@ -797,6 +797,21 @@ long keyctl_keyring_search(key_serial_t ringid,
+>  	return ret;
+>  }
+>  
+> +/*
+> + * Call the read method
+> + */
+> +static long __keyctl_read_key(struct key *key, char *buffer, size_t buflen)
+> +{
+> +	long ret;
+> +
+> +	down_read(&key->sem);
+> +	ret = key_validate(key);
+> +	if (ret == 0)
+> +		ret = key->type->read(key, buffer, buflen);
+> +	up_read(&key->sem);
+> +	return ret;
+> +}
+> +
+>  /*
+>   * Read a key's payload.
+>   *
+> @@ -844,16 +859,42 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+>  
+>  	/* the key is probably readable - now try to read it */
+>  can_read_key:
+> -	ret = -EOPNOTSUPP;
+> -	if (key->type->read) {
+> -		/* Read the data with the semaphore held (since we might sleep)
+> +	if (!key->type->read) {
+> +		ret = -EOPNOTSUPP;
+> +		goto error2;
+> +	}
+> +
+> +	if (!buffer || !buflen) {
+> +		/* Get the key length from the read method */
+> +		ret = __keyctl_read_key(key, NULL, 0);
+> +	} else {
+> +
+> +		/*
+> +		 * Read the data with the semaphore held (since we might sleep)
+>  		 * to protect against the key being updated or revoked.
+> +		 *
+> +		 * Allocating a temporary buffer to hold the keys before
+> +		 * transferring them to user buffer to avoid potential
+> +		 * deadlock involving page fault and mmap_sem.
+> +		 */
+> +		char *tmpbuf = kmalloc(buflen, GFP_KERNEL);
+> +
+> +		if (!tmpbuf) {
+> +			ret = -ENOMEM;
+> +			goto error2;
+> +		}
+> +		ret = __keyctl_read_key(key, tmpbuf, buflen);
+> +
+> +		/*
+> +		 * Read methods will just return the required length
+> +		 * without any copying if the provided length isn't big
+> +		 * enough.
+>  		 */
+> -		down_read(&key->sem);
+> -		ret = key_validate(key);
+> -		if (ret == 0)
+> -			ret = key->type->read(key, buffer, buflen);
+> -		up_read(&key->sem);
+> +		if ((ret > 0) && (ret <= buflen)) {
+> +			if (copy_to_user(buffer, tmpbuf, ret))
+> +				ret = -EFAULT;
+> +		}
+> +		kzfree(tmpbuf);
+>  	}
+>  
+>  error2:
+> diff --git a/security/keys/keyring.c b/security/keys/keyring.c
+> index febf36c6ddc5..5ca620d31cd3 100644
+> --- a/security/keys/keyring.c
+> +++ b/security/keys/keyring.c
+> @@ -459,7 +459,6 @@ static int keyring_read_iterator(const void *object, void *data)
+>  {
+>  	struct keyring_read_iterator_context *ctx = data;
+>  	const struct key *key = keyring_ptr_to_key(object);
+> -	int ret;
+>  
+>  	kenter("{%s,%d},,{%zu/%zu}",
+>  	       key->type->name, key->serial, ctx->count, ctx->buflen);
+> @@ -467,10 +466,7 @@ static int keyring_read_iterator(const void *object, void *data)
+>  	if (ctx->count >= ctx->buflen)
+>  		return 1;
+>  
+> -	ret = put_user(key->serial, ctx->buffer);
+> -	if (ret < 0)
+> -		return ret;
+> -	ctx->buffer++;
+> +	*ctx->buffer++ = key->serial;
+>  	ctx->count += sizeof(key->serial);
+>  	return 0;
+>  }
+> diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
+> index ecba39c93fd9..41e9735006d0 100644
+> --- a/security/keys/request_key_auth.c
+> +++ b/security/keys/request_key_auth.c
+> @@ -22,7 +22,7 @@ static int request_key_auth_instantiate(struct key *,
+>  static void request_key_auth_describe(const struct key *, struct seq_file *);
+>  static void request_key_auth_revoke(struct key *);
+>  static void request_key_auth_destroy(struct key *);
+> -static long request_key_auth_read(const struct key *, char __user *, size_t);
+> +static long request_key_auth_read(const struct key *, char *, size_t);
+>  
+>  /*
+>   * The request-key authorisation key type definition.
+> @@ -80,7 +80,7 @@ static void request_key_auth_describe(const struct key *key,
+>   * - the key's semaphore is read-locked
+>   */
+>  static long request_key_auth_read(const struct key *key,
+> -				  char __user *buffer, size_t buflen)
+> +				  char *buffer, size_t buflen)
+>  {
+>  	struct request_key_auth *rka = dereference_key_locked(key);
+>  	size_t datalen;
+> @@ -97,8 +97,7 @@ static long request_key_auth_read(const struct key *key,
+>  		if (buflen > datalen)
+>  			buflen = datalen;
+>  
+> -		if (copy_to_user(buffer, rka->callout_info, buflen) != 0)
+> -			ret = -EFAULT;
+> +		memcpy(buffer, rka->callout_info, buflen);
+>  	}
+>  
+>  	return ret;
+> diff --git a/security/keys/trusted-keys/trusted_tpm1.c b/security/keys/trusted-keys/trusted_tpm1.c
+> index d2c5ec1e040b..8001ab07e63b 100644
+> --- a/security/keys/trusted-keys/trusted_tpm1.c
+> +++ b/security/keys/trusted-keys/trusted_tpm1.c
+> @@ -1130,11 +1130,10 @@ static int trusted_update(struct key *key, struct key_preparsed_payload *prep)
+>   * trusted_read - copy the sealed blob data to userspace in hex.
+>   * On success, return to userspace the trusted key datablob size.
+>   */
+> -static long trusted_read(const struct key *key, char __user *buffer,
+> +static long trusted_read(const struct key *key, char *buffer,
+>  			 size_t buflen)
+>  {
+>  	const struct trusted_key_payload *p;
+> -	char *ascii_buf;
+>  	char *bufp;
+>  	int i;
+>  
+> @@ -1143,18 +1142,9 @@ static long trusted_read(const struct key *key, char __user *buffer,
+>  		return -EINVAL;
+>  
+>  	if (buffer && buflen >= 2 * p->blob_len) {
+> -		ascii_buf = kmalloc_array(2, p->blob_len, GFP_KERNEL);
+> -		if (!ascii_buf)
+> -			return -ENOMEM;
+> -
+> -		bufp = ascii_buf;
+> +		bufp = buffer;
+>  		for (i = 0; i < p->blob_len; i++)
+>  			bufp = hex_byte_pack(bufp, p->blob[i]);
+> -		if (copy_to_user(buffer, ascii_buf, 2 * p->blob_len) != 0) {
+> -			kzfree(ascii_buf);
+> -			return -EFAULT;
+> -		}
+> -		kzfree(ascii_buf);
+>  	}
+>  	return 2 * p->blob_len;
+>  }
+> diff --git a/security/keys/user_defined.c b/security/keys/user_defined.c
+> index 6f12de4ce549..07d4287e9084 100644
+> --- a/security/keys/user_defined.c
+> +++ b/security/keys/user_defined.c
+> @@ -168,7 +168,7 @@ EXPORT_SYMBOL_GPL(user_describe);
+>   * read the key data
+>   * - the key's semaphore is read-locked
+>   */
+> -long user_read(const struct key *key, char __user *buffer, size_t buflen)
+> +long user_read(const struct key *key, char *buffer, size_t buflen)
+>  {
+>  	const struct user_key_payload *upayload;
+>  	long ret;
+> @@ -181,8 +181,7 @@ long user_read(const struct key *key, char __user *buffer, size_t buflen)
+>  		if (buflen > upayload->datalen)
+>  			buflen = upayload->datalen;
+>  
+> -		if (copy_to_user(buffer, upayload->data, buflen) != 0)
+> -			ret = -EFAULT;
+> +		memcpy(buffer, upayload->data, buflen);
+>  	}
+>  
+>  	return ret;
+> -- 
+> 2.18.1
+> 
 
-The CellWise cw2015 is a shuntless, single-cell Li-Ion fuel gauge used
-in the pine64 Pinebook Pro laptop and some Raspberry Pi UPS HATs.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
----
- MAINTAINERS                           |   6 +
- drivers/power/supply/Kconfig          |  11 +
- drivers/power/supply/Makefile         |   1 +
- drivers/power/supply/cw2015_battery.c | 749 ++++++++++++++++++++++++++
- 4 files changed, 767 insertions(+)
- create mode 100644 drivers/power/supply/cw2015_battery.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6fbdf354d34..0260c89618f9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3885,6 +3885,12 @@ F:	arch/powerpc/include/uapi/asm/spu*.h
- F:	arch/powerpc/oprofile/*cell*
- F:	arch/powerpc/platforms/cell/
- 
-+CELLWISE CW2015 BATTERY DRIVER
-+M:	Tobias Schrammm <t.schramm@manjaro.org>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
-+F:	drivers/power/supply/cw2015_battery.c
-+
- CEPH COMMON CODE (LIBCEPH)
- M:	Ilya Dryomov <idryomov@gmail.com>
- M:	Jeff Layton <jlayton@kernel.org>
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 9a5591ab90d0..c8bc85906dee 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -116,6 +116,17 @@ config BATTERY_CPCAP
- 	  Say Y here to enable support for battery on Motorola
- 	  phones and tablets such as droid 4.
- 
-+config BATTERY_CW2015
-+	tristate "CW2015 Battery driver"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Say Y here to enable support for the cellwise cw2015
-+	  battery fuel gauge (used in the Pinebook Pro & others)
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called cw2015_battery.
-+
- config BATTERY_DS2760
- 	tristate "DS2760 battery driver (HP iPAQ & others)"
- 	depends on W1
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 6c7da920ea83..69727a10e835 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_BATTERY_ACT8945A)	+= act8945a_charger.o
- obj-$(CONFIG_BATTERY_AXP20X)	+= axp20x_battery.o
- obj-$(CONFIG_CHARGER_AXP20X)	+= axp20x_ac_power.o
- obj-$(CONFIG_BATTERY_CPCAP)	+= cpcap-battery.o
-+obj-$(CONFIG_BATTERY_CW2015)	+= cw2015_battery.o
- obj-$(CONFIG_BATTERY_DS2760)	+= ds2760_battery.o
- obj-$(CONFIG_BATTERY_DS2780)	+= ds2780_battery.o
- obj-$(CONFIG_BATTERY_DS2781)	+= ds2781_battery.o
-diff --git a/drivers/power/supply/cw2015_battery.c b/drivers/power/supply/cw2015_battery.c
-new file mode 100644
-index 000000000000..8603da6f4593
---- /dev/null
-+++ b/drivers/power/supply/cw2015_battery.c
-@@ -0,0 +1,749 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Fuel gauge driver for CellWise 2013 / 2015
-+ *
-+ * Copyright (C) 2012, RockChip
-+ * Copyright (C) 2020, Tobias Schramm
-+ *
-+ * Authors: xuhuicong <xhc@rock-chips.com>
-+ * Authors: Tobias Schramm <t.schramm@manjaro.org>
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/gfp.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/power_supply.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+#include <linux/time.h>
-+#include <linux/workqueue.h>
-+
-+#define CW2015_SIZE_BATINFO		64
-+
-+#define CW2015_RESET_TRIES		5
-+
-+#define CW2015_REG_VERSION		0x00
-+#define CW2015_REG_VCELL		0x02
-+#define CW2015_REG_SOC			0x04
-+#define CW2015_REG_RRT_ALERT		0x06
-+#define CW2015_REG_CONFIG		0x08
-+#define CW2015_REG_MODE			0x0A
-+#define CW2015_REG_BATINFO		0x10
-+
-+#define CW2015_MODE_SLEEP_MASK		GENMASK(7, 6)
-+#define CW2015_MODE_SLEEP		(0x03 << 6)
-+#define CW2015_MODE_NORMAL		(0x00 << 6)
-+#define CW2015_MODE_QUICK_START		(0x03 << 4)
-+#define CW2015_MODE_RESTART		(0x0f << 0)
-+
-+#define CW2015_CONFIG_UPDATE_FLG	(0x01 << 1)
-+#define CW2015_ATHD(x)			((x) << 3)
-+#define CW2015_MASK_ATHD		GENMASK(7, 3)
-+#define CW2015_MASK_SOC			GENMASK(12, 0)
-+
-+/* reset gauge of no valid state of charge could be polled for 40s */
-+#define CW2015_BAT_SOC_ERROR_MS		(40 * MSEC_PER_SEC)
-+/* reset gauge if state of charge stuck for half an hour during charging */
-+#define CW2015_BAT_CHARGING_STUCK_MS	(1800 * MSEC_PER_SEC)
-+
-+/* poll interval from CellWise GPL Android driver example */
-+#define CW2015_DEFAULT_POLL_INTERVAL_MS		8000
-+
-+#define CW2015_AVERAGING_SAMPLES		3
-+
-+struct cw_battery {
-+	struct device *dev;
-+	struct workqueue_struct *battery_workqueue;
-+	struct delayed_work battery_delay_work;
-+	struct regmap *regmap;
-+	struct power_supply *rk_bat;
-+	struct power_supply_battery_info battery;
-+	u8 *bat_profile;
-+
-+	bool charger_attached;
-+	bool battery_changed;
-+
-+	int soc;
-+	int voltage_mv;
-+	int status;
-+	int time_to_empty;
-+	int charge_count;
-+
-+	u32 poll_interval_ms;
-+	u8 alert_level;
-+
-+	unsigned int read_errors;
-+	unsigned int charge_stuck_cnt;
-+};
-+
-+static int cw_read_word(struct cw_battery *cw_bat, u8 reg, u16 *val)
-+{
-+	__be16 value;
-+	int ret;
-+
-+	ret = regmap_bulk_read(cw_bat->regmap, reg, &value, sizeof(value));
-+	if (ret)
-+		return ret;
-+
-+	*val = be16_to_cpu(value);
-+	return 0;
-+}
-+
-+int cw_update_profile(struct cw_battery *cw_bat)
-+{
-+	int ret;
-+	unsigned int reg_val;
-+	u8 reset_val;
-+
-+	/* make sure gauge is not in sleep mode */
-+	ret = regmap_read(cw_bat->regmap, CW2015_REG_MODE, &reg_val);
-+	if (ret)
-+		return ret;
-+
-+	reset_val = reg_val;
-+	if ((reg_val & CW2015_MODE_SLEEP_MASK) == CW2015_MODE_SLEEP) {
-+		dev_err(cw_bat->dev,
-+			"Gauge is in sleep mode, can't update battery info\n");
-+		return -EINVAL;
-+	}
-+
-+	/* write new battery info */
-+	ret = regmap_raw_write(cw_bat->regmap, CW2015_REG_BATINFO,
-+			       cw_bat->bat_profile,
-+			       CW2015_SIZE_BATINFO);
-+	if (ret)
-+		return ret;
-+
-+	/* set config update flag  */
-+	reg_val |= CW2015_CONFIG_UPDATE_FLG;
-+	reg_val &= ~CW2015_MASK_ATHD;
-+	reg_val |= CW2015_ATHD(cw_bat->alert_level);
-+	ret = regmap_write(cw_bat->regmap, CW2015_REG_CONFIG, reg_val);
-+	if (ret)
-+		return ret;
-+
-+	/* reset gauge to apply new battery profile */
-+	reset_val &= ~CW2015_MODE_RESTART;
-+	reg_val = reset_val | CW2015_MODE_RESTART;
-+	ret = regmap_write(cw_bat->regmap, CW2015_REG_MODE, reg_val);
-+	if (ret)
-+		return ret;
-+
-+	/* wait for gauge to reset */
-+	msleep(20);
-+
-+	/* clear reset flag */
-+	ret = regmap_write(cw_bat->regmap, CW2015_REG_MODE, reset_val);
-+	if (ret)
-+		return ret;
-+
-+	/* wait for gauge to become ready */
-+	ret = regmap_read_poll_timeout(cw_bat->regmap, CW2015_REG_SOC,
-+				       reg_val, reg_val <= 100,
-+				       10 * USEC_PER_MSEC, 10 * USEC_PER_SEC);
-+	if (ret)
-+		dev_err(cw_bat->dev,
-+			"Gauge did not become ready after profile upload\n");
-+	else
-+		dev_dbg(cw_bat->dev, "Battery profile updated\n");
-+
-+	return ret;
-+}
-+
-+static int cw_init(struct cw_battery *cw_bat)
-+{
-+	int ret;
-+	unsigned int reg_val = CW2015_MODE_SLEEP;
-+
-+	if ((reg_val & CW2015_MODE_SLEEP_MASK) == CW2015_MODE_SLEEP) {
-+		reg_val = CW2015_MODE_NORMAL;
-+		ret = regmap_write(cw_bat->regmap, CW2015_REG_MODE, reg_val);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = regmap_read(cw_bat->regmap, CW2015_REG_CONFIG, &reg_val);
-+	if (ret)
-+		return ret;
-+
-+	if ((reg_val & CW2015_MASK_ATHD) != CW2015_ATHD(cw_bat->alert_level)) {
-+		dev_dbg(cw_bat->dev, "Setting new alert level\n");
-+		reg_val &= ~CW2015_MASK_ATHD;
-+		reg_val |= ~CW2015_ATHD(cw_bat->alert_level);
-+		ret = regmap_write(cw_bat->regmap, CW2015_REG_CONFIG, reg_val);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = regmap_read(cw_bat->regmap, CW2015_REG_CONFIG, &reg_val);
-+	if (ret)
-+		return ret;
-+
-+	if (!(reg_val & CW2015_CONFIG_UPDATE_FLG)) {
-+		dev_dbg(cw_bat->dev,
-+			"Battery profile not present, uploading battery profile\n");
-+		if (cw_bat->bat_profile) {
-+			ret = cw_update_profile(cw_bat);
-+			if (ret) {
-+				dev_err(cw_bat->dev,
-+					"Failed to upload battery profile\n");
-+				return ret;
-+			}
-+		} else {
-+			dev_warn(cw_bat->dev,
-+				 "No profile specified, continuing without profile\n");
-+		}
-+	} else if (cw_bat->bat_profile) {
-+		u8 bat_info[CW2015_SIZE_BATINFO];
-+
-+		ret = regmap_raw_read(cw_bat->regmap, CW2015_REG_BATINFO,
-+				      bat_info, CW2015_SIZE_BATINFO);
-+		if (ret) {
-+			dev_err(cw_bat->dev,
-+				"Failed to read stored battery profile\n");
-+			return ret;
-+		}
-+
-+		if (memcmp(bat_info, cw_bat->bat_profile, CW2015_SIZE_BATINFO)) {
-+			dev_warn(cw_bat->dev, "Replacing stored battery profile\n");
-+			ret = cw_update_profile(cw_bat);
-+			if (ret)
-+				return ret;
-+		}
-+	} else {
-+		dev_warn(cw_bat->dev,
-+			 "Can't check current battery profile, no profile provided\n");
-+	}
-+
-+	dev_dbg(cw_bat->dev, "Battery profile configured\n");
-+	return 0;
-+}
-+
-+static int cw_power_on_reset(struct cw_battery *cw_bat)
-+{
-+	int ret;
-+	unsigned char reset_val;
-+
-+	reset_val = CW2015_MODE_SLEEP;
-+	ret = regmap_write(cw_bat->regmap, CW2015_REG_MODE, reset_val);
-+	if (ret)
-+		return ret;
-+
-+	/* wait for gauge to enter sleep */
-+	msleep(20);
-+
-+	reset_val = CW2015_MODE_NORMAL;
-+	ret = regmap_write(cw_bat->regmap, CW2015_REG_MODE, reset_val);
-+	if (ret)
-+		return ret;
-+
-+	ret = cw_init(cw_bat);
-+	if (ret)
-+		return ret;
-+	return 0;
-+}
-+
-+#define HYSTERESIS(current, previous, up, down) \
-+	(((current) < (previous) + (up)) && ((current) > (previous) - (down)))
-+
-+static int cw_get_soc(struct cw_battery *cw_bat)
-+{
-+	unsigned int soc;
-+	int ret;
-+
-+	ret = regmap_read(cw_bat->regmap, CW2015_REG_SOC, &soc);
-+	if (ret)
-+		return ret;
-+
-+	if (soc > 100) {
-+		int max_error_cycles =
-+			CW2015_BAT_SOC_ERROR_MS / cw_bat->poll_interval_ms;
-+
-+		dev_err(cw_bat->dev, "Invalid SoC %d%%\n", soc);
-+		cw_bat->read_errors++;
-+		if (cw_bat->read_errors > max_error_cycles) {
-+			dev_warn(cw_bat->dev,
-+				 "Too many invalid SoC reports, resetting gauge\n");
-+			cw_power_on_reset(cw_bat);
-+			cw_bat->read_errors = 0;
-+		}
-+		return cw_bat->soc;
-+	}
-+	cw_bat->read_errors = 0;
-+
-+	/* Reset gauge if stuck while charging */
-+	if (cw_bat->status == POWER_SUPPLY_STATUS_CHARGING && soc == cw_bat->soc) {
-+		int max_stuck_cycles =
-+			CW2015_BAT_CHARGING_STUCK_MS / cw_bat->poll_interval_ms;
-+
-+		cw_bat->charge_stuck_cnt++;
-+		if (cw_bat->charge_stuck_cnt > max_stuck_cycles) {
-+			dev_warn(cw_bat->dev,
-+				 "SoC stuck @%u%%, resetting gauge\n", soc);
-+			cw_power_on_reset(cw_bat);
-+			cw_bat->charge_stuck_cnt = 0;
-+		}
-+	} else {
-+		cw_bat->charge_stuck_cnt = 0;
-+	}
-+
-+	/* Ignore voltage dips during charge */
-+	if (cw_bat->charger_attached && HYSTERESIS(soc, cw_bat->soc, 0, 3))
-+		soc = cw_bat->soc;
-+
-+	/* Ignore voltage spikes during discharge */
-+	if (!cw_bat->charger_attached && HYSTERESIS(soc, cw_bat->soc, 3, 0))
-+		soc = cw_bat->soc;
-+
-+	return soc;
-+}
-+
-+static int cw_get_voltage(struct cw_battery *cw_bat)
-+{
-+	int ret, i, voltage_mv;
-+	u16 reg_val;
-+	u32 avg = 0;
-+
-+	for (i = 0; i < CW2015_AVERAGING_SAMPLES; i++) {
-+		ret = cw_read_word(cw_bat, CW2015_REG_VCELL, &reg_val);
-+		if (ret)
-+			return ret;
-+
-+		avg += reg_val;
-+	}
-+	avg /= CW2015_AVERAGING_SAMPLES;
-+
-+	/*
-+	 * 305 uV per ADC step
-+	 * Use 312 / 1024  as efficient approximation of 305 / 1000
-+	 * Negligible error of 0.1%
-+	 */
-+	voltage_mv = avg * 312 / 1024;
-+
-+	dev_dbg(cw_bat->dev, "Read voltage: %d mV, raw=0x%04x\n",
-+		voltage_mv, reg_val);
-+	return voltage_mv;
-+}
-+
-+static int cw_get_time_to_empty(struct cw_battery *cw_bat)
-+{
-+	int ret;
-+	u16 value16;
-+
-+	ret = cw_read_word(cw_bat, CW2015_REG_RRT_ALERT, &value16);
-+	if (ret)
-+		return ret;
-+
-+	return value16 & CW2015_MASK_SOC;
-+}
-+
-+static void cw_update_charge_status(struct cw_battery *cw_bat)
-+{
-+	int ret;
-+
-+	ret = power_supply_am_i_supplied(cw_bat->rk_bat);
-+	if (ret < 0) {
-+		dev_warn(cw_bat->dev, "Failed to get supply state: %d\n", ret);
-+	} else {
-+		bool charger_attached;
-+
-+		charger_attached = !!ret;
-+		if (cw_bat->charger_attached != charger_attached) {
-+			cw_bat->battery_changed = true;
-+			if (charger_attached)
-+				cw_bat->charge_count++;
-+		}
-+		cw_bat->charger_attached = charger_attached;
-+	}
-+}
-+
-+static void cw_update_soc(struct cw_battery *cw_bat)
-+{
-+	int soc;
-+
-+	soc = cw_get_soc(cw_bat);
-+	if (soc < 0)
-+		dev_err(cw_bat->dev, "Failed to get SoC from gauge: %d\n", soc);
-+	else if (cw_bat->soc != soc) {
-+		cw_bat->soc = soc;
-+		cw_bat->battery_changed = true;
-+	}
-+}
-+
-+static void cw_update_voltage(struct cw_battery *cw_bat)
-+{
-+	int voltage_mv;
-+
-+	voltage_mv = cw_get_voltage(cw_bat);
-+	if (voltage_mv < 0)
-+		dev_err(cw_bat->dev, "Failed to get voltage from gauge: %d\n",
-+			voltage_mv);
-+	else
-+		cw_bat->voltage_mv = voltage_mv;
-+}
-+
-+static void cw_update_status(struct cw_battery *cw_bat)
-+{
-+	int status = POWER_SUPPLY_STATUS_DISCHARGING;
-+
-+	if (cw_bat->charger_attached) {
-+		if (cw_bat->soc >= 100)
-+			status = POWER_SUPPLY_STATUS_FULL;
-+		else
-+			status = POWER_SUPPLY_STATUS_CHARGING;
-+	}
-+
-+	if (cw_bat->status != status)
-+		cw_bat->battery_changed = true;
-+	cw_bat->status = status;
-+}
-+
-+static void cw_update_time_to_empty(struct cw_battery *cw_bat)
-+{
-+	int time_to_empty;
-+
-+	time_to_empty = cw_get_time_to_empty(cw_bat);
-+	if (time_to_empty < 0)
-+		dev_err(cw_bat->dev, "Failed to get time to empty from gauge: %d\n",
-+			time_to_empty);
-+	else if (cw_bat->time_to_empty != time_to_empty) {
-+		cw_bat->time_to_empty = time_to_empty;
-+		cw_bat->battery_changed = true;
-+	}
-+}
-+
-+static void cw_bat_work(struct work_struct *work)
-+{
-+	struct delayed_work *delay_work;
-+	struct cw_battery *cw_bat;
-+	int ret;
-+	unsigned int reg_val;
-+
-+	delay_work = to_delayed_work(work);
-+	cw_bat = container_of(delay_work, struct cw_battery, battery_delay_work);
-+	ret = regmap_read(cw_bat->regmap, CW2015_REG_MODE, &reg_val);
-+	if (ret) {
-+		dev_err(cw_bat->dev, "Failed to read mode from gauge: %d\n", ret);
-+	} else {
-+		if ((reg_val & CW2015_MODE_SLEEP_MASK) == CW2015_MODE_SLEEP) {
-+			int i;
-+
-+			for (i = 0; i < CW2015_RESET_TRIES; i++) {
-+				if (!cw_power_on_reset(cw_bat))
-+					break;
-+			}
-+		}
-+		cw_update_soc(cw_bat);
-+		cw_update_voltage(cw_bat);
-+		cw_update_charge_status(cw_bat);
-+		cw_update_status(cw_bat);
-+		cw_update_time_to_empty(cw_bat);
-+	}
-+	dev_dbg(cw_bat->dev, "charger_attached = %d\n", cw_bat->charger_attached);
-+	dev_dbg(cw_bat->dev, "status = %d\n", cw_bat->status);
-+	dev_dbg(cw_bat->dev, "soc = %d%%\n", cw_bat->soc);
-+	dev_dbg(cw_bat->dev, "voltage = %dmV\n", cw_bat->voltage_mv);
-+
-+	if (cw_bat->battery_changed)
-+		power_supply_changed(cw_bat->rk_bat);
-+	cw_bat->battery_changed = false;
-+
-+	queue_delayed_work(cw_bat->battery_workqueue,
-+			   &cw_bat->battery_delay_work,
-+			   msecs_to_jiffies(cw_bat->poll_interval_ms));
-+}
-+
-+static bool cw_battery_valid_time_to_empty(struct cw_battery *cw_bat)
-+{
-+	return	cw_bat->time_to_empty > 0 &&
-+		cw_bat->time_to_empty < CW2015_MASK_SOC &&
-+		cw_bat->status == POWER_SUPPLY_STATUS_DISCHARGING;
-+}
-+
-+static int cw_battery_get_property(struct power_supply *psy,
-+				   enum power_supply_property psp,
-+				   union power_supply_propval *val)
-+{
-+	struct cw_battery *cw_bat;
-+
-+	cw_bat = power_supply_get_drvdata(psy);
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CAPACITY:
-+		val->intval = cw_bat->soc;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_STATUS:
-+		val->intval = cw_bat->status;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		val->intval = !!cw_bat->voltage_mv;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+		val->intval = cw_bat->voltage_mv * 1000;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW:
-+		if (cw_battery_valid_time_to_empty(cw_bat))
-+			val->intval = cw_bat->time_to_empty;
-+		else
-+			val->intval = 0;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_TECHNOLOGY:
-+		val->intval = POWER_SUPPLY_TECHNOLOGY_LION;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
-+		val->intval = cw_bat->charge_count;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CHARGE_FULL:
-+	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
-+		if (cw_bat->battery.charge_full_design_uah > 0)
-+			val->intval = cw_bat->battery.charge_full_design_uah;
-+		else
-+			val->intval = 0;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		if (cw_battery_valid_time_to_empty(cw_bat) &&
-+		    cw_bat->battery.charge_full_design_uah > 0) {
-+			/* calculate remaining capacity */
-+			val->intval = cw_bat->battery.charge_full_design_uah;
-+			val->intval = val->intval * cw_bat->soc / 100;
-+
-+			/* estimate current based on time to empty */
-+			val->intval = 60 * val->intval / cw_bat->time_to_empty;
-+		} else {
-+			val->intval = 0;
-+		}
-+
-+		break;
-+
-+	default:
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static enum power_supply_property cw_battery_properties[] = {
-+	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
-+	POWER_SUPPLY_PROP_TECHNOLOGY,
-+	POWER_SUPPLY_PROP_CHARGE_COUNTER,
-+	POWER_SUPPLY_PROP_CHARGE_FULL,
-+	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+};
-+
-+static const struct power_supply_desc cw2015_bat_desc = {
-+	.name		= "cw2015-battery",
-+	.type		= POWER_SUPPLY_TYPE_BATTERY,
-+	.properties	= cw_battery_properties,
-+	.num_properties	= ARRAY_SIZE(cw_battery_properties),
-+	.get_property	= cw_battery_get_property,
-+};
-+
-+static int cw2015_parse_properties(struct cw_battery *cw_bat)
-+{
-+	struct device *dev = cw_bat->dev;
-+	int length;
-+	int ret;
-+
-+	length = device_property_count_u8(dev, "cellwise,battery-profile");
-+	if (length < 0) {
-+		dev_warn(cw_bat->dev,
-+			 "No battery-profile found, using current flash contents\n");
-+	} else if (length != CW2015_SIZE_BATINFO) {
-+		dev_err(cw_bat->dev, "battery-profile must be %d bytes\n",
-+			CW2015_SIZE_BATINFO);
-+		return -EINVAL;
-+	} else {
-+		cw_bat->bat_profile = devm_kzalloc(dev, length, GFP_KERNEL);
-+		if (!cw_bat->bat_profile)
-+			return -ENOMEM;
-+
-+		ret = device_property_read_u8_array(dev,
-+						"cellwise,battery-profile",
-+						cw_bat->bat_profile,
-+						length);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = device_property_read_u32(dev, "cellwise,monitor-interval-ms",
-+				       &cw_bat->poll_interval_ms);
-+	if (ret) {
-+		dev_dbg(cw_bat->dev, "Using default poll interval\n");
-+		cw_bat->poll_interval_ms = CW2015_DEFAULT_POLL_INTERVAL_MS;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct regmap_range regmap_ranges_rd_yes[] = {
-+	regmap_reg_range(CW2015_REG_VERSION, CW2015_REG_VERSION),
-+	regmap_reg_range(CW2015_REG_VCELL, CW2015_REG_CONFIG),
-+	regmap_reg_range(CW2015_REG_MODE, CW2015_REG_MODE),
-+	regmap_reg_range(CW2015_REG_BATINFO,
-+			CW2015_REG_BATINFO + CW2015_SIZE_BATINFO - 1),
-+};
-+
-+static const struct regmap_access_table regmap_rd_table = {
-+	.yes_ranges = regmap_ranges_rd_yes,
-+	.n_yes_ranges = 4,
-+};
-+
-+static const struct regmap_range regmap_ranges_wr_yes[] = {
-+	regmap_reg_range(CW2015_REG_RRT_ALERT, CW2015_REG_CONFIG),
-+	regmap_reg_range(CW2015_REG_MODE, CW2015_REG_MODE),
-+	regmap_reg_range(CW2015_REG_BATINFO,
-+			CW2015_REG_BATINFO + CW2015_SIZE_BATINFO - 1),
-+};
-+
-+static const struct regmap_access_table regmap_wr_table = {
-+	.yes_ranges = regmap_ranges_wr_yes,
-+	.n_yes_ranges = 3,
-+};
-+
-+static const struct regmap_range regmap_ranges_vol_yes[] = {
-+	regmap_reg_range(CW2015_REG_VCELL, CW2015_REG_SOC + 1),
-+};
-+
-+static const struct regmap_access_table regmap_vol_table = {
-+	.yes_ranges = regmap_ranges_vol_yes,
-+	.n_yes_ranges = 1,
-+};
-+
-+static const struct regmap_config cw2015_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.rd_table = &regmap_rd_table,
-+	.wr_table = &regmap_wr_table,
-+	.volatile_table = &regmap_vol_table,
-+	.max_register = CW2015_REG_BATINFO + CW2015_SIZE_BATINFO - 1,
-+};
-+
-+static int cw_bat_probe(struct i2c_client *client)
-+{
-+	int ret;
-+	struct cw_battery *cw_bat;
-+	struct power_supply_config psy_cfg = { 0 };
-+
-+	cw_bat = devm_kzalloc(&client->dev, sizeof(*cw_bat), GFP_KERNEL);
-+	if (!cw_bat)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, cw_bat);
-+	cw_bat->dev = &client->dev;
-+	cw_bat->soc = 1;
-+
-+	ret = cw2015_parse_properties(cw_bat);
-+	if (ret) {
-+		dev_err(cw_bat->dev, "Failed to parse cw2015 properties\n");
-+		return ret;
-+	}
-+
-+	cw_bat->regmap = devm_regmap_init_i2c(client, &cw2015_regmap_config);
-+	if (IS_ERR(cw_bat->regmap)) {
-+		dev_err(cw_bat->dev, "Failed to allocate regmap: %ld\n",
-+			PTR_ERR(cw_bat->regmap));
-+		return PTR_ERR(cw_bat->regmap);
-+	}
-+
-+	ret = cw_init(cw_bat);
-+	if (ret) {
-+		dev_err(cw_bat->dev, "Init failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	psy_cfg.drv_data = cw_bat;
-+	psy_cfg.fwnode = dev_fwnode(cw_bat->dev);
-+
-+	cw_bat->rk_bat = devm_power_supply_register(&client->dev,
-+						    &cw2015_bat_desc,
-+						    &psy_cfg);
-+	if (IS_ERR(cw_bat->rk_bat)) {
-+		dev_err(cw_bat->dev, "Failed to register power supply\n");
-+		return PTR_ERR(cw_bat->rk_bat);
-+	}
-+
-+	ret = power_supply_get_battery_info(cw_bat->rk_bat, &cw_bat->battery);
-+	if (ret) {
-+		dev_warn(cw_bat->dev,
-+			 "No monitored battery, some properties will be missing\n");
-+	}
-+
-+	cw_bat->battery_workqueue = create_singlethread_workqueue("rk_battery");
-+	INIT_DELAYED_WORK(&cw_bat->battery_delay_work, cw_bat_work);
-+	queue_delayed_work(cw_bat->battery_workqueue,
-+			   &cw_bat->battery_delay_work, msecs_to_jiffies(10));
-+	return 0;
-+}
-+
-+static int __maybe_unused cw_bat_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct cw_battery *cw_bat = i2c_get_clientdata(client);
-+
-+	cancel_delayed_work_sync(&cw_bat->battery_delay_work);
-+	return 0;
-+}
-+
-+static int __maybe_unused cw_bat_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct cw_battery *cw_bat = i2c_get_clientdata(client);
-+
-+	queue_delayed_work(cw_bat->battery_workqueue,
-+			   &cw_bat->battery_delay_work, 0);
-+	return 0;
-+}
-+
-+SIMPLE_DEV_PM_OPS(cw_bat_pm_ops, cw_bat_suspend, cw_bat_resume);
-+
-+static int cw_bat_remove(struct i2c_client *client)
-+{
-+	struct cw_battery *cw_bat = i2c_get_clientdata(client);
-+
-+	cancel_delayed_work_sync(&cw_bat->battery_delay_work);
-+	power_supply_put_battery_info(cw_bat->rk_bat, &cw_bat->battery);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id cw_bat_id_table[] = {
-+	{ "cw2015", 0 },
-+	{ }
-+};
-+
-+static const struct of_device_id cw2015_of_match[] = {
-+	{ .compatible = "cellwise,cw2015" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, cw2015_of_match);
-+
-+static struct i2c_driver cw_bat_driver = {
-+	.driver = {
-+		.name = "cw2015",
-+		.pm = &cw_bat_pm_ops,
-+	},
-+	.probe_new = cw_bat_probe,
-+	.remove = cw_bat_remove,
-+	.id_table = cw_bat_id_table,
-+};
-+
-+module_i2c_driver(cw_bat_driver);
-+
-+MODULE_AUTHOR("xhc<xhc@rock-chips.com>");
-+MODULE_AUTHOR("Tobias Schramm <t.schramm@manjaro.org>");
-+MODULE_DESCRIPTION("cw2015/cw2013 battery driver");
-+MODULE_LICENSE("GPL");
--- 
-2.24.1
-
+/Jarkko
