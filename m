@@ -3,128 +3,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A11C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01E8C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E0A206B1
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CA420663
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:08:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXVKyar0"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OFxgpzsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgCOPDS (ORCPT
+        id S1728756AbgCOPIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:03:18 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35657 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728223AbgCOPDR (ORCPT
+        Sun, 15 Mar 2020 11:08:18 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:62992 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728223AbgCOPIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:03:17 -0400
-Received: by mail-pj1-f67.google.com with SMTP id mq3so7021217pjb.0;
-        Sun, 15 Mar 2020 08:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Akk5s7VpQ8EMc3QKWawmMJ2LR47WbqMiE93Yj41PNp4=;
-        b=EXVKyar0oLMU5KHLP0/MgDHqO3OiUnDESNs5UJzJ9S7k4L+/ZVkySEuCx/dQsAJgjn
-         q55m/TgfP+pwRhJyzcVffNuDndrcKrBLJkDgIRjck9pG3QXOAiuPj1CLQJB/t4YABVtf
-         Mdp06gQ2T9rjOyUBBPJiY3vW+kKqe5xGnZI9/RYwaozLNgskqApBbDCe3ur3lkxGDCQJ
-         8xyK0OQhgRK+hB4pcClarUopyNQ3SVqU1x6Yl2Y/iYmbUI7XlD8j56JpwBgYZit8F833
-         xMFCP3mi2p1jXS+LV9IWS8pEQcfFSgj5eVHp+4iZJTfPGqd9gfD4PMGCwe57khOZFYeU
-         GADQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Akk5s7VpQ8EMc3QKWawmMJ2LR47WbqMiE93Yj41PNp4=;
-        b=oED/ZzLd7qS3cIoK6YgFq1D4DjyFQE1RlG8ufVUEZSz6FrEQLQyAE1WFDHlgY97B4i
-         N5XWqpFuUm8hGTby9/mcDHBZe6Nz6ODeVPdxWrCj4HVZf//yk0q1vmdx1h4RTpe13lzO
-         IP0beWh+yonddJQ2TyUR88gp+sExfwabIikaALJoospQY4zJ2mtKoA+BSrAsdoskFT5z
-         U5+Sog927MI5jRYmnu2derHtlkpJp+1RkrQqSdAFAahw6dmOx5sfiH6P+wfcZq3a7hkh
-         WeAl8ISqtEy12lBkAx7nJ6Jq4j+uVZ5+kmaBKSq3rS+SqfAFxoLY4E9pRbq2qzcYKmJA
-         JAIQ==
-X-Gm-Message-State: ANhLgQ2EqMII+2RifyIYXvMTom7CYRUcvq3wm5iT5X9OEkCW7B6MpC57
-        p1k+/Dk4r5cLvIEnCX0s3dBvY91T
-X-Google-Smtp-Source: ADFU+vuRkV82PozUwcHEZyF4En2HI40Sx1yE+v/Qbqok6rp0jWAkSiIAPTyMe9knTgb7aSiGk0Ofbw==
-X-Received: by 2002:a17:90a:d80b:: with SMTP id a11mr20775016pjv.21.1584284596078;
-        Sun, 15 Mar 2020 08:03:16 -0700 (PDT)
-Received: from localhost (216.24.188.11.16clouds.com. [216.24.188.11])
-        by smtp.gmail.com with ESMTPSA id j21sm16849584pji.13.2020.03.15.08.03.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Mar 2020 08:03:15 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, davem@davemloft.net,
-        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH net-next v2 2/2] net: stmmac: use readl_poll_timeout() function in dwmac4_dma_reset()
-Date:   Sun, 15 Mar 2020 23:03:01 +0800
-Message-Id: <20200315150301.32129-3-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200315150301.32129-1-zhengdejin5@gmail.com>
-References: <20200315150301.32129-1-zhengdejin5@gmail.com>
+        Sun, 15 Mar 2020 11:08:18 -0400
+X-UUID: 76f36b23b4154017ba3abadc0af0d807-20200315
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+CvUngamV2VX3eNG/af1GoftRg2IFOk1is4zBfIJFy0=;
+        b=OFxgpzsLsAqSkkntwnUnK5cn2Dm+E94AGIngfCe1rhb/jsDWDFJLJSUIuWCABYlx0Xv9w9GugAcghFBuClwhXGV1GIN4WYtPlWYKNMBx/UTTwGc2URnwGeN7uVbc4+rwzA7hreuLC2/FnnoAoWHlYwle7QuNe9T69/IKRjkS9Ck=;
+X-UUID: 76f36b23b4154017ba3abadc0af0d807-20200315
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 564303256; Sun, 15 Mar 2020 23:08:09 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 15 Mar 2020 23:07:33 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 15 Mar 2020 23:07:31 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>
+Subject: [PATCH 1/1] dt-bindings: cpu: Add a support cpu type for cortex-a75
+Date:   Sun, 15 Mar 2020 23:08:05 +0800
+Message-ID: <1584284885-20836-1-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 860C1638F459CC376E4B34BE0F369F4CB84B24E6D4543CE68454EA5693FFD5262000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dwmac4_dma_reset() function use an open coded of readl_poll_timeout().
-Replace the open coded handling with the proper function.
-
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v1 -> v2:
-	- no changed.
-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c
-index 9becca280074..af68ef952cd6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/delay.h>
- #include "common.h"
- #include "dwmac4_dma.h"
-@@ -14,19 +15,16 @@
- int dwmac4_dma_reset(void __iomem *ioaddr)
- {
- 	u32 value = readl(ioaddr + DMA_BUS_MODE);
--	int limit;
-+	int err;
- 
- 	/* DMA SW reset */
- 	value |= DMA_BUS_MODE_SFT_RESET;
- 	writel(value, ioaddr + DMA_BUS_MODE);
--	limit = 10;
--	while (limit--) {
--		if (!(readl(ioaddr + DMA_BUS_MODE) & DMA_BUS_MODE_SFT_RESET))
--			break;
--		mdelay(10);
--	}
- 
--	if (limit < 0)
-+	err = readl_poll_timeout(ioaddr + DMA_BUS_MODE, value,
-+				 !(value & DMA_BUS_MODE_SFT_RESET),
-+				 10000, 100000);
-+	if (err)
- 		return -EBUSY;
- 
- 	return 0;
--- 
-2.25.0
+W0RldGFpbF0NCkFkZCBhcm0gY3B1IHR5cGUgY29ydGV4LWE3NS4NCg0KQ2hhbmdlLUlkOiBJMmIw
+NTk0ODkxNWFjZmE2YTA0YTBiOGZhODg2ODRhMTJiNmQ1YzJjYQ0KU2lnbmVkLW9mZi1ieTogSGFu
+a3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQotLS0NCiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMueWFtbCB8ICAgIDEgKw0KIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9jcHVzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvYXJtL2NwdXMueWFtbA0KaW5kZXggYzIzYzI0Zi4uNTFiNzVmNyAxMDA2NDQNCi0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vY3B1cy55YW1sDQorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMueWFtbA0KQEAgLTEyOCw2ICsx
+MjgsNyBAQCBwcm9wZXJ0aWVzOg0KICAgICAgIC0gYXJtLGNvcnRleC1hNTcNCiAgICAgICAtIGFy
+bSxjb3J0ZXgtYTcyDQogICAgICAgLSBhcm0sY29ydGV4LWE3Mw0KKyAgICAgIC0gYXJtLGNvcnRl
+eC1hNzUNCiAgICAgICAtIGFybSxjb3J0ZXgtbTANCiAgICAgICAtIGFybSxjb3J0ZXgtbTArDQog
+ICAgICAgLSBhcm0sY29ydGV4LW0xDQotLSANCjEuNy45LjUNCg==
 
