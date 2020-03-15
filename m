@@ -2,158 +2,351 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFE5C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CA3C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8ADF206EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:30:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oe48Y3k6"
+	by mail.kernel.org (Postfix) with ESMTP id B843B206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:37:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584268634;
+	bh=8ewgQI9pG9wLRFwqtLXiXuC4GTAAmEpzIuxYDhYuYSE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dvqLpoy2N6sV6R4vOXYgn7N2706hOEI6UHgb8j9xS+F3W6h2g4yKaiQNLHj0HfITn
+	 8kwghaEJ3GUyitTP7usmiJmAabgkdFUd/MRoHzdnfD+vPfk13IWRF7zanTuXVE0Sf7
+	 QZ5dQZOvMZN6q2wdP7ZBEy50qOcvej9FAuXKdV8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgCOKaD (ORCPT
+        id S1728281AbgCOKhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:30:03 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:44762 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbgCOKaD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:30:03 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 77F852D6;
-        Sun, 15 Mar 2020 11:30:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584268200;
-        bh=+til8j5cqHe4jmRk4M9/QpjRd7iVe9KmQF2nnXrAD6Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oe48Y3k6/YwHCbzm00F6c0JL/dvbejK4r/c8LpnLwTNqxoD4tUvubkQD0ZXlu5EWF
-         Yx2FjOr0fttn1/LeacVHcilgwqSY8xtwsTyIhl+ibwrnDCKd2W7VceczDSHrfv/PKi
-         Pqd3yBVJFIv0MdE5PMXCiut0LeBpMabmO/2tYSoE=
-Date:   Sun, 15 Mar 2020 12:29:56 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Niklas <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 2/2] media: rcar-csi2: Let the driver handle fwnode
- matching using match_custom callback
-Message-ID: <20200315102956.GA4732@pendragon.ideasonboard.com>
-References: <20200315102724.26850-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200315102724.26850-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Sun, 15 Mar 2020 06:37:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728247AbgCOKhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 06:37:13 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC22205C9;
+        Sun, 15 Mar 2020 10:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584268631;
+        bh=8ewgQI9pG9wLRFwqtLXiXuC4GTAAmEpzIuxYDhYuYSE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uxnzAk91plFRI/6jhSqY9unSOt5xrHPelR2q0jTl64d8s5C/iRvBAEga1GRTIdtjx
+         gRdBMjn4vsSLrZcR8YEmMnAxOZCu5cBb6K4QUw69zHFLyi0wexMqW52U2cPVTjHQoF
+         /TnNw7bt4q/3vm9NfHEmNdPdEuKZD1pWbZXTrVWQ=
+Date:   Sun, 15 Mar 2020 10:37:06 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] iio: adc: mp2629: Add support for mp2629 ADC
+ driver
+Message-ID: <20200315103706.38177792@archlinux>
+In-Reply-To: <20200315000013.4440-4-sravanhome@gmail.com>
+References: <20200315000013.4440-1-sravanhome@gmail.com>
+        <20200315000013.4440-4-sravanhome@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200315102724.26850-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Sun, 15 Mar 2020 01:00:11 +0100
+Saravanan Sekar <sravanhome@gmail.com> wrote:
 
-Thank you for the patch.
-
-On Sun, Mar 15, 2020 at 10:27:24AM +0000, Lad Prabhakar wrote:
-> The rcar-csi2 driver uses the v4l2-async framework to do endpoint matching
-> instead of node matching. This is needed as it needs to work with the
-> adv748x driver which register it self in v4l2-async using endpoints
-> instead of nodes. The reason for this is that from a single DT node it
-> creates multiple subdevices, one for each endpoint.
+> Add support for 8-bit resolution ADC readings for input power
+> supply and battery charging measurement. Provides voltage, current
+> readings to mp2629 power supply driver.
 > 
-> But when using subdevs which register itself in v4l2-async using nodes,
-> the rcar-csi2 driver failed to find the matching endpoint because the
-> match.fwnode was pointing to remote endpoint instead of remote parent
-> port.
-> 
-> This commit adds support in rcar-csi2 driver to handle both the cases
-> where subdev registers in v4l2-async using endpoints/nodes, by using
-> match_type as V4L2_ASYNC_MATCH_CUSTOM and implementing the match()
-> callback to compare the fwnode of either remote/parent.
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 
-This is not the way to go. The v4l2-async framework needs to be fixed
-instead, so that fwnode match will do the right thing automatically
-regardless of whether the node is a device node or and endpoint node.
+The IIO parts seems fine (minor comments inline) but I'm not keep on
+directly accessing the internals of the mfd device info structure.
 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To my mind that should be opaque to the child drivers so as to provide
+clear structure to any such accesses.
+
+Jonathan
+
+
 > ---
->  drivers/media/platform/rcar-vin/rcar-csi2.c | 46 +++++++++++++++++++--
->  1 file changed, 43 insertions(+), 3 deletions(-)
+>  drivers/iio/adc/Kconfig      |  10 ++
+>  drivers/iio/adc/Makefile     |   1 +
+>  drivers/iio/adc/mp2629_adc.c | 209 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 220 insertions(+)
+>  create mode 100644 drivers/iio/adc/mp2629_adc.c
 > 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> index faa9fb23a2e9..1bbf05e9f025 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> @@ -808,6 +808,46 @@ static int rcsi2_parse_v4l2(struct rcar_csi2 *priv,
->  	return 0;
->  }
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 82e33082958c..ef0c0cd31855 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -680,6 +680,16 @@ config MESON_SARADC
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called meson_saradc.
 >  
-> +static bool rcsi2_asd_match(struct v4l2_subdev *sd,
-> +			    struct v4l2_async_subdev *asd)
-> +{
-> +	struct rcar_csi2 *priv = (struct rcar_csi2 *)asd->match.custom.priv;
-> +	struct fwnode_handle *remote_endpoint;
-> +	struct fwnode_handle *subdev_endpoint;
-> +	struct device_node *np;
-> +	bool matched = false;
+> +config MP2629_ADC
+> +	tristate "Monolithic MP2629 ADC driver"
+> +	depends on MFD_MP2629
+> +	help
+> +	  Say yes to have support for battery charger IC MP2629 ADC device
+> +	  accessed over I2C.
 > +
-> +	np = of_graph_get_endpoint_by_regs(priv->dev->of_node, 0, 0);
-> +	if (!np) {
-> +		dev_err(priv->dev, "Not connected to subdevice\n");
-> +		return matched;
-> +	}
+> +	  This driver provides ADC conversion of system, input power supply
+> +	  and battery voltage & current information.
 > +
-> +	remote_endpoint =
-> +		fwnode_graph_get_remote_endpoint(of_fwnode_handle(np));
-> +	if (!remote_endpoint) {
-> +		dev_err(priv->dev, "Failed to get remote endpoint\n");
-> +		of_node_put(np);
-> +		return matched;
-> +	}
-> +	of_node_put(np);
+>  config NAU7802
+>  	tristate "Nuvoton NAU7802 ADC driver"
+>  	depends on I2C
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 919228900df9..f14416c245a6 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -64,6 +64,7 @@ obj-$(CONFIG_MCP3911) += mcp3911.o
+>  obj-$(CONFIG_MEDIATEK_MT6577_AUXADC) += mt6577_auxadc.o
+>  obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
+>  obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
+> +obj-$(CONFIG_MP2629_ADC) += mp2629_adc.o
+>  obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
+>  obj-$(CONFIG_NAU7802) += nau7802.o
+>  obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
+> diff --git a/drivers/iio/adc/mp2629_adc.c b/drivers/iio/adc/mp2629_adc.c
+> new file mode 100644
+> index 000000000000..1a99196624ed
+> --- /dev/null
+> +++ b/drivers/iio/adc/mp2629_adc.c
+> @@ -0,0 +1,209 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * MP2629 Driver for ADC
+> + *
+> + * Copyright 2020 Monolithic Power Systems, Inc
+> + *
+> + * Author: Saravanan Sekar <sravanhome@gmail.com>
+> + */
 > +
-> +	if (sd->fwnode != dev_fwnode(sd->dev)) {
-> +		if (remote_endpoint == sd->fwnode)
-> +			matched = true;
-> +	} else {
-> +		subdev_endpoint =
-> +		      fwnode_graph_get_next_endpoint(dev_fwnode(sd->dev), NULL);
-> +		if (remote_endpoint == subdev_endpoint)
-> +			matched = true;
-> +		fwnode_handle_put(subdev_endpoint);
-> +	}
+> +#include <linux/platform_device.h>
+> +#include <linux/of_device.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/regmap.h>
 > +
-> +	fwnode_handle_put(remote_endpoint);
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/machine.h>
+> +#include <linux/iio/driver.h>
+> +#include <linux/mfd/mp2629.h>
 > +
-> +	return matched;
+> +#define	MP2629_REG_ADC_CTRL		0x03
+> +#define	MP2629_REG_BATT_VOLT		0x0e
+> +#define	MP2629_REG_SYSTEM_VOLT		0x0f
+> +#define	MP2629_REG_INPUT_VOLT		0x11
+> +#define	MP2629_REG_BATT_CURRENT		0x12
+> +#define	MP2629_REG_INPUT_CURRENT	0x13
+> +
+> +#define	MP2629_ADC_START		BIT(7)
+> +#define MP2629_ADC_CONTINUOUS		BIT(6)
+
+Odd alignment.
+
+> +
+> +#define MP2629_MAP(_mp, _mpc) IIO_MAP(#_mp, "mp2629_charger", "mp2629-"_mpc)
+> +
+> +#define MP2629_ADC_CHAN(_ch, _type) {				\
+> +	.type = _type,						\
+> +	.indexed = 1,						\
+> +	.datasheet_name = #_ch,					\
+> +	.channel = MP2629_ ## _ch,				\
+> +	.address = MP2629_REG_ ## _ch,				\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
 > +}
 > +
->  static int rcsi2_parse_dt(struct rcar_csi2 *priv)
->  {
->  	struct device_node *ep;
-> @@ -833,9 +873,9 @@ static int rcsi2_parse_dt(struct rcar_csi2 *priv)
->  		return ret;
->  	}
->  
-> -	priv->asd.match.fwnode =
-> -		fwnode_graph_get_remote_endpoint(of_fwnode_handle(ep));
-> -	priv->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
-> +	priv->asd.match.custom.match = &rcsi2_asd_match;
-> +	priv->asd.match.custom.priv = priv;
-> +	priv->asd.match_type = V4L2_ASYNC_MATCH_CUSTOM;
->  
->  	of_node_put(ep);
->  
+> +static struct iio_chan_spec mp2629_channels[] = {
+> +	MP2629_ADC_CHAN(BATT_VOLT, IIO_VOLTAGE),
+> +	MP2629_ADC_CHAN(SYSTEM_VOLT, IIO_VOLTAGE),
+> +	MP2629_ADC_CHAN(INPUT_VOLT, IIO_VOLTAGE),
+> +	MP2629_ADC_CHAN(BATT_CURRENT, IIO_CURRENT),
+> +	MP2629_ADC_CHAN(INPUT_CURRENT, IIO_CURRENT)
+> +};
+> +
+> +struct mp2629_adc {
+> +	struct mp2629_info *info;
+> +	struct device *dev;
+> +};
+> +
+> +static struct iio_map mp2629_adc_maps[] = {
+> +	MP2629_MAP(BATT_VOLT, "batt-volt"),
+> +	MP2629_MAP(SYSTEM_VOLT, "system-volt"),
+> +	MP2629_MAP(INPUT_VOLT, "input-volt"),
+> +	MP2629_MAP(BATT_CURRENT, "batt-current"),
+> +	MP2629_MAP(INPUT_CURRENT, "input-current")
+> +};
+> +
+> +static int mp2629_read_raw(struct iio_dev *indio_dev,
+> +			struct iio_chan_spec const *chan,
+> +			int *val, int *val2, long mask)
+> +{
+> +	struct mp2629_adc *adc_info = iio_priv(indio_dev);
+> +	struct mp2629_info *info = adc_info->info;
+> +	unsigned int rval;
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = regmap_read(info->regmap, chan->address, &rval);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (chan->address == MP2629_INPUT_VOLT)
+> +			rval &= 0x7f;
+> +		*val = rval;
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->channel) {
+> +		case MP2629_BATT_VOLT:
+> +		case MP2629_SYSTEM_VOLT:
+> +			*val = 20;
+> +			return IIO_VAL_INT;
+> +
+> +		case MP2629_INPUT_VOLT:
+> +			*val = 60;
+> +			return IIO_VAL_INT;
+> +
+> +		case MP2629_BATT_CURRENT:
+> +			*val = 175;
+> +			*val2 = 10;
+> +			return IIO_VAL_FRACTIONAL;
+> +
+> +		case MP2629_INPUT_CURRENT:
+> +			*val = 133;
+> +			*val2 = 10;
+> +			return IIO_VAL_FRACTIONAL;
+> +
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_info mp2629_adc_info = {
+> +	.read_raw = &mp2629_read_raw,
+> +};
+> +
+> +static int mp2629_adc_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct mp2629_info *info = dev_get_drvdata(dev->parent);
+> +	struct mp2629_adc *adc_info;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc_info));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	adc_info = iio_priv(indio_dev);
+> +	platform_set_drvdata(pdev, indio_dev);
+> +	adc_info->info = info;
+> +	adc_info->dev = dev;
+> +
+> +	ret = iio_map_array_register(indio_dev, mp2629_adc_maps);
+> +	if (ret) {
+> +		dev_err(dev, "IIO maps register fail: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	indio_dev->name = dev_name(dev);
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->dev.of_node = pdev->dev.of_node;
+> +	indio_dev->channels = mp2629_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(mp2629_channels);
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &mp2629_adc_info;
+> +
+> +	ret = regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
+> +				MP2629_ADC_START | MP2629_ADC_CONTINUOUS,
+> +				MP2629_ADC_START | MP2629_ADC_CONTINUOUS);
+> +	if (ret) {
+> +		dev_err(dev, "adc enable fail: %d\n", ret);
+> +		goto fail_unmap;
+> +	}
+> +
+> +	ret = devm_iio_device_register(dev, indio_dev);
+> +	if (ret) {
+> +		dev_err(dev, "IIO device register fail: %d\n", ret);
+> +		goto fail_unmap;
 
--- 
-Regards,
+Should we not be turning the device off like we do in remove?
 
-Laurent Pinchart
+> +	}
+> +
+> +	return 0;
+> +
+> +fail_unmap:
+> +	iio_map_array_unregister(indio_dev);
+> +	return ret;
+> +}
+> +
+> +static int mp2629_adc_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct mp2629_adc *adc_info = iio_priv(indio_dev);
+> +	struct mp2629_info *info = adc_info->info;
+
+This mess in layering with the children directly using the parents
+regmap is a little concerning.  It means that the 3 drivers
+really aren't very well separated and can't really be reviewed
+independently (not a good thing). 
+
+It might just be a question of providing a wrapper in the mfd driver
+code so we at least have some visibility that this is going on.
+
+> +
+> +	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
+> +					 MP2629_ADC_CONTINUOUS, 0);
+> +	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
+> +					 MP2629_ADC_START, 0);
+> +
+> +	iio_map_array_unregister(indio_dev);
+> +	iio_device_unregister(indio_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mp2629_adc_of_match[] = {
+> +	{ .compatible = "mps,mp2629_adc"},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, mp2629_adc_of_match);
+> +
+> +static struct platform_driver mp2629_adc_driver = {
+> +	.driver = {
+> +		.name = "mp2629_adc",
+> +		.of_match_table = mp2629_adc_of_match,
+> +	},
+> +	.probe		= mp2629_adc_probe,
+> +	.remove		= mp2629_adc_remove,
+> +};
+> +module_platform_driver(mp2629_adc_driver);
+> +
+> +MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
+> +MODULE_DESCRIPTION("MP2629 ADC driver");
+> +MODULE_LICENSE("GPL");
+
