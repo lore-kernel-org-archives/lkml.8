@@ -2,203 +2,159 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27E5C18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA69C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9457F20575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6782F206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YuD16aQP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sANpO3aj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbgCOSsL (ORCPT
+        id S1729031AbgCOTOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 14:48:11 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38106 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgCOSsL (ORCPT
+        Sun, 15 Mar 2020 15:14:40 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43532 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728608AbgCOTOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 14:48:11 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h5so19254988edn.5;
-        Sun, 15 Mar 2020 11:48:08 -0700 (PDT)
+        Sun, 15 Mar 2020 15:14:40 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f8so6887750plt.10;
+        Sun, 15 Mar 2020 12:14:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G6L4EvN7lm7DYZ/YO34UEbURBIXNGU7BBcJMyT2iJ0g=;
-        b=YuD16aQPHLcB1g+JHpV2HSofbb0M4T2Gh2VdChud9ij53FcV9Wr6UhX/YqP3+CKuRa
-         Ya8fF300zL6ZJ91tN7l7sGP+UD5Ta6rIoyAHuY1YJyjeFB0sHJswwOyuwIFto9Op8XC1
-         ppzXJZ+pcUQpNHfgGMSLxx/kbtCVZf6oTDUYXQwSQUQz1MwZBQea5SbR26NYVllr7CFH
-         43j7rIrjLm7zpf7EwZqrUAyJrWnWP+M3aqnZcUw1LyYH2W/VxNjgLwpE7aQgTIR+mtpR
-         rVZOZ/4ZCA63bfxFpvd1HuXnBIYIe2nKKtyJHswyVstmKpwZF9RZyzXJD84C+kVONgGL
-         j8xw==
+        h=from:to:cc:subject:date:message-id;
+        bh=QJPqyWkxe0FvdCujVYrv8IN7juT6CFWXSWYBT76q9+w=;
+        b=sANpO3ajZY3xjd0/k5q4rDelXESgjIkMWTO+p4kXH7fYWkGB7cYw4Qk3k1aKpvrfDw
+         LI0ZMEDjgt8aoOkf7GtZkLwFrtingsW+Z0udRO1WLjWzmMp/tNFPv1jp/Or/dUgxo3Ux
+         ikywRVWGd6NDrL+A2btSdotr41flUCEuAHWZE+cF5s6UPI+AZyry5DI01kEK29tFXEvw
+         XS5k0uonygKubgiJR+2ibb/5miv39jalJ5gKmopKknFBrdnDJjp5lc75U+fsdO5UVOzt
+         RAxAF5h5ioz0nhSs0cVRKPjtdNziOkxUd4QtZ9s6TWvlwHeImvMOv4fYRXz2vT1clUaT
+         SuyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=G6L4EvN7lm7DYZ/YO34UEbURBIXNGU7BBcJMyT2iJ0g=;
-        b=ZGvR8IvT9ItmzObkWKNWb367z9MIPTjjM/JPeHs2qh/BckIWB2He5QiqQOUZuyhfXc
-         C1EXb9csM4DzTuoCyvMpwfRqCrmACfknvI5Uv+T2Qa2Dw8DG5COMyVgQkqLp94YVcIeW
-         E/EqN1sPUEwn+b6xZOvSXD36Z3dDHitdseAnZTl8TMAT+XG0L604+/+h7ux+MgCa6A+I
-         bgTNgWlthDv5RIpzrxykd5ZG1zmt9xU7c7+Ywmb5V14wozleHaO30k5qyULm2VmArb9I
-         /08RuTqZiNOyjnRxDXjOsC3JhJQ74mfukOnP/5TowUTZIeOgrSDv0ZgpK4/+elFgFJBl
-         nvFg==
-X-Gm-Message-State: ANhLgQ3p9t2EqYVthC8mTIv4sNFrrEi5a4uil3ymrz2DI1xpQeIyRd81
-        3WBx31sDScfX3BcMJOZ+7AM=
-X-Google-Smtp-Source: ADFU+vtP1YosyF+LTRKbGIgs5rzng+w8/ziq3PBGSYmK6s5kGkMdiiXqFsDXjGa49UWRRbqC6Di8qQ==
-X-Received: by 2002:a50:ce01:: with SMTP id y1mr4442030edi.47.1584298087756;
-        Sun, 15 Mar 2020 11:48:07 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id l9sm1661803edt.93.2020.03.15.11.48.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Mar 2020 11:48:07 -0700 (PDT)
-Subject: Re: [PATCH v3 3/4] arm64: dts: add RTC nodes for MT2712
-To:     Ran Bi <ran.bi@mediatek.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QJPqyWkxe0FvdCujVYrv8IN7juT6CFWXSWYBT76q9+w=;
+        b=UgEJ4saGzMJxtnZkY+DWrcDpxKTNUrpNp8rpro0p3mSZWHnVwMFNcXknbN+jjgF9JV
+         3BtF+iJohpTwsHfBl2v21sXeiPoi+CpIAI4VcSs1LJy5IZPWzLVTSkE5vpN8HZFGA5Wy
+         0DOh5Fn0rdP/OxAf/dJfayOeM0gPdBEiNQpuHj/lPV7EB+jc2y0eCAdBls5UsqbedHv6
+         fuVWgQ8UZR0vqs+kWAH1fXitPmkjH0xeI2WVW/zYLGIlRo8sqlEtbSHqI5Sbb7VHevVA
+         ks6b8PxFHqqNQra9sXITg+9h9ohhVoNT6Ae4YG4NJCCXk3DT+ybT9T/SCl4ePc7shiGA
+         lWEA==
+X-Gm-Message-State: ANhLgQ2nJRksF5W6W1L/ppBbZdje6TC3OFUBObEYsLBXiaq3uprPgZ3N
+        x+6UxXB6tsNmw96zE8pdsSU=
+X-Google-Smtp-Source: ADFU+vsYz8bmmqz+GFTxMop+sYVx/jLaNj6ejge3qbhBfCf1tOnqa7+uPrV8Zs+/qlZLiYPfrd+otw==
+X-Received: by 2002:a17:90a:d081:: with SMTP id k1mr22621148pju.57.1584299678766;
+        Sun, 15 Mar 2020 12:14:38 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-24-4-25-55.hsd1.ca.comcast.net. [24.4.25.55])
+        by smtp.gmail.com with ESMTPSA id z22sm41859247pgn.19.2020.03.15.12.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Mar 2020 12:14:37 -0700 (PDT)
+From:   rentao.bupt@gmail.com
+To:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        YT Shen <yt.shen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Flora Fu <flora.fu@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>
-References: <20200226051303.22560-1-ran.bi@mediatek.com>
- <20200226051303.22560-4-ran.bi@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <af1a3c83-62e4-0ead-c942-786489bf3d56@gmail.com>
-Date:   Sun, 15 Mar 2020 19:48:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200226051303.22560-4-ran.bi@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH v3] usb: gadget: aspeed: improve vhub port irq handling
+Date:   Sun, 15 Mar 2020 12:14:30 -0700
+Message-Id: <20200315191430.12379-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tao Ren <rentao.bupt@gmail.com>
 
+This patch evaluates vhub ports' irq mask before going through per-port
+irq handling one by one, which helps to speed up irq handling in case
+there is no port interrupt.
 
-On 26/02/2020 06:13, Ran Bi wrote:
-> This patch add device node for MT2712 RTC.
-> 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+---
+ Changes in v3:
+   - assign istat to (unsigned long) bitmap before calling
+     "for_each_set_bit_from".
+ Changes in v2:
+   - use "for_each_set_bit" to speed up port irq handling.
 
-Applied to v5.6-next/dts64
+ drivers/usb/gadget/udc/aspeed-vhub/core.c | 12 +++++++++---
+ drivers/usb/gadget/udc/aspeed-vhub/vhub.h |  8 +++-----
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-Thanks!
+diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+index f8d35dd60c34..555e8645fb1e 100644
+--- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
++++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+@@ -134,11 +134,15 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+ 	}
+ 
+ 	/* Handle device interrupts */
+-	for (i = 0; i < vhub->max_ports; i++) {
+-		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
++	if (istat & vhub->port_irq_mask) {
++		unsigned long bitmap = istat;
++		int offset = VHUB_IRQ_DEV1_BIT;
++		int size = VHUB_IRQ_DEV1_BIT + vhub->max_ports;
+ 
+-		if (istat & dev_mask)
++		for_each_set_bit_from(offset, &bitmap, size) {
++			i = offset - VHUB_IRQ_DEV1_BIT;
+ 			ast_vhub_dev_irq(&vhub->ports[i].dev);
++		}
+ 	}
+ 
+ 	/* Handle top-level vHub EP0 interrupts */
+@@ -332,6 +336,8 @@ static int ast_vhub_probe(struct platform_device *pdev)
+ 
+ 	spin_lock_init(&vhub->lock);
+ 	vhub->pdev = pdev;
++	vhub->port_irq_mask = GENMASK(VHUB_IRQ_DEV1_BIT + vhub->max_ports - 1,
++				      VHUB_IRQ_DEV1_BIT);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	vhub->regs = devm_ioremap_resource(&pdev->dev, res);
+diff --git a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+index fac79ef6d669..23a1ac91f8d2 100644
+--- a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
++++ b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+@@ -51,14 +51,11 @@
+ #define VHUB_CTRL_UPSTREAM_CONNECT		(1 << 0)
+ 
+ /* IER & ISR */
++#define VHUB_IRQ_DEV1_BIT			9
+ #define VHUB_IRQ_USB_CMD_DEADLOCK		(1 << 18)
+ #define VHUB_IRQ_EP_POOL_NAK			(1 << 17)
+ #define VHUB_IRQ_EP_POOL_ACK_STALL		(1 << 16)
+-#define VHUB_IRQ_DEVICE5			(1 << 13)
+-#define VHUB_IRQ_DEVICE4			(1 << 12)
+-#define VHUB_IRQ_DEVICE3			(1 << 11)
+-#define VHUB_IRQ_DEVICE2			(1 << 10)
+-#define VHUB_IRQ_DEVICE1			(1 << 9)
++#define VHUB_IRQ_DEVICE1			(1 << (VHUB_IRQ_DEV1_BIT))
+ #define VHUB_IRQ_BUS_RESUME			(1 << 8)
+ #define VHUB_IRQ_BUS_SUSPEND 			(1 << 7)
+ #define VHUB_IRQ_BUS_RESET 			(1 << 6)
+@@ -402,6 +399,7 @@ struct ast_vhub {
+ 	/* Per-port info */
+ 	struct ast_vhub_port		*ports;
+ 	u32				max_ports;
++	u32				port_irq_mask;
+ 
+ 	/* Generic EP data structures */
+ 	struct ast_vhub_ep		*epns;
+-- 
+2.17.1
 
-> ---
->  arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> index 43307bad3f0d..31166c17c39a 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> @@ -303,6 +303,12 @@ uart5: serial@1000f000 {
->  		status = "disabled";
->  	};
->  
-> +	rtc: rtc@10011000 {
-> +		compatible = "mediatek,mt2712-rtc";
-> +		reg = <0 0x10011000 0 0x1000>;
-> +		interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
->  	spis1: spi@10013000 {
->  		compatible = "mediatek,mt2712-spi-slave";
->  		reg = <0 0x10013000 0 0x100>;
-> 
