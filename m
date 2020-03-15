@@ -4,151 +4,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB693C10F29
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC4EC10F29
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7D620575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2CE20575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:53:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgCOPuY (ORCPT
+        id S1728864AbgCOPxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:50:24 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:23002 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbgCOPuX (ORCPT
+        Sun, 15 Mar 2020 11:53:38 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:6432 "EHLO
+        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728634AbgCOPxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:50:23 -0400
-Received: from localhost.localdomain ([93.22.37.174])
-        by mwinf5d79 with ME
-        id EfqG2200B3lSDvh03fqGhy; Sun, 15 Mar 2020 16:50:18 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 15 Mar 2020 16:50:18 +0100
-X-ME-IP: 93.22.37.174
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     vkoul@kernel.org, dan.j.williams@intel.com, peter.ujfalusi@ti.com,
-        grygorii.strashko@ti.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] dmaengine: ti: k3-udma: Fix an error handling path in 'k3_udma_glue_cfg_rx_flow()'
-Date:   Sun, 15 Mar 2020 16:50:15 +0100
-Message-Id: <20200315155015.27303-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 15 Mar 2020 11:53:38 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 4DDC9261012;
+        Sun, 15 Mar 2020 23:53:17 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Wang Wenhu <wenhu.wang@vivo.com>,
+        Jaskaran Singh <jaskaransingh7654321@gmail.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     kernel@vivo.com
+Subject: [PATCH v2,1/2] doc: zh_CN: index files in filesystems subdirectory
+Date:   Sun, 15 Mar 2020 08:52:38 -0700
+Message-Id: <20200315155258.91725-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200315092810.87008-1-wenhu.wang@vivo.com>
+References: <20200315092810.87008-1-wenhu.wang@vivo.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVIQkhLS0tKSU5DQ05LSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OE06Pyo5LTgzLDczIhwVKTw0
+        PwEKFCJVSlVKTkNPSUNMTUtITkNPVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQU9ITkI3Bg++
+X-HM-Tid: 0a70dee6518a9375kuws4ddc9261012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
-function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
+Add filesystems subdirectory into the table of Contents for zh_CN,
+all translations residing on it would be indexed conveniently.
 
-This not correct because this function has a 'channel->flows_ready--;' at
-the end, but 'flows_ready' has not been incremented here, when we branch to
-the error handling path.
-
-In order to keep a correct value in 'flows_ready', un-roll
-'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
-at the correct places when an error is detected.
-
-Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
-
-Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 ---
-Not sure that the last point of the description is correct. Maybe, the
-'xudma_rflow_put / return -ENODEV;' should be kept in order not to
-override 'flow->udma_rflow'.
+Changelog:
+ - v2 added SPDX header
 ---
- drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ Documentation/filesystems/index.rst           |  2 ++
+ .../translations/zh_CN/filesystems/index.rst  | 29 +++++++++++++++++++
+ Documentation/translations/zh_CN/index.rst    |  1 +
+ 3 files changed, 32 insertions(+)
+ create mode 100644 Documentation/translations/zh_CN/filesystems/index.rst
 
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index dbccdc7c0ed5..890573eb1625 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 	if (IS_ERR(flow->udma_rflow)) {
- 		ret = PTR_ERR(flow->udma_rflow);
- 		dev_err(dev, "UDMAX rflow get err %d\n", ret);
--		goto err;
-+		goto err_return;
- 	}
- 
- 	if (flow->udma_rflow_id != xudma_rflow_get_id(flow->udma_rflow)) {
--		xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err_rflow_put;
- 	}
- 
- 	/* request and cfg rings */
-@@ -592,7 +592,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 	if (!flow->ringrx) {
- 		ret = -ENODEV;
- 		dev_err(dev, "Failed to get RX ring\n");
--		goto err;
-+		goto err_rflow_put;
- 	}
- 
- 	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
-@@ -600,19 +600,19 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 	if (!flow->ringrxfdq) {
- 		ret = -ENODEV;
- 		dev_err(dev, "Failed to get RXFDQ ring\n");
--		goto err;
-+		goto err_ringrx_free;
- 	}
- 
- 	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
--		goto err;
-+		goto err_ringrxfdq_free;
- 	}
- 
- 	ret = k3_ringacc_ring_cfg(flow->ringrxfdq, &flow_cfg->rxfdq_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringrxfdq %d\n", ret);
--		goto err;
-+		goto err_ringrxfdq_free;
- 	}
- 
- 	if (rx_chn->remote) {
-@@ -662,7 +662,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 	if (ret) {
- 		dev_err(dev, "flow%d config failed: %d\n", flow->udma_rflow_id,
- 			ret);
--		goto err;
-+		goto err_ringrxfdq_free;
- 	}
- 
- 	rx_chn->flows_ready++;
-@@ -670,8 +670,18 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 		flow->udma_rflow_id, rx_chn->flows_ready);
- 
- 	return 0;
--err:
--	k3_udma_glue_release_rx_flow(rx_chn, flow_idx);
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index 386eaad008b2..ab47d5b1f092 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -1,3 +1,5 @@
++.. _filesystems_index:
 +
-+err_ringrxfdq_free:
-+	k3_ringacc_ring_free(flow->ringrxfdq);
+ ===============================
+ Filesystems in the Linux kernel
+ ===============================
+diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
+new file mode 100644
+index 000000000000..0a2cabfeaf7b
+--- /dev/null
++++ b/Documentation/translations/zh_CN/filesystems/index.rst
+@@ -0,0 +1,29 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. raw:: latex
 +
-+err_ringrx_free:
-+	k3_ringacc_ring_free(flow->ringrx);
++	\renewcommand\thesection*
++	\renewcommand\thesubsection*
 +
-+err_rflow_put:
-+	xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
-+	flow->udma_rflow = NULL;
++.. include:: ../disclaimer-zh_CN.rst
 +
-+err_return:
- 	return ret;
- }
++:Original: :ref:`Documentation/filesystems/index.rst <filesystems_index>`
++:Translator: Wang Wenhu <wenhu.wang@vivo.com>
++
++.. _cn_filesystems_index:
++
++========================
++Linux Kernel中的文件系统
++========================
++
++这份正在开发的手册或许在未来某个辉煌的日子里以易懂的形式将Linux虚拟\
++文件系统（VFS）层以及基于其上的各种文件系统如何工作呈现给大家。当前\
++可以看到下面的内容。
++
++文件系统
++========
++
++文件系统实现文档。
++
++.. toctree::
++   :maxdepth: 2
++
+diff --git a/Documentation/translations/zh_CN/index.rst b/Documentation/translations/zh_CN/index.rst
+index d3165535ec9e..76850a5dd982 100644
+--- a/Documentation/translations/zh_CN/index.rst
++++ b/Documentation/translations/zh_CN/index.rst
+@@ -14,6 +14,7 @@
+    :maxdepth: 2
  
+    process/index
++   filesystems/index
+ 
+ 目录和表格
+ ----------
 -- 
-2.20.1
+2.17.1
 
