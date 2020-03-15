@@ -2,151 +2,96 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C0CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF171C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916CE206B1
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1864206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0+Hv971"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gun4vQCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgCOOwU (ORCPT
+        id S1728755AbgCOPDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 10:52:20 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43362 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728310AbgCOOwT (ORCPT
+        Sun, 15 Mar 2020 11:03:07 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37649 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728310AbgCOPDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 10:52:19 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b2so11784400wrj.10;
-        Sun, 15 Mar 2020 07:52:18 -0700 (PDT)
+        Sun, 15 Mar 2020 11:03:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 3so495851pff.4;
+        Sun, 15 Mar 2020 08:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=7Gi+bCJZz4lHK563HcUlk7nIdd2eNAvPQL3ugWFcKi0=;
-        b=j0+Hv971Q3EFKqojafHzYkdFMh5pOunYi5hyJIEjse0f1ZGtX7fTXKcN3Lrcxbw4CS
-         Jb0eJ5EmPI+qs1QCv962jd2cqr4G7ko5zDBvFxElmvBcMpsHzBnGcqy5LC3PXr7rncnq
-         akFlAglqRW1W2LiAANi+GT6TSFsFq5KLQWv93gUxCurDm23MkoC77qj6icuaWNI0FFYs
-         pL1HPDgyllegAokH9S9QPs1nEv4jzJO4Mk0KybSpib712NqIynYJ3to/iCSacMuEWax7
-         6G2d8D8C5OOpcDoAnhN5Rbre9V/jmuPCwwUoAtSZ/Rh6resTWDqT7a0h/zrjqZN1jVOv
-         dgpw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kc0ThdNzpJn+Kfcg/RI1G+X6IBpfBw1q8Ln/bdPz3gg=;
+        b=gun4vQCyYWP1bqzzwNKXuuKF29zaiHKnVk83U9ZMhT/rCB7hAm6a8Cdj6qI1V3e4IV
+         /Rc7jjUJVxlSRNl/AwxR+g2q3fzUzLVCP2EOb8tHLoG3V8WBY8fg2EGbLABKxuLHV2q1
+         PiOUTheCzjMuRt2W6lhsPgXp6r7UDlhK2w73y5XXMnBK86ZlVt2aa933ie9R5UyvC7ty
+         p8wqaaMYQc7ACTMv2TzR/043Gd8/OfEcmi+dvCTZR5zobaN2Kb9/xvv4umxfhiiUfXhx
+         ADRo2NteR1DfuarrFYR/q/mXLAKF3UA0UMXwsQKBlb85Axs7z7mJYll4R2ierDo8TfzS
+         3Img==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=7Gi+bCJZz4lHK563HcUlk7nIdd2eNAvPQL3ugWFcKi0=;
-        b=Edfanh3oB2LBtzSKn6Q/p/2t78Mhz8YATkkMLukA883kTikoDm8PcAQCbqyrUc6D6o
-         3q3FmxUwxrFjNuShZl8Ek9O31mKTP19XigVy7hn9SvwdOuyVfCubuWcTyjoQLrlK/uk7
-         AchqOVPtQWpNS4twmREa+6Aiqz3zgCzdcMkozjypavKAvSJP2Q1ZPi9Ovn747JqkJspZ
-         Nd4nzxiB2Jy8LmfutDvH77t6vsujxq7CgtEy1wh3MSZPnMnhvoi/uuBdia+N4gpgQKyT
-         F5ZCQclA8gHLJ9iH9cSgn9p0ZD1NQDZ1fs11s1FlnLzK5Fwu9Zn8FIIUz0anukHY2I9B
-         Og1Q==
-X-Gm-Message-State: ANhLgQ3v6udfYhCttVeRpD0LGyornr7AzoBo72kK1H3OvgTUn+c+N41I
-        9Oz2GiiqL8P1h/CHednXfSU=
-X-Google-Smtp-Source: ADFU+vv+fswinTfECRcUsv5566rVnszb3rK5dZ9IdZZAIGCwH0wYljS9xHDRwAdKtdX02tI2Av4nUQ==
-X-Received: by 2002:a5d:640a:: with SMTP id z10mr27030399wru.301.1584283937438;
-        Sun, 15 Mar 2020 07:52:17 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id t81sm26050317wmb.15.2020.03.15.07.52.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 07:52:16 -0700 (PDT)
-Date:   Sun, 15 Mar 2020 15:52:14 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     peterz@infradead.org, herbert@gondor.apana.org.au,
-        viro@zeniv.linux.org.uk, tglx@linutronix.de, mingo@redhat.com,
-        dvhart@infradead.org
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: BUG: cryptsetup benchmark stuck
-Message-ID: <20200315145214.GA9576@Red>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kc0ThdNzpJn+Kfcg/RI1G+X6IBpfBw1q8Ln/bdPz3gg=;
+        b=L/z2Ho35OK4sWT6B/rx1/eNVDGiNvZmTuRPEKWdg8uNTG9Kf4/Stp4EnHJRp7Pz6uk
+         KhuBfPMg7vLdz9tQSl0YG36A8fsOBnfIr8whcj1BWZTm+rkuIXl9E5SSHavpqebhpmzT
+         LOV3dVLhWUUSQb1qVx0jvnW1IPXysYb24G9/v3mGDlMyW0H0OgHhSRFfa7RLYwtsFaXN
+         keoIPw9XW5LiIlgRDey1KRVFIRjw+p94kHX+6ozIBXbl2lruW6NqZkVjHD2Y1/KMdxMw
+         smcYKFvskj3AQStLHdMvDa2zE6GYCgRLP8DmWsu9X8Z7CYIvCQP9C8JoawVT81yc1y4n
+         Fr8Q==
+X-Gm-Message-State: ANhLgQ0f98a2VsS/fdpS6oBuxQq1PcZv6rnrpgeSGP6TeG7RKtRuyyTf
+        7yI1c9bX6pyQvNYCciavSr0=
+X-Google-Smtp-Source: ADFU+vtgzU9quN1fDPCbfmM0oAkAxz6+u3OVdKrZFBtlqzFobCSi93pYCDNldrZGFZPFHgHvfmczRA==
+X-Received: by 2002:a63:cb4a:: with SMTP id m10mr22706434pgi.259.1584284586339;
+        Sun, 15 Mar 2020 08:03:06 -0700 (PDT)
+Received: from localhost (216.24.188.11.16clouds.com. [216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id y9sm17201060pjj.17.2020.03.15.08.03.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Mar 2020 08:03:05 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, davem@davemloft.net,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH net-next v2 0/2] net: stmmac: Use readl_poll_timeout() to simplify the code
+Date:   Sun, 15 Mar 2020 23:02:59 +0800
+Message-Id: <20200315150301.32129-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hello
+This patch sets just for replace the open-coded loop to the
+readl_poll_timeout() helper macro for simplify the code in
+stmmac driver.
 
-On next-20200313, running cryptsetup benchmark is stuck.
-I have bisected this problem twice and the result is the same:
+v1 -> v2:
+	- no changed. I am a newbie and sent this patch a month
+	  ago (February 6th). So far, I have not received any comments or
+	  suggestion. I think it may be lost somewhere in the world, so
+	  resend it.
 
-git bisect start
-# bad: [2e602db729948ce577bf07e2b113f2aa806b62c7] Add linux-next specific files for 20200313
-git bisect bad 2e602db729948ce577bf07e2b113f2aa806b62c7
-# good: [98d54f81e36ba3bf92172791eba5ca5bd813989b] Linux 5.6-rc4
-git bisect good 98d54f81e36ba3bf92172791eba5ca5bd813989b
-# good: [f1ffc9616ef098ac180ac8ae3554e9beda4014f8] Merge remote-tracking branch 'bluetooth/master'
-git bisect good f1ffc9616ef098ac180ac8ae3554e9beda4014f8
-# good: [517488f00386297a3ed8a626c4fd23c1c05fab77] Merge remote-tracking branch 'iommu/next'
-git bisect good 517488f00386297a3ed8a626c4fd23c1c05fab77
-# bad: [308033e51d5c167ded64799982ab042ee1cdd7e5] Merge remote-tracking branch 'thunderbolt/next'
-git bisect bad 308033e51d5c167ded64799982ab042ee1cdd7e5
-# bad: [436b37da2c4b71ce22d915355291a2fe9bf71abd] Merge remote-tracking branch 'irqchip/irq/irqchip-next'
-git bisect bad 436b37da2c4b71ce22d915355291a2fe9bf71abd
-# bad: [b8aaa6b4a71eaa1161ae3a8e67e7c48dbdd131d5] Merge branch 'efi/urgent'
-git bisect bad b8aaa6b4a71eaa1161ae3a8e67e7c48dbdd131d5
-# good: [c99bbc21e58b91ac670c95a51639cc35f364ce7a] Merge branch 'sched/core'
-git bisect good c99bbc21e58b91ac670c95a51639cc35f364ce7a
-# bad: [1949ed1e393b5740b295f548ce66e2eeae3e76f7] Merge branch 'locking/urgent'
-git bisect bad 1949ed1e393b5740b295f548ce66e2eeae3e76f7
-# good: [836196beb377e59e54ec9e04f7402076ef7a8bd8] perf/core: Add per perf_cpu_context min_heap storage
-git bisect good 836196beb377e59e54ec9e04f7402076ef7a8bd8
-# good: [798048f85093901f475d25b2ac8d9ea1bc6d471a] Merge tag 'perf-urgent-for-mingo-5.6-20200306' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
-git bisect good 798048f85093901f475d25b2ac8d9ea1bc6d471a
-# good: [edd5d987f561b657c46383b0a778b99d51a76e4b] Merge branch 'ras/core'
-git bisect good edd5d987f561b657c46383b0a778b99d51a76e4b
-# good: [95ed6c707f26a727a29972b60469630ae10d579c] perf/cgroup: Order events in RB tree by cgroup id
-git bisect good 95ed6c707f26a727a29972b60469630ae10d579c
-# good: [b00f7244f01b8a9d205944929f58b99732541f44] Merge branch 'perf/core'
-git bisect good b00f7244f01b8a9d205944929f58b99732541f44
-# bad: [8019ad13ef7f64be44d4f892af9c840179009254] futex: Fix inode life-time issue
-git bisect bad 8019ad13ef7f64be44d4f892af9c840179009254
-# first bad commit: [8019ad13ef7f64be44d4f892af9c840179009254] futex: Fix inode life-time issue
+Dejin Zheng (2):
+  net: stmmac: use readl_poll_timeout() function in init_systime()
+  net: stmmac: use readl_poll_timeout() function in dwmac4_dma_reset()
 
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c   | 14 ++++++--------
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  | 14 ++++++--------
+ 2 files changed, 12 insertions(+), 16 deletions(-)
 
-git bisect start
-# good: [2c523b344dfa65a3738e7039832044aa133c75fb] Linux 5.6-rc5
-git bisect good 2c523b344dfa65a3738e7039832044aa133c75fb
-# bad: [2e602db729948ce577bf07e2b113f2aa806b62c7] Add linux-next specific files for 20200313
-git bisect bad 2e602db729948ce577bf07e2b113f2aa806b62c7
-# good: [acfda12b3a9b7b8d8cb4ff5f6ff0e48f688e254c] Merge remote-tracking branch 'spi-nor/spi-nor/next'
-git bisect good acfda12b3a9b7b8d8cb4ff5f6ff0e48f688e254c
-# good: [b38d0a2fd9c0bdd99492655295d0972ea549dca6] Merge remote-tracking branch 'devicetree/for-next'
-git bisect good b38d0a2fd9c0bdd99492655295d0972ea549dca6
-# bad: [308033e51d5c167ded64799982ab042ee1cdd7e5] Merge remote-tracking branch 'thunderbolt/next'
-git bisect bad 308033e51d5c167ded64799982ab042ee1cdd7e5
-# bad: [436b37da2c4b71ce22d915355291a2fe9bf71abd] Merge remote-tracking branch 'irqchip/irq/irqchip-next'
-git bisect bad 436b37da2c4b71ce22d915355291a2fe9bf71abd
-# bad: [b8aaa6b4a71eaa1161ae3a8e67e7c48dbdd131d5] Merge branch 'efi/urgent'
-git bisect bad b8aaa6b4a71eaa1161ae3a8e67e7c48dbdd131d5
-# good: [c99bbc21e58b91ac670c95a51639cc35f364ce7a] Merge branch 'sched/core'
-git bisect good c99bbc21e58b91ac670c95a51639cc35f364ce7a
-# bad: [1949ed1e393b5740b295f548ce66e2eeae3e76f7] Merge branch 'locking/urgent'
-git bisect bad 1949ed1e393b5740b295f548ce66e2eeae3e76f7
-# good: [836196beb377e59e54ec9e04f7402076ef7a8bd8] perf/core: Add per perf_cpu_context min_heap storage
-git bisect good 836196beb377e59e54ec9e04f7402076ef7a8bd8
-# good: [798048f85093901f475d25b2ac8d9ea1bc6d471a] Merge tag 'perf-urgent-for-mingo-5.6-20200306' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
-git bisect good 798048f85093901f475d25b2ac8d9ea1bc6d471a
-# good: [edd5d987f561b657c46383b0a778b99d51a76e4b] Merge branch 'ras/core'
-git bisect good edd5d987f561b657c46383b0a778b99d51a76e4b
-# good: [95ed6c707f26a727a29972b60469630ae10d579c] perf/cgroup: Order events in RB tree by cgroup id
-git bisect good 95ed6c707f26a727a29972b60469630ae10d579c
-# good: [b00f7244f01b8a9d205944929f58b99732541f44] Merge branch 'perf/core'
-git bisect good b00f7244f01b8a9d205944929f58b99732541f44
-# bad: [8019ad13ef7f64be44d4f892af9c840179009254] futex: Fix inode life-time issue
-git bisect bad 8019ad13ef7f64be44d4f892af9c840179009254
-# first bad commit: [8019ad13ef7f64be44d4f892af9c840179009254] futex: Fix inode life-time issue
+-- 
+2.25.0
 
-Since the two bisect lead to the same commit, I think it should be right one even if I dont find anything related to my problem.
-But reverting this patch is impossible, so I cannot test to try without it.
-
-Regards
