@@ -2,105 +2,150 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEABC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72829C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF827206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4568A206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584267222;
-	bh=gwrJ6sYrbxhdQYlWtybDyVw2aNJ2RBxviyhLDiHE2Q8=;
+	s=default; t=1584267675;
+	bh=qSrdTdk+Bozzx6kRvjzqGnSnWYLTir83lwA0ikq8NP8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=R3aooWxJFWad2oH5RE9MfcHmABTvfKOjQA4snEwwG+8bda3bnm0PRdtHSP/Fj1hUV
-	 3RM5IAp3F3D+nACSpc1ft7s3hX0tcIu69ytLmLLNhNX1boW72SSdalGjQALBgHq5L3
-	 DhnFBww0sDivauYhv/kxSMZlR6lG6/GS4WdBA1CM=
+	b=jKPKOPJ24Q60saCuWUdhMCRTe2f9Gs1AdgN0WyBXzvQop34ByPUCmkB+scR5QP1ci
+	 clT1qwjTz3NP+dN9lWu4JhVnEA/kBKMA524ee9vQ2x12q++49g9WztJQ8wB2B2Cx1B
+	 RA1ihkUsjx/hKQUzpMLdKmJ+QXBVWhCYlSIcCJOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgCOKNl (ORCPT
+        id S1728249AbgCOKVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47630 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 06:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgCOKNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:13:41 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1728141AbgCOKVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 06:21:13 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D865220575;
-        Sun, 15 Mar 2020 10:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ACB720578;
+        Sun, 15 Mar 2020 10:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584267221;
-        bh=gwrJ6sYrbxhdQYlWtybDyVw2aNJ2RBxviyhLDiHE2Q8=;
+        s=default; t=1584267672;
+        bh=qSrdTdk+Bozzx6kRvjzqGnSnWYLTir83lwA0ikq8NP8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=r533RQNGnq5xSHcTxObw+9A8llarsP+7Q97TxaaPxjxkkPkxrFWt81iWLDpQpXfT5
-         ufTayVCgMf/T2545wPrz3CSlPXKLRk9DrRelhD5PcBqcwpfognUg8VJkmLdZL6J6F3
-         BuUwMgcOjVoWo7o0EXcdCPkZXRAjGd6ue29Z4YSI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jDQH4-00Cqr9-Qt; Sun, 15 Mar 2020 10:13:38 +0000
+        b=KKGydK0cx0rTn8tjYeYi2WvlhSlF54CgzfR17XqNMjbHbZOYRmFKMLCw6vDQzPpPB
+         ElCG+Qo7LqS7Aek/8dBcIBiAb/Mr/fjjPBkMxTUGfCvj+5PsvebTKRH5orPr4jwEu1
+         qmDZ74IV1bi+WwHdy3mJdiNNVBKdyDgiaj+2tkqg=
+Date:   Sun, 15 Mar 2020 10:21:07 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: mfd: add document bindings for
+ mp2629
+Message-ID: <20200315102107.5c174611@archlinux>
+In-Reply-To: <20200315000013.4440-2-sravanhome@gmail.com>
+References: <20200315000013.4440-1-sravanhome@gmail.com>
+        <20200315000013.4440-2-sravanhome@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Sun, 15 Mar 2020 10:13:38 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Salter <msalter@redhat.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Tim Harvey <tharvey@gateworks.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] irqchip fixes for 5.6, take #2
-In-Reply-To: <20200315084846.h222n5pf4jvpojec@wunner.de>
-References: <20200314103000.2413-1-maz@kernel.org>
- <20200315084846.h222n5pf4jvpojec@wunner.de>
-Message-ID: <76dcc2d8532f8e3a87bf03469b9c2c19@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: lukas@wunner.de, tglx@linutronix.de, catalin.marinas@arm.com, msalter@redhat.com, rrichter@marvell.com, tharvey@gateworks.com, jason@lakedaemon.net, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lukas,
+On Sun, 15 Mar 2020 01:00:09 +0100
+Saravanan Sekar <sravanhome@gmail.com> wrote:
 
-On 2020-03-15 08:48, Lukas Wunner wrote:
-> On Sat, Mar 14, 2020 at 10:30:00AM +0000, Marc Zyngier wrote:
->> This is hopefully the last irqchip update for 5.6. This time, a single
->> patch working around a hardware issue on the Cavium ThunderX and its
->> derivatives.
+> Add device tree binding information for mp2629 mfd driver.
 > 
-> Hm, I was hoping to see the BCM2835 irqchip fix in this pull:
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+Trivial inline.
+
+> ---
+>  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
 > 
-> https://lore.kernel.org/lkml/f97868ba4e9b86ddad71f44ec9d8b3b7d8daa1ea.1582618537.git.lukas@wunner.de/
-> 
-> That patch fixes a pretty grave issue so I'd be really grateful
-> if anyone could pick it up (or provide feedback why it can't be
-> picked up just yet).
+> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> new file mode 100644
+> index 000000000000..f5b8c73123c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
+> +
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +description: |
+> +  MP2629 is an PMIC providing battery charging and power supply for smartphones,
+> +  Wireless camera and portable devices. Chip is contrlled over I2C.
 
-Whilst I don't dispute that this patch addresses a serious issue,
-it is in no way an urgent fix -- the issue is already 7.5 year old,
-so a couple of week delay isn't going to change the world. Also,
-the system does work without this fix, so I'm quite confident
-leaving it for 5.7.
+wireless (odd capitalization)
 
-But thanks for this email anyway, as it reminded me that although
-I had picked that patch for 5.7, I didn't apply it just yet. This
-is now fixed, and the patch should be picked up by -next shortly.
+> +
+> +  The MFD device handles battery charger controller and ADC IIO device for
+> +  battery, system voltage
+> +
+> +properties:
+> +  compatible:
+> +    const: mps,mp2629
+> +
+> +  reg:
+> +    description:
+> +      I2C device address.
 
-Thanks,
+Could drop the description. It's a standard element for an i2c device.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the IRQ number, the second cell is the trigger type.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/input/linux-event-codes.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@4b {
+> +            compatible = "mps,mp2629";
+> +            reg = <0x4b>;
+> +
+> +            interrupt-controller;
+> +            interrupt-parent = <&gpio2>;
+> +            #interrupt-cells = <2>;
+> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
+
