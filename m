@@ -2,128 +2,143 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3D8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D33C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5464B20637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gwLvACi/"
+	by mail.kernel.org (Postfix) with ESMTP id 3C1D9206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584295164;
+	bh=ooTtotCxj4FN51+o+o5KvI92R+015dWBAK0qfGoPVHQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=DLseC7+alZVtrLMiaKF7fnmc/JTS3Oj+zhKYDFDjLscO+Vw8M9bn9ldjP1+bfQdn9
+	 z5S3DP/zWVf1SgnBZmJLMeSeKaEkmmsm9gl5R+o5qeP5vzXJtGKyzvr1kysYkwuzmr
+	 uA00ryhqo/He95vGR4kXOxpGE6L+MSayV4LmfHfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgCORxs (ORCPT
+        id S1729021AbgCOR7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 13:53:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53268 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728985AbgCORxr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 13:53:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584294826;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4sCAV6YPEIN4XPv5c8gxRua4pipL3WppoMnmoXzPK/Y=;
-        b=gwLvACi/FapZ6/fjGzEYJhYtbAOvrPoqlx/QgHrk9cGpHR6SUrgjpe8DAWgAVKj0zRNRcM
-        f33m3+DIQocwGRoPbsLTJSkc1gCr0HH7mrglrvooWHnqi0obKWwiJu7NuaWfbS6KlfLFD2
-        aS7+xvWTv5goFLEicMZtdq3yLYh6ZjE=
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-9PBbbQEiP66ti7Jz7OlvVw-1; Sun, 15 Mar 2020 13:53:44 -0400
-X-MC-Unique: 9PBbbQEiP66ti7Jz7OlvVw-1
-Received: by mail-io1-f71.google.com with SMTP id d16so10154775iop.17
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 10:53:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4sCAV6YPEIN4XPv5c8gxRua4pipL3WppoMnmoXzPK/Y=;
-        b=opmVRA4susqzl5IA+npZAFPUQBsXbQnTRsAlDcpjT9lQeWV2/ONqif7TLOuU+XD6dx
-         3AUH9XWoV+VtCnyY3B0DfcCnh00lVZZHmERKod7fV3P4AY4flGLjhT7fODr9+LR9IGpD
-         cQ9+I4iNb1VBgFkP6Bp5SXu0hYPTzgoNJbUwp+ypGkKzp2dYAX+IFTa38cb8gk/ifZ0c
-         bWHinvA5wtIW1BUl52o8QaQHuz9PYzyyq5Bt6vDqOPt3N2k02IF4C0QkLt6NjWPyxCcD
-         Uhoxpecgpw8pePRIFjOt+QBCJdJhTSbbh1ZGVfcZnB7Bf8Wljh78yLGGRdAkR1kGFger
-         4JYw==
-X-Gm-Message-State: ANhLgQ0jZ+qqLE5lDuajy2yBeZJdgftPYXhm88ffcXwTwzCRvURPphOy
-        uR+NMYVmUQ14dGj1sGPEXRZGglF8O2EIsfxyLN2ByQpUAMbn+9HzdB2f+BbVvDIFVInVqHptacp
-        foPF8jyfHf6/G5nr0y9nUk+RYeDG56Xs+H4qXo+Tp
-X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr24142751ils.86.1584294824283;
-        Sun, 15 Mar 2020 10:53:44 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vv5rfYob+x+SH8BDGDVnTOHAxWdTolLX/Uz7HHyi5g6stxSZI9yXG9waJeMX3XmVStg/i9g2MSrXdDSJkvVEns=
-X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr24142734ils.86.1584294824017;
- Sun, 15 Mar 2020 10:53:44 -0700 (PDT)
+        Sun, 15 Mar 2020 13:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729001AbgCOR7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 13:59:22 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4A8B20658;
+        Sun, 15 Mar 2020 17:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584295161;
+        bh=ooTtotCxj4FN51+o+o5KvI92R+015dWBAK0qfGoPVHQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=GopWpZgPHmRn4mrjcnQ7gPbZ4szw44CQmgy2sEjgpcaRbaeeMU42Ac8PjZhRfQEIa
+         02A4YCtsL/kgRPzmnP6HAMD0ttXJqWjPDfRSWrrQjsP0MdLDuZOULEp4kkGa0T+1B6
+         bMntSkij3K+OtrzPag5fO9lP43/l/PPeYRS/pfkI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A6F5635226D7; Sun, 15 Mar 2020 10:59:21 -0700 (PDT)
+Date:   Sun, 15 Mar 2020 10:59:21 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        rcu <rcu@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@fb.com>, Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>
+Subject: Re: [PATCH RFC tip/core/rcu 0/16] Prototype RCU usable from idle,
+ exception, offline
+Message-ID: <20200315175921.GT3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
+ <20200313144145.GA31604@lenoir>
+ <20200313154243.GU3199@paulmck-ThinkPad-P72>
+ <2062731308.28584.1584294305768.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com> <20200315012523.GC208715@linux.intel.com>
-In-Reply-To: <20200315012523.GC208715@linux.intel.com>
-From:   Nathaniel McCallum <npmccallum@redhat.com>
-Date:   Sun, 15 Mar 2020 13:53:33 -0400
-Message-ID: <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2062731308.28584.1584294305768.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 9:25 PM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Wed, Mar 11, 2020 at 01:30:07PM -0400, Nathaniel McCallum wrote:
-> > Currently, the selftest has a wrapper around
-> > __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
-> > registers (CSRs), though it uses none of them. Then it calls this
-> > function which uses %rbx but preserves none of the CSRs. Then it jumps
-> > into an enclave which zeroes all these registers before returning.
-> > Thus:
-> >
-> >   1. wrapper saves all CSRs
-> >   2. wrapper repositions stack arguments
-> >   3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
-> >   4. selftest zeros all CSRs
-> >   5. wrapper loads all CSRs
-> >
-> > I'd like to propose instead that the enclave be responsible for saving
-> > and restoring CSRs. So instead of the above we have:
-> >   1. __vdso_sgx_enter_enclave() saves %rbx
-> >   2. enclave saves CSRs
-> >   3. enclave loads CSRs
-> >   4. __vdso_sgx_enter_enclave() loads %rbx
-> >
-> > I know that lots of other stuff happens during enclave transitions,
-> > but at the very least we could reduce the number of instructions
-> > through this critical path.
->
-> What Jethro said and also that it is a good general principle to cut
-> down the semantics of any vdso as minimal as possible.
->
-> I.e. even if saving RBX would make somehow sense it *can* be left
-> out without loss in terms of what can be done with the vDSO.
+On Sun, Mar 15, 2020 at 01:45:05PM -0400, Mathieu Desnoyers wrote:
+> ----- On Mar 13, 2020, at 11:42 AM, paulmck paulmck@kernel.org wrote:
+> 
+> > On Fri, Mar 13, 2020 at 03:41:46PM +0100, Frederic Weisbecker wrote:
+> >> On Thu, Mar 12, 2020 at 11:16:18AM -0700, Paul E. McKenney wrote:
+> >> > Hello!
+> >> > 
+> >> > This series provides two variants of Tasks RCU, a rude variant inspired
+> >> > by Steven Rostedt's use of schedule_on_each_cpu(), and a tracing variant
+> >> > requested by the BPF folks and perhaps also of use for other tracing
+> >> > use cases.
+> >> > 
+> >> > The tracing variant has explicit read-side markers to permit finite grace
+> >> > periods even given in-kernel loops in PREEMPT=n builds It also protects
+> >> > code in the idle loop, on exception entry/exit paths, and on the various
+> >> > CPU-hotplug online/offline code paths, thus having protection properties
+> >> > similar to SRCU.  However, unlike SRCU, this variant avoids expensive
+> >> > instructions in the read-side primitives, thus having read-side overhead
+> >> > similar to that of preemptible RCU.
+> >> > 
+> >> > There are of course downsides.  The grace-period code can send IPIs to
+> >> > CPUs, even when those CPUs are in the idle loop or in nohz_full userspace.
+> >> > It is necessary to scan the full tasklist, much as for Tasks RCU.  There
+> >> > is a single callback queue guarded by a single lock, again, much as for
+> >> > Tasks RCU.  If needed, these downsides can be at least partially remedied
+> >> 
+> >> So what we trade to fix the issues we are having with tracing against extended
+> >> grace periods, we lose in CPU isolation. That worries me a bit as tracing can
+> >> be thoroughly used with nohz_full and CPU isolation.
+> > 
+> > First, disturbing nohz_full CPUs can be avoided by the sysadm simply
+> > refusing to remove tracepoints while sensitive applications are running
+> > on nohz_full CPUs.
+> 
+> I doubt this approach will survive real-life.
 
-Please read the rest of the thread. Sean and I have hammered out some
-sensible and effective changes.
+Nothing survives real life, at least not indefinitely.  ;-)
 
+> > Second, for non-CPU-bound real-time programs with mostly-idle CPUs,
+> > I should be able to decrease the likelihood of sending IPIs pretty much
+> > to zero.
+> > 
+> > Or am I missing something here?
+> 
+> I would recommend considering the following alternative for this tracing-rcu
+> flavor:
+> 
+> - For all CPUs which are not nohz_full:
+>   - Implement fast RCU read-side which only requires compiler barriers,
+>   - Use IPIs to each of those CPUs when doing a grace period.
+> 
+> - For all nohz_full CPUS:
+>   - Dynamically detect CPUs which are nohz_full,
+>   - Implement slower RCU read-side with memory barriers,
+>   - No need to issue any IPI to those CPUs when doing the grace period.
+> 
+> This should cover all use-cases: staying fast for the common case, without
+> disturbing RT workloads.
+> 
+> Thoughts ?
+
+I will certainly add this to my list of potential solutions, and thank
+you for pointing me at it!
+
+							Thanx, Paul
