@@ -2,130 +2,138 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D83EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E805AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B183206B1
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA74206EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584264539;
+	bh=a3TDzGbEzkSLeXinw82ULYy0g3/qKx/I5ol4xjHP/jo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hEj7zL82aKXdZ+u+lD0IZQJmIy2e1T8Gxz1GTF+5YUs7Frui9kCuTl3p1llKOSxXT
+	 cnLbROZ0W2lrmiU/05RQT22KXe21H/RkwzgAfxWp77Jljs8fKuQErYjWLL+DqZP8ag
+	 8Yi+SxaupphfjlihXwPGry2mxLxilwg0dLNwNFxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgCOJ2u (ORCPT
+        id S1728178AbgCOJ26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:28:50 -0400
-Received: from m17617.mail.qiye.163.com ([59.111.176.17]:6972 "EHLO
-        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgCOJ2u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:28:50 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 1532B26143D;
-        Sun, 15 Mar 2020 17:28:45 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Wang Wenhu <wenhu.wang@vivo.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>
-Cc:     kernel@vivo.com
-Subject: [PATCH 1/2] doc: zh_CN: index files in filesystems subdirectory
-Date:   Sun, 15 Mar 2020 02:27:59 -0700
-Message-Id: <20200315092810.87008-2-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200315092810.87008-1-wenhu.wang@vivo.com>
-References: <20200315092810.87008-1-wenhu.wang@vivo.com>
+        Sun, 15 Mar 2020 05:28:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726521AbgCOJ26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 05:28:58 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 201A6206B1;
+        Sun, 15 Mar 2020 09:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584264537;
+        bh=a3TDzGbEzkSLeXinw82ULYy0g3/qKx/I5ol4xjHP/jo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FfBA9KivPcq2i/xkl3X4fU7JAbz8h0yxx+oZqKHJQ5x7jhklsgxMuE/2WvFgDiDBF
+         o7pdSPWOsANpZFUiHJvKEQwTSbzIyjb1W1C4fGD8h5sY3pHDt+HBI+v9WXsl+WrQ9x
+         ZyIDeRFLkXWNBlDSNIV+zjywyMF69vj0Bi3mF12w=
+Date:   Sun, 15 Mar 2020 09:28:52 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Rob Herring <robh@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] dt-bindings: input: Add docs for ADC driven
+ joystick.
+Message-ID: <20200315092852.2d2ecebb@archlinux>
+In-Reply-To: <bb188a58f29dfedcf56bb420f07a6813@artur-rojek.eu>
+References: <20200307211412.44148-1-contact@artur-rojek.eu>
+        <20200307211412.44148-4-contact@artur-rojek.eu>
+        <20200309203814.GA29255@bogus>
+        <bb188a58f29dfedcf56bb420f07a6813@artur-rojek.eu>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVDTk1CQkJDTE9KSk9CQllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PSI6MDo5MDg#ODcyLEk0KjkL
-        VjJPC0JVSlVKTkNPSU1PTklOQ0tKVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQU9IS0M3Bg++
-X-HM-Tid: 0a70dd8637729375kuws1532b26143d
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add filesystems subdirectory into the table of Contents for zh_CN,
-all translations residing on it would be indexed conveniently.
+On Mon, 09 Mar 2020 22:41:00 +0100
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
----
- Documentation/filesystems/index.rst           |  2 ++
- .../translations/zh_CN/filesystems/index.rst  | 27 +++++++++++++++++++
- Documentation/translations/zh_CN/index.rst    |  1 +
- 3 files changed, 30 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/filesystems/index.rst
+> Hi Rob,
+> 
+> On 2020-03-09 21:38, Rob Herring wrote:
+> > On Sat,  7 Mar 2020 22:14:11 +0100, Artur Rojek wrote:  
+> >> Add documentation for the adc-joystick driver, used to provide support
+> >> for joysticks connected over ADC.
+> >> 
+> >> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> >> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> >> ---
+> >> 
+> >>  Changes:
+> >> 
+> >>  v2: - Add `reg` property to axis subnode in order to enumerate the 
+> >> axes,
+> >>      - rename `linux,abs-code` property to `linux,code`,
+> >>      - drop `linux,` prefix from the remaining properties of axis 
+> >> subnode
+> >> 
+> >>  v3: no change
+> >> 
+> >>  v4: - remove "bindings" from the unique identifier string,
+> >>      - replace `|` with `>` for all description properties,
+> >>      - specify the number of items for `io-channels`,
+> >>      - correct the regex pattern of `axis` property,
+> >>      - specify the value range of `reg` property for each axis,
+> >>      - put `abs-range` properties under `allOf`
+> >> 
+> >>  .../bindings/input/adc-joystick.yaml          | 121 
+> >> ++++++++++++++++++
+> >>  1 file changed, 121 insertions(+)
+> >>  create mode 100644 
+> >> Documentation/devicetree/bindings/input/adc-joystick.yaml
+> >>   
+> > 
+> > My bot found errors running 'make dt_binding_check' on your patch:  
+> Like with the previous versions of this patch set, the DTS example 
+> requires that
+> patch [2/5] is applied first. When that is done, the DT check does 
+> succeed here.
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 386eaad008b2..ab47d5b1f092 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -1,3 +1,5 @@
-+.. _filesystems_index:
-+
- ===============================
- Filesystems in the Linux kernel
- ===============================
-diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
-new file mode 100644
-index 000000000000..a47dd86d6196
---- /dev/null
-+++ b/Documentation/translations/zh_CN/filesystems/index.rst
-@@ -0,0 +1,27 @@
-+.. raw:: latex
-+
-+	\renewcommand\thesection*
-+	\renewcommand\thesubsection*
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: :ref:`Documentation/filesystems/index.rst <filesystems_index>`
-+:Translator: Wang Wenhu <wenhu.wang@vivo.com>
-+
-+.. _cn_filesystems_index:
-+
-+========================
-+Linux Kernel中的文件系统
-+========================
-+
-+这份正在开发的手册或许在未来某个辉煌的日子里以易懂的形式将Linux虚拟\
-+文件系统（VFS）层以及基于其上的各种文件系统如何工作呈现给大家。当前\
-+可以看到下面的内容。
-+
-+文件系统
-+========
-+
-+文件系统实现文档。
-+
-+.. toctree::
-+   :maxdepth: 2
-diff --git a/Documentation/translations/zh_CN/index.rst b/Documentation/translations/zh_CN/index.rst
-index d3165535ec9e..76850a5dd982 100644
---- a/Documentation/translations/zh_CN/index.rst
-+++ b/Documentation/translations/zh_CN/index.rst
-@@ -14,6 +14,7 @@
-    :maxdepth: 2
- 
-    process/index
-+   filesystems/index
- 
- 目录和表格
- ----------
--- 
-2.17.1
+Fair enough as far as I am concerned.   There were enough comments
+from Rob in the previous version though that I'd definitely like
+him to take another look before I pick this series up.
+
+Thanks,
+
+Jonathan
+
+> 
+> Regards,
+> Artur
+> > 
+> > Error:
+> > Documentation/devicetree/bindings/input/adc-joystick.example.dts:22.31-32
+> > syntax error
+> > FATAL ERROR: Unable to parse input tree
+> > scripts/Makefile.lib:311: recipe for target
+> > 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml'
+> > failed
+> > make[1]: ***
+> > [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml]
+> > Error 1
+> > Makefile:1262: recipe for target 'dt_binding_check' failed
+> > make: *** [dt_binding_check] Error 2
+> > 
+> > See https://patchwork.ozlabs.org/patch/1250951
+> > Please check and re-submit.  
 
