@@ -2,137 +2,88 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB1EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9231CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0365206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:01:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="b5O729U+"
+	by mail.kernel.org (Postfix) with ESMTP id 7341B20739
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbgCOKBW (ORCPT
+        id S1728232AbgCOKDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:01:22 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40008 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbgCOKBV (ORCPT
+        Sun, 15 Mar 2020 06:03:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49936 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728197AbgCOKDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:01:21 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j17so11441833lfe.7
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 03:01:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=71ORSjZ3Dn1AeJ5HCzovvghC6s/uKrTIuOwAzA8cnlc=;
-        b=b5O729U+kA6wNZMWkRMZ2f+9gLV2ekOaJTecFIJtCJuzYBWqPUm8CzUVYcJgBisJWT
-         GLuL7jk9X1V0nyATtENYx1uBjEs+rCulddzR0yw0WgnGPQjAABnlVb1uNPyCJLkl1iok
-         vMDJWuaIuZEsGdABO+3ZXiUIs8oCGiqETweY2dNRwfDh9OMBi06mpi19FPeUeyQYg5TJ
-         ZuQiARjLsFNIP3icVlxCX9Tyb63CL0JW9/XUZr95bpntxgXQZvWniZB/6a9QKtOZAWh2
-         5rUPRevjrLAiCDo3iiqmCdYyN1SAcz4M/58X8ub1ba3YqijNeICS9FmqqSczcfipFrZB
-         E4SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=71ORSjZ3Dn1AeJ5HCzovvghC6s/uKrTIuOwAzA8cnlc=;
-        b=pDsFY6P1t76eAvQZYuwjjdsnWQBRv/SBHWvtKEFs9YxoX/RdqvlfiWL+Tfpm+/DSX+
-         ckAzD+TW4b4PDKd6ATT+QpKV8cQAIcygQ48wHhSTDJuxC+qK4rIOXOlNefjEC7rXnQ7y
-         Ixmvhnvl6HZqNqAeLpmE8W5sB5FpZXm/nFRTFwz/QRaJMvmP/1LBKafjg/WKKbyBehyh
-         3NTK2htEdCouoTfB5SE+It44MggkwpqYaJXStmeB8cwcr0y7pWS4lmTjyEi5iHvgiyOR
-         gkDiwIOsGCKrnX9XpxFi0oqGC7qyzikunA/g29YfAMMjqg2BCFuSfx1dBoGAcTfLcfgX
-         VrbA==
-X-Gm-Message-State: ANhLgQ3b/eKjNJzE+iMqPVnD+8GNLtVacFYjzPXrYgCxfoVJQ/IEgF0q
-        vkTDIo5rx4fzcEzdl7RdyrZZXAVw/46MMw==
-X-Google-Smtp-Source: ADFU+vuZsCqDScD5JeOlek4PJ1cGVfZOBeUno5n2lRms8OCKw1HTXMMiaSeqFlVPKJo2nj/7Ihtp3A==
-X-Received: by 2002:a19:ca46:: with SMTP id h6mr1688652lfj.108.1584266477579;
-        Sun, 15 Mar 2020 03:01:17 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:86a:1c7c:64a6:f77:4be8:4439? ([2a00:1fa0:86a:1c7c:64a6:f77:4be8:4439])
-        by smtp.gmail.com with ESMTPSA id t15sm3353585lfl.79.2020.03.15.03.01.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Mar 2020 03:01:16 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] drivers: provide
- devm_platform_ioremap_and_get_resource()
-To:     Dejin Zheng <zhengdejin5@gmail.com>, gregkh@linuxfoundation.org,
-        rafael@kernel.org, hminas@synopsys.com, mathias.nyman@intel.com,
-        bgolaszewski@baylibre.com, arnd@arndb.de, geert@linux-m68k.org,
-        mchehab+samsung@kernel.org, treding@nvidia.com, tglx@linutronix.de,
-        suzuki.poulose@arm.com, hdegoede@redhat.com,
-        linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200314052638.6008-1-zhengdejin5@gmail.com>
- <20200314052638.6008-2-zhengdejin5@gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <a7cbeabf-a7c3-b960-7aca-e124e98f9c7f@cogentembedded.com>
-Date:   Sun, 15 Mar 2020 13:01:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 15 Mar 2020 06:03:04 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jDQ6Y-0007T9-0n; Sun, 15 Mar 2020 11:02:46 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 09DCD101305; Sun, 15 Mar 2020 11:02:45 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>
+Subject: Re: [PATCH v3 00/26] Introduce common headers for vDSO
+In-Reply-To: <693b6a61-b5f6-2744-1579-b356e6510547@gmail.com>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com> <693b6a61-b5f6-2744-1579-b356e6510547@gmail.com>
+Date:   Sun, 15 Mar 2020 11:02:45 +0100
+Message-ID: <87fteadjga.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200314052638.6008-2-zhengdejin5@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Dmitry Safonov <0x7f454c46@gmail.com> writes:
+> I like the idea, but I'm wondering if we could have less-grained
+> headers? Like, AFAICS the patches create headers < 10 lines and even
+> mostly < 5 lines.. I like that header's names perfectly describe what's
+> inside, but I'm not sure how effective to have a lot of extra-small
+> includes.
 
-On 14.03.2020 8:26, Dejin Zheng wrote:
+If that goes all into a big header then the headers from where the bits and
+pieces are split out would have all to include this big header which
+might result in other include dependency nightmares.
 
-> Since commit "drivers: provide devm_platform_ioremap_resource()",
-> It was wrap platform_get_resource() and devm_ioremap_resource() as
-   ^^ it
+>>  create mode 100644 include/vdso/time.h
+>>  create mode 100644 include/vdso/time32.h
+>>  create mode 100644 include/vdso/time64.h
+>
+> Maybe we could made them less-grained?
+>
+> I.e, time32 + time64 + time.h => time.h?
 
-> single helper devm_platform_ioremap_resource(). but now, many drivers
-> still used platform_get_resource() and devm_ioremap_resource()
-> together in the kernel tree. The reason can not be replaced is they
-> still need use the resource variables obtained by platform_get_resource().
-> so provide this helper.
+Then you end up with ifdeffery. I like the clear separation.
 
-    Not really sure that's worth the effort...
+Thanks,
 
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
->   drivers/base/platform.c         | 18 ++++++++++++++++++
->   include/linux/platform_device.h |  3 +++
->   2 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 7fa654f1288b..b3e2409effae 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -62,6 +62,24 @@ struct resource *platform_get_resource(struct platform_device *dev,
->   EXPORT_SYMBOL_GPL(platform_get_resource);
->   
->   #ifdef CONFIG_HAS_IOMEM
-> +/**
-> + * devm_platform_ioremap_and_get_resource - call devm_ioremap_resource() for a
-> + *					    platform device and get resource
-> + *
-> + * @pdev: platform device to use both for memory resource lookup as well as
-> + *        resource management
-> + * @index: resource index
-> + * @res: get the resource
-> + */
-> +void __iomem *
-> +devm_platform_ioremap_and_get_resource(struct platform_device *pdev,
-> +				unsigned int index, struct resource **res)
-> +{
-> +	*res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-> +	return devm_ioremap_resource(&pdev->dev, *res);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_platform_ioremap_and_get_resource);
-
-    That looks more like devm_platform_get_and_ioremap_resource().
-
-[...]
-
-MBR, Sergei
+        tglx
