@@ -2,140 +2,113 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE0BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C35C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E218F20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BBF206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 18:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cyER+arR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dAcfOEZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgCOSTJ (ORCPT
+        id S1728470AbgCOSZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 14:19:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33351 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbgCOSS6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 14:18:58 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f13so16080717ljp.0;
-        Sun, 15 Mar 2020 11:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CgKkTnOMX6ncghHWriOangneW0Lj1MTz7QUFlB/TBlk=;
-        b=cyER+arRUN4tPHswUJyWF1Y0W1kj2Rw3H9LSCib5RMlxr17vX6RcfSoxJSGAxqBtba
-         0KFI8YI3/6nf++K4bHegZ9MpwZnxCTBJJmxDWOHyX7LEmCD37SKE3lX9/YTI1B3Blvtv
-         ibLL6ye2rk+vZNKAMQ2yEhaU4vqWgwtM9rQpQH06vsOs+3LfiJ5Kl4QisfK1upCMTCXR
-         fmQ9Lg0LE7H4g/J2I+lUtBoFTfheMLy9SCcbzNqMuP4NdFSx2NcqzLzks4IOHT0zU4AM
-         bEPR2QWgdo9c42FETz6v0S1k3GHXBDeVSz6bXTQ4/AQMjipinSWmBCo+6vx8H9VRiiTU
-         apOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CgKkTnOMX6ncghHWriOangneW0Lj1MTz7QUFlB/TBlk=;
-        b=hV2sZQ4sxHGzvWrovml7J7L/cXsxwAt2OFToi9+aS4mRANH6+/rU4cbAnzXscdkrl0
-         Cc1rZBXp6L+Tvx2oQKgOyp4KGkI7cBe8sVO8EDkAVfDPges0Kw9tvOLBJ6V4J7zGJjoo
-         0a8KZfGazrVet8bNIwj1okhSMaoDr3wKNltd8fQ3WfhUVASANc50MEliTDaI82taUadn
-         mV1OLnwOz1aye9Xfj0JgOaS2oXuPLMNeP0ERACDTulZ9aRiDCiWoejYPpYi6gWjsr7O7
-         Fp33c71vTOlJy86OC/Rt03akkiIp7ZhOwBQ6N88fKVDTClTULBZXIxK8CsnLZb33LssL
-         hhbg==
-X-Gm-Message-State: ANhLgQ2+3l7b7h25c9FW6J4Z54sfMRZKgyhtEB/Fp+a9YBujLpY/1K6D
-        bCLaGRQFypQadtSOJVTRZxIVLss+cEWjJw==
-X-Google-Smtp-Source: ADFU+vvQJd7IaN87n6kxG1TlY5n4Bc1aAhA1WrVKj4gLfyh8vnDOdScPTXmeuGwVRSwFA070TSGXew==
-X-Received: by 2002:a2e:9017:: with SMTP id h23mr12247365ljg.144.1584296334835;
-        Sun, 15 Mar 2020 11:18:54 -0700 (PDT)
-Received: from pc636.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id o15sm3040629ljj.55.2020.03.15.11.18.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 11:18:54 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     RCU <rcu@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [PATCH v1 6/6] mm/list_lru.c: remove kvfree_rcu_local() function
-Date:   Sun, 15 Mar 2020 19:18:40 +0100
-Message-Id: <20200315181840.6966-7-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200315181840.6966-1-urezki@gmail.com>
-References: <20200315181840.6966-1-urezki@gmail.com>
+        Sun, 15 Mar 2020 14:25:17 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:36936 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727399AbgCOSZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 14:25:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=powrQRe80aGxECCk+dtKXN3HLIybmgxMPcgaJHiSaLo=; b=dAcfOEZLeXaGsh5vQBzTzYpWwQ
+        QoBvIvwFJzEm7lg/gI+jxgbSj+tKI67zGiWkn2sB/cov0fXbMtF1TkZOn2UjLqKuMsIVoUZAgeqwq
+        l/ChR1erxzLionAxTCXDjevryHRoejIn+qRqTo7H8NmWNNkTO2OIFi0ilnDo6ULD+noQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jDXwe-0002FB-B9; Sun, 15 Mar 2020 19:25:04 +0100
+Date:   Sun, 15 Mar 2020 19:25:04 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, davem@davemloft.net,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next v2 1/2] net: stmmac: use readl_poll_timeout()
+ function in init_systime()
+Message-ID: <20200315182504.GA8524@lunn.ch>
+References: <20200315150301.32129-1-zhengdejin5@gmail.com>
+ <20200315150301.32129-2-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200315150301.32129-2-zhengdejin5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there is newly introduced kvfree_rcu() API,
-there is no need in queuing and using call_rcu()
-to kvfree() an object after the GP.
+On Sun, Mar 15, 2020 at 11:03:00PM +0800, Dejin Zheng wrote:
+> The init_systime() function use an open coded of readl_poll_timeout().
+> Replace the open coded handling with the proper function.
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+> v1 -> v2:
+> 	- no changed.
+> 
+>  .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+> index 020159622559..2a24e2a7db3b 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+> @@ -10,6 +10,7 @@
+>  *******************************************************************************/
+>  
+>  #include <linux/io.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/delay.h>
+>  #include "common.h"
+>  #include "stmmac_ptp.h"
+> @@ -53,8 +54,8 @@ static void config_sub_second_increment(void __iomem *ioaddr,
+>  
+>  static int init_systime(void __iomem *ioaddr, u32 sec, u32 nsec)
+>  {
+> -	int limit;
+>  	u32 value;
+> +	int err;
+>  
+>  	writel(sec, ioaddr + PTP_STSUR);
+>  	writel(nsec, ioaddr + PTP_STNSUR);
+> @@ -64,13 +65,10 @@ static int init_systime(void __iomem *ioaddr, u32 sec, u32 nsec)
+>  	writel(value, ioaddr + PTP_TCR);
+>  
+>  	/* wait for present system time initialize to complete */
+> -	limit = 10;
+> -	while (limit--) {
+> -		if (!(readl(ioaddr + PTP_TCR) & PTP_TCR_TSINIT))
+> -			break;
+> -		mdelay(10);
+> -	}
+> -	if (limit < 0)
+> +	err = readl_poll_timeout(ioaddr + PTP_TCR, value,
+> +				 !(value & PTP_TCR_TSINIT),
+> +				 10000, 100000);
+> +	if (err)
+>  		return -EBUSY;
 
-Remove kvfree_rcu_local() function and replace
-call_rcu() by new kvfree_rcu() API that does
-the same but in more efficient way.
+Hi Dejin
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- mm/list_lru.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+It is normal to just return whatever error code readl_poll_timeout()
+returned.
 
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 386424688f80..69becdb22408 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -12,6 +12,7 @@
- #include <linux/slab.h>
- #include <linux/mutex.h>
- #include <linux/memcontrol.h>
-+#include <linux/rcupdate.h>
- #include "slab.h"
- 
- #ifdef CONFIG_MEMCG_KMEM
-@@ -383,21 +384,13 @@ static void memcg_destroy_list_lru_node(struct list_lru_node *nlru)
- 	struct list_lru_memcg *memcg_lrus;
- 	/*
- 	 * This is called when shrinker has already been unregistered,
--	 * and nobody can use it. So, there is no need to use kvfree_rcu_local().
-+	 * and nobody can use it. So, there is no need to use kvfree_rcu().
- 	 */
- 	memcg_lrus = rcu_dereference_protected(nlru->memcg_lrus, true);
- 	__memcg_destroy_list_lru_node(memcg_lrus, 0, memcg_nr_cache_ids);
- 	kvfree(memcg_lrus);
- }
- 
--static void kvfree_rcu_local(struct rcu_head *head)
--{
--	struct list_lru_memcg *mlru;
--
--	mlru = container_of(head, struct list_lru_memcg, rcu);
--	kvfree(mlru);
--}
--
- static int memcg_update_list_lru_node(struct list_lru_node *nlru,
- 				      int old_size, int new_size)
- {
-@@ -429,7 +422,7 @@ static int memcg_update_list_lru_node(struct list_lru_node *nlru,
- 	rcu_assign_pointer(nlru->memcg_lrus, new);
- 	spin_unlock_irq(&nlru->lock);
- 
--	call_rcu(&old->rcu, kvfree_rcu_local);
-+	kvfree_rcu(old, rcu);
- 	return 0;
- }
- 
--- 
-2.20.1
-
+	Andrew
