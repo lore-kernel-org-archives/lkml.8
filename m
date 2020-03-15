@@ -2,83 +2,153 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56E1C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D70C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E33F206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162D02071B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 01:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="G5szt1P7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUwop040"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbgCOBya (ORCPT
+        id S1727697AbgCOByo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:54:30 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:36040 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbgCOBy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:54:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=NL3MJouei4eDxbtXys1XmSE5zsmrHAunj/d9XtHq32s=; b=G5szt1P7X8/ZbWY5RtsxzdhZQQ
-        FAgcpi+1hAXENYjjox6ZLVeHuUrmbkQiky5pSrHj7lZs3bFyKv0AceSFMBk833fGX1CPfVoh9mj49
-        psBPAjJDhJrAgfqjaAWG1m+7bFdjDfsETwSdUxnfe4MuZWSZ6NTPOh0bHe1gK2v+in0I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jDE8X-0002J5-M9; Sat, 14 Mar 2020 22:16:01 +0100
-Date:   Sat, 14 Mar 2020 22:16:01 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Madalin Bucur <madalin.bucur@oss.nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, shawnguo@kernel.org,
-        leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 1/3] net: fsl/fman: treat all RGMII modes in
- memac_adjust_link()
-Message-ID: <20200314211601.GA8622@lunn.ch>
-References: <1584101065-3482-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1584101065-3482-2-git-send-email-madalin.bucur@oss.nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584101065-3482-2-git-send-email-madalin.bucur@oss.nxp.com>
+        Sat, 14 Mar 2020 21:54:44 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38593 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727524AbgCOBym (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:54:42 -0400
+Received: by mail-lj1-f193.google.com with SMTP id w1so14776539ljh.5;
+        Sat, 14 Mar 2020 18:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=V1IoBnnxV2Y83h2tlBdWy/1+5bjdle9P7nqs3bJI3i8=;
+        b=JUwop040gLiKIAwr/wO4yQPmhewu6svjiqYk8A98SJb06eqViIfO5fo/GzugnsbG0J
+         hcuqQkAqB0A623J5OpNpk4YQKjePUYsW3l9fgrukoaCtR2K0rpRZvbYxZxkDc9SZX3cc
+         8Vq9kj5Df6Zl1vPVIit5jEDtsVLOOs6mAreaYvQUdVBCOg0ZZc2OorVyFyRM3KcBDZQg
+         nCd/9Tv8hMhEyqutPL9uxrQQ/Hj5Z5NR7KS5c24xwT5OaF73B7ukRGpUPE4bzDD9dXFn
+         sPacRjkorP3XjH9YxGkb7AeqrtX888jlHqQqCEVP+ODDdN9XzypxsEFhtkNS+1fzWIae
+         K5Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=V1IoBnnxV2Y83h2tlBdWy/1+5bjdle9P7nqs3bJI3i8=;
+        b=OOyzngNLD8P6cxSGDNuoG/pQJbuwrG6IJPDeU2jzaUvdkXz5pErX5XQ0y6yt34xXr2
+         GqbRT9NVNXriCZ53a9DwFwRfZIf6gXUg23QZyJz4/9YpRiWDhiROMUKqPy+wn0h4sA6t
+         0cSUPr787Osu/ym+JDsHkh1WLoIAUUV3thIep6ViWmtJivwtO7ahYHQoS6zRgKrgpR49
+         eAQccrv9KTSLWML+a14WN2gNE97sp0ovLfr+WEtPueuMldRX1tPMIJ4nDnBGTGuihxXQ
+         p8/mtFlAr2/bx6Gfu1Pnj4IEL2cta/0TlabYnqkAHPdimzH5co/megnqHJEbUzJItf/m
+         hgXA==
+X-Gm-Message-State: ANhLgQ0+PwSnY9xv+c/VGqZ8+eyhQFdTEOHxt1JRBeYE9wohrPuHKp9r
+        Pnt/pY/41US63O1qh5RDCeLgLdOJkEo=
+X-Google-Smtp-Source: ADFU+vu+LHDh3jXlJSxkrwyxND7tgM2Lw4qfJCoc6nDWHgNSm0RajY3Ww9rc+ZwTI9IFgI7kgs2/EQ==
+X-Received: by 2002:a5d:4b49:: with SMTP id w9mr1571584wrs.364.1584230426552;
+        Sat, 14 Mar 2020 17:00:26 -0700 (PDT)
+Received: from localhost.localdomain (p5B3F731E.dip0.t-ipconnect.de. [91.63.115.30])
+        by smtp.gmail.com with ESMTPSA id 7sm11394469wmf.20.2020.03.14.17.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2020 17:00:25 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v2 1/5] dt-bindings: mfd: add document bindings for mp2629
+Date:   Sun, 15 Mar 2020 01:00:09 +0100
+Message-Id: <20200315000013.4440-2-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200315000013.4440-1-sravanhome@gmail.com>
+References: <20200315000013.4440-1-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 02:04:23PM +0200, Madalin Bucur wrote:
-> Treat all internal delay variants the same as RGMII.
-> 
-> Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
-> ---
->  drivers/net/ethernet/freescale/fman/fman_memac.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
-> index e1901874c19f..0fc98584974a 100644
-> --- a/drivers/net/ethernet/freescale/fman/fman_memac.c
-> +++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
-> @@ -782,7 +782,10 @@ int memac_adjust_link(struct fman_mac *memac, u16 speed)
->  	/* Set full duplex */
->  	tmp &= ~IF_MODE_HD;
->  
-> -	if (memac->phy_if == PHY_INTERFACE_MODE_RGMII) {
-> +	if (memac->phy_if == PHY_INTERFACE_MODE_RGMII ||
-> +	    memac->phy_if == PHY_INTERFACE_MODE_RGMII_ID ||
-> +	    memac->phy_if == PHY_INTERFACE_MODE_RGMII_RXID ||
-> +	    memac->phy_if == PHY_INTERFACE_MODE_RGMII_TXID) {
+Add device tree binding information for mp2629 mfd driver.
 
-Hi Madalin
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+---
+ .../devicetree/bindings/mfd/mps,mp2629.yaml   | 62 +++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
 
-You can use phy_interface_mode_is_rgmii()
+diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+new file mode 100644
+index 000000000000..f5b8c73123c6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MP2629 Battery Charger PMIC from Monolithic Power System.
++
++maintainers:
++  - Saravanan Sekar <sravanhome@gmail.com>
++
++description: |
++  MP2629 is an PMIC providing battery charging and power supply for smartphones,
++  Wireless camera and portable devices. Chip is contrlled over I2C.
++
++  The MFD device handles battery charger controller and ADC IIO device for
++  battery, system voltage
++
++properties:
++  compatible:
++    const: mps,mp2629
++
++  reg:
++    description:
++      I2C device address.
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++    description:
++      The first cell is the IRQ number, the second cell is the trigger type.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/input/linux-event-codes.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pmic@4b {
++            compatible = "mps,mp2629";
++            reg = <0x4b>;
++
++            interrupt-controller;
++            interrupt-parent = <&gpio2>;
++            #interrupt-cells = <2>;
++            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
++        };
++    };
+-- 
+2.17.1
 
-    Andrew
