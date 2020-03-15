@@ -2,90 +2,125 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A49C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FB5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9511206B1
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:27:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="fHMyrNf4"
+	by mail.kernel.org (Postfix) with ESMTP id 1C142206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584264495;
+	bh=k0MY7Bqf584jeU9PbEpBAMYhk0hnAtxUjrOw1PNGQHQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=O6K/iZ5+95f3dgvMNuJn6mxF3Xy2x2Aw08mc3gqlo0538D879GaQzhZng8skE1N2y
+	 ymojVPLjhud+DaZdO+tX/f5SPTMp6N/ZGUBM1HQfDtwLTddtF8bfiw2Je1TTk3hWjO
+	 uU7TJFHpBNx14p7N9F0cMOrqI/fstnwa1X8HOz4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgCOJ1f (ORCPT
+        id S1728142AbgCOJ2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:27:35 -0400
-Received: from the.earth.li ([93.93.131.124]:32966 "EHLO the.earth.li"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgCOJ1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:27:35 -0400
-X-Greylist: delayed 23400 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Mar 2020 05:27:34 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=G1q++wL3ririgcEeSagYiQQcqI2rH+PGXUbjUOLutsA=; b=fHMyrNf45aLrtTJrH0Ajja5xZ7
-        a3tLbe3diE8kYq+jjSGY0uCV//apNcFHpRAIZ5YhDe8bBwLIPBJqhpeyWkXOctpyNSVE9Hl+SKF1s
-        /QwV0f6Zwh4iC/8SbJwEB1K4z+bT5iptsaThsWXskLchNTceUoLGsg0mjAFXz5PCu68PAyFLaL+hX
-        njiwnkE3QzSYMXhkukbe+cx2hhCik3A/zJBTYdjG8ZtCIes0JG0iaLY4eYH7FJp89/aZ/m9Hqc9PF
-        sJRwJofZ8VMnuREm7q4OfCTIK+4d6if2xQyiHl5/v0R9M6tLce07OJbm+7kg0RCa4W+mko53th9af
-        VgtmxJXA==;
-Received: from noodles by the.earth.li with local (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1jD4TU-0007aq-Lq; Sat, 14 Mar 2020 10:57:00 +0000
-Date:   Sat, 14 Mar 2020 10:57:00 +0000
-From:   Jonathan McDowell <noodles@earth.li>
-To:     linux-wireless@vger.kernel.org
-Cc:     Intel Linux Wireless <linuxwifi@intel.com>,
-        Ihab Zhaika <ihab.zhaika@intel.com>, johannes.berg@intel.com,
-        emmanuel.grumbach@intel.com, luciano.coelho@intel.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iwlwifi: mvm: Avoid use of GEO_TX_POWER_LIMIT when not
- supported
-Message-ID: <20200314105700.GM311@earth.li>
+        Sun, 15 Mar 2020 05:28:14 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39287 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgCOJ2N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 05:28:13 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f10so15240062ljn.6;
+        Sun, 15 Mar 2020 02:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=k0MY7Bqf584jeU9PbEpBAMYhk0hnAtxUjrOw1PNGQHQ=;
+        b=Sx43VyZaq2psJT9xqIVidcHL3h96etCE7IVZacPBNdfwm1ykQfiCokV3MGbXASTucf
+         d9kaMtFyylnFJ3xX2f/J5w5/35NG6F+ZeaHxZt0Sadpwbvume2jt3NPzVZ9g1cZY/HBB
+         rtH5q3SMNBhds3/yLS4ny21+ruxPDH1i4tqAPqBqVirMMOW3+4LThDiAs5+MjWMBad8o
+         isY3i/ywS97tlSH3hzgOD+3FKgzGiewOx+CByrS6E4BnVmKrNfa+ajysQa3xBErDNr5s
+         SL0FywuSsdV1EfufhjaE/34EnTd1G0IhAj99w3QVYlYPsSzIEcmT+NIGFV2Xqbujl+gh
+         0qOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=k0MY7Bqf584jeU9PbEpBAMYhk0hnAtxUjrOw1PNGQHQ=;
+        b=SElnOu5HNOA+9Ll4XI3x56EDoIFrynVoxC0B87OxlUPYiCGxMXdDNORlpP8XxlalHT
+         EDQ3yFqtBpW32Rg3qMisGGKZQIbc+ZUCzfAmG2dD38z2fWoNPmul9zCaWjJEkV8luBej
+         S4g/ZF0ZRPFukxGxYwPWwQE8+0hbZ9jwS2/6nX8p77BubfolF2dZXlhyZRlOENWh3NId
+         oUr1LOox/zm20zI4vfYnCZnSrfyp9n/k/Kznt7oRVZDX+9V/CvdkxLoSaF/2Uw3S8x4D
+         iJAxRw9QV11mdJb7A0aA+7XxMmGFYEf6e91lysJURKsXSF0dlCpSqmFi/Qk25NXyrG8p
+         UV1Q==
+X-Gm-Message-State: ANhLgQ2ymQQZm4teb/j4SHTGWYSL9fR3sYYZPGszDdtwYxyuDiWhrBfi
+        k8sZTQRAEIXZqaxebDBJLFdTM7jt2E8cyA==
+X-Google-Smtp-Source: ADFU+vvXjsjBwXRjg6blDRN9dWbFmFP0x6cQKEKKsY3Lzbg80fvZNanN8fszf7hNtH4/g9dBOm89Jw==
+X-Received: by 2002:a2e:891a:: with SMTP id d26mr12762955lji.182.1584264490463;
+        Sun, 15 Mar 2020 02:28:10 -0700 (PDT)
+Received: from saruman (88-113-215-213.elisa-laajakaista.fi. [88.113.215.213])
+        by smtp.gmail.com with ESMTPSA id f23sm1708531lja.42.2020.03.15.02.28.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Mar 2020 02:28:09 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] devicetree: bindings: exynos: Add new compatible for Exynos5420 dwc3 clocks support
+In-Reply-To: <20200301212019.2248-2-linux.amoon@gmail.com>
+References: <20200301212019.2248-1-linux.amoon@gmail.com> <20200301212019.2248-2-linux.amoon@gmail.com>
+Date:   Sun, 15 Mar 2020 11:28:05 +0200
+Message-ID: <871rpuezmi.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 39c1a9728f93 refactored the SAR table support and inadvertently
-added a call to GEO_TX_POWER_LIMIT without checking that the firmware
-supported it. This caused a regression for device + firmware
-combinations lacking the support. Add a check in iwl_mvm_sar_init to
-prevent this.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 39c1a9728f93 (iwlwifi: refactor the SAR tables from mvm to acpi)
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206395
-Cc: stable@vger.kernel.org # 5.5
-Signed-Off-By: Jonathan McDowell <noodles@earth.li>
+Anand Moon <linux.amoon@gmail.com> writes:
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index 54c094e88474..4a8a4cb2c553 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -1007,6 +1007,13 @@ static int iwl_mvm_sar_init(struct iwl_mvm *mvm)
- 	if (ret == -ENOENT)
- 		return 1;
- 
-+	/*
-+	 * If our firmware doesn't support GEO_TX_POWER_LIMIT then skip trying
-+	 * to use it.
-+	 */
-+	if (!iwl_sar_geo_support(&mvm->fwrt))
-+		return 1;
-+
- 	return ret;
- }
- 
+> This patch adds the new compatible string for Exynos5422 DWC3
+> to support enable/disable of core and suspend clk by DWC3 driver.
+> Also updated the clock names for compatible samsung,exynos5420-dwusb3.
+>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 
--- 
-... Don't do it!
+doesn't apply:
+
+checking file Documentation/devicetree/bindings/usb/exynos-usb.txt
+Hunk #2 FAILED at 84.
+1 out of 2 hunks FAILED
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl5t9SUACgkQzL64meEa
+mQYm8xAA3I2/YauH6uYkFBQvDNCN3vk3Y9Nd7A0OQ7+zhusbeqhl93In7+YgQ+3r
+gvXux2DHyL121EUbI7Fj398cescSm4FBgnhlVx8qhKQFn85vPBWtCjI8vvS+PIxn
+S6+emDEeVhj0FF8mfuVV844SqIrz7UcIg9hS9PMsrZLvh31cFbgJhAKhR84ak4lr
+jku+TUy2tf9ZJr8DU8DUH8dRWccCRZJ+RXFyNAfaMZ3aNJuI6CS5bGTp1LBL4alh
+i4G3NgBIk4JStBxezp3AZuJ5yYz3yHcgk2paMSKiuZoLJ+12KiLwxIlY70Mo984P
+8XI9oP6xVTreGY1KGR3I819s4qAjCley7q1/2eFiO2i7B4JMbn4724lExPUpEaPy
+qBtoiOmN4cYBPaF75RGCJEZmgM/+yt/CQHWEowEQRHSaoQ6iqUBmyOjZhAh03fA3
+8Bg6Mfs2cJXntvjNSLneHTzbOXbh1F57UCh+cWJNk7QOag/O95kd5N4IZJ55CWD6
+BnAc4yMsl9aOGNLYqwX173WqeOUHm7r6MQ+vXxp24ZlBT0Z9x9OfPmN6BGXPXJyA
+OFgkjJacY7L6pTWhVMPDReQ0SkXpTvqBZVGxYaxAROVPg/+Do71j8tiUwESQg19A
+1k/AH25xxfy/4OvcBqCwpphqRwzxuOvc6/+NEwXFiBY+oJdTnQ4=
+=uud3
+-----END PGP SIGNATURE-----
+--=-=-=--
