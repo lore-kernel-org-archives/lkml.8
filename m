@@ -2,147 +2,89 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEB6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 07:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D41CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 07:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64457206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 07:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498C0206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 07:16:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AU/XB7mV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rcYdKyFv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgCOHQC (ORCPT
+        id S1727981AbgCOHQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 03:16:02 -0400
+        Sun, 15 Mar 2020 03:16:08 -0400
 Received: from bombadil.infradead.org ([198.137.202.133]:49192 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727674AbgCOHPf (ORCPT
+        with ESMTP id S1727223AbgCOHPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 03:15:35 -0400
+        Sun, 15 Mar 2020 03:15:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wAfYh2xdWxAPIQJMB0mxlXqUYNASxsyPuzu7mvOnmEc=; b=AU/XB7mVJWInyKEADhOo52OrCP
-        mHHs4FpGwJVFsaEJIkwKB7GPlSxFxK5wb8lY/h7k1B2HI8/TEkr5nu6+qzH+meQbqOy+RBLbLEzMk
-        9fYmB10Qv6zwHhHdlZUG9O6k8w5IYi/7TpGJuqYkAqVdyyT0bjQ6ygAnsKRb9gPfM5sRlcnTnPCbK
-        2iYLwNUNb8rV7WJLCE/o74fQ9dC9we5VzowkOyE++PUmAj8V16Z1EeO6ce6YjYBTThvu3AlG55kgl
-        96pb4yEWavmHxUe1+6udBFG6cZbW2IQZohTgCBHmFUUSJ/hKXIntwyV8/kQhr2nyk0+BVsgcfEUMH
-        RyPc/nhQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jDKEa-00050h-44; Sun, 15 Mar 2020 03:46:40 +0000
-Date:   Sat, 14 Mar 2020 20:46:40 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
-Message-ID: <20200315034640.GV22433@bombadil.infradead.org>
-References: <20200226161404.14136-1-longman@redhat.com>
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Va4hKd5UNxovGjVSxksW2kq4jkfcUPbqde9Oaz+go/c=; b=rcYdKyFvOVbMXkJsWJ4j39OuWV
+        LztEjhk8AYp0LBMKYFosLO5hXiKZcXQG+X64+9zbzjLy7n9nQ3Q3CKZ2u4j9naJb3rW0t5YBB+ont
+        1RM3Yw71w99ROvZDW1a1FCtulbooAp0uyavD+RdD1yTIAYOgmciTdJqF9uEXixLdMW8gP3icOpVM2
+        VlGJftnoYsamCg98ZdS47t+J51YOIEmK8K7qNFYQRW+tebbBWqzXlrB3xLr9URuugr43TYAM5mzg/
+        IygbqCJLHojxQveps9ropruKVmcvtp/u0AQV2L8tBX29l0EE86jsdZ9v57ewAX66zHgG48KezL5Yn
+        j5BPnSlw==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jDKbF-0003dY-Gm; Sun, 15 Mar 2020 04:10:05 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Antonino Daplas <adaplas@gmail.com>,
+        Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
+Subject: [PATCH 3/6] fbdev: matrox: fix -Wextra build warnings
+Date:   Sat, 14 Mar 2020 21:09:59 -0700
+Message-Id: <20200315041002.24473-4-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200315041002.24473-1-rdunlap@infradead.org>
+References: <20200315041002.24473-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226161404.14136-1-longman@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
-> As there is no limit for negative dentries, it is possible that a sizeable
-> portion of system memory can be tied up in dentry cache slabs. Dentry slabs
-> are generally recalimable if the dentries are in the LRUs. Still having
-> too much memory used up by dentries can be problematic:
-> 
->  1) When a filesystem with too many negative dentries is being unmounted,
->     the process of draining the dentries associated with the filesystem
->     can take some time. To users, the system may seem to hang for
->     a while.  The long wait may also cause unexpected timeout error or
->     other warnings.  This can happen when a long running container with
->     many negative dentries is being destroyed, for instance.
-> 
->  2) Tying up too much memory in unused negative dentries means there
->     are less memory available for other use. Even though the kernel is
->     able to reclaim unused dentries when running out of free memory,
->     it will still introduce additional latency to the application
->     reducing its performance.
+When 'DEBUG' is not defined, modify the dprintk() macro to use the
+no_printk() macro instead of using <empty>.
+This fixes build warnings when -Wextra is used and provides
+printk format checking:
 
-There's a third problem, which is that having a lot of negative dentries
-can clog the hash chains.  I tried to quantify this, and found a weird result:
+../drivers/video/fbdev/matrox/matroxfb_base.c:635:77: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+../drivers/video/fbdev/matrox/matroxfb_Ti3026.c:632:54: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+../drivers/video/fbdev/matrox/matroxfb_Ti3026.c:654:53: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
 
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m5.402s
-user	0m4.361s
-sys	0m1.230s
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m5.572s
-user	0m4.337s
-sys	0m1.407s
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m5.607s
-user	0m4.522s
-sys	0m1.342s
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m5.599s
-user	0m4.472s
-sys	0m1.369s
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m5.574s
-user	0m4.498s
-sys	0m1.300s
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
+---
+Alternative: use pr_debug() so that CONFIG_DYNAMIC_DEBUG can be used
+at these sites.
 
-Pretty consistent system time, between about 1.3 and 1.4 seconds.
+ drivers/video/fbdev/matrox/matroxfb_base.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-root@bobo-kvm:~# grep dentry /proc/slabinfo 
-dentry             20394  21735    192   21    1 : tunables    0    0    0 : slabdata   1035   1035      0
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m5.515s
-user	0m4.353s
-sys	0m1.359s
-
-At this point, we have 20k dentries allocated.
-
-Now, pollute the dcache with names that don't exist:
-
-root@bobo-kvm:~# for i in `seq 1 100000`; do cat /dev/null$i >/dev/zero; done 2>/dev/null
-root@bobo-kvm:~# grep dentry /proc/slabinfo 
-dentry             20605  21735    192   21    1 : tunables    0    0    0 : slabdata   1035   1035      0
-
-Huh.  We've kept the number of dentries pretty constant.  Still, maybe the
-bad dentries have pushed out the good ones.
-
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m6.644s
-user	0m4.921s
-sys	0m1.946s
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m6.676s
-user	0m5.004s
-sys	0m1.909s
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m6.662s
-user	0m4.980s
-sys	0m1.916s
-root@bobo-kvm:~# time for i in `seq 1 10000`; do cat /dev/null >/dev/zero; done
-real	0m6.714s
-user	0m4.973s
-sys	0m1.986s
-
-Well, we certainly made it suck.  Up to a pretty consistent 1.9-2.0 seconds
-of kernel time, or 50% worse.  We've also made user time worse, somehow.
-
-Anyhow, I should write a proper C program to measure this.  But I thought
-I'd share this raw data with you now to demonstrate that dcache pollution
-is a real problem today, even on a machine with 2GB.
+--- linux-next-20200313.orig/drivers/video/fbdev/matrox/matroxfb_base.h
++++ linux-next-20200313/drivers/video/fbdev/matrox/matroxfb_base.h
+@@ -86,7 +86,7 @@
+ #ifdef DEBUG
+ #define dprintk(X...)	printk(X)
+ #else
+-#define dprintk(X...)
++#define dprintk(X...)	no_printk(X)
+ #endif
+ 
+ #ifndef PCI_SS_VENDOR_ID_SIEMENS_NIXDORF
