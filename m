@@ -2,92 +2,219 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7AAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CEDC18E5B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852AF20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584287782;
-	bh=0FETaBYg0gM6ta0vExCNPyV/NUzhVreAf5vTbqU/bEo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=zXt2ADsQ1KI/1AKooss0DI9zFXnm2CPKvABQYF4URgrrSa34u1L5JNJjmIeQckqJa
-	 Ks+2q23wIni9H9bOgUUmdOOqzW1mQPPYOEqunJTUB1nwI3n7YLu0rMq23Kt1hdkiHi
-	 5M94yked+t8Tnc2owVxzFRvmkOk01M7d7ismy+eE=
+	by mail.kernel.org (Postfix) with ESMTP id 57FE9206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:59:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gIEe9+Y2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgCOP4V convert rfc822-to-8bit (ORCPT
+        id S1728885AbgCOP7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:56:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31726 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728634AbgCOP4V (ORCPT
+        Sun, 15 Mar 2020 11:59:21 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44041 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728634AbgCOP7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:56:21 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-210-XA3QFsmIPzmvSf13aYxi3Q-1; Sun, 15 Mar 2020 11:56:16 -0400
-X-MC-Unique: XA3QFsmIPzmvSf13aYxi3Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A42A3477;
-        Sun, 15 Mar 2020 15:56:12 +0000 (UTC)
-Received: from krava.redhat.com (ovpn-204-71.brq.redhat.com [10.40.204.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B79C5DA76;
-        Sun, 15 Mar 2020 15:56:09 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH perf/urgent] perf expr: Fix copy/paste mistake
-Date:   Sun, 15 Mar 2020 16:56:09 +0100
-Message-Id: <20200315155609.603948-1-jolsa@kernel.org>
+        Sun, 15 Mar 2020 11:59:21 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 37so8131159pgm.11;
+        Sun, 15 Mar 2020 08:59:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2pQp4neBTipoD8jd8hs9nqlVYLeD5zyRoGXYPLNg50g=;
+        b=gIEe9+Y2TcJsW8q1FdRacL1/xVfjMXGmzgrbXI49SkaCJbyUs9kk5zFHgyRU1bTBte
+         cWwEas4x5A1MqOK2Kh/xvLk2xxBOLIT11OFXm5Oa+O0YTCcNKKBpqzfBffqZF9yADPtk
+         7fScdGQuFoDIwVbb3gUuLKZzyxI1HZrdo00o64XUHMecvvPK0cXDR/MBHMz+h9L2WL4d
+         ty0sPIaJGoUzhXSFuxGbVcMoqZw8IGTadLQKJLCr/dZkXlASa4nxRcrzgegL80NeHX+z
+         KEY/dxY3b0Ec9wpXswimHO8RpRPAdEEqWwwF47+lTdDH0S5Y+f2dBBSPjfreR0tAXkCs
+         9M0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2pQp4neBTipoD8jd8hs9nqlVYLeD5zyRoGXYPLNg50g=;
+        b=FIO2TPwtDnl7kurNt4h7td0oB0R63Vg8W8rRgKmmLA2/RnDOITew1PFyRQgwldkxAT
+         fOoQeyxFoC6b7vkc3X4b/0Owsj3jNtsxSA8AQv2DlJG8oLCp6vxN3exTJHo/dQeNUu1n
+         wG4fQkwVItWDhQll+LgSXE76DzZRhElUP0ZDor4wmfVnj2QZQ+Ek9GYs7mWURbz31UOs
+         tizo+XWV/eH1cN03bxycBVZI1DE5716fODNecN5Uygn/RCGWyZc2BOj+pVYnD6bXHYFI
+         /QO642uRFxSYYHPRQ3cWI/y2du/blI9mTOAyOB06covK61o55VUPas1DwBknj+p28cfN
+         daHA==
+X-Gm-Message-State: ANhLgQ2HRAje5vmILU6IqJDKaZgnpBNHrg8f/XleI3JcOD/9dZY+7vnP
+        YFDD3lfur1piQMc11O6a1tw=
+X-Google-Smtp-Source: ADFU+vsNho6DWp4+EWWJuoitLhCXhlkw/QHCVopdjSLKNubjamD/45lGeVe07usnoHlq/Q6y1OvTXQ==
+X-Received: by 2002:a63:24a:: with SMTP id 71mr23738528pgc.119.1584287958966;
+        Sun, 15 Mar 2020 08:59:18 -0700 (PDT)
+Received: from SARKAR ([43.224.157.36])
+        by smtp.gmail.com with ESMTPSA id 18sm65167319pfj.20.2020.03.15.08.59.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Mar 2020 08:59:18 -0700 (PDT)
+Message-ID: <5e6e50d6.1c69fb81.f5a45.b961@mx.google.com>
+X-Google-Original-Message-ID: <20200315155913.GA16078@rohitsarkar5398@gmail.com>
+Date:   Sun, 15 Mar 2020 21:29:13 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jic23@kernel.org, dragos.bogdan@analog.com
+Subject: Re: [PATCH v6] iio: adc: max1363: replace uses of mlock
+References: <5e6e4e78.1c69fb81.511f5.83ac@mx.google.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e6e4e78.1c69fb81.511f5.83ac@mx.google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Copy/paste leftover from recent refactor.
+Pl. ignore this patch, it contains incorrect logic.
+Thanks,
+Rohit
 
-Fixes: 26226a97724d ("perf expr: Move expr lexer to flex")
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/util/expr.l | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 1928f2a3dddc..eaad29243c23 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -79,10 +79,10 @@ symbol		{spec}*{sym}*{spec}*{sym}*
- 	{
- 		int start_token;
- 
--		start_token = parse_events_get_extra(yyscanner);
-+		start_token = expr_get_extra(yyscanner);
- 
- 		if (start_token) {
--			parse_events_set_extra(NULL, yyscanner);
-+			expr_set_extra(NULL, yyscanner);
- 			return start_token;
- 		}
- 	}
--- 
-2.24.1
-
+On Sun, Mar 15, 2020 at 09:19:08PM +0530, Rohit Sarkar wrote:
+> Replace usage indio_dev's mlock with either local lock or
+> iio_device_claim_direct_mode.
+> 
+> Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+> ---
+> Changelog v5 -> v6
+> * Minor failure handling fixes
+> 
+> Changelog v4 -> v5
+> * Use local lock too at places where driver state needs to be protected.
+> 
+> Changelog v3 -> v4
+> * Fix indentation
+> 
+> Changelog v2 -> v3
+> * use iio_device_claim_direct when switching modes
+> * replace mlock usage in max1363_write_event_config
+> 
+> Changelog v1 -> v2
+> * Fix indentation
+> 
+>  drivers/iio/adc/max1363.c | 31 ++++++++++++++++++++++---------
+>  1 file changed, 22 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+> index 5c2cc61b666e..647c99ae9fbe 100644
+> --- a/drivers/iio/adc/max1363.c
+> +++ b/drivers/iio/adc/max1363.c
+> @@ -150,6 +150,7 @@ struct max1363_chip_info {
+>   * @current_mode:	the scan mode of this chip
+>   * @requestedmask:	a valid requested set of channels
+>   * @reg:		supply regulator
+> + * @lock		lock to ensure state is consistent
+>   * @monitor_on:		whether monitor mode is enabled
+>   * @monitor_speed:	parameter corresponding to device monitor speed setting
+>   * @mask_high:		bitmask for enabled high thresholds
+> @@ -169,6 +170,7 @@ struct max1363_state {
+>  	const struct max1363_mode	*current_mode;
+>  	u32				requestedmask;
+>  	struct regulator		*reg;
+> +	struct mutex			lock;
+>  
+>  	/* Using monitor modes and buffer at the same time is
+>  	   currently not supported */
+> @@ -364,7 +366,11 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+>  	struct max1363_state *st = iio_priv(indio_dev);
+>  	struct i2c_client *client = st->client;
+>  
+> -	mutex_lock(&indio_dev->mlock);
+> +	ret = iio_device_claim_direct_mode(indio_dev);
+> +	mutex_lock(&st->lock);
+> +
+> +	if (ret < 0)
+> +		goto error_ret;
+>  	/*
+>  	 * If monitor mode is enabled, the method for reading a single
+>  	 * channel will have to be rather different and has not yet
+> @@ -372,7 +378,7 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+>  	 *
+>  	 * Also, cannot read directly if buffered capture enabled.
+>  	 */
+> -	if (st->monitor_on || iio_buffer_enabled(indio_dev)) {
+> +	if (st->monitor_on) {
+>  		ret = -EBUSY;
+>  		goto error_ret;
+>  	}
+> @@ -404,8 +410,9 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+>  		data = rxbuf[0];
+>  	}
+>  	*val = data;
+> +
+>  error_ret:
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&st->lock);
+>  	return ret;
+>  
+>  }
+> @@ -705,9 +712,9 @@ static ssize_t max1363_monitor_store_freq(struct device *dev,
+>  	if (!found)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&indio_dev->mlock);
+> +	mutex_lock(&st->lock);
+>  	st->monitor_speed = i;
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&st->lock);
+>  
+>  	return 0;
+>  }
+> @@ -810,12 +817,12 @@ static int max1363_read_event_config(struct iio_dev *indio_dev,
+>  	int val;
+>  	int number = chan->channel;
+>  
+> -	mutex_lock(&indio_dev->mlock);
+> +	mutex_lock(&st->lock);
+>  	if (dir == IIO_EV_DIR_FALLING)
+>  		val = (1 << number) & st->mask_low;
+>  	else
+>  		val = (1 << number) & st->mask_high;
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&st->lock);
+>  
+>  	return val;
+>  }
+> @@ -962,7 +969,12 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
+>  	u16 unifiedmask;
+>  	int number = chan->channel;
+>  
+> -	mutex_lock(&indio_dev->mlock);
+> +	ret = iio_device_claim_direct_mode(indio_dev);
+> +	mutex_lock(&st->lock);
+> +
+> +	if (ret < 0)
+> +		goto error_ret;
+> +
+>  	unifiedmask = st->mask_low | st->mask_high;
+>  	if (dir == IIO_EV_DIR_FALLING) {
+>  
+> @@ -989,7 +1001,7 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
+>  
+>  	max1363_monitor_mode_update(st, !!(st->mask_high | st->mask_low));
+>  error_ret:
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&st->lock);
+>  
+>  	return ret;
+>  }
+> @@ -1587,6 +1599,7 @@ static int max1363_probe(struct i2c_client *client,
+>  
+>  	st = iio_priv(indio_dev);
+>  
+> +	mutex_init(&st->lock);
+>  	st->reg = devm_regulator_get(&client->dev, "vcc");
+>  	if (IS_ERR(st->reg)) {
+>  		ret = PTR_ERR(st->reg);
+> -- 
+> 2.23.0.385.gbc12974a89
+> 
