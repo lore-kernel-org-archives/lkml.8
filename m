@@ -2,127 +2,124 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3293C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE1CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74ADA20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QX+syxtc"
+	by mail.kernel.org (Postfix) with ESMTP id D2E0320578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgCOPZT (ORCPT
+        id S1728850AbgCOPZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:25:19 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37811 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbgCOPZT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:25:19 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 3so518336pff.4;
-        Sun, 15 Mar 2020 08:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
-         :user-agent;
-        bh=OZDiihJ3OBBRg2OIBgYZpbzLQGD8FEl/aXEB9troNrk=;
-        b=QX+syxtcf4GjKjCDWFlesV29F0cBOtMntwqXN5uZUar72ElN03mFqOQENkbtOvbE3r
-         i2MEkW5/ieqzSaHZ6DdxfJRTN54XWIQHLVf15BMOoZ39XaU58QYkHo1JCv6yTeCeUCC/
-         kZBKlLf/iwUA4LSnsSXi5Xi8K8iFRZBckcRd6j88GDMUTLMprslKd8dzYmx1eHygkQxt
-         wbPjW4Hizn3C9+n6sUim89qqAn1gHwfSGNjOKEeuvOp1uMjerSsGwIyMxKmYbZw9gPfM
-         ksodhVrtnAMA8QGmnwdRrXRpwKCJ+yuiknoQqlDQWMd1hcDzpyZ9qqOgcVcuf/GR5cXw
-         oQgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
-         :content-disposition:user-agent;
-        bh=OZDiihJ3OBBRg2OIBgYZpbzLQGD8FEl/aXEB9troNrk=;
-        b=FnxhqXEBTutJZT74PgEM/eksr2DgMiHV9fHcgkaohw+95HDnIjcF+4bSHoZrC1HDdd
-         SnhcCgzi+IVmv4V0CFfbsGiV3ABlP2OfQM/3e1//4f1yocoCGKcfgcAaZvovownWtJem
-         pFWNc8P/OdB738tAGjfV3tO1f3eavie9uwuv9iwVZuEYSOKb0sK6DjmcdMW1fmIl5N2n
-         sFQCHoeJCnJoO4ej1jlPy0jxpKHijxDFU7goUKttvRjkbiCZveFIr7jMMwFX1ATzmyN4
-         z9j/yXSavj7wF3yQSk8ufJQUIVPNlyGWAAKc6ZWgv2p/g4Gpt0qvMqC9+Q37ZTas2DGS
-         uSoA==
-X-Gm-Message-State: ANhLgQ31Qt/iffkb1EuKH+XzCFG7op3GK9ArstqMOOIHVrPM9S0yFgi1
-        6qKJAOt9XaL07VCeVcXiquj/MW0/mDG/sg==
-X-Google-Smtp-Source: ADFU+vuRzHjAMFvBgD34pBjb6od/bFzqiSRchqVitpfWqkx3vPp9jB8ejHAhhT4dhtHDNo9AQ08D+A==
-X-Received: by 2002:a62:1dcd:: with SMTP id d196mr22287689pfd.296.1584285918156;
-        Sun, 15 Mar 2020 08:25:18 -0700 (PDT)
-Received: from SARKAR ([43.224.157.36])
-        by smtp.gmail.com with ESMTPSA id s18sm26154569pfe.15.2020.03.15.08.25.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 08:25:17 -0700 (PDT)
-Message-ID: <5e6e48dd.1c69fb81.11507.523e@mx.google.com>
-X-Google-Original-Message-ID: <20200315152512.GA8096@rohitsarkar5398@gmail.com>
-Date:   Sun, 15 Mar 2020 20:55:12 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     linux-iio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, alexandru.Ardelean@analog.com,
-        dragos.bogdan@analog.com,
-        Matt Ranostay <matt.ranostay@konsulko.com>, jic23@kernel.org,
-        rohitsarkar5398@gmail.com
-Subject: [PATCH v2] iio: health: max30100: use generic property handler
+        Sun, 15 Mar 2020 11:25:56 -0400
+Received: from monster.unsafe.ru ([5.9.28.80]:33952 "EHLO mail.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728817AbgCOPZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 11:25:56 -0400
+Received: from localhost.localdomain (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id C42A8C61B21;
+        Sun, 15 Mar 2020 15:25:51 +0000 (UTC)
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH v9 1/8] proc: rename struct proc_fs_info to proc_fs_opts
+Date:   Sun, 15 Mar 2020 16:25:16 +0100
+Message-Id: <b4ce0e71288059b0a882730a2edb2da4fa1da566.1584285253.git.gladkov.alexey@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1584285253.git.gladkov.alexey@gmail.com>
+References: <cover.1584285253.git.gladkov.alexey@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of of_property_read_xxx use device_property_read_xxx as it is
-compatible with ACPI too as opposed to only device tree.
-
-Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
 ---
-Changelog
-v1 -> v2
-- remove of_match_ptr to make it possible to use PRP0001 ACPI based
-  bindings
- drivers/iio/health/max30100.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ fs/proc_namespace.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
-index 84010501762d..546fc37ad75d 100644
---- a/drivers/iio/health/max30100.c
-+++ b/drivers/iio/health/max30100.c
-@@ -16,7 +16,7 @@
- #include <linux/irq.h>
- #include <linux/i2c.h>
- #include <linux/mutex.h>
--#include <linux/of.h>
-+#include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/buffer.h>
-@@ -267,11 +267,10 @@ static int max30100_get_current_idx(unsigned int val, int *reg)
- static int max30100_led_init(struct max30100_data *data)
- {
- 	struct device *dev = &data->client->dev;
--	struct device_node *np = dev->of_node;
- 	unsigned int val[2];
- 	int reg, ret;
+diff --git a/fs/proc_namespace.c b/fs/proc_namespace.c
+index 273ee82d8aa9..9a8b624bc3db 100644
+--- a/fs/proc_namespace.c
++++ b/fs/proc_namespace.c
+@@ -37,23 +37,23 @@ static __poll_t mounts_poll(struct file *file, poll_table *wait)
+ 	return res;
+ }
  
--	ret = of_property_read_u32_array(np, "maxim,led-current-microamp",
-+	ret = device_property_read_u32_array(dev, "maxim,led-current-microamp",
- 					(unsigned int *) &val, 2);
- 	if (ret) {
- 		/* Default to 24 mA RED LED, 50 mA IR LED */
-@@ -502,7 +501,7 @@ MODULE_DEVICE_TABLE(of, max30100_dt_ids);
- static struct i2c_driver max30100_driver = {
- 	.driver = {
- 		.name	= MAX30100_DRV_NAME,
--		.of_match_table	= of_match_ptr(max30100_dt_ids),
-+		.of_match_table	= max30100_dt_ids,
- 	},
- 	.probe		= max30100_probe,
- 	.remove		= max30100_remove,
+-struct proc_fs_info {
++struct proc_fs_opts {
+ 	int flag;
+ 	const char *str;
+ };
+ 
+ static int show_sb_opts(struct seq_file *m, struct super_block *sb)
+ {
+-	static const struct proc_fs_info fs_info[] = {
++	static const struct proc_fs_opts fs_opts[] = {
+ 		{ SB_SYNCHRONOUS, ",sync" },
+ 		{ SB_DIRSYNC, ",dirsync" },
+ 		{ SB_MANDLOCK, ",mand" },
+ 		{ SB_LAZYTIME, ",lazytime" },
+ 		{ 0, NULL }
+ 	};
+-	const struct proc_fs_info *fs_infop;
++	const struct proc_fs_opts *fs_infop;
+ 
+-	for (fs_infop = fs_info; fs_infop->flag; fs_infop++) {
++	for (fs_infop = fs_opts; fs_infop->flag; fs_infop++) {
+ 		if (sb->s_flags & fs_infop->flag)
+ 			seq_puts(m, fs_infop->str);
+ 	}
+@@ -63,7 +63,7 @@ static int show_sb_opts(struct seq_file *m, struct super_block *sb)
+ 
+ static void show_mnt_opts(struct seq_file *m, struct vfsmount *mnt)
+ {
+-	static const struct proc_fs_info mnt_info[] = {
++	static const struct proc_fs_opts mnt_opts[] = {
+ 		{ MNT_NOSUID, ",nosuid" },
+ 		{ MNT_NODEV, ",nodev" },
+ 		{ MNT_NOEXEC, ",noexec" },
+@@ -72,9 +72,9 @@ static void show_mnt_opts(struct seq_file *m, struct vfsmount *mnt)
+ 		{ MNT_RELATIME, ",relatime" },
+ 		{ 0, NULL }
+ 	};
+-	const struct proc_fs_info *fs_infop;
++	const struct proc_fs_opts *fs_infop;
+ 
+-	for (fs_infop = mnt_info; fs_infop->flag; fs_infop++) {
++	for (fs_infop = mnt_opts; fs_infop->flag; fs_infop++) {
+ 		if (mnt->mnt_flags & fs_infop->flag)
+ 			seq_puts(m, fs_infop->str);
+ 	}
 -- 
-2.23.0.385.gbc12974a89
+2.25.1
 
