@@ -2,145 +2,133 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE7CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E85C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F9B205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A19E205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584265570;
+	bh=biUlpyrXNvCOiK31I4zc/E3yxuZCzo2qiuxd+IZSWAU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Yc6gbJhlvkvCVxR5U0CoRRzL+4xH1mq/nHdCC6TneSy5w7C0O4XY6Za4k+MMNm6Om
+	 gSNQXGgh+p2g/KOFCjSam1BIwJSa1kl+Znms2FWahOoPGDzY5f6ZLOkENhAPr468Q9
+	 BsjWp7ljxXEisp8QvMCl5gooPYJhTxHDDCuoVj04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgCOJoZ (ORCPT
+        id S1728182AbgCOJqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:44:25 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:53142 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728123AbgCOJoZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:44:25 -0400
-Received: from fsav101.sakura.ne.jp (fsav101.sakura.ne.jp [27.133.134.228])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02F9iDJp004785;
-        Sun, 15 Mar 2020 18:44:13 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav101.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp);
- Sun, 15 Mar 2020 18:44:13 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp)
-Received: from [192.168.1.2] (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02F9iDK0004781
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sun, 15 Mar 2020 18:44:13 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH] ARM: dts: rockchip: use DMA channels for UARTs of
- TinkerBoard
-To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200314142327.25568-1-katsuhiro@katsuster.net>
- <2930126.sCcUyySgUU@diego>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <0b36bf84-0e7b-7287-a094-9fd2f33167ee@katsuster.net>
-Date:   Sun, 15 Mar 2020 18:44:13 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 15 Mar 2020 05:46:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728123AbgCOJqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 05:46:09 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCDE2205C9;
+        Sun, 15 Mar 2020 09:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584265568;
+        bh=biUlpyrXNvCOiK31I4zc/E3yxuZCzo2qiuxd+IZSWAU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NqUIdla21Wyb2/wkO+hupZvA3i4r2MrUH5+52i5fAChTQMy5pbR+ZmWjlZPW2fclo
+         YHcOxaC9G7ydMGE4FSk1lv5B7YQ2DkVJ9USKze+M//+CZ58eKDNbbBuFAjy8pXXBkC
+         FniQ9c3DkmfrcdF0OnVZRqFOP8sv/L83wN56mv6E=
+Date:   Sun, 15 Mar 2020 09:46:04 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        matt.ranostay@konsulko.com
+Subject: Re: [PATCH] iio: health: max30100: remove mlock usage
+Message-ID: <20200315094604.62dc96be@archlinux>
+In-Reply-To: <5e668b89.1c69fb81.d7e4f.0f61@mx.google.com>
+References: <5e668b89.1c69fb81.d7e4f.0f61@mx.google.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <2930126.sCcUyySgUU@diego>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Heiko,
+On Tue, 10 Mar 2020 00:01:28 +0530
+Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
 
-> This belongs in rk3288.dtsi, as this is definitly not board-specific, as
-> the dma-uart connection is done inside the soc.
+> Use local lock instead of indio_dev's mlock.
+> The mlock was being used to protect local driver state thus using the
+> local lock is a better option here.
 > 
-> At least on arm64 (rk3328, px30, probably more) we already have the
-> uart dmas in the core dtsi without any problems.
-> 
-> Is there any reason why you only did add it to the tinker board only?
+> Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
 
-There is no special reason. Simply I don't have and not tested on other
-boards of RK3288. But I hope these DMA settings can work correctly on
-other boards.
+Matt.  Definitely need your input on this.
 
-I'll resend patch for rk3288.dtsi.
+> ---
+>  drivers/iio/health/max30100.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+> index 84010501762d..8ddc4649547d 100644
+> --- a/drivers/iio/health/max30100.c
+> +++ b/drivers/iio/health/max30100.c
+> @@ -388,7 +388,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+>  		 * Temperature reading can only be acquired while engine
+>  		 * is running
+>  		 */
+> -		mutex_lock(&indio_dev->mlock);
+> +		mutex_lock(&data->lock);
 
-Best Regards,
-Katsuhiro Suzuki
+Hmm.. It's another complex one.  What is actually being protected here is
+the buffer state, but not to take it exclusively like claim_direct does.
 
+Here we need the inverse, we want to ensure we are 'not' in the direct
+mode because this hardware requires the buffer to be running to read the
+temperature. 
 
-On 2020/03/15 0:09, Heiko Stübner wrote:
-> Hi,
-> 
-> Am Samstag, 14. März 2020, 15:23:27 CET schrieb Katsuhiro Suzuki:
->> This patch enables to use DMAC for all UARTs that are connected to
->> dmac_peri core for TinkerBoard.
->>
->> Only uart2 is connected different DMAC (dmac_bus_s) so keep current
->> settings on this patch.
-> 
-> This belongs in rk3288.dtsi, as this is definitly not board-specific, as
-> the dma-uart connection is done inside the soc.
-> 
-> At least on arm64 (rk3328, px30, probably more) we already have the
-> uart dmas in the core dtsi without any problems.
-> 
-> Is there any reason why you only did add it to the tinker board only?
-> 
-> 
-> Heiko
-> 
-> 
->> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
->> ---
->>   arch/arm/boot/dts/rk3288-tinker.dtsi | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
->> index 312582c1bd37..6efabeaf3c6d 100644
->> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
->> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
->> @@ -491,10 +491,14 @@ &tsadc {
->>   };
->>   
->>   &uart0 {
->> +	dmas = <&dmac_peri 1>, <&dmac_peri 2>;
->> +	dma-names = "tx", "rx";
->>   	status = "okay";
->>   };
->>   
->>   &uart1 {
->> +	dmas = <&dmac_peri 3>, <&dmac_peri 4>;
->> +	dma-names = "tx", "rx";
->>   	status = "okay";
->>   };
->>   
->> @@ -503,10 +507,14 @@ &uart2 {
->>   };
->>   
->>   &uart3 {
->> +	dmas = <&dmac_peri 7>, <&dmac_peri 8>;
->> +	dma-names = "tx", "rx";
->>   	status = "okay";
->>   };
->>   
->>   &uart4 {
->> +	dmas = <&dmac_peri 9>, <&dmac_peri 10>;
->> +	dma-names = "tx", "rx";
->>   	status = "okay";
->>   };
->>   
->>
-> 
-> 
-> 
-> 
-> 
+That is the sort of interface that is going to get userspace very 
+confused.
+
+Matt, normally what I'd suggest here is that the temperature read should:
+
+1) Claim direct mode, if it fails then do the dance you have here
+(with more comments to explain why you are taking an internal lock)
+2) Start up capture as if we were in buffered mode
+3) Grab that temp
+4) stop capture to return to non buffered mode.
+5) Release direct mode.
+
+I guess we decided it wasn't worth the hassle.  
+
+So Rohit.  This one probably needs a comment rather than any change.
+We 'could' add a 'hold_buffered_mode' function that takes the mlock,
+verifies we are in buffered mode and continues to hold the lock 
+until the 'release_buffered_mode'.  However, I'm not sure any other
+drivers do this particular dance, so clear commenting in the driver
+might be enough.   Should we ever change how mlock is used in the
+core, we'd have to fix this driver up as well.
+
+Hmm.  This is really hammering home that perhaps all the remaining
+mlock cases are 'hard'.
+
+Thanks,
+
+Jonathan
+
+>  
+>  		if (!iio_buffer_enabled(indio_dev))
+>  			ret = -EAGAIN;
+> @@ -399,7 +399,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+>  
+>  		}
+>  
+> -		mutex_unlock(&indio_dev->mlock);
+> +		mutex_unlock(&data->lock);
+>  		break;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		*val = 1;  /* 0.0625 */
 
