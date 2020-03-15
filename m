@@ -2,169 +2,206 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DC1C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 13:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C184EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 13:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7F2205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 13:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584278591;
-	bh=avyqNFrlDVb+8P/ewKX+hQdQSyf11iJpQKuc/Kcpsy8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bltqloal35dnGutOCtLV0WxPU2fthqbPtfK5nyZa80+beZhnzaUTFIhsqWD+ztPDe
-	 DZjsCVjAKQxXItRmsgjRNuVDWGgJswzoP435Y6/7SGoQZrkLN+RDNmUZ8UBRUJD+pb
-	 9S6DtCY03sHcPd41Ev++9nXei0azTEbkZVuEWKJM=
+	by mail.kernel.org (Postfix) with ESMTP id 95CF3205ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 13:26:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgCONXK (ORCPT
+        id S1728618AbgCON0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 09:23:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728581AbgCONXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 09:23:10 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C295205ED;
-        Sun, 15 Mar 2020 13:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584278590;
-        bh=avyqNFrlDVb+8P/ewKX+hQdQSyf11iJpQKuc/Kcpsy8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iDlRGhr0QfYgpXHhauGw3ctwA3vgnaMBt1MmePRTvwBSKxsC3sZS/QUYWMVoUH2wo
-         ONTAWFSgXA5NgX4IB+tAH5PaqQZKGpOq1QfRov2VZ0fEPCrEzMy/cPr5BHNzYv3/nk
-         IGJAGowpJuUlPRZCvMZ2RdQ/QmzeW8DYrXqG9+cw=
-Date:   Sun, 15 Mar 2020 13:23:05 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        matt.ranostay@konsulko.com
-Subject: Re: [PATCH] iio: health: max30100: remove mlock usage
-Message-ID: <20200315132305.6f69d09b@archlinux>
-In-Reply-To: <5e6e0a19.1c69fb81.432d5.f12c@mx.google.com>
-References: <5e668b89.1c69fb81.d7e4f.0f61@mx.google.com>
-        <20200315094604.62dc96be@archlinux>
-        <5e6e0a19.1c69fb81.432d5.f12c@mx.google.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 15 Mar 2020 09:26:43 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:3133 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbgCON0n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 09:26:43 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee45e6e2ce49da-ca768; Sun, 15 Mar 2020 21:25:56 +0800 (CST)
+X-RM-TRANSID: 2ee45e6e2ce49da-ca768
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost (unknown[223.105.0.241])
+        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15e6e2ce2b3f-13bc7;
+        Sun, 15 Mar 2020 21:25:55 +0800 (CST)
+X-RM-TRANSID: 2ee15e6e2ce2b3f-13bc7
+From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+To:     Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Subject: [PATCH v2] ipvs: optimize tunnel dumps for icmp errors
+Date:   Sun, 15 Mar 2020 21:25:41 +0800
+Message-Id: <1584278741-13944-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Mar 2020 16:27:24 +0530
-Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+After strip GRE/UDP tunnel header for icmp errors, it's better to show
+"GRE/UDP" instead of "IPIP" in debug message.
 
-> On Sun, Mar 15, 2020 at 09:46:04AM +0000, Jonathan Cameron wrote:
-> > On Tue, 10 Mar 2020 00:01:28 +0530
-> > Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
-> >   
-> > > Use local lock instead of indio_dev's mlock.
-> > > The mlock was being used to protect local driver state thus using the
-> > > local lock is a better option here.
-> > > 
-> > > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>  
-> > 
-> > Matt.  Definitely need your input on this.
-> >   
-> > > ---
-> > >  drivers/iio/health/max30100.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
-> > > index 84010501762d..8ddc4649547d 100644
-> > > --- a/drivers/iio/health/max30100.c
-> > > +++ b/drivers/iio/health/max30100.c
-> > > @@ -388,7 +388,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
-> > >  		 * Temperature reading can only be acquired while engine
-> > >  		 * is running
-> > >  		 */
-> > > -		mutex_lock(&indio_dev->mlock);
-> > > +		mutex_lock(&data->lock);  
-> > 
-> > Hmm.. It's another complex one.  What is actually being protected here is
-> > the buffer state, but not to take it exclusively like claim_direct does.  
-> 
-> So just to check if I understand correctly, let's say we did not use any
-> lock in this case. If an execution thread reached the
-> iio_buffer_enabled() check and found the buffer to be enabled, but
-> the buffer got disabled simultaneously, the temperature readings that we
-> get will be corrupted. Does this make sense?
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+---
+v2: Fix wrong proto message
+---
+ net/netfilter/ipvs/ip_vs_core.c | 46 +++++++++++++++++++++++------------------
+ 1 file changed, 26 insertions(+), 20 deletions(-)
 
-Yes, any time after that check the buffer could be disabled and we'd potentially
-get a garbage result.
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index 512259f..d2ac530 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -1661,8 +1661,9 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 	struct ip_vs_protocol *pp;
+ 	struct ip_vs_proto_data *pd;
+ 	unsigned int offset, offset2, ihl, verdict;
+-	bool ipip, new_cp = false;
++	bool tunnel, new_cp = false;
+ 	union nf_inet_addr *raddr;
++	char *outer_proto;
+ 
+ 	*related = 1;
+ 
+@@ -1703,8 +1704,8 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 		return NF_ACCEPT; /* The packet looks wrong, ignore */
+ 	raddr = (union nf_inet_addr *)&cih->daddr;
+ 
+-	/* Special case for errors for IPIP packets */
+-	ipip = false;
++	/* Special case for errors for IPIP/UDP/GRE tunnel packets */
++	tunnel = false;
+ 	if (cih->protocol == IPPROTO_IPIP) {
+ 		struct ip_vs_dest *dest;
+ 
+@@ -1721,7 +1722,8 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 		cih = skb_header_pointer(skb, offset, sizeof(_ciph), &_ciph);
+ 		if (cih == NULL)
+ 			return NF_ACCEPT; /* The packet looks wrong, ignore */
+-		ipip = true;
++		tunnel = true;
++		outer_proto = "IPIP";
+ 	} else if ((cih->protocol == IPPROTO_UDP ||	/* Can be UDP encap */
+ 		    cih->protocol == IPPROTO_GRE) &&	/* Can be GRE encap */
+ 		   /* Error for our tunnel must arrive at LOCAL_IN */
+@@ -1729,16 +1731,19 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 		__u8 iproto;
+ 		int ulen;
+ 
+-		/* Non-first fragment has no UDP header */
++		/* Non-first fragment has no UDP/GRE header */
+ 		if (unlikely(cih->frag_off & htons(IP_OFFSET)))
+ 			return NF_ACCEPT;
+ 		offset2 = offset + cih->ihl * 4;
+-		if (cih->protocol == IPPROTO_UDP)
++		if (cih->protocol == IPPROTO_UDP) {
+ 			ulen = ipvs_udp_decap(ipvs, skb, offset2, AF_INET,
+ 					      raddr, &iproto);
+-		else
++			outer_proto = "UDP";
++		} else {
+ 			ulen = ipvs_gre_decap(ipvs, skb, offset2, AF_INET,
+ 					      raddr, &iproto);
++			outer_proto = "GRE";
++		}
+ 		if (ulen > 0) {
+ 			/* Skip IP and UDP/GRE tunnel headers */
+ 			offset = offset2 + ulen;
+@@ -1747,7 +1752,7 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 						 &_ciph);
+ 			if (cih && cih->version == 4 && cih->ihl >= 5 &&
+ 			    iproto == IPPROTO_IPIP)
+-				ipip = true;
++				tunnel = true;
+ 			else
+ 				return NF_ACCEPT;
+ 		}
+@@ -1767,11 +1772,11 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 		      "Checking incoming ICMP for");
+ 
+ 	offset2 = offset;
+-	ip_vs_fill_iph_skb_icmp(AF_INET, skb, offset, !ipip, &ciph);
++	ip_vs_fill_iph_skb_icmp(AF_INET, skb, offset, !tunnel, &ciph);
+ 	offset = ciph.len;
+ 
+ 	/* The embedded headers contain source and dest in reverse order.
+-	 * For IPIP this is error for request, not for reply.
++	 * For IPIP/UDP/GRE tunnel this is error for request, not for reply.
+ 	 */
+ 	cp = INDIRECT_CALL_1(pp->conn_in_get, ip_vs_conn_in_get_proto,
+ 			     ipvs, AF_INET, skb, &ciph);
+@@ -1779,7 +1784,7 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 	if (!cp) {
+ 		int v;
+ 
+-		if (ipip || !sysctl_schedule_icmp(ipvs))
++		if (tunnel || !sysctl_schedule_icmp(ipvs))
+ 			return NF_ACCEPT;
+ 
+ 		if (!ip_vs_try_to_schedule(ipvs, AF_INET, skb, pd, &v, &cp, &ciph))
+@@ -1797,7 +1802,7 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 		goto out;
+ 	}
+ 
+-	if (ipip) {
++	if (tunnel) {
+ 		__be32 info = ic->un.gateway;
+ 		__u8 type = ic->type;
+ 		__u8 code = ic->code;
+@@ -1809,17 +1814,18 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 			u32 mtu = ntohs(ic->un.frag.mtu);
+ 			__be16 frag_off = cih->frag_off;
+ 
+-			/* Strip outer IP and ICMP, go to IPIP header */
++			/* Strip outer IP and ICMP, go to IPIP/UDP/GRE header */
+ 			if (pskb_pull(skb, ihl + sizeof(_icmph)) == NULL)
+-				goto ignore_ipip;
++				goto ignore_tunnel;
+ 			offset2 -= ihl + sizeof(_icmph);
+ 			skb_reset_network_header(skb);
+-			IP_VS_DBG(12, "ICMP for IPIP %pI4->%pI4: mtu=%u\n",
+-				&ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr, mtu);
++			IP_VS_DBG(12, "ICMP for %s %pI4->%pI4: mtu=%u\n",
++				  outer_proto, &ip_hdr(skb)->saddr,
++				  &ip_hdr(skb)->daddr, mtu);
+ 			ipv4_update_pmtu(skb, ipvs->net, mtu, 0, 0);
+ 			/* Client uses PMTUD? */
+ 			if (!(frag_off & htons(IP_DF)))
+-				goto ignore_ipip;
++				goto ignore_tunnel;
+ 			/* Prefer the resulting PMTU */
+ 			if (dest) {
+ 				struct ip_vs_dest_dst *dest_dst;
+@@ -1832,11 +1838,11 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 				mtu -= sizeof(struct iphdr);
+ 			info = htonl(mtu);
+ 		}
+-		/* Strip outer IP, ICMP and IPIP, go to IP header of
++		/* Strip outer IP, ICMP and IPIP/UDP/GRE, go to IP header of
+ 		 * original request.
+ 		 */
+ 		if (pskb_pull(skb, offset2) == NULL)
+-			goto ignore_ipip;
++			goto ignore_tunnel;
+ 		skb_reset_network_header(skb);
+ 		IP_VS_DBG(12, "Sending ICMP for %pI4->%pI4: t=%u, c=%u, i=%u\n",
+ 			&ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr,
+@@ -1845,7 +1851,7 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 		/* ICMP can be shorter but anyways, account it */
+ 		ip_vs_out_stats(cp, skb);
+ 
+-ignore_ipip:
++ignore_tunnel:
+ 		consume_skb(skb);
+ 		verdict = NF_STOLEN;
+ 		goto out;
+-- 
+1.8.3.1
 
-> 
-> > Here we need the inverse, we want to ensure we are 'not' in the direct
-> > mode because this hardware requires the buffer to be running to read the
-> > temperature. 
-> > 
-> > That is the sort of interface that is going to get userspace very 
-> > confused.  
-> Agreed
-> 
-> > Matt, normally what I'd suggest here is that the temperature read should:
-> > 
-> > 1) Claim direct mode, if it fails then do the dance you have here
-> > (with more comments to explain why you are taking an internal lock)
-> > 2) Start up capture as if we were in buffered mode
-> > 3) Grab that temp
-> > 4) stop capture to return to non buffered mode.
-> > 5) Release direct mode.
-> > 
-> > I guess we decided it wasn't worth the hassle.  
-> > 
-> > So Rohit.  This one probably needs a comment rather than any change.  
-> The code already mentions that the "Temperature can only be acquired
-> while engine is running.", should I add something like "mlock is
-> acquired to protect the buffer state..." to the same comment.
 
-I'd wait for Matt to come back with whether he'd like to enable the
-more complex solution to allow the buffer to be enabled on demand.
-
-> 
-> > We 'could' add a 'hold_buffered_mode' function that takes the mlock,
-> > verifies we are in buffered mode and continues to hold the lock 
-> > until the 'release_buffered_mode'.  However, I'm not sure any other
-> > drivers do this particular dance, so clear commenting in the driver
-> > might be enough.   Should we ever change how mlock is used in the
-> > core, we'd have to fix this driver up as well.  
-> Understood.
-> 
-> > Hmm.  This is really hammering home that perhaps all the remaining
-> > mlock cases are 'hard'.  
-> A nice sideffect of me investigating these is that I am getting some
-> good insight into how iio works. I will see if I can investigate a
-> couple more cases
-
-Cool. 
-
-Jonathan
-
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> > >    
-> Thanks,
-> Rohit
-> > >  		if (!iio_buffer_enabled(indio_dev))
-> > >  			ret = -EAGAIN;
-> > > @@ -399,7 +399,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
-> > >  
-> > >  		}
-> > >  
-> > > -		mutex_unlock(&indio_dev->mlock);
-> > > +		mutex_unlock(&data->lock);
-> > >  		break;
-> > >  	case IIO_CHAN_INFO_SCALE:
-> > >  		*val = 1;  /* 0.0625 */  
-> >   
 
