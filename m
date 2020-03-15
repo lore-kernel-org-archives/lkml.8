@@ -2,102 +2,138 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C99CC10F29
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 23:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D558C10F29
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 23:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D031520674
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 23:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BX38o0G8"
+	by mail.kernel.org (Postfix) with ESMTP id 4936820663
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 23:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgCOXjS (ORCPT
+        id S1729176AbgCOXvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 19:39:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:55511 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgCOXjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 19:39:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gbVq5m7Hz9sPF;
-        Mon, 16 Mar 2020 10:39:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584315555;
-        bh=+tUDgcepRWBHlFKHghgW6vo5hJaPg5GMTqtRPTxNt7g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BX38o0G8OhdEvAj5bodvalfOhAExxgymnS2iA9L6fa8KWzyNKdEea1LA0YiJJJhoG
-         vP9et+8xpBzB4DGhKoAtbe1CRXtgHPja5aQiTwI/CvcHVUWl4YlRs7QOcVmmnDg21D
-         O7Z6ERSEcUjHoUE9p0lhCqtZWfLSJJ+AKOXW88KISi2QV92Zr+MyYA2NIsZv/4kxjM
-         cMs0/GMV/Q+A4cgXH53D7WEyXvbgLeoNb+6HMs1+bCs1hapbo8hIteZcIQ72srhAWH
-         GmgpNi1LLgO+fqGyTbJwSV46ZIkFDiaGAVpid12cnw9c16HY6YvXpeE/DdIiuIoG1l
-         erw1nJDIGKT+w==
-Date:   Mon, 16 Mar 2020 10:39:13 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: linux-next: build warning after merge of the mlx5-next tree
-Message-ID: <20200316103913.659d3a5e@canb.auug.org.au>
+        Sun, 15 Mar 2020 19:51:17 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:53978 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729033AbgCOXvR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 19:51:17 -0400
+Received: by mail-io1-f69.google.com with SMTP id q24so10591879iot.20
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 16:51:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=XFune3Nh7INWLVShwbwpLH/8tU9WYmcocUnNPcwte9c=;
+        b=Knrqv85SYG4o6aKhDXjT+3UOPZBkreirorOUeb6RjfoHvE8kU4X5wz8yBXSqpOSh02
+         yxuZU8LH3EGMwkkiVDk/CDC5dxHl24289/QfVs+jqO+NUze52JBeHc0JdHOGFBxJwVbx
+         uljOfNJYcN00mHgfJt6BN0OfJSnh6nEE3hxM62BielJIpIZ6wUSp/CQ6N+9Duub6h7Y1
+         xcF0T5zgkg03qIs75h9yNOMzODf29NObMYngxyNxoyff/e1mU5Yco2YWqKO0os5jSasD
+         ERwe5fZxie+jHBMPNa9+5u5VkeG8mtEi7OyKC/30I3XEvhL8AEjDBEkF3aFL9yAunqzy
+         IPUw==
+X-Gm-Message-State: ANhLgQ0eyatEcJTXeeHtGwMmvSJqK5P3xElVMXfFvMUKCaRxoJKBQPCx
+        GU2P7BtZ+QuLsVnL9XTVqCAcxr1T6PhiPKuwTFCgrMlx515i
+X-Google-Smtp-Source: ADFU+vvj1uMVlMX8J08YQZzfP6DiYsntASdjPiD+68J2r/EfLAEkCc0q/yICtOgqS/EPyozL5s42hyIBdR216JZD7NxY7Qjt1r7Y
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XcKj.RJIZwhP7uX1zcivCMd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a92:9f1b:: with SMTP id u27mr25436039ili.173.1584316274477;
+ Sun, 15 Mar 2020 16:51:14 -0700 (PDT)
+Date:   Sun, 15 Mar 2020 16:51:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c08f2005a0ed60d4@google.com>
+Subject: general protection fault in erspan_netlink_parms
+From:   syzbot <syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XcKj.RJIZwhP7uX1zcivCMd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi all,
+syzbot found the following crash on:
 
-After merging the mlx5-next tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+HEAD commit:    0fda7600 geneve: move debug check after netdev unregister
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=134e9555e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
+dashboard link: https://syzkaller.appspot.com/bug?extid=1b4ebf4dae4e510dd219
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1627f955e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111ac52de00000
 
-In file included from include/linux/printk.h:331,
-                 from include/linux/kernel.h:15,
-                 from drivers/net/ethernet/mellanox/mlx5/core/mr.c:33:
-drivers/net/ethernet/mellanox/mlx5/core/mr.c: In function 'mlx5_core_create=
-_mkey':
-include/linux/dynamic_debug.h:157:25: warning: 'key' may be used uninitiali=
-zed in this function [-Wmaybe-uninitialized]
-  157 |  _dynamic_func_call(fmt,__dynamic_dev_dbg,   \
-      |                         ^~~~~~~~~~~~~~~~~
-drivers/net/ethernet/mellanox/mlx5/core/mr.c:47:5: note: 'key' was declared=
- here
-   47 |  u8 key;
-      |     ^~~
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com
 
-Probably introduced by commit
+netlink: 4 bytes leftover after parsing attributes in process `syz-executor042'.
+general protection fault, probably for non-canonical address 0xdffffc0000000016: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x00000000000000b0-0x00000000000000b7]
+CPU: 0 PID: 9887 Comm: syz-executor042 Not tainted 5.6.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:erspan_netlink_parms.isra.0+0x5c/0x420 net/ipv4/ip_gre.c:1172
+Code: 6a 03 d6 fa 45 85 e4 0f 85 f0 00 00 00 e8 ec 01 d6 fa 48 8d bb b0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 37 03 00 00 4c 8b ab b0 00 00 00 4d 85 ed 0f 84
+RSP: 0018:ffffc90001f17080 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff869c13c6
+RDX: 0000000000000016 RSI: ffffffff869c13d4 RDI: 00000000000000b0
+RBP: ffff888090c0a000 R08: ffff88809a4f6240 R09: ffffc90001f170f0
+R10: fffff520003e2e24 R11: 0000000000000003 R12: 0000000000000000
+R13: ffffc90001f170e0 R14: 0000000000000000 R15: ffffc90001f17428
+FS:  0000000001941880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000284 CR3: 000000009e80a000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ erspan_newlink+0x106/0x140 net/ipv4/ip_gre.c:1341
+ __rtnl_newlink+0xf18/0x1590 net/core/rtnetlink.c:3319
+ rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5436
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4402e9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffc0fc1f58 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402e9
+RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000006e61 R09: 00000000004002c8
+R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000401b70
+R13: 0000000000401c00 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 895543aaa6ca5250 ]---
+RIP: 0010:erspan_netlink_parms.isra.0+0x5c/0x420 net/ipv4/ip_gre.c:1172
+Code: 6a 03 d6 fa 45 85 e4 0f 85 f0 00 00 00 e8 ec 01 d6 fa 48 8d bb b0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 37 03 00 00 4c 8b ab b0 00 00 00 4d 85 ed 0f 84
+RSP: 0018:ffffc90001f17080 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff869c13c6
+RDX: 0000000000000016 RSI: ffffffff869c13d4 RDI: 00000000000000b0
+RBP: ffff888090c0a000 R08: ffff88809a4f6240 R09: ffffc90001f170f0
+R10: fffff520003e2e24 R11: 0000000000000003 R12: 0000000000000000
+R13: ffffc90001f170e0 R14: 0000000000000000 R15: ffffc90001f17428
+FS:  0000000001941880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000284 CR3: 000000009e80a000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-  fc6a9f86f08a ("{IB,net}/mlx5: Assign mkey variant in mlx5_ib only")
 
---=20
-Cheers,
-Stephen Rothwell
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
---Sig_/XcKj.RJIZwhP7uX1zcivCMd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5uvKEACgkQAVBC80lX
-0Gxucwf/ZJwQJSJkO0ByEDptP7IoFfYCM7ovlNvvtf6koIf3uwcz3NEWWs5I7BbA
-/gH9MogBhIJX6XJ68f3MU68PBzMKGO4o955F9wxaI1iNwQifTCjcOA2wFWq0EoFT
-fgqcOGyLJ2U/xhPshHO+KgV+t6gvOyq5U0AQqSE1iDe4db95wUHs4G3QFLQ16/jj
-WuW9DLF6u00VZV6UKDckvfXKr3b85rKlLUeYzCxP6sU7SQhJdrDdqJ+6POUU5y1C
-naIUL+ectKgzdYT09I11Vukvls/ZOx3l3yaf+a36WZZhInwwRWhp0pXID3wdmBs2
-0U6aFaNs9wxfzWU8Hem+qJYWC1rkig==
-=1e/o
------END PGP SIGNATURE-----
-
---Sig_/XcKj.RJIZwhP7uX1zcivCMd--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
