@@ -2,165 +2,121 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A81FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAB5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769E920578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7518520578
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsMP5ZfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgCOPQ1 (ORCPT
+        id S1728812AbgCOPZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:16:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50141 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728743AbgCOPQM (ORCPT
+        Sun, 15 Mar 2020 11:25:11 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41555 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728794AbgCOPZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:16:12 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jDUzp-0001hs-3L; Sun, 15 Mar 2020 16:16:09 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2FA7AFFB8B;
-        Sun, 15 Mar 2020 16:16:08 +0100 (CET)
-Date:   Sun, 15 Mar 2020 15:14:38 -0000
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] efi/urgent for 5.6-rc6
-Message-ID: <158428527861.14940.12920965330771600615.tglx@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sun, 15 Mar 2020 11:25:11 -0400
+Received: by mail-il1-f194.google.com with SMTP id l14so13945871ilj.8;
+        Sun, 15 Mar 2020 08:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8oElHQLKFLOVtRHqu7xiZ6PSJACuRnWmCrjsIOT03/4=;
+        b=RsMP5ZfF9Kle+rjBS3Bso6AHBFITrbE13HUp2ObAa4PaLpubX0IyO20urbKNQZ8QzO
+         zyawLivUZMOXmEf4KS1gockamB5ifWcK8RDanr4T91XtPkH5uqz3rQkJuTN29cfWqPbo
+         UetMtw8CUEnybaWElSX6cG1rLsDBv9M8fdTLj8NPJFE16pwbaVq9cVWA4uz7b76daa0o
+         JOFelYtJ96GsHGmlh0CnSFIMH+ubQ4nER8Nckilais8GLUoMFOPtDNa0hT5zBIWZUkDE
+         7TeitOReluipDTZmFIWdjKp9FiDr+lWqjIq0utvdsGanqMtRlVOq6xPtcmqtTp0FDcdD
+         QTvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8oElHQLKFLOVtRHqu7xiZ6PSJACuRnWmCrjsIOT03/4=;
+        b=Swtw7IwfnYlS0YRdoyUeCqZ1PTZJmek7FEIwdGAE21fviXzdZArH0txierQFwuYMRc
+         60wE6RINAZN8FtsRaDWtD6gkdBv2e03CyomAnYzguw0shbqwzmvHuGs3QMQuBtJhQCIz
+         RK1oSrvYZQaykzlY+s14ihhLppK11rSLbBUzhjEricvR27NIciv3XjORce7st9g18sp3
+         uLIXIP6FZZr3niuhVLrfIVHzqAJN1uosuk2XYT8xPxaqvvKtH2flxNvznMfPtfZrsrma
+         /ZBm5XtSA/OgxEFhg3Oxz5owAeLt1omQQCALioYSDpwxlBORGEfA97uKujTpXSeabvc5
+         ZB2w==
+X-Gm-Message-State: ANhLgQ0g5/RWH/41UwHrwom49gGvxpyv0jOkE1pGeQwR/f9/wLdggqW9
+        ir7IjnPqemwKdB6wAl5l2EEZGkNRwEfzFj4oAcA=
+X-Google-Smtp-Source: ADFU+vt9/0tLT5TMHQJuvt7jSFZQO9BbU2DRVErpzh0iupQQjp//EFou6F5rBpQO/z0gYMAYYRnt+hMR7/PR6UXiFmE=
+X-Received: by 2002:a92:8f53:: with SMTP id j80mr17379957ild.171.1584285909944;
+ Sun, 15 Mar 2020 08:25:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <1583920112-2680-1-git-send-email-simhavcs@gmail.com> <20200312151752.GA7490@bogus>
+In-Reply-To: <20200312151752.GA7490@bogus>
+From:   Vinay Simha B N <simhavcs@gmail.com>
+Date:   Sun, 15 Mar 2020 20:54:58 +0530
+Message-ID: <CAGWqDJ7DP3DuR7EWT6Ni8YxN3Adg3RgJZut6+AtpAak_HB=QCQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+rob,
 
-please pull the latest efi/urgent branch from:
+i do not get the error when running 'make dt_binding_check' in my
+build environment
+Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-2020-03-15
+is there any tool available similar to  scripts/checkpatch.pl -f
+<file> , for yaml files?
 
-up to:  d6c066fda90d: efi: Add a sanity check to efivar_store_raw()
+On Thu, Mar 12, 2020 at 8:47 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, 11 Mar 2020 15:18:24 +0530, Vinay Simha BN wrote:
+> > Add yaml documentation for DSI/LVDS tc358775 bridge
+> >
+> > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> >
+> > ---
+> > v1:
+> >  Initial version
+> > ---
+> >  .../bindings/display/bridge/toshiba-tc358775.yaml  | 174 +++++++++++++++++++++
+> >  1 file changed, 174 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml:  while scanning for the next token
+> found character that cannot start any token
+>   in "<unicode string>", line 11, column 1
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> warning: no schema found in file: Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml: ignoring, error parsing file
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> See https://patchwork.ozlabs.org/patch/1252753
+> Please check and re-submit.
 
-Two EFI fixes:
-
- - Prevent a race and buffer overflow in the sysfs efivars interface which
-   causes kernel memory corruption.
-
- - Add the missing NULL pointer checks in efivar_store_raw()
-
-Thanks,
-
-	tglx
-
------------------->
-Vladis Dronov (2):
-      efi: Fix a race and a buffer overflow while reading efivars via sysfs
-      efi: Add a sanity check to efivar_store_raw()
 
 
- drivers/firmware/efi/efivars.c | 32 +++++++++++++++++++++++---------
- 1 file changed, 23 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/firmware/efi/efivars.c b/drivers/firmware/efi/efivars.c
-index 7576450c8254..aff3dfb4d7ba 100644
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -83,13 +83,16 @@ static ssize_t
- efivar_attr_read(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
-+	unsigned long size = sizeof(var->Data);
- 	char *str = buf;
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return -EINVAL;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-+	var->DataSize = size;
-+	if (ret)
- 		return -EIO;
- 
- 	if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
-@@ -116,13 +119,16 @@ static ssize_t
- efivar_size_read(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
-+	unsigned long size = sizeof(var->Data);
- 	char *str = buf;
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return -EINVAL;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-+	var->DataSize = size;
-+	if (ret)
- 		return -EIO;
- 
- 	str += sprintf(str, "0x%lx\n", var->DataSize);
-@@ -133,12 +139,15 @@ static ssize_t
- efivar_data_read(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
-+	unsigned long size = sizeof(var->Data);
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return -EINVAL;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-+	var->DataSize = size;
-+	if (ret)
- 		return -EIO;
- 
- 	memcpy(buf, var->Data, var->DataSize);
-@@ -199,6 +208,9 @@ efivar_store_raw(struct efivar_entry *entry, const char *buf, size_t count)
- 	u8 *data;
- 	int err;
- 
-+	if (!entry || !buf)
-+		return -EINVAL;
-+
- 	if (in_compat_syscall()) {
- 		struct compat_efi_variable *compat;
- 
-@@ -250,14 +262,16 @@ efivar_show_raw(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
- 	struct compat_efi_variable *compat;
-+	unsigned long datasize = sizeof(var->Data);
- 	size_t size;
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return 0;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &entry->var.Attributes,
--			     &entry->var.DataSize, entry->var.Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &datasize, var->Data);
-+	var->DataSize = datasize;
-+	if (ret)
- 		return -EIO;
- 
- 	if (in_compat_syscall()) {
-
+-- 
+regards,
+vinaysimha
