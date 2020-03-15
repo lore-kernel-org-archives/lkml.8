@@ -2,122 +2,103 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29B8C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B534C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9585205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0E4206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVW4lwLp"
+	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="kOzIRY1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbgCOMyG (ORCPT
+        id S1728552AbgCOMye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 08:54:06 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39512 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728522AbgCOMyG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 08:54:06 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j15so11681414lfk.6;
-        Sun, 15 Mar 2020 05:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1MwTYDSMkQGM4p1A9KGg+VT/DsDNrrQYfUwwT/ZLztU=;
-        b=PVW4lwLpvpoZzOqZEqmL2rZNklnr+mBEBTHrm1U2oQCXugYZUXMn73hg0zr7nZEt6Q
-         sa3RQTuWbDvP0p0KvC1A7Gs5Yxz+w2LZndSmver+ZGSD+6U8QK94OOo3Zo9sQahuheqp
-         xR0j1sNV3Fx/WHx2Hv0HHhtcMnfTLI2ys7PhowwjQseAHffjF8gG499vHraH5AMvGp/N
-         SPsYkIl+fr8LQywgtxdCjfRXRmzWQY21RunzhrW2Jt6y5NlZob96SiCUy8omR/uhKOl+
-         saj+Ox1dwqeHNc83t87f3Wk++i2PZcgAGKDCPGfNcxvjht9KUu+NgnkYS+FVHX7NXSbZ
-         LKzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1MwTYDSMkQGM4p1A9KGg+VT/DsDNrrQYfUwwT/ZLztU=;
-        b=VRvmw7AMeQP8woYrKSwTUYQHC6aDTcShej1h0JLCVRGbWgF9TmaC32JECSru5FjGq0
-         stHRPt41mfnWJnfaWgZHhczhHsqngqiLOL1Af+ajLcvV1IS7Ov01mwSfJAShwsAV8s4R
-         tXozW+AZTBwNnDRJPz5tlYypuALPEqZA9St/YXBbe+ssdL++mUNM10l2+7EMOnOy1amG
-         1CqXHPPbTAvB6eNAXusWn4OOxSBe0dHcESeS1Q72jcPjUvKgExo/TiUK/gdVAnAQgVIT
-         oQgIgjwZjOBr64qA1uVX5GesHslNjsovGz78qV4NidsnHKOfMh+/B9g/AsfIsomNi+07
-         O/hg==
-X-Gm-Message-State: ANhLgQ1VKqR7NEoAkkzmRpkqt/71xXPocwKdyD8CL02cpx+l7My+0BUL
-        /ln5SudCxU5akGD/o8pgVgXcrIx2
-X-Google-Smtp-Source: ADFU+vuEFH5q0NH5MzntAYyZmI1FtKlcUtANyZyUjRv2GKKy4RBWpfNo0pevPKgB8YDmuRJlHyHK/A==
-X-Received: by 2002:a19:cbd5:: with SMTP id b204mr608821lfg.203.1584276843012;
-        Sun, 15 Mar 2020 05:54:03 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id v200sm4187853lfa.48.2020.03.15.05.54.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Mar 2020 05:54:02 -0700 (PDT)
-Subject: Re: [RFC PATCH v4 8/8] arm64: tegra: Add Tegra VI CSI support in
- device tree
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, helen.koike@collabora.com, sboyd@kernel.org
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Sun, 15 Mar 2020 08:54:34 -0400
+Received: from mx.0dd.nl ([5.2.79.48]:52546 "EHLO mx.0dd.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728522AbgCOMye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 08:54:34 -0400
+X-Greylist: delayed 335 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Mar 2020 08:54:33 EDT
+Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mx.0dd.nl (Postfix) with ESMTPS id 32AD15FB19;
+        Sun, 15 Mar 2020 13:48:57 +0100 (CET)
+Authentication-Results: mx.0dd.nl;
+        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="kOzIRY1m";
+        dkim-atps=neutral
+Received: from www (www.vdorst.com [192.168.2.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.vdorst.com (Postfix) with ESMTPSA id CF07623728F;
+        Sun, 15 Mar 2020 13:48:56 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com CF07623728F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
+        s=default; t=1584276536;
+        bh=Is7T8gsczbAflMtpH86ZF4mhjtkMOqN5/wzv7KlnGtc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=kOzIRY1mr32lMxMDQcEn9401DmXj1RngdTgPhdC+quRwdtSfJ4U9O8lOjpq7cE/2p
+         3V43c43Hpew1vvNU0ooQIx5MDF7VELEPayVuSnXqjBLjRtpHy/9N+nlKPDUh9VVRgk
+         eZPdhvkogRf2Hjz6awee9vdt7z6RJ/KGoezDN1ZijC2tHT8c8zRdxTRzc7d5R9K8YY
+         EhhEMi9vHxETmH647fVSacigU5IL+PU6QCUbctesRtssqCY0IzWriFcibaVS+X2E28
+         ghyEbNG5m1BKMQWjDRu7bG+199F5/HTim2CqP/t6UP3IwVwdhP/iEGEcM0YTxAOnyY
+         or8/9Rj35zovA==
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
+ www.vdorst.com (Horde Framework) with HTTPS; Sun, 15 Mar 2020 12:48:56 +0000
+Date:   Sun, 15 Mar 2020 12:48:56 +0000
+Message-ID: <20200315124856.Horde.FggCAOBKhyXcJ0kuGBpqX_l@www.vdorst.com>
+From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
         linux-kernel@vger.kernel.org
-References: <1584236766-24819-1-git-send-email-skomatineni@nvidia.com>
- <1584236766-24819-9-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b4bbcc1d-d38c-14c5-7205-2f7657ab8712@gmail.com>
-Date:   Sun, 15 Mar 2020 15:54:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Subject: Re: [PATCH 0/2] gpio: mmio: introduce BGPIOF_NO_SET_ON_INPUT
+In-Reply-To: <20200315121338.251362-1-gch981213@gmail.com>
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-In-Reply-To: <1584236766-24819-9-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.03.2020 04:46, Sowjanya Komatineni пишет:
-> Tegra210 contains VI controller for video input capture from MIPI
-> CSI camera sensors and also supports built-in test pattern generator.
-> 
-> CSI ports can be one-to-one mapped to VI channels for capturing from
-> an external sensor or from built-in test pattern generator.
-> 
-> This patch adds support for VI and CSI and enables them in Tegra210
-> device tree.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
+Quoting Chuanhong Guo <gch981213@gmail.com>:
 
-Hello Sowjanya,
+> Currently gpio-hog doesn't work on gpio-mt7621 driver. On further
+> debugging, I noticed that set/clear register on this controller
+> only works on output pins. We need to setup pin direction before
+> writing values in bgpio_dir_out for a correct gpio-hog behavior.
+> This patchset introduces a new flag BGPIOF_NO_SET_ON_INPUT for
+> these kind of controller and set this flag for gpio-mt7621.
+>
+> Chuanhong Guo (2):
+>   gpio: mmio: introduce BGPIOF_NO_SET_ON_INPUT
+>   gpio: mt7621: add BGPIOF_NO_SET_ON_INPUT flag
+>
+>  drivers/gpio/gpio-mmio.c    | 23 +++++++++++++++++++----
+>  drivers/gpio/gpio-mt7621.c  |  4 ++--
+>  include/linux/gpio/driver.h |  1 +
+>  3 files changed, 22 insertions(+), 6 deletions(-)
+>
+> --
+> 2.24.1
+Thanks Chuanhong for debugging the problem!
 
-...
-> +
-> +			pd_venc: venc {
-> +				clocks = <&tegra_car TEGRA210_CLK_VI>,
-> +					 <&tegra_car TEGRA210_CLK_CSI>;
-> +				resets = <&tegra_car 20>,
+With this patch gpio-hog works again.
 
-What is the clock #20?
+For the series:
 
-> +					 <&tegra_car TEGRA210_CLK_CSI>,
-> +					 <&mc TEGRA210_MC_RESET_VI>;
+Tested-by: René van Dorst <opensource@vdorst.com>
 
-Does this order means that memory controller will be reset *after*
-resetting the CSI/VI hardware? This is incorrect reset sequence.
+Greats,
 
-The memory controller reset should be kept asserted during of the time
-of the hardware resetting procedure.
+René
 
-The correct sequence should be as follows:
-
-1. Assert MC
-2. Reset VI
-3. Deassert MC
