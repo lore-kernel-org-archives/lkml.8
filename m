@@ -2,87 +2,122 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2ECC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEF3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98AD020637
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A1220637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 17:10:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="PiXqnaA2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvYTglIG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgCORI4 (ORCPT
+        id S1728971AbgCORJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 13:08:56 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:36474 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728915AbgCORI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 13:08:56 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48gQrP5N7Mzw;
-        Sun, 15 Mar 2020 18:08:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1584292133; bh=CFU5FJmuQdF3qv0nzTWEIX3XxtGpmXCO2Bcuo6/RtV0=;
-        h=Date:From:Subject:To:Cc:From;
-        b=PiXqnaA20AS+ZPf2FLuiICoBqDqhTadyz5LqerFkVUBgSqRIBBYTJXR8ArbG2AKoO
-         /724trCrD+7cm39uQY61t9m6b7oY/diuhGUpEY8RX0P/2FBLp7iojPPAhkI85CemyW
-         wiitnfK5PM1b5bfNhafcU9Bw7NKsuTvidPDsNakaqOyj8euJsuXNhDRJ5m5AgaBoA4
-         Pp/C9hMiloWng4T5Bm4NeSyVU0xvRB84YapoYHRXsa537fl9PdnB5BB9kJlV62QCxj
-         UP8Bdqg332NU3ZtC9+ig4R8Z/u7PiD7enNuH6TSU5GP16liM4jFpf1HsNS3MdTP2jW
-         CF9oVWEyRBVjg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 15 Mar 2020 18:08:53 +0100
-Message-Id: <45912ba25c34a63b8098f471c3c8ebf8857a4716.1584292056.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH] spi: fix cs_change for last transfer
+        Sun, 15 Mar 2020 13:09:38 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51238 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728915AbgCORJh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 13:09:37 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a132so15129642wme.1
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 10:09:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yc4/8+r9LFoveyNvlviiorm4oDVYhtlLmMrWk1tR/FQ=;
+        b=AvYTglIGHkt2gGzakwKBWFsG6tS7qnh1tfKxmLN1Qhf/Usw1oHRP4U4FE1GtYyFuHp
+         m7By8cIoTWpFKc1nPMsr/RLdVquePQkibxtRx7xcnb6njCWCS6wh3VsIXQrF9Wmbgbhg
+         HSXamw8RhLIjL09PGqXBmWjfM8n65QXsA47PD+sY3mivjb9rJMKUeY/LhWntudrjnjRB
+         ciztiYIinVBLqCRDFZ9AKzDYBFDqe3aYtAk3K3TuKL1UBJVeckIEewJUoKEOHRrhouEL
+         VT59MCJebALE6RRkNVhHhaADQg3rbqKbA7YvFOCHk8+0QC1A+B7qSK1dhYGhD5v7V0Lj
+         FHeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yc4/8+r9LFoveyNvlviiorm4oDVYhtlLmMrWk1tR/FQ=;
+        b=iR9sw1YvubIqXOW+n8w6T4d0wKV3B35HDVNOjDdaq0rNPIClW9nIpThG6sIQoqGOJ7
+         OVb8qeXPuNxOagfs9/CIN84wQvsXGbsINGywo5wSmyysrZPh6mFEambn/CUceT2avK5K
+         nfh94J6j5tnytvPByAl6pYCdTrZVIK+inJhS14hrqzyvPD3tmX4UBIbJ+XPzZMMaOO9o
+         yZNUua0jgx7riwJX8/uPA5L1HFRknaSJ3UGo/k0FZXFCX+9NyTl922AGm4RqffOmsYk4
+         XnF6I+rWqPhusp6ukrBy2AeA5SKXodMyemMwLma5UzwdO/3LH2lRQi4nfq3focEhtk08
+         xlyw==
+X-Gm-Message-State: ANhLgQ2i/FZCIA0NdFIuYRAVEmndN9DlQ8GpUYgnbvjqfOwikQJBFGaq
+        1sBYo9uLQ0hD70rIfl1o4jJSCqlojaVgV5EY
+X-Google-Smtp-Source: ADFU+vsSRPq1z0lpvovd2o0tgcq1tUl6QnFH3+5MINTfcanV52K/pRNvKB4RbxUyJN1ZBdKd1mHbMQ==
+X-Received: by 2002:a1c:418b:: with SMTP id o133mr23602224wma.165.1584292173830;
+        Sun, 15 Mar 2020 10:09:33 -0700 (PDT)
+Received: from localhost.localdomain (ipb218f56a.dynamic.kabel-deutschland.de. [178.24.245.106])
+        by smtp.gmail.com with ESMTPSA id u25sm25874774wml.17.2020.03.15.10.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Mar 2020 10:09:33 -0700 (PDT)
+From:   Eugeniu Rosca <roscaeugeniu@gmail.com>
+X-Google-Original-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [RFC PATCH 0/3] Fix quiet console in pre-panic scenarios
+Date:   Sun, 15 Mar 2020 18:09:00 +0100
+Message-Id: <20200315170903.17393-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Generic spi_transfer_one_message() implementation introduced in
-commit b158935f70b9 has a bug in cs_change handling: it keeps CS
-asserted when cs_change is set. Fix it.
+Dear community,
 
-Cc: stable@vger.kernel.org
-Fixes: b158935f70b9 ("spi: Provide common spi_message processing loop")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/spi/spi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The motivation behind this seris is to save days/weeks, if not months,
+of debugging efforts for users who:
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 8994545367a2..5012eabde468 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1206,7 +1206,7 @@ static int spi_transfer_one_message(struct spi_controller *ctlr,
- 				    struct spi_message *msg)
- {
- 	struct spi_transfer *xfer;
--	bool keep_cs = false;
-+	bool keep_cs = true;
- 	int ret = 0;
- 	struct spi_statistics *statm = &ctlr->statistics;
- 	struct spi_statistics *stats = &msg->spi->statistics;
-@@ -1268,7 +1268,7 @@ static int spi_transfer_one_message(struct spi_controller *ctlr,
- 		if (xfer->cs_change) {
- 			if (list_is_last(&xfer->transfer_list,
- 					 &msg->transfers)) {
--				keep_cs = true;
-+				keep_cs = false;
- 			} else {
- 				spi_set_cs(msg->spi, false);
- 				_spi_transfer_cs_change_delay(msg, xfer);
+ * experience an issue like softlockup/hardlockup/hung task/oom, whose
+   reproduction is not clear and whose occurrence rate is very low
+ * are constrained to use a low loglevel value (1,2,3) in production
+ * mostly rely on console logs to debug the issue post-mortem
+   (e.g. saved to persistent storage via e.g. pstore)
+
+As pointed out in the last patch from this series, under the above
+circumstances, users might simply lack any relevant logs during
+post-mortem analysis.
+
+Why this series is marked as RFC is because:
+ * There are several possible approaches to turn console verbosity on
+   and off. Current series employs the 'ignore_loglevel' functionality,
+   but an alternative way is to use the 'console_loglevel' variable. The
+   latter is more intrusive, hence the former has been chosen as v1.
+ * Manipulating 'ignore_loglevel' might be seen as an abuse, especially
+   because it breaks the expectation of users who assume the system to
+   be dead silent after passing loglevel=0 on kernel command line.
+
+Thank you for your comments!
+
+Eugeniu Rosca (3):
+  printk: convert ignore_loglevel to atomic_t
+  printk: add console_verbose_{start,end}
+  watchdog: Turn console verbosity on when reporting softlockup
+
+ include/linux/printk.h | 10 ++++++++++
+ kernel/printk/printk.c | 30 ++++++++++++++++++++++++++----
+ kernel/watchdog.c      |  4 ++++
+ 3 files changed, 40 insertions(+), 4 deletions(-)
+
 -- 
-2.20.1
+2.25.0
 
