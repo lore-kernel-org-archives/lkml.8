@@ -3,114 +3,169 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59612C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28A8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FCE206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0690206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="junzBuMe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cp9QiejK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgCOK4l (ORCPT
+        id S1728337AbgCOK5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:56:41 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:45320 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgCOK4k (ORCPT
+        Sun, 15 Mar 2020 06:57:32 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55098 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgCOK5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:56:40 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 40BDA2D6;
-        Sun, 15 Mar 2020 11:56:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584269798;
-        bh=wBHI1FuPG8VN3qlmnNu6k1DtQ3wMNO+VIn6GJctKDuw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=junzBuMesSYYoLueMP7hQSX9UrKCfzGa4LmFNTzPWzvvD1okAfOXqERvo22URweSp
-         ULZc2eXcbymSf5rkPVsXMQX5QE99NAZZux5gLnIqBOXg2wCBgFQLGIIviA7TcxTBQk
-         vlqv9Frx63aSW9XCesSEouU/bXhyofw2oZQ1uzFw=
-Date:   Sun, 15 Mar 2020 12:56:34 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Niklas <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 1/2] media: v4l2-async: Pass pointer to struct
- v4l2_subdev in match_custom callback
-Message-ID: <20200315105634.GC4732@pendragon.ideasonboard.com>
-References: <20200315102724.26850-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200315102724.26850-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Sun, 15 Mar 2020 06:57:32 -0400
+Received: by mail-pj1-f68.google.com with SMTP id np16so6524397pjb.4;
+        Sun, 15 Mar 2020 03:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i14Cy+qHQvcRYik37Qgbi12uesnn0JzZqE03ZogEXJc=;
+        b=cp9QiejKjRe92539znGORxdJnz/s92/VO+x1lRBOKAG2XwMpTT8jz9pwG6IxcyNoQi
+         wij7QwCtg/6YUTFgh26JIA4AfD3+4zmZXjtOlRBV32fbeuKwU6b3iNPhpTEiSIm38wPX
+         AfSqchVKqdyy08eWk2lLklktY4VpbzA9kKlvm6ndhOFsIBZRyVblKle+gwoLQ5OjjV5G
+         LkYfhki/4RmmcgUZIbiuCxUeHriqE/UzbaCzhRZYhIt4SkRNSMDy93d/hDXLDj86Y+Wm
+         bOAgZ7oSCbALwFHD1p/m5GGOpIoxC2/FgP8hJ3Xc+QT/zAHb97LZRGxMsRblWcJtuIRf
+         2ETA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i14Cy+qHQvcRYik37Qgbi12uesnn0JzZqE03ZogEXJc=;
+        b=ObqaC110H/IPc5eNyxsSsWlctyGnBLPJ3pZ/7z27YJb2Kyck5x1HgdqbWwh341oCPn
+         DDVIKlAz26CmuAdo4/8JtOd7smFNDDOYbHnRPhueZJcjVezR8sfOpnW6/9Mfnknm2Gkf
+         NfLNWWRL+yLL5ulu1Wq7Q7dVd+ozSYjjjnlE55BEVXshT5Wi/0fUukvzESi1ojk2lAm3
+         TloDfWJR930W4MaN5wvIspCFc9os+76a+1RBgvY3XQaz/FW5HQK6gqH5mF7qn05tKhdj
+         a2u8TE/4djHCQe9hK0Z81OkP5/HrZBGcz5xzuoQPukoYCNdr6Wunahzh451jlvuv4gQL
+         3nSw==
+X-Gm-Message-State: ANhLgQ0AnStAqv99DG2ogE3xC/1MWzbV2xCVej38DcV0ALS8pIMYR4oW
+        gnqpBshOSVlSC48978ZG0fg=
+X-Google-Smtp-Source: ADFU+vu/SYr70+1nQJ7wC4Ha9lpGCwPceQjx2xzWHsE5kCQ7vD9Bi5qvlHiXcru9AvAmxFa2hmWkVg==
+X-Received: by 2002:a17:90b:2390:: with SMTP id mr16mr19568199pjb.149.1584269850687;
+        Sun, 15 Mar 2020 03:57:30 -0700 (PDT)
+Received: from SARKAR ([43.224.157.36])
+        by smtp.gmail.com with ESMTPSA id b70sm23876045pfb.6.2020.03.15.03.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Mar 2020 03:57:29 -0700 (PDT)
+Message-ID: <5e6e0a19.1c69fb81.432d5.f12c@mx.google.com>
+X-Google-Original-Message-ID: <20200315105724.GB21153@rohitsarkar5398@gmail.com>
+Date:   Sun, 15 Mar 2020 16:27:24 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        matt.ranostay@konsulko.com
+Subject: Re: [PATCH] iio: health: max30100: remove mlock usage
+References: <5e668b89.1c69fb81.d7e4f.0f61@mx.google.com>
+ <20200315094604.62dc96be@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200315102724.26850-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200315094604.62dc96be@archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
-
-Thank you for the patch.
-
-On Sun, Mar 15, 2020 at 10:27:23AM +0000, Lad Prabhakar wrote:
-> Passing a pointer to struct device for the match_custom callback is of no
-> use as in the bridge driver to match the fwnode, so instead pass the
-> struct v4l2_subdev pointer so that the bridge driver has enough
-> information to match against the subdevices.
-
-I'm not sure I like this. Conceptually speaking, the driver that
-registers the notifier wants to get v4l2_subdev instances corresponding
-to devices. A struct device is thus all it should need. Giving the match
-function access to the subdev opens the door to all kind of nasty hacks.
-
-In any case, I don't think is is required, see my reply to patch 2/2.
-
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/media/v4l2-core/v4l2-async.c | 2 +-
->  include/media/v4l2-async.h           | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
+On Sun, Mar 15, 2020 at 09:46:04AM +0000, Jonathan Cameron wrote:
+> On Tue, 10 Mar 2020 00:01:28 +0530
+> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 8bde33c21ce4..f897d4025f97 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -80,7 +80,7 @@ static bool match_custom(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
->  		/* Match always */
->  		return true;
->  
-> -	return asd->match.custom.match(sd->dev, asd);
-> +	return asd->match.custom.match(sd, asd);
->  }
->  
->  static LIST_HEAD(subdev_list);
-> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-> index 8319284c93cb..8c014e3bbd6c 100644
-> --- a/include/media/v4l2-async.h
-> +++ b/include/media/v4l2-async.h
-> @@ -86,8 +86,8 @@ struct v4l2_async_subdev {
->  			unsigned short address;
->  		} i2c;
->  		struct {
-> -			bool (*match)(struct device *dev,
-> -				      struct v4l2_async_subdev *sd);
-> +			bool (*match)(struct v4l2_subdev *sd,
-> +				      struct v4l2_async_subdev *asd);
->  			void *priv;
->  		} custom;
->  	} match;
+> > Use local lock instead of indio_dev's mlock.
+> > The mlock was being used to protect local driver state thus using the
+> > local lock is a better option here.
+> > 
+> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+> 
+> Matt.  Definitely need your input on this.
+> 
+> > ---
+> >  drivers/iio/health/max30100.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+> > index 84010501762d..8ddc4649547d 100644
+> > --- a/drivers/iio/health/max30100.c
+> > +++ b/drivers/iio/health/max30100.c
+> > @@ -388,7 +388,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+> >  		 * Temperature reading can only be acquired while engine
+> >  		 * is running
+> >  		 */
+> > -		mutex_lock(&indio_dev->mlock);
+> > +		mutex_lock(&data->lock);
+> 
+> Hmm.. It's another complex one.  What is actually being protected here is
+> the buffer state, but not to take it exclusively like claim_direct does.
 
--- 
-Regards,
+So just to check if I understand correctly, let's say we did not use any
+lock in this case. If an execution thread reached the
+iio_buffer_enabled() check and found the buffer to be enabled, but
+the buffer got disabled simultaneously, the temperature readings that we
+get will be corrupted. Does this make sense?
 
-Laurent Pinchart
+> Here we need the inverse, we want to ensure we are 'not' in the direct
+> mode because this hardware requires the buffer to be running to read the
+> temperature. 
+> 
+> That is the sort of interface that is going to get userspace very 
+> confused.
+Agreed
+
+> Matt, normally what I'd suggest here is that the temperature read should:
+> 
+> 1) Claim direct mode, if it fails then do the dance you have here
+> (with more comments to explain why you are taking an internal lock)
+> 2) Start up capture as if we were in buffered mode
+> 3) Grab that temp
+> 4) stop capture to return to non buffered mode.
+> 5) Release direct mode.
+> 
+> I guess we decided it wasn't worth the hassle.  
+> 
+> So Rohit.  This one probably needs a comment rather than any change.
+The code already mentions that the "Temperature can only be acquired
+while engine is running.", should I add something like "mlock is
+acquired to protect the buffer state..." to the same comment.
+
+> We 'could' add a 'hold_buffered_mode' function that takes the mlock,
+> verifies we are in buffered mode and continues to hold the lock 
+> until the 'release_buffered_mode'.  However, I'm not sure any other
+> drivers do this particular dance, so clear commenting in the driver
+> might be enough.   Should we ever change how mlock is used in the
+> core, we'd have to fix this driver up as well.
+Understood.
+
+> Hmm.  This is really hammering home that perhaps all the remaining
+> mlock cases are 'hard'.
+A nice sideffect of me investigating these is that I am getting some
+good insight into how iio works. I will see if I can investigate a
+couple more cases
+> Thanks,
+> 
+> Jonathan
+> 
+> >  
+Thanks,
+Rohit
+> >  		if (!iio_buffer_enabled(indio_dev))
+> >  			ret = -EAGAIN;
+> > @@ -399,7 +399,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+> >  
+> >  		}
+> >  
+> > -		mutex_unlock(&indio_dev->mlock);
+> > +		mutex_unlock(&data->lock);
+> >  		break;
+> >  	case IIO_CHAN_INFO_SCALE:
+> >  		*val = 1;  /* 0.0625 */
+> 
