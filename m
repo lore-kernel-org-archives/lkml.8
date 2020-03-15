@@ -2,108 +2,117 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4D9C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE51C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EB6206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584264211;
-	bh=yKjZ/kyJ5+E9mZarp6EgGQbXyqkdJ2EpqBzuXHumchk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xexmVf5eLc+o6N/vgusZ8GjnpVRr94/b8IoUMWfLUukB7G6G2oHk4xUHHtAu2ksLv
-	 N34LuuigFHL0fDZMh5iEPQ0br5181dXWQ+MUj02Qs44+wXDyZs6nYC6NCgJt5L3BIc
-	 4+IfVDQzCkJd5r0+kiXN7bVKP7/HItK4617Kw/ic=
+	by mail.kernel.org (Postfix) with ESMTP id 52E20206B1
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:25:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vp92DRfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgCOJXa (ORCPT
+        id S1728119AbgCOJZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728065AbgCOJX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:23:29 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC83206B1;
-        Sun, 15 Mar 2020 09:23:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584264208;
-        bh=yKjZ/kyJ5+E9mZarp6EgGQbXyqkdJ2EpqBzuXHumchk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TuVSAHLZhmVdwmTShn9T4dY6HMHdlSUXFSrx/iXBNHwzuPuUV+vfcv34JM0JkRjWi
-         MY1Nfp2aS5hztMdvi+z6zPEz7HeDgtHxKktJ6KUWDs5FHFhQD+LHfuFX5YuG31zBcP
-         RHciE7JQsoVCCaC2f128o8twhRIO+SvNe0+DNMHI=
-Date:   Sun, 15 Mar 2020 09:23:24 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH v8 5/8] iio: adc: adi-axi-adc: add support for AXI ADC
- IP core
-Message-ID: <20200315092324.22317690@archlinux>
-In-Reply-To: <f8478361c8166ac27f539bb1eceac050ab0908ec.camel@analog.com>
-References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
-        <20200306110100.22092-6-alexandru.ardelean@analog.com>
-        <20200307145411.720a680d@archlinux>
-        <e59eeceb0b1a27c3920e0bcc42bcba20bdfa9ec7.camel@analog.com>
-        <f8478361c8166ac27f539bb1eceac050ab0908ec.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Mar 2020 05:25:31 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43712 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbgCOJZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 05:25:30 -0400
+Received: by mail-il1-f195.google.com with SMTP id d14so12956503ilq.10;
+        Sun, 15 Mar 2020 02:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eDLn6hcaUGXN1ifnm89fP3KORlDlYvpz0bkA0oBIYGM=;
+        b=Vp92DRfDmGLIM/NPFDj32KHbGd5+v54Y8Qx53JAOAD18STaqvCL7NqF8E/KfcDTr1N
+         RTh37uMH8CGBwXi7s3YU7A9AqUdrD6fmecuUReY3uJ5yex7vhm+o2hnTXMKjuFBsXo8J
+         FRimVp9eYRS/Og97n7VrlGVV9giH2n3V/9MUXWgW6I3wwjkOIFXXfG78J9tNal3iQrA3
+         gO1CPPERPk/E+tzgHAp8X6rm6y76Q8xQ5fK5NSKoqHMy3CoWgMdhVBy0f55UMQT2l9Yo
+         PjFoGSXUOecROOqHn58hc8Ztnv48FZYFeTL64uCDFp58FTA2TSs3iokQUVSnB3mnnWY+
+         nyaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eDLn6hcaUGXN1ifnm89fP3KORlDlYvpz0bkA0oBIYGM=;
+        b=JzzcXQjSt1PiPSI277ANzrOxaWzBw8yXSgve7kyUdTFlXWUXO/+OAJvzlZmGkuxHHQ
+         ibSsqUYObdJYFpsPshMn5OFjqbYaWYLdr6T6KsTre++kN9OkDsKoH2U05lkP62z1PjBk
+         jqTtV88GU8chciFlXcqjaminV1rDIgglzut0+fxV9jCzEyi1XOyFJzL7ZMEjkMx8YEFh
+         4Ym6Pqs7FtO6h9gVSg/QHpagYE6hjeAA2FBZs1x6sTSdzKne5Qeq9f6CsCWpub8KFIbI
+         K02rz5lCAcfXGDzHybJXF6AjeWZoVu1c0TjYzCAs7NMkAa6+QfzdfnRFMBVPJhzIKn7Y
+         ia+w==
+X-Gm-Message-State: ANhLgQ2zJ5ujUn//8LzGY7Hs4R1Add0w68Q68f4kX0tP49vsvCby03qT
+        Q4qfoyn5s39SosV6h30FOiRoLdTrDoap0xipwBQ=
+X-Google-Smtp-Source: ADFU+vu2O/lxp6WbokN0oJhMae6LPLe+vhCCs071Xl1gPKo6khFDdWen7oB+9dJAe4A09kgfcbJwwxr26vMrqKvBJwk=
+X-Received: by 2002:a92:d843:: with SMTP id h3mr8319415ilq.246.1584264329583;
+ Sun, 15 Mar 2020 02:25:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200310194854.831-1-linux.amoon@gmail.com> <20200310194854.831-2-linux.amoon@gmail.com>
+ <87lfo2f0k9.fsf@kernel.org>
+In-Reply-To: <87lfo2f0k9.fsf@kernel.org>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Sun, 15 Mar 2020 14:55:19 +0530
+Message-ID: <CANAwSgQgLm623szgs5Lba-NQKySiGw5fRfjyxjfdfHxQxhri7g@mail.gmail.com>
+Subject: Re: [PATCHv3 1/5] devicetree: bindings: exynos: Add new compatible
+ for Exynos5420 dwc3 clocks support
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...
+Hi Felipe,
 
-> > > > +#define REG_RSTN				0x0040  
-> > > 
-> > > Usual stuff: These should be prefixed with driver relevant prefix
-> > > maybe ADI_AXI_  
-> > 
-> > my only concern [about the prefix] is that it makes the macro-names too long;
-> > after re-looking at these reg definitions, what bothered me is that some of
-> > the
-> > bit-field-names collide; so i went with concatenanting reg-names + reg-
-> > bitnames, 
-> > which made them look too long [so i removed the prefix]
-> > 
-> > there's also the possibility of going back to the regmap-doc and shortening
-> > these reg-name/bitnames;
-> > but they've been like this for a while, and i admit going to the HDL team
-> > makes
-> > me sometimes lazy;
-> > 
-> > i'll re-add teh ADI_AXI prefix; and will see how these look  
-> 
-> i talked to HDL
-> so, we'll have a round of renaming these [in the docs];
-> 
-> but now, i'm wondering if it's ok to drop the regs that are [currently] unused
-> and add them when functionality gets later-added;
+On Sun, 15 Mar 2020 at 14:37, Felipe Balbi <balbi@kernel.org> wrote:
+>
+>
+> Hi,
+>
+> Anand Moon <linux.amoon@gmail.com> writes:
+>
+> > Add the new compatible string for Exynos5422 DWC3 to support
+> > enable/disable of core and suspend clk by DWC3 driver.
+> > Also updated the clock names for compatible samsung,exynos5420-dwusb3.
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>
+> What is the dependency here?
+>
+> checking file Documentation/devicetree/bindings/usb/exynos-usb.txt
+> Hunk #2 FAILED at 84.
+> 1 out of 2 hunks FAILED
+>
+> Applying on top of v5.6-rc5
+>
+> --
+> balbi
 
-Absolutely.  Its in theory better to always do that, but sometimes it's
-just easier to copy type the whole datasheet register map into a driver
-so we tend to let it go.
+These patch were made on top linux next-20200306,
+And with new updates in the clk driver configuration.
+I will update these patchs later, plz drop these changes for now.
 
-> in the meantime, the names can be re-worked/shortened/prettify-ed;
-> we'll also need to re-do an inventory of the current HDL IP cores and see how
-> the regmaps hold-up/match against the docs;
-
-I'd not worry too much on shortening these.  A bit of ugly code never
-really hurt anyone if it's just a long define.
-
-Of course, if it makes sense anyway, always good to tidy up naming.
-
-Jonathan
+-Anand
