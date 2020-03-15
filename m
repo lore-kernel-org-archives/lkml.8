@@ -2,162 +2,145 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DEAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE7CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C853206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584264956;
-	bh=bydZt1msrAZyMXtqxKfMHkV2PUIlKeyA7eIC50CIB/M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wUydPYKtO+RVl1XQ2bHb6VEIvKizTg9AVhbeuTcd/kQ1RgC61YQGCm2z8kV3iQ7jy
-	 whOO5Jzx+0Wc/j1fVU2pMC6f3zMmD+ef/2VsEw+iwJXVldbFPv7/TuYDFUG+wxZskU
-	 72o4t7ShXBLEG/E/IP593I7hAvvB+E8GAZa9Wdbo=
+	by mail.kernel.org (Postfix) with ESMTP id C0F9B205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgCOJfz (ORCPT
+        id S1728175AbgCOJoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:35:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbgCOJfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:35:54 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52A38206BE;
-        Sun, 15 Mar 2020 09:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584264954;
-        bh=bydZt1msrAZyMXtqxKfMHkV2PUIlKeyA7eIC50CIB/M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TBHxriSWt3P/WyyWLaDJyymqjhCzixdbSC6Kom2zz+dKvOk44zqBI4xFqNgxzw0Wy
-         Ec1OcZMiugGyij6LFyACRIo89VS8P5sckaeq5a0n/cowSIEVh/iA3WeJIKg6KgFvoH
-         Qv81sHhcA288CvhJUJKfSFmqxzysIMSHEP4Ff1Yg=
-Date:   Sun, 15 Mar 2020 09:35:49 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     Olivier Moysan <olivier.moysan@st.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>, <alexandre.torgue@st.com>,
-        <benjamin.gaignard@st.com>, <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] iio: adc: stm32-adc: fix sleep in atomic context
-Message-ID: <20200315093549.20764470@archlinux>
-In-Reply-To: <288fb604-16c6-da52-533f-7f1440ed9daa@st.com>
-References: <20200309100212.16499-1-olivier.moysan@st.com>
-        <288fb604-16c6-da52-533f-7f1440ed9daa@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Mar 2020 05:44:25 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:53142 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728123AbgCOJoZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 05:44:25 -0400
+Received: from fsav101.sakura.ne.jp (fsav101.sakura.ne.jp [27.133.134.228])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02F9iDJp004785;
+        Sun, 15 Mar 2020 18:44:13 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav101.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp);
+ Sun, 15 Mar 2020 18:44:13 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp)
+Received: from [192.168.1.2] (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02F9iDK0004781
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sun, 15 Mar 2020 18:44:13 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH] ARM: dts: rockchip: use DMA channels for UARTs of
+ TinkerBoard
+To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200314142327.25568-1-katsuhiro@katsuster.net>
+ <2930126.sCcUyySgUU@diego>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <0b36bf84-0e7b-7287-a094-9fd2f33167ee@katsuster.net>
+Date:   Sun, 15 Mar 2020 18:44:13 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <2930126.sCcUyySgUU@diego>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Mar 2020 11:39:17 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+Hello Heiko,
 
-> On 3/9/20 11:02 AM, Olivier Moysan wrote:
-> > This commit fixes the following error:
-> > "BUG: sleeping function called from invalid context at kernel/irq/chip.c"
-> > 
-> > In DMA mode suppress the trigger irq handler, and make the buffer
-> > transfers directly in DMA callback, instead.
-> > 
-> > Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
-> > 
-> > Signed-off-by: Olivier Moysan <olivier.moysan@st.com>  
+> This belongs in rk3288.dtsi, as this is definitly not board-specific, as
+> the dma-uart connection is done inside the soc.
 > 
-> Hi Olivier,
+> At least on arm64 (rk3328, px30, probably more) we already have the
+> uart dmas in the core dtsi without any problems.
 > 
-> Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Thanks.  Queued up locally but not pushed out just yet as I have a pull
-request out to Greg.  Also marked for stable.
+> Is there any reason why you only did add it to the tinker board only?
 
-thanks,
+There is no special reason. Simply I don't have and not tested on other
+boards of RK3288. But I hope these DMA settings can work correctly on
+other boards.
 
-Jonathan
+I'll resend patch for rk3288.dtsi.
 
+Best Regards,
+Katsuhiro Suzuki
+
+
+On 2020/03/15 0:09, Heiko Stübner wrote:
+> Hi,
 > 
-> Thanks,
-> Fabrice
+> Am Samstag, 14. März 2020, 15:23:27 CET schrieb Katsuhiro Suzuki:
+>> This patch enables to use DMAC for all UARTs that are connected to
+>> dmac_peri core for TinkerBoard.
+>>
+>> Only uart2 is connected different DMAC (dmac_bus_s) so keep current
+>> settings on this patch.
 > 
-> > ---
-> > Changes in v2:
-> > - Add "Fixes" tag in commit message
-> > 
-> > This solution has been already discussed in the thread
-> > https://lkml.org/lkml/2019/3/30/171, and applied in STM32 DFSDM driver:
-> > e19ac9d9a978 ("iio: adc: stm32-dfsdm: fix sleep in atomic context")
-> > ---
-> >  drivers/iio/adc/stm32-adc.c | 31 ++++++++++++++++++++++++++++---
-> >  1 file changed, 28 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> > index 80c3f963527b..ae622ee6d08c 100644
-> > --- a/drivers/iio/adc/stm32-adc.c
-> > +++ b/drivers/iio/adc/stm32-adc.c
-> > @@ -1418,8 +1418,30 @@ static unsigned int stm32_adc_dma_residue(struct stm32_adc *adc)
-> >  static void stm32_adc_dma_buffer_done(void *data)
-> >  {
-> >  	struct iio_dev *indio_dev = data;
-> > +	struct stm32_adc *adc = iio_priv(indio_dev);
-> > +	int residue = stm32_adc_dma_residue(adc);
-> > +
-> > +	/*
-> > +	 * In DMA mode the trigger services of IIO are not used
-> > +	 * (e.g. no call to iio_trigger_poll).
-> > +	 * Calling irq handler associated to the hardware trigger is not
-> > +	 * relevant as the conversions have already been done. Data
-> > +	 * transfers are performed directly in DMA callback instead.
-> > +	 * This implementation avoids to call trigger irq handler that
-> > +	 * may sleep, in an atomic context (DMA irq handler context).
-> > +	 */
-> > +	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
-> >  
-> > -	iio_trigger_poll_chained(indio_dev->trig);
-> > +	while (residue >= indio_dev->scan_bytes) {
-> > +		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
-> > +
-> > +		iio_push_to_buffers(indio_dev, buffer);
-> > +
-> > +		residue -= indio_dev->scan_bytes;
-> > +		adc->bufi += indio_dev->scan_bytes;
-> > +		if (adc->bufi >= adc->rx_buf_sz)
-> > +			adc->bufi = 0;
-> > +	}
-> >  }
-> >  
-> >  static int stm32_adc_dma_start(struct iio_dev *indio_dev)
-> > @@ -1845,6 +1867,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
-> >  {
-> >  	struct iio_dev *indio_dev;
-> >  	struct device *dev = &pdev->dev;
-> > +	irqreturn_t (*handler)(int irq, void *p) = NULL;
-> >  	struct stm32_adc *adc;
-> >  	int ret;
-> >  
-> > @@ -1911,9 +1934,11 @@ static int stm32_adc_probe(struct platform_device *pdev)
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > +	if (!adc->dma_chan)
-> > +		handler = &stm32_adc_trigger_handler;
-> > +
-> >  	ret = iio_triggered_buffer_setup(indio_dev,
-> > -					 &iio_pollfunc_store_time,
-> > -					 &stm32_adc_trigger_handler,
-> > +					 &iio_pollfunc_store_time, handler,
-> >  					 &stm32_adc_buffer_setup_ops);
-> >  	if (ret) {
-> >  		dev_err(&pdev->dev, "buffer setup failed\n");
-> >   
+> This belongs in rk3288.dtsi, as this is definitly not board-specific, as
+> the dma-uart connection is done inside the soc.
+> 
+> At least on arm64 (rk3328, px30, probably more) we already have the
+> uart dmas in the core dtsi without any problems.
+> 
+> Is there any reason why you only did add it to the tinker board only?
+> 
+> 
+> Heiko
+> 
+> 
+>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>> ---
+>>   arch/arm/boot/dts/rk3288-tinker.dtsi | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+>> index 312582c1bd37..6efabeaf3c6d 100644
+>> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+>> @@ -491,10 +491,14 @@ &tsadc {
+>>   };
+>>   
+>>   &uart0 {
+>> +	dmas = <&dmac_peri 1>, <&dmac_peri 2>;
+>> +	dma-names = "tx", "rx";
+>>   	status = "okay";
+>>   };
+>>   
+>>   &uart1 {
+>> +	dmas = <&dmac_peri 3>, <&dmac_peri 4>;
+>> +	dma-names = "tx", "rx";
+>>   	status = "okay";
+>>   };
+>>   
+>> @@ -503,10 +507,14 @@ &uart2 {
+>>   };
+>>   
+>>   &uart3 {
+>> +	dmas = <&dmac_peri 7>, <&dmac_peri 8>;
+>> +	dma-names = "tx", "rx";
+>>   	status = "okay";
+>>   };
+>>   
+>>   &uart4 {
+>> +	dmas = <&dmac_peri 9>, <&dmac_peri 10>;
+>> +	dma-names = "tx", "rx";
+>>   	status = "okay";
+>>   };
+>>   
+>>
+> 
+> 
+> 
+> 
+> 
 
