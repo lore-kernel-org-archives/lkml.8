@@ -2,137 +2,108 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D15C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188CEC5ACBF
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB58120722
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E477E20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rT4Fsdqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgCOFXh (ORCPT
+        id S1727870AbgCOFXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 01:23:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:47872 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbgCOFXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 01:23:07 -0400
-IronPort-SDR: cd0F+eMp9X0FZjcuS3/acIRjGxIp8iwjSuzhtGZTzFtQHelJVzIY1d6boeR7mlglDbyQ/AQP0e
- aKdRwMUzuQcA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 22:23:06 -0700
-IronPort-SDR: Y5oYakOTTQYy7ktg+i6GwXDd7ztj2Y16YpdZ7Gd/UjtW27FgooCQ7f73s7TJkNUO2eL0+6A2OW
- um1I3eCxHFrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,555,1574150400"; 
-   d="scan'208";a="267194241"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.160])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Mar 2020 22:23:02 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v5 4/9] x86/split_lock: Export handle_user_split_lock()
-Date:   Sun, 15 Mar 2020 13:05:12 +0800
-Message-Id: <20200315050517.127446-5-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200315050517.127446-1-xiaoyao.li@intel.com>
-References: <20200315050517.127446-1-xiaoyao.li@intel.com>
+        Sun, 15 Mar 2020 01:23:45 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37916 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727447AbgCOFXn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 01:23:43 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x7so7583412pgh.5
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Mar 2020 22:23:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wR8nFRPEBNLxmIrRh2XX942TMuucAJ5R0/7i6Fo9p5k=;
+        b=rT4FsdqjKQBVFo3+uu3fzLfB762MuezwSN1LOBD3ukiXZTdXlSwwQK0uPYMfrGKpBw
+         HStP0LAwyHUgCf+9x10UYRCF9UJunuqcsp28aLez8GE2hFDyi0ofXM8Dr154ZCspaaDE
+         VtH1KqHCF1ohopOvbBe7ipKJhL7UEUPpzwYNws75GT7CW6MhGKCWLuE60W0BotyCDLvo
+         r4veXdZGi+c7XAXXCQaraojq3143FgIV7X78c33GlZQNlXCKwXQtmByc8TvqoSmTlHRH
+         Cgon8IVWrL7L1XDgxXdvlKuzPupzlbR94v3hnlq4+LXltc9bPmrXUZb2Ky4pFUwuc1FI
+         26Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wR8nFRPEBNLxmIrRh2XX942TMuucAJ5R0/7i6Fo9p5k=;
+        b=c9+29s5E3tU+JyPYm7FVQBbxiRCNDLJyLwJB9+/2qWhOP2cVF2mF73y6gaI/2o7CT3
+         z/4jQLH+fFFYuXHZDw+JofzTiHOHcA9SyXTBTQXc9+/VSLvAvZEFU9y68jJgoXc6kv1P
+         6yqYgxdGEhw88vBIxU+vlPmMP+jdKTvLvlE6VNRLWdYKnnaKg/1e6o8jT3vy+qd3MsUx
+         rPKrXj+ZXWedAjzM0CcmFYBZkrY1fpdJPLDgxDXNWZP5wFq7yOkMyr6Gy9xk4aZqt6Tj
+         MTyFZBPFTmtjFTN4fQgp2Azatg8kAkIvYm7cbc1bORPX7skvwk+eoiMlqL0JnYoYQTFP
+         2g7g==
+X-Gm-Message-State: ANhLgQ1Hd/Vqc1PUoNZo0HFpcts8cxGk5Ctulq6nGLaDPskl9Ss2zoH5
+        aV29qKf1mNbtyuQXGhJpfYal8g==
+X-Google-Smtp-Source: ADFU+vs5W6pKhDasxst/A96FZNjz5ZlLsLbn4MZHDngTRdMpMnXsBjfTrhf9HXmupeey+hIoU1207w==
+X-Received: by 2002:a63:514f:: with SMTP id r15mr20218986pgl.432.1584249822088;
+        Sat, 14 Mar 2020 22:23:42 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s12sm33303143pgi.38.2020.03.14.22.23.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2020 22:23:41 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 22:23:39 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] arm64: dts: qcom: sdm845: add audio support
+Message-ID: <20200315052339.GH1098305@builder>
+References: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the future, KVM will use handle_user_split_lock() to handle #AC
-caused by split lock in guest. Due to the fact that KVM doesn't have
-a @regs context and will pre-check EFLASG.AC, move the EFLAGS.AC check
-to do_alignment_check().
+On Thu 12 Mar 07:30 PDT 2020, Srinivas Kandagatla wrote:
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- arch/x86/include/asm/cpu.h  | 4 ++--
- arch/x86/kernel/cpu/intel.c | 7 ++++---
- arch/x86/kernel/traps.c     | 2 +-
- 3 files changed, 7 insertions(+), 6 deletions(-)
+> This patchset adds analog audio support for sdm845 based boards.
+> 
+> 
+> Changes since v1:
+> 	- various trival cleanups done as suggested by Bjorn
+> 	- added compressed audio dai for db845c
+> 
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index ff6f3ca649b3..ff567afa6ee1 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -43,11 +43,11 @@ unsigned int x86_stepping(unsigned int sig);
- #ifdef CONFIG_CPU_SUP_INTEL
- extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
- extern void switch_to_sld(unsigned long tifn);
--extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-+extern bool handle_user_split_lock(unsigned long ip);
- #else
- static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
- static inline void switch_to_sld(unsigned long tifn) {}
--static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+static inline bool handle_user_split_lock(unsigned long ip)
- {
- 	return false;
- }
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 3eeab717a0d0..c401d174c8db 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1102,13 +1102,13 @@ static void split_lock_init(struct cpuinfo_x86 *c)
- 	sld_state = sld_disable;
- }
- 
--bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+bool handle_user_split_lock(unsigned long ip)
- {
--	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-+	if (sld_state == sld_fatal)
- 		return false;
- 
- 	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
--			    current->comm, current->pid, regs->ip);
-+			    current->comm, current->pid, ip);
- 
- 	/*
- 	 * Disable the split lock detection for this task so it can make
-@@ -1119,6 +1119,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
- 	set_tsk_thread_flag(current, TIF_SLD);
- 	return true;
- }
-+EXPORT_SYMBOL_GPL(handle_user_split_lock);
- 
- /*
-  * This function is called only when switching between tasks with
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 0ef5befaed7d..407ff9be610f 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -304,7 +304,7 @@ dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
- 
- 	local_irq_enable();
- 
--	if (handle_user_split_lock(regs, error_code))
-+	if (!(regs->flags & X86_EFLAGS_AC) && handle_user_split_lock(regs->ip))
- 		return;
- 
- 	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
--- 
-2.20.1
+Thanks Srini!
 
+I fixed up the sort order per Vinod's feedback and applied these, with
+Vinod's acks.
+
+Regards,
+Bjorn
+
+> Srinivas Kandagatla (5):
+>   arm64: dts: qcom: sdm845: add slimbus nodes
+>   arm64: dts: qcom: sdm845: add apr nodes
+>   arm64: dts: qcom: c630: Enable audio support
+>   arm64: dts: qcom: sdm845: add pinctrl nodes for quat i2s
+>   arm64: dts: qcom: db845c: add analog audio support
+> 
+>  arch/arm64/boot/dts/qcom/sdm845-db845c.dts    | 159 ++++++++++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 281 ++++++++++++++++++
+>  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 113 +++++++
+>  3 files changed, 553 insertions(+)
+> 
+> -- 
+> 2.21.0
+> 
