@@ -2,118 +2,100 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BC0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958BBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A1A20674
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FAC206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 11:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgCOLB5 convert rfc822-to-8bit (ORCPT
+        id S1728344AbgCOLQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 07:01:57 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:9059 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgCOLB5 (ORCPT
+        Sun, 15 Mar 2020 07:16:35 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:47228 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgCOLQe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 07:01:57 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.9]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5e6e0b0862b-c9319; Sun, 15 Mar 2020 19:01:28 +0800 (CST)
-X-RM-TRANSID: 2eec5e6e0b0862b-c9319
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [10.0.0.249] (unknown[112.0.145.8])
-        by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee55e6e0b07b40-1577c;
-        Sun, 15 Mar 2020 19:01:28 +0800 (CST)
-X-RM-TRANSID: 2ee55e6e0b07b40-1577c
-Content-Type: text/plain; charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] ipvs: optimize tunnel dumps for icmp errors
-From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-In-Reply-To: <alpine.LFD.2.21.2003151003190.3987@ja.home.ssi.bg>
-Date:   Sun, 15 Mar 2020 19:01:26 +0800
-Cc:     Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <B4979BD7-480A-43B3-B693-B7839FAF08D2@cmss.chinamobile.com>
-References: <1584253087-8316-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <alpine.LFD.2.21.2003151003190.3987@ja.home.ssi.bg>
-To:     Julian Anastasov <ja@ssi.bg>
-X-Mailer: Apple Mail (2.3273)
+        Sun, 15 Mar 2020 07:16:34 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 2A5268050C;
+        Sun, 15 Mar 2020 12:16:28 +0100 (CET)
+Date:   Sun, 15 Mar 2020 12:16:27 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] power: supply: add CellWise cw2015 fuel gauge
+ driver
+Message-ID: <20200315111627.GA21240@ravnborg.org>
+References: <20200312222448.25097-1-t.schramm@manjaro.org>
+ <20200312222448.25097-4-t.schramm@manjaro.org>
+ <20200313091124.GP1922688@smile.fi.intel.com>
+ <fd75f94b-8e08-97da-a396-6df61c6fd89f@manjaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd75f94b-8e08-97da-a396-6df61c6fd89f@manjaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=z85fDJX7t83lHnj23ngA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Tobias.
 
-> On 2020年3月15日, at 下午4:17, Julian Anastasov <ja@ssi.bg> wrote:
+On Sun, Mar 15, 2020 at 12:00:35PM +0100, Tobias Schramm wrote:
+> Hi Andy,
 > 
+> thanks for your feedback. Please find my comments inline.
 > 
-> 	Hello,
+> > 
+> >> +				dev_err(cw_bat->dev,
+> >> +					 "Failed to upload battery info\n");
+> > 
+> > Indentation of the second line.
+> > 
+> I've seen quite a few different indentation styles used in kernel
+> source. Personally I'd indent like this:
 > 
-> On Sun, 15 Mar 2020, Haishuang Yan wrote:
+> 		dev_warn(cw_bat->dev,
+> 			 "some long error message");
 > 
->> After strip GRE/UDP tunnel header for icmp errors, it's better to show
->> "ICMP for GRE/UDP" instead of "ICMP for IPIP" in debug message.
->> 
->> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
->> ---
->> net/netfilter/ipvs/ip_vs_core.c | 41 +++++++++++++++++++++++------------------
->> 1 file changed, 23 insertions(+), 18 deletions(-)
->> 
->> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
->> index 512259f..f39ae6b 100644
->> --- a/net/netfilter/ipvs/ip_vs_core.c
->> +++ b/net/netfilter/ipvs/ip_vs_core.c
-> 
->> @@ -1703,8 +1707,8 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
->> 		return NF_ACCEPT; /* The packet looks wrong, ignore */
->> 	raddr = (union nf_inet_addr *)&cih->daddr;
->> 
->> -	/* Special case for errors for IPIP packets */
->> -	ipip = false;
->> +	/* Special case for errors for IPIP/UDP/GRE tunnel packets */
->> +	tunnel = false;
-> 
-> 	At this point it is safe to store cih->protocol in some new
-> var, eg. outer_proto...
-> 
->> @@ -1809,17 +1813,18 @@ static int ipvs_gre_decap(struct netns_ipvs *ipvs, struct sk_buff *skb,
->> 			u32 mtu = ntohs(ic->un.frag.mtu);
->> 			__be16 frag_off = cih->frag_off;
->> 
->> -			/* Strip outer IP and ICMP, go to IPIP header */
->> +			/* Strip outer IP and ICMP, go to IPIP/UDP/GRE header */
->> 			if (pskb_pull(skb, ihl + sizeof(_icmph)) == NULL)
->> -				goto ignore_ipip;
->> +				goto ignore_tunnel;
->> 			offset2 -= ihl + sizeof(_icmph);
->> 			skb_reset_network_header(skb);
->> -			IP_VS_DBG(12, "ICMP for IPIP %pI4->%pI4: mtu=%u\n",
->> -				&ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr, mtu);
->> +			IP_VS_DBG(12, "ICMP for %s %pI4->%pI4: mtu=%u\n",
->> +				  ip_vs_proto_name(cih->protocol),
-> 
-> 	Because here cih points to the embedded UDP/TCP/SCTP IP header, so
-> we can not see GRE here. Or it is even better if we do not add more code 
-> to ip_vs_proto_name(), just use char *outer_proto and assign it with 
-> "IPIP" (where ipip was set) and "UDP"/"GRE" (where ulen was set) and print
-> outer_proto here.
-Yes, you’re right. I will send v2 commit according to your suggestion, thanks
-very much.
+> However coding-style.rst specifies that spaces are never to be used for
+> indentation. May I assume they are ok for alignment though?
 
-> 
->> +				  &ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr, mtu);
-> 
-> Regards
-> 
-> --
-> Julian Anastasov <ja@ssi.bg>
-> 
+Indent with tabs and align with spaces.
 
+So this becomes
 
+< tab  >< tab  >dev_warn(cw_bat->dev,
+< tab  >< tab  ><tab    >_"some long error message");
 
+Where '_' represents a space.
+
+This is the recommend kernel practice.
+
+	Sam
