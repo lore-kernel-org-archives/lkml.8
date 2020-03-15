@@ -6,45 +6,52 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1CCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C63C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E483520663
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 532C2205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 14:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgCOOXb (ORCPT
+        id S1728748AbgCOOYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 10:23:31 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49362 "EHLO
+        Sun, 15 Mar 2020 10:24:02 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:49378 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbgCOOXb (ORCPT
+        with ESMTP id S1727778AbgCOOYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 10:23:31 -0400
+        Sun, 15 Mar 2020 10:24:02 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jDUAh-00ByN6-Kp; Sun, 15 Mar 2020 14:23:19 +0000
-Date:   Sun, 15 Mar 2020 14:23:19 +0000
+        id 1jDUBM-00ByOG-P1; Sun, 15 Mar 2020 14:24:00 +0000
+Date:   Sun, 15 Mar 2020 14:24:00 +0000
 From:   Al Viro <viro@zeniv.linux.org.uk>
 To:     Hillf Danton <hdanton@sina.com>
 Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC][PATCH v4 22/69] merging pick_link() with get_link(), part 4
-Message-ID: <20200315142319.GT23230@ZenIV.linux.org.uk>
+Subject: Re: [RFC][PATCH v4 23/69] merging pick_link() with get_link(), part 5
+Message-ID: <20200315142400.GU23230@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
  <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
- <20200315094148.12872-1-hdanton@sina.com>
+ <20200315095323.220-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200315094148.12872-1-hdanton@sina.com>
+In-Reply-To: <20200315095323.220-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 05:41:48PM +0800, Hillf Danton wrote:
-> > +	link = walk_component(nd, 0);
-> > +	if (link) {
-> 
-> Need to check that link is not err.
+On Sun, Mar 15, 2020 at 05:53:23PM +0800, Hillf Danton wrote:
 
-What for?  It will do the right thing anyway.
+> > +	res = step_into(nd, 0, dentry, inode, seq);
+> > +	if (unlikely(res)) {
+> 
+> Need to check that res is not err.
+> 
+> > +		nd->flags |= LOOKUP_PARENT;
+> > +		nd->flags &= ~(LOOKUP_OPEN|LOOKUP_CREATE|LOOKUP_EXCL);
+> > +		nd->stack[0].name = NULL;
+> > +		return res;
+> >  	}
+
+Not really...
