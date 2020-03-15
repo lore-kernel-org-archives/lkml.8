@@ -2,121 +2,66 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECCBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 08:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795A7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 08:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32872072A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 08:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F2E206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 08:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgCOImd (ORCPT
+        id S1728071AbgCOIst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 04:42:33 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49448 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgCOImd (ORCPT
+        Sun, 15 Mar 2020 04:48:49 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:42493 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbgCOIst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 04:42:33 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 675BA1C032D; Sun, 15 Mar 2020 09:42:31 +0100 (CET)
-Date:   Sun, 15 Mar 2020 09:42:30 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH] leds: ariel: Add driver for status LEDs on Dell Wyse 3020
-Message-ID: <20200315084230.GA1996@amd>
-References: <20200314105652.351708-1-lkundrak@v3.sk>
+        Sun, 15 Mar 2020 04:48:49 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id EAD41102CB03D;
+        Sun, 15 Mar 2020 09:48:46 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 829D1784E5; Sun, 15 Mar 2020 09:48:46 +0100 (CET)
+Date:   Sun, 15 Mar 2020 09:48:46 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Salter <msalter@redhat.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Tim Harvey <tharvey@gateworks.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] irqchip fixes for 5.6, take #2
+Message-ID: <20200315084846.h222n5pf4jvpojec@wunner.de>
+References: <20200314103000.2413-1-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200314105652.351708-1-lkundrak@v3.sk>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200314103000.2413-1-maz@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Mar 14, 2020 at 10:30:00AM +0000, Marc Zyngier wrote:
+> This is hopefully the last irqchip update for 5.6. This time, a single
+> patch working around a hardware issue on the Cavium ThunderX and its
+> derivatives.
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hm, I was hoping to see the BCM2835 irqchip fix in this pull:
 
-Hi!
+https://lore.kernel.org/lkml/f97868ba4e9b86ddad71f44ec9d8b3b7d8daa1ea.1582618537.git.lukas@wunner.de/
 
-> This adds support for controlling the LEDs attached to the Embedded
-> Controller on a Dell Wyse 3020 "Ariel" board.
->=20
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
-Does not look bad.
-
-> +static int ariel_led_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct ariel_led *leds;
-> +	struct regmap *ec_ram;
-> +	int ret;
-> +
-> +	leds =3D devm_kcalloc(dev, 3, sizeof(*leds), GFP_KERNEL);
-> +	if (!leds)
-> +		return -ENOMEM;
-> +
-> +	ec_ram =3D dev_get_regmap(dev->parent, "ec_ram");
-> +	if (!ec_ram)
-> +		return -ENODEV;
-> +
-> +	leds[0].ec_ram =3D ec_ram;
-> +	leds[0].ec_index =3D EC_BLUE_LED;
-> +	leds[0].led_cdev.name =3D "ariel:blue:power",
-> +	leds[0].led_cdev.brightness_get =3D ariel_led_get;
-> +	leds[0].led_cdev.brightness_set =3D ariel_led_set;
-> +	leds[0].led_cdev.blink_set =3D ariel_blink_set;
-> +	leds[0].led_cdev.default_trigger =3D "default-on";
-
-Move common settings to a loop?
-
-Definitely delete "ariel:" prefix.
-
-> +	leds[1].led_cdev.name =3D "ariel:amber:status",
-> +	leds[2].led_cdev.name =3D "ariel:green:status",
-
-Do the LEDs have some label, or some kind of common function? Calling
-it ":status" is not too useful...
-
-> +	ret =3D devm_led_classdev_register(dev, &leds[2].led_cdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(dev, "Dell Wyse 3020 LEDs\n");
-> +	return 0;
-> +}
-
-Just return ret; no need to print anything into the syslog.
+That patch fixes a pretty grave issue so I'd be really grateful
+if anyone could pick it up (or provide feedback why it can't be
+picked up just yet).
 
 Thanks!
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl5t6nYACgkQMOfwapXb+vKBcgCgkvL/uHuv1zBBuhBprXU+YYXO
-d84AoJ4BntW5hVTLpp469AW68EFnIwXW
-=goUQ
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
+Lukas
