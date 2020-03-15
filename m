@@ -2,62 +2,123 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72B1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CCEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA822205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9005D20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 12:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgCOM1T (ORCPT
+        id S1728519AbgCOMg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 08:27:19 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:51901 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728484AbgCOM1T (ORCPT
+        Sun, 15 Mar 2020 08:36:27 -0400
+Received: from 10.mo69.mail-out.ovh.net ([46.105.73.241]:52412 "EHLO
+        10.mo69.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbgCOMg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 08:27:19 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 75BD724000C;
-        Sun, 15 Mar 2020 12:27:17 +0000 (UTC)
-Date:   Sun, 15 Mar 2020 13:27:16 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH] rtc: snvs: remove redundant error message
-Message-ID: <20200315122716.GF4518@piout.net>
-References: <1584233264-26025-1-git-send-email-Anson.Huang@nxp.com>
+        Sun, 15 Mar 2020 08:36:27 -0400
+Received: from player692.ha.ovh.net (unknown [10.110.103.168])
+        by mo69.mail-out.ovh.net (Postfix) with ESMTP id 06B1184580
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 13:27:09 +0100 (CET)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player692.ha.ovh.net (Postfix) with ESMTPSA id 2285A104E0990;
+        Sun, 15 Mar 2020 12:26:53 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, linux-doc@vger.kernel.org
+Cc:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Kitt <steve@sk2.org>
+Subject: [PATCH v4] docs: sysctl/kernel: document BPF entries
+Date:   Sun, 15 Mar 2020 13:26:48 +0100
+Message-Id: <20200315122648.20558-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584233264-26025-1-git-send-email-Anson.Huang@nxp.com>
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 2241948192757337477
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrudeftddgudehjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheiledvrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Based on the implementation in kernel/bpf/syscall.c,
+kernel/bpf/trampoline.c, include/linux/filter.h, and the documentation
+in bpftool-prog.rst.
 
-On 15/03/2020 08:47:44+0800, Anson Huang wrote:
-> The RTC core already has error message for registration failure,
-> no need to have error message in the driver again.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/rtc/rtc-snvs.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
 
-I squashed that one in your previous patch.
+Notes:
+    This patch is intended for docs-next, but I'd appreciate reviews from
+    BPF developers.
+    
+    Changes since v3:
+    - moved back to docs-next.
+    
+    Changes since v2:
+    - fixed "will disabled" typo.
+    
+    Changes since v1:
+    - rebased on bpf-next instead of docs-next.
 
+ Documentation/admin-guide/sysctl/kernel.rst | 24 +++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 335696d3360d..88c51c0a5ce6 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -102,6 +102,20 @@ See the ``type_of_loader`` and ``ext_loader_ver`` fields in
+ :doc:`/x86/boot` for additional information.
+ 
+ 
++bpf_stats_enabled
++=================
++
++Controls whether the kernel should collect statistics on BPF programs
++(total time spent running, number of times run...). Enabling
++statistics causes a slight reduction in performance on each program
++run. The statistics can be seen using ``bpftool``.
++
++= ===================================
++0 Don't collect statistics (default).
++1 Collect statistics.
++= ===================================
++
++
+ cap_last_cap
+ ============
+ 
+@@ -1166,6 +1180,16 @@ NMI switch that most IA32 servers have fires unknown NMI up, for
+ example.  If a system hangs up, try pressing the NMI switch.
+ 
+ 
++unprivileged_bpf_disabled
++=========================
++
++Writing 1 to this entry will disable unprivileged calls to ``bpf()``;
++once disabled, calling ``bpf()`` without ``CAP_SYS_ADMIN`` will return
++``-EPERM``.
++
++Once set, this can't be cleared.
++
++
+ watchdog
+ ========
+ 
+
+base-commit: 7d3d3254adaa61cba896f71497f56901deb618e5
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
+
