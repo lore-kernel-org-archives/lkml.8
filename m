@@ -2,135 +2,135 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D22DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A93C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BF420575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC9220575
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:12:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="XXxWrlPv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGiYoRT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgCOKEc (ORCPT
+        id S1728241AbgCOKM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:04:32 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:50322 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgCOKEb (ORCPT
+        Sun, 15 Mar 2020 06:12:27 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33702 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728197AbgCOKM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:04:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1584266662; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
+        Sun, 15 Mar 2020 06:12:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584267144;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=8K4at98VmVZ/sFGzndyiaIeGeVtmYp4j33U5NwycmlE=;
-        b=XXxWrlPvXOPw8dW7Zjt0Mj2VJjdLgy7L/rL79sPujQA4p3Kw5LOsk6GmefWjmi6Y/W7EaQ
-        AS4rdhpXZo6VXsaaiDQKlpFNrWS44lsEacQ6DjKK1nY6W73CA4tzAKm7iu1ckJl2MU6vNF
-        5KrkOENWf1EGUI4ieLRvp5VxTfQtlvU=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Nick Dyer <nick@shmanahar.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] input: atmel_mxt_ts: Add support for optional regulator
-Date:   Sun, 15 Mar 2020 11:04:16 +0100
-Message-Id: <20200315100416.14151-2-paul@crapouillou.net>
-In-Reply-To: <20200315100416.14151-1-paul@crapouillou.net>
-References: <20200315100416.14151-1-paul@crapouillou.net>
+        bh=8fYeknRcTWmnQg8ZYRz0ZJkyEQG95MNGzU7Kd6SLL+M=;
+        b=KGiYoRT5/pHTLCbsXHXyfUGwxRTA05LKHRjQn8elcem/8l8E1ZlqCjCul7ZyD6/ILYJZiM
+        IHak6IkjZZppYKHNj6MvnphMorjHoiv5bXn0qxGl/f5h/qs8c5F3RC2eNpLoYWC69JBSqx
+        snyxBOBc7a1BvUr1Prkk34/EqGw6dzs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-ojHza0DOPKSAkDn91LjYXg-1; Sun, 15 Mar 2020 06:12:21 -0400
+X-MC-Unique: ojHza0DOPKSAkDn91LjYXg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A3A91005512;
+        Sun, 15 Mar 2020 10:12:18 +0000 (UTC)
+Received: from localhost (ovpn-116-26.ams2.redhat.com [10.36.116.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1792A5C1B2;
+        Sun, 15 Mar 2020 10:12:16 +0000 (UTC)
+Date:   Sun, 15 Mar 2020 10:12:15 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Eric Biggers <ebiggers@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, kernel@vivo.com
+Subject: Re: [PATCH 0/2] doc: zh_CN: facilitate translation for filesystems
+Message-ID: <20200315101215.GA325031@stefanha-x1.localdomain>
+References: <20200315092810.87008-1-wenhu.wang@vivo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200315092810.87008-1-wenhu.wang@vivo.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for an optional "vdd" regulator, as some platforms require a
-regulator to be enabled for the touchscreen to be enabled.
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 25 +++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+On Sun, Mar 15, 2020 at 02:27:58AM -0700, Wang Wenhu wrote:
+> This patch series set up the basic facility for the translation work
+> of the docs residing on filesystems into Chinese, indexing the filesystem=
+s
+> directory and adding one indexed translation into it. The virtiofs.rst
+> added is not only a translation itself but also an simple example that
+> future developers would take.
+>=20
+> The detailed diff info also shows the basic essential markups of
+> the toctree and reStructuredText, at least for the most simple occasions.
+> More translations of filesystems are on their way, and futher,
+> of more subsystems.
+>=20
+> ---
+> Wang Wenhu (2):
+>   doc: zh_CN: index files in filesystems subdirectory
+>   doc: zh_CN: add translation for virtiofs
+>=20
+>  Documentation/filesystems/index.rst           |  2 +
+>  Documentation/filesystems/virtiofs.rst        |  2 +
+>  .../translations/zh_CN/filesystems/index.rst  | 29 +++++++++
+>  .../zh_CN/filesystems/virtiofs.rst            | 62 +++++++++++++++++++
+>  Documentation/translations/zh_CN/index.rst    |  1 +
+>  5 files changed, 96 insertions(+)
+>  create mode 100644 Documentation/translations/zh_CN/filesystems/index.rs=
+t
+>  create mode 100644 Documentation/translations/zh_CN/filesystems/virtiofs=
+.rst
+>=20
+> --=20
+> 2.17.1
+>=20
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index ae60442efda0..b3511dad475a 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -22,6 +22,7 @@
- #include <linux/interrupt.h>
- #include <linux/of.h>
- #include <linux/property.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/gpio/consumer.h>
- #include <asm/unaligned.h>
-@@ -308,6 +309,7 @@ struct mxt_data {
- 	struct t7_config t7_cfg;
- 	struct mxt_dbg dbg;
- 	struct gpio_desc *reset_gpio;
-+	struct regulator *vdd;
- 
- 	/* Cached parameters from object table */
- 	u16 T5_address;
-@@ -3103,6 +3105,22 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- 	disable_irq(client->irq);
- 
-+	data->vdd = devm_regulator_get_optional(&client->dev, "vdd");
-+	if (IS_ERR(data->vdd)) {
-+		error = PTR_ERR(data->vdd);
-+		dev_err(&client->dev, "Failed to get regulator: %d\n", error);
-+		return error;
-+	}
-+
-+	if (data->vdd) {
-+		error = regulator_enable(data->vdd);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"Failed to enable regulator: %d\n", error);
-+			return error;
-+		}
-+	}
-+
- 	if (data->reset_gpio) {
- 		msleep(MXT_RESET_GPIO_TIME);
- 		gpiod_set_value(data->reset_gpio, 1);
-@@ -3111,7 +3129,7 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- 	error = mxt_initialize(data);
- 	if (error)
--		return error;
-+		goto err_disable_regulator;
- 
- 	error = sysfs_create_group(&client->dev.kobj, &mxt_attr_group);
- 	if (error) {
-@@ -3125,6 +3143,9 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- err_free_object:
- 	mxt_free_input_device(data);
- 	mxt_free_object_table(data);
-+err_disable_regulator:
-+	if (data->vdd)
-+		regulator_disable(data->vdd);
- 	return error;
- }
- 
-@@ -3136,6 +3157,8 @@ static int mxt_remove(struct i2c_client *client)
- 	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
- 	mxt_free_input_device(data);
- 	mxt_free_object_table(data);
-+	if (data->vdd)
-+		regulator_disable(data->vdd);
- 
- 	return 0;
- }
--- 
-2.25.1
+I am not a Chinese speaker but thank you for translation the
+documentation!
+
+Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5t/38ACgkQnKSrs4Gr
+c8i7pggAxFGK9yalFhtI40r+K7LMZVxPGH3zc20Ho6hCuGGbk0pnrVxuDOyAsgTo
+w809N9Ypju11BY4lh8vzpA8wmi+mrjCI1I+/Md87gv+vIuur17n6v895rHas9rkh
+VN6uRiHTxQR/zaDSaUM3yrR/KDCqHqe26T77B8//ope+JTqpWRNrhNccDtz5x/Kt
+BVWkyKGmHwKK2LZm3OkHHYXhZx519RS6gBrxbzSySnBbwPbBWcY75et0o8c3FSJP
+qh/pJ8keEtMEKVj/EGTZ2B9MN5d4nSi1yhxVizGHWkeDJ/yg6/l2kMKQ7MzAxPIP
+iM5LDusm9auID4W1sU3363No0ZF+4Q==
+=Sx9O
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
 
