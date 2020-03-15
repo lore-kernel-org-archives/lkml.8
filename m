@@ -3,105 +3,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33ADC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFE5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A744120578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8ADF206EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 10:30:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7HfmL36"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oe48Y3k6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgCOK2z (ORCPT
+        id S1728285AbgCOKaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:28:55 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42055 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgCOK2z (ORCPT
+        Sun, 15 Mar 2020 06:30:03 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:44762 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728250AbgCOKaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:28:55 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h8so7865892pgs.9;
-        Sun, 15 Mar 2020 03:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=0A0RJ57z71mMYdjUo91V4iXY17Ap84PMGG8CkVMa8K8=;
-        b=o7HfmL36BaFVUjlrx47sFcrPUOsclmtBsW618s/oG1LJSJy/8MF9YCDZaGYEakuyt7
-         HpKN9Kj6MbD9Xx44V9Ipmbb/y8nStV7zwJ1IqgfELJtx1A3Fsqc1j0HrzaANMB1eYnmx
-         XNjGUpQtGSQ6S7lXhsRzEDONXzpDd/7RS0ddbYsrqvWvZoUOryZtpyOMblYvumwIm1Xm
-         DbQKQhKAio3jnJE08YCx14oCa7oYG9yBVamrzkPbNiXITm7cvfzNIR2T9HkdUa5+2N/+
-         zjobqZ9vdZVPyhtnSBkqmf/DBzmKaX+qFs5tkSh5pdMzecHsWdPaRDmMfXHZ7ajx8VOy
-         xgjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=0A0RJ57z71mMYdjUo91V4iXY17Ap84PMGG8CkVMa8K8=;
-        b=ApYu7/RAk4vKrD6D5jOpNz+IbtS8E7XnGIINXBe4BGmb0/xkm2NEy/Ns4Wp5FHV+9n
-         eHu4jkX+9Lmzq7hK0TjKFWvPg7Z48Fjegtf6wEcbJ3SohqfYA5rAgMd2pi/7TzaVSSVc
-         pTmxkCqdGFgkvjbsJb9tRrc7/+29FoyqQ3p+W7/TqCEcsL9OG8A+s0joyQTXHSPyKSRE
-         SmFNc5mK6BlwnsCoR5iz57vNcO/SwkPRRA9xc5OkNU+VPtC88XvmnF5YM4+RbqRX7x4Z
-         v532ZB+lG3NCYIGwpCyBCzHUWxlVEIxodZYaafqJ6dhLNIeXlTRLnCuQFJDNrWp6E5oD
-         l4zQ==
-X-Gm-Message-State: ANhLgQ1nNE3nu+zx6lDkQcTFTsx2bJ0S7yIV5rYtn6pM2Rp/1fLSUcC1
-        i+/hPf1bXwKkBbJdFuEBSDHuRd2Mc2o=
-X-Google-Smtp-Source: ADFU+vu7f2zVxM/NDDw9ipVY18qNybJyCPLvi20SuVj6ZfITcqGgfSSd+h1OAUp0pRgO16x+ynwmwQ==
-X-Received: by 2002:a63:fc56:: with SMTP id r22mr21746883pgk.147.1584268134549;
-        Sun, 15 Mar 2020 03:28:54 -0700 (PDT)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id x6sm62618646pfi.83.2020.03.15.03.28.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Mar 2020 03:28:54 -0700 (PDT)
-Date:   Sun, 15 Mar 2020 15:58:48 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] USB: atm: Use the correct style for SPDX License Identifier
-Message-ID: <20200315102844.GA3460@nishad>
+        Sun, 15 Mar 2020 06:30:03 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 77F852D6;
+        Sun, 15 Mar 2020 11:30:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584268200;
+        bh=+til8j5cqHe4jmRk4M9/QpjRd7iVe9KmQF2nnXrAD6Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oe48Y3k6/YwHCbzm00F6c0JL/dvbejK4r/c8LpnLwTNqxoD4tUvubkQD0ZXlu5EWF
+         Yx2FjOr0fttn1/LeacVHcilgwqSY8xtwsTyIhl+ibwrnDCKd2W7VceczDSHrfv/PKi
+         Pqd3yBVJFIv0MdE5PMXCiut0LeBpMabmO/2tYSoE=
+Date:   Sun, 15 Mar 2020 12:29:56 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Niklas <niklas.soderlund@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 2/2] media: rcar-csi2: Let the driver handle fwnode
+ matching using match_custom callback
+Message-ID: <20200315102956.GA4732@pendragon.ideasonboard.com>
+References: <20200315102724.26850-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200315102724.26850-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200315102724.26850-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header file related to USB DSL modem support drivers.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used).
+Hi Prabhakar,
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+Thank you for the patch.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/usb/atm/usbatm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, Mar 15, 2020 at 10:27:24AM +0000, Lad Prabhakar wrote:
+> The rcar-csi2 driver uses the v4l2-async framework to do endpoint matching
+> instead of node matching. This is needed as it needs to work with the
+> adv748x driver which register it self in v4l2-async using endpoints
+> instead of nodes. The reason for this is that from a single DT node it
+> creates multiple subdevices, one for each endpoint.
+> 
+> But when using subdevs which register itself in v4l2-async using nodes,
+> the rcar-csi2 driver failed to find the matching endpoint because the
+> match.fwnode was pointing to remote endpoint instead of remote parent
+> port.
+> 
+> This commit adds support in rcar-csi2 driver to handle both the cases
+> where subdev registers in v4l2-async using endpoints/nodes, by using
+> match_type as V4L2_ASYNC_MATCH_CUSTOM and implementing the match()
+> callback to compare the fwnode of either remote/parent.
 
-diff --git a/drivers/usb/atm/usbatm.h b/drivers/usb/atm/usbatm.h
-index 8725755bd53d..d96658e2e209 100644
---- a/drivers/usb/atm/usbatm.h
-+++ b/drivers/usb/atm/usbatm.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /******************************************************************************
-  *  usbatm.h - Generic USB xDSL driver core
-  *
+This is not the way to go. The v4l2-async framework needs to be fixed
+instead, so that fwnode match will do the right thing automatically
+regardless of whether the node is a device node or and endpoint node.
+
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/media/platform/rcar-vin/rcar-csi2.c | 46 +++++++++++++++++++--
+>  1 file changed, 43 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> index faa9fb23a2e9..1bbf05e9f025 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> @@ -808,6 +808,46 @@ static int rcsi2_parse_v4l2(struct rcar_csi2 *priv,
+>  	return 0;
+>  }
+>  
+> +static bool rcsi2_asd_match(struct v4l2_subdev *sd,
+> +			    struct v4l2_async_subdev *asd)
+> +{
+> +	struct rcar_csi2 *priv = (struct rcar_csi2 *)asd->match.custom.priv;
+> +	struct fwnode_handle *remote_endpoint;
+> +	struct fwnode_handle *subdev_endpoint;
+> +	struct device_node *np;
+> +	bool matched = false;
+> +
+> +	np = of_graph_get_endpoint_by_regs(priv->dev->of_node, 0, 0);
+> +	if (!np) {
+> +		dev_err(priv->dev, "Not connected to subdevice\n");
+> +		return matched;
+> +	}
+> +
+> +	remote_endpoint =
+> +		fwnode_graph_get_remote_endpoint(of_fwnode_handle(np));
+> +	if (!remote_endpoint) {
+> +		dev_err(priv->dev, "Failed to get remote endpoint\n");
+> +		of_node_put(np);
+> +		return matched;
+> +	}
+> +	of_node_put(np);
+> +
+> +	if (sd->fwnode != dev_fwnode(sd->dev)) {
+> +		if (remote_endpoint == sd->fwnode)
+> +			matched = true;
+> +	} else {
+> +		subdev_endpoint =
+> +		      fwnode_graph_get_next_endpoint(dev_fwnode(sd->dev), NULL);
+> +		if (remote_endpoint == subdev_endpoint)
+> +			matched = true;
+> +		fwnode_handle_put(subdev_endpoint);
+> +	}
+> +
+> +	fwnode_handle_put(remote_endpoint);
+> +
+> +	return matched;
+> +}
+> +
+>  static int rcsi2_parse_dt(struct rcar_csi2 *priv)
+>  {
+>  	struct device_node *ep;
+> @@ -833,9 +873,9 @@ static int rcsi2_parse_dt(struct rcar_csi2 *priv)
+>  		return ret;
+>  	}
+>  
+> -	priv->asd.match.fwnode =
+> -		fwnode_graph_get_remote_endpoint(of_fwnode_handle(ep));
+> -	priv->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
+> +	priv->asd.match.custom.match = &rcsi2_asd_match;
+> +	priv->asd.match.custom.priv = priv;
+> +	priv->asd.match_type = V4L2_ASYNC_MATCH_CUSTOM;
+>  
+>  	of_node_put(ep);
+>  
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
