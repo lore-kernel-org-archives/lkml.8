@@ -2,111 +2,56 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC300C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4799C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D4920716
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:51:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jE9cFqMI"
+	by mail.kernel.org (Postfix) with ESMTP id A432120716
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 03:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbgCODvi (ORCPT
+        id S1727708AbgCODxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Mar 2020 23:51:38 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:32953 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbgCODvi (ORCPT
+        Sat, 14 Mar 2020 23:53:37 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35216 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgCODxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:51:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id n7so7798645pfn.0;
-        Sat, 14 Mar 2020 20:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Uim4AzYBCm6V2z3QF09x5PPcRE01qrMuLypTdVFHimA=;
-        b=jE9cFqMIPYofiNcH+xERYgJ9saPt+Kj9OIakPPW3wROVmtHc2kEDMOO04aTSlsYSEm
-         AhJstHD5b6Y7Ka9JrfO/E/kIThMLUYmVc3DvSzHvFFsAnVPZbe/ug+yhHMJk2+DgRA8V
-         a9TzqqNb3H4w7M4EgiU+rUGvAtVUXTXr3r7+/2sqgNTCvKwLZ96PyfvDjWYqprG5+fH+
-         U19nzB0FSdOwDpDlDXi5bGp2k+i8bwk6k0woWuOPQcf7pEanHQyxMkcAT8ELObqiuTsL
-         fKSvK/EYwUN1H3eS6ez+aSRZA7ZO+8LphankfmBcTWpWDePWZUtI51qE/iIqcW0uIbao
-         zJgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uim4AzYBCm6V2z3QF09x5PPcRE01qrMuLypTdVFHimA=;
-        b=hiD5eVW10hiXZpLdyi4lYwiorm+HAzm+gMFpFn4gSUPqZgwU1pLF5JmIqWdKZpooQY
-         tcfYp7bqVZrFh7ofI2gpYWVqI+aUg3Mi4qvzHdGXqrQ0vy7RXEZXDaF1HuwD5SaDoaZi
-         wazQXN7nz48pDcbZre6z20tIEe/06Y2HkCRu1jKM++8a6YlnAQZ5CWJBsMjub6kgvYWQ
-         yzA7vwqLWjTFvpwvszVrr3esJBiB74nmmXSfaPNWs/k51Y17P2xsGxD+tHgY5ZmSiA+7
-         WKl3rixRJl9Oh+TMc2BuJOUCvR1GUlddkm/V9pLBFQROCfL0yosWCWNSJNdFrxBFfNxq
-         f3HA==
-X-Gm-Message-State: ANhLgQ3Iw95L1lLdvXMq7h1oyB3/QsfC9m0w01kdVBNJbcRBvuh/1uL6
-        AF59WqCDSc/7N0WSWrxNdYHoiem/MkM=
-X-Google-Smtp-Source: ADFU+vsAFNYY+qMaVOBxLw+qtltM33BNN6phFUmxCHU630aJrU4CWVFiR6zHzz/Y0D1cSUuGio/2wQ==
-X-Received: by 2002:a63:6101:: with SMTP id v1mr17235961pgb.318.1584186170624;
-        Sat, 14 Mar 2020 04:42:50 -0700 (PDT)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id y131sm17983125pfg.25.2020.03.14.04.42.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 14 Mar 2020 04:42:49 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 17:12:47 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        John Crispin <john@phrozen.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
-Message-ID: <20200314114247.GA5577@afzalpc>
-References: <20200304203144.GA4323@alpha.franken.de>
- <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
- <20200313164751.GA30134@roeck-us.net>
- <20200314010744.GA5494@afzalpc>
- <204ac322-4214-fc83-e0b9-14473f855b0a@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <204ac322-4214-fc83-e0b9-14473f855b0a@roeck-us.net>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+        Sat, 14 Mar 2020 23:53:37 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 130F915B75272;
+        Sat, 14 Mar 2020 20:53:36 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 20:53:35 -0700 (PDT)
+Message-Id: <20200314.205335.907987569817755804.davem@davemloft.net>
+To:     michael@walle.cc
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
+        robh+dt@kernel.org, leoyang.li@nxp.com, shawnguo@kernel.org
+Subject: Re: [PATCH 1/2] net: dsa: felix: allow the device to be disabled
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200312164320.22349-1-michael@walle.cc>
+References: <20200312164320.22349-1-michael@walle.cc>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 14 Mar 2020 20:53:36 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 03:28:53AM -0700, Guenter Roeck wrote:
-> On 3/13/20 6:07 PM, afzal mohammed wrote:
 
-> > Can you please apply,
-> > 
-> > https://lkml.kernel.org/r/20200311152751.GA5044@afzalpc,
-> > 
-> > on top of this patch & see if it fixes the issue.
+This series depends upon some devicetree tree changes, so why don't you
+submit these changes there and add my:
 
-> I have not tested all configurations, but a quick check suggests
-> that it does indeed fix the problem.
+Acked-by: David S. Miller <davem@davemloft.net>
 
-Thanks Guenter for checking,
-
-i have sent a newer version [1] of that patch based on the feedback
-from Thomas.
-
-REgards
-afzal
-
-[1] https://lkml.kernel.org/r/20200314081312.GA4948@afzalpc
+Thank you.
