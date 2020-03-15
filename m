@@ -2,168 +2,92 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0648C18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7AAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B339220575
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852AF20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 15:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584287782;
+	bh=0FETaBYg0gM6ta0vExCNPyV/NUzhVreAf5vTbqU/bEo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zXt2ADsQ1KI/1AKooss0DI9zFXnm2CPKvABQYF4URgrrSa34u1L5JNJjmIeQckqJa
+	 Ks+2q23wIni9H9bOgUUmdOOqzW1mQPPYOEqunJTUB1nwI3n7YLu0rMq23Kt1hdkiHi
+	 5M94yked+t8Tnc2owVxzFRvmkOk01M7d7ismy+eE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgCOPx4 (ORCPT
+        id S1728884AbgCOP4V convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:53:56 -0400
-Received: from m17617.mail.qiye.163.com ([59.111.176.17]:7014 "EHLO
-        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbgCOPxz (ORCPT
+        Sun, 15 Mar 2020 11:56:21 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31726 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728634AbgCOP4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 11:53:55 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id AAAA226111A;
-        Sun, 15 Mar 2020 23:53:37 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Wang Wenhu <wenhu.wang@vivo.com>,
-        Eric Biggers <ebiggers@google.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     kernel@vivo.com
-Subject: [PATCH v2,2/2] doc: zh_CN: add translation for virtiofs
-Date:   Sun, 15 Mar 2020 08:52:39 -0700
-Message-Id: <20200315155258.91725-2-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200315155258.91725-1-wenhu.wang@vivo.com>
-References: <20200315092810.87008-1-wenhu.wang@vivo.com>
- <20200315155258.91725-1-wenhu.wang@vivo.com>
+        Sun, 15 Mar 2020 11:56:21 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-XA3QFsmIPzmvSf13aYxi3Q-1; Sun, 15 Mar 2020 11:56:16 -0400
+X-MC-Unique: XA3QFsmIPzmvSf13aYxi3Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A42A3477;
+        Sun, 15 Mar 2020 15:56:12 +0000 (UTC)
+Received: from krava.redhat.com (ovpn-204-71.brq.redhat.com [10.40.204.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B79C5DA76;
+        Sun, 15 Mar 2020 15:56:09 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH perf/urgent] perf expr: Fix copy/paste mistake
+Date:   Sun, 15 Mar 2020 16:56:09 +0100
+Message-Id: <20200315155609.603948-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVCT0xLS0tLSU1MS0lDQ1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MxQ6NBw5KTg9MDcfSRw3KT1K
-        EzQwFDZVSlVKTkNPSUNMTUlNT0tLVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQU1NQkw3Bg++
-X-HM-Tid: 0a70dee6a0899375kuwsaaaa226111a
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Translate virtiofs.rst in Documentation/filesystems/ into Chinese.
+Copy/paste leftover from recent refactor.
 
-Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+Fixes: 26226a97724d ("perf expr: Move expr lexer to flex")
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
-Changelog v2:
- - add a blank line in the end of index.rst to index virtiofs.rst
- - Asked-by Stefan Hajnoczi
- - added SPDX header and Copyright info
----
- Documentation/filesystems/virtiofs.rst        |  2 +
- .../translations/zh_CN/filesystems/index.rst  |  2 +
- .../zh_CN/filesystems/virtiofs.rst            | 61 +++++++++++++++++++
- 3 files changed, 65 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/filesystems/virtiofs.rst
+ tools/perf/util/expr.l | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/filesystems/virtiofs.rst b/Documentation/filesystems/virtiofs.rst
-index 4f338e3cb3f7..7c4301d962f8 100644
---- a/Documentation/filesystems/virtiofs.rst
-+++ b/Documentation/filesystems/virtiofs.rst
-@@ -1,3 +1,5 @@
-+.. _virtiofs_index:
-+
- .. SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index 1928f2a3dddc..eaad29243c23 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -79,10 +79,10 @@ symbol		{spec}*{sym}*{spec}*{sym}*
+ 	{
+ 		int start_token;
  
- ===================================================
-diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
-index 0a2cabfeaf7b..fd3700a4db6d 100644
---- a/Documentation/translations/zh_CN/filesystems/index.rst
-+++ b/Documentation/translations/zh_CN/filesystems/index.rst
-@@ -27,3 +27,5 @@ Linux Kernel中的文件系统
- .. toctree::
-    :maxdepth: 2
+-		start_token = parse_events_get_extra(yyscanner);
++		start_token = expr_get_extra(yyscanner);
  
-+   virtiofs
-+
-diff --git a/Documentation/translations/zh_CN/filesystems/virtiofs.rst b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
-new file mode 100644
-index 000000000000..cd836a9b2ac4
---- /dev/null
-+++ b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
-@@ -0,0 +1,61 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. raw:: latex
-+
-+	\renewcommand\thesection*
-+	\renewcommand\thesubsection*
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: :ref:`Documentation/filesystems/virtiofs.rst <virtiofs_index>`
-+
-+译者
-+::
-+
-+	中文版维护者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
-+	中文版翻译者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
-+	中文版校译者:  王文虎 Wang Wenhu <wenhu.wang@vivo.com>
-+
-+===========================================
-+virtiofs: virtio-fs 主机<->客机共享文件系统
-+===========================================
-+
-+- Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-+
-+介绍
-+====
-+Linux的virtiofs文件系统实现了一个半虚拟化VIRTIO类型“virtio-fs”设备的驱动，通过该\
-+类型设备实现客机<->主机文件系统共享。它允许客机挂载一个已经导出到主机的目录。
-+
-+客机通常需要访问主机或者远程系统上的文件。使用场景包括：在新客机安装时让文件对其\
-+可见；从主机上的根文件系统启动；对无状态或临时客机提供持久存储和在客机之间共享目录。
-+
-+尽管在某些任务可能通过使用已有的网络文件系统完成，但是却需要非常难以自动化的配置\
-+步骤，且将存储网络暴露给客机。而virtio-fs设备通过提供不经过网络的文件系统访问文件\
-+的设计方式解决了这些问题。
-+
-+另外，virto-fs设备发挥了主客机共存的优点提高了性能，并且提供了网络文件系统所不具备
-+的一些语义功能。
-+
-+用法
-+====
-+以``myfs``标签将文件系统挂载到``/mnt``:
-+
-+.. code-block:: sh
-+
-+  guest# mount -t virtiofs myfs /mnt
-+
-+请查阅 https://virtio-fs.gitlab.io/ 了解配置QEMU和virtiofsd守护程序的详细信息。
-+
-+内幕
-+====
-+由于virtio-fs设备将FUSE协议用于文件系统请求，因此Linux的virtiofs文件系统与FUSE文\
-+件系统客户端紧密集成在一起。客机充当FUSE客户端而主机充当FUSE服务器，内核与用户空\
-+间之间的/dev/fuse接口由virtio-fs设备接口代替。
-+
-+FUSE请求被置于虚拟队列中由主机处理。主机填充缓冲区中的响应部分，而客机处理请求的完成部分。
-+
-+将/dev/fuse映射到虚拟队列需要解决/dev/fuse和虚拟队列之间语义上的差异。每次读取\
-+/dev/fuse设备时，FUSE客户端都可以选择要传输的请求，从而可以使某些请求优先于其他\
-+请求。虚拟队列有其队列语义，无法更改已入队请求的顺序。在虚拟队列已满的情况下尤
-+其关键，因为此时不可能加入高优先级的请求。为了解决此差异，virtio-fs设备采用“hiprio”\
-+（高优先级）虚拟队列，专门用于有别于普通请求的高优先级请求。
+ 		if (start_token) {
+-			parse_events_set_extra(NULL, yyscanner);
++			expr_set_extra(NULL, yyscanner);
+ 			return start_token;
+ 		}
+ 	}
 -- 
-2.17.1
+2.24.1
 
