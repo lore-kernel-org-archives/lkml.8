@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A2CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A105C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E1F206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115DA206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 09:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TzL2mRYJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNI4nE8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgCOJa1 (ORCPT
+        id S1728150AbgCOJbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:30:27 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37553 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726521AbgCOJa1 (ORCPT
+        Sun, 15 Mar 2020 05:31:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47864 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726521AbgCOJbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:30:27 -0400
+        Sun, 15 Mar 2020 05:31:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584264625;
+        s=mimecast20190719; t=1584264667;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=rNFz5DYWHgexHyJt056VriaIF9paJuhnZXXnkdcdqbg=;
-        b=TzL2mRYJKAgXMfNkumr72/yUVM9jkNg8ca4qTRUeRNaZqDYEWaFeqlhuBt5dpVK5jVFt1T
-        uYLVuO6BM7/jv2IqhfgdRNMSlcE6N93R7CQX6AQgvR1tpYZDhleqKwSu7sdwXwjNdGgR+f
-        lkym10VwmfyPJ8af6z07X20tRFZvHVA=
+        bh=NskdIeesjzIp9l2WHfY+vsEAmi7voX22LG95jDKnurM=;
+        b=PNI4nE8erd2/nl8vpNvxbLkJKKIyjbO58q7Qk91/rt1FKqG2NMINSrxUbEdvyooc33OsZV
+        vcEI1rkkUTGk5lD5pd2pE6bbh75oEX3gp4/XeldykSNhZtnvA9pjKffx2gtaw+/wpq/GsN
+        NYa1Wyhu1vhzPpeT/9rhuFCESYXZnl8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-1ULkcQfGN8SlH9l2u-WY7w-1; Sun, 15 Mar 2020 05:30:21 -0400
-X-MC-Unique: 1ULkcQfGN8SlH9l2u-WY7w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-366-opja8U-XMLS4so4aBi8vrQ-1; Sun, 15 Mar 2020 05:31:03 -0400
+X-MC-Unique: opja8U-XMLS4so4aBi8vrQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F24B107ACC7;
-        Sun, 15 Mar 2020 09:30:19 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D2E98017CC;
+        Sun, 15 Mar 2020 09:31:01 +0000 (UTC)
 Received: from krava (ovpn-204-71.brq.redhat.com [10.40.204.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D467907F7;
-        Sun, 15 Mar 2020 09:30:16 +0000 (UTC)
-Date:   Sun, 15 Mar 2020 10:30:13 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 205785DA76;
+        Sun, 15 Mar 2020 09:30:57 +0000 (UTC)
+Date:   Sun, 15 Mar 2020 10:30:55 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -53,114 +53,86 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf mem2node: avoid double free related to realloc
-Message-ID: <20200315093013.GC492969@krava>
-References: <20200314042826.166953-1-irogers@google.com>
- <20200314142332.GB492969@krava>
- <CAP-5=fXZJidxHYeCqHcNPBArMe_aYwP0+u2dxiTD+V1fammK_Q@mail.gmail.com>
+Subject: Re: [PATCH v2] perf parse-events: fix 3 use after frees
+Message-ID: <20200315093055.GD492969@krava>
+References: <20200314170356.62914-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXZJidxHYeCqHcNPBArMe_aYwP0+u2dxiTD+V1fammK_Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200314170356.62914-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 09:49:37AM -0700, Ian Rogers wrote:
-> On Sat, Mar 14, 2020 at 7:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Fri, Mar 13, 2020 at 09:28:26PM -0700, Ian Rogers wrote:
-> > > Realloc of size zero is a free not an error, avoid this causing a double
-> > > free. Caught by clang's address sanitizer:
-> > >
-> > > ==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
-> > >     #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
-> > >     #1 0x5649659e9251 in __zfree tools/lib/zalloc.c:13:2
-> > >     #2 0x564965c0f92c in mem2node__exit tools/perf/util/mem2node.c:114:2
-> > >     #3 0x564965a08b4c in perf_c2c__report tools/perf/builtin-c2c.c:2867:2
-> > >     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
-> > >     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
-> > >     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
-> > >     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
-> > >     #8 0x564965942e41 in main tools/perf/perf.c:538:3
-> > >
-> > > 0x6020000015f0 is located 0 bytes inside of 1-byte region [0x6020000015f0,0x6020000015f1)
-> > > freed by thread T0 here:
-> > >     #0 0x564965929da3 in realloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
-> > >     #1 0x564965c0f55e in mem2node__init tools/perf/util/mem2node.c:97:16
-> > >     #2 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
-> > >     #3 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
-> > >     #4 0x564965944348 in run_builtin tools/perf/perf.c:312:11
-> > >     #5 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
-> > >     #6 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
-> > >     #7 0x564965942e41 in main tools/perf/perf.c:538:3
-> > >
-> > > previously allocated by thread T0 here:
-> > >     #0 0x564965929c42 in calloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:154:3
-> > >     #1 0x5649659e9220 in zalloc tools/lib/zalloc.c:8:9
-> > >     #2 0x564965c0f32d in mem2node__init tools/perf/util/mem2node.c:61:12
-> > >     #3 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
-> > >     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
-> > >     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
-> > >     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
-> > >     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
-> > >     #8 0x564965942e41 in main tools/perf/perf.c:538:3
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/mem2node.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
-> > > index 797d86a1ab09..7f97aa69eb65 100644
-> > > --- a/tools/perf/util/mem2node.c
-> > > +++ b/tools/perf/util/mem2node.c
-> > > @@ -95,7 +95,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
-> > >
-> > >       /* Cut unused entries, due to merging. */
-> > >       tmp_entries = realloc(entries, sizeof(*entries) * j);
-> > > -     if (tmp_entries)
-> > > +     if (j == 0 || tmp_entries)
-> >
-> > nice catch.. I wonder if we should fail in here, or at least
-> > warn that there're no entris.. which is really strange ;-)
+On Sat, Mar 14, 2020 at 10:03:56AM -0700, Ian Rogers wrote:
+> Reproducible with a clang asan build and then running perf test in
+> particular 'Parse event definition strings'.
 > 
-> The workload was the stream benchmark with perf c2c, but stream isn't
-> particularly long running. Not sure how j became 0, there's 2
-> possibilities in the code. The worry with a warning is the spam, so I
-> just wanted to make the code correct.
+> v2 frees the evsel->pmu_name avoiding a memory leak.
 
-I was wondering if we should fail completely,
-but we might break some c2c expected behaviour
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-how about just WARN_ONCE pn j == 0, and then
-the lookup will fail already with:
-
-        if (WARN_ONCE(node < 0, "WARNING: failed to find node\n"))
-                return;
-
-just get enough hints ;-)
-
+thanks,
 jirka
 
 > 
-> Thanks,
-> Ian
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/evsel.c        | 1 +
+>  tools/perf/util/parse-events.c | 6 +++---
+>  2 files changed, 4 insertions(+), 3 deletions(-)
 > 
-> > thanks,
-> > jirka
-> >
-> > >               entries = tmp_entries;
-> > >
-> > >       for (i = 0; i < j; i++) {
-> > > --
-> > > 2.25.1.481.gfbce0eb801-goog
-> > >
-> >
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 816d930d774e..15ccd193483f 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1287,6 +1287,7 @@ void perf_evsel__exit(struct evsel *evsel)
+>  	perf_thread_map__put(evsel->core.threads);
+>  	zfree(&evsel->group_name);
+>  	zfree(&evsel->name);
+> +	zfree(&evsel->pmu_name);
+>  	perf_evsel__object.fini(evsel);
+>  }
+>  
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index a14995835d85..593b6b03785d 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1449,7 +1449,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>  		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu, NULL,
+>  				    auto_merge_stats, NULL);
+>  		if (evsel) {
+> -			evsel->pmu_name = name;
+> +			evsel->pmu_name = name ? strdup(name) : NULL;
+>  			evsel->use_uncore_alias = use_uncore_alias;
+>  			return 0;
+>  		} else {
+> @@ -1497,7 +1497,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>  		evsel->snapshot = info.snapshot;
+>  		evsel->metric_expr = info.metric_expr;
+>  		evsel->metric_name = info.metric_name;
+> -		evsel->pmu_name = name;
+> +		evsel->pmu_name = name ? strdup(name) : NULL;
+>  		evsel->use_uncore_alias = use_uncore_alias;
+>  		evsel->percore = config_term_percore(&evsel->config_terms);
+>  	}
+> @@ -1547,7 +1547,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>  				if (!parse_events_add_pmu(parse_state, list,
+>  							  pmu->name, head,
+>  							  true, true)) {
+> -					pr_debug("%s -> %s/%s/\n", config,
+> +					pr_debug("%s -> %s/%s/\n", str,
+>  						 pmu->name, alias->str);
+>  					ok++;
+>  				}
+> -- 
+> 2.25.1.481.gfbce0eb801-goog
 > 
 
