@@ -6,43 +6,45 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5B6C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE59C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9787620736
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAFE920722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 04:34:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgCOE2B (ORCPT
+        id S1726619AbgCOEeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 00:28:01 -0400
-Received: from smtprelay0200.hostedemail.com ([216.40.44.200]:40474 "EHLO
+        Sun, 15 Mar 2020 00:34:17 -0400
+Received: from smtprelay0212.hostedemail.com ([216.40.44.212]:33592 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725837AbgCOE2B (ORCPT
+        by vger.kernel.org with ESMTP id S1726136AbgCOEeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 00:28:01 -0400
+        Sun, 15 Mar 2020 00:34:17 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 21D5F182CED28;
-        Sun, 15 Mar 2020 04:28:00 +0000 (UTC)
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 8B2AC837F24C;
+        Sun, 15 Mar 2020 04:34:16 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: queen11_45b03e9819604
-X-Filterd-Recvd-Size: 1633
+X-HE-Tag: blood54_7c668a58d7328
+X-Filterd-Recvd-Size: 1907
 Received: from XPS-9350.home (unknown [47.151.143.254])
         (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 15 Mar 2020 04:27:58 +0000 (UTC)
-Message-ID: <e8c0df0e7adb53c2e16f5a4f85de9f5a0f627b4f.camel@perches.com>
-Subject: Re: [PATCH] coding-style.rst: Add fallthrough as an emacs keyword
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 15 Mar 2020 04:34:14 +0000 (UTC)
+Message-ID: <1c31f0e1a0fe8ee268f27289f6f820c7e48596d5.camel@perches.com>
+Subject: Re: [Outreachy kernel] [PATCH v2] Staging: rtl8723bs: rtw_mlme:
+ Remove unnecessary conditions
 From:   Joe Perches <joe@perches.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sat, 14 Mar 2020 21:26:13 -0700
-In-Reply-To: <20200315021222.GU22433@bombadil.infradead.org>
-References: <7a2977ea9baacd1580ff80689f2c8f20d45b069d.camel@perches.com>
-         <20200315021222.GU22433@bombadil.infradead.org>
+To:     Shreeya Patel <shreeya.patel23498@gmail.com>,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
+        sbrivio@redhat.com, daniel.baluta@gmail.com,
+        nramas@linux.microsoft.com, hverkuil@xs4all.nl,
+        Larry.Finger@lwfinger.net
+Date:   Sat, 14 Mar 2020 21:32:29 -0700
+In-Reply-To: <4deeaef8f8e0f23a9adbfd7d98840624e2994cf2.camel@gmail.com>
+References: <20200313102912.17218-1-shreeya.patel23498@gmail.com>
+         <25a1aca2c993ecb70ba7cd9c9e38bce9170a98b0.camel@perches.com>
+         <4deeaef8f8e0f23a9adbfd7d98840624e2994cf2.camel@gmail.com>
 Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
@@ -52,19 +54,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-03-14 at 19:12 -0700, Matthew Wilcox wrote:
-> On Sat, Mar 14, 2020 at 02:13:59PM -0700, Joe Perches wrote:
-> > I've no idea how to remove the infinite monkeys jibe from the chinese translation
+On Sat, 2020-03-14 at 16:58 +0530, Shreeya Patel wrote:
+> This could be:
+> >  	if ((!(phtpriv->ampdu_enable) && pregistrypriv->ampdu_enable ==
+> > 1)) ||
+> > 	    pregistrypriv->ampdu_enable == 2)
+> > 		phtpriv->ampdu_enable = true;
+> > 
+> > Though it is probably more sensible to just set
+> > phtpriv->ampdu_enable without testing whether or
+> > not it's already set:
+> > 
+> > 	if (pregistrypriv->ampdu_enable == 1 ||
+> > 	    pregistrypriv->ampdu_enable == 2)
+> > 		phtpriv->ampdu_enable = true;
 > 
-> I don't think you should.  That's part of Linus' original text, and I
-> don't think it deters contributors.
-> 
-> > -uses are less than desirable (in fact, they are worse than random
-> > -typing - an infinite number of monkeys typing into GNU emacs would never
-> > -make a good program).
-> > +uses are less than desirable.
+> But the else-if block which I removed in v2 of this patch had nothing
+> in the block.
+> It was not assigning any value to "phtpriv->ampdu_enable". ( basically
+> it was empty and useless)
 
-It's silly, and moderately offensive,
-unrepresentative of the softer, modern Linus.
+Right, I misread the deletions from patch.
 
 
