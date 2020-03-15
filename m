@@ -2,92 +2,98 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77519C18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3DBC10F29
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 20:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B80E205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 19:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709B520637
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 20:12:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cGhe2zh6"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="roghQ77T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgCOTuX (ORCPT
+        id S1729101AbgCOUMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 15:50:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40486 "EHLO mail.skyhub.de"
+        Sun, 15 Mar 2020 16:12:42 -0400
+Received: from ozlabs.org ([203.11.71.1]:37717 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727329AbgCOTuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 15:50:22 -0400
-Received: from zn.tnic (p200300EC2F28D000ACB9AA06AD32AB36.dip0.t-ipconnect.de [IPv6:2003:ec:2f28:d000:acb9:aa06:ad32:ab36])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729081AbgCOUMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 16:12:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9346E1EC027B;
-        Sun, 15 Mar 2020 20:50:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584301820;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=17Mj+NXZZqXgw9A9yH5A54NytjZGqmWKL11usy+lGKE=;
-        b=cGhe2zh6Z5MfYnkcm812fY0mGNV4bikyhGUZz4pjtjPGwIZBC+Djdj3qubwnXODOtdvcOb
-        PjhR+fsyiYZ/wkkj27llHp6ISA+/UhVhO5Xqz9rOwClVs3Df1TGansURqGMMY8lhbdB8yS
-        yYd+BdoR0b0lr3PyAvXYVueBROvlzZc=
-Date:   Sun, 15 Mar 2020 20:50:24 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sherry Sun <sherry.sun@nxp.com>
-Cc:     mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
-        rrichter@marvell.com, michal.simek@xilinx.com,
-        manish.narani@xilinx.com, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com, frank.li@nxp.com
-Subject: Re: [PATCH v2] EDAC: synopsys: Fix the wrong call of pinf->col
- parameter
-Message-ID: <20200315195024.GB10926@zn.tnic>
-References: <1582856183-5007-1-git-send-email-sherry.sun@nxp.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gVwS2QKZz9sP7;
+        Mon, 16 Mar 2020 07:12:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584303160;
+        bh=T5p7qsdMSbtIslBz+IZ/R1FX6AlWSXNTZGgfkCMkXnA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=roghQ77Tf/swP68aZN7tG7UG8wcer2zycmAfCgVjDC9W4d1gTh3JIrJdcBuw4syTM
+         n40XKhIpV4dxqVTIuamaCEn4sBakok/XEmCXC+Xm87sV1HaIS1M/FENMxiEsrD0A0a
+         BHFVc/I2NhOLjmhWpeoLRSjPv57gB035JhlbW/tAxom9yMuW5C6Ym9X477HtBpY03F
+         3SE41lic00IkaUhnC2YSP2K0CXsSRsna1Zk+Q/HzJlpACzs4mpUtohyI9NFvLG9xle
+         tuCbcnXT2MQ7K4xOJzUBOiyuzJEPZJ8HzKgNtSR1/BFcl8+6BTuTTQUg8//BctqwPe
+         UwTvTH1eyuDig==
+Date:   Mon, 16 Mar 2020 07:12:34 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the usb-gadget tree
+Message-ID: <20200316071234.3e0bce06@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1582856183-5007-1-git-send-email-sherry.sun@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/Xcf=cdoDQKABwzFeZT1ekMP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 10:16:23AM +0800, Sherry Sun wrote:
-> Since ZynqMP platform call zynqmp_get_error_info() function to get ce/ue
-> information. In this function, pinf->col parameter is not used, this
-> parameter is only used by Zynq platforme in zynq_get_error_info(). So
-> here pinf->col should not be called and printed for ZynqMP, need remove
-> it.
+--Sig_/Xcf=cdoDQKABwzFeZT1ekMP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Err, the interrupt handler intr_handler() calls the ->get_error_info()
-function pointer and then calls handle_error(). I.e, the same path
-ending in handle_error() is called on both: Zynq and ZynqMP, one through
-the interrupt and the other through the poller.
+Hi all,
 
-Because it looks like the interrupt support is only on ZynqMP? I'm
-looking at that DDR_ECC_INTR_SUPPORT thing.
+In commit
 
-If so, then you need to rename the interrupt handler to
-zynqmp_intr_handler().
+  238d76021654 ("usb: dwc3: meson-g12a: Don't use ret uninitialized in dwc3=
+_meson_g12a_otg_init")
 
-And normal Zynq platform uses check_errors() which then calls
-handle_error().
+Fixes tag
 
-So still not good enough: you probably "fixed" it on ZynqMP but broke
-it on Zynq because check_errors() calls ->get_error_info() which is
-zynq_get_error_info() and will have populated pinf->col.
+  Fixes: 729149c53f04 ("usb: dwc3: Add Amlogic A1 DWC3 glue")
 
-You need to differentiate between Zynq and ZynqMP in handle_error() and
-issue the proper string depending on the platform.
+has these problem(s):
 
-AFAICT.
+  - Target SHA1 does not exist
 
--- 
-Regards/Gruss,
-    Boris.
+Perhaps you meant
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Fixes: 1e355f21d3fb ("usb: dwc3: Add Amlogic A1 DWC3 glue")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Xcf=cdoDQKABwzFeZT1ekMP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5ujDIACgkQAVBC80lX
+0Gz6GAf/eED2aBxU5Am16xpi3iuSkpHZss12ezWsbOyzIt1flEysxgxgysjvhFMc
+B3iLO5kFGBi+4HYcxrQzr/9lYZgzVwpeS3Yp+RikP2sBSmu6DkaK9n8f+mPQPyBM
+9LqPPWMUDgDRxqbcLSzJV+kjM7Jrbm9fCmPwWhWZTyqc5ZRwvSN2Kt6TwzhoGTF7
+d9yq929gJvJ6sNB1K/AUjoPCS74VGp9yqFGVUQ8UHiUN1qQUhWvjP5LH5vcVfKYq
+2jYR892oA8rpc34yQJov2d36D7PKDwqgEnwVTYxV//R3On7lZ/2AeK8P77lzCAeQ
+dChf4boP7W/7TkQhqNFJyDlhO5ZQAQ==
+=nvgy
+-----END PGP SIGNATURE-----
+
+--Sig_/Xcf=cdoDQKABwzFeZT1ekMP--
