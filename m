@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD343C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29A0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37012073D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A583520722
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbgCOFXE (ORCPT
+        id S1727662AbgCOFXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 01:23:04 -0400
+        Sun, 15 Mar 2020 01:23:12 -0400
 Received: from mga18.intel.com ([134.134.136.126]:47872 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727339AbgCOFXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 01:23:02 -0400
-IronPort-SDR: k/yBRykTxHZXqT0MMwfsK6I6j6W9tyQLyIPp2DnrIak5m/hNfiwIeu4g3ijpKeUUDjT/77Yg16
- Uy97Iwmc/U1Q==
+        id S1727584AbgCOFXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 01:23:10 -0400
+IronPort-SDR: M8wLh0PkbsrDMfXmxiC9M9v1o2qx55D7FNFQCRH61QtBpbjgZPXi22FDqFSBbbTx5oeaEJ8Ok/
+ Qc08hbZ1QZDA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 22:23:02 -0700
-IronPort-SDR: pc2S2JUm6ydaszdUzM9F54qmLgpdJXg7db/zDWyb1r7MCHg/8ssdOk4oMA6DWNrcN0+sE1G1Wy
- CtTrJSWWDM8Q==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2020 22:23:10 -0700
+IronPort-SDR: fKea1dvGBAMBVCZZshILki/T40YvFqjeQKMqXwGD1Ef9Ff69dkMLBhdMecbkabe/wMICLzMRy1
+ D1QlGtvoHpSA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,555,1574150400"; 
-   d="scan'208";a="267194227"
+   d="scan'208";a="267194251"
 Received: from lxy-clx-4s.sh.intel.com ([10.239.43.160])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Mar 2020 22:22:58 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 14 Mar 2020 22:23:06 -0700
 From:   Xiaoyao Li <xiaoyao.li@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -47,9 +47,9 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Jim Mattson <jmattson@google.com>,
         Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v5 3/9] x86/split_lock: Re-define the kernel param option for split_lock_detect
-Date:   Sun, 15 Mar 2020 13:05:11 +0800
-Message-Id: <20200315050517.127446-4-xiaoyao.li@intel.com>
+Subject: [PATCH v5 5/9] kvm: x86: Emulate split-lock access as a write
+Date:   Sun, 15 Mar 2020 13:05:13 +0800
+Message-Id: <20200315050517.127446-6-xiaoyao.li@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200315050517.127446-1-xiaoyao.li@intel.com>
 References: <20200315050517.127446-1-xiaoyao.li@intel.com>
@@ -60,99 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change sld_off to sld_disable, which means disabling feature split lock
-detection and it cannot be used in kernel nor can kvm expose it guest.
-Of course, the X86_FEATURE_SPLIT_LOCK_DETECT is not set.
+If split lock detect is on (warn/fatal), #AC handler calls die() when
+split lock happens in kernel.
 
-Add a new optioin sld_kvm_only, which means kernel turns split lock
-detection off, but kvm can expose it to guest.
+Malicous guest can exploit the KVM emulator to trigger split lock #AC
+in kernel[1]. So just emulating the access as a write if it's a
+split-lock access (the same as access spans page) to avoid malicious
+attacking kernel.
 
+More discussion can be found [2][3].
+
+[1] https://lore.kernel.org/lkml/8c5b11c9-58df-38e7-a514-dc12d687b198@redhat.com/
+[2] https://lkml.kernel.org/r/20200131200134.GD18946@linux.intel.com
+[3] https://lkml.kernel.org/r/20200227001117.GX9940@linux.intel.com
+
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  5 ++++-
- arch/x86/kernel/cpu/intel.c                   | 22 ++++++++++++++-----
- 2 files changed, 21 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/cpu.h  | 2 ++
+ arch/x86/kernel/cpu/intel.c | 6 ++++++
+ arch/x86/kvm/x86.c          | 7 ++++++-
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 1ee2d1e6d89a..2b922061ff08 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4666,7 +4666,10 @@
- 			instructions that access data across cache line
- 			boundaries will result in an alignment check exception.
- 
--			off	- not enabled
-+			disable	- disabled, neither kernel nor kvm can use it.
-+
-+			kvm_only - off in kernel but kvm can expose it to
-+				   guest for debug/testing scenario.
- 
- 			warn	- the kernel will emit rate limited warnings
- 				  about applications triggering the #AC
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index ff567afa6ee1..d2071f6a35ac 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -44,6 +44,7 @@ unsigned int x86_stepping(unsigned int sig);
+ extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
+ extern void switch_to_sld(unsigned long tifn);
+ extern bool handle_user_split_lock(unsigned long ip);
++extern bool split_lock_detect_on(void);
+ #else
+ static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
+ static inline void switch_to_sld(unsigned long tifn) {}
+@@ -51,5 +52,6 @@ static inline bool handle_user_split_lock(unsigned long ip)
+ {
+ 	return false;
+ }
++static inline bool split_lock_detect_on(void) { return false; }
+ #endif
+ #endif /* _ASM_X86_CPU_H */
 diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 4b3245035b5a..3eeab717a0d0 100644
+index c401d174c8db..de94957a11a4 100644
 --- a/arch/x86/kernel/cpu/intel.c
 +++ b/arch/x86/kernel/cpu/intel.c
-@@ -35,7 +35,8 @@
- 
- enum split_lock_detect_state {
- 	sld_not_exist = 0,
--	sld_off,
-+	sld_disable,
-+	sld_kvm_only,
- 	sld_warn,
- 	sld_fatal,
- };
-@@ -973,7 +974,8 @@ static const struct {
- 	const char			*option;
- 	enum split_lock_detect_state	state;
- } sld_options[] __initconst = {
--	{ "off",	sld_off   },
-+	{ "disable",	sld_disable },
-+	{ "kvm_only",	sld_kvm_only },
- 	{ "warn",	sld_warn  },
- 	{ "fatal",	sld_fatal },
- };
-@@ -1004,10 +1006,14 @@ static void __init split_lock_setup(void)
- 	}
- 
- 	switch (sld_state) {
--	case sld_off:
-+	case sld_disable:
- 		pr_info("disabled\n");
- 		break;
- 
-+	case sld_kvm_only:
-+		pr_info("off in kernel, but kvm can expose it to guest\n");
-+		break;
-+
- 	case sld_warn:
- 		pr_info("warning about user-space split_locks\n");
- 		break;
-@@ -1062,7 +1068,13 @@ static void split_lock_init(struct cpuinfo_x86 *c)
- 	test_ctrl_val = val;
- 
- 	switch (sld_state) {
--	case sld_off:
-+	case sld_disable:
-+		if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val & ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
-+			goto msr_broken;
-+		return;
-+	case sld_kvm_only:
-+		if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val | MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
-+			goto msr_broken;
- 		if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val & ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
- 			goto msr_broken;
- 		break;
-@@ -1087,7 +1099,7 @@ static void split_lock_init(struct cpuinfo_x86 *c)
- 	 * funny things and you get to keep whatever pieces.
- 	 */
- 	pr_warn_once("MSR fail -- disabled\n");
--	sld_state = sld_off;
-+	sld_state = sld_disable;
+@@ -1102,6 +1102,12 @@ static void split_lock_init(struct cpuinfo_x86 *c)
+ 	sld_state = sld_disable;
  }
  
- bool handle_user_split_lock(struct pt_regs *regs, long error_code)
++bool split_lock_detect_on(void)
++{
++	return sld_state == sld_warn || sld_state == sld_fatal;
++}
++EXPORT_SYMBOL_GPL(split_lock_detect_on);
++
+ bool handle_user_split_lock(unsigned long ip)
+ {
+ 	if (sld_state == sld_fatal)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5de200663f51..1a0e6c0b1b39 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5873,6 +5873,7 @@ static int emulator_cmpxchg_emulated(struct x86_emulate_ctxt *ctxt,
+ {
+ 	struct kvm_host_map map;
+ 	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
++	u64 page_line_mask = PAGE_MASK;
+ 	gpa_t gpa;
+ 	char *kaddr;
+ 	bool exchanged;
+@@ -5887,7 +5888,11 @@ static int emulator_cmpxchg_emulated(struct x86_emulate_ctxt *ctxt,
+ 	    (gpa & PAGE_MASK) == APIC_DEFAULT_PHYS_BASE)
+ 		goto emul_write;
+ 
+-	if (((gpa + bytes - 1) & PAGE_MASK) != (gpa & PAGE_MASK))
++	if (split_lock_detect_on())
++		page_line_mask = ~(cache_line_size() - 1);
++
++	/* when write spans page or spans cache when SLD enabled */
++	if (((gpa + bytes - 1) & page_line_mask) != (gpa & page_line_mask))
+ 		goto emul_write;
+ 
+ 	if (kvm_vcpu_map(vcpu, gpa_to_gfn(gpa), &map))
 -- 
 2.20.1
 
