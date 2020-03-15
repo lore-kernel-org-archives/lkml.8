@@ -2,75 +2,82 @@ Return-Path: <SRS0=iqK9=5A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A712C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 16:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6D8C10F29
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 16:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F5A20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 16:09:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VEVmLLl3"
+	by mail.kernel.org (Postfix) with ESMTP id 52187205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Mar 2020 16:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgCOQJ3 (ORCPT
+        id S1728912AbgCOQJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 12:09:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60523 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728310AbgCOQJ3 (ORCPT
+        Sun, 15 Mar 2020 12:09:49 -0400
+Received: from stargate.chelsio.com ([12.32.117.8]:60843 "EHLO
+        stargate.chelsio.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728310AbgCOQJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 12:09:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584288568;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZvfpCDi2rKJmJAvsmnRekrSK8tNLi3wzOk8K48DUov4=;
-        b=VEVmLLl3o/o99yAGae+Z7oe62Xi877YCemcSKy/At06p9ldXzq/mC+hrDjZ6s3sJO7AWCz
-        /w/G68cl9HmEhC6z5ifyTPWQvNbqQN2ZFuIvmy/hgDXZvF2nsF5R801Q092z4WC8tZq+3U
-        tJTPtQGqShfwo9Q2zo2xn4FmuV7u1sU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-2V2UxltzP0Kalk5PHP7k8Q-1; Sun, 15 Mar 2020 12:09:24 -0400
-X-MC-Unique: 2V2UxltzP0Kalk5PHP7k8Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91B06189D6C0;
-        Sun, 15 Mar 2020 16:09:23 +0000 (UTC)
-Received: from treble (ovpn-120-135.rdu2.redhat.com [10.10.120.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A05E59CA3;
-        Sun, 15 Mar 2020 16:09:22 +0000 (UTC)
-Date:   Sun, 15 Mar 2020 11:09:19 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [RFC][PATCH 05/16] objtool: Optimize find_symbol_by_index()
-Message-ID: <20200315160919.zd7phtq7ejyq4kva@treble>
-References: <20200312134107.700205216@infradead.org>
- <20200312135041.699859794@infradead.org>
+        Sun, 15 Mar 2020 12:09:48 -0400
+Received: from [10.193.177.146] (balakrishna-l.asicdesigners.com [10.193.177.146] (may be forged))
+        by stargate.chelsio.com (8.13.8/8.13.8) with ESMTP id 02FG9PwS006951;
+        Sun, 15 Mar 2020 09:09:26 -0700
+Subject: Re: [PATCH net-next] chcr: remove set but not used variable 'status'
+To:     YueHaibing <yuehaibing@huawei.com>, ayush.sawal@chelsio.com,
+        vinay.yadav@chelsio.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20200314105120.20968-1-yuehaibing@huawei.com>
+From:   rohit maheshwari <rohitm@chelsio.com>
+Message-ID: <a3e5ad76-80c2-cef3-7de2-7495d2c15da5@chelsio.com>
+Date:   Sun, 15 Mar 2020 21:39:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200312135041.699859794@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200314105120.20968-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 02:41:12PM +0100, Peter Zijlstra wrote:
-> The symbol index is object wide, not per section, so it makes no sense
-> to have the symbol_hash be part of the section object. By moving it to
-> the elf object we avoid the linear sections iteration.
 
-I remember there was a specific reason for this oddity, but it eludes me
-now.
+On 14/03/20 4:21 PM, YueHaibing wrote:
+> drivers/crypto/chelsio/chcr_ktls.c: In function chcr_ktls_cpl_set_tcb_rpl:
+> drivers/crypto/chelsio/chcr_ktls.c:662:11: warning:
+>   variable status set but not used [-Wunused-but-set-variable]
+>
+> commit 8a30923e1598 ("cxgb4/chcr: Save tx keys and handle HW response")
+> involved this unused variable, remove it.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   drivers/crypto/chelsio/chcr_ktls.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/crypto/chelsio/chcr_ktls.c b/drivers/crypto/chelsio/chcr_ktls.c
+> index f0c3834eda4f..00099e793e63 100644
+> --- a/drivers/crypto/chelsio/chcr_ktls.c
+> +++ b/drivers/crypto/chelsio/chcr_ktls.c
+> @@ -659,10 +659,9 @@ int chcr_ktls_cpl_set_tcb_rpl(struct adapter *adap, unsigned char *input)
+>   	const struct cpl_set_tcb_rpl *p = (void *)input;
+>   	struct chcr_ktls_info *tx_info = NULL;
+>   	struct tid_info *t;
+> -	u32 tid, status;
+> +	u32 tid;
+>   
+>   	tid = GET_TID(p);
+> -	status = p->status;
+>   
+>   	t = &adap->tids;
+>   	tx_info = lookup_tid(t, tid);
 
-This does make sense, assuming it doesn't break anything.
+Thanks for fixing it. Looks good to me.
 
--- 
-Josh
 
