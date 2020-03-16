@@ -2,365 +2,165 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FD0C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7E8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B1720658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:31:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="H7H9+aAk"
+	by mail.kernel.org (Postfix) with ESMTP id 27BE020679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584347521;
+	bh=G/JbKz/TJsKUzqrpwMaev68yogcQGTS/UnZoH2XPFgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ADzMia72381oU/f3kCsqX+tUlLQEkNnfR2oHTol6fxbgVPJBwlOldL2mMBlJqqLi6
+	 AaaI/DH9kluthohEIh4CobA2Isnzled6F3sD9R9VpogLvw2lZpJpk3oheILWgz3kSX
+	 FN/spC8yaVJ/9eKrw244Ub5jlY6SKIDqOp8IxG70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbgCPIbk (ORCPT
+        id S1730136AbgCPIcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:31:40 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53716 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729994AbgCPIbj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:31:39 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 25so16578190wmk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Wzawpb32ycFX/4O3Njhn3UtpNJRxkN3I88PzQJfRQKM=;
-        b=H7H9+aAkEO0hN9hpOR9Er8AC1d56jKFVJhyz3fXjJJyejBdjRjYqYYYJBTAnLyPcU2
-         MhnwLeSOGhqxRK7Ewe2I71UwV9ebPro2ZrCuJ2JJfFCnM9Qym1Fgb4hpn9UevE3FVqQ4
-         nHmA5HQ64C0SpDqgj6HWaQSdU5OStcEnVFWhs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=Wzawpb32ycFX/4O3Njhn3UtpNJRxkN3I88PzQJfRQKM=;
-        b=PHi0qGGmEqSSbA72kYu4C0J1logDUCUIZTx2mnynAIKmF4YP1ucqJHx6tRbkjlH6cT
-         2g5Ll1RQsG5uDle1DhpPdRe7oE3LZBY3LVsLt6RrgOjjOvsqVi0+cG59/c4EEWc3Lvxp
-         zNNjJzTFQidjYr+0YzrPJsbpI0YswqY2Z9OxSB2JCBeVS4RIZqYEEx+/D/dsbIsOtiDP
-         3/pisSKkj+pju0YWtLBjMneMgFGBYmLWcDh2O6EzefFbfdXR52vN9QvbRUoLKfHOc2/w
-         X/UuEnys0ljatbuchNgHk+rC16qpyyFnwfEtuK77DTLCeaUEXMGGyPzyVvSKGUU1PAgl
-         vwOg==
-X-Gm-Message-State: ANhLgQ3/noq+gbrlvJk7V/4uwrTgzpETDwR64Q/j4tTsApeH+seNLknH
-        hYr6Mto3oPF4op0qOeRDP0MWpw==
-X-Google-Smtp-Source: ADFU+vt42WZgdFdKmFsUiDdaWi7o5JWTNuoZJS24LfKRjHWzV9++4PqNZzCCmAAV32RBekVrk6ZBbQ==
-X-Received: by 2002:a7b:ce0c:: with SMTP id m12mr26996330wmc.104.1584347496421;
-        Mon, 16 Mar 2020 01:31:36 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id r18sm6290436wro.13.2020.03.16.01.31.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 01:31:34 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 09:31:32 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        jani.nikula@linux.intel.com, daniel@ffwll.ch,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        airlied@linux.ie, maarten.lankhorst@linux.intel.com,
-        tzimmermann@suse.de, mripard@kernel.org, mihail.atanassov@arm.com,
-        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
-Subject: Re: [RFC][PATCH 1/5] drm: Introduce scaling filter property
-Message-ID: <20200316083132.GC2363188@phenom.ffwll.local>
-Mail-Followup-To: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        jani.nikula@linux.intel.com, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, airlied@linux.ie,
-        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
-        mripard@kernel.org, mihail.atanassov@arm.com,
-        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
-References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
- <20200225070545.4482-2-pankaj.laxminarayan.bharadiya@intel.com>
- <20200310160106.GH13686@intel.com>
+        Mon, 16 Mar 2020 04:32:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729994AbgCPIb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:31:59 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8DDC20658;
+        Mon, 16 Mar 2020 08:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584347518;
+        bh=G/JbKz/TJsKUzqrpwMaev68yogcQGTS/UnZoH2XPFgg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IfbKFO8Olx7qaBdiqWuMLp8xz8Zy2G0XfEcnRj/20uRxt6mP1nmMvB3VMrQ/6a9JK
+         QKl2lckiUNdzmL+oSMPBXcOpsQe5G+Ap88ZZHxugi3IZTn6ZYNx0FsC+y9CGEuaBs3
+         qJ4ckJIbWPYCIkYNW0ayNVOEoPQCBlr1kuPEIizc=
+Date:   Mon, 16 Mar 2020 10:31:54 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, adobriyan@gmail.com,
+        akpm@linux-foundation.org, labbott@redhat.com,
+        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/3] meminfo: introduce extra meminfo
+Message-ID: <20200316083154.GF8510@unreal>
+References: <CGME20200311034454epcas1p2ef0c0081971dd82282583559398e58b2@epcas1p2.samsung.com>
+ <20200311034441.23243-1-jaewon31.kim@samsung.com>
+ <af4ace34-0db2-dd17-351f-eaa806f0a6ac@suse.cz>
+ <20200313174827.GA67638@unreal>
+ <5E6EFB6C.7050105@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200310160106.GH13686@intel.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <5E6EFB6C.7050105@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 06:01:06PM +0200, Ville Syrjälä wrote:
-> On Tue, Feb 25, 2020 at 12:35:41PM +0530, Pankaj Bharadiya wrote:
-> > Introduce new scaling filter property to allow userspace to select
-> > the driver's default scaling filter or Nearest-neighbor(NN) filter
-> > for upscaling operations on crtc/plane.
-> > 
-> > Drivers can set up this property for a plane by calling
-> > drm_plane_enable_scaling_filter() and for a CRTC by calling
-> > drm_crtc_enable_scaling_filter().
-> > 
-> > NN filter works by filling in the missing color values in the upscaled
-> > image with that of the coordinate-mapped nearest source pixel value.
-> > 
-> > NN filter for integer multiple scaling can be particularly useful for
-> > for pixel art games that rely on sharp, blocky images to deliver their
-> > distinctive look.
-> > 
-> > Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-> > Signed-off-by: Shashank Sharma <shashank.sharma@intel.com>
-> > Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
-> > ---
-> >  drivers/gpu/drm/drm_atomic_uapi.c |  8 +++++++
-> >  drivers/gpu/drm/drm_crtc.c        | 16 ++++++++++++++
-> >  drivers/gpu/drm/drm_mode_config.c | 13 ++++++++++++
-> >  drivers/gpu/drm/drm_plane.c       | 35 +++++++++++++++++++++++++++++++
-> >  include/drm/drm_crtc.h            | 10 +++++++++
-> >  include/drm/drm_mode_config.h     |  6 ++++++
-> >  include/drm/drm_plane.h           | 14 +++++++++++++
-> >  7 files changed, 102 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
-> > index a1e5e262bae2..4e3c1f3176e4 100644
-> > --- a/drivers/gpu/drm/drm_atomic_uapi.c
-> > +++ b/drivers/gpu/drm/drm_atomic_uapi.c
-> > @@ -435,6 +435,8 @@ static int drm_atomic_crtc_set_property(struct drm_crtc *crtc,
-> >  		return ret;
-> >  	} else if (property == config->prop_vrr_enabled) {
-> >  		state->vrr_enabled = val;
-> > +	} else if (property == config->scaling_filter_property) {
-> > +		state->scaling_filter = val;
-> 
-> I think we want a per-plane/per-crtc prop for this. If we start adding
-> more filters we are surely going to need different sets for different hw
-> blocks.
+On Mon, Mar 16, 2020 at 01:07:08PM +0900, Jaewon Kim wrote:
+>
+>
+> On 2020ë…„ 03ì›” 14ì¼ 02:48, Leon Romanovsky wrote:
+> > On Fri, Mar 13, 2020 at 04:19:36PM +0100, Vlastimil Babka wrote:
+> >> +CC linux-api, please include in future versions as well
+> >>
+> >> On 3/11/20 4:44 AM, Jaewon Kim wrote:
+> >>> /proc/meminfo or show_free_areas does not show full system wide memory
+> >>> usage status. There seems to be huge hidden memory especially on
+> >>> embedded Android system. Because it usually have some HW IP which do not
+> >>> have internal memory and use common DRAM memory.
+> >>>
+> >>> In Android system, most of those hidden memory seems to be vmalloc pages
+> >>> , ion system heap memory, graphics memory, and memory for DRAM based
+> >>> compressed swap storage. They may be shown in other node but it seems to
+> >>> useful if /proc/meminfo shows all those extra memory information. And
+> >>> show_mem also need to print the info in oom situation.
+> >>>
+> >>> Fortunately vmalloc pages is alread shown by commit 97105f0ab7b8
+> >>> ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
+> >>> memory using zsmalloc can be seen through vmstat by commit 91537fee0013
+> >>> ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
+> >>>
+> >>> Memory usage of specific driver can be various so that showing the usage
+> >>> through upstream meminfo.c is not easy. To print the extra memory usage
+> >>> of a driver, introduce following APIs. Each driver needs to count as
+> >>> atomic_long_t.
+> >>>
+> >>> int register_extra_meminfo(atomic_long_t *val, int shift,
+> >>> 			   const char *name);
+> >>> int unregister_extra_meminfo(atomic_long_t *val);
+> >>>
+> >>> Currently register ION system heap allocator and zsmalloc pages.
+> >>> Additionally tested on local graphics driver.
+> >>>
+> >>> i.e) cat /proc/meminfo | tail -3
+> >>> IonSystemHeap:    242620 kB
+> >>> ZsPages:          203860 kB
+> >>> GraphicDriver:    196576 kB
+> >>>
+> >>> i.e.) show_mem on oom
+> >>> <6>[  420.856428]  Mem-Info:
+> >>> <6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
+> >>> <6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
+> >> I like the idea and the dynamic nature of this, so that drivers not present
+> >> wouldn't add lots of useless zeroes to the output.
+> >> It also makes simpler the decisions of "what is important enough to need its own
+> >> meminfo entry".
+> >>
+> >> The suggestion for hunting per-driver /sys files would only work if there was a
+> >> common name to such files so once can find(1) them easily.
+> >> It also doesn't work for the oom/failed alloc warning output.
+> > Of course there is a need to have a stable name for such an output, this
+> > is why driver/core should be responsible for that and not drivers authors.
+> >
+> > The use case which I had in mind slightly different than to look after OOM.
+> >
+> > I'm interested to optimize our drivers in their memory footprint to
+> > allow better scale in SR-IOV mode where one device creates many separate
+> > copies of itself. Those copies easily can take gigabytes of RAM due to
+> > the need to optimize for high-performance networking. Sometimes the
+> > amount of memory and not HW is actually limits the scale factor.
+> >
+> > So I would imagine this feature being used as an aid for the driver
+> > developers and not for the runtime decisions.
+> >
+> > My 2-cents.
+> >
+> > Thanks
+> >
+> >
+> Thank you for your comment.
+> My idea, I think, may be able to help each driver developer to see their memory usage.
+> But I'd like to see overall memory usage through the one node.
 
-In the past we've only done that once we have a demonstrated need. Usually
-the patch to move the property to a per-object location isn't a lot of
-churn.
--Daniel
+It is more than enough :).
 
-> 
-> >  	} else if (property == config->degamma_lut_property) {
-> >  		ret = drm_atomic_replace_property_blob_from_id(dev,
-> >  					&state->degamma_lut,
-> > @@ -503,6 +505,8 @@ drm_atomic_crtc_get_property(struct drm_crtc *crtc,
-> >  		*val = (state->gamma_lut) ? state->gamma_lut->base.id : 0;
-> >  	else if (property == config->prop_out_fence_ptr)
-> >  		*val = 0;
-> > +	else if (property == config->scaling_filter_property)
-> > +		*val = state->scaling_filter;
-> >  	else if (crtc->funcs->atomic_get_property)
-> >  		return crtc->funcs->atomic_get_property(crtc, state, property, val);
-> >  	else
-> > @@ -583,6 +587,8 @@ static int drm_atomic_plane_set_property(struct drm_plane *plane,
-> >  					sizeof(struct drm_rect),
-> >  					&replaced);
-> >  		return ret;
-> > +	} else if (property == config->scaling_filter_property) {
-> > +		state->scaling_filter = val;
-> >  	} else if (plane->funcs->atomic_set_property) {
-> >  		return plane->funcs->atomic_set_property(plane, state,
-> >  				property, val);
-> > @@ -641,6 +647,8 @@ drm_atomic_plane_get_property(struct drm_plane *plane,
-> >  	} else if (property == config->prop_fb_damage_clips) {
-> >  		*val = (state->fb_damage_clips) ?
-> >  			state->fb_damage_clips->base.id : 0;
-> > +	} else if (property == config->scaling_filter_property) {
-> > +		*val = state->scaling_filter;
-> >  	} else if (plane->funcs->atomic_get_property) {
-> >  		return plane->funcs->atomic_get_property(plane, state, property, val);
-> >  	} else {
-> > diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
-> > index 4936e1080e41..1ce7b2ac9eb5 100644
-> > --- a/drivers/gpu/drm/drm_crtc.c
-> > +++ b/drivers/gpu/drm/drm_crtc.c
-> > @@ -748,3 +748,19 @@ int drm_mode_crtc_set_obj_prop(struct drm_mode_object *obj,
-> >  
-> >  	return ret;
-> >  }
-> > +
-> > +/**
-> > + * drm_crtc_enable_scaling_filter - Enables crtc scaling filter property.
-> > + * @crtc: CRTC on which to enable scaling filter property.
-> > + *
-> > + * This function lets driver to enable the scaling filter property on a crtc.
-> > + */
-> > +void drm_crtc_enable_scaling_filter(struct drm_crtc *crtc)
-> > +{
-> > +	struct drm_device *dev = crtc->dev;
-> > +
-> > +	drm_object_attach_property(&crtc->base,
-> > +				   dev->mode_config.scaling_filter_property,
-> > +				   0);
-> > +}
-> > +EXPORT_SYMBOL(drm_crtc_enable_scaling_filter);
-> > diff --git a/drivers/gpu/drm/drm_mode_config.c b/drivers/gpu/drm/drm_mode_config.c
-> > index 08e6eff6a179..1024a8d1cd5d 100644
-> > --- a/drivers/gpu/drm/drm_mode_config.c
-> > +++ b/drivers/gpu/drm/drm_mode_config.c
-> > @@ -214,6 +214,11 @@ static const struct drm_prop_enum_list drm_plane_type_enum_list[] = {
-> >  	{ DRM_PLANE_TYPE_CURSOR, "Cursor" },
-> >  };
-> >  
-> > +static const struct drm_prop_enum_list drm_scaling_filter_enum_list[] = {
-> > +	{ DRM_SCALING_FILTER_DEFAULT, "Default" },
-> > +	{ DRM_SCALING_FILTER_NEAREST_NEIGHBOR, "Nearest Neighbor" },
-> > +};
-> > +
-> >  static int drm_mode_create_standard_properties(struct drm_device *dev)
-> >  {
-> >  	struct drm_property *prop;
-> > @@ -370,6 +375,14 @@ static int drm_mode_create_standard_properties(struct drm_device *dev)
-> >  		return -ENOMEM;
-> >  	dev->mode_config.modifiers_property = prop;
-> >  
-> > +	prop = drm_property_create_enum(dev, 0,
-> > +				"SCALING_FILTER",
-> > +				drm_scaling_filter_enum_list,
-> > +				ARRAY_SIZE(drm_scaling_filter_enum_list));
-> > +	if (!prop)
-> > +		return -ENOMEM;
-> > +	dev->mode_config.scaling_filter_property = prop;
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
-> > index d6ad60ab0d38..ace7ee2775c8 100644
-> > --- a/drivers/gpu/drm/drm_plane.c
-> > +++ b/drivers/gpu/drm/drm_plane.c
-> > @@ -1221,3 +1221,38 @@ int drm_mode_page_flip_ioctl(struct drm_device *dev,
-> >  
-> >  	return ret;
-> >  }
-> > +
-> > +/**
-> > + * DOC: Scaling filter property
-> > + *
-> > + *
-> > + * SCALING_FILTER:
-> > + *
-> > + *	Indicates scaling filter to be used for CRTC/plane scaler
-> > + *
-> > + *	The value of this property can be one of the following:
-> > + *	Default:
-> > + *		Driver's default scaling filter
-> > + *	Nearest Neighbor:
-> > + *		Nearest Neighbor scaling filter
-> > + *
-> > + * Drivers can set up this property for a plane by calling
-> > + * drm_plane_enable_scaling_filter() and for a CRTC by calling
-> > + * drm_crtc_enable_scaling_filter()
-> > + */
-> > +
-> > +/**
-> > + * drm_plane_enable_scaling_filter - Enables plane scaling filter property.
-> > + * @plane: Plane on which to enable scaling filter property.
-> > + *
-> > + * This function lets driver to enable the scaling filter property on a plane.
-> > + */
-> > +void drm_plane_enable_scaling_filter(struct drm_plane *plane)
-> > +{
-> > +	struct drm_device *dev = plane->dev;
-> > +
-> > +	drm_object_attach_property(&plane->base,
-> > +				   dev->mode_config.scaling_filter_property,
-> > +				   0);
-> > +}
-> > +EXPORT_SYMBOL(drm_plane_enable_scaling_filter);
-> > diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
-> > index 59b51a09cae6..770f9328a5ba 100644
-> > --- a/include/drm/drm_crtc.h
-> > +++ b/include/drm/drm_crtc.h
-> > @@ -58,6 +58,7 @@ struct device_node;
-> >  struct dma_fence;
-> >  struct edid;
-> >  
-> > +
-> >  static inline int64_t U642I64(uint64_t val)
-> >  {
-> >  	return (int64_t)*((int64_t *)&val);
-> > @@ -296,6 +297,13 @@ struct drm_crtc_state {
-> >  	 */
-> >  	u32 target_vblank;
-> >  
-> > +	/**
-> > +	 * @scaling_filter:
-> > +	 *
-> > +	 * Scaling filter mode to be applied
-> > +	 */
-> > +	enum drm_scaling_filter scaling_filter;
-> > +
-> >  	/**
-> >  	 * @async_flip:
-> >  	 *
-> > @@ -1266,4 +1274,6 @@ static inline struct drm_crtc *drm_crtc_find(struct drm_device *dev,
-> >  #define drm_for_each_crtc(crtc, dev) \
-> >  	list_for_each_entry(crtc, &(dev)->mode_config.crtc_list, head)
-> >  
-> > +void drm_crtc_enable_scaling_filter(struct drm_crtc *crtc);
-> > +
-> >  #endif /* __DRM_CRTC_H__ */
-> > diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
-> > index 3bcbe30339f0..8c308ae1056d 100644
-> > --- a/include/drm/drm_mode_config.h
-> > +++ b/include/drm/drm_mode_config.h
-> > @@ -914,6 +914,12 @@ struct drm_mode_config {
-> >  	 */
-> >  	struct drm_property *modifiers_property;
-> >  
-> > +	/**
-> > +	 * @scaling_filter_property: CRTC/plane property to apply a particular
-> > +	 * filter while scaling.
-> > +	 */
-> > +	struct drm_property *scaling_filter_property;
-> > +
-> >  	/* cursor size */
-> >  	uint32_t cursor_width, cursor_height;
-> >  
-> > diff --git a/include/drm/drm_plane.h b/include/drm/drm_plane.h
-> > index 3f396d94afe4..2bc665cc6071 100644
-> > --- a/include/drm/drm_plane.h
-> > +++ b/include/drm/drm_plane.h
-> > @@ -35,6 +35,11 @@ struct drm_crtc;
-> >  struct drm_printer;
-> >  struct drm_modeset_acquire_ctx;
-> >  
-> > +
-> > +enum drm_scaling_filter {
-> > +	DRM_SCALING_FILTER_DEFAULT,
-> > +	DRM_SCALING_FILTER_NEAREST_NEIGHBOR,
-> > +};
-> >  /**
-> >   * struct drm_plane_state - mutable plane state
-> >   *
-> > @@ -214,6 +219,13 @@ struct drm_plane_state {
-> >  	 */
-> >  	bool visible;
-> >  
-> > +	/**
-> > +	 * @scaling_filter:
-> > +	 *
-> > +	 * Scaling filter mode to be applied
-> > +	 */
-> > +	enum drm_scaling_filter scaling_filter;
-> > +
-> >  	/**
-> >  	 * @commit: Tracks the pending commit to prevent use-after-free conditions,
-> >  	 * and for async plane updates.
-> > @@ -862,4 +874,6 @@ drm_plane_get_damage_clips(const struct drm_plane_state *state)
-> >  					state->fb_damage_clips->data : NULL);
-> >  }
-> >  
-> > +void drm_plane_enable_scaling_filter(struct drm_plane *plane);
-> > +
-> >  #endif
-> > -- 
-> > 2.23.0
-> 
-> -- 
-> Ville Syrjälä
-> Intel
+>
+> Let me know if you have more comment.
+> I am planning to move my logic to be shown on a new node, /proc/meminfo_extra at v2.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Can you please help me to understand how that file will look like once
+many drivers will start to use this interface? Will I see multiple
+lines?
+
+Something like:
+driver1 ....
+driver2 ....
+driver3 ....
+...
+driver1000 ....
+
+How can we extend it to support subsystems core code?
+
+Thanks
+
+>
+> Thank you
+> Jaewon Kim
