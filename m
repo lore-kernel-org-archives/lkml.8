@@ -2,91 +2,160 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA6FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD721C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894D62075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QwEW7K8I"
+	by mail.kernel.org (Postfix) with ESMTP id 986A320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731881AbgCPPFN (ORCPT
+        id S1731815AbgCPPF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:05:13 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:63866 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731688AbgCPPFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:05:13 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48h03553XYz9v0wQ;
-        Mon, 16 Mar 2020 16:05:05 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=QwEW7K8I; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uqkjpto6xMY0; Mon, 16 Mar 2020 16:05:05 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48h0353sMXz9v0wL;
-        Mon, 16 Mar 2020 16:05:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584371105; bh=4vECZigMBFnrRhGn3xOie0FgGaVr4EeWX/NjITIOAr0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QwEW7K8IxVzr4f0XSkbOw2rbYHAG/jVX500dwR0saNdRrZP3S/oF2OPDcfhHzYR0b
-         Pq2kA4CMRggN11Dp5j/YbiwIgrxyVEsIg6Zv6Rju2kWvJkDR9pAus0wGJ5YN7ooFgm
-         MTp6v4zFJKvXvKBa6g5Hp+o6M8GDiQgUtODgN4fg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A73A68B837;
-        Mon, 16 Mar 2020 16:05:10 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id HE1ike9e8piw; Mon, 16 Mar 2020 16:05:10 +0100 (CET)
-Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 04B588B828;
-        Mon, 16 Mar 2020 16:05:08 +0100 (CET)
-Subject: Re: [PATCH 00/15] powerpc/watchpoint: Preparation for more than one
- watchpoint
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
-        mikey@neuling.org
-Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <b7148b91-e3db-d48a-7294-5c18fc801933@c-s.fr>
-Date:   Mon, 16 Mar 2020 16:05:01 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 16 Mar 2020 11:05:58 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:43744 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731647AbgCPPF6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:05:58 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id AFEF32003B;
+        Mon, 16 Mar 2020 16:05:50 +0100 (CET)
+Date:   Mon, 16 Mar 2020 16:05:48 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: Re: [PATCH 2/2] dt-bindings: Document the Synopsys ARC HDMI TX
+ bindings
+Message-ID: <20200316150548.GA25294@ravnborg.org>
+References: <20200316144647.10416-1-Eugeniy.Paltsev@synopsys.com>
+ <20200316144647.10416-3-Eugeniy.Paltsev@synopsys.com>
 MIME-Version: 1.0
-In-Reply-To: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316144647.10416-3-Eugeniy.Paltsev@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=jIQo8A4GAAAA:8
+        a=e5mUnYsNAAAA:8 a=M7aO59fNJ6i23PoMEtIA:9 a=OoSG_5CIhO75MOo9:21
+        a=GlqmvLfQ7YiL8mw-:21 a=CjuIK1q_8ugA:10 a=Lf5xNeLK5dgiOs8hzIjU:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Eugeniy.
 
+On Mon, Mar 16, 2020 at 05:46:47PM +0300, Eugeniy Paltsev wrote:
+> This patch adds documentation of device tree bindings for the Synopsys
+> HDMI 2.0 TX encoder driver for ARC SoCs.
+> 
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> ---
+>  .../display/bridge/snps,arc-dw-hdmi.txt       | 73 +++++++++++++++++++
 
-Le 09/03/2020 à 09:57, Ravi Bangoria a écrit :
-> So far, powerpc Book3S code has been written with an assumption of only
-> one watchpoint. But future power architecture is introducing second
-> watchpoint register (DAWR). Even though this patchset does not enable
-> 2nd DAWR, it make the infrastructure ready so that enabling 2nd DAWR
-> should just be a matter of changing count.
+New bindings in DT Schema format please (.yaml files).
+We are working on migrating all bindings to DT Schema format.
 
-Some book3s (e300 family for instance, I think G2 as well) already have 
-a DABR2 in addition to DABR.
-Will this series allow to use it as well ?
+	Sam
 
-Christophe
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt
+> new file mode 100644
+> index 000000000000..d5e006b392cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt
+> @@ -0,0 +1,73 @@
+> +Synopsys DesignWare HDMI 2.0 TX encoder driver for ARC SoCs
+> +================================
+> +
+> +The HDMI transmitter is a Synopsys DesignWare HDMI 2.0 TX controller IP
+> +with a companion of Synopsys DesignWare HDMI 2.0 TX PHY IP.
+> +
+> +These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
+> +Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
+> +with the following device-specific properties.
+> +
+> +
+> +Required properties:
+> +
+> +- compatible : Shall contain
+> +  - "snps,dw-hdmi-hsdk" for HSDK4xD compatible HDMI TX
+> +
+> +- reg: See dw_hdmi.txt.
+> +- interrupts: HDMI interrupt number.
+> +- clocks: See dw_hdmi.txt.
+> +- clock-names: Must contain "iahb" and "isfr" as defined in dw_hdmi.txt.
+> +- ports: See dw_hdmi.txt. The DWC HDMI shall have one port numbered 0
+> +  corresponding to the video input of the controller and one port numbered 1
+> +  corresponding to its HDMI output.
+> +
+> +Example:
+> +
+> +hdmi: hdmi@0x10000 {
+> +	compatible = "snps,dw-hdmi-hsdk";
+> +	reg = <0x10000 0x10000>;
+> +	reg-io-width = <4>;
+> +	interrupts = <14>;
+> +	clocks = <&apbclk>, <&hdmi_pix_clk>;
+> +	clock-names = "iahb", "isfr";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +			hdmi_enc_input: endpoint {
+> +				remote-endpoint = <&pgu_output>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +			hdmi_enc_out: endpoint {
+> +				remote-endpoint = <&hdmi_con>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +hdmi-out {
+> +	...
+> +
+> +	port {
+> +		hdmi_con: endpoint {
+> +			remote-endpoint = <&hdmi_enc_out>;
+> +		};
+> +	};
+> +};
+> +
+> +pgu {
+> +	...
+> +
+> +	port_o: port {
+> +		pgu_output: endpoint {
+> +			remote-endpoint = <&hdmi_enc_input>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.21.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
