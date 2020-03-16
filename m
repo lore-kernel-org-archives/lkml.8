@@ -2,198 +2,367 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2EDC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44742C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D471B2071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A9E20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hIGUPv4P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lW38tUsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgCPDSv (ORCPT
+        id S1729704AbgCPDVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 23:18:51 -0400
-Received: from mail-am6eur05on2051.outbound.protection.outlook.com ([40.107.22.51]:6259
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729513AbgCPDSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 23:18:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jj1mSliTuLVmiYRtDfdp+LUH2w715J7OE4edPOpW39Xp22wD1bXIeeD0W0/LiuuNrOK3PY88rOwYDh42/QgYQfaUdE0YADhHwilbarwaZpQUysu3m2X3LRSKYFcXqPQYzXdb6pFs90PrUdaeonQXxMzn8B8CNeCV0U3mhhK5ie7GLZ/7xbYdeM/MxGyAQgnlrXP7XmsRHs3fZebY7jnrpUtvGi0yohBFMGmKU0X471S6OG5ZzANUHsbFIUAetKEpKCnSE0PJ05vFsISx+5gob0A2dvCFO33KgDG5YICObExl2h1Eq3R/c6o8Pjuec4MQynaQTqNdY6BOLabfo6xgjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TahVAyBCJPLtZmEHYqzD5raKzU7F/TiG/rDAo4s/h4Y=;
- b=k2si+/UxbzsXgpxitS1JhU6m5ikA5eWBwiPnsik5jKviHVgjoZL3leVUAHq2KhWJDh6kV9TqXNdepo8+AWIuM0hVUH1X2+AJy8vkrPVNl1kXSwh2Wx2PCrOSIFqaH9qMCj5jjOCfY4pZfmxvwdHduKqRQSdX0KBAAG4Z5PTGiWaNlqRwYTOyYgflYzNp60bPEq5/9n9taYr5u5jbaGbvK+VvumnTmhBadyKH+fHqeVpU8tJ6OIPqd8ygWq2z0Fzbh+lsfwBkCUUChsadDD/8Kydh9vb3uVgGm+U5ZIy8cpZzdsKlKbWc2sxDfGi3LgkEPtzdj1eTIMz7h30XAWHfeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TahVAyBCJPLtZmEHYqzD5raKzU7F/TiG/rDAo4s/h4Y=;
- b=hIGUPv4PBCI8THgjXlEEI/t9DKggGPCTDxiJy/WMk8YEcBLiq9uEqN+6TBHs0ihVmhLI+LbVI7qLHZmCGGbnNq4S7yeSglXa9eBWqYJ2vLskPQPY6JpFf7b2voXHsq4pGDe0aUIn4Fv8mVXFHnQiir0Z7pz1weq6SrPzV0+9NUY=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4225.eurprd04.prod.outlook.com (52.134.91.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.21; Mon, 16 Mar 2020 03:18:44 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2814.019; Mon, 16 Mar 2020
- 03:18:44 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     Anson Huang <anson.huang@nxp.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Thread-Topic: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Thread-Index: AQHV9av6lP0y7UryDUCSkdoJ2q6AXKhARRTAgAop3wCAACC+IIAABReAgAACi8A=
-Date:   Mon, 16 Mar 2020 03:18:43 +0000
-Message-ID: <AM0PR04MB44817A48746601EADA4E06BC88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB4481F087AC3CDA691300710288FE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200316005219.GD17221@dragon>
- <AM0PR04MB44819E4A9E027F1555C33D0B88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200316030744.GC17221@dragon>
-In-Reply-To: <20200316030744.GC17221@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [121.239.103.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3079320c-af88-4163-89cd-08d7c958bbe0
-x-ms-traffictypediagnostic: AM0PR04MB4225:|AM0PR04MB4225:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB42259DF9930304848B8C219B88F90@AM0PR04MB4225.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03449D5DD1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(39860400002)(366004)(376002)(396003)(136003)(346002)(199004)(2906002)(33656002)(45080400002)(4326008)(966005)(7416002)(66946007)(478600001)(6916009)(86362001)(66556008)(66476007)(76116006)(64756008)(66446008)(26005)(316002)(6506007)(186003)(54906003)(5660300002)(7696005)(8936002)(9686003)(55016002)(71200400001)(8676002)(81166006)(52536014)(81156014)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4225;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lhszBBbK78BO3V+mcm3R2DagCS9i8Eg7HQUhYe0sD67IsCkxp+bq2mmww1d0faekn38Oa0JW64Eb4/0iyA2dCO7rUY+/antncpcggZWkwHZnu4FW52VKrS28+CMar7nq2/0mTuK7WksB+ht1qgdFEY6FT8ZX6H2rUS/Q0wysoWfkzi/aEGx9lBYXQhIPbm9pQ739bED3hEYBkY03M+PMrCQRd+IiuK0RSDFr4dBJ7U3dAjUVgACW07FJJlwjni+MmrGIqijNau8yln229t6ZrFVytxANS1TZ1PTTGQQlo94VqGlouG+yiSdYzFm6HHQpUOfSdx/J0VNnfQQCaCTElg/bxdtKnKgenJuDL9SJXyKwHoLhnnzl8GE7kdkC8i7WDS9todOye7sDfFnQm1S0bwmUurMrUWRq9YCtisDZb9wzlZgU9GA5kzdIADGs3ZlGV2+excsb0zu44u5LwXGrjhjGl/n7v1YWuzkylPBRmAwNcG+SVBsZGQAqThGnwcR8D6iQLlQvTrc+dDuBHldCfS00Ug/cLm4xgn5Ln0/xzeOUvfmL+w8ZzqrEBI5DSfjxoxvH/xzDoaaTd256K755XQ==
-x-ms-exchange-antispam-messagedata: keGqj13UOWaWwY1/m4PZxDB1TRNoLa1JIvLWJmAn5Dyui1SI9PiV7XY/W6LeK+gXimN0BzoI7pNkUOt1mTEUA9/iA3tl83V7DL77jr0/YIbiLcG5Elpe4ihA5+ONSVpuhN8niW0cP1ngy9JJKYbgQw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3079320c-af88-4163-89cd-08d7c958bbe0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2020 03:18:44.0945
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vBBVTlbzTHJ3ZBYP/jlTyO5iM9iLqITQVLPKka5eyc7gPbBO8b+5iMM6Nx/Ec27Ivm/vgwGMKgNnsqM+ryDJSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4225
+        Sun, 15 Mar 2020 23:21:53 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33152 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729445AbgCPDVw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 23:21:52 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c20so12743946lfb.0;
+        Sun, 15 Mar 2020 20:21:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Zmu7fMFsBJeCOMbIn8KvGMIAfmFUwzCAJ0zed+mhTIc=;
+        b=lW38tUscI8Cr57K/8jLVPga8bz2Vy1Da6VcvpVrSxv71C0aZVtT7ujMxN7vmYOOjwy
+         tjOcXbc3REwOUgg6Tc9MuNA3q1gnH5fPOVoQrU0aiZ2nzwGDPqt3Qn4O9woFP8LDmXkE
+         WGhBF1CvRcBZn4/4KgN4RgY5WIokSWuvnICaMWMUzvxxOzrlsOETn7sT172okQp91W6x
+         3wV2Hrdg1nASCBbpn7On+3BkgAm+hFdh7UUtFYIgHS25xMROC6Ug49YwdbfeIhux9/xb
+         xBrhYKn9JfrEutxJhRKN4Nb2xi0LrXAm5t/mAj3fAoFKIYy1na46+PuJmHpGPI1hi1fs
+         MpBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Zmu7fMFsBJeCOMbIn8KvGMIAfmFUwzCAJ0zed+mhTIc=;
+        b=CIe939oZ3495xFzEtiTFDyWvlQedRzuUGInqcZ4blJDVhofN2VeV5u9MVWZQ1dC1Gp
+         eyPHdwpYzMkHJQc+VO2bWPu9/n34tFb1L6h7OIEoYjD8QlUVq0OOspXvB+dUqoaOVWsr
+         czcWlLr+EbVRbStHy12BqIxxyz3GpTSDFOavOAeBsKUc/KLFPo5aADzpXLrX9DTJdcZE
+         zAkraR8r0HbYVwbTcK19xpRr+103mNg2zotEUPZ+VslHaZRlxw6d7Zc+wBDCyaPBo+it
+         s9Y9fuXsIoNmIjzFFa4Kd4MhEhxwHTXtFZuTK5ULgXYKJGrJ6HwOeuKtTMRB84GBd6g6
+         +4zQ==
+X-Gm-Message-State: ANhLgQ3LfUSI21k35bUp9p/qvptvbYEdF0sGwaDVWFvn4CIKjNNVTqA5
+        CgSAGqHjCnaPoHP1eVPRCz0=
+X-Google-Smtp-Source: ADFU+vsigaHdqYexv0SuvEa+ZVrt/q/vKfMTxI9Oe14bDKFD8lVWv7y1TxjP0PXQy5RF2ZOmwBStng==
+X-Received: by 2002:ac2:5605:: with SMTP id v5mr16010995lfd.184.1584328908713;
+        Sun, 15 Mar 2020 20:21:48 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id s7sm17092677lfp.51.2020.03.15.20.21.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 15 Mar 2020 20:21:48 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Nick Xie <nick@khadas.com>
+Subject: [PATCH] arm64: dts: meson: add thermal zones to meson gx devices
+Date:   Mon, 16 Mar 2020 07:20:54 +0400
+Message-Id: <1584328854-28575-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU
-> case
->=20
-> On Mon, Mar 16, 2020 at 02:51:47AM +0000, Peng Fan wrote:
-> > Hi Shawn,
-> >
-> > > Subject: Re: [PATCH V3 1/7] firmware: imx: Add stubs for
-> > > !CONFIG_IMX_SCU case
-> > >
-> > > On Mon, Mar 09, 2020 at 01:40:18PM +0000, Peng Fan wrote:
-> > > > > Subject: [PATCH V3 1/7] firmware: imx: Add stubs for
-> > > > > !CONFIG_IMX_SCU case
-> > > >
-> > > > I have one patch pending reviewing.
-> > > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-F
-> > > > patc
-> > > >
-> > >
-> hwork.kernel.org%2Fpatch%2F11395247%2F&amp;data=3D02%7C01%7Cpeng.f
-> > > an%40n
-> > > >
-> > >
-> xp.com%7C995815002e2b490791e008d7c9445133%7C686ea1d3bc2b4c6fa9
-> > > 2cd99c5c
-> > > >
-> > >
-> 301635%7C0%7C0%7C637199167574579419&amp;sdata=3DRM4Mtwl8LZ3ft9
-> > > 3uL3FQPcHT
-> > > > 9lPHSqBOgugozkcLvag%3D&amp;reserved=3D0
-> > >
-> > > I dropped that patch from my queue and picked patch #2 from this
-> > > series as the favor.
-> >
-> > I think dropping that patch might cause Linux-next build fail as
-> > previously showed, because IMX_SCU_SOC depends on COMPILE_TEST. If
-> you
-> > drop that patch, also need to drop COMPILE_TEST from IMX_SCU_SOC.
-> >
-> >  ld: drivers/soc/imx/soc-imx-scu.o: in function `.imx_scu_soc_probe':
-> >  soc-imx-scu.c:(.text.imx_scu_soc_probe+0x44): undefined reference to
-> > `.imx_scu_get_handle'
-> >  ld: soc-imx-scu.c:(.text.imx_scu_soc_probe+0x134): undefined
-> > reference  to `.imx_scu_call_rpc'
-> >  ld: soc-imx-scu.c:(.text.imx_scu_soc_probe+0x20c): undefined
-> > reference  to `.imx_scu_call_rpc'
-> >
-> >  Caused by commit
-> >
-> >    68c189e3a93c ("soc: imx: increase build coverage for imx8m soc
-> >  driver")
-> >
-> > What do you prefer? I personally think dummy functions would be good.
->=20
-> I would rather drop COMPILE_TEST from IMX_SCU_SOC.  Could you send a
-> patch for that shortly?
+Adapt and update current VIM2 thermal zones support so that zones are
+available on all meson GXBB/GXL/GXM devices - similar to changes made
+for G12A/G12B/SM1 devices.
 
-Just sent out. One more thing, I think all drivers depends on IMX_SCU shoul=
-d not
-have COMPILE_TEST if we plan not to add dummy functions. I see you picked u=
-p
-Anson's patch in imx/drivers branch, please check more.
+Suggested-by: Nick Xie <nick@khadas.com>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          | 52 +++++++++++++
+ .../boot/dts/amlogic/meson-gxm-khadas-vim2.dts     | 87 ++++------------------
+ arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         | 28 +++++++
+ 3 files changed, 95 insertions(+), 72 deletions(-)
 
-Thanks,
-Peng.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 40db06e..03f79fe 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -12,6 +12,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	interrupt-parent = <&gic>;
+@@ -83,6 +84,7 @@
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+ 			clocks = <&scpi_dvfs 0>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -92,6 +94,7 @@
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+ 			clocks = <&scpi_dvfs 0>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -101,6 +104,7 @@
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+ 			clocks = <&scpi_dvfs 0>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -110,6 +114,7 @@
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+ 			clocks = <&scpi_dvfs 0>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		l2: l2-cache0 {
+@@ -117,6 +122,53 @@
+ 		};
+ 	};
+ 
++	thermal-zones {
++		cpu-thermal {
++			polling-delay-passive = <250>; /* milliseconds */
++			polling-delay = <1000>; /* milliseconds */
++
++			thermal-sensors = <&scpi_sensors 0>;
++
++			trips {
++				cpu_passive: cpu-passive {
++					temperature = <80000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "passive";
++				};
++
++				cpu_hot: cpu-hot {
++					temperature = <90000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "hot";
++				};
++
++				cpu_critical: cpu-critical {
++					temperature = <110000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "critical";
++				};
++			};
++
++			cpu_cooling_maps: cooling-maps {
++				map0 {
++					trip = <&cpu_passive>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++
++				map1 {
++					trip = <&cpu_hot>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++	};
++
+ 	arm-pmu {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+index d5dc128..27eeab7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -8,7 +8,6 @@
+ /dts-v1/;
+ 
+ #include <dt-bindings/input/input.h>
+-#include <dt-bindings/thermal/thermal.h>
+ 
+ #include "meson-gxm.dtsi"
+ 
+@@ -100,49 +99,6 @@
+ 		clock-names = "ext_clock";
+ 	};
+ 
+-	thermal-zones {
+-		cpu-thermal {
+-			polling-delay-passive = <250>; /* milliseconds */
+-			polling-delay = <1000>; /* milliseconds */
+-
+-			thermal-sensors = <&scpi_sensors 0>;
+-
+-			trips {
+-				cpu_alert0: cpu-alert0 {
+-					temperature = <70000>; /* millicelsius */
+-					hysteresis = <2000>; /* millicelsius */
+-					type = "active";
+-				};
+-
+-				cpu_alert1: cpu-alert1 {
+-					temperature = <80000>; /* millicelsius */
+-					hysteresis = <2000>; /* millicelsius */
+-					type = "passive";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu_alert0>;
+-					cooling-device = <&gpio_fan THERMAL_NO_LIMIT 1>;
+-				};
+-
+-				map1 {
+-					trip = <&cpu_alert1>;
+-					cooling-device = <&gpio_fan 2 THERMAL_NO_LIMIT>,
+-							 <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-							 <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-							 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-	};
+-
+ 	hdmi_5v: regulator-hdmi-5v {
+ 		compatible = "regulator-fixed";
+ 
+@@ -198,36 +154,23 @@
+ 	hdmi-phandle = <&hdmi_tx>;
+ };
+ 
+-&cpu0 {
+-	#cooling-cells = <2>;
+-};
+-
+-&cpu1 {
+-	#cooling-cells = <2>;
+-};
+-
+-&cpu2 {
+-	#cooling-cells = <2>;
+-};
+-
+-&cpu3 {
+-	#cooling-cells = <2>;
+-};
+-
+-&cpu4 {
+-	#cooling-cells = <2>;
+-};
+ 
+-&cpu5 {
+-	#cooling-cells = <2>;
+-};
+-
+-&cpu6 {
+-	#cooling-cells = <2>;
+-};
++&cpu_cooling_maps {
++	map0 {
++		cooling-device = <&gpio_fan THERMAL_NO_LIMIT 1>;
++	};
+ 
+-&cpu7 {
+-	#cooling-cells = <2>;
++	map1 {
++		cooling-device = <&gpio_fan 2 THERMAL_NO_LIMIT>,
++				 <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++	};
+ };
+ 
+ &ethmac {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+index 5ff64a0..b6f89f1 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+@@ -49,6 +49,7 @@
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+ 			clocks = <&scpi_dvfs 1>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu5: cpu@101 {
+@@ -58,6 +59,7 @@
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+ 			clocks = <&scpi_dvfs 1>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu6: cpu@102 {
+@@ -67,6 +69,7 @@
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+ 			clocks = <&scpi_dvfs 1>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu7: cpu@103 {
+@@ -76,6 +79,7 @@
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+ 			clocks = <&scpi_dvfs 1>;
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ };
+@@ -124,6 +128,30 @@
+ 	compatible = "amlogic,meson-gxm-aoclkc", "amlogic,meson-gx-aoclkc";
+ };
+ 
++&cpu_cooling_maps {
++	map0 {
++		cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++	};
++
++	map1 {
++		cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++				 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++	};
++};
++
+ &saradc {
+ 	compatible = "amlogic,meson-gxm-saradc", "amlogic,meson-saradc";
+ };
+-- 
+2.7.4
 
->=20
-> Shawn
