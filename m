@@ -2,254 +2,156 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30830C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF5CC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B47206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584389062;
-	bh=Xwa8ruFtzyte+EsDEJIYBy2/t4S0bIe89Tc3YaQoSr0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HEguKovxhqk6dhy0kS3x/NCiEsANxEIAxingEbcphAqRCoe1XOl75+KY0f8JV9chc
-	 TXoutwiD1ctioFBF+/Dmu3673YoWSTXMPQeckYUqt6/ZATB0C732EAUw4ysHfnSb2a
-	 +ilhLipGjeLTm1OQPdPFIRkh31NXZDnIcqsYRY98=
+	by mail.kernel.org (Postfix) with ESMTP id 8792220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:08:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GLK3ib9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732534AbgCPUEV (ORCPT
+        id S1732513AbgCPUI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732436AbgCPUEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:04:20 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01C3520658;
-        Mon, 16 Mar 2020 20:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584389059;
-        bh=Xwa8ruFtzyte+EsDEJIYBy2/t4S0bIe89Tc3YaQoSr0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=c/+y9xa56uhBvkveqc2ysEboJLvoLTXf/DVu2Bi8ddCfYr0BbX1Gb7O6fY/58RCP1
-         6M1/fZzAIJNlgX5yHcQNzJWyLfVhxqnGedbJnlyexDy1KW/9VkO67+B+k+EmbaV07T
-         Fy3LdujZRe+T9pPLpMpsrDzDoCR6KJqZDx5xy1o8=
-Date:   Mon, 16 Mar 2020 13:04:16 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "wad@chromium.org" <wad@chromium.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-team@fb.com" <kernel-team@fb.com>
-Subject: Re: [PATCH v2 0/4] kselftest: add fixture parameters
-Message-ID: <20200316130416.4ec9103b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <MWHPR13MB08957F02680872A2C30DD7F4FDF90@MWHPR13MB0895.namprd13.prod.outlook.com>
-References: <20200314005501.2446494-1-kuba@kernel.org>
-        <202003132049.3D0CDBB2A@keescook>
-        <MWHPR13MB08957F02680872A2C30DD7F4FDF90@MWHPR13MB0895.namprd13.prod.outlook.com>
+        Mon, 16 Mar 2020 16:08:26 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41787 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732436AbgCPUI0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 16:08:26 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s11so17239128qks.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 13:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y7O+y+5PEoVenZhGHq9mu4e8GpUF5OMLN8jJyvkkAuA=;
+        b=GLK3ib9JqbFf9iF8NGea8Z02yjbUhv86Qnz2UVCwo6GJzRWxTihfsWCUTHZiIDKBe3
+         iwbbt7GKMKqQVqrPm3UqZlhhj/gpOHWNXYIU9l7EwsPYpkzTVKLEISUcpQ/Kc0T14rTK
+         ba9kRoWtffQWv9ZAOZiZYjZ3/7WOSquGBDkwA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y7O+y+5PEoVenZhGHq9mu4e8GpUF5OMLN8jJyvkkAuA=;
+        b=IpS0270uUGYygQ25qcCe8hpuOTkZApx3wujthrao0hCl8KQZgUzF5I1fS4OyZ9MKhJ
+         0ZOoo290pNg1bW7zQgBBq8WWm6w1gkpuLLiydcipqFhh1fERg33703310dODZQqD+U/k
+         BjufjxNNf0LKyUi4wTzp5fO2cyr0UN2EtEAHXxtBJYMXGbFRrszzA7/Pg6mGiuS9+d2I
+         z0qweajOZL6L9mVk9nlf2lWQTnGgXXkhSHDB5uYZhJo/UUEhB7lv0yxhSgsm29MmYFpU
+         gtKhoEMCGoKbnABSWSv64kJ/pUR78IOa0T3TJhvPKiPT2sKhssDbgj5AU0016XZy0Lxf
+         2BIQ==
+X-Gm-Message-State: ANhLgQ2kbMfTSGOaNXITfTmtSAt8AdEKQvt6SsG+9sd7BDIO8desYjfd
+        Qdz0+H/ydKAuoYyAs6k3uuckFIiOyuDh0OGNtLRqBoUV
+X-Google-Smtp-Source: ADFU+vs5S1dg4gBE563kTuO9lUVvXZUUs6RGzfibabJb0mgdl11MosVnwpbj3oj46Nfhd2cc9MhY+rZktDGLwR6+s50=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr1394597qka.179.1584389303039;
+ Mon, 16 Mar 2020 13:08:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200316090021.52148-1-pmalani@chromium.org> <20200316090021.52148-4-pmalani@chromium.org>
+In-Reply-To: <20200316090021.52148-4-pmalani@chromium.org>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 16 Mar 2020 13:08:11 -0700
+Message-ID: <CACeCKadfezCCAa67p71Dqf2WUR8szLO45xzPq4XxFG53S-Y5fQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] platform/chrome: typec: Get PD_CONTROL cmd version
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Mar 2020 15:55:12 +0000 Bird, Tim wrote:
-> > -----Original Message-----
-> > From: Kees Cook
-> > 
-> > On Fri, Mar 13, 2020 at 05:54:57PM -0700, Jakub Kicinski wrote:  
-> > > Note that we loose a little bit of type safety
-> > > without passing parameters as an explicit argument.
-> > > If user puts the name of the wrong fixture as argument
-> > > to CURRENT_FIXTURE() it will happily cast the type.  
-> > 
-> > This got me to take a much closer look at things. I really didn't like
-> > needing to repeat the fixture name in CURRENT_FIXTURE() calls, and then
-> > started coming to all the same conclusions you did in your v1, that I
-> > just didn't quite see yet in my first review. :P
+My apologies, missed adding Heikki.
 
-No worries, it took me a little bit of internal back and forth to
-produce v1, and it's still not at all perfect :S
-
-> > Apologies for my wishy-washy-ness on this, but here's me talking myself
-> > out of my earlier criticisms:
-> > 
-> > - "I want tests to be run in declaration order" In v1, this is actually
-> >   mostly retained: they're still in declaration order, but they're
-> >   grouped by fixture (which are run in declaration order). That, I think,
-> >   is totally fine. Someone writing code that interleaves between fixtures
-> >   is madness, and having the report retain that ordering seems awful. I
-> >   had thought the declaration ordering was entirely removed, but I see on
-> >   closer inspection that's not true.
-> > 
-> > - "I'd like everything attached to _metadata" This results in the
-> >   type unsafety you call out here. And I stared at your v2 trying to
-> >   find a way around it, but to get the type attached, it has to be
-> >   part of the __TEST_F_IMPL() glue, and that means passing it along
-> >   side "self", which means plumbing it as a function argument
-> >   everywhere.
-> > 
-> > So, again, sorry for asking to iterate on v1 instead of v2, though the
-> > v2 _really_ helped me see the problems better. ;)
-> > 
-> > Something I'd like for v3: instead of "parameters" can we call it
-> > "instances"? It provides a way to run separate instances of the same
-> > fixtures. Those instances have parameters (i.e. struct fields), so I'd
-> > prefer the "instance" naming.  
-> 
-> Could I humbly suggest "variant" as a possible name here?
-> IMHO "instance" carries along some semantics related to object
-> oriented programming, which I think is a bit confusing.  (Maybe that's
-> intentional though, and you prefer that?)
-
-I like parameter or argument, since the data provided to the test 
-is constant, and used to guide the instantiation (i.e. "setup"). 
-"self" looks more like an instance of a class from OOP point of view.
-
-Variant sounds good too, although the abbreviation would be VAR?
-Which isn't ideal. 
-
-But I really don't care so whoever cares the most please speak up :P
-
-> BTW - Fuego has a similar feature for naming a collection of test
-> parameters with specific values (if I understand this proposed
-> feature correctly).  Fuego's feature was named a long time ago
-> (incorrectly, I think) and it continues to bug me to this day.
-> It was named 'specs', and after giving it considerable thought
-> I've been meaning to change it to 'variants'.
-> 
-> Just a suggestion for consideration.  The fact that Fuego got this
-> wrong is what motivates my suggestion today.  You have to live
-> with this kind of stuff a long time. :-)
-> 
-> We ran into some issues in Fuego with this concept, that motivate
-> the comments below.  I'll use your 'instance' terminology in my comments
-> although the terminology is different in Fuego.
-> 
-> > Also a change in reporting:
-> > 
-> > 	struct __fixture_params_metadata no_param = { .name = "", };
-> > 
-> > Let's make ".name = NULL" here, and then we can detect instantiation:
-> > 
-> > 	printf("[ RUN      ] %s%s%s.%s\n", f->name, p->name ? "." : "",
-> > 				p->name ?: "", t->name);
-
-Do I have to make it NULL or is it okay to test p->name[0] ?
-That way we can save one ternary operator from the litany..
-
-> > That'll give us single-instance fixtures an unchanged name:
-> > 
-> > 	fixture.test1
-> > 	fixture.test2  
-> 
-> We ended up in Fuego adding a 'default' instance name for 
-> all tests.  That way, all the parsers don't have to be coded to distinguish
-> if the test identifier includes an instance name or not, which turns
-> out to be a tough problem.
-> 
-> So single-instance tests would be:
->             fixture.default.test1
->             fixture.default.test2
-
-Interesting! That makes sense to me, thanks for sharing the experience.
-That's why I just appended the param/instance/variant name to the
-fixture name.
-
-To me global.default.XYZ is a mouthful. so in my example (perhaps that
-should have been part of the cover letter) I got:
-
-[ RUN      ] global.keysizes             <= non-fixture test
-[       OK ] global.keysizes             
-[ RUN      ] tls_basic.base_base         <= fixture: "tls_basic", no params
-[       OK ] tls_basic.base_base         
-[ RUN      ] tls12.sendfile              <= fixture: "tls", param: "12"
-[       OK ] tls12.sendfile                 
-[ RUN      ] tls13.sendfile              <= fixture: "tls", param: "13"
-[       OK ] tls13.sendfile                 (same fixture, diff param)
-
-And users can start inserting underscores themselves if they really
-want. (For TLS I was considering different ciphers but they don't impact
-testing much.)
-
-> > 
-> > and instanced fixtures will be:
-> > 
-> > 	fixture.wayA.test1
-> > 	fixture.wayA.test2
-> > 	fixture.wayB.test1
-> > 	fixture.wayB.test2
-> >   
-> 
-> Parsing of the test identifiers starts to become a thorny issue 
-> as you get longer and longer sequences of test-name parts
-> (test suite, test fixture, sub-test, test-case, measurement, instance, etc.)
-> It becomes considerably more difficult if  you have more than
-> one optional element in the identifier, so it's useful to
-> avoid any optional element you can.
-> 
-> > 
-> > And finally, since we're in the land of endless macros, I think it
-> > could be possible to make a macro to generate the __register_foo()
-> > routine bodies. By the end of the series there are three nearly identical
-> > functions in the harness for __register_test(), __register_fixture(), and
-> > __register_fixture_instance(). Something like this as an earlier patch to
-> > refactor the __register_test() that can be used by the latter two in their
-> > patches (and counting will likely need to be refactored earlier too):
-> > 
-> > #define __LIST_APPEND(head, item)				\
-> > {								\
-> > 	/* Circular linked list where only prev is circular. */	\
-> > 	if (head == NULL) {					\
-> > 		head = item;					\
-> > 		item->next = NULL;				\
-> > 		item->prev = item;				\
-> > 		return;						\
-> > 	}							\
-> > 	if (__constructor_order == _CONSTRUCTOR_ORDER_FORWARD) {\
-> > 		item->next = NULL;				\
-> > 		item->prev = head->prev;			\
-> > 		item->prev->next = item;			\
-> > 		head->prev = item;				\
-> > 	} else {						\
-> > 		p->next = head;					\
-> > 		p->next->prev = item;				\
-> > 		p->prev = item;					\
-> > 		head = item;					\
-> > 	}							\
-> > }
-> > 
-> > Which should let it be used, ultimately, as:
-> > 
-> > static inline void __register_test(struct __test_metadata *t)
-> > __LIST_APPEND(__test_list, t)
-> > 
-> > static inline void __register_fixture(struct __fixture_metadata *f)
-> > __LIST_APPEND(__fixture_list, f)
-> > 
-> > static inline void
-> > __register_fixture_instance(struct __fixture_metadata *f,
-> > 			    struct __fixture_instance_metadata *p)
-> > __LIST_APPEND(f->instances, p)  
-> 
-> With my suggestion of 'variant', this would change to:
-> 
-> static inline void
-> __register_fixture_variant(struct __fixture_metadata *f,
-> 			    struct __fixture_variant_metadata *p)
-> __LIST_APPEND(f->variants, p)
-> 
-> 
-> Just my 2 cents.
->  -- Tim
-
+On Mon, Mar 16, 2020 at 2:01 AM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Query the EC to determine the version number of the PD_CONTROL
+> command which is supported by the EC. Also store this value in the Type
+> C data struct since it will be used to determine how to parse the
+> response to queries for port information from the EC.
+>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>
+> Changes in v5:
+> - No changes.
+>
+> Changes in v4:
+> - No changes
+>
+> Changes in v3:
+> - Moved if statement check in the end of probe() from this patch to a
+>   previous patch.
+>
+> Changes in v2:
+> - No changes.
+>
+>  drivers/platform/chrome/cros_ec_typec.c | 32 +++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 02e6d5cbbbf7a..9f692eb78b322 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -21,6 +21,7 @@ struct cros_typec_data {
+>         struct device *dev;
+>         struct cros_ec_device *ec;
+>         int num_ports;
+> +       unsigned int cmd_ver;
+>         /* Array of ports, indexed by port number. */
+>         struct typec_port *ports[EC_USB_PD_MAX_PORTS];
+>         /* Initial capabilities for each port. */
+> @@ -171,6 +172,31 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
+>         return ret;
+>  }
+>
+> +static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+> +{
+> +       struct ec_params_get_cmd_versions_v1 req_v1;
+> +       struct ec_response_get_cmd_versions resp;
+> +       int ret;
+> +
+> +       /* We're interested in the PD control command version. */
+> +       req_v1.cmd = EC_CMD_USB_PD_CONTROL;
+> +       ret = cros_typec_ec_command(typec, 1, EC_CMD_GET_CMD_VERSIONS,
+> +                                   &req_v1, sizeof(req_v1), &resp,
+> +                                   sizeof(resp));
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       if (resp.version_mask & EC_VER_MASK(1))
+> +               typec->cmd_ver = 1;
+> +       else
+> +               typec->cmd_ver = 0;
+> +
+> +       dev_dbg(typec->dev, "PD Control has version mask 0x%hhx\n",
+> +               typec->cmd_ver);
+> +
+> +       return 0;
+> +}
+> +
+>  #ifdef CONFIG_ACPI
+>  static const struct acpi_device_id cros_typec_acpi_id[] = {
+>         { "GOOG0014", 0 },
+> @@ -202,6 +228,12 @@ static int cros_typec_probe(struct platform_device *pdev)
+>         typec->ec = dev_get_drvdata(pdev->dev.parent);
+>         platform_set_drvdata(pdev, typec);
+>
+> +       ret = cros_typec_get_cmd_version(typec);
+> +       if (ret < 0) {
+> +               dev_err(dev, "failed to get PD command version info\n");
+> +               return ret;
+> +       }
+> +
+>         ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
+>                                     &resp, sizeof(resp));
+>         if (ret < 0)
+> --
+> 2.25.1.481.gfbce0eb801-goog
+>
