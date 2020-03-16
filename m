@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C2EC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C358FC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6717A20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9529920724
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326136;
-	bh=Wk5vG2jvv3zKm1H8ZHIEKdgfGVZnA91k1WpdRvzFCCI=;
+	s=default; t=1584326139;
+	bh=bL7lnl2GqFhAGBZo2e7fJxDHlZSiBOzMDk+Ou/OCTqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d/ekhhvH0XEuM7F44kfJoJiYnsVlbmYfw0wzVTqeNmuJpEvSQkEBg7FhF+YUdJRZL
-	 mJw6beRDvB16rPyDBYntFpUgko/GHbPlbq/RmyH8PqL3W8Pr8rM3hBW8s3U2I/Zl06
-	 CBrO7ToltwOfayAJV0/PvkCUuiVBWZzvTSsIh12Q=
+	b=kZjjSGsqxTdwDM+za7uC5/71VGqiUBABPDKi9UghvgCrpU6ZZ9Qea9Ska+cGEPrnz
+	 ftx2pMkU2bUZdF+7unHICjRGd9JbvNNN0HAei4p/9hpQjnJgKnCe44EyfrQIaPfv3U
+	 BjBZxOkCfGkFmt40m4aoG/okbWOa4ukJl4O34zrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbgCPCff (ORCPT
+        id S1730215AbgCPCfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730186AbgCPCfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:35:32 -0400
+        id S1730196AbgCPCff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 412DA20738;
-        Mon, 16 Mar 2020 02:35:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7232420726;
+        Mon, 16 Mar 2020 02:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326132;
-        bh=Wk5vG2jvv3zKm1H8ZHIEKdgfGVZnA91k1WpdRvzFCCI=;
+        s=default; t=1584326134;
+        bh=bL7lnl2GqFhAGBZo2e7fJxDHlZSiBOzMDk+Ou/OCTqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X82w8VrHUtU0dox37zT7HQVJpsOlJnZF6yobS8qum8BpUTJ659ObNYPKnr7vdK1vq
-         w/BFToM2+e++QxM/sDWpI+Ln0FKqQnPIwMmLLa5O9uvYfILAek71c6b+rOS7PemCgl
-         orvowTDgqpO1SFejM4/LR8XWTjR/JwvdNUtaHjOc=
+        b=GpasM2xGPSedFrEjrStX45WMEf3iDP6wjNEoaH/KBjgP1lkYU82ecAUDYc+cHqvxd
+         MPwJ7wBNP5NgPq59R3QgibqE6aK1s+D+LVr3/3Aox0L6+rWufLCF/jEeKlQk3phrSC
+         /aHsf00ybbu1SgDsCs61syJxvrMasszu3J7x6KJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Axtens <dja@axtens.net>,
-        "Igor M. Liplianin" <liplianin@netup.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 10/15] altera-stapl: altera_get_note: prevent write beyond end of 'key'
-Date:   Sun, 15 Mar 2020 22:35:14 -0400
-Message-Id: <20200316023519.2050-10-sashal@kernel.org>
+Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
+        Julien Grall <jgrall@amazon.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
+Subject: [PATCH AUTOSEL 4.14 12/15] xenbus: req->body should be updated before req->state
+Date:   Sun, 15 Mar 2020 22:35:16 -0400
+Message-Id: <20200316023519.2050-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023519.2050-1-sashal@kernel.org>
 References: <20200316023519.2050-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,97 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit 3745488e9d599916a0b40d45d3f30e3d4720288e ]
+[ Upstream commit 1b6a51e86cce38cf4d48ce9c242120283ae2f603 ]
 
-altera_get_note is called from altera_init, where key is kzalloc(33).
+The req->body should be updated before req->state is updated and the
+order should be guaranteed by a barrier.
 
-When the allocation functions are annotated to allow the compiler to see
-the sizes of objects, and with FORTIFY_SOURCE, we see:
+Otherwise, read_reply() might return req->body = NULL.
 
-In file included from drivers/misc/altera-stapl/altera.c:14:0:
-In function ‘strlcpy’,
-    inlined from ‘altera_init’ at drivers/misc/altera-stapl/altera.c:2189:5:
-include/linux/string.h:378:4: error: call to ‘__write_overflow’ declared with attribute error: detected write beyond size of object passed as 1st parameter
-    __write_overflow();
-    ^~~~~~~~~~~~~~~~~~
+Below is sample callstack when the issue is reproduced on purpose by
+reordering the updates of req->body and req->state and adding delay in
+code between updates of req->state and req->body.
 
-That refers to this code in altera_get_note:
+[   22.356105] general protection fault: 0000 [#1] SMP PTI
+[   22.361185] CPU: 2 PID: 52 Comm: xenwatch Not tainted 5.5.0xen+ #6
+[   22.366727] Hardware name: Xen HVM domU, BIOS ...
+[   22.372245] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
+... ...
+[   22.392163] RSP: 0018:ffffb2d64023fdf0 EFLAGS: 00010246
+[   22.395933] RAX: 0000000000000000 RBX: 75746e7562755f6d RCX: 0000000000000000
+[   22.400871] RDX: 0000000000000000 RSI: ffffb2d64023fdfc RDI: 75746e7562755f6d
+[   22.405874] RBP: 0000000000000000 R08: 00000000000001e8 R09: 0000000000cdcdcd
+[   22.410945] R10: ffffb2d6402ffe00 R11: ffff9d95395eaeb0 R12: ffff9d9535935000
+[   22.417613] R13: ffff9d9526d4a000 R14: ffff9d9526f4f340 R15: ffff9d9537654000
+[   22.423726] FS:  0000000000000000(0000) GS:ffff9d953bc80000(0000) knlGS:0000000000000000
+[   22.429898] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   22.434342] CR2: 000000c4206a9000 CR3: 00000001ea3fc002 CR4: 00000000001606e0
+[   22.439645] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   22.444941] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   22.450342] Call Trace:
+[   22.452509]  simple_strtoull+0x27/0x70
+[   22.455572]  xenbus_transaction_start+0x31/0x50
+[   22.459104]  netback_changed+0x76c/0xcc1 [xen_netfront]
+[   22.463279]  ? find_watch+0x40/0x40
+[   22.466156]  xenwatch_thread+0xb4/0x150
+[   22.469309]  ? wait_woken+0x80/0x80
+[   22.472198]  kthread+0x10e/0x130
+[   22.474925]  ? kthread_park+0x80/0x80
+[   22.477946]  ret_from_fork+0x35/0x40
+[   22.480968] Modules linked in: xen_kbdfront xen_fbfront(+) xen_netfront xen_blkfront
+[   22.486783] ---[ end trace a9222030a747c3f7 ]---
+[   22.490424] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
 
-    if (key != NULL)
-            strlcpy(key, &p[note_strings +
-                            get_unaligned_be32(
-                            &p[note_table + (8 * i)])],
-                    length);
+The virt_rmb() is added in the 'true' path of test_reply(). The "while"
+is changed to "do while" so that test_reply() is used as a read memory
+barrier.
 
-The error triggers because the length of 'key' is 33, but the copy
-uses length supplied as the 'length' parameter, which is always
-256. Split the size parameter into key_len and val_len, and use the
-appropriate length depending on what is being copied.
-
-Detected by compiler error, only compile-tested.
-
-Cc: "Igor M. Liplianin" <liplianin@netup.ru>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Link: https://lore.kernel.org/r/20200120074344.504-2-dja@axtens.net
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/202002251042.D898E67AC@keescook
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Link: https://lore.kernel.org/r/20200303221423.21962-1-dongli.zhang@oracle.com
+Reviewed-by: Julien Grall <jgrall@amazon.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/altera-stapl/altera.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/xen/xenbus/xenbus_comms.c | 2 ++
+ drivers/xen/xenbus/xenbus_xs.c    | 9 ++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/altera-stapl/altera.c b/drivers/misc/altera-stapl/altera.c
-index 494e263daa748..b7ee8043a133e 100644
---- a/drivers/misc/altera-stapl/altera.c
-+++ b/drivers/misc/altera-stapl/altera.c
-@@ -2126,8 +2126,8 @@ static int altera_execute(struct altera_state *astate,
- 	return status;
+diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
+index d239fc3c5e3de..852ed161fc2a7 100644
+--- a/drivers/xen/xenbus/xenbus_comms.c
++++ b/drivers/xen/xenbus/xenbus_comms.c
+@@ -313,6 +313,8 @@ static int process_msg(void)
+ 			req->msg.type = state.msg.type;
+ 			req->msg.len = state.msg.len;
+ 			req->body = state.body;
++			/* write body, then update state */
++			virt_wmb();
+ 			req->state = xb_req_state_got_reply;
+ 			req->cb(req);
+ 		} else
+diff --git a/drivers/xen/xenbus/xenbus_xs.c b/drivers/xen/xenbus/xenbus_xs.c
+index 3f3b29398ab8e..b609c6e08796e 100644
+--- a/drivers/xen/xenbus/xenbus_xs.c
++++ b/drivers/xen/xenbus/xenbus_xs.c
+@@ -188,8 +188,11 @@ static bool xenbus_ok(void)
+ 
+ static bool test_reply(struct xb_req_data *req)
+ {
+-	if (req->state == xb_req_state_got_reply || !xenbus_ok())
++	if (req->state == xb_req_state_got_reply || !xenbus_ok()) {
++		/* read req->state before all other fields */
++		virt_rmb();
+ 		return true;
++	}
+ 
+ 	/* Make sure to reread req->state each time. */
+ 	barrier();
+@@ -199,7 +202,7 @@ static bool test_reply(struct xb_req_data *req)
+ 
+ static void *read_reply(struct xb_req_data *req)
+ {
+-	while (req->state != xb_req_state_got_reply) {
++	do {
+ 		wait_event(req->wq, test_reply(req));
+ 
+ 		if (!xenbus_ok())
+@@ -213,7 +216,7 @@ static void *read_reply(struct xb_req_data *req)
+ 		if (req->err)
+ 			return ERR_PTR(req->err);
+ 
+-	}
++	} while (req->state != xb_req_state_got_reply);
+ 
+ 	return req->body;
  }
- 
--static int altera_get_note(u8 *p, s32 program_size,
--			s32 *offset, char *key, char *value, int length)
-+static int altera_get_note(u8 *p, s32 program_size, s32 *offset,
-+			   char *key, char *value, int keylen, int vallen)
- /*
-  * Gets key and value of NOTE fields in the JBC file.
-  * Can be called in two modes:  if offset pointer is NULL,
-@@ -2184,7 +2184,7 @@ static int altera_get_note(u8 *p, s32 program_size,
- 						&p[note_table + (8 * i) + 4])];
- 
- 				if (value != NULL)
--					strlcpy(value, value_ptr, length);
-+					strlcpy(value, value_ptr, vallen);
- 
- 			}
- 		}
-@@ -2203,13 +2203,13 @@ static int altera_get_note(u8 *p, s32 program_size,
- 				strlcpy(key, &p[note_strings +
- 						get_unaligned_be32(
- 						&p[note_table + (8 * i)])],
--					length);
-+					keylen);
- 
- 			if (value != NULL)
- 				strlcpy(value, &p[note_strings +
- 						get_unaligned_be32(
- 						&p[note_table + (8 * i) + 4])],
--					length);
-+					vallen);
- 
- 			*offset = i + 1;
- 		}
-@@ -2463,7 +2463,7 @@ int altera_init(struct altera_config *config, const struct firmware *fw)
- 			__func__, (format_version == 2) ? "Jam STAPL" :
- 						"pre-standardized Jam 1.1");
- 		while (altera_get_note((u8 *)fw->data, fw->size,
--					&offset, key, value, 256) == 0)
-+					&offset, key, value, 32, 256) == 0)
- 			printk(KERN_INFO "%s: NOTE \"%s\" = \"%s\"\n",
- 					__func__, key, value);
- 	}
 -- 
 2.20.1
 
