@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF97EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EC4C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C62206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0447206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326344;
-	bh=iCt96E5njMMs6CflvXMtwjnWTr+mVz36Lx+Fo+/SpXk=;
+	s=default; t=1584326348;
+	bh=4yw0STCK+C5NSsvnEalgO/FdaunLe8EGQsfjZzCvPV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rHcDxMkIx6RDjhFiwaen3mSzpoDVEmvDCZF6m4A00audOTVSfliDwQYvJCIFg6+QA
-	 06WnAPzYkZZ3o/Vuhgsx1Taa1ZVXg66RjcBlWJg5mJOZLhFWZyzVlpYB6uLY50jQlv
-	 DwU1gZ5aeJhQDaOPQYNweHQfSOZpwfqZzXjBSLfA=
+	b=1eZZ9M2J3TVz1jZOJbAgR+4bkGF1sAP+Mj6ujBQNV5HXLpcLu76wv7dZY5IsIji29
+	 jdfNSOd6Nb10yOtqy7EkA6OliFXf9fEGVNQXQgvLsyup535q9xP6AF+0yBDASarh1L
+	 GAKYcCf05t5gTLGsKLn2IdZIgh9TVedzzpopNYrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbgCPCjD (ORCPT
+        id S1730355AbgCPCjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:39:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38314 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:39:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729906AbgCPCej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:39 -0400
+        id S1729896AbgCPCeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 914A420754;
-        Mon, 16 Mar 2020 02:34:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A69F20736;
+        Mon, 16 Mar 2020 02:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326078;
-        bh=iCt96E5njMMs6CflvXMtwjnWTr+mVz36Lx+Fo+/SpXk=;
+        s=default; t=1584326076;
+        bh=4yw0STCK+C5NSsvnEalgO/FdaunLe8EGQsfjZzCvPV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w4CPwQf3c54kQhxXQRVghhf2yl0xaVw1D1fTTQZYedMzpokyO6v3vdHQnp3WUGtWR
-         f5guVfyqeZqMqi/xCaacFOG0BxJfnpyltbBvLZxXboADQVuaaEoXQL1+DVKb+VaZWd
-         b26zmsNw014qvM48KzNTD9JviopyKyDyXpBjPykw=
+        b=Bsztwr8q7AeWY06+skX2OhW2/kRRQ+0HH2GFHKpA9cdWiQ4WKTBgzKWzLReJO6JDd
+         YbS7F3EPW76RZwBqz7Sx/gFo3p+MSEgMoEuSqxeqQr5/UhMbHpwNMk4OVCftumVaxi
+         RXv2OOoU3LdJQUPTbS9ull0XP0MHg8N0P+SBsA9U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Snitzer <snitzer@redhat.com>,
-        =?UTF-8?q?Daniel=20Gl=C3=B6ckner?= <dg@emlix.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.4 23/35] dm integrity: use dm_bio_record and dm_bio_restore
-Date:   Sun, 15 Mar 2020 22:33:59 -0400
-Message-Id: <20200316023411.1263-23-sashal@kernel.org>
+Cc:     Daniel Axtens <dja@axtens.net>,
+        "Igor M. Liplianin" <liplianin@netup.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 21/35] altera-stapl: altera_get_note: prevent write beyond end of 'key'
+Date:   Sun, 15 Mar 2020 22:33:57 -0400
+Message-Id: <20200316023411.1263-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
 References: <20200316023411.1263-1-sashal@kernel.org>
@@ -61,111 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: Daniel Axtens <dja@axtens.net>
 
-[ Upstream commit 248aa2645aa7fc9175d1107c2593cc90d4af5a4e ]
+[ Upstream commit 3745488e9d599916a0b40d45d3f30e3d4720288e ]
 
-In cases where dec_in_flight() has to requeue the integrity_bio_wait
-work to transfer the rest of the data, the bio's __bi_remaining might
-already have been decremented to 0, e.g.: if bio passed to underlying
-data device was split via blk_queue_split().
+altera_get_note is called from altera_init, where key is kzalloc(33).
 
-Use dm_bio_{record,restore} rather than effectively open-coding them in
-dm-integrity -- these methods now manage __bi_remaining too.
+When the allocation functions are annotated to allow the compiler to see
+the sizes of objects, and with FORTIFY_SOURCE, we see:
 
-Depends-on: f7f0b057a9c1 ("dm bio record: save/restore bi_end_io and bi_integrity")
-Reported-by: Daniel Glöckner <dg@emlix.com>
-Suggested-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+In file included from drivers/misc/altera-stapl/altera.c:14:0:
+In function ‘strlcpy’,
+    inlined from ‘altera_init’ at drivers/misc/altera-stapl/altera.c:2189:5:
+include/linux/string.h:378:4: error: call to ‘__write_overflow’ declared with attribute error: detected write beyond size of object passed as 1st parameter
+    __write_overflow();
+    ^~~~~~~~~~~~~~~~~~
+
+That refers to this code in altera_get_note:
+
+    if (key != NULL)
+            strlcpy(key, &p[note_strings +
+                            get_unaligned_be32(
+                            &p[note_table + (8 * i)])],
+                    length);
+
+The error triggers because the length of 'key' is 33, but the copy
+uses length supplied as the 'length' parameter, which is always
+256. Split the size parameter into key_len and val_len, and use the
+appropriate length depending on what is being copied.
+
+Detected by compiler error, only compile-tested.
+
+Cc: "Igor M. Liplianin" <liplianin@netup.ru>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Link: https://lore.kernel.org/r/20200120074344.504-2-dja@axtens.net
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/202002251042.D898E67AC@keescook
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-integrity.c | 32 +++++++++-----------------------
- 1 file changed, 9 insertions(+), 23 deletions(-)
+ drivers/misc/altera-stapl/altera.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
-index 57ac603f37410..145bc2e7eaf01 100644
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -6,6 +6,8 @@
-  * This file is released under the GPL.
-  */
+diff --git a/drivers/misc/altera-stapl/altera.c b/drivers/misc/altera-stapl/altera.c
+index 25e5f24b3fecd..5bdf574723144 100644
+--- a/drivers/misc/altera-stapl/altera.c
++++ b/drivers/misc/altera-stapl/altera.c
+@@ -2112,8 +2112,8 @@ static int altera_execute(struct altera_state *astate,
+ 	return status;
+ }
  
-+#include "dm-bio-record.h"
-+
- #include <linux/compiler.h>
- #include <linux/module.h>
- #include <linux/device-mapper.h>
-@@ -292,11 +294,7 @@ struct dm_integrity_io {
+-static int altera_get_note(u8 *p, s32 program_size,
+-			s32 *offset, char *key, char *value, int length)
++static int altera_get_note(u8 *p, s32 program_size, s32 *offset,
++			   char *key, char *value, int keylen, int vallen)
+ /*
+  * Gets key and value of NOTE fields in the JBC file.
+  * Can be called in two modes:  if offset pointer is NULL,
+@@ -2170,7 +2170,7 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 						&p[note_table + (8 * i) + 4])];
  
- 	struct completion *completion;
+ 				if (value != NULL)
+-					strlcpy(value, value_ptr, length);
++					strlcpy(value, value_ptr, vallen);
  
--	struct gendisk *orig_bi_disk;
--	u8 orig_bi_partno;
--	bio_end_io_t *orig_bi_end_io;
--	struct bio_integrity_payload *orig_bi_integrity;
--	struct bvec_iter orig_bi_iter;
-+	struct dm_bio_details bio_details;
- };
- 
- struct journal_completion {
-@@ -1447,14 +1445,9 @@ static void integrity_end_io(struct bio *bio)
- {
- 	struct dm_integrity_io *dio = dm_per_bio_data(bio, sizeof(struct dm_integrity_io));
- 
--	bio->bi_iter = dio->orig_bi_iter;
--	bio->bi_disk = dio->orig_bi_disk;
--	bio->bi_partno = dio->orig_bi_partno;
--	if (dio->orig_bi_integrity) {
--		bio->bi_integrity = dio->orig_bi_integrity;
-+	dm_bio_restore(&dio->bio_details, bio);
-+	if (bio->bi_integrity)
- 		bio->bi_opf |= REQ_INTEGRITY;
--	}
--	bio->bi_end_io = dio->orig_bi_end_io;
- 
- 	if (dio->completion)
- 		complete(dio->completion);
-@@ -1539,7 +1532,7 @@ static void integrity_metadata(struct work_struct *w)
  			}
  		}
+@@ -2189,13 +2189,13 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 				strlcpy(key, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i)])],
+-					length);
++					keylen);
  
--		__bio_for_each_segment(bv, bio, iter, dio->orig_bi_iter) {
-+		__bio_for_each_segment(bv, bio, iter, dio->bio_details.bi_iter) {
- 			unsigned pos;
- 			char *mem, *checksums_ptr;
+ 			if (value != NULL)
+ 				strlcpy(value, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i) + 4])],
+-					length);
++					vallen);
  
-@@ -1583,7 +1576,7 @@ static void integrity_metadata(struct work_struct *w)
- 		if (likely(checksums != checksums_onstack))
- 			kfree(checksums);
- 	} else {
--		struct bio_integrity_payload *bip = dio->orig_bi_integrity;
-+		struct bio_integrity_payload *bip = dio->bio_details.bi_integrity;
- 
- 		if (bip) {
- 			struct bio_vec biv;
-@@ -2002,20 +1995,13 @@ static void dm_integrity_map_continue(struct dm_integrity_io *dio, bool from_map
- 	} else
- 		dio->completion = NULL;
- 
--	dio->orig_bi_iter = bio->bi_iter;
--
--	dio->orig_bi_disk = bio->bi_disk;
--	dio->orig_bi_partno = bio->bi_partno;
-+	dm_bio_record(&dio->bio_details, bio);
- 	bio_set_dev(bio, ic->dev->bdev);
--
--	dio->orig_bi_integrity = bio_integrity(bio);
- 	bio->bi_integrity = NULL;
- 	bio->bi_opf &= ~REQ_INTEGRITY;
--
--	dio->orig_bi_end_io = bio->bi_end_io;
- 	bio->bi_end_io = integrity_end_io;
--
- 	bio->bi_iter.bi_size = dio->range.n_sectors << SECTOR_SHIFT;
-+
- 	generic_make_request(bio);
- 
- 	if (need_sync_io) {
+ 			*offset = i + 1;
+ 		}
+@@ -2449,7 +2449,7 @@ int altera_init(struct altera_config *config, const struct firmware *fw)
+ 			__func__, (format_version == 2) ? "Jam STAPL" :
+ 						"pre-standardized Jam 1.1");
+ 		while (altera_get_note((u8 *)fw->data, fw->size,
+-					&offset, key, value, 256) == 0)
++					&offset, key, value, 32, 256) == 0)
+ 			printk(KERN_INFO "%s: NOTE \"%s\" = \"%s\"\n",
+ 					__func__, key, value);
+ 	}
 -- 
 2.20.1
 
