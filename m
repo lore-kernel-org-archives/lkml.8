@@ -2,172 +2,120 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C47C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7CCC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2A620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7B320679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584390763;
+	bh=nklUAC/alqRi607y+IxIxqF+82IeDZb9jP6+Nc9EVK4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Fxl+VBpEg9YbCulznr8jZfbWDvCd4K/qEXHCXsE5mLCHsInZAFzr+ttOhZQzcn7kk
+	 MLC16cdKo0dkChMfj96Fz6P0daYD68OvJwNk4I0zlcy6CnJ1SHxR7v3CnbjFE3chkH
+	 BrAjZ7NkEq0MzF3hTobcbfRcb6Fk0zDn9qkLXt0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732564AbgCPUbz (ORCPT
+        id S1732592AbgCPUcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:31:55 -0400
-Received: from mga02.intel.com ([134.134.136.20]:47055 "EHLO mga02.intel.com"
+        Mon, 16 Mar 2020 16:32:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732486AbgCPUbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:31:55 -0400
-IronPort-SDR: GiWWNE2F9Lz0Gr8sBeeXupiu0mjoYTvISIWAGVSFEd8zAPNZdK/eLXQV5MSC/S3b2N2fMxMAEW
- QzfsaS42+MKg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 13:31:54 -0700
-IronPort-SDR: xzRL6UNCMzmpCMbegDbeHR9mq7Kyu+8iNJBgKmHYRgAOXTA6WBtoFvt6Flxv4JlXNJ3IylRjKI
- iCU6dERy42kg==
-X-IronPort-AV: E=Sophos;i="5.70,561,1574150400"; 
-   d="scan'208";a="390829182"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.77.132]) ([10.254.77.132])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 13:31:54 -0700
-Subject: Re: [PATCH 10/10] cacheinfo: Move resctrl's get_cache_id() to the
- cacheinfo header file
-To:     James Morse <james.morse@arm.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>
-References: <20200214182401.39008-1-james.morse@arm.com>
- <20200214182401.39008-11-james.morse@arm.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <3a20be0d-4d5f-cc0b-38d9-1ad8d648acac@intel.com>
-Date:   Mon, 16 Mar 2020 13:31:53 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1732486AbgCPUcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 16:32:42 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FA4920663;
+        Mon, 16 Mar 2020 20:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584390761;
+        bh=nklUAC/alqRi607y+IxIxqF+82IeDZb9jP6+Nc9EVK4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=XYJPJxiPOf9exMhHRhTNBwNosOCCwOwVwPOPPUZQkzHevXiguzDXhUxeMDS2PAlOc
+         VMwN1W+kiT4a9kwnR5u6x8FjnfvknmRZT+Wi7o6DlwZ1Eb4dcqy6PrteY4UibOnXyp
+         hCnAUvCrbrFpFwQpXR1sG9n0HDVDOvrO1msHwAQo=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 282D43522DE1; Mon, 16 Mar 2020 13:32:41 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 13:32:41 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        "kernel-team@fb.com," <kernel-team@fb.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH RFC tip/core/rcu 09/16] rcu-tasks: Add an RCU-tasks rude
+ variant
+Message-ID: <20200316203241.GB3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
+ <20200312181702.8443-9-paulmck@kernel.org>
+ <20200316194754.GA172196@google.com>
+ <CAEXW_YREzQ8hMP_vGiQFiNAtwxPn_C0TG6mH68QaS8cES-Jr3Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200214182401.39008-11-james.morse@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YREzQ8hMP_vGiQFiNAtwxPn_C0TG6mH68QaS8cES-Jr3Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
-
-On 2/14/2020 10:24 AM, James Morse wrote:
-> resctrl/core.c defines get_cache_id() for use in its cpu-hotplug
-> callbacks. This gets the id attribute of the cache at the corresponding
-> level of a cpu.
+On Mon, Mar 16, 2020 at 04:17:51PM -0400, Joel Fernandes wrote:
+> On Mon, Mar 16, 2020 at 3:47 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > On Thu, Mar 12, 2020 at 11:16:55AM -0700, paulmck@kernel.org wrote:
+> > > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > >
+> > > This commit adds a "rude" variant of RCU-tasks that has as quiescent
+> > > states schedule(), cond_resched_tasks_rcu_qs(), userspace execution,
+> > > and (in theory, anyway) cond_resched().  Updates make use of IPIs and
+> > > force an IPI and a context switch on each online CPU.  This variant
+> > > is useful in some situations in tracing.
+> >
+> > Would it be possible to better clarify that the "rude version" works only
+> > from preempt-disabled regions? Is that also true for the "non-rude" version?
+> >
+> > Also it would be good to clarify better in cover letter, how these new
+> > flavors relate to the existing Tasks-RCU implementation.
+> >
+> > In the existing one, a quiescent state is a task updating its context switch
+> > counters such that it went to sleep at least once, implying there is no
+> > chance it is on an about to be destroyed trampoline.
+> >
+> > However, here we are trying to determine if a task state is no longer on an
+> > RQ (which I gleaned from the first patch). Sounds very similar, would the
+> > context switch counters not help in that determination as well? If it is Ok,
+> > it would be good to describe in cover letter about what is exactly is a
+> > quiescent state and what exactly is a reader section in the cover letter, for
+> > both non-rude and rude version. Thanks!
 > 
-> Later rework means this private function needs to be shared. Move
-> it to the header file.
-> 
-> The name conflicts with a different definition in intel_cacheinfo.c,
-> name it get_cpu_cacheinfo_id() to show its relation with
-> get_cpu_cacheinfo().
-> 
-> Now this is visible on other architectures, check the id attribute
-> has actually been set.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> ---
->  arch/x86/kernel/cpu/resctrl/core.c | 17 ++---------------
->  include/linux/cacheinfo.h          | 18 ++++++++++++++++++
->  2 files changed, 20 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-> index 7c9c4bd5fd32..f2968fb6fb9a 100644
-> --- a/arch/x86/kernel/cpu/resctrl/core.c
-> +++ b/arch/x86/kernel/cpu/resctrl/core.c
-> @@ -349,19 +349,6 @@ static void rdt_get_cdp_l2_config(void)
->  	rdt_get_cdp_config(RDT_RESOURCE_L2, RDT_RESOURCE_L2CODE);
->  }
->  
-> -static int get_cache_id(int cpu, int level)
-> -{
-> -	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
-> -	int i;
-> -
-> -	for (i = 0; i < ci->num_leaves; i++) {
-> -		if (ci->info_list[i].level == level)
-> -			return ci->info_list[i].id;
-> -	}
-> -
-> -	return -1;
-> -}
-> -
->  static void
->  mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
->  {
-> @@ -559,7 +546,7 @@ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_domain *d)
->   */
->  static void domain_add_cpu(int cpu, struct rdt_resource *r)
->  {
-> -	int id = get_cache_id(cpu, r->cache_level);
-> +	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
->  	struct list_head *add_pos = NULL;
->  	struct rdt_domain *d;
->  
-> @@ -603,7 +590,7 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
->  
->  static void domain_remove_cpu(int cpu, struct rdt_resource *r)
->  {
-> -	int id = get_cache_id(cpu, r->cache_level);
-> +	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
->  	struct rdt_domain *d;
->  
->  	d = rdt_find_domain(r, id, NULL);
-> diff --git a/include/linux/cacheinfo.h b/include/linux/cacheinfo.h
-> index 46b92cd61d0c..e210225ab7a8 100644
-> --- a/include/linux/cacheinfo.h
-> +++ b/include/linux/cacheinfo.h
-> @@ -3,6 +3,7 @@
->  #define _LINUX_CACHEINFO_H
->  
->  #include <linux/bitops.h>
-> +#include <linux/cpu.h>
->  #include <linux/cpumask.h>
->  #include <linux/smp.h>
->  
-> @@ -119,4 +120,21 @@ int acpi_find_last_cache_level(unsigned int cpu);
->  
->  const struct attribute_group *cache_get_priv_group(struct cacheinfo *this_leaf);
->  
-> +/* Get the id of a particular cache on @cpu. cpuhp lock must held. */
+> Just curious, why is the "rude" version better than SRCU? Seems the
+> schedule_on_each_cpu() would be much slower than SRCU especially if
+> there are 1000s of CPUs involved. Is there any reason that is a better
+> alternative?
 
-Technically the cache is not _on_ @cpu. How about "Get the id of the
-cache associated with @cpu at level @level"?
+The rude version has much faster readers, and the story I hear is that
+there are not expected to be all that many concurrent updaters.
 
-Also, s/must held/must be held/
+But to get more detail, why not ask Steven why he chose not to use SRCU?
+(I know the story for the BPF guys, and it is because of SRCU's read-side
+overhead.)
 
-> +static inline int get_cpu_cacheinfo_id(int cpu, int level)
-> +{
-> +	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
-> +	int i;
-> +
-> +	for (i = 0; i < ci->num_leaves; i++) {
-> +		if (ci->info_list[i].level == level){
-
-Typo here. Could you please insert a space before the open brace?
-
-> +			if (ci->info_list[i].attributes & CACHE_ID)
-> +				return ci->info_list[i].id;
-> +			return -1;
-> +		}
-> +	}
-> +
-> +	return -1;
-> +}
-> +
->  #endif /* _LINUX_CACHEINFO_H */
-> 
-
-The resctrl bits look good to me.
-
-Thank you
-
-Reinette
+							Thanx, Paul
