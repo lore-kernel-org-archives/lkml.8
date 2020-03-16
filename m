@@ -2,176 +2,288 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB8CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B732EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDEDE20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D00320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="KK07tLL6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tPWJ9tgH"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="a321yIZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732498AbgCPTqk (ORCPT
+        id S1732473AbgCPTr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 15:46:40 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:50351 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732413AbgCPTqj (ORCPT
+        Mon, 16 Mar 2020 15:47:59 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41143 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732413AbgCPTr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 15:46:39 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 744635C029C;
-        Mon, 16 Mar 2020 15:46:38 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 16 Mar 2020 15:46:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=F+L/RnrZWA8hJfqh8UJGEn/VcqJ
-        5iOlEAqD0BCAvsvY=; b=KK07tLL6ZJ3e7X2CN9KgOGpO4qt1O64GF8PxQ67q130
-        adM4yQTITcBvUGQBhSt4sCXYAQkgq+UX7dRVO0hYiAQKibFzuf5gQ64tul25QQX7
-        McsPYfpcn4/XXapnF3S2KXk7Viwm8WeJiw791xHsGr8ADeFFPQsewfSV6m2LKXhb
-        HJ9jR7tP5IimiA/7IiOI6qEDIDEq/JOysSZdHK6vZ9yyn+S9m9/RylqWGjp1Vt8Q
-        ileP4COWqCPo6EoT8YDfep83WWxuPmrd2V4Ow5mkAgrn1wxQBQOxu7YUqoAh3wnS
-        vs4L8xgU6DDNqgL3Ww0RCTKgx23eJBljjF+Aw7JgXQQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=F+L/Rn
-        rZWA8hJfqh8UJGEn/VcqJ5iOlEAqD0BCAvsvY=; b=tPWJ9tgHcSw/bOJ4yyHpMo
-        Urojvf0PHFsqBmjfaQD/pAhPYRB4JSo52OZrEmv0V74m+SzhpXtdvlyLq1MF9l1A
-        ChOP0G/g4IuXjOm6GhFaY2rWl080maNGYOphkASki9sxYitLhXjBtJGP1u5FLkp0
-        FMICmauDM7H0FY/h8MJI5JlS0nWaOCRx5eSrbgwoF+sZOUEQ0ObnscSHvVYWmVvZ
-        3BfdyfePHtHkrf3Fqwk+PblYSx+6hU0Gdvjs2s4uIfVmggZhq+19QviR1yIHB+Nq
-        AEe2AIsQevFxWs20WlJBFShejruPWFfU5hoAvQXwrsf37U+MnAeAtz9wTAUCwlDQ
-        ==
-X-ME-Sender: <xms:nddvXmw1QVmTZv6htHkGqvqqyKEO3LauCopZ3m1nP9p42M_P4IX9_w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeffedguddvjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehg
-    rhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:nddvXj0EAbEEpSe7UVC7ysp_GnLaEX40b64Ij7aYqHaFTwY2OwxZYA>
-    <xmx:nddvXnkyBFwmdlNamEyC2LJ215JHkqp8XaBtPN0FfnjtJtr5yX2yvA>
-    <xmx:nddvXi8FrZOPEnNu_fL8UrNFBBSVCzMPvfyh-_It6ELbq_9GXjdtOA>
-    <xmx:ntdvXqGgZezPTIZRUYZclW3eaJG5UCUYqFMEIWNV6x3Eg38OxJNuOg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3B9D930624CC;
-        Mon, 16 Mar 2020 15:46:37 -0400 (EDT)
-Date:   Mon, 16 Mar 2020 20:46:26 +0100
-From:   Greg KH <greg@kroah.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Felipe Balbi <balbi@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: linux-next: build failure after merge of the usb-gadget tree
-Message-ID: <20200316194626.GC327539@kroah.com>
-References: <20200316143752.473f1073@canb.auug.org.au>
- <CALAqxLVbG8C0h3OkCGOAQPpFjrwiqddjONTO-EGmhzz52LnKMw@mail.gmail.com>
- <CALAqxLXfgv0Wt_OhOvYUiorJaSP=9wJj2Nqs-7a5VAs=8T2SHA@mail.gmail.com>
+        Mon, 16 Mar 2020 15:47:59 -0400
+Received: by mail-qt1-f193.google.com with SMTP id i26so5595132qtq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 12:47:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9at46gZVGRmfo97kGLXCVY992jesaxTvYo4eKqTd6FA=;
+        b=a321yIZ+clDsY41c9h0HbtzYN1tZnrw7f6NTr1cAV7wXPX2/dFXECqHypR5Kxw7WkW
+         N1jw+h0X2auJTqkuVN3WORjxEBHwNeY2sAEMeo21DOns0wWsaX9dV8/ou9MYy2HFIsco
+         mhvVMad10W+pjQEtavQSZ9Dv0otNihtbOUu/o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9at46gZVGRmfo97kGLXCVY992jesaxTvYo4eKqTd6FA=;
+        b=nhjFGW2mdPceN26ggytFbP2H5WiKIOjRf7u00UsFF9XghDMnDrorbqdA+WWofKQ2/9
+         nBFHQm0iUqor8KXEgmIM3rRkemgjJBkTwNAr7bGP2WN9XdBMZhuORK7O49NvIA1AdAmx
+         NIjGNUMFqqVepoBa5TThlBdA56OdhO58gUXIW50aNsUyczIgu63hKX6NLyLWq7Jv3rDj
+         34FiiTQkTXGvez/T7WkKLxnwattcEX3Z7OE6v35gX/pvu7DiGOPoVle8lUMIu2SzQEYG
+         BJBoxsvQA5MPgRHR7xOg4O+se8g4+5DJhveLF3LeDZgPiw7hI8f8jq0WNI1piOIAoNOB
+         hycw==
+X-Gm-Message-State: ANhLgQ0niZg2NId4asEno3ZPEa7hqWWnB4AKTsSVyFBrJjvEwKABlxsx
+        Mi78ckr9A5P5P3SnV3ok3k9gWw==
+X-Google-Smtp-Source: ADFU+vsmPPLATxBvZU3v2EvXbYV/FvEQlJE1xFA+xr0v7kSWjBpOblBoDbSj/C8pxzG9wL5RFUcVVw==
+X-Received: by 2002:ac8:7511:: with SMTP id u17mr1751667qtq.316.1584388075704;
+        Mon, 16 Mar 2020 12:47:55 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id r4sm431401qkm.98.2020.03.16.12.47.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 12:47:55 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 15:47:54 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     paulmck@kernel.org
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com
+Subject: Re: [PATCH RFC tip/core/rcu 09/16] rcu-tasks: Add an RCU-tasks rude
+ variant
+Message-ID: <20200316194754.GA172196@google.com>
+References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
+ <20200312181702.8443-9-paulmck@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALAqxLXfgv0Wt_OhOvYUiorJaSP=9wJj2Nqs-7a5VAs=8T2SHA@mail.gmail.com>
+In-Reply-To: <20200312181702.8443-9-paulmck@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 11:11:00AM -0700, John Stultz wrote:
-> On Mon, Mar 16, 2020 at 10:42 AM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Sun, Mar 15, 2020 at 8:37 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > After merging the usb-gadget tree, today's linux-next build (arm
-> > > multi_v7_defconfig) failed like this:
-> > >
-> > > drivers/usb/dwc3/drd.c: In function 'dwc3_setup_role_switch':
-> > > drivers/usb/dwc3/drd.c:551:23: error: assignment to 'usb_role_switch_set_t' {aka 'int (*)(struct usb_role_switch *, enum usb_role)'} from incompatible pointer type 'int (*)(struct device *, enum usb_role)' [-Werror=incompatible-pointer-types]
-> > >   551 |  dwc3_role_switch.set = dwc3_usb_role_switch_set;
-> > >       |                       ^
-> > > drivers/usb/dwc3/drd.c:552:23: error: assignment to 'usb_role_switch_get_t' {aka 'enum usb_role (*)(struct usb_role_switch *)'} from incompatible pointer type 'enum usb_role (*)(struct device *)' [-Werror=incompatible-pointer-types]
-> > >   552 |  dwc3_role_switch.get = dwc3_usb_role_switch_get;
-> > >       |                       ^
-> > >
-> > > Caused by commit
-> > >
-> > >   8a0a13799744 ("usb: dwc3: Registering a role switch in the DRD code.")
-> > >
-> > > interacting with commit
-> > >
-> > >   bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the switch in the API")
-> > >
-> > > from the usb tree.
-> > >
-> > > I have added the following merge fix patch (which may need more work):
-> > >
-> > > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > Date: Mon, 16 Mar 2020 14:34:31 +1100
-> > > Subject: [PATCH] usb: dwc3: fix up for role switch API change
-> > >
-> > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > ---
-> > >  drivers/usb/dwc3/drd.c | 10 ++++++----
-> > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-> > > index db68d48c2267..7db1ffc92bbd 100644
-> > > --- a/drivers/usb/dwc3/drd.c
-> > > +++ b/drivers/usb/dwc3/drd.c
-> > > @@ -478,9 +478,10 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
-> > >
-> > >  #if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
-> > >  #define ROLE_SWITCH 1
-> > > -static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-> > > +static int dwc3_usb_role_switch_set(struct usb_role_switch *sw,
-> > > +                                   enum usb_role role)
-> > >  {
-> > > -       struct dwc3 *dwc = dev_get_drvdata(dev);
-> > > +       struct dwc3 *dwc = usb_role_switch_get_drvdata(sw);
-> > >         u32 mode;
-> > >
-> > >         switch (role) {
-> > > @@ -502,9 +503,9 @@ static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-> > >         return 0;
-> > >  }
-> > >
-> > > -static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
-> > > +static enum usb_role dwc3_usb_role_switch_get(struct usb_role_switch *sw)
-> > >  {
-> > > -       struct dwc3 *dwc = dev_get_drvdata(dev);
-> > > +       struct dwc3 *dwc = usb_role_switch_get_drvdata(sw);
-> > >         unsigned long flags;
-> > >         enum usb_role role;
-> > >
-> > > @@ -550,6 +551,7 @@ static int dwc3_setup_role_switch(struct dwc3 *dwc)
-> > >         dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
-> > >         dwc3_role_switch.set = dwc3_usb_role_switch_set;
-> > >         dwc3_role_switch.get = dwc3_usb_role_switch_get;
-> > > +       dwc3_role_switch.driver_data = dwc;
-> > >         dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
-> > >         if (IS_ERR(dwc->role_sw))
-> > >                 return PTR_ERR(dwc->role_sw);
-> >
-> > Yes, thanks. Bryan pointed out there was a problem with the internal
-> > api change in -next, and I intended to resend the set this week.
-> > Your solution looks like what I have in my tree at first glance, but
-> > I'll double check to be sure.
+On Thu, Mar 12, 2020 at 11:16:55AM -0700, paulmck@kernel.org wrote:
+> From: "Paul E. McKenney" <paulmck@kernel.org>
 > 
-> Yes. Just confirmed its the same as what I had in my tree.
-> 
-> Acked-by: John Stultz <john.stultz@linaro.org>
-> 
-> Greg: Could you pull Stephen's fix into your tree?
+> This commit adds a "rude" variant of RCU-tasks that has as quiescent
+> states schedule(), cond_resched_tasks_rcu_qs(), userspace execution,
+> and (in theory, anyway) cond_resched().  Updates make use of IPIs and
+> force an IPI and a context switch on each online CPU.  This variant
+> is useful in some situations in tracing.
 
-It's been there for many hours now :)
+Would it be possible to better clarify that the "rude version" works only
+from preempt-disabled regions? Is that also true for the "non-rude" version?
+
+Also it would be good to clarify better in cover letter, how these new
+flavors relate to the existing Tasks-RCU implementation.
+
+In the existing one, a quiescent state is a task updating its context switch
+counters such that it went to sleep at least once, implying there is no
+chance it is on an about to be destroyed trampoline.
+
+However, here we are trying to determine if a task state is no longer on an
+RQ (which I gleaned from the first patch). Sounds very similar, would the
+context switch counters not help in that determination as well? If it is Ok,
+it would be good to describe in cover letter about what is exactly is a
+quiescent state and what exactly is a reader section in the cover letter, for
+both non-rude and rude version. Thanks!
+
+thanks,
+
+ - Joel
+
+
+
+> 
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> ---
+>  include/linux/rcupdate.h |  3 ++
+>  kernel/rcu/Kconfig       | 12 +++++-
+>  kernel/rcu/tasks.h       | 99 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 113 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> index 5523145..2be97a8 100644
+> --- a/include/linux/rcupdate.h
+> +++ b/include/linux/rcupdate.h
+> @@ -37,6 +37,7 @@
+>  /* Exported common interfaces */
+>  void call_rcu(struct rcu_head *head, rcu_callback_t func);
+>  void rcu_barrier_tasks(void);
+> +void rcu_barrier_tasks_rude(void);
+>  void synchronize_rcu(void);
+>  
+>  #ifdef CONFIG_PREEMPT_RCU
+> @@ -138,6 +139,8 @@ static inline void rcu_init_nohz(void) { }
+>  #define rcu_note_voluntary_context_switch(t) rcu_tasks_qs(t)
+>  void call_rcu_tasks(struct rcu_head *head, rcu_callback_t func);
+>  void synchronize_rcu_tasks(void);
+> +void call_rcu_tasks_rude(struct rcu_head *head, rcu_callback_t func);
+> +void synchronize_rcu_tasks_rude(void);
+>  void exit_tasks_rcu_start(void);
+>  void exit_tasks_rcu_finish(void);
+>  #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
+> diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+> index 38475d0..0d43ec1 100644
+> --- a/kernel/rcu/Kconfig
+> +++ b/kernel/rcu/Kconfig
+> @@ -71,7 +71,7 @@ config TREE_SRCU
+>  	  This option selects the full-fledged version of SRCU.
+>  
+>  config TASKS_RCU_GENERIC
+> -	def_bool TASKS_RCU
+> +	def_bool TASKS_RCU || TASKS_RUDE_RCU
+>  	select SRCU
+>  	help
+>  	  This option enables generic infrastructure code supporting
+> @@ -84,6 +84,16 @@ config TASKS_RCU
+>  	  only voluntary context switch (not preemption!), idle, and
+>  	  user-mode execution as quiescent states.  Not for manual selection.
+>  
+> +config TASKS_RUDE_RCU
+> +	def_bool 0
+> +	default n
+> +	help
+> +	  This option enables a task-based RCU implementation that uses
+> +	  only context switch (including preemption) and user-mode
+> +	  execution as quiescent states.  It forces IPIs and context
+> +	  switches on all online CPUs, including idle ones, so use
+> +	  with caution.  Not for manual selection.
+> +
+>  config RCU_STALL_COMMON
+>  	def_bool TREE_RCU
+>  	help
+> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> index d77921e..1d25c50 100644
+> --- a/kernel/rcu/tasks.h
+> +++ b/kernel/rcu/tasks.h
+> @@ -180,6 +180,9 @@ static void __init rcu_tasks_bootup_oddness(void)
+>  	else
+>  		pr_info("\tTasks RCU enabled.\n");
+>  #endif /* #ifdef CONFIG_TASKS_RCU */
+> +#ifdef CONFIG_TASKS_RUDE_RCU
+> +	pr_info("\tRude variant of Tasks RCU enabled.\n");
+> +#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
+>  }
+>  
+>  #endif /* #ifndef CONFIG_TINY_RCU */
+> @@ -410,3 +413,99 @@ static int __init rcu_spawn_tasks_kthread(void)
+>  core_initcall(rcu_spawn_tasks_kthread);
+>  
+>  #endif /* #ifdef CONFIG_TASKS_RCU */
+> +
+> +#ifdef CONFIG_TASKS_RUDE_RCU
+> +
+> +////////////////////////////////////////////////////////////////////////
+> +//
+> +// "Rude" variant of Tasks RCU, inspired by Steve Rostedt's trick of
+> +// passing an empty function to schedule_on_each_cpu().  This approach
+> +// provides an asynchronous call_rcu_rude() API and batching of concurrent
+> +// calls to the synchronous synchronize_rcu_rude() API.  This sends IPIs
+> +// far and wide and induces otherwise unnecessary context switches on all
+> +// online CPUs, whether online or not.
+> +
+> +// Empty function to allow workqueues to force a context switch.
+> +static void rcu_tasks_be_rude(struct work_struct *work)
+> +{
+> +}
+> +
+> +// Wait for one rude RCU-tasks grace period.
+> +static void rcu_tasks_rude_wait_gp(struct rcu_tasks *rtp)
+> +{
+> +	schedule_on_each_cpu(rcu_tasks_be_rude);
+> +}
+> +EXPORT_SYMBOL_GPL(rcu_tasks_rude_wait_gp);
+> +
+> +void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func);
+> +DEFINE_RCU_TASKS(rcu_tasks_rude, rcu_tasks_rude_wait_gp, call_rcu_tasks_rude);
+> +
+> +/**
+> + * call_rcu_tasks_rude() - Queue a callback rude task-based grace period
+> + * @rhp: structure to be used for queueing the RCU updates.
+> + * @func: actual callback function to be invoked after the grace period
+> + *
+> + * The callback function will be invoked some time after a full grace
+> + * period elapses, in other words after all currently executing RCU
+> + * read-side critical sections have completed. call_rcu_tasks_rude()
+> + * assumes that the read-side critical sections end at context switch,
+> + * cond_resched_rcu_qs(), or transition to usermode execution.  As such,
+> + * there are no read-side primitives analogous to rcu_read_lock() and
+> + * rcu_read_unlock() because this primitive is intended to determine
+> + * that all tasks have passed through a safe state, not so much for
+> + * data-strcuture synchronization.
+> + *
+> + * See the description of call_rcu() for more detailed information on
+> + * memory ordering guarantees.
+> + */
+> +void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func)
+> +{
+> +	call_rcu_tasks_generic(rhp, func, &rcu_tasks_rude);
+> +}
+> +EXPORT_SYMBOL_GPL(call_rcu_tasks_rude);
+> +
+> +/**
+> + * synchronize_rcu_tasks_rude - wait for a rude rcu-tasks grace period
+> + *
+> + * Control will return to the caller some time after a rude rcu-tasks
+> + * grace period has elapsed, in other words after all currently
+> + * executing rcu-tasks read-side critical sections have elapsed.  These
+> + * read-side critical sections are delimited by calls to schedule(),
+> + * cond_resched_tasks_rcu_qs(), userspace execution, and (in theory,
+> + * anyway) cond_resched().
+> + *
+> + * This is a very specialized primitive, intended only for a few uses in
+> + * tracing and other situations requiring manipulation of function preambles
+> + * and profiling hooks.  The synchronize_rcu_tasks_rude() function is not
+> + * (yet) intended for heavy use from multiple CPUs.
+> + *
+> + * See the description of synchronize_rcu() for more detailed information
+> + * on memory ordering guarantees.
+> + */
+> +void synchronize_rcu_tasks_rude(void)
+> +{
+> +	synchronize_rcu_tasks_generic(&rcu_tasks_rude);
+> +}
+> +EXPORT_SYMBOL_GPL(synchronize_rcu_tasks_rude);
+> +
+> +/**
+> + * rcu_barrier_tasks_rude - Wait for in-flight call_rcu_tasks_rude() callbacks.
+> + *
+> + * Although the current implementation is guaranteed to wait, it is not
+> + * obligated to, for example, if there are no pending callbacks.
+> + */
+> +void rcu_barrier_tasks_rude(void)
+> +{
+> +	/* There is only one callback queue, so this is easy.  ;-) */
+> +	synchronize_rcu_tasks_rude();
+> +}
+> +EXPORT_SYMBOL_GPL(rcu_barrier_tasks_rude);
+> +
+> +static int __init rcu_spawn_tasks_rude_kthread(void)
+> +{
+> +	rcu_spawn_tasks_kthread_generic(&rcu_tasks_rude);
+> +	return 0;
+> +}
+> +core_initcall(rcu_spawn_tasks_rude_kthread);
+> +
+> +#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
+> -- 
+> 2.9.5
+> 
