@@ -2,96 +2,83 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61F6C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD0BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19FD20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9903720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732705AbgCPVaI (ORCPT
+        id S1732707AbgCPVcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:30:08 -0400
-Received: from mga18.intel.com ([134.134.136.126]:6232 "EHLO mga18.intel.com"
+        Mon, 16 Mar 2020 17:32:07 -0400
+Received: from mga01.intel.com ([192.55.52.88]:42901 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732567AbgCPVaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:30:08 -0400
-IronPort-SDR: +Dc5zwygM1wkp0rLJA0xqpbWtEwvAHI/d5SWbG8gpU/Xzja9MMCeXtPzYVLP/Uz3yeGewW9vxV
- NNBPjKjFbn6Q==
+        id S1732567AbgCPVcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 17:32:07 -0400
+IronPort-SDR: BI6mbEcmNQGlbKFaWDHke0cGXJezZn25IKnf/yVzi6MSa20aZ2vlzAt+NzFw87NBPkD9MdlbDA
+ sxc4rVL8pIPw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 14:30:07 -0700
-IronPort-SDR: AIMDdKRJtMZydTFlW4tt9zT6zaAKwOMzVPMm2h5MaPSCZKm4+n+PU9YNAwbg2et54nQCTOpvaI
- 4G2Q/NqGsB+Q==
-X-ExtLoop1: 1
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 14:32:07 -0700
+IronPort-SDR: wNJfGrDR8FMZpt0WsJCTaiAL5mYOWrUGAELduYzhXGYJ/9Zklk75fV4srJXrHTT2IqiHHjLy+a
+ ODW+nGj0dC7g==
 X-IronPort-AV: E=Sophos;i="5.70,561,1574150400"; 
-   d="scan'208";a="244273851"
-Received: from oaizenbe-mobl.ger.corp.intel.com ([10.254.149.199])
-  by orsmga003.jf.intel.com with ESMTP; 16 Mar 2020 14:29:52 -0700
-Message-ID: <11e9de481f37a5160fe0d82dcbd7beb9d100748d.camel@linux.intel.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>,
-        Jethro Beekman <jethro@fortanix.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Date:   Mon, 16 Mar 2020 23:29:51 +0200
-In-Reply-To: <20d3cc40d559a854a7984543acdacb61a2d51b8d.camel@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
-         <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
-         <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
-         <20200315012523.GC208715@linux.intel.com>
-         <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
-         <7f9f2efe-e9af-44da-6719-040600f5b351@fortanix.com>
-         <CAOASepNifZdBmg59sJcP1mqSYMW_C=KsdKq-fCmvAU_5iQ9DFw@mail.gmail.com>
-         <20d3cc40d559a854a7984543acdacb61a2d51b8d.camel@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.35.92-1 
+   d="scan'208";a="236143000"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 14:32:07 -0700
+From:   ira.weiny@intel.com
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>, Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [RESEND] memremap: Remove stale comments
+Date:   Mon, 16 Mar 2020 14:32:05 -0700
+Message-Id: <20200316213205.145333-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-16 at 23:27 +0200, Jarkko Sakkinen wrote:
-> On Mon, 2020-03-16 at 09:57 -0400, Nathaniel McCallum wrote:
-> > For the vDSO, only marginally. I'm counting +4,-2 instructions in my
-> > suggestions. For the wrapper, things become significantly simpler.
-> 
-> Simpler is not a quality that has very high importance here except
-> when it comes to vDSO.
-> 
-> At least it is not enough to change to vDSO. What else?
-                                      ~~
-                                      the
+From: Ira Weiny <ira.weiny@intel.com>
 
-In any case, where I stand is that the vDSO implementation itself is
-exactly how it should be. The process to get it to this form was
-tedious. Now we have a form that the known userbase can live with.
+Fixes: 80a72d0af05a ("memremap: remove the data field in struct dev_pagemap")
+Fixes: fdc029b19dfd ("memremap: remove the dev field in struct dev_pagemap")
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-The documentation sucks, agreed. I think by fixing that this would
-be a wholelot better.
+---
+Resending to Andrew as Jason wanted him to take this:
 
-/Jarkko
-                                         
+https://lore.kernel.org/lkml/20200316182121.GL20941@ziepe.ca/
+
+Thanks,
+Ira
+
+ include/linux/memremap.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+index 6fefb09af7c3..edfd1ec6c165 100644
+--- a/include/linux/memremap.h
++++ b/include/linux/memremap.h
+@@ -98,8 +98,6 @@ struct dev_pagemap_ops {
+  * @ref: reference count that pins the devm_memremap_pages() mapping
+  * @internal_ref: internal reference if @ref is not provided by the caller
+  * @done: completion for @internal_ref
+- * @dev: host device of the mapping for debug
+- * @data: private data pointer for page_free()
+  * @type: memory type: see MEMORY_* in memory_hotplug.h
+  * @flags: PGMAP_* flags to specify defailed behavior
+  * @ops: method table
+-- 
+2.23.0
 
