@@ -4,152 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19152C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44343C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF907206B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A33420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730369AbgCPJQ2 (ORCPT
+        id S1730405AbgCPJQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:16:28 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:42698 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730056AbgCPJQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:16:28 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 310F91A094F;
-        Mon, 16 Mar 2020 10:16:26 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 349B51A0945;
-        Mon, 16 Mar 2020 10:16:23 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3CAD2402C4;
-        Mon, 16 Mar 2020 17:16:19 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] rtc: mxc: Use devm_add_action_or_reset() for calls to clk_disable_unprepare()
-Date:   Mon, 16 Mar 2020 17:09:45 +0800
-Message-Id: <1584349785-27042-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 16 Mar 2020 05:16:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56309 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730025AbgCPJQ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:16:57 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jDlrh-0006T8-Od; Mon, 16 Mar 2020 09:16:53 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: fix spelling mistake "exceds" -> "exceeds"
+Date:   Mon, 16 Mar 2020 09:16:53 +0000
+Message-Id: <20200316091653.110984-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_add_action_or_reset() for calls to clk_disable_unprepare(),
-which can simplify the error handling, and .remove callback can be dropped.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+There are a couple of spelling mistakes in dev_err error messages.
+Fix them.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/rtc/rtc-mxc.c | 46 +++++++++++++++++++---------------------------
- 1 file changed, 19 insertions(+), 27 deletions(-)
+ drivers/dma/sh/rcar-dmac.c  | 2 +-
+ drivers/dma/sh/shdma-base.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-mxc.c b/drivers/rtc/rtc-mxc.c
-index 902d57d..a8cfbde 100644
---- a/drivers/rtc/rtc-mxc.c
-+++ b/drivers/rtc/rtc-mxc.c
-@@ -307,6 +307,14 @@ static const struct rtc_class_ops mxc_rtc_ops = {
- 	.alarm_irq_enable	= mxc_rtc_alarm_irq_enable,
- };
- 
-+static void mxc_rtc_action(void *p)
-+{
-+	struct rtc_plat_data *pdata = p;
-+
-+	clk_disable_unprepare(pdata->clk_ref);
-+	clk_disable_unprepare(pdata->clk_ipg);
-+}
-+
- static int mxc_rtc_probe(struct platform_device *pdev)
- {
- 	struct rtc_device *rtc;
-@@ -366,14 +374,20 @@ static int mxc_rtc_probe(struct platform_device *pdev)
- 
- 	pdata->clk_ref = devm_clk_get(&pdev->dev, "ref");
- 	if (IS_ERR(pdata->clk_ref)) {
-+		clk_disable_unprepare(pdata->clk_ipg);
- 		dev_err(&pdev->dev, "unable to get ref clock!\n");
--		ret = PTR_ERR(pdata->clk_ref);
--		goto exit_put_clk_ipg;
-+		return PTR_ERR(pdata->clk_ref);
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index f06016d38a05..59b36ab5d684 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1219,7 +1219,7 @@ rcar_dmac_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr,
+ 	sg_len = buf_len / period_len;
+ 	if (sg_len > RCAR_DMAC_MAX_SG_LEN) {
+ 		dev_err(chan->device->dev,
+-			"chan%u: sg length %d exceds limit %d",
++			"chan%u: sg length %d exceeds limit %d",
+ 			rchan->index, sg_len, RCAR_DMAC_MAX_SG_LEN);
+ 		return NULL;
  	}
+diff --git a/drivers/dma/sh/shdma-base.c b/drivers/dma/sh/shdma-base.c
+index c51de498b5b4..2deeaab078a4 100644
+--- a/drivers/dma/sh/shdma-base.c
++++ b/drivers/dma/sh/shdma-base.c
+@@ -709,7 +709,7 @@ static struct dma_async_tx_descriptor *shdma_prep_dma_cyclic(
+ 	BUG_ON(!schan->desc_num);
  
- 	ret = clk_prepare_enable(pdata->clk_ref);
-+	if (ret) {
-+		clk_disable_unprepare(pdata->clk_ipg);
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(&pdev->dev, mxc_rtc_action, pdata);
- 	if (ret)
--		goto exit_put_clk_ipg;
-+		return ret;
- 
- 	rate = clk_get_rate(pdata->clk_ref);
- 
-@@ -385,16 +399,14 @@ static int mxc_rtc_probe(struct platform_device *pdev)
- 		reg = RTC_INPUT_CLK_38400HZ;
- 	else {
- 		dev_err(&pdev->dev, "rtc clock is not valid (%lu)\n", rate);
--		ret = -EINVAL;
--		goto exit_put_clk_ref;
-+		return -EINVAL;
+ 	if (sg_len > SHDMA_MAX_SG_LEN) {
+-		dev_err(schan->dev, "sg length %d exceds limit %d",
++		dev_err(schan->dev, "sg length %d exceeds limit %d",
+ 				sg_len, SHDMA_MAX_SG_LEN);
+ 		return NULL;
  	}
- 
- 	reg |= RTC_ENABLE_BIT;
- 	writew(reg, (pdata->ioaddr + RTC_RTCCTL));
- 	if (((readw(pdata->ioaddr + RTC_RTCCTL)) & RTC_ENABLE_BIT) == 0) {
- 		dev_err(&pdev->dev, "hardware module can't be enabled!\n");
--		ret = -EIO;
--		goto exit_put_clk_ref;
-+		return -EIO;
- 	}
- 
- 	platform_set_drvdata(pdev, pdata);
-@@ -417,29 +429,10 @@ static int mxc_rtc_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = rtc_register_device(rtc);
--	if (ret)
--		goto exit_put_clk_ref;
--
--	return 0;
--
--exit_put_clk_ref:
--	clk_disable_unprepare(pdata->clk_ref);
--exit_put_clk_ipg:
--	clk_disable_unprepare(pdata->clk_ipg);
- 
- 	return ret;
- }
- 
--static int mxc_rtc_remove(struct platform_device *pdev)
--{
--	struct rtc_plat_data *pdata = platform_get_drvdata(pdev);
--
--	clk_disable_unprepare(pdata->clk_ref);
--	clk_disable_unprepare(pdata->clk_ipg);
--
--	return 0;
--}
--
- static struct platform_driver mxc_rtc_driver = {
- 	.driver = {
- 		   .name	= "mxc_rtc",
-@@ -447,7 +440,6 @@ static struct platform_driver mxc_rtc_driver = {
- 	},
- 	.id_table = imx_rtc_devtype,
- 	.probe = mxc_rtc_probe,
--	.remove = mxc_rtc_remove,
- };
- 
- module_platform_driver(mxc_rtc_driver)
 -- 
-2.7.4
+2.25.1
 
