@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE7FC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C73C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D60D20737
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463EA20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326049;
-	bh=kfUWbnTeMtmznHS2XI+DY12FQ9bzL1Ohz2f03135/Vs=;
+	s=default; t=1584326053;
+	bh=cCg0M0loROU58Zt2BRB0MoP92hqsihIZYRkM3zwyyRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMVzcKXI7s8JY3kqxBWxrZU7SrrLIEdxCAGcXNx8kCOsb8JUjS74/V8QbvuQkfNTv
-	 Xub1iFvySgEDL/a26OqglX2lphoQ5VrG9QTCLbSpSsZ+tIrosZASv5CWO0b9Z/GS0d
-	 fL7DMGtsk6fKEz/OJNb8fKfYgYs9fRXRNKG4In3s=
+	b=uoLzoiMAOaiSLQfbsLxYAoY5opbft5CeNz3vjLG4H+tiPZa1QJAzoQVvjgRBUBg9d
+	 90r+AyD8PIFZ5jbIyk0XbWIhBHNaDTfAlEpYoFm5qEJG9/cqNEJjHvkfkUl4Iz77J/
+	 y8TIIqDwToGDWsLZ0VX5IeM6I8N+Rl9Y2vUwhGsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgCPCeI (ORCPT
+        id S1729796AbgCPCeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:34:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37256 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbgCPCeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:06 -0400
+        id S1729777AbgCPCeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD6032072A;
-        Mon, 16 Mar 2020 02:34:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7030120726;
+        Mon, 16 Mar 2020 02:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326045;
-        bh=kfUWbnTeMtmznHS2XI+DY12FQ9bzL1Ohz2f03135/Vs=;
+        s=default; t=1584326049;
+        bh=cCg0M0loROU58Zt2BRB0MoP92hqsihIZYRkM3zwyyRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1/UwPJSIKYUyGkWJNi0p4PpXttYjfdGxcHGEa8l21KyVYOhXKbwvQ0cr/ukRfxXFL
-         b42yYZdcCzVz7eJV9cHHl++D6v+8You17CDSLYPY3oJ2OHc/m1lgABexWbj7bx4Sr3
-         JZ7j826pVnYwPM7m2Aqn2iXMK/a2zgXYfwJ6oDn8=
+        b=KWL3pWbjXJfFfFs+oJnvQLlToapXO9JKU6+KSTFIMbNLLfYcJCQ5lxyTkl3J7J+ae
+         RFbT65nzR1DX93pmt6vjUiEs7yZRBmHkABjh9Ax3Ct8iUIPsm8VssQJPRYulEqZqqy
+         wvIctqijqI48aXudkADLDrEND9hnUSymkxF4ADHs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-riscv@lists.infradead.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 38/41] riscv: fix seccomp reject syscall code path
-Date:   Sun, 15 Mar 2020 22:33:16 -0400
-Message-Id: <20200316023319.749-38-sashal@kernel.org>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 41/41] io_uring: fix lockup with timeouts
+Date:   Sun, 15 Mar 2020 22:33:19 -0400
+Message-Id: <20200316023319.749-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
@@ -63,147 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tycho Andersen <tycho@tycho.ws>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit af33d2433b03d63ed31fcfda842f46676a5e1afc ]
+[ Upstream commit f0e20b8943509d81200cef5e30af2adfddba0f5c ]
 
-If secure_computing() rejected a system call, we were previously setting
-the system call number to -1, to indicate to later code that the syscall
-failed. However, if something (e.g. a user notification) was sleeping, and
-received a signal, we may set a0 to -ERESTARTSYS and re-try the system call
-again.
+There is a recipe to deadlock the kernel: submit a timeout sqe with a
+linked_timeout (e.g.  test_single_link_timeout_ception() from liburing),
+and SIGKILL the process.
 
-In this case, seccomp "denies" the syscall (because of the signal), and we
-would set a7 to -1, thus losing the value of the system call we want to
-restart.
+Then, io_kill_timeouts() takes @ctx->completion_lock, but the timeout
+isn't flagged with REQ_F_COMP_LOCKED, and will try to double grab it
+during io_put_free() to cancel the linked timeout. Probably, the same
+can happen with another io_kill_timeout() call site, that is
+io_commit_cqring().
 
-Instead, let's return -1 from do_syscall_trace_enter() to indicate that the
-syscall was rejected, so we don't clobber the value in case of -ERESTARTSYS
-or whatever.
-
-This commit fixes the user_notification_signal seccomp selftest on riscv to
-no longer hang. That test expects the system call to be re-issued after the
-signal, and it wasn't due to the above bug. Now that it is, everything
-works normally.
-
-Note that in the ptrace (tracer) case, the tracer can set the register
-values to whatever they want, so we still need to keep the code that
-handles out-of-bounds syscalls. However, we can drop the comment.
-
-We can also drop syscall_set_nr(), since it is no longer used anywhere, and
-the code that re-loads the value in a7 because of it.
-
-Reported in: https://lore.kernel.org/bpf/CAEn-LTp=ss0Dfv6J00=rCAy+N78U2AmhqJNjfqjr2FDpPYjxEQ@mail.gmail.com/
-
-Reported-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/include/asm/syscall.h |  7 -------
- arch/riscv/kernel/entry.S        | 11 +++--------
- arch/riscv/kernel/ptrace.c       | 11 +++++------
- 3 files changed, 8 insertions(+), 21 deletions(-)
+ fs/io_uring.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
-index 42347d0981e7e..49350c8bd7b09 100644
---- a/arch/riscv/include/asm/syscall.h
-+++ b/arch/riscv/include/asm/syscall.h
-@@ -28,13 +28,6 @@ static inline int syscall_get_nr(struct task_struct *task,
- 	return regs->a7;
- }
- 
--static inline void syscall_set_nr(struct task_struct *task,
--				  struct pt_regs *regs,
--				  int sysno)
--{
--	regs->a7 = sysno;
--}
--
- static inline void syscall_rollback(struct task_struct *task,
- 				    struct pt_regs *regs)
- {
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index e163b7b64c86c..f6486d4956013 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -228,20 +228,13 @@ check_syscall_nr:
- 	/* Check to make sure we don't jump to a bogus syscall number. */
- 	li t0, __NR_syscalls
- 	la s0, sys_ni_syscall
--	/*
--	 * The tracer can change syscall number to valid/invalid value.
--	 * We use syscall_set_nr helper in syscall_trace_enter thus we
--	 * cannot trust the current value in a7 and have to reload from
--	 * the current task pt_regs.
--	 */
--	REG_L a7, PT_A7(sp)
- 	/*
- 	 * Syscall number held in a7.
- 	 * If syscall number is above allowed value, redirect to ni_syscall.
- 	 */
- 	bge a7, t0, 1f
- 	/*
--	 * Check if syscall is rejected by tracer or seccomp, i.e., a7 == -1.
-+	 * Check if syscall is rejected by tracer, i.e., a7 == -1.
- 	 * If yes, we pretend it was executed.
- 	 */
- 	li t1, -1
-@@ -334,6 +327,7 @@ work_resched:
- handle_syscall_trace_enter:
- 	move a0, sp
- 	call do_syscall_trace_enter
-+	move t0, a0
- 	REG_L a0, PT_A0(sp)
- 	REG_L a1, PT_A1(sp)
- 	REG_L a2, PT_A2(sp)
-@@ -342,6 +336,7 @@ handle_syscall_trace_enter:
- 	REG_L a5, PT_A5(sp)
- 	REG_L a6, PT_A6(sp)
- 	REG_L a7, PT_A7(sp)
-+	bnez t0, ret_from_syscall_rejected
- 	j check_syscall_nr
- handle_syscall_trace_exit:
- 	move a0, sp
-diff --git a/arch/riscv/kernel/ptrace.c b/arch/riscv/kernel/ptrace.c
-index 407464201b91e..444dc7b0fd78c 100644
---- a/arch/riscv/kernel/ptrace.c
-+++ b/arch/riscv/kernel/ptrace.c
-@@ -148,21 +148,19 @@ long arch_ptrace(struct task_struct *child, long request,
-  * Allows PTRACE_SYSCALL to work.  These are called from entry.S in
-  * {handle,ret_from}_syscall.
-  */
--__visible void do_syscall_trace_enter(struct pt_regs *regs)
-+__visible int do_syscall_trace_enter(struct pt_regs *regs)
- {
- 	if (test_thread_flag(TIF_SYSCALL_TRACE))
- 		if (tracehook_report_syscall_entry(regs))
--			syscall_set_nr(current, regs, -1);
-+			return -1;
- 
- 	/*
- 	 * Do the secure computing after ptrace; failures should be fast.
- 	 * If this fails we might have return value in a0 from seccomp
- 	 * (via SECCOMP_RET_ERRNO/TRACE).
- 	 */
--	if (secure_computing() == -1) {
--		syscall_set_nr(current, regs, -1);
--		return;
--	}
-+	if (secure_computing() == -1)
-+		return -1;
- 
- #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
- 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
-@@ -170,6 +168,7 @@ __visible void do_syscall_trace_enter(struct pt_regs *regs)
- #endif
- 
- 	audit_syscall_entry(regs->a7, regs->a0, regs->a1, regs->a2, regs->a3);
-+	return 0;
- }
- 
- __visible void do_syscall_trace_exit(struct pt_regs *regs)
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 60a4832089982..fd28f85677225 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -688,6 +688,7 @@ static void io_kill_timeout(struct io_kiocb *req)
+ 	if (ret != -1) {
+ 		atomic_inc(&req->ctx->cq_timeouts);
+ 		list_del_init(&req->list);
++		req->flags |= REQ_F_COMP_LOCKED;
+ 		io_cqring_fill_event(req, 0);
+ 		io_put_req(req);
+ 	}
 -- 
 2.20.1
 
