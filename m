@@ -2,93 +2,154 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8E2C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ADBC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1243206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:47:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VJRDb5WO"
+	by mail.kernel.org (Postfix) with ESMTP id B04D920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732984AbgCPXr3 (ORCPT
+        id S1732938AbgCPXua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 19:47:29 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43961 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732900AbgCPXr3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 19:47:29 -0400
-Received: by mail-oi1-f194.google.com with SMTP id p125so19807699oif.10
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 16:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mttFfSWICKfg0VDWFFFpM6bA1x4vo0nhvLSocXypSiE=;
-        b=VJRDb5WO8N3vm52u9Y7VxkYqd/KhwpCssTVF/UwGUFlYgdoiGLRlnTUYkU9oIQoMQk
-         m8j0d0lURsNmVvD3V1Z1Aoq8rlugoZwTRKdpUND6SgGvq4CnIajRHPg6bsOL1/XgkKzD
-         Pk1/Zs30aVEax2sFOkLTEMZiUf4NPPZSy8ta9mhmquYZB0c9pSUphzMiiEREtt77WooC
-         6Sr7l50eJdZBYCK2hIN3ti+zO0Nw5bYwmDfBDPpcWq9zfUUnJwtHc7duN2CeM48dCKCn
-         oqF1nho6Yy7VEJIKNvggGf8WA9JuYp9O86nhacVnnp0Y5lIcN5VLRAVlwvZBy8mojr/l
-         pqWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mttFfSWICKfg0VDWFFFpM6bA1x4vo0nhvLSocXypSiE=;
-        b=GODdS8u/DDjkVdIB0tM/ROcJjhyN+8tksq0yw+L2sZyorC/IZg+7eyFuPJ8GVyCZdk
-         /6CkN0AB/dz44Q5fnSM5QOlMkENUhpIRrLjDJ+I/G0eNUmKrNnNF75VkuVy//2WK0mzU
-         o11RBG43M0WryzSXpbtJ6iOKyWH1YrdDTmPrnmYONuCpBfirrclBcKi8c6Q33PrHvIso
-         FtWqIlfcsbxhbUprQdQvpj1lrKlcC/NlXhOtnoT3Q+Q53oFdXaU2jiovPH8AfzlFiwOr
-         ZvbgvX6B5EzToEtpGdTwY1Ki4shAMpZodEI09i0EkR8o1src+ld+108sik90AOP/n957
-         4coQ==
-X-Gm-Message-State: ANhLgQ2gSUDyMqV4b0YjZ+wLoQtsB4HPUeqahT1iTkSLiYI19c4cNoge
-        Yznqpg1kMJPvo4+QIXI1pdSnzs6x/x+96FcvDnHp3A==
-X-Google-Smtp-Source: ADFU+vvf58lvIOAfydJM85FoH4fCfYl73Pwkpod8CRWAMB79NSEFG3mZJIsM7IndHf4CMxqGHbsvsMyMno0Is2Ju4oc=
-X-Received: by 2002:aca:4b56:: with SMTP id y83mr1554187oia.142.1584402448153;
- Mon, 16 Mar 2020 16:47:28 -0700 (PDT)
+        Mon, 16 Mar 2020 19:50:30 -0400
+Received: from mga11.intel.com ([192.55.52.93]:48604 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732880AbgCPXua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 19:50:30 -0400
+IronPort-SDR: a0VW147DNNTPEJ9pBmK1H3FA88R5wWrGFORlDgFtDafmfZsnhCu1PO/vX7qzUHbinDpGFVWTZp
+ 8cufbfXuivTA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 16:50:29 -0700
+IronPort-SDR: q1sPZdqkQk97Glbiq8/TcTPYanScaycXSHVMTujifIDlFbwviaBLGG5ggXttyLHvGZ4ABUsBst
+ DJyQzTV4eXiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,562,1574150400"; 
+   d="scan'208";a="244307367"
+Received: from bxing-mobl.amr.corp.intel.com (HELO [10.135.8.145]) ([10.135.8.145])
+  by orsmga003.jf.intel.com with ESMTP; 16 Mar 2020 16:50:26 -0700
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <20200315012523.GC208715@linux.intel.com>
+ <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
+ <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
+ <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
+ <20200316225322.GJ24267@linux.intel.com>
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+Message-ID: <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
+Date:   Mon, 16 Mar 2020 16:50:26 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1584397455-28701-1-git-send-email-yang.shi@linux.alibaba.com> <1584397455-28701-2-git-send-email-yang.shi@linux.alibaba.com>
-In-Reply-To: <1584397455-28701-2-git-send-email-yang.shi@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 16 Mar 2020 16:47:15 -0700
-Message-ID: <CALvZod4pn1XJN7EVV9w6t2cYkHWG++GB6pJdBzBJO+w4k8aEEw@mail.gmail.com>
-Subject: Re: [v2 PATCH 2/2] mm: swap: use smp_mb__after_atomic() to order LRU
- bit set
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200316225322.GJ24267@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 3:24 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
->
-> Memory barrier is needed after setting LRU bit, but smp_mb() is too
-> strong.  Some architectures, i.e. x86, imply memory barrier with atomic
-> operations, so replacing it with smp_mb__after_atomic() sounds better,
-> which is nop on strong ordered machines, and full memory barriers on
-> others.  With this change the vm-calability cases would perform better
-> on x86, I saw total 6% improvement with this patch and previous inline
-> fix.
->
-> The test data (lru-file-readtwice throughput) against v5.6-rc4:
->         mainline        w/ inline fix   w/ both (adding this)
->         150MB           154MB           159MB
->
-> Fixes: 9c4e6b1a7027 ("mm, mlock, vmscan: no more skipping pagevecs")
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-
-Reviewed-and-Tested-by: Shakeel Butt <shakeelb@google.com>
+On 3/16/2020 3:53 PM, Sean Christopherson wrote:
+> On Mon, Mar 16, 2020 at 11:38:24PM +0200, Jarkko Sakkinen wrote:
+>> On Mon, 2020-03-16 at 10:01 -0400, Nathaniel McCallum wrote:
+>>> On Mon, Mar 16, 2020 at 9:56 AM Jarkko Sakkinen
+>>> <jarkko.sakkinen@linux.intel.com> wrote:
+>>>> On Sun, 2020-03-15 at 13:53 -0400, Nathaniel McCallum wrote:
+>>>>> On Sat, Mar 14, 2020 at 9:25 PM Jarkko Sakkinen
+>>>>> <jarkko.sakkinen@linux.intel.com> wrote:
+>>>>>> On Wed, Mar 11, 2020 at 01:30:07PM -0400, Nathaniel McCallum wrote:
+>>>>>>> Currently, the selftest has a wrapper around
+>>>>>>> __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
+>>>>>>> registers (CSRs), though it uses none of them. Then it calls this
+>>>>>>> function which uses %rbx but preserves none of the CSRs. Then it jumps
+>>>>>>> into an enclave which zeroes all these registers before returning.
+>>>>>>> Thus:
+>>>>>>>
+>>>>>>>    1. wrapper saves all CSRs
+>>>>>>>    2. wrapper repositions stack arguments
+>>>>>>>    3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
+>>>>>>>    4. selftest zeros all CSRs
+>>>>>>>    5. wrapper loads all CSRs
+>>>>>>>
+>>>>>>> I'd like to propose instead that the enclave be responsible for saving
+>>>>>>> and restoring CSRs. So instead of the above we have:
+>>>>>>>    1. __vdso_sgx_enter_enclave() saves %rbx
+>>>>>>>    2. enclave saves CSRs
+>>>>>>>    3. enclave loads CSRs
+>>>>>>>    4. __vdso_sgx_enter_enclave() loads %rbx
+>>>>>>>
+>>>>>>> I know that lots of other stuff happens during enclave transitions,
+>>>>>>> but at the very least we could reduce the number of instructions
+>>>>>>> through this critical path.
+>>>>>>
+>>>>>> What Jethro said and also that it is a good general principle to cut
+>>>>>> down the semantics of any vdso as minimal as possible.
+>>>>>>
+>>>>>> I.e. even if saving RBX would make somehow sense it *can* be left
+>>>>>> out without loss in terms of what can be done with the vDSO.
+>>>>>
+>>>>> Please read the rest of the thread. Sean and I have hammered out some
+>>>>> sensible and effective changes.
+>>>>
+>>>> Have skimmed through that discussion but it comes down how much you get
+>>>> by obviously degrading some of the robustness. Complexity of the calling
+>>>> pattern is not something that should be emphasized as that is something
+>>>> that is anyway hidden inside the runtime.
+>>>
+>>> My suggestions explicitly maintained robustness, and in fact increased
+>>> it. If you think we've lost capability, please speak with specificity
+>>> rather than in vague generalities. Under my suggestions we can:
+>>> 1. call the vDSO from C
+>>> 2. pass context to the handler
+>>> 3. have additional stack manipulation options in the handler
+>>>
+>>> The cost for this is a net 2 additional instructions. No existing
+>>> capability is lost.
+>>
+>> My vague generality in this case is just that the whole design
+>> approach so far has been to minimize the amount of wrapping to
+>> EENTER.
+> 
+> Yes and no.   If we wanted to minimize the amount of wrapping around the
+> vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
+> first place.  The whole process has been about balancing the wants of each
+> use case against the overall quality of the API and code.
+> 
+The design of this vDSO API was NOT to minimize wrapping, but to allow 
+maximal flexibility. More specifically, we strove not to restrict how 
+info was exchanged between the enclave and its host process. After all, 
+calling convention is compiler specific - i.e. the enclave could be 
+built by a different compiler (e.g. MSVC) that doesn't share the same 
+list of CSRs as the host process. Therefore, the API has been 
+implemented to pass through virtually all registers except those used by 
+EENTER itself. Similarly, all registers are passed back from enclave to 
+the caller (or the exit handler) except those used by EEXIT. %rbp is an 
+exception because the vDSO API has to anchor the stack, using either 
+%rsp or %rbp. We picked %rbp to allow the enclave to allocate space on 
+the stack.
