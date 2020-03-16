@@ -2,204 +2,178 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8056AC43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343D1C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D38420739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:24:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="snbpQ1F3"
+	by mail.kernel.org (Postfix) with ESMTP id 103C22070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbgCTOYe (ORCPT
+        id S1727779AbgCTOYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:24:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59758 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbgCTOWd (ORCPT
+        Fri, 20 Mar 2020 10:24:53 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:9007 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727128AbgCTOYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:22:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=GeleFY4wKFffsAacEKcYhQbPvW9gV+4yKUUY3ROPtqc=; b=snbpQ1F3yPl8PvGbn72Wk3nBNt
-        Y5FA/0yOhenBLDJP77QplIJ0lLyZy5ERkLtT9edxWCdQDoRt4GD7/CP4pFdttYCVd6BLGWqjirfff
-        X0D1yeV/9rcADHpHOF90QR3rwOl3bqlcoAb+Ug9o1QwQU30FxxmBuzqr+PQlc6A/TrXFX8ihstZ3d
-        b+CU/ZN+Zw2d+fYwXTEvuqq/a8wOJMj9P6nQEj9Vr19NvrxIBS9c/zb0tA68rCCHtXPYV4Z7wssme
-        nz2hj/gL5jvkSHtlQ4AqHbf9hpmHLQ6pvZaLorlQDQYQX1aHyY+DQZdnGVVAFeuBJHIzl3jQ+b3to
-        nN/MsJKQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jFIXh-0000iD-Hj; Fri, 20 Mar 2020 14:22:33 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: [PATCH v9 11/25] mm: Add readahead address space operation
-Date:   Fri, 20 Mar 2020 07:22:17 -0700
-Message-Id: <20200320142231.2402-12-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200320142231.2402-1-willy@infradead.org>
-References: <20200320142231.2402-1-willy@infradead.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 20 Mar 2020 10:24:51 -0400
+IronPort-SDR: KXdCz/c+E28b++i04tbA1hUhmr2u6IKKr5IZwp6u4IxBjC473fkiz0MWcWHndlUWrI1e79BTHc
+ UyXOqZCo8OVhVBxaD6+c3QIMD4BliWknc5YczJ8vcYt3GkOpy3eLgwam1RPjwhIAVrkdUE5OIu
+ z1KK5bIlt4MBTP3Titq9LF3yidFqqRxXgWRTps3LoeyMJpilLocIsB+tHWPNoUH+ZUtu6xeGVl
+ AjUOokmAvdm4ZNsT2LyHtV1Bd52TPOximN2EtsP2d5NjRGIrQhHhc5vFV6mRx5biMjqr7FTqq8
+ ZCY=
+X-IronPort-AV: E=Sophos;i="5.70,559,1574150400"; 
+   d="scan'208";a="28594805"
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by labrats.qualcomm.com with ESMTP; 15 Mar 2020 23:21:12 -0700
+Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 15 Mar 2020 23:21:11 -0700
+Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
+        id A00EA3A61; Sun, 15 Mar 2020 23:21:11 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] scsi: ufs: Do not rely on prefetched data
+Date:   Sun, 15 Mar 2020 23:20:52 -0700
+Message-Id: <1584339655-20337-3-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1584339655-20337-1-git-send-email-cang@codeaurora.org>
+References: <1584339655-20337-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+We were setting bActiveICCLevel attribute for UFS device only once but
+type of this attribute has changed from persistent to volatile since UFS
+device specification v2.1. This attribute is set to the default value after
+power cycle or hardware reset event. It isn't safe to rely on prefetched
+data (only used for bActiveICCLevel attribute now). Hence this change
+removes the code related to data prefetching and set this parameter on
+every attempt to probe the UFS device.
 
-This replaces ->readpages with a saner interface:
- - Return void instead of an ignored error code.
- - Page cache is already populated with locked pages when ->readahead
-   is called.
- - New arguments can be passed to the implementation without changing
-   all the filesystems that use a common helper function like
-   mpage_readahead().
+Signed-off-by: Can Guo <cang@codeaurora.org>
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
----
- Documentation/filesystems/locking.rst |  6 +++++-
- Documentation/filesystems/vfs.rst     | 15 +++++++++++++++
- include/linux/fs.h                    |  2 ++
- mm/readahead.c                        | 12 ++++++++++--
- 4 files changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index 5057e4d9dcd1..0af2e0e11461 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -239,6 +239,7 @@ prototypes::
- 	int (*readpage)(struct file *, struct page *);
- 	int (*writepages)(struct address_space *, struct writeback_control *);
- 	int (*set_page_dirty)(struct page *page);
-+	void (*readahead)(struct readahead_control *);
- 	int (*readpages)(struct file *filp, struct address_space *mapping,
- 			struct list_head *pages, unsigned nr_pages);
- 	int (*write_begin)(struct file *, struct address_space *mapping,
-@@ -271,7 +272,8 @@ writepage:		yes, unlocks (see below)
- readpage:		yes, unlocks
- writepages:
- set_page_dirty		no
--readpages:
-+readahead:		yes, unlocks
-+readpages:		no
- write_begin:		locks the page		 exclusive
- write_end:		yes, unlocks		 exclusive
- bmap:
-@@ -295,6 +297,8 @@ the request handler (/dev/loop).
- ->readpage() unlocks the page, either synchronously or via I/O
- completion.
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 63aaa88f..99c7fca 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6458,11 +6458,12 @@ static u32 ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
+ 	return icc_level;
+ }
  
-+->readahead() unlocks the pages that I/O is attempted on like ->readpage().
+-static void ufshcd_init_icc_levels(struct ufs_hba *hba)
++static void ufshcd_set_active_icc_lvl(struct ufs_hba *hba)
+ {
+ 	int ret;
+ 	int buff_len = hba->desc_size.pwr_desc;
+ 	u8 *desc_buf;
++	u32 icc_level;
+ 
+ 	desc_buf = kmalloc(buff_len, GFP_KERNEL);
+ 	if (!desc_buf)
+@@ -6477,20 +6478,17 @@ static void ufshcd_init_icc_levels(struct ufs_hba *hba)
+ 		goto out;
+ 	}
+ 
+-	hba->init_prefetch_data.icc_level =
+-			ufshcd_find_max_sup_active_icc_level(hba,
+-			desc_buf, buff_len);
+-	dev_dbg(hba->dev, "%s: setting icc_level 0x%x",
+-			__func__, hba->init_prefetch_data.icc_level);
++	icc_level = ufshcd_find_max_sup_active_icc_level(hba, desc_buf,
++							 buff_len);
++	dev_dbg(hba->dev, "%s: setting icc_level 0x%x", __func__, icc_level);
+ 
+ 	ret = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
+-		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0,
+-		&hba->init_prefetch_data.icc_level);
++		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0, &icc_level);
+ 
+ 	if (ret)
+ 		dev_err(hba->dev,
+ 			"%s: Failed configuring bActiveICCLevel = %d ret = %d",
+-			__func__, hba->init_prefetch_data.icc_level , ret);
++			__func__, icc_level, ret);
+ 
+ out:
+ 	kfree(desc_buf);
+@@ -6996,8 +6994,6 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
+ {
+ 	int ret;
+ 
+-	ufshcd_init_icc_levels(hba);
+-
+ 	/* Add required well known logical units to scsi mid layer */
+ 	ret = ufshcd_scsi_add_wlus(hba);
+ 	if (ret)
+@@ -7095,6 +7091,14 @@ static int ufshcd_probe_hba(struct ufs_hba *hba, bool async)
+ 		}
+ 	}
+ 
++	/*
++	 * bActiveICCLevel is volatile for UFS device (as per latest v2.1 spec)
++	 * and for removable UFS card as well, hence always set the parameter.
++	 * Note: Error handler may issue the device reset hence resetting
++	 *       bActiveICCLevel as well so it is always safe to set this here.
++	 */
++	ufshcd_set_active_icc_lvl(hba);
 +
- ->readpages() populates the pagecache with the passed pages and starts
- I/O against them.  They come unlocked upon I/O completion.
+ 	/* set the state as operational after switching to desired gear */
+ 	hba->ufshcd_state = UFSHCD_STATE_OPERATIONAL;
  
-diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index 7d4d09dd5e6d..ed17771c212b 100644
---- a/Documentation/filesystems/vfs.rst
-+++ b/Documentation/filesystems/vfs.rst
-@@ -706,6 +706,7 @@ cache in your filesystem.  The following members are defined:
- 		int (*readpage)(struct file *, struct page *);
- 		int (*writepages)(struct address_space *, struct writeback_control *);
- 		int (*set_page_dirty)(struct page *page);
-+		void (*readahead)(struct readahead_control *);
- 		int (*readpages)(struct file *filp, struct address_space *mapping,
- 				 struct list_head *pages, unsigned nr_pages);
- 		int (*write_begin)(struct file *, struct address_space *mapping,
-@@ -781,12 +782,26 @@ cache in your filesystem.  The following members are defined:
- 	If defined, it should set the PageDirty flag, and the
- 	PAGECACHE_TAG_DIRTY tag in the radix tree.
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index d45a044..5652d39 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -404,15 +404,6 @@ struct ufs_clk_scaling {
+ 	bool is_suspended;
+ };
  
-+``readahead``
-+	Called by the VM to read pages associated with the address_space
-+	object.  The pages are consecutive in the page cache and are
-+	locked.  The implementation should decrement the page refcount
-+	after starting I/O on each page.  Usually the page will be
-+	unlocked by the I/O completion handler.  If the filesystem decides
-+	to stop attempting I/O before reaching the end of the readahead
-+	window, it can simply return.  The caller will decrement the page
-+	refcount and unlock the remaining pages for you.  Set PageUptodate
-+	if the I/O completes successfully.  Setting PageError on any page
-+	will be ignored; simply unlock the page if an I/O error occurs.
-+
- ``readpages``
- 	called by the VM to read pages associated with the address_space
- 	object.  This is essentially just a vector version of readpage.
- 	Instead of just one page, several pages are requested.
- 	readpages is only used for read-ahead, so read errors are
- 	ignored.  If anything goes wrong, feel free to give up.
-+	This interface is deprecated and will be removed by the end of
-+	2020; implement readahead instead.
+-/**
+- * struct ufs_init_prefetch - contains data that is pre-fetched once during
+- * initialization
+- * @icc_level: icc level which was read during initialization
+- */
+-struct ufs_init_prefetch {
+-	u32 icc_level;
+-};
+-
+ #define UFS_ERR_REG_HIST_LENGTH 8
+ /**
+  * struct ufs_err_reg_hist - keeps history of errors
+@@ -544,7 +535,6 @@ enum ufshcd_quirks {
+  * @intr_mask: Interrupt Mask Bits
+  * @ee_ctrl_mask: Exception event control mask
+  * @is_powered: flag to check if HBA is powered
+- * @init_prefetch_data: data pre-fetched during initialization
+  * @eh_work: Worker to handle UFS errors that require s/w attention
+  * @eeh_work: Worker to handle exception events
+  * @errors: HBA errors
+@@ -632,7 +622,6 @@ struct ufs_hba {
+ 	u32 intr_mask;
+ 	u16 ee_ctrl_mask;
+ 	bool is_powered;
+-	struct ufs_init_prefetch init_prefetch_data;
  
- ``write_begin``
- 	Called by the generic buffered write code to ask the filesystem
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 3cd4fe6b845e..d4e2d2964346 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -292,6 +292,7 @@ enum positive_aop_returns {
- struct page;
- struct address_space;
- struct writeback_control;
-+struct readahead_control;
- 
- /*
-  * Write life time hint values.
-@@ -375,6 +376,7 @@ struct address_space_operations {
- 	 */
- 	int (*readpages)(struct file *filp, struct address_space *mapping,
- 			struct list_head *pages, unsigned nr_pages);
-+	void (*readahead)(struct readahead_control *);
- 
- 	int (*write_begin)(struct file *, struct address_space *mapping,
- 				loff_t pos, unsigned len, unsigned flags,
-diff --git a/mm/readahead.c b/mm/readahead.c
-index e52b3a7b9da5..d01531ef9f3c 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -125,7 +125,14 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
- 
- 	blk_start_plug(&plug);
- 
--	if (aops->readpages) {
-+	if (aops->readahead) {
-+		aops->readahead(rac);
-+		/* Clean up the remaining pages */
-+		while ((page = readahead_page(rac))) {
-+			unlock_page(page);
-+			put_page(page);
-+		}
-+	} else if (aops->readpages) {
- 		aops->readpages(rac->file, rac->mapping, pages,
- 				readahead_count(rac));
- 		/* Clean up the remaining pages */
-@@ -233,7 +240,8 @@ void force_page_cache_readahead(struct address_space *mapping,
- 	struct file_ra_state *ra = &filp->f_ra;
- 	unsigned long max_pages;
- 
--	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages))
-+	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages &&
-+			!mapping->a_ops->readahead))
- 		return;
- 
- 	/*
+ 	/* Work Queues */
+ 	struct work_struct eh_work;
 -- 
-2.25.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
