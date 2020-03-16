@@ -2,142 +2,131 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA80CC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25533C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D66320719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:32:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=marinkevich.ru header.i=@marinkevich.ru header.b="cCn4gbh0"
+	by mail.kernel.org (Postfix) with ESMTP id 02C2120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbgCPGc4 (ORCPT
+        id S1729693AbgCPGdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:32:56 -0400
-Received: from scp8.hosting.reg.ru ([31.31.196.44]:54968 "EHLO
-        scp8.hosting.reg.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729593AbgCPGc4 (ORCPT
+        Mon, 16 Mar 2020 02:33:40 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:32883 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729407AbgCPGdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:32:56 -0400
-X-Greylist: delayed 2456 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Mar 2020 02:32:54 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=marinkevich.ru; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ICtt14DdKbzX+OLuDobayzCZUyiOY0nTOBAzHCBfqGE=; b=cCn4gbh0tjfZhaAf2FLyfea68j
-        gl+Es6KUTaf5V8E5Fl7F9B8MTUcDsPUPpMOOlHnqm/enLQzYaVC5VvClwbtMPp7LveOEJw4e01gjE
-        vfA8m6R7bEw+osghsGWL386vbR3Un5frZtYzIbjk3144DNFPIEFIKVqwPyKfJCbuYld3GOVe0usWJ
-        TbWjAN3BWHl7ZLdybrGMTyDqQGfjKVyerzI3oFpmO13zwXJ34UAa8zZ55Rz33Xo0CxWDJYiiC2TrW
-        YvR4LI2frniFi99val7SVRMV6MMs2w/UaYr5bBhJo5m26AuSV7dsOKdTk5umPxOfWkraqljQQbYlV
-        jiOnX7EA==;
-Received: from mail.eltex.org ([92.125.152.58]:46582 helo=GRayJob)
-        by scp8.hosting.reg.ru with esmtpa (Exim 4.92)
-        (envelope-from <s@marinkevich.ru>)
-        id 1jDifM-0002YW-H1; Mon, 16 Mar 2020 08:51:56 +0300
-Date:   Mon, 16 Mar 2020 12:51:56 +0700
-From:   Sergey Marinkevich <s@marinkevich.ru>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] netfilter: nft_masq: add range specified flag setting
-Message-ID: <20200316055156.GA3822@GRayJob>
+        Mon, 16 Mar 2020 02:33:39 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TshR7Hp_1584340410;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TshR7Hp_1584340410)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 16 Mar 2020 14:33:31 +0800
+Subject: Re: [PATCH] sched: avoid scale real weight down to zero
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+References: <bb14528b-08c3-c4c0-5bcf-4bec1d75227a@linux.alibaba.com>
+Message-ID: <b9f775cf-f26a-c76b-681c-126783270ad3@linux.alibaba.com>
+Date:   Mon, 16 Mar 2020 14:33:30 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - scp8.hosting.reg.ru
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - marinkevich.ru
-X-Get-Message-Sender-Via: scp8.hosting.reg.ru: authenticated_id: s@marinkevich.ru
-X-Authenticated-Sender: scp8.hosting.reg.ru: s@marinkevich.ru
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+In-Reply-To: <bb14528b-08c3-c4c0-5bcf-4bec1d75227a@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With nf_tables it is not possible to use port range for masquerading.
-Masquerade statement has option "to [:port-port]" which give no effect
-to translation behavior. But it must change source port of packet to
-one from ":port-port" range.
+Hi, Peter
 
-My network:
+I've done more complicated testing with share 2 and every thing looks fine.
 
-	+-----------------------------+
-	|   ROUTER                    |
-	|                             |
-	|                   Masquerade|
-	| 10.0.0.1            1.1.1.1 |
-	| +------+           +------+ |
-	| | eth1 |           | eth2 | |
-	+-+--^---+-----------+---^--+-+
-	     |                   |
-	     |                   |
-	+----v------+     +------v----+
-	|           |     |           |
-	| 10.0.0.2  |     |  1.1.1.2  |
-	|           |     |           |
-	|PC1        |     |PC2        |
-	+-----------+     +-----------+
+Should we apply this? or is there any concern?
 
-For testing i used rule like this:
+Regards,
+Michael Wang
 
-	rule ip nat POSTROUTING oifname eth2 masquerade to :666
-
-Run netcat for 1.1.1.2 667(UDP) and get dump from PC2:
-
-	15:22:25.591567 a8:f9:4b:aa:08:44 > a8:f9:4b:ac:e7:8f, ethertype IPv4 (0x0800), length 60: 1.1.1.1.34466 > 1.1.1.2.667: UDP, length 1
-
-Address translation works fine, but source port are not belongs to
-specified range.
-
-I see in similar source code (i.e. nft_redir.c, nft_nat.c) that
-there is setting NF_NAT_RANGE_PROTO_SPECIFIED flag. After adding this,
-repeat test for kernel with this patch, and get dump:
-
-	16:16:22.324710 a8:f9:4b:aa:08:44 > a8:f9:4b:ac:e7:8f, ethertype IPv4 (0x0800), length 60: 1.1.1.1.666 > 1.1.1.2.667: UDP, length 1
-
-Now it is works fine.
-
-Signed-off-by: Sergey Marinkevich <s@marinkevich.ru>
----
- net/netfilter/nft_masq.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/netfilter/nft_masq.c b/net/netfilter/nft_masq.c
-index bc9fd98c5d6d..448376e59074 100644
---- a/net/netfilter/nft_masq.c
-+++ b/net/netfilter/nft_masq.c
-@@ -113,6 +113,7 @@ static void nft_masq_ipv4_eval(const struct nft_expr *expr,
- 			&regs->data[priv->sreg_proto_min]);
- 		range.max_proto.all = (__force __be16)nft_reg_load16(
- 			&regs->data[priv->sreg_proto_max]);
-+		range.flags |= NF_NAT_RANGE_PROTO_SPECIFIED;
- 	}
- 	regs->verdict.code = nf_nat_masquerade_ipv4(pkt->skb, nft_hook(pkt),
- 						    &range, nft_out(pkt));
-@@ -159,6 +160,7 @@ static void nft_masq_ipv6_eval(const struct nft_expr *expr,
- 			&regs->data[priv->sreg_proto_min]);
- 		range.max_proto.all = (__force __be16)nft_reg_load16(
- 			&regs->data[priv->sreg_proto_max]);
-+		range.flags |= NF_NAT_RANGE_PROTO_SPECIFIED;
- 	}
- 	regs->verdict.code = nf_nat_masquerade_ipv6(pkt->skb, &range,
- 						    nft_out(pkt));
--- 
-2.21.0
-
+On 2020/3/5 上午10:57, 王贇 wrote:
+> During our testing, we found a case that shares no longer
+> working correctly, the cgroup topology is like:
+> 
+>   /sys/fs/cgroup/cpu/A		(shares=102400)
+>   /sys/fs/cgroup/cpu/A/B	(shares=2)
+>   /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+> 
+>   /sys/fs/cgroup/cpu/D		(shares=1024)
+>   /sys/fs/cgroup/cpu/D/E	(shares=1024)
+>   /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+> 
+> The same benchmark is running in group C & F, no other tasks are
+> running, the benchmark is capable to consumed all the CPUs.
+> 
+> We suppose the group C will win more CPU resources since it could
+> enjoy all the shares of group A, but it's F who wins much more.
+> 
+> The reason is because we have group B with shares as 2, since
+> A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
+> so A->cfs_rq.load.weight become very small.
+> 
+> And in calc_group_shares() we calculate shares as:
+> 
+>   load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+>   shares = (tg_shares * load) / tg_weight;
+> 
+> Since the 'cfs_rq->load.weight' is too small, the load become 0
+> after scale down, although 'tg_shares' is 102400, shares of the se
+> which stand for group A on root cfs_rq become 2.
+> 
+> While the se of D on root cfs_rq is far more bigger than 2, so it
+> wins the battle.
+> 
+> Thus when scale_load_down() scale real weight down to 0, it's no
+> longer telling the real story, the caller will have the wrong
+> information and the calculation will be buggy.
+> 
+> This patch add check in scale_load_down(), so the real weight will
+> be >= MIN_SHARES after scale, after applied the group C wins as
+> expected.
+> 
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+> ---
+>  kernel/sched/sched.h | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 2a0caf394dd4..75c283f22256 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -118,7 +118,13 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
+>  #ifdef CONFIG_64BIT
+>  # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
+>  # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
+> -# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
+> +# define scale_load_down(w) \
+> +({ \
+> +	unsigned long __w = (w); \
+> +	if (__w) \
+> +		__w = max(MIN_SHARES, __w >> SCHED_FIXEDPOINT_SHIFT); \
+> +	__w; \
+> +})
+>  #else
+>  # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
+>  # define scale_load(w)		(w)
+> 
