@@ -2,97 +2,159 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AF0C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F980C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48AD20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA0B20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:24:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTIjqCxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbgCPQXL (ORCPT
+        id S1732139AbgCPQYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:23:11 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46600 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731545AbgCPQXL (ORCPT
+        Mon, 16 Mar 2020 12:24:02 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37729 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731864AbgCPQYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:23:11 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y30so10009638pga.13;
-        Mon, 16 Mar 2020 09:23:10 -0700 (PDT)
+        Mon, 16 Mar 2020 12:24:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b23so22743166edx.4;
+        Mon, 16 Mar 2020 09:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZJNcfL+20pcF/nwvNIBx1sW4o3Q2BCHfxBO+o2iJP1E=;
+        b=TTIjqCxllK3X2lZBFPw7ICZwUlDRHxnHW7NjEPyP7bRYIrWRr4yeK7Ieugc+qaddT5
+         meVtk6e5fE6pXDialkcLZ+3IJSUnPo9gOI1koNCijDivBt2EhV81Kh3bMXQ4PqXNwRbF
+         8471GWlZw+jYl1IOjR0/BBScsAL6B1Gu850oaJfUv4UCh9+wnMeexpn0xaLvYVjzvc4O
+         2k6DkgQ+mH0bCuIs1N51H9UMGqet8MVK9P7Mw9ov3Cpwdxku2WYkl7Jw9m4DlHVqDKjA
+         s60LXh9QoOLGVcxPtLAR24/tMF6iXIR95Gx+5tyoUP82Oe4R/N7QHx2WIaMt3fWEaLib
+         grZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MPeWvE1ynYMgmBjcIfuACly8OXPEjkr9woxJje4Vp+k=;
-        b=XBYkQiqU/3fNEv0mCJMB0EUs/YMu5UbaEeejNhsuusc5O/lJ6L8TdZ69VkGVQ+wxc0
-         kdBTihwaqbW0NF9YpHCa5tKhXwef1NR3wsUteughjthkbi0C8WKHIBCl8zpAGgeEYkWP
-         ZjRXiVZD9INGGMD7Ld929aog49WHAMOgpRXctw927p5CPv+nxmX3BXZuw156BzU8znHO
-         Dhm9KwqtFDRZ6YWB7AqvoTynrZy9Wv4OIlnMlzJ3PqZT0BO6GbM/vvPBPsklIsj9p3I9
-         /XE30Qspn4i92snqLE/Vs62VmBrEBEpIKHLRmZ9471E9rSddCYFlvsSXYtwoN+ri0O2e
-         XFPQ==
-X-Gm-Message-State: ANhLgQ18ZKuuFCjtj+2ea7d4H0o10WzWrep+zlFMJGtPSJf1xJ0jfN5j
-        GRree7OMPf2BFL727I2ec9o=
-X-Google-Smtp-Source: ADFU+vteq0ZXl4bflTQr64JEC/RlOF0r9XRD+1FB4C6nIb76oOWRP1WchB6mng5hWY132x5LhHMaqQ==
-X-Received: by 2002:a63:921b:: with SMTP id o27mr659097pgd.364.1584375789493;
-        Mon, 16 Mar 2020 09:23:09 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:af99:b4cf:6b17:1075? ([2601:647:4000:d7:af99:b4cf:6b17:1075])
-        by smtp.gmail.com with ESMTPSA id z20sm66684pge.62.2020.03.16.09.23.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2020 09:23:08 -0700 (PDT)
-Subject: Re: [PATCH v6 3/7] scsi: ufs: introduce common delay function
-To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com
-Cc:     beanhuo@micron.com, asutoshd@codeaurora.org, cang@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-References: <20200316085303.20350-1-stanley.chu@mediatek.com>
- <20200316085303.20350-4-stanley.chu@mediatek.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <fdf91490-9c7d-df34-1c1f-e03e12855378@acm.org>
-Date:   Mon, 16 Mar 2020 09:23:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZJNcfL+20pcF/nwvNIBx1sW4o3Q2BCHfxBO+o2iJP1E=;
+        b=sbdhZIe3y6vP3I63LsmRZE+6+mIwcPptpvAyek7autDaabHiXd5xQxofqzgHuUXudC
+         lNnntg6FesgbztxLV5bDAO3M0SF/vBL5SLNlC88c5aNMk0PTeeVsYYefH+ks4WSaMlQ5
+         Am65fbSopII+krUdY//nM2L3zKDPitcD+E7kcq+XOPeefGduFN+MhkHkpPDsR6vEfhRH
+         jyNR4949+O9KqqB/kHoUsJM0C64HPxIu8HRW68y7dilIl9Utas9LyUTF+6eDg19+Gj2l
+         fqNT5TEl8oFvJOSai0Dx0Ur+Yz4ymWvnLbSdVoY6UUagY6lBJpQ5sVAJj2fdZshVp63a
+         FCgQ==
+X-Gm-Message-State: ANhLgQ1VBtyoXgmEU9j1XhP84fcHyoUIr8i++ng8mNHjXVQw1saqyDxp
+        sjVm2Si8DVZ5IG7azlSbvMJaB44rHnSKHHy1Dr8=
+X-Google-Smtp-Source: ADFU+vtMS9Vu9nfFyeRmHSBt293hXzPvslNsTBpvv+xVzxztZq0wa6f/b2eJoXA5f1LV5AowpMF8HiAFnKYGgv1mpuE=
+X-Received: by 2002:a17:906:f49:: with SMTP id h9mr88017ejj.6.1584375840024;
+ Mon, 16 Mar 2020 09:24:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200316085303.20350-4-stanley.chu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200314224340.1544-1-olteanv@gmail.com> <20200314224340.1544-7-olteanv@gmail.com>
+ <20200316122613.GE5010@sirena.org.uk> <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
+ <20200316124945.GF5010@sirena.org.uk> <CA+h21hpoHGuDwpOqtWJFO7+0mQVUrmcBLW7nnGq6dt3QU5axfw@mail.gmail.com>
+ <d05fda0e119405343e540b9768db534f@walle.cc>
+In-Reply-To: <d05fda0e119405343e540b9768db534f@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 16 Mar 2020 18:23:48 +0200
+Message-ID: <CA+h21hqt7Xe1LrSDsCVS8zqunQp2tKGhmHDraMirxL595go4nA@mail.gmail.com>
+Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
+ queue with a simple completion
+To:     Michael Walle <michael@walle.cc>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/16/20 1:52 AM, Stanley Chu wrote:
-> +void ufshcd_wait_us(unsigned long us, unsigned long tolerance, bool can_sleep)
-> +{
-> +	if (!us)
-> +		return;
-> +
-> +	if (us < 10 || !can_sleep)
-> +		udelay(us);
-> +	else
-> +		usleep_range(us, us + tolerance);
-> +}
-> +EXPORT_SYMBOL_GPL(ufshcd_wait_us);
+On Mon, 16 Mar 2020 at 15:25, Michael Walle <michael@walle.cc> wrote:
+>
+> Am 2020-03-16 14:00, schrieb Vladimir Oltean:
+> > On Mon, 16 Mar 2020 at 14:49, Mark Brown <broonie@kernel.org> wrote:
+> >>
+> >> On Mon, Mar 16, 2020 at 02:29:09PM +0200, Vladimir Oltean wrote:
+> >>
+> >> > Correct, the real problem is that I forgot to add a Fixes: tag for
+> >> > patch 5. I'll do that now.
+> >>
+> >> OK.  The series otherwise looked fine but I'll wait for testing.
+> >> Michael, if there's issues remaining it might be good to get some
+> >> Tested-bys for the patches prior to whatever's broken so we can get
+> >> those fixes in (but obviously verifying that is work so only if you
+> >> have time).
+>
+> I'm just about to test it. While my former "cat /dev/mtdN > /dev/null"
+> is working. I had the impression that it was slower, so I tried to test
+> it with dd now and a known chunk size.. only to find out that it is
+> still not working:
+>
+> # dmesg|grep spi
+> [    1.894891] spi-nor spi1.0: w25q128fw (16384 Kbytes)
+> ..
+> # time cat /dev/mtd0 > /dev/null
+> real    0m 30.73s
+> user    0m 0.00s
+> sys     0m 1.02s
+> # dd if=3D/dev/mtd0 of=3D/dev/null bs=3D64
+> 262144+0 records in
+> 262144+0 records out
+> # dd if=3D/dev/mtd0 of=3D/dev/null bs=3D64
+> 262144+0 records in
+> 262144+0 records out
+> # dd if=3D/dev/mtd0 of=3D/dev/null bs=3D64
+> dd: /dev/mtd0: Input/output error
 
-I don't like this function because I think it makes the UFS code harder 
-to read instead of easier. The 'can_sleep' argument is only set by one 
-caller which I think is a strong argument to remove that argument again 
-and to move the code that depends on that argument from the above 
-function into the caller. Additionally, it is not possible to comprehend 
-what a ufshcd_wait_us() call does without looking up the function 
-definition to see what the meaning of the third argument is.
+I don't really have a SPI flash connected to DSPI on any LS1028A board.
+Is this DMA or XSPI mode?
 
-Please drop this patch.
+>
+> I also wanted to test how it behaves if there are multiple processes
+> access the /dev/mtdN device. I haven't found the time to dig into
+> the call chain if see if there is any locking. Because what happens
+> if transfer_one_message() is called twice at the same time from two
+> different processes?
+>
+
+There is a mutex on the SPI bus, and therefore all variants of the
+.transfer() call are operating under this lock protection, which
+simplifies things quite a bit.
+
+> >
+> > This time I verified with a protocol analyzer all transfer lengths
+> > from 1 all the way to 256, with this script:
+> >
+> > #!/bin/bash
+> >
+> > buf=3D''
+> >
+> > for i in $(seq 0 255); do
+> > =C2=BB       buf=3D"${buf}\x$(printf '%02x' ${i})"
+> > =C2=BB       spidev_test --device /dev/spidev2.0 --bpw 8 --cpha --speed
+> > 5000000 -p "${buf}"
+> > done
+> >
+> > It looked fine as far as I could tell, and also the problems
+> > surrounding Ctrl-C are no longer present. Nonetheless it would be good
+> > if Michael could confirm, but I know that he's very busy too so it's
+> > understandable if he can no longer spend time on this.
+>
+> I'm working on it ;)
+>
+> -michael
 
 Thanks,
-
-Bart.
-
+-Vladimir
