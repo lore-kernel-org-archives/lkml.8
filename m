@@ -7,184 +7,167 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A8CC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F8FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17D3520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174AF206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XdSkYLFn"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="BaPmzh0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731353AbgCPMgh (ORCPT
+        id S1731399AbgCPMgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:36:37 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:53352 "EHLO pegase1.c-s.fr"
+        Mon, 16 Mar 2020 08:36:46 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:60629 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731309AbgCPMg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:36:29 -0400
+        id S1731346AbgCPMgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:36:37 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48gwlV5cxXz9v02r;
-        Mon, 16 Mar 2020 13:36:22 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 48gwlg01kmz9v02j;
+        Mon, 16 Mar 2020 13:36:31 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=XdSkYLFn; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=BaPmzh0i; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id NL9ck2uB04TY; Mon, 16 Mar 2020 13:36:22 +0100 (CET)
+        with ESMTP id a7sgS9D5L1-d; Mon, 16 Mar 2020 13:36:30 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlV49yyz9v02f;
-        Mon, 16 Mar 2020 13:36:22 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlf66QLz9v02f;
+        Mon, 16 Mar 2020 13:36:30 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584362182; bh=QhSYlRLL0xRZScGqt7FSniEp4HbS3pbCmHQIkLwD9dU=;
+        t=1584362190; bh=4ZeQB1HGwOm1bh7Uo5QQsFB6P5LKgwJIvbZVjD5AFeE=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=XdSkYLFnrWLiVRagGCCS4CtcT+w+lWmgk3NpU8QeRtLKSf9ziLChlQZsoBlm+FEnm
-         9JrStua5Yz3yR7K/CeT1SU9fTmXzxec+zG/oXa1oi383sIw5vxaQFh/j4UO8EJm06A
-         tPZQIBtHdBFgcqKtGWHHrsMH/uqeXiXocXqmj4UY=
+        b=BaPmzh0id4Z8wXA/D6wBUgCHZlc3/wtEKYUtfVkPSqEa2xvOiARxt1WSxNdvIkp+y
+         kZxFIjrstBwdlxasUYRKt+DAxuSHLKNZ2LIn/28yOFr0M+xaZtlD4gUgwerMHiqOsX
+         L23z5uaPrMmS6OQO9BHqkouUpXf0Qj2mfJry+Bpk=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8CC138B7D0;
-        Mon, 16 Mar 2020 13:36:27 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C2D938B7D2;
+        Mon, 16 Mar 2020 13:36:30 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Ty8EPjbuA8A6; Mon, 16 Mar 2020 13:36:27 +0100 (CET)
+        with ESMTP id TKffUrqapUyE; Mon, 16 Mar 2020 13:36:30 +0100 (CET)
 Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5EF1A8B7CB;
-        Mon, 16 Mar 2020 13:36:27 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8B7058B7CB;
+        Mon, 16 Mar 2020 13:36:30 +0100 (CET)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 51EEB65595; Mon, 16 Mar 2020 12:36:27 +0000 (UTC)
-Message-Id: <4672c1a9720c4b4d6bd382602478ce22ed9d001a.1584360344.git.christophe.leroy@c-s.fr>
+        id 7B21665595; Mon, 16 Mar 2020 12:36:30 +0000 (UTC)
+Message-Id: <314ca01d0445f9a1fc4d0627f006b2bf7d2340fd.1584360344.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1584360343.git.christophe.leroy@c-s.fr>
 References: <cover.1584360343.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 41/46] powerpc/8xx: Map linear memory with huge pages
+Subject: [PATCH v1 44/46] powerpc/8xx: Implement dedicated kasan_init_region()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Mar 2020 12:36:27 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 12:36:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Map linear memory space with 512k and 8M pages whenever
-possible.
-
-Three mappings are performed:
-- One for kernel text
-- One for RO data
-- One for the rest
-
-Separating the mappings is done to be able to update the
-protection later when using STRICT_KERNEL_RWX.
-
-The ITLB miss handler now need to also handle huge TLBs
-unless kernel text in pinned.
+Implement a kasan_init_region() dedicated to 8xx that
+allocates KASAN regions using huge pages.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/head_8xx.S |  4 +--
- arch/powerpc/mm/nohash/8xx.c   | 50 +++++++++++++++++++++++++++++++++-
- 2 files changed, 51 insertions(+), 3 deletions(-)
+ arch/powerpc/mm/kasan/8xx.c    | 74 ++++++++++++++++++++++++++++++++++
+ arch/powerpc/mm/kasan/Makefile |  1 +
+ 2 files changed, 75 insertions(+)
+ create mode 100644 arch/powerpc/mm/kasan/8xx.c
 
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 410cb48ab36f..49b9eee7dd57 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -223,7 +223,7 @@ InstructionTLBMiss:
- 3:
- 	mtcr	r11
- #endif
--#ifdef CONFIG_HUGETLBFS
-+#if defined(CONFIG_HUGETLBFS) || !defined(CONFIG_PIN_TLB_TEXT)
- 	lwz	r11, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
- 	mtspr	SPRN_MD_TWC, r11
- #else
-@@ -233,7 +233,7 @@ InstructionTLBMiss:
- #endif
- 	mfspr	r10, SPRN_MD_TWC
- 	lwz	r10, 0(r10)	/* Get the pte */
--#ifdef CONFIG_HUGETLBFS
-+#if defined(CONFIG_HUGETLBFS) || !defined(CONFIG_PIN_TLB_TEXT)
- 	rlwimi	r11, r10, 32 - 9, _PMD_PAGE_512K
- 	mtspr	SPRN_MI_TWC, r11
- #endif
-diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index 57e0c7496a6a..d670f3f82091 100644
---- a/arch/powerpc/mm/nohash/8xx.c
-+++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -126,20 +126,68 @@ void __init mmu_mapin_immr(void)
- 				    PAGE_KERNEL_NCG, MMU_PAGE_512K, true);
- }
- 
-+static void __init mmu_mapin_ram_chunk(unsigned long offset, unsigned long top,
-+				       pgprot_t prot, bool new)
+diff --git a/arch/powerpc/mm/kasan/8xx.c b/arch/powerpc/mm/kasan/8xx.c
+new file mode 100644
+index 000000000000..db4ef44af22f
+--- /dev/null
++++ b/arch/powerpc/mm/kasan/8xx.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#define DISABLE_BRANCH_PROFILING
++
++#include <linux/kasan.h>
++#include <linux/memblock.h>
++#include <linux/hugetlb.h>
++#include <asm/pgalloc.h>
++
++static int __init
++kasan_init_shadow_8M(unsigned long k_start, unsigned long k_end, void *block)
 +{
-+	unsigned long v = PAGE_OFFSET + offset;
-+	unsigned long p = offset;
++	pmd_t *pmd = pmd_ptr_k(k_start);
++	unsigned long k_cur, k_next;
 +
-+	WARN_ON(!IS_ALIGNED(offset, SZ_512K) || !IS_ALIGNED(top, SZ_512K));
++	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd += 2, block += SZ_8M) {
++		pte_basic_t *new;
 +
-+	for (; p < ALIGN(p, SZ_8M) && p < top; p += SZ_512K, v += SZ_512K)
-+		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
-+	for (; p < ALIGN_DOWN(top, SZ_8M) && p < top; p += SZ_8M, v += SZ_8M)
-+		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_8M, new);
-+	for (; p < ALIGN_DOWN(top, SZ_512K) && p < top; p += SZ_512K, v += SZ_512K)
-+		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
++		k_next = pgd_addr_end(k_cur, k_end);
++		k_next = pgd_addr_end(k_next, k_end);
++		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
++			continue;
 +
-+	if (!new)
-+		flush_tlb_kernel_range(PAGE_OFFSET + v, PAGE_OFFSET + top);
++		new = memblock_alloc(sizeof(pte_basic_t), SZ_4K);
++		if (!new)
++			return -ENOMEM;
++
++		*new = pte_val(pte_mkhuge(pfn_pte(PHYS_PFN(__pa(block)), PAGE_KERNEL)));
++
++		hugepd_populate_kernel((hugepd_t *)pmd, (pte_t *)new, PAGE_SHIFT_8M);
++		hugepd_populate_kernel((hugepd_t *)pmd + 1, (pte_t *)new, PAGE_SHIFT_8M);
++	}
++	return 0;
 +}
 +
- unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- {
-+	unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
-+	unsigned long sinittext = __pa(_sinittext);
-+	unsigned long boundary = strict_kernel_rwx_enabled() ? sinittext : etext8;
-+	unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
++int __init kasan_init_region(void *start, size_t size)
++{
++	unsigned long k_start = (unsigned long)kasan_mem_to_shadow(start);
++	unsigned long k_end = (unsigned long)kasan_mem_to_shadow(start + size);
++	unsigned long k_cur;
++	int ret;
++	void *block;
 +
-+	WARN_ON(top < einittext8);
++	block = memblock_alloc(k_end - k_start, SZ_8M);
++	if (!block)
++		return -ENOMEM;
 +
- 	mmu_mapin_immr();
++	if (IS_ALIGNED(k_start, SZ_8M)) {
++		kasan_init_shadow_8M(k_start, ALIGN_DOWN(k_end, SZ_8M), block);
++		k_cur = ALIGN_DOWN(k_end, SZ_8M);
++		if (k_cur == k_end)
++			goto finish;
++	} else {
++		k_cur = k_start;
++	}
++
++	ret = kasan_init_shadow_page_tables(k_start, k_end);
++	if (ret)
++		return ret;
++
++	for (; k_cur < k_end; k_cur += PAGE_SIZE) {
++		pmd_t *pmd = pmd_ptr_k(k_cur);
++		void *va = block + k_cur - k_start;
++		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
++
++		if (k_cur < ALIGN_DOWN(k_end, SZ_512K))
++			pte = pte_mkhuge(pte);
++
++		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
++	}
++finish:
++	flush_tlb_kernel_range(k_start, k_end);
++	return 0;
++}
+diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
+index 6577897673dd..440038ea79f1 100644
+--- a/arch/powerpc/mm/kasan/Makefile
++++ b/arch/powerpc/mm/kasan/Makefile
+@@ -3,3 +3,4 @@
+ KASAN_SANITIZE := n
  
--	return 0;
-+	if (__map_without_ltlbs)
-+		return 0;
-+
-+	mmu_mapin_ram_chunk(0, boundary, PAGE_KERNEL_TEXT, true);
-+	mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL_TEXT, true);
-+	mmu_mapin_ram_chunk(einittext8, top, PAGE_KERNEL, true);
-+
-+	if (top > SZ_32M)
-+		memblock_set_current_limit(top);
-+
-+	block_mapped_ram = top;
-+
-+	return top;
- }
- 
- void mmu_mark_initmem_nx(void)
- {
-+	unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
-+	unsigned long sinittext = __pa(_sinittext);
-+	unsigned long boundary = strict_kernel_rwx_enabled() ? sinittext : etext8;
-+	unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
-+
-+	mmu_mapin_ram_chunk(0, boundary, PAGE_KERNEL_TEXT, false);
-+	mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL, false);
- }
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
- void mmu_mark_rodata_ro(void)
- {
-+	unsigned long sinittext = __pa(_sinittext);
-+
-+	mmu_mapin_ram_chunk(0, sinittext, PAGE_KERNEL_ROX, false);
- }
- #endif
- 
+ obj-$(CONFIG_PPC32)           += kasan_init_32.o
++obj-$(CONFIG_PPC_8xx)		+= 8xx.o
 -- 
 2.25.0
 
