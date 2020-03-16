@@ -2,298 +2,228 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D5CC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8867DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40CE205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56051205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SF6Jlxt6"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IoVYZJc5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbgCPMhK (ORCPT
+        id S1731236AbgCPMgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:37:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:5721 "EHLO pegase1.c-s.fr"
+        Mon, 16 Mar 2020 08:36:21 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:25118 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731235AbgCPMgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:36:22 -0400
+        id S1731180AbgCPMgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:36:12 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48gwlM3tfmz9v02k;
-        Mon, 16 Mar 2020 13:36:15 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 48gwlB0ymZz9v02l;
+        Mon, 16 Mar 2020 13:36:06 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=SF6Jlxt6; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=IoVYZJc5; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 9bx9d4zO69C5; Mon, 16 Mar 2020 13:36:15 +0100 (CET)
+        with ESMTP id cG2d8UF2a7Jt; Mon, 16 Mar 2020 13:36:06 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlM2sQDz9v02f;
-        Mon, 16 Mar 2020 13:36:15 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwl972jjz9v02f;
+        Mon, 16 Mar 2020 13:36:05 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584362175; bh=gEQPvo8OMGmJ8FmLk1Egwj7fFZp/5sYG8NZwMaw4OUM=;
+        t=1584362166; bh=o1SlEZz+Awhnm5bSq+8fgheIzjCx3KGw3W3VMVbmJv0=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=SF6Jlxt6Tjqu/SVOfWdIYXa8EnKdb9KSCYRnn2UR8UHYj/0bT0dSOsba40iRW411L
-         6D5uf19rDOQDAJVbtj/N337/9vogiCWT+6GTlbpAH81bPUx/dDpG0NYvJAtaY9aXDi
-         qeceV0HAXF/QNcX1C5BGNR6Ok5BF1KOacYkG7GjM=
+        b=IoVYZJc5QXzBh9G+FWc9be0cKjYcLrK3DIOUHAUk/hpvoDay6Z2DWcv5YXXRZJ5sL
+         4mHgATE5RwKBe8cOWU5X5cXa0Ebi8ZtsJYa4565vrB+WKgFbocMMAK0lLdmNgsJUXE
+         YzNankmMIl8gRIWCDUwXowEAqHGN5Vu85lU5ipz8=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 60AA78B7D0;
-        Mon, 16 Mar 2020 13:36:20 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EFC708B7D0;
+        Mon, 16 Mar 2020 13:36:10 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id XN6NdJTHYz_s; Mon, 16 Mar 2020 13:36:20 +0100 (CET)
+        with ESMTP id xcenVoVwBBlG; Mon, 16 Mar 2020 13:36:10 +0100 (CET)
 Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 31A0F8B7CB;
-        Mon, 16 Mar 2020 13:36:20 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C6A7E8B7CB;
+        Mon, 16 Mar 2020 13:36:10 +0100 (CET)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 25EA665595; Mon, 16 Mar 2020 12:36:20 +0000 (UTC)
-Message-Id: <1f9f05f6f4ff204297e1ecf40a9447eca35e5b66.1584360344.git.christophe.leroy@c-s.fr>
+        id B5CE565595; Mon, 16 Mar 2020 12:36:10 +0000 (UTC)
+Message-Id: <56d433fcf335e08b990730f1eca8547e851fd185.1584360344.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1584360343.git.christophe.leroy@c-s.fr>
 References: <cover.1584360343.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 34/46] powerpc/8xx: Drop special handling of Linear and
- IMMR mappings in I/D TLB handlers
+Subject: [PATCH v1 25/46] powerpc/8xx: Drop CONFIG_8xx_COPYBACK option
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Mar 2020 12:36:20 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 12:36:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Up to now, linear and IMMR mappings are managed via huge TLB entries
-through specific code directly in TLB miss handlers. This implies
-some patching of the TLB miss handlers at startup, and a lot of
-dedicated code.
+CONFIG_8xx_COPYBACK was there to help disabling copyback cache mode
+for debuging hardware. But nobody will design new boards with 8xx now.
 
-Remove all this specific dedicated code.
+All 8xx platforms select it, so make it the default and remove
+the option.
 
-For now we are back to normal handling via standard 4k pages. In the
-next patches, linear memory mapping and IMMR mapping will be managed
-through huge pages.
+Also remove the Mx_RESETVAL values which are pretty useless and hide
+the real value while reading code.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/head_8xx.S |  29 +---------
- arch/powerpc/mm/nohash/8xx.c   | 103 +--------------------------------
- 2 files changed, 3 insertions(+), 129 deletions(-)
+ arch/powerpc/configs/adder875_defconfig      |  1 -
+ arch/powerpc/configs/ep88xc_defconfig        |  1 -
+ arch/powerpc/configs/mpc866_ads_defconfig    |  1 -
+ arch/powerpc/configs/mpc885_ads_defconfig    |  1 -
+ arch/powerpc/configs/tqm8xx_defconfig        |  1 -
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h |  2 --
+ arch/powerpc/kernel/head_8xx.S               | 15 +--------------
+ arch/powerpc/platforms/8xx/Kconfig           |  9 ---------
+ 8 files changed, 1 insertion(+), 30 deletions(-)
 
+diff --git a/arch/powerpc/configs/adder875_defconfig b/arch/powerpc/configs/adder875_defconfig
+index f55e23cb176c..5326bc739279 100644
+--- a/arch/powerpc/configs/adder875_defconfig
++++ b/arch/powerpc/configs/adder875_defconfig
+@@ -10,7 +10,6 @@ CONFIG_EXPERT=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_PPC_ADDER875=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_1000=y
+ # CONFIG_SECCOMP is not set
+diff --git a/arch/powerpc/configs/ep88xc_defconfig b/arch/powerpc/configs/ep88xc_defconfig
+index 0e2e5e81a359..f5c3e72da719 100644
+--- a/arch/powerpc/configs/ep88xc_defconfig
++++ b/arch/powerpc/configs/ep88xc_defconfig
+@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_PPC_EP88XC=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_100=y
+ # CONFIG_SECCOMP is not set
+diff --git a/arch/powerpc/configs/mpc866_ads_defconfig b/arch/powerpc/configs/mpc866_ads_defconfig
+index 5320735395e7..5c56d36cdfc5 100644
+--- a/arch/powerpc/configs/mpc866_ads_defconfig
++++ b/arch/powerpc/configs/mpc866_ads_defconfig
+@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_MPC86XADS=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_1000=y
+ CONFIG_MATH_EMULATION=y
+diff --git a/arch/powerpc/configs/mpc885_ads_defconfig b/arch/powerpc/configs/mpc885_ads_defconfig
+index 82a008c04eae..949ff9ccda5e 100644
+--- a/arch/powerpc/configs/mpc885_ads_defconfig
++++ b/arch/powerpc/configs/mpc885_ads_defconfig
+@@ -11,7 +11,6 @@ CONFIG_EXPERT=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_100=y
+ # CONFIG_SECCOMP is not set
+diff --git a/arch/powerpc/configs/tqm8xx_defconfig b/arch/powerpc/configs/tqm8xx_defconfig
+index eda8bfb2d0a3..77857d513022 100644
+--- a/arch/powerpc/configs/tqm8xx_defconfig
++++ b/arch/powerpc/configs/tqm8xx_defconfig
+@@ -15,7 +15,6 @@ CONFIG_MODULE_SRCVERSION_ALL=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_TQM8XX=y
+-CONFIG_8xx_COPYBACK=y
+ # CONFIG_8xx_CPU15 is not set
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_100=y
+diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+index 76af5b0cb16e..26b7cee34dfe 100644
+--- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+@@ -19,7 +19,6 @@
+ #define MI_RSV4I	0x08000000	/* Reserve 4 TLB entries */
+ #define MI_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
+ #define MI_IDXMASK	0x00001f00	/* TLB index to be loaded */
+-#define MI_RESETVAL	0x00000000	/* Value of register at reset */
+ 
+ /* These are the Ks and Kp from the PowerPC books.  For proper operation,
+  * Ks = 0, Kp = 1.
+@@ -95,7 +94,6 @@
+ #define MD_TWAM		0x04000000	/* Use 4K page hardware assist */
+ #define MD_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
+ #define MD_IDXMASK	0x00001f00	/* TLB index to be loaded */
+-#define MD_RESETVAL	0x04000000	/* Value of register at reset */
+ 
+ #define SPRN_M_CASID	793	/* Address space ID (context) to match */
+ #define MC_ASIDMASK	0x0000000f	/* Bits used for ASID value */
 diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 7ed866e83545..df2874a0fd13 100644
+index 073a651787df..905205c79a25 100644
 --- a/arch/powerpc/kernel/head_8xx.S
 +++ b/arch/powerpc/kernel/head_8xx.S
-@@ -206,31 +206,21 @@ InstructionTLBMiss:
- 	mfspr	r10, SPRN_SRR0	/* Get effective address of fault */
- 	INVALIDATE_ADJACENT_PAGES_CPU15(r10)
- 	mtspr	SPRN_MD_EPN, r10
--	/* Only modules will cause ITLB Misses as we always
--	 * pin the first 8MB of kernel memory */
- #ifdef ITLB_MISS_KERNEL
- 	mfcr	r11
--#if defined(SIMPLE_KERNEL_ADDRESS) && defined(CONFIG_PIN_TLB_TEXT)
-+#if defined(SIMPLE_KERNEL_ADDRESS)
- 	cmpi	cr0, r10, 0	/* Address >= 0x80000000 */
- #else
- 	rlwinm	r10, r10, 16, 0xfff8
- 	cmpli	cr0, r10, PAGE_OFFSET@h
--#ifndef CONFIG_PIN_TLB_TEXT
--	/* It is assumed that kernel code fits into the first 32M */
--0:	cmpli	cr7, r10, (PAGE_OFFSET + 0x2000000)@h
--	patch_site	0b, patch__itlbmiss_linmem_top
+@@ -779,10 +779,7 @@ start_here:
+ initial_mmu:
+ 	li	r8, 0
+ 	mtspr	SPRN_MI_CTR, r8		/* remove PINNED ITLB entries */
+-	lis	r10, MD_RESETVAL@h
+-#ifndef CONFIG_8xx_COPYBACK
+-	oris	r10, r10, MD_WTDEF@h
 -#endif
- #endif
- #endif
- 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
- #ifdef ITLB_MISS_KERNEL
--#if defined(SIMPLE_KERNEL_ADDRESS) && defined(CONFIG_PIN_TLB_TEXT)
-+#if defined(SIMPLE_KERNEL_ADDRESS)
- 	bge+	3f
- #else
- 	blt+	3f
--#endif
--#ifndef CONFIG_PIN_TLB_TEXT
--	blt	cr7, ITLBMissLinear
- #endif
- 	rlwinm	r10, r10, 0, 20, 31
- 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
-@@ -326,19 +316,9 @@ DataStoreTLBMiss:
- 	mfspr	r10, SPRN_MD_EPN
- 	rlwinm	r10, r10, 16, 0xfff8
- 	cmpli	cr0, r10, PAGE_OFFSET@h
--#ifndef CONFIG_PIN_TLB_IMMR
--	cmpli	cr6, r10, VIRT_IMMR_BASE@h
--#endif
--0:	cmpli	cr7, r10, (PAGE_OFFSET + 0x2000000)@h
--	patch_site	0b, patch__dtlbmiss_linmem_top
++	lis	r10, MD_TWAM@h
+ 	mtspr	SPRN_MD_CTR, r10	/* remove PINNED DTLB entries */
  
- 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
- 	blt+	3f
--#ifndef CONFIG_PIN_TLB_IMMR
--0:	beq-	cr6, DTLBMissIMMR
--	patch_site	0b, patch__dtlbmiss_immr_jmp
--#endif
--	blt	cr7, DTLBMissLinear
- 	rlwinm	r10, r10, 0, 20, 31
- 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
- 3:
-@@ -570,14 +550,9 @@ FixupDAR:/* Entry point for dcbx workaround. */
- 	cmpli	cr1, r11, PAGE_OFFSET@h
- 	mfspr	r11, SPRN_M_TWB	/* Get level 1 table */
- 	blt+	cr1, 3f
--	rlwinm	r11, r10, 16, 0xfff8
--
--0:	cmpli	cr7, r11, (PAGE_OFFSET + 0x1800000)@h
--	patch_site	0b, patch__fixupdar_linmem_top
- 
- 	/* create physical page address from effective address */
- 	tophys(r11, r10)
--	blt-	cr7, 201f
- 	mfspr	r11, SPRN_M_TWB	/* Get level 1 table */
- 	rlwinm	r11, r11, 0, 20, 31
- 	oris	r11, r11, (swapper_pg_dir - PAGE_OFFSET)@ha
-diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index 0956bc92b19c..d9f205d9a654 100644
---- a/arch/powerpc/mm/nohash/8xx.c
-+++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -54,8 +54,6 @@ unsigned long p_block_mapped(phys_addr_t pa)
- 	return 0;
- }
- 
--#define LARGE_PAGE_SIZE_8M	(1<<23)
--
- /*
-  * MMU_init_hw does the chip-specific initialization of the MMU hardware.
-  */
-@@ -80,119 +78,20 @@ void __init mmu_mapin_immr(void)
- 		map_kernel_page(v + offset, p + offset, PAGE_KERNEL_NCG);
- }
- 
--static void mmu_patch_cmp_limit(s32 *site, unsigned long mapped)
--{
--	modify_instruction_site(site, 0xffff, (unsigned long)__va(mapped) >> 16);
--}
--
--static void mmu_patch_addis(s32 *site, long simm)
--{
--	unsigned int instr = *(unsigned int *)patch_site_addr(site);
--
--	instr &= 0xffff0000;
--	instr |= ((unsigned long)simm) >> 16;
--	patch_instruction_site(site, instr);
--}
--
--static void mmu_mapin_ram_chunk(unsigned long offset, unsigned long top, pgprot_t prot)
--{
--	unsigned long s = offset;
--	unsigned long v = PAGE_OFFSET + s;
--	phys_addr_t p = memstart_addr + s;
--
--	for (; s < top; s += PAGE_SIZE) {
--		map_kernel_page(v, p, prot);
--		v += PAGE_SIZE;
--		p += PAGE_SIZE;
--	}
--}
--
- unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- {
--	unsigned long mapped;
--
- 	mmu_mapin_immr();
- 
--	if (__map_without_ltlbs) {
--		mapped = 0;
--		if (!IS_ENABLED(CONFIG_PIN_TLB_IMMR))
--			patch_instruction_site(&patch__dtlbmiss_immr_jmp, PPC_INST_NOP);
--		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
--			mmu_patch_cmp_limit(&patch__itlbmiss_linmem_top, 0);
--	} else {
--		unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
--
--		mapped = top & ~(LARGE_PAGE_SIZE_8M - 1);
--		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
--			mmu_patch_cmp_limit(&patch__itlbmiss_linmem_top, einittext8);
--
--		/*
--		 * Populate page tables to:
--		 * - have them appear in /sys/kernel/debug/kernel_page_tables
--		 * - allow the BDI to find the pages when they are not PINNED
--		 */
--		mmu_mapin_ram_chunk(0, einittext8, PAGE_KERNEL_X);
--		mmu_mapin_ram_chunk(einittext8, mapped, PAGE_KERNEL);
--	}
--
--	mmu_patch_cmp_limit(&patch__dtlbmiss_linmem_top, mapped);
--	mmu_patch_cmp_limit(&patch__fixupdar_linmem_top, mapped);
--
--	/* If the size of RAM is not an exact power of two, we may not
--	 * have covered RAM in its entirety with 8 MiB
--	 * pages. Consequently, restrict the top end of RAM currently
--	 * allocable so that calls to the MEMBLOCK to allocate PTEs for "tail"
--	 * coverage with normal-sized pages (or other reasons) do not
--	 * attempt to allocate outside the allowed range.
+ 	tlbia			/* Invalidate all TLB entries */
+@@ -857,17 +854,7 @@ initial_mmu:
+ 	mtspr	SPRN_DC_CST, r8
+ 	lis	r8, IDC_ENABLE@h
+ 	mtspr	SPRN_IC_CST, r8
+-#ifdef CONFIG_8xx_COPYBACK
+-	mtspr	SPRN_DC_CST, r8
+-#else
+-	/* For a debug option, I left this here to easily enable
+-	 * the write through cache mode
 -	 */
--	if (mapped)
--		memblock_set_current_limit(mapped);
--
--	block_mapped_ram = mapped;
--
--	return mapped;
-+	return 0;
- }
+-	lis	r8, DC_SFWT@h
+ 	mtspr	SPRN_DC_CST, r8
+-	lis	r8, IDC_ENABLE@h
+-	mtspr	SPRN_DC_CST, r8
+-#endif
+ 	/* Disable debug mode entry on breakpoints */
+ 	mfspr	r8, SPRN_DER
+ #ifdef CONFIG_PERF_EVENTS
+diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
+index e0fe670f06f6..b37de62d7e7f 100644
+--- a/arch/powerpc/platforms/8xx/Kconfig
++++ b/arch/powerpc/platforms/8xx/Kconfig
+@@ -98,15 +98,6 @@ menu "MPC8xx CPM Options"
+ # 8xx specific questions.
+ comment "Generic MPC8xx Options"
  
- void mmu_mark_initmem_nx(void)
- {
--	if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) && CONFIG_ETEXT_SHIFT < 23)
--		mmu_patch_addis(&patch__itlbmiss_linmem_top8,
--				-((long)_etext & ~(LARGE_PAGE_SIZE_8M - 1)));
--	if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT)) {
--		unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
--		unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
--		unsigned long etext = __pa(_etext);
+-config 8xx_COPYBACK
+-	bool "Copy-Back Data Cache (else Writethrough)"
+-	help
+-	  Saying Y here will cause the cache on an MPC8xx processor to be used
+-	  in Copy-Back mode.  If you say N here, it is used in Writethrough
+-	  mode.
 -
--		mmu_patch_cmp_limit(&patch__itlbmiss_linmem_top, __pa(_etext));
+-	  If in doubt, say Y here.
 -
--		/* Update page tables for PTDUMP and BDI */
--		mmu_mapin_ram_chunk(0, einittext8, __pgprot(0));
--		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX)) {
--			mmu_mapin_ram_chunk(0, etext, PAGE_KERNEL_TEXT);
--			mmu_mapin_ram_chunk(etext, einittext8, PAGE_KERNEL);
--		} else {
--			mmu_mapin_ram_chunk(0, etext8, PAGE_KERNEL_TEXT);
--			mmu_mapin_ram_chunk(etext8, einittext8, PAGE_KERNEL);
--		}
--	}
- }
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
- void mmu_mark_rodata_ro(void)
- {
--	unsigned long sinittext = __pa(_sinittext);
--	unsigned long etext = __pa(_etext);
--
--	if (CONFIG_DATA_SHIFT < 23)
--		mmu_patch_addis(&patch__dtlbmiss_romem_top8,
--				-__pa(((unsigned long)_sinittext) &
--				      ~(LARGE_PAGE_SIZE_8M - 1)));
--	mmu_patch_addis(&patch__dtlbmiss_romem_top, -__pa(_sinittext));
--
--	/* Update page tables for PTDUMP and BDI */
--	mmu_mapin_ram_chunk(0, sinittext, __pgprot(0));
--	mmu_mapin_ram_chunk(0, etext, PAGE_KERNEL_ROX);
--	mmu_mapin_ram_chunk(etext, sinittext, PAGE_KERNEL_RO);
- }
- #endif
- 
+ config 8xx_GPIO
+ 	bool "GPIO API Support"
+ 	select GPIOLIB
 -- 
 2.25.0
 
