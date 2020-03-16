@@ -2,154 +2,95 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E609C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9919C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C2E20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UAhCiAvp"
+	by mail.kernel.org (Postfix) with ESMTP id 9175120658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbgCPJvl (ORCPT
+        id S1730525AbgCPJwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:51:41 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37030 "EHLO mail.skyhub.de"
+        Mon, 16 Mar 2020 05:52:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42708 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730088AbgCPJvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:51:40 -0400
-Received: from zn.tnic (p200300EC2F06AB0069F33882ABEAD541.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:69f3:3882:abea:d541])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E7EE01EC0B89;
-        Mon, 16 Mar 2020 10:51:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584352299;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ifYntF04mk/uMnlnJ+xuphFsg2r2jtgAWgf2i801nHc=;
-        b=UAhCiAvp8/NUrep2e/FeG7v22OrCD0yHwL8spX3n72j90tddnXvZ7W+BwsT86+CzAh4jrU
-        RVNY2bzaJF+W4FD0Q6FroOPMpQjcKlXRkYUcJxjApO2NZWwmY3S9TAhuLSHgEW88+TA5mz
-        0okS+q4Kb8awXvS9Erugd7AWeFUPiTI=
-Date:   Mon, 16 Mar 2020 10:51:49 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Toshi Kani <toshi.kani@hpe.com>,
-        John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 11/11] EDAC/ghes: Create one memory controller per
- physical memory array
-Message-ID: <20200316095149.GE26126@zn.tnic>
-References: <20200306151318.17422-1-rrichter@marvell.com>
- <20200306151318.17422-12-rrichter@marvell.com>
+        id S1730088AbgCPJwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:52:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8A7E7B117;
+        Mon, 16 Mar 2020 09:52:28 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 555B51E10DA; Mon, 16 Mar 2020 10:52:24 +0100 (CET)
+Date:   Mon, 16 Mar 2020 10:52:24 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+Message-ID: <20200316095224.GF12783@quack2.suse.cz>
+References: <20200227052442.22524-1-ira.weiny@intel.com>
+ <20200305155144.GA5598@lst.de>
+ <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
+ <20200311033614.GQ1752567@magnolia>
+ <20200311062952.GA11519@lst.de>
+ <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306151318.17422-12-rrichter@marvell.com>
+In-Reply-To: <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:13:18PM +0100, Robert Richter wrote:
-> The ghes driver only creates one memory controller for the whole
-> system. This does not reflect memory topology especially in multi-node
-> systems. E.g. a Marvell ThunderX2 system shows:
+On Wed 11-03-20 10:07:18, Dan Williams wrote:
+> On Tue, Mar 10, 2020 at 11:30 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Tue, Mar 10, 2020 at 08:36:14PM -0700, Darrick J. Wong wrote:
+> > > 1) Leave the inode flag (FS_XFLAG_DAX) as it is, and export the S_DAX
+> > > status via statx.  Document that changes to FS_XFLAG_DAX do not take
+> > > effect immediately and that one must check statx to find out the real
+> > > mode.  If we choose this, I would also deprecate the dax mount option;
+> > > send in my mkfs.xfs patch to make it so that you can set FS_XFLAG_DAX on
+> > > all files at mkfs time; and we can finally lay this whole thing to rest.
+> > > This is the closest to what we have today.
+> > >
+> > > 2) Withdraw FS_XFLAG_DAX entirely, and let the kernel choose based on
+> > > usage patterns, hardware heuristics, or spiteful arbitrariness.
+> >
+> > 3) Only allow changing FS_XFLAG_DAX on directories or files that do
+> > not have blocks allocated to them yet, and side step all the hard
+> > problems.
 > 
->  /sys/devices/system/edac/mc/mc0/dimm0
->  /sys/devices/system/edac/mc/mc0/dimm1
->  /sys/devices/system/edac/mc/mc0/dimm2
->  /sys/devices/system/edac/mc/mc0/dimm3
->  /sys/devices/system/edac/mc/mc0/dimm4
->  /sys/devices/system/edac/mc/mc0/dimm5
->  /sys/devices/system/edac/mc/mc0/dimm6
->  /sys/devices/system/edac/mc/mc0/dimm7
->  /sys/devices/system/edac/mc/mc0/dimm8
->  /sys/devices/system/edac/mc/mc0/dimm9
->  /sys/devices/system/edac/mc/mc0/dimm10
->  /sys/devices/system/edac/mc/mc0/dimm11
->  /sys/devices/system/edac/mc/mc0/dimm12
->  /sys/devices/system/edac/mc/mc0/dimm13
->  /sys/devices/system/edac/mc/mc0/dimm14
->  /sys/devices/system/edac/mc/mc0/dimm15
+> This sounds reasonable to me.
 > 
-> The DIMMs 9-15 are located on the 2nd node of the system. On
-> comparable x86 systems there is one memory controller per node. The
-> ghes driver should also group DIMMs depending on the topology and
-> create one MC per node.
-> 
-> There are several options to detect the topology. ARM64 systems
-> retrieve the (NUMA) node information from the ACPI SRAT table (see
-> acpi_table_parse_srat()). The node id is later stored in the physical
-> address page. The pfn_to_nid() macro could be used for a DIMM after
-> determining its physical address. The drawback of this approach is
-> that there are too many subsystems involved it depends on. It could
-> easily break and makes the implementation complex. E.g. pfn_to_nid()
-> can only be reliable used on mapped address ranges which is not always
-> granted, there are various firmware instances involved which could be
-> broken, or results may vary depending on NUMA settings.
-> 
-> Another approach that was suggested by James' is to use the DIMM's
-> physical memory array handle to group DIMMs [1]. The advantage is to
-> only use the information on memory devices from the SMBIOS table that
-> contains a reference to the physical memory array it belongs too. This
-> information is mandatory same as the use of DIMM handle references by
-> GHES to provide the DIMM location of an error. There is only a single
-> table to parse which eases implementation. This patch uses this
-> approach for DIMM grouping.
-> 
-> Modify the DMI decoder to also detect the physical memory array a DIMM
-> is linked to and create one memory controller per array to group
-> DIMMs. With the change DIMMs are grouped, e.g. a ThunderX2 system
-> shows one MC per node now:
-> 
->  # grep . /sys/devices/system/edac/mc/mc*/dimm*/dimm_label
->  /sys/devices/system/edac/mc/mc0/dimm0/dimm_label:N0 DIMM_A0
->  /sys/devices/system/edac/mc/mc0/dimm1/dimm_label:N0 DIMM_B0
->  /sys/devices/system/edac/mc/mc0/dimm2/dimm_label:N0 DIMM_C0
->  /sys/devices/system/edac/mc/mc0/dimm3/dimm_label:N0 DIMM_D0
->  /sys/devices/system/edac/mc/mc0/dimm4/dimm_label:N0 DIMM_E0
->  /sys/devices/system/edac/mc/mc0/dimm5/dimm_label:N0 DIMM_F0
->  /sys/devices/system/edac/mc/mc0/dimm6/dimm_label:N0 DIMM_G0
->  /sys/devices/system/edac/mc/mc0/dimm7/dimm_label:N0 DIMM_H0
->  /sys/devices/system/edac/mc/mc1/dimm0/dimm_label:N1 DIMM_I0
->  /sys/devices/system/edac/mc/mc1/dimm1/dimm_label:N1 DIMM_J0
->  /sys/devices/system/edac/mc/mc1/dimm2/dimm_label:N1 DIMM_K0
->  /sys/devices/system/edac/mc/mc1/dimm3/dimm_label:N1 DIMM_L0
->  /sys/devices/system/edac/mc/mc1/dimm4/dimm_label:N1 DIMM_M0
->  /sys/devices/system/edac/mc/mc1/dimm5/dimm_label:N1 DIMM_N0
->  /sys/devices/system/edac/mc/mc1/dimm6/dimm_label:N1 DIMM_O0
->  /sys/devices/system/edac/mc/mc1/dimm7/dimm_label:N1 DIMM_P0
-> 
-> [1] https://lkml.kernel.org/r/f878201f-f8fd-0f2a-5072-ba60c64eefaf@arm.com
-> 
-> Suggested-by: James Morse <james.morse@arm.com>
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/ghes_edac.c | 137 ++++++++++++++++++++++++++++++---------
->  1 file changed, 107 insertions(+), 30 deletions(-)
+> As for deprecating the mount option, I think at a minimum it needs to
+> continue be accepted as an option even if it is ignored to not break
+> existing setups.
 
-This is all fine and good but that change affects the one x86 platform
-we support so the whole patchset should be tested there too. Adding
-Toshi.
+Agreed. But that's how we usually deprecate mount options. Also I'd say
+that statx() support for reporting DAX state and some education of
+programmers using DAX is required before we deprecate the mount option
+since currently applications check 'dax' mount option to determine how much
+memory they need to set aside for page cache before they consume everything
+else on the machine...
 
-As a matter of fact, the final version of this set should be tested on
-all platforms which are using this thing. Adding John Garry too who
-reported issues with this driver recently on his platform.
-
-Thx.
-
+								Honza
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
