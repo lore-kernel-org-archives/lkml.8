@@ -2,117 +2,174 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16EDC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF63C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741CF2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8385C205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QbuME4kA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bCfCbFFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbgCPKzi (ORCPT
+        id S1730702AbgCPLAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:55:38 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:17262 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730766AbgCPKzi (ORCPT
+        Mon, 16 Mar 2020 07:00:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28984 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730624AbgCPLAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:55:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584356137; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=5xrQ7T4fhSt6GBPAdXESoichf/t20jtCxTSqGyamBWA=; b=QbuME4kAq7Y488LrL6qJXCKPl1PL4q6/74R+TH5VC2oLdG2K6E68atajrlgQX3Y3lnXsd3dX
- YEBDmI0mPuEIpH8YoIc+M+VLnI0ZCkkXpVtNUztdwZtCGCtD8Wv90pxbeaymm9QXXUUEfBXx
- MKbph8GKj1SeKZBz4mtEMIMWC1I=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6f5b18.7fedd0517378-smtp-out-n02;
- Mon, 16 Mar 2020 10:55:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E41CCC4478C; Mon, 16 Mar 2020 10:55:19 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 16 Mar 2020 07:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584356421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=cSdLtCGEh4iL+FNlWi4IjCbozZyk8pdJbi3dct/QbPU=;
+        b=bCfCbFFpdtuLwwwtfb7b3gAshC0PWIGLfrE2CfCDq+6aBAzimw393a2J6z5dV8VwmG+V5r
+        WRL3F4CQxOfp9BaRqIXDZw1i93EcD3lxFEDqEnE9SEnsJQ29p1u7s4Fi61oJlJv8Mu/895
+        7LmGcnrJD3ozwyMVjcUHP9uG51UTzew=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-430-1hi_PFM5Ps6xbGG7zZQclw-1; Mon, 16 Mar 2020 07:00:13 -0400
+X-MC-Unique: 1hi_PFM5Ps6xbGG7zZQclw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E237C433CB;
-        Mon, 16 Mar 2020 10:55:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E237C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 3/3] clk: qcom: gcc: Add support for Secure control source clock
-Date:   Mon, 16 Mar 2020 16:24:42 +0530
-Message-Id: <1584356082-26769-4-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584356082-26769-1-git-send-email-tdas@codeaurora.org>
-References: <1584356082-26769-1-git-send-email-tdas@codeaurora.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AF74101FC60;
+        Mon, 16 Mar 2020 11:00:12 +0000 (UTC)
+Received: from [10.36.118.207] (unknown [10.36.118.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE86592F9A;
+        Mon, 16 Mar 2020 11:00:09 +0000 (UTC)
+Subject: Re: [PATCH v4 1/2] mm/sparse.c: Use kvmalloc/kvfree to alloc/free
+ memmap for the classic sparse
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, mhocko@suse.com, akpm@linux-foundation.org,
+        willy@infradead.org, richard.weiyang@gmail.com, vbabka@suse.cz
+References: <20200316102150.16487-1-bhe@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <1f5b22ac-283e-3b69-f443-528f09edaf60@redhat.com>
+Date:   Mon, 16 Mar 2020 12:00:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200316102150.16487-1-bhe@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The secure controller driver requires to request for various frequencies
-on the source clock, thus add support for the same.
+On 16.03.20 11:21, Baoquan He wrote:
+> This change makes populate_section_memmap()/depopulate_section_memmap
+> much simpler.
+> 
+> Suggested-by: Michal Hocko <mhocko@kernel.org>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> ---
+> v3->v4:
+>   Split the old v3 into two patches, to carve out the using 'nid'
+>   as preferred node to allocate memmap into a separate patch. This
+>   is suggested by Michal, and the carving out is put in patch 2.
+> 
+> v2->v3:
+>   Remove __GFP_NOWARN and use array_size when calling kvmalloc_node()
+>   per Matthew's comments.
+> http://lkml.kernel.org/r/20200312141749.GL27711@MiWiFi-R3L-srv
+> 
+>  mm/sparse.c | 27 +++------------------------
+>  1 file changed, 3 insertions(+), 24 deletions(-)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index e747a238a860..d01d09cc7d99 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -719,35 +719,14 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>  struct page * __meminit populate_section_memmap(unsigned long pfn,
+>  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>  {
+> -	struct page *page, *ret;
+> -	unsigned long memmap_size = sizeof(struct page) * PAGES_PER_SECTION;
+> -
+> -	page = alloc_pages(GFP_KERNEL|__GFP_NOWARN, get_order(memmap_size));
+> -	if (page)
+> -		goto got_map_page;
+> -
+> -	ret = vmalloc(memmap_size);
+> -	if (ret)
+> -		goto got_map_ptr;
+> -
+> -	return NULL;
+> -got_map_page:
+> -	ret = (struct page *)pfn_to_kaddr(page_to_pfn(page));
+> -got_map_ptr:
+> -
+> -	return ret;
+> +	return kvmalloc(array_size(sizeof(struct page),
+> +			PAGES_PER_SECTION), GFP_KERNEL);
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/gcc-sc7180.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+FWIW, this is what I meant:
 
-diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-index ad75847..3302f19 100644
---- a/drivers/clk/qcom/gcc-sc7180.c
-+++ b/drivers/clk/qcom/gcc-sc7180.c
-@@ -817,6 +817,26 @@ static struct clk_rcg2 gcc_usb3_prim_phy_aux_clk_src = {
- 	},
- };
+        return kvmalloc(array_size(sizeof(struct page),
+                                   PAGES_PER_SECTION), GFP_KERNEL);
 
-+static const struct freq_tbl ftbl_gcc_sec_ctrl_clk_src[] = {
-+	F(4800000, P_BI_TCXO, 4, 0, 0),
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 gcc_sec_ctrl_clk_src = {
-+	.cmd_rcgr = 0x3d030,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = gcc_parent_map_3,
-+	.freq_tbl = ftbl_gcc_sec_ctrl_clk_src,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "gcc_sec_ctrl_clk_src",
-+		.parent_data = gcc_parent_data_3,
-+		.num_parents = 3,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
- static struct clk_branch gcc_aggre_ufs_phy_axi_clk = {
- 	.halt_reg = 0x82024,
- 	.halt_check = BRANCH_HALT_DELAY,
-@@ -2337,6 +2357,7 @@ static struct clk_regmap *gcc_sc7180_clocks[] = {
- 	[GPLL7] = &gpll7.clkr,
- 	[GPLL4] = &gpll4.clkr,
- 	[GPLL1] = &gpll1.clkr,
-+	[GCC_SEC_CTRL_CLK_SRC] = &gcc_sec_ctrl_clk_src.clkr,
- };
 
- static const struct qcom_reset_map gcc_sc7180_resets[] = {
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+
+-- 
+Thanks,
+
+David / dhildenb
+
