@@ -2,94 +2,77 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BF6C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FD7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B189320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE15D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731613AbgCPPhC (ORCPT
+        id S1731671AbgCPPjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:37:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:50756 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 11:39:10 -0400
+Received: from elvis.franken.de ([193.175.24.41]:44978 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731505AbgCPPhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:37:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 400A51FB;
-        Mon, 16 Mar 2020 08:37:01 -0700 (PDT)
-Received: from [10.37.9.38] (unknown [10.37.9.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03C833F534;
-        Mon, 16 Mar 2020 08:36:55 -0700 (PDT)
-Subject: Re: [PATCH v3 21/26] arm64: Introduce asm/vdso/arch_timer.h
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
- <20200313154345.56760-22-vincenzo.frascino@arm.com>
- <20200315183151.GE32205@mbp>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <4914ad9c-3eaf-b328-f31b-5d3077ef272f@arm.com>
-Date:   Mon, 16 Mar 2020 15:37:23 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1731505AbgCPPjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:39:09 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jDrpX-0008Kq-00; Mon, 16 Mar 2020 16:39:03 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id CF651C1079; Mon, 16 Mar 2020 16:31:08 +0100 (CET)
+Date:   Mon, 16 Mar 2020 16:31:08 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] MIPS: c-r4k: Invalidate BMIPS5000 ZSCM prefetch lines
+Message-ID: <20200316153108.GA13674@alpha.franken.de>
+References: <20200311214432.GA5900@alpha.franken.de>
+ <2388CCC9-8C2A-4907-988D-7A239DE0DD6C@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200315183151.GE32205@mbp>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2388CCC9-8C2A-4907-988D-7A239DE0DD6C@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
+On Thu, Mar 12, 2020 at 11:09:35PM -0400, Kamal Dasu wrote:
+> This is needed on dma reads from device.  
 
-On 3/15/20 6:32 PM, Catalin Marinas wrote:
-> On Fri, Mar 13, 2020 at 03:43:40PM +0000, Vincenzo Frascino wrote:
->> The vDSO library should only include the necessary headers required for
->> a userspace library (UAPI and a minimal set of kernel headers). To make
->> this possible it is necessary to isolate from the kernel headers the
->> common parts that are strictly necessary to build the library.
->>
->> Introduce asm/vdso/arch_timer.h to contain all the arm64 specific
->> code. This allows to replace the second isb() in __arch_get_hw_counter()
->> with a fake dependent stack read of the counter which improves the vdso
->> library peformances of ~4.5%. Below the results of vdsotest [1] ran for
->> 100 iterations.
-> 
-> The subject seems to imply a non-functional change but as you read, it
-> gets a lot more complicated. Could you keep the functional change
-> separate from the header clean-up, maybe submit it as an independent
-> patch? And it shouldn't go in without Will's ack ;).
-> 
+ok.
 
-It is fine by me. I will repost the series with the required fixes and without
-this patch. This will give to me enough time to address Mark's comments as well
-and to Will to have a proper look.
+> > On Mar 11, 2020, at 5:44 PM, Thomas Bogendoerfer <tsbogend@alpha.franken.de> wrote:
+> > 
+> > ﻿On Wed, Mar 11, 2020 at 01:54:23PM -0700, Florian Fainelli wrote:
+> >>> On 2/7/20 2:33 PM, Kamal Dasu wrote:
+> >>> Zephyr secondary cache is 256KB, 128B lines. 32B sectors. A secondary cache
+> >>> line can contain two instruction cache lines (64B), or four data cache
+> >>> lines (32B). Hardware prefetch Cache detects stream access, and prefetches
+> >>> ahead of processor access. Add support to invalidate BMIPS5000 cpu zephyr
+> >>> secondary cache module (ZSCM) on DMA from device so that data returned is
+> >>> coherent during DMA read operations.
+> >>> 
+> >>> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+
+Applied to mips-next.
+
+Thomas.
 
 -- 
-Regards,
-Vincenzo
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
