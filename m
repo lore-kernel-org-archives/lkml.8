@@ -2,226 +2,94 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4EBC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBC3C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2D2206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9320920674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732533AbgCPTdi (ORCPT
+        id S1732455AbgCPTet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 15:33:38 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51888 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732522AbgCPTdg (ORCPT
+        Mon, 16 Mar 2020 15:34:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52812 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732366AbgCPTet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 15:33:36 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 574E5293369
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, hans.verkuil@cisco.com,
-        niklas.soderlund@ragnatech.se, mchehab@kernel.org,
-        Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH 4/4] media: vimc: use v4l2_pipeline_stream_{enable,disable} helpers
-Date:   Mon, 16 Mar 2020 16:33:05 -0300
-Message-Id: <20200316193305.428378-5-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200316193305.428378-1-helen.koike@collabora.com>
-References: <20200316193305.428378-1-helen.koike@collabora.com>
+        Mon, 16 Mar 2020 15:34:49 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jDvVT-0004MQ-5x; Mon, 16 Mar 2020 20:34:35 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 84ABC1013B2; Mon, 16 Mar 2020 20:34:34 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/9] pci/switchtec: Don't abuse completion wait queue for poll
+In-Reply-To: <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com>
+References: <20200313174701.148376-1-bigeasy@linutronix.de> <20200313174701.148376-4-bigeasy@linutronix.de> <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com>
+Date:   Mon, 16 Mar 2020 20:34:34 +0100
+Message-ID: <87v9n4ccvp.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use v4l2_pipeline_stream_{enable,disable} to call .s_stream() subdevice
-callbacks through the pipeline.
+Logan Gunthorpe <logang@deltatee.com> writes:
+> On 2020-03-13 11:46 a.m., Sebastian Andrzej Siewior wrote:
+>>  1) It cannot work with EPOLLEXCLUSIVE
+>
+> Why? You don't explain this.
 
-Tested streaming works with:
+man epoll_ctt(2)
 
-media-ctl -d /dev/media0 -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
-media-ctl -d /dev/media0 -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
-media-ctl -d /dev/media0 -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
-media-ctl -d /dev/media0 -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
-media-ctl -d /dev/media0 -V '"Scaler":0[fmt:RGB888_1X24/640x480]'
-media-ctl -d /dev/media0 -V '"Scaler":0[crop:(100,50)/400x150]'
-media-ctl -d /dev/media0 -V '"Scaler":1[fmt:RGB888_1X24/1920x1440]'
-v4l2-ctl -d /dev/video2 -v width=1200,height=450
-v4l2-ctl -d /dev/video0 -v pixelformat=BA81
-v4l2-ctl -d /dev/video1 -v pixelformat=BA81
-v4l2-ctl --stream-mmap --stream-count=10 -d /dev/video2 --stream-to=/tmp/test.raw
+EPOLLEXCLUSIVE (since Linux 4.5)
 
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
+  Sets an exclusive wakeup mode for the epoll file descriptor that is
+  being attached to the target file descriptor, fd.  When a wakeup event
+  occurs and multiple epoll file descriptors are attached to the same
+  target file using EPOLLEXCLUSIVE, one or more of the epoll file
+  descriptors will receive an event with epoll_wait(2).
 
----
+As this uses complete_all() there is no distinction possible, because
+complete_all() wakes up everything.
 
- drivers/media/platform/vimc/vimc-capture.c  | 28 +++++++-----
- drivers/media/platform/vimc/vimc-streamer.c | 49 +++------------------
- 2 files changed, 23 insertions(+), 54 deletions(-)
+> And I don't see how this patch would change anything to do with the
+> call to poll_wait(). All you've done is open-code the completion.
 
-diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-index 23e740c1c5c0..f65d59728d8f 100644
---- a/drivers/media/platform/vimc/vimc-capture.c
-+++ b/drivers/media/platform/vimc/vimc-capture.c
-@@ -233,21 +233,27 @@ static int vimc_cap_start_streaming(struct vb2_queue *vq, unsigned int count)
- 
- 	vcap->sequence = 0;
- 
--	/* Start the media pipeline */
- 	ret = media_pipeline_start(entity, &vcap->stream.pipe);
--	if (ret) {
--		vimc_cap_return_all_buffers(vcap, VB2_BUF_STATE_QUEUED);
--		return ret;
--	}
-+	if (ret)
-+		goto err_return_all_buffers;
-+
-+	ret = v4l2_pipeline_stream_enable(entity, &vcap->stream.pipe);
-+	if (ret)
-+		goto err_stop_media_pipe;
- 
- 	ret = vimc_streamer_s_stream(&vcap->stream, &vcap->ved, 1);
--	if (ret) {
--		media_pipeline_stop(entity);
--		vimc_cap_return_all_buffers(vcap, VB2_BUF_STATE_QUEUED);
--		return ret;
--	}
-+	if (ret)
-+		goto err_stop_stream;
- 
- 	return 0;
-+
-+err_stop_stream:
-+	v4l2_pipeline_stream_disable(entity, &vcap->stream.pipe);
-+err_stop_media_pipe:
-+	media_pipeline_stop(entity);
-+err_return_all_buffers:
-+	vimc_cap_return_all_buffers(vcap, VB2_BUF_STATE_QUEUED);
-+	return ret;
- }
- 
- /*
-@@ -260,6 +266,8 @@ static void vimc_cap_stop_streaming(struct vb2_queue *vq)
- 
- 	vimc_streamer_s_stream(&vcap->stream, &vcap->ved, 0);
- 
-+	v4l2_pipeline_stream_disable(&vcap->vdev.entity, &vcap->stream.pipe);
-+
- 	/* Stop the media pipeline */
- 	media_pipeline_stop(&vcap->vdev.entity);
- 
-diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-index 65feb3c596db..c0085f4695c2 100644
---- a/drivers/media/platform/vimc/vimc-streamer.c
-+++ b/drivers/media/platform/vimc/vimc-streamer.c
-@@ -36,33 +36,6 @@ static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
- 	return NULL;
- }
- 
--/**
-- * vimc_streamer_pipeline_terminate - Disable stream in all ved in stream
-- *
-- * @stream: the pointer to the stream structure with the pipeline to be
-- *	    disabled.
-- *
-- * Calls s_stream to disable the stream in each entity of the pipeline
-- *
-- */
--static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
--{
--	struct vimc_ent_device *ved;
--	struct v4l2_subdev *sd;
--
--	while (stream->pipe_size) {
--		stream->pipe_size--;
--		ved = stream->ved_pipeline[stream->pipe_size];
--		stream->ved_pipeline[stream->pipe_size] = NULL;
--
--		if (!is_media_entity_v4l2_subdev(ved->ent))
--			continue;
--
--		sd = media_entity_to_v4l2_subdev(ved->ent);
--		v4l2_subdev_call(sd, video, s_stream, 0);
--	}
--}
--
- /**
-  * vimc_streamer_pipeline_init - Initializes the stream structure
-  *
-@@ -82,27 +55,15 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
- 	struct media_entity *entity;
- 	struct video_device *vdev;
- 	struct v4l2_subdev *sd;
--	int ret = 0;
- 
- 	stream->pipe_size = 0;
- 	while (stream->pipe_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
- 		if (!ved) {
--			vimc_streamer_pipeline_terminate(stream);
-+			stream->pipe_size = 0;
- 			return -EINVAL;
- 		}
- 		stream->ved_pipeline[stream->pipe_size++] = ved;
- 
--		if (is_media_entity_v4l2_subdev(ved->ent)) {
--			sd = media_entity_to_v4l2_subdev(ved->ent);
--			ret = v4l2_subdev_call(sd, video, s_stream, 1);
--			if (ret && ret != -ENOIOCTLCMD) {
--				dev_err(ved->dev, "subdev_call error %s\n",
--					ved->ent->name);
--				vimc_streamer_pipeline_terminate(stream);
--				return ret;
--			}
--		}
--
- 		entity = vimc_get_source_entity(ved->ent);
- 		/* Check if the end of the pipeline was reached */
- 		if (!entity) {
-@@ -111,7 +72,7 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
- 				dev_err(ved->dev,
- 					"first entity in the pipe '%s' is not a source\n",
- 					ved->ent->name);
--				vimc_streamer_pipeline_terminate(stream);
-+				stream->pipe_size = 0;
- 				return -EPIPE;
- 			}
- 			return 0;
-@@ -129,7 +90,7 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
- 		}
- 	}
- 
--	vimc_streamer_pipeline_terminate(stream);
-+	stream->pipe_size = 0;
- 	return -EINVAL;
- }
- 
-@@ -210,7 +171,7 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
- 		if (IS_ERR(stream->kthread)) {
- 			ret = PTR_ERR(stream->kthread);
- 			dev_err(ved->dev, "kthread_run failed with %d\n", ret);
--			vimc_streamer_pipeline_terminate(stream);
-+			stream->pipe_size = 0;
- 			stream->kthread = NULL;
- 			return ret;
- 		}
-@@ -231,7 +192,7 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
- 
- 		stream->kthread = NULL;
- 
--		vimc_streamer_pipeline_terminate(stream);
-+		stream->pipe_size = 0;
- 	}
- 
- 	return 0;
--- 
-2.25.0
+wake_up_interruptible(x) resolves to: 
 
+     __wake_up(x, TASK_INTERRUPTIBLE, 1, NULL)
+
+which wakes exactly 1 exclusive waiter.
+
+Also the other way round is just working because the waker side uses
+complete_all(). Why? Because completion internally defaults to exclusive
+mode and complete() wakes exactly one exlusive waiter.
+
+There is a conceptual difference and while it works for that particular
+purpose to some extent it's not suitable as a general wait notification
+construct.
+
+Thanks,
+
+        tglx
