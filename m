@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73784C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE7FC5ACBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2B120737
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D60D20737
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326048;
-	bh=8utJ4PbiBkJFqLWavO/QYmjVPSaB2McN1fDCS3CNWwg=;
+	s=default; t=1584326049;
+	bh=kfUWbnTeMtmznHS2XI+DY12FQ9bzL1Ohz2f03135/Vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ju8LJRSn3rMOSQ8SzRPwX+KRgJO4lePuDyyFlLGr4sulmHRpDAUXq5hoj/oGUsmg0
-	 LQp3zX+Sv11fhXKse/Ffltg4a+dHCVgoWZEpflJ5ufAFNaJqNoPNXew02B0ZnntFvo
-	 0U8BFTbtOdMknWbP6TkiTAW0+mHlswDPJT9/rtbc=
+	b=tMVzcKXI7s8JY3kqxBWxrZU7SrrLIEdxCAGcXNx8kCOsb8JUjS74/V8QbvuQkfNTv
+	 Xub1iFvySgEDL/a26OqglX2lphoQ5VrG9QTCLbSpSsZ+tIrosZASv5CWO0b9Z/GS0d
+	 fL7DMGtsk6fKEz/OJNb8fKfYgYs9fRXRNKG4In3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbgCPCeH (ORCPT
+        id S1729771AbgCPCeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:34:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729730AbgCPCeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:04 -0400
+        id S1729742AbgCPCeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66FF0206EB;
-        Mon, 16 Mar 2020 02:34:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD6032072A;
+        Mon, 16 Mar 2020 02:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326043;
-        bh=8utJ4PbiBkJFqLWavO/QYmjVPSaB2McN1fDCS3CNWwg=;
+        s=default; t=1584326045;
+        bh=kfUWbnTeMtmznHS2XI+DY12FQ9bzL1Ohz2f03135/Vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kf33GIacZxdQb+WRd5kZqTQXVmg0KYqxjAr8GHdw2qvVCQQjE1ZzSbKDXRhbbJBbG
-         nXZfQkdafcqQBZrJvUc3TUEXNS7pn2vOWvpWG5d2Mtg9ezUhSUtMSI9qPl5faepKmn
-         KaUY+w3JJ4CQSGu/8Pblu79JkiI4jYSnO08RHnfc=
+        b=1/UwPJSIKYUyGkWJNi0p4PpXttYjfdGxcHGEa8l21KyVYOhXKbwvQ0cr/ukRfxXFL
+         b42yYZdcCzVz7eJV9cHHl++D6v+8You17CDSLYPY3oJ2OHc/m1lgABexWbj7bx4Sr3
+         JZ7j826pVnYwPM7m2Aqn2iXMK/a2zgXYfwJ6oDn8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
-        Julien Grall <jgrall@amazon.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 5.5 36/41] xenbus: req->body should be updated before req->state
-Date:   Sun, 15 Mar 2020 22:33:14 -0400
-Message-Id: <20200316023319.749-36-sashal@kernel.org>
+Cc:     Tycho Andersen <tycho@tycho.ws>,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 38/41] riscv: fix seccomp reject syscall code path
+Date:   Sun, 15 Mar 2020 22:33:16 -0400
+Message-Id: <20200316023319.749-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
@@ -60,111 +63,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Tycho Andersen <tycho@tycho.ws>
 
-[ Upstream commit 1b6a51e86cce38cf4d48ce9c242120283ae2f603 ]
+[ Upstream commit af33d2433b03d63ed31fcfda842f46676a5e1afc ]
 
-The req->body should be updated before req->state is updated and the
-order should be guaranteed by a barrier.
+If secure_computing() rejected a system call, we were previously setting
+the system call number to -1, to indicate to later code that the syscall
+failed. However, if something (e.g. a user notification) was sleeping, and
+received a signal, we may set a0 to -ERESTARTSYS and re-try the system call
+again.
 
-Otherwise, read_reply() might return req->body = NULL.
+In this case, seccomp "denies" the syscall (because of the signal), and we
+would set a7 to -1, thus losing the value of the system call we want to
+restart.
 
-Below is sample callstack when the issue is reproduced on purpose by
-reordering the updates of req->body and req->state and adding delay in
-code between updates of req->state and req->body.
+Instead, let's return -1 from do_syscall_trace_enter() to indicate that the
+syscall was rejected, so we don't clobber the value in case of -ERESTARTSYS
+or whatever.
 
-[   22.356105] general protection fault: 0000 [#1] SMP PTI
-[   22.361185] CPU: 2 PID: 52 Comm: xenwatch Not tainted 5.5.0xen+ #6
-[   22.366727] Hardware name: Xen HVM domU, BIOS ...
-[   22.372245] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
-... ...
-[   22.392163] RSP: 0018:ffffb2d64023fdf0 EFLAGS: 00010246
-[   22.395933] RAX: 0000000000000000 RBX: 75746e7562755f6d RCX: 0000000000000000
-[   22.400871] RDX: 0000000000000000 RSI: ffffb2d64023fdfc RDI: 75746e7562755f6d
-[   22.405874] RBP: 0000000000000000 R08: 00000000000001e8 R09: 0000000000cdcdcd
-[   22.410945] R10: ffffb2d6402ffe00 R11: ffff9d95395eaeb0 R12: ffff9d9535935000
-[   22.417613] R13: ffff9d9526d4a000 R14: ffff9d9526f4f340 R15: ffff9d9537654000
-[   22.423726] FS:  0000000000000000(0000) GS:ffff9d953bc80000(0000) knlGS:0000000000000000
-[   22.429898] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   22.434342] CR2: 000000c4206a9000 CR3: 00000001ea3fc002 CR4: 00000000001606e0
-[   22.439645] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   22.444941] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   22.450342] Call Trace:
-[   22.452509]  simple_strtoull+0x27/0x70
-[   22.455572]  xenbus_transaction_start+0x31/0x50
-[   22.459104]  netback_changed+0x76c/0xcc1 [xen_netfront]
-[   22.463279]  ? find_watch+0x40/0x40
-[   22.466156]  xenwatch_thread+0xb4/0x150
-[   22.469309]  ? wait_woken+0x80/0x80
-[   22.472198]  kthread+0x10e/0x130
-[   22.474925]  ? kthread_park+0x80/0x80
-[   22.477946]  ret_from_fork+0x35/0x40
-[   22.480968] Modules linked in: xen_kbdfront xen_fbfront(+) xen_netfront xen_blkfront
-[   22.486783] ---[ end trace a9222030a747c3f7 ]---
-[   22.490424] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
+This commit fixes the user_notification_signal seccomp selftest on riscv to
+no longer hang. That test expects the system call to be re-issued after the
+signal, and it wasn't due to the above bug. Now that it is, everything
+works normally.
 
-The virt_rmb() is added in the 'true' path of test_reply(). The "while"
-is changed to "do while" so that test_reply() is used as a read memory
-barrier.
+Note that in the ptrace (tracer) case, the tracer can set the register
+values to whatever they want, so we still need to keep the code that
+handles out-of-bounds syscalls. However, we can drop the comment.
 
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Link: https://lore.kernel.org/r/20200303221423.21962-1-dongli.zhang@oracle.com
-Reviewed-by: Julien Grall <jgrall@amazon.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+We can also drop syscall_set_nr(), since it is no longer used anywhere, and
+the code that re-loads the value in a7 because of it.
+
+Reported in: https://lore.kernel.org/bpf/CAEn-LTp=ss0Dfv6J00=rCAy+N78U2AmhqJNjfqjr2FDpPYjxEQ@mail.gmail.com/
+
+Reported-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_comms.c | 2 ++
- drivers/xen/xenbus/xenbus_xs.c    | 9 ++++++---
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ arch/riscv/include/asm/syscall.h |  7 -------
+ arch/riscv/kernel/entry.S        | 11 +++--------
+ arch/riscv/kernel/ptrace.c       | 11 +++++------
+ 3 files changed, 8 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
-index d239fc3c5e3de..852ed161fc2a7 100644
---- a/drivers/xen/xenbus/xenbus_comms.c
-+++ b/drivers/xen/xenbus/xenbus_comms.c
-@@ -313,6 +313,8 @@ static int process_msg(void)
- 			req->msg.type = state.msg.type;
- 			req->msg.len = state.msg.len;
- 			req->body = state.body;
-+			/* write body, then update state */
-+			virt_wmb();
- 			req->state = xb_req_state_got_reply;
- 			req->cb(req);
- 		} else
-diff --git a/drivers/xen/xenbus/xenbus_xs.c b/drivers/xen/xenbus/xenbus_xs.c
-index ddc18da61834e..3a06eb699f333 100644
---- a/drivers/xen/xenbus/xenbus_xs.c
-+++ b/drivers/xen/xenbus/xenbus_xs.c
-@@ -191,8 +191,11 @@ static bool xenbus_ok(void)
- 
- static bool test_reply(struct xb_req_data *req)
- {
--	if (req->state == xb_req_state_got_reply || !xenbus_ok())
-+	if (req->state == xb_req_state_got_reply || !xenbus_ok()) {
-+		/* read req->state before all other fields */
-+		virt_rmb();
- 		return true;
-+	}
- 
- 	/* Make sure to reread req->state each time. */
- 	barrier();
-@@ -202,7 +205,7 @@ static bool test_reply(struct xb_req_data *req)
- 
- static void *read_reply(struct xb_req_data *req)
- {
--	while (req->state != xb_req_state_got_reply) {
-+	do {
- 		wait_event(req->wq, test_reply(req));
- 
- 		if (!xenbus_ok())
-@@ -216,7 +219,7 @@ static void *read_reply(struct xb_req_data *req)
- 		if (req->err)
- 			return ERR_PTR(req->err);
- 
--	}
-+	} while (req->state != xb_req_state_got_reply);
- 
- 	return req->body;
+diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+index 42347d0981e7e..49350c8bd7b09 100644
+--- a/arch/riscv/include/asm/syscall.h
++++ b/arch/riscv/include/asm/syscall.h
+@@ -28,13 +28,6 @@ static inline int syscall_get_nr(struct task_struct *task,
+ 	return regs->a7;
  }
+ 
+-static inline void syscall_set_nr(struct task_struct *task,
+-				  struct pt_regs *regs,
+-				  int sysno)
+-{
+-	regs->a7 = sysno;
+-}
+-
+ static inline void syscall_rollback(struct task_struct *task,
+ 				    struct pt_regs *regs)
+ {
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index e163b7b64c86c..f6486d4956013 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -228,20 +228,13 @@ check_syscall_nr:
+ 	/* Check to make sure we don't jump to a bogus syscall number. */
+ 	li t0, __NR_syscalls
+ 	la s0, sys_ni_syscall
+-	/*
+-	 * The tracer can change syscall number to valid/invalid value.
+-	 * We use syscall_set_nr helper in syscall_trace_enter thus we
+-	 * cannot trust the current value in a7 and have to reload from
+-	 * the current task pt_regs.
+-	 */
+-	REG_L a7, PT_A7(sp)
+ 	/*
+ 	 * Syscall number held in a7.
+ 	 * If syscall number is above allowed value, redirect to ni_syscall.
+ 	 */
+ 	bge a7, t0, 1f
+ 	/*
+-	 * Check if syscall is rejected by tracer or seccomp, i.e., a7 == -1.
++	 * Check if syscall is rejected by tracer, i.e., a7 == -1.
+ 	 * If yes, we pretend it was executed.
+ 	 */
+ 	li t1, -1
+@@ -334,6 +327,7 @@ work_resched:
+ handle_syscall_trace_enter:
+ 	move a0, sp
+ 	call do_syscall_trace_enter
++	move t0, a0
+ 	REG_L a0, PT_A0(sp)
+ 	REG_L a1, PT_A1(sp)
+ 	REG_L a2, PT_A2(sp)
+@@ -342,6 +336,7 @@ handle_syscall_trace_enter:
+ 	REG_L a5, PT_A5(sp)
+ 	REG_L a6, PT_A6(sp)
+ 	REG_L a7, PT_A7(sp)
++	bnez t0, ret_from_syscall_rejected
+ 	j check_syscall_nr
+ handle_syscall_trace_exit:
+ 	move a0, sp
+diff --git a/arch/riscv/kernel/ptrace.c b/arch/riscv/kernel/ptrace.c
+index 407464201b91e..444dc7b0fd78c 100644
+--- a/arch/riscv/kernel/ptrace.c
++++ b/arch/riscv/kernel/ptrace.c
+@@ -148,21 +148,19 @@ long arch_ptrace(struct task_struct *child, long request,
+  * Allows PTRACE_SYSCALL to work.  These are called from entry.S in
+  * {handle,ret_from}_syscall.
+  */
+-__visible void do_syscall_trace_enter(struct pt_regs *regs)
++__visible int do_syscall_trace_enter(struct pt_regs *regs)
+ {
+ 	if (test_thread_flag(TIF_SYSCALL_TRACE))
+ 		if (tracehook_report_syscall_entry(regs))
+-			syscall_set_nr(current, regs, -1);
++			return -1;
+ 
+ 	/*
+ 	 * Do the secure computing after ptrace; failures should be fast.
+ 	 * If this fails we might have return value in a0 from seccomp
+ 	 * (via SECCOMP_RET_ERRNO/TRACE).
+ 	 */
+-	if (secure_computing() == -1) {
+-		syscall_set_nr(current, regs, -1);
+-		return;
+-	}
++	if (secure_computing() == -1)
++		return -1;
+ 
+ #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
+ 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
+@@ -170,6 +168,7 @@ __visible void do_syscall_trace_enter(struct pt_regs *regs)
+ #endif
+ 
+ 	audit_syscall_entry(regs->a7, regs->a0, regs->a1, regs->a2, regs->a3);
++	return 0;
+ }
+ 
+ __visible void do_syscall_trace_exit(struct pt_regs *regs)
 -- 
 2.20.1
 
