@@ -2,145 +2,66 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8245C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD2FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB0420679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0432051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="PkqyoXMH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cZVHtxGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731995AbgCPPt7 (ORCPT
+        id S1731972AbgCPPuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:49:59 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:39290 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731897AbgCPPt7 (ORCPT
+        Mon, 16 Mar 2020 11:50:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41330 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731890AbgCPPuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:49:59 -0400
-Received: by mail-qv1-f66.google.com with SMTP id v38so5058518qvf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:49:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vNebYaE/gz9C8jR4WscOnBZhY2YhTzN1/9r/OmYwa+c=;
-        b=PkqyoXMHW6C709eywAoB4Zg9YbUPqoNwNsQz9znt2o/0Pi18JeWueU7X5/RY9iyeVu
-         +VkwGgMT5QV7/gtTyHG1VZLICRJRzuNluXu81ChkBfZhRyraTCOxVIGQNm8jlMUzKpGi
-         fIuPtGM+u8px9QURldyjZ+NoiQyg1ZhO0Ufpg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vNebYaE/gz9C8jR4WscOnBZhY2YhTzN1/9r/OmYwa+c=;
-        b=sCKiWAbQUEpDy5cOS8jpD0l3/KBRqlc8cDuvFcIfN8ct4rk3RvDrhpVrWYITUk6TVe
-         BINc1Ol0oRwFKZIKuY5XkvRHHnHZOgxsUGwSFjWbn1LbaZHQzpWFYBCa5FzyjH+NfB+W
-         Sdyu7Pn5/vMSSofyeUOic7puWz8zFFb32rsAHgPhGYwQvI1ZdszeieUjcoB0360C+EzF
-         K8mC75e+62W1ZyQAhjXAD87UCBAwQxTHUNiTRCQEJ22GVdb8GzmrIdlOYcciKlGXJyKI
-         UMF6hbFZSJfH4uKi8eU/X15c1/65wIN3mlAnIrxye3N4jF73kvqBFGuGVB7ckrOI7BQU
-         cssg==
-X-Gm-Message-State: ANhLgQ2DnajrdrOZMPrEgLcPy4mI6+Xmj+v50XfMld02c3hPABUQYbmz
-        WphgxWtHotRkl+yM8YdarXViTA==
-X-Google-Smtp-Source: ADFU+vtI6BPuPrZxa2kjhQfZUbcQ/0LjAaWwbIcacUZdrpYQyd7J8oO/ArCb5wJ3DHEDX5+/HPc8Ag==
-X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr442773qvo.188.1584373797867;
-        Mon, 16 Mar 2020 08:49:57 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id z23sm22168qkg.21.2020.03.16.08.49.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:49:55 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 11:49:55 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        RCU <rcu@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH v1 6/6] mm/list_lru.c: remove kvfree_rcu_local() function
-Message-ID: <20200316154955.GH190951@google.com>
-References: <20200315181840.6966-1-urezki@gmail.com>
- <20200315181840.6966-7-urezki@gmail.com>
+        Mon, 16 Mar 2020 11:50:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4Fcs/ravGQBzEwV+PwLN/3FuduA8sqVcdSOOMqzyw+E=; b=cZVHtxGt+DHwY530inZn5uaoAd
+        NKYBLQCYm+jTGzzEtxEZZcghNZyQz3KZrzDd7pz5fIwHj8M1443PQzUVnDLn/hazE65KuoyeFpX4q
+        SlRMMnPERZ+98066ISJv8PqhvKadqBvfmDLO8yR9v9I62OoyIKC9HSVz650f2PtsxYapCWFVbdZ5R
+        f4Zrx1W+r/vsU+FwAD8cKpo9ZL8NyEpgdqr6xqK9E2SS96UpdcX+0mbPNpmGzTlROypcTsbmMtJ+v
+        SIN/U5JGq9qiN3Kzq85xwDB29JrmkRYMtCWIIZ3wmAhwo4vIys/n0ZiMZfOMz5rdYneOW+8wr8bIu
+        p6c7BDsw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jDs0a-0004dZ-Nu; Mon, 16 Mar 2020 15:50:28 +0000
+Date:   Mon, 16 Mar 2020 08:50:28 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org, joro@8bytes.org,
+        ohad@wizery.com, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        agross@kernel.org
+Subject: Re: [PATCH 0/3] Request direct mapping for modem firmware subdevice
+Message-ID: <20200316155028.GB18704@infradead.org>
+References: <20200309182255.20142-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200315181840.6966-7-urezki@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200309182255.20142-1-sibis@codeaurora.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 07:18:40PM +0100, Uladzislau Rezki (Sony) wrote:
-> Since there is newly introduced kvfree_rcu() API,
-> there is no need in queuing and using call_rcu()
-> to kvfree() an object after the GP.
-> 
-> Remove kvfree_rcu_local() function and replace
-> call_rcu() by new kvfree_rcu() API that does
-> the same but in more efficient way.
+On Mon, Mar 09, 2020 at 11:52:52PM +0530, Sibi Sankar wrote:
+> The Q6 modem sub-system has direct access to DDR through memnoc and
+> an indirect access routed through a SMMU which MSS CE (crypto engine
+> sub-component of MSS) uses during out of reset sequence. Request direct
+> mapping for the modem-firmware subdevice since smmu is not expected
+> to provide access control/translation for these SIDs (sandboxing of the
+> modem is achieved through XPUs engaged using SMC calls).
 
-This patch LGTM:
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-thanks,
-
- - Joel
-> 
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> ---
->  mm/list_lru.c | 13 +++----------
->  1 file changed, 3 insertions(+), 10 deletions(-)
-> 
-> diff --git a/mm/list_lru.c b/mm/list_lru.c
-> index 386424688f80..69becdb22408 100644
-> --- a/mm/list_lru.c
-> +++ b/mm/list_lru.c
-> @@ -12,6 +12,7 @@
->  #include <linux/slab.h>
->  #include <linux/mutex.h>
->  #include <linux/memcontrol.h>
-> +#include <linux/rcupdate.h>
->  #include "slab.h"
->  
->  #ifdef CONFIG_MEMCG_KMEM
-> @@ -383,21 +384,13 @@ static void memcg_destroy_list_lru_node(struct list_lru_node *nlru)
->  	struct list_lru_memcg *memcg_lrus;
->  	/*
->  	 * This is called when shrinker has already been unregistered,
-> -	 * and nobody can use it. So, there is no need to use kvfree_rcu_local().
-> +	 * and nobody can use it. So, there is no need to use kvfree_rcu().
->  	 */
->  	memcg_lrus = rcu_dereference_protected(nlru->memcg_lrus, true);
->  	__memcg_destroy_list_lru_node(memcg_lrus, 0, memcg_nr_cache_ids);
->  	kvfree(memcg_lrus);
->  }
->  
-> -static void kvfree_rcu_local(struct rcu_head *head)
-> -{
-> -	struct list_lru_memcg *mlru;
-> -
-> -	mlru = container_of(head, struct list_lru_memcg, rcu);
-> -	kvfree(mlru);
-> -}
-> -
->  static int memcg_update_list_lru_node(struct list_lru_node *nlru,
->  				      int old_size, int new_size)
->  {
-> @@ -429,7 +422,7 @@ static int memcg_update_list_lru_node(struct list_lru_node *nlru,
->  	rcu_assign_pointer(nlru->memcg_lrus, new);
->  	spin_unlock_irq(&nlru->lock);
->  
-> -	call_rcu(&old->rcu, kvfree_rcu_local);
-> +	kvfree_rcu(old, rcu);
->  	return 0;
->  }
->  
-> -- 
-> 2.20.1
-> 
+Please fix your device tree so that the device isn't bound to an
+IOMMU.
