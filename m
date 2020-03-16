@@ -2,132 +2,116 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A611C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04423C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1100520409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:23:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="U81rN3TZ"
+	by mail.kernel.org (Postfix) with ESMTP id CFB8520409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584383268;
+	bh=MlbJeIevRZO4ycIkqOCsGp7532IJjEKRO30YrAyzB5A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=UvO/qQkMgLR2T1TYBn4mS13HJsWClAOrZmpdEZPET9ENaEmHeXnKqkVSEMtlamiXf
+	 7oAB8LO6RDmJ2HaFaKItjV60w+anS5SRiRUTxZ0Is0uiCyWvtCb7WQ4Ebh1XmTFLAa
+	 R6uJxI8akAhdgyUTx0aj9kFfThNZVOMZNyzZNEt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732327AbgCPSXL (ORCPT
+        id S1732312AbgCPS1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 14:23:11 -0400
-Received: from www381.your-server.de ([78.46.137.84]:39600 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732242AbgCPSXK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 14:23:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=M7ml/Y4gDZjel4sRH32iDPtQppbmjBMK4zkw++HJBF0=; b=U81rN3TZfipi2EFc5vAjnlQVfp
-        avCVc4cUmvOv8fSdHFTPVEj2qrOpx7JJUlVTvVLwoxNwbUY/4t0fqn2dqVKPoelH/L54y7Ij6Sli9
-        Nv5D+IsLVpcC8zcjoOsbs0hiGF8VEg3XxcCICM1zEh8ipt2TsGhLUZjSb8aoBAcAZdhgw0Ybjh7AN
-        nWeNJhkJrIA90f/6vHBB84wWkLBBmKL3miWDYU5/eNo0Cw0D+0QnfwAFZnahXBkfr/4tifX/r82SJ
-        hiGIXjs6Rsy9IWSGoJoDgdp1ntAIj8TCRBnkOpcu2fvczOP8DbbSdmeluHKTatYfZKkTgZcEjd+Tt
-        ltBCRERg==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jDuOF-0004KC-09; Mon, 16 Mar 2020 19:23:03 +0100
-Received: from [93.104.121.61] (helo=[192.168.178.20])
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jDuOE-000HJ7-Lf; Mon, 16 Mar 2020 19:23:02 +0100
-Subject: Re: [PATCH v2 3/4] iio: vcnl4000: Export near level property for
- proximity sensor
-To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
-        Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <cover.1584380360.git.agx@sigxcpu.org>
- <5566fe01df933d3281f058666e2147cb97b38126.1584380360.git.agx@sigxcpu.org>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <c787921f-c412-4986-14ea-e31b531d3d5b@metafoo.de>
-Date:   Mon, 16 Mar 2020 19:23:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <5566fe01df933d3281f058666e2147cb97b38126.1584380360.git.agx@sigxcpu.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25753/Mon Mar 16 14:05:55 2020)
+        Mon, 16 Mar 2020 14:27:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:55248 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731967AbgCPS1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 14:27:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACF941FB;
+        Mon, 16 Mar 2020 11:27:46 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FCBB3F67D;
+        Mon, 16 Mar 2020 11:27:46 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 18:27:44 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "regulator: mp886x: Document MP8867 support" to the regulator tree
+In-Reply-To:  <20200316223100.37805b22@xhacker>
+Message-Id:  <applied-20200316223100.37805b22@xhacker>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/16/20 6:46 PM, Guido Günther wrote:
-> [...]
-> +static ssize_t vcnl4000_read_near_level(struct iio_dev *indio_dev,
-> +					uintptr_t priv,
-> +					const struct iio_chan_spec *chan,
-> +					char *buf)
-> +{
-> +	struct vcnl4000_data *data = iio_priv(indio_dev);
-> +
-> +	return sprintf(buf, "%u\n", data->near_level);
-> +}
-> +
-> +static const struct iio_chan_spec_ext_info vcnl4000_ext_info[] = {
-> +	{
-> +		.name = "near_level",
+The patch
 
-Generally having properties with a underscore in them breaks generic 
-parsing of the property name by userspace applications. This is because 
-we use underscores to separate different components (type, modifier, 
-etc.) of the attribute from each other.
+   regulator: mp886x: Document MP8867 support
 
-Do you think calling this "nearlevel" would work?
+has been applied to the regulator tree at
 
-I know there are existing bad examples of properties that use an 
-underscore, but we should try to limit introducing new ones.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-> +		.shared = IIO_SEPARATE,
-> +		.read = vcnl4000_read_near_level,
-> +	},
-> +	{ /* sentinel */ }
-> +};
-> +
->   static const struct iio_chan_spec vcnl4000_channels[] = {
->   	{
->   		.type = IIO_LIGHT,
-> @@ -350,6 +371,7 @@ static const struct iio_chan_spec vcnl4000_channels[] = {
->   	}, {
->   		.type = IIO_PROXIMITY,
->   		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.ext_info = vcnl4000_ext_info,
->   	}
->   };
->   
-> @@ -439,6 +461,10 @@ static int vcnl4000_probe(struct i2c_client *client,
->   	dev_dbg(&client->dev, "%s Ambient light/proximity sensor, Rev: %02x\n",
->   		data->chip_spec->prod, data->rev);
->   
-> +	if (device_property_read_u32(&client->dev, "near-level",
-> +				     &data->near_level) < 0)
-> +		data->near_level = 0;
-> +
->   	indio_dev->dev.parent = &client->dev;
->   	indio_dev->info = &vcnl4000_info;
->   	indio_dev->channels = vcnl4000_channels;
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From b11dec18e6334da2f2a11e07cf43e2a394b12c06 Mon Sep 17 00:00:00 2001
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Date: Mon, 16 Mar 2020 22:31:00 +0800
+Subject: [PATCH] regulator: mp886x: Document MP8867 support
+
+MP8867 is an I2C-controlled adjustable voltage regulator made by
+Monolithic Power Systems. The difference between MP8867 and MP8869
+are:
+1.If V_BOOT, the vref of MP8869 is fixed at 600mv while vref of MP8867
+is determined by the I2C control.
+2.For MP8867, when setting voltage, if the steps is within 5, we need
+to manually set the GO_BIT to 0.
+
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Link: https://lore.kernel.org/r/20200316223100.37805b22@xhacker
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/regulator/mp886x.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/mp886x.txt b/Documentation/devicetree/bindings/regulator/mp886x.txt
+index 6858e38eb47d..551867829459 100644
+--- a/Documentation/devicetree/bindings/regulator/mp886x.txt
++++ b/Documentation/devicetree/bindings/regulator/mp886x.txt
+@@ -1,7 +1,9 @@
+-Monolithic Power Systems MP8869 voltage regulator
++Monolithic Power Systems MP8867/MP8869 voltage regulator
+ 
+ Required properties:
+-- compatible: "mps,mp8869";
++- compatible: Must be one of the following.
++	"mps,mp8867"
++	"mps,mp8869"
+ - reg: I2C slave address.
+ - enable-gpios: enable gpios.
+ - mps,fb-voltage-divider: An array of two integers containing the resistor
+-- 
+2.20.1
 
