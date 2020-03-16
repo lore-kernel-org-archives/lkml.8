@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A94C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2F8C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E3C20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2264206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326333;
-	bh=7oo6LZ5BRUCyl3femyA+j4OKOF1/fABSYqHgCYpP7nI=;
+	s=default; t=1584326338;
+	bh=HDWemFmS6sNHHvqLejbRyMAPEs6e+okEDrDeTOhqVWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a/y8pmYpL8ey/QuOACMTukivnjBIA0z+SJ+lwGQeHj5GDWof3oqgbwagvNaJxSHZp
-	 34wi7MJLZhR8M95ro3WXc/jfX+lKt9SE0ItazL14pOVCfPrIqkD+7Qm6jWjDf36nL/
-	 cJUSSUrWL20LBkrN2foTJXoV0/ucKeWm34+CAwqE=
+	b=yHFxgR7VqP5taHJaaz/dfb+UYNupg4tKnzq5Lk9Fp/j1K5rZ/7gXiev4tNKzEHQoR
+	 S6nQesysbGFe8yxZwOZsMM5kEPWNwW5Ft/N+0mMxaUpZBtZzaeRt+L5/THCSeW3UUh
+	 e+sgFb41D2Wg6NHRLrhh9F+G9Rgmfg6Hm6VyWdtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730427AbgCPCiv (ORCPT
+        id S1729414AbgCPCi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:38:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38394 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729932AbgCPCen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:43 -0400
+        id S1729923AbgCPCel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34A082073C;
-        Mon, 16 Mar 2020 02:34:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED33A206BE;
+        Mon, 16 Mar 2020 02:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326082;
-        bh=7oo6LZ5BRUCyl3femyA+j4OKOF1/fABSYqHgCYpP7nI=;
+        s=default; t=1584326080;
+        bh=HDWemFmS6sNHHvqLejbRyMAPEs6e+okEDrDeTOhqVWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uF0AIuLZ/GORviA/2v+Avj/Iseh9eyElHYL1r/cWR7EljHTg2441nLoPOW1ZWneDl
-         7rj2m0l2Z1HnlQmdj6Zl8lq0QXdbpxiA8j9Z8pdLnxd00NeMIpAsYNBkWyMjqekPAI
-         o5vaHYx3LF3s8oPvH6/9RIHxWcg2BJFqYk3ckD3A=
+        b=aabHz0V2yDNTt2EWx+80T/H8PDJ35n9mrSo1fAQgPDaQq+FAv/QHaFcqm/EYcWN3L
+         v4+1Fj71cy6ZzZUUCLfpTKPQkAlPbfbB3PXfmdsLpWug9EdkypF/R1Z2bKereoxrqs
+         Cj1GvnlZ5pttlf7rNP/usdRP3lZpq6NMofY24lx4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 27/35] riscv: Force flat memory model with no-mmu
-Date:   Sun, 15 Mar 2020 22:34:03 -0400
-Message-Id: <20200316023411.1263-27-sashal@kernel.org>
+Cc:     Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 25/35] ASoC: stm32: sai: manage rebind issue
+Date:   Sun, 15 Mar 2020 22:34:01 -0400
+Message-Id: <20200316023411.1263-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
 References: <20200316023411.1263-1-sashal@kernel.org>
@@ -61,36 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit aa2734202acc506d09c8e641db4da161f902df27 ]
+[ Upstream commit 0d6defc7e0e437a9fd53622f7fd85740f38d5693 ]
 
-Compilation errors trigger if ARCH_SPARSEMEM_ENABLE is enabled for
-a nommu kernel. Since the sparsemem model does not make sense anyway
-for the nommu case, do not allow selecting this option to always use
-the flatmem model.
+The commit e894efef9ac7 ("ASoC: core: add support to card rebind")
+allows to rebind the sound card after a rebind of one of its component.
+With this commit, the sound card is actually rebound,
+but may be no more functional. The following problems have been seen
+with STM32 SAI driver.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+1) DMA channel is not requested:
+
+With the sound card rebind the simplified call sequence is:
+stm32_sai_sub_probe
+	snd_soc_register_component
+		snd_soc_try_rebind_card
+			snd_soc_instantiate_card
+	devm_snd_dmaengine_pcm_register
+
+The problem occurs because the pcm must be registered,
+before snd_soc_instantiate_card() is called.
+
+Modify SAI driver, to change the call sequence as follows:
+stm32_sai_sub_probe
+	devm_snd_dmaengine_pcm_register
+	snd_soc_register_component
+		snd_soc_try_rebind_card
+
+2) DMA channel is not released:
+
+dma_release_channel() is not called when
+devm_dmaengine_pcm_release() is executed.
+This occurs because SND_DMAENGINE_PCM_DRV_NAME component,
+has already been released through devm_component_release().
+
+devm_dmaengine_pcm_release() should be called before
+devm_component_release() to avoid this problem.
+
+Call snd_dmaengine_pcm_unregister() and snd_soc_unregister_component()
+explicitly from SAI driver, to have the right sequence.
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Message-Id: <20200304102406.8093-1-olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/stm/stm32_sai_sub.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index ade9699aa0dd6..a0fa4be94a68e 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -101,6 +101,7 @@ config ARCH_FLATMEM_ENABLE
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 30bcd5d3a32a8..10eb4b8e8e7ee 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -1543,20 +1543,20 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
- config ARCH_SPARSEMEM_ENABLE
- 	def_bool y
-+	depends on MMU
- 	select SPARSEMEM_VMEMMAP_ENABLE
+-	ret = devm_snd_soc_register_component(&pdev->dev, &stm32_component,
+-					      &sai->cpu_dai_drv, 1);
++	ret = snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
++	if (ret) {
++		dev_err(&pdev->dev, "Could not register pcm dma\n");
++		return ret;
++	}
++
++	ret = snd_soc_register_component(&pdev->dev, &stm32_component,
++					 &sai->cpu_dai_drv, 1);
+ 	if (ret)
+ 		return ret;
  
- config ARCH_SELECT_MEMORY_MODEL
+ 	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
+ 		conf = &stm32_sai_pcm_config_spdif;
+ 
+-	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Could not register pcm dma\n");
+-		return ret;
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -1565,6 +1565,8 @@ static int stm32_sai_sub_remove(struct platform_device *pdev)
+ 	struct stm32_sai_sub_data *sai = dev_get_drvdata(&pdev->dev);
+ 
+ 	clk_unprepare(sai->pdata->pclk);
++	snd_dmaengine_pcm_unregister(&pdev->dev);
++	snd_soc_unregister_component(&pdev->dev);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
