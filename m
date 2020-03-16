@@ -2,191 +2,174 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE97C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521E7C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B36720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:20:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LvC1OSwZ"
+	by mail.kernel.org (Postfix) with ESMTP id 30DC020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732783AbgCPWUm (ORCPT
+        id S1732773AbgCPWY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:20:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33111 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732739AbgCPWUl (ORCPT
+        Mon, 16 Mar 2020 18:24:26 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:59133 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732652AbgCPWYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:20:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m5so10555649pgg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:20:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OdJL97TnHEiwXNrNot3Nu+tTBwH6OViCGp++MAMoJjI=;
-        b=LvC1OSwZYDZhevpzNqmBIv1hskVJduDT0SK46lnoXZM7yCRwcl/gdG0KzlWgHXMvhv
-         LUgm3GaQaWEMgxGVKKdpsiCMfOg/h3Jp+Ii4+XN8ntv9ZXXcZiaZFjr3KlGAZX4TFhrU
-         Z0d7m3y3RlzzMmNzKVc3B2P2bhbDiIsD36WbQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OdJL97TnHEiwXNrNot3Nu+tTBwH6OViCGp++MAMoJjI=;
-        b=lOEiXLijzypQ4deXqQj65fw6VEMdUfplZDqbOGkCyPzUndTWqktDEOdgI6kGF7eka0
-         SFD/Kz4flEA3oLaWfr3h6CcYO2AFkLHQQReHrhwvQRDVMk7TJGaMfuWCiSXA3XdmX4N5
-         mzGWQlnj+sHBhvKzD28bzPDNVo3oD6jijVy0yEe3fUUfqCFgno50RaUv7wRAEGVIE5XH
-         XmRpP8ZMqCaKgtv3re5Vnm1ivilNZJnR7iI1CIx/3rBGPHYhCC/dsGYaDS9547KjoBo9
-         Wf+F0Tqi2jWgTm3OfvPdJytyotHIMT7za83IYDlPtl9JXv291NtMTkaxR+CIrVIzj321
-         83RA==
-X-Gm-Message-State: ANhLgQ3sI2PQcUZEOGF5v2BOkXtMIVPJpdKPJyeN5olflwKRfFno6wr0
-        9QeEKhY8Wuvt4dNI9P9IWWMQ1Q==
-X-Google-Smtp-Source: ADFU+vuzlYlb8p9d2+T6E5oG1EolUGtKK3FaYXBJKoHapG07JRQmTGibH+PYw4PUZ72sqbeZD6jwGw==
-X-Received: by 2002:aa7:8d18:: with SMTP id j24mr1884679pfe.264.1584397238841;
-        Mon, 16 Mar 2020 15:20:38 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id f8sm828535pfq.178.2020.03.16.15.20.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 15:20:38 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Alok Chauhan <alokc@codeaurora.org>,
-        Dilip Kota <dkota@codeaurora.org>, skakit@codeaurora.org,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: [PATCH] spi: spi-geni-qcom: Speculative fix of "nobody cared" about interrupt
-Date:   Mon, 16 Mar 2020 15:20:01 -0700
-Message-Id: <20200316151939.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Mar 2020 18:24:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tsowglv_1584397455;
+Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tsowglv_1584397455)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 17 Mar 2020 06:24:22 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     shakeelb@google.com, vbabka@suse.cz, willy@infradead.org,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v2 PATCH 1/2] mm: swap: make page_evictable() inline
+Date:   Tue, 17 Mar 2020 06:24:14 +0800
+Message-Id: <1584397455-28701-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every once in a while (like once in a few months on a device) people
-have seen warnings on devices using spi-geni-qcom like:
+When backporting commit 9c4e6b1a7027 ("mm, mlock, vmscan: no more
+skipping pagevecs") to our 4.9 kernel, our test bench noticed around 10%
+down with a couple of vm-scalability's test cases (lru-file-readonce,
+lru-file-readtwice and lru-file-mmap-read).  I didn't see that much down
+on my VM (32c-64g-2nodes).  It might be caused by the test configuration,
+which is 32c-256g with NUMA disabled and the tests were run in root memcg,
+so the tests actually stress only one inactive and active lru.  It
+sounds not very usual in mordern production environment.
 
-  irq ...: nobody cared (try booting with the "irqpoll" option)
+That commit did two major changes:
+1. Call page_evictable()
+2. Use smp_mb to force the PG_lru set visible
 
-...where the interrupt number listed matches up with "spi_geni" in
-/proc/interrupts.
+It looks they contribute the most overhead.  The page_evictable() is a
+function which does function prologue and epilogue, and that was used by
+page reclaim path only.  However, lru add is a very hot path, so it
+sounds better to make it inline.  However, it calls page_mapping() which
+is not inlined either, but the disassemble shows it doesn't do push and
+pop operations and it sounds not very straightforward to inline it.
 
-You can get "nobody cared" if the interrupt handler returns IRQ_NONE.
-Once you get into this state the driver will just stop working.
+Other than this, it sounds smp_mb() is not necessary for x86 since
+SetPageLRU is atomic which enforces memory barrier already, replace it
+with smp_mb__after_atomic() in the following patch.
 
-Auditing the code makes me believe that it's probably not so good
-checking "cur_mcmd" in the interrupt handler not under spinlock.
-Let's move it to be under spinlock.  While we're at it, let's not
-return IRQ_NONE.  IRQ_NONE is supposed to check the _hardware_ status
-registers and only be returned if your hardware says that there's no
-interrupt present.  It's not supposed to check software state.  In any
-case, the whole point of IRQ_NONE is if two separate devices are
-trying to share an interrupt line, which just isn't true for anyone
-using geni.
+With the two fixes applied, the tests can get back around 5% on that
+test bench and get back normal on my VM.  Since the test bench
+configuration is not that usual and I also saw around 6% up on the
+latest upstream, so it sounds good enough IMHO.
 
-Looking more closely at the code, it looks as if there are some other
-places that could be under spinlock, so let's add.  It looks as if the
-original code was assuming that by the time that the interrupt handler
-got called that the write to "cur_mcmd" (to make it not CMD_NONE
-anymore) would make it to the processor handling the interrupt.
-Perhaps with weakly ordered memory this sometimes (though very rarely)
-happened.
+The below is test data (lru-file-readtwice throughput) against the v5.6-rc4:
+	mainline	w/ inline fix
+          150MB            154MB
 
-Patch is marked "speculative" because I have no way to reproduce this
-problem, so I'm just hoping this fixes it.  Weakly ordered memory
-makes my brain hurt.
+With this patch the throughput gets 2.67% up.  The data with using
+smp_mb__after_atomic() is showed in the following patch.
 
-Fixes: 561de45f72bd ("spi: spi-geni-qcom: Add SPI driver support for GENI based QUP")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Fixes: 9c4e6b1a7027 ("mm, mlock, vmscan: no more skipping pagevecs")
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
+v2: * Solved the comments from Willy.
 
- drivers/spi/spi-geni-qcom.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ include/linux/pagemap.h |  2 +-
+ include/linux/swap.h    | 24 +++++++++++++++++++++++-
+ mm/vmscan.c             | 23 -----------------------
+ 3 files changed, 24 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index c3972424af71..51290a3fd203 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
-@@ -151,16 +151,19 @@ static void spi_geni_set_cs(struct spi_device *slv, bool set_flag)
- 	struct geni_se *se = &mas->se;
- 	unsigned long time_left;
- 
--	reinit_completion(&mas->xfer_done);
- 	pm_runtime_get_sync(mas->dev);
- 	if (!(slv->mode & SPI_CS_HIGH))
- 		set_flag = !set_flag;
- 
-+	spin_lock_irq(&mas->lock);
-+	reinit_completion(&mas->xfer_done);
-+
- 	mas->cur_mcmd = CMD_CS;
- 	if (set_flag)
- 		geni_se_setup_m_cmd(se, SPI_CS_ASSERT, 0);
- 	else
- 		geni_se_setup_m_cmd(se, SPI_CS_DEASSERT, 0);
-+	spin_unlock_irq(&mas->lock);
- 
- 	time_left = wait_for_completion_timeout(&mas->xfer_done, HZ);
- 	if (!time_left)
-@@ -307,6 +310,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 	u32 spi_tx_cfg, len;
- 	struct geni_se *se = &mas->se;
- 
-+	spin_lock_irq(&mas->lock);
-+
- 	spi_tx_cfg = readl(se->base + SE_SPI_TRANS_CFG);
- 	if (xfer->bits_per_word != mas->cur_bits_per_word) {
- 		spi_setup_word_len(mas, mode, xfer->bits_per_word);
-@@ -376,6 +381,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 	 */
- 	if (m_cmd & SPI_TX_ONLY)
- 		writel(mas->tx_wm, se->base + SE_GENI_TX_WATERMARK_REG);
-+
-+	spin_unlock_irq(&mas->lock);
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index ccb14b6..654ce76 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -70,7 +70,7 @@ static inline void mapping_clear_unevictable(struct address_space *mapping)
+ 	clear_bit(AS_UNEVICTABLE, &mapping->flags);
  }
  
- static int spi_geni_transfer_one(struct spi_master *spi,
-@@ -479,12 +486,17 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 	u32 m_irq;
- 	unsigned long flags;
+-static inline int mapping_unevictable(struct address_space *mapping)
++static inline bool mapping_unevictable(struct address_space *mapping)
+ {
+ 	if (mapping)
+ 		return test_bit(AS_UNEVICTABLE, &mapping->flags);
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 1e99f7a..d296c70 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -374,7 +374,29 @@ extern unsigned long mem_cgroup_shrink_node(struct mem_cgroup *mem,
+ #define node_reclaim_mode 0
+ #endif
  
--	if (mas->cur_mcmd == CMD_NONE)
--		return IRQ_NONE;
--
- 	spin_lock_irqsave(&mas->lock, flags);
- 	m_irq = readl(se->base + SE_GENI_M_IRQ_STATUS);
- 
-+	/*
-+	 * We don't expect to hit this, but if we do we should try our best
-+	 * to clear the interrupts and return so we don't just get called
-+	 * again.
-+	 */
-+	if (mas->cur_mcmd == CMD_NONE)
-+		goto exit;
+-extern int page_evictable(struct page *page);
++/**
++ * page_evictable - test whether a page is evictable
++ * @page: the page to test
++ *
++ * Test whether page is evictable--i.e., should be placed on active/inactive
++ * lists vs unevictable list.
++ *
++ * Reasons page might not be evictable:
++ * (1) page's mapping marked unevictable
++ * (2) page is part of an mlocked VMA
++ *
++ */
++static inline bool page_evictable(struct page *page)
++{
++	bool ret;
 +
- 	if ((m_irq & M_RX_FIFO_WATERMARK_EN) || (m_irq & M_RX_FIFO_LAST_EN))
- 		geni_spi_handle_rx(mas);
++	/* Prevent address_space of inode and swap cache from being freed */
++	rcu_read_lock();
++	ret = !mapping_unevictable(page_mapping(page)) && !PageMlocked(page);
++	rcu_read_unlock();
++	return ret;
++}
++
+ extern void check_move_unevictable_pages(struct pagevec *pvec);
  
-@@ -523,6 +535,7 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 		complete(&mas->xfer_done);
- 	}
+ extern int kswapd_run(int nid);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 8763705..855c395 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -4277,29 +4277,6 @@ int node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned int order)
+ }
+ #endif
  
-+exit:
- 	writel(m_irq, se->base + SE_GENI_M_IRQ_CLEAR);
- 	spin_unlock_irqrestore(&mas->lock, flags);
- 	return IRQ_HANDLED;
+-/*
+- * page_evictable - test whether a page is evictable
+- * @page: the page to test
+- *
+- * Test whether page is evictable--i.e., should be placed on active/inactive
+- * lists vs unevictable list.
+- *
+- * Reasons page might not be evictable:
+- * (1) page's mapping marked unevictable
+- * (2) page is part of an mlocked VMA
+- *
+- */
+-int page_evictable(struct page *page)
+-{
+-	int ret;
+-
+-	/* Prevent address_space of inode and swap cache from being freed */
+-	rcu_read_lock();
+-	ret = !mapping_unevictable(page_mapping(page)) && !PageMlocked(page);
+-	rcu_read_unlock();
+-	return ret;
+-}
+-
+ /**
+  * check_move_unevictable_pages - check pages for evictability and move to
+  * appropriate zone lru list
 -- 
-2.25.1.481.gfbce0eb801-goog
+1.8.3.1
 
