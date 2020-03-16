@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E52C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE456C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66937206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A166F2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326036;
-	bh=OOHQbU1RbTHQ1Ma7XU0Q9tWR+VuZggUaN4Rhmo7+W4I=;
+	s=default; t=1584326037;
+	bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D8ysxHytxUQBMDUNdFNIQ93rrkbwkFS98ZQbDQLXLTtRaf89osyow55njNh1i6gD9
-	 npg0s86PhsNhgW0YsMWSjJ/qY6UAMf1pmnceitN/4LpcrV1LXdp4aJm1hCHLuMmfT1
-	 gF3c7Mo2YL5NKUIBg8K02yquM1MO23JRfTVgqBew=
+	b=R+0h+KdsiA9xN2CroUT67h+/tEoe5V/mq1CR3LRe7+wvosnNIHzMT8QmtXBadYPCF
+	 TPEA6sam0TONjLOHgD2m0AdVq84yuaBbQx4JIeD02Ms26spPAb9bkXgQvcrQQfA6pF
+	 +NJldAHbz6cADcEoDaO+STAFvWWIWpZOhgkCpAwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgCPCdy (ORCPT
+        id S1729680AbgCPCdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:33:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36652 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:33:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729620AbgCPCdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:33:46 -0400
+        id S1729648AbgCPCdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:33:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA9E4206EB;
-        Mon, 16 Mar 2020 02:33:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 732D82076B;
+        Mon, 16 Mar 2020 02:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326025;
-        bh=OOHQbU1RbTHQ1Ma7XU0Q9tWR+VuZggUaN4Rhmo7+W4I=;
+        s=default; t=1584326031;
+        bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gHbwThH2r23n96AgZck5OzJ9LJ4haCPtKkGYeILbmn2e1R2tbHE9HS4F5GWd5ZFXD
-         chpZCSy0DuYaHbB8CKv32WiCJTlRJ4uO5iXrTd1NUNJ0F2XV7S8tsZgqMMo65da4LO
-         MciwvF9Dwm4R7VnrbbfOH8GFUCbmt2fktevkRAos=
+        b=scnaQgV9w+0eni3/WWkffpiUzvTwcEYvAstvmkgJ0KSKzTCEFbaevTrwQgQ+4AG8V
+         8nly4BXyvwJJ7BbPtmGHdtQ1cLzEagi3npZ6qMUq0+AOA4XkreqH610xEERsoBS3N8
+         4JXoBtN9oOhxnWbmZqLm40J9J0PlVc78xgJo4cIQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 21/41] drivers/perf: fsl_imx8_ddr: Correct the CLEAR bit definition
-Date:   Sun, 15 Mar 2020 22:32:59 -0400
-Message-Id: <20200316023319.749-21-sashal@kernel.org>
+Cc:     Mike Snitzer <snitzer@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.5 26/41] dm bio record: save/restore bi_end_io and bi_integrity
+Date:   Sun, 15 Mar 2020 22:33:04 -0400
+Message-Id: <20200316023319.749-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
@@ -59,51 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
+From: Mike Snitzer <snitzer@redhat.com>
 
-[ Upstream commit 049d919168458ac54e7fad27cd156a958b042d2f ]
+[ Upstream commit 1b17159e52bb31f982f82a6278acd7fab1d3f67b ]
 
-When disabling a counter from ddr_perf_event_stop(), the counter value
-is reset to 0 at the same time.
+Also, save/restore __bi_remaining in case the bio was used in a
+BIO_CHAIN (e.g. due to blk_queue_split).
 
-Preserve the counter value by performing a read-modify-write of the
-PMU register and clearing only the enable bit.
-
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Suggested-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/fsl_imx8_ddr_perf.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/md/dm-bio-record.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 95dca2cb52650..90884d14f95fa 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -388,9 +388,10 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
+diff --git a/drivers/md/dm-bio-record.h b/drivers/md/dm-bio-record.h
+index c82578af56a5b..2ea0360108e1d 100644
+--- a/drivers/md/dm-bio-record.h
++++ b/drivers/md/dm-bio-record.h
+@@ -20,8 +20,13 @@
+ struct dm_bio_details {
+ 	struct gendisk *bi_disk;
+ 	u8 bi_partno;
++	int __bi_remaining;
+ 	unsigned long bi_flags;
+ 	struct bvec_iter bi_iter;
++	bio_end_io_t *bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	struct bio_integrity_payload *bi_integrity;
++#endif
+ };
  
- 	if (enable) {
- 		/*
--		 * must disable first, then enable again
--		 * otherwise, cycle counter will not work
--		 * if previous state is enabled.
-+		 * cycle counter is special which should firstly write 0 then
-+		 * write 1 into CLEAR bit to clear it. Other counters only
-+		 * need write 0 into CLEAR bit and it turns out to be 1 by
-+		 * hardware. Below enable flow is harmless for all counters.
- 		 */
- 		writel(0, pmu->base + reg);
- 		val = CNTL_EN | CNTL_CLEAR;
-@@ -398,7 +399,8 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
- 		writel(val, pmu->base + reg);
- 	} else {
- 		/* Disable counter */
--		writel(0, pmu->base + reg);
-+		val = readl_relaxed(pmu->base + reg) & CNTL_EN_MASK;
-+		writel(val, pmu->base + reg);
- 	}
+ static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
+@@ -30,6 +35,11 @@ static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
+ 	bd->bi_partno = bio->bi_partno;
+ 	bd->bi_flags = bio->bi_flags;
+ 	bd->bi_iter = bio->bi_iter;
++	bd->__bi_remaining = atomic_read(&bio->__bi_remaining);
++	bd->bi_end_io = bio->bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	bd->bi_integrity = bio_integrity(bio);
++#endif
  }
  
+ static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
+@@ -38,6 +48,11 @@ static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
+ 	bio->bi_partno = bd->bi_partno;
+ 	bio->bi_flags = bd->bi_flags;
+ 	bio->bi_iter = bd->bi_iter;
++	atomic_set(&bio->__bi_remaining, bd->__bi_remaining);
++	bio->bi_end_io = bd->bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	bio->bi_integrity = bd->bi_integrity;
++#endif
+ }
+ 
+ #endif
 -- 
 2.20.1
 
