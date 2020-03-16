@@ -2,106 +2,105 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607B4C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482FEC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31AFF20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D4C20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:29:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xCBTTjg7"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BOC94vEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbgCPJ2v (ORCPT
+        id S1730475AbgCPJ3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:28:51 -0400
-Received: from mail-qv1-f43.google.com ([209.85.219.43]:41083 "EHLO
-        mail-qv1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730248AbgCPJ2u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:28:50 -0400
-Received: by mail-qv1-f43.google.com with SMTP id a10so8403017qvq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 02:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SlnHcEUyAXhhBJTuxvcx5n9cVWT6MWBEtfmnj6NVAkw=;
-        b=xCBTTjg7+2+l/sXdvcUuVTjFgeY15EPF67ZSsmNlr0RbLQ6WG2awltClbyDNN9qsWc
-         LJIZ9jy8TF6sDix0G3908K3ARc/4Zgc+HprhfUnODXb8Ca89J/I4OiHyc9kJ7jHy4fxk
-         LNJokixn3Cp1xu27cWtiOURlz8CG7UEkcnACaW1xl0DSids4SVm8AMlACzlS5qNtSTu4
-         dFd/aANQ/b9daRAajrSwTv2R786pJwT0sStgYdWbC4bZqSOCePowSnIgFy8d93Twst8g
-         DWja+bf9MDG/MCKQT+3X21tuMC37OUZ/cDuU7q/O0E+praW5C1xSCBJB1+nLBURttyym
-         mElA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SlnHcEUyAXhhBJTuxvcx5n9cVWT6MWBEtfmnj6NVAkw=;
-        b=n11AbNBMs7Xt5GPywyTHAl5It/EBU18k+9PsX9OXL8RGDMA1abmeiDoUNdMtxk+bLR
-         t0fEXRqewoMJ9mKECl8Hds0s/ulwozBmUcyjTyEvgEK4EevTKzLMyRGa5Rb2ceEQwFY/
-         HStTiiWGqz4Wjb9KBBWKOn2G0yCmaBBhZ9juQIRqzObShi8C5vUtr/Mfgdf+bIvekdkI
-         WGhNKUxuSdTSJuqoV/YnYJxeYoTridCBOs/Gt3RuI5fVZEceUPRMZLq4hUeNkleT7s5j
-         NuIaOKtxahsS13JkzCl+WCJhBIe9aw8Y/yl05lS1on41fmxK2oWllvV2LN+7dfudk1pq
-         ggng==
-X-Gm-Message-State: ANhLgQ3c3WofdUP+dKXusAm6sTezqgogxJwWIyt2Pj4TG1YI60eCrDND
-        bGK8+bTeLlTCWicub3pKqjSco44lRFNSa4gavKw+wA==
-X-Google-Smtp-Source: ADFU+vv9/MKP80W+Vi0dxJrqEXaWFhKiMZB6p3ZHnw6LAmw7NOyop46daJwcHltOfC98RD2Mcmpi+oZ9pXy6EOej54A=
-X-Received: by 2002:ad4:4a6c:: with SMTP id cn12mr21012782qvb.148.1584350929335;
- Mon, 16 Mar 2020 02:28:49 -0700 (PDT)
+        Mon, 16 Mar 2020 05:29:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33714 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730410AbgCPJ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:29:02 -0400
+Received: from zn.tnic (p200300EC2F06AB0069F33882ABEAD541.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:69f3:3882:abea:d541])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 137981EC0CAA;
+        Mon, 16 Mar 2020 10:29:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584350941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/6yYehhfRXpxa7Ic3XPedzuJ3VLB8PO82LBvRLGi1HY=;
+        b=BOC94vEbR3zgncFkMS7aJVBMCERwbHiZ/IqOlJ392YobgaF4CDpN0qRrw8GBpW97tB6Sv6
+        phCLHwQgg8y9MTalMInKENhrmDIiCASkSjmI/HjeheTM1ysazEjHlrQfmZRBrzqGMUoX5q
+        Zo2hNQS3acRgXWYksoy2TsQZezU4dBc=
+Date:   Mon, 16 Mar 2020 10:29:03 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/11] EDAC/ghes: Cleanup struct ghes_edac_dimm_fill,
+ rename it to ghes_dimm_fill
+Message-ID: <20200316092903.GA26126@zn.tnic>
+References: <20200306151318.17422-1-rrichter@marvell.com>
+ <20200306151318.17422-6-rrichter@marvell.com>
 MIME-Version: 1.0
-References: <20200316092340.114125-1-colin.king@canonical.com>
-In-Reply-To: <20200316092340.114125-1-colin.king@canonical.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 16 Mar 2020 10:28:38 +0100
-Message-ID: <CAMpxmJVxPzH1rhfKrGMHWAyKiPAy3CSx9xJqjw-2nKzy=-8ccg@mail.gmail.com>
-Subject: Re: [PATCH][next] tools: gpio-hammer: fix spelling mistake:
- "occurences" -> "occurrences"
-To:     Colin King <colin.king@canonical.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200306151318.17422-6-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 16 mar 2020 o 10:23 Colin King <colin.king@canonical.com> napisa=C5=
-=82(a):
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a spelling mistake in an error message. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Fri, Mar 06, 2020 at 04:13:12PM +0100, Robert Richter wrote:
+> The struct is used to store temporary data for the dmidecode callback.
+> Clean this up a bit:
+> 
+>  1) Rename it to something shorter and more reasonable.
+> 
+>  2) Rename member count to index since this is what it is used for.
+> 
+>  3) Move code close to ghes_edac_dmidecode() where it is used.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
 > ---
->  tools/gpio/gpio-hammer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
-> index 083399d276e4..28d2329e83d2 100644
-> --- a/tools/gpio/gpio-hammer.c
-> +++ b/tools/gpio/gpio-hammer.c
-> @@ -153,7 +153,7 @@ int main(int argc, char **argv)
->
->         if (i >=3D GPIOHANDLES_MAX) {
->                 fprintf(stderr,
-> -                       "Only %d occurences of '-o' are allowed, %d were =
-found\n",
-> +                       "Only %d occurrences of '-o' are allowed, %d were=
- found\n",
->                         GPIOHANDLES_MAX, i + 1);
->                 return -1;
->         }
-> --
-> 2.25.1
->
+>  drivers/edac/ghes_edac.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index 438972dfea09..358519e8c2e9 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -72,11 +72,6 @@ struct memdev_dmi_entry {
+>  	u16 conf_mem_clk_speed;
+>  } __attribute__((__packed__));
+>  
+> -struct ghes_edac_dimm_fill {
+> -	struct mem_ctl_info *mci;
+> -	unsigned int count;
+> -};
+> -
+>  static void ghes_edac_count_dimms(const struct dmi_header *dh, void *arg)
+>  {
+>  	int *num_dimm = arg;
+> @@ -113,18 +108,23 @@ static void ghes_dimm_setup_label(struct dimm_info *dimm, u16 handle)
+>  			"unknown memory (handle: 0x%.4x)", handle);
+>  }
+>  
+> +struct ghes_dimm_fill {
 
-Patch applied, thanks!
+Locally used only so it can be just "dimm_fill" since you're shortening
+it.
 
-Bartosz
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
