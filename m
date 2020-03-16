@@ -2,204 +2,109 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EA2C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F435C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35AF205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:54:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="OnmS4CBr"
+	by mail.kernel.org (Postfix) with ESMTP id E551F20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731096AbgCPMyG (ORCPT
+        id S1731146AbgCPMyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:54:06 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:15522 "EHLO
-        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731023AbgCPMyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:54:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1584363243; x=1615899243;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ER2QqLcezibDMSXGEObfIVVmWurWCCq2yGT0KmuLoQ0=;
-  b=OnmS4CBrLk9Ua2vXBRBJmnt3lAkWq3DWJbrjtv/Y+oJpJh+qWgw5j1MI
-   Sz27jFNcs6YdkSrdhhKoa/JU0bYDPvy2yqFde0gPq0Eu6hvG295opQtHb
-   yY0OX1nxhzIZKDGjHr34mBYsFiEcY/I+ZykEyD76Llbd5jPSErj+ECmtd
-   suVdkwYi80y/kQQlt9ra8pXihEV2lx5tteJrGuwj4AK7EHhFigZjQrfGV
-   9x8XjhaxJ/IdiqoKOvwlOU4HbUPmSFVZRbEEA+OjkO7kg+5zGJBji8jN4
-   aSXMcTPQn+eMWUF5B5RgDmKYlZWDQNkG3Kqp4v8bHQk5LzXaQwmMWHszS
-   g==;
-IronPort-SDR: NiPyy0izlDW5CsecNNrAyuLfm5QQKAlYX6OuB5Y4F0oSILp78ExVKpsVGHhExBJHxOOibUkyRw
- GcWvSuZL2Mdg==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV+5H21uxgWjW9wEe6B/TzHpI38w==
-Date:   Mon, 16 Mar 2020 12:53:59 +0000
-Message-ID: <20200316124851.6303-3-Denis.Osterland@diehl.com>
-References: <20200316124851.6303-1-Denis.Osterland@diehl.com>
-In-Reply-To: <20200316124851.6303-1-Denis.Osterland@diehl.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 16 Mar 2020 08:54:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36122 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730878AbgCPMyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:54:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6C502AB64;
+        Mon, 16 Mar 2020 12:54:31 +0000 (UTC)
+Message-ID: <9d8e1679b755940d85c95d5df8714d4bb3505cdc.camel@suse.de>
+Subject: Re: [PATCH 86/89] drm/vc4: hdmi: Adjust HSM clock rate depending on
+ pixel rate
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
+Cc:     Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Mon, 16 Mar 2020 13:54:29 +0100
+In-Reply-To: <abf64b907cd23488e06d2aca4991ac1be216ec8f.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <abf64b907cd23488e06d2aca4991ac1be216ec8f.1582533919.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-2Nhzgdng4j8pr0d0VEie"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: 415AWy8o668fDtCxszluz0usJCarfP6B29so9zGpOBCP3VvdIGTGcW31xNRj+VSU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for =22default-state=22 devicetree property, whic=
-h
-allows to defer pwm init to first use of led.
 
-This allows to configure the PWM early in bootloader to let the LED
-blink until an application in Linux userspace sets something different.
+--=-2Nhzgdng4j8pr0d0VEie
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
----
- drivers/leds/leds-pwm.c | 34 ++++++++++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+Hi Maxime,
+On Mon, 2020-02-24 at 10:07 +0100, Maxime Ripard wrote:
+> @@ -1460,6 +1456,7 @@ static int vc4_hdmi_dev_remove(struct platform_devi=
+ce
+> *pdev)
+>  }
+> =20
+>  struct vc4_hdmi_variant bcm2835_variant =3D {
+> +	.max_pixel_clock	=3D 148500000,
 
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 5f69b6571595..fce7969e7918 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -18,11 +18,16 @@
- #include <linux/pwm.h>
- #include <linux/slab.h>
-=20
-+#define LEDS_PWM_DEFSTATE_OFF	0
-+#define LEDS_PWM_DEFSTATE_ON	1
-+#define LEDS_PWM_DEFSTATE_KEEP	2
-+
- struct led_pwm {
- 	const char	*name;
- 	const char	*default_trigger;
- 	unsigned int	pwm_id __deprecated;
- 	u8		active_low;
-+	u8		default_state;
- 	unsigned int	max_brightness;
- 	unsigned int	pwm_period_ns;
- };
-@@ -72,7 +77,6 @@ static int led_pwm_add(struct device *dev, struct led_p=
-wm_priv *priv,
- 	led_data->active_low =3D led->active_low;
- 	led_data->cdev.name =3D led->name;
- 	led_data->cdev.default_trigger =3D led->default_trigger;
--	led_data->cdev.brightness =3D LED_OFF;
- 	led_data->cdev.max_brightness =3D led->max_brightness;
- 	led_data->cdev.flags =3D LED_CORE_SUSPENDRESUME;
-=20
-@@ -92,13 +96,27 @@ static int led_pwm_add(struct device *dev, struct led=
-_pwm_priv *priv,
-=20
- 	pwm_init_state(led_data->pwm, &led_data->pwmstate);
-=20
-+	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_ON)
-+		led_data->cdev.brightness =3D led->max_brightness;
-+	else if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
-+		uint64_t brightness;
-+
-+		pwm_get_state(led_data->pwm, &led_data->pwmstate);
-+		brightness =3D led->max_brightness;
-+		brightness *=3D led_data->pwmstate.duty_cycle;
-+		do_div(brightness, led_data->pwmstate.period);
-+		led_data->cdev.brightness =3D (enum led_brightness)brightness;
-+	}
-+
- 	if (!led_data->pwmstate.period)
- 		led_data->pwmstate.period =3D led->pwm_period_ns;
-=20
- 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret =3D=3D 0) {
- 		priv->num_leds++;
--		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-+		if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP)
-+			led_pwm_set(&led_data->cdev,
-+					led_data->cdev.brightness);
- 	} else {
- 		dev_err(dev, =22failed to register PWM led for %s: %d=5Cn=22,
- 			led->name, ret);
-@@ -116,6 +134,8 @@ static int led_pwm_create_fwnode(struct device *dev, =
-struct led_pwm_priv *priv)
- 	memset(&led, 0, sizeof(led));
-=20
- 	device_for_each_child_node(dev, fwnode) {
-+		const char *state =3D NULL;
-+
- 		ret =3D fwnode_property_read_string(fwnode, =22label=22, &led.name);
- 		if (ret && is_of_node(fwnode))
- 			led.name =3D to_of_node(fwnode)->name;
-@@ -133,6 +153,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
- struct led_pwm_priv *priv)
- 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
- 					 &led.max_brightness);
-=20
-+		if (!fwnode_property_read_string(fwnode, =22default-state=22,
-+						 &state)) {
-+			if (!strcmp(state, =22keep=22))
-+				led.default_state =3D LEDS_PWM_DEFSTATE_KEEP;
-+			else if (!strcmp(state, =22on=22))
-+				led.default_state =3D LEDS_PWM_DEFSTATE_ON;
-+			else
-+				led.default_state =3D LEDS_PWM_DEFSTATE_OFF;
-+		}
-+
- 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
- 		if (ret) {
- 			fwnode_handle_put(fwnode);
---=20
-2.25.1
+Just a reminder this might change in the close future:
+https://www.spinics.net/lists/arm-kernel/msg793013.html
+
+Regards,
+Nicolas
+j
+>  	.audio_available	=3D true,
+>  	.cec_available		=3D true,
+>  	.registers		=3D vc4_hdmi_fields,
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdm=
+i.h
+> index cbb1d3ab85d7..ee9753255b68 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+> @@ -38,6 +38,9 @@ struct vc4_hdmi_variant {
+>  	/* Set to true when the CEC support is available */
+>  	bool cec_available;
+> =20
+> +	/* Maximum pixel clock supported by the controller (in Hz) */
+> +	unsigned long long max_pixel_clock;
+> +
+>  	/* List of the registers available on that variant */
+>  	const struct vc4_hdmi_register *registers;
+> =20
 
 
+--=-2Nhzgdng4j8pr0d0VEie
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Diehl Connectivity Solutions GmbH
-Gesch=E4ftsf=FChrung: Horst Leonberger
-Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
-N=FCrnberg: HRB 32315
-_________________________________________________________________________=
-__________________________
+-----BEGIN PGP SIGNATURE-----
 
-Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
-ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
-Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
-ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
-Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
- und/oder Publikation dieser E-Mail ist strengstens untersagt.
-- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
-Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
-chten/
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5vdwUACgkQlfZmHno8
+x/5Emwf/c9TYjBffVgvOA41mykLV4Nr8lGqYlbGeCSqOkIJClpTw0XDG/Sam289n
+NVS5OpnsEXJWm2HMrWgVqYqZHb3E609pjVeibMyMUhBIvounfpp5kiGI0ZUfCm68
++JarBt0WtkW+731jvBxEnmfWB5j8FpHiZrSJkU5Eo7C7OhIHEAXvU+ZH6TdPqll6
+Zjic3+8SBELK0JfFzgB6qkVWFT4UBVpxQ53sokDF+NGROgOEdUkHWxivw9SGvFsg
+ewD3v2fbRdUNVTXI/9htZH4I/lupf3byyRQRnx8IWrzI/1U3NzY1xiHU3qEKUW3Q
+DQNY46wnSbAgfaRuOCuI0lgcGztljw==
+=xZA/
+-----END PGP SIGNATURE-----
 
-The contents of the above mentioned e-mail is not legally binding. This e=
--mail contains confidential and/or legally protected information. Please =
-inform us if you have received this e-mail by
-mistake and delete it in such a case. Each unauthorized reproduction, dis=
-closure, alteration, distribution and/or publication of this e-mail is st=
-rictly prohibited.=20
-- For general information on data protection and your respective rights p=
-lease visit https://www.diehl.com/group/en/transparency-and-information-o=
-bligations/
+--=-2Nhzgdng4j8pr0d0VEie--
+
