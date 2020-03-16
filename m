@@ -2,74 +2,118 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025FBC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3D8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD76C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F8220736
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584325999;
-	bh=JECNvcwgpBCM8o9+C4c1LowfMDmUIeZF7Y+YMfYbyQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0WY8SreBBGXTlapSSu/QF1Nd4lGwEQWcMuToumaCfu6Yn65xZCb452TdXSrGaCHHj
-	 xpss5ykya+wJfa9I3aAtMEdNoGK1oZPw/qa240X4HCS5d1WOfm+s4epCeMozY/0if4
-	 Sazw4l5y7CkPD85BhjlehNsiUGIp4YKg45GZewJk=
+	s=default; t=1584326010;
+	bh=UewdlmJMsTTuQM3SWdkjtOLwtSeuhyZrAMg9L0NrYp8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dtMCR3GihaVgUguimtbHzIcEnQ9xstflTRpLmpzz0FLiXiMamw82zM2GIgdkC8WcH
+	 0cVeSuJ5Njt9nE4fByI4GaTsi96Fx6hPqKyv2qSubhHUc9seucJO2XiFII3fch1wyF
+	 CdawxPNbS5QVT/pTfJmwktm2PUwukHhtGBQfFOks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgCPCdS (ORCPT
+        id S1729523AbgCPCd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:33:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729329AbgCPCdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:33:15 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729496AbgCPCdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:33:24 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92B57206BE;
-        Mon, 16 Mar 2020 02:33:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25FD220738;
+        Mon, 16 Mar 2020 02:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584325995;
-        bh=JECNvcwgpBCM8o9+C4c1LowfMDmUIeZF7Y+YMfYbyQY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2ff1qLXS+iJ0mRFvywRJpgkqmkJRDQUzJtasC4snv9dFEbWMnpN8z9nldKCs/nWRz
-         grOQkoeW5Tpi2uN6/U8i/WwVc2MYzBhjdLvomg0LHhOaytjUAQnmiRuVsRS/8obwW+
-         b7F/hZEG6p9C1nUQ2E6O3V6RqG8/C/jSAIg3VHy0=
-Date:   Mon, 16 Mar 2020 10:33:08 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH 2/2] arm64: dts: ls1028a: disable the felix switch by
- default
-Message-ID: <20200316023308.GW17221@dragon>
-References: <20200312164320.22349-1-michael@walle.cc>
- <20200312164320.22349-2-michael@walle.cc>
+        s=default; t=1584326004;
+        bh=UewdlmJMsTTuQM3SWdkjtOLwtSeuhyZrAMg9L0NrYp8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=B/od3cKvby3KQS7GcCxPkvuZSCaPaA2o1V/K9s3rLVUeVyoYYUu8p3xDZEvcafNMf
+         /oP60WQ777OXQpTRKQYxbmtq+G+FdjtowP9wSHJaPTv1u4y09nM4wQd+aTHCRG5LcJ
+         CNVRpd+nm3elXRc4xTo0NcT+KAL11KavMCLqjTwM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Evan Benn <evanbenn@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>, CK Hu <ck.hu@mediatek.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 03/41] drm/mediatek: Find the cursor plane instead of hard coding it
+Date:   Sun, 15 Mar 2020 22:32:41 -0400
+Message-Id: <20200316023319.749-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
+References: <20200316023319.749-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312164320.22349-2-michael@walle.cc>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 05:43:20PM +0100, Michael Walle wrote:
-> Disable the felix switch by default and enable it per board which are
-> actually using it.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+From: Evan Benn <evanbenn@chromium.org>
 
-Applied, thanks.
+[ Upstream commit 318caac7c81cdf5806df30c3d72385659a5f0f53 ]
+
+The cursor and primary planes were hard coded.
+Now search for them for passing to drm_crtc_init_with_planes
+
+Signed-off-by: Evan Benn <evanbenn@chromium.org>
+Reviewed-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index c3f5111fd563f..7104504babde0 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -549,10 +549,18 @@ static const struct drm_crtc_helper_funcs mtk_crtc_helper_funcs = {
+ 
+ static int mtk_drm_crtc_init(struct drm_device *drm,
+ 			     struct mtk_drm_crtc *mtk_crtc,
+-			     struct drm_plane *primary,
+-			     struct drm_plane *cursor, unsigned int pipe)
++			     unsigned int pipe)
+ {
+-	int ret;
++	struct drm_plane *primary = NULL;
++	struct drm_plane *cursor = NULL;
++	int i, ret;
++
++	for (i = 0; i < mtk_crtc->layer_nr; i++) {
++		if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_PRIMARY)
++			primary = &mtk_crtc->planes[i];
++		else if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_CURSOR)
++			cursor = &mtk_crtc->planes[i];
++	}
+ 
+ 	ret = drm_crtc_init_with_planes(drm, &mtk_crtc->base, primary, cursor,
+ 					&mtk_crtc_funcs, NULL);
+@@ -710,9 +718,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 			return ret;
+ 	}
+ 
+-	ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, &mtk_crtc->planes[0],
+-				mtk_crtc->layer_nr > 1 ? &mtk_crtc->planes[1] :
+-				NULL, pipe);
++	ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, pipe);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-- 
+2.20.1
+
