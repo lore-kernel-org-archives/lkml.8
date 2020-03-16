@@ -2,86 +2,133 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E3DC1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93819C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1BD20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rBc0xEE9"
+	by mail.kernel.org (Postfix) with ESMTP id 747DA20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbgCPHng (ORCPT
+        id S1729957AbgCPHoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:43:36 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34285 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728302AbgCPHnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:43:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gpFd530Zz9sPJ;
-        Mon, 16 Mar 2020 18:43:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584344613;
-        bh=XLT9Jf9yZQsFnwXj3AN1n6qKW2WgCf+CQFaUzBXFaMo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rBc0xEE92YsyDP21OMGZEscJfzyel2Bri4gGkgiiqLPcWXaqpkRlL8L0iVkxrUViC
-         OH/159slzxHwC11FVtvF5eFh+18KA4Xy9KS6dF4ddqSUYSU6GrFsi4SM+nlZz0syQ9
-         EsPa0n4ItSaHh0M6I6iJ+UQC8BStj54rqo75MIclgZ4AH3Q9jBm5ILVFD4+gourxj/
-         UMFP216Y/1aBFnSQhZNYjAxU7rXaruB8+PU8/vqDlcWa1Jxkl10KzdzMKHgOeeXSbV
-         YpsLiGbU5kCESKbQlsEJtD8uZIT2ecpE2No39ZeVkTPSQUwDJ+zhwXq3EobJzKfk2C
-         miWt1objO8EBA==
-Date:   Mon, 16 Mar 2020 18:43:31 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the imx-mxs tree
-Message-ID: <20200316184331.27d43eaa@canb.auug.org.au>
+        Mon, 16 Mar 2020 03:44:09 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:39089 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728302AbgCPHoJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 03:44:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TsjIkOZ_1584344641;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TsjIkOZ_1584344641)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 16 Mar 2020 15:44:01 +0800
+Subject: Re: [PATCH v2,1/2] doc: zh_CN: index files in filesystems
+ subdirectory
+To:     Wang Wenhu <wenhu.wang@vivo.com>, Jonathan Corbet <corbet@lwn.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Jaskaran Singh <jaskaransingh7654321@gmail.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     kernel@vivo.com
+References: <20200315092810.87008-1-wenhu.wang@vivo.com>
+ <20200315155258.91725-1-wenhu.wang@vivo.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <c163e158-125c-1b31-1bfb-6927b86d2a82@linux.alibaba.com>
+Date:   Mon, 16 Mar 2020 15:44:01 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/xaxcQLtuGHLKWlyJEIuxhuA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200315155258.91725-1-wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/xaxcQLtuGHLKWlyJEIuxhuA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
 
-Hi all,
-
-Commit
-
-  c258dccaf994 ("arm64: dts: imx8m: fix aips dts node")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/xaxcQLtuGHLKWlyJEIuxhuA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5vLiMACgkQAVBC80lX
-0Gx1Cgf3W9PAKG6zbzl3Udv4sH5Np8/d8WdGsnQgCuqGOe0CnDWSyzwFj+gafA7D
-isdD2MZR06iDMp6A1eoUFBWRc3zsvgJU3LDzHCTer29yem4sl1JpJVy+Z2AbhWQY
-4JPwnD+aEQ3i+UhWcpAMmhPNV4RE0ciwMp4+0txOgLZwJ0OqbRnsZ5Gveq/wJvqB
-qtKfPcLy0Kbeyd7COCHC4/ScpQwo5SGQA5xnce6aSSRDxexKNn61CmxY5VqTesAM
-5N/OrfmKc0MbRFfvTfoRIEK9YXj9HUuaCF4W4fJvJogedCNDQCjRPvfN61RRUAk5
-br0q45QPxAluDBmjP4t1TItXPMQ+
-=gJWd
------END PGP SIGNATURE-----
-
---Sig_/xaxcQLtuGHLKWlyJEIuxhuA--
+在 2020/3/15 下午11:52, Wang Wenhu 写道:
+> Add filesystems subdirectory into the table of Contents for zh_CN,
+> all translations residing on it would be indexed conveniently.
+> 
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> ---
+> Changelog:
+>  - v2 added SPDX header
+> ---
+>  Documentation/filesystems/index.rst           |  2 ++
+>  .../translations/zh_CN/filesystems/index.rst  | 29 +++++++++++++++++++
+>  Documentation/translations/zh_CN/index.rst    |  1 +
+>  3 files changed, 32 insertions(+)
+>  create mode 100644 Documentation/translations/zh_CN/filesystems/index.rst
+> 
+> diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+> index 386eaad008b2..ab47d5b1f092 100644
+> --- a/Documentation/filesystems/index.rst
+> +++ b/Documentation/filesystems/index.rst
+> @@ -1,3 +1,5 @@
+> +.. _filesystems_index:
+> +
+>  ===============================
+>  Filesystems in the Linux kernel
+>  ===============================
+> diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
+> new file mode 100644
+> index 000000000000..0a2cabfeaf7b
+> --- /dev/null
+> +++ b/Documentation/translations/zh_CN/filesystems/index.rst
+> @@ -0,0 +1,29 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. raw:: latex
+> +
+> +	\renewcommand\thesection*
+> +	\renewcommand\thesubsection*
+> +
+> +.. include:: ../disclaimer-zh_CN.rst
+> +
+> +:Original: :ref:`Documentation/filesystems/index.rst <filesystems_index>`
+> +:Translator: Wang Wenhu <wenhu.wang@vivo.com>
+> +
+> +.. _cn_filesystems_index:
+> +
+> +========================
+> +Linux Kernel中的文件系统
+> +========================
+> +
+> +这份正在开发的手册或许在未来某个辉煌的日子里以易懂的形式将Linux虚拟\
+> +文件系统（VFS）层以及基于其上的各种文件系统如何工作呈现给大家。当前\
+> +可以看到下面的内容。
+> +
+> +文件系统
+> +========
+> +
+> +文件系统实现文档。
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> diff --git a/Documentation/translations/zh_CN/index.rst b/Documentation/translations/zh_CN/index.rst
+> index d3165535ec9e..76850a5dd982 100644
+> --- a/Documentation/translations/zh_CN/index.rst
+> +++ b/Documentation/translations/zh_CN/index.rst
+> @@ -14,6 +14,7 @@
+>     :maxdepth: 2
+>  
+>     process/index
+> +   filesystems/index
+>  
+>  目录和表格
+>  ----------
+> 
