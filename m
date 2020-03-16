@@ -2,83 +2,166 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70162C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF6EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4968B20575
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCB32051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=malat-biz.20150623.gappssmtp.com header.i=@malat-biz.20150623.gappssmtp.com header.b="pK4psSJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731540AbgCPO35 (ORCPT
+        id S1731561AbgCPOak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:29:57 -0400
-Received: from smtp2.ustc.edu.cn ([202.38.64.46]:43193 "EHLO ustc.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731477AbgCPO35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:29:57 -0400
-Received: from xhacker (unknown [101.86.20.80])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygAnL5NgjW9e+D1PAA--.19840S2;
-        Mon, 16 Mar 2020 22:29:53 +0800 (CST)
-Date:   Mon, 16 Mar 2020 22:28:08 +0800
-From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 0/4] regulator: add MP8867/MP8869 support
-Message-ID: <20200316222808.6453d849@xhacker>
+        Mon, 16 Mar 2020 10:30:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55974 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731541AbgCPOak (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 10:30:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 6so17905299wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:30:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=malat-biz.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=R+Gvs9hVDDCMOY336QoblV4ZIg4hz1Qc4pgjDVSYrZw=;
+        b=pK4psSJaWvRH2ShNntRanlxFZciHpDRYht0XxCrDqbpXASnkX8hwZGkm+pAGRmIRE5
+         EYCs81swbCNuLcnkFMX7lDn1MmRvSmA84ltkpxKWvKHFW1oFs+Sef7jDi7hfRFwsalKR
+         SZGirVQLpL/Eh9zvjXI0s33o4t7okW7baFp/uSmbofDLUp8IunUjryBBbRraSND+HS8H
+         dii3B7s2DSllNMsHgWVT0PZAxaA/A/QW50XMqp1n5ltKiXESHzKRZBUpY4Wq3goD/20X
+         W1MqxSwts99LYy8f14jFSJkW2OUmB3kIoI/eko31fV7u5ExIVe5tQC6mjYAZAfQD+qvw
+         PtEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=R+Gvs9hVDDCMOY336QoblV4ZIg4hz1Qc4pgjDVSYrZw=;
+        b=psHX/CmtOTj5yFeyA8fcOpIoHr4T3KAfv0X3lOigyprAJLn3th73NumCg1lR40n59+
+         LTyKc3z64RjMajxd9adtaXbrzy/fkEODCdQbDrVo2s6lE0yp5QjRdjwqizasG+SszonH
+         XBJ1/wrpWVdQujdeqR1ifiAoQ8glr+igJtoy5CYvZARv+E1CQVxQ8aE9E5vDHLE3bMpi
+         Rj+xQui4NVAzGBPpCkMoUn+Uw8Z0dzE+S+Xpz6LHrfrFkev53KP5krbm/6UuI2A+7Aca
+         bHwYrfSJCq8s0Ky6LuMeaiSd7WxGAKJLemuDlKG1sZ7NRWbRLGyf1nq2mh3JuTAPoV3H
+         f7mw==
+X-Gm-Message-State: ANhLgQ1q1uPprwfG2fROdZK3pMEG7Eg+kv9P81lJpnGRTr/QiRnpdNdT
+        VqnzeMgYNeWJeF04ccZ89pv2hw==
+X-Google-Smtp-Source: ADFU+vtV83xhjIA0Tdy7spH4K8paaf1O0RSR60YNVgjS1x/u7IoiaFyGaHwTE03P7JDLOrQr5vAnuw==
+X-Received: by 2002:a05:600c:2319:: with SMTP id 25mr28084151wmo.106.1584369036638;
+        Mon, 16 Mar 2020 07:30:36 -0700 (PDT)
+Received: from ntb.Speedport_W_921V_1_46_000 (p57AF9474.dip0.t-ipconnect.de. [87.175.148.116])
+        by smtp.googlemail.com with ESMTPSA id z129sm31344330wmb.7.2020.03.16.07.30.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 07:30:35 -0700 (PDT)
+From:   Petr Malat <oss@malat.biz>
+To:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Cc:     terrelln@fb.com, clm@fb.com, gregkh@linuxfoundation.org,
+        keescook@chromium.org, Petr Malat <oss@malat.biz>
+Subject: [PATCH v2 2/2] x86: Enable support for ZSTD-compressed kernel
+Date:   Mon, 16 Mar 2020 15:30:17 +0100
+Message-Id: <20200316143018.1366-2-oss@malat.biz>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200316143018.1366-1-oss@malat.biz>
+References: <20200316140745.GB4041840@kroah.com>
+ <20200316143018.1366-1-oss@malat.biz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LkAmygAnL5NgjW9e+D1PAA--.19840S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xryktw13Zw4fZFy7Jw47urg_yoW3ZwbEkw
-        1xAa4xGwsrZFs5Cay0vFsFgry5CF4jqay7XFnxKrWFvFy7Za4UG39rZr97Aw48JayUZrnr
-        Ww1xJr40vr43WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbF8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E
-        4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-        WUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-        Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rV
-        WrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_
-        GrUvcSsGvfC2KfnxnUUI43ZEXa7IU86OJ5UUUUU==
-X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+ZSTD compression ratio is roughly 10% worst than xz, but the
+decompression is 10x faster. Currently, this is one of the optimal
+algorithms available in the kernel, as there isn't an algorithm,
+which would provide a better compression ratio and a shorter
+decompression time.
 
-The MP8867/MP8869 from Monolithic Power Systems is a single output
-DC/DC converter. The voltage can be controlled via I2C.
+Signed-off-by: Petr Malat <oss@malat.biz>
+---
+ arch/x86/Kconfig                  | 1 +
+ arch/x86/boot/compressed/Makefile | 5 ++++-
+ arch/x86/boot/compressed/misc.c   | 4 ++++
+ arch/x86/include/asm/boot.h       | 4 ++--
+ 4 files changed, 11 insertions(+), 3 deletions(-)
 
-since v1:
-  - rebase on regulator for-next branch
-
-Jisheng Zhang (4):
-  regulator: bindings: add MPS mp8869 voltage regulator
-  regulator: add support for MP8869 regulator
-  dt-bindings: mp886x: Document MP8867 support
-  regulator: mp886x: add MP8867 support
-
- .../devicetree/bindings/regulator/mp886x.txt  |  27 ++
- drivers/regulator/Kconfig                     |   7 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/mp886x.c                    | 290 ++++++++++++++++++
- 4 files changed, 325 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mp886x.txt
- create mode 100644 drivers/regulator/mp886x.c
-
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5e8949953660..b22312aae674 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -180,6 +180,7 @@ config X86
+ 	select HAVE_KERNEL_LZMA
+ 	select HAVE_KERNEL_LZO
+ 	select HAVE_KERNEL_XZ
++	select HAVE_KERNEL_ZSTD
+ 	select HAVE_KPROBES
+ 	select HAVE_KPROBES_ON_FTRACE
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 1dac210f7d44..a87dc1e41772 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -24,7 +24,7 @@ OBJECT_FILES_NON_STANDARD	:= y
+ KCOV_INSTRUMENT		:= n
+ 
+ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
+-	vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4
++	vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4 vmlinux.bin.zst
+ 
+ KBUILD_CFLAGS := -m$(BITS) -O2
+ KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
+@@ -145,6 +145,8 @@ $(obj)/vmlinux.bin.lzo: $(vmlinux.bin.all-y) FORCE
+ 	$(call if_changed,lzo)
+ $(obj)/vmlinux.bin.lz4: $(vmlinux.bin.all-y) FORCE
+ 	$(call if_changed,lz4)
++$(obj)/vmlinux.bin.zst: $(vmlinux.bin.all-y) FORCE
++	$(call if_changed,zstd)
+ 
+ suffix-$(CONFIG_KERNEL_GZIP)	:= gz
+ suffix-$(CONFIG_KERNEL_BZIP2)	:= bz2
+@@ -152,6 +154,7 @@ suffix-$(CONFIG_KERNEL_LZMA)	:= lzma
+ suffix-$(CONFIG_KERNEL_XZ)	:= xz
+ suffix-$(CONFIG_KERNEL_LZO) 	:= lzo
+ suffix-$(CONFIG_KERNEL_LZ4) 	:= lz4
++suffix-$(CONFIG_KERNEL_ZSTD) 	:= zst
+ 
+ quiet_cmd_mkpiggy = MKPIGGY $@
+       cmd_mkpiggy = $(obj)/mkpiggy $< > $@
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 9652d5c2afda..39e592d0e0b4 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -77,6 +77,10 @@ static int lines, cols;
+ #ifdef CONFIG_KERNEL_LZ4
+ #include "../../../../lib/decompress_unlz4.c"
+ #endif
++
++#ifdef CONFIG_KERNEL_ZSTD
++#include "../../../../lib/decompress_unzstd.c"
++#endif
+ /*
+  * NOTE: When adding a new decompressor, please update the analysis in
+  * ../header.S.
+diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
+index 680c320363db..9838c183e9a8 100644
+--- a/arch/x86/include/asm/boot.h
++++ b/arch/x86/include/asm/boot.h
+@@ -24,9 +24,9 @@
+ # error "Invalid value for CONFIG_PHYSICAL_ALIGN"
+ #endif
+ 
+-#ifdef CONFIG_KERNEL_BZIP2
++#if CONFIG_KERNEL_BZIP2 || CONFIG_KERNEL_ZSTD
+ # define BOOT_HEAP_SIZE		0x400000
+-#else /* !CONFIG_KERNEL_BZIP2 */
++#else /* !(CONFIG_KERNEL_BZIP2 || CONFIG_KERNEL_ZSTD)  */
+ # define BOOT_HEAP_SIZE		 0x10000
+ #endif
+ 
 -- 
-2.24.0
-
+2.20.1
 
