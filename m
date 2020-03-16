@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3211C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70640C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94BC206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEA0205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326351;
-	bh=jM7Fews3e1MESegyezgjrz7anoNSo3IuYP4oG7HKigc=;
+	s=default; t=1584326354;
+	bh=OVFFe6LVDT1McSdceRcLJ0lU84O4es66sWRpFFWGBb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCbL2zUlTiXR4F8cyXBinsusavdkuR15SmcaZDA36IMWsw/1M22Lxa2s7F0fNJZVO
-	 G9ZonCotNJ61OyJfOs3ftnyzYVrElS3dYgCUiLCxokOmZ5UJvCTTOIgqtRPbgbaw1V
-	 pWjSFiMppUN3C4eaFaxA1qs9QgNp/NQ6r2z2JRTM=
+	b=k2TrOUdIIpT3+ErNC7tXTtUA+UIqBrstxh04lnZUapCYTyGFDnd2P1C+SJIeJslI1
+	 BMnV9ilBniUBaOmxsW5xZPdFtHZ7XgQkEZJq291z9HSnXJqTEYii2JAIcUluqWRV7q
+	 +dUnCnk7qgGzedtlDi2XTI8wY0Q80FeILZrnGIPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgCPCjK (ORCPT
+        id S1730316AbgCPCjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38200 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:39:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729893AbgCPCef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:35 -0400
+        id S1729475AbgCPCee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 616012073C;
-        Mon, 16 Mar 2020 02:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588D0206EB;
+        Mon, 16 Mar 2020 02:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326075;
-        bh=jM7Fews3e1MESegyezgjrz7anoNSo3IuYP4oG7HKigc=;
+        s=default; t=1584326074;
+        bh=OVFFe6LVDT1McSdceRcLJ0lU84O4es66sWRpFFWGBb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/Et20zv5LYIKr4B0pRC7OO8Ocx8P8xsuhVVoZiAfOv3/xi/lu/5+HP9A/IugNq2O
-         sj8em3dC1PhBTD/cKDPNef9w1WAk6v0WFRyUDqpaJI0vN5onMjA+TwbKl3jeVf173f
-         vARlKQxVLTOgZQfX+a+4gm1BoaCgN6atYwnHpbnc=
+        b=jzY3E/0WLgYZ5iuIFyab7l8SRnR2OHQfTgDWbPHRbWowLapwXulGsjPyXZOWbR10r
+         GhHROs9t4KROcfu94BqSxd5aivTCyFF5LWBovUKUkj+glT2q/RF6WgtN2Eog/YTJDF
+         +jEa350ptKPYQhF38vJI2Xg6p05KAAjYDd6YZD/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     luanshi <zhangliguang@linux.alibaba.com>,
+Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>,
         Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 20/35] drivers/perf: arm_pmu_acpi: Fix incorrect checking of gicc pointer
-Date:   Sun, 15 Mar 2020 22:33:56 -0400
-Message-Id: <20200316023411.1263-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 19/35] drivers/perf: fsl_imx8_ddr: Correct the CLEAR bit definition
+Date:   Sun, 15 Mar 2020 22:33:55 -0400
+Message-Id: <20200316023411.1263-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
 References: <20200316023411.1263-1-sashal@kernel.org>
@@ -59,47 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: luanshi <zhangliguang@linux.alibaba.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-[ Upstream commit 3ba52ad55b533760a1f65836aa0ec9d35e36bb4f ]
+[ Upstream commit 049d919168458ac54e7fad27cd156a958b042d2f ]
 
-Fix bogus NULL checks on the return value of acpi_cpu_get_madt_gicc()
-by checking for a 0 'gicc->performance_interrupt' value instead.
+When disabling a counter from ddr_perf_event_stop(), the counter value
+is reset to 0 at the same time.
 
-Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Preserve the counter value by performing a read-modify-write of the
+PMU register and clearing only the enable bit.
+
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_pmu_acpi.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/perf/fsl_imx8_ddr_perf.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
-index acce8781c456c..f5c7a845cd7bf 100644
---- a/drivers/perf/arm_pmu_acpi.c
-+++ b/drivers/perf/arm_pmu_acpi.c
-@@ -24,8 +24,6 @@ static int arm_pmu_acpi_register_irq(int cpu)
- 	int gsi, trigger;
+diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+index 0e51baa48b149..6eef47de8fccc 100644
+--- a/drivers/perf/fsl_imx8_ddr_perf.c
++++ b/drivers/perf/fsl_imx8_ddr_perf.c
+@@ -327,9 +327,10 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
  
- 	gicc = acpi_cpu_get_madt_gicc(cpu);
--	if (WARN_ON(!gicc))
--		return -EINVAL;
- 
- 	gsi = gicc->performance_interrupt;
- 
-@@ -64,11 +62,10 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
- 	int gsi;
- 
- 	gicc = acpi_cpu_get_madt_gicc(cpu);
--	if (!gicc)
--		return;
- 
- 	gsi = gicc->performance_interrupt;
--	acpi_unregister_gsi(gsi);
-+	if (gsi)
-+		acpi_unregister_gsi(gsi);
+ 	if (enable) {
+ 		/*
+-		 * must disable first, then enable again
+-		 * otherwise, cycle counter will not work
+-		 * if previous state is enabled.
++		 * cycle counter is special which should firstly write 0 then
++		 * write 1 into CLEAR bit to clear it. Other counters only
++		 * need write 0 into CLEAR bit and it turns out to be 1 by
++		 * hardware. Below enable flow is harmless for all counters.
+ 		 */
+ 		writel(0, pmu->base + reg);
+ 		val = CNTL_EN | CNTL_CLEAR;
+@@ -337,7 +338,8 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
+ 		writel(val, pmu->base + reg);
+ 	} else {
+ 		/* Disable counter */
+-		writel(0, pmu->base + reg);
++		val = readl_relaxed(pmu->base + reg) & CNTL_EN_MASK;
++		writel(val, pmu->base + reg);
+ 	}
  }
  
- #if IS_ENABLED(CONFIG_ARM_SPE_PMU)
 -- 
 2.20.1
 
