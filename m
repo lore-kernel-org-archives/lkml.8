@@ -6,63 +6,67 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427F0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592BEC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2191720658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E5F20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbgCPKcT (ORCPT
+        id S1730660AbgCPKcf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:32:19 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:59407 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730565AbgCPKcS (ORCPT
+        Mon, 16 Mar 2020 06:32:35 -0400
+Received: from poy.remlab.net ([94.23.215.26]:33160 "EHLO
+        ns207790.ip-94-23-215.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730617AbgCPKcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:32:18 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C5B3C240010;
-        Mon, 16 Mar 2020 10:31:14 +0000 (UTC)
-Date:   Mon, 16 Mar 2020 11:31:14 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ran Bi <ran.bi@mediatek.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rtc tree
-Message-ID: <20200316103114.GO4518@piout.net>
-References: <20200316161558.438c7d8b@canb.auug.org.au>
- <1584341922.16860.5.camel@mhfsdcap03>
+        Mon, 16 Mar 2020 06:32:35 -0400
+Received: from basile.remlab.net (87-92-31-51.bb.dnainternet.fi [87.92.31.51])
+        (Authenticated sender: remi)
+        by ns207790.ip-94-23-215.eu (Postfix) with ESMTPSA id 918F95FAC8;
+        Mon, 16 Mar 2020 11:32:31 +0100 (CET)
+From:   =?ISO-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, suzuki.poulose@arm.com,
+        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
+        linux-kernel@vger.kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, maz@kernel.org, will@kernel.org
+Subject: Re: [PATCH] arm64: move kimage_vaddr to .rodata
+Date:   Mon, 16 Mar 2020 12:32:30 +0200
+Message-ID: <3096066.EsygCdbVZz@basile.remlab.net>
+Organization: Remlab
+In-Reply-To: <20200312164035.GA21120@lakrids.cambridge.arm.com>
+References: <20200312094002.153302-1-remi@remlab.net> <20200312164035.GA21120@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584341922.16860.5.camel@mhfsdcap03>
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 16/03/2020 14:58:42+0800, Ran Bi wrote:
-> > Caused by commit
+Le torstaina 12. maaliskuuta 2020, 18.40.36 EET Mark Rutland a écrit :
+> On Thu, Mar 12, 2020 at 11:40:02AM +0200, Rémi Denis-Courmont wrote:
+> > From: Remi Denis-Courmont <remi.denis.courmont@huawei.com>
 > > 
-> >   00c36d73171b ("rtc: add support for the MediaTek MT2712 RTC")
-> > 
-> > I have used the version from next-20200313 for today.
-> > 
+> > This datum is not referenced from .idmap.text: it does not need to be
+> > mapped in idmap. Lets move it to .rodata as it is never written to after
+> > early boot of the primary CPU.
+> > (Maybe .data.ro_after_init would be cleaner though?)
 > 
-> This build fail only happen if rtc-mt2712 build as module which I
-> haven't try. It because ";" was missed after "MODULE_DEVICE_TABLE(of,
-> mt2712_rtc_of_match)". Should I send a fix patch for this or resend the
-> whole rtc-mt2712 driver?
+> Can we move this into arch/arm64/mm/mmu.c, where we already have
 > 
+> kimage_voffset:
+> | u64 kimage_voffset __ro_after_init;
+> | EXPORT_SYMBOL(kimage_voffset);
+> 
+> ... or is it not possible to initialize kimage_vaddr correctly in C?
 
-I fixed it in my tree.
-
+Currently TEXT_OFFSET is defined by the Makefile only for assembler sources and 
+the linker script. So that would need to be exposed to CPPFLAGS as well.
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Реми Дёни-Курмон
+http://www.remlab.net/
+
+
+
