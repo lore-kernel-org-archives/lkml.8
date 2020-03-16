@@ -2,75 +2,77 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185AEC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E48BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D1D205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:54:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="n02GayrT"
+	by mail.kernel.org (Postfix) with ESMTP id E2F67205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732875AbgCPWyb (ORCPT
+        id S1732881AbgCPWzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:54:31 -0400
-Received: from ms11p00im-qufo17281501.me.com ([17.58.38.52]:54957 "EHLO
-        ms11p00im-qufo17281501.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732846AbgCPWyb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:54:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1584399269; bh=IKikRHcL5YKuxApp79H42YHUdr+KWA1t9QQPRbpAOxY=;
-        h=Date:From:To:Subject:Message-ID:Content-Type;
-        b=n02GayrTm1FL+rH6/S32fJguQYkLvMxs/wTUyfML/rri9pVXMGgmAKggB0HzoZ3v5
-         PHWYXVrkhwgjt3dm/0eSJ+QbrQHlLAChs5TNIPKi4gcdRcdODT9DM4YL4tYI+bTUzi
-         BchQ0Zw2zX8DsnKG4WjJbAqXRP9KkEZ57Nm6krRi34q3KlOWZGrw+BSCjrwy3qPEkp
-         xV7KpL+dJBxPhNJtjAY6QKTBzlZQmB0RGM2dwn7liq2ov48nMgFBb3gFTsMUrMFiZ6
-         94niKIXlVnv93mMJwjmGURsoOz2gqYccjOXF6TXIzlpRQPxPckt688JCf3ILdFsGZk
-         VVQ2sUGMT+VJQ==
-Received: from shwetrath.localdomain (unknown [66.199.8.131])
-        by ms11p00im-qufo17281501.me.com (Postfix) with ESMTPSA id 5A478B40633;
-        Mon, 16 Mar 2020 22:54:28 +0000 (UTC)
-Date:   Mon, 16 Mar 2020 18:54:26 -0400
-From:   Vijay Thakkar <vijaythakkar@me.com>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] perf vendor events amd: add Zen2 events
-Message-ID: <20200316225426.GA147347@shwetrath.localdomain>
-References: <20200314044453.82554-1-vijaythakkar@me.com>
- <20200314044453.82554-3-vijaythakkar@me.com>
- <34be3999-34ef-871f-0950-089a00e5b1dd@amd.com>
+        Mon, 16 Mar 2020 18:55:35 -0400
+Received: from mga04.intel.com ([192.55.52.120]:11589 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732846AbgCPWzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 18:55:35 -0400
+IronPort-SDR: 7WkIFmFQF6Bml4R2d5RXaEdz3L9peyCD/CXyAoOIb59qfznmoAzz+biS7hlzTlWWWXQ0aPuBzJ
+ K40W8rDf6Vqw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 15:55:34 -0700
+IronPort-SDR: L2UZYp09IyTg9lHguWJOyfhxMETseoQhwxC5xJdF+NWb9h4rfOEvdD0BM+3RuV3M9BjueC4pVG
+ TqG09vv7uGLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,561,1574150400"; 
+   d="scan'208";a="267744344"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Mar 2020 15:55:34 -0700
+Date:   Mon, 16 Mar 2020 15:55:34 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jethro Beekman <jethro@fortanix.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200316225534.GK24267@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <20200315012523.GC208715@linux.intel.com>
+ <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <7f9f2efe-e9af-44da-6719-040600f5b351@fortanix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <34be3999-34ef-871f-0950-089a00e5b1dd@amd.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-16_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=756 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-2003160094
+In-Reply-To: <7f9f2efe-e9af-44da-6719-040600f5b351@fortanix.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kim,
+On Mon, Mar 16, 2020 at 02:31:36PM +0100, Jethro Beekman wrote:
+> Can someone remind me why we're not passing TCS in RBX but on the stack?
 
-Sorry for the blunder, I was working on a different system for a day
-that had my school git email that I forgot to change in the sign-off.
-Should be all fixed up in v5.
-
--Vijay
+I finally remembered why.  It's pulled off the stack and passed into the
+exit handler.  I'm pretty sure the vDSO could take it in %rbx and manually
+save it on the stack, but I'd rather keep the current behavior so that the
+vDSO is callable from C (assuming @leaf is changed to be passed via %rcx).
