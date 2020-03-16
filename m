@@ -2,106 +2,116 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EF2C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02419C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBA720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD2620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vS3P/SI7"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="W3QBmfns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732700AbgCPVRE (ORCPT
+        id S1732677AbgCPVTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:17:04 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36468 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732636AbgCPVRE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:17:04 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m33so15627405qtb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 14:17:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6FuZZoVTFoFF+1kD/gUu0wVHL7she4RE1ISWVv5X9/Y=;
-        b=vS3P/SI72Ul6DR1lMgGssHto6g2grnX9qlthgAH3MQfmuXC8X32mBEV5vRMILYFoOq
-         4onAUSdTQuBwhU0RuSci5/PTf1r4JBaUP8Pw0DyYOWja6pAkXMATZKnLyjyFZEGi+GA/
-         eCDQlvBCRoEzFSHEzjyIod/Hajg3WiKRzy1Y3Ojd8TGeVi2RTyLkv2JxJXW+vsx5GDYY
-         WNg2Xvb6E7w7rb+ylM+6oO9aGCkI3rJhKrXAXeRNMiFn7ivrSzDCkzvRnvwc/qzEBWn0
-         IBtQ02xNfhoR+D4fAsK7NATVfiG+qj8CTzFQe2nPxlmTI1GBmzEoljvP0picHIgld4qx
-         JMkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6FuZZoVTFoFF+1kD/gUu0wVHL7she4RE1ISWVv5X9/Y=;
-        b=todTUXSikuT5uvwwyw6aoOlAXbkO85qaqVIc5YoUYfNrFExAF6IKF7oPmSBYFHG/j8
-         RfbFEFeQbk6b4rAyHrNYrGrFUZkM+sfNcVlkMXCyCudHy0xFQz1SM+gsPEHJsiPfeAg9
-         RapAp1+rB1IPiqNA/fxX2EXAqcKy1YN7ah9X7jH8aKTmxPGQY2dMfKDomMdvFZcCygX6
-         2xjlOnKSWS2dpRhvIZpMIHDDGL7HpAZIe54uLQwMvVv2KyWxdwcRnWc5G6bOKHhnbJR4
-         5DPGzMLDyEK0HdvgBiTL/2Phvdz0n+VMXtQuuHyc4ZeQ+HmgN2gM9/b1jl0p4DtCMuwg
-         puDw==
-X-Gm-Message-State: ANhLgQ3k5f0e51KuFNGW3mK5EOoT0kyHyMvfXFkzCmWEkGWPVnRrCqNg
-        E03XNhTYMHwlKP+AWBc+utE=
-X-Google-Smtp-Source: ADFU+vvhoV+Um0FzZrMDfLcuJCaJUEsDuGqA2Mhz9ejyhF6zsDn0DKV3vmnWwROYKPClMo1LTYQOsA==
-X-Received: by 2002:ac8:481a:: with SMTP id g26mr2174747qtq.267.1584393423506;
-        Mon, 16 Mar 2020 14:17:03 -0700 (PDT)
-Received: from localhost.localdomain ([179.159.236.147])
-        by smtp.googlemail.com with ESMTPSA id p23sm579055qkm.39.2020.03.16.14.17.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 14:17:02 -0700 (PDT)
-From:   Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
-To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        sumit.semwal@linaro.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Igor Matheus Andrade Torrente <igormtorrente@gmail.com>,
-        Rodrigo.Siqueira@amd.com, rodrigosiqueiramelo@gmail.com,
-        andrealmeid@collabora.com
-Subject: [PATCH] Staging: drm_gem: Fix a misaligned comment block
-Date:   Mon, 16 Mar 2020 18:15:53 -0300
-Message-Id: <20200316211553.2506-1-igormtorrente@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 16 Mar 2020 17:19:09 -0400
+Received: from mail-eopbgr70051.outbound.protection.outlook.com ([40.107.7.51]:21138
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732567AbgCPVTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 17:19:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DC++W2T3HnG2jOAGEf8aYzuSjtE6ruz0KoJhw/GK7zVCCB++onwSYH2DXjfnHqfK314W24GxNVWFE3Mx/hW2zTs3XGRISdP8W0T2sfaf8UmnoVYDiA9uVOP1B7QoR2lmef8ziRDieAEMum4Hog0l7N9r8c8omNtljankGfPSB9GI45F/muTzkJwgIQugzCLINaETLqpgutNMsGtmqOYA4jY7XApBWJZddJD6j4DipiI1AtEbOSDTfbjbtC/K8IPnepT4lJT3shSGVpCm1cC2cvciFxy997Q2mtYVZcDEOfiZGSdcAxtB57boi8txsKZqisCInFJ1UCNaf2OMG8ykOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1mHpFbhKjLPCe2gTl73mXkphR6XLMS7I7gQxSFBVRRg=;
+ b=VqoqmCA4bnYtnrbCpoyuN3+r7xDbjNHciSC7t9AY1T6TsYU8bBDixxzprQK/PVS0n03JcGjWpajRgWjPW+9Bu/S+PMmClFT57peqkjQyhkyUkb4jAzrPRRG9LDngVgKBCrov2h0v5j0y33nU/CwkqVQPZcwKC1RVkNV7YQP0XqLr5KHiL7iVrEbR3QK4yjnaIAdFL06SIqRF6h+m87hSY/7kRHwqLUknHNi+KDUVhp/xWgSUEGSgdYFGZnyUcRViXhXR0kawFqXcg9J0zdlclEjahAgA19OMJv6CuHjHumCnpu+B/VXSwrp0hBS9sz9s24qFVISgLofH51sOoq85qA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1mHpFbhKjLPCe2gTl73mXkphR6XLMS7I7gQxSFBVRRg=;
+ b=W3QBmfns9h/NDx/pJrNS4JPqEya1+iuAg/557sD+ll8LVv5dUtsgOy/74Gg733uO0CdYu4Q8fOQMFyXzh2w8kQE0WZRAfuOLd6P6Bp2VHyHgLs/SphHTKZO8A2J1JM+efcS7iWaa63kk5ZhmEKSjvvQrPhuMfJymF0hQdpPz+7w=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (20.177.51.151) by
+ VI1PR05MB4926.eurprd05.prod.outlook.com (20.177.52.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.22; Mon, 16 Mar 2020 21:19:05 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::8cea:6c66:19fe:fbc2]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::8cea:6c66:19fe:fbc2%7]) with mapi id 15.20.2793.023; Mon, 16 Mar 2020
+ 21:19:05 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        Jiri Pirko <jiri@mellanox.com>, Roi Dayan <roid@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Oz Shlomo <ozsh@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] net/mlx5e: CT: remove set but not used variable
+ 'unnew'
+Thread-Topic: [PATCH net-next] net/mlx5e: CT: remove set but not used variable
+ 'unnew'
+Thread-Index: AQHV+e4JaUSaLigfdEmB/1IwmiaykKhLvRgA
+Date:   Mon, 16 Mar 2020 21:19:05 +0000
+Message-ID: <d5acf4f27a5438d40ba5f53ec9cb498742202576.camel@mellanox.com>
+References: <20200314104446.54364-1-yuehaibing@huawei.com>
+In-Reply-To: <20200314104446.54364-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0ab72745-7533-417e-16a6-08d7c9efa88a
+x-ms-traffictypediagnostic: VI1PR05MB4926:|VI1PR05MB4926:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB49264AA2279B5DD71D3E5FA6BEF90@VI1PR05MB4926.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1148;
+x-forefront-prvs: 03449D5DD1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(376002)(136003)(366004)(199004)(76116006)(110136005)(6486002)(2906002)(4744005)(5660300002)(54906003)(8676002)(81156014)(81166006)(6636002)(478600001)(8936002)(91956017)(316002)(36756003)(66946007)(186003)(66476007)(86362001)(26005)(71200400001)(6506007)(66446008)(4326008)(64756008)(66556008)(6512007)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4926;H:VI1PR05MB5102.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +OjH6zUnz4hmohebetZWjAGrr5snuq2HExLnfh4ttFdIUiOhlv/G6WWdoRjzxnmKNmXGBQiD591twyEmoyibpKBNy6qMJOHQ6sE6PnnGtahxd0asrvj8GOe8JW7CiADGAYWJGszvqmEqeGwJZiZ5De1zcP5npKzJrcaNRz54as2EAvPtr6RP0c8nFH53urFX9PYL6dg1lvyNXgx+eB2mMCdyigSIWyk+NVI+1zVzdfchvRaSmq3r9EggmQPQ05WRKolIWWfnNqFt9b/SN6Vs66JMLNKHjffYCrybauGOB5DrXpv+TsQ8leiGngPYmHuUuqmclcfOk/8oevyu3XjX0MYnnrbf2Iy+LK4MhmVl7WYCLWMMrTHNf+P0XNIJ1xWnaNiy7j59SdiY8iS9W8gRgs8mvSBJrqtHkjEEdPa4ewoH38c2k78hEYySqknjhvsX
+x-ms-exchange-antispam-messagedata: MHfDNXeXdb51WkXBYHUIPwxqvzMwNAwIVctr0npTM0FFdGx9xNjwLCB2A9kPbujJGaIxaewABe958asXctH0G0clbBrS8vdqhw18K1gLfF4UKd+scj81KInyQiL7/IpvShEv1w0l1EI0Jn6m8SSWPQ==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <512337F70B95A048AD76561F50EDE3B7@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ab72745-7533-417e-16a6-08d7c9efa88a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2020 21:19:05.6894
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M9T4tHtCuvy8PeWURs2eWFlhfZZ7GGo613t43Wu7Iw23gwU1/j1PXKWY96q5pQxVU2tkjRr7kEbZZbxNf6vSFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4926
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a checkpatch warning caused by a misaligned comment block.
-
-Signed-off-by: Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
----
- drivers/gpu/drm/drm_gem.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 000fa4a1899f..6e960d57371e 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -222,10 +222,10 @@ drm_gem_object_handle_put_unlocked(struct drm_gem_object *obj)
- 		return;
- 
- 	/*
--	* Must bump handle count first as this may be the last
--	* ref, in which case the object would disappear before we
--	* checked for a name
--	*/
-+	 * Must bump handle count first as this may be the last
-+	 * ref, in which case the object would disappear before we
-+	 * checked for a name
-+	 */
- 
- 	mutex_lock(&dev->object_name_lock);
- 	if (--obj->handle_count == 0) {
--- 
-2.20.1
-
+T24gU2F0LCAyMDIwLTAzLTE0IGF0IDE4OjQ0ICswODAwLCBZdWVIYWliaW5nIHdyb3RlOg0KPiBk
+cml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZW4vdGNfY3QuYzoNCj4gIElu
+IGZ1bmN0aW9uIG1seDVfdGNfY3RfcGFyc2VfbWF0Y2g6DQo+IGRyaXZlcnMvbmV0L2V0aGVybmV0
+L21lbGxhbm94L21seDUvY29yZS9lbi90Y19jdC5jOjY5OTozNjogd2FybmluZzoNCj4gIHZhcmlh
+YmxlIHVubmV3IHNldCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdDQo+
+IA0KPiBjb21taXQgNGMzODQ0ZDllOTdlICgibmV0L21seDVlOiBDVDogSW50cm9kdWNlIGNvbm5l
+Y3Rpb24gdHJhY2tpbmciKQ0KPiBpbnZvbGVkIHRoaXMgdW51c2VkIHZhcmlhYmxlLCByZW1vdmUg
+aXQuDQo+IA0KDQpJIHRvb2sgdGhlIGxpYmVydHkgdG8gZml4IHRoaXMgdG8gYSBwcm9wZXIgIkZp
+eGVzOiIgdGFnLg0KDQpBcHBsaWVkIHRvIG5ldC1uZXh0LW1seDUNCg0KVGhhbmtzLA0KU2FlZWQu
+DQoNCg==
