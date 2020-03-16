@@ -2,104 +2,71 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE525C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A3CC1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A026A20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:53:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbeX5UKo"
+	by mail.kernel.org (Postfix) with ESMTP id C938A2071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584331178;
+	bh=OwJofg1umza0zcGppaQzonY2py79O/Agzc6jYX0VXNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BkfYBtsik7KCWGjBkCl5xdY0iJrkAxXnqGcugLc5aSPjWkC89u3GdCyTWGPS+VuxN
+	 W2r5RHye4+ltsAzLQteYBZ+aJhW5LI/AHRG9GNfvSeGq70omUuptLjUPJ90plWAgFj
+	 vY7MPOdz7LKfYffrdsWaIN9tnfhKpEEf8anxIPt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgCPDxa (ORCPT
+        id S1729529AbgCPD7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 23:53:30 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35754 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729412AbgCPDxa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 23:53:30 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g6so7365353plt.2;
-        Sun, 15 Mar 2020 20:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=C249CL9vZbJjGY5SY9HaOYPXZNrUoazqr8vVdhSJLxc=;
-        b=YbeX5UKoLAWoeqcw7Q/c9tQyAMJcC+JzZ9CnlGn1ov5ohmb8qb6dSbK23haVP5/FyF
-         nh0GPdgl34Ie646XT9QBX8ixIYobJHzWAf19eQ7HtKIOpDZRmi5d+j4PaKK59JO1ZYN2
-         BUx9mnikzXn6lmFRd5j96sK77UGDRYpw+5chW6ZsfhREn0A8R7KaaWabPBYcCwc7k95c
-         PGdDHBe+LsdxMdsA06WIS/hoM9ruojvEjdHqz39klHVGY8EuV/qxJM0yrvf+145CISNt
-         lZQ0V2YIte00cH+u12YGPlCxl0Q5BgG4eTLx2BpGi/16DYWe0XTXj9S4GZqYSAAhU6B0
-         8e1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=C249CL9vZbJjGY5SY9HaOYPXZNrUoazqr8vVdhSJLxc=;
-        b=BivR4MCVcexaeOhjDXLRvU1LYcOD6T4FxTpFY6xDt/z9Sco9U3c0Wh58TbQ/DQIYOd
-         mf2/SkCjJ/UDR7bKe8wtxRJj5ROf0b0bt93T2J73xVeJPbJW8e8zXOpky8cUPO9mhK4X
-         kQR3bi8MK0xdXyD2cgnK9W3LvQ5sQUjlCSeaEEhKlX4fJabqnAM1xQFQgDmWQfAxKLdv
-         GXCKj4IwbHui329N9k2KP85Xd4VpUHMcHIau3QP9/bmvGbSMdlXy9NUfdj67aYY7pTwO
-         YbZHoY/S+Ae0u6I0NU5UhrYuBIxBoXb8e6GMDvIvi4a6nH7xXi54M+faOUWyzHnDU/rn
-         tj6Q==
-X-Gm-Message-State: ANhLgQ3i1XR2Si/AEOsNfPe3mH3f2ImyiN7/ld8FJwJrR67JNwV6y+fX
-        9EltG15NcTmXP96pMmsKRbs=
-X-Google-Smtp-Source: ADFU+vt8j7rx0vgN/MuXOrCtGwcpsFMUkwXZDEP+KtICMmp/pv9FflGadulya+vhgWSw7QEClX4Vsw==
-X-Received: by 2002:a17:902:7583:: with SMTP id j3mr25527955pll.236.1584330808708;
-        Sun, 15 Mar 2020 20:53:28 -0700 (PDT)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id h23sm14077457pfo.220.2020.03.15.20.53.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Mar 2020 20:53:28 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] sctp: fix refcount bug in sctp_wfree
-Date:   Mon, 16 Mar 2020 11:53:24 +0800
-Message-Id: <1584330804-18477-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 15 Mar 2020 23:59:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729412AbgCPD7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 23:59:37 -0400
+Received: from localhost (unknown [122.178.203.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DE2920679;
+        Mon, 16 Mar 2020 03:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584331176;
+        bh=OwJofg1umza0zcGppaQzonY2py79O/Agzc6jYX0VXNM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rpgDkk+670A5qB2Q00do/ZWIQgTumAcfirYJqxkvV68VMr8ku79MxQwSVK7rdwa5L
+         jyxNIvUMxG5GhgyWKfWCSg3kbxZqXvlx6foqWLX+o7My3S7tcJXTqsQTlm2cd2Ih7x
+         2O2xuN8slIpyoBr6PdqN1UguFyJMSalSoQqcSohI=
+Date:   Mon, 16 Mar 2020 09:29:29 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm SDM845 audio configs
+Message-ID: <20200316035929.GS4885@vkoul-mobl>
+References: <20200315050827.1575421-1-bjorn.andersson@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200315050827.1575421-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do accounting for skb's real sk.
-In some case skb->sk != asoc->base.sk.
+On 14-03-20, 22:08, Bjorn Andersson wrote:
+> Enable soundwire, slimbus frameworks, the machine driver and the codec
+> drivers for WCD934x and WSA881x used on varios SDM845 based designs.
 
-Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- net/sctp/socket.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks Bjorn, I was about to send this and you beat me. I have tested
+this on RB3
 
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index 1b56fc4..5f5c28b 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -9080,7 +9080,7 @@ static void sctp_wfree(struct sk_buff *skb)
- {
- 	struct sctp_chunk *chunk = skb_shinfo(skb)->destructor_arg;
- 	struct sctp_association *asoc = chunk->asoc;
--	struct sock *sk = asoc->base.sk;
-+	struct sock *sk = skb->sk;
- 
- 	sk_mem_uncharge(sk, skb->truesize);
- 	sk->sk_wmem_queued -= skb->truesize + sizeof(struct sctp_chunk);
-@@ -9109,7 +9109,7 @@ static void sctp_wfree(struct sk_buff *skb)
- 	}
- 
- 	sock_wfree(skb);
--	sctp_wake_up_waiters(sk, asoc);
-+	sctp_wake_up_waiters(asoc->base.sk, asoc);
- 
- 	sctp_association_put(asoc);
- }
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Tested-by: Vinod Koul <vkoul@kernel.org>
+
 -- 
-1.8.3.1
-
+~Vinod
