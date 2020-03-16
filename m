@@ -2,492 +2,106 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D15C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B312C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83F72051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:30:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=malat-biz.20150623.gappssmtp.com header.i=@malat-biz.20150623.gappssmtp.com header.b="qxWtyq5M"
+	by mail.kernel.org (Postfix) with ESMTP id E0BF52051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731552AbgCPOaj (ORCPT
+        id S1731565AbgCPOb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:30:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45946 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731483AbgCPOaj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:30:39 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t2so11445067wrx.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=malat-biz.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=g/dhNA3aNRvuvEsXtbiSUvtrpS+S/9UD1UxqNBwuDcQ=;
-        b=qxWtyq5MBRY8apb3t42+Iz7Gi0OU//4zkGhKbYC3S7i3E+iMpkhz/+tevkHXnaLAJ3
-         5OMYowQkZap9gx6HcHygIryfYSd+qlj4GtW3/tciVRS+3g3r/ZmVsxSXWv7w4au8YBUn
-         VEqX2m2A8RgvaxPHddsmJIiubtKXXrR4GCvkxB3fNKARkkJxrPm1EjdQbf4a0HXuFWtJ
-         dZVv1Slir3cGguBRz4dir3EQsAszPZK7r5BfdzxUBVGG7Hoz2vUq0zAQfJFvzHN7Pjow
-         mcGSZN/5oRB3WSFYcCEZ559aG7caEKcrctOB1g7XcRv1zm0VinMHLfOim2vz2zzfXzpJ
-         gWug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=g/dhNA3aNRvuvEsXtbiSUvtrpS+S/9UD1UxqNBwuDcQ=;
-        b=LLfEVln28mY4uB/fMJtYpqxqaBFYlzl3NJHZIyaZgunfD4pTIzX4NwceLndad9GWXT
-         Ss/C54UbxaZVc9YNNfAlp71wlHup/jfV5+qebjqfrEVWXhE53NXHVWOk5avQnYvrFLxu
-         cAc+XLEE6gcX09n3/VVe5Obdg23VsmbY8uD50KRng41Oqb7mgmzxhYkbHdjsxF3gMYFo
-         8mC8TB2DHC2C2F7FDGI2PJ1+LxOPfb78Yh6ABHM8S4c/8wr3n5+bL6Q8tK0pbWs9boX0
-         ZsJZCxsKRX+otZLXKNo0Cz2YmI8WfAA5p8BzfQ9nN9rP9lFhOoVgio2pflT82J2yBXQ/
-         ZDSA==
-X-Gm-Message-State: ANhLgQ1XYkHoklcyL3cjcEdHTSVU29iNgYYt2/r2coZPZBiVlPI/l82b
-        sjNHSpbbLVTFECmsnNnXLAE7tg==
-X-Google-Smtp-Source: ADFU+vvIOSAB0AsdRcUD6ucE8HedXZ2Nt6Bl7Qv1h5oNrkDS7C4cqzz+e40W4meA3nr+XOSYId967w==
-X-Received: by 2002:adf:e502:: with SMTP id j2mr16993870wrm.259.1584369032776;
-        Mon, 16 Mar 2020 07:30:32 -0700 (PDT)
-Received: from ntb.Speedport_W_921V_1_46_000 (p57AF9474.dip0.t-ipconnect.de. [87.175.148.116])
-        by smtp.googlemail.com with ESMTPSA id z129sm31344330wmb.7.2020.03.16.07.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:30:31 -0700 (PDT)
-From:   Petr Malat <oss@malat.biz>
-To:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org
-Cc:     terrelln@fb.com, clm@fb.com, gregkh@linuxfoundation.org,
-        keescook@chromium.org, Petr Malat <oss@malat.biz>
-Subject: [PATCH v2 1/2] lib: add support for ZSTD-compressed kernel
-Date:   Mon, 16 Mar 2020 15:30:16 +0100
-Message-Id: <20200316143018.1366-1-oss@malat.biz>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316140745.GB4041840@kroah.com>
-References: <20200316140745.GB4041840@kroah.com>
+        Mon, 16 Mar 2020 10:31:26 -0400
+Received: from smtp2.ustc.edu.cn ([202.38.64.46]:44266 "EHLO ustc.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731465AbgCPObZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 10:31:25 -0400
+Received: from xhacker (unknown [101.86.20.80])
+        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygBnbZG6jW9eqD9PAA--.20103S2;
+        Mon, 16 Mar 2020 22:31:23 +0800 (CST)
+Date:   Mon, 16 Mar 2020 22:29:45 +0800
+From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v2 1/4] regulator: bindings: add MPS mp8869 voltage
+ regulator
+Message-ID: <20200316222945.74ad34dd@xhacker>
+In-Reply-To: <20200316222808.6453d849@xhacker>
+References: <20200316222808.6453d849@xhacker>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: LkAmygBnbZG6jW9eqD9PAA--.20103S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4fCrWkGr4fWr4xCr47twb_yoW8XF15pF
+        4DCFsIkr4vyF1xWa1fGa4Iya1rXr48Ca4fCF12kw4Fgas8A3Zrt390kryrAF18Ar4kJFW5
+        ArZ8Cry8Kw1Iv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUy2b7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s02
+        6xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
+        I_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
+        6r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj4
+        0_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
+        Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jnNVgUUUUU=
+X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for extracting ZSTD-compressed kernel images, as well as
-ZSTD-compressed initramfs.
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-ZSTD compression ratio is roughly 10% worst than xz, but the
-decompression is 10x faster. Currently, this is one of the optimal
-algorithms available in the kernel, as there isn't an algorithm,
-which would provide a better compression ratio and a shorter
-decompression time.
+The MP8869 from Monolithic Power Systems is a single output dc/dc
+converter with voltage control over i2c.
 
-Signed-off-by: Petr Malat <oss@malat.biz>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- include/linux/decompress/unzstd.h |  12 +++
- init/Kconfig                      |  15 ++-
- lib/Kconfig                       |   4 +
- lib/Makefile                      |   1 +
- lib/decompress.c                  |   5 +
- lib/decompress_unzstd.c           | 159 ++++++++++++++++++++++++++++++
- lib/zstd/decompress.c             |   2 +
- lib/zstd/fse_decompress.c         |   4 +-
- scripts/Makefile.lib              |   3 +
- usr/Kconfig                       |  24 +++++
- 10 files changed, 227 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/decompress/unzstd.h
- create mode 100644 lib/decompress_unzstd.c
+ .../devicetree/bindings/regulator/mp886x.txt  | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mp886x.txt
 
-diff --git a/include/linux/decompress/unzstd.h b/include/linux/decompress/unzstd.h
+diff --git a/Documentation/devicetree/bindings/regulator/mp886x.txt b/Documentation/devicetree/bindings/regulator/mp886x.txt
 new file mode 100644
-index 000000000000..dd2c49d47456
+index 000000000000..6858e38eb47d
 --- /dev/null
-+++ b/include/linux/decompress/unzstd.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef DECOMPRESS_UNZSTD_H
-+#define DECOMPRESS_UNZSTD_H
++++ b/Documentation/devicetree/bindings/regulator/mp886x.txt
+@@ -0,0 +1,25 @@
++Monolithic Power Systems MP8869 voltage regulator
 +
-+int unzstd(unsigned char *inbuf, long len,
-+	long (*fill)(void*, unsigned long),
-+	long (*flush)(void*, unsigned long),
-+	unsigned char *output,
-+	long *pos,
-+	void (*error)(char *x));
-+#endif
++Required properties:
++- compatible: "mps,mp8869";
++- reg: I2C slave address.
++- enable-gpios: enable gpios.
++- mps,fb-voltage-divider: An array of two integers containing the resistor
++  values R1 and R2 of the feedback voltage divider in kilo ohms.
 +
-diff --git a/init/Kconfig b/init/Kconfig
-index a34064a031a5..628eb3c290a2 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -172,13 +172,16 @@ config HAVE_KERNEL_LZO
- config HAVE_KERNEL_LZ4
- 	bool
- 
-+config HAVE_KERNEL_ZSTD
-+	bool
++Any property defined as part of the core regulator binding, defined in
++./regulator.txt, can also be used.
 +
- config HAVE_KERNEL_UNCOMPRESSED
- 	bool
- 
- choice
- 	prompt "Kernel compression mode"
- 	default KERNEL_GZIP
--	depends on HAVE_KERNEL_GZIP || HAVE_KERNEL_BZIP2 || HAVE_KERNEL_LZMA || HAVE_KERNEL_XZ || HAVE_KERNEL_LZO || HAVE_KERNEL_LZ4 || HAVE_KERNEL_UNCOMPRESSED
-+	depends on HAVE_KERNEL_GZIP || HAVE_KERNEL_BZIP2 || HAVE_KERNEL_LZMA || HAVE_KERNEL_XZ || HAVE_KERNEL_LZO || HAVE_KERNEL_LZ4 || HAVE_KERNEL_ZSTD || HAVE_KERNEL_UNCOMPRESSED
- 	help
- 	  The linux kernel is a kind of self-extracting executable.
- 	  Several compression algorithms are available, which differ
-@@ -257,6 +260,16 @@ config KERNEL_LZ4
- 	  is about 8% bigger than LZO. But the decompression speed is
- 	  faster than LZO.
- 
-+config KERNEL_ZSTD
-+	bool "ZSTD"
-+	depends on HAVE_KERNEL_ZSTD
-+	help
-+	  Its compression ratio is roughly 10% worst than xz, but the
-+	  decompression is 10x faster. Currently, this is one of the optimal
-+	  algorithms available in the kernel, as there isn't an algorithm,
-+	  which would provide a better compression ratio and a shorter
-+	  decompression time.
++Example:
 +
- config KERNEL_UNCOMPRESSED
- 	bool "None"
- 	depends on HAVE_KERNEL_UNCOMPRESSED
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 6e790dc55c5b..df301bd888d7 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -329,6 +329,10 @@ config DECOMPRESS_LZ4
- 	select LZ4_DECOMPRESS
- 	tristate
- 
-+config DECOMPRESS_ZSTD
-+	select ZSTD_DECOMPRESS
-+	tristate
-+
- #
- # Generic allocator support is selected if needed
- #
-diff --git a/lib/Makefile b/lib/Makefile
-index 93217d44237f..3ab9f4c31f8b 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -158,6 +158,7 @@ lib-$(CONFIG_DECOMPRESS_LZMA) += decompress_unlzma.o
- lib-$(CONFIG_DECOMPRESS_XZ) += decompress_unxz.o
- lib-$(CONFIG_DECOMPRESS_LZO) += decompress_unlzo.o
- lib-$(CONFIG_DECOMPRESS_LZ4) += decompress_unlz4.o
-+lib-$(CONFIG_DECOMPRESS_ZSTD) += decompress_unzstd.o
- 
- obj-$(CONFIG_TEXTSEARCH) += textsearch.o
- obj-$(CONFIG_TEXTSEARCH_KMP) += ts_kmp.o
-diff --git a/lib/decompress.c b/lib/decompress.c
-index 857ab1af1ef3..ab3fc90ffc64 100644
---- a/lib/decompress.c
-+++ b/lib/decompress.c
-@@ -13,6 +13,7 @@
- #include <linux/decompress/inflate.h>
- #include <linux/decompress/unlzo.h>
- #include <linux/decompress/unlz4.h>
-+#include <linux/decompress/unzstd.h>
- 
- #include <linux/types.h>
- #include <linux/string.h>
-@@ -37,6 +38,9 @@
- #ifndef CONFIG_DECOMPRESS_LZ4
- # define unlz4 NULL
- #endif
-+#ifndef CONFIG_DECOMPRESS_ZSTD
-+# define unzstd NULL
-+#endif
- 
- struct compress_format {
- 	unsigned char magic[2];
-@@ -52,6 +56,7 @@ static const struct compress_format compressed_formats[] __initconst = {
- 	{ {0xfd, 0x37}, "xz", unxz },
- 	{ {0x89, 0x4c}, "lzo", unlzo },
- 	{ {0x02, 0x21}, "lz4", unlz4 },
-+	{ {0x28, 0xb5}, "zstd", unzstd },
- 	{ {0, 0}, NULL, NULL }
- };
- 
-diff --git a/lib/decompress_unzstd.c b/lib/decompress_unzstd.c
-new file mode 100644
-index 000000000000..b8be89250033
---- /dev/null
-+++ b/lib/decompress_unzstd.c
-@@ -0,0 +1,159 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Wrapper for decompressing ZSTD-compressed kernel, initramfs, and initrd
-+ * Based on decompress_unlz4.c
-+ *
-+ * Copyright (C) 2020, Petr Malat <oss@malat.biz>
-+ */
-+
-+#ifdef STATIC
-+#define PREBOOT
-+#include "zstd/zstd_internal.h"
-+#include "zstd/huf_decompress.c"
-+#include "zstd/entropy_common.c"
-+#include "zstd/fse_decompress.c"
-+#include "zstd/zstd_common.c"
-+#include "zstd/decompress.c"
-+#include "xxhash.c"
-+#else
-+#include <linux/decompress/unzstd.h>
-+#include <linux/zstd.h>
-+#endif
-+#include <linux/types.h>
-+#include <linux/decompress/mm.h>
-+#include <linux/compiler.h>
-+
-+STATIC inline int INIT unzstd(u8 *input, long in_len,
-+				long (*fill)(void *, unsigned long),
-+				long (*flush)(void *, unsigned long),
-+				u8 *output, long *posp,
-+				void (*error)(char *x))
-+{
-+	int ret = -1, ws = 1 << ZSTD_WINDOWLOG_MAX;
-+	u8 *inp, *outp;
-+	ZSTD_DStream *zstd;
-+	void *workspace;
-+	size_t workspace_size;
-+	ZSTD_outBuffer out;
-+	ZSTD_inBuffer in;
-+	unsigned long out_len;
-+	unsigned long pos;
-+
-+	if (output) {
-+		out_len = ULONG_MAX; // Caller knows data will fit
-+		outp = output;
-+	} else if (!flush) {
-+		error("NULL output pointer and no flush function provided");
-+		goto exit_0;
-+	} else {
-+		out_len = ZSTD_DStreamOutSize();
-+		outp = large_malloc(out_len);
-+		if (!outp) {
-+			error("Could not allocate output buffer");
-+			goto exit_0;
-+		}
-+	}
-+
-+	if (input && fill) {
-+		error("Both input pointer and fill function provided,");
-+		goto exit_1;
-+	} else if (input) {
-+		ZSTD_frameParams p;
-+
-+		inp = input;
-+		if (!ZSTD_getFrameParams(&p, input, in_len))
-+			ws = p.windowSize;
-+	} else if (!fill) {
-+		error("NULL input pointer and missing fill function");
-+		goto exit_1;
-+	} else {
-+		in_len = ZSTD_DStreamInSize();
-+		inp = large_malloc(in_len);
-+		if (!inp) {
-+			error("Could not allocate input buffer");
-+			goto exit_1;
-+		}
-+	}
-+
-+	workspace_size = ZSTD_DStreamWorkspaceBound(ws);
-+	workspace = large_malloc(workspace_size);
-+	if (!workspace) {
-+		error("Could not allocate workspace");
-+		goto exit_2;
-+	}
-+
-+	zstd = ZSTD_initDStream(ws, workspace, workspace_size);
-+	if (!zstd) {
-+		error("Could not initialize ZSTD");
-+		goto exit_3;
-+	}
-+
-+	in.src = inp;
-+	in.size = in_len;
-+	in.pos = 0;
-+	if (posp)
-+		*posp = 0;
-+
-+	for (;;) {
-+		if (fill) {
-+			in.size = fill(inp, in_len);
-+			if (in.size == 0)
-+				break;
-+		} else if (in.size == in.pos) {
-+			break;
-+		}
-+init:		out.dst = outp;
-+		out.size = out_len;
-+		out.pos = 0;
-+		pos = in.pos;
-+
-+		ret = ZSTD_decompressStream(zstd, &out, &in);
-+		if (posp)
-+			*posp += in.pos - pos;
-+		if (ZSTD_isError(ret)) {
-+			error("Decompression failed");
-+			ret = -EIO;
-+			goto exit_3;
-+		}
-+
-+		if (flush && out.pos) {
-+			if (flush(out.dst, out.pos) != out.pos) {
-+				ret = -EIO;
-+				goto exit_3;
-+			}
-+			goto init;
-+		}
-+
-+		if (ret == 0) {
-+			ret = ZSTD_resetDStream(zstd);
-+			if (ZSTD_isError(ret)) {
-+				ret = -EIO;
-+				goto exit_3;
-+			}
-+		}
-+		if (in.pos < in.size)
-+			goto init;
-+	}
-+
-+	ret = 0;
-+
-+exit_3:	large_free(workspace);
-+exit_2:	if (!input)
-+		large_free(inp);
-+exit_1:	if (!output)
-+		large_free(outp);
-+exit_0:	return ret;
-+}
-+
-+#ifdef PREBOOT
-+STATIC int INIT __decompress(unsigned char *buf, long in_len,
-+			      long (*fill)(void*, unsigned long),
-+			      long (*flush)(void*, unsigned long),
-+			      unsigned char *output, long out_len,
-+			      long *posp,
-+			      void (*error)(char *x)
-+	)
-+{
-+	return unzstd(buf, in_len, fill, flush, output, posp, error);
-+}
-+#endif
-diff --git a/lib/zstd/decompress.c b/lib/zstd/decompress.c
-index 269ee9a796c1..6a5e1ce22719 100644
---- a/lib/zstd/decompress.c
-+++ b/lib/zstd/decompress.c
-@@ -42,9 +42,11 @@
- /*-*************************************
- *  Macros
- ***************************************/
-+#ifndef PREBOOT
- #define ZSTD_isError ERR_isError /* for inlining */
- #define FSE_isError ERR_isError
- #define HUF_isError ERR_isError
-+#endif
- 
- /*_*******************************************************
- *  Memory operations
-diff --git a/lib/zstd/fse_decompress.c b/lib/zstd/fse_decompress.c
-index a84300e5a013..bd4e9c891d96 100644
---- a/lib/zstd/fse_decompress.c
-+++ b/lib/zstd/fse_decompress.c
-@@ -54,12 +54,13 @@
- /* **************************************************************
- *  Error Management
- ****************************************************************/
--#define FSE_isError ERR_isError
- #define FSE_STATIC_ASSERT(c)                                   \
- 	{                                                      \
- 		enum { FSE_static_assert = 1 / (int)(!!(c)) }; \
- 	} /* use only *after* variable declarations */
- 
-+#ifndef PREBOOT
-+#define FSE_isError ERR_isError
- /* check and forward error code */
- #define CHECK_F(f)                  \
- 	{                           \
-@@ -67,6 +68,7 @@
- 		if (FSE_isError(e)) \
- 			return e;   \
- 	}
-+#endif
- 
- /* **************************************************************
- *  Templates
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 3fa32f83b2d7..1c2f2dc528dc 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -337,6 +337,9 @@ quiet_cmd_lz4 = LZ4     $@
-       cmd_lz4 = { cat $(real-prereqs) | lz4c -l -c1 stdin stdout; \
-                   $(size_append); } > $@
- 
-+quiet_cmd_zstd = ZSTD    $@
-+      cmd_zstd = { cat $(real-prereqs) | zstd -19 --zstd=wlog=21; $(size_append); } > $@
-+
- # U-Boot mkimage
- # ---------------------------------------------------------------------------
- 
-diff --git a/usr/Kconfig b/usr/Kconfig
-index a6b68503d177..892eb15957db 100644
---- a/usr/Kconfig
-+++ b/usr/Kconfig
-@@ -106,6 +106,15 @@ config RD_LZ4
- 	  Support loading of a LZ4 encoded initial ramdisk or cpio buffer
- 	  If unsure, say N.
- 
-+config RD_ZSTD
-+	bool "Support initial ramdisk/ramfs compressed using ZSTD"
-+	default y
-+	depends on BLK_DEV_INITRD
-+	select DECOMPRESS_ZSTD
-+	help
-+	  Support loading of a ZSTD encoded initial ramdisk or cpio buffer
-+	  If unsure, say N.
-+
- choice
- 	prompt "Built-in initramfs compression mode"
- 	depends on INITRAMFS_SOURCE!=""
-@@ -214,6 +223,19 @@ config INITRAMFS_COMPRESSION_LZ4
- 	  If you choose this, keep in mind that most distros don't provide lz4
- 	  by default which could cause a build failure.
- 
-+config INITRAMFS_COMPRESSION_ZSTD
-+	bool "ZSTD"
-+	depends on RD_ZSTD
-+	help
-+	  Its compression ratio is roughly 10% worst than xz, but the
-+	  decompression is 10x faster. Currently, this is one of the optimal
-+	  algorithms available in the kernel, as there isn't an algorithm,
-+	  which would provide a better compression ratio and a shorter
-+	  decompression time.
-+
-+	  If you choose this, keep in mind that you may need to install the zstd
-+	  tool to be able to compress the initram.
-+
- endchoice
- 
- config INITRAMFS_COMPRESSION
-@@ -226,10 +248,12 @@ config INITRAMFS_COMPRESSION
- 	default ".xz"   if INITRAMFS_COMPRESSION_XZ
- 	default ".lzo"  if INITRAMFS_COMPRESSION_LZO
- 	default ".lz4"  if INITRAMFS_COMPRESSION_LZ4
-+	default ".zst"  if INITRAMFS_COMPRESSION_ZSTD
- 	default ".gz"   if RD_GZIP
- 	default ".lz4"  if RD_LZ4
- 	default ".lzo"  if RD_LZO
- 	default ".xz"   if RD_XZ
- 	default ".lzma" if RD_LZMA
- 	default ".bz2"  if RD_BZIP2
-+	default ".zst"  if RD_ZSTD
- 	default ""
++	vcpu: regulator@62 {
++		compatible = "mps,mp8869";
++		regulator-name = "vcpu";
++		regulator-min-microvolt = <700000>;
++		regulator-max-microvolt = <850000>;
++		regulator-always-on;
++		regulator-boot-on;
++		enable-gpios = <&porta 1 GPIO_ACTIVE_LOW>;
++		mps,fb-voltage-divider = <80 240>;
++		reg = <0x62>;
++	};
 -- 
-2.20.1
+2.24.0
+
 
