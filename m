@@ -2,99 +2,112 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64457C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA0BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281EE206B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="DOf+CeQI"
+	by mail.kernel.org (Postfix) with ESMTP id 680EC2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgCPJlP (ORCPT
+        id S1730466AbgCPJmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:41:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:60373 "EHLO ozlabs.org"
+        Mon, 16 Mar 2020 05:42:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:44804 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730231AbgCPJlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:41:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48grsM6VkJz9sP7;
-        Mon, 16 Mar 2020 20:41:11 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1584351672;
-        bh=0BJ3FURw+fjw50wR+e6LRkf2Tx726H888JVrSKrls5Y=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=DOf+CeQIRr9jP+zd801bgQ9LbD/TE+CByjPvWQvxtr5O+4o/uK2xFlU76UoHQRM1m
-         PO1UW4Vu9Tn3ovq5neZhqoNPTofTuJvlkJdzuw73af6U6+M6OMMYOV5ATseJFLag1d
-         eGFHtLkuRRd+l35uigGkppduH+zZfcCp+HEH5Ox0Lg6H5WOFmqhf3yKgYxTeypdh6d
-         pHOnjPqwfPWJAnn4ZvO9glKgXR9NoACQZilm7+8n5WjERuDRAAt+e7zzdFJLFgKXIV
-         CQsDHCnCtxvsQrpIyuKhAC4GTZJHC7VD8yOytmTWWGwHrRvIQ8hGEOiumZJOhsfWn+
-         luLNejYRjYIaQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     WANG Wenhu <wenhu.wang@vivo.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        WANG Wenhu <wenhu.wang@vivo.com>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S1730088AbgCPJmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:42:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A1361FB;
+        Mon, 16 Mar 2020 02:42:10 -0700 (PDT)
+Received: from [10.37.9.38] (unknown [10.37.9.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E587B3F534;
+        Mon, 16 Mar 2020 02:42:04 -0700 (PDT)
+Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     trivial@kernel.org, kernel@vivo.com,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v3] powerpc/fsl-85xx: fix compile error
-In-Reply-To: <20200314051035.64552-1-wenhu.wang@vivo.com>
-References: <20200314051035.64552-1-wenhu.wang@vivo.com>
-Date:   Mon, 16 Mar 2020 20:41:12 +1100
-Message-ID: <875zf4r613.fsf@mpe.ellerman.id.au>
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-19-vincenzo.frascino@arm.com>
+ <20200315182950.GB32205@mbp>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
+Date:   Mon, 16 Mar 2020 09:42:32 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200315182950.GB32205@mbp>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WANG Wenhu <wenhu.wang@vivo.com> writes:
-> Include "linux/of_address.h" to fix the compile error for
-> mpc85xx_l2ctlr_of_probe() when compiling fsl_85xx_cache_sram.c.
->
->   CC      arch/powerpc/sysdev/fsl_85xx_l2ctlr.o
-> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c: In function =E2=80=98mpc85xx_l2ctl=
-r_of_probe=E2=80=99:
-> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:11: error: implicit declaration =
-of function =E2=80=98of_iomap=E2=80=99; did you mean =E2=80=98pci_iomap=E2=
-=80=99? [-Werror=3Dimplicit-function-declaration]
->   l2ctlr =3D of_iomap(dev->dev.of_node, 0);
->            ^~~~~~~~
->            pci_iomap
-> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:9: error: assignment makes point=
-er from integer without a cast [-Werror=3Dint-conversion]
->   l2ctlr =3D of_iomap(dev->dev.of_node, 0);
->          ^
-> cc1: all warnings being treated as errors
-> scripts/Makefile.build:267: recipe for target 'arch/powerpc/sysdev/fsl_85=
-xx_l2ctlr.o' failed
-> make[2]: *** [arch/powerpc/sysdev/fsl_85xx_l2ctlr.o] Error 1
->
-> Fixes: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+Hi Catalin,
 
-The syntax is:
+you should not really work on Sunday ;-) Joking, thanks for reviewing my patches.
 
-Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+On 3/15/20 6:30 PM, Catalin Marinas wrote:
+> On Fri, Mar 13, 2020 at 03:43:37PM +0000, Vincenzo Frascino wrote:
+>> --- /dev/null
+>> +++ b/arch/arm64/include/asm/vdso/processor.h
+>> @@ -0,0 +1,31 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (C) 2020 ARM Ltd.
+>> + */
+>> +#ifndef __ASM_VDSO_PROCESSOR_H
+>> +#define __ASM_VDSO_PROCESSOR_H
+>> +
+>> +#ifndef __ASSEMBLY__
+>> +
+>> +#include <asm/page-def.h>
+>> +
+>> +#ifdef CONFIG_COMPAT
+>> +#if defined(CONFIG_ARM64_64K_PAGES) && defined(CONFIG_KUSER_HELPERS)
+>> +/*
+>> + * With CONFIG_ARM64_64K_PAGES enabled, the last page is occupied
+>> + * by the compat vectors page.
+>> + */
+>> +#define TASK_SIZE_32		UL(0x100000000)
+>> +#else
+>> +#define TASK_SIZE_32		(UL(0x100000000) - PAGE_SIZE)
+>> +#endif /* CONFIG_ARM64_64K_PAGES */
+>> +#endif /* CONFIG_COMPAT */
+> 
+> Just curious, what's TASK_SIZE_32 used for in the vDSO code? You don't
+> seem to move TASK_SIZE.
+> 
 
-> Cc: stable <stable@vger.kernel.org>
+I tried to fine grain the headers as much as I could in order to avoid
+unneeded/unwanted inclusions:
+ * TASK_SIZE_32 is used to verify ABI consistency on vdso32 (please refer to
+   arch/arm64/kernel/vdso32/vgettimeofday.c).
+ * TASK_SIZE is not required by the vdso library hence it is not present in
+   these headers.
 
-The commit above went into v2.6.37.
-
-So no one has noticed this bug since then, how? Or did something else
-change to expose the problem?
-
-cheers
+-- 
+Regards,
+Vincenzo
