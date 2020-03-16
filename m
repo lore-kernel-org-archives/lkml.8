@@ -2,70 +2,90 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EE4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0992C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9F1205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E20205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584321187;
+	bh=ILnGuopfrhCWnkKrqnyInl7MvbflrVYGdJUJ9X9o7J4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N5PqmncZNhxZJ70BEbGA6VZw5bBwpXXHiekGybIngndqdlG86ML51QjnUqlcxMelL
+	 tRvJGJCZputWzl0mn/eayRfrG5HfBi7NwHu6BaOdemWShFYjwMvZAaUx3q40aqdhyr
+	 V4g6sg8eU+//fHjO4u9oNcLowgjXB/GpGnzqu6zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbgCPBM4 convert rfc822-to-8bit (ORCPT
+        id S1729410AbgCPBNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 21:12:56 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:2489 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729300AbgCPBM4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 21:12:56 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15e6ed27523a-d0e54; Mon, 16 Mar 2020 09:12:22 +0800 (CST)
-X-RM-TRANSID: 2ee15e6ed27523a-d0e54
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [172.20.146.62] (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45e6ed26fa05-5e508;
-        Mon, 16 Mar 2020 09:12:17 +0800 (CST)
-X-RM-TRANSID: 2ee45e6ed26fa05-5e508
-Content-Type: text/plain; charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH 1/4] netfilter: nf_flow_table: reload ipv6h in
- nf_flow_nat_ipv6
-From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-In-Reply-To: <20200315204435.25kji3x5me72xjgg@salvia>
-Date:   Mon, 16 Mar 2020 09:12:15 +0800
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <C1CD964F-8819-4563-96DD-216EDECB36FB@cmss.chinamobile.com>
-References: <1584281705-26228-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <20200315204435.25kji3x5me72xjgg@salvia>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-X-Mailer: Apple Mail (2.3273)
+        Sun, 15 Mar 2020 21:13:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729300AbgCPBNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 21:13:06 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA84B20674;
+        Mon, 16 Mar 2020 01:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584321185;
+        bh=ILnGuopfrhCWnkKrqnyInl7MvbflrVYGdJUJ9X9o7J4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bl8nACmy85FPAzdl2QuPd305imWBxyeo5FBiR8LYXOqQj8S5slX/47kvyaF3x5XFu
+         hPor8oR0wjKb7Vkzpsd+o3Mpu7FMl32oQyMKkKFlMyOIVNFGJj+k7TbPCtIZvXU6KI
+         0lKVPSE8X99h/ee+sSyTkwyOZdn0zrUPkeFbVqc8=
+Date:   Mon, 16 Mar 2020 09:12:55 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        dmitry.torokhov@gmail.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        wim@linux-watchdog.org, daniel.baluta@nxp.com,
+        linux@rempel-privat.de, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, m.felsch@pengutronix.de,
+        andriy.shevchenko@linux.intel.com, arnd@arndb.de, robh@kernel.org,
+        yuehaibing@huawei.com, ronald@innovation.ch, krzk@kernel.org,
+        leonard.crestez@nxp.com, aisheng.dong@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+Message-ID: <20200316011255.GL17221@dragon>
+References: <1583544359-515-1-git-send-email-Anson.Huang@nxp.com>
+ <20200316002803.GL29269@dragon>
+ <6bc06056-b614-fbbf-037c-4a98bafa591c@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6bc06056-b614-fbbf-037c-4a98bafa591c@roeck-us.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> On 2020年3月16日, at 上午4:44, Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+On Sun, Mar 15, 2020 at 05:54:52PM -0700, Guenter Roeck wrote:
+> On 3/15/20 5:28 PM, Shawn Guo wrote:
+> > On Sat, Mar 07, 2020 at 09:25:53AM +0800, Anson Huang wrote:
+> >> Add stubs for those i.MX SCU APIs to make those modules depending
+> >> on IMX_SCU can pass build when COMPILE_TEST is enabled.
+> >>
+> >> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > 
+> > Already had such a patch from Peng Fan.
+> > 
 > 
-> On Sun, Mar 15, 2020 at 10:15:02PM +0800, Haishuang Yan wrote:
->> Since nf_flow_snat_port and nf_flow_snat_ipv6 call pskb_may_pull()
->> which may change skb->data, so we need to reload ipv6h at the right
->> palce.
-> 
-> Could you collapse patch 1/4 and 2/4 ?
-> 
-> Same thing with patches 3/4 and 4/4 ?
-> 
-> Thanks.
-> 
+> Did you follow the discussion and the conclusion that the only patch
+> really needed is patch 2/7 ?
 
-Okay, I will collapse the patches. Thanks.
+Thanks for the reminding.  Just did.
 
-
-
+Shawn
