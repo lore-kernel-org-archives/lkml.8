@@ -2,79 +2,162 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6750C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3FAC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D3220724
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA01C205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730859AbgCPLhu (ORCPT
+        id S1730885AbgCPLpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:37:50 -0400
-Received: from verein.lst.de ([213.95.11.211]:53902 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730783AbgCPLhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:37:50 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A9E1C68CEC; Mon, 16 Mar 2020 12:37:46 +0100 (CET)
-Date:   Mon, 16 Mar 2020 12:37:46 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     Christoph Hellwig <hch@lst.de>, jack@suse.cz,
-        Jens Axboe <axboe@kernel.dk>, viro@zeniv.linux.org.uk,
-        bvanassche@acm.org, keith.busch@intel.com, tglx@linutronix.de,
-        mwilck@suse.com, yuyufen@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: disk revalidation updates and OOM
-Message-ID: <20200316113746.GA15930@lst.de>
-References: <93b395e6-5c3f-0157-9572-af0f9094dbd7@windriver.com> <20200310074018.GB26381@lst.de> <75865e17-48f8-a63a-3a29-f995115ffcfc@windriver.com> <20200310162647.GA6361@lst.de> <f48683d9-7854-ba5f-da3a-7ef987a539b8@windriver.com> <20200311155458.GA24376@lst.de> <18bbb6cd-578e-5ead-f2cd-a8a01db17e29@windriver.com>
+        Mon, 16 Mar 2020 07:45:23 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2561 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729043AbgCPLpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 07:45:23 -0400
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 83B2B9CE06A100C7DF0E;
+        Mon, 16 Mar 2020 11:45:20 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 16 Mar 2020 11:45:19 +0000
+Received: from localhost (10.47.94.88) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 16 Mar
+ 2020 11:45:19 +0000
+Date:   Mon, 16 Mar 2020 11:45:18 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "jic23@kernel.org" <jic23@kernel.org>
+Subject: Re: [PATCH 1/8] iio: core: drop devm_iio_device_unregister() API
+ call
+Message-ID: <20200316114518.00005440@Huawei.com>
+In-Reply-To: <9a18cedd0e537927aad27001dfc5e8845d302e46.camel@analog.com>
+References: <20200227135227.12433-1-alexandru.ardelean@analog.com>
+        <9a18cedd0e537927aad27001dfc5e8845d302e46.camel@analog.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18bbb6cd-578e-5ead-f2cd-a8a01db17e29@windriver.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.94.88]
+X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 07:01:09PM +0800, He Zhe wrote:
-> > Do 142fe8f and 979c690d work with the build fix applied? (f0b870d
-> > shouldn't be interesting for this case).
+On Mon, 16 Mar 2020 09:09:08 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+
+> On Thu, 2020-02-27 at 15:52 +0200, Alexandru Ardelean wrote:
+> > It's unused so far, so it can't be removed. Also makes sense to remove it
+> > to discourage weird uses of this call during review.  
 > 
-> Sorry for slow reply.
+> Any thoughts on this?
+> I suspect that this may be one of those "I'd like to sit on this for a while"
+> patchsets?
+> Which is fine.
+
+Got it in one.   It's both extremely simple and extremely likely to break
+someones out of tree driver.  I guessing all the ADI ones are fine though :)
+
+> But I'm also wondering if this got omitted.
+
+Wise to check, it wouldn't be the first time I'd lost a whole
+series.
+
+Thanks,
+
+Jonathan
+
+
+
 > 
-> With my build fix applied, the issue is triggered since 142fe8f.
-> And I can see the endless loop of invalidate and revalidate...
+> Thanks
+> Alex
+> 
+> > 
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > ---
+> >  .../driver-api/driver-model/devres.rst          |  1 -
+> >  drivers/iio/industrialio-core.c                 | 17 -----------------
+> >  include/linux/iio/iio.h                         |  4 ----
+> >  3 files changed, 22 deletions(-)
+> > 
+> > diff --git a/Documentation/driver-api/driver-model/devres.rst
+> > b/Documentation/driver-api/driver-model/devres.rst
+> > index 46c13780994c..0580c64ebdfd 100644
+> > --- a/Documentation/driver-api/driver-model/devres.rst
+> > +++ b/Documentation/driver-api/driver-model/devres.rst
+> > @@ -286,7 +286,6 @@ IIO
+> >    devm_iio_device_alloc()
+> >    devm_iio_device_free()
+> >    devm_iio_device_register()
+> > -  devm_iio_device_unregister()
+> >    devm_iio_kfifo_allocate()
+> >    devm_iio_kfifo_free()
+> >    devm_iio_triggered_buffer_setup()
+> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> > index 0b14666dff09..e4011f8431f9 100644
+> > --- a/drivers/iio/industrialio-core.c
+> > +++ b/drivers/iio/industrialio-core.c
+> > @@ -1823,23 +1823,6 @@ int __devm_iio_device_register(struct device *dev,
+> > struct iio_dev *indio_dev,
+> >  }
+> >  EXPORT_SYMBOL_GPL(__devm_iio_device_register);
+> >  
+> > -/**
+> > - * devm_iio_device_unregister - Resource-managed iio_device_unregister()
+> > - * @dev:	Device this iio_dev belongs to
+> > - * @indio_dev:	the iio_dev associated with the device
+> > - *
+> > - * Unregister iio_dev registered with devm_iio_device_register().
+> > - */
+> > -void devm_iio_device_unregister(struct device *dev, struct iio_dev
+> > *indio_dev)
+> > -{
+> > -	int rc;
+> > -
+> > -	rc = devres_release(dev, devm_iio_device_unreg,
+> > -			    devm_iio_device_match, indio_dev);
+> > -	WARN_ON(rc);
+> > -}
+> > -EXPORT_SYMBOL_GPL(devm_iio_device_unregister);
+> > -
+> >  /**
+> >   * iio_device_claim_direct_mode - Keep device in direct mode
+> >   * @indio_dev:	the iio_dev associated with the device
+> > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> > index 862ce0019eba..0eb9e8d7ec68 100644
+> > --- a/include/linux/iio/iio.h
+> > +++ b/include/linux/iio/iio.h
+> > @@ -591,9 +591,6 @@ void iio_device_unregister(struct iio_dev *indio_dev);
+> >   * calls iio_device_register() internally. Refer to that function for more
+> >   * information.
+> >   *
+> > - * If an iio_dev registered with this function needs to be unregistered
+> > - * separately, devm_iio_device_unregister() must be used.
+> > - *
+> >   * RETURNS:
+> >   * 0 on success, negative error number on failure.
+> >   */
+> > @@ -601,7 +598,6 @@ void iio_device_unregister(struct iio_dev *indio_dev);
+> >  	__devm_iio_device_register((dev), (indio_dev), THIS_MODULE);
+> >  int __devm_iio_device_register(struct device *dev, struct iio_dev *indio_dev,
+> >  			       struct module *this_mod);
+> > -void devm_iio_device_unregister(struct device *dev, struct iio_dev
+> > *indio_dev);
+> >  int iio_push_event(struct iio_dev *indio_dev, u64 ev_code, s64 timestamp);
+> >  int iio_device_claim_direct_mode(struct iio_dev *indio_dev);
+> >  void iio_device_release_direct_mode(struct iio_dev *indio_dev);  
 
-Thanks.  Can you test the patch below that restores the previous
-rather odd behavior of not clearing the capacity to 0 if partition
-scanning is not enabled?
 
-
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 69bf2fb6f7cd..daac27f4b821 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1520,10 +1520,13 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
- 	if (ret)
- 		return ret;
- 
--	if (invalidate)
--		set_capacity(disk, 0);
--	else if (disk->fops->revalidate_disk)
--		disk->fops->revalidate_disk(disk);
-+	if (invalidate) {
-+		if (disk_part_scan_enabled(disk))
-+			set_capacity(disk, 0);
-+	} else {
-+		if (disk->fops->revalidate_disk)
-+			disk->fops->revalidate_disk(disk);
-+	}
- 
- 	check_disk_size_change(disk, bdev, !invalidate);
- 
