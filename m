@@ -2,118 +2,154 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2DCC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E747BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF0F205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4922205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:27:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="NHilyZgv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PMiOVc3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732545AbgCPUZL (ORCPT
+        id S1732572AbgCPU1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:25:11 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:31743 "EHLO
-        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732505AbgCPUZL (ORCPT
+        Mon, 16 Mar 2020 16:27:32 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34765 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732505AbgCPU1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:25:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1584390309; x=1615926309;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=oEuZ697fpN3VMiiWha7d/Dl3C5sMFsmwp8ShroavJmw=;
-  b=NHilyZgvlF3Wn55rWsGajrL9Qz7VDm2J57lXvsjsO4c+JVz1cBmowP6p
-   KJi46H3kz53u1PmE/ceoU3JcDrzzoAngzK0qWJ4Z3LY1We+W7blfoP1S5
-   qREYsYfqqqK0Xo2LI9B0cWk7l4yosIwS4TbpDLa8DWzYG63WlXKj4/g6P
-   vd1f/YcOLcmJhVCCRdYc6sLu+Shna/WNzG71sj+BdAr4yuYhEFW6CeWog
-   NY4/ISzIVNI36Q7Uv0TXuZ4HpW7Pek9+HH2kPy+Tu7ltOgCLCUzXL7niP
-   mbP3zXIPlaa9jVL1MUPlLFJ9wt66xZo3oXcvdkRXl0Z+y7ApVAKPl7P7p
-   w==;
-IronPort-SDR: yBwmUqifiKg6kNQNTp+cKxWFKvqwKQHMEx/aUrgwCJ/Moc08X36jPPRJ+ai0g66+KevvbKZ6JX
- rNgpUqz0JUDA==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV+5H21uxgWjW9wEe6B/TzHpI386hLe6EAgAAeVQA=
-Date:   Mon, 16 Mar 2020 20:24:48 +0000
-Message-ID: <e2835f58aead3ca85ad47e9769b393addcd19f2a.camel@diehl.com>
-References: <20200316124851.6303-1-Denis.Osterland@diehl.com>
-         <20200316124851.6303-3-Denis.Osterland@diehl.com>
-         <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
-In-Reply-To: <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <91C99D695C10214E93AE3AE8B7A09929@diehl.internal>
-Content-Transfer-Encoding: base64
+        Mon, 16 Mar 2020 16:27:32 -0400
+Received: by mail-qk1-f195.google.com with SMTP id f3so28658719qkh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 13:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S2gv1QhjogxptslpnkdxgZhw8u/nAyfilbVaSMlvcmU=;
+        b=PMiOVc3vQbipGLvlB6qHP0Ixsz0PjMhpv8/8WD86hkkaD7DCDUtRTaLv/Veghz8yaY
+         bvFeSUzKfRpitgsIMyOeBQAuV41Om8Rc9UX5jsVnzyLjCi2sKG2KpkOdOE766UR8i3hs
+         PgFjzwqYOdh8+BQBzqxGXIn0Q5ZUxAI/GrGwdpyRsQDguhXbbODhq4N1b50sVPPsZgUS
+         CJnTQZNio8h84hnqW5iF21LNrggfj1AYOUbxqfrVKa596fPHNv0gl22xM7u0Jtm3i2aa
+         8iKSnsdnqs1zTlQYqLDoUchqW432txsk+lO735Fm+yRfyhH901W50Yk78OmLgnf0QJVb
+         f0Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S2gv1QhjogxptslpnkdxgZhw8u/nAyfilbVaSMlvcmU=;
+        b=YrefEpWt0+qEN8OW+iCKZ/QskzISFXkzUWE3ZoSH5BDNI69fd9cGwvJXjX+/NUEo8w
+         yNNW5Ft6qO/YrHjHzbLqMM8kyNT/UpuSQ3++LPFNv726+2xQKPt5x7iCsYaoZxRzeoZb
+         1CendQP66ifKq3E4aeePIQB1IFI/6v2wRJQwq+4TyV1p6VNvm5rUVMBPBReshkKsNAPi
+         wxYxx4p28JJ02BBz7AmIN93gCHtWgW0Jmg+/m4ayA+Wfu0Mw8xUNTRbr3eCj4v8ADVXH
+         Hi7cK601qiMXaQ5qvciUs99RGzK1q+H4FaJ77AjpF0DkWa3Axdgv2wOPiiF0DEvT/Ont
+         NmJg==
+X-Gm-Message-State: ANhLgQ2UDzrqVGh4qnJN3D47PBUSdBNHHyw+H1dU1PhZIvZ7LWEzy0jm
+        e4geV7JPbPuS+zoxgoC1At8eIyNMBBamrl2LR6bR2Q==
+X-Google-Smtp-Source: ADFU+vshaoIHEoVCoTdfRwECb4uhEWSchW+KhN7IDeSP8twzFAjIO6PFEI4jhrTTmXzwanIWsN9cc6E6UGLZPGWyvOc=
+X-Received: by 2002:a37:f511:: with SMTP id l17mr1520749qkk.479.1584390450866;
+ Mon, 16 Mar 2020 13:27:30 -0700 (PDT)
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: byQFdw3ukCM+zy1/poiPcwvMiO0gPpQfBgEl6CP/J6HYOXhaUBXefvRQ1Zrwlkv4
+References: <20200305200409.239406-1-heidifahim@google.com>
+ <CAFd5g45HSuxcP8_-yaJY4M=Acy14L=FTwY3GT_m-eTVtP6NJhQ@mail.gmail.com> <b8777872-189b-b361-6ff4-c7cd51772dfd@kernel.org>
+In-Reply-To: <b8777872-189b-b361-6ff4-c7cd51772dfd@kernel.org>
+From:   Heidi Fahim <heidifahim@google.com>
+Date:   Mon, 16 Mar 2020 13:27:19 -0700
+Message-ID: <CAMVcs3uBetxWdLw=R86D1by3+SJO3ruo5Z7UUA_YHF9Hu3BKFw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] kunit: kunit_parser: make parser more robust
+To:     shuah <shuah@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFjZWssDQoNCkFtIE1vbnRhZywgZGVuIDE2LjAzLjIwMjAsIDE5OjM2ICswMTAwIHNj
-aHJpZWIgSmFjZWsgQW5hc3pld3NraToNCj4gSGkgRGVuaXMsDQo+IA0KPiBPbiAzLzE2LzIw
-IDE6NTMgUE0sIERlbmlzIE9zdGVybGFuZC1IZWltIHdyb3RlOg0KLi4uDQo+ID4gIA0KPiA+
-IEBAIC05MiwxMyArOTYsMjcgQEAgc3RhdGljIGludCBsZWRfcHdtX2FkZChzdHJ1Y3QgZGV2
-aWNlICpkZXYsIHN0cnVjdCBsZWRfcHdtX3ByaXYgKnByaXYsDQo+ID4gIA0KPiA+ICAJcHdt
-X2luaXRfc3RhdGUobGVkX2RhdGEtPnB3bSwgJmxlZF9kYXRhLT5wd21zdGF0ZSk7DQo+ID4g
-IA0KPiA+ICsJaWYgKGxlZC0+ZGVmYXVsdF9zdGF0ZSA9PSBMRURTX1BXTV9ERUZTVEFURV9P
-TikNCj4gPiArCQlsZWRfZGF0YS0+Y2Rldi5icmlnaHRuZXNzID0gbGVkLT5tYXhfYnJpZ2h0
-bmVzczsNCj4gPiArCWVsc2UgaWYgKGxlZC0+ZGVmYXVsdF9zdGF0ZSA9PSBMRURTX1BXTV9E
-RUZTVEFURV9LRUVQKSB7DQo+ID4gKwkJdWludDY0X3QgYnJpZ2h0bmVzczsNCj4gPiArDQo+
-ID4gKwkJcHdtX2dldF9zdGF0ZShsZWRfZGF0YS0+cHdtLCAmbGVkX2RhdGEtPnB3bXN0YXRl
-KTsNCj4gDQo+IFRoaXMgc2VlbXMgdG8gbm90IGJlIHJlYWRpbmcgdGhlIGRldmljZSBzdGF0
-ZSwgaS5lLiB3aGF0IHlvdSB0cmllZA0KPiB0byBhZGRyZXNzIGJ5IGRpcmVjdCBjYWxsIHRv
-IHB3bS0+Y2hpcC0+b3BzLT5nZXRfc3RhdGUoKSBiZWZvcmUuDQo+IA0KPiBBbSBJIG1pc3Np
-bmcgc29tZXRoaW5nPw0KPiANCg0Kd2VsbCwgbm90IHlvdSwgYnV0IEkgbWlzc2VkIGNmYzRj
-MTg5YmM3MGIxYWNjMTdlNmYxYWJmMWRjMWMwYWU4OTBiZDguDQpTaW5jZSB0aGlzIGNvbW1p
-dCBwd21fZ2V0X3N0YXRlKCkgaXMgc3VmZmljaWVudC4NCg0KUmVnYXJkcyBEZW5pcw0KDQoN
-Cg0KRGllaGwgQ29ubmVjdGl2aXR5IFNvbHV0aW9ucyBHbWJIDQpHZXNjaMOkZnRzZsO8aHJ1
-bmc6IEhvcnN0IExlb25iZXJnZXINClNpdHogZGVyIEdlc2VsbHNjaGFmdDogTsO8cm5iZXJn
-IC0gUmVnaXN0ZXJnZXJpY2h0OiBBbXRzZ2VyaWNodA0KTsO8cm5iZXJnOiBIUkIgMzIzMTUN
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpEZXIg
-SW5oYWx0IGRlciB2b3JzdGVoZW5kZW4gRS1NYWlsIGlzdCBuaWNodCByZWNodGxpY2ggYmlu
-ZGVuZC4gRGllc2UgRS1NYWlsIGVudGhhZWx0IHZlcnRyYXVsaWNoZSB1bmQvb2RlciByZWNo
-dGxpY2ggZ2VzY2h1ZXR6dGUgSW5mb3JtYXRpb25lbi4NCkluZm9ybWllcmVuIFNpZSB1bnMg
-Yml0dGUsIHdlbm4gU2llIGRpZXNlIEUtTWFpbCBmYWVsc2NobGljaGVyd2Vpc2UgZXJoYWx0
-ZW4gaGFiZW4uIEJpdHRlIGxvZXNjaGVuIFNpZSBpbiBkaWVzZW0gRmFsbCBkaWUgTmFjaHJp
-Y2h0Lg0KSmVkZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwgQmVrYW5udGdh
-YmUsIEFlbmRlcnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlvbiBkaWVzZXIg
-RS1NYWlsIGlzdCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQotIEluZm9ybWF0aW9uZW4genVt
-IERhdGVuc2NodXR6LCBpbnNiZXNvbmRlcmUgenUgSWhyZW4gUmVjaHRlbiwgZXJoYWx0ZW4g
-U2llIHVudGVyIGh0dHBzOi8vd3d3LmRpZWhsLmNvbS9ncm91cC9kZS90cmFuc3BhcmVuei11
-bmQtaW5mb3JtYXRpb25zcGZsaWNodGVuLw0KDQpUaGUgY29udGVudHMgb2YgdGhlIGFib3Zl
-IG1lbnRpb25lZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGluZy4gVGhpcyBlLW1haWwg
-Y29udGFpbnMgY29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHByb3RlY3RlZCBpbmZvcm1h
-dGlvbi4gUGxlYXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFp
-bCBieQ0KbWlzdGFrZSBhbmQgZGVsZXRlIGl0IGluIHN1Y2ggYSBjYXNlLiBFYWNoIHVuYXV0
-aG9yaXplZCByZXByb2R1Y3Rpb24sIGRpc2Nsb3N1cmUsIGFsdGVyYXRpb24sIGRpc3RyaWJ1
-dGlvbiBhbmQvb3IgcHVibGljYXRpb24gb2YgdGhpcyBlLW1haWwgaXMgc3RyaWN0bHkgcHJv
-aGliaXRlZC4gDQotIEZvciBnZW5lcmFsIGluZm9ybWF0aW9uIG9uIGRhdGEgcHJvdGVjdGlv
-biBhbmQgeW91ciByZXNwZWN0aXZlIHJpZ2h0cyBwbGVhc2UgdmlzaXQgaHR0cHM6Ly93d3cu
-ZGllaGwuY29tL2dyb3VwL2VuL3RyYW5zcGFyZW5jeS1hbmQtaW5mb3JtYXRpb24tb2JsaWdh
-dGlvbnMvDQo=
+On Fri, Mar 13, 2020 at 1:22 PM shuah <shuah@kernel.org> wrote:
+>
+> On 3/5/20 2:25 PM, Brendan Higgins wrote:
+> > On Thu, Mar 5, 2020 at 12:04 PM Heidi Fahim <heidifahim@google.com> wrote:
+> >>
+> >> Previously, kunit_parser did not properly handle kunit TAP output that
+> >> - had any prefixes (generated from different configs e.g.
+> >> CONFIG_PRINTK_TIME)
+> >> - had unrelated kernel output mixed in the middle of
+> >> it, which has shown up when testing with allyesconfig
+> >> To remove prefixes, the parser looks for the first line that includes
+> >> TAP output, "TAP version 14".  It then determines the length of the
+> >> string before this sequence, and strips that number of characters off
+> >> the beginning of the following lines until the last KUnit output line is
+> >> reached.
+> >> These fixes have been tested with additional tests in the
+> >> KUnitParseTest and their associated logs have also been added.
+> >>
+> >> Signed-off-by: Heidi Fahim <heidifahim@google.com>
+> >
+> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> >
+>
+> Heidi and Brendan,
+>
+> git apply is throwing away formatting in
+>
+> tools/testing/kunit/test_data/test_config_printk_time.log
+>
+>
+> Applying: kunit: kunit_parser: make parser more robust
+> .git/rebase-apply/patch:396: space before tab in indent.
+>         # Subtest: kunit-resource-test
+> .git/rebase-apply/patch:397: space before tab in indent.
+>         1..5
+> .git/rebase-apply/patch:398: space before tab in indent.
+>         ok 1 - kunit_resource_test_init_resources
+> .git/rebase-apply/patch:399: space before tab in indent.
+>         ok 2 - kunit_resource_test_alloc_resource
+> .git/rebase-apply/patch:400: space before tab in indent.
+>         ok 3 - kunit_resource_test_destroy_resource
+> warning: squelched 11 whitespace errors
+> warning: 16 lines add whitespace errors.
+>
+> Can you fix this and resend patches. If apply this as is,
+> all the formatting you have in there goes away.
+>
+> This is what gets applied.
+>
+> [    0.060000] TAP version 14
+> [    0.060000]  # Subtest: kunit-resource-test
+> [    0.060000]  1..5
+> [    0.060000]  ok 1 - kunit_resource_test_init_resources
+> [    0.060000]  ok 2 - kunit_resource_test_alloc_resource
+> [    0.060000]  ok 3 - kunit_resource_test_destroy_resource
+> [    0.060000]  ok 4 - kunit_resource_test_cleanup_resources
+> [    0.060000]  ok 5 - kunit_resource_test_proper_free_ordering
+> [    0.060000] ok 1 - kunit-resource-test
+> [    0.060000]  # Subtest: kunit-try-catch-test
+> [    0.060000]  1..2
+> [    0.060000]  ok 1 - kunit_test_try_catch_successful_try_no_catch
+> [    0.060000]  ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch
+> [    0.060000] ok 2 - kunit-try-catch-test
+> [    0.060000]  # Subtest: string-stream-test
+> [    0.060000]  1..3
+> [    0.060000]  ok 1 - string_stream_test_empty_on_creation
+> [    0.060000]  ok 2 - string_stream_test_not_empty_after_add
+> [    0.060000]  ok 3 - string_stream_test_get_string
+> [    0.060000] ok 3 - string-stream-test
+> [    0.060000] List of all partitions:
+> [    0.060000] No filesystem could mount root, tried:
+>
+> thanks,
+> -- Shuah
+
+Thanks Shuah. I made the fix by marking the .log files as binaries
+which should make the git apply work well now. See my v3 patch for
+specifics.
+
+Best,
+Heidi
