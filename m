@@ -2,89 +2,98 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ED4C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E3AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7731206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584325672;
-	bh=BvqinQzwER3qvGVtAY/jOGwjYFoSdJdx/JoTyCey0Fs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eG1yQYKOTNpAXTz/NQS6zan7WKShY+Fgo7oqE1IPbxXgzduEVbuTGUFqDrGBgVm51
-	 g3vzfOVF5XebZ5onPaRdy5RYokb8uN6aUt3ACBhECsyjiKKbWGqfxvoqDl+xmUhBGi
-	 ns9yliWRBLjjAacdFxEmNQmco3nUcWg3PzN1Q/Qc=
+	by mail.kernel.org (Postfix) with ESMTP id 146E3206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qaD+nGz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgCPC1v (ORCPT
+        id S1729431AbgCPCdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729329AbgCPC1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:27:51 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3442220674;
-        Mon, 16 Mar 2020 02:27:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584325670;
-        bh=BvqinQzwER3qvGVtAY/jOGwjYFoSdJdx/JoTyCey0Fs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W2BCYRPv+w/w/rPSriYges5+8PdjJB45otEpMOJcasHG8D0A2z8UdeJL2EbL/Nwb7
-         MqC0eLo9/ipSMcSjKnxKIaN8TDFYSsTUSbvMaFY/9bhOwr+V6sS0nEgGgHPV8kXRBs
-         ZXI1QhCZLrNCoDtpboPTDGGbaYCDbuooHU1UN/04=
-Date:   Mon, 16 Mar 2020 10:27:44 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Igor Opaniuk <igor.opaniuk@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] ARM: dts: toradex: DTS license/copyright clean-up
-Message-ID: <20200316022739.GV17221@dragon>
-References: <20200312083830.18011-1-igor.opaniuk@gmail.com>
+        Sun, 15 Mar 2020 22:33:01 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:55362 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729329AbgCPCdA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:33:00 -0400
+Received: by mail-pj1-f65.google.com with SMTP id mj6so7281149pjb.5;
+        Sun, 15 Mar 2020 19:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LdMG7Y+xU0eu7euegCHI14a27CukttOQVa2zPD7qKFg=;
+        b=qaD+nGz+4req7pisApL3TUgA0bDYUAFYBmMwL+17JsqmYhf05/TQgGkvVW5BleOaVN
+         J/ArPj8zJhtN5OBrAcb/uch4u4bsxOR8JqLHkChDE0m25vx07AYeKrZFaF2O9GjiOWhg
+         hfFwu9EFCbArdNKVZexcfOTlhp9/a/qBSUinhX/YSyraqkhfFulgcR7Pd5bCwR0pO28+
+         nu73c/DvxBaxr/vmey0ww+UOL18TLJ3AFX3k/jonOGvydHwMpqQGER0OlZOKVN7jzFjA
+         mgR+3Y7GiyGKn1ZGiFaXwHuPkpDMYNeR+WmKGPTHtRNQZ0BnbV03/ZGkSi0N4zqokKDG
+         JtGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LdMG7Y+xU0eu7euegCHI14a27CukttOQVa2zPD7qKFg=;
+        b=QEHQd+6zhUH1VGOJ8HCqWQy1Ii70+SziG8FUVB51ImjJouGi1TBjmHgcWVGkbz0ZdX
+         vYyJm0ZbLbyXRPbfA4ryLUfEand4p2/e/fQ8t+0YJCMAQA08M9Wl6V42EzQw9fF6Zcz5
+         b86Wb5UyySV1mZJNnoJrhcPQmUcHhy0fIxTemv3v0CRQn/QVXZ7KNHBmJR1z4lI/fMmU
+         pU2KGscrt6T5u5yaTw9X1eiZ4wB7elEdatXPtL4Gf4LuT8DaRzJypMZcqaqSjFUXsEvp
+         htvoypVpl9QCKih9NgbRlgGR2F4OQKNr74zLnRJQBuHukBjtVaV13/PjPB/W8YtEh3Bq
+         0e2g==
+X-Gm-Message-State: ANhLgQ3T8JujcMZlF+R5Hzxm6qNzL64u7B/wUftzzci1yXepClKT691O
+        iz6gWiXuYA0H7+gh9YMM93Q=
+X-Google-Smtp-Source: ADFU+vvefGbRI50sNUTTuCEtd9NhIpfisHMiyldT0aZLPmtS2/VO55W4NpqcF4zc7qkrvptmGtG9fw==
+X-Received: by 2002:a17:902:b710:: with SMTP id d16mr22228351pls.293.1584325979094;
+        Sun, 15 Mar 2020 19:32:59 -0700 (PDT)
+Received: from localhost (216.24.188.11.16clouds.com. [216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id l1sm14949598pje.9.2020.03.15.19.32.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Mar 2020 19:32:58 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, davem@davemloft.net,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, andrew@lunn.ch
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH net-next v3 0/2] net: stmmac: Use readl_poll_timeout() to simplify the code
+Date:   Mon, 16 Mar 2020 10:32:52 +0800
+Message-Id: <20200316023254.13201-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312083830.18011-1-igor.opaniuk@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 10:38:27AM +0200, Igor Opaniuk wrote:
-> 1. Replace boiler plate licenses texts with the SPDX license
-> identifiers in Toradex Vybrid-based SoM device trees.
-> 2. As X11 is identical to the MIT License, but with an extra sentence
-> that prohibits using the copyright holders' names for advertising or
-> promotional purposes without written permission, use MIT license instead
-> of X11 ('s/X11/MIT/g').
-> 3. Replace "Toradex AG" with "Toradex" in the Copyright notice.
-> 4. Use GPL2.0+ instead of GPL2.0, as it's used now by default for all
-> new DTS files.
-> 
-> v2:
-> - Drop switching from GPL2.0+ to GPL2.0 [Marcel Ziswiler]
-> - Replace "Toradex AG" with "Toradex" in the Copyright notice [Marcel Ziswiler]
-> 
-> Igor Opaniuk (3):
->   arm: dts: imx6: toradex: use SPDX-License-Identifier
->   arm: dts: imx7: toradex: use SPDX-License-Identifier
->   arm: dts: vf: toradex: SPDX tags and copyright cleanup
+This patch sets just for replace the open-coded loop to the
+readl_poll_timeout() helper macro for simplify the code in
+stmmac driver.
 
-Change prefix to 'ARM: ...' and applied all, thanks.
+v2 -> v3:
+	- return whatever error code by readl_poll_timeout() returned.
+v1 -> v2:
+	- no changed. I am a newbie and sent this patch a month
+	  ago (February 6th). So far, I have not received any comments or
+	  suggestion. I think it may be lost somewhere in the world, so
+	  resend it.
+
+Dejin Zheng (2):
+  net: stmmac: use readl_poll_timeout() function in init_systime()
+  net: stmmac: use readl_poll_timeout() function in dwmac4_dma_reset()
+
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c  | 15 ++++-----------
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c | 15 ++++-----------
+ 2 files changed, 8 insertions(+), 22 deletions(-)
+
+-- 
+2.25.0
+
