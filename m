@@ -2,128 +2,106 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EF4C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0D3C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3539520658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F1220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbgCPIkh (ORCPT
+        id S1730325AbgCPIlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:40:37 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60396 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730093AbgCPIkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:40:35 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 493F6B9DC6793F6F57C0;
-        Mon, 16 Mar 2020 16:40:29 +0800 (CST)
-Received: from localhost.localdomain (10.175.34.53) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 16 Mar 2020 16:40:21 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <aviad.krawczyk@huawei.com>, <luoxianjun@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <yin.yinshi@huawei.com>
-Subject: [PATCH net 2/6] hinic: fix a bug of waitting for IO stopped
-Date:   Mon, 16 Mar 2020 00:56:26 +0000
-Message-ID: <20200316005630.9817-3-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200316005630.9817-1-luobin9@huawei.com>
-References: <20200316005630.9817-1-luobin9@huawei.com>
+        Mon, 16 Mar 2020 04:41:04 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:59511 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730167AbgCPIlD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:41:03 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id A7614C000D;
+        Mon, 16 Mar 2020 08:40:56 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 09:40:56 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "ronald@innovation.ch" <ronald@innovation.ch>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+Message-ID: <20200316084056.GG4518@piout.net>
+References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
+ <AM0PR04MB4481F087AC3CDA691300710288FE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316005219.GD17221@dragon>
+ <AM0PR04MB44819E4A9E027F1555C33D0B88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316030744.GC17221@dragon>
+ <AM0PR04MB44817A48746601EADA4E06BC88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316033447.GE17221@dragon>
+ <DB3PR0402MB3916DA9F0F175B9D2E9E684FF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.34.53]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB3916DA9F0F175B9D2E9E684FF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-it's unreliable for fw to check whether IO is stopped, so driver
-wait for enough time to ensure IO process is done in hw before
-freeing resources
+On 16/03/2020 08:04:17+0000, Anson Huang wrote:
+> Hi, Shawn
+> 
+> > Subject: Re: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU
+> > case
+> > 
+> > On Mon, Mar 16, 2020 at 03:18:43AM +0000, Peng Fan wrote:
+> > > Just sent out. One more thing, I think all drivers depends on IMX_SCU
+> > > should not have COMPILE_TEST if we plan not to add dummy functions. I
+> > > see you picked up Anson's patch in imx/drivers branch, please check more.
+> > 
+> > Ha, yes. COMPILE_TEST should be dropped for IMX_SCU_PD in Anson's patch.
+> > Thanks for reminding.
+> 
+> I still NOT quite understand why we won't support COMPILE_TEST for SCU drivers,
+> with whose stubs, the build should be OK, if there is any build error, we should try
+> to fix it, NOT just remove the COMPILE_TEST support, any special reason?
+> 
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
----
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
- 1 file changed, 2 insertions(+), 49 deletions(-)
+COMPILE_TEST is supported as long as IMX_SCU is selected like is it for
+any driver depending on any bus.
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 79b3d53f2fbf..c7c75b772a86 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -360,50 +360,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
- 	return -EFAULT;
- }
- 
--static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
--{
--	struct hinic_cmd_io_status cmd_io_status;
--	struct hinic_hwif *hwif = hwdev->hwif;
--	struct pci_dev *pdev = hwif->pdev;
--	struct hinic_pfhwdev *pfhwdev;
--	unsigned long end;
--	u16 out_size;
--	int err;
--
--	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
--		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
--		return -EINVAL;
--	}
--
--	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
--
--	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
--
--	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
--	do {
--		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
--					HINIC_COMM_CMD_IO_STATUS_GET,
--					&cmd_io_status, sizeof(cmd_io_status),
--					&cmd_io_status, &out_size,
--					HINIC_MGMT_MSG_SYNC);
--		if ((err) || (out_size != sizeof(cmd_io_status))) {
--			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
--				err);
--			return err;
--		}
--
--		if (cmd_io_status.status == IO_STOPPED) {
--			dev_info(&pdev->dev, "IO stopped\n");
--			return 0;
--		}
--
--		msleep(20);
--	} while (time_before(jiffies, end));
--
--	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
--	return -ETIMEDOUT;
--}
--
- /**
-  * clear_io_resource - set the IO resources as not active in the NIC
-  * @hwdev: the NIC HW device
-@@ -423,11 +379,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
- 		return -EINVAL;
- 	}
- 
--	err = wait_for_io_stopped(hwdev);
--	if (err) {
--		dev_err(&pdev->dev, "IO has not stopped yet\n");
--		return err;
--	}
-+	/* sleep 100ms to wait for firmware stopping I/O */
-+	msleep(100);
- 
- 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
- 
 -- 
-2.17.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
