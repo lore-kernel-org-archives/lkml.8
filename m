@@ -2,124 +2,132 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211F4C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E484C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0353E20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1130420658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="bqhZBq8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgCPIcz (ORCPT
+        id S1730161AbgCPIdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:32:55 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:45621 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729978AbgCPIcy (ORCPT
+        Mon, 16 Mar 2020 04:33:15 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37727 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729978AbgCPIdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:32:54 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MCsHm-1j4vTQ08rg-008ptg; Mon, 16 Mar 2020 09:32:52 +0100
-Received: by mail-qk1-f178.google.com with SMTP id f3so24675110qkh.1;
-        Mon, 16 Mar 2020 01:32:51 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1D9RFKOM+mmr0RAgeQ9b61ZPcAE4LE7PPMf2paFHJBMyk9Zv1+
-        EeTnh+EWe4suAD+17SdByKLCNWbGC0VpITIvmeA=
-X-Google-Smtp-Source: ADFU+vt5kUDFBAPxQ/eoOtbyfq5T4WxUU4coVWhvqGjxWRRI+qcvmiTDhvmnRyeGJebLCVabbOJ5WyjHLakbilschCU=
-X-Received: by 2002:a37:6285:: with SMTP id w127mr24726126qkb.138.1584347570587;
- Mon, 16 Mar 2020 01:32:50 -0700 (PDT)
+        Mon, 16 Mar 2020 04:33:14 -0400
+Received: by mail-wr1-f66.google.com with SMTP id 6so19990021wre.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:33:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Np0PyQ3dN/K0XmXOWBC7J7/OCl/vL8McW1IXy4RBUgE=;
+        b=bqhZBq8gCbsRh+Ix9GzmFj7etr9aCj5k2VDWtb9DCZDwiUCQ4xy5s1cpMAc2jIBpCo
+         WwxG0+8bynS7HTBvZ+IMWiWgLzWMCoq2Jcy6TDEG7/yEMjhTa16mzIVokPevbP+2vpVz
+         /IfRIBrdLITDf1yOGV5zCQasJlEzEhPdG8440=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=Np0PyQ3dN/K0XmXOWBC7J7/OCl/vL8McW1IXy4RBUgE=;
+        b=i2kV04hwzu6wU7wlusaFk0weGNBoR9Glf4Hl2JY6nyg6y1espzPSTjJsgE6cUiWO/F
+         ZGOawDeWXcNvXu1WAy9mqRN+un4OV8U+/gZGMNhiBBzaiFdEZduAhCRJ2GhAolYqUW5z
+         XE0qIAeTwVZ0RhCIkCeWxYBy3Nb2k4jmHLjnKXwSAGepKqKBaR1+pFZx86+hGXRrtkVm
+         vznTBqG4S3KiZxi8yowpYOq5Jc0lg6IYstPjCtKleZZgtYhI3vh+aVoGYU+XtzC5x6tv
+         cjVGXVT1TlP1SqEyYK140tfaa/Ivw0osA1xetbFjDltoNkAzEkryCV/Wh292fI+6mhj+
+         s4oA==
+X-Gm-Message-State: ANhLgQ0UDc0fTs69En9FEykrZMNKDxu6MPR0XvbpQn7q9JT/lsDejqud
+        hYZcezkbQucCU43rVOnz4LjcVQ==
+X-Google-Smtp-Source: ADFU+vv5wVdXdcx4EeLmKazJGTmA1SjA1iRGsWULv81fmZZvk3NWZudyD95lysFKRly5AByJQvUxng==
+X-Received: by 2002:a5d:6907:: with SMTP id t7mr19250023wru.159.1584347592539;
+        Mon, 16 Mar 2020 01:33:12 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id g7sm93502349wrq.21.2020.03.16.01.33.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 01:33:11 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 09:33:09 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Wambui Karuga <wambui.karugax@gmail.com>, daniel@ffwll.ch,
+        airlied@linux.ie, Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 10/21] drm/tegra: remove checks for debugfs functions
+ return value
+Message-ID: <20200316083309.GD2363188@phenom.ffwll.local>
+Mail-Followup-To: Thierry Reding <thierry.reding@gmail.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>, airlied@linux.ie,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+References: <20200227120232.19413-1-wambui.karugax@gmail.com>
+ <20200227120232.19413-11-wambui.karugax@gmail.com>
+ <20200311143753.GC494173@ulmo>
+ <alpine.LNX.2.21.99999.375.2003111750360.14786@wambui>
+ <20200311232446.GA998881@ulmo>
 MIME-Version: 1.0
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
- <1584200119-18594-5-git-send-email-mikelley@microsoft.com>
- <CAK8P3a2Hnm74aUMNFHbjMr4HwHGZn1+xa4ERsxAJY6hMzhEOhQ@mail.gmail.com> <632eb459dbe53a9b69df2a4f030a755b@kernel.org>
-In-Reply-To: <632eb459dbe53a9b69df2a4f030a755b@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 16 Mar 2020 09:32:34 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3aihZeriUWAhWJMsOtdiY4Lo29syrRbB4Po3v4dsLhvA@mail.gmail.com>
-Message-ID: <CAK8P3a3aihZeriUWAhWJMsOtdiY4Lo29syrRbB4Po3v4dsLhvA@mail.gmail.com>
-Subject: Re: [PATCH v6 04/10] arm64: hyperv: Add memory alloc/free functions
- for Hyper-V size pages
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, olaf@aepfle.de,
-        Andy Whitcroft <apw@canonical.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, marcelo.cerri@canonical.com,
-        "K. Y. Srinivasan" <kys@microsoft.com>, sunilmut@microsoft.com,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:BHpMUhD9WE5ysXlz1KEecLs2Dmfm78AEFkWWqQALB6q+NCVLgJU
- Rb6XRpgprTcor3ig9lc6DhcnvB2Mou+IVdbMu19yOv9agNQIXZRRRIi/HCqU99dpfzQP9QH
- QGFtiPTeguz3S9qHHlWkMqGMCFN+9yVAfsv4J6kTBvHOvbRg5T/nWKok92bMRIpRRYedHhR
- rJyu1C8E8y4KX2mbU2+HA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SsmI/FqHK3w=:6LMYrKew+LxMQI7jNeFoqM
- O9624qbU4K7jnAyUCH7vF5/i92CRlV/yLACBOot8iqHyT3jIlS1vFcACCIC8Ft3rKjsHJSTVd
- 2mxy9j8/Vz45B3vp0QQRhPq828WKioQxR+2QeR7t5OG4FPTXORqH6HFxZF0t+ZhF8ldGvDIKI
- dJw6us89CCJe6TIsbpSpTNOmbaQtOvE/iwEmIMOkrfJDPlAafEtfO47L44bFEHKzZmcOTFGEW
- 3tpoCbRQj+1Bij61MvITjzA6snQIThaU4kRc1DxU+6h9hF+ZVH7m4c1OzOtBCcpgHFYR818Cz
- 0iTYWUJJIjMAFIExv9rdZslCNJNo3DJpcbe+PrUHzHAkIqoo9LL2TZ+l1rqnog+CJ+MkbjSAK
- Fmb8hWd7tGU0SbTyqsQHPXZpDUnp4jzkeb5mEla+VLXRfyhzf1Qiav8VLp3f/Ymyo1gm0JdKz
- h2U99LnWH5eOP8mx4D9QVYJ0pXLdUzJUgN3Tudx7HKdnfRGpyV6NwUk53dlBLHZITqg9ohSAG
- btnwKIE+l9SS7S4rK3VFBRIz0cUbaes8gEWN07AyzzwCXkpbxy9ZrpJAURMPqsWQdG02aUPRI
- GLjMy3CF8NK0weJG71N4bK5aZoIbkN9YxEu5YqptzEzAmsPK8CAVuyvvzFmnU4WE4pAbQBbez
- TfN08eNKXzweWMkKUVffIORAa8asjt8tz3p8nvFtxmrD8sOxSiDoTMkymT+z4Eb+f4DX4ytgU
- N8WLepGoRCYjJ45L65WesCE4+4EJoxP6Xfmq+0CxVh0FeXYsF8Tjrn64J6FxJDQqSAk6maX9g
- VRpxewEvjOqgsd4fsBL0LfGATd26yYR9FODt0EiY0E2IgL0w10=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311232446.GA998881@ulmo>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 9:30 AM Marc Zyngier <maz@kernel.org> wrote:
-> On 2020-03-16 08:22, Arnd Bergmann wrote:
-> > On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com>
-> > wrote:
-> >>  /*
-> >> + * Functions for allocating and freeing memory with size and
-> >> + * alignment HV_HYP_PAGE_SIZE. These functions are needed because
-> >> + * the guest page size may not be the same as the Hyper-V page
-> >> + * size. We depend upon kmalloc() aligning power-of-two size
-> >> + * allocations to the allocation size boundary, so that the
-> >> + * allocated memory appears to Hyper-V as a page of the size
-> >> + * it expects.
-> >> + *
-> >> + * These functions are used by arm64 specific code as well as
-> >> + * arch independent Hyper-V drivers.
-> >> + */
-> >> +
-> >> +void *hv_alloc_hyperv_page(void)
-> >> +{
-> >> +       BUILD_BUG_ON(PAGE_SIZE <  HV_HYP_PAGE_SIZE);
-> >> +       return kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
-> >
-> > I don't think there is any guarantee that kmalloc() returns
-> > page-aligned
-> > allocations in general.
->
-> I believe that guarantee came with 59bb47985c1db ("mm, sl[aou]b:
-> guarantee
-> natural alignment for kmalloc(power-of-two)").
->
-> > How about using get_free_pages() to implement this?
->
-> This would certainly work, at the expense of a lot of wasted memory when
-> PAGE_SIZE isn't 4k.
+On Thu, Mar 12, 2020 at 12:24:46AM +0100, Thierry Reding wrote:
+> On Wed, Mar 11, 2020 at 05:54:46PM +0300, Wambui Karuga wrote:
+> > Hey Thierry,
+> > 
+> > On Wed, 11 Mar 2020, Thierry Reding wrote:
+> > 
+> > > On Thu, Feb 27, 2020 at 03:02:21PM +0300, Wambui Karuga wrote:
+> > > > Since 987d65d01356 (drm: debugfs: make
+> > > > drm_debugfs_create_files() never fail) there is no need to check the
+> > > > return value of drm_debugfs_create_files(). Therefore, remove the
+> > > > return checks and error handling of the drm_debugfs_create_files()
+> > > > function from various debugfs init functions in drm/tegra and have
+> > > > them return 0 directly.
+> > > > 
+> > > > This change also includes removing the use of drm_debugfs_create_files
+> > > > as a return value in tegra_debugfs_init() and have the function declared
+> > > > as void.
+> > > > 
+> > > > Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> > > > ---
+> > > >  drivers/gpu/drm/tegra/dc.c   | 11 +----------
+> > > >  drivers/gpu/drm/tegra/drm.c  |  8 ++++----
+> > > >  drivers/gpu/drm/tegra/dsi.c  | 11 +----------
+> > > >  drivers/gpu/drm/tegra/hdmi.c | 11 +----------
+> > > >  drivers/gpu/drm/tegra/sor.c  | 11 +----------
+> > > >  5 files changed, 8 insertions(+), 44 deletions(-)
+> > > 
+> > > Applied, thanks.
+> > > 
+> > There's a newer version[1] of this patch series as this specific patch
+> > depends on other work in drm.
+> 
+> Oh yeah, I just noticed that this patch causes a build failure, so I
+> backed it out again.
+> 
+> If there's dependencies on other work, it's probably best to take this
+> through drm-misc, in which case:
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> 
+> Let me know if you'd prefer me to apply this to drm/tegra instead.
 
-I'm sure this is the least of your problems when the guest runs with
-a large base page size, you've already wasted most of your memory
-otherwise then.
-
-    Arnd
+Yeah I'm going to pull in the entire series through -misc rsn.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
