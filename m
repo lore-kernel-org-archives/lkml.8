@@ -2,69 +2,72 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02639C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF81C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA98205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D3E20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:38:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIiuCbVM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUq7JVDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732924AbgCPXit (ORCPT
+        id S1732967AbgCPXiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 19:38:49 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:53409 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732873AbgCPXit (ORCPT
+        Mon, 16 Mar 2020 19:38:52 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33498 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732932AbgCPXiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 19:38:49 -0400
-Received: by mail-wm1-f48.google.com with SMTP id 25so19573598wmk.3;
-        Mon, 16 Mar 2020 16:38:47 -0700 (PDT)
+        Mon, 16 Mar 2020 19:38:51 -0400
+Received: by mail-wr1-f67.google.com with SMTP id a25so23423350wrd.0;
+        Mon, 16 Mar 2020 16:38:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DCOASbKIk/eztd0+a4bJk0Nw8ytr6z5GvXEV97QcrW0=;
-        b=BIiuCbVMArPrTrZV8g/UKJSjycuUYUQKhZdkv2Zw8bObdDCX4Mn7JbuhB4yL7+ywRj
-         0QbOClYDLOHdZ591r4CIOkv7JWvQvqvTBc1Zul7dEJzcoKh3a0UcjqdVIx6xvVy/Cmh+
-         sxWqLUtT1iGzs56tXrE/bh5fqLqxgakWzY5kfYYG8VJCMrPFN7iY1FNttawjfetHr7T9
-         2E0P1sX3ZmZ9Bv6vVyhSNmOnpEEkfHPmsabh7hLzIVYu88N8wdHNYs3Dz606gpzDxhlt
-         RpVL2tNPjWCLOA7Mv8IBXcJ3a+3am4AUiGARPkN8r7mK/qVtXGtTMDtyhxHtKLEjoqg/
-         IUMw==
+        bh=s7MT1W4c0iLCPP6WJDplp79IQPzcsZf4PRM5SEuNrW4=;
+        b=VUq7JVDvVVdvjOIFNpX/FRhbAtLHjXOHzOAYtH7CclKhk0PX6gE4NDOyrwdczDR96g
+         XBPqQ/qmho70NGmAt9wpd6HIIdYruSDqmfTcv+XYRf8TsIf11fRiVVTov167IXkwKSG/
+         5fXFkJBcWLHCl3GlZo+kQBBocGEPbOHnPn9aYTwd3s5kWipZO/L87zu4QF4bfZYf9IWj
+         75EsJ6F59P1m+IuIInW1wB6e3nmPioqZhPlofGL40Pd5O0D8r8CWdFqvsp3siggp+ERv
+         o15mdaMOUxbchwp0XZUWf/9S/RJB0Vsujsa8nsFCi1jU9/mSuX0DlhwTb6S7WAnT/fuM
+         +DlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DCOASbKIk/eztd0+a4bJk0Nw8ytr6z5GvXEV97QcrW0=;
-        b=TboBBmfERjegDk/ZRgeZYPFErYwPBseSZwYYSd9UO4CMOwrW8gpktmE5e9Qrn5B1ns
-         NARlNYiSt08u8oUdZRNRfeSmkEqQ0LOUgFnr9ynPxzS/7Cn8XJvFILHAFP9qM1Ut+KbQ
-         8Xz2XbU3IajHniZ888T1a+IEle/ERRc6qrT8LeEHGfSzHbdgvAP7E0gci6KsfkvBmDHx
-         Qwni9rmtuK8I/pLeCMW15TBJqyP/9Ho+XV+NIUXBpnGLH6nf9qYG8JKLvgGJag1WYg1L
-         Fj9bZrROOaNvI5b/bf8ZghC/uk5FDdiLOQ+ziSKIMetqlh8Mms60wQLaBEuev/UWsRX4
-         A58g==
-X-Gm-Message-State: ANhLgQ2TJoTQpu+jXtCB2gn9OC+sqPtX2q0mwQiU6JG9cp7GNIKtvet7
-        fNxPTD7bovpYOAGVBntIUIcVgY/rrw==
-X-Google-Smtp-Source: ADFU+vsso9j9Trv7CuavLXkwX5AoJ+GqEOWAGxR8QFosCyX4kuQiDd6yBNfdyzuemAR0iBIU111cbQ==
-X-Received: by 2002:a7b:cd83:: with SMTP id y3mr1452071wmj.176.1584401927067;
-        Mon, 16 Mar 2020 16:38:47 -0700 (PDT)
+        bh=s7MT1W4c0iLCPP6WJDplp79IQPzcsZf4PRM5SEuNrW4=;
+        b=euaJM4hRGZAL13PAJLmEZa1AqP2Ej/RObBvgIiRFNJyUwdexXgPzv6Gc3b918TIXeT
+         B7UH5ZJWkpOu0waDtycW0rbMDy7x7zzr5BPeevufUay60jmdyvZ4yTu/N8s7homURNxR
+         mnYLdt9jmIfJweC8Bi4zAju+tZadDGMKHCjcqTRJ/dpx1h64sZsYh3anc69WKzTLcFfA
+         /F4TfgsZwxtDkbZEhvzSbtpOvn2/Mzjd9+Z6GhIyfAlHA0pRWEBqdf8SvbpvrRw8LIN+
+         muCuTNi655sHzfrEUwXROS8MviBKCZilE17ZCx1qC7Oja+lSTihhtZm5s2e2k+alV/lk
+         KJpg==
+X-Gm-Message-State: ANhLgQ3nitSqvEWxNj2Ix1VnGDSb4G5mLFpuhkKMEZ90QOaTs5O1dfgK
+        87DY541/fCr+mkqXNZnaKH2Wnx98YA==
+X-Google-Smtp-Source: ADFU+vs8yceWIx6H0vj2f2I+P9/G6KQwzFtNlEfkONE+N15XxTsAk5Y2edcwjSd0PYP0tBCmiGhJ7A==
+X-Received: by 2002:a5d:4ad1:: with SMTP id y17mr1744026wrs.119.1584401930067;
+        Mon, 16 Mar 2020 16:38:50 -0700 (PDT)
 Received: from localhost.localdomain (host-92-23-82-35.as13285.net. [92.23.82.35])
-        by smtp.googlemail.com with ESMTPSA id i9sm1510495wmd.37.2020.03.16.16.38.44
+        by smtp.googlemail.com with ESMTPSA id i9sm1510495wmd.37.2020.03.16.16.38.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 16:38:46 -0700 (PDT)
+        Mon, 16 Mar 2020 16:38:49 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] lock warning cleanups
-Date:   Mon, 16 Mar 2020 23:37:58 +0000
-Message-Id: <20200316233804.96657-1-jbi.octave@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 3/6] fs: Add missing annotation for __wait_on_freeing_inode()
+Date:   Mon, 16 Mar 2020 23:38:01 +0000
+Message-Id: <20200316233804.96657-4-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <0/6>
+In-Reply-To: <20200316233804.96657-1-jbi.octave@gmail.com>
 References: <0/6>
+ <20200316233804.96657-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,27 +75,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds missing annotations to various functions,
-that register warnings of context imbalance when built with Sparse tool.
-The adds fix the warnings, improve on readability of the code
-and give better insight or directive on what the functions are actually doing.
+Sparse reports a warning at __wait_on_freeing_inode()
 
-Jules Irenge (6):
-  namei: Add missing annotation for unlazy_walk()
-  namei: Add missing annotation for unlazy_child()
-  fs: Add missing annotation for __wait_on_freeing_inode()
-  fs/fs-writeback.c: Add missing annotation for
-    wbc_attach_and_unlock_inode()
-  fs/fs-writeback.c: replace two annotations for
-    __inode_wait_for_writeback()
-  fs: add missing annotation for pin_kill()
+warning: context imbalance in __wait_on_freeing_inode() - unexpected unlock
 
- fs/fs-writeback.c | 4 ++--
- fs/fs_pin.c       | 1 +
- fs/inode.c        | 2 ++
- fs/namei.c        | 2 ++
- 4 files changed, 7 insertions(+), 2 deletions(-)
+The root cause is the missing annotations at __wait_on_freeing_inode()
 
+Add the missing __releases(&inode->i_lock)
+	and __must_hold(&inode_hash_lock) annotations
+
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ fs/inode.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/inode.c b/fs/inode.c
+index 7d57068b6b7a..3b06c5c59883 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -1955,6 +1955,8 @@ EXPORT_SYMBOL(inode_needs_sync);
+  * will DTRT.
+  */
+ static void __wait_on_freeing_inode(struct inode *inode)
++	__releases(&inode->i_lock)
++	__must_hold(&inode_hash_lock)
+ {
+ 	wait_queue_head_t *wq;
+ 	DEFINE_WAIT_BIT(wait, &inode->i_state, __I_NEW);
 -- 
 2.24.1
 
