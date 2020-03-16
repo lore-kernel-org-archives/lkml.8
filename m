@@ -2,149 +2,153 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98074C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6FEC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E7E20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B78206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:56:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NC5C6doT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sp8cn/io"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732602AbgCPUyj (ORCPT
+        id S1732617AbgCPU4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:54:39 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45189 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732567AbgCPUyj (ORCPT
+        Mon, 16 Mar 2020 16:56:13 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33852 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732567AbgCPU4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:54:39 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m15so10400817pgv.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 13:54:38 -0700 (PDT)
+        Mon, 16 Mar 2020 16:56:13 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t3so10418953pgn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 13:56:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8zaBBvQDtHAjHEbDBvVjsaeN/s+0x2io0CGlb7cqMuk=;
-        b=NC5C6doT6AV4hlrji55WQRv2ak6KZA54MIACHybf9hYpmGdaQvZ5lqKUD9ww5OWaab
-         EZsNrn06nhTAfOUb72zCr5pH6xiWjtjY6IsodW1jMXEH+eF53vW312XumTTpWljyZ8wE
-         wEkT0WMsSVGjb6GvfDpP49Cp/iJS2YAi33ARk=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NZ/7vQHI7KE97BesE+3WxlmFuT1Y/pVRDjy/XH5FkC0=;
+        b=sp8cn/ioOKcQrBGgpv/MwvdbUYmqLpY3kwI0x736FzBzMjDBs+K3pg5UUG1Q1DCeI5
+         1zn/f5brLanFHqo0Pi0PlKHd5FTKycUoSSyfxNbIRzD0Gm8PrzXSWOP/yv1NXIywvuWV
+         NvWUdv8eYUpXPvoGC6Q7n8PkYcU1IOx3Ty8eAJPkTabAUsLDTP0BN+QnS2rYduD9ixFa
+         x8DTDXw1Y8QHmn3HdSK2F61wnQzHBQBCPgkC9kZDUmTWVrr3qd+cK8dXytoA6SleFib7
+         dNliIlDgmEDxwl4YuOOZ5bVeMwLMEEXEedpVexup+LT/AAjgdd16EmutVUrhVjABss71
+         cTQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8zaBBvQDtHAjHEbDBvVjsaeN/s+0x2io0CGlb7cqMuk=;
-        b=nSqEXGJAfANwo5zlsvfKmqovc363rViqxygJnB+XJzz5lGS0kMbGRBAG+DmymecYvn
-         enR1/4LU/LK4Zs7RExAJqpcobBjJjw7P7AqzwETY4DvOCXP9mCCUGpt/OCZ8ZdzLl0mi
-         vsVF+5gsk0U2rYOXqwiljVN4ruIwP7xADbVcOmOiEEqq+auYFHnypuBdgjmxrtwQg82q
-         GEYq9LFW//KC8/9surDATR0TEi4olKVYcihuIQCmAn1FXc7xzxnltMjsUGyhJxickCfR
-         L0RF253mglLcQ3yDj4k5r55LrglDs99jVLSoP0fv1Qox1oBVnRpxjD9qrhgLdYYC8W0u
-         v0Zw==
-X-Gm-Message-State: ANhLgQ1un//yaU0g61GjFJXKpZn5Gm17Xm3O/Zdjm7zRiB0Mz1edrcFf
-        UehYa4UaMfyhOwZBobPp2eJY4A==
-X-Google-Smtp-Source: ADFU+vvE7G4Rh/cPZyrk4V/K67aeMmLDEO8ABilE2ePX/BPd0FpssbnC0NcQjOjCNteMmCCgiD+oWw==
-X-Received: by 2002:a63:1e44:: with SMTP id p4mr1614833pgm.367.1584392077826;
-        Mon, 16 Mar 2020 13:54:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f17sm391580pge.48.2020.03.16.13.54.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 13:54:36 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 13:54:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mauro Rossi <issor.oruam@gmail.com>,
-        Michael Matz <matz@suse.de>
-Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
- version to 2.23
-Message-ID: <202003161354.538479F16@keescook>
-References: <20200113161310.GA191743@rani.riverdale.lan>
- <20200113195337.604646-1-nivedita@alum.mit.edu>
- <202001131750.C1B8468@keescook>
- <20200114165135.GK31032@zn.tnic>
- <20200115002131.GA3258770@rani.riverdale.lan>
- <20200115122458.GB20975@zn.tnic>
- <20200316160259.GN26126@zn.tnic>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NZ/7vQHI7KE97BesE+3WxlmFuT1Y/pVRDjy/XH5FkC0=;
+        b=Jj0LhxD/9vO++w3kIh6eRX0zCNqXLU30XDf26QyDOSdR5kUbp/2YPVoAcZotRhgzBv
+         aJ+go+stOWe8KRHHSlSM35XQSgW4exzOtQycOa4HQQLAHsUPQrhIM4I4adkxkNNirvPP
+         CAD7AGtIPiuc62H5qfEwqviQ1a0TpvtTBIeH6TWNx/sqYiHDDyABufWKsv+Z+PANpuzl
+         v8Re4BzwOjaXVq1HjYGyiUerL2pUibNw5H4G40JI8wuRO4SVGAFoQ0IBU7L0xtad9ZSa
+         nONZeHbaNM3DTZgKeIofW5mu0iWt+ytZizz6+xdh1Iz4v7+igG8jKjKDQuu7gFFyaxE4
+         e1Fw==
+X-Gm-Message-State: ANhLgQ1dLLart//o1cc2L/Opd2IoljRGJDgSNQG8ICytmtyyXXVa5VR+
+        mcAPJ/q8nObDx2JRKV7ovpE4iJz2Kvp3ckxfxhNJkg==
+X-Google-Smtp-Source: ADFU+vuCQ97q6HcYQkHwhQj8C1S5Oa2alEBysaM6RamyvELgnI7a1zylhDyl+jjS4YkMyCE133hnoh3bBFYURu9FD5U=
+X-Received: by 2002:a05:6a00:42:: with SMTP id i2mr1554887pfk.108.1584392167596;
+ Mon, 16 Mar 2020 13:56:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316160259.GN26126@zn.tnic>
+References: <20200316203452.32998-1-natechancellor@gmail.com>
+In-Reply-To: <20200316203452.32998-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 16 Mar 2020 13:55:55 -0700
+Message-ID: <CAKwvOdkDUYYm9ZoTeKt-5kGhDTxo6w2XhOjONWhzh6M4rE5LpA@mail.gmail.com>
+Subject: Re: [PATCH] mlx5: Remove uninitialized use of key in mlx5_core_create_mkey
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 05:02:59PM +0100, Borislav Petkov wrote:
-> Long overdue patch, see below.
-> 
-> Plan is to queue it after 5.7-rc1.
-> 
+On Mon, Mar 16, 2020 at 1:35 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> ../drivers/net/ethernet/mellanox/mlx5/core/mr.c:63:21: warning: variable
+> 'key' is uninitialized when used here [-Wuninitialized]
+>                       mkey_index, key, mkey->key);
+>                                   ^~~
+> ../drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:54:6: note:
+> expanded from macro 'mlx5_core_dbg'
+>                  ##__VA_ARGS__)
+>                    ^~~~~~~~~~~
+> ../include/linux/dev_printk.h:114:39: note: expanded from macro
+> 'dev_dbg'
+>         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+>                                              ^~~~~~~~~~~
+> ../include/linux/dynamic_debug.h:158:19: note: expanded from macro
+> 'dynamic_dev_dbg'
+>                            dev, fmt, ##__VA_ARGS__)
+>                                        ^~~~~~~~~~~
+> ../include/linux/dynamic_debug.h:143:56: note: expanded from macro
+> '_dynamic_func_call'
+>         __dynamic_func_call(__UNIQUE_ID(ddebug), fmt, func, ##__VA_ARGS__)
+>                                                               ^~~~~~~~~~~
+> ../include/linux/dynamic_debug.h:125:15: note: expanded from macro
+> '__dynamic_func_call'
+>                 func(&id, ##__VA_ARGS__);               \
+>                             ^~~~~~~~~~~
+> ../drivers/net/ethernet/mellanox/mlx5/core/mr.c:47:8: note: initialize
+> the variable 'key' to silence this warning
+>         u8 key;
+>               ^
+>                = '\0'
+> 1 warning generated.
+>
+> key's initialization was removed in commit fc6a9f86f08a ("{IB,net}/mlx5:
+> Assign mkey variant in mlx5_ib only") but its use was not fully removed.
+> Remove it now so that there is no more warning.
+>
+> Fixes: fc6a9f86f08a ("{IB,net}/mlx5: Assign mkey variant in mlx5_ib only")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/932
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Thanks for the patch and analysis, looks good to me!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
 > ---
-> From: Borislav Petkov <bp@suse.de>
-> Date: Mon, 16 Mar 2020 16:28:36 +0100
-> Subject: [PATCH] Documentation/changes: Raise minimum supported binutilsa version to 2.23
-> 
-> The currently minimum-supported binutils version 2.21 has the problem of
-> promoting symbols which are defined outside of a section into absolute.
-> According to Arvind:
-> 
->   binutils-2.21 and -2.22. An x86-64 defconfig will fail with
->           Invalid absolute R_X86_64_32S relocation: _etext
->   and after fixing that one, with
->           Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
-> 
-> Those two versions of binutils have a bug when it comes to handling
-> symbols defined outside of a section and binutils 2.23 has the proper
-> fix, see: https://sourceware.org/legacy-ml/binutils/2012-06/msg00155.html
-> 
-> Therefore, up to the fixed version directly, skipping the broken ones.
-> 
-> Currently shipping distros already have the fixed binutils version so
-> there should be no breakage resulting from this.
-> 
-> For more details about the whole thing, see the thread in Link.
-> 
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-
-Acked-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> Link: https://lkml.kernel.org/r/20200110202349.1881840-1-nivedita@alum.mit.edu
-> ---
->  Documentation/process/changes.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
-> index e47863575917..7a842655142c 100644
-> --- a/Documentation/process/changes.rst
-> +++ b/Documentation/process/changes.rst
-> @@ -31,7 +31,7 @@ you probably needn't concern yourself with pcmciautils.
->  ====================== ===============  ========================================
->  GNU C                  4.6              gcc --version
->  GNU make               3.81             make --version
-> -binutils               2.21             ld -v
-> +binutils               2.23             ld -v
->  flex                   2.5.35           flex --version
->  bison                  2.0              bison --version
->  util-linux             2.10o            fdformat --version
-> -- 
-> 2.21.0
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+>  drivers/net/ethernet/mellanox/mlx5/core/mr.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mr.c b/drivers/net/ethernet/mellanox/mlx5/core/mr.c
+> index fd3e6d217c3b..366f2cbfc6db 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/mr.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/mr.c
+> @@ -44,7 +44,6 @@ int mlx5_core_create_mkey(struct mlx5_core_dev *dev,
+>         u32 mkey_index;
+>         void *mkc;
+>         int err;
+> -       u8 key;
+>
+>         MLX5_SET(create_mkey_in, in, opcode, MLX5_CMD_OP_CREATE_MKEY);
+>
+> @@ -59,8 +58,7 @@ int mlx5_core_create_mkey(struct mlx5_core_dev *dev,
+>         mkey->key |= mlx5_idx_to_mkey(mkey_index);
+>         mkey->pd = MLX5_GET(mkc, mkc, pd);
+>
+> -       mlx5_core_dbg(dev, "out 0x%x, key 0x%x, mkey 0x%x\n",
+> -                     mkey_index, key, mkey->key);
+> +       mlx5_core_dbg(dev, "out 0x%x, mkey 0x%x\n", mkey_index, mkey->key);
+>         return 0;
+>  }
+>  EXPORT_SYMBOL(mlx5_core_create_mkey);
+> --
+> 2.26.0.rc1
+>
+> --
 
 -- 
-Kees Cook
+Thanks,
+~Nick Desaulniers
