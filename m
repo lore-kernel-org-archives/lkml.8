@@ -2,179 +2,222 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0253C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237DEC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7683A20785
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584555727;
-	bh=0kLp7bEp/11sPwr/wXBGJSmj+PYzD+oXI6sOmSm+LUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IQi1V7cRamgLzHH19BIw737p8tmt+Dm+onpGauaBqS/oVx0w21ikFTjoHpQ4Qf/gJ
-	 dlJ6IxWvJfuZlv5MWt3YgsynQdwgyeCObGZEd+nAgX3A0xlzuqETdb7CDlN2hRaau/
-	 ukva7WYjo/IH//k3dIKC1d4DGnXFa0ZwQec3mdVU=
+	by mail.kernel.org (Postfix) with ESMTP id 066692077E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgCRSWG (ORCPT
+        id S1727014AbgCRSWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:22:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbgCRSWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:22:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0338A2077E;
-        Wed, 18 Mar 2020 18:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584555723;
-        bh=0kLp7bEp/11sPwr/wXBGJSmj+PYzD+oXI6sOmSm+LUc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0Oa48EjSeTb/K5rRf47bm8c63ncn/iBXJ5ghH8MWC2/UNVxAosBp0kw0dVM1CYBIY
-         e5a068X1hqTCQ0rSF8NyfLuIEEVOjeO5jyLfqz9jWDJLak242HHegusdlKcUPV6dsR
-         guYzBqrLDcR7f/OuR7ZZB99Wm71AhkGClZLchqxo=
-Date:   Wed, 18 Mar 2020 19:22:01 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/13] coresight: cti: Add sysfs coresight mgmt register
- access
-Message-ID: <20200318182201.GA3235688@kroah.com>
-References: <20200309161748.31975-1-mathieu.poirier@linaro.org>
- <20200309161748.31975-3-mathieu.poirier@linaro.org>
- <20200318131821.GA2789508@kroah.com>
- <20200318181604.GB18359@xps15>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318181604.GB18359@xps15>
+        Wed, 18 Mar 2020 14:22:16 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:11629 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbgCRSWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 14:22:16 -0400
+IronPort-SDR: PtQYAqYmSU0V13VozZJzT3/D/k3Aw4DWrLHK9jvJkfDjc7Uk3homh3/D233H7+zWukP/i0yQKL
+ wp/+b68cT7IFCY38LwOmf1gwPpR8cnMHcgIzjLAbe//7kaVpbnS4xtArEuE7JhZZaX9g2rYbtx
+ cOZWUXGZkvFoFmSfrF2hQi7wRmUwSTcNsIB28g9c9J9L/Dekjuu0TSwiqAb6HuutnC5F6qW3iU
+ yHzocVmXAsSGvKRiqwL15u0/S+I1fN0VxBbaPPBmP5TV64ejczCwQ47DCSau5WTT/Ra6MkYzcu
+ /Z0=
+X-IronPort-AV: E=Sophos;i="5.70,559,1574150400"; 
+   d="scan'208";a="46713605"
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by labrats.qualcomm.com with ESMTP; 16 Mar 2020 00:06:27 -0700
+Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
+  by ironmsg01-sd.qualcomm.com with ESMTP; 16 Mar 2020 00:06:25 -0700
+Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
+        id CC1EC3A63; Mon, 16 Mar 2020 00:06:25 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Subhash Jadavani <subhashj@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] scsi: ufs: Clean up ufshcd_scale_clks() and clock scaling error out path
+Date:   Mon, 16 Mar 2020 00:06:10 -0700
+Message-Id: <1584342373-10282-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1584342373-10282-1-git-send-email-cang@codeaurora.org>
+References: <1584342373-10282-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:16:04PM -0600, Mathieu Poirier wrote:
-> On Wed, Mar 18, 2020 at 02:18:21PM +0100, Greg KH wrote:
-> > On Mon, Mar 09, 2020 at 10:17:37AM -0600, Mathieu Poirier wrote:
-> > > From: Mike Leach <mike.leach@linaro.org>
-> > > 
-> > > Adds sysfs access to the coresight management registers.
-> > > 
-> > > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > [Fixed abbreviation in title]
-> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > > ---
-> > >  .../hwtracing/coresight/coresight-cti-sysfs.c | 53 +++++++++++++++++++
-> > >  drivers/hwtracing/coresight/coresight-priv.h  |  1 +
-> > >  2 files changed, 54 insertions(+)
-> > > 
-> > > diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> > > index a832b8c6b866..507f8eb487fe 100644
-> > > --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> > > +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> > > @@ -62,11 +62,64 @@ static struct attribute *coresight_cti_attrs[] = {
-> > >  	NULL,
-> > >  };
-> > >  
-> > > +/* register based attributes */
-> > > +
-> > > +/* macro to access RO registers with power check only (no enable check). */
-> > > +#define coresight_cti_reg(name, offset)			\
-> > > +static ssize_t name##_show(struct device *dev,				\
-> > > +			   struct device_attribute *attr, char *buf)	\
-> > > +{									\
-> > > +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);	\
-> > > +	u32 val = 0;							\
-> > > +	pm_runtime_get_sync(dev->parent);				\
-> > > +	spin_lock(&drvdata->spinlock);					\
-> > > +	if (drvdata->config.hw_powered)					\
-> > > +		val = readl_relaxed(drvdata->base + offset);		\
-> > > +	spin_unlock(&drvdata->spinlock);				\
-> > > +	pm_runtime_put_sync(dev->parent);				\
-> > > +	return scnprintf(buf, PAGE_SIZE, "0x%x\n", val);		\
-> > > +}									\
-> > > +static DEVICE_ATTR_RO(name)
-> > > +
-> > > +/* coresight management registers */
-> > > +coresight_cti_reg(devaff0, CTIDEVAFF0);
-> > > +coresight_cti_reg(devaff1, CTIDEVAFF1);
-> > > +coresight_cti_reg(authstatus, CORESIGHT_AUTHSTATUS);
-> > > +coresight_cti_reg(devarch, CORESIGHT_DEVARCH);
-> > > +coresight_cti_reg(devid, CORESIGHT_DEVID);
-> > > +coresight_cti_reg(devtype, CORESIGHT_DEVTYPE);
-> > > +coresight_cti_reg(pidr0, CORESIGHT_PERIPHIDR0);
-> > > +coresight_cti_reg(pidr1, CORESIGHT_PERIPHIDR1);
-> > > +coresight_cti_reg(pidr2, CORESIGHT_PERIPHIDR2);
-> > > +coresight_cti_reg(pidr3, CORESIGHT_PERIPHIDR3);
-> > > +coresight_cti_reg(pidr4, CORESIGHT_PERIPHIDR4);
-> > > +
-> > > +static struct attribute *coresight_cti_mgmt_attrs[] = {
-> > > +	&dev_attr_devaff0.attr,
-> > > +	&dev_attr_devaff1.attr,
-> > > +	&dev_attr_authstatus.attr,
-> > > +	&dev_attr_devarch.attr,
-> > > +	&dev_attr_devid.attr,
-> > > +	&dev_attr_devtype.attr,
-> > > +	&dev_attr_pidr0.attr,
-> > > +	&dev_attr_pidr1.attr,
-> > > +	&dev_attr_pidr2.attr,
-> > > +	&dev_attr_pidr3.attr,
-> > > +	&dev_attr_pidr4.attr,
-> > > +	NULL,
-> > > +};
-> > > +
-> > >  static const struct attribute_group coresight_cti_group = {
-> > >  	.attrs = coresight_cti_attrs,
-> > >  };
-> > >  
-> > > +static const struct attribute_group coresight_cti_mgmt_group = {
-> > > +	.attrs = coresight_cti_mgmt_attrs,
-> > > +	.name = "mgmt",
-> > > +};
-> > > +
-> > >  const struct attribute_group *coresight_cti_groups[] = {
-> > >  	&coresight_cti_group,
-> > > +	&coresight_cti_mgmt_group,
-> > >  	NULL,
-> > >  };
-> > > diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> > > index 82e563cdc879..aba6b789c969 100644
-> > > --- a/drivers/hwtracing/coresight/coresight-priv.h
-> > > +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> > > @@ -22,6 +22,7 @@
-> > >  #define CORESIGHT_CLAIMCLR	0xfa4
-> > >  #define CORESIGHT_LAR		0xfb0
-> > >  #define CORESIGHT_LSR		0xfb4
-> > > +#define CORESIGHT_DEVARCH	0xfbc
-> > >  #define CORESIGHT_AUTHSTATUS	0xfb8
-> > >  #define CORESIGHT_DEVID		0xfc8
-> > >  #define CORESIGHT_DEVTYPE	0xfcc
-> > > -- 
-> > > 2.20.1
-> > > 
-> > 
-> > I do not see any Documentation/ABI/ entries for these new sysfs files,
-> > did I miss it somehow?  I can't take new sysfs code without
-> > documentation.
-> 
-> All the ABI is documented in this patch, which is part of this set.
-> 
-> [1]. https://lkml.org/lkml/2020/3/9/642
+From: Subhash Jadavani <subhashj@codeaurora.org>
 
-That is not in the required Documentation/ABI/ form that all sysfs files
-should have.  If they don't, it's a bug.
+This change introduces a func ufshcd_set_clk_freq() to explicitly
+set clock frequency so that it can be used in reset_and_resotre path and
+in ufshcd_scale_clks(). Meanwhile, this change cleans up the clock scaling
+error out path.
 
-Please use that format and do not make up your own, we already have
-tools that parse these files.
+Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
 
-thanks,
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 2a2a63b..63aaa88f 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -855,28 +855,29 @@ static bool ufshcd_is_unipro_pa_params_tuning_req(struct ufs_hba *hba)
+ 		return false;
+ }
+ 
+-static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
++/**
++ * ufshcd_set_clk_freq - set UFS controller clock frequencies
++ * @hba: per adapter instance
++ * @scale_up: If True, set max possible frequency othewise set low frequency
++ *
++ * Returns 0 if successful
++ * Returns < 0 for any other errors
++ */
++static int ufshcd_set_clk_freq(struct ufs_hba *hba, bool scale_up)
+ {
+ 	int ret = 0;
+ 	struct ufs_clk_info *clki;
+ 	struct list_head *head = &hba->clk_list_head;
+-	ktime_t start = ktime_get();
+-	bool clk_state_changed = false;
+ 
+ 	if (list_empty(head))
+ 		goto out;
+ 
+-	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
+-	if (ret)
+-		return ret;
+-
+ 	list_for_each_entry(clki, head, list) {
+ 		if (!IS_ERR_OR_NULL(clki->clk)) {
+ 			if (scale_up && clki->max_freq) {
+ 				if (clki->curr_freq == clki->max_freq)
+ 					continue;
+ 
+-				clk_state_changed = true;
+ 				ret = clk_set_rate(clki->clk, clki->max_freq);
+ 				if (ret) {
+ 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
+@@ -895,7 +896,6 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
+ 				if (clki->curr_freq == clki->min_freq)
+ 					continue;
+ 
+-				clk_state_changed = true;
+ 				ret = clk_set_rate(clki->clk, clki->min_freq);
+ 				if (ret) {
+ 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
+@@ -914,13 +914,36 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
+ 				clki->name, clk_get_rate(clki->clk));
+ 	}
+ 
++out:
++	return ret;
++}
++
++/**
++ * ufshcd_scale_clks - scale up or scale down UFS controller clocks
++ * @hba: per adapter instance
++ * @scale_up: True if scaling up and false if scaling down
++ *
++ * Returns 0 if successful
++ * Returns < 0 for any other errors
++ */
++static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
++{
++	int ret = 0;
++
++	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
++	if (ret)
++		return ret;
++
++	ret = ufshcd_set_clk_freq(hba, scale_up);
++	if (ret)
++		return ret;
++
+ 	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
++	if (ret) {
++		ufshcd_set_clk_freq(hba, !scale_up);
++		return ret;
++	}
+ 
+-out:
+-	if (clk_state_changed)
+-		trace_ufshcd_profile_clk_scaling(dev_name(hba->dev),
+-			(scale_up ? "up" : "down"),
+-			ktime_to_us(ktime_sub(ktime_get(), start)), ret);
+ 	return ret;
+ }
+ 
+@@ -1106,35 +1129,36 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, bool scale_up)
+ 
+ 	ret = ufshcd_clock_scaling_prepare(hba);
+ 	if (ret)
+-		return ret;
++		goto out;
+ 
+ 	/* scale down the gear before scaling down clocks */
+ 	if (!scale_up) {
+ 		ret = ufshcd_scale_gear(hba, false);
+ 		if (ret)
+-			goto out;
++			goto clk_scaling_unprepare;
+ 	}
+ 
+ 	ret = ufshcd_scale_clks(hba, scale_up);
+-	if (ret) {
+-		if (!scale_up)
+-			ufshcd_scale_gear(hba, true);
+-		goto out;
+-	}
++	if (ret)
++		goto scale_up_gear;
+ 
+ 	/* scale up the gear after scaling up clocks */
+ 	if (scale_up) {
+ 		ret = ufshcd_scale_gear(hba, true);
+ 		if (ret) {
+ 			ufshcd_scale_clks(hba, false);
+-			goto out;
++			goto clk_scaling_unprepare;
+ 		}
+ 	}
+ 
+-	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
++	goto clk_scaling_unprepare;
+ 
+-out:
++scale_up_gear:
++	if (!scale_up)
++		ufshcd_scale_gear(hba, true);
++clk_scaling_unprepare:
+ 	ufshcd_clock_scaling_unprepare(hba);
++out:
+ 	ufshcd_release(hba);
+ 	return ret;
+ }
+@@ -6251,7 +6275,7 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 
+ 	/* scale up clocks to max frequency before full reinitialization */
+-	ufshcd_scale_clks(hba, true);
++	ufshcd_set_clk_freq(hba, true);
+ 
+ 	err = ufshcd_hba_enable(hba);
+ 	if (err)
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-greg k-h
