@@ -2,160 +2,120 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD721C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E39C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986A320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6965E2077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:07:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SHXWde4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbgCPPF6 (ORCPT
+        id S1731779AbgCPPHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:05:58 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:43744 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731647AbgCPPF6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:05:58 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Mon, 16 Mar 2020 11:07:19 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55500 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731636AbgCPPHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:07:19 -0400
+Received: from zn.tnic (p200300EC2F06AB00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id AFEF32003B;
-        Mon, 16 Mar 2020 16:05:50 +0100 (CET)
-Date:   Mon, 16 Mar 2020 16:05:48 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: Re: [PATCH 2/2] dt-bindings: Document the Synopsys ARC HDMI TX
- bindings
-Message-ID: <20200316150548.GA25294@ravnborg.org>
-References: <20200316144647.10416-1-Eugeniy.Paltsev@synopsys.com>
- <20200316144647.10416-3-Eugeniy.Paltsev@synopsys.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F0CFA1EC0CD0;
+        Mon, 16 Mar 2020 16:07:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584371237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=GD2Ahrn2R5rUUvAa4JTLz4UOPMAsrHi8CDaz4s4yJSI=;
+        b=SHXWde4fDvWxBfVwik+iIXFlwqSwyFi9wb8Ysb5mMzITlhOyWeBCsXaD4rXksEukZi4a+N
+        alU2DEpPFyp2ipQRe5IX8a2/gP3yuxmLbgNH0PFR9q0lXEJ3ma6j3kleNaYAj8VHtRxPMX
+        mCwclVqLEcimypLTbgvdcqbReUybTew=
+From:   Borislav Petkov <bp@alien8.de>
+To:     X86 ML <x86@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: [PATCH] x86/amd_nb, char/amd64-agp: Use amd_nb_num() accessor
+Date:   Mon, 16 Mar 2020 16:07:25 +0100
+Message-Id: <20200316150725.925-1-bp@alien8.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316144647.10416-3-Eugeniy.Paltsev@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=jIQo8A4GAAAA:8
-        a=e5mUnYsNAAAA:8 a=M7aO59fNJ6i23PoMEtIA:9 a=OoSG_5CIhO75MOo9:21
-        a=GlqmvLfQ7YiL8mw-:21 a=CjuIK1q_8ugA:10 a=Lf5xNeLK5dgiOs8hzIjU:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugeniy.
+From: Borislav Petkov <bp@suse.de>
 
-On Mon, Mar 16, 2020 at 05:46:47PM +0300, Eugeniy Paltsev wrote:
-> This patch adds documentation of device tree bindings for the Synopsys
-> HDMI 2.0 TX encoder driver for ARC SoCs.
-> 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> ---
->  .../display/bridge/snps,arc-dw-hdmi.txt       | 73 +++++++++++++++++++
+... to find whether there are northbridges present on the system.
+This converts the last forgotten user and therefore, unexport
+amd_nb_misc_ids[] too.
 
-New bindings in DT Schema format please (.yaml files).
-We are working on migrating all bindings to DT Schema format.
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Michal Kubecek <mkubecek@suse.cz>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+---
+ arch/x86/include/asm/amd_nb.h | 1 -
+ arch/x86/kernel/amd_nb.c      | 4 +---
+ drivers/char/agp/amd64-agp.c  | 2 +-
+ 3 files changed, 2 insertions(+), 5 deletions(-)
 
-	Sam
+diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
+index 1ae4e5791afa..c7df20e78b09 100644
+--- a/arch/x86/include/asm/amd_nb.h
++++ b/arch/x86/include/asm/amd_nb.h
+@@ -12,7 +12,6 @@ struct amd_nb_bus_dev_range {
+ 	u8 dev_limit;
+ };
+ 
+-extern const struct pci_device_id amd_nb_misc_ids[];
+ extern const struct amd_nb_bus_dev_range amd_nb_bus_dev_ranges[];
+ 
+ extern bool early_is_amd_nb(u32 value);
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index 69aed0ebbdfc..b6b3297851f3 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -36,10 +36,9 @@ static const struct pci_device_id amd_root_ids[] = {
+ 	{}
+ };
+ 
+-
+ #define PCI_DEVICE_ID_AMD_CNB17H_F4     0x1704
+ 
+-const struct pci_device_id amd_nb_misc_ids[] = {
++static const struct pci_device_id amd_nb_misc_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_K8_NB_MISC) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_10H_NB_MISC) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_15H_NB_F3) },
+@@ -56,7 +55,6 @@ const struct pci_device_id amd_nb_misc_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
+ 	{}
+ };
+-EXPORT_SYMBOL_GPL(amd_nb_misc_ids);
+ 
+ static const struct pci_device_id amd_nb_link_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_15H_NB_F4) },
+diff --git a/drivers/char/agp/amd64-agp.c b/drivers/char/agp/amd64-agp.c
+index 594aee281977..b40edae32817 100644
+--- a/drivers/char/agp/amd64-agp.c
++++ b/drivers/char/agp/amd64-agp.c
+@@ -775,7 +775,7 @@ int __init agp_amd64_init(void)
+ 		}
+ 
+ 		/* First check that we have at least one AMD64 NB */
+-		if (!pci_dev_present(amd_nb_misc_ids)) {
++		if (!amd_nb_num()) {
+ 			pci_unregister_driver(&agp_amd64_pci_driver);
+ 			return -ENODEV;
+ 		}
+-- 
+2.21.0
 
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt
-> new file mode 100644
-> index 000000000000..d5e006b392cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt
-> @@ -0,0 +1,73 @@
-> +Synopsys DesignWare HDMI 2.0 TX encoder driver for ARC SoCs
-> +================================
-> +
-> +The HDMI transmitter is a Synopsys DesignWare HDMI 2.0 TX controller IP
-> +with a companion of Synopsys DesignWare HDMI 2.0 TX PHY IP.
-> +
-> +These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
-> +Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
-> +with the following device-specific properties.
-> +
-> +
-> +Required properties:
-> +
-> +- compatible : Shall contain
-> +  - "snps,dw-hdmi-hsdk" for HSDK4xD compatible HDMI TX
-> +
-> +- reg: See dw_hdmi.txt.
-> +- interrupts: HDMI interrupt number.
-> +- clocks: See dw_hdmi.txt.
-> +- clock-names: Must contain "iahb" and "isfr" as defined in dw_hdmi.txt.
-> +- ports: See dw_hdmi.txt. The DWC HDMI shall have one port numbered 0
-> +  corresponding to the video input of the controller and one port numbered 1
-> +  corresponding to its HDMI output.
-> +
-> +Example:
-> +
-> +hdmi: hdmi@0x10000 {
-> +	compatible = "snps,dw-hdmi-hsdk";
-> +	reg = <0x10000 0x10000>;
-> +	reg-io-width = <4>;
-> +	interrupts = <14>;
-> +	clocks = <&apbclk>, <&hdmi_pix_clk>;
-> +	clock-names = "iahb", "isfr";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			hdmi_enc_input: endpoint {
-> +				remote-endpoint = <&pgu_output>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +			hdmi_enc_out: endpoint {
-> +				remote-endpoint = <&hdmi_con>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +hdmi-out {
-> +	...
-> +
-> +	port {
-> +		hdmi_con: endpoint {
-> +			remote-endpoint = <&hdmi_enc_out>;
-> +		};
-> +	};
-> +};
-> +
-> +pgu {
-> +	...
-> +
-> +	port_o: port {
-> +		pgu_output: endpoint {
-> +			remote-endpoint = <&hdmi_enc_input>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.21.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
