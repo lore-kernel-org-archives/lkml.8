@@ -2,92 +2,107 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04630C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C488C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB29F205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0A320658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n7TUMxfS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAaQ7sIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732768AbgCPVow (ORCPT
+        id S1732776AbgCPVpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:44:52 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39348 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732652AbgCPVow (ORCPT
+        Mon, 16 Mar 2020 17:45:24 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:34940 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732652AbgCPVpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:44:52 -0400
-Received: by mail-pj1-f68.google.com with SMTP id d8so9373007pje.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 14:44:51 -0700 (PDT)
+        Mon, 16 Mar 2020 17:45:23 -0400
+Received: by mail-wr1-f45.google.com with SMTP id h4so2539986wru.2;
+        Mon, 16 Mar 2020 14:45:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=D3D+qRAc+7oS8J6Sb2B1Mz4hpBLBqFH8O13t3FcfVa4=;
-        b=n7TUMxfS05q1sAGxhXfS9KBXthw4r/gV1wXyY3/HpwXnOs+Yf4tGf5oszH9qukZVML
-         Woma4yNpxC5KWOU6oTIBDHv/5/ZOV5plbE8NVxCxOmEAK+nVWI0W/MmSWVPVSwDdtLha
-         skblwS0q9kA8z6T7FDwQcwTZJI1UofMPLd8rpqDlQPEwCp5TdX+CJh3xxCQGkTKFDLX6
-         lxXaJPjSxD8mLnFCjTOTifmCJ5qyABOPd/kHcOZDE077fAGrmFbdZD5eUu/aC8F8FGMq
-         cLG3FOnrfaRSlMtmlqvG0zr4Wtew6oQhNzY8Xm3csG5EPY3Fn56nbQAhcKNGnt+WVg7g
-         inrA==
+        h=from:to:cc:subject:date:message-id;
+        bh=FfPpdz9J4skN4p3S/CS6XKQcAy2N9kTf5vI/j49UlgQ=;
+        b=GAaQ7sIzdom1zPFBKBJ0qramzcEWfAyH6wS9FE+ctO79AA5zuhWW7MRnREov6Kktwu
+         /mHnCpJeGC75drCn3e/Q8Dtb9Mzf14q3VDmZezYiY4I+93u6imbwa7wbTrUlLJTj5SQJ
+         cQoHbDCNDSTgHyHM0EGIxzcYozCqYzIspCEl09cswre1F/5K9j/ytSnaI+KdtXc9EYqY
+         TWvu0HpUd0XPrVZvBHvD1Xc1JAT7o5CmGuxChluOBhoDO68/5eW4mss5VHCyONINDDs0
+         C/TENN3J48NEdjfWD1p6qDRqZg5EWvFAC13Jqjb+7awmdL/1uJKyZcENWgX31PY69q+m
+         cTGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D3D+qRAc+7oS8J6Sb2B1Mz4hpBLBqFH8O13t3FcfVa4=;
-        b=RCZsvzRWgLhMVAbnWeYVsv+eEhMRxwXQ1SEHI3jtemNVsbI6i8rt9PTvPwBR0oT6v/
-         SwmcLh98k/fu+z690kzEJxywGxQzBKa3NxW/vW3TFvGvpf8ZwhEE7feLR63O1IBeJx/h
-         1OEQckKsn5FLRIxoaurljv0O8ndpg7RYPM69Lxc4c0pFIJlOqLAQ61zRJwZMEoQwPrMY
-         oCQ3Dr8TIUa6iJqkgT1VVDg5J4I6T+ly7XzBuDFE5szpsXKLNo2YMe9J0esNZW6D3WrZ
-         izyS54jcQ0UjaqqtRT9L4zlBKeEdqY3KSzmuWsohbBTfmibvxJ/G1v5jOiWX4caGRse7
-         s7JA==
-X-Gm-Message-State: ANhLgQ1MwWy46aHGNFL/E5NevJE7SwhhPo8T/GvPCUcBkDa/ReChNSzD
-        W+snIboXAztoSEMrIgW2EDIQvOtO
-X-Google-Smtp-Source: ADFU+vs60R8/j/ZW6FCkLMviIra7UhFL+U4BLcl8OYqLfjSUIx79EqZSX89WiGJDT2CyWWVnFVsKfg==
-X-Received: by 2002:a17:902:b118:: with SMTP id q24mr1265410plr.0.1584395091130;
-        Mon, 16 Mar 2020 14:44:51 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id j1sm812274pfg.64.2020.03.16.14.44.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Mar 2020 14:44:51 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 14:45:06 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     robin.murphy@arm.com, m.szyprowski@samsung.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [RFC][PATCH] dma-mapping: align default segment_boundary_mask
- with dma_mask
-Message-ID: <20200316214506.GC18970@Asurada-Nvidia.nvidia.com>
-References: <20200314000007.13778-1-nicoleotsuka@gmail.com>
- <20200316124850.GB17386@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316124850.GB17386@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FfPpdz9J4skN4p3S/CS6XKQcAy2N9kTf5vI/j49UlgQ=;
+        b=LypnkhnfhRtSlTg9rAkNy5W1q9dq2gIFUWabEZvmk7ofT0Gk0Q3zXc4p9kMSXt+nOp
+         KWK5d4Vqo/MXnz2aW0oatXcjA+zFxKkjlV5iwEry/2XZUpTxa4vaSCE7cs1jt8/jCZbm
+         BhayW3XNq92w0McU9lk8uE8Qcx3qozr6X2m/YXMDsdf1bhpA0xZDBVdZvlF55gVlikE9
+         2HjeVI+GXwg/qQcKT/2qtMDgaq1k/69idZThwtlrMSVkPzSTBdrVlcSuVLng0QZNuFx3
+         fbCYNBYWN7qO8hV5Wanm1drqd7uZticM+hwbAX3Hv8g00NXGZDxUS0xNul8TyLCEdM+A
+         sMNQ==
+X-Gm-Message-State: ANhLgQ12diOX8drcmC1/SUUAviSUAH4luVdnLqt9QzM1/Cu75wtS7LYN
+        KpaXGKSu3XdYHIKtdzgn6Rc=
+X-Google-Smtp-Source: ADFU+vuMlY3kwzXXs69D6CZI4m87gdH5XYJab7g0mZaWj3MEXEhiTPue0pxPxGqNDw2y4S0PE1VxXw==
+X-Received: by 2002:a5d:5741:: with SMTP id q1mr1394313wrw.169.1584395121578;
+        Mon, 16 Mar 2020 14:45:21 -0700 (PDT)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a13sm1625676wrh.80.2020.03.16.14.45.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 16 Mar 2020 14:45:21 -0700 (PDT)
+From:   Doug Berger <opendmb@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
+Subject: [PATCH net 0/2] net: bcmgenet: revisit MAC reset
+Date:   Mon, 16 Mar 2020 14:44:54 -0700
+Message-Id: <1584395096-41674-1-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Commit 3a55402c9387 ("net: bcmgenet: use RGMII loopback for MAC 
+reset") was intended to resolve issues with reseting the UniMAC
+core within the GENET block by providing better control over the
+clocks used by the UniMAC core. Unfortunately, it is not
+compatible with all of the supported system configurations so an
+alternative method must be applied.
 
-On Mon, Mar 16, 2020 at 01:48:50PM +0100, Christoph Hellwig wrote:
-> On Fri, Mar 13, 2020 at 05:00:07PM -0700, Nicolin Chen wrote:
-> > @@ -736,7 +736,7 @@ static inline unsigned long dma_get_seg_boundary(struct device *dev)
-> >  {
-> >  	if (dev->dma_parms && dev->dma_parms->segment_boundary_mask)
-> >  		return dev->dma_parms->segment_boundary_mask;
-> > -	return DMA_BIT_MASK(32);
-> > +	return (unsigned long)dma_get_mask(dev);
-> 
-> Just thinking out loud after my reply - shouldn't we just return ULONG_MAX
-> by default here to mark this as no limit?
+This commit set provides such an alternative. The first commit
+reverts the previous change and the second commit provides the
+alternative reset sequence that addresses the concerns observed
+with the previous implementation.
 
-Yea, ULONG_MAX (saying no limit) sounds good to me.
+This replacement implementation should be applied to the stable
+branches wherever commit 3a55402c9387 ("net: bcmgenet: use RGMII 
+loopback for MAC reset") has been applied.
+
+Unfortunately, reverting that commit may conflict with some
+restructuring changes introduced by commit 4f8d81b77e66 ("net: 
+bcmgenet: Refactor register access in bcmgenet_mii_config").
+The first commit in this set has been manually edited to
+resolve the conflict on net/master. I would be happy to help
+stable maintainers with resolving any such conflicts if they
+occur. However, I do not expect that commit to have been
+backported to stable branch so hopefully the revert can be
+applied cleanly.
+
+Doug Berger (2):
+  Revert "net: bcmgenet: use RGMII loopback for MAC reset"
+  net: bcmgenet: keep MAC in reset until PHY is up
+
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 10 +++---
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |  6 +++-
+ drivers/net/ethernet/broadcom/genet/bcmmii.c       | 40 ++++------------------
+ 3 files changed, 16 insertions(+), 40 deletions(-)
+
+-- 
+2.7.4
+
