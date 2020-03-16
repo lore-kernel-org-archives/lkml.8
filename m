@@ -2,100 +2,77 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB40C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345E3C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4A4920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:36:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Gn7gCvG7"
+	by mail.kernel.org (Postfix) with ESMTP id 01EE320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732583AbgCPUgn (ORCPT
+        id S1732600AbgCPUhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:36:43 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59583 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732486AbgCPUgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:36:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48h7Ph4dHrz9sNg;
-        Tue, 17 Mar 2020 07:36:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584391000;
-        bh=E1U0xLByz95YzR7wQ4JTZLnx+6/JTGLTX9JJ8HDDy+4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Gn7gCvG7273154JZNU6BrZ/vDeU1vVK1IFLAloT5JNe7ihOccVHXDEc3xItWKI37E
-         qbRWPLoHwDoJJIPQknxigoUO2yVdYYmWyIJ4Xq8jZQjdeBAHSIGX/x2pl8SrQSSzK6
-         yVPu0ZRicpbLBA0nOK8Dx8yrD4edmkNkg5v4VSIfJmsG2n4LskfDCNaj+f+inc6kvf
-         aOYiXqahEOeSRBnFw84Xsj5fgKfajho1zVu+Qq3jsj96XFT0A2fIrHSpdOmxS5s/Zj
-         U9cAoDF3arw27/S5Z57cPg2OIAW0d4BcrOjFUI+mkz86A+XzCIQdmcnrVId2WpwJyt
-         gGVRd34a9yRaw==
-Date:   Tue, 17 Mar 2020 07:36:34 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: linux-next: Fixes tag needs some work in the kvm tree
-Message-ID: <20200317073634.318d875c@canb.auug.org.au>
+        Mon, 16 Mar 2020 16:37:06 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:53163 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732486AbgCPUhF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 16:37:05 -0400
+Received: by mail-il1-f200.google.com with SMTP id d2so14965994ilf.19
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 13:37:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=1hH1v+Hs6ExwOL7AfjVRT/RqaQ0mSQnFpD6JFW1tz+I=;
+        b=truSzvmoc0tge4792Sd1xAX7mYWoMv/7pBD2Hs3f7sLSvtoQEpO5WEDhI/HPMOB2lZ
+         AgQa47RjkPfj9u0VXtRw+O3rZsRQlZwLXARxVCqxe010iP81FV7ctwS3tlzIVNJc+3cu
+         yGZok6goq/LL4G+pITimpjkQ2FlIBAuwN/8zXJgR1ldeafv941ujxetUKV7BPSVftlNm
+         mbkFCtfs4RjiqUkFOwEMNtR8KAck6bSNo19W2iG7Dk7S4GrhDMzkrB+AorHtG2tyqHRr
+         BO38arMINXQ1gynRqkR01Vm8t/5VG1aFN13tXB1Qywf5G+Oy/d2Yet9T5POHTnbdtHDG
+         pcvQ==
+X-Gm-Message-State: ANhLgQ3OKbjd2SA6gQF/RNkpFIPSUuYYS+rohrvRbYveKrFau8Ofk+mW
+        PQ1zIaJAnvb2P/7Ew1AioEUkviU0ZEYDb+jEmIDvxMzTQiNF
+X-Google-Smtp-Source: ADFU+vs5BTmNxfX+DRGldsrsvnJV06VNfn+AsRVzOB9z+p6kQcf3sjK3v84T6pJ1Ez7LwBfk7CSAu9s6QRJmdMon1TgVX09wHH8C
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6OgdvJYICiguUsDS=HAoZpN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a5d:8555:: with SMTP id b21mr857105ios.200.1584391024933;
+ Mon, 16 Mar 2020 13:37:04 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 13:37:04 -0700
+In-Reply-To: <0000000000003a2af3059905d1dc@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003a06e005a0fec8cc@google.com>
+Subject: Re: INFO: task hung in paste_selection
+From:   syzbot <syzbot+a172213a651850d94cf2@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com, jslaby@suse.cz,
+        linux-kernel@vger.kernel.org, okash.khawaja@gmail.com,
+        samuel.thibault@ens-lyon.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6OgdvJYICiguUsDS=HAoZpN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+syzbot suspects this bug was fixed by commit:
 
-Hi all,
+commit e8c75a30a23c6ba63f4ef6895cbf41fd42f21aa2
+Author: Jiri Slaby <jslaby@suse.cz>
+Date:   Fri Feb 28 11:54:06 2020 +0000
 
-In commit
+    vt: selection, push sel_lock up
 
-  abbed4fa94f6 ("KVM: x86: Fix warning due to implicit truncation on 32-bit=
- KVM")
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14aada1de00000
+start commit:   ae4b064e Merge tag 'afs-fixes-20191211' of git://git.kerne..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
+dashboard link: https://syzkaller.appspot.com/bug?extid=a172213a651850d94cf2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13bf312ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=116cce46e00000
 
-Fixes tag
+If the result looks correct, please mark the bug fixed by replying with:
 
-  Fixes: a3e967c0b87d3 ("KVM: Terminate memslot walks via used_slots"
+#syz fix: vt: selection, push sel_lock up
 
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: 0577d1abe704 ("KVM: Terminate memslot walks via used_slots")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6OgdvJYICiguUsDS=HAoZpN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5v41IACgkQAVBC80lX
-0Gzxzwf9HQtaXf5Bs9skXDKbSipPsKnC/xa7uyHpEo9n83bZWiBCOrpxiTG0H8TA
-Yp/HSPgkgXcbQFn6q+3fx1K3YUrq0JLoz+YBya4sIjCYyqVzRuOXvRwdlCHpXz3C
-G+Jx6osECD1CMln5u2znfQk17qLpoKW4fQKVXZUdVuBFm2hV4naUI25J47znP7pJ
-vqFeC3l4TIBzKo3zEnQDwwgU+x+2gZ+F50J9YwE6uecf7stJ7SSQHFCe1cIqlBgP
-txsq8nPy0jXDbN+ifohbPsQOCW5TfWqoSEXCwm2q8ilkyMqGNP/rTPCbQHtRvLiQ
-akbILx1xSlFy2qh5Jy9ZwDsMBP484A==
-=b46K
------END PGP SIGNATURE-----
-
---Sig_/6OgdvJYICiguUsDS=HAoZpN--
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
