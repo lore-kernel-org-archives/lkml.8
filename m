@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68D4C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA069C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B214D20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A501220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:41:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="ZF3Y52u0"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="PA43uhLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgCPOlN (ORCPT
+        id S1731788AbgCPOlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:41:13 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39435 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731622AbgCPOlM (ORCPT
+        Mon, 16 Mar 2020 10:41:18 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45944 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731780AbgCPOlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:41:12 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d25so2050767pfn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:41:12 -0700 (PDT)
+        Mon, 16 Mar 2020 10:41:17 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m15so9863126pgv.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:41:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CVarNpQRd3enJr5skp5lLNjTv2pf6YOr11ML5pu2Yek=;
-        b=ZF3Y52u0OpJFPh48STHyOdMrekImctJYB/6uj1vEXJ0lk+iSEJXgw2qkzr1AWPELv+
-         ngBiNYbxAbLJ5lTSqe8ljYaFGBMDfeMWeh7Se4+hRCjx1JfWdZgDmtyUt2BGjUUgRQK0
-         dU1ciDrApj/+1TcPtjLR7fk8i7FtEq/8zl+inlyUw9CRUHOLFocsVZmFGW5RejO+mYQ9
-         YyYmKU5mdojSRhRKJBCpnJLqnIzuAKOYmCwk+HnkxLVx9gtQ9DvEXQ/qOv+3VH5iiNc5
-         KNJdUQVpy1XWJtF/3e8WeAiStQOJXJ7dvvst4q3caxZ0rKwBHxGtRKEjy/d8RCyrlezL
-         08Jg==
+        bh=Ec/qljJseUj42+qXdMKQ/Cdd1Nw68u70B1BF4qO5fFk=;
+        b=PA43uhLJ4dV67BS6HBUW1ccyCma3ss0jBNt5wlVS4LOxSfNPNL/IWaKkGVIUVjAaFC
+         nbfLb3nxu/T8w91QAEqS91k6z48VGZruAaM3bf59RowqJMsQUAuUZHntA45bT6+xHSFr
+         TTW5IOs5I0KKhKbW5IVXXpXO+3joJjfP4mECiOi+TSCpENvT6YZKjDeIqpstPxDxURaY
+         iiPoUqUWHnt4Eij8NLaw0V3Xf4QoJpYDhrTN939zuVNpTB9SCHIEKKMDidgHPkxXSMsy
+         WLJVfutOCTbKWle2w+hxBnA1rOZbPKqTnd6LnFPg1TQterEsldTsSp1POiKrWb9/2CWs
+         hHyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CVarNpQRd3enJr5skp5lLNjTv2pf6YOr11ML5pu2Yek=;
-        b=U7s6pqTAnSJHbu9QUnOXUUNuoAK2Sb7xP90xC11NmClVfgEp76V6DY8yVtGLoHjeW2
-         1jcyqxfRrc6/v46zYsteLK9f/UeYfDhJLNFeZZj+a9VXx3mx2D67qU1u1rWKNeqU/+hK
-         eVYidyz19iZaBg3jSopE3oBjbLVL3FzQKyY4eEyGC86KHk4lwzQUli2Fk1hzHR+TY4r3
-         GvWKIjWNpPbAirqa382Zrw+CbggcZEDi874Bq9xRspHJGGRLTS4mWJLuYzu/NqtJzZ2E
-         zx1f2ExUcULJF0JNLJV6T6msJPJXXUiCGRBVlbOfNyBCCrbFSlhLlkG9ymiI0eUE+XK9
-         kM0A==
-X-Gm-Message-State: ANhLgQ0ADnDhpsiA46timCHtlVvYdj/JtNj+cRSVj8g6l+viUnp5CDfV
-        CMk4Rx+bvl9iYqpbmKx0Uml11VAyZx84zw==
-X-Google-Smtp-Source: ADFU+vvrqZsjgKaBKROAwghGj2fq8+QLQkRmkD+WDTlJ3KuKLvlnh4/ky0QMhz20b0zlLt+YBMTwXA==
-X-Received: by 2002:a65:6446:: with SMTP id s6mr186277pgv.5.1584369671473;
-        Mon, 16 Mar 2020 07:41:11 -0700 (PDT)
+        bh=Ec/qljJseUj42+qXdMKQ/Cdd1Nw68u70B1BF4qO5fFk=;
+        b=GEGSvRYzSTXBfTUOMZvmHakfHIvuu7wVM65Hk9iD9XoW4OKFpcp+Qzj54yPSAuUnc8
+         ubBzzOgTpBiKgz03OOtUnINmMVnRP3BnfGEepl9Pt76FECKEMTYWJVlVBVzoPAXPgQju
+         XXIGr+FZHhLe9hkg68uVlTaactc4Zgxlm9PpwK24UblkoU1vAfRJci9K07E4LyRE87jY
+         N1SVKjsct9lmD56MhwZhZtoFjt4F5VGg368wGKV5Dfquc5dVwKCTICu3K885R0EhEunI
+         HjB0QM0P8eSP6xfu+KJL0ViOatXOiv/PDaO86FHify6VaP26LntVhh9phrAqrsb1YwXg
+         haEA==
+X-Gm-Message-State: ANhLgQ21ekshTJLjAyFXJ4QewRi2S16QxSjhGlwWNvpk8G/6YUOsCETi
+        Cxk1y2wRBjb6qkJ25bcqX56dhYKVQP9bYA==
+X-Google-Smtp-Source: ADFU+vv9fNvlM9VkE8msbeFBPvyd020Kc7WOA9oT9awJJ2vvJOtgZ7ZP3GfmK6w+s097m3AxgtVHNg==
+X-Received: by 2002:aa7:961c:: with SMTP id q28mr9311527pfg.177.1584369675909;
+        Mon, 16 Mar 2020 07:41:15 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.41.07
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.41.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:41:10 -0700 (PDT)
+        Mon, 16 Mar 2020 07:41:15 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,10 +67,12 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Michal Simek <monstr@monstr.eu>
-Subject: [PATCHv2 20/50] microblaze: Add show_stack_loglvl()
-Date:   Mon, 16 Mar 2020 14:38:46 +0000
-Message-Id: <20200316143916.195608-21-dima@arista.com>
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org
+Subject: [PATCHv2 21/50] mips: Add show_stack_loglvl()
+Date:   Mon, 16 Mar 2020 14:38:47 +0000
+Message-Id: <20200316143916.195608-22-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -100,60 +102,142 @@ Also, it will consolidate printings with headers.
 Introduce show_stack_loglvl(), that eventually will substitute
 show_stack().
 
-Cc: Michal Simek <monstr@monstr.eu>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@vger.kernel.org
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/microblaze/kernel/traps.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ arch/mips/kernel/traps.c | 41 +++++++++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
 
-diff --git a/arch/microblaze/kernel/traps.c b/arch/microblaze/kernel/traps.c
-index be726ee120fb..149ae534937e 100644
---- a/arch/microblaze/kernel/traps.c
-+++ b/arch/microblaze/kernel/traps.c
-@@ -31,7 +31,8 @@ static int __init kstack_setup(char *s)
+diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+index de05503c680c..077aabbd6b9f 100644
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -106,26 +106,26 @@ void (*board_bind_eic_interrupt)(int irq, int regset);
+ void (*board_ebase_setup)(void);
+ void(*board_cache_error_setup)(void);
+ 
+-static void show_raw_backtrace(unsigned long reg29)
++static void show_raw_backtrace(unsigned long reg29, const char *loglvl)
+ {
+ 	unsigned long *sp = (unsigned long *)(reg29 & ~3);
+ 	unsigned long addr;
+ 
+-	printk("Call Trace:");
++	printk("%sCall Trace:", loglvl);
+ #ifdef CONFIG_KALLSYMS
+-	printk("\n");
++	printk("%s\n", loglvl);
+ #endif
+ 	while (!kstack_end(sp)) {
+ 		unsigned long __user *p =
+ 			(unsigned long __user *)(unsigned long)sp++;
+ 		if (__get_user(addr, p)) {
+-			printk(" (Bad stack address)");
++			printk("%s (Bad stack address)", loglvl);
+ 			break;
+ 		}
+ 		if (__kernel_text_address(addr))
+-			print_ip_sym(KERN_DEFAULT, addr);
++			print_ip_sym(loglvl, addr);
+ 	}
+-	printk("\n");
++	printk("%s\n", loglvl);
  }
- __setup("kstack=", kstack_setup);
+ 
+ #ifdef CONFIG_KALLSYMS
+@@ -138,7 +138,8 @@ static int __init set_raw_show_trace(char *str)
+ __setup("raw_show_trace", set_raw_show_trace);
+ #endif
+ 
+-static void show_backtrace(struct task_struct *task, const struct pt_regs *regs)
++static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
++			   const char *loglvl)
+ {
+ 	unsigned long sp = regs->regs[29];
+ 	unsigned long ra = regs->regs[31];
+@@ -148,12 +149,12 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs)
+ 		task = current;
+ 
+ 	if (raw_show_trace || user_mode(regs) || !__kernel_text_address(pc)) {
+-		show_raw_backtrace(sp);
++		show_raw_backtrace(sp, loglvl);
+ 		return;
+ 	}
+-	printk("Call Trace:\n");
++	printk("%sCall Trace:\n", loglvl);
+ 	do {
+-		print_ip_sym(KERN_DEFAULT, pc);
++		print_ip_sym(loglvl, pc);
+ 		pc = unwind_stack(task, &sp, pc, &ra);
+ 	} while (pc);
+ 	pr_cont("\n");
+@@ -164,19 +165,19 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs)
+  * with at least a bit of error checking ...
+  */
+ static void show_stacktrace(struct task_struct *task,
+-	const struct pt_regs *regs)
++	const struct pt_regs *regs, const char *loglvl)
+ {
+ 	const int field = 2 * sizeof(unsigned long);
+ 	long stackdata;
+ 	int i;
+ 	unsigned long __user *sp = (unsigned long __user *)regs->regs[29];
+ 
+-	printk("Stack :");
++	printk("%sStack :", loglvl);
+ 	i = 0;
+ 	while ((unsigned long) sp & (PAGE_SIZE - 1)) {
+ 		if (i && ((i % (64 / field)) == 0)) {
+ 			pr_cont("\n");
+-			printk("       ");
++			printk("%s       ", loglvl);
+ 		}
+ 		if (i > 39) {
+ 			pr_cont(" ...");
+@@ -192,10 +193,11 @@ static void show_stacktrace(struct task_struct *task,
+ 		i++;
+ 	}
+ 	pr_cont("\n");
+-	show_backtrace(task, regs);
++	show_backtrace(task, regs, loglvl);
+ }
  
 -void show_stack(struct task_struct *task, unsigned long *sp)
 +void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
 +		       const char *loglvl)
  {
- 	unsigned long words_to_show;
- 	u32 fp = (u32) sp;
-@@ -50,7 +51,7 @@ void show_stack(struct task_struct *task, unsigned long *sp)
- 	if (kstack_depth_to_print && (words_to_show > kstack_depth_to_print))
- 		words_to_show = kstack_depth_to_print;
- 
--	pr_info("Kernel Stack:\n");
-+	printk("%sKernel Stack:\n", loglvl);
- 
- 	/*
- 	 * Make the first line an 'odd' size if necessary to get
-@@ -65,14 +66,19 @@ void show_stack(struct task_struct *task, unsigned long *sp)
- 			words_to_show -= line1_words;
- 		}
- 	}
--	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_ADDRESS, 32, 4, (void *)fp,
-+	print_hex_dump(loglvl, "", DUMP_PREFIX_ADDRESS, 32, 4, (void *)fp,
- 		       words_to_show << 2, 0);
--	pr_info("\n\nCall Trace:\n");
--	microblaze_unwind(task, NULL, KERN_INFO);
--	pr_info("\n");
-+	printk("%s\n\nCall Trace:\n", loglvl);
-+	microblaze_unwind(task, NULL, loglvl);
-+	printk("%s\n", loglvl);
- 
- 	if (!task)
- 		task = current;
- 
- 	debug_show_held_locks(task);
+ 	struct pt_regs regs;
+ 	mm_segment_t old_fs = get_fs();
+@@ -219,10 +221,15 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+ 	 * the stack in the kernel (not user) address space.
+ 	 */
+ 	set_fs(KERNEL_DS);
+-	show_stacktrace(task, &regs);
++	show_stacktrace(task, &regs, loglvl);
+ 	set_fs(old_fs);
  }
-+
+ 
 +void show_stack(struct task_struct *task, unsigned long *sp)
 +{
-+	show_stack_loglvl(task, sp, KERN_INFO);
++	show_stack_loglvl(task, sp, KERN_DEFAULT)
 +}
++
+ static void show_code(unsigned int __user *pc)
+ {
+ 	long i;
+@@ -371,7 +378,7 @@ void show_registers(struct pt_regs *regs)
+ 	if (!user_mode(regs))
+ 		/* Necessary for getting the correct stack content */
+ 		set_fs(KERNEL_DS);
+-	show_stacktrace(current, regs);
++	show_stacktrace(current, regs, KERN_DEFAULT);
+ 	show_code((unsigned int __user *) regs->cp0_epc);
+ 	printk("\n");
+ 	set_fs(old_fs);
 -- 
 2.25.1
 
