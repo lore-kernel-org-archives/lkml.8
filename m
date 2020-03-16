@@ -2,99 +2,170 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECFDC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDBAC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7193120674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD97920575
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cGUYkrmw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o3xuur4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgCPGNb (ORCPT
+        id S1729555AbgCPGZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:13:31 -0400
-Received: from ozlabs.org ([203.11.71.1]:55291 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbgCPGNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:13:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 16 Mar 2020 02:25:36 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25485 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729455AbgCPGZg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 02:25:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584339935; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=UyuhZmeVdghEkFGq1LyGqfP9NwpUlzrusHvbYNXKk6I=;
+ b=o3xuur4ysC/sooWt65toZNBn58nss0YrmXesoHxfJjL1U9eThLW1njrB731pd/1SBl5pNg1V
+ nVtDTls9VeNw3I+ty84kCxZ/QSwtmI2xT9b4C49GWtb/AY7nWTZ6J0w1zAkyUZ/eKfP888Y+
+ nrFrFbmhLtbfHnG/pcnS9CtbKLc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6f1bde.7f142f8219d0-smtp-out-n01;
+ Mon, 16 Mar 2020 06:25:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E502CC43637; Mon, 16 Mar 2020 06:25:32 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gmFh4nSDz9sP7;
-        Mon, 16 Mar 2020 17:13:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584339208;
-        bh=R+csjcOqNqi7S115Kcf8DsKcsipg4+MKhtDLsAEzD78=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cGUYkrmw995IVpdSjxqX8ef2uo5KKRDfxULYBIe6tsKRlJGVLO7iOiycaAdKPpvU7
-         KfMfAoYlVfU56uP0LkLZQou/I14RxodF1d605Ymf8UiOiJl3IU6fUrGz8UZ1XTmt5U
-         tRxdsAgayoqp1n5o8tQGiuoDCkB6Hvkbxyq18fgWCQfzbLNGJTUf7MXfcqX4i2sMgh
-         EA56Hqp4zu+PLZTTppnd8pXdJ0wy0RDR4ZV2keyQX89cGzHlhu5kD2M7rEjPD20HC1
-         6Sat5omINJzwKNF8lnO/gWbnIAAE6sI2UI5sBMypdrRoqw9Aff8OMn0dznMlEeXNGZ
-         Va0RaPSt9+A+g==
-Date:   Mon, 16 Mar 2020 17:13:26 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200316171326.7ee3eebd@canb.auug.org.au>
-In-Reply-To: <20200316045804.GC3486@MiWiFi-R3L-srv>
-References: <20200313214214.4d2e2af6@canb.auug.org.au>
-        <20200316045804.GC3486@MiWiFi-R3L-srv>
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 83A43C433CB;
+        Mon, 16 Mar 2020 06:25:31 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/92b7T1mW=iE4ZvhDpnm80gA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 16 Mar 2020 14:25:31 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.peter~sen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+Subject: Re: [PATCH v5 2/8] scsi: ufs: remove init_prefetch_data in struct
+ ufs_hba
+In-Reply-To: <20200316034218.11914-3-stanley.chu@mediatek.com>
+References: <20200316034218.11914-1-stanley.chu@mediatek.com>
+ <20200316034218.11914-3-stanley.chu@mediatek.com>
+Message-ID: <51fde835f4f03fcca6e83ba6d3579f2e@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/92b7T1mW=iE4ZvhDpnm80gA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020-03-16 11:42, Stanley Chu wrote:
+> Struct init_prefetch_data currently is used privately in
+> ufshcd_init_icc_levels(), thus it can be removed from struct ufs_hba.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+> Reviewed-by: Avri Altman <avri.altman@wdc.com>
 
-Hi Baoquan,
+Hi Stanley,
 
-On Mon, 16 Mar 2020 12:58:04 +0800 Baoquan He <bhe@redhat.com> wrote:
->
-> I made a patch to fix these warnings, the reason has been told in the
-> log. Or just drop below patch. Both is fine to me.
->=20
-> mm-sparsec-move-subsection_map-related-functions-together.patch
->=20
-> From 273196eeb7bbc4af93bef18f594af91541e3ce8a Mon Sep 17 00:00:00 2001
-> From: Baoquan He <bhe@redhat.com>
-> Date: Sat, 14 Mar 2020 17:01:01 +0800
-> Subject: [PATCH] mm/sparse.c: move functions into CONFIG_MEMORY_HOTPLUG
->  ifdeffery scope
+Earlier, I have one similar patch for this, but it does more than this.
+Please check the mail I just sent.
 
-I have applied this to linux-next today to see how it goes.
+Thanks,
+Can Guo.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/92b7T1mW=iE4ZvhDpnm80gA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5vGQYACgkQAVBC80lX
-0GyY1QgAnoF4yv+kGFQApYoLlk6Xa5EYqNPdge0oJf2Vbu8SbrnM4u86OSmJo9GC
-GHWWrDvyDlwRG0Jizl2Y5ETcT9o/t7Nxh8mZV5mB2arKZHEQvZP37r6iL3wRCbjx
-AYQSkKnR6CRVdF6OWW65mfnlAN+yCF9qgO5YtcJ/0Zs7O+lm8UuntxvbOlmX0L92
-zLkMfy2t5xrb/jXNL4dqMp+1wH8YQo6FxsaarP9AljwQoQY/ClI4RjdN5vVuEmV2
-AOiyguQn8VxjjP666fzCBRE4BIL7wiepemamjBTXvJ/SbEGlueiWec2diFskVLLh
-V6L1p12uTzb/Zue7jmKFU84HFWP7pw==
-=Zr0I
------END PGP SIGNATURE-----
-
---Sig_/92b7T1mW=iE4ZvhDpnm80gA--
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 15 ++++++---------
+>  drivers/scsi/ufs/ufshcd.h | 11 -----------
+>  2 files changed, 6 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 314e808b0d4e..b4988b9ee36c 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -6501,6 +6501,7 @@ static void ufshcd_init_icc_levels(struct ufs_hba 
+> *hba)
+>  {
+>  	int ret;
+>  	int buff_len = hba->desc_size.pwr_desc;
+> +	u32 icc_level;
+>  	u8 *desc_buf;
+> 
+>  	desc_buf = kmalloc(buff_len, GFP_KERNEL);
+> @@ -6516,21 +6517,17 @@ static void ufshcd_init_icc_levels(struct 
+> ufs_hba *hba)
+>  		goto out;
+>  	}
+> 
+> -	hba->init_prefetch_data.icc_level =
+> -			ufshcd_find_max_sup_active_icc_level(hba,
+> -			desc_buf, buff_len);
+> -	dev_dbg(hba->dev, "%s: setting icc_level 0x%x",
+> -			__func__, hba->init_prefetch_data.icc_level);
+> +	icc_level =
+> +		ufshcd_find_max_sup_active_icc_level(hba, desc_buf, buff_len);
+> +	dev_dbg(hba->dev, "%s: setting icc_level 0x%x",	__func__, icc_level);
+> 
+>  	ret = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
+> -		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0,
+> -		&hba->init_prefetch_data.icc_level);
+> +		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0, &icc_level);
+> 
+>  	if (ret)
+>  		dev_err(hba->dev,
+>  			"%s: Failed configuring bActiveICCLevel = %d ret = %d",
+> -			__func__, hba->init_prefetch_data.icc_level , ret);
+> -
+> +			__func__, icc_level, ret);
+>  out:
+>  	kfree(desc_buf);
+>  }
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 5c10777154fc..5cf79d2319a6 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -402,15 +402,6 @@ struct ufs_clk_scaling {
+>  	bool is_suspended;
+>  };
+> 
+> -/**
+> - * struct ufs_init_prefetch - contains data that is pre-fetched once 
+> during
+> - * initialization
+> - * @icc_level: icc level which was read during initialization
+> - */
+> -struct ufs_init_prefetch {
+> -	u32 icc_level;
+> -};
+> -
+>  #define UFS_ERR_REG_HIST_LENGTH 8
+>  /**
+>   * struct ufs_err_reg_hist - keeps history of errors
+> @@ -541,7 +532,6 @@ enum ufshcd_quirks {
+>   * @intr_mask: Interrupt Mask Bits
+>   * @ee_ctrl_mask: Exception event control mask
+>   * @is_powered: flag to check if HBA is powered
+> - * @init_prefetch_data: data pre-fetched during initialization
+>   * @eh_work: Worker to handle UFS errors that require s/w attention
+>   * @eeh_work: Worker to handle exception events
+>   * @errors: HBA errors
+> @@ -627,7 +617,6 @@ struct ufs_hba {
+>  	u32 intr_mask;
+>  	u16 ee_ctrl_mask;
+>  	bool is_powered;
+> -	struct ufs_init_prefetch init_prefetch_data;
+> 
+>  	/* Work Queues */
+>  	struct work_struct eh_work;
