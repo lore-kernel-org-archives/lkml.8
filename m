@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966F2C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF52C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC4720719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DFBC20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dhJGWj51"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iU+T52/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730141AbgCPI3F (ORCPT
+        id S1730155AbgCPI3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:29:05 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41819 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729662AbgCPI3E (ORCPT
+        Mon, 16 Mar 2020 04:29:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37982 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729662AbgCPI3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:29:04 -0400
-Received: by mail-pf1-f193.google.com with SMTP id z65so9509007pfz.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:29:03 -0700 (PDT)
+        Mon, 16 Mar 2020 04:29:13 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x7so9329629pgh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:29:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XoP+srWl8SMi8ME7E8J0z0jrymSLuVtgaOt9BSrS2Lo=;
-        b=dhJGWj51/N03rIS4wKXDNhmOaM6UnPNG+Wt85ubeB/ZOH5dRqtuUyiQs/6n2wtiJwX
-         ERYQv500bcuY1KRY/kZ7MDUd4so7EA8roFaON4zK7a3gCVBeDJqqOsn+PHIGBBF+1ZaB
-         ivlGdCprgn4GD6oLgKHaE9Na8sGF0ScEzVKCQ=
+        bh=FJTNnQMVnN5ncpWAOlzehz8dsdNEt0BVgmpsICUkc+E=;
+        b=iU+T52/D1cDGl2VhHjSH/+5Xhqv+kPxQajLHOpTZTw4uFM/z9/9q9Hn110Pi3FKc3J
+         xwz7bcsiqUjARLtUrkHIDz7LXy1kI82ZDPxUx00U42yIcq1xct3qt+py3qPUlSPFX5qt
+         mgXH2kTk+ji7Qp3zE4giAAnBPJtmwQV6MbgMY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XoP+srWl8SMi8ME7E8J0z0jrymSLuVtgaOt9BSrS2Lo=;
-        b=D7G5D1+/cAkx7SFMvqEhHMqnrVItQ08MWzrl8kFY7ZFCZcCUrmInt3IcCokGgKIKfp
-         R30yIv6FgGUSgC0JJcPVun5j3433mKXtepJAVsDlBsuAv6K8/JOHLSfmkLQU1XD4jsIZ
-         I6Ek45cpCPgjxqzyNqN7i9RN5USheloEeMTFD0/0aiH+lbssswfNreQtQ0auiYRLc7pC
-         TUGgwT8txNu2keJPage2l8/ZFN3sQVvpv07hUqgv8vWRp0a74C9Wq6fYg2TCWDyrJJnl
-         RU1Ughqnal+OpJf6OaWPC1LiEK+KiKCI+j4vU6d5JtIPs7UupgGIXXXqRIsTMXpknhOq
-         R88g==
-X-Gm-Message-State: ANhLgQ03wo0hImJrfLLvI706atfMw8OW5kHwQgZaBNq2Qr1UgFfH0LaN
-        dCIetrNtLz25ObHi9MHmfKQaFhHhY+w=
-X-Google-Smtp-Source: ADFU+vuJqSwUwdlKcFpaH4S+Us2miDxu7scOYcj24greW1Pyf8QOtTKxg57OaSxEykYWly4qZ2+1rA==
-X-Received: by 2002:a62:fb06:: with SMTP id x6mr26720634pfm.149.1584347342528;
-        Mon, 16 Mar 2020 01:29:02 -0700 (PDT)
+        bh=FJTNnQMVnN5ncpWAOlzehz8dsdNEt0BVgmpsICUkc+E=;
+        b=jpy3CNpQgOeNv14kuxbzVweG0u8zXslm9JGXbXQmVHgfk4FGLnE4GqfGpScvkT+T5n
+         A56l1ESQNsx4Dhm8ZobcEDAlKuiPn3w1yrE34scaHHroOWE4juu5n4paQXCZcJP9/wCJ
+         /uS0UL3OpPcpNlqO5C/qriLuTbHbVHwyuuJc/ZdISUl62feN9BvkfpcYMMKzBn6CtJXu
+         ipuHoxxX6/dLBJJ+DP3alBzwkuwVQkaxHyzLFSbyOYeqmSY0Pkqvn85wrry19xMC1wvy
+         t5OLd9GGHR/iNx7w/wWefJO/u94i0Lb7gPjaeYGUhQcuGkNJR+dkDIz3iS0qrRnxqVZu
+         a8jg==
+X-Gm-Message-State: ANhLgQ2GRF9T4n2BbwZHMgIW6jJCcFcPLsLSf7PuIwRIwWE8/UtR5JIJ
+        bEFVO1KIrNKj1Gbrn8z7u+Fwy4S7sbs=
+X-Google-Smtp-Source: ADFU+vvxyh97TI+CoevlPOLmPV80vCMY2zPQ3f4LxIbqKaykZYJpUD3CeaUVXfzHVi0hhnD1kLgtsQ==
+X-Received: by 2002:a63:5f92:: with SMTP id t140mr26421777pgb.109.1584347352815;
+        Mon, 16 Mar 2020 01:29:12 -0700 (PDT)
 Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id p8sm7867846pff.26.2020.03.16.01.29.01
+        by smtp.gmail.com with ESMTPSA id p8sm7867846pff.26.2020.03.16.01.29.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 01:29:02 -0700 (PDT)
+        Mon, 16 Mar 2020 01:29:12 -0700 (PDT)
 From:   Prashant Malani <pmalani@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Prashant Malani <pmalani@chromium.org>,
         Benson Leung <bleung@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v2 2/3] platform/chrome: notify: Amend ACPI driver to plat
-Date:   Mon, 16 Mar 2020 01:28:32 -0700
-Message-Id: <20200316082831.242516-3-pmalani@chromium.org>
+Subject: [PATCH v2 3/3] platform/chrome: notify: Pull PD_HOST_EVENT status
+Date:   Mon, 16 Mar 2020 01:28:34 -0700
+Message-Id: <20200316082831.242516-4-pmalani@chromium.org>
 X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 In-Reply-To: <20200316082831.242516-1-pmalani@chromium.org>
 References: <20200316082831.242516-1-pmalani@chromium.org>
@@ -71,141 +71,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the ACPI driver into the equivalent platform driver, with the
-same ACPI match table as before. This allows the device driver to access
-the parent platform EC device and its cros_ec_device struct, which will
-be required to communicate with the EC to pull PD Host event information
-from it.
-
-Also change the ACPI driver name to "cros-usbpd-notify-acpi" so that
-there is no confusion between it and the "regular" platform driver on
-platforms that have both CONFIG_ACPI and CONFIG_OF enabled.
+Read the PD host even status from the EC and send that to the notifier
+listeners, for more fine-grained event information.
 
 Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
 
 Changes in v2:
-- Removed unrequired adev pointer checks, and a dev_info print.
+- Fixed variable declaration ordering.
+- Updated cros_ec_pd_command() to use standard Linux error codes.
 
- drivers/platform/chrome/cros_usbpd_notify.c | 71 +++++++++++++++++----
- 1 file changed, 59 insertions(+), 12 deletions(-)
+ drivers/platform/chrome/cros_usbpd_notify.c | 86 ++++++++++++++++++++-
+ 1 file changed, 83 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
-index 99cc245354ae7..5507d93c0ce7b 100644
+index 5507d93c0ce7b..59df762b5e6d7 100644
 --- a/drivers/platform/chrome/cros_usbpd_notify.c
 +++ b/drivers/platform/chrome/cros_usbpd_notify.c
-@@ -12,6 +12,7 @@
- #include <linux/platform_device.h>
+@@ -53,11 +53,90 @@ void cros_usbpd_unregister_notify(struct notifier_block *nb)
+ }
+ EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
  
- #define DRV_NAME "cros-usbpd-notify"
-+#define DRV_NAME_PLAT_ACPI "cros-usbpd-notify-acpi"
- #define ACPI_DRV_NAME "GOOG0003"
- 
- static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
-@@ -54,14 +55,61 @@ EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
- 
- #ifdef CONFIG_ACPI
- 
--static int cros_usbpd_notify_add_acpi(struct acpi_device *adev)
-+static void cros_usbpd_notify_acpi(acpi_handle device, u32 event, void *data)
- {
++/**
++ * cros_ec_pd_command - Send a command to the EC.
++ *
++ * @ec_dev: EC device
++ * @command: EC command
++ * @outdata: EC command output data
++ * @outsize: Size of outdata
++ * @indata: EC command input data
++ * @insize: Size of indata
++ *
++ * Return: >= 0 on success, negative error number on failure.
++ */
++static int cros_ec_pd_command(struct cros_ec_device *ec_dev,
++			      int command,
++			      uint8_t *outdata,
++			      int outsize,
++			      uint8_t *indata,
++			      int insize)
++{
++	struct cros_ec_command *msg;
++	int ret;
++
++	msg = kzalloc(sizeof(*msg) + max(insize, outsize), GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++
++	msg->command = command;
++	msg->outsize = outsize;
++	msg->insize = insize;
++
++	if (outsize)
++		memcpy(msg->data, outdata, outsize);
++
++	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
++	if (ret < 0)
++		goto error;
++
++	if (insize)
++		memcpy(indata, msg->data, insize);
++error:
++	kfree(msg);
++	return ret;
++}
++
++static void cros_usbpd_get_event_and_notify(struct device  *dev,
++					    struct cros_ec_device *ec_dev)
++{
++	struct ec_response_host_event_status host_event_status;
++	u32 event = 0;
++	int ret;
++
++	/*
++	 * We still send a 0 event out to older devices which don't
++	 * have the updated device heirarchy.
++	 */
++	if (!ec_dev) {
++		dev_dbg(dev,
++			"EC device inaccessible; sending 0 event status.\n");
++		goto send_notify;
++	}
++
++	/* Check for PD host events on EC. */
++	ret = cros_ec_pd_command(ec_dev, EC_CMD_PD_HOST_EVENT_STATUS,
++				 NULL, 0,
++				 (uint8_t *)&host_event_status,
++				 sizeof(host_event_status));
++	if (ret < 0) {
++		dev_warn(dev, "Can't get host event status (err: %d)\n", ret);
++		goto send_notify;
++	}
++
++	event = host_event_status.status;
++
++send_notify:
 +	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
 +}
 +
-+static int cros_usbpd_notify_probe_acpi(struct platform_device *pdev)
-+{
-+	struct cros_usbpd_notify_data *pdnotify;
-+	struct device *dev = &pdev->dev;
-+	struct acpi_device *adev;
-+	struct cros_ec_device *ec_dev;
-+	acpi_status status;
-+
-+	adev = ACPI_COMPANION(dev);
-+
-+	pdnotify = devm_kzalloc(dev, sizeof(*pdnotify), GFP_KERNEL);
-+	if (!pdnotify)
-+		return -ENOMEM;
-+
-+	/* Get the EC device pointer needed to talk to the EC. */
-+	ec_dev = dev_get_drvdata(dev->parent);
-+	if (!ec_dev) {
-+		/*
-+		 * We continue even for older devices which don't have the
-+		 * correct device heirarchy, namely, GOOG0003 is a child
-+		 * of GOOG0004.
-+		 */
-+		dev_warn(dev, "Couldn't get Chrome EC device pointer.\n");
-+	}
-+
-+	pdnotify->dev = dev;
-+	pdnotify->ec = ec_dev;
-+
-+	status = acpi_install_notify_handler(adev->handle,
-+					     ACPI_ALL_NOTIFY,
-+					     cros_usbpd_notify_acpi,
-+					     pdnotify);
-+	if (ACPI_FAILURE(status)) {
-+		dev_warn(dev, "Failed to register notify handler %08x\n",
-+			 status);
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
+ #ifdef CONFIG_ACPI
  
--static void cros_usbpd_notify_acpi(struct acpi_device *adev, u32 event)
-+static int cros_usbpd_notify_remove_acpi(struct platform_device *pdev)
+ static void cros_usbpd_notify_acpi(acpi_handle device, u32 event, void *data)
  {
 -	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
-+	struct device *dev = &pdev->dev;
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
++	struct cros_usbpd_notify_data *pdnotify = data;
 +
-+	acpi_remove_notify_handler(adev->handle, ACPI_ALL_NOTIFY,
-+				   cros_usbpd_notify_acpi);
-+
-+	return 0;
++	cros_usbpd_get_event_and_notify(pdnotify->dev, pdnotify->ec);
  }
  
- static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] = {
-@@ -70,14 +118,13 @@ static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, cros_usbpd_notify_acpi_device_ids);
- 
--static struct acpi_driver cros_usbpd_notify_acpi_driver = {
--	.name = DRV_NAME,
--	.class = DRV_NAME,
--	.ids = cros_usbpd_notify_acpi_device_ids,
--	.ops = {
--		.add = cros_usbpd_notify_add_acpi,
--		.notify = cros_usbpd_notify_acpi,
-+static struct platform_driver cros_usbpd_notify_acpi_driver = {
-+	.driver = {
-+		.name = DRV_NAME_PLAT_ACPI,
-+		.acpi_match_table = cros_usbpd_notify_acpi_device_ids,
- 	},
-+	.probe = cros_usbpd_notify_probe_acpi,
-+	.remove = cros_usbpd_notify_remove_acpi,
- };
- 
- #endif /* CONFIG_ACPI */
-@@ -157,7 +204,7 @@ static int __init cros_usbpd_notify_init(void)
- 		return ret;
- 
- #ifdef CONFIG_ACPI
--	acpi_bus_register_driver(&cros_usbpd_notify_acpi_driver);
-+	platform_driver_register(&cros_usbpd_notify_acpi_driver);
- #endif
- 	return 0;
- }
-@@ -165,7 +212,7 @@ static int __init cros_usbpd_notify_init(void)
- static void __exit cros_usbpd_notify_exit(void)
+ static int cros_usbpd_notify_probe_acpi(struct platform_device *pdev)
+@@ -133,6 +212,8 @@ static int cros_usbpd_notify_plat(struct notifier_block *nb,
+ 				  unsigned long queued_during_suspend,
+ 				  void *data)
  {
- #ifdef CONFIG_ACPI
--	acpi_bus_unregister_driver(&cros_usbpd_notify_acpi_driver);
-+	platform_driver_unregister(&cros_usbpd_notify_acpi_driver);
- #endif
- 	platform_driver_unregister(&cros_usbpd_notify_plat_driver);
- }
++	struct cros_usbpd_notify_data *pdnotify = container_of(nb,
++			struct cros_usbpd_notify_data, nb);
+ 	struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
+ 	u32 host_event = cros_ec_get_host_event(ec_dev);
+ 
+@@ -140,8 +221,7 @@ static int cros_usbpd_notify_plat(struct notifier_block *nb,
+ 		return NOTIFY_BAD;
+ 
+ 	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
+-		blocking_notifier_call_chain(&cros_usbpd_notifier_list,
+-					     host_event, NULL);
++		cros_usbpd_get_event_and_notify(pdnotify->dev, ec_dev);
+ 		return NOTIFY_OK;
+ 	}
+ 	return NOTIFY_DONE;
 -- 
 2.25.1.481.gfbce0eb801-goog
 
