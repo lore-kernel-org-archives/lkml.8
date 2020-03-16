@@ -2,88 +2,150 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4927FC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A1DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15DEC20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC38120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732110AbgCPQUa (ORCPT
+        id S1732119AbgCPQVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:20:30 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:34171 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732011AbgCPQU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:20:29 -0400
-Received: from localhost.localdomain (unknown [61.129.42.58])
-        by app2 (Coremail) with SMTP id XQUFCgCHjpo_p29e3RxJBQ--.3638S3;
-        Tue, 17 Mar 2020 00:20:16 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu
-Subject: [PATCH] VMCI: Fix dereference before NULL-check of context ptr
-Date:   Tue, 17 Mar 2020 00:18:33 +0800
-Message-Id: <1584375516-10729-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgCHjpo_p29e3RxJBQ--.3638S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruFy3Gry8Wr13KF4UZw17GFg_yoWfWrc_Wa
-        45WFsrArWYkFnF9wnrCrnxZryFyFWfZr1xGan293y3JFZI9w43JF1qvFy3JF43urZrKrnr
-        Jr4DCa4Iy34xKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbTAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_GcCE
-        3s1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-        1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v
-        4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK67AK6r1l42xK82IYc2Ij64vIr41l4I
-        8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
-        xVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
-        AFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
-        cIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU1NtxUUUUU
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Mon, 16 Mar 2020 12:21:07 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36672 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731875AbgCPQVH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 12:21:07 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 39so3022028otu.3;
+        Mon, 16 Mar 2020 09:21:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LJifg6Ktp1NK1uHmjwaX7dp/t9zxCzEVMxQ0Jij2Or4=;
+        b=XZ1JbYHRwlMT88Qn2gbAVBymt+OEEUCWbmoA3mL/QvXfZAJlaYLSP6MPYkOmWJxdke
+         jxUgQdElJw1eIud6VxSCgUHMKjkA/HyJPx2WFTm5hefloixigyYvLwuR6CizH4iTZXLI
+         tCS1wyeNksBHvlY6XSXlrsx+0F1+1LU5R5U24I1ML5SxZVmCVWNvd54VhRnBHRm7pr7Y
+         gNqkP8EECIeXedDIrPEZc15ZKVH0cAFkyct3THs0ZmixYeNSM0ymnawN7YOXwDa0xvbF
+         xRXy/7Nn3Ymo+dyFHZXkoFVMhuK2wqclq0fhYdnHhx1BL3iWBifJafc/oj5fzpSJx1LQ
+         /Bzw==
+X-Gm-Message-State: ANhLgQ0L2ToQsDxYX6rI7vR+ltvMxqdu3o/S+mDL7ckdxK4QAY3iJz2b
+        SKsQm3n+3V6BvQi9hIY60E6Fdwg2Cv6evGyq4D5Z0EQh
+X-Google-Smtp-Source: ADFU+vsh2R6+fVy5SdGy4MQXtSg6SAr17XAlHFOULaDGUiHv7RDiKl+xwnZvb/vrmq7HKN+kAoSeKV+RZDTKGCRCEHE=
+X-Received: by 2002:a9d:1708:: with SMTP id i8mr79567ota.250.1584375665600;
+ Mon, 16 Mar 2020 09:21:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200211091937.29558-1-brgl@bgdev.pl> <20200211091937.29558-6-brgl@bgdev.pl>
+In-Reply-To: <20200211091937.29558-6-brgl@bgdev.pl>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 16 Mar 2020 17:20:54 +0100
+Message-ID: <CAMuHMdUc9Vwh=B5nA2tW66DwYr3AE6g2Jvd_o0W-oShDs+QQEg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v6 5/7] gpiolib: provide a dedicated function for
+ setting lineinfo
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A NULL pointer can be returned by vmci_ctx_get(). Thus add a
-corresponding check so that a NULL pointer dereference will
-be avoided in vmci_ctx_put().
+Hi Bartosz,
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- drivers/misc/vmw_vmci/vmci_queue_pair.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Tue, Feb 11, 2020 at 10:21 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> We'll soon be filling out the gpioline_info structure in multiple
+> places. Add a separate function that given a gpio_desc sets all relevant
+> fields.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/misc/vmw_vmci/vmci_queue_pair.c b/drivers/misc/vmw_vmci/vmci_queue_pair.c
-index 032617101ebc..b6ba00ad9ec8 100644
---- a/drivers/misc/vmw_vmci/vmci_queue_pair.c
-+++ b/drivers/misc/vmw_vmci/vmci_queue_pair.c
-@@ -1808,7 +1808,8 @@ static int qp_alloc_host_work(struct vmci_handle *handle,
- 		pr_devel("queue pair broker failed to alloc (result=%d)\n",
- 			 result);
- 	}
--	vmci_ctx_put(context);
-+	if (context)
-+		vmci_ctx_put(context);
- 	return result;
- }
- 
+This is now commit d2ac25798208fb85 ("gpiolib: provide a dedicated
+function for setting lineinfo") in gpio/for-next.
+
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1147,6 +1147,60 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+>         return ret;
+>  }
+>
+> +static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+> +                                 struct gpioline_info *info)
+> +{
+> +       struct gpio_chip *chip = desc->gdev->chip;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&gpio_lock, flags);
+
+spinlock taken
+
+> +
+> +       if (desc->name) {
+> +               strncpy(info->name, desc->name, sizeof(info->name));
+> +               info->name[sizeof(info->name) - 1] = '\0';
+> +       } else {
+> +               info->name[0] = '\0';
+> +       }
+> +
+> +       if (desc->label) {
+> +               strncpy(info->consumer, desc->label, sizeof(info->consumer));
+> +               info->consumer[sizeof(info->consumer) - 1] = '\0';
+> +       } else {
+> +               info->consumer[0] = '\0';
+> +       }
+> +
+> +       /*
+> +        * Userspace only need to know that the kernel is using this GPIO so
+> +        * it can't use it.
+> +        */
+> +       info->flags = 0;
+> +       if (test_bit(FLAG_REQUESTED, &desc->flags) ||
+> +           test_bit(FLAG_IS_HOGGED, &desc->flags) ||
+> +           test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+> +           test_bit(FLAG_EXPORT, &desc->flags) ||
+> +           test_bit(FLAG_SYSFS, &desc->flags) ||
+> +           !pinctrl_gpio_can_use_line(chip->base + info->line_offset))
+
+pinctrl_gpio_can_use_line(), and pinctrl_get_device_gpio_range() called
+from it, call mutex_lock():
+
+    BUG: sleeping function called from invalid context at
+kernel/locking/mutex.c:281
+    in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 652, name: lsgpio
+    CPU: 1 PID: 652 Comm: lsgpio Not tainted
+5.6.0-rc1-koelsch-00008-gd2ac25798208fb85 #755
+    Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+    [<c020e3f0>] (unwind_backtrace) from [<c020a5b8>] (show_stack+0x10/0x14)
+    [<c020a5b8>] (show_stack) from [<c07d31b4>] (dump_stack+0x88/0xa8)
+    [<c07d31b4>] (dump_stack) from [<c0241318>] (___might_sleep+0xf8/0x168)
+    [<c0241318>] (___might_sleep) from [<c07ec13c>] (mutex_lock+0x24/0x7c)
+    [<c07ec13c>] (mutex_lock) from [<c046f47c>]
+(pinctrl_get_device_gpio_range+0x1c/0xb4)
+    [<c046f47c>] (pinctrl_get_device_gpio_range) from [<c046f5e8>]
+(pinctrl_gpio_can_use_line+0x24/0x88)
+    [<c046f5e8>] (pinctrl_gpio_can_use_line) from [<c0478bd0>]
+(gpio_ioctl+0x270/0x584)
+    [<c0478bd0>] (gpio_ioctl) from [<c03194c0>] (vfs_ioctl+0x20/0x38)
+
+Reproducer is "lsgpio" with CONFIG_DEBUG_ATOMIC_SLEEP=y.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
