@@ -2,115 +2,134 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3B1C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB68C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1868B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD17205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="tIGoVilx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733042AbgCPX7f (ORCPT
+        id S1733051AbgCPX7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 19:59:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:48081 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732932AbgCPX7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 19:59:35 -0400
-IronPort-SDR: rzKtaOE/4Ri3zXuy263VksSdMeBJ7wjvonGcL1F1CV5OHOJxe8PWrHXFrIK8CWZnTSkkO+L0HX
- nOI9CzZdDlLQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 16:59:34 -0700
-IronPort-SDR: EXC5OOzw7kiXij0nmleAvE4HV7gl1QOatOdI+iOuUlgq374R5zeDr8XW1LmjOeNWMBJmjRY+II
- 7ydyTJgBvJ/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,562,1574150400"; 
-   d="scan'208";a="233334574"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 16 Mar 2020 16:59:34 -0700
-Date:   Mon, 16 Mar 2020 16:59:34 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200316235934.GM24267@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
- <20200315012523.GC208715@linux.intel.com>
- <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
- <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
- <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
- <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
- <20200316225322.GJ24267@linux.intel.com>
- <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
+        Mon, 16 Mar 2020 19:59:53 -0400
+Received: from mail-bn8nam12on2071.outbound.protection.outlook.com ([40.107.237.71]:20704
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732932AbgCPX7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 19:59:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PKZdpwtxjzinFJIn9NpMECRUwfqv8PNn1EiwS14DO/pLCEeTu7r6AtNWg+CkKmHgBBLEVfwQOek5EOslJ0eJ1Im81cLs3gAC8olreCzQJgO4AJZHHoK0L/UZMYeOlOkRvv6a0KniWdtkmzGTvpJ152/SoeTqUhuGP+Z3cf1B8kyv/KvdV8eU8B96rwmM1Tg3fT1FQlJrfGP4OPI6U2rvUn4P1+HX7kmklc8eDqqPZGK1vql51TBd1/+7odO1YXeioKm12/I0eXmAsuQ0xzxWEbK/7nrPK0n7jueZ/xQcJ987BMwirz3NDubD2OkVrgy+ID/xgHYkjwMCiep18mj7Qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=775pDYEiZd/aNKZTnpTLvDccXt+O7E17G8bTpDz4P7A=;
+ b=aUxz23u+oBvwbctrJrz/eehWiewh/CkSH7+qaZ7JuFpc3mmz9AA+YlsVatvhe3MZyIN8s+dvUZH5t48uzc0/xFTcC/RMX1t8a6eNdCi4du6Qc+g+yizH/DkeBpEBhmXgd2cmc08Xjmpnm/ZpremyGQD4ZLzuKmm55znu7tHKq9/OzTcfCEy++CbvSVXemGoASnmVI3xqWTkXohPDdJrE2Ah8weApQLx7rydGkRz5rJlUQHdY6rUurhJqPK6zHXMHXiAKjSGi5kirRqca4anFoV1Uks4qFlkR/nL7IewFjQZoVNXz+vHr6SV5gTZ6sAp7MNB2D6AuInkLk7xbb4CXmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=775pDYEiZd/aNKZTnpTLvDccXt+O7E17G8bTpDz4P7A=;
+ b=tIGoVilxtbOZt/ZmQuQeqVUTecD10+J3wv6xJvPVsOsaEigtuHqkr1xIKr6CWA60amvsoXv9OH6B+uGl06U/Pi4PP76O7paqsiYh6Ks3OQd0Wd5cpPVX5p9wv0VuirkMRYLp8T0AQoIAfxk7ForBkWi2REDuWKGq5U2D+xtUGYA=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
+ by SN6PR12MB2784.namprd12.prod.outlook.com (2603:10b6:805:68::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21; Mon, 16 Mar
+ 2020 23:59:51 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2814.019; Mon, 16 Mar 2020
+ 23:59:50 +0000
+Subject: Re: [PATCH v5 1/3] perf vendor events amd: restrict model detection
+ for zen1 based processors
+To:     Vijay Thakkar <vijaythakkar@me.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
+        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20200316225238.150154-1-vijaythakkar@me.com>
+ <20200316225238.150154-2-vijaythakkar@me.com>
+From:   Kim Phillips <kim.phillips@amd.com>
+Message-ID: <b2deb965-7274-8b6f-08b7-1a93e4a2e4df@amd.com>
+Date:   Mon, 16 Mar 2020 18:59:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200316225238.150154-2-vijaythakkar@me.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN1PR12CA0097.namprd12.prod.outlook.com
+ (2603:10b6:802:21::32) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.136.247] (165.204.77.1) by SN1PR12CA0097.namprd12.prod.outlook.com (2603:10b6:802:21::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21 via Frontend Transport; Mon, 16 Mar 2020 23:59:49 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 04c3db4c-41fc-48ea-0ca4-08d7ca061d49
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2784:|SN6PR12MB2784:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB278420FC14BAA06E05DDEC7F87F90@SN6PR12MB2784.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 03449D5DD1
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(199004)(2616005)(4326008)(956004)(26005)(5660300002)(6486002)(2906002)(16526019)(6666004)(186003)(4744005)(44832011)(36756003)(81166006)(66476007)(66556008)(81156014)(66946007)(52116002)(8676002)(110136005)(54906003)(316002)(31686004)(53546011)(31696002)(16576012)(86362001)(7416002)(478600001)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2784;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Dy6VW9fre1nl1ZC/8oYj4uxxR7aYZsGQ6PLCHnwwRU2D7VAs7J1QUPBVNA8v+64SuGcO8bgjpapkLYuBGmDX2IWlBNq0RUnCp3rU410XFGadT+kx5BUoJGqBeCRDMAjK/z5FTAimseZtng/dlvkoQ3F8TAbHGsJatGJvCftQWZVl9a1p788z2jSpzAXaBTbwKKb8EuVv621GZqBZByqV9FWsrnC4GIeZvi+fGHw2lgMDwLXu2dkMw9qlQtUTPlhLiCBhW7jSE3HwA39bORNwbauDg+MaqSIYQyl8zxPZlIi65rvjvOpEQodg+glCYFJsFh6ClyV44S2algC62N4Wwb21sFy/tR/wdI/vKQZIVd7a77UdkphgQNlABFKMzJ5zaChsXMsX6UjL+8z7LoyVwiuliG/yj4OMMIrJq98YaePopL74U8uQuDEdCfvJl/v1
+X-MS-Exchange-AntiSpam-MessageData: 9jGvb1DWgIClmEkbx9I4e2bo4MTpzg7wN9lw+5UfIzf004d2x0XPEfLncBL8nHQ/6RwRjcDtr96QTxSAlYKLSGix7N9UlMc1okmfjBAEhtU3B+wrMy5YgqpHhDv1SgYyJZ50CliRoF0qnrGIKOA9wA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04c3db4c-41fc-48ea-0ca4-08d7ca061d49
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2020 23:59:50.7877
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QK0oQji4biuzIiBDAmHC7zcqStkzLmhQ/L8bSHLT6MYVY4XpBCkweLn2TFBb1baPeVrDOo7Lc6Jzi8mpET/rBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2784
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 04:50:26PM -0700, Xing, Cedric wrote:
-> On 3/16/2020 3:53 PM, Sean Christopherson wrote:
-> >On Mon, Mar 16, 2020 at 11:38:24PM +0200, Jarkko Sakkinen wrote:
-> >>>My suggestions explicitly maintained robustness, and in fact increased
-> >>>it. If you think we've lost capability, please speak with specificity
-> >>>rather than in vague generalities. Under my suggestions we can:
-> >>>1. call the vDSO from C
-> >>>2. pass context to the handler
-> >>>3. have additional stack manipulation options in the handler
-> >>>
-> >>>The cost for this is a net 2 additional instructions. No existing
-> >>>capability is lost.
-> >>
-> >>My vague generality in this case is just that the whole design
-> >>approach so far has been to minimize the amount of wrapping to
-> >>EENTER.
-> >
-> >Yes and no.   If we wanted to minimize the amount of wrapping around the
-> >vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
-> >first place.  The whole process has been about balancing the wants of each
-> >use case against the overall quality of the API and code.
-> >
-> The design of this vDSO API was NOT to minimize wrapping, but to allow
-> maximal flexibility. More specifically, we strove not to restrict how info
-> was exchanged between the enclave and its host process. After all, calling
-> convention is compiler specific - i.e. the enclave could be built by a
-> different compiler (e.g. MSVC) that doesn't share the same list of CSRs as
-> the host process. Therefore, the API has been implemented to pass through
-> virtually all registers except those used by EENTER itself. Similarly, all
-> registers are passed back from enclave to the caller (or the exit handler)
-> except those used by EEXIT. %rbp is an exception because the vDSO API has to
-> anchor the stack, using either %rsp or %rbp. We picked %rbp to allow the
-> enclave to allocate space on the stack.
+On 3/16/20 5:52 PM, Vijay Thakkar wrote:
+> This patch changes the previous blanket detection of AMD Family 17h
+> processors to be more specific to Zen1 core based products only by
+> replacing model detection regex pattern [[:xdigit:]]+ with
+> ([12][0-9A-F]|[0-9A-F]), restricting to models 0 though 2f only.
+> 
+> This change is required to allow for the addition of separate PMU events
+> for Zen2 core based models in the following patches as those belong to family
+> 17h but have different PMCs. Current PMU events directory has also been
+> renamed to "amdzen1" from "amdfam17h" to reflect this specificity.
+> 
+> Note that although this change does not break PMU counters for existing
+> zen1 based systems, it does disable the current set of counters for zen2
+> based systems. Counters for zen2 have been added in the following
+> patches in this patchset.
+> 
+> Signed-off-by: Vijay Thakkar <vijaythakkar@me.com>
 
-And unless I'm missing something, using %rcx to pass @leaf would still
-satisfy the above, correct?  Ditto for saving/restoring %rbx.
+For the series:
 
-I.e. a runtime that's designed to work with enclave's using a different
-calling convention wouldn't be able to take advantage of being able to call
-the vDSO from C, but neither would it take on any meaningful burden. 
+Acked-by: Kim Phillips <kim.phillips@amd.com>
+
+Thanks,
+
+Kim
