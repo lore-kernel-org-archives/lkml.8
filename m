@@ -2,96 +2,94 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FA0C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B3FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C077205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5MHYWGu"
+	by mail.kernel.org (Postfix) with ESMTP id D34F9206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584359690;
+	bh=24D2nmoA1PD2UDbWlzqD/g16A8HBhZbRXBxFqrR2eX4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vAwdz6PHo4KrC/8kwDod/DVq+i4qTpxHbS6O8LJbWHSAuPxTOV+tAWgWl78wVaBTa
+	 6V8ZYURsQXMT5a2203W5f5Tv20bIOWT/mawFIsCIdxd/o1DGdqDF3QDTELwHXjA/PW
+	 IBoMvId7JWA9JmtpZNrnyygU1+T1CtwtmIHa9+gY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbgCPLvE (ORCPT
+        id S1730927AbgCPLyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:51:04 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53040 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730915AbgCPLvD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:51:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584359463;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tryDzo9SohMjPK6GcmpV+7d9g8Sngd5hQyCi5ctTNMA=;
-        b=a5MHYWGuyMaD2C5GKLQP9ijHgdGoq9uOV4wqMVOfx55TRkijN0WI6EWi9rookr5GA5ioaj
-        nt77shBdLbN9kjyDPzWmARXJjLNx0qeuhBRvAzc3WuVlrRUSqSbXuWxzCf8Cx2Z3QweMw6
-        MHPMWzyScxaGiI2dxvq1XBF7xb870dM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-iG6UQSl3NH2zipfAM4M8Sg-1; Mon, 16 Mar 2020 07:50:59 -0400
-X-MC-Unique: iG6UQSl3NH2zipfAM4M8Sg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 16 Mar 2020 07:54:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730907AbgCPLyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 07:54:49 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 76A4218B5FAC;
-        Mon, 16 Mar 2020 11:50:57 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B84DE92F83;
-        Mon, 16 Mar 2020 11:50:52 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200313152102.1707-2-longman@redhat.com>
-References: <20200313152102.1707-2-longman@redhat.com> <20200313152102.1707-1-longman@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     dhowells@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Subject: Re: [PATCH v3 1/3] KEYS: Don't write out to userspace while holding key semaphore
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BDE0205ED;
+        Mon, 16 Mar 2020 11:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584359688;
+        bh=24D2nmoA1PD2UDbWlzqD/g16A8HBhZbRXBxFqrR2eX4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=woKdUbjOhCrnilC3sCEt3y39EL5CZdCI72qTnRuL8MQi6XfOyOVAr9pfK77lb5S0g
+         bf0iUMADXGl0lmeO6obpAiBf7pymdUTcYXQfMlCDj2kS28OlnDyY2cql+Dol1Ed3oH
+         wE0B6RAxBU67RGkqB8soNjQ3f7LaTISLTdX+JYDA=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jDoKU-00D45x-VP; Mon, 16 Mar 2020 11:54:47 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     John Garry <john.garry@huawei.com>,
+        chenxiang <chenxiang66@hisilicon.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v3 0/2] irqchip/gic-v3-its: Balance LPI affinity across CPUs
+Date:   Mon, 16 Mar 2020 11:54:31 +0000
+Message-Id: <20200316115433.9017-1-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1797277.1584359451.1@warthog.procyon.org.uk>
-Date:   Mon, 16 Mar 2020 11:50:51 +0000
-Message-ID: <1797278.1584359451@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, john.garry@huawei.com, chenxiang66@hisilicon.com, wangzhou1@hisilicon.com, ming.lei@redhat.com, jason@lakedaemon.net, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Waiman Long <longman@redhat.com> wrote:
+When mapping a LPI, the ITS driver picks the first possible
+affinity, which is in most cases CPU0, assuming that if
+that's not suitable, someone will come and set the affinity
+to something more interesting.
 
->  include/linux/key-type.h                  |  2 +-
->  security/keys/big_key.c                   | 11 ++---
->  security/keys/encrypted-keys/encrypted.c  |  7 ++-
->  security/keys/keyctl.c                    | 57 +++++++++++++++++++----
->  security/keys/keyring.c                   |  6 +--
->  security/keys/request_key_auth.c          |  7 ++-
->  security/keys/trusted-keys/trusted_tpm1.c | 14 +-----
->  security/keys/user_defined.c              |  5 +-
-> ...
-> -	long (*read)(const struct key *key, char __user *buffer, size_t buflen);
-> +	long (*read)(const struct key *key, char *buffer, size_t buflen);
+It apparently isn't the case, and people complain of poor
+performance when many interrupts are glued to the same CPU.
+So let's place the interrupts by finding the "least loaded"
+CPU (that is, the one that has the fewer LPIs mapped to it).
+So called 'managed' interrupts are an interesting case where
+the affinity is actually dictated by the kernel itself, and
+we should honor this.
 
-Note that there are read functions outside of security/keys/ that also need
-fixing - dns_resolver_read() and rxrpc_read().
+* From v2:
+  - Split accounting from CPU selection
+  - Track managed and unmanaged interrupts separately
 
-David
+Marc Zyngier (2):
+  irqchip/gic-v3-its: Track LPI distribution on a per CPU basis
+  irqchip/gic-v3-its: Balance initial LPI affinity across CPUs
+
+ drivers/irqchip/irq-gic-v3-its.c | 153 +++++++++++++++++++++++++------
+ 1 file changed, 127 insertions(+), 26 deletions(-)
+
+-- 
+2.20.1
 
