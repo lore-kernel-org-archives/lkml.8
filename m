@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65695C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39196C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD7C206EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F790206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326307;
-	bh=+Wrdt2IjNJU/+2f1OXPiWEBQi2rieRBad78UzbSNW1k=;
+	s=default; t=1584326310;
+	bh=ZZnHNSt6W/dTcHetd5j2f9gR0uIYQG3CneTi7NAPW7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TleCn1w7MXLUS6JvzPH62F7APHoFmWOncuzl7jGghNL9gLTHGQvrysXETplAOtOzV
-	 ns5fh4QZ55UqxmvSNSFv5X3PsBAceZVQ7qBydEND5mkZippS7q849X1nDhVgw1d3W3
-	 dct8vXV2VpBLo2vBNv6V0Umhrr1gDoqEvvBl7Pqk=
+	b=0FgKsYgdtao4CzE6A5yaSBpRdJzlJlNLCLli45hkodXCpPB1GifkccS8CHW12P8Ru
+	 /HXcoC54+J3qrQTjEELVPj23vTHfA1wiUibfRp1QRpB5V9KOoe9d2y3g/eI89qRCI+
+	 9ZNAnBJ9eYSQFlPs8Ayiji255ezywY9zzi9zseO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbgCPCev (ORCPT
+        id S1729981AbgCPCev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 15 Mar 2020 22:34:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38440 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:38380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729939AbgCPCeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:44 -0400
+        id S1729927AbgCPCem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DE2A2073E;
-        Mon, 16 Mar 2020 02:34:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F63E20726;
+        Mon, 16 Mar 2020 02:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326084;
-        bh=+Wrdt2IjNJU/+2f1OXPiWEBQi2rieRBad78UzbSNW1k=;
+        s=default; t=1584326081;
+        bh=ZZnHNSt6W/dTcHetd5j2f9gR0uIYQG3CneTi7NAPW7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCSk/IgsalNh7v2ncI5MgijhkdyWDMZLzYnqSsZWwFBxmoS6+KvzoZ1i1ow0sfDAz
-         /2abz+ajR0WzrJj8X/28LEThr1YxpSqUoMg2AhjegGWAkWJXhvut1BUcv/AaG0563X
-         YuEiE8Uffj1cx1LI1N0UwHMXiUQWFpOj+5UE5jj0=
+        b=NQnrHBW05I8nEmX1nlaw15c5nzfM4fjbkrSV+1Ns7ZmQk3Bbi/gqyqPe/eccb9PVU
+         ywUv2SMaz7/xy7UGIsXMg8PaDx2HE0iIZOz/KMrC6PPMbOyyq6Ee0LmhNw21fSPAah
+         cjzdIvogJdx9PZ05HRFDSHARe9Br3iwWR91RPGmk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Ghiti <alex@ghiti.fr>, Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 28/35] riscv: Fix range looking for kernel image memblock
-Date:   Sun, 15 Mar 2020 22:34:04 -0400
-Message-Id: <20200316023411.1263-28-sashal@kernel.org>
+Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 26/35] spi: spi_register_controller(): free bus id on error paths
+Date:   Sun, 15 Mar 2020 22:34:02 -0400
+Message-Id: <20200316023411.1263-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
 References: <20200316023411.1263-1-sashal@kernel.org>
@@ -60,35 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Ghiti <alex@ghiti.fr>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-[ Upstream commit a160eed4b783d7b250a32f7e5787c9867abc5686 ]
+[ Upstream commit f9981d4f50b475d7dbb70f3022b87a3c8bba9fd6 ]
 
-When looking for the memblock where the kernel lives, we should check
-that the memory range associated to the memblock entirely comprises the
-kernel image and not only intersects with it.
+Some error paths leave the bus id allocated. As a result the IDR
+allocation will fail after a deferred probe. Fix by freeing the bus id
+always on error.
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Message-Id: <20200304111740.27915-1-aaro.koskinen@nokia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/mm/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 573463d1c799a..f5d813c1304da 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -98,7 +98,7 @@ void __init setup_bootmem(void)
- 	for_each_memblock(memory, reg) {
- 		phys_addr_t end = reg->base + reg->size;
- 
--		if (reg->base <= vmlinux_end && vmlinux_end <= end) {
-+		if (reg->base <= vmlinux_start && vmlinux_end <= end) {
- 			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
- 
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 26b91ee0855dc..c186d3a944cd0 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2452,7 +2452,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		if (ctlr->use_gpio_descriptors) {
+ 			status = spi_get_gpio_descs(ctlr);
+ 			if (status)
+-				return status;
++				goto free_bus_id;
  			/*
+ 			 * A controller using GPIO descriptors always
+ 			 * supports SPI_CS_HIGH if need be.
+@@ -2462,7 +2462,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 			/* Legacy code path for GPIOs from DT */
+ 			status = of_spi_get_gpio_numbers(ctlr);
+ 			if (status)
+-				return status;
++				goto free_bus_id;
+ 		}
+ 	}
+ 
+@@ -2470,17 +2470,14 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	 * Even if it's just one always-selected device, there must
+ 	 * be at least one chipselect.
+ 	 */
+-	if (!ctlr->num_chipselect)
+-		return -EINVAL;
++	if (!ctlr->num_chipselect) {
++		status = -EINVAL;
++		goto free_bus_id;
++	}
+ 
+ 	status = device_add(&ctlr->dev);
+-	if (status < 0) {
+-		/* free bus id */
+-		mutex_lock(&board_lock);
+-		idr_remove(&spi_master_idr, ctlr->bus_num);
+-		mutex_unlock(&board_lock);
+-		goto done;
+-	}
++	if (status < 0)
++		goto free_bus_id;
+ 	dev_dbg(dev, "registered %s %s\n",
+ 			spi_controller_is_slave(ctlr) ? "slave" : "master",
+ 			dev_name(&ctlr->dev));
+@@ -2496,11 +2493,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		status = spi_controller_initialize_queue(ctlr);
+ 		if (status) {
+ 			device_del(&ctlr->dev);
+-			/* free bus id */
+-			mutex_lock(&board_lock);
+-			idr_remove(&spi_master_idr, ctlr->bus_num);
+-			mutex_unlock(&board_lock);
+-			goto done;
++			goto free_bus_id;
+ 		}
+ 	}
+ 	/* add statistics */
+@@ -2515,7 +2508,12 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	/* Register devices from the device tree and ACPI */
+ 	of_register_spi_devices(ctlr);
+ 	acpi_register_spi_devices(ctlr);
+-done:
++	return status;
++
++free_bus_id:
++	mutex_lock(&board_lock);
++	idr_remove(&spi_master_idr, ctlr->bus_num);
++	mutex_unlock(&board_lock);
+ 	return status;
+ }
+ EXPORT_SYMBOL_GPL(spi_register_controller);
 -- 
 2.20.1
 
