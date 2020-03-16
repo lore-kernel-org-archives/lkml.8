@@ -2,143 +2,147 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47009C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C08C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2054F205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7939205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F/mKIGm2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732665AbgCPVBC (ORCPT
+        id S1732674AbgCPVBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:01:02 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52472 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732571AbgCPVBC (ORCPT
+        Mon, 16 Mar 2020 17:01:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45771 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732597AbgCPVBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:01:02 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 377FC28A3BA
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, linux-rockchip@lists.infradead.org,
-        hans.verkuil@cisco.com, kernel@collabora.com,
-        Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v2 2/2] media: staging: rkisp1: cap: serialize start/stop stream
-Date:   Mon, 16 Mar 2020 18:00:44 -0300
-Message-Id: <20200316210044.595312-3-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200316210044.595312-1-helen.koike@collabora.com>
-References: <20200316210044.595312-1-helen.koike@collabora.com>
+        Mon, 16 Mar 2020 17:01:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id m15so10410308pgv.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 14:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FykSs6ArRQ1VTW0edGQU9r+oRpdoLevjlWnrbNH8SzQ=;
+        b=F/mKIGm2VSDsMdeG2UN7tdnBaLkXajwusX1FSQGsszz2c2mkMYP00hgIofJTgrQDW1
+         SlYcjtn0dgAw7izmdBv71zLnPNljO/N2mb5wfEaVhtU0iQ3ICwa7+j1vTDbBcOdxXrmc
+         L4SVReMbOZrT0y9fUuU3TP449id5RqEw/5/u0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FykSs6ArRQ1VTW0edGQU9r+oRpdoLevjlWnrbNH8SzQ=;
+        b=ezg3JcX3zKtCEntPoLGr+wypIK9lpdYGibnPiZZzrW3gdsVV19ITtrV/2zj0FnND6C
+         LHFFr1J+0YKN25jp1m/yt8Hn1+/Lzm6ooNAZFJSfQZ+pw4o5KGyBfsJs3f+74yL7T+df
+         PiPIk985dD/Gs/5WAsRHWq6QZn7g7K1KdZn3NNKyCeK8vUtM382CmD/rMPftUn0m9TgB
+         TdVEtH0IhOeGpt4AwmC4MSgbKQXpu+aDw0KGlZdFJG7oU9JSKvF9RDeIljRkzEphpFlo
+         ZaTrrCm7pdQLCZiLb4WB268VxdShzZs5YNYMFDjUSP2fkCjUBoC1FXl09wbwxm29OsAz
+         Yfag==
+X-Gm-Message-State: ANhLgQ0VWm3FIehbRHrqiuEckkYoD/9aCRnpa9vOCoxLmALDw0Aa/8wL
+        Ilu6Ckhb58dD1xWWVm9mKp7jpQ==
+X-Google-Smtp-Source: ADFU+vspzRBYngPdmN2Sb7yi3ynFWRC4K625gLz2x5YvOEj/9r9JVqHRh4cG4ZtIaq7Mzq78lwob+g==
+X-Received: by 2002:a63:7c4:: with SMTP id 187mr1570289pgh.369.1584392495839;
+        Mon, 16 Mar 2020 14:01:35 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p4sm747093pfg.163.2020.03.16.14.01.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 14:01:34 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 14:01:33 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "wad@chromium.org" <wad@chromium.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-team@fb.com" <kernel-team@fb.com>
+Subject: Re: [PATCH v2 0/4] kselftest: add fixture parameters
+Message-ID: <202003161356.6CD6783@keescook>
+References: <20200314005501.2446494-1-kuba@kernel.org>
+ <202003132049.3D0CDBB2A@keescook>
+ <MWHPR13MB08957F02680872A2C30DD7F4FDF90@MWHPR13MB0895.namprd13.prod.outlook.com>
+ <20200316130416.4ec9103b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316130416.4ec9103b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to support simultaneous streaming from both capture devices,
-start/stop vb2 calls need to be serialized to allow multiple concurrent
-calls.
+On Mon, Mar 16, 2020 at 01:04:16PM -0700, Jakub Kicinski wrote:
+> Variant sounds good too, although the abbreviation would be VAR?
+> Which isn't ideal. 
+> 
+> But I really don't care so whoever cares the most please speak up :P
 
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
----
+Let's go with "variant" and just spell it out.
 
-Changes in v2:
-- Rebased with media/master
+> > BTW - Fuego has a similar feature for naming a collection of test
+> > parameters with specific values (if I understand this proposed
+> > feature correctly).  Fuego's feature was named a long time ago
+> > (incorrectly, I think) and it continues to bug me to this day.
+> > It was named 'specs', and after giving it considerable thought
+> > I've been meaning to change it to 'variants'.
+> > 
+> > Just a suggestion for consideration.  The fact that Fuego got this
+> > wrong is what motivates my suggestion today.  You have to live
+> > with this kind of stuff a long time. :-)
+> > 
+> > We ran into some issues in Fuego with this concept, that motivate
+> > the comments below.  I'll use your 'instance' terminology in my comments
+> > although the terminology is different in Fuego.
+> > 
+> > > Also a change in reporting:
+> > > 
+> > > 	struct __fixture_params_metadata no_param = { .name = "", };
+> > > 
+> > > Let's make ".name = NULL" here, and then we can detect instantiation:
+> > > 
+> > > 	printf("[ RUN      ] %s%s%s.%s\n", f->name, p->name ? "." : "",
+> > > 				p->name ?: "", t->name);
+> 
+> Do I have to make it NULL or is it okay to test p->name[0] ?
+> That way we can save one ternary operator from the litany..
 
- drivers/staging/media/rkisp1/rkisp1-capture.c | 9 +++++++++
- drivers/staging/media/rkisp1/rkisp1-common.h  | 2 ++
- drivers/staging/media/rkisp1/rkisp1-dev.c     | 2 ++
- 3 files changed, 13 insertions(+)
+I did consider Tim's idea of having them all say 'default', but since
+the bulk of tests aren't going to have variants, I don't want to spam
+the report with words I have to skip over.
 
-diff --git a/drivers/staging/media/rkisp1/rkisp1-capture.c b/drivers/staging/media/rkisp1/rkisp1-capture.c
-index 967bd05b4507..f3c4f2a198ca 100644
---- a/drivers/staging/media/rkisp1/rkisp1-capture.c
-+++ b/drivers/staging/media/rkisp1/rkisp1-capture.c
-@@ -927,6 +927,8 @@ static void rkisp1_vb2_stop_streaming(struct vb2_queue *queue)
- 	struct rkisp1_device *rkisp1 = cap->rkisp1;
- 	int ret;
- 
-+	mutex_lock(&cap->rkisp1->stream_lock);
-+
- 	rkisp1_stream_stop(cap);
- 	media_pipeline_stop(&node->vdev.entity);
- 	ret = rkisp1_pipeline_sink_walk(&node->vdev.entity, NULL,
-@@ -943,6 +945,8 @@ static void rkisp1_vb2_stop_streaming(struct vb2_queue *queue)
- 		dev_err(rkisp1->dev, "power down failed error:%d\n", ret);
- 
- 	rkisp1_dummy_buf_destroy(cap);
-+
-+	mutex_unlock(&cap->rkisp1->stream_lock);
- }
- 
- /*
-@@ -987,6 +991,8 @@ rkisp1_vb2_start_streaming(struct vb2_queue *queue, unsigned int count)
- 	struct media_entity *entity = &cap->vnode.vdev.entity;
- 	int ret;
- 
-+	mutex_lock(&cap->rkisp1->stream_lock);
-+
- 	ret = rkisp1_dummy_buf_create(cap);
- 	if (ret)
- 		goto err_ret_buffers;
-@@ -1016,6 +1022,8 @@ rkisp1_vb2_start_streaming(struct vb2_queue *queue, unsigned int count)
- 		goto err_pipe_disable;
- 	}
- 
-+	mutex_unlock(&cap->rkisp1->stream_lock);
-+
- 	return 0;
- 
- err_pipe_disable:
-@@ -1029,6 +1037,7 @@ rkisp1_vb2_start_streaming(struct vb2_queue *queue, unsigned int count)
- 	rkisp1_dummy_buf_destroy(cap);
- err_ret_buffers:
- 	rkisp1_return_all_buffers(cap, VB2_BUF_STATE_QUEUED);
-+	mutex_unlock(&cap->rkisp1->stream_lock);
- 
- 	return ret;
- }
-diff --git a/drivers/staging/media/rkisp1/rkisp1-common.h b/drivers/staging/media/rkisp1/rkisp1-common.h
-index b291cc60de8e..4ec5aae9694a 100644
---- a/drivers/staging/media/rkisp1/rkisp1-common.h
-+++ b/drivers/staging/media/rkisp1/rkisp1-common.h
-@@ -247,6 +247,7 @@ struct rkisp1_debug {
-  * @rkisp1_capture: capture video device
-  * @stats: ISP statistics output device
-  * @params: ISP input parameters device
-+ * @stream_lock: lock to serialize start/stop streaming in capture devices.
-  */
- struct rkisp1_device {
- 	void __iomem *base_addr;
-@@ -266,6 +267,7 @@ struct rkisp1_device {
- 	struct rkisp1_params params;
- 	struct media_pipeline pipe;
- 	struct vb2_alloc_ctx *alloc_ctx;
-+	struct mutex stream_lock;
- 	struct rkisp1_debug debug;
- };
- 
-diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
-index b1b3c058e957..3e3a3925b019 100644
---- a/drivers/staging/media/rkisp1/rkisp1-dev.c
-+++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
-@@ -471,6 +471,8 @@ static int rkisp1_probe(struct platform_device *pdev)
- 	dev_set_drvdata(dev, rkisp1);
- 	rkisp1->dev = dev;
- 
-+	mutex_init(&rkisp1->stream_lock);
-+
- 	rkisp1->base_addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(rkisp1->base_addr))
- 		return PTR_ERR(rkisp1->base_addr);
+And empty-check (instead of NULL) is fine by me.
+
+> To me global.default.XYZ is a mouthful. so in my example (perhaps that
+> should have been part of the cover letter) I got:
+> 
+> [ RUN      ] global.keysizes             <= non-fixture test
+> [       OK ] global.keysizes             
+> [ RUN      ] tls_basic.base_base         <= fixture: "tls_basic", no params
+> [       OK ] tls_basic.base_base         
+> [ RUN      ] tls12.sendfile              <= fixture: "tls", param: "12"
+> [       OK ] tls12.sendfile                 
+> [ RUN      ] tls13.sendfile              <= fixture: "tls", param: "13"
+> [       OK ] tls13.sendfile                 (same fixture, diff param)
+> 
+> And users can start inserting underscores themselves if they really
+> want. (For TLS I was considering different ciphers but they don't impact
+> testing much.)
+
+The reason I'd like a dot is just for lay-person grep-ability and
+to avoid everyone needing to remember to add separator prefixes --
+there should just be a common one. e.g.  searching for "tls13" in the
+tree wouldn't find the test (since it's actually named "tls" and "13"
+is separate places). (I mean, sure, searching for "tls" is also insane,
+but I think I made my point.)
+
+-Kees
+
 -- 
-2.25.0
-
+Kees Cook
