@@ -2,99 +2,112 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37CCC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD05CC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F1E20753
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YYGEhZM7"
+	by mail.kernel.org (Postfix) with ESMTP id B972B20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732435AbgCPT2Z (ORCPT
+        id S1732484AbgCPTdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 15:28:25 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40755 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732366AbgCPT2Z (ORCPT
+        Mon, 16 Mar 2020 15:33:20 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51844 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732366AbgCPTdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 15:28:25 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j17so15061264lfe.7
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 12:28:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9W++nvTHbfXeoIcDZohOBZWZ4LKN9eFr+StdFejbfcQ=;
-        b=YYGEhZM7PPavYrG7MqPMpq5f7+jG7H/yxC5PSXo/ntzCb32eA6x3sviAXL5LkLPADt
-         HsJ0OW7yc8ZaY/BMWvM3uvCuRq0WYc5+11RIrVcbAuWv3YlGQcKZ9EExZuZbCBm8FfYF
-         QbF9aV/ZUs5MeYh9+WzvYlXU4izRU4Nfij9AgZ4JqvLKn2thuw35T9IhZ7apkWnLPWWr
-         xv5Z0YjGrNlMcgBgIIvEIhIEg71Z4PpMPsLA/j30sUqBzjqGzM+gBW60ivkHZxwFFNeQ
-         EoP7T24Gh8veA5TnxfeF9dZup5lv6L61gYWY2Z+r+JTJTzR5B9nEdTKiuxJrRhATQY6h
-         R91A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9W++nvTHbfXeoIcDZohOBZWZ4LKN9eFr+StdFejbfcQ=;
-        b=KtrAdLuedo5p2vcZr6rMSr8+1Czo5mdBSEi3QMDnxi+cRXs+EMB4Cblg7j3AYdkUMj
-         wuAt8x+eQsTo4Z3HtoWqKsIkEXsg70Li9gB/moUXP+3OXFTT7NaaP7aX1CUJUfbn82ap
-         3XKLAB/1p2ALwIT+GJuZaMHx8pR884veeiFC3TWMbqU88TO1fdEKN31o3CU53Y3davFl
-         aHNPH0Aq/vhxBHsV+l0CUs3RwJwpyjfHWM+XbkMLPvW1DA11s+sxkoNmdttSnYouoLk9
-         M7ytMu4lLFjOl9/4Pz2N2v6n2G33Xl2sdMkHDkmZnLUi7CKwEaWt4CAaMqYTnyhT0vw4
-         bIDQ==
-X-Gm-Message-State: ANhLgQ2PbCjwHW2o2hJLG0jFKLFJD1PUVEZuxPy/AP016Q4bdsV5ZysY
-        rqNj83qIho7K6JnVvmsfEvdonNcIDV2ZvLVi1+7i
-X-Google-Smtp-Source: ADFU+vuK3Glg35VFHYG66rljp/O8A8T7rbFwvJ8CVf9D6xtbfhbcuuYaoE3SLZuTyADw8oBNT8YpaYMIqKTqWs+iAig=
-X-Received: by 2002:ac2:41d3:: with SMTP id d19mr576598lfi.57.1584386902991;
- Mon, 16 Mar 2020 12:28:22 -0700 (PDT)
+        Mon, 16 Mar 2020 15:33:20 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id CAFCD293369
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, hans.verkuil@cisco.com,
+        niklas.soderlund@ragnatech.se, mchehab@kernel.org,
+        Helen Koike <helen.koike@collabora.com>
+Subject: [PATCH 0/4] media: add v4l2_pipeline_stream_{enable,disable} helpers
+Date:   Mon, 16 Mar 2020 16:33:01 -0300
+Message-Id: <20200316193305.428378-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <CAKT=dDnFpj2hJd5z73pfcrhXXacDpPVyKzC7+K94tsX=+e_BHg@mail.gmail.com>
- <20200302235044.59163-1-zzyiwei@google.com> <20200303090703.32b2ad68@gandalf.local.home>
- <20200303141505.GA3405@kroah.com> <20200303093104.260b1946@gandalf.local.home>
- <20200303155639.GA437469@kroah.com> <CAKT=dDnT_d-C2jfcgD+OFvJ=vkqxvQDmg3nAErvs9tXS6iifpw@mail.gmail.com>
- <20200316140544.42e3f383@gandalf.local.home>
-In-Reply-To: <20200316140544.42e3f383@gandalf.local.home>
-From:   Yiwei Zhang <zzyiwei@google.com>
-Date:   Mon, 16 Mar 2020 12:28:10 -0700
-Message-ID: <CAKT=dD=g1aK6At4hCyjDNc_S1hR8TUngR7Sm13kgP+tNr4WOmA@mail.gmail.com>
-Subject: Re: [PATCH v4] gpu/trace: add a gpu total memory usage tracepoint
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, mingo@redhat.com,
-        elder@kernel.org, federico.vaga@cern.ch, tony.luck@intel.com,
-        vilhelm.gray@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
-        tglx@linutronix.de, yamada.masahiro@socionext.com,
-        paul.walmsley@sifive.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Dariusz Marcinkiewicz <darekm@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        linux-kernel@vger.kernel.org,
-        Prahlad Kilambi <prahladk@google.com>,
-        android-kernel <android-kernel@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 11:05 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 13 Mar 2020 15:59:37 -0700
-> Yiwei Zhang <zzyiwei@google.com> wrote:
->
-> > Hi guys, thanks for all the help throughout this. After struggling a
-> > while, I failed to figure out when the next merge window is. Could you
-> > help point me to the release calendar or something?  Thanks again!
->
-> I have this queued in my local tree. I'm currently having some issues with
-> my testing (there appears to be an unrelated bug to my code keeping it from
-> passing). But you should see this patch fly by when I add it to my
-> linux-next queue.
->
-> -- Steve
+Hi,
 
-Got it. Awesome, thanks Steve!
+Media drivers need to iterate through the pipeline and call .s_stream()
+callbacks in the subdevices.
+
+Instead of repeating code, add helpers for this.
+
+These helpers will go walk through the pipeline only visiting entities
+that participates in the stream, i.e. it follow link from sink to source
+(and not the opposite).
+
+Which means that in a topology like this https://bit.ly/3b2MxjI
+calling v4l2_pipeline_stream_enable() from rkisp1_mainpath won't call
+.s_stream(true) for rkisp1_resizer_selfpath.
+
+stream_count variable was added in v4l2_subdevice to handle nested calls
+to the helpers.
+This is useful when the driver allows streaming from more then one
+capture device sharing subdevices.
+
+This patch came from the error I was facing when multistreaming from
+rkisp1 driver, where stopping one capture would call s_stream(false) in
+the pipeline, causing a stall in the second capture device.
+
+Also, the vimc patch https://patchwork.kernel.org/patch/10948833/ won't
+be required with this patchset.
+
+This patchset was tested on rkisp1 and vimc drivers.
+
+Other cleanup might be possible (but I won't add in this patchset as I
+don't have the hw to test):
+	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/omap3isp/isp.c#n697
+	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/qcom/camss/camss-video.c#n430
+	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/stm32/stm32-dcmi.c#n680
+	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/xilinx/xilinx-dma.c#n97
+
+Overview of patches:
+====================
+
+Patch 1/4 adds a new iterator function to follow links from sink to
+source only.
+
+Path 2/4 adds the helpers in v4l2-common.c, allowing nested calls by
+adding stream_count in the subdevice struct.
+
+Patch 3/4 cleanup rkisp1 driver to use the helpers.
+
+Patch 4/4 cleanup vimc driver to use the helpers.
+
+
+Helen Koike (4):
+  media: mc-entity.c: add media_graph_walk_next_stream()
+  media: v4l2-common: add helper functions to call s_stream() callbacks
+  media: staging: rkisp1: use v4l2_pipeline_stream_{enable,disable}
+    helpers
+  media: vimc: use v4l2_pipeline_stream_{enable,disable} helpers
+
+ drivers/media/mc/mc-entity.c                  | 34 ++++++-
+ drivers/media/platform/vimc/vimc-capture.c    | 28 ++++--
+ drivers/media/platform/vimc/vimc-streamer.c   | 49 +--------
+ drivers/media/v4l2-core/v4l2-common.c         | 99 +++++++++++++++++++
+ drivers/staging/media/rkisp1/rkisp1-capture.c | 74 +-------------
+ include/media/media-entity.h                  | 15 +++
+ include/media/v4l2-common.h                   | 30 ++++++
+ include/media/v4l2-subdev.h                   |  2 +
+ 8 files changed, 204 insertions(+), 127 deletions(-)
+
+-- 
+2.25.0
+
