@@ -2,122 +2,102 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3E0C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCE7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C2F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1482620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oJl+8nZd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AW2GJDjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732684AbgCPVPc (ORCPT
+        id S1732692AbgCPVQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:15:32 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33262 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732652AbgCPVPb (ORCPT
+        Mon, 16 Mar 2020 17:16:50 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48872 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732634AbgCPVQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:15:31 -0400
-Received: by mail-pj1-f66.google.com with SMTP id dw20so4371381pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 14:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KaK149mcvHpJfMxye3tXJbFCoSJn6xDOGuQiZnEv0Kw=;
-        b=oJl+8nZd+9LHzT40nJyJpJtsqNnnWAFfqgFRQndl19IpKUIGbqNdVNhBE9WEOnIV2g
-         2c7b3BSJ2ogdeQ7VuOP3OiFyCQhSdVd4J4VA/4APGFx+yohktiZTEaRER/oQ6B/d0NfX
-         sDTXa9db3Gn1XzHA6McRVnzpwTMdcs05FxmGYBXr8VfyQLCCTQ3TcSRAwCg/f18wya2n
-         eAgUrOvBOl8xxzXeFDzOJCdbveNC4EF1CJOXWlfSmn30fGKE489oQw+ZujOzTAuarzRF
-         Sm/4j7xsi8YJ3N+3bw6oHU/rDwv9zoCOgyZScV7WUyLnnsFloGsOpmt05pPwfivRg5h6
-         3oow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KaK149mcvHpJfMxye3tXJbFCoSJn6xDOGuQiZnEv0Kw=;
-        b=EfkHzzKq7gCjmxPgE5Cj9ZrR+b7zp/uAmtaHfq3YMDSA5xgeBQ9C/QMce+ZfUB/Svg
-         z/XxHvbJlldNxq/W8YDUyrs2Xw797SAE6pFyqbcN+BOcBJX0g/S8odu/Nv2OSPcZv9OK
-         6qQbUqKL5//KM9F3wDMZEDVpa+Nf0l7T76O897lG/BrQtIbegAEDHD6bsPVo3yN62pjq
-         /78pAPiYpd90YR6YcbxTiGaQ/3M9XebbQxS31QBweF/TOqENQ/2df9u2u4BcBxK/ojkZ
-         uWvWWQ4AJK8TyCMXf93ZkE02XaQGRqOO7Q7heeYMIvdIPC5yr1XKLrkj+2oAfGNVZcc1
-         RQZQ==
-X-Gm-Message-State: ANhLgQ3lpwNgyod+XrGVjK/IXJ4MroKkvZFYW88idPfRIJR4tgM/bmJh
-        8wPlPKsBI8KJsyW1i8U3BSllUqACy24MkFl7x5zTgA==
-X-Google-Smtp-Source: ADFU+vsLMv4vfYgKJM3UACye15ScgavNMy5rn/D4RIYctClFBjL2Holw5IElKcomCXFXEdmQBRVk31RXNl8gfxVrZiI=
-X-Received: by 2002:a17:90b:311:: with SMTP id ay17mr1531492pjb.27.1584393329930;
- Mon, 16 Mar 2020 14:15:29 -0700 (PDT)
+        Mon, 16 Mar 2020 17:16:49 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GLGk5I053421;
+        Mon, 16 Mar 2020 16:16:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584393406;
+        bh=auIeyhTBM5VkG3uumINphWmH9dle8E51uTezycsVdfw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=AW2GJDjDqJALwoiACZrVEaZ547mHy7rGecQNGU7yiSaOnmjRGQXae6HVSf3WZLgqh
+         p/vEpeiN9SwW7v/0GRuIBepJQP0m+/OnaaaveMWGhcXE/NrEpSXaxe1622zZn2q8Jf
+         Jc3UpgovJzlR0msqclGmu5V8oOF+fWC9ITLliKe8=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02GLGkP3032895
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Mar 2020 16:16:46 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Mar 2020 16:16:45 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Mar 2020 16:16:46 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GLGgmi060747;
+        Mon, 16 Mar 2020 16:16:43 -0500
+Subject: Re: [for-next PATCH v2 1/5] phy: ti: gmii-sel: simplify config
+ dependencies between net drivers and gmii phy
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        netdev <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200303160029.345-1-grygorii.strashko@ti.com>
+ <20200303160029.345-2-grygorii.strashko@ti.com>
+ <20200316140859.GA30922@a0393678ub>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <128961a1-8437-741d-96cc-ed24b790cabf@ti.com>
+Date:   Mon, 16 Mar 2020 23:16:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200130015905.18610-1-natechancellor@gmail.com> <20200211142431.243E6C433A2@smtp.codeaurora.org>
-In-Reply-To: <20200211142431.243E6C433A2@smtp.codeaurora.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 16 Mar 2020 14:15:17 -0700
-Message-ID: <CAKwvOdkcT6jdFu2Mj5ZKErKmm+MyGAoJ=R_0LatR+_A0j7OtYw@mail.gmail.com>
-Subject: Re: [PATCH] ath11k: Silence clang -Wsometimes-uninitialized in ath11k_update_per_peer_stats_from_txcompl
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        CI Notify <ci_notify@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200316140859.GA30922@a0393678ub>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kalle, I still see this warning in KernelCI builds of linux-next.
-Is ath-next flowing into linux-next?  I just want to triple check that
-this fix gets sent along.
-
-On Tue, Feb 11, 2020 at 6:24 AM Kalle Valo <kvalo@codeaurora.org> wrote:
->
-> Nathan Chancellor <natechancellor@gmail.com> wrote:
->
-> > Clang warns a few times (trimmed for brevity):
-> >
-> > ../drivers/net/wireless/ath/ath11k/debugfs_sta.c:185:7: warning:
-> > variable 'rate_idx' is used uninitialized whenever 'if' condition is
-> > false [-Wsometimes-uninitialized]
-> >
-> > It is not wrong, rate_idx is only initialized in the first if block.
-> > However, this is not necessarily an issue in practice because rate_idx
-> > will only be used when initialized because
-> > ath11k_accumulate_per_peer_tx_stats only uses rate_idx when flags is not
-> > set to RATE_INFO_FLAGS_HE_MCS, RATE_INFO_FLAGS_VHT_MCS, or
-> > RATE_INFO_FLAGS_MCS. Still, it is not good to stick uninitialized values
-> > into another function so initialize it to zero to prevent any issues
-> > down the line.
-> >
-> > Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/832
-> > Reported-by: ci_notify@linaro.org
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
->
-> Patch applied to ath-next branch of ath.git, thanks.
->
-> df57acc415b1 ath11k: Silence clang -Wsometimes-uninitialized in ath11k_update_per_peer_stats_from_txcompl
->
-> --
-> https://patchwork.kernel.org/patch/11357331/
->
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200211142431.243E6C433A2%40smtp.codeaurora.org.
 
 
+On 16/03/2020 16:08, Kishon Vijay Abraham I wrote:
+> On Tue, Mar 03, 2020 at 06:00:25PM +0200, Grygorii Strashko wrote:
+>> The phy-gmii-sel can be only auto selected in Kconfig and now the pretty
+>> complex Kconfig dependencies are defined for phy-gmii-sel driver, which
+>> also need to be updated every time phy-gmii-sel is re-used for any new
+>> networking driver.
+>>
+>> Simplify Kconfig definition for phy-gmii-sel PHY driver - drop all
+>> dependencies and from networking drivers and rely on using 'imply
+>> PHY_TI_GMII_SEL' in Kconfig definitions for networking drivers instead.
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+Thanks you, Kishon.
+
+I'll include this patch in next version of my series to
+add networking support for k3 am65x/j721e soc.
 
 -- 
-Thanks,
-~Nick Desaulniers
+Best regards,
+grygorii
