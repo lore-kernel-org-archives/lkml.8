@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376ACC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65695C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE3E206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD7C206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326303;
-	bh=OGv4NJMH6egSO3CM+oM4/EP7ikbuiFpvtEs66GSlFxA=;
+	s=default; t=1584326307;
+	bh=+Wrdt2IjNJU/+2f1OXPiWEBQi2rieRBad78UzbSNW1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1vIvJTkkHzzZFejPHsPlRmfH8BzpE1FjsibjrT1WG0AG0ot8SLT9dilOIXABWr/G
-	 EySBujStsBftpum8h5CiXGJX6PlQb2VDK9sRPLzIjHm8IWD3F4k2vCn4MeOLV3OVlH
-	 eH99nyFoAQOg1yqEoh9cv+TOz8hn4OLf7QyijAxQ=
+	b=TleCn1w7MXLUS6JvzPH62F7APHoFmWOncuzl7jGghNL9gLTHGQvrysXETplAOtOzV
+	 ns5fh4QZ55UqxmvSNSFv5X3PsBAceZVQ7qBydEND5mkZippS7q849X1nDhVgw1d3W3
+	 dct8vXV2VpBLo2vBNv6V0Umhrr1gDoqEvvBl7Pqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgCPCiW (ORCPT
+        id S1729991AbgCPCev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:38:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38738 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729989AbgCPCew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:52 -0400
+        id S1729939AbgCPCeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BEA62073E;
-        Mon, 16 Mar 2020 02:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DE2A2073E;
+        Mon, 16 Mar 2020 02:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326091;
-        bh=OGv4NJMH6egSO3CM+oM4/EP7ikbuiFpvtEs66GSlFxA=;
+        s=default; t=1584326084;
+        bh=+Wrdt2IjNJU/+2f1OXPiWEBQi2rieRBad78UzbSNW1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nal4SxkVifYfOzHjgZJOKQfGU7HRzJMLKeFkO1olo2uVviykxF0hkN/YOHASBbYu+
-         jLzA/8pcWUoqurVRMgqVHMXKJ4hgnfblRF6PXTqjLy2VEi+CpFjUq9P+5x1gXwxugW
-         JWgdaJy7rJh0NyThkAk+3GEl34YqoYZIQw+AOpsI=
+        b=JCSk/IgsalNh7v2ncI5MgijhkdyWDMZLzYnqSsZWwFBxmoS6+KvzoZ1i1ow0sfDAz
+         /2abz+ajR0WzrJj8X/28LEThr1YxpSqUoMg2AhjegGWAkWJXhvut1BUcv/AaG0563X
+         YuEiE8Uffj1cx1LI1N0UwHMXiUQWFpOj+5UE5jj0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Carlo Nonato <carlo.nonato95@gmail.com>,
-        Kwon Je Oh <kwonje.oh2@gmail.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 34/35] block, bfq: fix overwrite of bfq_group pointer in bfq_find_set_group()
-Date:   Sun, 15 Mar 2020 22:34:10 -0400
-Message-Id: <20200316023411.1263-34-sashal@kernel.org>
+Cc:     Alexandre Ghiti <alex@ghiti.fr>, Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 28/35] riscv: Fix range looking for kernel image memblock
+Date:   Sun, 15 Mar 2020 22:34:04 -0400
+Message-Id: <20200316023411.1263-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
 References: <20200316023411.1263-1-sashal@kernel.org>
@@ -61,60 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Carlo Nonato <carlo.nonato95@gmail.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
 
-[ Upstream commit 14afc59361976c0ba39e3a9589c3eaa43ebc7e1d ]
+[ Upstream commit a160eed4b783d7b250a32f7e5787c9867abc5686 ]
 
-The bfq_find_set_group() function takes as input a blkcg (which represents
-a cgroup) and retrieves the corresponding bfq_group, then it updates the
-bfq internal group hierarchy (see comments inside the function for why
-this is needed) and finally it returns the bfq_group.
-In the hierarchy update cycle, the pointer holding the correct bfq_group
-that has to be returned is mistakenly used to traverse the hierarchy
-bottom to top, meaning that in each iteration it gets overwritten with the
-parent of the current group. Since the update cycle stops at root's
-children (depth = 2), the overwrite becomes a problem only if the blkcg
-describes a cgroup at a hierarchy level deeper than that (depth > 2). In
-this case the root's child that happens to be also an ancestor of the
-correct bfq_group is returned. The main consequence is that processes
-contained in a cgroup at depth greater than 2 are wrongly placed in the
-group described above by BFQ.
+When looking for the memblock where the kernel lives, we should check
+that the memory range associated to the memblock entirely comprises the
+kernel image and not only intersects with it.
 
-This commits fixes this problem by using a different bfq_group pointer in
-the update cycle in order to avoid the overwrite of the variable holding
-the original group reference.
-
-Reported-by: Kwon Je Oh <kwonje.oh2@gmail.com>
-Signed-off-by: Carlo Nonato <carlo.nonato95@gmail.com>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-cgroup.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/riscv/mm/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index d0e36d6522649..86cd718e0380b 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -593,12 +593,13 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
- 	 */
- 	entity = &bfqg->entity;
- 	for_each_entity(entity) {
--		bfqg = container_of(entity, struct bfq_group, entity);
--		if (bfqg != bfqd->root_group) {
--			parent = bfqg_parent(bfqg);
-+		struct bfq_group *curr_bfqg = container_of(entity,
-+						struct bfq_group, entity);
-+		if (curr_bfqg != bfqd->root_group) {
-+			parent = bfqg_parent(curr_bfqg);
- 			if (!parent)
- 				parent = bfqd->root_group;
--			bfq_group_set_parent(bfqg, parent);
-+			bfq_group_set_parent(curr_bfqg, parent);
- 		}
- 	}
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 573463d1c799a..f5d813c1304da 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -98,7 +98,7 @@ void __init setup_bootmem(void)
+ 	for_each_memblock(memory, reg) {
+ 		phys_addr_t end = reg->base + reg->size;
  
+-		if (reg->base <= vmlinux_end && vmlinux_end <= end) {
++		if (reg->base <= vmlinux_start && vmlinux_end <= end) {
+ 			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
+ 
+ 			/*
 -- 
 2.20.1
 
