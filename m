@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90096C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994C9C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633D92051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDAD2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YhoDYWj6"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="jyesnZc+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731921AbgCPOms (ORCPT
+        id S1731927AbgCPOmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:42:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37895 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731589AbgCPOmq (ORCPT
+        Mon, 16 Mar 2020 10:42:52 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36378 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbgCPOmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:42:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x7so9878170pgh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:42:45 -0700 (PDT)
+        Mon, 16 Mar 2020 10:42:50 -0400
+Received: by mail-pj1-f68.google.com with SMTP id nu11so5573274pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:42:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ju3Njn5NotWuQ3oLE1KcS84vF3InDYC+aV5NVuCJqsk=;
-        b=YhoDYWj6l4mRX5dsP++3w+m8Z4HaLuNhLmjIGJpsJEOPXWkSRx6TJDVQtHfJDmIENO
-         2B69I24eEXomBnJuRJsAXSEd2erDBmlJ80CAE51EJS4E1eoVp0+VqI6kCIAIp6HcJhQr
-         DKxthTmn8jrrTRIHQurbAkxnocGe620X3fVBXJdyjh+5ZNDRpr+fdNiLQ9vX+GnyuqAi
-         klQwpYVvOitq46DB8HWGqHP7UdOH4Gk8cQda+QAbHe4vElmx2DwBr8J+CJxwoGy4Qc5H
-         g9FfnoC+GNwZBLm6b39vOXwai3Rj+0NPFWnmxCiSX2Jnae3E5CsMbP0pMt/KyKX2XjAe
-         5xGg==
+        bh=9l+wWBOfSBMIyXuLdYYRbynfSuSviwsAcrFvYuXXKYQ=;
+        b=jyesnZc+pnNv4stNLJoNav6+7GENTQ6+U6xxezUlEgUF9ZB/4NnP+xLLsaH5eoG81h
+         tLTg1bK7UPOWVvSCDhpwoVPU3+zAWiBYq0gCqkhPajy2vnr1Mr43DueQfqjvV21pt/9P
+         ee5JG+KiZInIFAlRM4MRzp/NWgiRd2o9ZKMqg8lSIkgxXYEuyAD5TIGbrBUursVCko8p
+         zSGHNPpG+s4hVj41Tv7ksb33zV1qZLro4NPwP9egOI7rrmkpM1bTSr/FYQYAZf/RW6Qm
+         bipwdBpYmI+vsE0RTF4yj5Q/uOe8Q3uIq6QcwOiABZaNtI+2HSuNsLZUwMiHDZvr6mTL
+         qSZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ju3Njn5NotWuQ3oLE1KcS84vF3InDYC+aV5NVuCJqsk=;
-        b=D6EFhRE1Z0WLVeRi979iU3rlSMQ/nrBXLMrTb+DhR3+xKtRTfaCr7OAas9FOCOtFRK
-         7Q8DX6o1L7FDeugpuej8lgXAhNIy2ALmvt/6IZrhCAminXIYX94tgjQ7FN46IaygHV8t
-         XSvJor6pR8s5PRzbQQgXRX8/rw+LZMoK6j0yV8GBdKn84TWze5vufhC4qiXrlmqPUdfn
-         7MXEGr650CMMIdCsz79AZ+WzI8Ix+h5H6LO4EV/4JA3s9GgUGB+wrIS7r/K/2pRmGjAF
-         7pfOyFiB5hlqBJz9RSt/ckvXKp47ALAiw111ZrZpzAjgiu7HqJ3U3XwNQFCj1ErD2Rcg
-         H0xg==
-X-Gm-Message-State: ANhLgQ1xIcWk4xcHupDOFZGfwWNmBT/qxpFjDGLK+qdPLxmKLmxvM9Fo
-        Xr7AWclhIUwkzCVuNbVRojIqwUWtJIKuig==
-X-Google-Smtp-Source: ADFU+vuLwxIAH/W01ZsVoSHLQxItDbUipns0V56puawDa9JFjyo39OEZooDtS5vJmMorib0bFCx0+Q==
-X-Received: by 2002:a63:c445:: with SMTP id m5mr208045pgg.194.1584369764830;
-        Mon, 16 Mar 2020 07:42:44 -0700 (PDT)
+        bh=9l+wWBOfSBMIyXuLdYYRbynfSuSviwsAcrFvYuXXKYQ=;
+        b=OBrWIqxfAWgAgtoONCKyPiHtw+KyDAiYaIEHssL3T5O6dPrXA2wES1ZGCje67gTa7D
+         6CS/UB+ehRmAZgWEy5KeuljUvzSr20ieLG1l9eeTiM+F2CSx2aD1QE6kEgGDp4kKZzO0
+         KMeFB0QxA14GbBq2ZmQreIeVq9MtKgv3PaFC3+XpOMewCyBLcvwOKZXloFkvi9byIa25
+         gFhN4n3yOwuHc2PstynK0RDv/TwIHa+97Ollh5ylri53CjclMJnieDTZrCBW3T+Pqkas
+         PtZEB35P8C+45YE+ojGVDBhcCmUA5rGxY3wzXBJL8Lcsp/QvtCuc74fgeGbcTmICQ4NZ
+         wnWQ==
+X-Gm-Message-State: ANhLgQ38nX8QM5vJlEAANLAPQYaX3DcEFxMm94EJ28ABaI1LRMSLDrld
+        934TpByGIBzyv4jJO++/eK9fFx5/tsuYsA==
+X-Google-Smtp-Source: ADFU+vv1gjc3CefDFGciNcdkAwCtQ0Chq7leYuvkV/SrELQIGIJsqBVW4/kt6PloYuXxBhhFBEYnDQ==
+X-Received: by 2002:a17:902:8509:: with SMTP id bj9mr27957195plb.123.1584369769335;
+        Mon, 16 Mar 2020 07:42:49 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.42.40
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.42.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:42:44 -0700 (PDT)
+        Mon, 16 Mar 2020 07:42:48 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,12 +67,12 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: [PATCHv2 41/50] x86: Add show_stack_loglvl()
-Date:   Mon, 16 Mar 2020 14:39:07 +0000
-Message-Id: <20200316143916.195608-42-dima@arista.com>
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org
+Subject: [PATCHv2 42/50] xtensa: Add loglvl to show_trace()
+Date:   Mon, 16 Mar 2020 14:39:08 +0000
+Message-Id: <20200316143916.195608-43-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -99,48 +99,58 @@ Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
 an easier approach than introducing more printk buffers.
 Also, it will consolidate printings with headers.
 
-Introduce show_stack_loglvl(), that eventually will substitute
-show_stack().
+Add log level argument to show_trace() as a preparation for introducing
+show_stack_loglvl().
 
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: linux-xtensa@linux-xtensa.org
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/kernel/dumpstack.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/xtensa/kernel/traps.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index b94bc31a1757..4396f2cfad19 100644
---- a/arch/x86/kernel/dumpstack.c
-+++ b/arch/x86/kernel/dumpstack.c
-@@ -279,7 +279,8 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
- 	}
+diff --git a/arch/xtensa/kernel/traps.c b/arch/xtensa/kernel/traps.c
+index 0976e27b8d5d..c397a02457bc 100644
+--- a/arch/xtensa/kernel/traps.c
++++ b/arch/xtensa/kernel/traps.c
+@@ -479,18 +479,22 @@ void show_regs(struct pt_regs * regs)
+ 
+ static int show_trace_cb(struct stackframe *frame, void *data)
+ {
++	const char *loglvl = data;
++
+ 	if (kernel_text_address(frame->pc))
+-		pr_cont(" [<%08lx>] %pB\n", frame->pc, (void *)frame->pc);
++		printk("%s [<%08lx>] %pB\n",
++			loglvl, frame->pc, (void *)frame->pc);
+ 	return 0;
  }
  
--void show_stack(struct task_struct *task, unsigned long *sp)
-+void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+-void show_trace(struct task_struct *task, unsigned long *sp)
++static void show_trace(struct task_struct *task, unsigned long *sp,
 +		       const char *loglvl)
  {
- 	task = task ? : current;
+ 	if (!sp)
+ 		sp = stack_pointer(task);
  
-@@ -290,7 +291,12 @@ void show_stack(struct task_struct *task, unsigned long *sp)
- 	if (!sp && task == current)
- 		sp = get_stack_pointer(current, NULL);
- 
--	show_trace_log_lvl(task, NULL, sp, KERN_DEFAULT);
-+	show_trace_log_lvl(task, NULL, sp, loglvl);
-+}
-+
-+void show_stack(struct task_struct *task, unsigned long *sp)
-+{
-+	show_stack_loglvl(task, sp, KERN_DEFAULT);
+-	pr_info("Call Trace:\n");
+-	walk_stackframe(sp, show_trace_cb, NULL);
++	printk("%sCall Trace:\n", loglvl);
++	walk_stackframe(sp, show_trace_cb, (void *)loglvl);
  }
  
- void show_stack_regs(struct pt_regs *regs)
+ #define STACK_DUMP_ENTRY_SIZE 4
+@@ -511,7 +515,7 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+ 	print_hex_dump(KERN_INFO, " ", DUMP_PREFIX_NONE,
+ 		       STACK_DUMP_LINE_SIZE, STACK_DUMP_ENTRY_SIZE,
+ 		       sp, len, false);
+-	show_trace(task, sp);
++	show_trace(task, stack, KERN_INFO);
+ }
+ 
+ DEFINE_SPINLOCK(die_lock);
 -- 
 2.25.1
 
