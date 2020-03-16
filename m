@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA52C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D674C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994082051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED242051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbgCPKsa (ORCPT
+        id S1730711AbgCPKt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:48:30 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:46165 "EHLO
+        Mon, 16 Mar 2020 06:49:56 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:59099 "EHLO
         relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730478AbgCPKsa (ORCPT
+        with ESMTP id S1730478AbgCPKt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:48:30 -0400
+        Mon, 16 Mar 2020 06:49:56 -0400
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 227A9240024;
-        Mon, 16 Mar 2020 10:47:18 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 140FD24001D;
+        Mon, 16 Mar 2020 10:48:29 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Eddie Huang <eddie.huang@mediatek.com>,
         Sean Wang <sean.wang@mediatek.com>,
@@ -32,10 +32,12 @@ To:     Eddie Huang <eddie.huang@mediatek.com>,
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] rtc: mt2712: fix build without PM_SLEEP
-Date:   Mon, 16 Mar 2020 11:47:00 +0100
-Message-Id: <20200316104701.209293-1-alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/2] rtc: mt2712: remove unused variable
+Date:   Mon, 16 Mar 2020 11:47:01 +0100
+Message-Id: <20200316104701.209293-2-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200316104701.209293-1-alexandre.belloni@bootlin.com>
+References: <20200316104701.209293-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,30 +45,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move SIMPLE_DEV_PM_OPS out of #ifdef to fix build issues when PM_SLEEP is
-not selected.
+irqen is not used in  mt2712_rtc_set_alarm, remove it.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-mt2712.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-mt2712.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/rtc/rtc-mt2712.c b/drivers/rtc/rtc-mt2712.c
-index 432df9b0a3ac..c2709c1602f0 100644
+index c2709c1602f0..617e397dd820 100644
 --- a/drivers/rtc/rtc-mt2712.c
 +++ b/drivers/rtc/rtc-mt2712.c
-@@ -394,10 +394,10 @@ static int mt2712_rtc_resume(struct device *dev)
+@@ -232,7 +232,6 @@ static int mt2712_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ {
+ 	struct mt2712_rtc *mt2712_rtc = dev_get_drvdata(dev);
+ 	struct rtc_time *tm = &alm->time;
+-	u16 irqen;
  
- 	return 0;
- }
-+#endif
- 
- static SIMPLE_DEV_PM_OPS(mt2712_pm_ops, mt2712_rtc_suspend,
- 			 mt2712_rtc_resume);
--#endif
- 
- static const struct of_device_id mt2712_rtc_of_match[] = {
- 	{ .compatible = "mediatek,mt2712-rtc", },
+ 	dev_dbg(&mt2712_rtc->rtc->dev, "set al time: %ptR, alm en: %d\n",
+ 		tm, alm->enabled);
 -- 
 2.24.1
 
