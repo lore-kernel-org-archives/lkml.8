@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4A0C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A88CC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D95920575
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE8820575
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgCPHEg (ORCPT
+        id S1729853AbgCPHEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:04:36 -0400
-Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:34886 "HELO
+        Mon, 16 Mar 2020 03:04:37 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:16902 "HELO
         aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1729723AbgCPHEg (ORCPT
+        by vger.kernel.org with SMTP id S1728302AbgCPHEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Mar 2020 03:04:36 -0400
 Received: from 137.localdomain (unknown [218.107.205.216])
-        by app1 (Coremail) with SMTP id xjNnewDn7Q1cHm9ew20FAA--.217S4;
-        Mon, 16 Mar 2020 14:36:24 +0800 (CST)
+        by app1 (Coremail) with SMTP id xjNnewDn7Q1cHm9ew20FAA--.217S6;
+        Mon, 16 Mar 2020 14:36:27 +0800 (CST)
 From:   Pengcheng Yang <yangpc@wangsu.com>
 To:     edumazet@google.com, ncardwell@google.com, davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pengcheng Yang <yangpc@wangsu.com>
-Subject: [PATCH RESEND net-next v2 2/5] tcp: fix stretch ACK bugs in Scalable
-Date:   Mon, 16 Mar 2020 14:35:08 +0800
-Message-Id: <1584340511-9870-3-git-send-email-yangpc@wangsu.com>
+Subject: [PATCH RESEND net-next v2 4/5] tcp: fix stretch ACK bugs in Veno
+Date:   Mon, 16 Mar 2020 14:35:10 +0800
+Message-Id: <1584340511-9870-5-git-send-email-yangpc@wangsu.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
 References: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
-X-CM-TRANSID: xjNnewDn7Q1cHm9ew20FAA--.217S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4rWryDXr1xJr4furyDJrb_yoW8XFWUpF
-        s8Gw1Fkr45WrySgayS9Fy5JF15GwsavFy7Gry2krn3Aws8Gr93tF1kt3y5tFWUA3yxC39I
-        krWj93WxWF9YyrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: xjNnewDn7Q1cHm9ew20FAA--.217S6
+X-Coremail-Antispam: 1UD129KBjvJXoWrKF18ZF15GFy5Xr1kuw17Wrg_yoW8JF1fpF
+        Z7GwsIkF4agFyIgFWfAa45Jw4UGa1vqFW8K34UJw1fXw4YqF13AFyvq3y5trWUG3yxAw1a
+        vr909w1fJF9akrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
         9KBjDU0xBIdaVrnRJUUUgI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
         0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
         x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
@@ -47,7 +47,7 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4rWryDXr1xJr4furyDJrb_yoW8XFWUpF
         JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
         AFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xII
         jxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
-        A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU
+        A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU
         0xZFpf9x0Jj2-eOUUUUU=
 X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,55 +55,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change Scalable to properly handle stretch ACKs in additive
-increase mode by passing in the count of ACKed packets to
-tcp_cong_avoid_ai().
-
-In addition, because we are now precisely accounting for
-stretch ACKs, including delayed ACKs, we can now change
-TCP_SCALABLE_AI_CNT to 100.
+Change Veno to properly handle stretch ACKs in additive
+increase mode by passing in the count of ACKed packets
+to tcp_cong_avoid_ai().
 
 Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
 ---
- net/ipv4/tcp_scalable.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ net/ipv4/tcp_veno.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv4/tcp_scalable.c b/net/ipv4/tcp_scalable.c
-index 471571e..6cebf41 100644
---- a/net/ipv4/tcp_scalable.c
-+++ b/net/ipv4/tcp_scalable.c
-@@ -10,10 +10,9 @@
- #include <net/tcp.h>
+diff --git a/net/ipv4/tcp_veno.c b/net/ipv4/tcp_veno.c
+index 857491c..50a9a6e 100644
+--- a/net/ipv4/tcp_veno.c
++++ b/net/ipv4/tcp_veno.c
+@@ -154,8 +154,9 @@ static void tcp_veno_cong_avoid(struct sock *sk, u32 ack, u32 acked)
  
- /* These factors derived from the recommended values in the aer:
-- * .01 and and 7/8. We use 50 instead of 100 to account for
-- * delayed ack.
-+ * .01 and and 7/8.
-  */
--#define TCP_SCALABLE_AI_CNT	50U
-+#define TCP_SCALABLE_AI_CNT	100U
- #define TCP_SCALABLE_MD_SCALE	3
+ 		if (tcp_in_slow_start(tp)) {
+ 			/* Slow start. */
+-			tcp_slow_start(tp, acked);
+-			goto done;
++			acked = tcp_slow_start(tp, acked);
++			if (!acked)
++				goto done;
+ 		}
  
- static void tcp_scalable_cong_avoid(struct sock *sk, u32 ack, u32 acked)
-@@ -23,11 +22,13 @@ static void tcp_scalable_cong_avoid(struct sock *sk, u32 ack, u32 acked)
- 	if (!tcp_is_cwnd_limited(sk))
- 		return;
- 
--	if (tcp_in_slow_start(tp))
--		tcp_slow_start(tp, acked);
--	else
--		tcp_cong_avoid_ai(tp, min(tp->snd_cwnd, TCP_SCALABLE_AI_CNT),
--				  1);
-+	if (tcp_in_slow_start(tp)) {
-+		acked = tcp_slow_start(tp, acked);
-+		if (!acked)
-+			return;
-+	}
-+	tcp_cong_avoid_ai(tp, min(tp->snd_cwnd, TCP_SCALABLE_AI_CNT),
-+			  acked);
- }
- 
- static u32 tcp_scalable_ssthresh(struct sock *sk)
+ 		/* Congestion avoidance. */
+@@ -163,7 +164,7 @@ static void tcp_veno_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+ 			/* In the "non-congestive state", increase cwnd
+ 			 * every rtt.
+ 			 */
+-			tcp_cong_avoid_ai(tp, tp->snd_cwnd, 1);
++			tcp_cong_avoid_ai(tp, tp->snd_cwnd, acked);
+ 		} else {
+ 			/* In the "congestive state", increase cwnd
+ 			 * every other rtt.
+@@ -177,7 +178,7 @@ static void tcp_veno_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+ 					veno->inc = 1;
+ 				tp->snd_cwnd_cnt = 0;
+ 			} else
+-				tp->snd_cwnd_cnt++;
++				tp->snd_cwnd_cnt += acked;
+ 		}
+ done:
+ 		if (tp->snd_cwnd < 2)
 -- 
 1.8.3.1
 
