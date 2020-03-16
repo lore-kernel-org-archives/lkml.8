@@ -2,201 +2,84 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FF6C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22E6C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696882051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890F72051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYTMLp3z"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="n7up+uKa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbgCPNod (ORCPT
+        id S1731409AbgCPNrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:44:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37442 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731130AbgCPNod (ORCPT
+        Mon, 16 Mar 2020 09:47:42 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:46387 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731128AbgCPNrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:44:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 6so21289183wre.4;
-        Mon, 16 Mar 2020 06:44:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nO7gNqCTwmPJ3cLdw6MlLopviM60j+Jf/LUmBue4U14=;
-        b=bYTMLp3zWJUvBGVepm6sOE4tTLdAPmVVFdqa9vcgVDmHpbf21DK6yOxCuObtdd9d9k
-         JgQb1NC5pD6ytynJoiaTVDP4KUu13PgMOBp6dCzQP868apmeXauY/nxJ89KVPnpnypPa
-         d2uf2Z6hWXmwSF/a184+jlq5DGxvlHOq6KcGNbzi4HbHo28I0otg1h4aGDND7xptb2mB
-         Lym/f7WoegJ8iqWhNelbLuMfdH13GbRJDFzUarHajmBkl9ACG/YMtoQXOIR+Nf6ZrLp4
-         0HkYBN+eDkagHezjz8RwGFGKaLaJicFtsi4rfQf+YeLYEO5A55l4MDWNO3pb5Tk+7RPs
-         V7+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nO7gNqCTwmPJ3cLdw6MlLopviM60j+Jf/LUmBue4U14=;
-        b=ihpUm41mwL7KtLqNUFRbiSoba6CTf7Q/1O6cefwRfxJN1jtXVezbUm4iTW8u//2UvX
-         N4tMCJnrNxx8mFPNdxrsDXG0lkk3QHRSGrO7cw6qHq3wDHXWsc587EGZWS9yBVyYsmOL
-         ZvET+2g/3uhqr+96iORRT2/9RKfway9/J763VJfsRVrzdyCTsF11rCt+9Bd4+TGEkgPY
-         neLJwJhqCbp/dzxIAA3rn310GmWrrSEXE6pPQzdYDG4aH5KhLYBCwIPMAvN6JiUPFNOT
-         8I8HQIKY955M1keT5iazSeYBCF4eD3vnxf5SqETWhNRH6GdnkC0FTFMF/Kg8j3vCSpuc
-         QHzg==
-X-Gm-Message-State: ANhLgQ195igEMxX4iC8SuLoWR1xJLjuj0WlTr8JZFBc3lqqlo383CEHi
-        YUXwAByjJ3nubuq7tr4lAcY=
-X-Google-Smtp-Source: ADFU+vtIuMs/TH2XKr3oDVVBV2LTvKuTzBgNH8YLVlpy/T2UcsmZIIR9YQjSykMAMLhZ5u2Wl90+bw==
-X-Received: by 2002:adf:eb48:: with SMTP id u8mr35806629wrn.283.1584366269667;
-        Mon, 16 Mar 2020 06:44:29 -0700 (PDT)
-Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
-        by smtp.gmail.com with ESMTPSA id o9sm3132wrw.20.2020.03.16.06.44.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 06:44:28 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 14:44:27 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Cross <ccross@android.com>,
-        Olof Johansson <olof@lixom.net>,
-        Thierry Reding <treding@nvidia.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the usb tree
-Message-ID: <20200316134427.GA3825456@ulmo>
-References: <20200316141004.171649a5@canb.auug.org.au>
- <20200316113012.GA3049021@ulmo>
- <20200316132850.GB3960435@kroah.com>
+        Mon, 16 Mar 2020 09:47:42 -0400
+X-UUID: 10a504a8f5d14e4fae581bb818e7ad34-20200316
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4JA6NZX9xYGKptnv1DMIdtY2XSn1zUtwqcPfjmJwyTg=;
+        b=n7up+uKagsveG+5NfZjhth4tRoOXTNB+oTxgQ7UVoZRnTLAkyIGeU0UHsEj7lJVZgNNThLemjI0rrkL19fmOBa/ssZeA2e1Buq4dzgizm7dnZUBSsqNCJ11D1HtaSKbAFKb8UFBYRR3IiyG6PeLaswb+ML9e+cWkhcDcZ4s3t9I=;
+X-UUID: 10a504a8f5d14e4fae581bb818e7ad34-20200316
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1831999363; Mon, 16 Mar 2020 21:47:35 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 16 Mar 2020 21:45:18 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 16 Mar 2020 21:44:36 +0800
+Message-ID: <1584366454.14250.12.camel@mtksdccf07>
+Subject: Re: [PATCH 2/2] scsi: ufs: Do not rely on prefetched data
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
+        <hongwus@codeaurora.org>, <rnayak@codeaurora.org>,
+        <linux-scsi@vger.kernel.org>, <kernel-team@android.com>,
+        <saravanak@google.com>, <salyzyn@google.com>,
+        "Alim Akhtar" <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Bart Van Assche" <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Mon, 16 Mar 2020 21:47:34 +0800
+In-Reply-To: <1584342373-10282-3-git-send-email-cang@codeaurora.org>
+References: <1584342373-10282-1-git-send-email-cang@codeaurora.org>
+         <1584342373-10282-3-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
-Content-Disposition: inline
-In-Reply-To: <20200316132850.GB3960435@kroah.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+SGkgQ2FuLA0KDQpPbiBNb24sIDIwMjAtMDMtMTYgYXQgMDA6MDYgLTA3MDAsIENhbiBHdW8gd3Jv
+dGU6DQo+IFdlIHdlcmUgc2V0dGluZyBiQWN0aXZlSUNDTGV2ZWwgYXR0cmlidXRlIGZvciBVRlMg
+ZGV2aWNlIG9ubHkgb25jZSBidXQNCj4gdHlwZSBvZiB0aGlzIGF0dHJpYnV0ZSBoYXMgY2hhbmdl
+ZCBmcm9tIHBlcnNpc3RlbnQgdG8gdm9sYXRpbGUgc2luY2UgVUZTDQo+IGRldmljZSBzcGVjaWZp
+Y2F0aW9uIHYyLjEuIFRoaXMgYXR0cmlidXRlIGlzIHNldCB0byB0aGUgZGVmYXVsdCB2YWx1ZSBh
+ZnRlcg0KPiBwb3dlciBjeWNsZSBvciBoYXJkd2FyZSByZXNldCBldmVudC4gSXQgaXNuJ3Qgc2Fm
+ZSB0byByZWx5IG9uIHByZWZldGNoZWQNCj4gZGF0YSAob25seSB1c2VkIGZvciBiQWN0aXZlSUND
+TGV2ZWwgYXR0cmlidXRlIG5vdykuIEhlbmNlIHRoaXMgY2hhbmdlDQo+IHJlbW92ZXMgdGhlIGNv
+ZGUgcmVsYXRlZCB0byBkYXRhIHByZWZldGNoaW5nIGFuZCBzZXQgdGhpcyBwYXJhbWV0ZXIgb24N
+Cj4gZXZlcnkgYXR0ZW1wdCB0byBwcm9iZSB0aGUgVUZTIGRldmljZS4NCj4gDQo+IFNpZ25lZC1v
+ZmYtYnk6IENhbiBHdW8gPGNhbmdAY29kZWF1cm9yYS5vcmc+DQoNClJldmlld2VkIGFuZCBUZXN0
+ZWQgYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQoNCg0K
 
---17pEHd4RhPHOinZp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 16, 2020 at 02:28:50PM +0100, Greg KH wrote:
-> On Mon, Mar 16, 2020 at 12:30:12PM +0100, Thierry Reding wrote:
-> > On Mon, Mar 16, 2020 at 02:10:04PM +1100, Stephen Rothwell wrote:
-> > > Hi all,
-> > >=20
-> > > After merging the usb tree, today's linux-next build (arm
-> > > multi_v7_defconfig) failed like this:
-> > >=20
-> > > drivers/phy/tegra/xusb.c: In function 'tegra_xusb_setup_usb_role_swit=
-ch':
-> > > drivers/phy/tegra/xusb.c:641:10: error: initialization of 'int (*)(st=
-ruct usb_role_switch *, enum usb_role)' from incompatible pointer type 'int=
- (*)(struct device *, enum usb_role)' [-Werror=3Dincompatible-pointer-types]
-> > >   641 |   .set =3D tegra_xusb_role_sw_set,
-> > >       |          ^~~~~~~~~~~~~~~~~~~~~~
-> > > drivers/phy/tegra/xusb.c:641:10: note: (near initialization for 'role=
-_sx_desc.set')
-> > >=20
-> > > Caused by commit
-> > >=20
-> > >   bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the=
- switch in the API")
-> > >=20
-> > > interacting with commit
-> > >=20
-> > >   5a00c7c7604f ("phy: tegra: xusb: Add usb-role-switch support")
-> > >=20
-> > > from the tegra tree.
-> > >=20
-> > > I have added this merge fix patch (which may need more work):
-> > >=20
-> > > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > Date: Mon, 16 Mar 2020 14:04:20 +1100
-> > > Subject: [PATCH] phy: tegra: fix up for set_role API change
-> > >=20
-> > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > ---
-> > >  drivers/phy/tegra/xusb.c | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-> > > index d907f03bf282..25223c350e66 100644
-> > > --- a/drivers/phy/tegra/xusb.c
-> > > +++ b/drivers/phy/tegra/xusb.c
-> > > @@ -596,11 +596,12 @@ static void tegra_xusb_usb_phy_work(struct work=
-_struct *work)
-> > >  	atomic_notifier_call_chain(&port->usb_phy.notifier, 0, &port->usb_p=
-hy);
-> > >  }
-> > > =20
-> > > -static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role =
-role)
-> > > +static int tegra_xusb_role_sw_set(struct usb_role_switch *sw,
-> > > +				  enum usb_role role)
-> > >  {
-> > > -	struct tegra_xusb_port *port =3D dev_get_drvdata(dev);
-> > > +	struct tegra_xusb_port *port =3D usb_role_switch_get_drvdata(sw);
-> > > =20
-> > > -	dev_dbg(dev, "%s(): role %s\n", __func__, usb_roles[role]);
-> > > +	dev_dbg(&port->dev, "%s(): role %s\n", __func__, usb_roles[role]);
-> > > =20
-> > >  	schedule_work(&port->usb_phy_work);
-> > > =20
-> > > --=20
-> > > 2.25.0
-> >=20
-> > I can rebase the branch that contains this commit on top of Greg's USB
-> > tree. These are a dependency for the UDC and host driver changes that I
-> > have sent as a pull request to Greg, so this should all work out nicely.
->=20
-> Ok, should I take your pull request then, or not?
-
-Let me rebase things first and I'll send an updated pull request. Please
-ignore the one I sent on Friday.
-
-> > Greg, I recall that you've said in the past that you don't rebase your
-> > trees. Is that still the case for the USB tree? Do you have a preference
-> > what to base my branch on? The earliest of your USB tree that contains
-> > all patches needed to make this compile? Or the latest?
->=20
-> Yes, I do not rebase my tree.  Please work off of the usb-next branch,
-> and you can send me a pull request based anywhere, it should work just
-> fine :)
-
-Great, will do.
-
-Thanks,
-Thierry
-
---17pEHd4RhPHOinZp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5vgqEACgkQ3SOs138+
-s6Eb+BAAoJE0qmD8u7uB+0AAfevz6Lf1WRusjXdCuqbPJhtmAOPUlVwlvczGVkz5
-sSSC9GxD/lva2LI1b4w4KDkky79z9wFfTEGIpot+N3JKpu8GkzeSCKl4SYfhwNob
-lGgHF9NN8us+Uz9MHzAmQ3pjXD3Do5L4IZrpbS9I74VEmqh24IXgnow0xqOFN46E
-9KeS7jTjRKgN/yZ5QJalyYicT5RUbZpL17UBoOHqyfMPe1y7NrD3//dnWhn0lRS4
-qrw4x1vjmQcwXiXFJ9MmIVo5fluT1qyMP+gMBZ22Bsgih+pnhXvv2PnJcL2TTcB+
-7KPCPQz4jKAMyZYXqF0zvOKcnjvy26r6pF6sCk+O9kPl0vlFEpxqDWwfka0EoE3c
-yevorPB+441Pfztxep3kiLqbGgl8X0U+4srPzefepSEbyTF3FFQbFwgO/dl0Vm81
-XKya2Fz5GZ3Nux49Rgf918Bn94vuNS4mikJ/5oOu9edbeQbXNlNcZkJzY1gJV6is
-BrA4aZMmdQViqW3BkqEY5DhPKHyPwcfm0cmk6qTY0LsoM/eqEDB3wM3+2l42TWCp
-JQI4TCjv4vkgvDXFc+5XVZJMQ0kAgbXa39FUwIzSm84yBpcSh1bbISWYDQ0C3KZk
-qU8VehpklUamu0pfEMXqy4nmI0n4SWlGlKLz1/QL/3GJeyWtKs4=
-=R74w
------END PGP SIGNATURE-----
-
---17pEHd4RhPHOinZp--
