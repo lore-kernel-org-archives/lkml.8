@@ -2,111 +2,164 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73E0C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7AEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78369206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB0620575
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yn1exyHX"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="MMITke/t";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E54II+Zr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731336AbgCPN1K (ORCPT
+        id S1731356AbgCPN2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:27:10 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33059 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731234AbgCPN1K (ORCPT
+        Mon, 16 Mar 2020 09:28:54 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:33255 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731154AbgCPN2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:27:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584365229;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=of4mUL4rmHq6XhJnwzhTCE0KMqAQsZJRaiD2FUTq71A=;
-        b=Yn1exyHXjLgLQKCsOxunUqUH2+ZgQDTzpH1jwkeE0ypgd8oNFoFeAXMmUhs0SOhfGR45qs
-        vyENoTyp7aPJbycfnd28dSIzBQpt2u7caIiAK4XN/v9t4qKZjnTzlRPs8AIHxUR040kpqn
-        gi/SfZKNF5rx6JrvcaDOi4UP0rq/txE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-123-fqJGX8F_OYKDw0hvF-bISA-1; Mon, 16 Mar 2020 09:27:01 -0400
-X-MC-Unique: fqJGX8F_OYKDw0hvF-bISA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8ACF513F6;
-        Mon, 16 Mar 2020 13:26:59 +0000 (UTC)
-Received: from tucnak.zalov.cz (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00D7190776;
-        Mon, 16 Mar 2020 13:26:58 +0000 (UTC)
-Received: from tucnak.zalov.cz (localhost [127.0.0.1])
-        by tucnak.zalov.cz (8.15.2/8.15.2) with ESMTP id 02GDQt3m018001;
-        Mon, 16 Mar 2020 14:26:56 +0100
-Received: (from jakub@localhost)
-        by tucnak.zalov.cz (8.15.2/8.15.2/Submit) id 02GDQmtB018000;
-        Mon, 16 Mar 2020 14:26:48 +0100
-Date:   Mon, 16 Mar 2020 14:26:48 +0100
-From:   Jakub Jelinek <jakub@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
-Message-ID: <20200316132648.GM2156@tucnak>
-Reply-To: Jakub Jelinek <jakub@redhat.com>
-References: <20200314164451.346497-1-slyfox@gentoo.org>
- <20200316130414.GC12561@hirez.programming.kicks-ass.net>
+        Mon, 16 Mar 2020 09:28:54 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 58BB38A3;
+        Mon, 16 Mar 2020 09:28:53 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 16 Mar 2020 09:28:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=kUt0/mQF3fFJa+SaSINLmVBKDef
+        IWc4N6QePTDuzfSE=; b=MMITke/te69dqqbGeQu04RBDJ/CNFu9Mv7nGTbowzXQ
+        xehmmtXo4k3FoXwb7bFvEt+NxawRNiLdWElmv5a9sO+ElRJBFW1tX2aTQMS0Dg1F
+        bgPbGsl87QnQi3MjbqsE2+AhbfFmfVekKhzUHvKHVItp1zkRR9mARHPBX9U2IkRG
+        J/sZxAyc4NkCLU18nWG4NHw1ZWJBq9I3Iwrn7CCcxhS+EvR5V1aLnTGy1ZurYaBL
+        ip6SYvODCmITn1WB376t6NfiQohRp/hNAbn8/M/sPlzw+2gEP0nMp7sHWbj639nM
+        BUsQyg3/mVQsRKogD4c6c6QBtJw36laiKWoHXClyiOg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=kUt0/m
+        QF3fFJa+SaSINLmVBKDefIWc4N6QePTDuzfSE=; b=E54II+Zr/SHosUpbY1exrD
+        7+e/dfXdJWjLHcaFp4ZWnrrX6ggOODSWkM3EGj1UA2RAQRGftL0M46aRp0721gzC
+        NMEcE2o5p3KB+FSL9N5fMb5QnLX/vnoNqMn+q4FoTMGEbq9QO5klV/6R9Eti3D9b
+        z7qeNVtMR30/buyfqBc3XOkdAfEmZmewKxoeWE8Lq+TmzxPGVUcXJfM3Waqs115H
+        5wlNw/mmLQQk2011MOnqD4Ft1/ksvICBeomJY3r/KqeEKkeOO9mp9YXpGwL8L+tx
+        gc8wPv5tzpOaSSk4PUVsShiDTlvsRPrBZe3L0xG8mEEOIGUOZqLKN2npUMCmzREg
+        ==
+X-ME-Sender: <xms:E39vXhN3ZlO3f_vOQKtaXChXo1UDvkVWaVPnwxl4F32q_QNynJ_c2g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeffedgheefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
+    vghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:FH9vXtb6YH76y_EsKcEvxoCb9vzxCMqmqBtTd2Y89tOnWXhJEiqZmQ>
+    <xmx:FH9vXv1ehRBIrcJZo3SdhEU9g3eH4nR_W5e6EwN7LIGrvxCQGsr8MA>
+    <xmx:FH9vXjfTR1tjN_Fnh7KZstrJtqZdkJHWKRJDKjKC6jPdOnHryLL5Yg>
+    <xmx:FH9vXmXmU3EM1KURrh4IVJR_6wiDZoMX0ZKKfAOwyXJmu_QNo7ESdQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9B6F83061CB6;
+        Mon, 16 Mar 2020 09:28:51 -0400 (EDT)
+Date:   Mon, 16 Mar 2020 14:28:50 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Cross <ccross@android.com>,
+        Olof Johansson <olof@lixom.net>,
+        Thierry Reding <treding@nvidia.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: linux-next: build failure after merge of the usb tree
+Message-ID: <20200316132850.GB3960435@kroah.com>
+References: <20200316141004.171649a5@canb.auug.org.au>
+ <20200316113012.GA3049021@ulmo>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316130414.GC12561@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200316113012.GA3049021@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:04:14PM +0100, Peter Zijlstra wrote:
-> > diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> > index 9b294c13809a..da9f4ea9bf4c 100644
-> > --- a/arch/x86/kernel/Makefile
-> > +++ b/arch/x86/kernel/Makefile
-> > @@ -11,6 +11,12 @@ extra-y	+= vmlinux.lds
+On Mon, Mar 16, 2020 at 12:30:12PM +0100, Thierry Reding wrote:
+> On Mon, Mar 16, 2020 at 02:10:04PM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > After merging the usb tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> > 
+> > drivers/phy/tegra/xusb.c: In function 'tegra_xusb_setup_usb_role_switch':
+> > drivers/phy/tegra/xusb.c:641:10: error: initialization of 'int (*)(struct usb_role_switch *, enum usb_role)' from incompatible pointer type 'int (*)(struct device *, enum usb_role)' [-Werror=incompatible-pointer-types]
+> >   641 |   .set = tegra_xusb_role_sw_set,
+> >       |          ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/phy/tegra/xusb.c:641:10: note: (near initialization for 'role_sx_desc.set')
+> > 
+> > Caused by commit
+> > 
+> >   bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the switch in the API")
+> > 
+> > interacting with commit
+> > 
+> >   5a00c7c7604f ("phy: tegra: xusb: Add usb-role-switch support")
+> > 
+> > from the tegra tree.
+> > 
+> > I have added this merge fix patch (which may need more work):
+> > 
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Mon, 16 Mar 2020 14:04:20 +1100
+> > Subject: [PATCH] phy: tegra: fix up for set_role API change
+> > 
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/phy/tegra/xusb.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+> > index d907f03bf282..25223c350e66 100644
+> > --- a/drivers/phy/tegra/xusb.c
+> > +++ b/drivers/phy/tegra/xusb.c
+> > @@ -596,11 +596,12 @@ static void tegra_xusb_usb_phy_work(struct work_struct *work)
+> >  	atomic_notifier_call_chain(&port->usb_phy.notifier, 0, &port->usb_phy);
+> >  }
 > >  
-> >  CPPFLAGS_vmlinux.lds += -U$(UTS_MACHINE)
+> > -static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+> > +static int tegra_xusb_role_sw_set(struct usb_role_switch *sw,
+> > +				  enum usb_role role)
+> >  {
+> > -	struct tegra_xusb_port *port = dev_get_drvdata(dev);
+> > +	struct tegra_xusb_port *port = usb_role_switch_get_drvdata(sw);
 > >  
-> > +# smpboot's init_secondary initializes stack canary.
-> > +# Make sure we don't emit stack checks before it's
-> > +# initialized.
-> > +nostackp := $(call cc-option, -fno-stack-protector)
-> > +CFLAGS_smpboot.o := $(nostackp)
+> > -	dev_dbg(dev, "%s(): role %s\n", __func__, usb_roles[role]);
+> > +	dev_dbg(&port->dev, "%s(): role %s\n", __func__, usb_roles[role]);
+> >  
+> >  	schedule_work(&port->usb_phy_work);
+> >  
+> > -- 
+> > 2.25.0
 > 
-> What makes GCC10 insert this while GCC9 does not. Also, I would much
+> I can rebase the branch that contains this commit on top of Greg's USB
+> tree. These are a dependency for the UDC and host driver changes that I
+> have sent as a pull request to Greg, so this should all work out nicely.
 
-My bet is different inlining decisions.
-If somebody hands me over the preprocessed source + gcc command line, I can
-have a look in detail (which exact change and why).
+Ok, should I take your pull request then, or not?
 
-> rather GCC10 add a function attrbute to kill this:
-> 
->   __attribute__((no_stack_protect))
+> Greg, I recall that you've said in the past that you don't rebase your
+> trees. Is that still the case for the USB tree? Do you have a preference
+> what to base my branch on? The earliest of your USB tree that contains
+> all patches needed to make this compile? Or the latest?
 
-There is no such attribute, only __attribute__((stack_protect)) which is
-meant mainly for -fstack-protector-explicit and does the opposite, or
-__attribute__((optimize ("no-stack-protector"))) (which will work only
-in GCC7+, since https://gcc.gnu.org/PR71585 changes).
-Or of course you could add noinline attribute to whatever got inlined
-and contains some array or addressable variable that whatever
--fstack-protector* mode kernel uses triggers it.  With -fstack-protector-all
-it would never work even in the past I believe.
+Yes, I do not rebase my tree.  Please work off of the usb-next branch,
+and you can send me a pull request based anywhere, it should work just
+fine :)
 
-	Jakub
+thanks,
 
+greg k-h
