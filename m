@@ -2,253 +2,103 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A90C5ACDA
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D17C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FB120679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584377516;
-	bh=8aWbeyEHBuZ88Xn1W2sCvPjikYI/AzkEPxcBZq7atVk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BvI5l09tnOlwUIGspv/0MixAfSJ7eQ5/K9piMQ9ZU9LNbvMqJ2vKMWIxHW8AuO90p
-	 GJsDsl4n7+UvSlyQQCBxFT6GKu9MaaO9ehuEKCVb4oIzPe8qxq2zUZDwDcH80m1OrX
-	 46iTgEnrJdCXeqVybB25yb2Vt2geqlAlnXP4luxY=
+	by mail.kernel.org (Postfix) with ESMTP id C2E3820679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:55:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="trk/L3v+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732339AbgCPQvz (ORCPT
+        id S1731958AbgCPQzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:51:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:52162 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732209AbgCPQvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:51:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFADA11D4;
-        Mon, 16 Mar 2020 09:51:09 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DEDB3F67D;
-        Mon, 16 Mar 2020 09:51:09 -0700 (PDT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH v10 05/13] arm64: elf: Enable BTI at exec based on ELF program properties
-Date:   Mon, 16 Mar 2020 16:50:47 +0000
-Message-Id: <20200316165055.31179-6-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316165055.31179-1-broonie@kernel.org>
-References: <20200316165055.31179-1-broonie@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Mar 2020 12:55:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37036 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731665AbgCPQzC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 12:55:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 6so22142334wre.4;
+        Mon, 16 Mar 2020 09:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AQf2iKCEsB/GA9ZIoAYJPyIaIBV5OxWUOZmM58+bafY=;
+        b=trk/L3v++ANqrIUVITso6ThLzoP1KahOPQyG7f8RK5X5q2u/wheKNMpf80UEm7iu5p
+         YM/EYZSgLlPVf3nZ/cVs67W9ZdFUUkSMnASQkzH5pE4ED+HmN8NehI4U6sKayo9dGb7d
+         zIBRSuqUnxQJu9mC5j98ddHovxCBddjWuvkzv9LarLbnWbeMnxRFxli8WIadqM+P2Zmv
+         3HvLdKmgkN4foVGlIhjfyjledLRYqhQtOya+ywYKYBgl9hodD1aE1UQteJSqHl1YNkVm
+         qak9hC1IS0zag0Aw5T00naucmeaCjTOanLhKv/mDlE3dD8SPLYPUCXxvehtXd9EUrr7Y
+         IGxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AQf2iKCEsB/GA9ZIoAYJPyIaIBV5OxWUOZmM58+bafY=;
+        b=a2XGwRKwU2cn80lxJB+xR91gc4kNhGAbhlKvWHmr9lmt8S014m9/9EX8nlUOwxF8y9
+         Ql+moKX+oCw4fnnABcX9RyvyH5xLrF/06Omme/KavQ8YRVnt0EdC+FCqUNffKbSiwr6X
+         8bgO20oOUeNx/hEPs8kCeYAMxwDZ79si5ZiYcgxc7t5ulnj/ipmnw9t7Y3HqBYb4cIQL
+         Aq2JOMMbkXAwOk6wqhXcWUbbHl9XhQm7M+G8Yce2/wpLPa+flw2oyu74PJbb2M8lthk8
+         aG8EIROFYZxn9E8+Cw9fFW2pgrFUw/qoHxBcRXPt+3PVnPvA67eKZzfjAfcIEQIwDoG3
+         LgFQ==
+X-Gm-Message-State: ANhLgQ32FxXeftGDSQfR1IkUanA6rvrAK/TxNw05wRpPD3wt+nZzt2Zd
+        aezAzT736h0X3znxNC90Xys=
+X-Google-Smtp-Source: ADFU+vvHWm61UIugggtzM8uXyDIcDZdkvbs/hkRGyfkWWy7W9YjHvfNGqeh/+hEgajI/lmViYUCLzg==
+X-Received: by 2002:adf:e68d:: with SMTP id r13mr328647wrm.170.1584377700423;
+        Mon, 16 Mar 2020 09:55:00 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id x17sm359381wmi.28.2020.03.16.09.54.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Mar 2020 09:54:59 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: rockchip: rk3xxx: fix L2 cache-controller nodename
+Date:   Mon, 16 Mar 2020 17:54:53 +0100
+Message-Id: <20200316165453.3022-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Martin <Dave.Martin@arm.com>
+A test with the command below gives for example this error:
 
-For BTI protection to be as comprehensive as possible, it is
-desirable to have BTI enabled from process startup.  If this is not
-done, the process must use mprotect() to enable BTI for each of its
-executable mappings, but this is painful to do in the libc startup
-code.  It's simpler and more sound to have the kernel do it
-instead.
+arch/arm/boot/dts/rk3066a-bqcurie2.dt.yaml:
+l2-cache-controller@10138000: $nodename:0:
+'l2-cache-controller@10138000'
+does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
-To this end, detect BTI support in the executable (or ELF
-interpreter, as appropriate), via the
-NT_GNU_PROGRAM_PROPERTY_TYPE_0 note, and tweak the initial prot
-flags for the process' executable pages to include PROT_BTI as
-appropriate.
+Fix error by changing nodename to 'cache-controller'.
 
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/l2c2x0.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm64/Kconfig           |  3 +++
- arch/arm64/include/asm/elf.h | 50 ++++++++++++++++++++++++++++++++++++
- arch/arm64/kernel/process.c  | 19 ++++++++++++++
- include/uapi/linux/elf.h     |  6 +++++
- 4 files changed, 78 insertions(+)
+ arch/arm/boot/dts/rk3xxx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 0b30e884e088..8a15bc68dadd 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -9,6 +9,7 @@ config ARM64
- 	select ACPI_MCFG if (ACPI && PCI)
- 	select ACPI_SPCR_TABLE if ACPI
- 	select ACPI_PPTT if ACPI
-+	select ARCH_BINFMT_ELF_STATE
- 	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_HAS_DEBUG_VIRTUAL
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
-@@ -33,6 +34,7 @@ config ARM64
- 	select ARCH_HAS_SYSCALL_WRAPPER
- 	select ARCH_HAS_TEARDOWN_DMA_OPS if IOMMU_SUPPORT
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
-+	select ARCH_HAVE_ELF_PROT
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
- 	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
-@@ -62,6 +64,7 @@ config ARM64
- 	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
- 	select ARCH_KEEP_MEMBLOCK
- 	select ARCH_USE_CMPXCHG_LOCKREF
-+	select ARCH_USE_GNU_PROPERTY if BINFMT_ELF
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
- 	select ARCH_SUPPORTS_MEMORY_FAILURE
-diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-index b618017205a3..4f00d50585a4 100644
---- a/arch/arm64/include/asm/elf.h
-+++ b/arch/arm64/include/asm/elf.h
-@@ -114,7 +114,11 @@
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 9438332b8..f9fcb7e96 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -91,7 +91,7 @@
+ 		status = "disabled";
+ 	};
  
- #ifndef __ASSEMBLY__
- 
-+#include <uapi/linux/elf.h>
- #include <linux/bug.h>
-+#include <linux/errno.h>
-+#include <linux/fs.h>
-+#include <linux/types.h>
- #include <asm/processor.h> /* for signal_minsigstksz, used by ARCH_DLINFO */
- 
- typedef unsigned long elf_greg_t;
-@@ -224,6 +228,52 @@ extern int aarch32_setup_additional_pages(struct linux_binprm *bprm,
- 
- #endif /* CONFIG_COMPAT */
- 
-+struct arch_elf_state {
-+	int flags;
-+};
-+
-+#define ARM64_ELF_BTI		(1 << 0)
-+
-+#define INIT_ARCH_ELF_STATE {			\
-+	.flags = 0,				\
-+}
-+
-+static inline int arch_parse_elf_property(u32 type, const void *data,
-+					  size_t datasz, bool compat,
-+					  struct arch_elf_state *arch)
-+{
-+	/* No known properties for AArch32 yet */
-+	if (IS_ENABLED(CONFIG_COMPAT) && compat)
-+		return 0;
-+
-+	if (type == GNU_PROPERTY_AARCH64_FEATURE_1_AND) {
-+		const u32 *p = data;
-+
-+		if (datasz != sizeof(*p))
-+			return -ENOEXEC;
-+
-+		if (system_supports_bti() &&
-+		    (*p & GNU_PROPERTY_AARCH64_FEATURE_1_BTI))
-+			arch->flags |= ARM64_ELF_BTI;
-+	}
-+
-+	return 0;
-+}
-+
-+static inline int arch_elf_pt_proc(void *ehdr, void *phdr,
-+				   struct file *f, bool is_interp,
-+				   struct arch_elf_state *state)
-+{
-+	return 0;
-+}
-+
-+static inline int arch_check_elf(void *ehdr, bool has_interp,
-+				 void *interp_ehdr,
-+				 struct arch_elf_state *state)
-+{
-+	return 0;
-+}
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 00626057a384..b8e3faa8d406 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/compat.h>
- #include <linux/efi.h>
-+#include <linux/elf.h>
- #include <linux/export.h>
- #include <linux/sched.h>
- #include <linux/sched/debug.h>
-@@ -18,6 +19,7 @@
- #include <linux/sched/task_stack.h>
- #include <linux/kernel.h>
- #include <linux/lockdep.h>
-+#include <linux/mman.h>
- #include <linux/mm.h>
- #include <linux/stddef.h>
- #include <linux/sysctl.h>
-@@ -654,3 +656,20 @@ asmlinkage void __sched arm64_preempt_schedule_irq(void)
- 	if (system_capabilities_finalized())
- 		preempt_schedule_irq();
- }
-+
-+#ifdef CONFIG_BINFMT_ELF
-+int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
-+			 bool has_interp, bool is_interp)
-+{
-+	if (is_interp != has_interp)
-+		return prot;
-+
-+	if (!(state->flags & ARM64_ELF_BTI))
-+		return prot;
-+
-+	if (prot & PROT_EXEC)
-+		prot |= PROT_BTI;
-+
-+	return prot;
-+}
-+#endif
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 20900f4496b7..c6dd0215482e 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -448,4 +448,10 @@ typedef struct elf64_note {
-   Elf64_Word n_type;	/* Content type */
- } Elf64_Nhdr;
- 
-+/* .note.gnu.property types for EM_AARCH64: */
-+#define GNU_PROPERTY_AARCH64_FEATURE_1_AND	0xc0000000
-+
-+/* Bits for GNU_PROPERTY_AARCH64_FEATURE_1_BTI */
-+#define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
-+
- #endif /* _UAPI_LINUX_ELF_H */
+-	L2: l2-cache-controller@10138000 {
++	L2: cache-controller@10138000 {
+ 		compatible = "arm,pl310-cache";
+ 		reg = <0x10138000 0x1000>;
+ 		cache-unified;
 -- 
-2.20.1
+2.11.0
 
