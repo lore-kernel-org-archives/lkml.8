@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF81C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67002C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF10720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EFA20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731784AbgCPPEN (ORCPT
+        id S1731823AbgCPPEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:04:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:50004 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 11:04:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:50014 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731638AbgCPPEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:04:12 -0400
+        id S1731780AbgCPPEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:04:13 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB861101E;
-        Mon, 16 Mar 2020 08:04:11 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE3BA1045;
+        Mon, 16 Mar 2020 08:04:12 -0700 (PDT)
 Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC9AA3F534;
-        Mon, 16 Mar 2020 08:04:10 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF0313F534;
+        Mon, 16 Mar 2020 08:04:11 -0700 (PDT)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
         cristian.marussi@arm.com
-Subject: [PATCH v5 02/13] firmware: arm_scmi: Update protocol commands and notification list
-Date:   Mon, 16 Mar 2020 15:03:23 +0000
-Message-Id: <20200316150334.47463-3-cristian.marussi@arm.com>
+Subject: [PATCH v5 03/13] firmware: arm_scmi: Add notifications support in transport layer
+Date:   Mon, 16 Mar 2020 15:03:24 +0000
+Message-Id: <20200316150334.47463-4-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200316150334.47463-1-cristian.marussi@arm.com>
 References: <20200316150334.47463-1-cristian.marussi@arm.com>
@@ -41,87 +41,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+Add common transport-layer methods to:
+ - fetch a notification instead of a response
+ - clear a pending notification
 
-Add commands' enumerations and messages definitions for all existing
-notify-enable commands across all protocols.
+Add also all the needed support in mailbox/shmem transports.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
- drivers/firmware/arm_scmi/base.c    | 7 +++++++
- drivers/firmware/arm_scmi/perf.c    | 5 +++++
- drivers/firmware/arm_scmi/power.c   | 6 ++++++
- drivers/firmware/arm_scmi/sensors.c | 4 ++++
- 4 files changed, 22 insertions(+)
+ drivers/firmware/arm_scmi/common.h  |  8 ++++++++
+ drivers/firmware/arm_scmi/mailbox.c | 17 +++++++++++++++++
+ drivers/firmware/arm_scmi/shmem.c   | 15 +++++++++++++++
+ 3 files changed, 40 insertions(+)
 
-diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
-index f804e8af6521..ce7d9203e41b 100644
---- a/drivers/firmware/arm_scmi/base.c
-+++ b/drivers/firmware/arm_scmi/base.c
-@@ -14,6 +14,13 @@ enum scmi_base_protocol_cmd {
- 	BASE_DISCOVER_LIST_PROTOCOLS = 0x6,
- 	BASE_DISCOVER_AGENT = 0x7,
- 	BASE_NOTIFY_ERRORS = 0x8,
-+	BASE_SET_DEVICE_PERMISSIONS = 0x9,
-+	BASE_SET_PROTOCOL_PERMISSIONS = 0xa,
-+	BASE_RESET_AGENT_CONFIGURATION = 0xb,
-+};
-+
-+enum scmi_base_protocol_notify {
-+	BASE_ERROR_EVENT = 0x0,
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index 5ac06469b01c..3c2e5d0d7b68 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -178,6 +178,8 @@ struct scmi_chan_info {
+  * @send_message: Callback to send a message
+  * @mark_txdone: Callback to mark tx as done
+  * @fetch_response: Callback to fetch response
++ * @fetch_notification: Callback to fetch notification
++ * @clear_notification: Callback to clear a pending notification
+  * @poll_done: Callback to poll transfer status
+  */
+ struct scmi_transport_ops {
+@@ -190,6 +192,9 @@ struct scmi_transport_ops {
+ 	void (*mark_txdone)(struct scmi_chan_info *cinfo, int ret);
+ 	void (*fetch_response)(struct scmi_chan_info *cinfo,
+ 			       struct scmi_xfer *xfer);
++	void (*fetch_notification)(struct scmi_chan_info *cinfo,
++				   size_t max_len, struct scmi_xfer *xfer);
++	void (*clear_notification)(struct scmi_chan_info *cinfo);
+ 	bool (*poll_done)(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer);
  };
  
- struct scmi_msg_resp_base_attributes {
-diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-index ec81e6f7e7a4..88509ec637d0 100644
---- a/drivers/firmware/arm_scmi/perf.c
-+++ b/drivers/firmware/arm_scmi/perf.c
-@@ -27,6 +27,11 @@ enum scmi_performance_protocol_cmd {
- 	PERF_DESCRIBE_FASTCHANNEL = 0xb,
+@@ -222,5 +227,8 @@ void shmem_tx_prepare(struct scmi_shared_mem __iomem *shmem,
+ u32 shmem_read_header(struct scmi_shared_mem __iomem *shmem);
+ void shmem_fetch_response(struct scmi_shared_mem __iomem *shmem,
+ 			  struct scmi_xfer *xfer);
++void shmem_fetch_notification(struct scmi_shared_mem __iomem *shmem,
++			      size_t max_len, struct scmi_xfer *xfer);
++void shmem_clear_notification(struct scmi_shared_mem __iomem *shmem);
+ bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
+ 		     struct scmi_xfer *xfer);
+diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
+index 73077bbc4ad9..19ee058f9f44 100644
+--- a/drivers/firmware/arm_scmi/mailbox.c
++++ b/drivers/firmware/arm_scmi/mailbox.c
+@@ -158,6 +158,21 @@ static void mailbox_fetch_response(struct scmi_chan_info *cinfo,
+ 	shmem_fetch_response(smbox->shmem, xfer);
+ }
+ 
++static void mailbox_fetch_notification(struct scmi_chan_info *cinfo,
++				       size_t max_len, struct scmi_xfer *xfer)
++{
++	struct scmi_mailbox *smbox = cinfo->transport_info;
++
++	shmem_fetch_notification(smbox->shmem, max_len, xfer);
++}
++
++static void mailbox_clear_notification(struct scmi_chan_info *cinfo)
++{
++	struct scmi_mailbox *smbox = cinfo->transport_info;
++
++	shmem_clear_notification(smbox->shmem);
++}
++
+ static bool
+ mailbox_poll_done(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
+ {
+@@ -173,6 +188,8 @@ static struct scmi_transport_ops scmi_mailbox_ops = {
+ 	.send_message = mailbox_send_message,
+ 	.mark_txdone = mailbox_mark_txdone,
+ 	.fetch_response = mailbox_fetch_response,
++	.fetch_notification = mailbox_fetch_notification,
++	.clear_notification = mailbox_clear_notification,
+ 	.poll_done = mailbox_poll_done,
  };
  
-+enum scmi_performance_protocol_notify {
-+	PERFORMANCE_LIMITS_CHANGED = 0x0,
-+	PERFORMANCE_LEVEL_CHANGED = 0x1,
-+};
-+
- struct scmi_opp {
- 	u32 perf;
- 	u32 power;
-diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
-index 214886ce84f1..cf7f0312381b 100644
---- a/drivers/firmware/arm_scmi/power.c
-+++ b/drivers/firmware/arm_scmi/power.c
-@@ -12,6 +12,12 @@ enum scmi_power_protocol_cmd {
- 	POWER_STATE_SET = 0x4,
- 	POWER_STATE_GET = 0x5,
- 	POWER_STATE_NOTIFY = 0x6,
-+	POWER_STATE_CHANGE_REQUESTED_NOTIFY = 0x7,
-+};
-+
-+enum scmi_power_protocol_notify {
-+	POWER_STATE_CHANGED = 0x0,
-+	POWER_STATE_CHANGE_REQUESTED = 0x1,
- };
+diff --git a/drivers/firmware/arm_scmi/shmem.c b/drivers/firmware/arm_scmi/shmem.c
+index ca0ffd302ea2..e1ab05be90e3 100644
+--- a/drivers/firmware/arm_scmi/shmem.c
++++ b/drivers/firmware/arm_scmi/shmem.c
+@@ -67,6 +67,21 @@ void shmem_fetch_response(struct scmi_shared_mem __iomem *shmem,
+ 	memcpy_fromio(xfer->rx.buf, shmem->msg_payload + 4, xfer->rx.len);
+ }
  
- struct scmi_msg_resp_power_attributes {
-diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-index eba61b9c1f53..db1b1ab303da 100644
---- a/drivers/firmware/arm_scmi/sensors.c
-+++ b/drivers/firmware/arm_scmi/sensors.c
-@@ -14,6 +14,10 @@ enum scmi_sensor_protocol_cmd {
- 	SENSOR_READING_GET = 0x6,
- };
- 
-+enum scmi_sensor_protocol_notify {
-+	SENSOR_TRIP_POINT_EVENT = 0x0,
-+};
++void shmem_fetch_notification(struct scmi_shared_mem __iomem *shmem,
++			      size_t max_len, struct scmi_xfer *xfer)
++{
++	/* Skip only the length of header in shmem area i.e 4 bytes */
++	xfer->rx.len = min_t(size_t, max_len, ioread32(&shmem->length) - 4);
 +
- struct scmi_msg_resp_sensor_attributes {
- 	__le16 num_sensors;
- 	u8 max_requests;
++	/* Take a copy to the rx buffer.. */
++	memcpy_fromio(xfer->rx.buf, shmem->msg_payload, xfer->rx.len);
++}
++
++void shmem_clear_notification(struct scmi_shared_mem __iomem *shmem)
++{
++	iowrite32(SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE, &shmem->channel_status);
++}
++
+ bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
+ 		     struct scmi_xfer *xfer)
+ {
 -- 
 2.17.1
 
