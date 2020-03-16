@@ -2,151 +2,148 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE4FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16F4C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B2520674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:17:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pY8PI3pw"
+	by mail.kernel.org (Postfix) with ESMTP id BFA2120674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732797AbgCPWRr (ORCPT
+        id S1732801AbgCPWSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:17:47 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:40554 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732739AbgCPWRq (ORCPT
+        Mon, 16 Mar 2020 18:18:34 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:55268 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732716AbgCPWSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:17:46 -0400
-Received: by mail-ua1-f67.google.com with SMTP id t20so7236768uao.7;
-        Mon, 16 Mar 2020 15:17:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wJo7ZmZmH0TiIejQdryJ3EHusk8AK7atRTT/qElU8mk=;
-        b=pY8PI3pwZdpq6nPZYjoZpnYpZau8JaiUZE7gfRwRPOV/h9kAcg7RP43uhPrimETyP3
-         AiLLjMLeB9OEyc6K+ZwYL2NpOE6s8qUyZxod9xA2xI18QVBNBSNKHTtBMfXRRxEa+A75
-         63szQXFHTT5/dUHMrKmGeFoQ13EGUVswQssgoVZJZeWVoJ861d7sH+nLMKA4nY4PTq02
-         9rbDElTNlvOZ6ihb1lsegGACNw8ih0+7FtrbjGogLvb1TvEpFN4yQNX2+JqekF51TSNJ
-         AHuGUV9olfL0EcJHCCavgvdnN8hiJadhAQp3+gRuOHFjddUY3DYdozbUa3gACSrPt4Uh
-         b/rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wJo7ZmZmH0TiIejQdryJ3EHusk8AK7atRTT/qElU8mk=;
-        b=JR4J+DE2Za4IyixE8w44ThaslJnVVuyA6wWtDC+Lggot49y8OE9BaU2yVruwYcQhij
-         rZ4KzMljeneMDngLedUumjjQiOYtB7A2rRhJ1OrIGXZviuHU/2zf9DJopGkDZ9KpTnC/
-         ThSSjE9XaAA3at+FuS1xZYdEaNAEkN6QC94lX8IV1C0Fcl1M+qUOGEyYkdugcGOn5SNp
-         M3Kz50PledaGXSvHEhjdO2F0otvTJLKH5wYOLxWPCU+coa3UGKemBw1P/X6DiF/+zDjo
-         3QLbfeOAQKhPTpLesA028iY0qRxDnxMsQHo+/pAGPmY7y5Da8CscHjjnjXJuxddB1TVv
-         ATAw==
-X-Gm-Message-State: ANhLgQ0MhAZYtWenW7Uch+J1j7GaLLKASlC/ohHscfLakiZNuo6bNCHJ
-        0KNhycN6MypGWsyLKFpIjNYmjZdfRhL4HD0x5WQa1n4O
-X-Google-Smtp-Source: ADFU+vuoQ/kRCsq5ARO98ctp//Ll6c0fNXHY/6edADTBa7RcUdzw4y4Go7Ey4w/OkSBRbLy+vcGAG3yEOFZiaB4O6zI=
-X-Received: by 2002:ab0:344f:: with SMTP id a15mr1771389uaq.2.1584397065487;
- Mon, 16 Mar 2020 15:17:45 -0700 (PDT)
+        Mon, 16 Mar 2020 18:18:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Tsp8z.Q_1584397108;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tsp8z.Q_1584397108)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 17 Mar 2020 06:18:30 +0800
+Subject: Re: [PATCH 2/2] mm: swap: use smp_mb__after_atomic() to order LRU bit
+ set
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     Vlastimil Babka <vbabka@suse.cz>, shakeelb@google.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1584124476-76534-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1584124476-76534-2-git-send-email-yang.shi@linux.alibaba.com>
+ <3c13c484-8fbf-3c3a-fbe1-a40434869e55@suse.cz>
+ <52877743-bb43-f928-2995-92607272dbb8@linux.alibaba.com>
+Message-ID: <a5bdbb82-c0fe-e8f0-0f31-6819254426bb@linux.alibaba.com>
+Date:   Mon, 16 Mar 2020 15:18:27 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20200316163646.2465-1-a.s.protopopov@gmail.com> <202003161423.B51FDA8083@keescook>
-In-Reply-To: <202003161423.B51FDA8083@keescook>
-From:   Anton Protopopov <a.s.protopopov@gmail.com>
-Date:   Mon, 16 Mar 2020 18:17:34 -0400
-Message-ID: <CAGn_itw594Q_-4gC8=3jjRGF-wx90GeXMWBAz54X-UEer9pbtA@mail.gmail.com>
-Subject: Re: [PATCH] seccomp: allow BPF_MOD ALU instructions
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <52877743-bb43-f928-2995-92607272dbb8@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=BF=D0=BD, 16 =D0=BC=D0=B0=D1=80. 2020 =D0=B3. =D0=B2 17:24, Kees Cook <=
-keescook@chromium.org>:
+
+
+On 3/16/20 10:49 AM, Yang Shi wrote:
 >
-> On Mon, Mar 16, 2020 at 04:36:46PM +0000, Anton Protopopov wrote:
-> > The BPF_MOD ALU instructions could be utilized by seccomp classic BPF f=
-ilters,
-> > but were missing from the explicit list of allowed calls since its intr=
-oduction
-> > in the original e2cfabdfd075 ("seccomp: add system call filtering using=
- BPF")
-> > commit.  Add support for these instructions by adding them to the allow=
-ed list
-> > in the seccomp_check_filter function.
-> >
-> > Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
 >
-> This has been suggested in the past, but was deemed ultimately redundant:
-> https://lore.kernel.org/lkml/201908121035.06695C79F@keescook/
+> On 3/16/20 10:40 AM, Vlastimil Babka wrote:
+>> On 3/13/20 7:34 PM, Yang Shi wrote:
+>>> Memory barrier is needed after setting LRU bit, but smp_mb() is too
+>>> strong.  Some architectures, i.e. x86, imply memory barrier with atomic
+>>> operations, so replacing it with smp_mb__after_atomic() sounds better,
+>>> which is nop on strong ordered machines, and full memory barriers on
+>>> others.  With this change the vm-calability cases would perform better
+>>> on x86, I saw total 6% improvement with this patch and previous inline
+>>> fix.
+>>>
+>>> The test data (lru-file-readtwice throughput) against v5.6-rc4:
+>>>     mainline    w/ inline fix    w/ both (adding this)
+>>>     150MB        154MB        159MB
+>>>
+>>> Fixes: 9c4e6b1a7027 ("mm, mlock, vmscan: no more skipping pagevecs")
+>>> Cc: Shakeel Butt <shakeelb@google.com>
+>>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> According to my understanding of Documentation/memory_barriers.txt 
+>> this would be
+>> correct (but it might not say much :)
+>
+> This is my understanding too.
+>
+>>
+>> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>>
+>> But i have some suggestions...
+>>
+>>> ---
+>>>   mm/swap.c | 6 +++---
+>>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/mm/swap.c b/mm/swap.c
+>>> index cf39d24..118bac4 100644
+>>> --- a/mm/swap.c
+>>> +++ b/mm/swap.c
+>>> @@ -945,20 +945,20 @@ static void __pagevec_lru_add_fn(struct page 
+>>> *page, struct lruvec *lruvec,
+>>>        * #0: __pagevec_lru_add_fn        #1: clear_page_mlock
+>>>        *
+>>>        * SetPageLRU()                TestClearPageMlocked()
+>>> -     * smp_mb() // explicit ordering    // above provides strict
+>>> +     * MB()     // explicit ordering    // above provides strict
+>> Why MB()? That would be the first appareance of 'MB()' in the whole 
+>> tree. I
+>> think it's fine keeping smp_mb()...
+>
+> I would like to use a more general name, maybe just use "memory barrier"?
 
-Yeah, Paul told me this right after I submitted the patch.
-
-> Is there a strong reason it's needed?
-
-I really don't have such a strong need in BPF_MOD, but let me tell why
-I wanted to use it in the first place.
-
-I've used this operation to speedup processing linear blacklist
-filters. Namely, if you have a list of syscall numbers to blacklist,
-you can do, say,
-
-ldw [0]
-mod #4
-jeq #1, case1
-jeq #1, case2
-jeq #1, case3
-case0:
-...
-
-and in every case to walk only a corresponding factor-list. In my case
-I had a list of ~40 syscall numbers and after this change filter
-executed in 17.25 instructions on average per syscall vs. 45
-instructions for the linear filter (so this removes about 30
-instructions penalty per every syscall). To replace "mod #4" I
-actually used "and #3", but this obviously doesn't work for
-non-power-of-two divisors. If I would use "mod 5", then it would give
-me about 15.5 instructions on average.
-
-Thanks,
-Anton
+Keeping smp_mb() should be just fine...
 
 >
-> Thanks!
+>>
+>>>        *                    // ordering
+>>>        * PageMlocked()            PageLRU()
+>>>        *
+>>>        *
+>>>        * if '#1' does not observe setting of PG_lru by '#0' and fails
+>>>        * isolation, the explicit barrier will make sure that 
+>>> page_evictable
+>>> -     * check will put the page in correct LRU. Without smp_mb(), 
+>>> SetPageLRU
+>>> +     * check will put the page in correct LRU. Without MB(), 
+>>> SetPageLRU
+>> ... same here ...
+>>
+>>>        * can be reordered after PageMlocked check and can make '#1' 
+>>> to fail
+>>>        * the isolation of the page whose Mlocked bit is cleared (#0 
+>>> is also
+>>>        * looking at the same page) and the evictable page will be 
+>>> stranded
+>>>        * in an unevictable LRU.
+>> Only here I would note that SetPageLRU() is an atomic bitop so we can 
+>> use the
+>> __after_atomic() variant. And I would move the actual SetPageLRU() 
+>> call from
+>> above the comment here right before the barrier.
 >
-> -Kees
+> Sure. Thanks.
 >
-> > ---
-> >  kernel/seccomp.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> > index b6ea3dcb57bf..cae7561b44d4 100644
-> > --- a/kernel/seccomp.c
-> > +++ b/kernel/seccomp.c
-> > @@ -206,6 +206,8 @@ static int seccomp_check_filter(struct sock_filter =
-*filter, unsigned int flen)
-> >               case BPF_ALU | BPF_MUL | BPF_X:
-> >               case BPF_ALU | BPF_DIV | BPF_K:
-> >               case BPF_ALU | BPF_DIV | BPF_X:
-> > +             case BPF_ALU | BPF_MOD | BPF_K:
-> > +             case BPF_ALU | BPF_MOD | BPF_X:
-> >               case BPF_ALU | BPF_AND | BPF_K:
-> >               case BPF_ALU | BPF_AND | BPF_X:
-> >               case BPF_ALU | BPF_OR | BPF_K:
-> > --
-> > 2.19.1
+>>
+>>>        */
+>>> -    smp_mb();
+>>> +    smp_mb__after_atomic();
+>> Thanks.
+>>
+>>>         if (page_evictable(page)) {
+>>>           lru = page_lru(page);
+>>>
 >
-> --
-> Kees Cook
+
