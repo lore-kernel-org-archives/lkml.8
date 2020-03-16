@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBA9C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF8FC1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC5E20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5368206B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NQwXZAGu"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="G9SvvGTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbgCPJ1p (ORCPT
+        id S1730443AbgCPJ15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:27:45 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40407 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730025AbgCPJ1p (ORCPT
+        Mon, 16 Mar 2020 05:27:57 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40584 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730430AbgCPJ14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:27:45 -0400
-Received: by mail-qt1-f194.google.com with SMTP id n5so13509582qtv.7
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 02:27:43 -0700 (PDT)
+        Mon, 16 Mar 2020 05:27:56 -0400
+Received: by mail-qk1-f193.google.com with SMTP id j2so12012568qkl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 02:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=RuY79H+7PbCifVG/uPjWzJMnWAOcXE93nluGeC97EMs=;
-        b=NQwXZAGu03zdP3PHdRmp0ZDmyZYt6KOo9nZXaolzS5dJp/KZV3AIzcp1HPWFvtUoDs
-         YOnouRNvQHChmCnFju6kPIwelwubONI4YT9YxIT5XjCeLrpEsS1XvNTQVM+xlWV9KL0h
-         +vA1lqOyDp1wAGBiAkL7c+KaeWNIT5zSD8DKpmMlOxKGfOJswVfiaEW8yhjIHAUYoL9C
-         mP9LQF3MTYHN98Y9gBq/zhOEZC/y9YMl5CtMrAwI3wJLdIZkRKB/BZhiEuou0dwgkD77
-         EnsQkk4GrxT1Lh7ixqkjYgNKHjQ4SlxgY132vlS1ecL4NJEh1qYFNcefM+8ii5nlnAKd
-         lQjQ==
+        bh=+6KKRggvbK0+NAqhE3WJvvvxBZ3bm45y+mPyerHldIY=;
+        b=G9SvvGTaCE7lk6jTYD5LyqgoCgnp6sGRQuxZMcEmtVxq41kQTtxFkAj6fIqf0DjMzz
+         op9lTItLw+6v5TQTPH399nhk2kBcFHmhvFRGgMmyRWJd4uj/MIs1bMl3mHC8tiFsHHsj
+         jKAvKNXZ/E1AMhG5WaiLMb0ua6fpM/la/00zLl5p6DfWXS0Zw0vdqxGQTz6Wuj7LT3uW
+         tZIUAPbqWjNC5ORiu4YZFKOeEXuiaYgavOZXqveBxoT39LhJamV+ZWqE977iffHP6lRp
+         tKKzG7mu7O6sKqyxl5cftq5e3BsY5uBsQ4lh6kfZofNxGL1kWyfqhYxeJhFW1KqopRc9
+         pRlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RuY79H+7PbCifVG/uPjWzJMnWAOcXE93nluGeC97EMs=;
-        b=FmO+k/a9SUYOToeOUSdGk6LnUh4nebx5YQ5/g5QobXmEZCYuBpqFq4evEZrPFyRHwe
-         2zTrAjCAR+Mn2xUmlJcU/iPq1uhKuhDW1W/oAoo59T+D2CLmqLIRaXfVY72EJXAHozCC
-         +DYRR1jDOhUMB4O58IzYRRvocLzbO7KEj5huoSIg8wJxpQmxoTamhO1erYXd737IvqLI
-         gOb9L2oqL0poEJ/6HGljR4md/upRvpXlEUJ9XpkwN7F2HM976mfbLhvYsSwRoX/kNwPq
-         fSueIqYzrLiMUTLiHiZVGFn7RO+OZZT+eT/YmUFH/2FS6TNuPOpP9OGtkvsKNAuOpwwj
-         iAIQ==
-X-Gm-Message-State: ANhLgQ0W0qCbh3w6DskivI5pGCJZJiMapXPnEFgh5eFaOIW1hNLsig6Z
-        H0sqoe89QjycSBpppeDKAomAwyeBybmLu0qyhMfJJQ==
-X-Google-Smtp-Source: ADFU+vsche6bnmQMkSeJA2+it0hy2TfSpmMQY4kJlZ8IEEangiOV4yZCTjryt0RDpjKC0GfFt3HGmNsLjEvKO7zcJGg=
-X-Received: by 2002:aed:3c4b:: with SMTP id u11mr19797788qte.208.1584350862684;
- Mon, 16 Mar 2020 02:27:42 -0700 (PDT)
+        bh=+6KKRggvbK0+NAqhE3WJvvvxBZ3bm45y+mPyerHldIY=;
+        b=Bt0u1wuHq4yAnn9xhpsAS35Qf1x+VSJyctZkM23A4lsnk+LWSHIuWUOBDJXv6Qq2x5
+         1HRA/fqygbzbC+fYLX1S0UuYylQzVH3Lxa749vDUf33CG+pO0/XyjV7MEViihsbUODHf
+         qfQertXL1MOjrUr8eZPD8QruwdR6RD0zy8WrbkGBfPzMQDfYBp3s6bnXNiRJv8p9u2Ck
+         82JDszglXDX1drL6e6ecBLNmrNrjrYlQRuRZsQqkpWdF8T6D1aq8v995aPNE2/oyTxJk
+         K1JFdqBkav8gqh6n9Tqw79ICgkQzHYje6xyl2W4k2878SNrt8Yf6ug6sezKUynLbH7OX
+         z5cg==
+X-Gm-Message-State: ANhLgQ2apqUwDV/JQWvHQ+Sg9ZvlZcgcc+DM8F+rZN5Woqh7RVxQ+w2Q
+        iKyiTBnEr/8D1Xkf3gaAwTW7JkrYljTfLnI3AheESuMj2gI=
+X-Google-Smtp-Source: ADFU+vtA89e3VaeupVSYxqp/eyk/8w7sDvNnoJ+ZP6HESQ3pGFQfQz4PmtMTNCvvjdPZ3PC77VGAexLRBZQNRVaJkLs=
+X-Received: by 2002:a37:4808:: with SMTP id v8mr22591137qka.263.1584350875543;
+ Mon, 16 Mar 2020 02:27:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200315121338.251362-1-gch981213@gmail.com> <20200315121338.251362-2-gch981213@gmail.com>
-In-Reply-To: <20200315121338.251362-2-gch981213@gmail.com>
+References: <20200315121338.251362-1-gch981213@gmail.com> <20200315121338.251362-3-gch981213@gmail.com>
+In-Reply-To: <20200315121338.251362-3-gch981213@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 16 Mar 2020 10:27:31 +0100
-Message-ID: <CAMpxmJU4MOkk7n7OqkEiEbd68qu49ZWywWhx=CAxUFWUgSDsgA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: mmio: introduce BGPIOF_NO_SET_ON_INPUT
+Date:   Mon, 16 Mar 2020 10:27:44 +0100
+Message-ID: <CAMpxmJXZpJ4D2oPYrkWOXeLzih5ti=YN-TBb6PGzP=4JVhXnOA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: mt7621: add BGPIOF_NO_SET_ON_INPUT flag
 To:     Chuanhong Guo <gch981213@gmail.com>
 Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -74,13 +74,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 niedz., 15 mar 2020 o 13:14 Chuanhong Guo <gch981213@gmail.com> napisa=C5=
 =82(a):
 >
-> Some gpio controllers ignores pin value writing when that pin is
-> configured as input mode. As a result, bgpio_dir_out should set
-> pin to output before configuring pin values or gpio pin values
-> can't be set up properly.
-> Introduce two variants of bgpio_dir_out: bgpio_dir_out_val_first
-> and bgpio_dir_out_dir_first, and assign direction_output according
-> to a new flag: BGPIOF_NO_SET_ON_INPUT.
+> DSET/DCLR registers only works on output pins. Add corresponding
+> BGPIOF_NO_SET_ON_INPUT flag to bgpio_init call to fix direction_out
+> behavior.
 >
 > Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 
