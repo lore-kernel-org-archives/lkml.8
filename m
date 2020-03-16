@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF92BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04E9C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA4D20754
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9968220754
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgCPPE3 (ORCPT
+        id S1731928AbgCPPE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:04:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:50098 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 11:04:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:50080 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731897AbgCPPEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:04:25 -0400
+        id S1731889AbgCPPEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:04:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33F281045;
-        Mon, 16 Mar 2020 08:04:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3327106F;
+        Mon, 16 Mar 2020 08:04:22 -0700 (PDT)
 Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 350F83F534;
-        Mon, 16 Mar 2020 08:04:24 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C44E03F534;
+        Mon, 16 Mar 2020 08:04:21 -0700 (PDT)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
         cristian.marussi@arm.com
-Subject: [PATCH v5 13/13] firmware: arm_scmi: Add Base notifications support
-Date:   Mon, 16 Mar 2020 15:03:34 +0000
-Message-Id: <20200316150334.47463-14-cristian.marussi@arm.com>
+Subject: [PATCH v5 11/13] firmware: arm_scmi: Add Sensor notifications support
+Date:   Mon, 16 Mar 2020 15:03:32 +0000
+Message-Id: <20200316150334.47463-12-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200316150334.47463-1-cristian.marussi@arm.com>
 References: <20200316150334.47463-1-cristian.marussi@arm.com>
@@ -41,7 +41,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SCMI Base protocol register with the notification core.
+Make SCMI Sensor protocol register with the notification core.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
@@ -58,112 +58,72 @@ V1 --> V2
   notification core, together with proper reference counting of enables
 - switched to devres protocol-registration
 ---
- drivers/firmware/arm_scmi/base.c | 109 +++++++++++++++++++++++++++++++
- include/linux/scmi_protocol.h    |   8 +++
- 2 files changed, 117 insertions(+)
+ drivers/firmware/arm_scmi/sensors.c | 69 +++++++++++++++++++++++++++++
+ include/linux/scmi_protocol.h       |  7 +++
+ 2 files changed, 76 insertions(+)
 
-diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
-index ce7d9203e41b..53245be3e3cb 100644
---- a/drivers/firmware/arm_scmi/base.c
-+++ b/drivers/firmware/arm_scmi/base.c
-@@ -6,6 +6,9 @@
+diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
+index db1b1ab303da..83b2b566207d 100644
+--- a/drivers/firmware/arm_scmi/sensors.c
++++ b/drivers/firmware/arm_scmi/sensors.c
+@@ -6,6 +6,7 @@
   */
  
  #include "common.h"
 +#include "notify.h"
-+
-+#define SCMI_BASE_NUM_SOURCES	1
  
- enum scmi_base_protocol_cmd {
- 	BASE_DISCOVER_VENDOR = 0x3,
-@@ -29,6 +32,19 @@ struct scmi_msg_resp_base_attributes {
- 	__le16 reserved;
+ enum scmi_sensor_protocol_cmd {
+ 	SENSOR_DESCRIPTION_GET = 0x3,
+@@ -71,6 +72,12 @@ struct scmi_msg_sensor_reading_get {
+ #define SENSOR_READ_ASYNC	BIT(0)
  };
  
-+struct scmi_msg_base_error_notify {
-+	__le32 event_control;
-+#define BASE_TP_NOTIFY_ALL	BIT(0)
-+};
-+
-+struct scmi_base_error_notify_payld {
++struct scmi_sensor_trip_notify_payld {
 +	__le32 agent_id;
-+	__le32 error_status;
-+#define IS_FATAL_ERROR(x)	((x) & BIT(31))
-+#define ERROR_CMD_COUNT(x)	FIELD_GET(GENMASK(9, 0), (x))
-+	__le64 msg_reports[8192];
++	__le32 sensor_id;
++	__le32 trip_point_desc;
 +};
 +
- /**
-  * scmi_base_attributes_get() - gets the implementation details
-  *	that are associated with the base protocol.
-@@ -222,6 +238,93 @@ static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
- 	return ret;
- }
+ struct sensors_info {
+ 	u32 version;
+ 	int num_sensors;
+@@ -276,6 +283,62 @@ static struct scmi_sensor_ops sensor_ops = {
+ 	.reading_get = scmi_sensor_reading_get,
+ };
  
-+static int scmi_base_error_notify(const struct scmi_handle *handle, bool enable)
-+{
-+	int ret;
-+	u32 evt_cntl = enable ? BASE_TP_NOTIFY_ALL : 0;
-+	struct scmi_xfer *t;
-+	struct scmi_msg_base_error_notify *cfg;
-+
-+	ret = scmi_xfer_get_init(handle, BASE_NOTIFY_ERRORS,
-+				 SCMI_PROTOCOL_BASE, sizeof(*cfg), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	cfg = t->tx.buf;
-+	cfg->event_control = cpu_to_le32(evt_cntl);
-+
-+	ret = scmi_do_xfer(handle, t);
-+
-+	scmi_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+static bool scmi_base_set_notify_enabled(const struct scmi_handle *handle,
-+					 u8 evt_id, u32 src_id, bool enable)
++static bool scmi_sensor_set_notify_enabled(const struct scmi_handle *handle,
++					   u8 evt_id, u32 src_id, bool enable)
 +{
 +	int ret;
 +
-+	ret = scmi_base_error_notify(handle, enable);
++	ret = scmi_sensor_trip_point_notify(handle, src_id, enable);
 +	if (ret)
-+		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLED - evt[%X] ret:%d\n",
-+			SCMI_PROTOCOL_BASE, evt_id, ret);
++		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
++			SCMI_PROTOCOL_SENSOR, evt_id, src_id, ret);
 +
 +	return !ret;
 +}
 +
-+static void *scmi_base_fill_custom_report(u8 evt_id, u64 timestamp,
-+					  const void *payld, size_t payld_sz,
-+					  void *report, u32 *src_id)
++static void *scmi_sensor_fill_custom_report(u8 evt_id, u64 timestamp,
++					   const void *payld, size_t payld_sz,
++					   void *report, u32 *src_id)
 +{
 +	void *rep = NULL;
 +
 +	switch (evt_id) {
-+	case BASE_ERROR_EVENT:
++	case SENSOR_TRIP_POINT_EVENT:
 +	{
-+		int i;
-+		const struct scmi_base_error_notify_payld *p = payld;
-+		struct scmi_base_error_report *r = report;
++		const struct scmi_sensor_trip_notify_payld *p = payld;
++		struct scmi_sensor_trip_point_report *r = report;
 +
-+		/*
-+		 * BaseError notification payload is variable in size but
-+		 * up to a maximum length determined by the struct ponted by p.
-+		 * Instead payld_sz is the effective length of this notification
-+		 * payload so cannot be greater of the maximum allowed size as
-+		 * pointed by p.
-+		 */
-+		if (sizeof(*p) < payld_sz)
++		if (sizeof(*p) != payld_sz)
 +			break;
 +
 +		r->timestamp = timestamp;
 +		r->agent_id = le32_to_cpu(p->agent_id);
-+		r->fatal = IS_FATAL_ERROR(le32_to_cpu(p->error_status));
-+		r->cmd_count = ERROR_CMD_COUNT(le32_to_cpu(p->error_status));
-+		for (i = 0; i < r->cmd_count; i++)
-+			r->reports[i] = le64_to_cpu(p->msg_reports[i]);
-+		*src_id = 0;
++		r->sensor_id = le32_to_cpu(p->sensor_id);
++		r->trip_point_desc = le32_to_cpu(p->trip_point_desc);
++		*src_id = r->sensor_id;
 +		rep = r;
 +		break;
 +	}
@@ -174,49 +134,48 @@ index ce7d9203e41b..53245be3e3cb 100644
 +	return rep;
 +}
 +
-+static const struct scmi_event base_events[] = {
++static const struct scmi_event sensor_events[] = {
 +	{
-+		.id = BASE_ERROR_EVENT,
-+		.max_payld_sz = 8192,
-+		.max_report_sz = sizeof(struct scmi_base_error_report),
++		.id = SENSOR_TRIP_POINT_EVENT,
++		.max_payld_sz = 12,
++		.max_report_sz = sizeof(struct scmi_sensor_trip_point_report),
 +	},
 +};
 +
-+static const struct scmi_protocol_event_ops base_event_ops = {
-+	.set_notify_enabled = scmi_base_set_notify_enabled,
-+	.fill_custom_report = scmi_base_fill_custom_report,
++static const struct scmi_protocol_event_ops sensor_event_ops = {
++	.set_notify_enabled = scmi_sensor_set_notify_enabled,
++	.fill_custom_report = scmi_sensor_fill_custom_report,
 +};
 +
- int scmi_base_protocol_init(struct scmi_handle *h)
+ static int scmi_sensors_protocol_init(struct scmi_handle *handle)
  {
- 	int id, ret;
-@@ -256,6 +359,12 @@ int scmi_base_protocol_init(struct scmi_handle *h)
- 	dev_dbg(dev, "Found %d protocol(s) %d agent(s)\n", rev->num_protocols,
- 		rev->num_agents);
+ 	u32 version;
+@@ -299,6 +362,12 @@ static int scmi_sensors_protocol_init(struct scmi_handle *handle)
+ 
+ 	scmi_sensor_description_get(handle, sinfo);
  
 +	scmi_register_protocol_events(handle,
-+				      SCMI_PROTOCOL_BASE, (4 * PAGE_SIZE),
-+				      &base_event_ops, base_events,
-+				      ARRAY_SIZE(base_events),
-+				      SCMI_BASE_NUM_SOURCES);
++				      SCMI_PROTOCOL_SENSOR, PAGE_SIZE,
++				      &sensor_event_ops, sensor_events,
++				      ARRAY_SIZE(sensor_events),
++				      sinfo->num_sensors);
 +
- 	for (id = 0; id < rev->num_agents; id++) {
- 		scmi_base_discover_agent_get(handle, id, name);
- 		dev_dbg(dev, "Agent %d: %s\n", id, name);
+ 	sinfo->version = version;
+ 	handle->sensor_ops = &sensor_ops;
+ 	handle->sensor_priv = sinfo;
 diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 0afa945fd04b..1a39cfd863e0 100644
+index 70aaf1c86901..0f40ecd0609c 100644
 --- a/include/linux/scmi_protocol.h
 +++ b/include/linux/scmi_protocol.h
-@@ -417,4 +417,12 @@ struct scmi_reset_issued_report {
- 	u32	reset_state;
+@@ -404,4 +404,11 @@ struct scmi_perf_level_report {
+ 	u32	performance_level;
  };
  
-+struct scmi_base_error_report {
++struct scmi_sensor_trip_point_report {
 +	ktime_t	timestamp;
 +	u32	agent_id;
-+	bool	fatal;
-+	u16	cmd_count;
-+	u64	reports[8192];
++	u32	sensor_id;
++	u32	trip_point_desc;
 +};
 +
  #endif /* _LINUX_SCMI_PROTOCOL_H */
