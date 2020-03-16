@@ -2,96 +2,125 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9C3C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDBEC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5AD20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584371604;
-	bh=jzaKcrjBVVgXu4gQbm8RO2NC8KMRRW29Vaj/zvBoqKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cPpevKTu12K4NK18JeNtKzkpv/AoxHw1NI7UTuup32slVwymQRYOr/gdTd2rbtKN6
-	 zPSPTtoVsud5DbaDQFpWQWbCmccPdPm6rkABztMCMMMw3OnwDGwpRH/C7KfAmiLlAn
-	 SwgeFlrCWqT/Cz/478eGO7Htnd1re5fOCoD6424k=
+	by mail.kernel.org (Postfix) with ESMTP id 60A5020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:13:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SdlmuNY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731760AbgCPPNX (ORCPT
+        id S1731781AbgCPPNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:13:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:50390 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729964AbgCPPNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:13:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 911181FB;
-        Mon, 16 Mar 2020 08:13:22 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13E253F534;
-        Mon, 16 Mar 2020 08:13:21 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 15:13:20 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] spi: fix cs_change for last transfer
-Message-ID: <20200316151320.GI5010@sirena.org.uk>
-References: <45912ba25c34a63b8098f471c3c8ebf8857a4716.1584292056.git.mirq-linux@rere.qmqm.pl>
- <20200316121750.GD5010@sirena.org.uk>
- <20200316143455.GA19141@qmqm.qmqm.pl>
+        Mon, 16 Mar 2020 11:13:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52986 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729964AbgCPPNq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:13:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Vl+Cf0ZuC3XZwjG76c59VMt7RhS7EZIRiTRbmqe9zmk=; b=SdlmuNY8kTO/HYkpoRHXV+09Fz
+        ognI1JqujrUhRwxTTQN8bOgapO3nu5lae7DP0HW5ZRCwPCXWywqTso62Tz4lWV1L/lQymObYvU78W
+        3XdvW7ZftBP4Rkgi8BmsiSmVAuJeBAXfDDZJmQ3XZQ4KqV70WDvNVp/aF06k5YRF/GhDwy5yh/wfi
+        v3QVIH56XZjyRAvCgmRXfn0yox6Zb03IvOsEQCL5opmy6yH0rYwUiXdpGbwiAUl3L6FMe0fEzhdUg
+        JAjbxC7nLls5BYm2fjEbriAEDpaj3JYnIED6DYqgR5ldcEkg3qvGOCycrW8WYD8j4eVrmhfBadu02
+        QgmLKdeA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jDrQz-0004GC-GF; Mon, 16 Mar 2020 15:13:41 +0000
+Subject: Re: [PATCH 1/9] Documentation: Add lock ordering and nesting
+ documentation
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200313174701.148376-1-bigeasy@linutronix.de>
+ <20200313174701.148376-2-bigeasy@linutronix.de>
+ <2e0912cc-6780-18e9-4e4c-7cc60da6709f@infradead.org>
+ <20200316103454.iodi65uzbpat4kv5@linutronix.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <de6fdc5d-690a-1130-c911-caccbb0b1a8f@infradead.org>
+Date:   Mon, 16 Mar 2020 08:13:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="81JctsDUVPekGcy+"
-Content-Disposition: inline
-In-Reply-To: <20200316143455.GA19141@qmqm.qmqm.pl>
-X-Cookie: I thought YOU silenced the guard!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200316103454.iodi65uzbpat4kv5@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/16/20 3:34 AM, Sebastian Andrzej Siewior wrote:
+> On 2020-03-14 15:57:24 [-0700], Randy Dunlap wrote:
+>> Hi,
+> Hi Randy,
+> 
+>> A few comments for your consideration:
+> 
+> I merged all of you comments but two:
+> 
+>> On 3/13/20 10:46 AM, Sebastian Andrzej Siewior wrote:
+> …
+>>> +rwlock_t and PREEMPT_RT
+>>> +-----------------------
+>>> +
+>>> +On a PREEMPT_RT enabled kernel rwlock_t is mapped to a separate
+>>> +implementation based on rt_mutex which changes the semantics:
+>>> +
+>>> + - Same changes as for spinlock_t
+>>> +
+>>> + - The implementation is not fair and can cause writer starvation under
+>>> +   certain circumstances. The reason for this is that a writer cannot
+>>> +   inherit its priority to multiple readers. Readers which are blocked
+>>
+>>       ^^^^^^^ I think this is backwards. Maybe more like so:
+>>                                                          a writer cannot
+>>       bequeath or grant or bestow or pass down    ...    its priority to
+> 
+> So the term "inherit" is the problem. The protocol is officially called
+> PI which is short for Priority Inheritance. Other documentation,
+> RT-mutex for instance, is also using this term when it is referring to
+> altering the priority of a task. For that reason I prefer to keep using
+> this term.
 
---81JctsDUVPekGcy+
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, I get it.
 
-On Mon, Mar 16, 2020 at 03:34:55PM +0100, Micha=C5=82 Miros=C5=82aw wrote:
-> On Mon, Mar 16, 2020 at 12:17:50PM +0000, Mark Brown wrote:
+>>> +   on a writer fully support the priority inheritance protocol.
+> …
+>>> +raw_spinlock_t
+>>> +--------------
+>>> +
+>>> +As raw_spinlock_t locking disables preemption and eventually interrupts the
+>>> +code inside the critical region has to be careful to avoid calls into code
+>>
+>> Can I buy a comma in there somewhere, please?
+>> I don't get it as is.
+> 
+> What about
+> 
+> | As raw_spinlock_t locking disables preemption, and eventually interrupts, the
+> | code inside the critical region has to be careful to avoid calls into code
+> 
+> any better?
 
-> > This is the opposite of the intended behaviour - we want to deassert
-> > chip select at the end of the message unless cs_change is set on the
-> > last transfer.  If this were broken I would expect to see widespread
-> > problems being reported.
+Yes.
 
-> This is unfortunate naming I suppose. I reread the spi.h comments
-> a few more times and it seems indeed, that .cs_change =3D=3D 1 on last
-> transfer means to a driver: "you may leave CS unchanged" - quite the
-> reverse compared to non-last transfers.
+thanks.
+-- 
+~Randy
 
-cs_change also means that we should add an extra chip select transition
-on transfers other than the last.
-
-> Please drop this patch then.
-
-OK.
-
---81JctsDUVPekGcy+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5vl48ACgkQJNaLcl1U
-h9DeXgf+Msgq0Fm5YFrl6BpPbINtM7Fs6PHQdsIBzUMHwaUxzJ476+0jR9ILxEvu
-oCl/v/BLaAw/KY/8ThuxaxG4H6S4s2U81tyOzDDJGINf+DIkbsTytxcHzC8fHlmC
-cCX7v80+PGdLbNklVqd34sNgTPPiG0GgLUBbFJu4J9ALVA158w4RBYQMVRACaOi7
-iqxBkcb2LoZA3d4Ack098jTiyFEbV3yUJGWb3mkOzlvEsoZEbZOG5hU+1YH10roJ
-rXsen2GpoQ01/kt0T0qoPSMBPyVSYHcbs3mc+I3JroIo0my4bVTOxvMip+G33jwe
-ftkmcl8XS3KCBDNLs08TsBWjugPd0w==
-=4bFZ
------END PGP SIGNATURE-----
-
---81JctsDUVPekGcy+--
