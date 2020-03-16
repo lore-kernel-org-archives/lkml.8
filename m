@@ -2,218 +2,158 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59335C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B41C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D61D20409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D994120409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oLEuIfOT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1EbTPZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732299AbgCPSQZ (ORCPT
+        id S1732275AbgCPSUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 14:16:25 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34266 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732194AbgCPSQY (ORCPT
+        Mon, 16 Mar 2020 14:20:04 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44780 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732236AbgCPSUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 14:16:24 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j16so18847562otl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 11:16:22 -0700 (PDT)
+        Mon, 16 Mar 2020 14:20:03 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h16so15073452qtr.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 11:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AytcRsQb8rnc1tl9ddb2MP4tgLvFwGB2+hxhfru9Cws=;
-        b=oLEuIfOTUjg8X+ZOjbmvIjKtzMDs//2tPcvihxea4bsn98fOVWn0AxXjAmcl84ESO0
-         0KB9aOBcCAdhZIWiSRfl1DiUb25XuH5iTSJLLQLQEMDTMz4oaPxTNCew5Uthg5f0jIMO
-         BBCvZc4a/gkbWPqUxZ2hkDUEx6AUXBBBSlYg7tcLF6yzQqpPNgaPf5DqE/q+WropkeEi
-         FBkXNIpCSSjYxWEwMdw7SSnp+QVpg6SryYBjVI9wvjN6eF9bSi9RPgDFLc7BT+T83ExU
-         Iy3QjjEHrPhs5izEtzX8O6jPTsfL/uDkr+0zPWr3sU1p8TYJ2v2zLWMcVafbkeRYbaII
-         azpA==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KKFZzAhZQvtZ0ajIaQdWvUFb/RVZsTqaSdNCIFm2bao=;
+        b=Z1EbTPZvjSbUTzInKlQ3ySCYhajxIyyyUeRxcNt/UtHDB8fhtPVLH3HbFPcxj9lmRr
+         aQAMksOrY2R+WNj9Y2wMs9jz819yimoo9vv0FOyHAr3u8up3NmVVjeKO1b13yxLu4HbP
+         cIQoAmzVi2BVZOb0YlM1XMAIb9AXU2uz6tuE+T1mfdGjOZPp3IVvOGASm+INvZjMX1o7
+         QFu3d6E/Zta85NL0yLj4DlCMiRtnoPMnylDAM0v3de6Syk8xeyjkmoMyZF1NZp7rvQuN
+         eb1pTYjEzPMHDrWvr6aItwgPasKTcJUQXvCD7FetJ+z30O6uNIhaVYum/NDmunfN5r+u
+         SSMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AytcRsQb8rnc1tl9ddb2MP4tgLvFwGB2+hxhfru9Cws=;
-        b=mnRRBgGPg2HYyZeRfa0ta9Uqb09bX4epXb8AsVRVDcT3K0tt1PmNVwMneBN5Oq+T3J
-         vV0vxo8AYRFW8wonoyHzLtD+Hm+Fr7DMlaKRywKdxXtM025G//OLAiLJK+oy0J/Sdj+d
-         tvgBmlD+OlvxADzY4/PNq8xDAGuopp5XyPehcEUhPWUSItv1XpnlOFlBU8r8HgibG3IK
-         CHRtWWSEJm4pwNSGnGHJrX2siiKPy3DNXsg5O+SeF/5Smo9n8IoAaevIvS6e+GJWdkPP
-         FmNg4tTpTJ0sD9xocmyivQ/j6UjfGuadM4kGgDSz4BvZD/U/0Aj3FOyMDgPazwErZhUO
-         tweA==
-X-Gm-Message-State: ANhLgQ1zPeQx1/d50sT1hY+b4V1mOnoxnT3peLf4Vp7U9wacIfDObP7r
-        JvSfSkHHts9KqM+0H9Ve6U+AsrKYownlmODmLBSowg==
-X-Google-Smtp-Source: ADFU+vs+CDTEDD/dMiiLalF1gofIsXSEm1H+NkYNI/ASvxqUQqvo8uiHyCmz0h9AZd7BU/LBHr1J5ovLnsgzUG7sthw=
-X-Received: by 2002:a9d:1eea:: with SMTP id n97mr439851otn.139.1584382581256;
- Mon, 16 Mar 2020 11:16:21 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KKFZzAhZQvtZ0ajIaQdWvUFb/RVZsTqaSdNCIFm2bao=;
+        b=rniBERISoQR/lf/qVfO9FPwkKvNSVL1/tzXRoAYUFnFbj8SyBqGUQFt/OM+a26sT7X
+         R7+wtxZjqwbcf/8oJMw5ESC4t0n2abUPKxJZAMwl5cM6UGJCODWxIRlLsFl+3tlpqgc/
+         Bpj6pjcihoiYsyYRtfQjH5uDuUq+xXJi6sx1cVALqvFa9ogLN581CLnGrZDLTrOLISKF
+         FO8O70luVkPNxc/Dw+/WUDgNBJM4vpFwM+tScqU/ZCpAFqYsbeorLOjNtfoKd0L1UL2e
+         GbDHaV4sxZ2u5PVdHkVijAdRnbNH2BGzhFrRQqc2dYlp/TZflInH5orYvO8rpeiSaWrY
+         7a1g==
+X-Gm-Message-State: ANhLgQ07kAdM3hJZXUpryEwn0GTCtbIwkzSswr+FUV+RE4U0cXNiKD9j
+        fhI3oVKkBpsqkZcO2Qg8BKo=
+X-Google-Smtp-Source: ADFU+vut8+lk8h6DghsGF9vXWwJyd0Q9FTHyY9s/hrhAU/14scaEcUy0d31RwT+XbbfJ4twZkjo9Jg==
+X-Received: by 2002:aed:36a5:: with SMTP id f34mr1369065qtb.57.1584382802448;
+        Mon, 16 Mar 2020 11:20:02 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id z18sm365473qtz.77.2020.03.16.11.20.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 11:20:01 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 16 Mar 2020 14:20:00 -0400
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
+Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
+Message-ID: <20200316181957.GA348193@rani.riverdale.lan>
+References: <20200314164451.346497-1-slyfox@gentoo.org>
+ <20200316130414.GC12561@hirez.programming.kicks-ass.net>
+ <20200316132648.GM2156@tucnak>
+ <20200316134234.GE12561@hirez.programming.kicks-ass.net>
+ <20200316175450.GO26126@zn.tnic>
 MIME-Version: 1.0
-References: <20200111052125.238212-1-saravanak@google.com> <f9f3afa0-f0a7-6cff-2e57-e4e448a81a90@linaro.org>
- <CAGETcx_VV+NUALO=9PS5id7Jz0yLjG=T4FsC=J4PjuQ-rGcd9A@mail.gmail.com>
- <CAGETcx_Y7TroxBGsD0ssG8X+iZawoMVnqVPbEOJwR2Wmv=0Kxw@mail.gmail.com>
- <814e5b06-dde9-f59a-735a-39d7e41efc67@linaro.org> <CAGETcx9Nq7OQPNv5sha3Yy_QmPzP-32jjMVqaczbE4NkjdmWXA@mail.gmail.com>
- <897866cb-f059-d15f-62f5-9ee2688dded0@linaro.org> <CAGETcx-i5ows0bh_gRao5jV7GZtsNJ+0u8tC+w8E0YLxd7U94w@mail.gmail.com>
- <73509a5b-7bb2-fae5-9bd1-cb809a5b67e8@linaro.org>
-In-Reply-To: <73509a5b-7bb2-fae5-9bd1-cb809a5b67e8@linaro.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 16 Mar 2020 11:15:45 -0700
-Message-ID: <CAGETcx-UAjWhtDMoTaLX-2HwXWq-3aAi9FcwszEJ1-YKcekqmQ@mail.gmail.com>
-Subject: Re: [PATCH v1] clocksource: Avoid creating dead devices
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200316175450.GO26126@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 11:07 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 16/03/2020 18:49, Saravana Kannan wrote:
-> > On Mon, Mar 16, 2020 at 7:57 AM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> >>
-> >> On 08/03/2020 06:53, Saravana Kannan wrote:
-> >>> On Wed, Mar 4, 2020 at 11:56 AM Daniel Lezcano
-> >>> <daniel.lezcano@linaro.org> wrote:
-> >>>>
-> >>>> On 04/03/2020 20:30, Saravana Kannan wrote:
-> >>>>> On Thu, Feb 27, 2020 at 1:22 PM Saravana Kannan <saravanak@google.c=
-om> wrote:
-> >>>>>>
-> >>>>>> On Thu, Feb 27, 2020 at 1:06 AM Daniel Lezcano
-> >>>>>> <daniel.lezcano@linaro.org> wrote:
-> >>>>>>>
-> >>>>>>> On 11/01/2020 06:21, Saravana Kannan wrote:
-> >>>>>>>> Timer initialization is done during early boot way before the dr=
-iver
-> >>>>>>>> core starts processing devices and drivers. Timers initialized d=
-uring
-> >>>>>>>> this early boot period don't really need or use a struct device.
-> >>>>>>>>
-> >>>>>>>> However, for timers represented as device tree nodes, the struct=
- devices
-> >>>>>>>> are still created and sit around unused and wasting memory. This=
- change
-> >>>>>>>> avoid this by marking the device tree nodes as "populated" if th=
-e
-> >>>>>>>> corresponding timer is successfully initialized.
-> >>>>
-> >>>> TBH, I'm missing the rational with the explanation and the code. Can=
- you
-> >>>> elaborate or rephrase it?
-> >>>
-> >>> Ok, let me start from the top.
-> >>>
-> >>> When the kernel boots, timer_probe() is called (via time_init()) way
-> >>> before any of the initcalls are called in do_initcalls().
-> >>>
-> >>> In systems with CONFIG_OF, of_platform_default_populate_init() gets
-> >>> called at arch_initcall_sync() level.
-> >>> of_platform_default_populate_init() is what kicks off creating
-> >>> platform devices from device nodes in DT. However, if the struct
-> >>> device_node that corresponds to a device node in DT has OF_POPULATED
-> >>> flag set, a platform device is NOT created for it (because it's
-> >>> considered already "populated"/taken care of).
-> >>>
-> >>> When a timer driver registers using TIMER_OF_DECLARE(), the driver's
-> >>> init code is called from timer_probe() on the struct device_node that
-> >>> corresponds to the timer device node. At this point the timer is
-> >>> already "probed". If you don't mark this device node with
-> >>> OF_POPULATED, at arch_initcall_sync() it's going to have a pointless
-> >>> struct platform_device created that's just using up memory and
-> >>> pointless.
-> >>>
-> >>> So my patch sets the OF_POPULATED flag for all timer device_node's
-> >>> that are successfully probed from timer_probe().
-> >>>
-> >>> If a timer driver doesn't use TIMER_OF_DECLARE() and just registers a=
-s
-> >>> a platform device, the driver init function won't be called from
-> >>> timer_probe() and it's corresponding devices won't have OF_POPULATED
-> >>> set in their device_node. So platform_devices will be created for the=
-m
-> >>> and they'll probe as normal platform devices. This is why my change
-> >>> doesn't break drivers/clocksource/ingenic-timer.c.
-> >>>
-> >>> Btw, this is no different from what irqchip does with IRQCHIP_DECLARE=
-.
-> >>>
-> >>> Hope that clears it up.
-> >>
-> >> Yes, thanks for the explanation.
-> >>
-> >> Why not just set the OF_POPULATED if the probe succeeds?
-> >>
-> >> Like:
-> >>
-> >> diff --git a/drivers/clocksource/timer-probe.c
-> >> b/drivers/clocksource/timer-probe.c
-> >> index ee9574da53c0..f290639ff824 100644
-> >> --- a/drivers/clocksource/timer-probe.c
-> >> +++ b/drivers/clocksource/timer-probe.c
-> >> @@ -35,6 +35,7 @@ void __init timer_probe(void)
-> >>                         continue;
-> >>                 }
-> >>
-> >> +               of_node_set_flag(np, OF_POPULATED);
-> >>                 timers++;
-> >>         }
-> >>
-> >> instead of setting the flag and clearing it in case of failure?
-> >
-> > Looking at IRQ framework which first did it the way you suggested and
-> > then changed it to the way I did it, it looks like it allows for
-> > drivers that need to split the initialization between early init (not
-> > just error out, but init partly) and later driver probe. See [1].
-> >
-> > Also, most of the other frameworks that set OF_POPULATED, set it
-> > before calling the initialization function for the device. Maybe it's
-> > to make sure the device node data "looks the same" whether a device is
-> > initialized during early init or during normal device probe (since the
-> > OF_POPULATED is set before the probe is called) -- i.e. have
-> > OF_POPULATED  set before the device initialization code is actually
-> > run?
-> >
-> > Honestly I don't have a strong opinion either way, but I lean towards
-> > following what IRQ does.
->
-> Thanks for the pointer. Indeed it is to catch situation where the driver
-> is clearing the flag like:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers/clocksource/ingenic-timer.c#n245
->
-> But I'm not able to figure out why it is cleared here :/
+On Mon, Mar 16, 2020 at 06:54:50PM +0100, Borislav Petkov wrote:
+> On Mon, Mar 16, 2020 at 02:42:34PM +0100, Peter Zijlstra wrote:
+> > Right I know, I looked for it recently :/ But since this is new in 10
+> > and 10 isn't released yet, I figured someone can add the attribute
+> > before it does get released.
+> 
+> Yes, that would be a good solution.
+> 
+> I looked at what happens briefly after building gcc10 from git and IINM,
+> the function in question - start_secondary() - already gets the stack
+> canary asm glue added so it checks for a stack canary.
+> 
+> However, the stack canary value itself gets set later in that same
+> function:
+> 
+>         /* to prevent fake stack check failure in clock setup */
+>         boot_init_stack_canary();
+> 
+> so the asm glue which checks for it would need to reload the newly
+> computed canary value (it is 0 before we compute it and thus the
+> mismatch).
+> 
+> So having a way to state "do not add stack canary checking to this
+> particular function" would be optimal. And since you already have the
+> "stack_protect" function attribute I figure adding a "no_stack_protect"
+> one should be easy...
+> 
+> > > Or of course you could add noinline attribute to whatever got inlined
+> > > and contains some array or addressable variable that whatever
+> > > -fstack-protector* mode kernel uses triggers it.  With -fstack-protector-all
+> > > it would never work even in the past I believe.
+> > 
+> > I don't think the kernel supports -fstack-protector-all, but I could be
+> > mistaken.
+> 
+> The other thing I was thinking was to carve out only that function into
+> a separate compilation unit and disable stack protector only for it.
+> 
+> All IMHO of course.
+> 
+> Thx.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
 
-I think I know what's going on. He wants to implement PM support for
-this timer. But PM support is tied to devices. So, clearing out the
-flag allows creating the device which then hooks into PM ops.
+With STACKPROTECTOR_STRONG, gcc9 (at least gentoo's version, not sure if
+they have some patches that affect it) already adds stack canary into
+start_secondary. Not sure why it doesn't panic already with gcc9?
 
-Although, it looks like the driver assumes the timer framework was
-setting the OF_POPULATED flag.
-
--Saravana
-
->
-> Paul?
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+00000000000008f0 <start_secondary>:
+     8f0:       53                      push   %rbx
+     8f1:       48 83 ec 10             sub    $0x10,%rsp
+     8f5:       65 48 8b 04 25 28 00    mov    %gs:0x28,%rax
+     8fc:       00 00
+     8fe:       48 89 44 24 08          mov    %rax,0x8(%rsp)
+     903:       31 c0                   xor    %eax,%eax
+...
+     a2e:       e8 00 00 00 00          callq  a33 <start_secondary+0x143>
+                        a2f: R_X86_64_PLT32     cpu_startup_entry-0x4
+     a33:       48 8b 44 24 08          mov    0x8(%rsp),%rax
+     a38:       65 48 33 04 25 28 00    xor    %gs:0x28,%rax
+     a3f:       00 00 
+     a41:       75 12                   jne    a55 <start_secondary+0x165>
+     a43:       48 83 c4 10             add    $0x10,%rsp
+     a47:       5b                      pop    %rbx
+     a48:       c3                      retq   
+     a49:       0f 01 1d 00 00 00 00    lidt   0x0(%rip)        # a50 <start_secondary+0x160>
+                        a4c: R_X86_64_PC32      debug_idt_descr-0x4
+     a50:       e9 cb fe ff ff          jmpq   920 <start_secondary+0x30>
+     a55:       e8 00 00 00 00          callq  a5a <start_secondary+0x16a>
+                        a56: R_X86_64_PLT32     __stack_chk_fail-0x4
