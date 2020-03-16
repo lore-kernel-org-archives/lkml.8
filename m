@@ -2,101 +2,151 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 609CAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE4FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E5920679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B2520674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5Vv3DiQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pY8PI3pw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732786AbgCPWQx (ORCPT
+        id S1732797AbgCPWRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:16:53 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36343 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732766AbgCPWQx (ORCPT
+        Mon, 16 Mar 2020 18:17:47 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:40554 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732739AbgCPWRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:16:53 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s5so23293029wrg.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:16:52 -0700 (PDT)
+        Mon, 16 Mar 2020 18:17:46 -0400
+Received: by mail-ua1-f67.google.com with SMTP id t20so7236768uao.7;
+        Mon, 16 Mar 2020 15:17:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=S8JSIVJc8hBC+f06nZTFPR0p1Zl2SoUOHTZdVV+bVfY=;
-        b=A5Vv3DiQIbfRSJv7uqZ5fY3XPteie2VbktlftTTVVWcjL0Amblo3pOEE+jfyt9yZHN
-         tE8B976jEnbzlJPjwhTcFZz5UNBBpwmdr15ARC+uTnWr1Daq8aYuvu4mggOoElN4mgt3
-         IdnjfVM3aXeiNm9Hoq1XYirqDlPrGAX66tGqb9ZmIhG4IXAQ1X/t1vs4/sTXAfGsGzpf
-         loLe4BKtgUDm3IiF4xmThYdk54MZTNljl2wqstzw9eWZnrsnP3tg2GKhtS+qQsLqf6Vj
-         AKtvxnuy1QUG1uDE3F+sfjv8q0gEMv8XgwKIQD2tA7z8nTQ7H2DWmI6Rig36QGl7qf4t
-         bmzg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wJo7ZmZmH0TiIejQdryJ3EHusk8AK7atRTT/qElU8mk=;
+        b=pY8PI3pwZdpq6nPZYjoZpnYpZau8JaiUZE7gfRwRPOV/h9kAcg7RP43uhPrimETyP3
+         AiLLjMLeB9OEyc6K+ZwYL2NpOE6s8qUyZxod9xA2xI18QVBNBSNKHTtBMfXRRxEa+A75
+         63szQXFHTT5/dUHMrKmGeFoQ13EGUVswQssgoVZJZeWVoJ861d7sH+nLMKA4nY4PTq02
+         9rbDElTNlvOZ6ihb1lsegGACNw8ih0+7FtrbjGogLvb1TvEpFN4yQNX2+JqekF51TSNJ
+         AHuGUV9olfL0EcJHCCavgvdnN8hiJadhAQp3+gRuOHFjddUY3DYdozbUa3gACSrPt4Uh
+         b/rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S8JSIVJc8hBC+f06nZTFPR0p1Zl2SoUOHTZdVV+bVfY=;
-        b=S6XlG7Vkiu/fkchjj0Ex6T1omONo3y/AQ0QKbJvCNzsK3ot9YbgDhwIzY1t6wtPToG
-         +5wslFZZdZui9jL6yIYjGR9Gy8fqMkHQEKqBdSdEeVRqYw28GuUHWNBaGTiKVcSE5RWX
-         MVr2lUCmMAvvdmlnSB+ZbueHXTjM+Y1wdhvibpBE5DGdtkFOV7qFrGaEYQbfG6Lyq6WG
-         e345r0rGCLKjp0TPQV2T6YbPzc8fPVYeh6FXoljwC176kLR2KDPMcV2oshLT0B44yMBn
-         H9Lqd9hwTJV7HdRsruzvIqe+Bem21YLY7awRoZdrbhLVsmgrSvs5QvIGqhQ9yRUIZkeb
-         MnQw==
-X-Gm-Message-State: ANhLgQ2ZRAe0EOd9UVIXeiZBSU0Oywv8xfgl4bRUgEwz49z1Nwoz2mCr
-        Xh3T+SvaIIaK11h//+XmVxc=
-X-Google-Smtp-Source: ADFU+vse1oKkwdvXItJohl4s4XqPs4btnr1psEXCZPSDssQaCTO12dAzDLte2Fwb/Z4L5RV+sy7bZg==
-X-Received: by 2002:adf:a483:: with SMTP id g3mr1611117wrb.403.1584397011889;
-        Mon, 16 Mar 2020 15:16:51 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id s131sm1305558wmf.35.2020.03.16.15.16.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Mar 2020 15:16:51 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 22:16:51 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
-        akpm@linux-foundation.org, david@redhat.com, willy@infradead.org,
-        richard.weiyang@gmail.com, vbabka@suse.cz
-Subject: Re: [PATCH v5 2/2] mm/sparse.c: allocate memmap preferring the given
- node
-Message-ID: <20200316221651.nkif7tdkks5cmlnm@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200316102150.16487-1-bhe@redhat.com>
- <20200316102150.16487-2-bhe@redhat.com>
- <20200316125625.GH3486@MiWiFi-R3L-srv>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wJo7ZmZmH0TiIejQdryJ3EHusk8AK7atRTT/qElU8mk=;
+        b=JR4J+DE2Za4IyixE8w44ThaslJnVVuyA6wWtDC+Lggot49y8OE9BaU2yVruwYcQhij
+         rZ4KzMljeneMDngLedUumjjQiOYtB7A2rRhJ1OrIGXZviuHU/2zf9DJopGkDZ9KpTnC/
+         ThSSjE9XaAA3at+FuS1xZYdEaNAEkN6QC94lX8IV1C0Fcl1M+qUOGEyYkdugcGOn5SNp
+         M3Kz50PledaGXSvHEhjdO2F0otvTJLKH5wYOLxWPCU+coa3UGKemBw1P/X6DiF/+zDjo
+         3QLbfeOAQKhPTpLesA028iY0qRxDnxMsQHo+/pAGPmY7y5Da8CscHjjnjXJuxddB1TVv
+         ATAw==
+X-Gm-Message-State: ANhLgQ0MhAZYtWenW7Uch+J1j7GaLLKASlC/ohHscfLakiZNuo6bNCHJ
+        0KNhycN6MypGWsyLKFpIjNYmjZdfRhL4HD0x5WQa1n4O
+X-Google-Smtp-Source: ADFU+vuoQ/kRCsq5ARO98ctp//Ll6c0fNXHY/6edADTBa7RcUdzw4y4Go7Ey4w/OkSBRbLy+vcGAG3yEOFZiaB4O6zI=
+X-Received: by 2002:ab0:344f:: with SMTP id a15mr1771389uaq.2.1584397065487;
+ Mon, 16 Mar 2020 15:17:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316125625.GH3486@MiWiFi-R3L-srv>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20200316163646.2465-1-a.s.protopopov@gmail.com> <202003161423.B51FDA8083@keescook>
+In-Reply-To: <202003161423.B51FDA8083@keescook>
+From:   Anton Protopopov <a.s.protopopov@gmail.com>
+Date:   Mon, 16 Mar 2020 18:17:34 -0400
+Message-ID: <CAGn_itw594Q_-4gC8=3jjRGF-wx90GeXMWBAz54X-UEer9pbtA@mail.gmail.com>
+Subject: Re: [PATCH] seccomp: allow BPF_MOD ALU instructions
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 08:56:25PM +0800, Baoquan He wrote:
->When allocating memmap for hot added memory with the classic sparse, the
->specified 'nid' is ignored in populate_section_memmap().
+=D0=BF=D0=BD, 16 =D0=BC=D0=B0=D1=80. 2020 =D0=B3. =D0=B2 17:24, Kees Cook <=
+keescook@chromium.org>:
 >
->While in allocating memmap for the classic sparse during boot, the node
->given by 'nid' is preferred. And VMEMMAP prefers the node of 'nid' in
->both boot stage and memory hot adding. So seems no reason to not respect
->the node of 'nid' for the classic sparse when hot adding memory.
+> On Mon, Mar 16, 2020 at 04:36:46PM +0000, Anton Protopopov wrote:
+> > The BPF_MOD ALU instructions could be utilized by seccomp classic BPF f=
+ilters,
+> > but were missing from the explicit list of allowed calls since its intr=
+oduction
+> > in the original e2cfabdfd075 ("seccomp: add system call filtering using=
+ BPF")
+> > commit.  Add support for these instructions by adding them to the allow=
+ed list
+> > in the seccomp_check_filter function.
+> >
+> > Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
 >
->Use kvmalloc_node instead to use the passed in 'nid'.
+> This has been suggested in the past, but was deemed ultimately redundant:
+> https://lore.kernel.org/lkml/201908121035.06695C79F@keescook/
+
+Yeah, Paul told me this right after I submitted the patch.
+
+> Is there a strong reason it's needed?
+
+I really don't have such a strong need in BPF_MOD, but let me tell why
+I wanted to use it in the first place.
+
+I've used this operation to speedup processing linear blacklist
+filters. Namely, if you have a list of syscall numbers to blacklist,
+you can do, say,
+
+ldw [0]
+mod #4
+jeq #1, case1
+jeq #1, case2
+jeq #1, case3
+case0:
+...
+
+and in every case to walk only a corresponding factor-list. In my case
+I had a list of ~40 syscall numbers and after this change filter
+executed in 17.25 instructions on average per syscall vs. 45
+instructions for the linear filter (so this removes about 30
+instructions penalty per every syscall). To replace "mod #4" I
+actually used "and #3", but this obviously doesn't work for
+non-power-of-two divisors. If I would use "mod 5", then it would give
+me about 15.5 instructions on average.
+
+Thanks,
+Anton
+
 >
->Signed-off-by: Baoquan He <bhe@redhat.com>
->Acked-by: Michal Hocko <mhocko@suse.com>
->Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-
-
--- 
-Wei Yang
-Help you, Help me
+> Thanks!
+>
+> -Kees
+>
+> > ---
+> >  kernel/seccomp.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > index b6ea3dcb57bf..cae7561b44d4 100644
+> > --- a/kernel/seccomp.c
+> > +++ b/kernel/seccomp.c
+> > @@ -206,6 +206,8 @@ static int seccomp_check_filter(struct sock_filter =
+*filter, unsigned int flen)
+> >               case BPF_ALU | BPF_MUL | BPF_X:
+> >               case BPF_ALU | BPF_DIV | BPF_K:
+> >               case BPF_ALU | BPF_DIV | BPF_X:
+> > +             case BPF_ALU | BPF_MOD | BPF_K:
+> > +             case BPF_ALU | BPF_MOD | BPF_X:
+> >               case BPF_ALU | BPF_AND | BPF_K:
+> >               case BPF_ALU | BPF_AND | BPF_X:
+> >               case BPF_ALU | BPF_OR | BPF_K:
+> > --
+> > 2.19.1
+>
+> --
+> Kees Cook
