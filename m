@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5038EC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A707C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2470A2072A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17CB92074C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326101;
-	bh=hjYzrSAG1T8NzDLvFDVc+oisTswRnN3vFWY0chwC3UY=;
+	s=default; t=1584326104;
+	bh=RU0Lq8UlK/cuo32sdGpDmu2ST0CReyarNIWqqjH87Vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=itjS9aVCIn/jIfCQ1on4ZPrKlm7PgtzTRtX2LBHTnXH+wYG2Ho4Frh6eramIN6ltg
-	 xzKRQCKLmPrmkd6U04zstUW9yqGsNWtRkxtIRBv1Gl/sYRaPAIO27dCux3UWbxechw
-	 SU9S8T0TVTf+kTXbYaX9kXvNXBCFuH1O5hW+n5XA=
+	b=SzzaNsBVbtxAZLaM9FFhg2a+px4JCaRc4YWF5uUS3ODkRvlCtQE8XxEa3MBncxHTB
+	 Y8cfpLCwD7IsDt0au9hG/aDK2j99LdMZv7az9u1QFLL1wLqFo8nEoXOtemm1xABXSM
+	 aiLKM9/zUGwgJdo2ayt4FizXpHDgrktiaEl4LPjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbgCPCe7 (ORCPT
+        id S1730064AbgCPCfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:34:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:35:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730024AbgCPCe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:57 -0400
+        id S1730051AbgCPCfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03E9F20736;
-        Mon, 16 Mar 2020 02:34:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A13D420748;
+        Mon, 16 Mar 2020 02:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326097;
-        bh=hjYzrSAG1T8NzDLvFDVc+oisTswRnN3vFWY0chwC3UY=;
+        s=default; t=1584326100;
+        bh=RU0Lq8UlK/cuo32sdGpDmu2ST0CReyarNIWqqjH87Vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CabYTB5dPl6cBt5l0Slr0iuvv5wqz5PryqOLsy2/PXWEw1sQ/MrCg9o4qqTk8tUIJ
-         M+vcPJxNw1BrEfQERq9x1+pIgmtcUeREi6ON8bFPXtZLqARnJM/Pa+2n5UNUk+9mh9
-         iOQ2gRR+bYpie54bWVsTvjhueCdJ442xNXhnjjM0=
+        b=dro+jyiVDRlIrXuhT0a46nkS+UEkQ3V6Ff6qoE4BojPBxrXRnUDVkHUNcS5UCCY7y
+         4b+bTbjoEpuJup1Sz7svJBj57astcA70wNfItNufYvfJ/8Y/OjdcHdNQLEpxrYn68L
+         SE0QR/wSo8fv+VvAerBxBX9bDKfj9A8xXp+d3RYc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Hovold <johan@kernel.org>,
-        Sanchayan Maity <maitysanchayan@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 02/20] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible properties
-Date:   Sun, 15 Mar 2020 22:34:35 -0400
-Message-Id: <20200316023453.1800-2-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/20] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
+Date:   Sun, 15 Mar 2020 22:34:38 -0400
+Message-Id: <20200316023453.1800-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023453.1800-1-sashal@kernel.org>
 References: <20200316023453.1800-1-sashal@kernel.org>
@@ -63,54 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit bcbf53a0dab50980867476994f6079c1ec5bb3a3 ]
+[ Upstream commit 27f13774654ea6bd0b6fc9b97cce8d19e5735661 ]
 
-The sram-node compatible properties have mistakingly combined the
-model-specific string with the generic "mtd-ram" string.
+'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
+has RAM above 32-bit boundary (accessible with LPAE config) though the
+PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
+property in PCIe RC DT nodes to indicate the host bridge can access
+only 32 bits.
 
-Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
-"cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
-not present in any binding.
-
-The physmap driver will however bind to platform devices that specify
-"mtd-ram".
-
-Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
-Cc: Sanchayan Maity <maitysanchayan@gmail.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-index 9de45a7173561..50a7ec0875535 100644
---- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-+++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-@@ -234,7 +234,7 @@
- 
- 	/* SRAM on Colibri nEXT_CS0 */
- 	sram@0,0 {
--		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
-+		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
- 		reg = <0 0 0x00010000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -245,7 +245,7 @@
- 
- 	/* SRAM on Colibri nEXT_CS1 */
- 	sram@1,0 {
--		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
-+		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
- 		reg = <1 0 0x00010000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 7ce24b282d421..c1ef3201950ae 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -324,6 +324,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -376,6 +377,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
 -- 
 2.20.1
 
