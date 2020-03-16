@@ -2,100 +2,197 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911E9C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E515C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD022051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195AA20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:51:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dXdItexk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730733AbgCPKuH (ORCPT
+        id S1730716AbgCPKvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:50:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11650 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730478AbgCPKuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:50:06 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1798D6017481BD96D1A2;
-        Mon, 16 Mar 2020 18:50:02 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 16 Mar 2020
- 18:49:53 +0800
-Subject: Re: [PATCH] KVM: arm64: Use the correct timer for accessing CNT
-To:     KarimAllah Ahmed <karahmed@amazon.de>,
-        <linux-kernel@vger.kernel.org>
-CC:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1584351546-5018-1-git-send-email-karahmed@amazon.de>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <7ed91b9b-e968-770c-28f9-0ca479359657@huawei.com>
-Date:   Mon, 16 Mar 2020 18:49:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 16 Mar 2020 06:51:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36613 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730497AbgCPKvk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 06:51:40 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g62so17468602wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 03:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nidoOoOuGAG+2czC5MfcLDZfkrE7iEbyovUBFwN1rwI=;
+        b=dXdItexkHNDuhNzUc30jfkl8tJPnU6X2pWnCWqtY+Jid2v1ZdehA/sRs1JgNb+l1il
+         Ixfh3eZUQzHqFlk8JII8xxArEVpg3Z77p9qg8fDkR5UIEPJwgDTVV3QAGv8Pc3R4PE/8
+         jTLIMBz+uioj5152OyOKxthN7w4xzMgb9Iu7CqpxoZivzwjO76e9bxYkFvUCdu9uPTqT
+         0FO152jmRhxJzIhFZReJGzQNMv1JeOpL1Gj+Cu8usFxaWLnbbYUE9KwyxLp+dr6Xsykb
+         jknQcBSq2CJVQwANIvfDBR8MuPv6BYatk9gN5I5h1Bvo4gsjMQC1taSRaR4lszFFRZKu
+         Rgmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nidoOoOuGAG+2czC5MfcLDZfkrE7iEbyovUBFwN1rwI=;
+        b=RGXWiOH2D/HsiABQk/HGz9stZFxOkmjvnpEG+A1Zngfxvr5O4tLtTqeTntjMNMgfay
+         r/caSSLzk6TZqHhbdADe1ENdghzPUxJ7nJQ6v31eSFyxQdmMJdgxfPP9bTjoFrETQTbq
+         U70wHyXpcntRDd0tN2LN7Q32VuRhuBAK3OfVLd3x+AJT6C9f/b8Xqd5VykPxIjmbiuRv
+         IG4BpbkfN9wTWVV5UtfXl87pt2wOYYIXIaN/G/QhCqNsnb1Fyp7q6+JmxcZePZMnu8H9
+         Orir1drx44PtnIKFfEUaVz5E74HWiRTLPNNpCjS2n5Nxqtm0/4pwLqAstXeyke4yCt0q
+         ZZfQ==
+X-Gm-Message-State: ANhLgQ1VzgBJ8jEa6SG4Hjp6c1iuNxWXxPZD4RJmuXmdCvJQ7OOWAcC4
+        KAv4x9ssLs7IFauE26PEYGXy8A==
+X-Google-Smtp-Source: ADFU+vvbM4lYcyOpSCa26oS/kVEssmWydFIemNDeb5yA992UsqHs9/XOPlRWfFzSZKk+TggrwQ+XWw==
+X-Received: by 2002:a1c:4d14:: with SMTP id o20mr27266059wmh.17.1584355897774;
+        Mon, 16 Mar 2020 03:51:37 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f835:499f:9553:971a? ([2a01:e34:ed2f:f020:f835:499f:9553:971a])
+        by smtp.googlemail.com with ESMTPSA id c23sm30147583wme.39.2020.03.16.03.51.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2020 03:51:37 -0700 (PDT)
+Subject: Re: [PATCH v3 3/6] clocksource: timer-ti-dm: Implement cpu_pm
+ notifier for context save and restore
+To:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-pwm@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+References: <20200305082715.15861-1-lokeshvutla@ti.com>
+ <20200305082715.15861-4-lokeshvutla@ti.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
+ CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
+ U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
+ UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
+ KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
+ ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
+ 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
+ UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
+ d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
+ 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
+ z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
+ Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
+ 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
+ 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
+ eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
+ NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
+ 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
+ gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
+ qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
+ OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
+ gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
+ 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
+ PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
+ F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
+ WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
+ qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
+ l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
+ BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
+ 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
+ eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
+ t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
+ i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
+ X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
+ fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
+Message-ID: <5b7bd5f8-f4e3-b851-da3e-8f05386dce09@linaro.org>
+Date:   Mon, 16 Mar 2020 11:51:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1584351546-5018-1-git-send-email-karahmed@amazon.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200305082715.15861-4-lokeshvutla@ti.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2020/3/16 17:39, KarimAllah Ahmed wrote:
-> Use the physical timer object when reading the physical timer counter
-> instead of using the virtual timer object. This is only visible when
-> reading it from user-space as kvm_arm_timer_get_reg() is only executed on
-> the get register patch from user-space.
-
-s/patch/path/
-
-I think the physical counter hasn't yet been accessed by the current
-userspace, wrong?
-
+On 05/03/2020 09:27, Lokesh Vutla wrote:
+> omap_dm_timer_enable() restores the entire context(including counter)
+> based on 2 conditions:
+> - If get_context_loss_count is populated and context is lost.
+> - If get_context_loss_count is not populated update unconditionally.
 > 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: kvmarm@lists.cs.columbia.edu
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
-
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-
-And this might also deserve:
-
-Fixes: 84135d3d18da ("KVM: arm/arm64: consolidate arch timer trap handlers")
-
-
-Thanks.
-
+> Case2 has a side effect of updating the counter register even though
+> context is not lost. When timer is configured in pwm mode, this is
+> causing undesired behaviour in the pwm period.
+> 
+> Instead of using get_context_loss_count call back, implement cpu_pm
+> notifier with context save and restore support. And delete the
+> get_context_loss_count callback all together.
+> 
+> Suggested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> [tony@atomide.com: removed pm_runtime calls from cpuidle calls]
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 > ---
->   virt/kvm/arm/arch_timer.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
-> index 0d9438e..93bd59b 100644
-> --- a/virt/kvm/arm/arch_timer.c
-> +++ b/virt/kvm/arm/arch_timer.c
-> @@ -788,7 +788,7 @@ u64 kvm_arm_timer_get_reg(struct kvm_vcpu *vcpu, u64 regid)
->   					  vcpu_ptimer(vcpu), TIMER_REG_CTL);
->   	case KVM_REG_ARM_PTIMER_CNT:
->   		return kvm_arm_timer_read(vcpu,
-> -					  vcpu_vtimer(vcpu), TIMER_REG_CNT);
-> +					  vcpu_ptimer(vcpu), TIMER_REG_CNT);
->   	case KVM_REG_ARM_PTIMER_CVAL:
->   		return kvm_arm_timer_read(vcpu,
->   					  vcpu_ptimer(vcpu), TIMER_REG_CVAL);
-> 
+
+[ ... ]
+
+> @@ -725,6 +728,12 @@ static int __maybe_unused omap_dm_timer_runtime_suspend(struct device *dev)
+>  
+>  	atomic_set(&timer->enabled, 0);
+>  
+> +	if (timer->capability & OMAP_TIMER_ALWON ||
+> +	    !timer->func_base)
+> +	    return 0;
+
+WARNING: suspect code indent for conditional statements (8, 12)
+#168: FILE: drivers/clocksource/timer-ti-dm.c:762:
++	if (timer->capability & OMAP_TIMER_ALWON ||
+[...]
++	    return 0;
+
+
+WARNING: Statements should start on a tabstop
+#170: FILE: drivers/clocksource/timer-ti-dm.c:764:
++	    return 0;
+
+[ ... ]
+
+
+Mind to resend this patch with the warning fixed?
+
+Thanks
+
+  -- Daniel
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
