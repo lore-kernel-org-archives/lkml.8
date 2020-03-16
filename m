@@ -2,213 +2,99 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D821C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFA0C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E94BD20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:08:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584382084;
-	bh=aSGUaETrVlfP6l6e2BraMZ8cZpsFZueQ1YQLMZLrH2Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=TQOK6Jg2x/+69K2qgPqXDUXlaBwGX8W8DIUG6oDwx7Bt55JQyVOkEoVfQy3IWMtT/
-	 HGuRx4XOZ3h9qVlTEeagnyVgtNgP4uJbARPjz1ZVAf/ZGScvmecb50ZTCcR4acmoPR
-	 g5HPLehZdz1jfwUD+1DW0BNXsW80Iq6X7nOBkNCk=
+	by mail.kernel.org (Postfix) with ESMTP id 8E23820674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZSyiK0rT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732333AbgCPSID (ORCPT
+        id S1732348AbgCPSIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 14:08:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:53778 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 14:08:25 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53454 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732234AbgCPSIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 14:08:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0818E1FB;
-        Mon, 16 Mar 2020 11:08:02 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E5863F67D;
-        Mon, 16 Mar 2020 11:08:01 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 18:08:00 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: qcom: q6asm-dai: add support for ALAC and APE decoders" to the asoc tree
-In-Reply-To:  <20200316055221.1944464-9-vkoul@kernel.org>
-Message-Id:  <applied-20200316055221.1944464-9-vkoul@kernel.org>
-X-Patchwork-Hint: ignore
+        id S1732242AbgCPSIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 14:08:25 -0400
+Received: from zn.tnic (p200300EC2F06AB00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E85871EC0C84;
+        Mon, 16 Mar 2020 19:08:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584382103;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=BWcGdDqsDLKukOwUdjv1uByG4xJeZMLjRXLsayzjkaE=;
+        b=ZSyiK0rTzOfdUWBy80UPgJ1F0kWy8AOIcOnfpO9jCLDjyguTmras8/gvB0ruNU4J4pCt01
+        +71UQAiN0kbs6IOtbYrBWwZ++25bwdK+amIA6DKyPWMM7VF99h92dJDCPIXC3lbwmSHak+
+        fNBIFlrCFGDhvqUpFyXoRWC0TTLU4Ns=
+Date:   Mon, 16 Mar 2020 19:08:29 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Wei Huang <wei.huang2@amd.com>
+Cc:     linux-kernel@vger.kernel.org, tony.luck@intel.com,
+        yazen.ghannam@amd.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, linux-edac@vger.kernel.org, x86@kernel.org,
+        smita.koralahallichannabasappa@amd.com
+Subject: Re: [PATCH 1/1] x86/mce/amd: Add PPIN support for AMD MCE
+Message-ID: <20200316180829.GP26126@zn.tnic>
+References: <20200311044409.2717587-1-wei.huang2@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200311044409.2717587-1-wei.huang2@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Tue, Mar 10, 2020 at 11:44:09PM -0500, Wei Huang wrote:
+> Newer AMD CPUs support the feature of protected processor identification
+> number (PPIN). This patch detects and enables PPIN support on AMD platforms
 
-   ASoC: qcom: q6asm-dai: add support for ALAC and APE decoders
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
 
-has been applied to the asoc tree at
+Also, do
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+$ git grep 'This patch' Documentation/process
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+for more details.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> and includes PPIN info in MCE records if available. Because this feature is
+> almost identical on both Intel and AMD, it re-uses X86_FEATURE_INTEL_PPIN
+> feature bit and renames it to X86_FEATURE_PPIN.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Strictly speaking, you can't rename it anymore because it is visible in
+/proc/cpuinfo and thus ABI.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Besides, we have already a cpufeatures.h leaf for exactly that word:
 
-Thanks,
-Mark
+/* AMD-defined CPU features, CPUID level 0x80000008 (EBX), word 13 */
 
-From 4c3189380c6748a3e9fc6ab8aeb4bde3dd2032ed Mon Sep 17 00:00:00 2001
-From: Vinod Koul <vkoul@kernel.org>
-Date: Mon, 16 Mar 2020 11:22:20 +0530
-Subject: [PATCH] ASoC: qcom: q6asm-dai: add support for ALAC and APE decoders
+which means you can call the AMD define
 
-Qualcomm DSPs also supports the ALAC and APE decoders, so add support
-for these and convert the snd_codec_params to qdsp format.
+#define X86_FEATURE_AMD_PPIN               ( 13*32+23) /* AMD Protected Processor Inventory Number */
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Link: https://lore.kernel.org/r/20200316055221.1944464-9-vkoul@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/qcom/qdsp6/q6asm-dai.c | 70 +++++++++++++++++++++++++++++++-
- 1 file changed, 69 insertions(+), 1 deletion(-)
+and /proc/cpuinfo will have "amd_ppin" and the code will use the
+respective vendor flag to test.
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index fa685fe4a027..8b5d86be9ace 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -41,6 +41,9 @@
- #define Q6ASM_DAI_TX	1
- #define Q6ASM_DAI_RX	2
- 
-+#define ALAC_CH_LAYOUT_MONO   ((101 << 16) | 1)
-+#define ALAC_CH_LAYOUT_STEREO ((101 << 16) | 2)
-+
- enum stream_state {
- 	Q6ASM_STREAM_IDLE = 0,
- 	Q6ASM_STREAM_STOPPED,
-@@ -630,12 +633,16 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
- 	struct q6asm_dai_data *pdata;
- 	struct q6asm_flac_cfg flac_cfg;
- 	struct q6asm_wma_cfg wma_cfg;
-+	struct q6asm_alac_cfg alac_cfg;
-+	struct q6asm_ape_cfg ape_cfg;
- 	unsigned int wma_v9 = 0;
- 	struct device *dev = c->dev;
- 	int ret;
- 	union snd_codec_options *codec_options;
- 	struct snd_dec_flac *flac;
- 	struct snd_dec_wma *wma;
-+	struct snd_dec_alac *alac;
-+	struct snd_dec_ape *ape;
- 
- 	codec_options = &(prtd->codec_param.codec.options);
- 
-@@ -758,6 +765,65 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
- 			dev_err(dev, "WMA9 CMD failed:%d\n", ret);
- 			return -EIO;
- 		}
-+		break;
-+
-+	case SND_AUDIOCODEC_ALAC:
-+		memset(&alac_cfg, 0x0, sizeof(alac_cfg));
-+		alac = &codec_options->alac_d;
-+
-+		alac_cfg.sample_rate = params->codec.sample_rate;
-+		alac_cfg.avg_bit_rate = params->codec.bit_rate;
-+		alac_cfg.bit_depth = prtd->bits_per_sample;
-+		alac_cfg.num_channels = params->codec.ch_in;
-+
-+		alac_cfg.frame_length = alac->frame_length;
-+		alac_cfg.pb = alac->pb;
-+		alac_cfg.mb = alac->mb;
-+		alac_cfg.kb = alac->kb;
-+		alac_cfg.max_run = alac->max_run;
-+		alac_cfg.compatible_version = alac->compatible_version;
-+		alac_cfg.max_frame_bytes = alac->max_frame_bytes;
-+
-+		switch (params->codec.ch_in) {
-+		case 1:
-+			alac_cfg.channel_layout_tag = ALAC_CH_LAYOUT_MONO;
-+			break;
-+		case 2:
-+			alac_cfg.channel_layout_tag = ALAC_CH_LAYOUT_STEREO;
-+			break;
-+		}
-+		ret = q6asm_stream_media_format_block_alac(prtd->audio_client,
-+							   &alac_cfg);
-+		if (ret < 0) {
-+			dev_err(dev, "ALAC CMD Format block failed:%d\n", ret);
-+			return -EIO;
-+		}
-+		break;
-+
-+	case SND_AUDIOCODEC_APE:
-+		memset(&ape_cfg, 0x0, sizeof(ape_cfg));
-+		ape = &codec_options->ape_d;
-+
-+		ape_cfg.sample_rate = params->codec.sample_rate;
-+		ape_cfg.num_channels = params->codec.ch_in;
-+		ape_cfg.bits_per_sample = prtd->bits_per_sample;
-+
-+		ape_cfg.compatible_version = ape->compatible_version;
-+		ape_cfg.compression_level = ape->compression_level;
-+		ape_cfg.format_flags = ape->format_flags;
-+		ape_cfg.blocks_per_frame = ape->blocks_per_frame;
-+		ape_cfg.final_frame_blocks = ape->final_frame_blocks;
-+		ape_cfg.total_frames = ape->total_frames;
-+		ape_cfg.seek_table_present = ape->seek_table_present;
-+
-+		ret = q6asm_stream_media_format_block_ape(prtd->audio_client,
-+							  &ape_cfg);
-+		if (ret < 0) {
-+			dev_err(dev, "APE CMD Format block failed:%d\n", ret);
-+			return -EIO;
-+		}
-+		break;
-+
- 	default:
- 		break;
- 	}
-@@ -857,10 +923,12 @@ static int q6asm_dai_compr_get_caps(struct snd_compr_stream *stream,
- 	caps->max_fragment_size = COMPR_PLAYBACK_MAX_FRAGMENT_SIZE;
- 	caps->min_fragments = COMPR_PLAYBACK_MIN_NUM_FRAGMENTS;
- 	caps->max_fragments = COMPR_PLAYBACK_MAX_NUM_FRAGMENTS;
--	caps->num_codecs = 3;
-+	caps->num_codecs = 5;
- 	caps->codecs[0] = SND_AUDIOCODEC_MP3;
- 	caps->codecs[1] = SND_AUDIOCODEC_FLAC;
- 	caps->codecs[2] = SND_AUDIOCODEC_WMA;
-+	caps->codecs[3] = SND_AUDIOCODEC_ALAC;
-+	caps->codecs[4] = SND_AUDIOCODEC_APE;
- 
- 	return 0;
- }
+> Signed-off-by: Wei Huang <wei.huang2@amd.com>
+> Signed-off-by: Smita Koralahalli Channabasappa <smita.koralahallichannabasappa@amd.com>
+
+What does this SOB mean? Grep Documentation/ for "Co-developed-by" in
+case this is what you're trying to express.
+
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
