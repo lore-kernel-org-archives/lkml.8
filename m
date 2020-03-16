@@ -2,156 +2,68 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B625C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC53C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A6320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE0B206B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbgCPIlQ (ORCPT
+        id S1730147AbgCPImw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:41:16 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60380 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730085AbgCPIlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:41:15 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4012E7D1E366B462072D;
-        Mon, 16 Mar 2020 16:40:29 +0800 (CST)
-Received: from localhost.localdomain (10.175.34.53) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 16 Mar 2020 16:40:20 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <aviad.krawczyk@huawei.com>, <luoxianjun@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <yin.yinshi@huawei.com>
-Subject: [PATCH net 1/6] hinic: fix process of long length skb without frags
-Date:   Mon, 16 Mar 2020 00:56:25 +0000
-Message-ID: <20200316005630.9817-2-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200316005630.9817-1-luobin9@huawei.com>
-References: <20200316005630.9817-1-luobin9@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.34.53]
-X-CFilter-Loop: Reflected
+        Mon, 16 Mar 2020 04:42:52 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:40960 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbgCPImv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:42:51 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2FCA914218234;
+        Mon, 16 Mar 2020 01:42:51 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 01:42:47 -0700 (PDT)
+Message-Id: <20200316.014247.141724414124911729.davem@davemloft.net>
+To:     mayflowerera@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] macsec: Support XPN frame handling - IEEE
+ 802.1AEbw
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200309194702.117050-1-mayflowerera@gmail.com>
+References: <20200309194702.117050-1-mayflowerera@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Mar 2020 01:42:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-some tool such as pktgen can build an illegal skb with long
-length but no fragments, which is unsupported for hw, so
-drop it
+From: Era Mayflower <mayflowerera@gmail.com>
+Date: Mon,  9 Mar 2020 19:47:01 +0000
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
----
- drivers/net/ethernet/huawei/hinic/hinic_ethtool.c |  1 +
- drivers/net/ethernet/huawei/hinic/hinic_main.c    |  1 +
- drivers/net/ethernet/huawei/hinic/hinic_tx.c      | 13 +++++++++----
- drivers/net/ethernet/huawei/hinic/hinic_tx.h      |  2 +-
- 4 files changed, 12 insertions(+), 5 deletions(-)
+> Support extended packet number cipher suites (802.1AEbw) frames handling.
+> This does not include the needed netlink patches.
+> 
+>     * Added xpn boolean field to `struct macsec_secy`.
+>     * Added ssci field to `struct_macsec_tx_sa` (802.1AE figure 10-5).
+>     * Added ssci field to `struct_macsec_rx_sa` (802.1AE figure 10-5).
+>     * Added salt field to `struct macsec_key` (802.1AE 10.7 NOTE 1).
+>     * Created pn_t type for easy access to lower and upper halves.
+>     * Created salt_t type for easy access to the "ssci" and "pn" parts.
+>     * Created `macsec_fill_iv_xpn` function to create IV in XPN mode.
+>     * Support in PN recovery and preliminary replay check in XPN mode.
+> 
+> In addition, according to IEEE 802.1AEbw figure 10-5, the PN of incoming
+> frame can be 0 when XPN cipher suite is used, so fixed the function
+> `macsec_validate_skb` to fail on PN=0 only if XPN is off.
+> 
+> Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-index 966aea949c0b..dac157bc06a7 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-@@ -582,6 +582,7 @@ static struct hinic_stats hinic_tx_queue_stats[] = {
- 	HINIC_TXQ_STAT(tx_wake),
- 	HINIC_TXQ_STAT(tx_dropped),
- 	HINIC_TXQ_STAT(big_frags_pkts),
-+	HINIC_TXQ_STAT(frag_len_overflow),
- };
- 
- #define HINIC_RXQ_STAT(_stat_item) { \
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index 13560975c103..a9bee70bd6c7 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -107,6 +107,7 @@ static void update_tx_stats(struct hinic_dev *nic_dev, struct hinic_txq *txq)
- 	nic_tx_stats->tx_wake += tx_stats.tx_wake;
- 	nic_tx_stats->tx_dropped += tx_stats.tx_dropped;
- 	nic_tx_stats->big_frags_pkts += tx_stats.big_frags_pkts;
-+	nic_tx_stats->frag_len_overflow += tx_stats.frag_len_overflow;
- 	u64_stats_update_end(&nic_tx_stats->syncp);
- 
- 	hinic_txq_clean_stats(txq);
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index 0e13d1c7e474..3c6762086fff 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -45,9 +45,10 @@
- 
- #define HW_CONS_IDX(sq)                 be16_to_cpu(*(u16 *)((sq)->hw_ci_addr))
- 
--#define MIN_SKB_LEN                     17
-+#define MIN_SKB_LEN			17
-+#define HINIC_GSO_MAX_SIZE		65536
- 
--#define	MAX_PAYLOAD_OFFSET	        221
-+#define	MAX_PAYLOAD_OFFSET		221
- #define TRANSPORT_OFFSET(l4_hdr, skb)	((u32)((l4_hdr) - (skb)->data))
- 
- union hinic_l3 {
-@@ -84,6 +85,7 @@ void hinic_txq_clean_stats(struct hinic_txq *txq)
- 	txq_stats->tx_wake = 0;
- 	txq_stats->tx_dropped = 0;
- 	txq_stats->big_frags_pkts = 0;
-+	txq_stats->frag_len_overflow = 0;
- 	u64_stats_update_end(&txq_stats->syncp);
- }
- 
-@@ -106,6 +108,7 @@ void hinic_txq_get_stats(struct hinic_txq *txq, struct hinic_txq_stats *stats)
- 		stats->tx_wake = txq_stats->tx_wake;
- 		stats->tx_dropped = txq_stats->tx_dropped;
- 		stats->big_frags_pkts = txq_stats->big_frags_pkts;
-+		stats->frag_len_overflow = txq_stats->frag_len_overflow;
- 	} while (u64_stats_fetch_retry(&txq_stats->syncp, start));
- 	u64_stats_update_end(&stats->syncp);
- }
-@@ -440,7 +443,6 @@ static int hinic_tx_offload(struct sk_buff *skb, struct hinic_sq_task *task,
- 			     vlan_tag >> VLAN_PRIO_SHIFT);
- 		offload |= TX_OFFLOAD_VLAN;
- 	}
--
- 	if (offload)
- 		hinic_task_set_l2hdr(task, skb_network_offset(skb));
- 
-@@ -488,11 +490,14 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
- 		txq->txq_stats.big_frags_pkts++;
- 		u64_stats_update_end(&txq->txq_stats.syncp);
- 	}
--
- 	if (nr_sges > txq->max_sges) {
- 		netdev_err(netdev, "Too many Tx sges\n");
- 		goto skb_error;
- 	}
-+	if (unlikely(skb->len > HINIC_GSO_MAX_SIZE && nr_sges == 1)) {
-+		txq->txq_stats.frag_len_overflow++;
-+		goto skb_error;
-+	}
- 
- 	err = tx_map_skb(nic_dev, skb, txq->sges);
- 	if (err)
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.h b/drivers/net/ethernet/huawei/hinic/hinic_tx.h
-index f158b7db7fb8..ac65b4301c09 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.h
-@@ -22,7 +22,7 @@ struct hinic_txq_stats {
- 	u64     tx_wake;
- 	u64     tx_dropped;
- 	u64	big_frags_pkts;
--
-+	u64     frag_len_overflow;
- 	struct u64_stats_sync   syncp;
- };
- 
--- 
-2.17.1
-
+Applied.
