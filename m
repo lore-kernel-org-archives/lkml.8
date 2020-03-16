@@ -2,94 +2,125 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4FFC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9B6C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90A320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="xcFDkYZd"
+	by mail.kernel.org (Postfix) with ESMTP id 75986206B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584351162;
+	bh=v8XmfeBNcbxbhqd0XIx/4PozRgFvSeRgR01rqGyZfOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s1j2z9ayrvxBmrSVQ60NLPXTnyxPsa90nWfphQcEtZOfh05DaPUlSE9agasPOZDi4
+	 IAJYF0Tih8NtrTBtyKHtE94u9qcn2FZ72oApIXLN9RO7lhkdXCctA5JEpPr4xOsbhj
+	 FAFGbpg6rdYcTx+aMY7T6b3RcGIYm0U1dqChJAus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgCPJcb (ORCPT
+        id S1730490AbgCPJcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:32:31 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:39985 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730411AbgCPJcb (ORCPT
+        Mon, 16 Mar 2020 05:32:41 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42176 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730025AbgCPJck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:32:31 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9E435891AD;
-        Mon, 16 Mar 2020 22:32:27 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1584351147;
-        bh=V0O3aq6hbiIFibPdk6wV1NdKjC0vrqYnL+s1/TpL2AY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=xcFDkYZdMgaWXcdgkzR9rwLeNts9xQIfTG1F1eVfKO8WRzMg6AAQOPBYsaG+SpUb5
-         UI5jCtbtC/4NIWeF0GshJ1Q+PqBYJJ+8He67DwSf3Bmqtj0B7kOweFkpGIMA8ra/pR
-         vl0WE6b72v4bazdkXx4AYBwH84uk8jNz26IdBBg13tDUN+bzkY/rHmAMf/ZJNufmhT
-         nApN5FNY5T49I1xF7rCZ4AwDkKzDf9ope6ihouui84RQTDVJ5r3JEAKitl0zRSAcyE
-         G2eWDwSIW/qFOkaOkp1wZGwX15aHKdVK0S/HPqIMq0o9tg3xAfF1EsMUqwg1gy4D2D
-         B3o/ld3G9Fkog==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e6f47ac0000>; Mon, 16 Mar 2020 22:32:28 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 16 Mar 2020 22:32:26 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Mon, 16 Mar 2020 22:32:26 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "andrew@lunn.ch" <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "josua@solid-run.com" <josua@solid-run.com>
-Subject: Re: [PATCH v2] net: mvmdio: avoid error message for optional IRQ
-Thread-Topic: [PATCH v2] net: mvmdio: avoid error message for optional IRQ
-Thread-Index: AQHV9+B2ZGst8pFaOk2XUMzXhPXGHqhJ/4cAgAATMACAAA80gA==
-Date:   Mon, 16 Mar 2020 09:32:25 +0000
-Message-ID: <49cd4dbc073c3b8b1a5d9b2714d95a45b0d21a97.camel@alliedtelesis.co.nz>
-References: <20200311200546.9936-1-chris.packham@alliedtelesis.co.nz>
-         <63905ad2134b4d19cb274c9e082a9326a07991ac.camel@alliedtelesis.co.nz>
-         <20200316083800.GB8524@lunn.ch>
-In-Reply-To: <20200316083800.GB8524@lunn.ch>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.14.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5399738A5E26844DABE8E4273C1A4593@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Mon, 16 Mar 2020 05:32:40 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v11so20247799wrm.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 02:32:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oEYSbzcwvWV4DLx8To++eoIp8BYJ//m6HHg73CdsKHw=;
+        b=g55uLz9/Zy16wZpzq2f8Q/G+Gns7WsSIhCd4XkVUs7azIxVFa9iJ0rXT5sZF+hVz7r
+         5NkC//AlvMna1LFBnJeyoQSzYbgjUO1IPRFD+n++EUsjHvSy0icdYHaXwwnkN7pWU51T
+         E2zTU2wzo/Zmn+PrkThwnv/D0ssNZ1lo73Z/hc6HIpZVX7ztTHbPn8IUw5mqZOLGD3p4
+         tjG1t6v9WRraRldANI3PoP5wOj0IcY8kADLmEhD2ERt1t4Re4SsNP0ViJLP851PS7KlI
+         s7gnquLbqBdOZUm89TMzkYiQDEmeY+EqsvMe6YWYW3JTGuICNpWhR3aXieH8ewtVLmu8
+         pRkg==
+X-Gm-Message-State: ANhLgQ1TMNcPCo4jmt40m7k4pXVGUEP7hP1bdWkgZrCpC4TZ7tSKGzYV
+        U0auNs+slzOUnpLEuCIDjyLpxI9C
+X-Google-Smtp-Source: ADFU+vt6YXM1CptagV/rpbnMHtj8W9qM4URMPJkfMe5NZq7b8cAbpDRqRecJiXokzAJI5m005xwVmQ==
+X-Received: by 2002:adf:f688:: with SMTP id v8mr6409318wrp.344.1584351158748;
+        Mon, 16 Mar 2020 02:32:38 -0700 (PDT)
+Received: from localhost (ip-37-188-254-25.eurotel.cz. [37.188.254.25])
+        by smtp.gmail.com with ESMTPSA id p8sm24718070wrw.19.2020.03.16.02.32.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 02:32:38 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 10:32:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
+Message-ID: <20200316093236.GF11482@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
+ <20200310221019.GE8447@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2003101556270.177273@chino.kir.corp.google.com>
+ <20200311082736.GA23944@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2003111238570.171292@chino.kir.corp.google.com>
+ <20200312083241.GT23944@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2003121115480.158939@chino.kir.corp.google.com>
+ <20200312201624.GD23944@dhcp22.suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312201624.GD23944@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAzLTE2IGF0IDA5OjM4ICswMTAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-PiBBY3R1YWxseSBvbiBjbG9zZXIgaW5zcGVjdGlvbiBJIHRoaW5rIHRoaXMgaXMgd3JvbmcuDQo+
-ID4gcGxhdGZvcm1fZ2V0X2lycV9vcHRpb25hbCgpIHdpbGwgcmV0dXJuIC1FTlhJTyBpZiB0aGUg
-aXJxIGlzIG5vdA0KPiA+IHNwZWNpZmllZC4NCj4gDQo+IFRoZSBfb3B0aW9uYWwgaXMgdGhlbiBw
-b2ludGxlc3MuIEFuZCBkaWZmZXJlbnQgdG8gYWxsIHRoZSBvdGhlcg0KPiBfb3B0aW9uYWwgZnVu
-Y3Rpb25zIHdoaWNoIGRvbid0IHJldHVybiBhbiBlcnJvciBpZiB0aGUgcHJvcGVydHkgaXMNCj4g
-bm90DQo+IGRlZmluZWQuDQo+IA0KPiBBcmUgeW91IHJlYWxseSBzdXJlIGFib3V0IHRoaXM/IEkg
-ZG9uJ3QgaGF2ZSB0aGUgdGltZSByaWdodCBub3cgdG8NCj4gY2hlY2suDQo+IA0KDQpSZWdyZXRh
-YmJseSB5ZXNbMV0uIEl0IGNhdWdodCBtZSBieSBzdXJwcmlzZSB0b28uIEkgb25seSBub3RpY2Vk
-IHdoZW4gSQ0Kd2VudCB0byB1c2UgYSBkaWZmZXJlbnQgYm9hcmQgdGhhdCB1c2VkIHRoYXQgZHJp
-dmVyLiBJIHRoaW5rIHRoZQ0KcHJvYmxlbSBpcyB0aGF0IG9uIHNvbWUgcGxhdGZvcm1zIDAgaXMg
-YSB2YWxpZCBpcnEgc28gaXQgY2FuJ3QganVzdCBiZQ0KdXNlZCB0byBpbmRpY2F0ZSBhIG1pc3Np
-bmcgaW50ZXJydXB0Lg0KDQpbMV0gLSBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGlu
-dXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvdHJlZS9kcml2ZXJzL2Jhc2UvcGxhdGZv
-cm0uYyNuMTM4DQoNCg0K
+On Thu 12-03-20 21:16:27, Michal Hocko wrote:
+> On Thu 12-03-20 11:20:33, David Rientjes wrote:
+> > On Thu, 12 Mar 2020, Michal Hocko wrote:
+> > 
+> > > > I think the changelog clearly states that we need to guarantee that a 
+> > > > reclaimer will yield the processor back to allow a victim to exit.  This 
+> > > > is where we make the guarantee.  If it helps for the specific reason it 
+> > > > triggered in my testing, we could add:
+> > > > 
+> > > > "For example, mem_cgroup_protected() can prohibit reclaim and thus any 
+> > > > yielding in page reclaim would not address the issue."
+> > > 
+> > > I would suggest something like the following:
+> > > "
+> > > The reclaim path (including the OOM) relies on explicit scheduling
+> > > points to hand over execution to tasks which could help with the reclaim
+> > > process.
+> > 
+> > Are there other examples where yielding in the reclaim path would "help 
+> > with the reclaim process" other than oom victims?  This sentence seems 
+> > vague.
+> 
+> In the context of UP and !PREEMPT this also includes IO flushers,
+> filesystems rely on workers and there are things I am very likely not
+> aware of. If you think this is vaague then feel free to reformulate.
+> All I really do care about is what the next paragraph is explaining.
+
+Btw. do you plan to send a patch with an updated changelog?
+
+> > > Currently it is mostly shrink_page_list which yields CPU for
+> > > each reclaimed page. This might be insuficient though in some
+> > > configurations. E.g. when a memcg OOM path is triggered in a hierarchy
+> > > which doesn't have any reclaimable memory because of memory reclaim
+> > > protection (MEMCG_PROT_MIN) then there is possible to trigger a soft
+> > > lockup during an out of memory situation on non preemptible kernels
+> > > <PUT YOUR SOFT LOCKUP SPLAT HERE>
+> > > 
+> > > Fix this by adding a cond_resched up in the reclaim path and make sure
+> > > there is a yield point regardless of reclaimability of the target
+> > > hierarchy.
+> > > "
+> > > 
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
+
+-- 
+Michal Hocko
+SUSE Labs
