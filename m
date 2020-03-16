@@ -6,55 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB23C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C77C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C6620409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2032220409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgCPDqV (ORCPT
+        id S1729517AbgCPDqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 23:46:21 -0400
-Received: from m176115.mail.qiye.163.com ([59.111.176.115]:29247 "EHLO
+        Sun, 15 Mar 2020 23:46:43 -0400
+Received: from m176115.mail.qiye.163.com ([59.111.176.115]:31259 "EHLO
         m176115.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729387AbgCPDqV (ORCPT
+        with ESMTP id S1729387AbgCPDqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 23:46:21 -0400
-Received: from localhost.localdomain (unknown [58.251.74.227])
-        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id 0F225664012;
-        Mon, 16 Mar 2020 11:46:10 +0800 (CST)
+        Sun, 15 Mar 2020 23:46:42 -0400
+Received: from localhost.localdomain (unknown [58.251.74.226])
+        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id E3695663D0F;
+        Mon, 16 Mar 2020 11:46:37 +0800 (CST)
 From:   Zheng Wei <wei.zheng@vivo.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Enrico Weigelt <info@metux.net>,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
+        Will Deacon <will@kernel.org>, Brian King <brking@us.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
+        linux-scsi@vger.kernel.org
 Cc:     kernel@vivo.com, wenhu.wang@vivo.com,
         Zheng Wei <wei.zheng@vivo.com>
-Subject: [PATCH v2,RESEND] btrfs: fix the duplicated definition of 'inode_item_err'
-Date:   Mon, 16 Mar 2020 11:45:57 +0800
-Message-Id: <20200316034600.125962-1-wei.zheng@vivo.com>
+Subject: [PATCH v2,RESEND] scsi/ipr: fix wrong __VA_ARGS__ usage
+Date:   Mon, 16 Mar 2020 11:46:29 +0800
+Message-Id: <20200316034631.126018-1-wei.zheng@vivo.com>
 X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VMS0hCQkJCQk1KQ05IWVdZKFlBSE
-        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NAw6HRw6NTg0CjdKDgsaKUIP
-        SR0wFDxVSlVKTkNPSEhLSExLQ09CVTMWGhIXVQweElUBEx4VHDsNEg0UVRgUFkVZV1kSC1lBWU5D
-        VUlOSlVMT1VJSUxZV1kIAVlBSU9OTjcG
-X-HM-Tid: 0a70e172eeb39373kuws0f225664012
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVLSE9CQkJDT0xPSklKSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nio6Pzo6Kjg4GjcrQwkVKBoS
+        OToaC0hVSlVKTkNPSEhLSEJDTUNCVTMWGhIXVQweElUBEx4VHDsNEg0UVRgUFkVZV1kSC1lBWU5D
+        VUlOSlVMT1VJSU1ZV1kIAVlBSU1NSDcG
+X-HM-Tid: 0a70e1735b759373kuwse3695663d0f
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove the duplicated definition of 'inode_item_err'
-in the file tree-checker.c
+ipr_hcam_err uses __VA_ARGS__ without "##" prefix, 
+it causes a build error when there is no variable arguments.
 
 Signed-off-by: Zheng Wei <wei.zheng@vivo.com>
 ---
@@ -63,24 +62,31 @@ changelog
 v1 -> v2
  - resend for the failure of delivery to some recipients.
 
- fs/btrfs/tree-checker.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/scsi/ipr.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
-index a92f8a6dd192..517b44300a05 100644
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -957,10 +957,6 @@ static int check_dev_item(struct extent_buffer *leaf,
- 	return 0;
+diff --git a/drivers/scsi/ipr.h b/drivers/scsi/ipr.h
+index b97aa9ac2ffe..de3401972354 100644
+--- a/drivers/scsi/ipr.h
++++ b/drivers/scsi/ipr.h
+@@ -1813,14 +1813,14 @@ struct ipr_ucode_image_header {
+ 					hostrcb->hcam.u.error64.fd_res_path, \
+ 					hostrcb->rp_buffer,		\
+ 					sizeof(hostrcb->rp_buffer)),	\
+-				__VA_ARGS__);				\
++				##__VA_ARGS__);				\
+ 		} else {						\
+ 			ipr_ra_err((hostrcb)->ioa_cfg,			\
+ 				(hostrcb)->hcam.u.error.fd_res_addr,	\
+-				fmt, __VA_ARGS__);			\
++				fmt, ##__VA_ARGS__);			\
+ 		}							\
+ 	} else {							\
+-		dev_err(&(hostrcb)->ioa_cfg->pdev->dev, fmt, __VA_ARGS__); \
++		dev_err(&(hostrcb)->ioa_cfg->pdev->dev, fmt, ##__VA_ARGS__); \
+ 	}								\
  }
  
--/* Inode item error output has the same format as dir_item_err() */
--#define inode_item_err(eb, slot, fmt, ...)			\
--	dir_item_err(eb, slot, fmt, __VA_ARGS__)
--
- static int check_inode_item(struct extent_buffer *leaf,
- 			    struct btrfs_key *key, int slot)
- {
 -- 
 2.17.1
 
