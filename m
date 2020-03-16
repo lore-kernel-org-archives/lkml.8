@@ -2,98 +2,108 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9987C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBB1C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCD62051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F59720719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584364468;
+	bh=LmU7P8pTU610kxZnULxwK7dksMsqCbNn4F4inI+WiXs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wkFzfqTw8MCzVKCKgHvSR1pz5dxD7+opB5S3RKUi+nxxyPaWp5ZnWXAXr/Bh0Bq3j
+	 oJZLCresdgAAua771je+yeDtsf8pIxuNUPLkpdB3JTrmWASpddxn1qDht+292prc36
+	 2+EU7YAVpjPH67mA9PNnDJET+56KsP3YlCa+8/yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbgCPNNT (ORCPT
+        id S1731161AbgCPNO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:13:19 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11702 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731025AbgCPNNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:13:19 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8D0A22A0B1305EC4C0D3;
-        Mon, 16 Mar 2020 21:13:14 +0800 (CST)
-Received: from huawei.com (10.175.113.25) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 16 Mar 2020
- 21:13:04 +0800
-From:   Zheng Zengkai <zhengzengkai@huawei.com>
-To:     <davem@davemloft.net>, <aelior@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <zhengzengkai@huawei.com>
-Subject: [PATCH net-next] qede: remove some unused code in function qede_selftest_receive_traffic
-Date:   Mon, 16 Mar 2020 21:05:24 +0800
-Message-ID: <20200316130524.140421-1-zhengzengkai@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 16 Mar 2020 09:14:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731025AbgCPNO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 09:14:27 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29AFC20663;
+        Mon, 16 Mar 2020 13:14:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584364466;
+        bh=LmU7P8pTU610kxZnULxwK7dksMsqCbNn4F4inI+WiXs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bOc05CrcR9Emny6/CLjvQzRP6g4e7lV/jF56WxstnkltZOCNUUkZMHM4ezxPC6/XB
+         pFyzosK7RWC9Nm1suRt1xMatiaj4HXL03w0CC+Xngzdu5ETKQmrCCbXM/UuMPbzQA8
+         HLZSWtZY/WDD/PJ9Kux3Dr7pWtJjlrB/Qk666CdI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jDpZY-00D5AE-EW; Mon, 16 Mar 2020 13:14:24 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 16 Mar 2020 13:14:24 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        chenxiang <chenxiang66@hisilicon.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>, luojiaxing@huawei.com
+Subject: Re: [PATCH v3 2/2] irqchip/gic-v3-its: Balance initial LPI affinity
+ across CPUs
+In-Reply-To: <2c367508-f81b-342e-eb05-8bbd1b056279@huawei.com>
+References: <20200316115433.9017-1-maz@kernel.org>
+ <20200316115433.9017-3-maz@kernel.org>
+ <2c367508-f81b-342e-eb05-8bbd1b056279@huawei.com>
+Message-ID: <9ce0b23455a06d92161c5302ac28152e@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: john.garry@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chenxiang66@hisilicon.com, wangzhou1@hisilicon.com, ming.lei@redhat.com, jason@lakedaemon.net, tglx@linutronix.de, luojiaxing@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove set but not used variables 'sw_comp_cons' and 'hw_comp_cons'
-to fix gcc '-Wunused-but-set-variable' warning:
+On 2020-03-16 13:02, John Garry wrote:
 
-drivers/net/ethernet/qlogic/qede/qede_ethtool.c: In function qede_selftest_receive_traffic:
-drivers/net/ethernet/qlogic/qede/qede_ethtool.c:1569:20:
- warning: variable sw_comp_cons set but not used [-Wunused-but-set-variable]
-drivers/net/ethernet/qlogic/qede/qede_ethtool.c: In function qede_selftest_receive_traffic:
-drivers/net/ethernet/qlogic/qede/qede_ethtool.c:1569:6:
- warning: variable hw_comp_cons set but not used [-Wunused-but-set-variable]
+Hi John,
 
-After removing 'hw_comp_cons',the memory barrier 'rmb()' and its comments become useless,
-so remove them as well.
+> Hi Marc,
+> 
+>> +		int this_count = its_read_lpi_count(d, tmp);
+> 
+> Not sure if it's intentional, but now there seems to be a subtle
+> difference to what Thomas described for non-managed interrupts - for
+> non-managed interrupts, x86 selects the CPU based on the total
+> interrupt load per CPU (or, more specifically, lowest vector
+> allocation count), and not just the non-managed load. Or maybe I
+> misread it.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zheng Zengkai <zhengzengkai@huawei.com>
----
- drivers/net/ethernet/qlogic/qede/qede_ethtool.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+So far, I'm trying to keep the two allocation paths separate, as the
+two systems I have access to have very different behaviours: D05 has
+no managed interrupts to speak of, and my top-secret work machine
+has almost no unmanaged interrupts, so the two sets are almost
+completely disjoint.
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-index 8a426afb6a55..f5141d1f19bf 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-@@ -1566,7 +1566,7 @@ static int qede_selftest_transmit_traffic(struct qede_dev *edev,
- 
- static int qede_selftest_receive_traffic(struct qede_dev *edev)
- {
--	u16 hw_comp_cons, sw_comp_cons, sw_rx_index, len;
-+	u16 sw_rx_index, len;
- 	struct eth_fast_path_rx_reg_cqe *fp_cqe;
- 	struct qede_rx_queue *rxq = NULL;
- 	struct sw_rx_data *sw_rx_data;
-@@ -1596,17 +1596,6 @@ static int qede_selftest_receive_traffic(struct qede_dev *edev)
- 			continue;
- 		}
- 
--		hw_comp_cons = le16_to_cpu(*rxq->hw_cons_ptr);
--		sw_comp_cons = qed_chain_get_cons_idx(&rxq->rx_comp_ring);
--
--		/* Memory barrier to prevent the CPU from doing speculative
--		 * reads of CQE/BD before reading hw_comp_cons. If the CQE is
--		 * read before it is written by FW, then FW writes CQE and SB,
--		 * and then the CPU reads the hw_comp_cons, it will use an old
--		 * CQE.
--		 */
--		rmb();
--
- 		/* Get the CQE from the completion ring */
- 		cqe = (union eth_rx_cqe *)qed_chain_consume(&rxq->rx_comp_ring);
- 
+Also, it all depends on the interrupt allocation order, and whether
+something will rebalance the non-managed interrupts at a later time.
+At least, these two patches make it easy to alter the placement policy
+(the behaviour you describe above is a 2 line change).
+
+> Anyway, we can test this now for NVMe with its managed interrupts.
+
+Looking forward to hearing from you!
+
+         M.
 -- 
-2.20.1
-
+Jazz is not dead. It just smells funny...
