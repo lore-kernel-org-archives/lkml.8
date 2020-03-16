@@ -2,135 +2,123 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C22CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2361AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C0220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB19E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FrdMwbYx"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mM4lwSG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732844AbgCPWb4 (ORCPT
+        id S1732849AbgCPWfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:31:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:33075 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732785AbgCPWb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:31:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48h9yd0vR7z9sPF;
-        Tue, 17 Mar 2020 09:31:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584397913;
-        bh=LGX3AdqZzyzLOEua6P7UOCgahPZcme0H+kHaEsv/suU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FrdMwbYxtxXUW1vLuTgkCPpGAx/ErMuldSbxm/IYGbRowhLq25z3ud+F465zjm3i4
-         lwHttDaoli9v4xidjGEzSVcoA1TXeWgRfdjwIFMd3aHvHcDMW0goe0Xw0NK2VmqnD0
-         LypsB2sou1xqAi4pZ/Eew7THKe4ap2HgZ+BYMGHPkIgpdJcBpHhSxakS0kQDYVhKMJ
-         iYdmp1pZQHW09Es3FBkfk1yMNUFCQGClENsEwRg/utt97KqjYt3bQhACY6G88+NVVY
-         z9ZYidNaZbl31DcK+kPZhek5IR0p5s7b6hA8gZ75OGzkxLPC95NExnryjgS0KJli3e
-         uv2qFFfdXZP6A==
-Date:   Tue, 17 Mar 2020 09:31:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andy Gross <agross@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Li Yang <leoyang.li@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: linux-next: manual merge of the qcom tree with the imx-mxs tree
-Message-ID: <20200317093151.2b2aa227@canb.auug.org.au>
+        Mon, 16 Mar 2020 18:35:21 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:17476 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732836AbgCPWfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 18:35:20 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02GMUen6021564
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:35:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=8v1OnHmR5wX5fICDYV1U9HUzSwtkFptrUKwgJuVU9co=;
+ b=mM4lwSG146ZpE7yCU7c2bx8k3Nx2oj8WSsZFuqDD3zireAZV990AovTSEZgmf6Jz2GOK
+ E7teFoCvRH3egG89aHA59BlZ7wLPF1srfyiCDaGBr+UWQaNlMV40hys3yGhHYA54+uoF
+ eydnEwwc9a2KJS6nkQhNVRpaJuvq1/8OAg8= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yrvsnsuvq-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:35:19 -0700
+Received: from intmgw002.06.prn3.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c085:11d::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 16 Mar 2020 15:35:17 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 494903BA0D448; Mon, 16 Mar 2020 15:35:16 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] mm: memcg: make memory.oom.group tolerable to task migration
+Date:   Mon, 16 Mar 2020 15:35:10 -0700
+Message-ID: <20200316223510.3176148-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/L2hIOezLj76HDzJTGDnB4=H";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-16_10:2020-03-12,2020-03-16 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
+ bulkscore=0 clxscore=1015 spamscore=0 impostorscore=0 priorityscore=1501
+ mlxscore=0 phishscore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003160092
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/L2hIOezLj76HDzJTGDnB4=H
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+If a task is getting moved out of the OOMing cgroup, it might
+result in unexpected OOM killings if memory.oom.group is used
+anywhere in the cgroup tree.
 
-Hi all,
+Imagine the following example:
 
-Today's linux-next merge of the qcom tree got a conflict in:
+          A (oom.group = 1)
+         / \
+  (OOM) B   C
 
-  arch/arm64/configs/defconfig
+Let's say B's memory.max is exceeded and it's OOMing. The OOM killer
+selects a task in B as a victim, but someone asynchronously moves
+the task into C. mem_cgroup_get_oom_group() will iterate over all
+ancestors of C up to the root cgroup. In theory it had to stop
+at the oom_domain level - the memory cgroup which is OOMing.
+But because B is not an ancestor of C, it's not happening.
+Instead it chooses A (because it's oom.group is set), and kills
+all tasks in A. This behavior is wrong because the OOM happened in B,
+so there is no reason to kill anything outside.
 
-between commit:
+Fix this by checking it the memory cgroup to which the task belongs
+is a descendant of the oom_domain. If not, memory.oom.group should
+be ignored, and the OOM killer should kill only the victim task.
 
-  97c1ed02f765 ("arm64: defconfig: Enable PHY devices used on QorIQ boards")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reported-by: Dan Schatzberg <dschatzberg@fb.com>
+---
+ mm/memcontrol.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-from the imx-mxs tree and commit:
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index daa399be4688..d8c4b7aa4e73 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1930,6 +1930,14 @@ struct mem_cgroup *mem_cgroup_get_oom_group(struct task_struct *victim,
+ 	if (memcg == root_mem_cgroup)
+ 		goto out;
+ 
++	/*
++	 * If the victim task has been asynchronously moved to a different
++	 * memory cgroup, we might end up killing tasks outside oom_domain.
++	 * In this case it's better to ignore memory.group.oom.
++	 */
++	if (unlikely(!mem_cgroup_is_descendant(memcg, oom_domain)))
++		goto out;
++
+ 	/*
+ 	 * Traverse the memory cgroup hierarchy from the victim task's
+ 	 * cgroup up to the OOMing cgroup (or root) to find the
+-- 
+2.24.1
 
-  1788e7a93207 ("arm64: defconfig: Enable Qualcomm SDM845 audio configs")
-
-from the qcom tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/configs/defconfig
-index 8a7e1bea71ba,d74d237498d8..000000000000
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@@ -792,12 -763,13 +803,14 @@@ CONFIG_QCOM_SYSMON=3D
-  CONFIG_RPMSG_QCOM_GLINK_RPM=3Dy
-  CONFIG_RPMSG_QCOM_GLINK_SMEM=3Dm
-  CONFIG_RPMSG_QCOM_SMD=3Dy
-+ CONFIG_SOUNDWIRE=3Dm
-+ CONFIG_SOUNDWIRE_QCOM=3Dm
-  CONFIG_OWL_PM_DOMAINS=3Dy
-  CONFIG_RASPBERRYPI_POWER=3Dy
- +CONFIG_FSL_DPAA=3Dy
- +CONFIG_FSL_MC_DPIO=3Dy
-  CONFIG_IMX_SCU_SOC=3Dy
-  CONFIG_QCOM_AOSS_QMP=3Dy
- -CONFIG_QCOM_COMMAND_DB=3Dy
-  CONFIG_QCOM_GENI_SE=3Dy
-  CONFIG_QCOM_GLINK_SSR=3Dm
-  CONFIG_QCOM_RMTFS_MEM=3Dm
-@@@ -892,7 -866,9 +906,10 @@@ CONFIG_FPGA_REGION=3D
-  CONFIG_OF_FPGA_REGION=3Dm
-  CONFIG_TEE=3Dy
-  CONFIG_OPTEE=3Dy
- +CONFIG_MUX_MMIO=3Dy
-+ CONFIG_SLIMBUS=3Dm
-+ CONFIG_SLIM_QCOM_CTRL=3Dm
-+ CONFIG_SLIM_QCOM_NGD_CTRL=3Dm
-  CONFIG_EXT2_FS=3Dy
-  CONFIG_EXT3_FS=3Dy
-  CONFIG_EXT4_FS_POSIX_ACL=3Dy
-
---Sig_/L2hIOezLj76HDzJTGDnB4=H
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5v/lcACgkQAVBC80lX
-0GzcbAf/bfFuHKR4oxSEMoJggkJXxVeCNCQ8wSp+O3ue4mam0RtwlAH6LEVJXAbi
-Q9q6P/L72L0SM1KDKLOv/1+704dmo6R6aAkuh3jwCR4h8BgyTWLrYfWkeEnEN+Bl
-HgXftgVdxsopQuSkRmIPjgMp0obJXkPDBT4S8kRV+zJ2lVpY79pc7NcPS6MJ297s
-Y15xL1X5jgtvGrQJvJrZBmjXHp3RlymZAjRxVQyDbbmXbbH8bCWIdNWGynjknm6S
-+EGZ5C8fkAce2tmtn006ieB2nWasK1cO03r4J6f2Tf2Qbd3ieFUselCWVxvo0IvQ
-w9drF5HZ10lmJMWPtl3K0b8TbKUk4Q==
-=HW+C
------END PGP SIGNATURE-----
-
---Sig_/L2hIOezLj76HDzJTGDnB4=H--
