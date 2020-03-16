@@ -2,155 +2,101 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82C8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58049C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC88C20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584370665;
-	bh=NzhOibcs2MP0b0Rjl3DVux6ONP6tV6JWJAUi8FlJ2ek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OKuotUUQWu+oTLJ+6sljMWmeH+NPjs4zZVakgIsMVQ0V3aYxGw6/+WiLNZzx8oEMU
-	 aI5OeYlJ7n2xEP07X3bvp+2eu2Qhfef2iF9r2jGroSVpqCvFq4WgHC3/WslD026MBk
-	 kfs5tMsbfy9bLF3Y3zY5DqAg/d+DM32/fPFD9qBA=
+	by mail.kernel.org (Postfix) with ESMTP id 377CA20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbgCPO5o (ORCPT
+        id S1731719AbgCPO5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:57:44 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51418 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731539AbgCPO5o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:57:44 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a132so18014644wme.1;
-        Mon, 16 Mar 2020 07:57:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CuvWFuqCG4KEAkRK7EOPy0KNKDy73YIks+wli/bNrIk=;
-        b=WdHLOwgg/ZXiqJ9Gkl9eo0PWRHSoR9L6cKaHIhRXTufRUfLp6OYrbErMl3b9ZmTUlg
-         PRrslsyB4ZcR32WrjYeCOHopICrEJURB9wommE3I6dGvrlgyM9T5Ul/O2zpsmeWsiExb
-         UdS4aTdxvfsobtqMTV7EnEO/c7iAIHPqATtyJTb5ystPkVMqYWz3z5ie4wxshFKQB9v4
-         cm+HkZ0qL227TpXrM2XrZyXasVdPkMGjq/45JXn6IO5VWxCHJ3g+VzICXitAre+91ZUy
-         DQVdpZGI9oRXW0dvD7H3+ADgdeqP2IMSHkADKiYLSzY8XXp4So15tSTfLzWZOKOTR/3K
-         NFog==
-X-Gm-Message-State: ANhLgQ25Gd2zEtaJCw8zkQmphKyftheOkmKns9FJgP2UogeDSJj88IDt
-        TfFHSpPfujNRb0YSjpdJ7Ck=
-X-Google-Smtp-Source: ADFU+vuxr1MlnxaVPTHNEpdcW0tduhRumcOW54unK5HZo2oIB47fMNMEC3sUX2fki2zFgUKVoAWGwA==
-X-Received: by 2002:a05:600c:c8:: with SMTP id u8mr28452399wmm.178.1584370662433;
-        Mon, 16 Mar 2020 07:57:42 -0700 (PDT)
-Received: from localhost ([37.188.132.163])
-        by smtp.gmail.com with ESMTPSA id 31sm296460wrr.5.2020.03.16.07.57.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:57:41 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 15:57:40 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH 3/6] mm, memcg: Prevent memory.low load/store tearing
-Message-ID: <20200316145740.GO11482@dhcp22.suse.cz>
-References: <cover.1584034301.git.chris@chrisdown.name>
- <448206f44b0fa7be9dad2ca2601d2bcb2c0b7844.1584034301.git.chris@chrisdown.name>
+        Mon, 16 Mar 2020 10:57:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34096 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731636AbgCPO5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 10:57:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 69629B131;
+        Mon, 16 Mar 2020 14:57:47 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 145F11E10DA; Mon, 16 Mar 2020 15:57:47 +0100 (CET)
+Date:   Mon, 16 Mar 2020 15:57:47 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] udf: udf_sb.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200316145747.GB22684@quack2.suse.cz>
+References: <20200309202715.GA9428@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <448206f44b0fa7be9dad2ca2601d2bcb2c0b7844.1584034301.git.chris@chrisdown.name>
+In-Reply-To: <20200309202715.GA9428@embeddedor>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12-03-20 17:33:01, Chris Down wrote:
-> This can be set concurrently with reads, which may cause the wrong value
-> to be propagated.
+On Mon 09-03-20 15:27:15, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> Signed-off-by: Chris Down <chris@chrisdown.name>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Roman Gushchin <guro@fb.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: linux-mm@kvack.org
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kernel-team@fb.com
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Thanks. I've added the patch to my tree.
 
 > ---
->  mm/memcontrol.c   | 4 ++--
->  mm/page_counter.c | 9 ++++++---
->  2 files changed, 8 insertions(+), 5 deletions(-)
+>  fs/udf/udf_sb.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index aca2964ea494..c85a304fa4a1 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6262,7 +6262,7 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->  		return MEMCG_PROT_NONE;
+> diff --git a/fs/udf/udf_sb.h b/fs/udf/udf_sb.h
+> index 3d83be54c474..65280ae009e0 100644
+> --- a/fs/udf/udf_sb.h
+> +++ b/fs/udf/udf_sb.h
+> @@ -83,7 +83,7 @@ struct udf_virtual_data {
+>  struct udf_bitmap {
+>  	__u32			s_extPosition;
+>  	int			s_nr_groups;
+> -	struct buffer_head 	*s_block_bitmap[0];
+> +	struct buffer_head	*s_block_bitmap[];
+>  };
 >  
->  	emin = memcg->memory.min;
-> -	elow = memcg->memory.low;
-> +	elow = READ_ONCE(memcg->memory.low);
->  
->  	parent = parent_mem_cgroup(memcg);
->  	/* No parent means a non-hierarchical mode on v1 memcg */
-> @@ -6291,7 +6291,7 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->  	if (elow && parent_elow) {
->  		unsigned long low_usage, siblings_low_usage;
->  
-> -		low_usage = min(usage, memcg->memory.low);
-> +		low_usage = min(usage, READ_ONCE(memcg->memory.low));
->  		siblings_low_usage = atomic_long_read(
->  			&parent->memory.children_low_usage);
->  
-> diff --git a/mm/page_counter.c b/mm/page_counter.c
-> index 50184929b61f..18b7f779f2e2 100644
-> --- a/mm/page_counter.c
-> +++ b/mm/page_counter.c
-> @@ -17,6 +17,7 @@ static void propagate_protected_usage(struct page_counter *c,
->  				      unsigned long usage)
->  {
->  	unsigned long protected, old_protected;
-> +	unsigned long low;
->  	long delta;
->  
->  	if (!c->parent)
-> @@ -34,8 +35,10 @@ static void propagate_protected_usage(struct page_counter *c,
->  			atomic_long_add(delta, &c->parent->children_min_usage);
->  	}
->  
-> -	if (c->low || atomic_long_read(&c->low_usage)) {
-> -		if (usage <= c->low)
-> +	low = READ_ONCE(c->low);
-> +
-> +	if (low || atomic_long_read(&c->low_usage)) {
-> +		if (usage <= low)
->  			protected = usage;
->  		else
->  			protected = 0;
-> @@ -231,7 +234,7 @@ void page_counter_set_low(struct page_counter *counter, unsigned long nr_pages)
->  {
->  	struct page_counter *c;
->  
-> -	counter->low = nr_pages;
-> +	WRITE_ONCE(counter->low, nr_pages);
->  
->  	for (c = counter; c; c = c->parent)
->  		propagate_protected_usage(c, atomic_long_read(&c->usage));
+>  struct udf_part_map {
 > -- 
-> 2.25.1
+> 2.25.0
 > 
-
 -- 
-Michal Hocko
-SUSE Labs
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
