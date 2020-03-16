@@ -2,122 +2,155 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A62C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C59C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C819205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:05:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="HC5iw9ns"
+	by mail.kernel.org (Postfix) with ESMTP id 2106C2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbgCPNFl (ORCPT
+        id S1731132AbgCPNJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:05:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37776 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730974AbgCPNFl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:05:41 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 3so2051714pff.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 06:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=S3ylSoSVkSVtheK/F1qvWvf0XZ/cN1+4cUsuDfSQPrg=;
-        b=HC5iw9nsPFCCHJIQ4FigojhiQRRfcdyb6Qpgcbl9eWbw97vM6ByH1GNo0POUcLpnq8
-         W2526eX+MuNa5a/YiPRQpKhHy989nZbvMYd0iQ068YzwHi/XfEMOAHswjNqJkdwQO/xa
-         W0/LGixqd91m0pYY9vhfsXQG0Fssoiruwz8xI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=S3ylSoSVkSVtheK/F1qvWvf0XZ/cN1+4cUsuDfSQPrg=;
-        b=gnbFSZ20YHXaOnKWCp9mjwaacTf/k+vtibvm3zgdsRsqdBCzVbNNeheY9XcYHS6lxq
-         yarESRbEe4uR6+jvvUzdF5motOD+hEObmnJiXXGr668c9vNJF2zkKIIbP68pnkUBPmQu
-         a/cbApbg+uMjuw5CCO7hPQGoR9BT9nX1+ZwsLBrHSLEoVKvCZpJrAdeW3qveKvSKjJiu
-         MHVD7UrlITA+zKKWJOtRfSso0VIvcCcZMjBFZriSW9lZCLAN4oG3OmGOlpaXENy8TmAO
-         a94v39kKuT82itzkpjaYWdnuuSrXyRh/bKjRJ10pyUTaeLM7VLCBAFZiLsZg4IpZ1ZHa
-         xTqA==
-X-Gm-Message-State: ANhLgQ0WlYxDDeL+oEE8x7L5R2buUxAeKdPTUFmEPcgJNkRSX6WlJ4Jp
-        crz/L5XVDT0vOKicvnTP4pWzIg==
-X-Google-Smtp-Source: ADFU+vte8YprRXpiosPh6oK8UzgBCXexYDX8dInWwsIZfEzpUDJTBrqtjf9QP5Ukzx4PTdYLK6yJpw==
-X-Received: by 2002:a63:5506:: with SMTP id j6mr26894163pgb.43.1584363939827;
-        Mon, 16 Mar 2020 06:05:39 -0700 (PDT)
-Received: from localhost (2001-44b8-1113-6700-789d-cd2c-42e1-23af.static.ipv6.internode.on.net. [2001:44b8:1113:6700:789d:cd2c:42e1:23af])
-        by smtp.gmail.com with ESMTPSA id z15sm32281786pfg.152.2020.03.16.06.05.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 06:05:38 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, psampat@linux.ibm.com,
-        pratik.r.sampat@gmail.com, ego@linux.vnet.ibm.com
-Subject: Re: [PATCH] Fixes: 227942809b52 ("cpufreq: powernv: Restore cpu frequency to policy->cur on unthrottling")
-In-Reply-To: <20200306110549.25517-1-psampat@linux.ibm.com>
-References: <20200306110549.25517-1-psampat@linux.ibm.com>
-Date:   Tue, 17 Mar 2020 00:05:35 +1100
-Message-ID: <87v9n4o3fk.fsf@dja-thinkpad.axtens.net>
+        Mon, 16 Mar 2020 09:09:14 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25949 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731094AbgCPNJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 09:09:14 -0400
+IronPort-SDR: VGinNkE0QJ8atWsdctpYzrxADn6puc7SHHqn32XUPbATYHrzEcvnQZKrARR0Imv1fq5ghv6r+E
+ dq/2VlThmd7g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 06:09:13 -0700
+IronPort-SDR: 0CeY80JCmqMRFF8PRRwqjCJTuc1Tu7GsgKQr52YKi11iJStA/m1bmE/80Ik3TgXwgODzGweN8w
+ O4YWoKhrBOMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,560,1574150400"; 
+   d="scan'208";a="247451195"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by orsmga006.jf.intel.com with ESMTP; 16 Mar 2020 06:09:11 -0700
+Subject: Re: [RESEND PATCH 1/3] mmc: host: Introduce the request_atomic() for
+ the host
+To:     Baolin Wang <baolin.wang7@gmail.com>, ulf.hansson@linaro.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1583307441.git.baolin.wang7@gmail.com>
+ <ace53bca354e2846f19684bd33a9c0f3c2ee2c44.1583307441.git.baolin.wang7@gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <dd44e606-3eb5-f7fc-5995-021705a9b5d9@intel.com>
+Date:   Mon, 16 Mar 2020 15:08:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <ace53bca354e2846f19684bd33a9c0f3c2ee2c44.1583307441.git.baolin.wang7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pratik,
-
-Please could you resend this with a more meaningful subject line and
-move the Fixes: line to immediately above your signed-off-by?
-
-Thanks!
-
-Regards,
-Daniel
-
-> The patch avoids allocating cpufreq_policy on stack hence fixing frame
-> size overflow in 'powernv_cpufreq_work_fn'
->
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+On 4/03/20 9:42 am, Baolin Wang wrote:
+> The SD host controller can process one request in the atomic context if
+> the card is nonremovable, which means we can submit next request in the
+> irq hard handler when using the MMC software queue to reduce the latency.
+> Thus this patch adds a new API request_atomic() for the host controller
+> and implement it for the SD host controller.
+> 
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 > ---
->  drivers/cpufreq/powernv-cpufreq.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
-> index 56f4bc0d209e..20ee0661555a 100644
-> --- a/drivers/cpufreq/powernv-cpufreq.c
-> +++ b/drivers/cpufreq/powernv-cpufreq.c
-> @@ -902,6 +902,7 @@ static struct notifier_block powernv_cpufreq_reboot_nb = {
->  void powernv_cpufreq_work_fn(struct work_struct *work)
+>  drivers/mmc/host/sdhci.c | 27 +++++++++++++++++++--------
+>  drivers/mmc/host/sdhci.h |  1 +
+>  include/linux/mmc/host.h |  3 +++
+>  3 files changed, 23 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 9c37451..4febbcb 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -2016,17 +2016,12 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
+>   *                                                                           *
+>  \*****************************************************************************/
+>  
+> -void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+> +static void sdhci_start_request(struct mmc_host *mmc, struct mmc_request *mrq,
+> +				int present)
 >  {
->  	struct chip *chip = container_of(work, struct chip, throttle);
-> +	struct cpufreq_policy *policy;
->  	unsigned int cpu;
->  	cpumask_t mask;
+> -	struct sdhci_host *host;
+> -	int present;
+> +	struct sdhci_host *host = mmc_priv(mmc);
+>  	unsigned long flags;
 >  
-> @@ -916,12 +917,14 @@ void powernv_cpufreq_work_fn(struct work_struct *work)
->  	chip->restore = false;
->  	for_each_cpu(cpu, &mask) {
->  		int index;
-> -		struct cpufreq_policy policy;
+> -	host = mmc_priv(mmc);
+> -
+> -	/* Firstly check card presence */
+> -	present = mmc->ops->get_cd(mmc);
+> -
+>  	spin_lock_irqsave(&host->lock, flags);
 >  
-> -		cpufreq_get_policy(&policy, cpu);
-> -		index = cpufreq_table_find_index_c(&policy, policy.cur);
-> -		powernv_cpufreq_target_index(&policy, index);
-> -		cpumask_andnot(&mask, &mask, policy.cpus);
-> +		policy = cpufreq_cpu_get(cpu);
-> +		if (!policy)
-> +			continue;
-> +		index = cpufreq_table_find_index_c(policy, policy->cur);
-> +		powernv_cpufreq_target_index(policy, index);
-> +		cpumask_andnot(&mask, &mask, policy->cpus);
-> +		cpufreq_cpu_put(policy);
->  	}
->  out:
->  	put_online_cpus();
-> -- 
-> 2.17.1
+>  	sdhci_led_activate(host);
+> @@ -2043,6 +2038,22 @@ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>  
+>  	spin_unlock_irqrestore(&host->lock, flags);
+>  }
+> +
+> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq)
+> +{
+> +	sdhci_start_request(mmc, mrq, 1);
+> +}
+> +EXPORT_SYMBOL_GPL(sdhci_request_atomic);
+> +
+> +void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+> +{
+> +	int present;
+> +
+> +	/* Firstly check card presence */
+> +	present = mmc->ops->get_cd(mmc);
+> +
+> +	sdhci_start_request(mmc, mrq, present);
+> +}
+>  EXPORT_SYMBOL_GPL(sdhci_request);
+>  
+>  void sdhci_set_bus_width(struct sdhci_host *host, int width)
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index cac2d97..5507a73 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -775,6 +775,7 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
+>  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
+>  			   unsigned short vdd);
+>  void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
+> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
+>  void sdhci_set_bus_width(struct sdhci_host *host, int width);
+>  void sdhci_reset(struct sdhci_host *host, u8 mask);
+>  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 562ed06..db5e59c 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -92,6 +92,9 @@ struct mmc_host_ops {
+>  			    int err);
+>  	void	(*pre_req)(struct mmc_host *host, struct mmc_request *req);
+>  	void	(*request)(struct mmc_host *host, struct mmc_request *req);
+> +	/* Submit one request to host in atomic context. */
+> +	void	(*request_atomic)(struct mmc_host *host,
+> +				  struct mmc_request *req);
+
+This doesn't have the flexibility to return "busy".  For example,
+sdhci_send_command() will potentially wait quite some time if the inhibit
+bits are set.  That is not good in interrupt context.  It would be better to
+return immediately in that case and have the caller fall back to a
+non-atomic context.  Thoughts?
+
+>  
+>  	/*
+>  	 * Avoid calling the next three functions too often or in a "fast
+> 
+
