@@ -2,115 +2,162 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06995C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCCCC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A5F2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E1C20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:56:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BuHh1iQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbgCPN4r (ORCPT
+        id S1731504AbgCPN4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:56:47 -0400
-Received: from mga06.intel.com ([134.134.136.31]:4449 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731110AbgCPN4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:56:47 -0400
-IronPort-SDR: X3aBeBnVSKtzArek4ILMPFhHlM2wm6lzGJGa4wjiFnxxeu7nW5nnQrxmw9dHkiwjSA29eaPlAn
- GjnGvm4LRFCQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 06:56:46 -0700
-IronPort-SDR: /SUHAXr9ZbR3tCMwpyjXlQOI9q2Src6Jid+g9z5mmueuqmBQgyXAsG0Xkqdmizj0DuQTtuc0XH
- oahoNkjdbz7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,560,1574150400"; 
-   d="scan'208";a="443347986"
-Received: from zidelson-mobl1.ger.corp.intel.com ([10.251.163.156])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Mar 2020 06:56:32 -0700
-Message-ID: <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Date:   Mon, 16 Mar 2020 15:56:30 +0200
-In-Reply-To: <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
-         <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
-         <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
-         <20200315012523.GC208715@linux.intel.com>
-         <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.35.92-1 
+        Mon, 16 Mar 2020 09:56:51 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42373 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731430AbgCPN4u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 09:56:50 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 66so17883031otd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 06:56:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SSNdADPq40Icef6Tc/mRDZ+zWsTXT5yssnz0a7eZlsw=;
+        b=BuHh1iQw9D5S/CSDLMes3O/Z027IN27+nS9M9h0w3X2Q6aE54k3WH6saSfk3mbexwy
+         Ot9DqbQkbclTXsc0sh9lkymaa5NFknCXTSMJJM0WIqMLzdke72kKAGM6KMvkpy5CxxVs
+         z6eEtT1Gv+RY6oHBhoergPp6GS+cNYLA4OUqXODE5c26VmwsANLuNrsrKzn1ccxpUE33
+         loWXV0pmiPDdsjGscwCtpBAN50waRiSzvPKgB1Hv3axNkraImnw+uyzyP1pegu1Mt83q
+         BnFjImWtl3B91wnMDhdp9cFFiuXCnOwbZfD5NAyYv89gA1zbDeKfB1JzcTylbl1tKk9x
+         lSGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SSNdADPq40Icef6Tc/mRDZ+zWsTXT5yssnz0a7eZlsw=;
+        b=WXuzyhNsgRwoEgpOM7kGDwNeSuOh0vhnTdGQo7gFoXGd2GNKdvQylnSZsFDMol7bLx
+         VoM8PFQNGfbA+QAn5yY5mX5fE/jNvsQwk2KJDtvNhobKgIpyLAV5tIOpBVRBDFOc/K2o
+         5N3bPYAGrDU0PMaBWAX3DYP/EqLVA51ss1Ys5irm9V3sw9EARiwxPFTlVO+FfS7Rv/3t
+         l8T7UQb8lyyaVI5EEDJosvbgMLzmGjv8jsT9IbF6roJXdylKQCjkXyvUnHtaK39ov2iA
+         yGsVs90pqKAlZxyRz7f3RyISsCcaRkCvIoFPLSiB/ysNQriFLpKnIguqtixqqL//sqrW
+         JA+Q==
+X-Gm-Message-State: ANhLgQ3ooDFQ6g7Iz40+3JVkJ/Ia84lGCB+btaLKG5soQSpmjQS+XMzt
+        D9O/66CUKQ1scPq437zgPpOwksOCZjKdI0koN3UmlQ==
+X-Google-Smtp-Source: ADFU+vuFs6DxW0lAL9j9/oJQCI1FKsehJ8PLZtN9yyub223KaBZWQ828I7ir6elf1GcKI0XTnDEZI4ORA3smEkvCBXQ=
+X-Received: by 2002:a9d:2c64:: with SMTP id f91mr2675599otb.17.1584367009313;
+ Mon, 16 Mar 2020 06:56:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200309190359.GA5822@paulmck-ThinkPad-P72> <20200309190420.6100-27-paulmck@kernel.org>
+ <20200312180328.GA4772@paulmck-ThinkPad-P72> <20200312180414.GA8024@paulmck-ThinkPad-P72>
+ <CANpmjNOqmsm69vfdCAVGhLzTV-oB3E5saRbjzwrkbO-6nGgTYw@mail.gmail.com>
+In-Reply-To: <CANpmjNOqmsm69vfdCAVGhLzTV-oB3E5saRbjzwrkbO-6nGgTYw@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 16 Mar 2020 14:56:38 +0100
+Message-ID: <CANpmjNO=jGNNd4J0hBhz4ORLdw_+EHQDvyoQRikRCOsuMAcXYg@mail.gmail.com>
+Subject: Re: [PATCH kcsan 27/32] kcsan: Add option to allow watcher interruptions
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>, kernel-team@fb.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, Qian Cai <cai@lca.pw>,
+        Boqun Feng <boqun.feng@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-03-15 at 13:53 -0400, Nathaniel McCallum wrote:
-> On Sat, Mar 14, 2020 at 9:25 PM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> > On Wed, Mar 11, 2020 at 01:30:07PM -0400, Nathaniel McCallum wrote:
-> > > Currently, the selftest has a wrapper around
-> > > __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
-> > > registers (CSRs), though it uses none of them. Then it calls this
-> > > function which uses %rbx but preserves none of the CSRs. Then it jumps
-> > > into an enclave which zeroes all these registers before returning.
-> > > Thus:
-> > > 
-> > >   1. wrapper saves all CSRs
-> > >   2. wrapper repositions stack arguments
-> > >   3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
-> > >   4. selftest zeros all CSRs
-> > >   5. wrapper loads all CSRs
-> > > 
-> > > I'd like to propose instead that the enclave be responsible for saving
-> > > and restoring CSRs. So instead of the above we have:
-> > >   1. __vdso_sgx_enter_enclave() saves %rbx
-> > >   2. enclave saves CSRs
-> > >   3. enclave loads CSRs
-> > >   4. __vdso_sgx_enter_enclave() loads %rbx
-> > > 
-> > > I know that lots of other stuff happens during enclave transitions,
-> > > but at the very least we could reduce the number of instructions
-> > > through this critical path.
-> > 
-> > What Jethro said and also that it is a good general principle to cut
-> > down the semantics of any vdso as minimal as possible.
-> > 
-> > I.e. even if saving RBX would make somehow sense it *can* be left
-> > out without loss in terms of what can be done with the vDSO.
-> 
-> Please read the rest of the thread. Sean and I have hammered out some
-> sensible and effective changes.
+On Fri, 13 Mar 2020 at 16:28, Marco Elver <elver@google.com> wrote:
+>
+> On Thu, 12 Mar 2020 at 19:04, Paul E. McKenney <paulmck@kernel.org> wrote=
+:
+> >
+> > On Thu, Mar 12, 2020 at 11:03:28AM -0700, Paul E. McKenney wrote:
+> > > On Mon, Mar 09, 2020 at 12:04:15PM -0700, paulmck@kernel.org wrote:
+> > > > From: Marco Elver <elver@google.com>
+> > > >
+> > > > Add option to allow interrupts while a watchpoint is set up. This c=
+an be
+> > > > enabled either via CONFIG_KCSAN_INTERRUPT_WATCHER or via the boot
+> > > > parameter 'kcsan.interrupt_watcher=3D1'.
+> > > >
+> > > > Note that, currently not all safe per-CPU access primitives and pat=
+terns
+> > > > are accounted for, which could result in false positives. For examp=
+le,
+> > > > asm-generic/percpu.h uses plain operations, which by default are
+> > > > instrumented. On interrupts and subsequent accesses to the same
+> > > > variable, KCSAN would currently report a data race with this option=
+.
+> > > >
+> > > > Therefore, this option should currently remain disabled by default,=
+ but
+> > > > may be enabled for specific test scenarios.
+> > > >
+> > > > To avoid new warnings, changes all uses of smp_processor_id() to us=
+e the
+> > > > raw version (as already done in kcsan_found_watchpoint()). The exac=
+t SMP
+> > > > processor id is for informational purposes in the report, and
+> > > > correctness is not affected.
+> > > >
+> > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > >
+> > > And I get silent hangs that bisect to this patch when running the
+> > > following rcutorture command, run in the kernel source tree on a
+> > > 12-hardware-thread laptop:
+> > >
+> > > bash tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 12 --durati=
+on 10 --kconfig "CONFIG_DEBUG_INFO=3Dy CONFIG_KCSAN=3Dy CONFIG_KCSAN_ASSUME=
+_PLAIN_WRITES_ATOMIC=3Dn CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=3Dn CONFIG_K=
+CSAN_REPORT_ONCE_IN_MS=3D100000 CONFIG_KCSAN_VERBOSE=3Dy CONFIG_KCSAN_INTER=
+RUPT_WATCHER=3Dy" --configs TREE03
+> > >
+> > > It works fine on some (but not all) of the other rcutorture test
+> > > scenarios.  It fails on TREE01, TREE02, TREE03, TREE09.  The common t=
+hread
+> > > is that these are the TREE scenarios are all PREEMPT=3Dy.  So are RUD=
+E01,
+> > > SRCU-P, TASKS01, and TASKS03, but these scenarios are not hammering
+> > > on Tree RCU, and thus have far less interrupt activity and the like.
+> > > Given that it is an interrupt-related feature being added by this com=
+mit,
+> > > this seems like expected (mis)behavior.
+> > >
+> > > Can you reproduce this?  If not, are there any diagnostics I can add =
+to
+> > > my testing?  Or a diagnostic patch I could apply?
+>
+> I think I can reproduce it.  Let me debug some more, so far I haven't
+> found anything yet.
+>
+> What I do know is that it's related to reporting. Turning kcsan_report
+> into a noop makes the test run to completion.
+>
+> > I should hasten to add that this feature was quite helpful in recent wo=
+rk!
+>
+> Good to know. :-)  We can probably keep this patch, since the default
+> config doesn't turn this on. But I will try to see what's up with the
+> hangs, and hopefully find a fix.
 
-Have skimmed through that discussion but it comes down how much you get
-by obviously degrading some of the robustness. Complexity of the calling
-pattern is not something that should be emphasized as that is something
-that is anyway hidden inside the runtime.
+So this one turned out to be quite interesting. We can get deadlocks
+if we can set up multiple watchpoints per task in case it's
+interrupted and the interrupt sets up another watchpoint, and there
+are many concurrent races happening; because the other_info struct in
+report.c may never be released if an interrupt blocks the consumer due
+to waiting for other_info to become released.
+Give me another day or 2 to come up with a decent fix.
 
-/Jarkko
-
+Thanks,
+-- Marco
