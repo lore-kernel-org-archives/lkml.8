@@ -2,107 +2,127 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD43C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3861C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41FC220409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8444E206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kn1rmJdj"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iGg05VAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgCPDOB (ORCPT
+        id S1729691AbgCPDOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 23:14:01 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33728 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729632AbgCPDOB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 23:14:01 -0400
-Received: by mail-pj1-f66.google.com with SMTP id dw20so3502263pjb.0;
-        Sun, 15 Mar 2020 20:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=khBuxhsfLtwkJbdKTmDzOvFGTSeMlV30RfTjpZu731w=;
-        b=kn1rmJdjTdsBvzi0LDTmK5qUEfCtK9WakHtxi8Ap5Saruk4TTWNmKOmoPYgpPVoNRe
-         iIRKrkxEN2QDuUJG4CFdNmzkRQsyQzwPqKknfvHnuG+0eN3QHTzcbCwPJz+i2BxtYgUB
-         zOC4qwr3yAiRPQXOms9hObGNg6ADVyucZmWHM9UACsF2q56OzzyCr/gE9DoOEKBUbkWu
-         LgBWJDNLwqm4LvFFn7BhIB77ylx4VbE8y0IuvX580kYEzYZ24N2EYbUDK5jEldiGVhbi
-         H6bpFd5Dglggsk0HZJHwRu/Lk+Dlk0K28Obr/9sBfCjoPVUr57WAepWNmRHhibIep5nV
-         hCnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=khBuxhsfLtwkJbdKTmDzOvFGTSeMlV30RfTjpZu731w=;
-        b=MqAoleXMFtLa1CfWdi3AT+14pExXkfPXyuIzQWU4zexb74Pu3eNGn6QbPiWICPvpvc
-         q6Zj7Ihu36NSAl8mnrE3qcHMDNogpoc8TU837qVej9m83orqDyd8svq1VeM8WTH+334r
-         mO10MZ0xqN8CCTfzgsxwmltT9RwXd/Ae357ymS0M4NnNRcUJOO30d82RWbNJiIZ0lmDm
-         6wmvlcH37rriqrxMD2zoclKBUObkKWXNkqF0atkgWfkTEJ9xmhlZctN36g8wTEXszYsM
-         7z5vVNwlnoEAv1J/jgDb6JjaJjEwUEt1sLtZM/pEcIaGfkzcWhkV8gTRRl/hctpKeJYT
-         SpLg==
-X-Gm-Message-State: ANhLgQ3Oi6259ZPqCA/vNiMlTRKblblDhQrSy/+3WL13o14FkGKvQOjZ
-        dcsPKSFuglfP/U2C1joKKGaleZ50
-X-Google-Smtp-Source: ADFU+vv0iMVJ6y997gl0WDsAS6Y7kFlu0SMT8wzHsJdz8FAeQKpXwcBhpv7tTWGIevKbzy+hwlxqjA==
-X-Received: by 2002:a17:902:9886:: with SMTP id s6mr25001838plp.100.1584328440119;
-        Sun, 15 Mar 2020 20:14:00 -0700 (PDT)
-Received: from sh04182tmp293.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id e9sm5143392pjt.23.2020.03.15.20.13.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 15 Mar 2020 20:13:59 -0700 (PDT)
-From:   Lanqing Liu <liuhhome@gmail.com>
-To:     dan.carpenter@oracle.com, gregkh@linuxfoundation.org,
-        jslaby@suse.com
-Cc:     baolin.wang@linaro.org, lanqing.liu@unisoc.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        orsonzhai@gmail.com, zhang.lyra@gmail.com
-Subject: [PATCH] serial: sprd: Fix a dereference warning
-Date:   Mon, 16 Mar 2020 11:13:33 +0800
-Message-Id: <e2bd92691538e95b04a2c2a728f3292e1617018f.1584325957.git.liuhhome@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Sun, 15 Mar 2020 23:14:39 -0400
+Received: from ozlabs.org ([203.11.71.1]:34999 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729655AbgCPDOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 23:14:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ghHK1nppz9sP7;
+        Mon, 16 Mar 2020 14:14:37 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584328477;
+        bh=5N2MgFvt+u4m3pMT4rzBFHd1Ae2gPlXu7fZF/DEo/2I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=iGg05VAIG2sIlwe19oNPJOgxzikHUYlJHgswB3sPEJD+4OyWRI0DvXOE6h3UYyzCR
+         1yoOO9FvcsFC2WJOLMlann/K9FxJ2x0c8fXuLjdat8ce8HiX+06rbdVy9OAs0w2SC/
+         z/vEBWdGEXYoDvQ2Sa009SFDGril6oGIEYF7PLjkdhf8j7aY6MsOClnZ5g/R4aYwFo
+         FOqBKPyQuyWcgorYHYu93s4XDkLuHUjc//PMLjSo2FqxFEbSQtu3FouocA+A3AwAZn
+         GNlDpEZyi5O9bBDHZQQa85jp4cJd/IcJBN6prRq0OA2isjq7fKw4w3N4ZWNdm0OrAo
+         X800ptsDP/Tlg==
+Date:   Mon, 16 Mar 2020 14:14:36 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Rob Herring <robherring2@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: linux-next: manual merge of the usb-gadget tree with the devicetree
+ tree
+Message-ID: <20200316141436.2113f68c@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/JHsccSclAd4l8cAX/NDuV7e";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should validate if the 'sup' is NULL or not before freeing DMA
-memory, to fix below warning.
+--Sig_/JHsccSclAd4l8cAX/NDuV7e
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-"drivers/tty/serial/sprd_serial.c:1141 sprd_remove()
- error: we previously assumed 'sup' could be null (see line 1132)"
+Hi all,
 
-Fixes: f4487db58eb7 ("serial: sprd: Add DMA mode support")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
----
- drivers/tty/serial/sprd_serial.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Today's linux-next merge of the usb-gadget tree got a conflict in:
 
-diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
-index 3d3c706..a223e93 100644
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -1132,14 +1132,13 @@ static int sprd_remove(struct platform_device *dev)
- 	if (sup) {
- 		uart_remove_one_port(&sprd_uart_driver, &sup->port);
- 		sprd_port[sup->port.line] = NULL;
-+		sprd_rx_free_buf(sup);
- 		sprd_ports_num--;
- 	}
- 
- 	if (!sprd_ports_num)
- 		uart_unregister_driver(&sprd_uart_driver);
- 
--	sprd_rx_free_buf(sup);
--
- 	return 0;
- }
- 
--- 
-1.9.1
+  Documentation/devicetree/bindings/usb/generic.txt
 
+between commit:
+
+  431a30b7d495 ("dt-bindings: Convert usb-connector to YAML format.")
+
+from the devicetree tree and commit:
+
+  dd2d0d1fac2b ("dt-bindings: usb: generic: Add role-switch-default-mode bi=
+nding")
+
+from the usb-gadget tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/devicetree/bindings/usb/generic.txt
+index 474e74c06522,67c51759a642..000000000000
+--- a/Documentation/devicetree/bindings/usb/generic.txt
++++ b/Documentation/devicetree/bindings/usb/generic.txt
+@@@ -34,7 -34,13 +34,13 @@@ Optional properties
+   - usb-role-switch: boolean, indicates that the device is capable of assi=
+gning
+  			the USB data role (USB host or USB device) for a given
+  			USB connector, such as Type-C, Type-B(micro).
+ -			see connector/usb-connector.txt.
+ +			see connector/usb-connector.yaml.
++  - role-switch-default-mode: indicating if usb-role-switch is enabled, the
++ 			device default operation mode of controller while usb
++ 			role is USB_ROLE_NONE. Valid arguments are "host" and
++ 			"peripheral". Defaults to "peripheral" if not
++ 			specified.
++=20
+ =20
+  This is an attribute to a USB controller such as:
+ =20
+
+--Sig_/JHsccSclAd4l8cAX/NDuV7e
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5u7xwACgkQAVBC80lX
+0GxnrwgAnWg0FEc/D17k1v601YqL9c7GdX9Xkcvqy8WB+1Leeg8bJS9LMlDhuy5M
+OJiJ7oIOM3dhdTaFW1qPx+QrKd7Vh37kpGmuD6BdLTXTc1Y+rvshgQSUfwb5bSUp
+fgWKgD7DnnR5iEnSNK+JlheuTVpb8X5h8gWdca2tya/hrlzZ3kAQh8lvxYTgcIQl
+CgIQ78QcaLOwVxcds7icofeAT4kXEjPq/R4iz4BWCc+zS/4reM/g+WuwQkyNmSCY
+IWUdC+I+TEMcb16XiQLGXpPn2C/UKERbjbz8fSOMBTpk33on3XrILRPUIc6pkqqJ
+xP2rzo3gbAbTUk8tJSUFfqDSSaBqoA==
+=59uV
+-----END PGP SIGNATURE-----
+
+--Sig_/JHsccSclAd4l8cAX/NDuV7e--
