@@ -2,131 +2,255 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85264C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5D5C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2442073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:49:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cb7/GBkJ"
+	by mail.kernel.org (Postfix) with ESMTP id BCC282073C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732615AbgCPUtI (ORCPT
+        id S1732620AbgCPUuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:49:08 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44248 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732571AbgCPUtH (ORCPT
+        Mon, 16 Mar 2020 16:50:10 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52388 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732537AbgCPUuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:49:07 -0400
-Received: by mail-oi1-f193.google.com with SMTP id d62so19295601oia.11;
-        Mon, 16 Mar 2020 13:49:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FwKpB9dezgsGNUxz1nNOwjc19tHL0rqvKXfkEKEGY/8=;
-        b=Cb7/GBkJLJp64RKa6AX44fXcNNPL8ZxndHUjn6sCAS1kZmVV5zk73GoaBGgjU6kSwA
-         ubqfcHH14i6g1cKZE3HE1EV1CVFheG266PjCzYpwTesYO7cEyfmagMQScGUavZrbD19R
-         AOAC9gQWjHkeg4XZ48ScRd6VJ4qChPu9ncAxdshFtGxdbvLuk6pj/y957G1WIMLcuphj
-         byLdZWV5ODm7ZGkHvlCZjRGCEIdy4Lon2IZDi7flQJSOqnMpadaB3QENWV7kKpjuuz1P
-         JzaIoZEiT14M4Dxdd9pZNGZHeSaMQ6DnGrP0dAivYFBMf29HFrWkJhDyITbYM8j/GLba
-         aV6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FwKpB9dezgsGNUxz1nNOwjc19tHL0rqvKXfkEKEGY/8=;
-        b=fU+Spf9nyYjwgXWGZ8OCXMz6r8DH/hBQxtZ42BqOPe8MX4otS5mvev2ZvLB1Ccp2YR
-         x27tft/YRzHCKRkc+1AFDGUrlv+dNK7H7a2jT8lf6Gd8vYT4/A1Puo2Anj2aptD66D4V
-         cJM02ePVT5Wjw5/obK4cyRwDkWFTU4Inmdy7YzYdFbleb5E7K21NxlXZiXYM+yUb8MWC
-         hIx/hOxMrjW630LyEVWdvV0uGbLz56Bb9sb9cjQMhNlkbCpdeOkSORr828d3hQKBZgX1
-         E67kV6ZX1+d20ezOpyQdgov/FQ+ZgzAajhMDHDhTWNkBoaKL4GO8L9vKsqoZPp7u1phJ
-         jTVA==
-X-Gm-Message-State: ANhLgQ2pNM6GBbSA4NOHnCQdlt6MgWgMOWa7RgEKJUEtKE4eaBOZOHaG
-        xK/tugpZ04fLty8/p5XwFsw=
-X-Google-Smtp-Source: ADFU+vvEjYOEDnaDrK2AIBMJUjh56ynJDxAdBGrx8W7H91Yx5yY0DH5GhjJyoGX2Ad4wDgRML4TLvA==
-X-Received: by 2002:a05:6808:4e:: with SMTP id v14mr1083539oic.70.1584391745414;
-        Mon, 16 Mar 2020 13:49:05 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id c1sm329747oib.46.2020.03.16.13.49.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 13:49:04 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     Sibi Sankar <sibis@codeaurora.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] soc: qcom: pdr: Avoid uninitialized use of found in pdr_indication_cb
-Date:   Mon, 16 Mar 2020 13:48:55 -0700
-Message-Id: <20200316204855.15611-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.0.rc1
+        Mon, 16 Mar 2020 16:50:10 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id D0D31294208
+Subject: Re: [PATCH 2/4] media: v4l2-common: add helper functions to call
+ s_stream() callbacks
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, hans.verkuil@cisco.com,
+        niklas.soderlund@ragnatech.se, mchehab@kernel.org
+References: <20200316193305.428378-1-helen.koike@collabora.com>
+ <20200316193305.428378-3-helen.koike@collabora.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <b7041eb2-adfc-abf4-336e-93a2b1154482@collabora.com>
+Date:   Mon, 16 Mar 2020 17:50:02 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200316193305.428378-3-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
 
-../drivers/soc/qcom/pdr_interface.c:316:2: warning: variable 'found' is
-used uninitialized whenever 'for' loop exits because its condition is
-false [-Wsometimes-uninitialized]
-        list_for_each_entry(pds, &pdr->lookups, node) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../include/linux/list.h:624:7: note: expanded from macro
-'list_for_each_entry'
-             &pos->member != (head);
-             ^~~~~~~~~~~~~~~~~~~~~~
-../drivers/soc/qcom/pdr_interface.c:325:7: note: uninitialized use
-occurs here
-        if (!found)
-             ^~~~~
-../drivers/soc/qcom/pdr_interface.c:316:2: note: remove the condition if
-it is always true
-        list_for_each_entry(pds, &pdr->lookups, node) {
-        ^
-../include/linux/list.h:624:7: note: expanded from macro
-'list_for_each_entry'
-             &pos->member != (head);
-             ^
-../drivers/soc/qcom/pdr_interface.c:309:12: note: initialize the
-variable 'found' to silence this warning
-        bool found;
-                  ^
-                   = 0
-1 warning generated.
 
-Initialize found to false to fix this warning.
+On 3/16/20 4:33 PM, Helen Koike wrote:
+> Add v4l2_pipeline_stream_{enable,disable} helper functions to iterate
+> through the subdevices in a given stream (i.e following links from sink
+> to source) and call .s_stream() callback.
+> 
+> Add stream_count on the subdevice object for simultaneous streaming from
+> different video devices which shares subdevices.
+> 
+> Prevent calling .s_stream(true) if it was already called previously by
+> another stream.
+> 
+> Prevent calling .s_stream(false) from one stream when there are still
+> others active.
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+> 
+>  drivers/media/v4l2-core/v4l2-common.c | 99 +++++++++++++++++++++++++++
+>  include/media/v4l2-common.h           | 30 ++++++++
+>  include/media/v4l2-subdev.h           |  2 +
+>  3 files changed, 131 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+> index d0e5ebc736f9..6a5a3d2c282e 100644
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -441,3 +441,102 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
+> +
+> +int v4l2_pipeline_stream_disable(struct media_entity *entity,
+> +				 struct media_pipeline *pipe)
+> +{
+> +	struct media_device *mdev = entity->graph_obj.mdev;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&mdev->graph_mutex);
+> +
+> +	if (!pipe->streaming_count) {
+> +		ret = media_graph_walk_init(&pipe->graph, mdev);
+> +		if (ret) {
+> +			mutex_unlock(&mdev->graph_mutex);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	media_graph_walk_start(&pipe->graph, entity);
+> +
+> +	while ((entity = media_graph_walk_next_stream(&pipe->graph))) {
+> +		struct v4l2_subdev *sd;
+> +
+> +		if (!is_media_entity_v4l2_subdev(entity))
+> +			continue;
+> +
+> +		sd = media_entity_to_v4l2_subdev(entity);
+> +		if (!sd->stream_count || --sd->stream_count)
+> +			continue;
+> +
+> +		ret = v4l2_subdev_call(sd, video, s_stream, false);
+> +		if (ret && ret != -ENOIOCTLCMD)
 
-Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
-Link: https://github.com/ClangBuiltLinux/linux/issues/933
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/soc/qcom/pdr_interface.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+argh..., there is a missing open curly braces here (skipped when I added the check
+for -ENOIOCTLCMD), sorry about that (/me embarrassed).
 
-diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
-index 7ee088b9cc7c..17ad3b8698e1 100644
---- a/drivers/soc/qcom/pdr_interface.c
-+++ b/drivers/soc/qcom/pdr_interface.c
-@@ -306,7 +306,7 @@ static void pdr_indication_cb(struct qmi_handle *qmi,
- 	const struct servreg_state_updated_ind *ind_msg = data;
- 	struct pdr_list_node *ind;
- 	struct pdr_service *pds;
--	bool found;
-+	bool found = false;
- 
- 	if (!ind_msg || !ind_msg->service_path[0] ||
- 	    strlen(ind_msg->service_path) > SERVREG_NAME_LENGTH)
--- 
-2.26.0.rc1
+Fixed version can be found here https://gitlab.collabora.com/koike/linux/tree/v4l2/s_stream
 
+I'll submit v2 after having your comments.
+
+> +			dev_dbg(mdev->dev,
+> +				"couldn't disable stream for subdevice '%s'\n",
+> +				entity->name);
+> +			break;
+> +		}
+> +
+> +		dev_dbg(mdev->dev,
+> +			"stream disabled for subdevice '%s'\n", entity->name);
+> +	}
+> +
+> +	if (!pipe->streaming_count)
+> +		media_graph_walk_cleanup(&pipe->graph);
+> +
+> +	mutex_unlock(&mdev->graph_mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_disable);
+> +
+> +__must_check int v4l2_pipeline_stream_enable(struct media_entity *entity,
+> +					     struct media_pipeline *pipe)
+> +{
+> +	struct media_device *mdev = entity->graph_obj.mdev;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&mdev->graph_mutex);
+> +
+> +	if (!pipe->streaming_count) {
+> +		ret = media_graph_walk_init(&pipe->graph, mdev);
+> +		if (ret) {
+> +			mutex_unlock(&mdev->graph_mutex);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	media_graph_walk_start(&pipe->graph, entity);
+> +
+> +	while ((entity = media_graph_walk_next_stream(&pipe->graph))) {
+> +		struct v4l2_subdev *sd;
+> +
+> +		if (!is_media_entity_v4l2_subdev(entity))
+> +			continue;
+> +
+> +		sd = media_entity_to_v4l2_subdev(entity);
+> +		if (sd->stream_count++)
+> +			continue;
+> +
+> +		ret = v4l2_subdev_call(sd, video, s_stream, true);
+> +		if (ret && ret != -ENOIOCTLCMD)
+
+Same here
+
+Thanks,
+Helen
+
+> +			dev_dbg(mdev->dev,
+> +				"couldn't enable stream for subdevice '%s'\n",
+> +				entity->name);
+> +			v4l2_pipeline_stream_disable(entity, pipe);
+> +			break;
+> +		}
+> +
+> +		dev_dbg(mdev->dev,
+> +			"stream enabled for subdevice '%s'\n", entity->name);
+> +	}
+> +
+> +	if (!pipe->streaming_count)
+> +		media_graph_walk_cleanup(&pipe->graph);
+> +
+> +	mutex_unlock(&mdev->graph_mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_enable);
+> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> index 150ee16ebd81..46c0857d07c4 100644
+> --- a/include/media/v4l2-common.h
+> +++ b/include/media/v4l2-common.h
+> @@ -519,6 +519,36 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
+>  int v4l2_fill_pixfmt_mp(struct v4l2_pix_format_mplane *pixfmt, u32 pixelformat,
+>  			u32 width, u32 height);
+>  
+> +/**
+> + * media_pipeline_stop - Mark a pipeline as not streaming
+> + * @entity: Starting entity
+> + * @pipe: Media pipeline to iterate through the topology
+> + *
+> + * Call .s_stream(false) callback in all the subdevices participating in the
+> + * stream, i.e. following links from sink to source.
+> + *
+> + * If multiple calls to v4l2_pipeline_stream_enable() have been made, the
+> + * same number of calls to this function are required.
+> + */
+> +int v4l2_pipeline_stream_disable(struct media_entity *entity,
+> +				 struct media_pipeline *pipe);
+> +
+> +/**
+> + * v4l2_pipeline_stream_enable - Call .s_stream(true) callbacks in the stream
+> + * @entity: Starting entity
+> + * @pipe: Media pipeline to iterate through the topology
+> + *
+> + * Call .s_stream(true) callback in all the subdevices participating in the
+> + * stream, i.e. following links from sink to source.
+> + *
+> + * Calls to this function can be nested, in which case the same number of
+> + * v4l2_pipeline_stream_disable() calls will be required to stop streaming.
+> + * The  pipeline pointer must be identical for all nested calls to
+> + * v4l2_pipeline_stream_enable().
+> + */
+> +__must_check int v4l2_pipeline_stream_enable(struct media_entity *entity,
+> +					     struct media_pipeline *pipe);
+> +
+>  static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
+>  {
+>  	/*
+> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> index a4848de59852..20f913a9f70c 100644
+> --- a/include/media/v4l2-subdev.h
+> +++ b/include/media/v4l2-subdev.h
+> @@ -838,6 +838,7 @@ struct v4l2_subdev_platform_data {
+>   * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
+>   *		     device using v4l2_device_register_sensor_subdev().
+>   * @pdata: common part of subdevice platform data
+> + * @stream_count: Stream count for the subdevice.
+>   *
+>   * Each instance of a subdev driver should create this struct, either
+>   * stand-alone or embedded in a larger struct.
+> @@ -869,6 +870,7 @@ struct v4l2_subdev {
+>  	struct v4l2_async_notifier *notifier;
+>  	struct v4l2_async_notifier *subdev_notifier;
+>  	struct v4l2_subdev_platform_data *pdata;
+> +	unsigned int stream_count;
+>  };
+>  
+>  
+> 
