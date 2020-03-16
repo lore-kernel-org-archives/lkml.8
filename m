@@ -2,148 +2,116 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CB7C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD69C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFCD20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B711620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIU/bY9A"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xJqpOXfN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732850AbgCPWiS (ORCPT
+        id S1732847AbgCPWnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:38:18 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55158 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732739AbgCPWiS (ORCPT
+        Mon, 16 Mar 2020 18:43:06 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:43440 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732739AbgCPWnG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:38:18 -0400
-Received: by mail-wm1-f68.google.com with SMTP id n8so19452628wmc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:38:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1fBBOx02VcEYppdCNi5Xl2Em7WTei4uipjmvF9jzRYs=;
-        b=VIU/bY9At5xVG9wGhnfLBhqN5QhHGKCCXmnN0KqYvjF5a52JUlieZIV/k3W7Zj8g1F
-         MFNBVubiu0gUfDZ9X2oPNmd5daPqxz2V2TAmpJkUMKOmsWxB11u4e9+XB4aMZZpiWATd
-         aLmESwpnTHPZNYPpBtRmFdVWiS/8d3rxkCcyUENSLnbb/NZq2Su3zNs3hOJJ4Iwsv6kY
-         6OAmsB+ki3dgNsnGBnnPErL28p9mGumyb/c6ufE/eE0zt4wX7PLbjPI09wsx+mjohR2y
-         XeRLugX//utJqPKRSD2TAVvv1avqSVifEO0XR1NrCG75QuxCio5D4R8Qb/FXNN/Sp+lD
-         Ml2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1fBBOx02VcEYppdCNi5Xl2Em7WTei4uipjmvF9jzRYs=;
-        b=o56cAxHzXi+eIwUuB7gBXD0vJPN4K9b0nUZfO6GMZrO53ftQckWFuRcle3uWOsq9sQ
-         nfqDRo+jRPIAzNK5F9kLVVubIqrIcr4E5g1qoA+iDwQBXhh+1+rir3U5t3lk8gnGWo7N
-         /BpuHGtwnNIzhOVJwFgWZU95YQSZLjumCin2SxtVkiW/GF7kbyvA6ulhIFlYp0Uu4hI/
-         PAnfrU/Dbj65aBqhCyIRVecZ2stYJmYK4Jpq+3CGZeGFhfRl5Dm2IX/phez24jLn/ILR
-         H6762d9dXHKnVMdWEyzFVaQbTv5vzsIrB5EeBg5TUWsAhoAjeQeKPEmTnycfQJoG8DIj
-         2YDA==
-X-Gm-Message-State: ANhLgQ35ODq7xy/b/80D2UJ4AAhNgZ5g2fA5JhciLjChTwsGF9LIfQHo
-        c3hytMM58ok8pWI7nRB39k8=
-X-Google-Smtp-Source: ADFU+vtChtP3lSKZ8/B9vEVi/mPCHm0+iHAc+RkasjUxXmYPvAx9TcuNhExKUL1CJUWuiaYhpG/LpA==
-X-Received: by 2002:a1c:3dd7:: with SMTP id k206mr1292164wma.147.1584398296193;
-        Mon, 16 Mar 2020 15:38:16 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id w204sm1427927wma.1.2020.03.16.15.38.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Mar 2020 15:38:15 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 22:38:14 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Mika Penttil?? <mika.penttila@nextfour.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [RFC 2/3] mm: Add a new page flag PageLayzyFree() for MADV_FREE
-Message-ID: <20200316223814.dpzlmfpb6a2cus25@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200228033819.3857058-1-ying.huang@intel.com>
- <20200228033819.3857058-3-ying.huang@intel.com>
- <20200315081854.rcqlmfckeqrh7fbt@master>
- <92d4b0fe-f592-8da6-0282-2ea8a015b247@nextfour.com>
- <20200315122217.45mioaxzuulwvx2f@master>
- <87pnddrt5t.fsf@yhuang-dev.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pnddrt5t.fsf@yhuang-dev.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Mon, 16 Mar 2020 18:43:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584398586; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=8RXmUUdj99K0SeMhBlE3eAxq4g+Jx7OU47A7A+eN1IM=; b=xJqpOXfNPWwxZGznKjrSXlU8Ndh7Coeaxc7/tS26GpkMa+DaDQsj+kOTfLk4fEez2U6iO0a+
+ 6jRgQ+gadcpINC5FXE7P61J4a7IydSpnuAcqINV557OEEp1MdlMGlNhonU9PZHSvoMd9vDuf
+ /YNMN3v2x9mMnUFTvIBjflgi7Oc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7000f2.7f4415630ab0-smtp-out-n03;
+ Mon, 16 Mar 2020 22:42:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 594E9C433D2; Mon, 16 Mar 2020 22:42:58 +0000 (UTC)
+Received: from majja-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: majja)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9149DC433CB;
+        Mon, 16 Mar 2020 22:42:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9149DC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=majja@codeaurora.org
+From:   Maheshwar Ajja <majja@codeaurora.org>
+To:     mchehab@kernel.org
+Cc:     Maheshwar Ajja <majja@codeaurora.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: v4l2-ctrl: Add H264 profile and levels
+Date:   Mon, 16 Mar 2020 15:42:30 -0700
+Message-Id: <1584398550-19727-1-git-send-email-majja@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 09:21:34AM +0800, Huang, Ying wrote:
->Wei Yang <richard.weiyang@gmail.com> writes:
->
->> On Sun, Mar 15, 2020 at 10:54:03AM +0200, Mika Penttil?? wrote:
->>>
->>>
->>>On 15.3.2020 10.18, Wei Yang wrote:
->>>> On Fri, Feb 28, 2020 at 11:38:18AM +0800, Huang, Ying wrote:
->>>> > From: Huang Ying <ying.huang@intel.com>
->>>> > 
->>>> > Now !PageSwapBacked() is used as the flag for the pages freed lazily
->>>> > via MADV_FREE.  This isn't obvious enough.  So Dave suggested to add a
->>>> > new page flag for that to improve the code readability.
->>>> I am confused with the usage of PageSwapBacked().
->>>> 
->>>> Previously I thought this flag means the page is swapin, set in
->>>> swapin_readahead(). While I found page_add_new_anon_rmap() would set it too.
->>>> This means every anon page would carry this flag. Then what is this flag
->>>> means?
->>>> 
->>>> 
->>>
->>>But not all PageSwapBacked() pages are anon, like shmem.
->>>
->>
->> Yes, while it looks shmem is the only exception.
->
->Another exception is the pages freed lazily via MADV_FREE.
->
->> I am still struggling to understand the meaning of this flag.
->
->You can use `git blame` to find out the commit which introduces this
->flag.  Which describes why this flag is introduced.
+Add H264 profile "Contrained High" and H264 levels "5.2",
+"6.0", "6.1" and "6.2".
 
-Thanks, I see the purpose is to distinguish a page:
+Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
+---
+ drivers/media/v4l2-core/v4l2-ctrls.c | 5 +++++
+ include/uapi/linux/v4l2-controls.h   | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-   a) file backed
-   b) or otheres
-
-This sound more clear.
-
-And now this flag is also used for MADV_FREE, which sounds a little abuse.
-This is the purpose of this patch to make a dedicate flag for MADV_FREE.
-
-BTW, the name, swapbacked, is a little misleading. Maybe just to me. But I
-can't come up with better naming. :-)
-
->
->Best Regards,
->Huang, Ying
->
->>>
->>>--Mika
-
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 2928c5e..67ce711 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -336,6 +336,10 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+ 		"4.2",
+ 		"5",
+ 		"5.1",
++		"5.2",
++		"6.0",
++		"6.1",
++		"6.2",
+ 		NULL,
+ 	};
+ 	static const char * const h264_loop_filter[] = {
+@@ -362,6 +366,7 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+ 		"Scalable High Intra",
+ 		"Stereo High",
+ 		"Multiview High",
++		"Constrained High",
+ 		NULL,
+ 	};
+ 	static const char * const vui_sar_idc[] = {
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 5a7bede..fbe3f82d 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -467,6 +467,10 @@ enum v4l2_mpeg_video_h264_level {
+ 	V4L2_MPEG_VIDEO_H264_LEVEL_4_2	= 13,
+ 	V4L2_MPEG_VIDEO_H264_LEVEL_5_0	= 14,
+ 	V4L2_MPEG_VIDEO_H264_LEVEL_5_1	= 15,
++	V4L2_MPEG_VIDEO_H264_LEVEL_5_2	= 16,
++	V4L2_MPEG_VIDEO_H264_LEVEL_6_0	= 17,
++	V4L2_MPEG_VIDEO_H264_LEVEL_6_1	= 18,
++	V4L2_MPEG_VIDEO_H264_LEVEL_6_2	= 19,
+ };
+ #define V4L2_CID_MPEG_VIDEO_H264_LOOP_FILTER_ALPHA	(V4L2_CID_MPEG_BASE+360)
+ #define V4L2_CID_MPEG_VIDEO_H264_LOOP_FILTER_BETA	(V4L2_CID_MPEG_BASE+361)
+@@ -495,6 +499,7 @@ enum v4l2_mpeg_video_h264_profile {
+ 	V4L2_MPEG_VIDEO_H264_PROFILE_SCALABLE_HIGH_INTRA	= 14,
+ 	V4L2_MPEG_VIDEO_H264_PROFILE_STEREO_HIGH		= 15,
+ 	V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH		= 16,
++	V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_HIGH		= 17,
+ };
+ #define V4L2_CID_MPEG_VIDEO_H264_VUI_EXT_SAR_HEIGHT	(V4L2_CID_MPEG_BASE+364)
+ #define V4L2_CID_MPEG_VIDEO_H264_VUI_EXT_SAR_WIDTH	(V4L2_CID_MPEG_BASE+365)
 -- 
-Wei Yang
-Help you, Help me
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
