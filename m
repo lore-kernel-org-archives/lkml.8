@@ -2,104 +2,130 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A22C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E83EC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A889B20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584380957;
-	bh=xfZTyr5ja+RYNnMtZwetmtPv+1AaqscNKven2FfkDxo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=BHpTEiK9WBCWtv6nKUPQTUm4dccQ+hq0vpHkRdCWGI/kk7CKgIMGnBOUjWp1fPgQ7
-	 dYmRv7kRW6K+PGMRblbcYZlDDRE5i2LdNlOmv/c6g2g7vwjGIqrbyKyXkvZNrBVGvx
-	 uydH8b+46NK5PGj3Sv6x1Ca0ahTIG/IHR/770Rpc=
+	by mail.kernel.org (Postfix) with ESMTP id 3571420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732223AbgCPRtQ (ORCPT
+        id S1732243AbgCPRtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730437AbgCPRtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 13:49:16 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FEA720658;
-        Mon, 16 Mar 2020 17:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584380955;
-        bh=xfZTyr5ja+RYNnMtZwetmtPv+1AaqscNKven2FfkDxo=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=oSKsU9SJzm/EgdmfAJYDTOlPriLwztJA85HMjiIi2sSw8r069BfrEZgsdO3OKAAJb
-         jNf1SxhN1ajEtZvk51Mb6dT8GkeMeTQCB7vItI33yfsE+L7gCgTAkkCoo4xjNNpHYJ
-         kD56b2zhaxo0WpofpKkWwAxD4yOY8VF4YUbgcVQM=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 16 Mar 2020 13:49:35 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:45363 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732228AbgCPRtf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 13:49:35 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TsoNvPO_1584380967;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TsoNvPO_1584380967)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 17 Mar 2020 01:49:29 +0800
+Subject: Re: [PATCH 2/2] mm: swap: use smp_mb__after_atomic() to order LRU bit
+ set
+To:     Vlastimil Babka <vbabka@suse.cz>, shakeelb@google.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1584124476-76534-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1584124476-76534-2-git-send-email-yang.shi@linux.alibaba.com>
+ <3c13c484-8fbf-3c3a-fbe1-a40434869e55@suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <52877743-bb43-f928-2995-92607272dbb8@linux.alibaba.com>
+Date:   Mon, 16 Mar 2020 10:49:26 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1584356082-26769-2-git-send-email-tdas@codeaurora.org>
-References: <1584356082-26769-1-git-send-email-tdas@codeaurora.org> <1584356082-26769-2-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v1 1/3] clk: qcom: gcc: Add support for a new frequency for SC7180
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Mon, 16 Mar 2020 10:49:14 -0700
-Message-ID: <158438095454.88485.11063617239206162025@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <3c13c484-8fbf-3c3a-fbe1-a40434869e55@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-03-16 03:54:40)
-> There is a requirement to support 51.2MHz from GPLL6 for qup clocks,
-> thus update the frequency table and parent data/map to use the GPLL6
-> source PLL.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
 
-Any Fixes: tag for this? I guess the beginning of this driver being
-introduced?
 
->  drivers/clk/qcom/gcc-sc7180.c | 73 ++++++++++++++++++++++---------------=
-------
->  1 file changed, 37 insertions(+), 36 deletions(-)
->=20
-> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-> index 7f59fb8..ad75847 100644
-> --- a/drivers/clk/qcom/gcc-sc7180.c
-> +++ b/drivers/clk/qcom/gcc-sc7180.c
-> @@ -405,8 +406,8 @@ static const struct freq_tbl ftbl_gcc_qupv3_wrap0_s0_=
-clk_src[] =3D {
->=20
->  static struct clk_init_data gcc_qupv3_wrap0_s0_clk_src_init =3D {
->         .name =3D "gcc_qupv3_wrap0_s0_clk_src",
-> -       .parent_data =3D gcc_parent_data_0,
-> -       .num_parents =3D 4,
-> +       .parent_data =3D gcc_parent_data_1,
+On 3/16/20 10:40 AM, Vlastimil Babka wrote:
+> On 3/13/20 7:34 PM, Yang Shi wrote:
+>> Memory barrier is needed after setting LRU bit, but smp_mb() is too
+>> strong.  Some architectures, i.e. x86, imply memory barrier with atomic
+>> operations, so replacing it with smp_mb__after_atomic() sounds better,
+>> which is nop on strong ordered machines, and full memory barriers on
+>> others.  With this change the vm-calability cases would perform better
+>> on x86, I saw total 6% improvement with this patch and previous inline
+>> fix.
+>>
+>> The test data (lru-file-readtwice throughput) against v5.6-rc4:
+>> 	mainline	w/ inline fix	w/ both (adding this)
+>> 	150MB		154MB		159MB
+>>
+>> Fixes: 9c4e6b1a7027 ("mm, mlock, vmscan: no more skipping pagevecs")
+>> Cc: Shakeel Butt <shakeelb@google.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> According to my understanding of Documentation/memory_barriers.txt this would be
+> correct (but it might not say much :)
 
-This should have been done initially. We shouldn't need to describe
-"new" parents when they have always been there. Are there other clks in
-this driver that actually have more parents than we've currently
-described? If so, please fix them.
+This is my understanding too.
 
-> +       .num_parents =3D 5,
-
-Can you use ARRAY_SIZE(gcc_parent_data_1) instead? That way this isn't a
-hard-coded value.
-
->         .ops =3D &clk_rcg2_ops,
->  };
 >
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>
+> But i have some suggestions...
+>
+>> ---
+>>   mm/swap.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/mm/swap.c b/mm/swap.c
+>> index cf39d24..118bac4 100644
+>> --- a/mm/swap.c
+>> +++ b/mm/swap.c
+>> @@ -945,20 +945,20 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
+>>   	 * #0: __pagevec_lru_add_fn		#1: clear_page_mlock
+>>   	 *
+>>   	 * SetPageLRU()				TestClearPageMlocked()
+>> -	 * smp_mb() // explicit ordering	// above provides strict
+>> +	 * MB() 	// explicit ordering	// above provides strict
+> Why MB()? That would be the first appareance of 'MB()' in the whole tree. I
+> think it's fine keeping smp_mb()...
+
+I would like to use a more general name, maybe just use "memory barrier"?
+
+>
+>>   	 *					// ordering
+>>   	 * PageMlocked()			PageLRU()
+>>   	 *
+>>   	 *
+>>   	 * if '#1' does not observe setting of PG_lru by '#0' and fails
+>>   	 * isolation, the explicit barrier will make sure that page_evictable
+>> -	 * check will put the page in correct LRU. Without smp_mb(), SetPageLRU
+>> +	 * check will put the page in correct LRU. Without MB(), SetPageLRU
+> ... same here ...
+>
+>>   	 * can be reordered after PageMlocked check and can make '#1' to fail
+>>   	 * the isolation of the page whose Mlocked bit is cleared (#0 is also
+>>   	 * looking at the same page) and the evictable page will be stranded
+>>   	 * in an unevictable LRU.
+> Only here I would note that SetPageLRU() is an atomic bitop so we can use the
+> __after_atomic() variant. And I would move the actual SetPageLRU() call from
+> above the comment here right before the barrier.
+
+Sure. Thanks.
+
+>
+>>   	 */
+>> -	smp_mb();
+>> +	smp_mb__after_atomic();
+> Thanks.
+>
+>>   
+>>   	if (page_evictable(page)) {
+>>   		lru = page_lru(page);
+>>
+
