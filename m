@@ -2,115 +2,236 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF14C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA476C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8230520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F8E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="KyZp3UU4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lTJMYg2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732966AbgCPXv6 (ORCPT
+        id S1732991AbgCPXwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 19:51:58 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57705 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732873AbgCPXv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 19:51:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 16 Mar 2020 19:52:13 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:40929 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732968AbgCPXwN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 19:52:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584402732; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=UVRg/IKP0ReeVb3UgrKtZRxpVyr7banJOHx/aYgxfUI=; b=lTJMYg2/ONkyc8H8/bq/sqnauJOox8qN7UeFh8zvSNQNFd/5vF3fGcYyRMlaqrRsmkq0/42H
+ Sk624ptVw2g+kN+APY7uBxQf37eU1zyI6Cf5J6kBzaQ56XMEtUuGHOb1ujFipVzVWb6VCrDv
+ 2mK/SmpBGGmKE9LRtuLAA/PR07E=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e70112b.7f954c9783e8-smtp-out-n03;
+ Mon, 16 Mar 2020 23:52:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 350CBC44795; Mon, 16 Mar 2020 23:52:11 +0000 (UTC)
+Received: from [192.168.8.111] (cpe-70-95-153-89.san.res.rr.com [70.95.153.89])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hCl00YkRz9sNg;
-        Tue, 17 Mar 2020 10:51:55 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1584402716;
-        bh=VpGZJfIHRSmpY2D6/9MDE+epOSAM4GCBKy3wjs3vSQY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=KyZp3UU46svAFMhAbU9or0JQs3a7cvyqqXAhvu3oQALDSAmUTG90zdGlkD0Wp8Quw
-         iHaED7uUOqwS9JISSSweGCtZP8EEnAF5XvupzScmakJX/Yn2W/31NAp0qT4f+Yo3zL
-         V+wyBffLfS/TRxxkS2a0SlOLo9pib5gF931+1foZ/L7FWPYttasxj0OQpHsScZKNKN
-         ogF9pHfcKEWI/a1mlWPhEBTrC9JUt5y4nLI6mfpObDEvrBNeI/0B3BCpIXycQZ+0DB
-         Ojix1JIaU3FQdnEUeN+jWrJWSYAhqy4fJSNsKvV0oZrsbSbamiZu0zDmbRe8hACJ4h
-         /Aw3ogY1hT2WQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH] powerpc/32: Fix missing NULL pmd check in virt_to_kpte()
-In-Reply-To: <CAKwvOdm6Z+ERUcGXPbuBKmnpBUNKfL8fPOdxK2g+a1gVRWqh-Q@mail.gmail.com>
-References: <b1177cdfc6af74a3e277bba5d9e708c4b3315ebe.1583575707.git.christophe.leroy@c-s.fr> <20200313033517.GA37606@ubuntu-m2-xlarge-x86> <CAKwvOdm6Z+ERUcGXPbuBKmnpBUNKfL8fPOdxK2g+a1gVRWqh-Q@mail.gmail.com>
-Date:   Tue, 17 Mar 2020 10:51:55 +1100
-Message-ID: <87zhcfq2n8.fsf@mpe.ellerman.id.au>
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D1429C433BA;
+        Mon, 16 Mar 2020 23:52:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D1429C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [<RFC PATCH v1> 1/2] scsi: ufs: add write booster feature support
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        "subhashj@codeaurora.org" <subhashj@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "vinholikatti@gmail.com" <vinholikatti@gmail.com>,
+        "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Cc:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <cover.1582330473.git.asutoshd@codeaurora.org>
+ <0eb182e6731bc4ce0c1d6a97f102155d7186520f.1582330473.git.asutoshd@codeaurora.org>
+ <MN2PR04MB699133FA7E3B2B7A4F1450FAFCED0@MN2PR04MB6991.namprd04.prod.outlook.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <8d618210-0f83-47cc-d0c4-cc4343e4d51c@codeaurora.org>
+Date:   Mon, 16 Mar 2020 16:52:08 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <MN2PR04MB699133FA7E3B2B7A4F1450FAFCED0@MN2PR04MB6991.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nick Desaulniers <ndesaulniers@google.com> writes:
-> Hello ppc friends, did this get picked up into -next yet?
-
-Not yet.
-
-It's in my next-test, but it got stuck there because some subsequent
-patches caused some CI errors that I had to debug.
-
-I'll push it to next today.
-
-cheers
-
-> On Thu, Mar 12, 2020 at 8:35 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
+On 2/25/2020 4:50 AM, Avri Altman wrote:
+>> +/*
+>> + * ufshcd_get_wb_alloc_units - returns
+>> "dLUNumWriteBoosterBufferAllocUnits"
+>> + * @hba: per-adapter instance
+>> + * @lun: UFS device lun id
+>> + * @d_lun_wbb_au: pointer to buffer to hold the LU's alloc units info
+>> + *
+>> + * Returns 0 in case of success and d_lun_wbb_au would be returned
+>> + * Returns -ENOTSUPP if reading d_lun_wbb_au is not supported.
+>> + * Returns -EINVAL in case of invalid parameters passed to this function.
+>> + */
+>> +static int ufshcd_get_wb_alloc_units(struct ufs_hba *hba,
+>> +                           u8 lun,
+>> +                           u8 *d_lun_wbb_au)
+>> +{
+>> +       int ret;
+>> +
+>> +       if (!d_lun_wbb_au)
+>> +               ret = -EINVAL;
+>> +
+>> +       /* WB can be supported only from LU0..LU7 */
+>> +       else if (lun >= UFS_UPIU_MAX_GENERAL_LUN)
+>> +               ret = -ENOTSUPP;
+>> +       else
+>> +               ret = ufshcd_read_unit_desc_param(hba,
+>> +                                         lun,
+>> +                                         UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS,
+>> +                                         d_lun_wbb_au,
+>> +                                         sizeof(*d_lun_wbb_au));
+> You are reading here a single byte, instead of 4
+> 
+>> +       return ret;
+>> +}
+>> +
+>>   /**
+>>    * ufshcd_get_lu_power_on_wp_status - get LU's power on write protect
+>>    * status
+>> @@ -5194,6 +5267,165 @@ static void
+>> ufshcd_bkops_exception_event_handler(struct ufs_hba *hba)
+>>                                  __func__, err);
+>>   }
 >>
->> On Sat, Mar 07, 2020 at 10:09:15AM +0000, Christophe Leroy wrote:
->> > Commit 2efc7c085f05 ("powerpc/32: drop get_pteptr()"),
->> > replaced get_pteptr() by virt_to_kpte(). But virt_to_kpte() lacks a
->> > NULL pmd check and returns an invalid non NULL pointer when there
->> > is no page table.
->> >
->> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
->> > Fixes: 2efc7c085f05 ("powerpc/32: drop get_pteptr()")
->> > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> > ---
->> >  arch/powerpc/include/asm/pgtable.h | 4 +++-
->> >  1 file changed, 3 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
->> > index b80bfd41828d..b1f1d5339735 100644
->> > --- a/arch/powerpc/include/asm/pgtable.h
->> > +++ b/arch/powerpc/include/asm/pgtable.h
->> > @@ -54,7 +54,9 @@ static inline pmd_t *pmd_ptr_k(unsigned long va)
->> >
->> >  static inline pte_t *virt_to_kpte(unsigned long vaddr)
->> >  {
->> > -     return pte_offset_kernel(pmd_ptr_k(vaddr), vaddr);
->> > +     pmd_t *pmd = pmd_ptr_k(vaddr);
->> > +
->> > +     return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
->> >  }
->> >  #endif
->> >
->> > --
->> > 2.25.0
->> >
->>
->> With QEMU 4.2.0, I can confirm this fixes the panic:
->>
->> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
->
->
->
-> -- 
+>> +static bool ufshcd_wb_sup(struct ufs_hba *hba)
+>> +{
+>> +       return ((hba->dev_info.d_ext_ufs_feature_sup &
+>> +                  UFS_DEV_WRITE_BOOSTER_SUP) &&
+> Don't you want to have a vendor cap as well,
+> to allow the platform vendor to control this feature?
+I presume each platform vendor would provide a provisioning 
+script/method which would configure the WB properties.
+It can be controlled through that.
+> 
+>> +                 (hba->dev_info.b_wb_buffer_type
+>> +                  || hba->dev_info.wb_config_lun));
+>> +}
+>> +
+>> +
+> 
+> 
+> 
+>> +static bool ufshcd_wb_is_buf_flush_needed(struct ufs_hba *hba)
+>> +{
+>> +       int ret;
+>> +       u32 cur_buf, status, avail_buf;
+>> +
+>> +       if (!ufshcd_wb_sup(hba))
+>> +               return false;
+>> +
+>> +       ret = ufshcd_query_attr_retry(hba,
+>> UPIU_QUERY_OPCODE_READ_ATTR,
+>> +                                     QUERY_ATTR_IDN_AVAIL_WB_BUFF_SIZE,
+>> +                                     0, 0, &avail_buf);
+>> +       if (ret) {
+>> +               dev_warn(hba->dev, "%s dAvailableWriteBoosterBufferSize read
+>> failed %d\n",
+>> +                        __func__, ret);
+>> +               return false;
+>> +       }
+>> +
+>> +       ret = ufshcd_vops_get_user_cap_mode(hba);
+>> +       if (ret <= 0) {
+>> +               dev_dbg(hba->dev, "Get user-cap reduction mode: failed: %d\n",
+>> +                       ret);
+>> +               /* Most commonly used */
+>> +               ret = UFS_WB_BUFF_PRESERVE_USER_SPACE;
+>> +       }
+>> +
+>> +       hba->dev_info.keep_vcc_on = false;
+>> +       if (ret == UFS_WB_BUFF_USER_SPACE_RED_EN) {
+>> +               if (avail_buf <= UFS_WB_10_PERCENT_BUF_REMAIN) {
+>> +                       hba->dev_info.keep_vcc_on = true;
+>> +                       return true;
+>> +               }
+>> +               return false;
+>> +       } else if (ret == UFS_WB_BUFF_PRESERVE_USER_SPACE) {
+>> +               ret = ufshcd_query_attr_retry(hba,
+>> UPIU_QUERY_OPCODE_READ_ATTR,
+>> +                                             QUERY_ATTR_IDN_CURR_WB_BUFF_SIZE,
+>> +                                             0, 0, &cur_buf);
+>> +               if (ret) {
+>> +                       dev_err(hba->dev, "%s dCurWriteBoosterBufferSize read failed
+>> %d\n",
+>> +                                __func__, ret);
+>> +                       return false;
+>> +               }
+>> +
+>> +               if (!cur_buf) {
+>> +                       dev_info(hba->dev, "dCurWBBuf: %d WB disabled until free-
+>> space is available\n",
+>> +                                cur_buf);
+>> +                       return false;
+>> +               }
+>> +
+>> +               ret = ufshcd_get_ee_status(hba, &status);
+>> +               if (ret) {
+>> +                       dev_err(hba->dev, "%s: failed to get exception status %d\n",
+>> +                               __func__, ret);
+>> +                       if (avail_buf < UFS_WB_40_PERCENT_BUF_REMAIN) {
+>> +                               hba->dev_info.keep_vcc_on = true;
+>> +                               return true;
+>> +                       }
+>> +                       return false;
+>> +               }
+>> +
+>> +               status &= hba->ee_ctrl_mask;
+>> +
+>> +               if ((status & MASK_EE_URGENT_BKOPS) ||
+> So you are getting the status, but not the bkops level.
+> And what about WRITEBOOSTER_EVENT_EN? After all it was invented specifically for WB...
+Yeah - WB exception event is not supported in this series. I will push 
+another change to support that.
+With WB enabled, any BKOPS exception level warrants the vcc to be on.
+This is to minimize performance impact. Please correct this 
+understanding from device perspective.
+
+> 
+>> +                   (avail_buf < UFS_WB_40_PERCENT_BUF_REMAIN)) {
+>> +                       hba->dev_info.keep_vcc_on = true;
+>> +                       return true;
+>> +               }
+>> +       }
+>> +       return false;
+>> +}
+> 
 > Thanks,
-> ~Nick Desaulniers
+> Avri
+> 
+
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
