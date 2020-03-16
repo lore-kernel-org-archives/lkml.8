@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04E9C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3660EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9968220754
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F60F20754
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731928AbgCPPE2 (ORCPT
+        id S1731912AbgCPPE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:04:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:50080 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 11:04:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:50058 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731889AbgCPPEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:04:23 -0400
+        id S1731873AbgCPPEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:04:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3327106F;
-        Mon, 16 Mar 2020 08:04:22 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E2161FB;
+        Mon, 16 Mar 2020 08:04:20 -0700 (PDT)
 Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C44E03F534;
-        Mon, 16 Mar 2020 08:04:21 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F3683F534;
+        Mon, 16 Mar 2020 08:04:19 -0700 (PDT)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
         cristian.marussi@arm.com
-Subject: [PATCH v5 11/13] firmware: arm_scmi: Add Sensor notifications support
-Date:   Mon, 16 Mar 2020 15:03:32 +0000
-Message-Id: <20200316150334.47463-12-cristian.marussi@arm.com>
+Subject: [PATCH v5 09/13] firmware: arm_scmi: Add Power notifications support
+Date:   Mon, 16 Mar 2020 15:03:30 +0000
+Message-Id: <20200316150334.47463-10-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200316150334.47463-1-cristian.marussi@arm.com>
 References: <20200316150334.47463-1-cristian.marussi@arm.com>
@@ -41,7 +41,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SCMI Sensor protocol register with the notification core.
+Make SCMI Power protocol register with the notification core.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
@@ -58,72 +58,126 @@ V1 --> V2
   notification core, together with proper reference counting of enables
 - switched to devres protocol-registration
 ---
- drivers/firmware/arm_scmi/sensors.c | 69 +++++++++++++++++++++++++++++
- include/linux/scmi_protocol.h       |  7 +++
- 2 files changed, 76 insertions(+)
+ drivers/firmware/arm_scmi/power.c | 123 ++++++++++++++++++++++++++++++
+ include/linux/scmi_protocol.h     |  15 ++++
+ 2 files changed, 138 insertions(+)
 
-diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-index db1b1ab303da..83b2b566207d 100644
---- a/drivers/firmware/arm_scmi/sensors.c
-+++ b/drivers/firmware/arm_scmi/sensors.c
+diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
+index cf7f0312381b..30bd7342a169 100644
+--- a/drivers/firmware/arm_scmi/power.c
++++ b/drivers/firmware/arm_scmi/power.c
 @@ -6,6 +6,7 @@
   */
  
  #include "common.h"
 +#include "notify.h"
  
- enum scmi_sensor_protocol_cmd {
- 	SENSOR_DESCRIPTION_GET = 0x3,
-@@ -71,6 +72,12 @@ struct scmi_msg_sensor_reading_get {
- #define SENSOR_READ_ASYNC	BIT(0)
+ enum scmi_power_protocol_cmd {
+ 	POWER_DOMAIN_ATTRIBUTES = 0x3,
+@@ -48,6 +49,12 @@ struct scmi_power_state_notify {
+ 	__le32 notify_enable;
  };
  
-+struct scmi_sensor_trip_notify_payld {
++struct scmi_power_state_notify_payld {
 +	__le32 agent_id;
-+	__le32 sensor_id;
-+	__le32 trip_point_desc;
++	__le32 domain_id;
++	__le32 power_state;
 +};
 +
- struct sensors_info {
- 	u32 version;
- 	int num_sensors;
-@@ -276,6 +283,62 @@ static struct scmi_sensor_ops sensor_ops = {
- 	.reading_get = scmi_sensor_reading_get,
+ struct power_dom_info {
+ 	bool state_set_sync;
+ 	bool state_set_async;
+@@ -63,6 +70,11 @@ struct scmi_power_info {
+ 	struct power_dom_info *dom_info;
  };
  
-+static bool scmi_sensor_set_notify_enabled(const struct scmi_handle *handle,
-+					   u8 evt_id, u32 src_id, bool enable)
++static enum scmi_power_protocol_cmd evt_2_cmd[] = {
++	POWER_STATE_NOTIFY,
++	POWER_STATE_CHANGE_REQUESTED_NOTIFY,
++};
++
+ static int scmi_power_attributes_get(const struct scmi_handle *handle,
+ 				     struct scmi_power_info *pi)
+ {
+@@ -186,6 +198,111 @@ static struct scmi_power_ops power_ops = {
+ 	.state_get = scmi_power_state_get,
+ };
+ 
++static int scmi_power_request_notify(const struct scmi_handle *handle,
++				     u32 domain, int message_id, bool enable)
 +{
 +	int ret;
++	struct scmi_xfer *t;
++	struct scmi_power_state_notify *notify;
 +
-+	ret = scmi_sensor_trip_point_notify(handle, src_id, enable);
++	ret = scmi_xfer_get_init(handle, message_id, SCMI_PROTOCOL_POWER,
++				 sizeof(*notify), 0, &t);
 +	if (ret)
-+		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
-+			SCMI_PROTOCOL_SENSOR, evt_id, src_id, ret);
++		return ret;
++
++	notify = t->tx.buf;
++	notify->domain = cpu_to_le32(domain);
++	notify->notify_enable = enable ? cpu_to_le32(BIT(0)) : 0;
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_xfer_put(handle, t);
++	return ret;
++}
++
++static bool scmi_power_set_notify_enabled(const struct scmi_handle *handle,
++					  u8 evt_id, u32 src_id, bool enable)
++{
++	int ret, cmd_id;
++
++	cmd_id = MAP_EVT_TO_ENABLE_CMD(evt_id, evt_2_cmd);
++	if (cmd_id < 0)
++		return false;
++
++	ret = scmi_power_request_notify(handle, src_id, cmd_id, enable);
++	if (ret)
++		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLE - evt[%X] dom[%d] - ret:%d\n",
++				SCMI_PROTOCOL_POWER, evt_id, src_id, ret);
 +
 +	return !ret;
 +}
 +
-+static void *scmi_sensor_fill_custom_report(u8 evt_id, u64 timestamp,
++static void *scmi_power_fill_custom_report(u8 evt_id, u64 timestamp,
 +					   const void *payld, size_t payld_sz,
 +					   void *report, u32 *src_id)
 +{
 +	void *rep = NULL;
 +
 +	switch (evt_id) {
-+	case SENSOR_TRIP_POINT_EVENT:
++	case POWER_STATE_CHANGED:
 +	{
-+		const struct scmi_sensor_trip_notify_payld *p = payld;
-+		struct scmi_sensor_trip_point_report *r = report;
++		const struct scmi_power_state_notify_payld *p = payld;
++		struct scmi_power_state_changed_report *r = report;
 +
 +		if (sizeof(*p) != payld_sz)
 +			break;
 +
 +		r->timestamp = timestamp;
 +		r->agent_id = le32_to_cpu(p->agent_id);
-+		r->sensor_id = le32_to_cpu(p->sensor_id);
-+		r->trip_point_desc = le32_to_cpu(p->trip_point_desc);
-+		*src_id = r->sensor_id;
++		r->domain_id = le32_to_cpu(p->domain_id);
++		r->power_state = le32_to_cpu(p->power_state);
++		*src_id = r->domain_id;
++		rep = r;
++		break;
++	}
++	case POWER_STATE_CHANGE_REQUESTED:
++	{
++		const struct scmi_power_state_notify_payld *p = payld;
++		struct scmi_power_state_change_requested_report *r = report;
++
++		if (sizeof(*p) != payld_sz)
++			break;
++
++		r->timestamp = timestamp;
++		r->agent_id = le32_to_cpu(p->agent_id);
++		r->domain_id = le32_to_cpu(p->domain_id);
++		r->power_state = le32_to_cpu(p->power_state);
++		*src_id = r->domain_id;
 +		rep = r;
 +		break;
 +	}
@@ -134,48 +188,63 @@ index db1b1ab303da..83b2b566207d 100644
 +	return rep;
 +}
 +
-+static const struct scmi_event sensor_events[] = {
++static const struct scmi_event power_events[] = {
 +	{
-+		.id = SENSOR_TRIP_POINT_EVENT,
++		.id = POWER_STATE_CHANGED,
 +		.max_payld_sz = 12,
-+		.max_report_sz = sizeof(struct scmi_sensor_trip_point_report),
++		.max_report_sz =
++			sizeof(struct scmi_power_state_changed_report),
++	},
++	{
++		.id = POWER_STATE_CHANGE_REQUESTED,
++		.max_payld_sz = 12,
++		.max_report_sz =
++			sizeof(struct scmi_power_state_change_requested_report),
 +	},
 +};
 +
-+static const struct scmi_protocol_event_ops sensor_event_ops = {
-+	.set_notify_enabled = scmi_sensor_set_notify_enabled,
-+	.fill_custom_report = scmi_sensor_fill_custom_report,
++static const struct scmi_protocol_event_ops power_event_ops = {
++	.set_notify_enabled = scmi_power_set_notify_enabled,
++	.fill_custom_report = scmi_power_fill_custom_report,
 +};
 +
- static int scmi_sensors_protocol_init(struct scmi_handle *handle)
+ static int scmi_power_protocol_init(struct scmi_handle *handle)
  {
- 	u32 version;
-@@ -299,6 +362,12 @@ static int scmi_sensors_protocol_init(struct scmi_handle *handle)
- 
- 	scmi_sensor_description_get(handle, sinfo);
+ 	int domain;
+@@ -214,6 +331,12 @@ static int scmi_power_protocol_init(struct scmi_handle *handle)
+ 		scmi_power_domain_attributes_get(handle, domain, dom);
+ 	}
  
 +	scmi_register_protocol_events(handle,
-+				      SCMI_PROTOCOL_SENSOR, PAGE_SIZE,
-+				      &sensor_event_ops, sensor_events,
-+				      ARRAY_SIZE(sensor_events),
-+				      sinfo->num_sensors);
++				      SCMI_PROTOCOL_POWER, PAGE_SIZE,
++				      &power_event_ops, power_events,
++				      ARRAY_SIZE(power_events),
++				      pinfo->num_domains);
 +
- 	sinfo->version = version;
- 	handle->sensor_ops = &sensor_ops;
- 	handle->sensor_priv = sinfo;
+ 	pinfo->version = version;
+ 	handle->power_ops = &power_ops;
+ 	handle->power_priv = pinfo;
 diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 70aaf1c86901..0f40ecd0609c 100644
+index 934b91d29311..0b602c32efd1 100644
 --- a/include/linux/scmi_protocol.h
 +++ b/include/linux/scmi_protocol.h
-@@ -404,4 +404,11 @@ struct scmi_perf_level_report {
- 	u32	performance_level;
- };
+@@ -374,4 +374,19 @@ typedef int (*scmi_prot_init_fn_t)(struct scmi_handle *);
+ int scmi_protocol_register(int protocol_id, scmi_prot_init_fn_t fn);
+ void scmi_protocol_unregister(int protocol_id);
  
-+struct scmi_sensor_trip_point_report {
++/* SCMI Notification API - Custom Event Reports */
++struct scmi_power_state_changed_report {
 +	ktime_t	timestamp;
 +	u32	agent_id;
-+	u32	sensor_id;
-+	u32	trip_point_desc;
++	u32	domain_id;
++	u32	power_state;
++};
++
++struct scmi_power_state_change_requested_report {
++	ktime_t	timestamp;
++	u32	agent_id;
++	u32	domain_id;
++	u32	power_state;
 +};
 +
  #endif /* _LINUX_SCMI_PROTOCOL_H */
