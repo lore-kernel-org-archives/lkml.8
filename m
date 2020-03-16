@@ -2,152 +2,195 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C45C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00481C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB35B20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4231205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:42:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQs1PTnj"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pUjrMXS0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732122AbgCPRmR (ORCPT
+        id S1732163AbgCPRmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:42:17 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41961 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731136AbgCPRmQ (ORCPT
+        Mon, 16 Mar 2020 13:42:24 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34359 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732008AbgCPRmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 13:42:16 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s15so18737966otq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 10:42:14 -0700 (PDT)
+        Mon, 16 Mar 2020 13:42:24 -0400
+Received: by mail-qk1-f196.google.com with SMTP id f3so27694285qkh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 10:42:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qhncLtarCzRlJMoBi8hB921jlCqL13EkGiu5gBmAYjg=;
-        b=dQs1PTnjnl/5W47pOKmpnd1Y2tKhX2upHf4sIuVADHlRkbwGArJ0Yj5dG+Gpg0Bux9
-         Db11yvt5seTO9EUFw97JDcQMyEvgcyWdUvEnVhv6tvSuSy0OCBdfrBtbyl/hXMUQgEgo
-         UKjyieu99l5kLxB1zV/StaLaraOFzOmlLGahOyBxBx2HIspDPg5y5vHcPNJjRu3/iC/r
-         XfoQrmbHBUYo7YpgA0qs/naQXj+x/kX53Dv5yX+0d3XRD/Bz9gk66RshjZtnirKrOo1s
-         vhL3exYJaJGGg6XjjccWJ9HsNtTQQVHk+VRHm5ZzHAAGwRAa9rP90s5kz/t7Q4cjzyol
-         xRfw==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ID3H30czz/FP3Uv6UAzC/d4Q+G/GcberRTPzu1ZMo3E=;
+        b=pUjrMXS0RNct/9Enu86BqiyDEyDA19V03PxzPGB6D8+iM2iV7UoDhLF8BPum0uzAyr
+         T/IufEnDOIte1DkXg/9yRlJhtFt8uoXQCuWg9Czdg7Ow+DEVIAOhl/Zj2NnOrEHNhuXG
+         bR9IifFrczz8icm/pyp4HFEjqnfA/Mhi0e1ik=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qhncLtarCzRlJMoBi8hB921jlCqL13EkGiu5gBmAYjg=;
-        b=A4KMy3YpFar2aXYrVqMqeXsm19Nubhb1vkvM/OPMD7+QlsgU7fENof7FcyVcsF4PGk
-         4iOKtRRns2vz2NA/SQeAb6KqhPuXwqJI8DRrUJC4pf+EMJ9QAzFC59BKylPPB+In5KlZ
-         ex3bpcIpqxv46o+hg512HSO/iZo3caZMJWNanoxqt5SnyUuT4LrjvwfPHjmgs2Vuu0xa
-         AVCBYfgAlv0TK0fk++i++/Vb3GQ1EtKd4uAL/dcd7gi3x1gG/rdNksDf4jbK3YxkhJ9g
-         ZCPA7zRC8HcBEE+UrmPRD5DczY+dHK6Pwn4DGJGmqpFEmkuFEYHvPHyH+MY0ZFtKwsDd
-         cwVA==
-X-Gm-Message-State: ANhLgQ1m3lmmrrH4cq8phdxYSg1Yz93/cRl82Q/ccjlydXP67I//NG3l
-        30Nl8VP6KOutT+4khpL4xiILQwnat06RQs55twUp+nTd
-X-Google-Smtp-Source: ADFU+vuP/KkkZgDywii83iNHUDiefA29hNlDag61OgomS1t4Udsa1TmC2ebMVs5Ip2CtPXE3wttnfYR+56S3gzF7DkI=
-X-Received: by 2002:a9d:75c6:: with SMTP id c6mr314816otl.352.1584380534428;
- Mon, 16 Mar 2020 10:42:14 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ID3H30czz/FP3Uv6UAzC/d4Q+G/GcberRTPzu1ZMo3E=;
+        b=MytV7uIY42T9fJxtnmOaOvABbssUb3oDQxAP/jT1y9jVWpnFxWlAx58jf9jz1qB70Y
+         QssorblLQNQo5Sbm0GTotFXIys5t+GXlc9clJ/TxthCJZNdYLor7kpcmy6DZIII/u+1B
+         2jSKgbSwfnzN3qcjn2sC5HhZ5vs5A3qLxxSpe2/bzFRHEaZKC7UP51VTpMcfvAGgM738
+         M52E9vpGO1nFrY/67mW6gZ7wUzZ29nANxsYV50a0WtlWZpx+TNIxdOOEMA4TG2vdUDLp
+         c6zZLjA1332hWAbVCUGkZUnS/Fe7Be0p26j9UfLOJECIdjRU7QRz5iAZ0AbOzkX8ys/+
+         szig==
+X-Gm-Message-State: ANhLgQ0K1smk6VPuiKcIMm0Ajz3N0nlQdIvb3ggWtFN9j1XI5WW+mrv3
+        siQVxV6WGS5sRd+oKfV6zkK0vODMdAk=
+X-Google-Smtp-Source: ADFU+vsUqZ3usZr2Eg81VF8mEAQnj3RaqBD5qL05O2zypbQOSU/izpiqRllh9ZyhbPi+zjBxCqAQdg==
+X-Received: by 2002:a37:e47:: with SMTP id 68mr807305qko.17.1584380542178;
+        Mon, 16 Mar 2020 10:42:22 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id h138sm205962qke.86.2020.03.16.10.42.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 10:42:21 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, linux-mm@kvack.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Subject: [RFC] Simplify debug_objects handling in kfree_rcu
+Date:   Mon, 16 Mar 2020 13:42:18 -0400
+Message-Id: <20200316174218.154090-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-References: <20200316143752.473f1073@canb.auug.org.au>
-In-Reply-To: <20200316143752.473f1073@canb.auug.org.au>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 16 Mar 2020 10:42:00 -0700
-Message-ID: <CALAqxLVbG8C0h3OkCGOAQPpFjrwiqddjONTO-EGmhzz52LnKMw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the usb-gadget tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Felipe Balbi <balbi@kernel.org>, Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 8:37 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> After merging the usb-gadget tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
->
-> drivers/usb/dwc3/drd.c: In function 'dwc3_setup_role_switch':
-> drivers/usb/dwc3/drd.c:551:23: error: assignment to 'usb_role_switch_set_t' {aka 'int (*)(struct usb_role_switch *, enum usb_role)'} from incompatible pointer type 'int (*)(struct device *, enum usb_role)' [-Werror=incompatible-pointer-types]
->   551 |  dwc3_role_switch.set = dwc3_usb_role_switch_set;
->       |                       ^
-> drivers/usb/dwc3/drd.c:552:23: error: assignment to 'usb_role_switch_get_t' {aka 'enum usb_role (*)(struct usb_role_switch *)'} from incompatible pointer type 'enum usb_role (*)(struct device *)' [-Werror=incompatible-pointer-types]
->   552 |  dwc3_role_switch.get = dwc3_usb_role_switch_get;
->       |                       ^
->
-> Caused by commit
->
->   8a0a13799744 ("usb: dwc3: Registering a role switch in the DRD code.")
->
-> interacting with commit
->
->   bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the switch in the API")
->
-> from the usb tree.
->
-> I have added the following merge fix patch (which may need more work):
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Mon, 16 Mar 2020 14:34:31 +1100
-> Subject: [PATCH] usb: dwc3: fix up for role switch API change
->
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/usb/dwc3/drd.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-> index db68d48c2267..7db1ffc92bbd 100644
-> --- a/drivers/usb/dwc3/drd.c
-> +++ b/drivers/usb/dwc3/drd.c
-> @@ -478,9 +478,10 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
->
->  #if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
->  #define ROLE_SWITCH 1
-> -static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-> +static int dwc3_usb_role_switch_set(struct usb_role_switch *sw,
-> +                                   enum usb_role role)
->  {
-> -       struct dwc3 *dwc = dev_get_drvdata(dev);
-> +       struct dwc3 *dwc = usb_role_switch_get_drvdata(sw);
->         u32 mode;
->
->         switch (role) {
-> @@ -502,9 +503,9 @@ static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
->         return 0;
->  }
->
-> -static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
-> +static enum usb_role dwc3_usb_role_switch_get(struct usb_role_switch *sw)
->  {
-> -       struct dwc3 *dwc = dev_get_drvdata(dev);
-> +       struct dwc3 *dwc = usb_role_switch_get_drvdata(sw);
->         unsigned long flags;
->         enum usb_role role;
->
-> @@ -550,6 +551,7 @@ static int dwc3_setup_role_switch(struct dwc3 *dwc)
->         dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
->         dwc3_role_switch.set = dwc3_usb_role_switch_set;
->         dwc3_role_switch.get = dwc3_usb_role_switch_get;
-> +       dwc3_role_switch.driver_data = dwc;
->         dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
->         if (IS_ERR(dwc->role_sw))
->                 return PTR_ERR(dwc->role_sw);
+In order to prepare for future changes to headless RCU support, make the
+debug_objects handling in kfree_rcu use the final 'pointer' value of the
+object, instead of depending on the head.
 
-Yes, thanks. Bryan pointed out there was a problem with the internal
-api change in -next, and I intended to resend the set this week.
-Your solution looks like what I have in my tree at first glance, but
-I'll double check to be sure.
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+Paul, Vlad, I am adding this to my rcu/kfree tree for further testing. Let me know any
+comments. I have only build-tested this patch.
 
-Thanks so much!
--john
+ kernel/rcu/tree.c | 30 +++++++++++++-----------------
+ 1 file changed, 13 insertions(+), 17 deletions(-)
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 32152be9a09ac..0e2632622176b 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2758,7 +2758,6 @@ struct kfree_rcu_bulk_data {
+ 	unsigned long nr_records;
+ 	void *records[KFREE_BULK_MAX_ENTR];
+ 	struct kfree_rcu_bulk_data *next;
+-	struct rcu_head *head_free_debug;
+ };
+ 
+ /**
+@@ -2808,11 +2807,11 @@ struct kfree_rcu_cpu {
+ static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc);
+ 
+ static __always_inline void
+-debug_rcu_head_unqueue_bulk(struct rcu_head *head)
++debug_rcu_bhead_unqueue(struct kfree_rcu_bulk_data *bhead)
+ {
+ #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
+-	for (; head; head = head->next)
+-		debug_rcu_head_unqueue(head);
++	for (int i = 0; i < bhead->nr_records; i++)
++		debug_rcu_head_unqueue((struct rcu_head *)(bhead->records[i]));
+ #endif
+ }
+ 
+@@ -2842,7 +2841,7 @@ static void kfree_rcu_work(struct work_struct *work)
+ 	for (; bhead; bhead = bnext) {
+ 		bnext = bhead->next;
+ 
+-		debug_rcu_head_unqueue_bulk(bhead->head_free_debug);
++		debug_rcu_bhead_unqueue(bhead);
+ 
+ 		rcu_lock_acquire(&rcu_callback_map);
+ 		trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
+@@ -2864,14 +2863,15 @@ static void kfree_rcu_work(struct work_struct *work)
+ 	 */
+ 	for (; head; head = next) {
+ 		unsigned long offset = (unsigned long)head->func;
++		void *ptr = (void *)head - offset;
+ 
+ 		next = head->next;
+-		debug_rcu_head_unqueue(head);
++		debug_rcu_head_unqueue((struct rcu_head *)ptr);
+ 		rcu_lock_acquire(&rcu_callback_map);
+ 		trace_rcu_invoke_kvfree_callback(rcu_state.name, head, offset);
+ 
+ 		if (!WARN_ON_ONCE(!__is_kvfree_rcu_offset(offset)))
+-			kvfree((void *)head - offset);
++			kvfree(ptr);
+ 
+ 		rcu_lock_release(&rcu_callback_map);
+ 		cond_resched_tasks_rcu_qs();
+@@ -2995,18 +2995,11 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+ 		/* Initialize the new block. */
+ 		bnode->nr_records = 0;
+ 		bnode->next = krcp->bhead;
+-		bnode->head_free_debug = NULL;
+ 
+ 		/* Attach it to the head. */
+ 		krcp->bhead = bnode;
+ 	}
+ 
+-#ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
+-	head->func = func;
+-	head->next = krcp->bhead->head_free_debug;
+-	krcp->bhead->head_free_debug = head;
+-#endif
+-
+ 	/* Finally insert. */
+ 	krcp->bhead->records[krcp->bhead->nr_records++] =
+ 		(void *) head - (unsigned long) func;
+@@ -3030,14 +3023,17 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ {
+ 	unsigned long flags;
+ 	struct kfree_rcu_cpu *krcp;
++	void *ptr;
+ 
+ 	local_irq_save(flags);	// For safely calling this_cpu_ptr().
+ 	krcp = this_cpu_ptr(&krc);
+ 	if (krcp->initialized)
+ 		spin_lock(&krcp->lock);
+ 
++	ptr = (void *)head - (unsigned long)func;
++
+ 	// Queue the object but don't yet schedule the batch.
+-	if (debug_rcu_head_queue(head)) {
++	if (debug_rcu_head_queue(ptr)) {
+ 		// Probable double kfree_rcu(), just leak.
+ 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
+ 			  __func__, head);
+@@ -3054,8 +3050,8 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 	 * Under high memory pressure GFP_NOWAIT can fail,
+ 	 * in that case the emergency path is maintained.
+ 	 */
+-	if (is_vmalloc_addr((void *) head - (unsigned long) func) ||
+-			!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func)) {
++	if (is_vmalloc_addr(ptr) ||
++	    !kfree_call_rcu_add_ptr_to_bulk(krcp, head, func)) {
+ 		head->func = func;
+ 		head->next = krcp->head;
+ 		krcp->head = head;
+-- 
+2.25.1.481.gfbce0eb801-goog
