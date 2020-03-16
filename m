@@ -2,145 +2,125 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA81C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FACDC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807F420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7127120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdQPD2e+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TDsn/0Mv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732577AbgCPUfQ (ORCPT
+        id S1732593AbgCPUf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:35:16 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42516 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732486AbgCPUfQ (ORCPT
+        Mon, 16 Mar 2020 16:35:26 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25462 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732580AbgCPUf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:35:16 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 13so10386933oiy.9;
-        Mon, 16 Mar 2020 13:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2WeeeQuIf6X+Fgo34LchZIqqcKLKtS9v2wrYypr8QcQ=;
-        b=VdQPD2e+W+dj6T/pc1K7U0NlTgVjr9jQQJP3cDhSIFn2wVwfqqIrK+OEebkM2I5DdP
-         6JeVtmsy3VsaNJIi8D8HiwH35Vqr/TvqZVzjip6PGSJokbfTz2xdUHuuD/qK+NbqhDmL
-         Glco0sva6+pQPhZWzH9GLR0nAULr1i1WB5/IsucKUiF/9Gx6/LL8gg7XIVviJsuX4ZiB
-         uQGZRfqr4wQZ/4WEmBoDzG2tddTZ9qQ2gbqdYTTT+jSTLpw9MSmZohk/sqxbi5ygP2cO
-         2NW29gjwY0UgluKxwgABVfDjfI0Wins3t08xeangQCzKSmpEyDYRYiC1rMgV3OrjHc7v
-         4sMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2WeeeQuIf6X+Fgo34LchZIqqcKLKtS9v2wrYypr8QcQ=;
-        b=CKSNVcuyCmB+twr8BHPHW2VzuYou0or3qFmhXdugTULa0+6xQ302/abfnAWfAoeiZY
-         /H3+3YO4vCVCVHqqmkYPSpWFmAZkNmAQ0evB62OVEGn++SItTiKQv3qXeoIdkWo5F1NB
-         iU+TAQXs3hKUI+Mpp2LZQ+DQmgZ4wc5u8lh4pkdSz8Zr/xoYYYMYPSbrpLuLCcTnnt3R
-         ZtSHS7NYJgGbT+s2WEgw+EiwJ8WOuepskx814Arz71RkoL+1f/E9OpBLx7y16RqXn9e1
-         pMjp4BHlNqSstf3hhW1Fa+i9HZIi5JRqJoFxzv6Zp++sBQeaHNui5sRT5o4kcz6id8uT
-         XTWg==
-X-Gm-Message-State: ANhLgQ0hZAg7Ag4XmjeRFLC4DBnzhjDzT2R9ClOywxKv4GXuoiofN6Lk
-        jRlO3n9270BrunjsSgcI8DA=
-X-Google-Smtp-Source: ADFU+vt05REQiVpWVawSbU9b+0kISMA+KKSDQTRxNNjoSMj/l5oSCOSmZZuFg7XjV2AsmmlGhe64nA==
-X-Received: by 2002:a05:6808:b17:: with SMTP id s23mr1049303oij.166.1584390914991;
-        Mon, 16 Mar 2020 13:35:14 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id o6sm307086oti.65.2020.03.16.13.35.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 13:35:14 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] mlx5: Remove uninitialized use of key in mlx5_core_create_mkey
-Date:   Mon, 16 Mar 2020 13:34:52 -0700
-Message-Id: <20200316203452.32998-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.0.rc1
+        Mon, 16 Mar 2020 16:35:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584390925;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rNP0mmhYO3ZkBwa0TVYh9YRT8v7S/Igc0A+3yqdKcRw=;
+        b=TDsn/0MvQKYnUkqIoaEDGFZUN+u5cqn8G3PYqWyOf3c9QVPVWoKwtEy6d1HYXLZjYlWLn6
+        1qCam8sKstCg8WgnPWueBs8doiSw37t5AV5B68CBatXIdJ1UkLfDo5j2BgFymqZXFSCgn8
+        xBDfk5HIR+pwwshhL269G/cqG93Wfs4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-yXlxTpiMOSaQPrYogFg8ag-1; Mon, 16 Mar 2020 16:35:21 -0400
+X-MC-Unique: yXlxTpiMOSaQPrYogFg8ag-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39A0918AB2C0;
+        Mon, 16 Mar 2020 20:35:19 +0000 (UTC)
+Received: from treble (ovpn-121-192.rdu2.redhat.com [10.10.121.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 852049CA3;
+        Mon, 16 Mar 2020 20:35:16 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 15:35:14 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        jslaby@suse.cz, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH 2/2] x86/xen: Make the secondary CPU idle tasks
+ reliable
+Message-ID: <20200316203514.qm7so7b55jbmskgg@treble>
+References: <20200312142007.11488-1-mbenes@suse.cz>
+ <20200312142007.11488-3-mbenes@suse.cz>
+ <75224ad1-f160-802a-9d72-b092ba864fb7@suse.com>
+ <alpine.LSU.2.21.2003131048110.30076@pobox.suse.cz>
+ <alpine.LSU.2.21.2003161642450.15518@pobox.suse.cz>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2003161642450.15518@pobox.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On Mon, Mar 16, 2020 at 04:51:12PM +0100, Miroslav Benes wrote:
+> > diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+> > index 6b88cdcbef8f..39afd88309cb 100644
+> > --- a/arch/x86/xen/smp_pv.c
+> > +++ b/arch/x86/xen/smp_pv.c
+> > @@ -92,6 +92,7 @@ asmlinkage __visible void cpu_bringup_and_idle(void)
+> >  {
+> >         cpu_bringup();
+> >         boot_init_stack_canary();
+> > +       asm volatile (UNWIND_HINT(ORC_REG_UNDEFINED, 0, ORC_TYPE_CALL, 1));
+> >         cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+> >  }
+> > 
+> > and that seems to work. I need to properly verify and test, but the 
+> > explanation is that as opposed to the above, cpu_startup_entry() is on the 
+> > idle task's stack and the hint is then taken into account. The unwound 
+> > stack seems to be complete, so it could indeed be the fix.
+> 
+> Not the correct one though. Objtool rightfully complains with
+> 
+> arch/x86/xen/smp_pv.o: warning: objtool: cpu_bringup_and_idle()+0x6a: undefined stack state
+> 
+> and all the other hacks I tried ended up in the same dead alley. It seems 
+> to me the correct fix is that all orc entries for cpu_bringup_and_idle() 
+> should have "end" property set to 1, since it is the first function on the 
+> stack. I don't know how to achieve that without the assembly hack in the 
+> patch I sent. If I am not missing something, of course.
+> 
+> Josh, any idea?
 
-../drivers/net/ethernet/mellanox/mlx5/core/mr.c:63:21: warning: variable
-'key' is uninitialized when used here [-Wuninitialized]
-                      mkey_index, key, mkey->key);
-                                  ^~~
-../drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:54:6: note:
-expanded from macro 'mlx5_core_dbg'
-                 ##__VA_ARGS__)
-                   ^~~~~~~~~~~
-../include/linux/dev_printk.h:114:39: note: expanded from macro
-'dev_dbg'
-        dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-                                             ^~~~~~~~~~~
-../include/linux/dynamic_debug.h:158:19: note: expanded from macro
-'dynamic_dev_dbg'
-                           dev, fmt, ##__VA_ARGS__)
-                                       ^~~~~~~~~~~
-../include/linux/dynamic_debug.h:143:56: note: expanded from macro
-'_dynamic_func_call'
-        __dynamic_func_call(__UNIQUE_ID(ddebug), fmt, func, ##__VA_ARGS__)
-                                                              ^~~~~~~~~~~
-../include/linux/dynamic_debug.h:125:15: note: expanded from macro
-'__dynamic_func_call'
-                func(&id, ##__VA_ARGS__);               \
-                            ^~~~~~~~~~~
-../drivers/net/ethernet/mellanox/mlx5/core/mr.c:47:8: note: initialize
-the variable 'key' to silence this warning
-        u8 key;
-              ^
-               = '\0'
-1 warning generated.
+Yeah, I think mucking with the unwind hints in C code is going to be
+precarious.  You could maybe have something like
 
-key's initialization was removed in commit fc6a9f86f08a ("{IB,net}/mlx5:
-Assign mkey variant in mlx5_ib only") but its use was not fully removed.
-Remove it now so that there is no more warning.
+	asm("
+	  UNWIND_HINT_EMPTY\n
+	  mov $CPUHP_AP_ONLINE_IDLE, %rdi\n
+	  call cpu_startup_entry\n
+	)"
+	unreachable();
 
-Fixes: fc6a9f86f08a ("{IB,net}/mlx5: Assign mkey variant in mlx5_ib only")
-Link: https://github.com/ClangBuiltLinux/linux/issues/932
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/mr.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+but that's pretty ugly (and it might not work anyway).
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mr.c b/drivers/net/ethernet/mellanox/mlx5/core/mr.c
-index fd3e6d217c3b..366f2cbfc6db 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/mr.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/mr.c
-@@ -44,7 +44,6 @@ int mlx5_core_create_mkey(struct mlx5_core_dev *dev,
- 	u32 mkey_index;
- 	void *mkc;
- 	int err;
--	u8 key;
- 
- 	MLX5_SET(create_mkey_in, in, opcode, MLX5_CMD_OP_CREATE_MKEY);
- 
-@@ -59,8 +58,7 @@ int mlx5_core_create_mkey(struct mlx5_core_dev *dev,
- 	mkey->key |= mlx5_idx_to_mkey(mkey_index);
- 	mkey->pd = MLX5_GET(mkc, mkc, pd);
- 
--	mlx5_core_dbg(dev, "out 0x%x, key 0x%x, mkey 0x%x\n",
--		      mkey_index, key, mkey->key);
-+	mlx5_core_dbg(dev, "out 0x%x, mkey 0x%x\n", mkey_index, mkey->key);
- 	return 0;
- }
- EXPORT_SYMBOL(mlx5_core_create_mkey);
+I suppose we could add a new facility to mark an entire C function as an
+"end" point.
+
+But I think it would be cleanest to just do something like your patch
+and have the entry code be asm which then calls cpu_bringup_and_idle().
+That would make it consistent with all other entry code, which all lives
+in asm.
+
 -- 
-2.26.0.rc1
+Josh
 
