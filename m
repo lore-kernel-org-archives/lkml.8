@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2557FC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F07DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F5120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F4A20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbgCPMGH (ORCPT
+        id S1731006AbgCPMGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:06:07 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:54766 "EHLO inva021.nxp.com"
+        Mon, 16 Mar 2020 08:06:17 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54916 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730924AbgCPMGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:06:04 -0400
+        id S1730962AbgCPMGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:06:06 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A9C912009DF;
-        Mon, 16 Mar 2020 13:06:02 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B55112009F9;
+        Mon, 16 Mar 2020 13:06:04 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9DCA02009CD;
-        Mon, 16 Mar 2020 13:06:02 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A75BB2009CD;
+        Mon, 16 Mar 2020 13:06:04 +0100 (CET)
 Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 40EC62039B;
-        Mon, 16 Mar 2020 13:06:02 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 4762D2039B;
+        Mon, 16 Mar 2020 13:06:04 +0100 (CET)
 From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
 To:     davem@davemloft.net, netdev@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, shawnguo@kernel.org,
         leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-kernel@vger.kernel.org,
         Madalin Bucur <madalin.bucur@oss.nxp.com>
-Subject: [PATCH net v2 1/3] net: fsl/fman: treat all RGMII modes in memac_adjust_link()
-Date:   Mon, 16 Mar 2020 14:05:56 +0200
-Message-Id: <1584360358-8092-2-git-send-email-madalin.bucur@oss.nxp.com>
+Subject: [PATCH net v2 3/3] arm64: dts: ls1046ardb: set RGMII interfaces to RGMII_ID mode
+Date:   Mon, 16 Mar 2020 14:05:58 +0200
+Message-Id: <1584360358-8092-4-git-send-email-madalin.bucur@oss.nxp.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
 References: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
@@ -48,29 +48,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Treat all internal delay variants the same as RGMII.
+The correct setting for the RGMII ports on LS1046ARDB is to
+enable delay on both Rx and Tx so the interface mode used must
+be PHY_INTERFACE_MODE_RGMII_ID.
 
+Since commit 1b3047b5208a80 ("net: phy: realtek: add support for
+configuring the RX delay on RTL8211F") the Realtek 8211F PHY driver
+has control over the RGMII RX delay and it is disabling it for
+RGMII_TXID. The LS1046ARDB uses two such PHYs in RGMII_ID mode but
+in the device tree the mode was described as "rgmii".
+
+Changing the phy-connection-type to "rgmii-id" to address the issue.
+
+Fixes: 3fa395d2c48a ("arm64: dts: add LS1046A DPAA FMan nodes")
 Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
 ---
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v2: used phy_interface_mode_is_rgmii() to identify RGMII
-
- drivers/net/ethernet/freescale/fman/fman_memac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
-index e1901874c19f..0d2b4ab01f24 100644
---- a/drivers/net/ethernet/freescale/fman/fman_memac.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
-@@ -782,7 +782,7 @@ int memac_adjust_link(struct fman_mac *memac, u16 speed)
- 	/* Set full duplex */
- 	tmp &= ~IF_MODE_HD;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+index dbc23d6cd3b4..d53ccc56bb63 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+@@ -131,12 +131,12 @@
+ &fman0 {
+ 	ethernet@e4000 {
+ 		phy-handle = <&rgmii_phy1>;
+-		phy-connection-type = "rgmii";
++		phy-connection-type = "rgmii-id";
+ 	};
  
--	if (memac->phy_if == PHY_INTERFACE_MODE_RGMII) {
-+	if (phy_interface_mode_is_rgmii(memac->phy_if)) {
- 		/* Configure RGMII in manual mode */
- 		tmp &= ~IF_MODE_RGMII_AUTO;
- 		tmp &= ~IF_MODE_RGMII_SP_MASK;
+ 	ethernet@e6000 {
+ 		phy-handle = <&rgmii_phy2>;
+-		phy-connection-type = "rgmii";
++		phy-connection-type = "rgmii-id";
+ 	};
+ 
+ 	ethernet@e8000 {
 -- 
 2.1.0
 
