@@ -2,86 +2,101 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B087EC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 829AAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85EA02071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4E6206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:37:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oau0fH9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732196AbgCPQh2 (ORCPT
+        id S1732206AbgCPQha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:37:28 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:40816 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732122AbgCPQh2 (ORCPT
+        Mon, 16 Mar 2020 12:37:30 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44510 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732198AbgCPQh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:37:28 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TsoL6qx_1584376608;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TsoL6qx_1584376608)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 17 Mar 2020 00:36:51 +0800
-Subject: Re: [PATCH 1/2] mm: swap: make page_evictable() inline
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     shakeelb@google.com, vbabka@suse.cz, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1584124476-76534-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200314160157.GR22433@bombadil.infradead.org>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <245aab40-ea54-eadc-ca9e-e85ef78b7cc7@linux.alibaba.com>
-Date:   Mon, 16 Mar 2020 09:36:47 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 16 Mar 2020 12:37:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id d62so18413158oia.11;
+        Mon, 16 Mar 2020 09:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3+hUQzi8rSGcD861hLFiFZxEV8fS8e2CK6IX3o7vpd0=;
+        b=oau0fH9kC3YB34GLThPRDlnyCEnY6HDOha1KcXiOv3qrdIVzUHzJRk9k1OOR6Ka6yL
+         j88oQRJF2i5wYbwRGZcnenshtLZH1ISiJwrl70x5A76vF9F3vopXkZUtH5eXKc3vo6W7
+         EnwaCSCPwicuLe+Vi/SX+LWJsVhIM5upRWWrlLDHo4wE0/9HzT5RwKGgK+WSCgA0palu
+         xjZzmcpf9tnyRBOc8dznz+tkLsIa9aehGS09LOYRKexCGokM+a6/uYxTMQtWWE9usIsY
+         bYdoTkyHqHG994k1w1/Ni+/MjJyK9pl2TlfLMGWFXGHp+5IxIog7kRNv39WxEqavY58V
+         AuIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3+hUQzi8rSGcD861hLFiFZxEV8fS8e2CK6IX3o7vpd0=;
+        b=DTJ+9R7/qVT/NsMMg/3oEW2g92unksIZSVuLpZdUVaat+yKiRGz12hq1Wj6SH8AN+R
+         A2RzpJWu/yPcBNxrViBO3A9wZxrx68lp4Q7zwvxH2h9/d6QQkRAMzWu2ZoDeVtqfQtmu
+         FKGAxV+piqi33Yb1UQWaQ07DCQNeXZifO7rutoIOxuXkWfF38xRH6rhWMiguqwLgyLcX
+         62FEGkiRO0eEugcvTFDwAAck9HlolOrAtkBcAJZaPSayw+cHPN2ON2VSXhH/YkqTuUQ4
+         3JMcrSk7y6LgphVD1f82KYS5z+QgDy9uq9N2nTR71TihfjlZKMQpZTFOOzzbS0HNTP3c
+         uBng==
+X-Gm-Message-State: ANhLgQ1Ww8xVnZkKQxrDpu1itPSXJie5XNcP3WXqqS6127/b4ewV+JfF
+        T7tOYkADzjUHOjXddss1/vg=
+X-Google-Smtp-Source: ADFU+vtFGB4+FIEYm6YYVa7xkL80tUjCTX2OzlmzKkjvbd4GxJ+Ve1IzVjgR7/PoVO7kUAS6E7uKZw==
+X-Received: by 2002:aca:1913:: with SMTP id l19mr269031oii.47.1584376648382;
+        Mon, 16 Mar 2020 09:37:28 -0700 (PDT)
+Received: from localhost.members.linode.com ([2600:3c00::f03c:91ff:fe99:7fe5])
+        by smtp.gmail.com with ESMTPSA id l20sm115101oih.40.2020.03.16.09.37.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 09:37:27 -0700 (PDT)
+From:   Anton Protopopov <a.s.protopopov@gmail.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Anton Protopopov <a.s.protopopov@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org
+Subject: [PATCH] seccomp: allow BPF_MOD ALU instructions
+Date:   Mon, 16 Mar 2020 16:36:46 +0000
+Message-Id: <20200316163646.2465-1-a.s.protopopov@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20200314160157.GR22433@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The BPF_MOD ALU instructions could be utilized by seccomp classic BPF filters,
+but were missing from the explicit list of allowed calls since its introduction
+in the original e2cfabdfd075 ("seccomp: add system call filtering using BPF")
+commit.  Add support for these instructions by adding them to the allowed list
+in the seccomp_check_filter function.
 
+Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
+---
+ kernel/seccomp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On 3/14/20 9:01 AM, Matthew Wilcox wrote:
-> On Sat, Mar 14, 2020 at 02:34:35AM +0800, Yang Shi wrote:
->> -extern int page_evictable(struct page *page);
->> +/*
-> This seems to be in kernel-doc format already; could you add the extra
-> '*' so it is added to the fine documentation?
-
-Yes, sure.
-
->
->> + * page_evictable - test whether a page is evictable
->> + * @page: the page to test
->> + *
->> + * Test whether page is evictable--i.e., should be placed on active/inactive
->> + * lists vs unevictable list.
->> + *
->> + * Reasons page might not be evictable:
->> + * (1) page's mapping marked unevictable
->> + * (2) page is part of an mlocked VMA
->> + *
->> + */
->> +static inline int page_evictable(struct page *page)
->> +{
->> +	int ret;
->> +
->> +	/* Prevent address_space of inode and swap cache from being freed */
->> +	rcu_read_lock();
->> +	ret = !mapping_unevictable(page_mapping(page)) && !PageMlocked(page);
->> +	rcu_read_unlock();
->> +	return ret;
->> +}
-> This seems like it should return bool ... that might even lead to code
-> generation improvement.
-
-Thanks for catching this. It looks mapping_unevictable() needs to be 
-converted to bool as well.
-
-
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index b6ea3dcb57bf..cae7561b44d4 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -206,6 +206,8 @@ static int seccomp_check_filter(struct sock_filter *filter, unsigned int flen)
+ 		case BPF_ALU | BPF_MUL | BPF_X:
+ 		case BPF_ALU | BPF_DIV | BPF_K:
+ 		case BPF_ALU | BPF_DIV | BPF_X:
++		case BPF_ALU | BPF_MOD | BPF_K:
++		case BPF_ALU | BPF_MOD | BPF_X:
+ 		case BPF_ALU | BPF_AND | BPF_K:
+ 		case BPF_ALU | BPF_AND | BPF_X:
+ 		case BPF_ALU | BPF_OR | BPF_K:
+-- 
+2.19.1
