@@ -2,165 +2,180 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA096C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F6DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B0A20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3074D2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xahOxVv4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uAWvXPKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730808AbgCPL1u (ORCPT
+        id S1730814AbgCPLaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:27:50 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:57980 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729043AbgCPL1u (ORCPT
+        Mon, 16 Mar 2020 07:30:18 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40481 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730698AbgCPLaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:27:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584358069; h=Content-Type: Cc: To: Subject: Message-ID:
- Date: From: In-Reply-To: References: MIME-Version: Sender;
- bh=8AhoRulK+Wx1g03sgzSt5h6cmvFffKNX5bBFnXkzqcY=; b=xahOxVv4mPohHuMR1TUdI2JVDl83VG/BJB3SFhQjpbwkFCTk9IrvymIa7AD9cEcnWwIVnwGs
- bxIMNsOspHIqdrt3z/DSfpu2+r4XD5qHK8a6d8DnsbtPoVfrgEGX235D1sTWL0PhbGEJvihy
- pPKVfD+EZp4HRcflhTBiEAvk6G0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6f62a6.7f675edb7378-smtp-out-n02;
- Mon, 16 Mar 2020 11:27:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 27F90C44788; Mon, 16 Mar 2020 11:27:33 +0000 (UTC)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6D99EC433D2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 11:27:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6D99EC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Received: by mail-ed1-f47.google.com with SMTP id b23so21585301edx.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 04:27:32 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3A2Y0lYOQIYrUz7QibaQruPGbxe7/IxTljqFAbYv0/CFWYct5k
-        fQMBYZEXGvPBBM62fN0GVZ2FQmo/DXhrUaPSOws=
-X-Google-Smtp-Source: ADFU+vv/536hA54zgXvN5nJM9F1df6ZOW/WKdTpNHboHuz6b9eEBQ6fIc+xXAUAfG2JNaLr5pOMIvWbZzN2HAOjmA+s=
-X-Received: by 2002:a50:951e:: with SMTP id u30mr25583228eda.144.1584358051134;
- Mon, 16 Mar 2020 04:27:31 -0700 (PDT)
+        Mon, 16 Mar 2020 07:30:17 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z12so8416628wmf.5;
+        Mon, 16 Mar 2020 04:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=u10mLbx13rBjuUZ6X11Wbn8nkL4El9jkpcLiVIu0+S8=;
+        b=uAWvXPKWxndSsk4VsF2Qr1gnE5v+0qvFoIhcuUZpA/QweCy6iKBAUcs23tt/ZrHfDp
+         G/DOAwWYKuxon9Mn6oXv9GTodjnZQYFnXfUDAaA1HpYaaWAkwvZ2eAjHfsaxBEsop97D
+         4YaEUaP2CfSwIVNeKy8mQX9JkvwIZ5+o3ahU59Bgeo6pCQVwf9fGSNhutnz0PadNqR24
+         t18QQyFe5QYw8VQ7L2CVIjWUYo/FC6jTHGEqMfiB7vXeILd3pFN60eqQhMfgLdBE2Zxj
+         NQumidioxcGtxAQxJxb3gQICMBPyl3N92vhIZ8qRNaag/ZjHgeiu2/1jD7abVY/g64DX
+         pGYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u10mLbx13rBjuUZ6X11Wbn8nkL4El9jkpcLiVIu0+S8=;
+        b=Y8biRAHYOa4YmUJUBjge4J0r82+ReD2qi7yldWOBmWEWy+wPYD4WuhoM7f7Brc4HKR
+         hC5U4MjoxLKXoQmD8pe4oK5PT+GOfRwBmgHUeOS0LuD6NyAppfBsxHq3AKD8eGy7dJle
+         CyTtsk/W59oy429E8rvtWjmR/OV+8rig6UWJZrxcNOfzKwHf4dNW4xBFSKiusjMGrRF3
+         yCXR60JP1jqVLJYXqdH6axQukv7ZDqZmvhay/tPNqF0lM6kFoAdU2fWM3bxwAXJsmkZT
+         VVXZdmHTUKb9m6Ay6bIjOMCYtqAF0ZlYvvIcKK6G2yGiU1z6VXuL1KBrkISI5+uvPx0V
+         Wyjg==
+X-Gm-Message-State: ANhLgQ1IcDdjUM2sR41p/PzdMtTWYv1tzRSHB1/ghbNh0aI824QQE+Dv
+        v+3yBrbR6fxCB84TXM04vwQ=
+X-Google-Smtp-Source: ADFU+vu5azq6cmrHqo5F5U539HET90FApjVVwnLS67MGRj95kRNbWIhE50zh7SRipACC6dEHbReCzQ==
+X-Received: by 2002:a7b:c62a:: with SMTP id p10mr25503240wmk.46.1584358215746;
+        Mon, 16 Mar 2020 04:30:15 -0700 (PDT)
+Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
+        by smtp.gmail.com with ESMTPSA id g127sm31035875wmf.10.2020.03.16.04.30.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 04:30:14 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 12:30:12 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>
+Cc:     Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>,
+        Thierry Reding <treding@nvidia.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: linux-next: build failure after merge of the usb tree
+Message-ID: <20200316113012.GA3049021@ulmo>
+References: <20200316141004.171649a5@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1584326350-30275-1-git-send-email-psodagud@codeaurora.org> <1584326350-30275-3-git-send-email-psodagud@codeaurora.org>
-In-Reply-To: <1584326350-30275-3-git-send-email-psodagud@codeaurora.org>
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-Date:   Mon, 16 Mar 2020 16:57:19 +0530
-X-Gmail-Original-Message-ID: <CAEU1=PnmhRGmTHPikj5y0OVcp2NO81JgSBYyg4o=CPaNkuF-5Q@mail.gmail.com>
-Message-ID: <CAEU1=PnmhRGmTHPikj5y0OVcp2NO81JgSBYyg4o=CPaNkuF-5Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] sched: Add a check for cpu unbound deferrable timers
-To:     Prasad Sodagudi <psodagud@codeaurora.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>, sboyd@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, saravanak@google.com,
-        tsoni@codeaurora.org, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Content-Disposition: inline
+In-Reply-To: <20200316141004.171649a5@canb.auug.org.au>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prasad,
 
-On Mon, Mar 16, 2020 at 8:42 AM Prasad Sodagudi <psodagud@codeaurora.org> wrote:
->
-> Add a check for cpu unbound deferrable timer expiry and raise
-> softirq for handling the expired timers so that the CPU can
-> process the cpu unbound deferrable times as early as possible
-> when a cpu tries to enter/exit idle loop.
->
-> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Mar 16, 2020 at 02:10:04PM +1100, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> After merging the usb tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+>=20
+> drivers/phy/tegra/xusb.c: In function 'tegra_xusb_setup_usb_role_switch':
+> drivers/phy/tegra/xusb.c:641:10: error: initialization of 'int (*)(struct=
+ usb_role_switch *, enum usb_role)' from incompatible pointer type 'int (*)=
+(struct device *, enum usb_role)' [-Werror=3Dincompatible-pointer-types]
+>   641 |   .set =3D tegra_xusb_role_sw_set,
+>       |          ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/phy/tegra/xusb.c:641:10: note: (near initialization for 'role_sx_=
+desc.set')
+>=20
+> Caused by commit
+>=20
+>   bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the swi=
+tch in the API")
+>=20
+> interacting with commit
+>=20
+>   5a00c7c7604f ("phy: tegra: xusb: Add usb-role-switch support")
+>=20
+> from the tegra tree.
+>=20
+> I have added this merge fix patch (which may need more work):
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 16 Mar 2020 14:04:20 +1100
+> Subject: [PATCH] phy: tegra: fix up for set_role API change
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 > ---
->  include/linux/timer.h    |  3 +++
->  kernel/time/tick-sched.c |  6 ++++++
->  kernel/time/timer.c      | 29 ++++++++++++++++++++++++++++-
->  3 files changed, 37 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/timer.h b/include/linux/timer.h
-> index 1e6650e..25a1837 100644
-> --- a/include/linux/timer.h
-> +++ b/include/linux/timer.h
-> @@ -172,6 +172,9 @@ extern int del_timer(struct timer_list * timer);
->  extern int mod_timer(struct timer_list *timer, unsigned long expires);
->  extern int mod_timer_pending(struct timer_list *timer, unsigned long expires);
->  extern int timer_reduce(struct timer_list *timer, unsigned long expires);
-> +#ifdef CONFIG_SMP
-> +extern bool check_pending_deferrable_timers(int cpu);
-> +#endif
->
->  /*
->   * The jiffies value which is added to now, when there is no timer
-> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-> index a792d21..fe0836a 100644
-> --- a/kernel/time/tick-sched.c
-> +++ b/kernel/time/tick-sched.c
-> @@ -23,6 +23,7 @@
->  #include <linux/module.h>
->  #include <linux/irq_work.h>
->  #include <linux/posix-timers.h>
-> +#include <linux/timer.h>
->  #include <linux/context_tracking.h>
->  #include <linux/mm.h>
->
-> @@ -948,6 +949,11 @@ static void __tick_nohz_idle_stop_tick(struct tick_sched *ts)
->         ktime_t expires;
->         int cpu = smp_processor_id();
->
-> +#ifdef CONFIG_SMP
-> +       if (check_pending_deferrable_timers(cpu))
-> +               raise_softirq_irqoff(TIMER_SOFTIRQ);
-> +#endif
-> +
->         /*
->          * If tick_nohz_get_sleep_length() ran tick_nohz_next_event(), the
->          * tick timer expiration time is known already.
+>  drivers/phy/tegra/xusb.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+> index d907f03bf282..25223c350e66 100644
+> --- a/drivers/phy/tegra/xusb.c
+> +++ b/drivers/phy/tegra/xusb.c
+> @@ -596,11 +596,12 @@ static void tegra_xusb_usb_phy_work(struct work_str=
+uct *work)
+>  	atomic_notifier_call_chain(&port->usb_phy.notifier, 0, &port->usb_phy);
+>  }
+> =20
+> -static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+> +static int tegra_xusb_role_sw_set(struct usb_role_switch *sw,
+> +				  enum usb_role role)
+>  {
+> -	struct tegra_xusb_port *port =3D dev_get_drvdata(dev);
+> +	struct tegra_xusb_port *port =3D usb_role_switch_get_drvdata(sw);
+> =20
+> -	dev_dbg(dev, "%s(): role %s\n", __func__, usb_roles[role]);
+> +	dev_dbg(&port->dev, "%s(): role %s\n", __func__, usb_roles[role]);
+> =20
+>  	schedule_work(&port->usb_phy_work);
+> =20
+> --=20
+> 2.25.0
 
-Since this is called outside interrupt context, ksoftirqd task is always woken
-up to serve the TIMER softirq. Given that, this CPU exited idle due to an
-interrupt, we could probably check this condition and raise the softirq prior
-to irq_exit. To make the discussion easier, providing the diff. This will make
-sure that TIMER softirq is served after serving the IRQ and avoids waking
-ksoftirqd. This should also cover the case, Thoms mentioned in the other
-email.
+I can rebase the branch that contains this commit on top of Greg's USB
+tree. These are a dependency for the UDC and host driver changes that I
+have sent as a pull request to Greg, so this should all work out nicely.
 
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index a792d21..d9d1915 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -1268,8 +1268,19 @@ static inline void tick_nohz_irq_enter(void)
-        now = ktime_get();
-        if (ts->idle_active)
-                tick_nohz_stop_idle(ts, now);
--       if (ts->tick_stopped)
-+       if (ts->tick_stopped) {
-                tick_nohz_update_jiffies(now);
-+               /*
-+                * TODO: check the possibility of doing this only
-+                * when jiffies is updated.
-+                *
-+                * __raise_softirq_irqoff() marks the softirq pending.
-+                * The softirq is served after this IRQ is served from
-+                * irq_exit()
-+                */
-+               if (check_pending_deferrable_timers())
-+                       __raise_softirq_irqoff(TIMER_SOFTIRQ);
-+       }
- }
+Greg, I recall that you've said in the past that you don't rebase your
+trees. Is that still the case for the USB tree? Do you have a preference
+what to base my branch on? The earliest of your USB tree that contains
+all patches needed to make this compile? Or the latest?
 
- #else
+Thierry
 
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a
-Linux Foundation Collaborative Project
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5vYzwACgkQ3SOs138+
+s6HYsA//R8FjHDxAalqcSRUQWMth+qdvNLypSWmB9ZJbhglP+b4RvokeaP4ZzFeo
+AVavdyHUWROF2Uh/YGfPWaFlAiPwmJz3we0Fk1uk0F3aEO5B0wBBbVQ7DnKW7Rqa
+BI0eRkP0YyuwvsBRLcUYfaLW+StRn5PQzc+YggjGqQwJs9BRAqEc/6VitlMj4A9B
+q0C1w3pOJ7/5P7WZ0brDcoay1mkHZQ8cExlW+iWFufkazzG3T3Z9IVFqDxSvElTu
+kLmJax6ubC/jMX1YlRQ6GN4V3YIxGx+fWPYrGSM+a/dRIIUhLFEI5yKC8WLNr9SY
+9Dnw4AL4U+XnEvS+kvQTpWu0j9FT9T7q5Zrijn/U3Lj4Hl0p5YEMVstL9iCGkZ0h
+w4tIVCsWw+Kihhvlc3mA9TKe/xt+CZhpJZ6CtEl15Soz4YLRPVA0NrlPdEYsIzvo
+P24n6uGEsvavmeXVRGw4sOW4LByXl4Aijd9omU405z+3RIbM4m5i0FvOVROdGoD+
+9+ipP2Sptgti8FOoWqtnN1nFf49DeXSiLNb5kbWmIOmmyCsZI7WWdBNYx8tLBKhB
+kjZsc7sicNXbT1qeY300Wxm7YW1YVwiwZHWJFC0pcfHg9Z5tc9obVuj3gZGWqjPK
+V8aoOspwmxKH7lh6N4maZVhxN4/CsjVpEhrcF6velt2RaFw8gz8=
+=TXzi
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
