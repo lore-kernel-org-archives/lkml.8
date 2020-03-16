@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33594C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D267C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096BE20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ADD120736
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="MYkZIxy2"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="FAz6w/yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731720AbgCPOko (ORCPT
+        id S1731730AbgCPOks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:40:44 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:52871 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731680AbgCPOkn (ORCPT
+        Mon, 16 Mar 2020 10:40:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33854 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731722AbgCPOkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:40:43 -0400
-Received: by mail-pj1-f68.google.com with SMTP id ng8so1478526pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:40:42 -0700 (PDT)
+        Mon, 16 Mar 2020 10:40:47 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a23so8117280plm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zBHOgyLEZ5r85R272wFN9sBw9jILT7cn4Ky0rcV2SIc=;
-        b=MYkZIxy2XeKjs+V9xB58jdXdUpcU6IZVviLbe3NECyl9u6565FXZNazZYXK8WVbGGp
-         wqqtqcr4qpQuIinzSoHhAQ2OnbO/tBjFvYnvUGj4MQJVQ+CmVBFyymzUlYnfnb1shm0i
-         VXyNz60DmU8RlVgoqaXQ6Uc2mcnwqpZrh4ZHGhSq1fwCWHOfKxa/ASbhSjwrLzB+Ar6y
-         PDGGckT870MdrCOjKZz8kfDAPiw/yWC3S60bjGD93d928ZGj1gn3Ff+8f/maKG142WjX
-         hzNQaFOFDO3cKZdR+Qlji+s8rOQsxpkgOwNOPZJJCo1IMh69Weh3aAcIx5nymt8VSRVo
-         Nv8w==
+        bh=ML9QnmYycAYqBuHmwB02FgVr/qb/2XNl2+pJ9kSVZfk=;
+        b=FAz6w/yr23y1uFPy/XFwW5Sl96On4ZY7zXaQxi6Dv8Kl46TSTnJbw7suk4JfORLhDu
+         qfsd1nfrliQg2zAN1Sf8A+dUcQMAWIq18/8v+98blt1kKvwHHR68zpmpKHTcsEivUUuU
+         DZUfdfZLdWkvMIfM1lJEJIJ/m3CjsiKAkhXAO1/1n4+XaJ5ziFyFg+Q7y4c8pebckDmw
+         iZJUuweHVOTLfwWRi2MB7MQxSvftLCF8t50xo1r2zC8X4kPRcIBHEXIJurbtabLXqjpU
+         fbdBwcVOutJ0gwA20OXbIhErWSN0p4uN5s4j1TFRkQejrRYdbE8ldb14hfJjrox5Phwq
+         DoZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zBHOgyLEZ5r85R272wFN9sBw9jILT7cn4Ky0rcV2SIc=;
-        b=jFatVUye1Xhy4wkwCjCG9+p02Mi1ZdJXucyhUlyVhEOB7obSFb9wQ6MbwwRdcFJjXI
-         y0gARj3gYg7gbsEFyEqBWxk7rE1Z9I2daqPpmn5FoORVLZf4yfTRsaTgzAqg4cyTksVg
-         pBLpTMkKo3Yy6hbXNWj7GDVlW7UHYMOi9rDOIbVcuSsFaJYN0jccQ5waXFnZmHiJgzMc
-         bqIhzCEoWaDTx/W91f6+cBblZ6exCPV6VH19pbIM50y8YgZ1j1GOUOdE3BUwTmoB9B5c
-         2S0NAYvAd6oZy+1rI7cUyll8shkO097IUXyGYM7gOC4gxYTOiUTx/+QccVBk5EpBnTm7
-         EMJw==
-X-Gm-Message-State: ANhLgQ1zUCPd/zYhD00koZ/oJ87IYyWCJRmxfbmHmjaiX3nVXOLXX0ME
-        dhBwF7IMbvlYNEV17nyQb3c0kX9j/1kdmg==
-X-Google-Smtp-Source: ADFU+vtaZTnfAL6/i5p7oo7caqYCNYzoPpDeqZG5/l1xOh3L9hMyIiSyiKjpui4ZWYql9+I0v/iZoA==
-X-Received: by 2002:a17:902:5ac9:: with SMTP id g9mr27676801plm.125.1584369641913;
-        Mon, 16 Mar 2020 07:40:41 -0700 (PDT)
+        bh=ML9QnmYycAYqBuHmwB02FgVr/qb/2XNl2+pJ9kSVZfk=;
+        b=UJvXRgfg+z8Ln9nyYzigabIACkDgwIkuXhyIOD9Lq8ZRdLXaUyZqJrzh906G+IVPh4
+         hM63bTy7qqxLXo7Wj/ppqhse22B7jjrZyfDU1T6Dwiw9Ikx3XA6xCmhZyJzt7ndoAFtf
+         mmuS1pIYrwTZOcNYvkh+1LIk3KkgQ4VE3HUcobr4CpOMOhMRuCXsqVaZf5asxs+oQKDR
+         1R2Rms4p78lSFP0bSznzyt3SEHNIB+xhKswEAGQ+BRYZeyxjWWcSYk/ClI/q9+9CvwSQ
+         utaTuHGmXMago5ez73BeFI2Ns8UQgLh2TInzNph11//uPfBn8+kH099v1RHbTeaZTPZm
+         BSaQ==
+X-Gm-Message-State: ANhLgQ3Pl1c+RLwugsfyn6CoYLeDJasfxqy7/vrPql6gmV4kij6y8J6k
+        ah8nEJmBz4rL3g54IpUAMzNQoCESLQ3SHg==
+X-Google-Smtp-Source: ADFU+vuZMkcsPbmNT9DPCN78vyP5De+z0stdPCk4zYPh3NwltEIprDDhI2wGhSNYTPtTsDsbpgFy2w==
+X-Received: by 2002:a17:90b:374c:: with SMTP id ne12mr24765794pjb.67.1584369646065;
+        Mon, 16 Mar 2020 07:40:46 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.40.37
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.40.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:40:41 -0700 (PDT)
+        Mon, 16 Mar 2020 07:40:45 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,11 +67,11 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        uclinux-h8-devel@lists.sourceforge.jp
-Subject: [PATCHv2 13/50] h8300: Add show_stack_loglvl()
-Date:   Mon, 16 Mar 2020 14:38:39 +0000
-Message-Id: <20200316143916.195608-14-dima@arista.com>
+        Brian Cain <bcain@codeaurora.org>,
+        linux-hexagon@vger.kernel.org
+Subject: [PATCHv2 14/50] hexagon: Add show_stack_loglvl()
+Date:   Mon, 16 Mar 2020 14:38:40 +0000
+Message-Id: <20200316143916.195608-15-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -101,67 +101,117 @@ Also, it will consolidate printings with headers.
 Introduce show_stack_loglvl(), that eventually will substitute
 show_stack().
 
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: uclinux-h8-devel@lists.sourceforge.jp
+As a good side-effect die() now prints the stacktrace with KERN_EMERG
+aligned with other messages.
+
+Cc: Brian Cain <bcain@codeaurora.org>
+Cc: linux-hexagon@vger.kernel.org
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/h8300/kernel/traps.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ arch/hexagon/kernel/traps.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/arch/h8300/kernel/traps.c b/arch/h8300/kernel/traps.c
-index e47a9e0dc278..6362446563d6 100644
---- a/arch/h8300/kernel/traps.c
-+++ b/arch/h8300/kernel/traps.c
-@@ -115,7 +115,8 @@ void die(const char *str, struct pt_regs *fp, unsigned long err)
+diff --git a/arch/hexagon/kernel/traps.c b/arch/hexagon/kernel/traps.c
+index 69c623b14ddd..a8a3a210d781 100644
+--- a/arch/hexagon/kernel/traps.c
++++ b/arch/hexagon/kernel/traps.c
+@@ -79,7 +79,7 @@ static const char *ex_name(int ex)
+ }
  
- static int kstack_depth_to_print = 24;
+ static void do_show_stack(struct task_struct *task, unsigned long *fp,
+-			  unsigned long ip)
++			  unsigned long ip, const char *loglvl)
+ {
+ 	int kstack_depth_to_print = 24;
+ 	unsigned long offset, size;
+@@ -93,9 +93,8 @@ static void do_show_stack(struct task_struct *task, unsigned long *fp,
+ 	if (task == NULL)
+ 		task = current;
  
--void show_stack(struct task_struct *task, unsigned long *esp)
-+void show_stack_loglvl(struct task_struct *task, unsigned long *esp,
+-	printk(KERN_INFO "CPU#%d, %s/%d, Call Trace:\n",
+-	       raw_smp_processor_id(), task->comm,
+-	       task_pid_nr(task));
++	printk("%sCPU#%d, %s/%d, Call Trace:\n", loglvl, raw_smp_processor_id(),
++		task->comm, task_pid_nr(task));
+ 
+ 	if (fp == NULL) {
+ 		if (task == current) {
+@@ -108,7 +107,7 @@ static void do_show_stack(struct task_struct *task, unsigned long *fp,
+ 	}
+ 
+ 	if ((((unsigned long) fp) & 0x3) || ((unsigned long) fp < 0x1000)) {
+-		printk(KERN_INFO "-- Corrupt frame pointer %p\n", fp);
++		printk("%s-- Corrupt frame pointer %p\n", loglvl, fp);
+ 		return;
+ 	}
+ 
+@@ -125,8 +124,7 @@ static void do_show_stack(struct task_struct *task, unsigned long *fp,
+ 
+ 		name = kallsyms_lookup(ip, &size, &offset, &modname, tmpstr);
+ 
+-		printk(KERN_INFO "[%p] 0x%lx: %s + 0x%lx", fp, ip, name,
+-			offset);
++		printk("%s[%p] 0x%lx: %s + 0x%lx", loglvl, fp, ip, name, offset);
+ 		if (((unsigned long) fp < low) || (high < (unsigned long) fp))
+ 			printk(KERN_CONT " (FP out of bounds!)");
+ 		if (modname)
+@@ -136,8 +134,7 @@ static void do_show_stack(struct task_struct *task, unsigned long *fp,
+ 		newfp = (unsigned long *) *fp;
+ 
+ 		if (((unsigned long) newfp) & 0x3) {
+-			printk(KERN_INFO "-- Corrupt frame pointer %p\n",
+-				newfp);
++			printk("%s-- Corrupt frame pointer %p\n", loglvl, newfp);
+ 			break;
+ 		}
+ 
+@@ -147,7 +144,7 @@ static void do_show_stack(struct task_struct *task, unsigned long *fp,
+ 						+ 8);
+ 
+ 			if (regs->syscall_nr != -1) {
+-				printk(KERN_INFO "-- trap0 -- syscall_nr: %ld",
++				printk("%s-- trap0 -- syscall_nr: %ld", loglvl,
+ 					regs->syscall_nr);
+ 				printk(KERN_CONT "  psp: %lx  elr: %lx\n",
+ 					 pt_psp(regs), pt_elr(regs));
+@@ -155,7 +152,7 @@ static void do_show_stack(struct task_struct *task, unsigned long *fp,
+ 			} else {
+ 				/* really want to see more ... */
+ 				kstack_depth_to_print += 6;
+-				printk(KERN_INFO "-- %s (0x%lx)  badva: %lx\n",
++				printk("%s-- %s (0x%lx)  badva: %lx\n", loglvl,
+ 					ex_name(pt_cause(regs)), pt_cause(regs),
+ 					pt_badva(regs));
+ 			}
+@@ -178,10 +175,16 @@ static void do_show_stack(struct task_struct *task, unsigned long *fp,
+ 	}
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *fp)
++void show_stack_loglvl(struct task_struct *task, unsigned long *fp,
 +		       const char *loglvl)
  {
- 	unsigned long *stack,  addr;
- 	int i;
-@@ -125,17 +126,17 @@ void show_stack(struct task_struct *task, unsigned long *esp)
- 
- 	stack = esp;
- 
--	pr_info("Stack from %08lx:", (unsigned long)stack);
-+	printk("%sStack from %08lx:", loglvl, (unsigned long)stack);
- 	for (i = 0; i < kstack_depth_to_print; i++) {
- 		if (((unsigned long)stack & (THREAD_SIZE - 1)) >=
- 		    THREAD_SIZE-4)
- 			break;
- 		if (i % 8 == 0)
--			pr_info(" ");
-+			printk("%s ", loglvl);
- 		pr_cont(" %08lx", *stack++);
- 	}
- 
--	pr_info("\nCall Trace:\n");
-+	printk("%s\nCall Trace:\n", loglvl);
- 	i = 0;
- 	stack = esp;
- 	while (((unsigned long)stack & (THREAD_SIZE - 1)) < THREAD_SIZE-4) {
-@@ -150,10 +151,15 @@ void show_stack(struct task_struct *task, unsigned long *esp)
- 		 */
- 		if (check_kernel_text(addr)) {
- 			if (i % 4 == 0)
--				pr_info("       ");
-+				printk("%s       ", loglvl);
- 			pr_cont(" [<%08lx>]", addr);
- 			i++;
- 		}
- 	}
--	pr_info("\n");
-+	printk("%s\n", loglvl);
+ 	/* Saved link reg is one word above FP */
+-	do_show_stack(task, fp, 0);
++	do_show_stack(task, fp, 0, loglvl);
 +}
 +
-+void show_stack(struct task_struct *task, unsigned long *esp)
++void show_stack(struct task_struct *task, unsigned long *fp)
 +{
-+	show_stack_loglvl(task, esp, KERN_INFO);
++	show_stack_loglvl(task, fp, 0, KERN_INFO);
  }
+ 
+ int die(const char *str, struct pt_regs *regs, long err)
+@@ -207,7 +210,7 @@ int die(const char *str, struct pt_regs *regs, long err)
+ 
+ 	print_modules();
+ 	show_regs(regs);
+-	do_show_stack(current, &regs->r30, pt_elr(regs));
++	do_show_stack(current, &regs->r30, pt_elr(regs), KERN_EMERG);
+ 
+ 	bust_spinlocks(0);
+ 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
 -- 
 2.25.1
 
