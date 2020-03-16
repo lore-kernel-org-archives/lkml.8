@@ -2,112 +2,70 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AD2C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EE4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32D820674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:11:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VAdNUfp2"
+	by mail.kernel.org (Postfix) with ESMTP id 6D9F1205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgCPBLw (ORCPT
+        id S1729395AbgCPBM4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 21:11:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:40103 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbgCPBLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 21:11:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gdYd51YGz9sQt;
-        Mon, 16 Mar 2020 12:11:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584321110;
-        bh=TONNJhWJly+zoYUt5zQ+eqWuGEiT9Xm7B7CzlZKAEUs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VAdNUfp2NJ5g5KCnficA8TvVefqXi8wZYKfj9rSUI42TCeIpB/pPF32Ig2ZaOZeIU
-         VTm019AwGl6eVcJW52DKNmw3pgbebDnFfrKfK1UddKyLx5bMphRn8STgj0X5nxHFBT
-         cGnsruv8EmjdvS2E6cNA1e0IkwOCFxNq1syo1qkPfBBG5Ck0FNVR17/VYGjryt3Ru2
-         I9w8EZBqdFtp7+XmDKMxrVoEPK0alRTglwbURf9Euc6KmxDNIyqZSsyioy7CR3aFEO
-         cZoyY5xo3PjQ+RGrKjqHUr811E8dkw1OrLBDhRuTJ9h23psTvi3f05bR880Ejsx9/9
-         58e3lBHF+hiMA==
-Date:   Mon, 16 Mar 2020 12:11:48 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warnings after merge of the devicetree tree
-Message-ID: <20200316121148.6f65f3f9@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/q4Cg4nRI+Axz/UwWZOuGBnQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Sun, 15 Mar 2020 21:12:56 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:2489 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729300AbgCPBM4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 21:12:56 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15e6ed27523a-d0e54; Mon, 16 Mar 2020 09:12:22 +0800 (CST)
+X-RM-TRANSID: 2ee15e6ed27523a-d0e54
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.146.62] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45e6ed26fa05-5e508;
+        Mon, 16 Mar 2020 09:12:17 +0800 (CST)
+X-RM-TRANSID: 2ee45e6ed26fa05-5e508
+Content-Type: text/plain; charset=gb2312
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH 1/4] netfilter: nf_flow_table: reload ipv6h in
+ nf_flow_nat_ipv6
+From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+In-Reply-To: <20200315204435.25kji3x5me72xjgg@salvia>
+Date:   Mon, 16 Mar 2020 09:12:15 +0800
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C1CD964F-8819-4563-96DD-216EDECB36FB@cmss.chinamobile.com>
+References: <1584281705-26228-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+ <20200315204435.25kji3x5me72xjgg@salvia>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/q4Cg4nRI+Axz/UwWZOuGBnQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+> On 2020年3月16日, at 上午4:44, Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+> 
+> On Sun, Mar 15, 2020 at 10:15:02PM +0800, Haishuang Yan wrote:
+>> Since nf_flow_snat_port and nf_flow_snat_ipv6 call pskb_may_pull()
+>> which may change skb->data, so we need to reload ipv6h at the right
+>> palce.
+> 
+> Could you collapse patch 1/4 and 2/4 ?
+> 
+> Same thing with patches 3/4 and 4/4 ?
+> 
+> Thanks.
+> 
 
-After merging the devicetree tree, today's linux-next build (arm
-multi_v7_defconfig) produced these warnings:
+Okay, I will collapse the patches. Thanks.
 
-arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:435.11-439.4: Warning (=
-i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10: I2C bus unit addr=
-ess format error, expected "40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:437.3-30: Warning (i2c_=
-bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10:reg: I2C address must =
-be less than 10-bits, got "0x40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:521.11-525.4: Warning (=
-i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10: I2C bus unit addr=
-ess format error, expected "40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:523.3-30: Warning (i2c_=
-bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10:reg: I2C address must =
-be less than 10-bits, got "0x40000010"
-arch/arm/boot/dts/sun5i.dtsi:189.4-52: Warning (dma_ranges_format): /soc/dr=
-am-controller@1c01000:dma-ranges: "dma-ranges" property has invalid length =
-(12 bytes) (parent #address-cells =3D=3D 1, child #address-cells =3D=3D 2, =
-#size-cells =3D=3D 1)
-arch/arm/boot/dts/sun8i-r40.dtsi:769.4-52: Warning (dma_ranges_format): /so=
-c/dram-controller@1c62000:dma-ranges: "dma-ranges" property has invalid len=
-gth (12 bytes) (parent #address-cells =3D=3D 1, child #address-cells =3D=3D=
- 2, #size-cells =3D=3D 1)
-arch/arm/boot/dts/sunxi-h3-h5.dtsi:563.4-52: Warning (dma_ranges_format): /=
-soc/dram-controller@1c62000:dma-ranges: "dma-ranges" property has invalid l=
-ength (12 bytes) (parent #address-cells =3D=3D 1, child #address-cells =3D=
-=3D 2, #size-cells =3D=3D 1)
 
-(Originally there were 51 lines of messages, but I removed the duplicates.)
 
-I am assuming that these are due to the dtc update. :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/q4Cg4nRI+Axz/UwWZOuGBnQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5u0lQACgkQAVBC80lX
-0Gy8VAgApCpmayavhPVofQP5fn2Ii6CmQUmBSdgDyGGMf/I4kGl3eGUZXKb1E7Yd
-wqyXaRP9zbwQX3bzZCSqihxO0K4XtPXuoPW2dm2rcmBbXL919MCkP3jYkpVfe5cG
-q3UhjYs4VENDViaqita/K1ppzeHpnIQPH0ogH49cnC/3gDeDer3v8Qu6+9yHHaZj
-vyHngs9bBxU5k099JNkpetUkAJKMX/a+9wIdwoYnEiFVfO754Na0a1Jb1flAKhjM
-bXBZTfFEFb/SFU5+URmWmB1xUW8XCQcHPHpCkCSJhqUjp+e1wj5XjAKplUJKMmah
-z9QZOyHCoNVnXCKT2FSp2hXStNQuag==
-=Wmnd
------END PGP SIGNATURE-----
-
---Sig_/q4Cg4nRI+Axz/UwWZOuGBnQ--
