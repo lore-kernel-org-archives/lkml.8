@@ -2,153 +2,125 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DA5C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1EBC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4EB20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584343352;
-	bh=i90tGLn33Tv00DaJ3sLB7WbfrF23W+1D/UTdCPfargY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=oVE5olstslXUZTEqaZAzOw0bfOXWWVDEyC6xvWZSsNi4VFIDo0AtofePYx6xt0Q4A
-	 wYRGLF/zmnI30c2/sA/nBFGne9xRlvgROE0xVxAFyz7TwQDajFkmMPC5D5bBs6KKOR
-	 cTabfED195oEan2pMLxLzDhwsi94VWd/13zQkvbw=
+	by mail.kernel.org (Postfix) with ESMTP id 4747F20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbgCPHWb (ORCPT
+        id S1729926AbgCPHXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:22:31 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45194 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728120AbgCPHWa (ORCPT
+        Mon, 16 Mar 2020 03:23:49 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:63610 "HELO
+        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with SMTP id S1728120AbgCPHXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:22:30 -0400
-Received: by mail-lj1-f196.google.com with SMTP id e18so17393768ljn.12;
-        Mon, 16 Mar 2020 00:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=zM8KKIBzhx1kO+5WbVIIuZQdbPNyIKOWqBOoeUsitpE=;
-        b=bsRnJTPgAHC+3edYWQkWocNVD1PQaRvLiZVab5K+Wb42YHWaXlYOe5hZDH7ZP9gMu+
-         EfOTbqk/56yLXuX+p2vF8MZL9FufyepJTLb9s8E0RjDMQJM/lrgnX36FG7yipZg4r0Qb
-         BOiw3OOfpWGzRqkAsYP80LxsOfNHKAugUfzmHtmJkOgcHbQlT1gWz5KqzJwGCc7JdLUr
-         EIyBNekRJGiDvT10FA5a/PUkQcHcC+1H/wXWgmG3E5vl8FYvtuALyz/oYN0/1SSa6lLG
-         0ad5iyvlNZPFjxuOjPc8qh3JM5ZDEYFwd55R++r1TgKcsaiaWiuWRjb2DARTgZluDxld
-         PIhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=zM8KKIBzhx1kO+5WbVIIuZQdbPNyIKOWqBOoeUsitpE=;
-        b=Lvs27J6Oods5/O7IajUYTz2q07n2ZIwU86omlp8TQJafAZcvW7nbENp7k0MV7whUZ5
-         Htw9cKLX/V+W/6anWliFXADMT4EPTBOvwX7QeVF8V+WBKZgDtm+6AXTaBwPPt5Y2VB5f
-         OqBkdRmkKo1eQZc20oeUSnzypOcc+Rdbjmd+WY4Jud4OYIFzkduP1E/keGyrPi1iEDTz
-         khWJ9CHQYQnO7eb2sUGq0MxtjEa2ZDaq6QaDSDi6d1YS4+60652XxJGT40rnJ37MMs6a
-         ovzvexJ1KC4r9UstUx1LV+U2Gs6BQDL2GhXJpOdW1mlAluVTVi8IESi5EH7dDwaT6Maj
-         Hnqg==
-X-Gm-Message-State: ANhLgQ0UpAVUecKJ+56JKplOY5zXylUFll46vW1r3DH9cTlcvSw+Yqc9
-        z09Td/jOJSvPugrTaE6NN8/hN6emL7E=
-X-Google-Smtp-Source: ADFU+vu7oM/7DXs8El5eK1zdRL5vi2cRkxZBY+xv2ACF67YVjAnjTf8plkdDyZHGxHCKRw7S2ObxDQ==
-X-Received: by 2002:a2e:964e:: with SMTP id z14mr16124424ljh.44.1584343348106;
-        Mon, 16 Mar 2020 00:22:28 -0700 (PDT)
-Received: from saruman (88-113-215-213.elisa-laajakaista.fi. [88.113.215.213])
-        by smtp.gmail.com with ESMTPSA id 18sm15467494ljv.30.2020.03.16.00.22.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Mar 2020 00:22:27 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>,
-        gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] usb: dwc3: enable runtime PM for drd role switch / extcon
-In-Reply-To: <ab538c6e-b524-d690-984b-126651cf4d4d@puri.sm>
-References: <20200312143038.11719-1-martin.kepplinger@puri.sm> <87fteaf0b1.fsf@kernel.org> <ab538c6e-b524-d690-984b-126651cf4d4d@puri.sm>
-Date:   Mon, 16 Mar 2020 09:22:23 +0200
-Message-ID: <8736a8228g.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Mon, 16 Mar 2020 03:23:49 -0400
+Received: from 137.localdomain (unknown [218.107.205.216])
+        by app1 (Coremail) with SMTP id xjNnewDn7Q1cHm9ew20FAA--.217S5;
+        Mon, 16 Mar 2020 14:36:25 +0800 (CST)
+From:   Pengcheng Yang <yangpc@wangsu.com>
+To:     edumazet@google.com, ncardwell@google.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pengcheng Yang <yangpc@wangsu.com>
+Subject: [PATCH RESEND net-next v2 3/5] tcp: stretch ACK fixes in Veno prep
+Date:   Mon, 16 Mar 2020 14:35:09 +0800
+Message-Id: <1584340511-9870-4-git-send-email-yangpc@wangsu.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
+References: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
+X-CM-TRANSID: xjNnewDn7Q1cHm9ew20FAA--.217S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw1kAF13urWDGFyxKryrtFb_yoW8Ww47pa
+        43Wrs3KF1aqFs7KrZxAFWUJw45G3Z7KayUJ3y7CF1fXw4avr1a9FyDXr4YvrWUGrWxt3Wa
+        vr4Uur1fKFn7ArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUgI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
+        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
+        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
+        F7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F4
+        0EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Gr4lOx8S6xCaFVCjc4AY6r1j6r4U
+        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF1l42
+        xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8GwCFx2IqxVCFs4IE7xkEbVWUJVW8
+        JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+        AFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
+        A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU
+        0xZFpf9x0Jj2-eOUUUUU=
+X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+No code logic has been changed in this patch.
 
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+---
+ net/ipv4/tcp_veno.c | 44 +++++++++++++++++++++++---------------------
+ 1 file changed, 23 insertions(+), 21 deletions(-)
 
-Hi,
+diff --git a/net/ipv4/tcp_veno.c b/net/ipv4/tcp_veno.c
+index 3b36bb1..857491c 100644
+--- a/net/ipv4/tcp_veno.c
++++ b/net/ipv4/tcp_veno.c
+@@ -153,31 +153,33 @@ static void tcp_veno_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+ 		veno->diff = (tp->snd_cwnd << V_PARAM_SHIFT) - target_cwnd;
+ 
+ 		if (tcp_in_slow_start(tp)) {
+-			/* Slow start.  */
++			/* Slow start. */
+ 			tcp_slow_start(tp, acked);
++			goto done;
++		}
++
++		/* Congestion avoidance. */
++		if (veno->diff < beta) {
++			/* In the "non-congestive state", increase cwnd
++			 * every rtt.
++			 */
++			tcp_cong_avoid_ai(tp, tp->snd_cwnd, 1);
+ 		} else {
+-			/* Congestion avoidance. */
+-			if (veno->diff < beta) {
+-				/* In the "non-congestive state", increase cwnd
+-				 *  every rtt.
+-				 */
+-				tcp_cong_avoid_ai(tp, tp->snd_cwnd, 1);
+-			} else {
+-				/* In the "congestive state", increase cwnd
+-				 * every other rtt.
+-				 */
+-				if (tp->snd_cwnd_cnt >= tp->snd_cwnd) {
+-					if (veno->inc &&
+-					    tp->snd_cwnd < tp->snd_cwnd_clamp) {
+-						tp->snd_cwnd++;
+-						veno->inc = 0;
+-					} else
+-						veno->inc = 1;
+-					tp->snd_cwnd_cnt = 0;
++			/* In the "congestive state", increase cwnd
++			 * every other rtt.
++			 */
++			if (tp->snd_cwnd_cnt >= tp->snd_cwnd) {
++				if (veno->inc &&
++				    tp->snd_cwnd < tp->snd_cwnd_clamp) {
++					tp->snd_cwnd++;
++					veno->inc = 0;
+ 				} else
+-					tp->snd_cwnd_cnt++;
+-			}
++					veno->inc = 1;
++				tp->snd_cwnd_cnt = 0;
++			} else
++				tp->snd_cwnd_cnt++;
+ 		}
++done:
+ 		if (tp->snd_cwnd < 2)
+ 			tp->snd_cwnd = 2;
+ 		else if (tp->snd_cwnd > tp->snd_cwnd_clamp)
+-- 
+1.8.3.1
 
-Martin Kepplinger <martin.kepplinger@puri.sm> writes:
->> (for commit logs, please break your lines at 72 characters)
->>=20
->> Martin Kepplinger <martin.kepplinger@puri.sm> writes:
->>=20
->>> Note: runtime PM currently needs to be enabled ("auto") manually via
->>> sysfs as its power/control is set to "on" by the driver.
->>=20
->> Right, that's on purpose
->>=20
->>> When runtime PM enabled, dwc3 currently doesn't resume when a cable is
->>> connected.  It only suspends after a cable is disconnected.
->>>
->>> When using an extcon driver (for a different chip on the board), dwc3
->>> can register a hook for that. (Still undocumented -> TODO?).
->>>
->>> Make sure, dwc3 is resumed when "set_mode" is being called by drd.
->>>
->>> this is only a question about what's missing to properly keep runtime
->>> PM enabled for dwc3 and if my change makes any sense at all. It seems
->>> to work fine for me...
->>>
->>> I'm glad about any hints on how to keep runtime PM enabled (at least wh=
-en
->>> having an extcon hook set up).
->>=20
->> You need to remember that what you write here is going to be placed in
->> the commit log and will survive forever in the history of the
->> project. Can you be a little bit more technical? For example, why did
->> you change the asynchronous pm_runtime_put() to synchronous versions?
->> Why was that necessary?>
->> Also, you're missing your Signed-off-by line. Please, read the
->> documentation about how to write patches.
->
-> I don't sign off on this change. It merely servers as a basis for the
-> question I have: How to properly have continuous runtime PM in dwc3 (at
-> least when having an extcon device connected) and is there any specific
-> reason why this isn't yet implemented?
-
-Probably because nobody has spent the time to do it. If you have HW and
-time to implement this, by all means, go ahead.
-
-Just make sure to keep the current functionality: pm runtime should only
-be enabled by userspace.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl5vKS8ACgkQzL64meEa
-mQYeGA/+OgHY0ROt+AIADj8SxrXz4bPiq9uAEgd/J7CBDwkFVXNqodsXENY7+1uI
-ji3yVk1PDYZYYXU3C+wpJJLGYun9pt6extOZ6kdiZub/08gpVl8QsJ40N/5/32gp
-TI/qrRQphkC/UQmzzE97j7LgIburGVBjp31l08TifualMtEhAoJ5fcA91y9ynF6p
-ZG0h0cwDCtisgXytMckyKOPIwSN9EdLr4PFlDr4gj23mLyJxH2cB8UlacBp83p6D
-gBknR6vKnCWz+vhUXFUGHcKxWjjVTe9RgA7m+Iur9Eu/y60QkAs1P8IzsVLQgsUn
-+22zh82AcrOIzjwSXJppCfIVx54nKrOrkEfwrWJnUoGawrtCC7mVMPP0Lz8PfmCq
-k1UpByh5syaIm7NU9Rf+xYjsnxZEY9zevxPGUxrIvOMVhSxMHWuGd2gBSQTrhHDn
-n0t7iBI5wLgHLsL4y07OVvP7tp3ICZPtTXNM91bt7THTOO959A58silEaDVcu5iO
-t+2pbiL0BrBBQjX4136tIVGT403oPFqHa678mL7ykkeiUAx3WFBkEQHu3sFPdtBy
-zU1gxzS6BY0tnzBIOT00oMdcUF0lGljuB+67N1DB87AWZq7yhY8kvM92KwuG5SG2
-R+Fg3/Rq88aXrep4ADZgQwTmlO7OA3HVWs+d9bdR2P3XL6oKGC4=
-=UNxB
------END PGP SIGNATURE-----
---=-=-=--
