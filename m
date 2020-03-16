@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB30C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65753C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C0620658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9AC20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326323;
-	bh=9dMFvrNqxpUvePmXG+6FIyrL9b0WiSp7fU/JGA6+lSs=;
+	s=default; t=1584326328;
+	bh=88/XO/N93K3OgCv2drcOHgS1Mvwynwf+rNzOUc7lL+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oqcxD9TjCw6wsYvq0lwc3/5npa06uzm5022pj6WVhV3JS7gW6HnSatsacsJaKdo20
-	 qrAY/h1DuKKqPDlRtPDUgR4fWBu+jHfGU7SDUiRf1XavYw5KIDpJusub6KR5M0lYqS
-	 tzAdJpVgphCkl3+oUGNLQ9UE/260JUcOBFxHxrew=
+	b=2I+BfrVfWodGRl9FT0FT5vlU83tmZqZz2xp31byP2jGUgDC4OJ83y6g/NRMuI7D2V
+	 Pa+96Bipd0LlGkGn/2lJcvPwCKANXE1qsjlHMq4MQhjg/zVKOd1lCBtJ0i7tVRs37Z
+	 TgNV1ZyIhCxKBb3VwA7COXOhyxn/xdfRxLi+DtdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbgCPCil (ORCPT
+        id S1730420AbgCPCir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38620 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729955AbgCPCes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:48 -0400
+        id S1729500AbgCPCep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08AFC206EB;
-        Mon, 16 Mar 2020 02:34:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71622206EB;
+        Mon, 16 Mar 2020 02:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326087;
-        bh=9dMFvrNqxpUvePmXG+6FIyrL9b0WiSp7fU/JGA6+lSs=;
+        s=default; t=1584326085;
+        bh=88/XO/N93K3OgCv2drcOHgS1Mvwynwf+rNzOUc7lL+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WnEFh2QU3fOxOXPu11g86q6G4GA0iZY+OF5bmrfZx3QWQL410B13q1uHE31nhwmEF
-         bcc23ACwkom0PiNfRA11emRzQP4/BGXBNOTV8UnMjYW9wqMNMmTAoc6fX3XlIYeM5i
-         NB+bv4j5WB4Ly4wQ3GIT36rhM8uh24ZHwUoqscF8=
+        b=GwVl3AC0FJPVJqCc5oMyLDc+qGlOcZRu7Ae2PE1A2Ho78Fgan4CSAP3MzSAB5vc1P
+         ol88vOiGAzEQQ3ei7jY2z1MlTxqPLX2CbxdjEe+7NnD2hEbN90v7deEz292Vdim+dE
+         LI2dOMPPwmt9TTbYMds90eZhNK8fc6NM/8QDWsQU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josip Pavic <Josip.Pavic@amd.com>, Aric Cyr <Aric.Cyr@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+Cc:     Yintian Tao <yttao@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Monk Liu <Monk.Liu@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 31/35] drm/amd/display: fix dcc swath size calculations on dcn1
-Date:   Sun, 15 Mar 2020 22:34:07 -0400
-Message-Id: <20200316023411.1263-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 29/35] drm/amdgpu: clean wptr on wb when gpu recovery
+Date:   Sun, 15 Mar 2020 22:34:05 -0400
+Message-Id: <20200316023411.1263-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
 References: <20200316023411.1263-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,45 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josip Pavic <Josip.Pavic@amd.com>
+From: Yintian Tao <yttao@amd.com>
 
-[ Upstream commit a0275dfc82c9034eefbeffd556cca6dd239d7925 ]
+[ Upstream commit 2ab7e274b86739f4ceed5d94b6879f2d07b2802f ]
 
-[Why]
-Swath sizes are being calculated incorrectly. The horizontal swath size
-should be the product of block height, viewport width, and bytes per
-element, but the calculation uses viewport height instead of width. The
-vertical swath size is similarly incorrectly calculated. The effect of
-this is that we report the wrong DCC caps.
+The TDR will be randomly failed due to compute ring
+test failure. If the compute ring wptr & 0x7ff(ring_buf_mask)
+is 0x100 then after map mqd the compute ring rptr will be
+synced with 0x100. And the ring test packet size is also 0x100.
+Then after invocation of amdgpu_ring_commit, the cp will not
+really handle the packet on the ring buffer because rptr is equal to wptr.
 
-[How]
-Use viewport width in the horizontal swath size calculation and viewport
-height in the vertical swath size calculation.
-
-Signed-off-by: Josip Pavic <Josip.Pavic@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Yintian Tao <yttao@amd.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Monk Liu <Monk.Liu@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 1 +
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c  | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c
-index a02c10e23e0d6..d163388c99a06 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c
-@@ -840,8 +840,8 @@ static void hubbub1_det_request_size(
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+index 2816d03297385..14417cebe38ba 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+@@ -3555,6 +3555,7 @@ static int gfx_v10_0_kcq_init_queue(struct amdgpu_ring *ring)
  
- 	hubbub1_get_blk256_size(&blk256_width, &blk256_height, bpe);
+ 		/* reset ring buffer */
+ 		ring->wptr = 0;
++		atomic64_set((atomic64_t *)&adev->wb.wb[ring->wptr_offs], 0);
+ 		amdgpu_ring_clear_ring(ring);
+ 	} else {
+ 		amdgpu_ring_clear_ring(ring);
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index d85e1e559c826..40034efa64bbc 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -3756,6 +3756,7 @@ static int gfx_v9_0_kcq_init_queue(struct amdgpu_ring *ring)
  
--	swath_bytes_horz_wc = height * blk256_height * bpe;
--	swath_bytes_vert_wc = width * blk256_width * bpe;
-+	swath_bytes_horz_wc = width * blk256_height * bpe;
-+	swath_bytes_vert_wc = height * blk256_width * bpe;
- 
- 	*req128_horz_wc = (2 * swath_bytes_horz_wc <= detile_buf_size) ?
- 			false : /* full 256B request */
+ 		/* reset ring buffer */
+ 		ring->wptr = 0;
++		atomic64_set((atomic64_t *)&adev->wb.wb[ring->wptr_offs], 0);
+ 		amdgpu_ring_clear_ring(ring);
+ 	} else {
+ 		amdgpu_ring_clear_ring(ring);
 -- 
 2.20.1
 
