@@ -2,165 +2,124 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7E8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211F4C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27BE020679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584347521;
-	bh=G/JbKz/TJsKUzqrpwMaev68yogcQGTS/UnZoH2XPFgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ADzMia72381oU/f3kCsqX+tUlLQEkNnfR2oHTol6fxbgVPJBwlOldL2mMBlJqqLi6
-	 AaaI/DH9kluthohEIh4CobA2Isnzled6F3sD9R9VpogLvw2lZpJpk3oheILWgz3kSX
-	 FN/spC8yaVJ/9eKrw244Ub5jlY6SKIDqOp8IxG70=
+	by mail.kernel.org (Postfix) with ESMTP id 0353E20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgCPIcA (ORCPT
+        id S1730145AbgCPIcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:32:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729994AbgCPIb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:31:59 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8DDC20658;
-        Mon, 16 Mar 2020 08:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584347518;
-        bh=G/JbKz/TJsKUzqrpwMaev68yogcQGTS/UnZoH2XPFgg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IfbKFO8Olx7qaBdiqWuMLp8xz8Zy2G0XfEcnRj/20uRxt6mP1nmMvB3VMrQ/6a9JK
-         QKl2lckiUNdzmL+oSMPBXcOpsQe5G+Ap88ZZHxugi3IZTn6ZYNx0FsC+y9CGEuaBs3
-         qJ4ckJIbWPYCIkYNW0ayNVOEoPQCBlr1kuPEIizc=
-Date:   Mon, 16 Mar 2020 10:31:54 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jaewon Kim <jaewon31.kim@samsung.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, adobriyan@gmail.com,
-        akpm@linux-foundation.org, labbott@redhat.com,
-        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/3] meminfo: introduce extra meminfo
-Message-ID: <20200316083154.GF8510@unreal>
-References: <CGME20200311034454epcas1p2ef0c0081971dd82282583559398e58b2@epcas1p2.samsung.com>
- <20200311034441.23243-1-jaewon31.kim@samsung.com>
- <af4ace34-0db2-dd17-351f-eaa806f0a6ac@suse.cz>
- <20200313174827.GA67638@unreal>
- <5E6EFB6C.7050105@samsung.com>
+        Mon, 16 Mar 2020 04:32:55 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:45621 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729978AbgCPIcy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:32:54 -0400
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MCsHm-1j4vTQ08rg-008ptg; Mon, 16 Mar 2020 09:32:52 +0100
+Received: by mail-qk1-f178.google.com with SMTP id f3so24675110qkh.1;
+        Mon, 16 Mar 2020 01:32:51 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1D9RFKOM+mmr0RAgeQ9b61ZPcAE4LE7PPMf2paFHJBMyk9Zv1+
+        EeTnh+EWe4suAD+17SdByKLCNWbGC0VpITIvmeA=
+X-Google-Smtp-Source: ADFU+vt5kUDFBAPxQ/eoOtbyfq5T4WxUU4coVWhvqGjxWRRI+qcvmiTDhvmnRyeGJebLCVabbOJ5WyjHLakbilschCU=
+X-Received: by 2002:a37:6285:: with SMTP id w127mr24726126qkb.138.1584347570587;
+ Mon, 16 Mar 2020 01:32:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5E6EFB6C.7050105@samsung.com>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-5-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a2Hnm74aUMNFHbjMr4HwHGZn1+xa4ERsxAJY6hMzhEOhQ@mail.gmail.com> <632eb459dbe53a9b69df2a4f030a755b@kernel.org>
+In-Reply-To: <632eb459dbe53a9b69df2a4f030a755b@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 16 Mar 2020 09:32:34 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3aihZeriUWAhWJMsOtdiY4Lo29syrRbB4Po3v4dsLhvA@mail.gmail.com>
+Message-ID: <CAK8P3a3aihZeriUWAhWJMsOtdiY4Lo29syrRbB4Po3v4dsLhvA@mail.gmail.com>
+Subject: Re: [PATCH v6 04/10] arm64: hyperv: Add memory alloc/free functions
+ for Hyper-V size pages
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>, olaf@aepfle.de,
+        Andy Whitcroft <apw@canonical.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, marcelo.cerri@canonical.com,
+        "K. Y. Srinivasan" <kys@microsoft.com>, sunilmut@microsoft.com,
+        Boqun Feng <boqun.feng@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:BHpMUhD9WE5ysXlz1KEecLs2Dmfm78AEFkWWqQALB6q+NCVLgJU
+ Rb6XRpgprTcor3ig9lc6DhcnvB2Mou+IVdbMu19yOv9agNQIXZRRRIi/HCqU99dpfzQP9QH
+ QGFtiPTeguz3S9qHHlWkMqGMCFN+9yVAfsv4J6kTBvHOvbRg5T/nWKok92bMRIpRRYedHhR
+ rJyu1C8E8y4KX2mbU2+HA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SsmI/FqHK3w=:6LMYrKew+LxMQI7jNeFoqM
+ O9624qbU4K7jnAyUCH7vF5/i92CRlV/yLACBOot8iqHyT3jIlS1vFcACCIC8Ft3rKjsHJSTVd
+ 2mxy9j8/Vz45B3vp0QQRhPq828WKioQxR+2QeR7t5OG4FPTXORqH6HFxZF0t+ZhF8ldGvDIKI
+ dJw6us89CCJe6TIsbpSpTNOmbaQtOvE/iwEmIMOkrfJDPlAafEtfO47L44bFEHKzZmcOTFGEW
+ 3tpoCbRQj+1Bij61MvITjzA6snQIThaU4kRc1DxU+6h9hF+ZVH7m4c1OzOtBCcpgHFYR818Cz
+ 0iTYWUJJIjMAFIExv9rdZslCNJNo3DJpcbe+PrUHzHAkIqoo9LL2TZ+l1rqnog+CJ+MkbjSAK
+ Fmb8hWd7tGU0SbTyqsQHPXZpDUnp4jzkeb5mEla+VLXRfyhzf1Qiav8VLp3f/Ymyo1gm0JdKz
+ h2U99LnWH5eOP8mx4D9QVYJ0pXLdUzJUgN3Tudx7HKdnfRGpyV6NwUk53dlBLHZITqg9ohSAG
+ btnwKIE+l9SS7S4rK3VFBRIz0cUbaes8gEWN07AyzzwCXkpbxy9ZrpJAURMPqsWQdG02aUPRI
+ GLjMy3CF8NK0weJG71N4bK5aZoIbkN9YxEu5YqptzEzAmsPK8CAVuyvvzFmnU4WE4pAbQBbez
+ TfN08eNKXzweWMkKUVffIORAa8asjt8tz3p8nvFtxmrD8sOxSiDoTMkymT+z4Eb+f4DX4ytgU
+ N8WLepGoRCYjJ45L65WesCE4+4EJoxP6Xfmq+0CxVh0FeXYsF8Tjrn64J6FxJDQqSAk6maX9g
+ VRpxewEvjOqgsd4fsBL0LfGATd26yYR9FODt0EiY0E2IgL0w10=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 01:07:08PM +0900, Jaewon Kim wrote:
+On Mon, Mar 16, 2020 at 9:30 AM Marc Zyngier <maz@kernel.org> wrote:
+> On 2020-03-16 08:22, Arnd Bergmann wrote:
+> > On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com>
+> > wrote:
+> >>  /*
+> >> + * Functions for allocating and freeing memory with size and
+> >> + * alignment HV_HYP_PAGE_SIZE. These functions are needed because
+> >> + * the guest page size may not be the same as the Hyper-V page
+> >> + * size. We depend upon kmalloc() aligning power-of-two size
+> >> + * allocations to the allocation size boundary, so that the
+> >> + * allocated memory appears to Hyper-V as a page of the size
+> >> + * it expects.
+> >> + *
+> >> + * These functions are used by arm64 specific code as well as
+> >> + * arch independent Hyper-V drivers.
+> >> + */
+> >> +
+> >> +void *hv_alloc_hyperv_page(void)
+> >> +{
+> >> +       BUILD_BUG_ON(PAGE_SIZE <  HV_HYP_PAGE_SIZE);
+> >> +       return kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
+> >
+> > I don't think there is any guarantee that kmalloc() returns
+> > page-aligned
+> > allocations in general.
 >
+> I believe that guarantee came with 59bb47985c1db ("mm, sl[aou]b:
+> guarantee
+> natural alignment for kmalloc(power-of-two)").
 >
-> On 2020년 03월 14일 02:48, Leon Romanovsky wrote:
-> > On Fri, Mar 13, 2020 at 04:19:36PM +0100, Vlastimil Babka wrote:
-> >> +CC linux-api, please include in future versions as well
-> >>
-> >> On 3/11/20 4:44 AM, Jaewon Kim wrote:
-> >>> /proc/meminfo or show_free_areas does not show full system wide memory
-> >>> usage status. There seems to be huge hidden memory especially on
-> >>> embedded Android system. Because it usually have some HW IP which do not
-> >>> have internal memory and use common DRAM memory.
-> >>>
-> >>> In Android system, most of those hidden memory seems to be vmalloc pages
-> >>> , ion system heap memory, graphics memory, and memory for DRAM based
-> >>> compressed swap storage. They may be shown in other node but it seems to
-> >>> useful if /proc/meminfo shows all those extra memory information. And
-> >>> show_mem also need to print the info in oom situation.
-> >>>
-> >>> Fortunately vmalloc pages is alread shown by commit 97105f0ab7b8
-> >>> ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
-> >>> memory using zsmalloc can be seen through vmstat by commit 91537fee0013
-> >>> ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
-> >>>
-> >>> Memory usage of specific driver can be various so that showing the usage
-> >>> through upstream meminfo.c is not easy. To print the extra memory usage
-> >>> of a driver, introduce following APIs. Each driver needs to count as
-> >>> atomic_long_t.
-> >>>
-> >>> int register_extra_meminfo(atomic_long_t *val, int shift,
-> >>> 			   const char *name);
-> >>> int unregister_extra_meminfo(atomic_long_t *val);
-> >>>
-> >>> Currently register ION system heap allocator and zsmalloc pages.
-> >>> Additionally tested on local graphics driver.
-> >>>
-> >>> i.e) cat /proc/meminfo | tail -3
-> >>> IonSystemHeap:    242620 kB
-> >>> ZsPages:          203860 kB
-> >>> GraphicDriver:    196576 kB
-> >>>
-> >>> i.e.) show_mem on oom
-> >>> <6>[  420.856428]  Mem-Info:
-> >>> <6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
-> >>> <6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
-> >> I like the idea and the dynamic nature of this, so that drivers not present
-> >> wouldn't add lots of useless zeroes to the output.
-> >> It also makes simpler the decisions of "what is important enough to need its own
-> >> meminfo entry".
-> >>
-> >> The suggestion for hunting per-driver /sys files would only work if there was a
-> >> common name to such files so once can find(1) them easily.
-> >> It also doesn't work for the oom/failed alloc warning output.
-> > Of course there is a need to have a stable name for such an output, this
-> > is why driver/core should be responsible for that and not drivers authors.
-> >
-> > The use case which I had in mind slightly different than to look after OOM.
-> >
-> > I'm interested to optimize our drivers in their memory footprint to
-> > allow better scale in SR-IOV mode where one device creates many separate
-> > copies of itself. Those copies easily can take gigabytes of RAM due to
-> > the need to optimize for high-performance networking. Sometimes the
-> > amount of memory and not HW is actually limits the scale factor.
-> >
-> > So I would imagine this feature being used as an aid for the driver
-> > developers and not for the runtime decisions.
-> >
-> > My 2-cents.
-> >
-> > Thanks
-> >
-> >
-> Thank you for your comment.
-> My idea, I think, may be able to help each driver developer to see their memory usage.
-> But I'd like to see overall memory usage through the one node.
-
-It is more than enough :).
-
+> > How about using get_free_pages() to implement this?
 >
-> Let me know if you have more comment.
-> I am planning to move my logic to be shown on a new node, /proc/meminfo_extra at v2.
+> This would certainly work, at the expense of a lot of wasted memory when
+> PAGE_SIZE isn't 4k.
 
-Can you please help me to understand how that file will look like once
-many drivers will start to use this interface? Will I see multiple
-lines?
+I'm sure this is the least of your problems when the guest runs with
+a large base page size, you've already wasted most of your memory
+otherwise then.
 
-Something like:
-driver1 ....
-driver2 ....
-driver3 ....
-...
-driver1000 ....
-
-How can we extend it to support subsystems core code?
-
-Thanks
-
->
-> Thank you
-> Jaewon Kim
+    Arnd
