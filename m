@@ -2,100 +2,99 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13630C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C486C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD9F2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:15:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qm57GoxA"
+	by mail.kernel.org (Postfix) with ESMTP id 5EF3C20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgCPEPD (ORCPT
+        id S1729535AbgCPETO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 00:15:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35209 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgCPEPD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 00:15:03 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m3so16443269wmi.0;
-        Sun, 15 Mar 2020 21:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3iz7M4n4vFnZlY3xJtiBBVd2QMi0cxZMNzGQK0mvGgU=;
-        b=Qm57GoxAvObsxjUCwFXGwb6fTVZevkffefjkygHM2wKdzEH5TdTIZ8CQPsfvDrOquL
-         iTKdu5SRtb2qvQA0lSlBxOYWaWUFraJgn9mFTtU8xD9g8xoRuwy4N1LTrZIq7jXtKlht
-         ThvpvhmabSheJK+5t9TzVfncKDUVMRwzoVPfrbnkJ6XqcOgxGO6sVuqET3SiZoIAp1vr
-         6Zpjb/wuigPojbksg3WJ9/WlfYS9UJvelcwNZwAmEJwwFqQv1HWxgvGtXKP2z4uUOCXM
-         qRiATOTGjwUqv9ieffMy0CKjISNE5zpxMhMIyJF6+BJWNFW4WAVA/XOniBqKYCxOXmiX
-         gTxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3iz7M4n4vFnZlY3xJtiBBVd2QMi0cxZMNzGQK0mvGgU=;
-        b=ETJLrtn8R1eKIar5Dva4RIuXFXdVQkL9AfGfVE4/rnoNH518dCaCv7pjwmAdo83a7J
-         swSwpROZ0ZjC6KHZlq3FuGDp514vfsspettxwYW8nNdF68zy5Z4gxqL7FjOeTiZ9AANU
-         BnUIz6f7lqgScrHyFpHleN1X6eaOBWSZ6kjO1ua7Dno1mcl1p2p8m6Ak69j9ifkgL730
-         jIDhfYka5MjmjFR1VHaRwY0yPbwKcwAzE7aAI8k4R0WaqmCxuiYBBCtDVwA9m9O1sIdI
-         7K1wgj7UwBAyI0FvMdaLoesPAZ+NNXXi5UK50NSnFkDBlh5jfXDI4GFhOLhHzDj6BYzg
-         7jKw==
-X-Gm-Message-State: ANhLgQ2mGJSe7gOf8Weou24TkE/DvoPaiivRhHzzHRFJLG4sI2RC/rvn
-        RGVHEJkJt5Qg6V/q0C6xgGhUQ/chxc9auaaJrfE=
-X-Google-Smtp-Source: ADFU+vsb6tTIy7aNbe5hox5lzXtNlAswN/TLEr3PvFO5UJXfiLG/mBbEiYczD4nl8OHxwPiIZadH1b768KaOJjOYKKo=
-X-Received: by 2002:a1c:3585:: with SMTP id c127mr25298561wma.124.1584332101597;
- Sun, 15 Mar 2020 21:15:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200127165646.19806-1-andrew.smirnov@gmail.com>
- <20200127165646.19806-2-andrew.smirnov@gmail.com> <VI1PR0402MB3485FF5402B8C0FFF48FBF2298030@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB3485FF5402B8C0FFF48FBF2298030@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Sun, 15 Mar 2020 21:14:49 -0700
-Message-ID: <CAHQ1cqGZP5RKTsc4+jikyPVggt-mGViRtKNvyOx9FGkYW9pgmg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/9] crypto: caam - allocate RNG instantiation
- descriptor with GFP_DMA
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 16 Mar 2020 00:19:14 -0400
+Received: from mga12.intel.com ([192.55.52.136]:63079 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728940AbgCPETN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 00:19:13 -0400
+IronPort-SDR: 0egLvg9iIzScUnDfidJ1uN41kFbuh38rmy65l/wmM/BGmjl4ekJFTO4GcSnjjvYVKsANWApK7w
+ IPxnv8bBSwhg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2020 21:19:13 -0700
+IronPort-SDR: qqKhMkZR/dihWiThgsnpGuua4A2LYMZ14+qcgczyL/vFFtb+8B8fnQQxSXntmbb2vCUuqjtbas
+ S3mSyA+2ssQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,559,1574150400"; 
+   d="scan'208";a="417007218"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by orsmga005.jf.intel.com with ESMTP; 15 Mar 2020 21:19:12 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Xu Yilun <yilun.xu@intel.com>
+Subject: [PATCH v2 0/7] Add interrupt support to FPGA DFL drivers
+Date:   Mon, 16 Mar 2020 12:16:55 +0800
+Message-Id: <1584332222-26652-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 6:08 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->
-> On 1/27/2020 6:57 PM, Andrey Smirnov wrote:
-> > Be consistent with the rest of the codebase and use GFP_DMA when
-> > allocating memory for a CAAM JR descriptor.
-> >
-> Please use GFP_DMA32 instead.
-> Device is not limited to less than 32 bits of addressing
-> in any of its incarnations.
->
-> s/GFP_DMA/GFP_DMA32 should be performed throughout caam driver.
-> (But of course, I wouldn't include this change in current patch series).
->
+This patchset add interrupt support to FPGA DFL drivers.
 
-Hmm, I am triggering
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/slub.c?h=v5.6-rc6#n1721
-by using GFP_DMA32. AFAICT, GFP_DMA32 can't be used in SLUB/SLAB
-allocated memory:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/internal.h?h=v5.6-rc6#n32
+With these patches, DFL driver will parse and assign interrupt resources
+for enumerated feature devices and their sub features.
 
-I'll stick with GFP_DMA for now, unless you have a different preference.
+This patchset also introduces a set of APIs for user to monitor DFL
+interrupts. Three sub features (DFL FME error, DFL AFU error and user
+interrupt) drivers now support these APIs.
 
-Thanks,
-Andrey Smirnov
+Patch #1: DFL framework change. Accept interrupt info input from DFL bus
+          driver, and add interrupt parsing and assignment for feature
+          sub devices.
+Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
+Patch #3: DFL framework change. Add helper functions for feature sub
+          device drivers to handle interrupt and notify users.
+Patch #4: Add interrupt support for AFU error reporting sub feature.
+Patch #5: Add interrupt support for FME global error reporting sub
+          feature.
+Patch #6: Add interrupt support for a new sub feature, to handle user
+          interrupts implemented in AFU.
+Patch #7: Documentation for DFL interrupt handling.
+
+Main changes from v1:
+ - Early validating irq table for each feature in parse_feature_irq()
+   in Patch #1.
+ - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
+   instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
+   DFL_FPGA_FME/PORT_XXX_SET_IRQ param
+
+Xu Yilun (7):
+  fpga: dfl: parse interrupt info for feature devices on enumeration
+  fpga: dfl: pci: add irq info for feature devices enumeration
+  fpga: dfl: introduce interrupt trigger setting API
+  fpga: dfl: afu: add interrupt support for error reporting
+  fpga: dfl: fme: add interrupt support for global error reporting
+  fpga: dfl: afu: add user interrupt support
+  Documentation: fpga: dfl: add descriptions for interrupt related
+    interfaces.
+
+ Documentation/fpga/dfl.rst    |  17 +++
+ drivers/fpga/dfl-afu-error.c  |  64 +++++++++++
+ drivers/fpga/dfl-afu-main.c   |  78 +++++++++++++
+ drivers/fpga/dfl-fme-error.c  |  66 +++++++++++
+ drivers/fpga/dfl-fme-main.c   |   6 +
+ drivers/fpga/dfl-pci.c        |  78 +++++++++++--
+ drivers/fpga/dfl.c            | 247 +++++++++++++++++++++++++++++++++++++++++-
+ drivers/fpga/dfl.h            |  51 +++++++++
+ include/uapi/linux/fpga-dfl.h |  75 +++++++++++++
+ 9 files changed, 669 insertions(+), 13 deletions(-)
+
+-- 
+2.7.4
+
