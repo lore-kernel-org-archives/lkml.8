@@ -2,469 +2,162 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20917C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36AAC1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE12F2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FF520722
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgCPGiK (ORCPT
+        id S1729700AbgCPGih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:38:10 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30893 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbgCPGiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:38:10 -0400
-IronPort-SDR: pFyi5GDhEk94QHht0+J4Ki48XRcSF+00tHlk8CY4NVBJzG3KyUuW5idSI4tCIaqSAF0Rv3rovg
- Jyx+aVjf40ww==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2020 23:38:09 -0700
-IronPort-SDR: HrZd8evHh1tNacqFCEflT2w/cQOB4Uz9WqlBiHj96GlKq+zpTqGoRaJH/iDAyAKUhjTzEKynFJ
- /4AO4IXlexUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,559,1574150400"; 
-   d="scan'208";a="354929391"
-Received: from yhuang-dev.sh.intel.com ([10.239.159.23])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2020 23:38:05 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: [PATCH -V2] mm: Code cleanup for MADV_FREE
-Date:   Mon, 16 Mar 2020 14:37:40 +0800
-Message-Id: <20200316063740.2542014-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 16 Mar 2020 02:38:37 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51369 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729435AbgCPGih (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 02:38:37 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a132so16297756wme.1;
+        Sun, 15 Mar 2020 23:38:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=L/hVm9PFFup3qS7IkAWx1YNVvGEF1kg6IBxXb7BSSz4=;
+        b=oV5obvJhF2zMHd+Irf8W7beSFHNQS3maE+DsmjzgTJs2mHRFBFyHd1yk+Sxy7D1Q+6
+         Myt3Yjx8/H6vKJoIn/KFmSTQpy61x7eiYN/fTf4q6ra4y32X473TTno8q2s5jCwqKioz
+         URWwp//aiBG2LLITeZK8kjFTrgEWk/i/mjYqo5PYQQZ+Ks/wGb+jLatkSAUgiCD9Z+Fa
+         HTx6Jt0mXa4MKA7VkRxyPR4nRV/AHg4euVGTcW5Hy36B+q/p+Bw0PI7y0Cxby2HKPPy5
+         Tv/UakuW9NxYu/qPMXO7M+K6QAt4w3R3Uijv1eJ9orcMHysmSf1a+50co0tzB+sO1hx5
+         kZ5Q==
+X-Gm-Message-State: ANhLgQ1t00nuoyP1qqCCJERxUiwDuk82p8WduEe+SUX95Kq8fsGm3O7S
+        g9ZV4D+HYIwooN9925c9rcdhFBB9
+X-Google-Smtp-Source: ADFU+vslDcUQeSCwZ7u/5/zXeSvaSUK8YUvibE0DUSA2CdPPk5TwiMHhfiR9C8IryrwYPhZLRD+XRw==
+X-Received: by 2002:a1c:9658:: with SMTP id y85mr16958701wmd.63.1584340714724;
+        Sun, 15 Mar 2020 23:38:34 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id i12sm330803wro.46.2020.03.15.23.38.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Mar 2020 23:38:34 -0700 (PDT)
+Subject: Re: linux-next: manual merge of the tty tree with Linus' tree
+To:     Greg KH <greg@kroah.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200310144013.6df85b46@canb.auug.org.au>
+ <20200310090422.GB2445065@kroah.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
+ rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
+ rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
+ i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
+ wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
+ ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
+ cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
+ 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
+ w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
+ YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABtBtKaXJpIFNsYWJ5
+ IDxqc2xhYnlAc3VzZS5jej6JAjgEEwECACIFAk6S6NgCGwMGCwkIBwMCBhUIAgkKCwQWAgMB
+ Ah4BAheAAAoJEL0lsQQGtHBJgDsP/j9wh0vzWXsOPO3rDpHjeC3BT5DKwjVN/KtP7uZttlkB
+ duReCYMTZGzSrmK27QhCflZ7Tw0Naq4FtmQSH8dkqVFugirhlCOGSnDYiZAAubjTrNLTqf7e
+ 5poQxE8mmniH/Asg4KufD9bpxSIi7gYIzaY3hqvYbVF1vYwaMTujojlixvesf0AFlE4x8WKs
+ wpk43fmo0ZLcwObTnC3Hl1JBsPujCVY8t4E7zmLm7kOB+8EHaHiRZ4fFDWweuTzRDIJtVmrH
+ LWvRDAYg+IH3SoxtdJe28xD9KoJw4jOX1URuzIU6dklQAnsKVqxz/rpp1+UVV6Ky6OBEFuoR
+ 613qxHCFuPbkRdpKmHyE0UzmniJgMif3v0zm/+1A/VIxpyN74cgwxjhxhj/XZWN/LnFuER1W
+ zTHcwaQNjq/I62AiPec5KgxtDeV+VllpKmFOtJ194nm9QM9oDSRBMzrG/2AY/6GgOdZ0+qe+
+ 4BpXyt8TmqkWHIsVpE7I5zVDgKE/YTyhDuqYUaWMoI19bUlBBUQfdgdgSKRMJX4vE72dl8BZ
+ +/ONKWECTQ0hYntShkmdczcUEsWjtIwZvFOqgGDbev46skyakWyod6vSbOJtEHmEq04NegUD
+ al3W7Y/FKSO8NqcfrsRNFWHZ3bZ2Q5X0tR6fc6gnZkNEtOm5fcWLY+NVz4HLaKrJuQINBE6S
+ 54YBEADPnA1iy/lr3PXC4QNjl2f4DJruzW2Co37YdVMjrgXeXpiDvneEXxTNNlxUyLeDMcIQ
+ K8obCkEHAOIkDZXZG8nr4mKzyloy040V0+XA9paVs6/ice5l+yJ1eSTs9UKvj/pyVmCAY1Co
+ SNN7sfPaefAmIpduGacp9heXF+1Pop2PJSSAcCzwZ3PWdAJ/w1Z1Dg/tMCHGFZ2QCg4iFzg5
+ Bqk4N34WcG24vigIbRzxTNnxsNlU1H+tiB81fngUp2pszzgXNV7CWCkaNxRzXi7kvH+MFHu2
+ 1m/TuujzxSv0ZHqjV+mpJBQX/VX62da0xCgMidrqn9RCNaJWJxDZOPtNCAWvgWrxkPFFvXRl
+ t52z637jleVFL257EkMI+u6UnawUKopa+Tf+R/c+1Qg0NHYbiTbbw0pU39olBQaoJN7JpZ99
+ T1GIlT6zD9FeI2tIvarTv0wdNa0308l00bas+d6juXRrGIpYiTuWlJofLMFaaLYCuP+e4d8x
+ rGlzvTxoJ5wHanilSE2hUy2NSEoPj7W+CqJYojo6wTJkFEiVbZFFzKwjAnrjwxh6O9/V3O+Z
+ XB5RrjN8hAf/4bSo8qa2y3i39cuMT8k3nhec4P9M7UWTSmYnIBJsclDQRx5wSh0Mc9Y/psx9
+ B42WbV4xrtiiydfBtO6tH6c9mT5Ng+d1sN/VTSPyfQARAQABiQIfBBgBAgAJBQJOkueGAhsM
+ AAoJEL0lsQQGtHBJN7UQAIDvgxaW8iGuEZZ36XFtewH56WYvVUefs6+Pep9ox/9ZXcETv0vk
+ DUgPKnQAajG/ViOATWqADYHINAEuNvTKtLWmlipAI5JBgE+5g9UOT4i69OmP/is3a/dHlFZ3
+ qjNk1EEGyvioeycJhla0RjakKw5PoETbypxsBTXk5EyrSdD/I2Hez9YGW/RcI/WC8Y4Z/7FS
+ ITZhASwaCOzy/vX2yC6iTx4AMFt+a6Z6uH/xGE8pG5NbGtd02r+m7SfuEDoG3Hs1iMGecPyV
+ XxCVvSV6dwRQFc0UOZ1a6ywwCWfGOYqFnJvfSbUiCMV8bfRSWhnNQYLIuSv/nckyi8CzCYIg
+ c21cfBvnwiSfWLZTTj1oWyj5a0PPgGOdgGoIvVjYXul3yXYeYOqbYjiC5t99JpEeIFupxIGV
+ ciMk6t3pDrq7n7Vi/faqT+c4vnjazJi0UMfYnnAzYBa9+NkfW0w5W9Uy7kW/v7SffH/2yFiK
+ 9HKkJqkN9xYEYaxtfl5pelF8idoxMZpTvCZY7jhnl2IemZCBMs6s338wS12Qro5WEAxV6cjD
+ VSdmcD5l9plhKGLmgVNCTe8DPv81oDn9s0cIRLg9wNnDtj8aIiH8lBHwfUkpn32iv0uMV6Ae
+ sLxhDWfOR4N+wu1gzXWgLel4drkCJcuYK5IL1qaZDcuGR8RPo3jbFO7Y
+Message-ID: <b518b4d6-b959-525f-1425-cdcb1277958f@suse.cz>
+Date:   Mon, 16 Mar 2020 07:38:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200310090422.GB2445065@kroah.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+On 10. 03. 20, 10:04, Greg KH wrote:
+> On Tue, Mar 10, 2020 at 02:40:13PM +1100, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Today's linux-next merge of the tty tree got a conflict in:
+>>
+>>   drivers/tty/vt/selection.c
+>>
+>> between commits:
+>>
+>>   4b70dd57a15d ("vt: selection, push console lock down")
+>>   e8c75a30a23c ("vt: selection, push sel_lock up")
+>>
+>> from Linus' tree and commits:
+>>
+>>   9256d09f1da1 ("vt: selection, create struct from console selection globals")
+>>   bc80932cc25a ("vt: selection, indent switch-case properly")
+>>
+>> from the tty tree.
+>>
+>> I fixed it up (I think - see below) and can carry the fix as necessary.
+>> This is now fixed as far as linux-next is concerned, but any non trivial
+>> conflicts should be mentioned to your upstream maintainer when your tree
+>> is submitted for merging.  You may also want to consider cooperating
+>> with the maintainer of the conflicting tree to minimise any particularly
+>> complex conflicts.
+> 
+> Thank you for this, I hadn't gotten to it yet.
+> 
+> Your merge looks the same as mine, and I've pushed out the merge
+> resolution in my tree.
 
-Some comments for MADV_FREE is revised and added to help people understand the
-MADV_FREE code, especially the page flag, PG_swapbacked.  This makes
-page_is_file_cache() isn't consistent with its comments.  So the function is
-renamed to page_is_file_lru() to make them consistent again.  All these are put
-in one patch as one logical change.
+Ah, the two merges differ, actually.
 
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Suggested-by: David Hildenbrand <david@redhat.com>
-Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-Suggested-and-acked-by: David Rientjes <rientjes@google.com>
-Acked-by: Michal Hocko <mhocko@kernel.org>
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Rik van Riel <riel@surriel.com>
----
-Changelog:
+Stepen's (cdc26c076ff):
 
-v2:
+-       if (sel_cons != vc_cons[fg_console].d) {
+ -      mutex_lock(&vc_sel.lock);
++       if (vc_sel.cons != vc_cons[fg_console].d) {
 
-- Revised PG_swapbacked comments, Thanks Michal!
 
----
- include/linux/mm_inline.h     | 15 ++++++++-------
- include/linux/page-flags.h    |  5 +++++
- include/trace/events/vmscan.h |  2 +-
- mm/compaction.c               |  2 +-
- mm/gup.c                      |  2 +-
- mm/khugepaged.c               |  4 ++--
- mm/memory-failure.c           |  2 +-
- mm/memory_hotplug.c           |  2 +-
- mm/mempolicy.c                |  2 +-
- mm/migrate.c                  | 16 ++++++++--------
- mm/mprotect.c                 |  2 +-
- mm/swap.c                     | 16 ++++++++--------
- mm/vmscan.c                   | 12 ++++++------
- 13 files changed, 44 insertions(+), 38 deletions(-)
+Yours (cb05c6c82fb0):
+ -      if (sel_cons != vc_cons[fg_console].d) {
+ +      mutex_lock(&vc_sel.lock);
+ +      if (vc_sel.cons != vc_cons[fg_console].d) {
 
-diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
-index 6f2fef7b0784..9aea990069a2 100644
---- a/include/linux/mm_inline.h
-+++ b/include/linux/mm_inline.h
-@@ -6,19 +6,20 @@
- #include <linux/swap.h>
- 
- /**
-- * page_is_file_cache - should the page be on a file LRU or anon LRU?
-+ * page_is_file_lru - should the page be on a file LRU or anon LRU?
-  * @page: the page to test
-  *
-- * Returns 1 if @page is page cache page backed by a regular filesystem,
-- * or 0 if @page is anonymous, tmpfs or otherwise ram or swap backed.
-- * Used by functions that manipulate the LRU lists, to sort a page
-- * onto the right LRU list.
-+ * Returns 1 if @page is page cache page backed by a regular filesystem or
-+ * anonymous page lazily freed (e.g. via MADV_FREE).  Returns 0 if @page is
-+ * normal anonymous page, tmpfs or otherwise ram or swap backed.  Used by
-+ * functions that manipulate the LRU lists, to sort a page onto the right LRU
-+ * list.
-  *
-  * We would like to get this info without a page flag, but the state
-  * needs to survive until the page is last deleted from the LRU, which
-  * could be as far down as __page_cache_release.
-  */
--static inline int page_is_file_cache(struct page *page)
-+static inline int page_is_file_lru(struct page *page)
- {
- 	return !PageSwapBacked(page);
- }
-@@ -75,7 +76,7 @@ static __always_inline void del_page_from_lru_list(struct page *page,
-  */
- static inline enum lru_list page_lru_base_type(struct page *page)
- {
--	if (page_is_file_cache(page))
-+	if (page_is_file_lru(page))
- 		return LRU_INACTIVE_FILE;
- 	return LRU_INACTIVE_ANON;
- }
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index d4771b1a1232..222f6f7b2bb3 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -63,6 +63,11 @@
-  * page_waitqueue(page) is a wait queue of all tasks waiting for the page
-  * to become unlocked.
-  *
-+ * PG_swapbacked is set when a page uses swap as a backing storage.  This are
-+ * usually PageAnon or shmem pages but please note that even anonymous pages
-+ * might lose their PG_swapbacked flag when they simply can be dropped (e.g. as
-+ * a result of MADV_FREE).
-+ *
-  * PG_uptodate tells whether the page's contents is valid.  When a read
-  * completes, the page becomes uptodate, unless a disk I/O error happened.
-  *
-diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index a5ab2973e8dc..74bb594ccb25 100644
---- a/include/trace/events/vmscan.h
-+++ b/include/trace/events/vmscan.h
-@@ -323,7 +323,7 @@ TRACE_EVENT(mm_vmscan_writepage,
- 	TP_fast_assign(
- 		__entry->pfn = page_to_pfn(page);
- 		__entry->reclaim_flags = trace_reclaim_flags(
--						page_is_file_cache(page));
-+						page_is_file_lru(page));
- 	),
- 
- 	TP_printk("page=%p pfn=%lu flags=%s",
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 827d8a2b3164..e8c84c6d4267 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -990,7 +990,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 		/* Successfully isolated */
- 		del_page_from_lru_list(page, lruvec, page_lru(page));
- 		mod_node_page_state(page_pgdat(page),
--				NR_ISOLATED_ANON + page_is_file_cache(page),
-+				NR_ISOLATED_ANON + page_is_file_lru(page),
- 				hpage_nr_pages(page));
- 
- isolate_success:
-diff --git a/mm/gup.c b/mm/gup.c
-index e8aaa40c35ea..411cb09b4be3 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1691,7 +1691,7 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
- 					list_add_tail(&head->lru, &cma_page_list);
- 					mod_node_page_state(page_pgdat(head),
- 							    NR_ISOLATED_ANON +
--							    page_is_file_cache(head),
-+							    page_is_file_lru(head),
- 							    hpage_nr_pages(head));
- 				}
- 			}
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index d0ce22fb58d2..e8709e19beea 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -514,7 +514,7 @@ void __khugepaged_exit(struct mm_struct *mm)
- 
- static void release_pte_page(struct page *page)
- {
--	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
-+	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_lru(page));
- 	unlock_page(page);
- 	putback_lru_page(page);
- }
-@@ -614,7 +614,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
- 			goto out;
- 		}
- 		inc_node_page_state(page,
--				NR_ISOLATED_ANON + page_is_file_cache(page));
-+				NR_ISOLATED_ANON + page_is_file_lru(page));
- 		VM_BUG_ON_PAGE(!PageLocked(page), page);
- 		VM_BUG_ON_PAGE(PageLRU(page), page);
- 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 1c961cd26c0b..a96364be8ab4 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1810,7 +1810,7 @@ static int __soft_offline_page(struct page *page, int flags)
- 		 */
- 		if (!__PageMovable(page))
- 			inc_node_page_state(page, NR_ISOLATED_ANON +
--						page_is_file_cache(page));
-+						page_is_file_lru(page));
- 		list_add(&page->lru, &pagelist);
- 		ret = migrate_pages(&pagelist, new_page, NULL, MPOL_MF_MOVE_ALL,
- 					MIGRATE_SYNC, MR_MEMORY_FAILURE);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 8bdf484241de..e3b2074ef30c 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1324,7 +1324,7 @@ do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 			list_add_tail(&page->lru, &source);
- 			if (!__PageMovable(page))
- 				inc_node_page_state(page, NR_ISOLATED_ANON +
--						    page_is_file_cache(page));
-+						    page_is_file_lru(page));
- 
- 		} else {
- 			pr_warn("failed to isolate pfn %lx\n", pfn);
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 0c6fbee1ea5a..2c41923892f7 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1048,7 +1048,7 @@ static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 		if (!isolate_lru_page(head)) {
- 			list_add_tail(&head->lru, pagelist);
- 			mod_node_page_state(page_pgdat(head),
--				NR_ISOLATED_ANON + page_is_file_cache(head),
-+				NR_ISOLATED_ANON + page_is_file_lru(head),
- 				hpage_nr_pages(head));
- 		} else if (flags & MPOL_MF_STRICT) {
- 			/*
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 8f62089126ad..de23507f5c68 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -193,7 +193,7 @@ void putback_movable_pages(struct list_head *l)
- 			put_page(page);
- 		} else {
- 			mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON +
--					page_is_file_cache(page), -hpage_nr_pages(page));
-+					page_is_file_lru(page), -hpage_nr_pages(page));
- 			putback_lru_page(page);
- 		}
- 	}
-@@ -1223,7 +1223,7 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
- 		 */
- 		if (likely(!__PageMovable(page)))
- 			mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON +
--					page_is_file_cache(page), -hpage_nr_pages(page));
-+					page_is_file_lru(page), -hpage_nr_pages(page));
- 	}
- 
- 	/*
-@@ -1595,7 +1595,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
- 		err = 1;
- 		list_add_tail(&head->lru, pagelist);
- 		mod_node_page_state(page_pgdat(head),
--			NR_ISOLATED_ANON + page_is_file_cache(head),
-+			NR_ISOLATED_ANON + page_is_file_lru(head),
- 			hpage_nr_pages(head));
- 	}
- out_putpage:
-@@ -1958,7 +1958,7 @@ static int numamigrate_isolate_page(pg_data_t *pgdat, struct page *page)
- 		return 0;
- 	}
- 
--	page_lru = page_is_file_cache(page);
-+	page_lru = page_is_file_lru(page);
- 	mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON + page_lru,
- 				hpage_nr_pages(page));
- 
-@@ -1994,7 +1994,7 @@ int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
- 	 * Don't migrate file pages that are mapped in multiple processes
- 	 * with execute permissions as they are probably shared libraries.
- 	 */
--	if (page_mapcount(page) != 1 && page_is_file_cache(page) &&
-+	if (page_mapcount(page) != 1 && page_is_file_lru(page) &&
- 	    (vma->vm_flags & VM_EXEC))
- 		goto out;
- 
-@@ -2002,7 +2002,7 @@ int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
- 	 * Also do not migrate dirty pages as not all filesystems can move
- 	 * dirty pages in MIGRATE_ASYNC mode which is a waste of cycles.
- 	 */
--	if (page_is_file_cache(page) && PageDirty(page))
-+	if (page_is_file_lru(page) && PageDirty(page))
- 		goto out;
- 
- 	isolated = numamigrate_isolate_page(pgdat, page);
-@@ -2017,7 +2017,7 @@ int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
- 		if (!list_empty(&migratepages)) {
- 			list_del(&page->lru);
- 			dec_node_page_state(page, NR_ISOLATED_ANON +
--					page_is_file_cache(page));
-+					page_is_file_lru(page));
- 			putback_lru_page(page);
- 		}
- 		isolated = 0;
-@@ -2047,7 +2047,7 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
- 	pg_data_t *pgdat = NODE_DATA(node);
- 	int isolated = 0;
- 	struct page *new_page = NULL;
--	int page_lru = page_is_file_cache(page);
-+	int page_lru = page_is_file_lru(page);
- 	unsigned long start = address & HPAGE_PMD_MASK;
- 
- 	new_page = alloc_pages_node(node,
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 4d30c4b549e1..494192ca954b 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -102,7 +102,7 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 				 * it cannot move them all from MIGRATE_ASYNC
- 				 * context.
- 				 */
--				if (page_is_file_cache(page) && PageDirty(page))
-+				if (page_is_file_lru(page) && PageDirty(page))
- 					continue;
- 
- 				/*
-diff --git a/mm/swap.c b/mm/swap.c
-index 6a8be910b14d..f70e8b0b7319 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -276,7 +276,7 @@ static void __activate_page(struct page *page, struct lruvec *lruvec,
- 			    void *arg)
- {
- 	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
--		int file = page_is_file_cache(page);
-+		int file = page_is_file_lru(page);
- 		int lru = page_lru_base_type(page);
- 
- 		del_page_from_lru_list(page, lruvec, lru);
-@@ -394,7 +394,7 @@ void mark_page_accessed(struct page *page)
- 		else
- 			__lru_cache_activate_page(page);
- 		ClearPageReferenced(page);
--		if (page_is_file_cache(page))
-+		if (page_is_file_lru(page))
- 			workingset_activation(page);
- 	}
- 	if (page_is_idle(page))
-@@ -515,7 +515,7 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
- 		return;
- 
- 	active = PageActive(page);
--	file = page_is_file_cache(page);
-+	file = page_is_file_lru(page);
- 	lru = page_lru_base_type(page);
- 
- 	del_page_from_lru_list(page, lruvec, lru + active);
-@@ -548,7 +548,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
- 			    void *arg)
- {
- 	if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
--		int file = page_is_file_cache(page);
-+		int file = page_is_file_lru(page);
- 		int lru = page_lru_base_type(page);
- 
- 		del_page_from_lru_list(page, lruvec, lru + LRU_ACTIVE);
-@@ -573,9 +573,9 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
- 		ClearPageActive(page);
- 		ClearPageReferenced(page);
- 		/*
--		 * lazyfree pages are clean anonymous pages. They have
--		 * SwapBacked flag cleared to distinguish normal anonymous
--		 * pages
-+		 * Lazyfree pages are clean anonymous pages.  They have
-+		 * PG_swapbacked flag cleared, to distinguish them from normal
-+		 * anonymous pages
- 		 */
- 		ClearPageSwapBacked(page);
- 		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
-@@ -963,7 +963,7 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
- 
- 	if (page_evictable(page)) {
- 		lru = page_lru(page);
--		update_page_reclaim_stat(lruvec, page_is_file_cache(page),
-+		update_page_reclaim_stat(lruvec, page_is_file_lru(page),
- 					 PageActive(page));
- 		if (was_unevictable)
- 			count_vm_event(UNEVICTABLE_PGRESCUED);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index d9fb680884b8..d290a268dd68 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -919,7 +919,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
- 		 * exceptional entries and shadow exceptional entries in the
- 		 * same address_space.
- 		 */
--		if (reclaimed && page_is_file_cache(page) &&
-+		if (reclaimed && page_is_file_lru(page) &&
- 		    !mapping_exiting(mapping) && !dax_mapping(mapping))
- 			shadow = workingset_eviction(page, target_memcg);
- 		__delete_from_page_cache(page, shadow);
-@@ -1043,7 +1043,7 @@ static void page_check_dirty_writeback(struct page *page,
- 	 * Anonymous pages are not handled by flushers and must be written
- 	 * from reclaim context. Do not stall reclaim based on them
- 	 */
--	if (!page_is_file_cache(page) ||
-+	if (!page_is_file_lru(page) ||
- 	    (PageAnon(page) && !PageSwapBacked(page))) {
- 		*dirty = false;
- 		*writeback = false;
-@@ -1316,7 +1316,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			 * the rest of the LRU for clean pages and see
- 			 * the same dirty pages again (PageReclaim).
- 			 */
--			if (page_is_file_cache(page) &&
-+			if (page_is_file_lru(page) &&
- 			    (!current_is_kswapd() || !PageReclaim(page) ||
- 			     !test_bit(PGDAT_DIRTY, &pgdat->flags))) {
- 				/*
-@@ -1460,7 +1460,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			try_to_free_swap(page);
- 		VM_BUG_ON_PAGE(PageActive(page), page);
- 		if (!PageMlocked(page)) {
--			int type = page_is_file_cache(page);
-+			int type = page_is_file_lru(page);
- 			SetPageActive(page);
- 			stat->nr_activate[type] += nr_pages;
- 			count_memcg_page_event(page, PGACTIVATE);
-@@ -1498,7 +1498,7 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
- 	LIST_HEAD(clean_pages);
- 
- 	list_for_each_entry_safe(page, next, page_list, lru) {
--		if (page_is_file_cache(page) && !PageDirty(page) &&
-+		if (page_is_file_lru(page) && !PageDirty(page) &&
- 		    !__PageMovable(page) && !PageUnevictable(page)) {
- 			ClearPageActive(page);
- 			list_move(&page->lru, &clean_pages);
-@@ -2054,7 +2054,7 @@ static void shrink_active_list(unsigned long nr_to_scan,
- 			 * IO, plus JVM can create lots of anon VM_EXEC pages,
- 			 * so we ignore them here.
- 			 */
--			if ((vm_flags & VM_EXEC) && page_is_file_cache(page)) {
-+			if ((vm_flags & VM_EXEC) && page_is_file_lru(page)) {
- 				list_add(&page->lru, &l_active);
- 				continue;
- 			}
+> Jiri, can you double-check to verify that the merge is correct in my
+> tree?
+
+So this is now a tty tree problem. Will send a patch in a minute.
+
+thanks,
 -- 
-2.25.0
-
+js
+suse labs
