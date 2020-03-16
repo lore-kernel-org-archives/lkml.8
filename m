@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8333C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2D0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B276E20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 448E620658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326271;
-	bh=2hY2yy0nVV7zzzENxHxzh6cBEDGz8r3oejDRBC2kBmU=;
+	s=default; t=1584326275;
+	bh=NFkaruU0VVDJR0UpDc2JMXjGorQN1M34yxFfETQdM5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N/j6cqMQpWwiSNYEZ0ZpbCK0U4w3lOi5jUAuzzfZU1X2CM/G3IgAwFu/aut7cgmZz
-	 QmVJGZ7qAHTqLyQQhIuaphdRFzxpHBoRDQhXfaUP1wwFNs8RSTvr6c48oZNm1VsLLy
-	 kn32mdx2Ys864fxnRzI2rKSBUrbu7R4FmRV3Tsuc=
+	b=UGkiaflbhmFQbRAcpKdwx3FmfpVYYozmxtv8mTK3RcgN9rMtKDgj2QPsJ3YPAr2Ih
+	 ZIvMkpP0iqV6MvyaAls/RHkkK3AWwGuIbCnbY0VNFpyugtpE5q/JYA8rNfnCaTvE9T
+	 GKi4dZANFhxgKqR7ZBngsBqxi1q/CgUqsJfEdaLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbgCPCfP (ORCPT
+        id S1730401AbgCPChy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:35:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39208 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:37:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730077AbgCPCfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:35:06 -0400
+        id S1730095AbgCPCfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAFCC2072A;
-        Mon, 16 Mar 2020 02:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F12E8206E9;
+        Mon, 16 Mar 2020 02:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326106;
-        bh=2hY2yy0nVV7zzzENxHxzh6cBEDGz8r3oejDRBC2kBmU=;
+        s=default; t=1584326109;
+        bh=NFkaruU0VVDJR0UpDc2JMXjGorQN1M34yxFfETQdM5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ejjmdy/mLDF6FL3tWsus3qlbfqR1b2xvGIj5mn1H8S4rGpIIb0KbKlMCgD3c5CAtk
-         Kcq1rqua0Tw0r+PCr4CIjO4KC+blzj62cGwvRLOF8S0Z+kwuQLE3QVo/IXmqy+iGHK
-         99laEcqw1NPj+OPA5nroxDHyxXCL/7M5vUPWvW7E=
+        b=FFj9Iklcj4TTuGUPNAW/AGuPqVeLB7bGaRN04DQrgbvXFnLYaMjIWbG5Y1dTEjyIX
+         m7tnJFZrJcJGZT5SpRbmMVouZLm+mJeG+A4FcbQ4DmJCm9YSTrqP3rNpxf7a3SZok/
+         GuVtALm0d6LnfjjbuyHdsN2KebkSa9rHNbNpBZ30=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     luanshi <zhangliguang@linux.alibaba.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 10/20] drivers/perf: arm_pmu_acpi: Fix incorrect checking of gicc pointer
-Date:   Sun, 15 Mar 2020 22:34:43 -0400
-Message-Id: <20200316023453.1800-10-sashal@kernel.org>
+Cc:     Mike Snitzer <snitzer@redhat.com>,
+        =?UTF-8?q?Daniel=20Gl=C3=B6ckner?= <dg@emlix.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.19 13/20] dm integrity: use dm_bio_record and dm_bio_restore
+Date:   Sun, 15 Mar 2020 22:34:46 -0400
+Message-Id: <20200316023453.1800-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023453.1800-1-sashal@kernel.org>
 References: <20200316023453.1800-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,47 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: luanshi <zhangliguang@linux.alibaba.com>
+From: Mike Snitzer <snitzer@redhat.com>
 
-[ Upstream commit 3ba52ad55b533760a1f65836aa0ec9d35e36bb4f ]
+[ Upstream commit 248aa2645aa7fc9175d1107c2593cc90d4af5a4e ]
 
-Fix bogus NULL checks on the return value of acpi_cpu_get_madt_gicc()
-by checking for a 0 'gicc->performance_interrupt' value instead.
+In cases where dec_in_flight() has to requeue the integrity_bio_wait
+work to transfer the rest of the data, the bio's __bi_remaining might
+already have been decremented to 0, e.g.: if bio passed to underlying
+data device was split via blk_queue_split().
 
-Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Use dm_bio_{record,restore} rather than effectively open-coding them in
+dm-integrity -- these methods now manage __bi_remaining too.
+
+Depends-on: f7f0b057a9c1 ("dm bio record: save/restore bi_end_io and bi_integrity")
+Reported-by: Daniel Glöckner <dg@emlix.com>
+Suggested-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_pmu_acpi.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/md/dm-integrity.c | 32 +++++++++-----------------------
+ 1 file changed, 9 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
-index 0f197516d7089..9a6f7f822566f 100644
---- a/drivers/perf/arm_pmu_acpi.c
-+++ b/drivers/perf/arm_pmu_acpi.c
-@@ -27,8 +27,6 @@ static int arm_pmu_acpi_register_irq(int cpu)
- 	int gsi, trigger;
+diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
+index 5885239cc1f85..d75a4ce7d12ae 100644
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -6,6 +6,8 @@
+  * This file is released under the GPL.
+  */
  
- 	gicc = acpi_cpu_get_madt_gicc(cpu);
--	if (WARN_ON(!gicc))
--		return -EINVAL;
++#include "dm-bio-record.h"
++
+ #include <linux/compiler.h>
+ #include <linux/module.h>
+ #include <linux/device-mapper.h>
+@@ -276,11 +278,7 @@ struct dm_integrity_io {
  
- 	gsi = gicc->performance_interrupt;
+ 	struct completion *completion;
  
-@@ -67,11 +65,10 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
- 	int gsi;
+-	struct gendisk *orig_bi_disk;
+-	u8 orig_bi_partno;
+-	bio_end_io_t *orig_bi_end_io;
+-	struct bio_integrity_payload *orig_bi_integrity;
+-	struct bvec_iter orig_bi_iter;
++	struct dm_bio_details bio_details;
+ };
  
- 	gicc = acpi_cpu_get_madt_gicc(cpu);
--	if (!gicc)
--		return;
+ struct journal_completion {
+@@ -1249,14 +1247,9 @@ static void integrity_end_io(struct bio *bio)
+ {
+ 	struct dm_integrity_io *dio = dm_per_bio_data(bio, sizeof(struct dm_integrity_io));
  
- 	gsi = gicc->performance_interrupt;
--	acpi_unregister_gsi(gsi);
-+	if (gsi)
-+		acpi_unregister_gsi(gsi);
- }
+-	bio->bi_iter = dio->orig_bi_iter;
+-	bio->bi_disk = dio->orig_bi_disk;
+-	bio->bi_partno = dio->orig_bi_partno;
+-	if (dio->orig_bi_integrity) {
+-		bio->bi_integrity = dio->orig_bi_integrity;
++	dm_bio_restore(&dio->bio_details, bio);
++	if (bio->bi_integrity)
+ 		bio->bi_opf |= REQ_INTEGRITY;
+-	}
+-	bio->bi_end_io = dio->orig_bi_end_io;
  
- static int arm_pmu_acpi_parse_irqs(void)
+ 	if (dio->completion)
+ 		complete(dio->completion);
+@@ -1336,7 +1329,7 @@ static void integrity_metadata(struct work_struct *w)
+ 		if (!checksums)
+ 			checksums = checksums_onstack;
+ 
+-		__bio_for_each_segment(bv, bio, iter, dio->orig_bi_iter) {
++		__bio_for_each_segment(bv, bio, iter, dio->bio_details.bi_iter) {
+ 			unsigned pos;
+ 			char *mem, *checksums_ptr;
+ 
+@@ -1380,7 +1373,7 @@ static void integrity_metadata(struct work_struct *w)
+ 		if (likely(checksums != checksums_onstack))
+ 			kfree(checksums);
+ 	} else {
+-		struct bio_integrity_payload *bip = dio->orig_bi_integrity;
++		struct bio_integrity_payload *bip = dio->bio_details.bi_integrity;
+ 
+ 		if (bip) {
+ 			struct bio_vec biv;
+@@ -1784,20 +1777,13 @@ static void dm_integrity_map_continue(struct dm_integrity_io *dio, bool from_map
+ 	} else
+ 		dio->completion = NULL;
+ 
+-	dio->orig_bi_iter = bio->bi_iter;
+-
+-	dio->orig_bi_disk = bio->bi_disk;
+-	dio->orig_bi_partno = bio->bi_partno;
++	dm_bio_record(&dio->bio_details, bio);
+ 	bio_set_dev(bio, ic->dev->bdev);
+-
+-	dio->orig_bi_integrity = bio_integrity(bio);
+ 	bio->bi_integrity = NULL;
+ 	bio->bi_opf &= ~REQ_INTEGRITY;
+-
+-	dio->orig_bi_end_io = bio->bi_end_io;
+ 	bio->bi_end_io = integrity_end_io;
+-
+ 	bio->bi_iter.bi_size = dio->range.n_sectors << SECTOR_SHIFT;
++
+ 	generic_make_request(bio);
+ 
+ 	if (need_sync_io) {
 -- 
 2.20.1
 
