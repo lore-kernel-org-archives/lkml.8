@@ -7,159 +7,222 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C65CC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1DEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638F1205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59DA5206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="p2IzPxG6"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="oxuUX1kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbgCPMgW (ORCPT
+        id S1731269AbgCPMgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:36:22 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:41784 "EHLO pegase1.c-s.fr"
+        Mon, 16 Mar 2020 08:36:24 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:52502 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731190AbgCPMgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:36:13 -0400
+        id S1731203AbgCPMgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:36:17 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48gwlC1V2Cz9v02m;
-        Mon, 16 Mar 2020 13:36:07 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 48gwlG2Z50z9v02p;
+        Mon, 16 Mar 2020 13:36:10 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=p2IzPxG6; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=oxuUX1kv; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id j_po_jq3GY_Z; Mon, 16 Mar 2020 13:36:07 +0100 (CET)
+        with ESMTP id nuUs-mnwoiOk; Mon, 16 Mar 2020 13:36:10 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlC0T79z9v02f;
-        Mon, 16 Mar 2020 13:36:07 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlG1Y3Xz9v02f;
+        Mon, 16 Mar 2020 13:36:10 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584362167; bh=BpfFLBkbJkuxnqbVoA084JvTYcb/hx3a8yIvVMCCaRQ=;
+        t=1584362170; bh=ogsKLFBR0QtJyOVTshoojRSV8Y+XRRVVXcypL+4W3Lg=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=p2IzPxG6TuhfUtNi+Wi47tOS9lRyai7UoXp6XZyzmI/W4gWDxSnuk49CPP6Pj+4wc
-         Cthrssv5CkmnUGAe1VbCr7QKG8kyNsq7Iyu6SZWRDaoXz0Fk1w8+bHh4G/Cgtb8AiP
-         8voNIjMjDpbcTS1jWJyi2QP3zTyYasfmarvAnJiA=
+        b=oxuUX1kvz+Y0n99OZDZ5b39lvAejsqI52Cyn3bRLzgonPTibD0lHhSawyUg/wSKKK
+         0+pCaujEUdy8jltQykDPrGc1/S9xfZQxZslrATZ0px8ETPpQjXoYsmexELmXSi5Yu7
+         K9QCwaFbVKVDIs0ueCT/re+3m/lNHddMVvCU+NFE=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0B96B8B7D0;
-        Mon, 16 Mar 2020 13:36:12 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2A4DD8B7D0;
+        Mon, 16 Mar 2020 13:36:15 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ufvd-gpqaPiZ; Mon, 16 Mar 2020 13:36:11 +0100 (CET)
+        with ESMTP id LobdtdXyzH8h; Mon, 16 Mar 2020 13:36:15 +0100 (CET)
 Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D32528B7CB;
-        Mon, 16 Mar 2020 13:36:11 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F2E1F8B7CB;
+        Mon, 16 Mar 2020 13:36:14 +0100 (CET)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id C72CA65595; Mon, 16 Mar 2020 12:36:11 +0000 (UTC)
-Message-Id: <63a5e2c2444937caf1e81066bb61e00cbf34634a.1584360344.git.christophe.leroy@c-s.fr>
+        id E63E565595; Mon, 16 Mar 2020 12:36:14 +0000 (UTC)
+Message-Id: <c098e9365d677d484e3d8dd57354d4cb379ea452.1584360344.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1584360343.git.christophe.leroy@c-s.fr>
 References: <cover.1584360343.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 26/46] powerpc/8xx: Prepare handlers for _PAGE_HUGE for
- 512k pages.
+Subject: [PATCH v1 29/46] powerpc/8xx: MM_SLICE is not needed anymore
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Mar 2020 12:36:11 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 12:36:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prepare ITLB handler to handle _PAGE_HUGE when CONFIG_HUGETLBFS
-is enabled. This means that the L1 entry has to be kept in r11
-until L2 entry is read, in order to insert _PAGE_HUGE into it.
+As the 8xx now manages 512k pages in standard page tables,
+it doesn't need CONFIG_PPC_MM_SLICES anymore.
 
-Also move pgd_offset helpers before pte_update() as they
-will be needed there in next patch.
+Don't select it anymore and remove all related code.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/nohash/32/pgtable.h | 13 ++++++-------
- arch/powerpc/kernel/head_8xx.S               | 15 +++++++++------
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h | 64 --------------------
+ arch/powerpc/include/asm/nohash/32/slice.h   | 20 ------
+ arch/powerpc/include/asm/slice.h             |  2 -
+ arch/powerpc/platforms/Kconfig.cputype       |  1 -
+ 4 files changed, 87 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/nohash/32/slice.h
 
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index dd5835354e33..1a86d20b58f3 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -206,6 +206,12 @@ static inline void pmd_clear(pmd_t *pmdp)
- }
+diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+index 26b7cee34dfe..a092e6434bda 100644
+--- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+@@ -176,12 +176,6 @@
+  */
+ #define SPRN_M_TW	799
  
- 
-+/* to find an entry in a kernel page-table-directory */
-+#define pgd_offset_k(address) pgd_offset(&init_mm, address)
-+
-+/* to find an entry in a page-table-directory */
-+#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
-+#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
- 
- /*
-  * PTE updates. This function is called whenever an existing
-@@ -348,13 +354,6 @@ static inline int pte_young(pte_t pte)
- 	pfn_to_page((__pa(pmd_val(pmd)) >> PAGE_SHIFT))
- #endif
- 
--/* to find an entry in a kernel page-table-directory */
--#define pgd_offset_k(address) pgd_offset(&init_mm, address)
--
--/* to find an entry in a page-table-directory */
--#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
--#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
--
- /* Find an entry in the third-level page table.. */
- #define pte_index(address)		\
- 	(((address) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 905205c79a25..adad8baadcf5 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -196,7 +196,7 @@ SystemCall:
- 
- InstructionTLBMiss:
- 	mtspr	SPRN_SPRG_SCRATCH0, r10
--#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP)
-+#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP) || defined(CONFIG_HUGETLBFS)
- 	mtspr	SPRN_SPRG_SCRATCH1, r11
- #endif
- 
-@@ -235,16 +235,19 @@ InstructionTLBMiss:
- 	rlwinm	r10, r10, 0, 20, 31
- 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
- 3:
-+	mtcr	r11
- #endif
-+#ifdef CONFIG_HUGETLBFS
-+	lwz	r11, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
-+	mtspr	SPRN_MI_TWC, r11	/* Set segment attributes */
-+	mtspr	SPRN_MD_TWC, r11
-+#else
- 	lwz	r10, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
- 	mtspr	SPRN_MI_TWC, r10	/* Set segment attributes */
--
- 	mtspr	SPRN_MD_TWC, r10
-+#endif
- 	mfspr	r10, SPRN_MD_TWC
- 	lwz	r10, 0(r10)	/* Get the pte */
--#ifdef ITLB_MISS_KERNEL
--	mtcr	r11
+-#ifdef CONFIG_PPC_MM_SLICES
+-#include <asm/nohash/32/slice.h>
+-#define SLICE_ARRAY_SIZE	(1 << (32 - SLICE_LOW_SHIFT - 1))
+-#define LOW_SLICE_ARRAY_SZ	SLICE_ARRAY_SIZE
 -#endif
- #ifdef CONFIG_SWAP
- 	rlwinm	r11, r10, 32-5, _PAGE_PRESENT
- 	and	r11, r11, r10
-@@ -263,7 +266,7 @@ InstructionTLBMiss:
+-
+ #if defined(CONFIG_PPC_4K_PAGES)
+ #define mmu_virtual_psize	MMU_PAGE_4K
+ #elif defined(CONFIG_PPC_16K_PAGES)
+@@ -199,71 +193,13 @@
  
- 	/* Restore registers */
- 0:	mfspr	r10, SPRN_SPRG_SCRATCH0
--#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP)
-+#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP) || defined(CONFIG_HUGETLBFS)
- 	mfspr	r11, SPRN_SPRG_SCRATCH1
+ #include <linux/mmdebug.h>
+ 
+-struct slice_mask {
+-	u64 low_slices;
+-	DECLARE_BITMAP(high_slices, 0);
+-};
+-
+ typedef struct {
+ 	unsigned int id;
+ 	unsigned int active;
+ 	unsigned long vdso_base;
+-#ifdef CONFIG_PPC_MM_SLICES
+-	u16 user_psize;		/* page size index */
+-	unsigned char low_slices_psize[SLICE_ARRAY_SIZE];
+-	unsigned char high_slices_psize[0];
+-	unsigned long slb_addr_limit;
+-	struct slice_mask mask_base_psize; /* 4k or 16k */
+-	struct slice_mask mask_512k;
+-	struct slice_mask mask_8m;
+-#endif
+ 	void *pte_frag;
+ } mm_context_t;
+ 
+-#ifdef CONFIG_PPC_MM_SLICES
+-static inline u16 mm_ctx_user_psize(mm_context_t *ctx)
+-{
+-	return ctx->user_psize;
+-}
+-
+-static inline void mm_ctx_set_user_psize(mm_context_t *ctx, u16 user_psize)
+-{
+-	ctx->user_psize = user_psize;
+-}
+-
+-static inline unsigned char *mm_ctx_low_slices(mm_context_t *ctx)
+-{
+-	return ctx->low_slices_psize;
+-}
+-
+-static inline unsigned char *mm_ctx_high_slices(mm_context_t *ctx)
+-{
+-	return ctx->high_slices_psize;
+-}
+-
+-static inline unsigned long mm_ctx_slb_addr_limit(mm_context_t *ctx)
+-{
+-	return ctx->slb_addr_limit;
+-}
+-
+-static inline void mm_ctx_set_slb_addr_limit(mm_context_t *ctx, unsigned long limit)
+-{
+-	ctx->slb_addr_limit = limit;
+-}
+-
+-static inline struct slice_mask *slice_mask_for_size(mm_context_t *ctx, int psize)
+-{
+-	if (psize == MMU_PAGE_512K)
+-		return &ctx->mask_512k;
+-	if (psize == MMU_PAGE_8M)
+-		return &ctx->mask_8m;
+-
+-	BUG_ON(psize != mmu_virtual_psize);
+-
+-	return &ctx->mask_base_psize;
+-}
+-#endif /* CONFIG_PPC_MM_SLICE */
+-
+ #define PHYS_IMMR_BASE (mfspr(SPRN_IMMR) & 0xfff80000)
+ #define VIRT_IMMR_BASE (__fix_to_virt(FIX_IMMR_BASE))
+ 
+diff --git a/arch/powerpc/include/asm/nohash/32/slice.h b/arch/powerpc/include/asm/nohash/32/slice.h
+deleted file mode 100644
+index 39eb0154ae2d..000000000000
+--- a/arch/powerpc/include/asm/nohash/32/slice.h
++++ /dev/null
+@@ -1,20 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ASM_POWERPC_NOHASH_32_SLICE_H
+-#define _ASM_POWERPC_NOHASH_32_SLICE_H
+-
+-#ifdef CONFIG_PPC_MM_SLICES
+-
+-#define SLICE_LOW_SHIFT		26	/* 64 slices */
+-#define SLICE_LOW_TOP		(0x100000000ull)
+-#define SLICE_NUM_LOW		(SLICE_LOW_TOP >> SLICE_LOW_SHIFT)
+-#define GET_LOW_SLICE_INDEX(addr)	((addr) >> SLICE_LOW_SHIFT)
+-
+-#define SLICE_HIGH_SHIFT	0
+-#define SLICE_NUM_HIGH		0ul
+-#define GET_HIGH_SLICE_INDEX(addr)	(addr & 0)
+-
+-#define SLB_ADDR_LIMIT_DEFAULT	DEFAULT_MAP_WINDOW
+-
+-#endif /* CONFIG_PPC_MM_SLICES */
+-
+-#endif /* _ASM_POWERPC_NOHASH_32_SLICE_H */
+diff --git a/arch/powerpc/include/asm/slice.h b/arch/powerpc/include/asm/slice.h
+index c6f466f4c241..0bdd9c62eca0 100644
+--- a/arch/powerpc/include/asm/slice.h
++++ b/arch/powerpc/include/asm/slice.h
+@@ -4,8 +4,6 @@
+ 
+ #ifdef CONFIG_PPC_BOOK3S_64
+ #include <asm/book3s/64/slice.h>
+-#elif defined(CONFIG_PPC_MMU_NOHASH_32)
+-#include <asm/nohash/32/slice.h>
  #endif
- 	rfi
+ 
+ #ifndef __ASSEMBLY__
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 4208724e9f28..6a50392df7b5 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -55,7 +55,6 @@ config PPC_8xx
+ 	select SYS_SUPPORTS_HUGETLBFS
+ 	select PPC_HAVE_KUEP
+ 	select PPC_HAVE_KUAP
+-	select PPC_MM_SLICES if HUGETLB_PAGE
+ 	select HAVE_ARCH_VMAP_STACK
+ 
+ config 40x
 -- 
 2.25.0
 
