@@ -2,119 +2,205 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B930DC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C87C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D2620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC242051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERsmc/Qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731466AbgCPN5x (ORCPT
+        id S1731497AbgCPN6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:57:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16018 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731468AbgCPN5x (ORCPT
+        Mon, 16 Mar 2020 09:58:17 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44456 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731392AbgCPN6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:57:53 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02GDpOA1040273
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:57:51 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yrr6sy2ns-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:57:51 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Mon, 16 Mar 2020 13:57:49 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Mar 2020 13:57:46 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02GDvjDu15532088
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Mar 2020 13:57:45 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9FC52A405B;
-        Mon, 16 Mar 2020 13:57:45 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07F41A4060;
-        Mon, 16 Mar 2020 13:57:44 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.92.169])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Mar 2020 13:57:43 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, psampat@linux.ibm.com,
-        pratik.r.sampat@gmail.com, ego@linux.vnet.ibm.com, dja@axtens.net
-Subject: [PATCH] cpufreq: powernv: Fix frame-size-overflow in powernv_cpufreq_work_fn
-Date:   Mon, 16 Mar 2020 19:27:43 +0530
-X-Mailer: git-send-email 2.24.1
+        Mon, 16 Mar 2020 09:58:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h16so14162752qtr.11;
+        Mon, 16 Mar 2020 06:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3qtCtnALikW4YRd7lmEcJiEiNtsvnAppAgjxyAmiqH4=;
+        b=ERsmc/Qibw62KbwGpwOOfWIZ6CBFiFkO67cMiCszwdoC1DcIaQu8Hw2zScckRBFb44
+         k6GGHr1CPptG34oTO/ZnP+9Va99g5f7NypepdLh5NycRp3Osd96XGvWA4c68o3XvDYP/
+         C71MoeHY59is5S69ymeDdD7pK2hzT7yvHs4mF1UVVEae44I7wUBwlUmKJ//z581FAYGb
+         Gl7jgCbMqBDRIApWcMaBUFRcrUYOfpEc7/pgaj1AKUjzlnCiERfrzVCP8+lyl5mRppQA
+         Gw+H0kLNsLXhnkQ0mQ2+CEttrfnsikLOSSCgc373TnuPJroYc/pFHduTIYS7SjyiiKzP
+         7d9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3qtCtnALikW4YRd7lmEcJiEiNtsvnAppAgjxyAmiqH4=;
+        b=a8FpaQr7wnrvr3JSd5x8BOc/TRwCd8tFGnZFx6w9dKMc/QDlfhwNpb9vzthAx1bt8T
+         ohUEXyiUsbA7tIgFz8pG8SDRD4BNG3JqG/MVE5AHIPyY/Glu3Kqx8WcbQdjBZk7e8i8J
+         0jS0cYZpIJ8NoeysdlArzuOVfYBO+VTbzSXd6ibXaImYeoc4ZXexYRuTBwtphet1zyT5
+         HIscXaBMB59H9SiyglrDQPyoIX6g3zG2UrtlzFIHFJLvdNSd7tYclIvJ2vdHsQBrvg5x
+         iWUPHtx7K/n7fSTcGNtFDQvmfgAO+WX2w9OmqCDIlDSBkw/tf/zUGmpENYs77+cvbLPc
+         fBdg==
+X-Gm-Message-State: ANhLgQ1P+0Mx/rm/8wDKvWj5HLN9ZiBTxFKrkzUj1C1N3Bos1yO+IfL6
+        7rfKoOBy/90qiGBm3/II5zA=
+X-Google-Smtp-Source: ADFU+vsUgruPzO2nVj4karDuY2h5qc4Sh89hdsjxItBLh5zrjqCxWPDo0lF9ZHSswXcgZF3BH84LQw==
+X-Received: by 2002:ac8:e45:: with SMTP id j5mr101097qti.215.1584367095370;
+        Mon, 16 Mar 2020 06:58:15 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id i4sm17930568qtr.41.2020.03.16.06.58.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 06:58:14 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7C23F40009; Mon, 16 Mar 2020 10:58:12 -0300 (-03)
+Date:   Mon, 16 Mar 2020 10:58:12 -0300
+To:     Colin King <colin.king@canonical.com>,
+        Andi Kleen <andi@firstfloor.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf vendor events: fix spelling mistakes: "occurences"
+ -> "occurrences"
+Message-ID: <20200316135812.GA28064@kernel.org>
+References: <20200316093853.117752-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031613-0008-0000-0000-0000035E25A7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031613-0009-0000-0000-00004A7F790A
-Message-Id: <20200316135743.57735-1-psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-16_03:2020-03-12,2020-03-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- phishscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=999 adultscore=0 impostorscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003160065
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316093853.117752-1-colin.king@canonical.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch avoids allocating cpufreq_policy on stack hence fixing frame
-size overflow in 'powernv_cpufreq_work_fn'
+Em Mon, Mar 16, 2020 at 09:38:53AM +0000, Colin King escreveu:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Fix spelling mistake of "occurrences"
 
-Fixes: 227942809b52 ("cpufreq: powernv: Restore cpu frequency to policy->cur on unthrottling")
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- drivers/cpufreq/powernv-cpufreq.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+This has to be done on the master doc at Intel from where these json
+files are generated, otherwise in the next update this will get
+overwritten.
 
-diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
-index 56f4bc0d209e..20ee0661555a 100644
---- a/drivers/cpufreq/powernv-cpufreq.c
-+++ b/drivers/cpufreq/powernv-cpufreq.c
-@@ -902,6 +902,7 @@ static struct notifier_block powernv_cpufreq_reboot_nb = {
- void powernv_cpufreq_work_fn(struct work_struct *work)
- {
- 	struct chip *chip = container_of(work, struct chip, throttle);
-+	struct cpufreq_policy *policy;
- 	unsigned int cpu;
- 	cpumask_t mask;
+- Arnaldo
  
-@@ -916,12 +917,14 @@ void powernv_cpufreq_work_fn(struct work_struct *work)
- 	chip->restore = false;
- 	for_each_cpu(cpu, &mask) {
- 		int index;
--		struct cpufreq_policy policy;
- 
--		cpufreq_get_policy(&policy, cpu);
--		index = cpufreq_table_find_index_c(&policy, policy.cur);
--		powernv_cpufreq_target_index(&policy, index);
--		cpumask_andnot(&mask, &mask, policy.cpus);
-+		policy = cpufreq_cpu_get(cpu);
-+		if (!policy)
-+			continue;
-+		index = cpufreq_table_find_index_c(policy, policy->cur);
-+		powernv_cpufreq_target_index(policy, index);
-+		cpumask_andnot(&mask, &mask, policy->cpus);
-+		cpufreq_cpu_put(policy);
- 	}
- out:
- 	put_online_cpus();
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json    | 2 +-
+>  tools/perf/pmu-events/arch/x86/ivytown/pipeline.json      | 2 +-
+>  tools/perf/pmu-events/arch/x86/jaketown/pipeline.json     | 2 +-
+>  .../perf/pmu-events/arch/x86/knightslanding/pipeline.json | 8 ++++----
+>  tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json  | 2 +-
+>  5 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json b/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json
+> index 2a0aad91d83d..e5ca2d85e84d 100644
+> --- a/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json
+> @@ -80,7 +80,7 @@
+>          "EdgeDetect": "1",
+>          "EventName": "INT_MISC.RECOVERY_STALLS_COUNT",
+>          "SampleAfterValue": "2000003",
+> -        "BriefDescription": "Number of occurences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc.)",
+> +        "BriefDescription": "Number of occurrences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc.)",
+>          "CounterMask": "1",
+>          "CounterHTOff": "0,1,2,3,4,5,6,7"
+>      },
+> diff --git a/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json b/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json
+> index 2a0aad91d83d..e5ca2d85e84d 100644
+> --- a/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json
+> @@ -80,7 +80,7 @@
+>          "EdgeDetect": "1",
+>          "EventName": "INT_MISC.RECOVERY_STALLS_COUNT",
+>          "SampleAfterValue": "2000003",
+> -        "BriefDescription": "Number of occurences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc.)",
+> +        "BriefDescription": "Number of occurrences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc.)",
+>          "CounterMask": "1",
+>          "CounterHTOff": "0,1,2,3,4,5,6,7"
+>      },
+> diff --git a/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json b/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
+> index 783a5b4a67b1..f32fd4aea6b1 100644
+> --- a/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
+> @@ -1019,7 +1019,7 @@
+>          "EdgeDetect": "1",
+>          "EventName": "INT_MISC.RECOVERY_STALLS_COUNT",
+>          "SampleAfterValue": "2000003",
+> -        "BriefDescription": "Number of occurences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc...).",
+> +        "BriefDescription": "Number of occurrences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc...).",
+>          "CounterMask": "1",
+>          "CounterHTOff": "0,1,2,3,4,5,6,7"
+>      },
+> diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json b/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
+> index 92e4ef2e22c6..17c92cdedde0 100644
+> --- a/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
+> @@ -340,7 +340,7 @@
+>          "UMask": "0x1",
+>          "EventName": "RECYCLEQ.LD_BLOCK_ST_FORWARD",
+>          "SampleAfterValue": "200003",
+> -        "BriefDescription": "Counts the number of occurences a retired load gets blocked because its address partially overlaps with a store",
+> +        "BriefDescription": "Counts the number of occurrences a retired load gets blocked because its address partially overlaps with a store",
+>          "Data_LA": "1"
+>      },
+>      {
+> @@ -349,7 +349,7 @@
+>          "UMask": "0x2",
+>          "EventName": "RECYCLEQ.LD_BLOCK_STD_NOTREADY",
+>          "SampleAfterValue": "200003",
+> -        "BriefDescription": "Counts the number of occurences a retired load gets blocked because its address overlaps with a store whose data is not ready"
+> +        "BriefDescription": "Counts the number of occurrences a retired load gets blocked because its address overlaps with a store whose data is not ready"
+>      },
+>      {
+>          "PublicDescription": "This event counts the number of retired store that experienced a cache line boundary split(Precise Event). Note that each spilt should be counted only once.",
+> @@ -358,7 +358,7 @@
+>          "UMask": "0x4",
+>          "EventName": "RECYCLEQ.ST_SPLITS",
+>          "SampleAfterValue": "200003",
+> -        "BriefDescription": "Counts the number of occurences a retired store that is a cache line split. Each split should be counted only once."
+> +        "BriefDescription": "Counts the number of occurrences a retired store that is a cache line split. Each split should be counted only once."
+>      },
+>      {
+>          "PEBS": "1",
+> @@ -367,7 +367,7 @@
+>          "UMask": "0x8",
+>          "EventName": "RECYCLEQ.LD_SPLITS",
+>          "SampleAfterValue": "200003",
+> -        "BriefDescription": "Counts the number of occurences a retired load that is a cache line split. Each split should be counted only once.",
+> +        "BriefDescription": "Counts the number of occurrences a retired load that is a cache line split. Each split should be counted only once.",
+>          "Data_LA": "1"
+>      },
+>      {
+> diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+> index b7150f65f16d..d69db55f33e7 100644
+> --- a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+> @@ -108,7 +108,7 @@
+>          "EdgeDetect": "1",
+>          "EventName": "INT_MISC.RECOVERY_STALLS_COUNT",
+>          "SampleAfterValue": "2000003",
+> -        "BriefDescription": "Number of occurences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc...).",
+> +        "BriefDescription": "Number of occurrences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc...).",
+>          "CounterMask": "1",
+>          "CounterHTOff": "0,1,2,3,4,5,6,7"
+>      },
+> -- 
+> 2.25.1
+> 
+
 -- 
-2.24.1
 
+- Arnaldo
