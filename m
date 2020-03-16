@@ -2,277 +2,108 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96663C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4A0C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4D320679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584342083;
-	bh=2/M2ChLBW/nP2NSP8Nh1OoS3EnGuZZl0K6fHDHNZxmA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K6SGYvk2x2YMVHZWLUje/gIk9JXEzYakEj6inigiwycJBYEbqlaeaG5lc6fXn1RBr
-	 AIDUweFcXnq9Cd/ln/ZAmCw6gqaiHwFrd9UDSUshk+/vwSjJFuabUq8YHxM6W9j2gA
-	 eixW4JRa0My0iSHos6OXPB6bfY9EVOc8rJEA9/EI=
+	by mail.kernel.org (Postfix) with ESMTP id 5D95920575
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbgCPHBW (ORCPT
+        id S1729813AbgCPHEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728302AbgCPHBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:01:22 -0400
-Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7605F20575;
-        Mon, 16 Mar 2020 07:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584342080;
-        bh=2/M2ChLBW/nP2NSP8Nh1OoS3EnGuZZl0K6fHDHNZxmA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1+0hX8F0yt6lAze4g2CFbmdYa1MEj3AKccddPQzDW2+iDFMzP9fBijTq8uhAaj14j
-         jtxuyDMUhznPtLBeQ1CJCqkxNgDuv78g7d8yUmoWIGuTOP/J4ArBsTRI/2MdM4WWlB
-         iCtiIGYFo1kRr1+BPrKm3iEIH+0USEaAA4BAAXVs=
-Date:   Mon, 16 Mar 2020 08:01:09 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Wang Wenhu <wenhu.wang@vivo.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biggers <ebiggers@google.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, kernel@vivo.com
-Subject: Re: [PATCH v2,2/2] doc: zh_CN: add translation for virtiofs
-Message-ID: <20200316080109.5ea05868@coco.lan>
-In-Reply-To: <20200315155258.91725-2-wenhu.wang@vivo.com>
-References: <20200315092810.87008-1-wenhu.wang@vivo.com>
-        <20200315155258.91725-1-wenhu.wang@vivo.com>
-        <20200315155258.91725-2-wenhu.wang@vivo.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Mon, 16 Mar 2020 03:04:36 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:34886 "HELO
+        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with SMTP id S1729723AbgCPHEg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 03:04:36 -0400
+Received: from 137.localdomain (unknown [218.107.205.216])
+        by app1 (Coremail) with SMTP id xjNnewDn7Q1cHm9ew20FAA--.217S4;
+        Mon, 16 Mar 2020 14:36:24 +0800 (CST)
+From:   Pengcheng Yang <yangpc@wangsu.com>
+To:     edumazet@google.com, ncardwell@google.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pengcheng Yang <yangpc@wangsu.com>
+Subject: [PATCH RESEND net-next v2 2/5] tcp: fix stretch ACK bugs in Scalable
+Date:   Mon, 16 Mar 2020 14:35:08 +0800
+Message-Id: <1584340511-9870-3-git-send-email-yangpc@wangsu.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
+References: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
+X-CM-TRANSID: xjNnewDn7Q1cHm9ew20FAA--.217S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4rWryDXr1xJr4furyDJrb_yoW8XFWUpF
+        s8Gw1Fkr45WrySgayS9Fy5JF15GwsavFy7Gry2krn3Aws8Gr93tF1kt3y5tFWUA3yxC39I
+        krWj93WxWF9YyrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUgI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
+        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
+        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
+        F7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F4
+        0EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Gr4lOx8S6xCaFVCjc4AY6r1j6r4U
+        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF1l42
+        xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8GwCFx2IqxVCFs4IE7xkEbVWUJVW8
+        JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+        AFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
+        A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU
+        0xZFpf9x0Jj2-eOUUUUU=
+X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, 15 Mar 2020 08:52:39 -0700
-Wang Wenhu <wenhu.wang@vivo.com> escreveu:
+Change Scalable to properly handle stretch ACKs in additive
+increase mode by passing in the count of ACKed packets to
+tcp_cong_avoid_ai().
 
-> Translate virtiofs.rst in Documentation/filesystems/ into Chinese.
->=20
-> Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
-> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-> ---
-> Changelog v2:
->  - add a blank line in the end of index.rst to index virtiofs.rst
->  - Asked-by Stefan Hajnoczi
->  - added SPDX header and Copyright info
-> ---
->  Documentation/filesystems/virtiofs.rst        |  2 +
->  .../translations/zh_CN/filesystems/index.rst  |  2 +
->  .../zh_CN/filesystems/virtiofs.rst            | 61 +++++++++++++++++++
->  3 files changed, 65 insertions(+)
->  create mode 100644 Documentation/translations/zh_CN/filesystems/virtiofs=
-.rst
->=20
-> diff --git a/Documentation/filesystems/virtiofs.rst b/Documentation/files=
-ystems/virtiofs.rst
-> index 4f338e3cb3f7..7c4301d962f8 100644
-> --- a/Documentation/filesystems/virtiofs.rst
-> +++ b/Documentation/filesystems/virtiofs.rst
-> @@ -1,3 +1,5 @@
-> +.. _virtiofs_index:
-> +
->  .. SPDX-License-Identifier: GPL-2.0
+In addition, because we are now precisely accounting for
+stretch ACKs, including delayed ACKs, we can now change
+TCP_SCALABLE_AI_CNT to 100.
 
-Please place the SPDX as the first line, e. g.:
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+---
+ net/ipv4/tcp_scalable.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-	.. SPDX-License-Identifier: GPL-2.0
-	+
-	+.. _virtiofs_index:
+diff --git a/net/ipv4/tcp_scalable.c b/net/ipv4/tcp_scalable.c
+index 471571e..6cebf41 100644
+--- a/net/ipv4/tcp_scalable.c
++++ b/net/ipv4/tcp_scalable.c
+@@ -10,10 +10,9 @@
+ #include <net/tcp.h>
+ 
+ /* These factors derived from the recommended values in the aer:
+- * .01 and and 7/8. We use 50 instead of 100 to account for
+- * delayed ack.
++ * .01 and and 7/8.
+  */
+-#define TCP_SCALABLE_AI_CNT	50U
++#define TCP_SCALABLE_AI_CNT	100U
+ #define TCP_SCALABLE_MD_SCALE	3
+ 
+ static void tcp_scalable_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+@@ -23,11 +22,13 @@ static void tcp_scalable_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+ 	if (!tcp_is_cwnd_limited(sk))
+ 		return;
+ 
+-	if (tcp_in_slow_start(tp))
+-		tcp_slow_start(tp, acked);
+-	else
+-		tcp_cong_avoid_ai(tp, min(tp->snd_cwnd, TCP_SCALABLE_AI_CNT),
+-				  1);
++	if (tcp_in_slow_start(tp)) {
++		acked = tcp_slow_start(tp, acked);
++		if (!acked)
++			return;
++	}
++	tcp_cong_avoid_ai(tp, min(tp->snd_cwnd, TCP_SCALABLE_AI_CNT),
++			  acked);
+ }
+ 
+ static u32 tcp_scalable_ssthresh(struct sock *sk)
+-- 
+1.8.3.1
 
-After doing such change:
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-(In time: I'm not reviewing the translation - as I don't speak Mandarin)
-
-> =20
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Doc=
-umentation/translations/zh_CN/filesystems/index.rst
-> index 0a2cabfeaf7b..fd3700a4db6d 100644
-> --- a/Documentation/translations/zh_CN/filesystems/index.rst
-> +++ b/Documentation/translations/zh_CN/filesystems/index.rst
-> @@ -27,3 +27,5 @@ Linux Kernel=E4=B8=AD=E7=9A=84=E6=96=87=E4=BB=B6=E7=B3=
-=BB=E7=BB=9F
->  .. toctree::
->     :maxdepth: 2
-> =20
-> +   virtiofs
-> +
-> diff --git a/Documentation/translations/zh_CN/filesystems/virtiofs.rst b/=
-Documentation/translations/zh_CN/filesystems/virtiofs.rst
-> new file mode 100644
-> index 000000000000..cd836a9b2ac4
-> --- /dev/null
-> +++ b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
-> @@ -0,0 +1,61 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +.. raw:: latex
-> +
-> +	\renewcommand\thesection*
-> +	\renewcommand\thesubsection*
-
-Same note as on the previous patch: please check if this works with
-1.7.9 and latest Sphinx versions
-
-Regards,
-Mauro
-
-> +
-> +.. include:: ../disclaimer-zh_CN.rst
-> +
-> +:Original: :ref:`Documentation/filesystems/virtiofs.rst <virtiofs_index>`
-> +
-> +=E8=AF=91=E8=80=85
-> +::
-> +
-> +	=E4=B8=AD=E6=96=87=E7=89=88=E7=BB=B4=E6=8A=A4=E8=80=85=EF=BC=9A =E7=8E=
-=8B=E6=96=87=E8=99=8E Wang Wenhu <wenhu.wang@vivo.com>
-> +	=E4=B8=AD=E6=96=87=E7=89=88=E7=BF=BB=E8=AF=91=E8=80=85=EF=BC=9A =E7=8E=
-=8B=E6=96=87=E8=99=8E Wang Wenhu <wenhu.wang@vivo.com>
-> +	=E4=B8=AD=E6=96=87=E7=89=88=E6=A0=A1=E8=AF=91=E8=80=85:  =E7=8E=8B=E6=
-=96=87=E8=99=8E Wang Wenhu <wenhu.wang@vivo.com>
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +virtiofs: virtio-fs =E4=B8=BB=E6=9C=BA<->=E5=AE=A2=E6=9C=BA=E5=85=B1=E4=
-=BA=AB=E6=96=87=E4=BB=B6=E7=B3=BB=E7=BB=9F
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +- Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-> +
-> +=E4=BB=8B=E7=BB=8D
-> +=3D=3D=3D=3D
-> +Linux=E7=9A=84virtiofs=E6=96=87=E4=BB=B6=E7=B3=BB=E7=BB=9F=E5=AE=9E=E7=
-=8E=B0=E4=BA=86=E4=B8=80=E4=B8=AA=E5=8D=8A=E8=99=9A=E6=8B=9F=E5=8C=96VIRTIO=
-=E7=B1=BB=E5=9E=8B=E2=80=9Cvirtio-fs=E2=80=9D=E8=AE=BE=E5=A4=87=E7=9A=84=E9=
-=A9=B1=E5=8A=A8=EF=BC=8C=E9=80=9A=E8=BF=87=E8=AF=A5\
-> +=E7=B1=BB=E5=9E=8B=E8=AE=BE=E5=A4=87=E5=AE=9E=E7=8E=B0=E5=AE=A2=E6=9C=BA=
-<->=E4=B8=BB=E6=9C=BA=E6=96=87=E4=BB=B6=E7=B3=BB=E7=BB=9F=E5=85=B1=E4=BA=AB=
-=E3=80=82=E5=AE=83=E5=85=81=E8=AE=B8=E5=AE=A2=E6=9C=BA=E6=8C=82=E8=BD=BD=E4=
-=B8=80=E4=B8=AA=E5=B7=B2=E7=BB=8F=E5=AF=BC=E5=87=BA=E5=88=B0=E4=B8=BB=E6=9C=
-=BA=E7=9A=84=E7=9B=AE=E5=BD=95=E3=80=82
-> +
-> +=E5=AE=A2=E6=9C=BA=E9=80=9A=E5=B8=B8=E9=9C=80=E8=A6=81=E8=AE=BF=E9=97=AE=
-=E4=B8=BB=E6=9C=BA=E6=88=96=E8=80=85=E8=BF=9C=E7=A8=8B=E7=B3=BB=E7=BB=9F=E4=
-=B8=8A=E7=9A=84=E6=96=87=E4=BB=B6=E3=80=82=E4=BD=BF=E7=94=A8=E5=9C=BA=E6=99=
-=AF=E5=8C=85=E6=8B=AC=EF=BC=9A=E5=9C=A8=E6=96=B0=E5=AE=A2=E6=9C=BA=E5=AE=89=
-=E8=A3=85=E6=97=B6=E8=AE=A9=E6=96=87=E4=BB=B6=E5=AF=B9=E5=85=B6\
-> +=E5=8F=AF=E8=A7=81=EF=BC=9B=E4=BB=8E=E4=B8=BB=E6=9C=BA=E4=B8=8A=E7=9A=84=
-=E6=A0=B9=E6=96=87=E4=BB=B6=E7=B3=BB=E7=BB=9F=E5=90=AF=E5=8A=A8=EF=BC=9B=E5=
-=AF=B9=E6=97=A0=E7=8A=B6=E6=80=81=E6=88=96=E4=B8=B4=E6=97=B6=E5=AE=A2=E6=9C=
-=BA=E6=8F=90=E4=BE=9B=E6=8C=81=E4=B9=85=E5=AD=98=E5=82=A8=E5=92=8C=E5=9C=A8=
-=E5=AE=A2=E6=9C=BA=E4=B9=8B=E9=97=B4=E5=85=B1=E4=BA=AB=E7=9B=AE=E5=BD=95=E3=
-=80=82
-> +
-> +=E5=B0=BD=E7=AE=A1=E5=9C=A8=E6=9F=90=E4=BA=9B=E4=BB=BB=E5=8A=A1=E5=8F=AF=
-=E8=83=BD=E9=80=9A=E8=BF=87=E4=BD=BF=E7=94=A8=E5=B7=B2=E6=9C=89=E7=9A=84=E7=
-=BD=91=E7=BB=9C=E6=96=87=E4=BB=B6=E7=B3=BB=E7=BB=9F=E5=AE=8C=E6=88=90=EF=BC=
-=8C=E4=BD=86=E6=98=AF=E5=8D=B4=E9=9C=80=E8=A6=81=E9=9D=9E=E5=B8=B8=E9=9A=BE=
-=E4=BB=A5=E8=87=AA=E5=8A=A8=E5=8C=96=E7=9A=84=E9=85=8D=E7=BD=AE\
-> +=E6=AD=A5=E9=AA=A4=EF=BC=8C=E4=B8=94=E5=B0=86=E5=AD=98=E5=82=A8=E7=BD=91=
-=E7=BB=9C=E6=9A=B4=E9=9C=B2=E7=BB=99=E5=AE=A2=E6=9C=BA=E3=80=82=E8=80=8Cvir=
-tio-fs=E8=AE=BE=E5=A4=87=E9=80=9A=E8=BF=87=E6=8F=90=E4=BE=9B=E4=B8=8D=E7=BB=
-=8F=E8=BF=87=E7=BD=91=E7=BB=9C=E7=9A=84=E6=96=87=E4=BB=B6=E7=B3=BB=E7=BB=9F=
-=E8=AE=BF=E9=97=AE=E6=96=87=E4=BB=B6\
-> +=E7=9A=84=E8=AE=BE=E8=AE=A1=E6=96=B9=E5=BC=8F=E8=A7=A3=E5=86=B3=E4=BA=86=
-=E8=BF=99=E4=BA=9B=E9=97=AE=E9=A2=98=E3=80=82
-> +
-> +=E5=8F=A6=E5=A4=96=EF=BC=8Cvirto-fs=E8=AE=BE=E5=A4=87=E5=8F=91=E6=8C=A5=
-=E4=BA=86=E4=B8=BB=E5=AE=A2=E6=9C=BA=E5=85=B1=E5=AD=98=E7=9A=84=E4=BC=98=E7=
-=82=B9=E6=8F=90=E9=AB=98=E4=BA=86=E6=80=A7=E8=83=BD=EF=BC=8C=E5=B9=B6=E4=B8=
-=94=E6=8F=90=E4=BE=9B=E4=BA=86=E7=BD=91=E7=BB=9C=E6=96=87=E4=BB=B6=E7=B3=BB=
-=E7=BB=9F=E6=89=80=E4=B8=8D=E5=85=B7=E5=A4=87
-> +=E7=9A=84=E4=B8=80=E4=BA=9B=E8=AF=AD=E4=B9=89=E5=8A=9F=E8=83=BD=E3=80=82
-> +
-> +=E7=94=A8=E6=B3=95
-> +=3D=3D=3D=3D
-> +=E4=BB=A5``myfs``=E6=A0=87=E7=AD=BE=E5=B0=86=E6=96=87=E4=BB=B6=E7=B3=BB=
-=E7=BB=9F=E6=8C=82=E8=BD=BD=E5=88=B0``/mnt``:
-> +
-> +.. code-block:: sh
-> +
-> +  guest# mount -t virtiofs myfs /mnt
-> +
-> +=E8=AF=B7=E6=9F=A5=E9=98=85 https://virtio-fs.gitlab.io/ =E4=BA=86=E8=A7=
-=A3=E9=85=8D=E7=BD=AEQEMU=E5=92=8Cvirtiofsd=E5=AE=88=E6=8A=A4=E7=A8=8B=E5=
-=BA=8F=E7=9A=84=E8=AF=A6=E7=BB=86=E4=BF=A1=E6=81=AF=E3=80=82
-> +
-> +=E5=86=85=E5=B9=95
-> +=3D=3D=3D=3D
-> +=E7=94=B1=E4=BA=8Evirtio-fs=E8=AE=BE=E5=A4=87=E5=B0=86FUSE=E5=8D=8F=E8=
-=AE=AE=E7=94=A8=E4=BA=8E=E6=96=87=E4=BB=B6=E7=B3=BB=E7=BB=9F=E8=AF=B7=E6=B1=
-=82=EF=BC=8C=E5=9B=A0=E6=AD=A4Linux=E7=9A=84virtiofs=E6=96=87=E4=BB=B6=E7=
-=B3=BB=E7=BB=9F=E4=B8=8EFUSE=E6=96=87\
-> +=E4=BB=B6=E7=B3=BB=E7=BB=9F=E5=AE=A2=E6=88=B7=E7=AB=AF=E7=B4=A7=E5=AF=86=
-=E9=9B=86=E6=88=90=E5=9C=A8=E4=B8=80=E8=B5=B7=E3=80=82=E5=AE=A2=E6=9C=BA=E5=
-=85=85=E5=BD=93FUSE=E5=AE=A2=E6=88=B7=E7=AB=AF=E8=80=8C=E4=B8=BB=E6=9C=BA=
-=E5=85=85=E5=BD=93FUSE=E6=9C=8D=E5=8A=A1=E5=99=A8=EF=BC=8C=E5=86=85=E6=A0=
-=B8=E4=B8=8E=E7=94=A8=E6=88=B7=E7=A9=BA\
-> +=E9=97=B4=E4=B9=8B=E9=97=B4=E7=9A=84/dev/fuse=E6=8E=A5=E5=8F=A3=E7=94=B1=
-virtio-fs=E8=AE=BE=E5=A4=87=E6=8E=A5=E5=8F=A3=E4=BB=A3=E6=9B=BF=E3=80=82
-> +
-> +FUSE=E8=AF=B7=E6=B1=82=E8=A2=AB=E7=BD=AE=E4=BA=8E=E8=99=9A=E6=8B=9F=E9=
-=98=9F=E5=88=97=E4=B8=AD=E7=94=B1=E4=B8=BB=E6=9C=BA=E5=A4=84=E7=90=86=E3=80=
-=82=E4=B8=BB=E6=9C=BA=E5=A1=AB=E5=85=85=E7=BC=93=E5=86=B2=E5=8C=BA=E4=B8=AD=
-=E7=9A=84=E5=93=8D=E5=BA=94=E9=83=A8=E5=88=86=EF=BC=8C=E8=80=8C=E5=AE=A2=E6=
-=9C=BA=E5=A4=84=E7=90=86=E8=AF=B7=E6=B1=82=E7=9A=84=E5=AE=8C=E6=88=90=E9=83=
-=A8=E5=88=86=E3=80=82
-> +
-> +=E5=B0=86/dev/fuse=E6=98=A0=E5=B0=84=E5=88=B0=E8=99=9A=E6=8B=9F=E9=98=9F=
-=E5=88=97=E9=9C=80=E8=A6=81=E8=A7=A3=E5=86=B3/dev/fuse=E5=92=8C=E8=99=9A=E6=
-=8B=9F=E9=98=9F=E5=88=97=E4=B9=8B=E9=97=B4=E8=AF=AD=E4=B9=89=E4=B8=8A=E7=9A=
-=84=E5=B7=AE=E5=BC=82=E3=80=82=E6=AF=8F=E6=AC=A1=E8=AF=BB=E5=8F=96\
-> +/dev/fuse=E8=AE=BE=E5=A4=87=E6=97=B6=EF=BC=8CFUSE=E5=AE=A2=E6=88=B7=E7=
-=AB=AF=E9=83=BD=E5=8F=AF=E4=BB=A5=E9=80=89=E6=8B=A9=E8=A6=81=E4=BC=A0=E8=BE=
-=93=E7=9A=84=E8=AF=B7=E6=B1=82=EF=BC=8C=E4=BB=8E=E8=80=8C=E5=8F=AF=E4=BB=A5=
-=E4=BD=BF=E6=9F=90=E4=BA=9B=E8=AF=B7=E6=B1=82=E4=BC=98=E5=85=88=E4=BA=8E=E5=
-=85=B6=E4=BB=96\
-> +=E8=AF=B7=E6=B1=82=E3=80=82=E8=99=9A=E6=8B=9F=E9=98=9F=E5=88=97=E6=9C=89=
-=E5=85=B6=E9=98=9F=E5=88=97=E8=AF=AD=E4=B9=89=EF=BC=8C=E6=97=A0=E6=B3=95=E6=
-=9B=B4=E6=94=B9=E5=B7=B2=E5=85=A5=E9=98=9F=E8=AF=B7=E6=B1=82=E7=9A=84=E9=A1=
-=BA=E5=BA=8F=E3=80=82=E5=9C=A8=E8=99=9A=E6=8B=9F=E9=98=9F=E5=88=97=E5=B7=B2=
-=E6=BB=A1=E7=9A=84=E6=83=85=E5=86=B5=E4=B8=8B=E5=B0=A4
-> +=E5=85=B6=E5=85=B3=E9=94=AE=EF=BC=8C=E5=9B=A0=E4=B8=BA=E6=AD=A4=E6=97=B6=
-=E4=B8=8D=E5=8F=AF=E8=83=BD=E5=8A=A0=E5=85=A5=E9=AB=98=E4=BC=98=E5=85=88=E7=
-=BA=A7=E7=9A=84=E8=AF=B7=E6=B1=82=E3=80=82=E4=B8=BA=E4=BA=86=E8=A7=A3=E5=86=
-=B3=E6=AD=A4=E5=B7=AE=E5=BC=82=EF=BC=8Cvirtio-fs=E8=AE=BE=E5=A4=87=E9=87=87=
-=E7=94=A8=E2=80=9Chiprio=E2=80=9D\
-> +=EF=BC=88=E9=AB=98=E4=BC=98=E5=85=88=E7=BA=A7=EF=BC=89=E8=99=9A=E6=8B=9F=
-=E9=98=9F=E5=88=97=EF=BC=8C=E4=B8=93=E9=97=A8=E7=94=A8=E4=BA=8E=E6=9C=89=E5=
-=88=AB=E4=BA=8E=E6=99=AE=E9=80=9A=E8=AF=B7=E6=B1=82=E7=9A=84=E9=AB=98=E4=BC=
-=98=E5=85=88=E7=BA=A7=E8=AF=B7=E6=B1=82=E3=80=82
-
-
-
-Thanks,
-Mauro
