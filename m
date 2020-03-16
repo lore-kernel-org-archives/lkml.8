@@ -2,157 +2,119 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0ADC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B930DC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B49206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:57:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U+qDYKKx"
+	by mail.kernel.org (Postfix) with ESMTP id 89D2620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731452AbgCPN5n (ORCPT
+        id S1731466AbgCPN5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:57:43 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57632 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731331AbgCPN5n (ORCPT
+        Mon, 16 Mar 2020 09:57:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16018 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731468AbgCPN5x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:57:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584367062;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=y37xLyubvdE/S1nw2px77Rlc9yCddXzDwGhRdNOHBN8=;
-        b=U+qDYKKxcwqXFOhLxLOVUKh84m+575C8WW5WG2gOpK/Ixkb8PYum9+KUrkCfPhTe6cPKNm
-        XJEuqFIJqfz1E+OPo85vvsFYtN/xScTTFQndS4i00In7bOPe/yAnmhSCThEnVidXcEVtlT
-        KAizB2LMnyfGBYawYT/jiHbmHi3UDFI=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-474-a8r-fxhTNXeQ8AqcNqwSFQ-1; Mon, 16 Mar 2020 09:57:40 -0400
-X-MC-Unique: a8r-fxhTNXeQ8AqcNqwSFQ-1
-Received: by mail-io1-f72.google.com with SMTP id s66so11757933iod.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 06:57:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y37xLyubvdE/S1nw2px77Rlc9yCddXzDwGhRdNOHBN8=;
-        b=p7w6r2E1fn8PX53eDgU/tRJ9WzT0AfahawK6aNINJpD/teZQOMR9cWsTOQSm1J6E6H
-         x/gxncsF7/AfgTKyI0vUy/+jgJTaUJGkKseDEzVLV5PFE6/Re8egpZZZstwI64d89Lx1
-         ZS85JkVJf+62aKA6lQtOfhuqvUHLYnzB+ZY6TtJz2yQQ0NBWHDtKpRS3QA/KlHr9iktZ
-         LimrVKc1G9R/e1HZwmnenjB0L7q4OKAr/Lvf8aKOT42bgCkn6krQWNvRt6bbPZKINtYQ
-         DLlSTvhXVRnGZ6dlYrK/e8AuQ5kmIoqFummjyY5WOUALF6DiSEC4LFH3+65xTmv1t9gY
-         NIAA==
-X-Gm-Message-State: ANhLgQ1/dzom3AOPLl01jiB2SPw5gpMsvhMhIjyXgRaEmtHUW1Inj/9h
-        2VV6y2MBA+AJxAkwug5P62cskX7lfL/4OOkjd8AimS4XmEBgCcFgo2G6ttEk7TXBFyRooghkP4T
-        58kcDicE7ruijQDcBEf0k98BGN6b5v/OL1P7vQ1B3
-X-Received: by 2002:a02:cf04:: with SMTP id q4mr9572693jar.87.1584367059506;
-        Mon, 16 Mar 2020 06:57:39 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtNPvPZSYhWxM/8qdJsnQ0HV6J98ZSgGTa1bi4C+JJwXzj6XCPHyu7EOkwfMD3Vu6PwhYirIlDVFEzqlntUoBQ=
-X-Received: by 2002:a02:cf04:: with SMTP id q4mr9572653jar.87.1584367059169;
- Mon, 16 Mar 2020 06:57:39 -0700 (PDT)
+        Mon, 16 Mar 2020 09:57:53 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02GDpOA1040273
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:57:51 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yrr6sy2ns-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:57:51 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Mon, 16 Mar 2020 13:57:49 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 16 Mar 2020 13:57:46 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02GDvjDu15532088
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Mar 2020 13:57:45 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FC52A405B;
+        Mon, 16 Mar 2020 13:57:45 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 07F41A4060;
+        Mon, 16 Mar 2020 13:57:44 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.92.169])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 16 Mar 2020 13:57:43 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, psampat@linux.ibm.com,
+        pratik.r.sampat@gmail.com, ego@linux.vnet.ibm.com, dja@axtens.net
+Subject: [PATCH] cpufreq: powernv: Fix frame-size-overflow in powernv_cpufreq_work_fn
+Date:   Mon, 16 Mar 2020 19:27:43 +0530
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
- <20200315012523.GC208715@linux.intel.com> <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
- <7f9f2efe-e9af-44da-6719-040600f5b351@fortanix.com>
-In-Reply-To: <7f9f2efe-e9af-44da-6719-040600f5b351@fortanix.com>
-From:   Nathaniel McCallum <npmccallum@redhat.com>
-Date:   Mon, 16 Mar 2020 09:57:28 -0400
-Message-ID: <CAOASepNifZdBmg59sJcP1mqSYMW_C=KsdKq-fCmvAU_5iQ9DFw@mail.gmail.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Jethro Beekman <jethro@fortanix.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031613-0008-0000-0000-0000035E25A7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031613-0009-0000-0000-00004A7F790A
+Message-Id: <20200316135743.57735-1-psampat@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-16_03:2020-03-12,2020-03-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003160065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 9:32 AM Jethro Beekman <jethro@fortanix.com> wrote:
->
-> On 2020-03-15 18:53, Nathaniel McCallum wrote:
-> > On Sat, Mar 14, 2020 at 9:25 PM Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com> wrote:
-> >>
-> >> On Wed, Mar 11, 2020 at 01:30:07PM -0400, Nathaniel McCallum wrote:
-> >>> Currently, the selftest has a wrapper around
-> >>> __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
-> >>> registers (CSRs), though it uses none of them. Then it calls this
-> >>> function which uses %rbx but preserves none of the CSRs. Then it jumps
-> >>> into an enclave which zeroes all these registers before returning.
-> >>> Thus:
-> >>>
-> >>>   1. wrapper saves all CSRs
-> >>>   2. wrapper repositions stack arguments
-> >>>   3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
-> >>>   4. selftest zeros all CSRs
-> >>>   5. wrapper loads all CSRs
-> >>>
-> >>> I'd like to propose instead that the enclave be responsible for saving
-> >>> and restoring CSRs. So instead of the above we have:
-> >>>   1. __vdso_sgx_enter_enclave() saves %rbx
-> >>>   2. enclave saves CSRs
-> >>>   3. enclave loads CSRs
-> >>>   4. __vdso_sgx_enter_enclave() loads %rbx
-> >>>
-> >>> I know that lots of other stuff happens during enclave transitions,
-> >>> but at the very least we could reduce the number of instructions
-> >>> through this critical path.
-> >>
-> >> What Jethro said and also that it is a good general principle to cut
-> >> down the semantics of any vdso as minimal as possible.
-> >>
-> >> I.e. even if saving RBX would make somehow sense it *can* be left
-> >> out without loss in terms of what can be done with the vDSO.
-> >
-> > Please read the rest of the thread. Sean and I have hammered out some
-> > sensible and effective changes.
->
-> I'm not sure they're sensible? By departing from the ENCLU calling convention, both the VDSO
-> and the wrapper become more complicated.
+The patch avoids allocating cpufreq_policy on stack hence fixing frame
+size overflow in 'powernv_cpufreq_work_fn'
 
-For the vDSO, only marginally. I'm counting +4,-2 instructions in my
-suggestions. For the wrapper, things become significantly simpler.
+Fixes: 227942809b52 ("cpufreq: powernv: Restore cpu frequency to policy->cur on unthrottling")
+Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+---
+ drivers/cpufreq/powernv-cpufreq.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-> The wrapper because now it needs to implement all
-> kinds of logic for different behavior depending on whether the VDSO is or isn't available.
-
-When isn't the vDSO available? Once the patches are merged it will
-always be available. Then we also get to live with this interface
-forever. I'd rather have a good, usable interface for the long term.
-
-> I agree with Jarkko that everything should be kept small and simple. Calling a couple extra instructions is going to have a negligible effect compared to the actual time EENTER/EEXIT take.
-
-We all agree on small and simple. Nothing I've proposed fails either
-of those criteria.
-
-> Can someone remind me why we're not passing TCS in RBX but on the stack?
-
-If you do that, the vDSO will never be callable from C. And, as you've
-stated above, calling a couple extra instructions is going to have a
-negligible effect.
+diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+index 56f4bc0d209e..20ee0661555a 100644
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -902,6 +902,7 @@ static struct notifier_block powernv_cpufreq_reboot_nb = {
+ void powernv_cpufreq_work_fn(struct work_struct *work)
+ {
+ 	struct chip *chip = container_of(work, struct chip, throttle);
++	struct cpufreq_policy *policy;
+ 	unsigned int cpu;
+ 	cpumask_t mask;
+ 
+@@ -916,12 +917,14 @@ void powernv_cpufreq_work_fn(struct work_struct *work)
+ 	chip->restore = false;
+ 	for_each_cpu(cpu, &mask) {
+ 		int index;
+-		struct cpufreq_policy policy;
+ 
+-		cpufreq_get_policy(&policy, cpu);
+-		index = cpufreq_table_find_index_c(&policy, policy.cur);
+-		powernv_cpufreq_target_index(&policy, index);
+-		cpumask_andnot(&mask, &mask, policy.cpus);
++		policy = cpufreq_cpu_get(cpu);
++		if (!policy)
++			continue;
++		index = cpufreq_table_find_index_c(policy, policy->cur);
++		powernv_cpufreq_target_index(policy, index);
++		cpumask_andnot(&mask, &mask, policy->cpus);
++		cpufreq_cpu_put(policy);
+ 	}
+ out:
+ 	put_online_cpus();
+-- 
+2.24.1
 
