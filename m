@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345EFC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222DBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9CA2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED49720658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:39:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="beK8PCLh"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WKf5Gnvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbgCPOju (ORCPT
+        id S1731595AbgCPOjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:39:50 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43089 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731507AbgCPOjt (ORCPT
+        Mon, 16 Mar 2020 10:39:54 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37165 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731572AbgCPOjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:39:49 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u12so9863021pgb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:39:47 -0700 (PDT)
+        Mon, 16 Mar 2020 10:39:53 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f16so8109525plj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:39:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AD7FtBEtTdopzK9pUfhZrq115V9s5XIG8+/OzSZ3Wto=;
-        b=beK8PCLhYD1dsLDpHJqB8TGxb7jQ3ongo5w6XNyZETLY4DBFCgV6vo1/Kg3D8/g9TT
-         jDa7CyqwP6bvlCprkI5tDSFMoUTXcgwB6uiucd06U6ZutTR34GpztaaDBilSTUraD1lA
-         f/sVZKw2N5UEeOUhzymaK7xfM/UqWtoxrBrSlOhsigCrjhc+WFJYpHUVUYs7cGMJppAS
-         colGDPgTSwUmsuiSnMYX1LLvGitITGH21NbuQ3oavInbU/YFwa6DgCpLfDhW/TG0VVFn
-         5v9nH08IShEv4OkMwS2q4yMf4YwLYG0Rq9f0GIRPBZfSeSOOUH3EMyyFpIsO01TXv07a
-         O17Q==
+        bh=Zku3gYtegdivuyVdz79vHefY5lOBMVX+wXMMYAiZ+NE=;
+        b=WKf5GnvmXhvVA4DxzPPfzsd2Rc2/Z1+VTXY1J3w+oW9gKuJCYU02BAFddRUuh4qEKK
+         6BxpN+0SaP/s32hujCUWhaFAygo0o+dRCw9H53gUijl07I6sc7xuF8k8GEcnkhFwhRdA
+         tpAFN2ANcbdUbvmkxVZQsSArHyJ6qvpYiMQp4gOk1fG3ntONRL0KO2K6tNpixvBVohKw
+         di8QqXauNo2B9I3ryAhYbVR6tYzbpPGUbPmcfT8SGmOEEBjTasvH5wQ4dIlX7KvpotOk
+         BXDsiLZiozCsL9YohSMaLgXKfQB/eAEzxZr1ZwVh8U8fb3Fk+FIgp7e9NINrSGDwCAcP
+         JvBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AD7FtBEtTdopzK9pUfhZrq115V9s5XIG8+/OzSZ3Wto=;
-        b=LTPPnAYjUfjQCTmt0279GPNM8CuXMMBlBIAVk8t6vmn/XzfbJzRE883zt1cwKK6w30
-         a8ndD3Dk4HztPE2LdYMeAkm5Spoi8u5di5FLbVRYkY8DJg8BLXevcbwEcORtX1sinysR
-         ZnsHop0Mtz5DI/ffXK2WL0oQlNFjFRH+YSR2vVvBxVtUI+UjbPEwtqW/r7mH/fRjsT0g
-         TfQRDK9ydGToUW6bBGSUCdjSBa02La+aRtUeIhUectGrY7DWQQWRbBUlmDteX5K0GTCk
-         XdIJxf/6oNYa7TwqS8BwYlVwg8HfxKGoB0izCfWak8ppaBhyeC+8ppSMHKgdycr9WPKF
-         S3Gw==
-X-Gm-Message-State: ANhLgQ0tz7V1GSTqJbj9NFDk4V+YLQ9wr45fLkqT/ALyJ2KYRAV5L3Eu
-        pMK5tT7kE9MRu6f9cvpB+vfLDu+lGw0Jvg==
-X-Google-Smtp-Source: ADFU+vu68iG0TnbKfTTHZ6jUwW0TjWy3ZYyyMw5wypW0qWK6v9wnWEf9y1k4iDUr1GuSU5GTgBbgdw==
-X-Received: by 2002:a62:7d4e:: with SMTP id y75mr5644pfc.32.1584369586818;
-        Mon, 16 Mar 2020 07:39:46 -0700 (PDT)
+        bh=Zku3gYtegdivuyVdz79vHefY5lOBMVX+wXMMYAiZ+NE=;
+        b=KkYxpRRwEEwXKwyPqTKWIYPXEwIHoSm2eg5PcokJnkhVUuUJFI+2q4ULa1/KsO8aFk
+         9egkebaOGXn8wL/I1NCjOG8qKv9X6LLYjpNy4HQp5IpMBzaTIQMu2KMherGlqY91Oagg
+         Y22h31z4s9/m9r4KP8QMrDRpey1n4KfoOq9LRUBbtKjoNoJHq8jgWADEski5JNRcwKa6
+         MA2rp0cCVTZbWFF5Hi3x9At+o4O98/xzPfGrsj8JzXhwnpjWFzMJ/TQpNwe3sLtPSKka
+         yXU0FvFenUxvM/aZh8WRRlO6bTIFTGXbkvowQ01pTkzx9XtlcJekj0Ms4kdOA0hN31WQ
+         F6BQ==
+X-Gm-Message-State: ANhLgQ2nxn2cyKGUhOEpaXwuOv7yPJ3H+doaUYPc7AnOxGaDH4aCXdwA
+        3mv5Ast2k9nn0HTX3OdlhIwyRPM0Ze2xVg==
+X-Google-Smtp-Source: ADFU+vtiKGNSRYoPM3pTwE6au0ABiF7VSY7Yq/xvnLVs4MaGZeWn+VEDdXf7tZqlXXOlOj9M9cuJww==
+X-Received: by 2002:a17:90b:14c2:: with SMTP id jz2mr25747348pjb.152.1584369591646;
+        Mon, 16 Mar 2020 07:39:51 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.39.39
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.39.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:39:46 -0700 (PDT)
+        Mon, 16 Mar 2020 07:39:51 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,27 +67,13 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Michal Simek <monstr@monstr.eu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Will Deacon <will@kernel.org>, linux-mips@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCHv2 01/50] kallsyms/printk: Add loglvl to print_ip_sym()
-Date:   Mon, 16 Mar 2020 14:38:27 +0000
-Message-Id: <20200316143916.195608-2-dima@arista.com>
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Richard Henderson <rth@twiddle.net>,
+        linux-alpha@vger.kernel.org
+Subject: [PATCHv2 02/50] alpha: Add show_stack_loglvl()
+Date:   Mon, 16 Mar 2020 14:38:28 +0000
+Message-Id: <20200316143916.195608-3-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -98,236 +84,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-print_ip_sym() needs to have a log level parameter to comply with other
-parts being printed. Otherwise, half of the expected backtrace would be
-printed and other may be missing with some logging level.
+Currently, the log-level of show_stack() depends on a platform
+realization. It creates situations where the headers are printed with
+lower log level or higher than the stacktrace (depending on
+a platform or user).
 
-The following callee(s) are using now the adjusted log level:
-- microblaze/unwind: the same level as headers & userspace unwind.
-  Note that pr_debug()'s there are for debugging the unwinder itself.
-- nds32/traps: symbol addresses are printed with the same log level
-  as backtrace headers.
-- lockdep: ip for locking issues is printed with the same log level
-  as other part of the warning.
-- sched: ip where preemption was disabled is printed as error like
-  the rest part of the message.
-- ftrace: bug reports are now consistent in the log level being used.
+Furthermore, it forces the logic decision from user to an architecture
+side. In result, some users as sysrq/kdb/etc are doing tricks with
+temporary rising console_loglevel while printing their messages.
+And in result it not only may print unwanted messages from other CPUs,
+but also omit printing at all in the unlucky case where the printk()
+was deferred.
 
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Michal Simek <monstr@monstr.eu>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincent Chen <deanbo422@gmail.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
+an easier approach than introducing more printk buffers.
+Also, it will consolidate printings with headers.
+
+Introduce show_stack_loglvl(), that eventually will substitute
+show_stack().
+
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: linux-alpha@vger.kernel.org
+[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/microblaze/kernel/unwind.c | 2 +-
- arch/mips/kernel/traps.c        | 4 ++--
- arch/nds32/kernel/traps.c       | 4 ++--
- arch/riscv/kernel/stacktrace.c  | 2 +-
- include/linux/kallsyms.h        | 4 ++--
- kernel/locking/lockdep.c        | 4 ++--
- kernel/sched/core.c             | 6 ++----
- kernel/trace/ftrace.c           | 8 ++++----
- tools/include/linux/kallsyms.h  | 2 +-
- 9 files changed, 17 insertions(+), 19 deletions(-)
+ arch/alpha/kernel/traps.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/arch/microblaze/kernel/unwind.c b/arch/microblaze/kernel/unwind.c
-index 34c270cb11fc..4241cdd28ee7 100644
---- a/arch/microblaze/kernel/unwind.c
-+++ b/arch/microblaze/kernel/unwind.c
-@@ -254,7 +254,7 @@ static void microblaze_unwind_inner(struct task_struct *task,
- 					task->comm);
- 				break;
- 			} else
--				print_ip_sym(pc);
-+				print_ip_sym(KERN_INFO, pc);
- 		}
+diff --git a/arch/alpha/kernel/traps.c b/arch/alpha/kernel/traps.c
+index f6b9664ac504..2402f1777f54 100644
+--- a/arch/alpha/kernel/traps.c
++++ b/arch/alpha/kernel/traps.c
+@@ -121,10 +121,10 @@ dik_show_code(unsigned int *pc)
+ }
  
- 		/* Stop when we reach anything not part of the kernel */
-diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
-index 31968cbd6464..de05503c680c 100644
---- a/arch/mips/kernel/traps.c
-+++ b/arch/mips/kernel/traps.c
-@@ -123,7 +123,7 @@ static void show_raw_backtrace(unsigned long reg29)
+ static void
+-dik_show_trace(unsigned long *sp)
++dik_show_trace(unsigned long *sp, const char *loglvl)
+ {
+ 	long i = 0;
+-	printk("Trace:\n");
++	printk("%sTrace:\n", loglvl);
+ 	while (0x1ff8 & (unsigned long) sp) {
+ 		extern char _stext[], _etext[];
+ 		unsigned long tmp = *sp;
+@@ -133,24 +133,25 @@ dik_show_trace(unsigned long *sp)
+ 			continue;
+ 		if (tmp >= (unsigned long) &_etext)
+ 			continue;
+-		printk("[<%lx>] %pSR\n", tmp, (void *)tmp);
++		printk("%s[<%lx>] %pSR\n", loglvl, tmp, (void *)tmp);
+ 		if (i > 40) {
+-			printk(" ...");
++			printk("%s ...", loglvl);
  			break;
  		}
- 		if (__kernel_text_address(addr))
--			print_ip_sym(addr);
-+			print_ip_sym(KERN_DEFAULT, addr);
  	}
- 	printk("\n");
+-	printk("\n");
++	printk("%s\n", loglvl);
  }
-@@ -153,7 +153,7 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs)
+ 
+ static int kstack_depth_to_print = 24;
+ 
+-void show_stack(struct task_struct *task, unsigned long *sp)
++void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
++			const char *loglvl)
+ {
+ 	unsigned long *stack;
+ 	int i;
+ 
+ 	/*
+-	 * debugging aid: "show_stack(NULL);" prints the
++	 * debugging aid: "show_stack(NULL, NULL, KERN_EMERG);" prints the
+ 	 * back trace for this cpu.
+ 	 */
+ 	if(sp==NULL)
+@@ -163,14 +164,19 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+ 		if ((i % 4) == 0) {
+ 			if (i)
+ 				pr_cont("\n");
+-			printk("       ");
++			printk("%s       ", loglvl);
+ 		} else {
+ 			pr_cont(" ");
+ 		}
+ 		pr_cont("%016lx", *stack++);
  	}
- 	printk("Call Trace:\n");
- 	do {
--		print_ip_sym(pc);
-+		print_ip_sym(KERN_DEFAULT, pc);
- 		pc = unwind_stack(task, &sp, pc, &ra);
- 	} while (pc);
  	pr_cont("\n");
-diff --git a/arch/nds32/kernel/traps.c b/arch/nds32/kernel/traps.c
-index f4d386b52622..40625760a125 100644
---- a/arch/nds32/kernel/traps.c
-+++ b/arch/nds32/kernel/traps.c
-@@ -108,7 +108,7 @@ static void __dump(struct task_struct *tsk, unsigned long *base_reg)
- 			if (__kernel_text_address(ret_addr)) {
- 				ret_addr = ftrace_graph_ret_addr(
- 						tsk, &graph, ret_addr, NULL);
--				print_ip_sym(ret_addr);
-+				print_ip_sym(KERN_EMERG, ret_addr);
- 			}
- 			if (--cnt < 0)
- 				break;
-@@ -124,7 +124,7 @@ static void __dump(struct task_struct *tsk, unsigned long *base_reg)
- 
- 				ret_addr = ftrace_graph_ret_addr(
- 						tsk, &graph, ret_addr, NULL);
--				print_ip_sym(ret_addr);
-+				print_ip_sym(KERN_EMERG, ret_addr);
- 			}
- 			if (--cnt < 0)
- 				break;
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index 0940681d2f68..a76892b48fff 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -98,7 +98,7 @@ static void notrace walk_stackframe(struct task_struct *task,
- 
- static bool print_trace_address(unsigned long pc, void *arg)
- {
--	print_ip_sym(pc);
-+	print_ip_sym(KERN_DEFAULT, pc);
- 	return false;
+-	dik_show_trace(sp);
++	dik_show_trace(sp, loglvl);
++}
++
++void show_stack(struct task_struct *task, unsigned long *sp)
++{
++	show_stack_loglvl(task, sp, KERN_DEFAULT);
  }
  
-diff --git a/include/linux/kallsyms.h b/include/linux/kallsyms.h
-index 657a83b943f0..98338dc6b5d2 100644
---- a/include/linux/kallsyms.h
-+++ b/include/linux/kallsyms.h
-@@ -165,9 +165,9 @@ static inline int kallsyms_show_value(void)
+ void
+@@ -184,7 +190,7 @@ die_if_kernel(char * str, struct pt_regs *regs, long err, unsigned long *r9_15)
+ 	printk("%s(%d): %s %ld\n", current->comm, task_pid_nr(current), str, err);
+ 	dik_show_regs(regs, r9_15);
+ 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
+-	dik_show_trace((unsigned long *)(regs+1));
++	dik_show_trace((unsigned long *)(regs+1), KERN_DEFAULT);
+ 	dik_show_code((unsigned int *)regs->pc);
  
- #endif /*CONFIG_KALLSYMS*/
+ 	if (test_and_set_thread_flag (TIF_DIE_IF_KERNEL)) {
+@@ -625,7 +631,7 @@ do_entUna(void * va, unsigned long opcode, unsigned long reg,
+ 	printk("gp = %016lx  sp = %p\n", regs->gp, regs+1);
  
--static inline void print_ip_sym(unsigned long ip)
-+static inline void print_ip_sym(const char *loglvl, unsigned long ip)
- {
--	printk("[<%px>] %pS\n", (void *) ip, (void *) ip);
-+	printk("%s[<%px>] %pS\n", loglvl, (void *) ip, (void *) ip);
- }
+ 	dik_show_code((unsigned int *)pc);
+-	dik_show_trace((unsigned long *)(regs+1));
++	dik_show_trace((unsigned long *)(regs+1), KERN_DEFAULT);
  
- #endif /*_LINUX_KALLSYMS_H*/
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 32406ef0d6a2..af819bb6874b 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3998,7 +3998,7 @@ static void print_unlock_imbalance_bug(struct task_struct *curr,
- 		curr->comm, task_pid_nr(curr));
- 	print_lockdep_cache(lock);
- 	pr_cont(") at:\n");
--	print_ip_sym(ip);
-+	print_ip_sym(KERN_WARNING, ip);
- 	pr_warn("but there are no more locks to release!\n");
- 	pr_warn("\nother info that might help us debug this:\n");
- 	lockdep_print_held_locks(curr);
-@@ -4600,7 +4600,7 @@ static void print_lock_contention_bug(struct task_struct *curr,
- 		curr->comm, task_pid_nr(curr));
- 	print_lockdep_cache(lock);
- 	pr_cont(") at:\n");
--	print_ip_sym(ip);
-+	print_ip_sym(KERN_WARNING, ip);
- 	pr_warn("but there are no locks held!\n");
- 	pr_warn("\nother info that might help us debug this:\n");
- 	lockdep_print_held_locks(curr);
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 1a9983da4408..2284deb3a83b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3858,8 +3858,7 @@ static noinline void __schedule_bug(struct task_struct *prev)
- 	if (IS_ENABLED(CONFIG_DEBUG_PREEMPT)
- 	    && in_atomic_preempt_off()) {
- 		pr_err("Preemption disabled at:");
--		print_ip_sym(preempt_disable_ip);
--		pr_cont("\n");
-+		print_ip_sym(KERN_ERR, preempt_disable_ip);
- 	}
- 	if (panic_on_warn)
- 		panic("scheduling while atomic\n");
-@@ -6792,8 +6791,7 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
- 	if (IS_ENABLED(CONFIG_DEBUG_PREEMPT)
- 	    && !preempt_count_equals(preempt_offset)) {
- 		pr_err("Preemption disabled at:");
--		print_ip_sym(preempt_disable_ip);
--		pr_cont("\n");
-+		print_ip_sym(KERN_ERR, preempt_disable_ip);
- 	}
- 	dump_stack();
- 	add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index fd81c7de77a7..c377e290ba54 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -2021,12 +2021,12 @@ void ftrace_bug(int failed, struct dyn_ftrace *rec)
- 	case -EFAULT:
- 		FTRACE_WARN_ON_ONCE(1);
- 		pr_info("ftrace faulted on modifying ");
--		print_ip_sym(ip);
-+		print_ip_sym(KERN_INFO, ip);
- 		break;
- 	case -EINVAL:
- 		FTRACE_WARN_ON_ONCE(1);
- 		pr_info("ftrace failed to modify ");
--		print_ip_sym(ip);
-+		print_ip_sym(KERN_INFO, ip);
- 		print_ip_ins(" actual:   ", (unsigned char *)ip);
- 		pr_cont("\n");
- 		if (ftrace_expected) {
-@@ -2037,12 +2037,12 @@ void ftrace_bug(int failed, struct dyn_ftrace *rec)
- 	case -EPERM:
- 		FTRACE_WARN_ON_ONCE(1);
- 		pr_info("ftrace faulted on writing ");
--		print_ip_sym(ip);
-+		print_ip_sym(KERN_INFO, ip);
- 		break;
- 	default:
- 		FTRACE_WARN_ON_ONCE(1);
- 		pr_info("ftrace faulted on unknown error ");
--		print_ip_sym(ip);
-+		print_ip_sym(KERN_INFO, ip);
- 	}
- 	print_bug_type();
- 	if (rec) {
-diff --git a/tools/include/linux/kallsyms.h b/tools/include/linux/kallsyms.h
-index 89ca6fe257cc..efb6c3f5f2a9 100644
---- a/tools/include/linux/kallsyms.h
-+++ b/tools/include/linux/kallsyms.h
-@@ -20,7 +20,7 @@ static inline const char *kallsyms_lookup(unsigned long addr,
- 
- #include <execinfo.h>
- #include <stdlib.h>
--static inline void print_ip_sym(unsigned long ip)
-+static inline void print_ip_sym(const char *loglvl, unsigned long ip)
- {
- 	char **name;
- 
+ 	if (test_and_set_thread_flag (TIF_DIE_IF_KERNEL)) {
+ 		printk("die_if_kernel recursion detected.\n");
 -- 
 2.25.1
 
