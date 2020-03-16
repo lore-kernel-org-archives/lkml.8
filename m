@@ -2,94 +2,98 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69565C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04ADC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 377C620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:27:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KWLvjEnj"
+	by mail.kernel.org (Postfix) with ESMTP id CB23320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbgCPP1r (ORCPT
+        id S1731600AbgCPPbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:27:47 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:48892 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731858AbgCPP1r (ORCPT
+        Mon, 16 Mar 2020 11:31:22 -0400
+Received: from smtprelay0023.hostedemail.com ([216.40.44.23]:35616 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731483AbgCPPbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:27:47 -0400
-X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Mar 2020 11:27:46 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584372465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7tIckOGwAi8kcv9l4a2aU1rTC/7Ce6IHxh06VU/Fv30=;
-        b=KWLvjEnjTHt4qBu77RI5DqKfhLG3h3XeH6uRPIWV0cQw12zGCmiIkBflGA5qs93grJTUpq
-        C9dZmOyDTyqL+2W6XCMYPwlBvKnJupjmDaTNQ0T+m7bEDVMXgbUfk6pjqnx2YUBX+CIZNk
-        tQ5r9Q4/R4DGBN9XUOk5qUNBud2KNK8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-HalrFa8EOcWuYz9zbJlVlQ-1; Mon, 16 Mar 2020 11:21:34 -0400
-X-MC-Unique: HalrFa8EOcWuYz9zbJlVlQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F5C4193283B;
-        Mon, 16 Mar 2020 15:21:32 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-249.phx2.redhat.com [10.3.118.249])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6542E19757;
-        Mon, 16 Mar 2020 15:21:29 +0000 (UTC)
-Subject: Re: [PATCH v3 3/3] KEYS: Use kvmalloc() to better handle large buffer
- allocation
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-References: <20200313152102.1707-4-longman@redhat.com>
- <20200313152102.1707-1-longman@redhat.com>
- <1809107.1584368672@warthog.procyon.org.uk>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <b7188708-67fa-b41d-2d03-f9a3862f32d7@redhat.com>
-Date:   Mon, 16 Mar 2020 11:21:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 16 Mar 2020 11:31:22 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave08.hostedemail.com (Postfix) with ESMTP id F29A81802DEF8;
+        Mon, 16 Mar 2020 15:31:20 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id E5402181D304D;
+        Mon, 16 Mar 2020 15:31:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: route18_624da6916fc3d
+X-Filterd-Recvd-Size: 2711
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 16 Mar 2020 15:31:15 +0000 (UTC)
+Message-ID: <97ea305c0d336f3c36a804b37e6bbb4b1bbf24fd.camel@perches.com>
+Subject: Re: [PATCHv2 01/50] kallsyms/printk: Add loglvl to print_ip_sym()
+From:   Joe Perches <joe@perches.com>
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Michal Simek <monstr@monstr.eu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Will Deacon <will@kernel.org>, linux-mips@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Date:   Mon, 16 Mar 2020 08:29:28 -0700
+In-Reply-To: <20200316143916.195608-2-dima@arista.com>
+References: <20200316143916.195608-1-dima@arista.com>
+         <20200316143916.195608-2-dima@arista.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <1809107.1584368672@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/16/20 10:24 AM, David Howells wrote:
-> I wonder if it's worth merging this into patch 2.  I'm not sure it's really
-> worth its own patch.  If you want to generalise kvzfree(), then that could go
-> as its own patch first.
->
-> David
+On Mon, 2020-03-16 at 14:38 +0000, Dmitry Safonov wrote:
+> print_ip_sym() needs to have a log level parameter to comply with other
+> parts being printed. Otherwise, half of the expected backtrace would be
+> printed and other may be missing with some logging level.
 
-Sure, I can merge it into patch 2.
+There are 15 instances of print_ip_sym.
 
-Thanks,
-Longman
+Perhaps it'd be better to get rid of print_ip_sym
+altogether by expanding it in-place instead.
+
+>  arch/microblaze/kernel/unwind.c | 2 +-
+>  arch/mips/kernel/traps.c        | 4 ++--
+>  arch/nds32/kernel/traps.c       | 4 ++--
+>  arch/riscv/kernel/stacktrace.c  | 2 +-
+>  include/linux/kallsyms.h        | 4 ++--
+>  kernel/locking/lockdep.c        | 4 ++--
+>  kernel/sched/core.c             | 6 ++----
+>  kernel/trace/ftrace.c           | 8 ++++----
+>  tools/include/linux/kallsyms.h  | 2 +-
+
 
