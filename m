@@ -2,203 +2,138 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07B4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04947C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE43020578
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA82C205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="avmg36es"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mDSPa+99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgCPEHW (ORCPT
+        id S1729388AbgCPEOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 00:07:22 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:15450 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgCPEHW (ORCPT
+        Mon, 16 Mar 2020 00:14:37 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:45546 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgCPEOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 00:07:22 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200316040718epoutp01ac1f94633dabfed999c392cfdc9cd6d7~8rTsZSIuD1548715487epoutp01V
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 04:07:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200316040718epoutp01ac1f94633dabfed999c392cfdc9cd6d7~8rTsZSIuD1548715487epoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584331638;
-        bh=d/RUH2DnI9bnLtOMlJoIQfdWKOD4LySjodtnFlva8jQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=avmg36esx9qcAnqupfRIid4DfMK5c++LCpOxslb0Mbc6UxsPeTGuJkP6fi7lcIGmr
-         Jtze8pM26j62WMJCqr6WxMZV62fj19xlL7K7WesG8YtQNRmMzjGidxaWyrtMpaw07i
-         OBiQ+04ewYhaJIWSCE0wUAR3QrkJh8hSfCX4jnlo=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200316040717epcas1p37e0ea434b3d3a625758d6344cdf6262c~8rTsBP5n_2125321253epcas1p3T;
-        Mon, 16 Mar 2020 04:07:17 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 48gjS46QXnzMqYm3; Mon, 16 Mar
-        2020 04:07:16 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        55.E5.04160.47BFE6E5; Mon, 16 Mar 2020 13:07:16 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200316040716epcas1p3a16c3c333b74923a596f66fae5f28621~8rTqpmFmP2836328363epcas1p3k;
-        Mon, 16 Mar 2020 04:07:16 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200316040716epsmtrp1b021eecc8cca1bfb7a3507db2f928c21~8rTqm6sXH3093330933epsmtrp1d;
-        Mon, 16 Mar 2020 04:07:16 +0000 (GMT)
-X-AuditID: b6c32a38-297ff70000001040-28-5e6efb74fa80
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B4.A2.04158.47BFE6E5; Mon, 16 Mar 2020 13:07:16 +0900 (KST)
-Received: from [10.253.104.82] (unknown [10.253.104.82]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200316040714epsmtip2ed6746f17217020b1ce28bfd4334b2c2~8rTpJFgM52540325403epsmtip2o;
-        Mon, 16 Mar 2020 04:07:14 +0000 (GMT)
-Subject: Re: [RFC PATCH 0/3] meminfo: introduce extra meminfo
-To:     Leon Romanovsky <leon@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc:     adobriyan@gmail.com, akpm@linux-foundation.org, labbott@redhat.com,
-        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        Linux API <linux-api@vger.kernel.org>
-From:   Jaewon Kim <jaewon31.kim@samsung.com>
-Message-ID: <5E6EFB6C.7050105@samsung.com>
-Date:   Mon, 16 Mar 2020 13:07:08 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-        Thunderbird/38.7.2
-MIME-Version: 1.0
-In-Reply-To: <20200313174827.GA67638@unreal>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNJsWRmVeSWpSXmKPExsWy7bCmnm7J77w4g48njCymN3pZzFm/hs2i
-        e/NMRouVe34wWUz5tZTZYvP3DjaLy7vmsFncW/Of1WLZ1/fsFhtaZrFbPJowicni1N3P7Baz
-        G/sYHXg9ds66y+6xaVUnm8emT5PYPe5c28PmcWLGbxaP9/uusnmcWXCE3WPnp82sHp83yQVw
-        RuXYZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gDdraRQ
-        lphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMDQo0CtOzC0uzUvXS87PtTI0MDAyBapM
-        yMn4v2kBS8FymYp7bV8YGxgfiXUxcnJICJhIPOw4zgRiCwnsYJQ41gUU5wKyPzFKbO39xArh
-        fGOUOLxzHhtMx7zGiewQib2MEg+PH2eGcN4ySnxY8oAVpEpYwFbi5f8DQAkODhEBd4m1X4xA
-        wswCi5gkWmeGg9hsAtoS7xdMAivnFdCSmPq1lQXEZhFQlfg6fxk7iC0qECGxY+5HRogaQYmT
-        M5+wgIzkFNCRWDiTFWKkvETz1tlgJ0gILGKX6Py4lRniUBeJ1cvWQNnCEq+Ob2GHsKUkXva3
-        sUM0NDNKvJ25mRHCaWGUuLuplxGiyliit+cC2APMApoS63fpQ4QVJXb+nssIsZlP4t3XHlaQ
-        EgkBXomONiGIEjWJlmdfWSFsGYm//55B2R4Suz9choboE0aJS3/PsU1gVJiF5LdZSB6ahbB5
-        ASPzKkax1ILi3PTUYsMCE+QY3sQITshaFjsY95zzOcQowMGoxMMrkZYXJ8SaWFZcmXuIUYKD
-        WUmEt6MmO06INyWxsiq1KD++qDQntfgQoykwuCcyS4km5wOzRV5JvKGpkbGxsYWJmbmZqbGS
-        OO/U6zlxQgLpiSWp2ampBalFMH1MHJxSDYzqelOKD7jMZP2ao7u9fl7G0118Mea2pj3Pv3z8
-        cUB+8j0Rdc0Qsfd+DYeXFUVrFjnFlnkkbeZ9ulDW8E5X3P+Lc5wk4qbn1p42rpt2cMmpAsea
-        Y3vUv3xvtXC7/Tlp3bzDNpeMP/aH6/fOYExo1rQwfLdd2OvKovq7fL+52Mo+3l/sJVzkHKDE
-        UpyRaKjFXFScCABb9mYV3gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvG7J77w4g7fHBSymN3pZzFm/hs2i
-        e/NMRouVe34wWUz5tZTZYvP3DjaLy7vmsFncW/Of1WLZ1/fsFhtaZrFbPJowicni1N3P7Baz
-        G/sYHXg9ds66y+6xaVUnm8emT5PYPe5c28PmcWLGbxaP9/uusnmcWXCE3WPnp82sHp83yQVw
-        RnHZpKTmZJalFunbJXBl/N+0gKVguUzFvbYvjA2Mj8S6GDk5JARMJOY1TmTvYuTiEBLYzShx
-        9d4FRoiEjMSb809Zuhg5gGxhicOHiyFqXjNKXHk4lx2kRljAVuLl/wPMIDUiAu4Sa78YQdQ8
-        YZTY92ozE4jDLLCISeJm+3Q2kAY2AW2J9wsmsYLYvAJaElO/trKA2CwCqhJf5y8DGyoqECGx
-        et01ZogaQYmTM5+AHcEpoCOxcCYriMksoC6xfp4QSAWzgLxE89bZzBMYBWchaZiFUDULSdUC
-        RuZVjJKpBcW56bnFhgVGeanlesWJucWleel6yfm5mxjBMaaltYPxxIn4Q4wCHIxKPLwSaXlx
-        QqyJZcWVuYcYJTiYlUR4O2qy44R4UxIrq1KL8uOLSnNSiw8xSnOwKInzyucfixQSSE8sSc1O
-        TS1ILYLJMnFwSjUw+mdbJ5gXPz09RX3aSUXJRSr91UzztFX3Vs/b7dnpcVBljtq0H0xx5pPs
-        Eoo448J1P04LPe8Yx7F7jaGk48+ynQsNW98GKwZ1TPTymRD0clHjlaOy91wdl2Vs55FuMNGc
-        emfHn5W6/rsZ775vufcx9Nb7nrvHhPXePrTYeue7pJ70cZN8N5lmJZbijERDLeai4kQAteUJ
-        XK0CAAA=
-X-CMS-MailID: 20200316040716epcas1p3a16c3c333b74923a596f66fae5f28621
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200311034454epcas1p2ef0c0081971dd82282583559398e58b2
-References: <CGME20200311034454epcas1p2ef0c0081971dd82282583559398e58b2@epcas1p2.samsung.com>
-        <20200311034441.23243-1-jaewon31.kim@samsung.com>
-        <af4ace34-0db2-dd17-351f-eaa806f0a6ac@suse.cz>
-        <20200313174827.GA67638@unreal>
+        Mon, 16 Mar 2020 00:14:37 -0400
+Received: by mail-pl1-f202.google.com with SMTP id s6so9461908plp.12
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 21:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=8nA2hScnF6v2G0I1bnw6Oj3DivH5BnpkZl+mne8j+kA=;
+        b=mDSPa+99rw2JNjwNjr26acFFK1NJzZRajAx1Lm9aNgJq2lvXu5mNLw9qFWlShEJfJq
+         fr+nR3uxre7PdoWj+nyPCHjH01Lrfjcb2yGd+2vbyouGvINQRY4gUkD36YmYjHk8moHZ
+         WE8EnCK75nN+fQdwDWsgkeieS1PeQnuIm32Oey6etPYPpy2S50dcGLQUuK6Vr26up6p/
+         VJu8+oGPOH+3AWrXdvQoWxyJTwrtUy9pQ3c0qttC+bpqi7c+IyQVn1a+iZwp+fONGMC4
+         SZkrL1Iv7b1bv/6XvZli9pfxEdZ94CZ8Km6pBspTFjEE/Yx5w9WX0Bo9fvx83jlxEUoS
+         LAbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=8nA2hScnF6v2G0I1bnw6Oj3DivH5BnpkZl+mne8j+kA=;
+        b=W2w5RN2W2BaDfDq7rfsmSByDOn2ESrTKLToc9nL06PBFZoGtFp0tLSAK+ccPOIhwZG
+         j45Vc0pSfs0g/D4/qgr+p+pvdImU03/OcHZm1Zp8hOfw2Mnnh0F1IEx9wGanpDzIEsym
+         i81rOD4oBn/wK7IgC1OL5T9KO4CbnkkMYOkv9UiiAaCM33u+q2JyzX7mNvbuLFlvevhw
+         6b4rbJW8pPbzEPV/Qctg+i69NOMhpYUGMLPWQF3tnftGwQglY/C/BorJVOXUFQo3xU3N
+         LIQKj2+KKiLbYBynx6XlArd23irfXx94pTL7a/SPxlPpTur0Ba+I/abHkx6n6x6JJstd
+         FqFg==
+X-Gm-Message-State: ANhLgQ0Q65/6xWW8Ybr517W6XNxHeGJ7kU+1zeIwNlQw5k9PoCSZSq5W
+        o4ZGcyf3GWn34qvuBfUm+sZdMgSI5x60
+X-Google-Smtp-Source: ADFU+vt6yXQTbYWIKiMlO0L+FzEhOR/V+hFczzaycNV4sxjMKth8glR6Azdh13s6nmbVLuk+VhB0WkfM7arL
+X-Received: by 2002:a17:90a:7309:: with SMTP id m9mr22987108pjk.52.1584332075593;
+ Sun, 15 Mar 2020 21:14:35 -0700 (PDT)
+Date:   Sun, 15 Mar 2020 21:14:31 -0700
+Message-Id: <20200316041431.19607-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH] perf parse-events: fix memory leaks found on parse_events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Memory leaks found by applying LLVM's libfuzzer on the parse_events
+function.
 
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/perf/evlist.c        | 2 ++
+ tools/perf/util/parse-events.c | 2 ++
+ tools/perf/util/parse-events.y | 3 ++-
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
-On 2020년 03월 14일 02:48, Leon Romanovsky wrote:
-> On Fri, Mar 13, 2020 at 04:19:36PM +0100, Vlastimil Babka wrote:
->> +CC linux-api, please include in future versions as well
->>
->> On 3/11/20 4:44 AM, Jaewon Kim wrote:
->>> /proc/meminfo or show_free_areas does not show full system wide memory
->>> usage status. There seems to be huge hidden memory especially on
->>> embedded Android system. Because it usually have some HW IP which do not
->>> have internal memory and use common DRAM memory.
->>>
->>> In Android system, most of those hidden memory seems to be vmalloc pages
->>> , ion system heap memory, graphics memory, and memory for DRAM based
->>> compressed swap storage. They may be shown in other node but it seems to
->>> useful if /proc/meminfo shows all those extra memory information. And
->>> show_mem also need to print the info in oom situation.
->>>
->>> Fortunately vmalloc pages is alread shown by commit 97105f0ab7b8
->>> ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
->>> memory using zsmalloc can be seen through vmstat by commit 91537fee0013
->>> ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
->>>
->>> Memory usage of specific driver can be various so that showing the usage
->>> through upstream meminfo.c is not easy. To print the extra memory usage
->>> of a driver, introduce following APIs. Each driver needs to count as
->>> atomic_long_t.
->>>
->>> int register_extra_meminfo(atomic_long_t *val, int shift,
->>> 			   const char *name);
->>> int unregister_extra_meminfo(atomic_long_t *val);
->>>
->>> Currently register ION system heap allocator and zsmalloc pages.
->>> Additionally tested on local graphics driver.
->>>
->>> i.e) cat /proc/meminfo | tail -3
->>> IonSystemHeap:    242620 kB
->>> ZsPages:          203860 kB
->>> GraphicDriver:    196576 kB
->>>
->>> i.e.) show_mem on oom
->>> <6>[  420.856428]  Mem-Info:
->>> <6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
->>> <6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
->> I like the idea and the dynamic nature of this, so that drivers not present
->> wouldn't add lots of useless zeroes to the output.
->> It also makes simpler the decisions of "what is important enough to need its own
->> meminfo entry".
->>
->> The suggestion for hunting per-driver /sys files would only work if there was a
->> common name to such files so once can find(1) them easily.
->> It also doesn't work for the oom/failed alloc warning output.
-> Of course there is a need to have a stable name for such an output, this
-> is why driver/core should be responsible for that and not drivers authors.
->
-> The use case which I had in mind slightly different than to look after OOM.
->
-> I'm interested to optimize our drivers in their memory footprint to
-> allow better scale in SR-IOV mode where one device creates many separate
-> copies of itself. Those copies easily can take gigabytes of RAM due to
-> the need to optimize for high-performance networking. Sometimes the
-> amount of memory and not HW is actually limits the scale factor.
->
-> So I would imagine this feature being used as an aid for the driver
-> developers and not for the runtime decisions.
->
-> My 2-cents.
->
-> Thanks
->
->
-Thank you for your comment.
-My idea, I think, may be able to help each driver developer to see their memory usage.
-But I'd like to see overall memory usage through the one node.
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index 5b9f2ca50591..6485d1438f75 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -125,8 +125,10 @@ static void perf_evlist__purge(struct perf_evlist *evlist)
+ void perf_evlist__exit(struct perf_evlist *evlist)
+ {
+ 	perf_cpu_map__put(evlist->cpus);
++	perf_cpu_map__put(evlist->all_cpus);
+ 	perf_thread_map__put(evlist->threads);
+ 	evlist->cpus = NULL;
++	evlist->all_cpus = NULL;
+ 	evlist->threads = NULL;
+ 	fdarray__exit(&evlist->pollfd);
+ }
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index a14995835d85..997862224292 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1482,6 +1482,8 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 
+ 		list_for_each_entry_safe(pos, tmp, &config_terms, list) {
+ 			list_del_init(&pos->list);
++			if (pos->free_str)
++				free(pos->val.str);
+ 			free(pos);
+ 		}
+ 		return -EINVAL;
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 94f8bcd83582..8212cc771667 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -44,7 +44,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+ 
+ 	list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
+ 		list_del_init(&evsel->core.node);
+-		perf_evsel__delete(evsel);
++		evsel__delete(evsel);
+ 	}
+ 	free(list_evsel);
+ }
+@@ -326,6 +326,7 @@ PE_NAME opt_pmu_config
+ 	}
+ 	parse_events_terms__delete($2);
+ 	parse_events_terms__delete(orig_terms);
++	free(pattern);
+ 	free($1);
+ 	$$ = list;
+ #undef CLEANUP_YYABORT
+-- 
+2.25.1.481.gfbce0eb801-goog
 
-Let me know if you have more comment.
-I am planning to move my logic to be shown on a new node, /proc/meminfo_extra at v2.
-
-Thank you
-Jaewon Kim
