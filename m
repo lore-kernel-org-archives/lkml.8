@@ -2,123 +2,111 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4160C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC669C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9CD2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Z3KhRTH7"
+	by mail.kernel.org (Postfix) with ESMTP id AEFFA20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584351118;
+	bh=DxJdBm7JzgmwEdXyNYzruCyx/B+uGLyGyP2Jf9wSNDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fG2NKlcyUo/9Hp6HDmvjamonPwgyRRQaxvYZrVcPs9pj+JDxZHmvRt8BfbecYBR0N
+	 JtV+GDB+pwKmmd2wGXHLoWb5odTdAmJtl1J7vmhz9azbMasXqyIqeEVEgFGvuWAdlI
+	 WYQkJQ/Ixd9tDwqRtPg2LUYakSDykshbq6KR602s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbgCPJb0 (ORCPT
+        id S1730460AbgCPJb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:31:26 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34070 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730025AbgCPJbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:31:25 -0400
-Received: from zn.tnic (p200300EC2F06AB0069F33882ABEAD541.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:69f3:3882:abea:d541])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 544771EC0CD0;
-        Mon, 16 Mar 2020 10:31:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584351084;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=e/ksiddUErz9dGVWE2UE8EQ9TOo//fHUKhGBIAL1Tuk=;
-        b=Z3KhRTH7zoeWs62R9l7tErKfxlxS3sWy6e2hDrsDgxE0LhFp1a68YRUJEL8tVqWrG4AcPS
-        xcgn7yOqdHyDH2ZMoojUmENGIZ623EQLdeWQzgmgu/Gz5Iw5PjHr3F5/mM6BtPDf4z1X5N
-        MxeXJL9kOSOwawxGVW/XiH4ZiniC4BY=
-Date:   Mon, 16 Mar 2020 10:31:34 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/11] EDAC/ghes: Carve out MC device handling into
- separate functions
-Message-ID: <20200316093134.GB26126@zn.tnic>
-References: <20200306151318.17422-1-rrichter@marvell.com>
- <20200306151318.17422-7-rrichter@marvell.com>
+        Mon, 16 Mar 2020 05:31:57 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33079 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730025AbgCPJb5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:31:57 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r7so12850974wmg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 02:31:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ph+Lpxd0P8ykJk38qY3p4Me0iTKehJecocwBUyoICdw=;
+        b=enpOwdSvWvEc2AC8JGVPJGx1IPYRVUlnRn3NS7TPXV7GSXN7eJFh8KTT7X93soOP50
+         j42jkJdNapt4OEcvYZceibH8YMjRw9+eD+sgiwWBpfeGy3YVXfLWu1k4UXhaNM5dkprf
+         NFZZy210TBLNSAQ0sJtrmhKHFV94C/rVJK39cIvzyJ29NEqn8lC+PqNGz8WkIlwviAZR
+         5TsECY4hZfdYKVVeMBAxr+4ZluC+W9V845D5lzP+OO4gOkGb2xHR6mhkVwQLZAQbW/1A
+         ySZa8tlkcZ5B8BGwL6I0ptgE2jqayHa+gLvySHccSF398VY7MAch9dcGfHbVM3z6xpw6
+         8EoQ==
+X-Gm-Message-State: ANhLgQ0OGSH+1hiWSXNxf0daKO4t7GnZUjZ9IGXVq6aDb9ZgrZe/alAy
+        UftRdx0cazA2/N19PyB4kQ8=
+X-Google-Smtp-Source: ADFU+vuzMY/bxgQVAYh9LRNLpKp+57RbLaL/bDaeNyCIhcyn7QrUEk5CpP5iqMFCd2M73sePPJWAyA==
+X-Received: by 2002:a05:600c:2244:: with SMTP id a4mr25638104wmm.147.1584351114379;
+        Mon, 16 Mar 2020 02:31:54 -0700 (PDT)
+Received: from localhost (ip-37-188-254-25.eurotel.cz. [37.188.254.25])
+        by smtp.gmail.com with ESMTPSA id d7sm20150724wrc.25.2020.03.16.02.31.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 02:31:53 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 10:31:52 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
+Message-ID: <20200316093152.GE11482@dhcp22.suse.cz>
+References: <993e7783-60e9-ba03-b512-c829b9e833fd@i-love.sakura.ne.jp>
+ <alpine.DEB.2.21.2003111513180.195367@chino.kir.corp.google.com>
+ <202003120012.02C0CEUB043533@www262.sakura.ne.jp>
+ <alpine.DEB.2.21.2003121101030.158939@chino.kir.corp.google.com>
+ <20200312153238.c8d25ea6994b54a2c4d5ae1f@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306151318.17422-7-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200312153238.c8d25ea6994b54a2c4d5ae1f@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:13:13PM +0100, Robert Richter wrote:
-> The functions are too long, carve out code that handles MC devices
-> into the new functions ghes_mc_create(), ghes_mc_add_or_free() and
-> ghes_mc_free(). Apart from better code readability the functions can
-> be reused and the implementation of the error paths becomes easier.
+On Thu 12-03-20 15:32:38, Andrew Morton wrote:
+> On Thu, 12 Mar 2020 11:07:15 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
 > 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/ghes_edac.c | 133 +++++++++++++++++++++++----------------
->  1 file changed, 79 insertions(+), 54 deletions(-)
+> > On Thu, 12 Mar 2020, Tetsuo Handa wrote:
+> > 
+> > > > On Thu, 12 Mar 2020, Tetsuo Handa wrote:
+> > > > > > If you have an alternate patch to try, we can test it.  But since this 
+> > > > > > cond_resched() is needed anyway, I'm not sure it will change the result.
+> > > > > 
+> > > > > schedule_timeout_killable(1) is an alternate patch to try; I don't think
+> > > > > that this cond_resched() is needed anyway.
+> > > > > 
+> > > > 
+> > > > You are suggesting schedule_timeout_killable(1) in shrink_node_memcgs()?
+> > > > 
+> > > 
+> > > Andrew Morton also mentioned whether cond_resched() in shrink_node_memcgs()
+> > > is enough. But like you mentioned,
+> > > 
+> > 
+> > It passes our testing because this is where the allocator is looping while 
+> > the victim is trying to exit if only it could be scheduled.
 > 
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index 358519e8c2e9..5a4c9694bbff 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -462,16 +462,81 @@ static struct acpi_platform_list plat_list[] = {
->  	{ } /* End */
->  };
->  
-> -int ghes_edac_register(struct ghes *ghes, struct device *dev)
-> +static struct mem_ctl_info *ghes_mc_create(struct device *dev, int mc_idx,
-> +					int num_dimm)
->  {
-> -	bool fake = false;
-> -	int rc = 0, num_dimm = 0;
-> +	struct edac_mc_layer layers[1];
->  	struct mem_ctl_info *mci;
->  	struct ghes_mci *pvt;
-> -	struct edac_mc_layer layers[1];
-> -	struct ghes_dimm_fill dimm_fill;
-> +
-> +	layers[0].type = EDAC_MC_LAYER_ALL_MEM;
-> +	layers[0].size = num_dimm;
-> +	layers[0].is_virt_csrow = true;
-> +
-> +	mci = edac_mc_alloc(mc_idx, ARRAY_SIZE(layers), layers, sizeof(*pvt));
-> +	if (!mci)
-> +		return NULL;
-> +
-> +	pvt		= mci->pvt_info;
-> +	pvt->mci	= mci;
-> +
-> +	mci->pdev = dev;
-> +	mci->mtype_cap = MEM_FLAG_EMPTY;
-> +	mci->edac_ctl_cap = EDAC_FLAG_NONE;
-> +	mci->edac_cap = EDAC_FLAG_NONE;
-> +	mci->mod_name = "ghes_edac.c";
-> +	mci->ctl_name = "ghes_edac";
-> +	mci->dev_name = "ghes";
-> +
-> +	return mci;
-> +}
-> +
-> +static int ghes_mc_add_or_free(struct mem_ctl_info *mci)
+> What happens if the allocator has SCHED_FIFO?
 
-ghes_mc_add() is good enough. The fact that the function has error
-handling doesn't need to be in the name.
+The same thing as a SCHED_FIFO running in a tight loop in the userspace.
 
+As long as a high priority context depends on a resource held by a low
+priority task then we have a priority inversion problem and the page
+allocator is no real exception here. But I do not see the allocator
+is much different from any other code in the kernel. We do not add
+random sleeps here and there to push a high priority FIFO or RT tasks
+out of the execution context. We do cond_resched to help !PREEMPT
+kernels but priority related issues are really out of scope of that
+facility.
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Michal Hocko
+SUSE Labs
