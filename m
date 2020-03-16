@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11826C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A90C5ACDA
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA392206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FB120679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584377510;
-	bh=XYL9AOJtK5aVQvrteB5ZcPm9qQvX26vafh9D8nOItuI=;
+	s=default; t=1584377516;
+	bh=8aWbeyEHBuZ88Xn1W2sCvPjikYI/AzkEPxcBZq7atVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NXqXOc2KmeftMB+SsthGULlQ7p8JXYGugsCvmleFDkif1srdvPGIzqTE9AUxlZbwd
-	 +hsxnLFdsAc8vJptLhv7i5/nCjVGf6vYvDCrhVOouWxfbcBCApJt4sNNNWny9l2/M1
-	 0gOaLzL4Q+3aTYOuw/3d0zWHNPpC/l30zYfoyHdk=
+	b=BvI5l09tnOlwUIGspv/0MixAfSJ7eQ5/K9piMQ9ZU9LNbvMqJ2vKMWIxHW8AuO90p
+	 GJsDsl4n7+UvSlyQQCBxFT6GKu9MaaO9ehuEKCVb4oIzPe8qxq2zUZDwDcH80m1OrX
+	 46iTgEnrJdCXeqVybB25yb2Vt2geqlAlnXP4luxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732326AbgCPQvt (ORCPT
+        id S1732339AbgCPQvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:51:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:52220 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 12:51:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:52162 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731414AbgCPQvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:51:14 -0400
+        id S1732209AbgCPQvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 12:51:10 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1804030E;
-        Mon, 16 Mar 2020 09:51:14 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFADA11D4;
+        Mon, 16 Mar 2020 09:51:09 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F2D13F67D;
-        Mon, 16 Mar 2020 09:51:13 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DEDB3F67D;
+        Mon, 16 Mar 2020 09:51:09 -0700 (PDT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>
@@ -57,11 +57,10 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Dave Martin <Dave.Martin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH v10 07/13] arm64: unify native/compat instruction skipping
-Date:   Mon, 16 Mar 2020 16:50:49 +0000
-Message-Id: <20200316165055.31179-8-broonie@kernel.org>
+Subject: [PATCH v10 05/13] arm64: elf: Enable BTI at exec based on ELF program properties
+Date:   Mon, 16 Mar 2020 16:50:47 +0000
+Message-Id: <20200316165055.31179-6-broonie@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316165055.31179-1-broonie@kernel.org>
 References: <20200316165055.31179-1-broonie@kernel.org>
@@ -74,90 +73,182 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Martin <Dave.Martin@arm.com>
 
-Skipping of an instruction on AArch32 works a bit differently from
-AArch64, mainly due to the different CPSR/PSTATE semantics.
+For BTI protection to be as comprehensive as possible, it is
+desirable to have BTI enabled from process startup.  If this is not
+done, the process must use mprotect() to enable BTI for each of its
+executable mappings, but this is painful to do in the libc startup
+code.  It's simpler and more sound to have the kernel do it
+instead.
 
-Currently arm64_skip_faulting_instruction() is only suitable for
-AArch64, and arm64_compat_skip_faulting_instruction() handles the IT
-state machine but is local to traps.c.
-
-Since manual instruction skipping implies a trap, it's a relatively
-slow path.
-
-So, make arm64_skip_faulting_instruction() handle both compat and
-native, and get rid of the arm64_compat_skip_faulting_instruction()
-special case.
+To this end, detect BTI support in the executable (or ELF
+interpreter, as appropriate), via the
+NT_GNU_PROGRAM_PROPERTY_TYPE_0 note, and tweak the initial prot
+flags for the process' executable pages to include PROT_BTI as
+appropriate.
 
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/kernel/traps.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ arch/arm64/Kconfig           |  3 +++
+ arch/arm64/include/asm/elf.h | 50 ++++++++++++++++++++++++++++++++++++
+ arch/arm64/kernel/process.c  | 19 ++++++++++++++
+ include/uapi/linux/elf.h     |  6 +++++
+ 4 files changed, 78 insertions(+)
 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index b8c714dda851..bc9f4292bfc3 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -272,6 +272,8 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
- 	}
- }
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 0b30e884e088..8a15bc68dadd 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -9,6 +9,7 @@ config ARM64
+ 	select ACPI_MCFG if (ACPI && PCI)
+ 	select ACPI_SPCR_TABLE if ACPI
+ 	select ACPI_PPTT if ACPI
++	select ARCH_BINFMT_ELF_STATE
+ 	select ARCH_CLOCKSOURCE_DATA
+ 	select ARCH_HAS_DEBUG_VIRTUAL
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+@@ -33,6 +34,7 @@ config ARM64
+ 	select ARCH_HAS_SYSCALL_WRAPPER
+ 	select ARCH_HAS_TEARDOWN_DMA_OPS if IOMMU_SUPPORT
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
++	select ARCH_HAVE_ELF_PROT
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
+ 	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+@@ -62,6 +64,7 @@ config ARM64
+ 	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
+ 	select ARCH_KEEP_MEMBLOCK
+ 	select ARCH_USE_CMPXCHG_LOCKREF
++	select ARCH_USE_GNU_PROPERTY if BINFMT_ELF
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+ 	select ARCH_SUPPORTS_MEMORY_FAILURE
+diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
+index b618017205a3..4f00d50585a4 100644
+--- a/arch/arm64/include/asm/elf.h
++++ b/arch/arm64/include/asm/elf.h
+@@ -114,7 +114,11 @@
  
-+static void advance_itstate(struct pt_regs *regs);
+ #ifndef __ASSEMBLY__
+ 
++#include <uapi/linux/elf.h>
+ #include <linux/bug.h>
++#include <linux/errno.h>
++#include <linux/fs.h>
++#include <linux/types.h>
+ #include <asm/processor.h> /* for signal_minsigstksz, used by ARCH_DLINFO */
+ 
+ typedef unsigned long elf_greg_t;
+@@ -224,6 +228,52 @@ extern int aarch32_setup_additional_pages(struct linux_binprm *bprm,
+ 
+ #endif /* CONFIG_COMPAT */
+ 
++struct arch_elf_state {
++	int flags;
++};
 +
- void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
- {
- 	regs->pc += size;
-@@ -282,6 +284,9 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
- 	 */
- 	if (user_mode(regs))
- 		user_fastforward_single_step(current);
++#define ARM64_ELF_BTI		(1 << 0)
 +
-+	if (regs->pstate & PSR_MODE32_BIT)
-+		advance_itstate(regs);
++#define INIT_ARCH_ELF_STATE {			\
++	.flags = 0,				\
++}
++
++static inline int arch_parse_elf_property(u32 type, const void *data,
++					  size_t datasz, bool compat,
++					  struct arch_elf_state *arch)
++{
++	/* No known properties for AArch32 yet */
++	if (IS_ENABLED(CONFIG_COMPAT) && compat)
++		return 0;
++
++	if (type == GNU_PROPERTY_AARCH64_FEATURE_1_AND) {
++		const u32 *p = data;
++
++		if (datasz != sizeof(*p))
++			return -ENOEXEC;
++
++		if (system_supports_bti() &&
++		    (*p & GNU_PROPERTY_AARCH64_FEATURE_1_BTI))
++			arch->flags |= ARM64_ELF_BTI;
++	}
++
++	return 0;
++}
++
++static inline int arch_elf_pt_proc(void *ehdr, void *phdr,
++				   struct file *f, bool is_interp,
++				   struct arch_elf_state *state)
++{
++	return 0;
++}
++
++static inline int arch_check_elf(void *ehdr, bool has_interp,
++				 void *interp_ehdr,
++				 struct arch_elf_state *state)
++{
++	return 0;
++}
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index 00626057a384..b8e3faa8d406 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -11,6 +11,7 @@
+ 
+ #include <linux/compat.h>
+ #include <linux/efi.h>
++#include <linux/elf.h>
+ #include <linux/export.h>
+ #include <linux/sched.h>
+ #include <linux/sched/debug.h>
+@@ -18,6 +19,7 @@
+ #include <linux/sched/task_stack.h>
+ #include <linux/kernel.h>
+ #include <linux/lockdep.h>
++#include <linux/mman.h>
+ #include <linux/mm.h>
+ #include <linux/stddef.h>
+ #include <linux/sysctl.h>
+@@ -654,3 +656,20 @@ asmlinkage void __sched arm64_preempt_schedule_irq(void)
+ 	if (system_capabilities_finalized())
+ 		preempt_schedule_irq();
  }
++
++#ifdef CONFIG_BINFMT_ELF
++int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
++			 bool has_interp, bool is_interp)
++{
++	if (is_interp != has_interp)
++		return prot;
++
++	if (!(state->flags & ARM64_ELF_BTI))
++		return prot;
++
++	if (prot & PROT_EXEC)
++		prot |= PROT_BTI;
++
++	return prot;
++}
++#endif
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index 20900f4496b7..c6dd0215482e 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -448,4 +448,10 @@ typedef struct elf64_note {
+   Elf64_Word n_type;	/* Content type */
+ } Elf64_Nhdr;
  
- static LIST_HEAD(undef_hook);
-@@ -644,19 +649,12 @@ static void advance_itstate(struct pt_regs *regs)
- 	compat_set_it_state(regs, it);
- }
- 
--static void arm64_compat_skip_faulting_instruction(struct pt_regs *regs,
--						   unsigned int sz)
--{
--	advance_itstate(regs);
--	arm64_skip_faulting_instruction(regs, sz);
--}
--
- static void compat_cntfrq_read_handler(unsigned int esr, struct pt_regs *regs)
- {
- 	int reg = (esr & ESR_ELx_CP15_32_ISS_RT_MASK) >> ESR_ELx_CP15_32_ISS_RT_SHIFT;
- 
- 	pt_regs_write_reg(regs, reg, arch_timer_get_rate());
--	arm64_compat_skip_faulting_instruction(regs, 4);
-+	arm64_skip_faulting_instruction(regs, 4);
- }
- 
- static const struct sys64_hook cp15_32_hooks[] = {
-@@ -676,7 +674,7 @@ static void compat_cntvct_read_handler(unsigned int esr, struct pt_regs *regs)
- 
- 	pt_regs_write_reg(regs, rt, lower_32_bits(val));
- 	pt_regs_write_reg(regs, rt2, upper_32_bits(val));
--	arm64_compat_skip_faulting_instruction(regs, 4);
-+	arm64_skip_faulting_instruction(regs, 4);
- }
- 
- static const struct sys64_hook cp15_64_hooks[] = {
-@@ -697,7 +695,7 @@ void do_cp15instr(unsigned int esr, struct pt_regs *regs)
- 		 * There is no T16 variant of a CP access, so we
- 		 * always advance PC by 4 bytes.
- 		 */
--		arm64_compat_skip_faulting_instruction(regs, 4);
-+		arm64_skip_faulting_instruction(regs, 4);
- 		return;
- 	}
- 
++/* .note.gnu.property types for EM_AARCH64: */
++#define GNU_PROPERTY_AARCH64_FEATURE_1_AND	0xc0000000
++
++/* Bits for GNU_PROPERTY_AARCH64_FEATURE_1_BTI */
++#define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
++
+ #endif /* _UAPI_LINUX_ELF_H */
 -- 
 2.20.1
 
