@@ -2,162 +2,140 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB5CC5ACC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F226C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEB120719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJ48qA7k"
+	by mail.kernel.org (Postfix) with ESMTP id F29D92071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbgCPPvP (ORCPT
+        id S1732115AbgCPPvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 16 Mar 2020 11:51:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39584 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731934AbgCPPvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Mar 2020 11:51:15 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45001 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732072AbgCPPvH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:51:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y2so6383801wrn.11;
-        Mon, 16 Mar 2020 08:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Pi3izNgFJ8/Wn3g5uvUevM173nM22Xr7mDvSE98uAq0=;
-        b=cJ48qA7kE7JybTdpcAoE5sbhxDypIhKl5l9q5MIIdwZKsWfNyHJ5L1qUrYRGPev5C9
-         DkcNqHIvbeWOGDUceNXMPvzGqKDzs1qfVkhYXR6XI+VQfLTqnadj5CwooPEk9QQpsohq
-         NE8Vik+Px9eSNpRKF56Q2QbpfKv8mx4Qt5PZ4ELhBYMbCYaZ3tb77xVGc5GWalYqLa09
-         e/4BJDsl24eOPtmMP+cQjs/FFKi+T5VUk+fbvOElzcWfFmBk/Tny0bqG5NxRAJoafv6o
-         6lq0ZPTSLKxWttOZ4/dEuFnD9/J3+jZmsDDnZiGdzMB9xFpwMKGx4DXKOqXYcHOnUh7x
-         CG2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Pi3izNgFJ8/Wn3g5uvUevM173nM22Xr7mDvSE98uAq0=;
-        b=bwjEmPlPPL90JYdSVJyOZS8eHFUG8kupZdYfbEniEaTVATsjV3zqwt7/NmwaLEaqY/
-         XYovI/VZzo0Sv6p7bQzwJu8NFlKuI5P8hvWmvmm70XEPyQ6VTOQ8Td8uMRQSHTgXo1Sk
-         +mt5vKtuqsuM415SnM30PIKD+GTP3quO5OK7L8huPqECRiZBEIuw5PsFrcdQWNvTSowN
-         Rgb2cbUZKfvAnqjpamNLV4KbXHcx4tnIpnWyS7Qc2uJxgIahfn1/shK5VApyWl4cmDAd
-         GnnOELNPgGI1IeDQi8b/dzEUJHL9uROOby9GhWqfJpFC37rk9J40CUYc/yIhUT9PtOW5
-         LgYg==
-X-Gm-Message-State: ANhLgQ3vDjYG9X6yvlfDNsy/oRXz11SzNF9aJWuXMS1SFi8C+hWuz913
-        m5lKujcYsV2sAgVm2fXX5oQQL47O
-X-Google-Smtp-Source: ADFU+vuRh4hYRRqz4FcdU201pTY3UL3+RG8kdekrT+sL3Qqb5ePPt24DY48+sk7sG4oPy8prX+tYTg==
-X-Received: by 2002:adf:f504:: with SMTP id q4mr44851wro.28.1584373865545;
-        Mon, 16 Mar 2020 08:51:05 -0700 (PDT)
-Received: from saturn.lan ([188.26.73.247])
-        by smtp.gmail.com with ESMTPSA id n14sm153558wmi.19.2020.03.16.08.51.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:51:05 -0700 (PDT)
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-X-Google-Original-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     jic23@kernel.org, robh+dt@kernel.org, Laszlo.Nagy@analog.com,
-        Andrei.Grozav@analog.com, Michael.Hennerich@analog.com,
-        Istvan.Csomortani@analog.com, Adrian.Costina@analog.com,
-        Dragos.Bogdan@analog.com,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v10 8/8] dt-bindings: iio: adc: add bindings doc for AD9467 ADC
-Date:   Mon, 16 Mar 2020 17:50:35 +0200
-Message-Id: <20200316155035.25500-9-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316155035.25500-1-alexandru.ardelean@analog.com>
-References: <20200316155035.25500-1-alexandru.ardelean@analog.com>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3F8AAAD5F;
+        Mon, 16 Mar 2020 15:51:13 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 16:51:12 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     jpoimboe@redhat.com,
+        =?ISO-8859-15?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+cc:     boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        jslaby@suse.cz
+Subject: Re: [RFC PATCH 2/2] x86/xen: Make the secondary CPU idle tasks
+ reliable
+In-Reply-To: <alpine.LSU.2.21.2003131048110.30076@pobox.suse.cz>
+Message-ID: <alpine.LSU.2.21.2003161642450.15518@pobox.suse.cz>
+References: <20200312142007.11488-1-mbenes@suse.cz> <20200312142007.11488-3-mbenes@suse.cz> <75224ad1-f160-802a-9d72-b092ba864fb7@suse.com> <alpine.LSU.2.21.2003131048110.30076@pobox.suse.cz>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="1678380546-80487206-1584373873=:15518"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds the binding doc for the AD9467 ADC.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- .../bindings/iio/adc/adi,ad9467.yaml          | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+--1678380546-80487206-1584373873=:15518
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
-new file mode 100644
-index 000000000000..c4f57fa6aad1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad9467.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD9467 High-Speed ADC
-+
-+maintainers:
-+  - Michael Hennerich <michael.hennerich@analog.com>
-+  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-+
-+description: |
-+  The AD9467 is a 16-bit, monolithic, IF sampling analog-to-digital
-+  converter (ADC).
-+
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/AD9467.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad9467
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: adc-clk
-+
-+  powerdown-gpios:
-+    description:
-+      Pin that controls the powerdown mode of the device.
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description:
-+      Reset pin for the device.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adc@0 {
-+          compatible = "adi,ad9467";
-+          reg = <0>;
-+          clocks = <&adc_clk>;
-+          clock-names = "adc-clk";
-+        };
-+    };
-+...
--- 
-2.20.1
+On Fri, 13 Mar 2020, Miroslav Benes wrote:
 
+> On Fri, 13 Mar 2020, Jürgen Groß wrote:
+> 
+> > On 12.03.20 15:20, Miroslav Benes wrote:
+> > > The unwinder reports the secondary CPU idle tasks' stack on XEN PV as
+> > > unreliable, which affects at least live patching.
+> > > cpu_initialize_context() sets up the context of the CPU through
+> > > VCPUOP_initialise hypercall. After it is woken up, the idle task starts
+> > > in cpu_bringup_and_idle() function and its stack starts at the offset
+> > > right below pt_regs. The unwinder correctly detects the end of stack
+> > > there but it is confused by NULL return address in the last frame.
+> > > 
+> > > RFC: I haven't found the way to teach the unwinder about the state of
+> > > the stack there. Thus the ugly hack using assembly. Similar to what
+> > > startup_xen() has got for boot CPU.
+> > > 
+> > > It introduces objtool "unreachable instruction" warning just right after
+> > > the jump to cpu_bringup_and_idle(). It should show the idea what needs
+> > > to be done though, I think. Ideas welcome.
+> > > 
+> > > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> > > ---
+> > >   arch/x86/xen/smp_pv.c   |  3 ++-
+> > >   arch/x86/xen/xen-head.S | 10 ++++++++++
+> > >   2 files changed, 12 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+> > > index 802ee5bba66c..6b88cdcbef8f 100644
+> > > --- a/arch/x86/xen/smp_pv.c
+> > > +++ b/arch/x86/xen/smp_pv.c
+> > > @@ -53,6 +53,7 @@ static DEFINE_PER_CPU(struct xen_common_irq, xen_irq_work)
+> > > = { .irq = -1 };
+> > >   static DEFINE_PER_CPU(struct xen_common_irq, xen_pmu_irq) = { .irq = -1 };
+> > >   
+> > >   static irqreturn_t xen_irq_work_interrupt(int irq, void *dev_id);
+> > > +extern unsigned char asm_cpu_bringup_and_idle[];
+> > >   
+> > >   static void cpu_bringup(void)
+> > >   {
+> > 
+> > Would adding this here work?
+> > 
+> > +	asm volatile (UNWIND_HINT(ORC_REG_UNDEFINED, 0, ORC_TYPE_CALL, 1));
+> 
+> I tried something similar. It did not work, because than the hint is 
+> "bound" to the closest next call in the function which is cr4_init() in 
+> this case. The unwinder would not take it into account.
+> 
+> In my case, I placed it at the beginning of cpu_bringup_and_idle(). I also 
+> open coded it and played with the offset in the orc entry, but that did 
+> not work for some other reason.
+> 
+> However, now I tried this
+> 
+> diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+> index 6b88cdcbef8f..39afd88309cb 100644
+> --- a/arch/x86/xen/smp_pv.c
+> +++ b/arch/x86/xen/smp_pv.c
+> @@ -92,6 +92,7 @@ asmlinkage __visible void cpu_bringup_and_idle(void)
+>  {
+>         cpu_bringup();
+>         boot_init_stack_canary();
+> +       asm volatile (UNWIND_HINT(ORC_REG_UNDEFINED, 0, ORC_TYPE_CALL, 1));
+>         cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+>  }
+> 
+> and that seems to work. I need to properly verify and test, but the 
+> explanation is that as opposed to the above, cpu_startup_entry() is on the 
+> idle task's stack and the hint is then taken into account. The unwound 
+> stack seems to be complete, so it could indeed be the fix.
+
+Not the correct one though. Objtool rightfully complains with
+
+arch/x86/xen/smp_pv.o: warning: objtool: cpu_bringup_and_idle()+0x6a: undefined stack state
+
+and all the other hacks I tried ended up in the same dead alley. It seems 
+to me the correct fix is that all orc entries for cpu_bringup_and_idle() 
+should have "end" property set to 1, since it is the first function on the 
+stack. I don't know how to achieve that without the assembly hack in the 
+patch I sent. If I am not missing something, of course.
+
+Josh, any idea?
+
+Thanks
+Miroslav
+--1678380546-80487206-1584373873=:15518--
