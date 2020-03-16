@@ -2,118 +2,159 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C223C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DA8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049CC20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51BE920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SOcDdD2u"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ibTHYW+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbgCPJpU (ORCPT
+        id S1730462AbgCPJuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:45:20 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36112 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730088AbgCPJpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:45:19 -0400
-Received: from zn.tnic (p200300EC2F06AB0069F33882ABEAD541.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:69f3:3882:abea:d541])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6D7781EC0A9C;
-        Mon, 16 Mar 2020 10:45:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584351917;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=er1/yi3HrpV0pKbBvQNLcsrrISJcbRo0gz2JglnSHYA=;
-        b=SOcDdD2uAhMLX8/rfv4mvESr5GbRTWbfRrTXCC88Pt0fDoZQSqQso/kcaBSYgoHy0kqxAB
-        fXNKH7mfYE1lj471zikh1Mj5MewzDJLeai9M17WecqslbNwPYsoJLSl4YDlukuAuDpueyD
-        d+AzHVyTwd2rKLzYpU2AtZcTQ94unhQ=
-Date:   Mon, 16 Mar 2020 10:45:27 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/11] EDAC/ghes: Create an own device for each mci
-Message-ID: <20200316094527.GD26126@zn.tnic>
-References: <20200306151318.17422-1-rrichter@marvell.com>
- <20200306151318.17422-11-rrichter@marvell.com>
+        Mon, 16 Mar 2020 05:50:13 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35092 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730025AbgCPJuM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:50:12 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d5so19990582wrc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 02:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ERTY/dO2K1SPKjMbktdMeysHG0XO9+huCKvmnpNOLJI=;
+        b=ibTHYW+ifSOK/LTwiOq9PvvBipE99KOth2lQwB2NBbuHnYCQ/NlKS7NdOgfiitP9Tq
+         woUhVB3QTfB09JULKmuFEYCYBDCGqSp1vXFLBUFiLq7vXw0x41Q53oQG0oOLLcEwBghC
+         iPXOUGNazW7XgLId9HV2Cylcj4oKabBf930Vs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=ERTY/dO2K1SPKjMbktdMeysHG0XO9+huCKvmnpNOLJI=;
+        b=Tv4214Lr8+U+I09OK0wpsRfoOCEm4Dy2q4j14QEGfaT7N43+4r0XJ1rkqULOSuQEod
+         lfs3FJnV653oS0z1ukXBZMH4xyUuaVa83TyE8BGJ/OjTGB3i//zps37jqz5Q12g9dcOp
+         bchQgsAJZNnIWdqCE0G2aOrKBDqhiW2fl79pzgDEzVYGg4jiBQic+jgieNj8LrxjFWoO
+         i5MNOIkParYA7U+JKGcFDNhtBTptkRqoVlGqTi2xjWI9YXJ4OtDKAbM/ZJhDYydoSgUE
+         nWzvkGuawz3j9o7h5SJJtUZnMtaucLxkAXQAjNMMM0sJEP2xFtD9nOFWLRshZf1BeFYA
+         dCnA==
+X-Gm-Message-State: ANhLgQ0/Rxte4HD59Qu0mgmIOIPgMHUGMyh+NgrPCTU/3HnNRY54u3Lp
+        hV5Z4DBxTp2OjM2a5NmT1bNMeQ==
+X-Google-Smtp-Source: ADFU+vtGDKyYyg/j1KSDufUqygL0smsKl8gN9P6w7ZHoyArqQzjHnMTkautF3tAyQ2ZQ3DB2aaFDeg==
+X-Received: by 2002:a5d:6ca7:: with SMTP id a7mr17894725wra.157.1584352210573;
+        Mon, 16 Mar 2020 02:50:10 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id x6sm6531641wrm.29.2020.03.16.02.50.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 02:50:09 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 10:50:07 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Joe Perches <joe@perches.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        intel-gfx@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [Intel-gfx] [PATCH] MAINTAINERS: adjust to reservation.h renaming
+Message-ID: <20200316095007.GI2363188@phenom.ffwll.local>
+Mail-Followup-To: Joe Perches <joe@perches.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        intel-gfx@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org
+References: <20200304120711.12117-1-lukas.bulwahn@gmail.com>
+ <b0296e3a-31f8-635a-f26d-8b0bc490aae3@amd.com>
+ <20200306103946.GT2363188@phenom.ffwll.local>
+ <155f99baffe11836fc9d794ff297bdcee7831050.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200306151318.17422-11-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <155f99baffe11836fc9d794ff297bdcee7831050.camel@perches.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:13:17PM +0100, Robert Richter wrote:
-> Each edac mc must have a unique device for identification (see
-> add_mc_to_global_list()). This 1:1 mapping between parent device and
-> mci is a limitation for supporting multiple instances created by the
-> ghes driver. Solve this by creating an own device in between of the
-> ghes parent and the mci struct, this allows a 1:n mapping between
-> both.
+On Fri, Mar 06, 2020 at 02:56:06AM -0800, Joe Perches wrote:
+> On Fri, 2020-03-06 at 11:39 +0100, Daniel Vetter wrote:
+> > On Wed, Mar 04, 2020 at 01:08:32PM +0100, Christian König wrote:
+> > > Am 04.03.20 um 13:07 schrieb Lukas Bulwahn:
+> > > > Commit 52791eeec1d9 ("dma-buf: rename reservation_object to dma_resv")
+> > > > renamed include/linux/reservation.h to include/linux/dma-resv.h, but
+> > > > missed the reference in the MAINTAINERS entry.
+> > > > 
+> > > > Since then, ./scripts/get_maintainer.pl --self-test complains:
+> > > > 
+> > > >    warning: no file matches F: include/linux/reservation.h
+> > > > 
+> > > > Adjust the DMA BUFFER SHARING FRAMEWORK entry in MAINTAINERS.
+> > > > 
+> > > > Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
+> > > > Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
+> > > > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> > > 
+> > > Reviewed-by: Christian König <christian.koenig@amd.com>
+> > 
+> > You'll push this too?
+> > -Daniel
+> > 
+> > > > ---
+> > > > Christian, please pick this patch.
+> > > > applies cleanly on current master and next-20200303
+> > > > 
+> > > >   MAINTAINERS | 2 +-
+> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > > index 6158a143a13e..3d6cb2789c9e 100644
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -5022,7 +5022,7 @@ L:	dri-devel@lists.freedesktop.org
+> > > >   L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
+> > > >   F:	drivers/dma-buf/
+> > > >   F:	include/linux/dma-buf*
+> > > > -F:	include/linux/reservation.h
+> > > > +F:	include/linux/dma-resv.h
+> > > >   F:	include/linux/*fence.h
+> > > >   F:	Documentation/driver-api/dma-buf.rst
+> > > >   K:	dma_(buf|fence|resv)
 > 
-> Implement this using a platform device as this is the least possible
-> effort to create and free a device. It shows up nicely in sysfs:
+> Slightly unrelated:
 > 
->  # find /sys/ -name ghes_mc*
->  /sys/devices/platform/GHES.0/ghes_mc.1
->  /sys/devices/platform/GHES.0/ghes_mc.0
->  /sys/bus/platform/devices/ghes_mc.1
->  /sys/bus/platform/devices/ghes_mc.0
+> The K: entry matches a lot of other things
+> and may have a lot of false positive matches
+> like any variable named dma_buffer
 > 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/ghes_edac.c | 26 +++++++++++++++++++++++---
->  1 file changed, 23 insertions(+), 3 deletions(-)
+> This should also use (?:...) to avoid a perl
+> capture group.
 > 
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index cd61b8ae49f6..64220397296e 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -539,6 +539,8 @@ static struct acpi_platform_list plat_list[] = {
->  static struct mem_ctl_info *ghes_mc_create(struct device *dev, int mc_idx,
->  					int num_dimm)
->  {
-> +	struct platform_device_info pdevinfo;
-> +	struct platform_device *pdev;
->  	struct edac_mc_layer layers[1];
->  	struct mem_ctl_info *mci;
->  	struct ghes_mci *pvt;
-> @@ -547,13 +549,23 @@ static struct mem_ctl_info *ghes_mc_create(struct device *dev, int mc_idx,
->  	layers[0].size = num_dimm;
->  	layers[0].is_virt_csrow = true;
->  
-> +	pdevinfo	= (struct platform_device_info){
-> +		.parent	= dev,
-> +		.name	= "ghes_mc",
-> +		.id	= mc_idx,
-> +	};
+> Perhaps:
+> 
+> K:	'\bdma_(?:buf|fence|resv)\b'
 
-You can statically allocate that one once at the top of the file and
-assign ->parent and ->id each time before calling the function below.
+Hm either people aren't using get_maintainers.pl consistently, or it
+doesn't seem to be a real world problem. I'm not seeing any unrelated
+patches on dri-devel at least.
 
-> +
-> +	pdev = platform_device_register_full(&pdevinfo);
-> +	if (IS_ERR(pdev))
-> +		goto fail;
-> +
-
+But happy to merge such a patch if it shows up ofc, it's definitely the
+more correct thing :-)
+-Daniel
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
