@@ -2,79 +2,107 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FDEC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85768C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D03E20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264B320658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="HycmfWNg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgCPHtF (ORCPT
+        id S1730045AbgCPHtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:49:05 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:44065 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729662AbgCPHtF (ORCPT
+        Mon, 16 Mar 2020 03:49:17 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:39904 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729662AbgCPHtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:49:05 -0400
-Received: by mail-il1-f199.google.com with SMTP id h87so13124431ild.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 00:49:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=ouibFrPDWjCxL4FEpaUkFRuLLdmqeyOHLoLDagTo38s=;
-        b=acnRlMGRhNt8H8UFRftWAoITt4Cru5I2IFV7GcxF6VqmqELmG5bTuqnEXIx9/PNe+L
-         ec6HY6bCfPWqHgYAtXDIgAKqKzW9zAz6G2idAYGmE+8/6O2JHg0T4JpRE0fQVV6sdzul
-         PUzCrhTO4YNepI3Vc/XKoCajftgH0RXMtdlexen8kjGFqOGswCcvkNGzxM/pHZE3C9h2
-         KmsJZhOBj0pMjRcAkFKzXqh1u3E3qc0ExLFgit63L4ch0Aorc4XI86uh1QkUmwF288qR
-         6Y2XZMR7mppXN8k3EQ0ste7xWIDIln2lPx924yiuxahoPw96XVxpdjY/aiMoYf6+Cb/k
-         cGJA==
-X-Gm-Message-State: ANhLgQ1uUhg53LkeuYWL5lVKiyM23C+gNaAjB11d8DdQOGkt/TSzM3zM
-        rOwhQ2BWw1Nma8E0VbivA7aAVMcU3Uu+NmsJQckOhlgNswjm
-X-Google-Smtp-Source: ADFU+vuDRuPOxa1IDImesiTPozC5o7HpVN8zsZ8bX3G8vsFE+prdAIwJ0Rw4kazKiRUzVPk45zL965SLV5YZQfZX51CMEkoS3u30
+        Mon, 16 Mar 2020 03:49:16 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id AA242891AE;
+        Mon, 16 Mar 2020 20:49:14 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1584344954;
+        bh=lueV+3/ieVHX0j1GQCzwiOIpCw7+gr2T4FpZqjS6B2c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=HycmfWNg2/Q+8Ek/8KDldYNUcMAEcs8cBuxd/YQ9WlGn1QxlvkwR3cPnh+lyQxL3L
+         c8UVa2+9Ko+TlhayaFRsmZRlGEK4JIv+TZ61+aKGM8z4KfmBHlye6Ehd95Cc29I7RX
+         ZIvhXC04W7jbSoThi4eTR2TnvcklVTGiRsnyPmlsmSJCzitng0byif77U+N32h9GW4
+         U2VEzeex9xdjQWEF4sLrgwqhpW6uRRK9vTLIUhJ6cPSEpc1x/OWZ6up0oeJT8OR50I
+         hHTm3LfNmGdd9SWc8Pf5dnDZdfZhPf8pNlLfVsdoER+s+2AYGnnv5MRmf4IyW3mAq7
+         IN9AOWFWmShrA==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e6f2f750002>; Mon, 16 Mar 2020 20:49:14 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 2D02813EF9C;
+        Mon, 16 Mar 2020 20:49:09 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 813F428006E; Mon, 16 Mar 2020 20:49:09 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     davem@davemloft.net, andrew@lunn.ch, josua@solid-run.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v3 2/2] net: mvmdio: avoid error message for optional IRQ
+Date:   Mon, 16 Mar 2020 20:49:07 +1300
+Message-Id: <20200316074907.21879-3-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200316074907.21879-1-chris.packham@alliedtelesis.co.nz>
+References: <20200316074907.21879-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:dd14:: with SMTP id f20mr22452258ioc.32.1584344942619;
- Mon, 16 Mar 2020 00:49:02 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 00:49:02 -0700
-In-Reply-To: <000000000000c08f2005a0ed60d4@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000081b1df05a0f40d13@google.com>
-Subject: Re: general protection fault in erspan_netlink_parms
-From:   syzbot <syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        petrm@mellanox.com, syzkaller-bugs@googlegroups.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Per the dt-binding the interrupt is optional so use
+platform_get_irq_optional() instead of platform_get_irq(). Since
+commit 7723f4c5ecdb ("driver core: platform: Add an error message to
+platform_get_irq*()") platform_get_irq() produces an error message
 
-commit e1f8f78ffe9854308b9e12a73ebe4e909074fc33
-Author: Petr Machata <petrm@mellanox.com>
-Date:   Fri Mar 13 11:39:36 2020 +0000
+  orion-mdio f1072004.mdio: IRQ index 0 not found
 
-    net: ip_gre: Separate ERSPAN newlink / changelink callbacks
+which is perfectly normal if one hasn't specified the optional property
+in the device tree.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=101477fde00000
-start commit:   0fda7600 geneve: move debug check after netdev unregister
-git tree:       net
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=121477fde00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=141477fde00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
-dashboard link: https://syzkaller.appspot.com/bug?extid=1b4ebf4dae4e510dd219
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1627f955e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111ac52de00000
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
 
-Reported-by: syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com
-Fixes: e1f8f78ffe98 ("net: ip_gre: Separate ERSPAN newlink / changelink callbacks")
+Notes:
+    Changes in v3:
+    - return to minimal fix
+   =20
+    Changes in v2:
+    - Add review from Andrew
+    - Clean up error handling case
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+ drivers/net/ethernet/marvell/mvmdio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet=
+/marvell/mvmdio.c
+index 0b9e851f3da4..d14762d93640 100644
+--- a/drivers/net/ethernet/marvell/mvmdio.c
++++ b/drivers/net/ethernet/marvell/mvmdio.c
+@@ -347,7 +347,7 @@ static int orion_mdio_probe(struct platform_device *p=
+dev)
+ 	}
+=20
+=20
+-	dev->err_interrupt =3D platform_get_irq(pdev, 0);
++	dev->err_interrupt =3D platform_get_irq_optional(pdev, 0);
+ 	if (dev->err_interrupt > 0 &&
+ 	    resource_size(r) < MVMDIO_ERR_INT_MASK + 4) {
+ 		dev_err(&pdev->dev,
+--=20
+2.25.1
+
