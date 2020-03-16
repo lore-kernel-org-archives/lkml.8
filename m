@@ -2,75 +2,60 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69954C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3713DC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404462071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:44:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esJMsHWZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1560B206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbgCPSoH (ORCPT
+        id S1732420AbgCPSo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 14:44:07 -0400
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:39062 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732266AbgCPSoG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 14:44:06 -0400
-Received: by mail-ot1-f46.google.com with SMTP id r2so3525978otn.6;
-        Mon, 16 Mar 2020 11:44:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dD9qGn/FmD1rIVTC9XP6vGVct8WmBBkX3v6FBswGPLo=;
-        b=esJMsHWZs+0PiRjH1AF2Hk5PbE+Y5R7BCiJrNVdMcoZKSi+C0xzNISCgs/mOWzY0ww
-         gCmBY9dGL02PsqJdCZS5/wBs8Hf70P6RDvqfKxgg+ihoJxjSUq1fQ9YH66lCGBmafAVM
-         kETmoetguC2zop5uJIv42hFWUauMUhqm/yMur5RV9yM/abKe5DHypK/mCUHUu2srRchi
-         7jV1pl7UM+uYxS6yRzqfMKsexl1U2c5ItHczyqqs0QeVGyFRC//kaLFUyWtknlXcexE6
-         f4LCMnglc/PSFiL9QOcWcGgQHsbc65WohjBjzYsz9LvnzpPcbPDcQ8XUTrwHYkDebOKZ
-         oqBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dD9qGn/FmD1rIVTC9XP6vGVct8WmBBkX3v6FBswGPLo=;
-        b=HJVXavB6aE6b9mvmHLnaCjDPplX3AgfHu/dZrQZYFjY+0H7FhSFiIKiZ+QbZh4rG1A
-         nGjj1grjJTfqXxiLTXHQ87QUrVKykzKLu32/FkiknlLIskLh9BUgpjT++IfJFzLZ7/zd
-         wSWmbJOav1CXV+cFxZ0Z/hGuT7+JXAXGINYUwRQxpaF78O0LbLxendBlOZ/7y65aw08M
-         yOuT6PmRAGAT+3r/1LEMwDioLF78MdVB0wGneZMKdglEOVGJetPqyWTSgWjtXah33nUM
-         G6TApmOysuLSlE3p8KJ1s2tt+pIWZxXsF9GmVUoZLIDfViBrvcbE1ntK3IglwTGsdG1F
-         HOUw==
-X-Gm-Message-State: ANhLgQ0aH8OwOvWOds+Bp4hGLMta6xvtXLCasR4sY2xmUGSR3RGeYD3m
-        e9gGiU5lgajRyhr9KyywEOvWfxqk0XAPKOfe1VwW9vcSKYc=
-X-Google-Smtp-Source: ADFU+vtheCmSwN1cXxJGNkX/ItmoDbQsGdufvuyMgkH1GqbyWVjt4ajqUacyxSFy/mBtQNQYQzItBR97ME8aHQgqhrY=
-X-Received: by 2002:a05:6830:1bc9:: with SMTP id v9mr474176ota.319.1584384246005;
- Mon, 16 Mar 2020 11:44:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000b3cfc805a0824881@google.com>
-In-Reply-To: <000000000000b3cfc805a0824881@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 16 Mar 2020 11:43:55 -0700
-Message-ID: <CAM_iQpV_h9ej+bnz7Z_Jjf-NXGzSpq+6kY_-kCynkn=5TxPPJQ@mail.gmail.com>
-Subject: Re: WARNING in call_rcu
-To:     syzbot <syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 16 Mar 2020 14:44:29 -0400
+Received: from gate.crashing.org ([63.228.1.57]:43116 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732266AbgCPSo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 14:44:28 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 02GIhfj4002112;
+        Mon, 16 Mar 2020 13:43:41 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 02GIhe5d002111;
+        Mon, 16 Mar 2020 13:43:40 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 16 Mar 2020 13:43:39 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
+        mikey@neuling.org, apopple@linux.ibm.com, peterz@infradead.org,
+        fweisbec@gmail.com, oleg@redhat.com, npiggin@gmail.com,
+        linux-kernel@vger.kernel.org, paulus@samba.org, jolsa@kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        mingo@kernel.org
+Subject: Re: [PATCH 00/15] powerpc/watchpoint: Preparation for more than one watchpoint
+Message-ID: <20200316184339.GB22482@gate.crashing.org>
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com> <b7148b91-e3db-d48a-7294-5c18fc801933@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7148b91-e3db-d48a-7294-5c18fc801933@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz fix: net_sched: cls_route: remove the right filter from hashtable
+On Mon, Mar 16, 2020 at 04:05:01PM +0100, Christophe Leroy wrote:
+> Some book3s (e300 family for instance, I think G2 as well) already have 
+> a DABR2 in addition to DABR.
+
+The original "G2" (meaning 603 and 604) do not have DABR2.  The newer
+"G2" (meaning e300) does have it.  e500 and e600 do not have it either.
+
+Hope I got that right ;-)
+
+
+Segher
