@@ -2,108 +2,92 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0362CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69232C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF73205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:38:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XyjcltoI"
+	by mail.kernel.org (Postfix) with ESMTP id 3AA24205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbgCPMiV (ORCPT
+        id S1731205AbgCPMi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:38:21 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:52652 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731032AbgCPMfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:35:48 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48gwkk28YLz9tygN;
-        Mon, 16 Mar 2020 13:35:42 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=XyjcltoI; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id yeYpyMC2g6FZ; Mon, 16 Mar 2020 13:35:42 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwkk13Ngz9tygM;
-        Mon, 16 Mar 2020 13:35:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584362142; bh=4O+JQAaxWU7vz/WlcBgddWLwVTeB5N/VcA1T6OcpC/o=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=XyjcltoIlya8jWgzlRPPbHh65HKWmJqKCkmrmOBRsuqaqOaE6Qwe51K7RXwu9Vlyf
-         rFC06x/0ezzqEz2aDl5jaWPBPZWPLeKJZ+nniTT8HwjKtv4GS16RhsQFIp58p9gzQb
-         IHeVdeeMm6NQ+JTjZDDfRh4k/MPwQNpWwIypywyk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 21D528B7D0;
-        Mon, 16 Mar 2020 13:35:47 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 44S8FnZQyNMR; Mon, 16 Mar 2020 13:35:47 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 04CF38B7CB;
-        Mon, 16 Mar 2020 13:35:47 +0100 (CET)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id F18AD65595; Mon, 16 Mar 2020 12:35:46 +0000 (UTC)
-Message-Id: <d68150f052e6a955139635a41ca28d75c494714b.1584360343.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1584360343.git.christophe.leroy@c-s.fr>
-References: <cover.1584360343.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 02/46] powerpc/kasan: Fix error detection on memory
- allocation
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Mar 2020 12:35:46 +0000 (UTC)
+        Mon, 16 Mar 2020 08:38:58 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33290 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731027AbgCPMi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:38:57 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7A402E500B6ABF9507E3;
+        Mon, 16 Mar 2020 20:38:48 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 16 Mar 2020
+ 20:38:38 +0800
+Subject: Re: [PATCH] KVM: arm64: Use the correct timer for accessing CNT
+To:     Marc Zyngier <maz@kernel.org>
+CC:     KarimAllah Ahmed <karahmed@amazon.de>,
+        <linux-kernel@vger.kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1584351546-5018-1-git-send-email-karahmed@amazon.de>
+ <7ed91b9b-e968-770c-28f9-0ca479359657@huawei.com>
+ <a8b72d6c0a28e0554050e98d011f32d9@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <a9fd7e22-f46a-fd47-26ee-44d2d36783fd@huawei.com>
+Date:   Mon, 16 Mar 2020 20:38:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+MIME-Version: 1.0
+In-Reply-To: <a8b72d6c0a28e0554050e98d011f32d9@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case (k_start & PAGE_MASK) doesn't equal (kstart), 'va' will never be
-NULL allthough 'block' is NULL
+Hi Marc,
 
-Check the return of memblock_alloc() directly instead of
-the resulting address in the loop.
+On 2020/3/16 19:09, Marc Zyngier wrote:
+> Hi Zenghui,
+> 
+> On 2020-03-16 10:49, Zenghui Yu wrote:
+>> Hi,
+>>
+>> On 2020/3/16 17:39, KarimAllah Ahmed wrote:
+>>> Use the physical timer object when reading the physical timer counter
+>>> instead of using the virtual timer object. This is only visible when
+>>> reading it from user-space as kvm_arm_timer_get_reg() is only 
+>>> executed on
+>>> the get register patch from user-space.
+>>
+>> s/patch/path/
+>>
+>> I think the physical counter hasn't yet been accessed by the current
+>> userspace, wrong?
+> 
+> I don't think userspace can access it, as the ONE_REG API only exposes 
+> the virtual
+> timer so far, and userspace is much better off just reading the counter 
+> directly
+> (it has access to the virtual counter, and the guarantee that cntvoff is 
+> 0 in this
+> context).
 
-Fixes: 509cd3f2b473 ("powerpc/32: Simplify KASAN init")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/mm/kasan/kasan_init_32.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Yeah, I see. The physical timer registers are all ignored in
+walk_one_sys_reg() and won't be exposed.
 
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 750a927839d7..60c2acdf73a7 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -76,15 +76,14 @@ static int __init kasan_init_region(void *start, size_t size)
- 		return ret;
- 
- 	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
-+	if (!block)
-+		return -ENOMEM;
- 
- 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
- 		pmd_t *pmd = pmd_ptr_k(k_cur);
- 		void *va = block + k_cur - k_start;
- 		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
- 
--		if (!va)
--			return -ENOMEM;
--
- 		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
- 	}
- 	flush_tlb_kernel_range(k_start, k_end);
--- 
-2.25.0
+> 
+> But as we move towards a situation where we can save/restore the 
+> physical timer
+> just like the virtual one, we're going to use this path and hit this bug.
+
+Thanks for the explanation.
+
+
+Zenghui
 
