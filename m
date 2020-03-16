@@ -2,71 +2,126 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAAAC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F402EC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206662071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B709920575
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRfm9/B4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729711AbgCPG7U (ORCPT
+        id S1729898AbgCPG7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:59:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34812 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729723AbgCPG7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:59:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 07550AEC4;
-        Mon, 16 Mar 2020 06:59:13 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 2/3] vt: selection, use rounddown() for start/endline computation
-Date:   Mon, 16 Mar 2020 07:59:10 +0100
-Message-Id: <20200316065911.11024-2-jslaby@suse.cz>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200316065911.11024-1-jslaby@suse.cz>
-References: <20200316065911.11024-1-jslaby@suse.cz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Mar 2020 02:59:53 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35345 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729723AbgCPG7x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 02:59:53 -0400
+Received: by mail-pj1-f67.google.com with SMTP id mq3so8121050pjb.0;
+        Sun, 15 Mar 2020 23:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eYiMJvzhgU8cefu9p/MQZ5kiTc4aQrMez5IEQVm5JBQ=;
+        b=TRfm9/B4gRFAcCC55jE5RaVV0vmnjxrYFvjtTjkrmgerr/XbVypOdOi6wnkZhUIFd7
+         JnIjaywX0wnTUsBgsph4ZFny1zoArct+omSuqJYexPFVNNvcaA3PsHiSkvGyJzOaoE5b
+         BOtJhvlWEHMpRzz0kBK/6uR2ErJXZ4w4ekkwzQ8yXBT+a7LGnxBIh6HDLuXD7KJdDA8S
+         265wqayBZ1aRhMNOerV4XS9rX0pyFAx6nTO0NeyXePiIyIDSxJ+KkapXdq8Ymt7AP9LA
+         SE5wPIo8xkdV44XSmr8FqL25QAWUEYf1LxPoizMsBE0OmiATrjbxSC6LT4vTTbNfgHj2
+         HJEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eYiMJvzhgU8cefu9p/MQZ5kiTc4aQrMez5IEQVm5JBQ=;
+        b=gqkeu/dvJw9l/4F7UUVvVGG4bIGAuiKdfiG4vhZcr0nFkyH9tHYUJwmvNX3e08Pswl
+         zROTWLsxwnGznVCQvrrMpu7rLW8shOUnvGS6gUxrXqqgskvaFh3kN4zD0A3Yn8erQ0de
+         sPRjGd9vUu/PeatRNlGJuqXVbb9ENN196AY9QSXn3EGUYDDsAjRe+vQ+vWHm9uLP1AXg
+         KiWrdxE7y+T6jbI9wSiQVRMlqnt/3nsuOevZETaajjlouKJ7YPVv2LprAozte0alP8tS
+         Z4m7wIBTmMnISQAuRA+Aj7qD6xyxcFDzIMvL5rkrvUfxRf4L9W2Ea2BD7leMAKMQagQ+
+         UstQ==
+X-Gm-Message-State: ANhLgQ1oMuq05ATPB4frcDln2AYYhmxgp9r5LlYoIFnYQFX+gC6+felN
+        zbHgbNQAmyMrymAEGb/QuBA=
+X-Google-Smtp-Source: ADFU+vs4k0yrj7Ym3y5Tl5ybhCCG7hiX4pdR2mu8G0rZbALQoIBX9Pplw0st5yHEoVLU+nrrBSb4wA==
+X-Received: by 2002:a17:902:421:: with SMTP id 30mr3282708ple.271.1584341992275;
+        Sun, 15 Mar 2020 23:59:52 -0700 (PDT)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id x70sm54634841pgd.37.2020.03.15.23.59.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 15 Mar 2020 23:59:51 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     vyasevich@gmail.com, nhorman@tuxdriver.com,
+        marcelo.leitner@gmail.com, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] drm/lease: fix potential race in fill_object_idr
+Date:   Mon, 16 Mar 2020 14:59:43 +0800
+Message-Id: <1584341983-11245-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a helper called rounddown for these modulo computations. So use
-it.
+We should hold idr_mutex for idr_alloc.
 
-No functional change intended and "objdump -d" proves that.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
 ---
- drivers/tty/vt/selection.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_lease.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
-index 582184dd386c..d54a549c5892 100644
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -252,9 +252,9 @@ static int __set_selection_kernel(struct tiocl_selection *v, struct tty_struct *
+diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
+index b481caf..427ee21 100644
+--- a/drivers/gpu/drm/drm_lease.c
++++ b/drivers/gpu/drm/drm_lease.c
+@@ -418,6 +418,7 @@ static int fill_object_idr(struct drm_device *dev,
+ 		goto out_free_objects;
+ 	}
+ 
++	mutex_lock(&dev->mode_config.idr_mutex);
+ 	/* add their IDs to the lease request - taking into account
+ 	   universal planes */
+ 	for (o = 0; o < object_count; o++) {
+@@ -437,7 +438,7 @@ static int fill_object_idr(struct drm_device *dev,
+ 		if (ret < 0) {
+ 			DRM_DEBUG_LEASE("Object %d cannot be inserted into leases (%d)\n",
+ 					object_id, ret);
+-			goto out_free_objects;
++			goto out_unlock;
  		}
- 		break;
- 	case TIOCL_SELLINE:	/* line-by-line selection */
--		new_sel_start = ps - ps % vc->vc_size_row;
--		new_sel_end = pe + vc->vc_size_row
--			    - pe % vc->vc_size_row - 2;
-+		new_sel_start = rounddown(ps, vc->vc_size_row);
-+		new_sel_end = rounddown(pe, vc->vc_size_row) +
-+			vc->vc_size_row - 2;
- 		break;
- 	case TIOCL_SELPOINTER:
- 		highlight_pointer(pe);
+ 		if (obj->type == DRM_MODE_OBJECT_CRTC && !universal_planes) {
+ 			struct drm_crtc *crtc = obj_to_crtc(obj);
+@@ -445,20 +446,22 @@ static int fill_object_idr(struct drm_device *dev,
+ 			if (ret < 0) {
+ 				DRM_DEBUG_LEASE("Object primary plane %d cannot be inserted into leases (%d)\n",
+ 						object_id, ret);
+-				goto out_free_objects;
++				goto out_unlock;
+ 			}
+ 			if (crtc->cursor) {
+ 				ret = idr_alloc(leases, &drm_lease_idr_object, crtc->cursor->base.id, crtc->cursor->base.id + 1, GFP_KERNEL);
+ 				if (ret < 0) {
+ 					DRM_DEBUG_LEASE("Object cursor plane %d cannot be inserted into leases (%d)\n",
+ 							object_id, ret);
+-					goto out_free_objects;
++					goto out_unlock;
+ 				}
+ 			}
+ 		}
+ 	}
+ 
+ 	ret = 0;
++out_unlock:
++	mutex_unlock(&dev->mode_config.idr_mutex);
+ out_free_objects:
+ 	for (o = 0; o < object_count; o++) {
+ 		if (objects[o])
 -- 
-2.25.1
+1.8.3.1
 
