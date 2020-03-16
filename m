@@ -2,110 +2,111 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A7DC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73E0C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B51E20575
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78369206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:27:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbH43ppH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yn1exyHX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731349AbgCPNZW (ORCPT
+        id S1731336AbgCPN1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:25:22 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36496 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731339AbgCPNZV (ORCPT
+        Mon, 16 Mar 2020 09:27:10 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33059 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731234AbgCPN1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:25:21 -0400
-Received: by mail-io1-f66.google.com with SMTP id d15so17096527iog.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 06:25:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TMB3I+rumZbopL7iA7VgSh6g4RCIDOU1fcM/KqObKVk=;
-        b=lbH43ppHwZ+4bP9DpdgMlJd10QGcbF3VkZgARIIwmPAabLVrq89yo59Wkvpg0B+FOr
-         LKkDkwn+A+RlzmNcjdQlpN7WocV+dq/bcnczJqSsY+gFWs1g1z25MUdZ4acX7Xi2qhnY
-         GFcS6BbZK+K/Pq2RQybjP9tmkujzmaWDwsSQjNzycd2QY8mMVXfKpDJNLgwvqkF8Jots
-         y9XZQvsztYs3SfIodSB1ESokwzOAjrGuQ8mADrY+a4GcxmUjhLhBU/KJ4qDmdOQg3JC8
-         Y0W+05I4f8zp/7HcEsYZAQhZQZBv37waLj8MV+UHtcoo45uXd4mz2gkYJX+xLQmMtdiE
-         U21w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TMB3I+rumZbopL7iA7VgSh6g4RCIDOU1fcM/KqObKVk=;
-        b=iDZl33Hpb9lIzBMixBtccxDcq1txVBLp+mw0ylmRBHayxcKhmloaZnxVrI5PjUSERW
-         Tu6XXJQl2EXaBCE+Vo+mfGqlVWTQ23dijRzT/mLIZ7NLsegMgpDuyC5AdvOk2cKtn6oJ
-         pafH8bO55LbSDx4PBUH2xqh0e2G+UN5EO8VKPty8UsbLlZj0ButZBvRMAtr23CtCgvl2
-         w6V0B6UopZLkobTsYGzX1QJjGM404OEkk6jdua3nF+K6kL9IBdTXFoMzWhTIsmDHyVY9
-         6zV/rU+/bQlKfMfN0Fet1+OoPDzlJ2CWK7AvT7p7gs9p9Blvxo6/2f9Kb/O4hMgoeNMv
-         j+rQ==
-X-Gm-Message-State: ANhLgQ1YnzukmE9+ezVMjjuD/fVBa3uybCy1ldzPmnO75UxnNJ4EDCiF
-        kvhXZP5g9du4Ns6Xt/vQo7O/PwjpvAuMA6Fp2GCQ5x9O
-X-Google-Smtp-Source: ADFU+vscEA3DoJzNBLF3qlT/fJsareFDrGhP8Rg51CJcgR4jOmMPbvczqx3L/rtwKbzDjttTclmRQP4/LD7wLacCIX0=
-X-Received: by 2002:a02:81cd:: with SMTP id r13mr9442364jag.91.1584365120586;
- Mon, 16 Mar 2020 06:25:20 -0700 (PDT)
+        Mon, 16 Mar 2020 09:27:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584365229;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=of4mUL4rmHq6XhJnwzhTCE0KMqAQsZJRaiD2FUTq71A=;
+        b=Yn1exyHXjLgLQKCsOxunUqUH2+ZgQDTzpH1jwkeE0ypgd8oNFoFeAXMmUhs0SOhfGR45qs
+        vyENoTyp7aPJbycfnd28dSIzBQpt2u7caIiAK4XN/v9t4qKZjnTzlRPs8AIHxUR040kpqn
+        gi/SfZKNF5rx6JrvcaDOi4UP0rq/txE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-123-fqJGX8F_OYKDw0hvF-bISA-1; Mon, 16 Mar 2020 09:27:01 -0400
+X-MC-Unique: fqJGX8F_OYKDw0hvF-bISA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8ACF513F6;
+        Mon, 16 Mar 2020 13:26:59 +0000 (UTC)
+Received: from tucnak.zalov.cz (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00D7190776;
+        Mon, 16 Mar 2020 13:26:58 +0000 (UTC)
+Received: from tucnak.zalov.cz (localhost [127.0.0.1])
+        by tucnak.zalov.cz (8.15.2/8.15.2) with ESMTP id 02GDQt3m018001;
+        Mon, 16 Mar 2020 14:26:56 +0100
+Received: (from jakub@localhost)
+        by tucnak.zalov.cz (8.15.2/8.15.2/Submit) id 02GDQmtB018000;
+        Mon, 16 Mar 2020 14:26:48 +0100
+Date:   Mon, 16 Mar 2020 14:26:48 +0100
+From:   Jakub Jelinek <jakub@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
+Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
+Message-ID: <20200316132648.GM2156@tucnak>
+Reply-To: Jakub Jelinek <jakub@redhat.com>
+References: <20200314164451.346497-1-slyfox@gentoo.org>
+ <20200316130414.GC12561@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200313031017.71090-1-ling.ma.program@gmail.com>
-In-Reply-To: <20200313031017.71090-1-ling.ma.program@gmail.com>
-From:   Ling Ma <ling.ma.program@gmail.com>
-Date:   Mon, 16 Mar 2020 21:25:42 +0800
-Message-ID: <CAOGi=dNniSgkUtJPfaYLAbR+_8DMFdU59mx7hf8Otj_VjDF_dQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] locks:Remove spinlock in unshare_files
-To:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     "ling.ma" <ling.ml@antfin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316130414.GC12561@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any comments ?
+On Mon, Mar 16, 2020 at 02:04:14PM +0100, Peter Zijlstra wrote:
+> > diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> > index 9b294c13809a..da9f4ea9bf4c 100644
+> > --- a/arch/x86/kernel/Makefile
+> > +++ b/arch/x86/kernel/Makefile
+> > @@ -11,6 +11,12 @@ extra-y	+= vmlinux.lds
+> >  
+> >  CPPFLAGS_vmlinux.lds += -U$(UTS_MACHINE)
+> >  
+> > +# smpboot's init_secondary initializes stack canary.
+> > +# Make sure we don't emit stack checks before it's
+> > +# initialized.
+> > +nostackp := $(call cc-option, -fno-stack-protector)
+> > +CFLAGS_smpboot.o := $(nostackp)
+> 
+> What makes GCC10 insert this while GCC9 does not. Also, I would much
 
-Thanks
-Ling
+My bet is different inlining decisions.
+If somebody hands me over the preprocessed source + gcc command line, I can
+have a look in detail (which exact change and why).
 
-<ling.ma.program@gmail.com> =E4=BA=8E2020=E5=B9=B43=E6=9C=8813=E6=97=A5=E5=
-=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=8811:09=E5=86=99=E9=81=93=EF=BC=9A
->
-> From: Ma Ling <ling.ml@antfin.com>
->
-> Processor support atomic operation for long/int/short/char type,
-> we use the feature to avoid spinlock, which cost hundreds cycles.
->
-> Appreciate your comments
-> Ling
->
-> Signed-off-by: Ma Ling <ling.ml@antfin.com>
-> ---
->  kernel/fork.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 60a1295..fe54600 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -3041,9 +3041,7 @@ int unshare_files(struct files_struct **displaced)
->                 return error;
->         }
->         *displaced =3D task->files;
-> -       task_lock(task);
-> -       task->files =3D copy;
-> -       task_unlock(task);
-> +       WRITE_ONCE(task->files, copy);
->         return 0;
->  }
->
-> --
-> 1.8.3.1
->
+> rather GCC10 add a function attrbute to kill this:
+> 
+>   __attribute__((no_stack_protect))
+
+There is no such attribute, only __attribute__((stack_protect)) which is
+meant mainly for -fstack-protector-explicit and does the opposite, or
+__attribute__((optimize ("no-stack-protector"))) (which will work only
+in GCC7+, since https://gcc.gnu.org/PR71585 changes).
+Or of course you could add noinline attribute to whatever got inlined
+and contains some array or addressable variable that whatever
+-fstack-protector* mode kernel uses triggers it.  With -fstack-protector-all
+it would never work even in the past I believe.
+
+	Jakub
+
