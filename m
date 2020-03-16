@@ -2,88 +2,96 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65478C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73A7C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4309E205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F21720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDUrqXNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732762AbgCPWM5 (ORCPT
+        id S1732765AbgCPWQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:12:57 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:37232 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732652AbgCPWM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:12:56 -0400
-Received: from sf (tunnel547699-pt.tunnel.tserv1.lon2.ipv6.he.net [IPv6:2001:470:1f1c:3e6::2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: slyfox)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 4547834F19C;
-        Mon, 16 Mar 2020 22:12:54 +0000 (UTC)
-Date:   Mon, 16 Mar 2020 22:12:51 +0000
-From:   Sergei Trofimovich <slyfox@gentoo.org>
-To:     Jakub Jelinek <jakub@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
-Message-ID: <20200316221251.7b4f5801@sf>
-In-Reply-To: <20200316132648.GM2156@tucnak>
-References: <20200314164451.346497-1-slyfox@gentoo.org>
-        <20200316130414.GC12561@hirez.programming.kicks-ass.net>
-        <20200316132648.GM2156@tucnak>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 16 Mar 2020 18:16:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32781 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732652AbgCPWQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 18:16:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a25so23243676wrd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7ipMDfBVAMyLNbQEs0O89B52Q8CgpEgd0HJoy940o84=;
+        b=rDUrqXNfQ6QAZRw1ebLOjgAmUY+zdBr/wr00Tn9UVbDVWZh0L3BrZgTtDRjyi3HpnV
+         POReGPeXPkc0ibX6k9TNC99d7hLNevV8kBX3o0kQqjPglLW8YRDHmS3CQNkWnXj8BK1k
+         b2M0iILM5iMMngmdVKiQ4ywPpuqNotHwmYagYaLWtY+B/5KVpUQgUceqxLv9NcTuNNx0
+         G7EY6IUycmSs0BMXvF/XtA4LLeczibS6ptxcBaEo/TqMF93bUyME3wkgt7G65nO8MWRV
+         tqxYhIIZeypq9I5cwvRqkhnwzXu7cvBTvhHSiCcGFK3964eWIlpdvdeJf87DjXITVV6f
+         Rx7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7ipMDfBVAMyLNbQEs0O89B52Q8CgpEgd0HJoy940o84=;
+        b=kofL+ZqqR+iGq1e8bA9k9kMvGny2i74MSR31GvGHjhbq/gazDM/EZYH5oKvysSifBf
+         GziGqcJLCtWMyGEnUGXoihgAiUfAUL5MqGvEAannFIqxwmFYPsvXA/sb7D7YZfO40BBz
+         plo/Fev49lKs3Guj4DJ2J4GgOhgMeyeYD1142qPAWihNqnVURb9BSHXicqmRj1jm0205
+         VElplfWYgaMcAm9manMALsXoOBOdn5nqiqq7D8hYAplbIYc6Ly095nlGVUbpHLrOCMsD
+         r0US3q45HxhIs4xrMx9zUQkJNbMyupap4NZ7Xkd9O6rARCnjvM+WEtP9IZkYaDAkuoYQ
+         gu1A==
+X-Gm-Message-State: ANhLgQ2J1vVDgxHvFVimspaVJvGx0leTp506W4f9XPKjMF1V0mqAUPDM
+        Uz12wZIRBm1MmzvOgrUcLcU=
+X-Google-Smtp-Source: ADFU+vuFbwnhRFo5Dda/vLml2HSpZlyhdRruCctRD8yqem72BZLQBJ7jeAyH/wR91BpnxK/5cGgFdA==
+X-Received: by 2002:adf:b197:: with SMTP id q23mr1548867wra.412.1584396988286;
+        Mon, 16 Mar 2020 15:16:28 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id k5sm1250889wmj.18.2020.03.16.15.16.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Mar 2020 15:16:27 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 22:16:26 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
+        akpm@linux-foundation.org, david@redhat.com, willy@infradead.org,
+        richard.weiyang@gmail.com, vbabka@suse.cz
+Subject: Re: [PATCH v5 1/2] mm/sparse.c: Use kvmalloc/kvfree to alloc/free
+ memmap for the classic sparse
+Message-ID: <20200316221626.lyepjuubytto32vz@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200316102150.16487-1-bhe@redhat.com>
+ <20200316125450.GG3486@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316125450.GG3486@MiWiFi-R3L-srv>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Mar 2020 14:26:48 +0100
-Jakub Jelinek <jakub@redhat.com> wrote:
+On Mon, Mar 16, 2020 at 08:54:50PM +0800, Baoquan He wrote:
+>This change makes populate_section_memmap()/depopulate_section_memmap
+>much simpler.
+>
+>Suggested-by: Michal Hocko <mhocko@kernel.org>
+>Signed-off-by: Baoquan He <bhe@redhat.com>
+>Reviewed-by: David Hildenbrand <david@redhat.com>
+>Acked-by: Michal Hocko <mhocko@suse.com>
+>Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-> > > +# smpboot's init_secondary initializes stack canary.
-> > > +# Make sure we don't emit stack checks before it's
-> > > +# initialized.
-> > > +nostackp := $(call cc-option, -fno-stack-protector)
-> > > +CFLAGS_smpboot.o := $(nostackp)  
-> > 
-> > What makes GCC10 insert this while GCC9 does not. Also, I would much  
-> 
-> My bet is different inlining decisions.
-> If somebody hands me over the preprocessed source + gcc command line, I can
-> have a look in detail (which exact change and why).
-
-In case you are still interested in preprocessed files and results I've collected
-all the bits in a single tarball:
-    https://dev.gentoo.org/~slyfox/bugs/linux-gcc-10-boot-2020-03-14.tar.gz
-Same available in separate files in:
-    https://dev.gentoo.org/~slyfox/bugs/linux-gcc-10-boot-2020-03-14/
-
-Specifically:
-- gcc-v.gcc-{9,10}: gcc-v output of both compilers. Note --enable-default-pie --enable-default-ssp.
-- config.gcc-{9,10}: note, they are not identical as Kbuild does not recognize gcc-10's
-  plugin support. I don't use it though.
-- boot-crash-gcc-10.jpg: picture of a full boot crash
-- command.gcc-{9,10} called to generate .s files (it's almost the same when building .o files)
-- arch-x86-kernel-smpboot.s-gcc-{9,10}: asm files, gennerated with 'make arch/x86/kernel/smpboot.s V=1'
-- arch-x86-kernel-smpboot.c.c-gcc-{9,10}: preprocessed files, generated from command by changing -S to -E.
-
-Another observation: kernel built by gcc-10 boots as-is in qemu without patches.
-I wonder if the following boot line right before the crash has something to do wit it:
-    "random: get_random_bgtes called from start_secondary+0x105/0x1a0 with crng_init=0"
-I hope it's not a race of async canary initialization and canary use.
-Only one CPU is booted at that time, yes?
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
 
 -- 
-
-  Sergei
+Wei Yang
+Help you, Help me
