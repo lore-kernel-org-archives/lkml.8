@@ -2,165 +2,113 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AF8C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB22C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3EF620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sfF+Makf"
+	by mail.kernel.org (Postfix) with ESMTP id 85CD520663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584329889;
+	bh=0VZ0auaUnnxnmEvkvSQZVjExN3L/Ybt8ODLBIb6CQ/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kISpsRPsCduS2rz0/Qr+9AZcbL9oZQsqaxHJR1kRgsdvXPaY7lpmpXWPq8gL+SJX1
+	 NRSGR9KlpaFkdTWweGrrF45rFtV4+eqRNjXfGZH5kgvRuN3UZjvspknqXHmveswRX2
+	 BuWJSxbnPQoLI943A73EO+CsTvgpf6RB3IWTQMHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgCPDh5 (ORCPT
+        id S1729798AbgCPDiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 23:37:57 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33147 "EHLO ozlabs.org"
+        Sun, 15 Mar 2020 23:38:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbgCPDh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 23:37:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1729383AbgCPDiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 23:38:07 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ghp95sY2z9sP7;
-        Mon, 16 Mar 2020 14:37:53 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584329875;
-        bh=OqGkEgplLcjd9k0OxB0XX6oCQC73DckEogblwhAin24=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sfF+MakfMEDBwd+kEfUCSnjuYXxN+WSD2m/7bxx+optsTovXDrTODIYYtuU+E6TgG
-         VVKaLMXEanzwj4NF2Rie7lxDT+wkI3EuJXKzrd8jfa+QsQzUYN/xWABeaQc7krFK07
-         jHU/9u/2g0lCKNs5GP6KYcsrqaFeZ9p8mLHuUgNBaxTl6gq/1LYAKXuDM/Zh2YdH6B
-         Eh+QW3eK061ykDe8jEifKxw+2jWe+29Udv0V8LVeqfTSAzTBE0dqG4Jsz8fpho1s09
-         3z09OkZMl5ptV/0x+yhQVyu4snY1+U30w54B4P+CPsAu3PlSlWv0g1n6NzgifXajMb
-         vnj3hGgXnOeIw==
-Date:   Mon, 16 Mar 2020 14:37:52 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Felipe Balbi <balbi@kernel.org>, Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: linux-next: build failure after merge of the usb-gadget tree
-Message-ID: <20200316143752.473f1073@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CAEE205ED;
+        Mon, 16 Mar 2020 03:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584329886;
+        bh=0VZ0auaUnnxnmEvkvSQZVjExN3L/Ybt8ODLBIb6CQ/U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vE7+fh6ob4BmhTho9ZwlDoDnDIGReEj1f07eRH4bog7bDD6dIFkrc98DP7R5iGq7g
+         07MKoTtoCemvU4U+BklAP5n/9n0R78Ff8PMkEMgXvjzArTIxkaEs7ujgutpLOzD20r
+         9Ksj744AXEEe5vg1xLW2iCAyvvoIeZrBqJX0rU2s=
+Date:   Mon, 16 Mar 2020 11:37:53 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        dmitry.torokhov@gmail.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        wim@linux-watchdog.org, linux@roeck-us.net, daniel.baluta@nxp.com,
+        gregkh@linuxfoundation.org, linux@rempel-privat.de,
+        tglx@linutronix.de, m.felsch@pengutronix.de,
+        andriy.shevchenko@linux.intel.com, arnd@arndb.de,
+        ronald@innovation.ch, krzk@kernel.org, robh@kernel.org,
+        leonard.crestez@nxp.com, aisheng.dong@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V3 2/7] firmware: imx: add COMPILE_TEST support
+Message-ID: <20200316033752.GF17221@dragon>
+References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
+ <1583714300-19085-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dqdE2jDR+SqDnGIHyN7gx7T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583714300-19085-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dqdE2jDR+SqDnGIHyN7gx7T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Mar 09, 2020 at 08:38:15AM +0800, Anson Huang wrote:
+> Add COMPILE_TEST support to i.MX SCU drivers for better compile
+> testing coverage.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No change.
+> ---
+>  drivers/firmware/imx/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/firmware/imx/Kconfig b/drivers/firmware/imx/Kconfig
+> index 1d2e5b8..116707a 100644
+> --- a/drivers/firmware/imx/Kconfig
+> +++ b/drivers/firmware/imx/Kconfig
+> @@ -12,7 +12,7 @@ config IMX_DSP
+>  
+>  config IMX_SCU
+>  	bool "IMX SCU Protocol driver"
+> -	depends on IMX_MBOX
+> +	depends on IMX_MBOX || COMPILE_TEST
+>  	help
+>  	  The System Controller Firmware (SCFW) is a low-level system function
+>  	  which runs on a dedicated Cortex-M core to provide power, clock, and
+> @@ -24,6 +24,6 @@ config IMX_SCU
+>  
+>  config IMX_SCU_PD
+>  	bool "IMX SCU Power Domain driver"
+> -	depends on IMX_SCU
+> +	depends on IMX_SCU || COMPILE_TEST
 
-Hi all,
+Just reminded by Peng, as we go without adding stubs for !IMX_SCU, any
+driver depending on IMX_SCU shouldn't have COMPILE_TEST.  I fixed it up
+by dropping COMPILE_TEST from IMX_SCU_PD.
 
-After merging the usb-gadget tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+Shawn
 
-drivers/usb/dwc3/drd.c: In function 'dwc3_setup_role_switch':
-drivers/usb/dwc3/drd.c:551:23: error: assignment to 'usb_role_switch_set_t'=
- {aka 'int (*)(struct usb_role_switch *, enum usb_role)'} from incompatible=
- pointer type 'int (*)(struct device *, enum usb_role)' [-Werror=3Dincompat=
-ible-pointer-types]
-  551 |  dwc3_role_switch.set =3D dwc3_usb_role_switch_set;
-      |                       ^
-drivers/usb/dwc3/drd.c:552:23: error: assignment to 'usb_role_switch_get_t'=
- {aka 'enum usb_role (*)(struct usb_role_switch *)'} from incompatible poin=
-ter type 'enum usb_role (*)(struct device *)' [-Werror=3Dincompatible-point=
-er-types]
-  552 |  dwc3_role_switch.get =3D dwc3_usb_role_switch_get;
-      |                       ^
-
-Caused by commit
-
-  8a0a13799744 ("usb: dwc3: Registering a role switch in the DRD code.")
-
-interacting with commit
-
-  bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the switc=
-h in the API")
-
-from the usb tree.
-
-I have added the following merge fix patch (which may need more work):
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 16 Mar 2020 14:34:31 +1100
-Subject: [PATCH] usb: dwc3: fix up for role switch API change
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/usb/dwc3/drd.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index db68d48c2267..7db1ffc92bbd 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -478,9 +478,10 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 =
-*dwc)
-=20
- #if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
- #define ROLE_SWITCH 1
--static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-+static int dwc3_usb_role_switch_set(struct usb_role_switch *sw,
-+				    enum usb_role role)
- {
--	struct dwc3 *dwc =3D dev_get_drvdata(dev);
-+	struct dwc3 *dwc =3D usb_role_switch_get_drvdata(sw);
- 	u32 mode;
-=20
- 	switch (role) {
-@@ -502,9 +503,9 @@ static int dwc3_usb_role_switch_set(struct device *dev,=
- enum usb_role role)
- 	return 0;
- }
-=20
--static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
-+static enum usb_role dwc3_usb_role_switch_get(struct usb_role_switch *sw)
- {
--	struct dwc3 *dwc =3D dev_get_drvdata(dev);
-+	struct dwc3 *dwc =3D usb_role_switch_get_drvdata(sw);
- 	unsigned long flags;
- 	enum usb_role role;
-=20
-@@ -550,6 +551,7 @@ static int dwc3_setup_role_switch(struct dwc3 *dwc)
- 	dwc3_role_switch.fwnode =3D dev_fwnode(dwc->dev);
- 	dwc3_role_switch.set =3D dwc3_usb_role_switch_set;
- 	dwc3_role_switch.get =3D dwc3_usb_role_switch_get;
-+	dwc3_role_switch.driver_data =3D dwc;
- 	dwc->role_sw =3D usb_role_switch_register(dwc->dev, &dwc3_role_switch);
- 	if (IS_ERR(dwc->role_sw))
- 		return PTR_ERR(dwc->role_sw);
---=20
-2.25.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/dqdE2jDR+SqDnGIHyN7gx7T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5u9JAACgkQAVBC80lX
-0GyPygf/bbHKNkqtj+vqWCz/ZX500aXamYWTraOd2hNu/v9a6s0mL5UhyRMgBSW0
-VOfwC1a5vIsJOA8aNwt8c+yVY+XvZD8R8Wq6bTDcXL2YU99uTW4RBFoZn2va//3V
-VaApamZeIZPnUzCpIM4jE+gqjzlI5rVDBzTlluZT6DPNJFJjBAPf2+EfsFowPL28
-5RE5X0/tbbKLvcWva/NcmPfR3NmhqZ4wJ0CBb5NtMjQ5dbu29s/Mec1/Ek2JkngM
-UM451DBJQeM7ywePXDQCVboPKo75an72B9sV5w6B8E2bJ1FNRfVoKUGKRSpxqhnY
-pCG/nWDBOau+tFg12TtI6Aiz+665Rw==
-=vbhz
------END PGP SIGNATURE-----
-
---Sig_/dqdE2jDR+SqDnGIHyN7gx7T--
+>  	help
+>  	  The System Controller Firmware (SCFW) based power domain driver.
+> -- 
+> 2.7.4
+> 
