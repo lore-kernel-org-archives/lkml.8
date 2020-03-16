@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CECC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46D5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5487B205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB73205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326417;
-	bh=cffXXnGE5zy+o0fQH1NWf2WJWAmcQ27vougEbStwcsU=;
+	s=default; t=1584326422;
+	bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9EW7+QIkDb3PGidRKzsF5yILihDpHT4YkqnnsDh5KyZlZ7aWVd3oZajclM5frXgf
-	 oFlKiELIaXfXDoisG7h5R8gMhS6ug1/zcUc4T5j6LTNSi3S1tprVpfnsQIoEpqS1ea
-	 0HabUhkFi2SCZFeDNSm45q0oqfvb9PCMUwW+63n8=
+	b=y1BXQjxy6+8t3zpCy49KhiCUMBN9FeG01KeMiSKLcpjOKOM06mseEvlbP/1HJraq/
+	 i4JdbzMSAmGpNE/4xAAMES2IeNraBFaVr3pjnga7oefRGccYKalGpirHeHU6Wu3acF
+	 /WOTwSsRkq0m8IXpybATJc75JGIEtpNQ905muqZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgCPCkQ (ORCPT
+        id S1729741AbgCPCeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37284 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729753AbgCPCeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:07 -0400
+        id S1729380AbgCPCeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12772206E9;
-        Mon, 16 Mar 2020 02:34:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82EBB206E9;
+        Mon, 16 Mar 2020 02:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326047;
-        bh=cffXXnGE5zy+o0fQH1NWf2WJWAmcQ27vougEbStwcsU=;
+        s=default; t=1584326044;
+        bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xjsVeYfcWjO9C279RjU3/chEWtdpX8INw1vpxs6vBl5SeWXCiwZ8N8+bZ/KA6I4t/
-         4xGDERwyVn6wRYLWVb9vshoy7tuWROknbvdhUfzCmMjcKf6Omn5tkc6FEpkAbZyRRu
-         jAOvyLQ7ZVkE5/MTLu8Q2D70nvLEn7VRs7msW0gw=
+        b=JfnYNtjCNxMe9zicNGm/QBDAOSlenHB7OBs5gRFfLNX/9kqvcISmAoFv2uVxmiOHl
+         E+kTtwbDGxUkz1tUDwn/IP6vbW+crJ25+8ex0SM2lLE1dLZ+0AfTI7nuN2SnRAIrRe
+         nB8/DBjaNXP1nmFhEmTSdCx3APkd/cNj9mkUTFuI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Carlo Nonato <carlo.nonato95@gmail.com>,
-        Kwon Je Oh <kwonje.oh2@gmail.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 39/41] block, bfq: fix overwrite of bfq_group pointer in bfq_find_set_group()
-Date:   Sun, 15 Mar 2020 22:33:17 -0400
-Message-Id: <20200316023319.749-39-sashal@kernel.org>
+Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
+        Julien Grall <jgrall@amazon.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
+Subject: [PATCH AUTOSEL 5.5 37/41] xenbus: req->err should be updated before req->state
+Date:   Sun, 15 Mar 2020 22:33:15 -0400
+Message-Id: <20200316023319.749-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
@@ -61,60 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Carlo Nonato <carlo.nonato95@gmail.com>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit 14afc59361976c0ba39e3a9589c3eaa43ebc7e1d ]
+[ Upstream commit 8130b9d5b5abf26f9927b487c15319a187775f34 ]
 
-The bfq_find_set_group() function takes as input a blkcg (which represents
-a cgroup) and retrieves the corresponding bfq_group, then it updates the
-bfq internal group hierarchy (see comments inside the function for why
-this is needed) and finally it returns the bfq_group.
-In the hierarchy update cycle, the pointer holding the correct bfq_group
-that has to be returned is mistakenly used to traverse the hierarchy
-bottom to top, meaning that in each iteration it gets overwritten with the
-parent of the current group. Since the update cycle stops at root's
-children (depth = 2), the overwrite becomes a problem only if the blkcg
-describes a cgroup at a hierarchy level deeper than that (depth > 2). In
-this case the root's child that happens to be also an ancestor of the
-correct bfq_group is returned. The main consequence is that processes
-contained in a cgroup at depth greater than 2 are wrongly placed in the
-group described above by BFQ.
+This patch adds the barrier to guarantee that req->err is always updated
+before req->state.
 
-This commits fixes this problem by using a different bfq_group pointer in
-the update cycle in order to avoid the overwrite of the variable holding
-the original group reference.
+Otherwise, read_reply() would not return ERR_PTR(req->err) but
+req->body, when process_writes()->xb_write() is failed.
 
-Reported-by: Kwon Je Oh <kwonje.oh2@gmail.com>
-Signed-off-by: Carlo Nonato <carlo.nonato95@gmail.com>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Link: https://lore.kernel.org/r/20200303221423.21962-2-dongli.zhang@oracle.com
+Reviewed-by: Julien Grall <jgrall@amazon.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-cgroup.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/xen/xenbus/xenbus_comms.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 5a64607ce7744..facbf4db19428 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -610,12 +610,13 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
- 	 */
- 	entity = &bfqg->entity;
- 	for_each_entity(entity) {
--		bfqg = container_of(entity, struct bfq_group, entity);
--		if (bfqg != bfqd->root_group) {
--			parent = bfqg_parent(bfqg);
-+		struct bfq_group *curr_bfqg = container_of(entity,
-+						struct bfq_group, entity);
-+		if (curr_bfqg != bfqd->root_group) {
-+			parent = bfqg_parent(curr_bfqg);
- 			if (!parent)
- 				parent = bfqd->root_group;
--			bfq_group_set_parent(bfqg, parent);
-+			bfq_group_set_parent(curr_bfqg, parent);
- 		}
+diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
+index 852ed161fc2a7..eb5151fc8efab 100644
+--- a/drivers/xen/xenbus/xenbus_comms.c
++++ b/drivers/xen/xenbus/xenbus_comms.c
+@@ -397,6 +397,8 @@ static int process_writes(void)
+ 	if (state.req->state == xb_req_state_aborted)
+ 		kfree(state.req);
+ 	else {
++		/* write err, then update state */
++		virt_wmb();
+ 		state.req->state = xb_req_state_got_reply;
+ 		wake_up(&state.req->wq);
  	}
- 
 -- 
 2.20.1
 
