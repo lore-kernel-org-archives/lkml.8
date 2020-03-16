@@ -2,99 +2,101 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CE1C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1E4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF61320679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584383599;
-	bh=FNFTDbC711bD4zKJDCRdzhah0Z5BX1mcqlQex3BGMnQ=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=cXCSMKsmyh7MNvuiQzDChApsUPW/pIcgXzsEUnk9YdiaU99jqQUKgms30bH3YqtVx
-	 hoL4so1RB9W77Yb/W9VwUkLr2As8S88thHRQXEs8YZ73xU4xge5CQ9xtqyMBJLdUPa
-	 zH1TInsjmm3gRcMB3s/f6mZ0iM35ounYkQf5bqBc=
+	by mail.kernel.org (Postfix) with ESMTP id 50F9B20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732358AbgCPSdT (ORCPT
+        id S1732355AbgCPSfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 14:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60954 "EHLO mail.kernel.org"
+        Mon, 16 Mar 2020 14:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731967AbgCPSdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 14:33:18 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1731967AbgCPSfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 14:35:21 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E5FB20674;
-        Mon, 16 Mar 2020 18:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584383598;
-        bh=FNFTDbC711bD4zKJDCRdzhah0Z5BX1mcqlQex3BGMnQ=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=MwC1Iwj9v+6hWSPEFBT0jJ1XSZSHjALVOrY91LV7+Cujyn0l6PoCwq/NWfQQ1NHHN
-         I5Z/I+4pfDMaWfuMYHsrh+hWIiJxIL0vRtWOZQntJny3yBu2PzzuoHIwiHJ0dJhKmq
-         eOK9mPpVFDB5urtCQs3fTpz3/8SBxR8o+t9taseQ=
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C38620674;
+        Mon, 16 Mar 2020 18:35:19 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 14:35:17 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Eugeniu Rosca <roscaeugeniu@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [RFC PATCH 0/3] Fix quiet console in pre-panic scenarios
+Message-ID: <20200316143517.651abbeb@gandalf.local.home>
+In-Reply-To: <20200315170903.17393-1-erosca@de.adit-jv.com>
+References: <20200315170903.17393-1-erosca@de.adit-jv.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <c6b19bac-b018-28a0-421f-f40f85245bee@codeaurora.org>
-References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org> <1581423236-21341-2-git-send-email-tdas@codeaurora.org> <20200303201629.GP24720@google.com> <f0529793-c51d-4baf-5217-173c552f4cbe@codeaurora.org> <20200304170939.GR24720@google.com> <158412246142.149997.5548337390525905687@swboyd.mtv.corp.google.com> <c6b19bac-b018-28a0-421f-f40f85245bee@codeaurora.org>
-Subject: Re: [PATCH v1 2/2] clk: qcom: dispcc: Remove support of disp_cc_mdss_rscc_ahb_clk
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>, robh@kernel.org,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Mon, 16 Mar 2020 11:33:17 -0700
-Message-ID: <158438359728.88485.9249991203602274851@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-03-14 04:08:47)
-> I would require you suggestion on the below.
->=20
-> On 3/13/2020 11:31 PM, Stephen Boyd wrote:
-> > Quoting Matthias Kaehlcke (2020-03-04 09:09:39)
-> >> Hi Taniya,
-> >>
-> >> On Wed, Mar 04, 2020 at 09:05:20AM +0530, Taniya Das wrote:
-> >>>
-> >>> Hi Matthias,
-> >>>
-> >>> The display device node is not present and we encounter this crash, w=
-ould it
-> >>> be possible to add ALWAYS_ON for the MDSS GDSC and give it a try.
-> >>
-> >> It still crashes when ALWAYS_ON is set for the MDSS GDSC.
-> >=20
-> > Any updates here? I'm about to send this patch off to Linus and I'm
-> > wondering if there will be a resolution besides reverting it.
-> >=20
->=20
-> Looks like the AHB clock needs to be left enabled till the last clocks=20
-> get disabled. I need to add a new dependency o n this clock.
->=20
-> Hi Stephen,
->=20
->=20
-> Any way to keep this dependency using the framework  or I need to split=20
-> the probes to register them independently?
->=20
+On Sun, 15 Mar 2020 18:09:00 +0100
+Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
 
-Sorry, I don't understand the problem fully. This AHB clk is left on in
-the bootloader? Why do we need to touch it if it's always left enabled?
-Is it actually the case that the bootloader hasn't turned this clk on
-and we're getting lucky having it marked here as CLK_IS_CRITICAL? Can we
-force it on in driver probe and then ignore it after that?
+> Dear community,
+> 
+> The motivation behind this seris is to save days/weeks, if not months,
+> of debugging efforts for users who:
+> 
+>  * experience an issue like softlockup/hardlockup/hung task/oom, whose
+>    reproduction is not clear and whose occurrence rate is very low
+>  * are constrained to use a low loglevel value (1,2,3) in production
+>  * mostly rely on console logs to debug the issue post-mortem
+>    (e.g. saved to persistent storage via e.g. pstore)
+> 
+> As pointed out in the last patch from this series, under the above
+> circumstances, users might simply lack any relevant logs during
+> post-mortem analysis.
+> 
+> Why this series is marked as RFC is because:
+>  * There are several possible approaches to turn console verbosity on
+>    and off. Current series employs the 'ignore_loglevel' functionality,
+>    but an alternative way is to use the 'console_loglevel' variable. The
+>    latter is more intrusive, hence the former has been chosen as v1.
+>  * Manipulating 'ignore_loglevel' might be seen as an abuse, especially
+>    because it breaks the expectation of users who assume the system to
+>    be dead silent after passing loglevel=0 on kernel command line.
+> 
+> Thank you for your comments!
+
+I don't see any issues with this patch set. What do others think?
+
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+[ Note, I only acked, and did not give a deep review of it ]
+
+-- Steve
+
+> 
+> Eugeniu Rosca (3):
+>   printk: convert ignore_loglevel to atomic_t
+>   printk: add console_verbose_{start,end}
+>   watchdog: Turn console verbosity on when reporting softlockup
+> 
+>  include/linux/printk.h | 10 ++++++++++
+>  kernel/printk/printk.c | 30 ++++++++++++++++++++++++++----
+>  kernel/watchdog.c      |  4 ++++
+>  3 files changed, 40 insertions(+), 4 deletions(-)
+> 
+
