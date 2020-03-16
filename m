@@ -2,139 +2,131 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666CDC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85264C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 397EE20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2442073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cb7/GBkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732576AbgCPUne (ORCPT
+        id S1732615AbgCPUtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:43:34 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38201 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732537AbgCPUnd (ORCPT
+        Mon, 16 Mar 2020 16:49:08 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44248 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732571AbgCPUtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:43:33 -0400
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jDwa3-0006n7-SB; Mon, 16 Mar 2020 21:43:23 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jDwa2-0007Vh-2S; Mon, 16 Mar 2020 21:43:22 +0100
-Date:   Mon, 16 Mar 2020 21:43:22 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Stefan Lengfeld <contact@stefanchrist.eu>
-Cc:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: at91: support atomic write xfer
-Message-ID: <20200316204322.GB17716@pengutronix.de>
-References: <c05f76f74cd6a7ec2735c96861f9d5933631c112.1584296795.git.mirq-linux@rere.qmqm.pl>
- <9924dd54-dd8b-d130-9607-2bbbc65675d5@gmail.com>
- <20200316144221.GC19141@qmqm.qmqm.pl>
- <20200316172003.lguso2fczz5imh6g@porty>
+        Mon, 16 Mar 2020 16:49:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d62so19295601oia.11;
+        Mon, 16 Mar 2020 13:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FwKpB9dezgsGNUxz1nNOwjc19tHL0rqvKXfkEKEGY/8=;
+        b=Cb7/GBkJLJp64RKa6AX44fXcNNPL8ZxndHUjn6sCAS1kZmVV5zk73GoaBGgjU6kSwA
+         ubqfcHH14i6g1cKZE3HE1EV1CVFheG266PjCzYpwTesYO7cEyfmagMQScGUavZrbD19R
+         AOAC9gQWjHkeg4XZ48ScRd6VJ4qChPu9ncAxdshFtGxdbvLuk6pj/y957G1WIMLcuphj
+         byLdZWV5ODm7ZGkHvlCZjRGCEIdy4Lon2IZDi7flQJSOqnMpadaB3QENWV7kKpjuuz1P
+         JzaIoZEiT14M4Dxdd9pZNGZHeSaMQ6DnGrP0dAivYFBMf29HFrWkJhDyITbYM8j/GLba
+         aV6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FwKpB9dezgsGNUxz1nNOwjc19tHL0rqvKXfkEKEGY/8=;
+        b=fU+Spf9nyYjwgXWGZ8OCXMz6r8DH/hBQxtZ42BqOPe8MX4otS5mvev2ZvLB1Ccp2YR
+         x27tft/YRzHCKRkc+1AFDGUrlv+dNK7H7a2jT8lf6Gd8vYT4/A1Puo2Anj2aptD66D4V
+         cJM02ePVT5Wjw5/obK4cyRwDkWFTU4Inmdy7YzYdFbleb5E7K21NxlXZiXYM+yUb8MWC
+         hIx/hOxMrjW630LyEVWdvV0uGbLz56Bb9sb9cjQMhNlkbCpdeOkSORr828d3hQKBZgX1
+         E67kV6ZX1+d20ezOpyQdgov/FQ+ZgzAajhMDHDhTWNkBoaKL4GO8L9vKsqoZPp7u1phJ
+         jTVA==
+X-Gm-Message-State: ANhLgQ2pNM6GBbSA4NOHnCQdlt6MgWgMOWa7RgEKJUEtKE4eaBOZOHaG
+        xK/tugpZ04fLty8/p5XwFsw=
+X-Google-Smtp-Source: ADFU+vvEjYOEDnaDrK2AIBMJUjh56ynJDxAdBGrx8W7H91Yx5yY0DH5GhjJyoGX2Ad4wDgRML4TLvA==
+X-Received: by 2002:a05:6808:4e:: with SMTP id v14mr1083539oic.70.1584391745414;
+        Mon, 16 Mar 2020 13:49:05 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id c1sm329747oib.46.2020.03.16.13.49.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 13:49:04 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] soc: qcom: pdr: Avoid uninitialized use of found in pdr_indication_cb
+Date:   Mon, 16 Mar 2020 13:48:55 -0700
+Message-Id: <20200316204855.15611-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200316172003.lguso2fczz5imh6g@porty>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 21:08:32 up 24 days,  7:25, 51 users,  load average: 0.31, 0.28,
- 0.21
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-16 18:20, Stefan Lengfeld wrote:
-> Hi Michał,
-> 
-> On Mon, Mar 16, 2020 at 03:42:21PM +0100, Michał Mirosław wrote:
-> > On Sun, Mar 15, 2020 at 11:46:33PM +0300, Dmitry Osipenko wrote:
-> > > 15.03.2020 21:27, Michał Mirosław пишет:
-> > > > Implement basic support for atomic write - enough to get a simple
-> > > > write to PMIC on shutdown. Only for chips having ALT_CMD register,
-> > > > eg. SAMA5D2.
-> > > > 
-> > > > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> > > > ---
-> > > 
-> > > Hello Michał,
-> > > 
-> > > ...
-> > > > +	ret = pm_runtime_get_sync(dev->dev);
-> > > > +	if (ret < 0)
-> > > > +		goto out;
-> > > 
-> > > Runtime PM can't be used while interrupts are disabled, unless
-> > > pm_runtime_irq_safe() is used and driver's RPM callback is IRQ-safe.
-> > 
-> > I didn't get any warnings from lockdep and friends, but I'll double
-> > check if this is by luck.
-> 
-> You can have a look at the I2C atomic patch for the imx-driver. See
-> 
->    https://patchwork.ozlabs.org/patch/1225802/
-> 
-> In that patch Marco Felsch is using clk_enable() and clk_disable() calls.
+Clang warns:
 
-Yep because we need to handle the runtime_pm stuff by our-self. So for
-the imx case we need to handle the clk en-/disable stuff. Runtime pm is
-using a workqueue which can't be used in that late case.
+../drivers/soc/qcom/pdr_interface.c:316:2: warning: variable 'found' is
+used uninitialized whenever 'for' loop exits because its condition is
+false [-Wsometimes-uninitialized]
+        list_for_each_entry(pds, &pdr->lookups, node) {
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../include/linux/list.h:624:7: note: expanded from macro
+'list_for_each_entry'
+             &pos->member != (head);
+             ^~~~~~~~~~~~~~~~~~~~~~
+../drivers/soc/qcom/pdr_interface.c:325:7: note: uninitialized use
+occurs here
+        if (!found)
+             ^~~~~
+../drivers/soc/qcom/pdr_interface.c:316:2: note: remove the condition if
+it is always true
+        list_for_each_entry(pds, &pdr->lookups, node) {
+        ^
+../include/linux/list.h:624:7: note: expanded from macro
+'list_for_each_entry'
+             &pos->member != (head);
+             ^
+../drivers/soc/qcom/pdr_interface.c:309:12: note: initialize the
+variable 'found' to silence this warning
+        bool found;
+                  ^
+                   = 0
+1 warning generated.
 
-Regards,
-  Marco
+Initialize found to false to fix this warning.
 
-> > > ...
-> > > > +	timeout = jiffies + (2 + msg->len) * HZ/1000;
-> > > > +	for (;;) {
-> > > > +		stat = at91_twi_read(dev, AT91_TWI_SR);
-> > > > +		if (stat & AT91_TWI_TXCOMP)
-> > > > +			break;
-> > > > +		if (time_after(jiffies, timeout)) {
-> > > > +			ret = -ETIMEDOUT;
-> > > > +			goto out;
-> > > > +		}
-> > > > +		udelay(100);
-> > > > +	}
-> > > 
-> > > Jiffies can't be used with the disabled interrupts because jiffies are
-> > > updated by timer's interrupt.
-> > > 
-> > > Either ktime() API or iterator-based loop should be used.
-> > 
-> > Thanks for the pointers. In my use-case power is cut from the CPU at this
-> > point so it didn't matter that the loop was infinite.
-> 
-> Here again you can have a look at Marco Felsch's patch. He used the
-> function readb_poll_timeout_atomic(). So the loop can potentially
-> replaced by a single line.
-> 
-> Kind regards,
-> Stefan
-> 
+Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
+Link: https://github.com/ClangBuiltLinux/linux/issues/933
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/soc/qcom/pdr_interface.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+index 7ee088b9cc7c..17ad3b8698e1 100644
+--- a/drivers/soc/qcom/pdr_interface.c
++++ b/drivers/soc/qcom/pdr_interface.c
+@@ -306,7 +306,7 @@ static void pdr_indication_cb(struct qmi_handle *qmi,
+ 	const struct servreg_state_updated_ind *ind_msg = data;
+ 	struct pdr_list_node *ind;
+ 	struct pdr_service *pds;
+-	bool found;
++	bool found = false;
+ 
+ 	if (!ind_msg || !ind_msg->service_path[0] ||
+ 	    strlen(ind_msg->service_path) > SERVREG_NAME_LENGTH)
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.26.0.rc1
+
