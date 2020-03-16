@@ -2,100 +2,90 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A80C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BA9C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7598206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:23:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vSg0a1+Q"
+	by mail.kernel.org (Postfix) with ESMTP id 063E0206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584361578;
+	bh=wLXZj/rQOoK1wG6OXYHycuFl5KB8T+77ikZuAOuVcxg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WWmN8+JAZ8L1snp5HsbYPA3UQFzs+mctC3WC8mwkGbeZuwfh2qaSzmVHKcXE7MlCs
+	 HF795BmVtAiMerMJ/qiT0QC3s4az+RLvFdztIXGZNpDNMke0g3lB/GnM4v8rPLwBSN
+	 Ks1ATkbO1SOUqd+4uFYVtOe2Iyf2MxFnR6UaDmsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730978AbgCPMXw (ORCPT
+        id S1730993AbgCPM0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:23:52 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52740 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730878AbgCPMXw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:23:52 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GCNWG8055256;
-        Mon, 16 Mar 2020 07:23:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584361412;
-        bh=/axxTSN4rOjW8bh6Kbh93WtVu/tmmhKSGynWOWCPzuY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vSg0a1+QKByxeZQ7KBTjfgkxDI9IEY9zlUWk/fQEdnbGDiw7iS+KNJxMY7pblqv91
-         xcRc9iE/EmWBlfMtFx29z1Q7oLaJDwW3ojWz/gBihLpbblaWUvjPcymhZ6fkd6lTnK
-         L6gF9F4A/jU3aB+ibd8fH0XVfsLOOvs8npPetIlU=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GCNWpJ082049;
-        Mon, 16 Mar 2020 07:23:32 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Mar 2020 07:23:32 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Mar 2020 07:23:32 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GCNS4R121266;
-        Mon, 16 Mar 2020 07:23:29 -0500
-Subject: Re: [PATCH] kthread: Mark timer used by delayed kthread works as IRQ
- safe
-To:     Tejun Heo <tj@kernel.org>, Petr Mladek <pmladek@suse.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        <linux-rt-users@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>
-References: <20200217120709.1974-1-pmladek@suse.com>
- <20200219152248.GC698990@mtj.thefacebook.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <6a4c07df-8971-8637-5251-ce177c3a08ce@ti.com>
-Date:   Mon, 16 Mar 2020 14:23:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Mar 2020 08:26:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:47378 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730902AbgCPM0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:26:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F97E30E;
+        Mon, 16 Mar 2020 05:26:15 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F75B3F52E;
+        Mon, 16 Mar 2020 05:26:14 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 12:26:13 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
+ queue with a simple completion
+Message-ID: <20200316122613.GE5010@sirena.org.uk>
+References: <20200314224340.1544-1-olteanv@gmail.com>
+ <20200314224340.1544-7-olteanv@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200219152248.GC698990@mtj.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M/SuVGWktc5uNpra"
+Content-Disposition: inline
+In-Reply-To: <20200314224340.1544-7-olteanv@gmail.com>
+X-Cookie: I thought YOU silenced the guard!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
 
-On 19/02/2020 17:22, Tejun Heo wrote:
-> On Mon, Feb 17, 2020 at 01:07:09PM +0100, Petr Mladek wrote:
->> The timer used by delayed kthread works are IRQ safe because the used
->> kthread_delayed_work_timer_fn() is IRQ safe.
->>
->> It is properly marked when initialized by KTHREAD_DELAYED_WORK_INIT().
->> But TIMER_IRQSAFE flag is missing when initialized by
->> kthread_init_delayed_work().
->>
->> The missing flag might trigger invalid warning from del_timer_sync()
->> when kthread_mod_delayed_work() is called with interrupts disabled.
->>
->> Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> Signed-off-by: Petr Mladek <pmladek@suse.com>
->> Tested-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-> Acked-by: Tejun Heo <tj@kernel.org>
+--M/SuVGWktc5uNpra
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm worry shouldn't this patch have "fixes" tag?
+On Sun, Mar 15, 2020 at 12:43:34AM +0200, Vladimir Oltean wrote:
 
--- 
-Best regards,
-grygorii
+> The wait queue was actually restructured as a completion, after polling
+> other drivers for the most "popular" approach.
+
+> Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+
+Fixes should generally go at the start of the series to make sure that
+they can be applied without any dependencies on the rest of the series
+and sent to mainline before the merge window.
+
+--M/SuVGWktc5uNpra
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5vcGQACgkQJNaLcl1U
+h9BuGwf/TNkbNlpccB3oDAPTRoqpGwgXMT50uneLIqM+UWYDfTdo503/gwBuVGUZ
+Ix/lJF/B9AD4LGk+CJED3A9PB8UahrL+5hl8+bojzSHjpRLyWrGqGg0GDEuH5DFV
+fZxWjtf5laBqVYUzAvNi65PTOzLgXhO01FetyFQyToHLdFGQZs6wq0uZcJlq5A55
+22ACschvXdQ8k3aOsPXLOwTaNxEIsWex+GpybtDIZdoUMnT6Y7Gf/LaWl9noJzCC
+PTqYrePE1pwPUKo+/y2QXdUvao5UzQ/0qcBR7MHt0mjwFWlwikRRiF2dJf7s4Bqn
+M/7m7bPS6B2ieiOoQgB2bp02f5FZnQ==
+=3FFa
+-----END PGP SIGNATURE-----
+
+--M/SuVGWktc5uNpra--
