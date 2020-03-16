@@ -2,165 +2,86 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06B9C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF77C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 748B720658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DEC20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:45:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mjp71bUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgCPHpK (ORCPT
+        id S1729980AbgCPHpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:45:10 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60390 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729582AbgCPHpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:45:10 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Tsj-C4w_1584344695;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tsj-C4w_1584344695)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 16 Mar 2020 15:44:56 +0800
-Subject: Re: [PATCH v2,2/2] doc: zh_CN: add translation for virtiofs
-To:     Wang Wenhu <wenhu.wang@vivo.com>, Jonathan Corbet <corbet@lwn.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biggers <ebiggers@google.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     kernel@vivo.com
-References: <20200315092810.87008-1-wenhu.wang@vivo.com>
- <20200315155258.91725-1-wenhu.wang@vivo.com>
- <20200315155258.91725-2-wenhu.wang@vivo.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <5116273f-c88e-543f-7f91-a45ae2d3d505@linux.alibaba.com>
-Date:   Mon, 16 Mar 2020 15:44:55 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        Mon, 16 Mar 2020 03:45:43 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57261 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729582AbgCPHpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 03:45:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gpJ45DM5z9sPJ;
+        Mon, 16 Mar 2020 18:45:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584344740;
+        bh=cBV1Ueb6fOuj4tcdK1V03+d6DIFrighm5HZQCK0tZxM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mjp71bUoszkXPxx6gq5RvJYiame0/rUb08CowSSUidwPqNlGzzmW7x9mraF1EXBMN
+         eWTaiWCHQx2XsfR9b7N3BcmFLmFgI15kEQDQr5o29qCN1ImE/ycnN36YaxbPfZZeZ2
+         cRZbtLbY26hgRn58J5f6p5pVXySlcVgvY+571ddIr8RZ7pJb9B7+iRhEe/7Rh+5KSY
+         bjmaIacJjpDjgXjUScypLIhezN9NCDsc3oRNrjAyt/KVOdT5dSjFfoocxIbUh7t4QW
+         zQaVsDGSPqZpAd1lTIlihuxBNTXRCOokaYuYdsJzh2fvdxh19WRM072u+NJsFZAquS
+         /js2ttUryWmVA==
+Date:   Mon, 16 Mar 2020 18:45:40 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the v4l-dvb tree
+Message-ID: <20200316184540.30b35707@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200315155258.91725-2-wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/CO1P+oL0eESydM.6/2QY5v7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
+--Sig_/CO1P+oL0eESydM.6/2QY5v7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-在 2020/3/15 下午11:52, Wang Wenhu 写道:
-> Translate virtiofs.rst in Documentation/filesystems/ into Chinese.
-> 
-> Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
-> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-> ---
-> Changelog v2:
->  - add a blank line in the end of index.rst to index virtiofs.rst
->  - Asked-by Stefan Hajnoczi
->  - added SPDX header and Copyright info
-> ---
->  Documentation/filesystems/virtiofs.rst        |  2 +
->  .../translations/zh_CN/filesystems/index.rst  |  2 +
->  .../zh_CN/filesystems/virtiofs.rst            | 61 +++++++++++++++++++
->  3 files changed, 65 insertions(+)
->  create mode 100644 Documentation/translations/zh_CN/filesystems/virtiofs.rst
-> 
-> diff --git a/Documentation/filesystems/virtiofs.rst b/Documentation/filesystems/virtiofs.rst
-> index 4f338e3cb3f7..7c4301d962f8 100644
-> --- a/Documentation/filesystems/virtiofs.rst
-> +++ b/Documentation/filesystems/virtiofs.rst
-> @@ -1,3 +1,5 @@
-> +.. _virtiofs_index:
-> +
->  .. SPDX-License-Identifier: GPL-2.0
->  
->  ===================================================
-> diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
-> index 0a2cabfeaf7b..fd3700a4db6d 100644
-> --- a/Documentation/translations/zh_CN/filesystems/index.rst
-> +++ b/Documentation/translations/zh_CN/filesystems/index.rst
-> @@ -27,3 +27,5 @@ Linux Kernel中的文件系统
->  .. toctree::
->     :maxdepth: 2
->  
-> +   virtiofs
-> +
-> diff --git a/Documentation/translations/zh_CN/filesystems/virtiofs.rst b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
-> new file mode 100644
-> index 000000000000..cd836a9b2ac4
-> --- /dev/null
-> +++ b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
-> @@ -0,0 +1,61 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +.. raw:: latex
-> +
-> +	\renewcommand\thesection*
-> +	\renewcommand\thesubsection*
-> +
-> +.. include:: ../disclaimer-zh_CN.rst
-> +
-> +:Original: :ref:`Documentation/filesystems/virtiofs.rst <virtiofs_index>`
-> +
-> +译者
-> +::
-> +
-> +	中文版维护者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
-> +	中文版翻译者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
-> +	中文版校译者:  王文虎 Wang Wenhu <wenhu.wang@vivo.com>
-> +
-> +===========================================
-> +virtiofs: virtio-fs 主机<->客机共享文件系统
-> +===========================================
-> +
-> +- Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-> +
-> +介绍
-> +====
-> +Linux的virtiofs文件系统实现了一个半虚拟化VIRTIO类型“virtio-fs”设备的驱动，通过该\
-> +类型设备实现客机<->主机文件系统共享。它允许客机挂载一个已经导出到主机的目录。
-> +
-> +客机通常需要访问主机或者远程系统上的文件。使用场景包括：在新客机安装时让文件对其\
-> +可见；从主机上的根文件系统启动；对无状态或临时客机提供持久存储和在客机之间共享目录。
-> +
-> +尽管在某些任务可能通过使用已有的网络文件系统完成，但是却需要非常难以自动化的配置\
-> +步骤，且将存储网络暴露给客机。而virtio-fs设备通过提供不经过网络的文件系统访问文件\
-> +的设计方式解决了这些问题。
-> +
-> +另外，virto-fs设备发挥了主客机共存的优点提高了性能，并且提供了网络文件系统所不具备
-> +的一些语义功能。
-> +
-> +用法
-> +====
-> +以``myfs``标签将文件系统挂载到``/mnt``:
-> +
-> +.. code-block:: sh
-> +
-> +  guest# mount -t virtiofs myfs /mnt
-> +
-> +请查阅 https://virtio-fs.gitlab.io/ 了解配置QEMU和virtiofsd守护程序的详细信息。
-> +
-> +内幕
-> +====
-> +由于virtio-fs设备将FUSE协议用于文件系统请求，因此Linux的virtiofs文件系统与FUSE文\
-> +件系统客户端紧密集成在一起。客机充当FUSE客户端而主机充当FUSE服务器，内核与用户空\
-> +间之间的/dev/fuse接口由virtio-fs设备接口代替。
-> +
-> +FUSE请求被置于虚拟队列中由主机处理。主机填充缓冲区中的响应部分，而客机处理请求的完成部分。
-> +
-> +将/dev/fuse映射到虚拟队列需要解决/dev/fuse和虚拟队列之间语义上的差异。每次读取\
-> +/dev/fuse设备时，FUSE客户端都可以选择要传输的请求，从而可以使某些请求优先于其他\
-> +请求。虚拟队列有其队列语义，无法更改已入队请求的顺序。在虚拟队列已满的情况下尤
-> +其关键，因为此时不可能加入高优先级的请求。为了解决此差异，virtio-fs设备采用“hiprio”\
-> +（高优先级）虚拟队列，专门用于有别于普通请求的高优先级请求。
-> 
+Hi all,
+
+Commit
+
+  6fafbbe8d414 ("device property: Export fwnode_get_name()")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CO1P+oL0eESydM.6/2QY5v7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5vLqQACgkQAVBC80lX
+0Gw8YQf/eOyBHqOyhgJIkjlHs/X4VpiG4Fhikou8MwZaLZwVFWFBBDf3MiozYcLh
+FJ2epJx7wp6jvZ0BCOmvFd1rY4Jfx3A622WVgJasb3/1kJ2HvG1YIG3V6Wt6wgiZ
+lcMmguIqoHCXU3dIoXIPsrt7YY5VWpjVZTgiCCzky6U3rcU4R+aQRUeKGSshDwyH
+EDxnc8Ft54cxr3YOiHxqVDVBMCqGJ13y9+fZcC7GQPZfMvu0I0ILI4qOYhEQtQa8
+zQEEuWtWpu1HTVNV3O1jjA+djodb2pdEzKBY3951F9Hsy5ISxA6AL9Ct4DvGsO0/
+16H+nowpB0ZLwubAXFF6ggRP3H0ASA==
+=uDnD
+-----END PGP SIGNATURE-----
+
+--Sig_/CO1P+oL0eESydM.6/2QY5v7--
