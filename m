@@ -2,247 +2,95 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4195EC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2DFC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D6020722
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326401;
-	bh=zzaahmDT84UeYapfyePLPQkSNdpaQfj2oAJEjcsBFBw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpy1Gl7iKfnROHXSTSOrKINgKx+mYFB/omlDpj7ukNO6oVlvratuCPRnMv8kjglhg
-	 +/tPNWH9yLxJGqhL7LOs95cdTqDmS/4A8dRykQtnXwYfwOQqIttX8dzJjAq8dosXKB
-	 ZMnSD6WUjI+HsCJS7gA6S8FlWvcsUV/i5qbl40oA=
+	by mail.kernel.org (Postfix) with ESMTP id 1B4C5205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbgCPCj7 (ORCPT
+        id S1730488AbgCPCkG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:39:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729348AbgCPCeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:14 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5536F20737;
-        Mon, 16 Mar 2020 02:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326054;
-        bh=zzaahmDT84UeYapfyePLPQkSNdpaQfj2oAJEjcsBFBw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vsLeHK5n/l9VZaKj65bTLcd1Y1hCYY3j81Q2N1DujzN5LofjY6wyV74/ZopJkcd3O
-         Fdilx+HeO7Fiv9jnQJY3lCEmsuo9MiOKtdLfVKTTsNk+efujpTWXrc9bzbFEkrUbNv
-         UzSGUBQAmT8MEwzolXYJlyGehsBa59jkL1dMsaFU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 02/35] spi: spi-omap2-mcspi: Support probe deferral for DMA channels
-Date:   Sun, 15 Mar 2020 22:33:38 -0400
-Message-Id: <20200316023411.1263-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
-References: <20200316023411.1263-1-sashal@kernel.org>
+        Sun, 15 Mar 2020 22:40:06 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:53421 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729348AbgCPCkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:40:04 -0400
+Received: by mail-il1-f198.google.com with SMTP id z19so10143478ils.20
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 19:40:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to:content-transfer-encoding;
+        bh=G7pIHMXafOLm3F/2/i2LvBMFMIvTzROgcOUTWFn2X6I=;
+        b=dl/DQ3SQaqFCSEyMJ9OqcOBl9qS6BjMjCe8F+0rgGqrAK31yXle5E9ZBzAWgKGZmSX
+         9PxzyGjONZcW/sr6xutjkQpR9bDGT5buw91q6ikutP4gpwKo0hA2WPaliGxLe83jByBX
+         LuQlFtHDZOB4Zcqqk8NArhaS35EWhLEoWcBMXdpPt4bSyFgkKCRpLk4SfkYoSMDQKyo3
+         c2YdzOjF/2J4T8OzhfeU7JlaZnFRfOx5xatnJArDucrgxaJG3U8c12jNWJbblEQC5ZMG
+         WWMeLAyrZlHLkGT69sR7FxzspGFqFExRIIEH+6pqIBx6aM5nnuxB1ahcTW5VhyJcCwya
+         gQLw==
+X-Gm-Message-State: ANhLgQ1hviQxIWwa6BbIoRlHOpfbt0q4ohkhJiuaeaCjRF0TQ81Zzb4f
+        85HCjHy4BJDFJLVW/WdFBsxcUnTbtPzUxG/2ffTVtrpB0CtH
+X-Google-Smtp-Source: ADFU+vsoZxccOxRhbL4Y/MIwgxSx220g7zIbktYsAfwneEMRwc/N8lW0/7POXMyHaJ8GuPRqszlVeuTTjg5as1yqhzbhVmbrzHSZ
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:3dd:: with SMTP id r29mr2463944jaq.94.1584326403449;
+ Sun, 15 Mar 2020 19:40:03 -0700 (PDT)
+Date:   Sun, 15 Mar 2020 19:40:03 -0700
+In-Reply-To: <000000000000bdb5b2059c865f5c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007c695f05a0efbc52@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in bitmap_ip_ext_cleanup
+From:   syzbot <syzbot+6491ea8f6dddbf04930e@syzkaller.appspotmail.com>
+To:     a@unstable.cc, akpm@linux-foundation.org, allison@lohutok.net,
+        arnd@arndb.de, axboe@kernel.dk, b.a.t.m.a.n@lists.open-mesh.org,
+        bp@alien8.de, catalin.marinas@arm.com, chris@zankel.net,
+        christian.brauner@ubuntu.com, christian@brauner.io,
+        coreteam@netfilter.org, dan.carpenter@oracle.com,
+        davem@davemloft.net, elena.reshetova@intel.com,
+        florent.fourcot@wifirst.fr, fw@strlen.de, geert@linux-m68k.org,
+        hare@suse.com, heiko.carstens@de.ibm.com, hpa@zytor.com,
+        info@drgreenstore.com, info@metux.net, jcmvbkbc@gmail.com,
+        jeremy@azazel.net, johannes.berg@intel.com,
+        kadlec@blackhole.kfki.hu, kadlec@netfilter.org,
+        linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux@armlinux.org.uk, mareklindner@neomailbox.ch,
+        mingo@redhat.com, netdev@vger.kernel.org,
+        netfilter-core-owner@lists.netfilter.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        peterz@infradead.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk, will@kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh Raghavendra <vigneshr@ti.com>
+syzbot suspects this bug was fixed by commit:
 
-[ Upstream commit 32f2fc5dc3992b4b60cc6b1a6a31be605cc9c3a2 ]
+commit 32c72165dbd0e246e69d16a3ad348a4851afd415
+Author: Kadlecsik József <kadlec@blackhole.kfki.hu>
+Date:   Sun Jan 19 21:06:49 2020 +0000
 
-dma_request_channel() can return -EPROBE_DEFER, if DMA driver is not
-ready. Currently driver just falls back to PIO mode on probe deferral.
-Fix this by requesting all required channels during probe and
-propagating EPROBE_DEFER error code.
+    netfilter: ipset: use bitmap infrastructure completely
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Link: https://lore.kernel.org/r/20200204124816.16735-3-vigneshr@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/spi/spi-omap2-mcspi.c | 77 +++++++++++++++++------------------
- 1 file changed, 38 insertions(+), 39 deletions(-)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16b8e545e00000
+start commit:   d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cf8e288883e40aba
+dashboard link: https://syzkaller.appspot.com/bug?extid=6491ea8f6dddbf04930e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=126748d6e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1385f959e00000
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 8e435da730996..cfb64e5a7d45d 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -986,20 +986,12 @@ static int omap2_mcspi_setup_transfer(struct spi_device *spi,
-  * Note that we currently allow DMA only if we get a channel
-  * for both rx and tx. Otherwise we'll do PIO for both rx and tx.
-  */
--static int omap2_mcspi_request_dma(struct spi_device *spi)
-+static int omap2_mcspi_request_dma(struct omap2_mcspi *mcspi,
-+				   struct omap2_mcspi_dma *mcspi_dma)
- {
--	struct spi_master	*master = spi->master;
--	struct omap2_mcspi	*mcspi;
--	struct omap2_mcspi_dma	*mcspi_dma;
- 	int ret = 0;
- 
--	mcspi = spi_master_get_devdata(master);
--	mcspi_dma = mcspi->dma_channels + spi->chip_select;
--
--	init_completion(&mcspi_dma->dma_rx_completion);
--	init_completion(&mcspi_dma->dma_tx_completion);
--
--	mcspi_dma->dma_rx = dma_request_chan(&master->dev,
-+	mcspi_dma->dma_rx = dma_request_chan(mcspi->dev,
- 					     mcspi_dma->dma_rx_ch_name);
- 	if (IS_ERR(mcspi_dma->dma_rx)) {
- 		ret = PTR_ERR(mcspi_dma->dma_rx);
-@@ -1007,7 +999,7 @@ static int omap2_mcspi_request_dma(struct spi_device *spi)
- 		goto no_dma;
- 	}
- 
--	mcspi_dma->dma_tx = dma_request_chan(&master->dev,
-+	mcspi_dma->dma_tx = dma_request_chan(mcspi->dev,
- 					     mcspi_dma->dma_tx_ch_name);
- 	if (IS_ERR(mcspi_dma->dma_tx)) {
- 		ret = PTR_ERR(mcspi_dma->dma_tx);
-@@ -1016,20 +1008,40 @@ static int omap2_mcspi_request_dma(struct spi_device *spi)
- 		mcspi_dma->dma_rx = NULL;
- 	}
- 
-+	init_completion(&mcspi_dma->dma_rx_completion);
-+	init_completion(&mcspi_dma->dma_tx_completion);
-+
- no_dma:
- 	return ret;
- }
- 
-+static void omap2_mcspi_release_dma(struct spi_master *master)
-+{
-+	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
-+	struct omap2_mcspi_dma	*mcspi_dma;
-+	int i;
-+
-+	for (i = 0; i < master->num_chipselect; i++) {
-+		mcspi_dma = &mcspi->dma_channels[i];
-+
-+		if (mcspi_dma->dma_rx) {
-+			dma_release_channel(mcspi_dma->dma_rx);
-+			mcspi_dma->dma_rx = NULL;
-+		}
-+		if (mcspi_dma->dma_tx) {
-+			dma_release_channel(mcspi_dma->dma_tx);
-+			mcspi_dma->dma_tx = NULL;
-+		}
-+	}
-+}
-+
- static int omap2_mcspi_setup(struct spi_device *spi)
- {
- 	int			ret;
- 	struct omap2_mcspi	*mcspi = spi_master_get_devdata(spi->master);
- 	struct omap2_mcspi_regs	*ctx = &mcspi->ctx;
--	struct omap2_mcspi_dma	*mcspi_dma;
- 	struct omap2_mcspi_cs	*cs = spi->controller_state;
- 
--	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
--
- 	if (!cs) {
- 		cs = kzalloc(sizeof *cs, GFP_KERNEL);
- 		if (!cs)
-@@ -1054,13 +1066,6 @@ static int omap2_mcspi_setup(struct spi_device *spi)
- 		}
- 	}
- 
--	if (!mcspi_dma->dma_rx || !mcspi_dma->dma_tx) {
--		ret = omap2_mcspi_request_dma(spi);
--		if (ret)
--			dev_warn(&spi->dev, "not using DMA for McSPI (%d)\n",
--				 ret);
--	}
--
- 	ret = pm_runtime_get_sync(mcspi->dev);
- 	if (ret < 0) {
- 		pm_runtime_put_noidle(mcspi->dev);
-@@ -1077,12 +1082,8 @@ static int omap2_mcspi_setup(struct spi_device *spi)
- 
- static void omap2_mcspi_cleanup(struct spi_device *spi)
- {
--	struct omap2_mcspi	*mcspi;
--	struct omap2_mcspi_dma	*mcspi_dma;
- 	struct omap2_mcspi_cs	*cs;
- 
--	mcspi = spi_master_get_devdata(spi->master);
--
- 	if (spi->controller_state) {
- 		/* Unlink controller state from context save list */
- 		cs = spi->controller_state;
-@@ -1091,19 +1092,6 @@ static void omap2_mcspi_cleanup(struct spi_device *spi)
- 		kfree(cs);
- 	}
- 
--	if (spi->chip_select < spi->master->num_chipselect) {
--		mcspi_dma = &mcspi->dma_channels[spi->chip_select];
--
--		if (mcspi_dma->dma_rx) {
--			dma_release_channel(mcspi_dma->dma_rx);
--			mcspi_dma->dma_rx = NULL;
--		}
--		if (mcspi_dma->dma_tx) {
--			dma_release_channel(mcspi_dma->dma_tx);
--			mcspi_dma->dma_tx = NULL;
--		}
--	}
--
- 	if (gpio_is_valid(spi->cs_gpio))
- 		gpio_free(spi->cs_gpio);
- }
-@@ -1314,6 +1302,9 @@ static bool omap2_mcspi_can_dma(struct spi_master *master,
- 	if (spi_controller_is_slave(master))
- 		return true;
- 
-+	master->dma_rx = mcspi_dma->dma_rx;
-+	master->dma_tx = mcspi_dma->dma_tx;
-+
- 	return (xfer->len >= DMA_MIN_BYTES);
- }
- 
-@@ -1501,6 +1492,11 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
- 	for (i = 0; i < master->num_chipselect; i++) {
- 		sprintf(mcspi->dma_channels[i].dma_rx_ch_name, "rx%d", i);
- 		sprintf(mcspi->dma_channels[i].dma_tx_ch_name, "tx%d", i);
-+
-+		status = omap2_mcspi_request_dma(mcspi,
-+						 &mcspi->dma_channels[i]);
-+		if (status == -EPROBE_DEFER)
-+			goto free_master;
- 	}
- 
- 	status = platform_get_irq(pdev, 0);
-@@ -1538,6 +1534,7 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- free_master:
-+	omap2_mcspi_release_dma(master);
- 	spi_master_put(master);
- 	return status;
- }
-@@ -1547,6 +1544,8 @@ static int omap2_mcspi_remove(struct platform_device *pdev)
- 	struct spi_master *master = platform_get_drvdata(pdev);
- 	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
- 
-+	omap2_mcspi_release_dma(master);
-+
- 	pm_runtime_dont_use_autosuspend(mcspi->dev);
- 	pm_runtime_put_sync(mcspi->dev);
- 	pm_runtime_disable(&pdev->dev);
--- 
-2.20.1
+If the result looks correct, please mark the bug fixed by replying with:
 
+#syz fix: netfilter: ipset: use bitmap infrastructure completely
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
