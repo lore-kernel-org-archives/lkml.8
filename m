@@ -2,138 +2,100 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04947C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13630C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA82C205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD9F2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mDSPa+99"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qm57GoxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgCPEOh (ORCPT
+        id S1729521AbgCPEPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 00:14:37 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:45546 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgCPEOh (ORCPT
+        Mon, 16 Mar 2020 00:15:03 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35209 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgCPEPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 00:14:37 -0400
-Received: by mail-pl1-f202.google.com with SMTP id s6so9461908plp.12
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 21:14:36 -0700 (PDT)
+        Mon, 16 Mar 2020 00:15:03 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m3so16443269wmi.0;
+        Sun, 15 Mar 2020 21:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=8nA2hScnF6v2G0I1bnw6Oj3DivH5BnpkZl+mne8j+kA=;
-        b=mDSPa+99rw2JNjwNjr26acFFK1NJzZRajAx1Lm9aNgJq2lvXu5mNLw9qFWlShEJfJq
-         fr+nR3uxre7PdoWj+nyPCHjH01Lrfjcb2yGd+2vbyouGvINQRY4gUkD36YmYjHk8moHZ
-         WE8EnCK75nN+fQdwDWsgkeieS1PeQnuIm32Oey6etPYPpy2S50dcGLQUuK6Vr26up6p/
-         VJu8+oGPOH+3AWrXdvQoWxyJTwrtUy9pQ3c0qttC+bpqi7c+IyQVn1a+iZwp+fONGMC4
-         SZkrL1Iv7b1bv/6XvZli9pfxEdZ94CZ8Km6pBspTFjEE/Yx5w9WX0Bo9fvx83jlxEUoS
-         LAbg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3iz7M4n4vFnZlY3xJtiBBVd2QMi0cxZMNzGQK0mvGgU=;
+        b=Qm57GoxAvObsxjUCwFXGwb6fTVZevkffefjkygHM2wKdzEH5TdTIZ8CQPsfvDrOquL
+         iTKdu5SRtb2qvQA0lSlBxOYWaWUFraJgn9mFTtU8xD9g8xoRuwy4N1LTrZIq7jXtKlht
+         ThvpvhmabSheJK+5t9TzVfncKDUVMRwzoVPfrbnkJ6XqcOgxGO6sVuqET3SiZoIAp1vr
+         6Zpjb/wuigPojbksg3WJ9/WlfYS9UJvelcwNZwAmEJwwFqQv1HWxgvGtXKP2z4uUOCXM
+         qRiATOTGjwUqv9ieffMy0CKjISNE5zpxMhMIyJF6+BJWNFW4WAVA/XOniBqKYCxOXmiX
+         gTxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=8nA2hScnF6v2G0I1bnw6Oj3DivH5BnpkZl+mne8j+kA=;
-        b=W2w5RN2W2BaDfDq7rfsmSByDOn2ESrTKLToc9nL06PBFZoGtFp0tLSAK+ccPOIhwZG
-         j45Vc0pSfs0g/D4/qgr+p+pvdImU03/OcHZm1Zp8hOfw2Mnnh0F1IEx9wGanpDzIEsym
-         i81rOD4oBn/wK7IgC1OL5T9KO4CbnkkMYOkv9UiiAaCM33u+q2JyzX7mNvbuLFlvevhw
-         6b4rbJW8pPbzEPV/Qctg+i69NOMhpYUGMLPWQF3tnftGwQglY/C/BorJVOXUFQo3xU3N
-         LIQKj2+KKiLbYBynx6XlArd23irfXx94pTL7a/SPxlPpTur0Ba+I/abHkx6n6x6JJstd
-         FqFg==
-X-Gm-Message-State: ANhLgQ0Q65/6xWW8Ybr517W6XNxHeGJ7kU+1zeIwNlQw5k9PoCSZSq5W
-        o4ZGcyf3GWn34qvuBfUm+sZdMgSI5x60
-X-Google-Smtp-Source: ADFU+vt6yXQTbYWIKiMlO0L+FzEhOR/V+hFczzaycNV4sxjMKth8glR6Azdh13s6nmbVLuk+VhB0WkfM7arL
-X-Received: by 2002:a17:90a:7309:: with SMTP id m9mr22987108pjk.52.1584332075593;
- Sun, 15 Mar 2020 21:14:35 -0700 (PDT)
-Date:   Sun, 15 Mar 2020 21:14:31 -0700
-Message-Id: <20200316041431.19607-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH] perf parse-events: fix memory leaks found on parse_events
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3iz7M4n4vFnZlY3xJtiBBVd2QMi0cxZMNzGQK0mvGgU=;
+        b=ETJLrtn8R1eKIar5Dva4RIuXFXdVQkL9AfGfVE4/rnoNH518dCaCv7pjwmAdo83a7J
+         swSwpROZ0ZjC6KHZlq3FuGDp514vfsspettxwYW8nNdF68zy5Z4gxqL7FjOeTiZ9AANU
+         BnUIz6f7lqgScrHyFpHleN1X6eaOBWSZ6kjO1ua7Dno1mcl1p2p8m6Ak69j9ifkgL730
+         jIDhfYka5MjmjFR1VHaRwY0yPbwKcwAzE7aAI8k4R0WaqmCxuiYBBCtDVwA9m9O1sIdI
+         7K1wgj7UwBAyI0FvMdaLoesPAZ+NNXXi5UK50NSnFkDBlh5jfXDI4GFhOLhHzDj6BYzg
+         7jKw==
+X-Gm-Message-State: ANhLgQ2mGJSe7gOf8Weou24TkE/DvoPaiivRhHzzHRFJLG4sI2RC/rvn
+        RGVHEJkJt5Qg6V/q0C6xgGhUQ/chxc9auaaJrfE=
+X-Google-Smtp-Source: ADFU+vsb6tTIy7aNbe5hox5lzXtNlAswN/TLEr3PvFO5UJXfiLG/mBbEiYczD4nl8OHxwPiIZadH1b768KaOJjOYKKo=
+X-Received: by 2002:a1c:3585:: with SMTP id c127mr25298561wma.124.1584332101597;
+ Sun, 15 Mar 2020 21:15:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200127165646.19806-1-andrew.smirnov@gmail.com>
+ <20200127165646.19806-2-andrew.smirnov@gmail.com> <VI1PR0402MB3485FF5402B8C0FFF48FBF2298030@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB3485FF5402B8C0FFF48FBF2298030@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Sun, 15 Mar 2020 21:14:49 -0700
+Message-ID: <CAHQ1cqGZP5RKTsc4+jikyPVggt-mGViRtKNvyOx9FGkYW9pgmg@mail.gmail.com>
+Subject: Re: [PATCH v7 1/9] crypto: caam - allocate RNG instantiation
+ descriptor with GFP_DMA
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memory leaks found by applying LLVM's libfuzzer on the parse_events
-function.
+On Tue, Feb 4, 2020 at 6:08 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 1/27/2020 6:57 PM, Andrey Smirnov wrote:
+> > Be consistent with the rest of the codebase and use GFP_DMA when
+> > allocating memory for a CAAM JR descriptor.
+> >
+> Please use GFP_DMA32 instead.
+> Device is not limited to less than 32 bits of addressing
+> in any of its incarnations.
+>
+> s/GFP_DMA/GFP_DMA32 should be performed throughout caam driver.
+> (But of course, I wouldn't include this change in current patch series).
+>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/perf/evlist.c        | 2 ++
- tools/perf/util/parse-events.c | 2 ++
- tools/perf/util/parse-events.y | 3 ++-
- 3 files changed, 6 insertions(+), 1 deletion(-)
+Hmm, I am triggering
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/slub.c?h=v5.6-rc6#n1721
+by using GFP_DMA32. AFAICT, GFP_DMA32 can't be used in SLUB/SLAB
+allocated memory:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/internal.h?h=v5.6-rc6#n32
 
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 5b9f2ca50591..6485d1438f75 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -125,8 +125,10 @@ static void perf_evlist__purge(struct perf_evlist *evlist)
- void perf_evlist__exit(struct perf_evlist *evlist)
- {
- 	perf_cpu_map__put(evlist->cpus);
-+	perf_cpu_map__put(evlist->all_cpus);
- 	perf_thread_map__put(evlist->threads);
- 	evlist->cpus = NULL;
-+	evlist->all_cpus = NULL;
- 	evlist->threads = NULL;
- 	fdarray__exit(&evlist->pollfd);
- }
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index a14995835d85..997862224292 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1482,6 +1482,8 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 
- 		list_for_each_entry_safe(pos, tmp, &config_terms, list) {
- 			list_del_init(&pos->list);
-+			if (pos->free_str)
-+				free(pos->val.str);
- 			free(pos);
- 		}
- 		return -EINVAL;
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 94f8bcd83582..8212cc771667 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -44,7 +44,7 @@ static void free_list_evsel(struct list_head* list_evsel)
- 
- 	list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
- 		list_del_init(&evsel->core.node);
--		perf_evsel__delete(evsel);
-+		evsel__delete(evsel);
- 	}
- 	free(list_evsel);
- }
-@@ -326,6 +326,7 @@ PE_NAME opt_pmu_config
- 	}
- 	parse_events_terms__delete($2);
- 	parse_events_terms__delete(orig_terms);
-+	free(pattern);
- 	free($1);
- 	$$ = list;
- #undef CLEANUP_YYABORT
--- 
-2.25.1.481.gfbce0eb801-goog
+I'll stick with GFP_DMA for now, unless you have a different preference.
 
+Thanks,
+Andrey Smirnov
