@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD4CC5ACC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828F8C5ACC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E3420679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504B420736
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584377479;
-	bh=Y9RGRUHIi6qkk5wya965oATudtCpKBHHkgm9GJfHUoc=;
+	s=default; t=1584377486;
+	bh=nk6wwF8pUt1K1x95HCkgB+QHeseB0pbsdmvD8seAupQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dhq3qM3H1MUfxuviTbHyWfgQtZMLw5UQ542x6/clGOlqoNt2KlzF5zjmOD+dn0g7x
-	 DCleB3POm60BtPdxzuU7/Z89V+OZXIMGFMWvMt6aIE+EbmvU4pu2c1+1XEUtGw2S+3
-	 iWPSG1IGCLmynGq5W6W/uADAGAd+ARIdio3Cbr4A=
+	b=EeoXmdLZ3qEdFXzDIC5ByrBJt5WR5QOaMuEdyZTcJqxETHUrh52+LQOFRyi9PBHr4
+	 juW1P77TZ0J0LaYrVylWJBOjKYK+/0AHGF7QAKYKWIM44LhR3jVZGNe0LTgrXf7m6x
+	 J5S1Ulg1Ao5wWpVgNVNaiZylwyFGeIFfr3b5LfOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732249AbgCPQvS (ORCPT
+        id S1732288AbgCPQvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:51:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:52188 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 12:51:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:52324 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732228AbgCPQvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:51:12 -0400
+        id S1732273AbgCPQvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 12:51:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02E3F11FB;
-        Mon, 16 Mar 2020 09:51:12 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0FA7106F;
+        Mon, 16 Mar 2020 09:51:22 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 568BA3F67D;
-        Mon, 16 Mar 2020 09:51:11 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 559D33F67D;
+        Mon, 16 Mar 2020 09:51:22 -0700 (PDT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>
@@ -56,11 +56,10 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Sudakshina Das <sudi.das@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH v10 06/13] arm64: BTI: Decode BYTPE bits when printing PSTATE
-Date:   Mon, 16 Mar 2020 16:50:48 +0000
-Message-Id: <20200316165055.31179-7-broonie@kernel.org>
+Subject: [PATCH v10 11/13] arm64: mm: Display guarded pages in ptdump
+Date:   Mon, 16 Mar 2020 16:50:53 +0000
+Message-Id: <20200316165055.31179-12-broonie@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316165055.31179-1-broonie@kernel.org>
 References: <20200316165055.31179-1-broonie@kernel.org>
@@ -71,72 +70,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Martin <Dave.Martin@arm.com>
+v8.5-BTI introduces the GP field in stage 1 translation tables which
+indicates that blocks and pages with it set are guarded pages for which
+branch target identification checks should be performed. Decode this
+when dumping the page tables to aid debugging.
 
-The current code to print PSTATE symbolically when generating
-backtraces etc., does not include the BYTPE field used by Branch
-Target Identification.
-
-So, decode BYTPE and print it too.
-
-In the interests of human-readability, print the classes of BTI
-matched.  The symbolic notation, BYTPE (PSTATE[11:10]) and
-permitted classes of subsequent instruction are:
-
-    -- (BTYPE=0b00): any insn
-    jc (BTYPE=0b01): BTI jc, BTI j, BTI c, PACIxSP
-    -c (BYTPE=0b10): BTI jc, BTI c, PACIxSP
-    j- (BTYPE=0b11): BTI jc, BTI j
-
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/kernel/process.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/arm64/mm/dump.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index b8e3faa8d406..24af13d7bde6 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -211,6 +211,15 @@ void machine_restart(char *cmd)
- 	while (1);
- }
- 
-+#define bstr(suffix, str) [PSR_BTYPE_ ## suffix >> PSR_BTYPE_SHIFT] = str
-+static const char *const btypes[] = {
-+	bstr(NONE, "--"),
-+	bstr(  JC, "jc"),
-+	bstr(   C, "-c"),
-+	bstr(  J , "j-")
-+};
-+#undef bstr
-+
- static void print_pstate(struct pt_regs *regs)
- {
- 	u64 pstate = regs->pstate;
-@@ -229,7 +238,10 @@ static void print_pstate(struct pt_regs *regs)
- 			pstate & PSR_AA32_I_BIT ? 'I' : 'i',
- 			pstate & PSR_AA32_F_BIT ? 'F' : 'f');
- 	} else {
--		printk("pstate: %08llx (%c%c%c%c %c%c%c%c %cPAN %cUAO)\n",
-+		const char *btype_str = btypes[(pstate & PSR_BTYPE_MASK) >>
-+					       PSR_BTYPE_SHIFT];
-+
-+		printk("pstate: %08llx (%c%c%c%c %c%c%c%c %cPAN %cUAO BTYPE=%s)\n",
- 			pstate,
- 			pstate & PSR_N_BIT ? 'N' : 'n',
- 			pstate & PSR_Z_BIT ? 'Z' : 'z',
-@@ -240,7 +252,8 @@ static void print_pstate(struct pt_regs *regs)
- 			pstate & PSR_I_BIT ? 'I' : 'i',
- 			pstate & PSR_F_BIT ? 'F' : 'f',
- 			pstate & PSR_PAN_BIT ? '+' : '-',
--			pstate & PSR_UAO_BIT ? '+' : '-');
-+			pstate & PSR_UAO_BIT ? '+' : '-',
-+			btype_str);
- 	}
- }
- 
+diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
+index 860c00ec8bd3..78163b7a7dde 100644
+--- a/arch/arm64/mm/dump.c
++++ b/arch/arm64/mm/dump.c
+@@ -145,6 +145,11 @@ static const struct prot_bits pte_bits[] = {
+ 		.val	= PTE_UXN,
+ 		.set	= "UXN",
+ 		.clear	= "   ",
++	}, {
++		.mask	= PTE_GP,
++		.val	= PTE_GP,
++		.set	= "GP",
++		.clear	= "  ",
+ 	}, {
+ 		.mask	= PTE_ATTRINDX_MASK,
+ 		.val	= PTE_ATTRINDX(MT_DEVICE_nGnRnE),
 -- 
 2.20.1
 
