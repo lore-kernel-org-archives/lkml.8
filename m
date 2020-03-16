@@ -2,120 +2,91 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E39C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00088C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6965E2077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA6E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SHXWde4f"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J3qYEiBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731779AbgCPPHT (ORCPT
+        id S1731825AbgCPPHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:07:19 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55500 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731636AbgCPPHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:07:19 -0400
-Received: from zn.tnic (p200300EC2F06AB00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 16 Mar 2020 11:07:34 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59202 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731810AbgCPPHd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:07:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584371253; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=I74FzD8gT42MrBJOC+YUJAHq1MUTpP7zxvPx0mJUftQ=;
+ b=J3qYEiBToEpwwlVrAK431NJ5oBbt+Zhbl5nyasgEPTHTHVYdlpDbR9w279KMkFIEXoAz+eii
+ 5AYeWBEZxmnohoGduJ/8n4qhgWqljj0e1wMVO23Cq2+CPGJPfC6rnU42nWay3KpjJReqmkem
+ uvSh5kL1Yq0f+N5V3SZiZ+cILTk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6f9623.7f69d522ab20-smtp-out-n01;
+ Mon, 16 Mar 2020 15:07:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2E512C433CB; Mon, 16 Mar 2020 15:07:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F0CFA1EC0CD0;
-        Mon, 16 Mar 2020 16:07:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584371237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=GD2Ahrn2R5rUUvAa4JTLz4UOPMAsrHi8CDaz4s4yJSI=;
-        b=SHXWde4fDvWxBfVwik+iIXFlwqSwyFi9wb8Ysb5mMzITlhOyWeBCsXaD4rXksEukZi4a+N
-        alU2DEpPFyp2ipQRe5IX8a2/gP3yuxmLbgNH0PFR9q0lXEJ3ma6j3kleNaYAj8VHtRxPMX
-        mCwclVqLEcimypLTbgvdcqbReUybTew=
-From:   Borislav Petkov <bp@alien8.de>
-To:     X86 ML <x86@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: [PATCH] x86/amd_nb, char/amd64-agp: Use amd_nb_num() accessor
-Date:   Mon, 16 Mar 2020 16:07:25 +0100
-Message-Id: <20200316150725.925-1-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94B9CC44791;
+        Mon, 16 Mar 2020 15:07:13 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 16 Mar 2020 20:37:13 +0530
+From:   bgodavar@codeaurora.org
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, c-hbandi@codeaurora.org,
+        hemantg@codeaurora.org, mka@chromium.org
+Subject: Re: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QCA chip QCA6390
+In-Reply-To: <20200314094328.3331-2-rjliao@codeaurora.org>
+References: <20200314094328.3331-1-rjliao@codeaurora.org>
+ <20200314094328.3331-2-rjliao@codeaurora.org>
+Message-ID: <1ac67f48f34bc91e89a1b3a5d1c23453@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On 2020-03-14 15:13, Rocky Liao wrote:
+> This patch adds compatible string for the QCA chip QCA6390.
+> 
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> index beca6466d59a..badf597c0e58 100644
+> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> @@ -13,6 +13,7 @@ Required properties:
+>     * "qcom,wcn3990-bt"
+>     * "qcom,wcn3991-bt"
+>     * "qcom,wcn3998-bt"
+> +   * "qcom,qca6390-bt"
+> 
 
-... to find whether there are northbridges present on the system.
-This converts the last forgotten user and therefore, unexport
-amd_nb_misc_ids[] too.
+[Bala]: Can you add a example snippet of QCA6390 dts
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Michal Kubecek <mkubecek@suse.cz>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
----
- arch/x86/include/asm/amd_nb.h | 1 -
- arch/x86/kernel/amd_nb.c      | 4 +---
- drivers/char/agp/amd64-agp.c  | 2 +-
- 3 files changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
-index 1ae4e5791afa..c7df20e78b09 100644
---- a/arch/x86/include/asm/amd_nb.h
-+++ b/arch/x86/include/asm/amd_nb.h
-@@ -12,7 +12,6 @@ struct amd_nb_bus_dev_range {
- 	u8 dev_limit;
- };
- 
--extern const struct pci_device_id amd_nb_misc_ids[];
- extern const struct amd_nb_bus_dev_range amd_nb_bus_dev_ranges[];
- 
- extern bool early_is_amd_nb(u32 value);
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index 69aed0ebbdfc..b6b3297851f3 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -36,10 +36,9 @@ static const struct pci_device_id amd_root_ids[] = {
- 	{}
- };
- 
--
- #define PCI_DEVICE_ID_AMD_CNB17H_F4     0x1704
- 
--const struct pci_device_id amd_nb_misc_ids[] = {
-+static const struct pci_device_id amd_nb_misc_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_K8_NB_MISC) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_10H_NB_MISC) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_15H_NB_F3) },
-@@ -56,7 +55,6 @@ const struct pci_device_id amd_nb_misc_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
- 	{}
- };
--EXPORT_SYMBOL_GPL(amd_nb_misc_ids);
- 
- static const struct pci_device_id amd_nb_link_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_15H_NB_F4) },
-diff --git a/drivers/char/agp/amd64-agp.c b/drivers/char/agp/amd64-agp.c
-index 594aee281977..b40edae32817 100644
---- a/drivers/char/agp/amd64-agp.c
-+++ b/drivers/char/agp/amd64-agp.c
-@@ -775,7 +775,7 @@ int __init agp_amd64_init(void)
- 		}
- 
- 		/* First check that we have at least one AMD64 NB */
--		if (!pci_dev_present(amd_nb_misc_ids)) {
-+		if (!amd_nb_num()) {
- 			pci_unregister_driver(&agp_amd64_pci_driver);
- 			return -ENODEV;
- 		}
--- 
-2.21.0
-
+>  Optional properties for compatible string qcom,qca6174-bt:
