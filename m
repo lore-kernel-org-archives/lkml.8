@@ -2,125 +2,365 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF95C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FD0C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F29620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584347447;
-	bh=ShtIzAXjdARpIp5bk6R+u6x5+mPatLQqVE+H2TFyyiI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=igOjSPIK+Fg/AADuulf9W4yINMshMvL2wMNyJ233TqnlseRrGVmN9lFrkZW6hQrbJ
-	 yqbcPoNTjchqJ/MosiP11VA8I+IkB3FoyFsp4KzFM8ajr/OrHXLqgga1Oxb7S4+0nu
-	 HMmBfZM5d7uX8XD0k7L5OegRZf7ti0gMUoqpqi7o=
+	by mail.kernel.org (Postfix) with ESMTP id 54B1720658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:31:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="H7H9+aAk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbgCPIaq (ORCPT
+        id S1730106AbgCPIbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729994AbgCPIap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:30:45 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A472820658;
-        Mon, 16 Mar 2020 08:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584347444;
-        bh=ShtIzAXjdARpIp5bk6R+u6x5+mPatLQqVE+H2TFyyiI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iljvpBfjN2QMpa+akkgow4BQCj7qUXZxzO9BNLKJqukhpSaF5nQwMPp3dEN9PjoW1
-         3gBXFXuJUC19uMMOg7vzlyRrTuBNqoC9X/18UiBS5+4VMORwfPLMuJEm2R95vdqD7y
-         wfoZd+uoGkyYhgnoSQySBYoJXMMLSO29tEYXU0Pk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jDl91-00D1aD-0w; Mon, 16 Mar 2020 08:30:43 +0000
+        Mon, 16 Mar 2020 04:31:40 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53716 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729994AbgCPIbj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:31:39 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 25so16578190wmk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Wzawpb32ycFX/4O3Njhn3UtpNJRxkN3I88PzQJfRQKM=;
+        b=H7H9+aAkEO0hN9hpOR9Er8AC1d56jKFVJhyz3fXjJJyejBdjRjYqYYYJBTAnLyPcU2
+         MhnwLeSOGhqxRK7Ewe2I71UwV9ebPro2ZrCuJ2JJfFCnM9Qym1Fgb4hpn9UevE3FVqQ4
+         nHmA5HQ64C0SpDqgj6HWaQSdU5OStcEnVFWhs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=Wzawpb32ycFX/4O3Njhn3UtpNJRxkN3I88PzQJfRQKM=;
+        b=PHi0qGGmEqSSbA72kYu4C0J1logDUCUIZTx2mnynAIKmF4YP1ucqJHx6tRbkjlH6cT
+         2g5Ll1RQsG5uDle1DhpPdRe7oE3LZBY3LVsLt6RrgOjjOvsqVi0+cG59/c4EEWc3Lvxp
+         zNNjJzTFQidjYr+0YzrPJsbpI0YswqY2Z9OxSB2JCBeVS4RIZqYEEx+/D/dsbIsOtiDP
+         3/pisSKkj+pju0YWtLBjMneMgFGBYmLWcDh2O6EzefFbfdXR52vN9QvbRUoLKfHOc2/w
+         X/UuEnys0ljatbuchNgHk+rC16qpyyFnwfEtuK77DTLCeaUEXMGGyPzyVvSKGUU1PAgl
+         vwOg==
+X-Gm-Message-State: ANhLgQ3/noq+gbrlvJk7V/4uwrTgzpETDwR64Q/j4tTsApeH+seNLknH
+        hYr6Mto3oPF4op0qOeRDP0MWpw==
+X-Google-Smtp-Source: ADFU+vt42WZgdFdKmFsUiDdaWi7o5JWTNuoZJS24LfKRjHWzV9++4PqNZzCCmAAV32RBekVrk6ZBbQ==
+X-Received: by 2002:a7b:ce0c:: with SMTP id m12mr26996330wmc.104.1584347496421;
+        Mon, 16 Mar 2020 01:31:36 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id r18sm6290436wro.13.2020.03.16.01.31.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 01:31:34 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 09:31:32 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+Cc:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        jani.nikula@linux.intel.com, daniel@ffwll.ch,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        airlied@linux.ie, maarten.lankhorst@linux.intel.com,
+        tzimmermann@suse.de, mripard@kernel.org, mihail.atanassov@arm.com,
+        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
+Subject: Re: [RFC][PATCH 1/5] drm: Introduce scaling filter property
+Message-ID: <20200316083132.GC2363188@phenom.ffwll.local>
+Mail-Followup-To: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        jani.nikula@linux.intel.com, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, airlied@linux.ie,
+        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+        mripard@kernel.org, mihail.atanassov@arm.com,
+        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
+References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200225070545.4482-2-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200310160106.GH13686@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 16 Mar 2020 08:30:42 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, olaf@aepfle.de,
-        Andy Whitcroft <apw@canonical.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, marcelo.cerri@canonical.com,
-        "K. Y. Srinivasan" <kys@microsoft.com>, sunilmut@microsoft.com,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH v6 04/10] arm64: hyperv: Add memory alloc/free functions
- for Hyper-V size pages
-In-Reply-To: <CAK8P3a2Hnm74aUMNFHbjMr4HwHGZn1+xa4ERsxAJY6hMzhEOhQ@mail.gmail.com>
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
- <1584200119-18594-5-git-send-email-mikelley@microsoft.com>
- <CAK8P3a2Hnm74aUMNFHbjMr4HwHGZn1+xa4ERsxAJY6hMzhEOhQ@mail.gmail.com>
-Message-ID: <632eb459dbe53a9b69df2a4f030a755b@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: arnd@arndb.de, mikelley@microsoft.com, will@kernel.org, ardb@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org, linux-arch@vger.kernel.org, olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com, jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com, sunilmut@microsoft.com, boqun.feng@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200310160106.GH13686@intel.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-16 08:22, Arnd Bergmann wrote:
-> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> 
-> wrote:
->>  /*
->> + * Functions for allocating and freeing memory with size and
->> + * alignment HV_HYP_PAGE_SIZE. These functions are needed because
->> + * the guest page size may not be the same as the Hyper-V page
->> + * size. We depend upon kmalloc() aligning power-of-two size
->> + * allocations to the allocation size boundary, so that the
->> + * allocated memory appears to Hyper-V as a page of the size
->> + * it expects.
->> + *
->> + * These functions are used by arm64 specific code as well as
->> + * arch independent Hyper-V drivers.
->> + */
->> +
->> +void *hv_alloc_hyperv_page(void)
->> +{
->> +       BUILD_BUG_ON(PAGE_SIZE <  HV_HYP_PAGE_SIZE);
->> +       return kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
->> +}
->> +EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
+On Tue, Mar 10, 2020 at 06:01:06PM +0200, Ville Syrjälä wrote:
+> On Tue, Feb 25, 2020 at 12:35:41PM +0530, Pankaj Bharadiya wrote:
+> > Introduce new scaling filter property to allow userspace to select
+> > the driver's default scaling filter or Nearest-neighbor(NN) filter
+> > for upscaling operations on crtc/plane.
+> > 
+> > Drivers can set up this property for a plane by calling
+> > drm_plane_enable_scaling_filter() and for a CRTC by calling
+> > drm_crtc_enable_scaling_filter().
+> > 
+> > NN filter works by filling in the missing color values in the upscaled
+> > image with that of the coordinate-mapped nearest source pixel value.
+> > 
+> > NN filter for integer multiple scaling can be particularly useful for
+> > for pixel art games that rely on sharp, blocky images to deliver their
+> > distinctive look.
+> > 
+> > Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+> > Signed-off-by: Shashank Sharma <shashank.sharma@intel.com>
+> > Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
+> > ---
+> >  drivers/gpu/drm/drm_atomic_uapi.c |  8 +++++++
+> >  drivers/gpu/drm/drm_crtc.c        | 16 ++++++++++++++
+> >  drivers/gpu/drm/drm_mode_config.c | 13 ++++++++++++
+> >  drivers/gpu/drm/drm_plane.c       | 35 +++++++++++++++++++++++++++++++
+> >  include/drm/drm_crtc.h            | 10 +++++++++
+> >  include/drm/drm_mode_config.h     |  6 ++++++
+> >  include/drm/drm_plane.h           | 14 +++++++++++++
+> >  7 files changed, 102 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
+> > index a1e5e262bae2..4e3c1f3176e4 100644
+> > --- a/drivers/gpu/drm/drm_atomic_uapi.c
+> > +++ b/drivers/gpu/drm/drm_atomic_uapi.c
+> > @@ -435,6 +435,8 @@ static int drm_atomic_crtc_set_property(struct drm_crtc *crtc,
+> >  		return ret;
+> >  	} else if (property == config->prop_vrr_enabled) {
+> >  		state->vrr_enabled = val;
+> > +	} else if (property == config->scaling_filter_property) {
+> > +		state->scaling_filter = val;
 > 
-> I don't think there is any guarantee that kmalloc() returns 
-> page-aligned
-> allocations in general.
+> I think we want a per-plane/per-crtc prop for this. If we start adding
+> more filters we are surely going to need different sets for different hw
+> blocks.
 
-I believe that guarantee came with 59bb47985c1db ("mm, sl[aou]b: 
-guarantee
-natural alignment for kmalloc(power-of-two)").
+In the past we've only done that once we have a demonstrated need. Usually
+the patch to move the property to a per-object location isn't a lot of
+churn.
+-Daniel
 
-> How about using get_free_pages() to implement this?
+> 
+> >  	} else if (property == config->degamma_lut_property) {
+> >  		ret = drm_atomic_replace_property_blob_from_id(dev,
+> >  					&state->degamma_lut,
+> > @@ -503,6 +505,8 @@ drm_atomic_crtc_get_property(struct drm_crtc *crtc,
+> >  		*val = (state->gamma_lut) ? state->gamma_lut->base.id : 0;
+> >  	else if (property == config->prop_out_fence_ptr)
+> >  		*val = 0;
+> > +	else if (property == config->scaling_filter_property)
+> > +		*val = state->scaling_filter;
+> >  	else if (crtc->funcs->atomic_get_property)
+> >  		return crtc->funcs->atomic_get_property(crtc, state, property, val);
+> >  	else
+> > @@ -583,6 +587,8 @@ static int drm_atomic_plane_set_property(struct drm_plane *plane,
+> >  					sizeof(struct drm_rect),
+> >  					&replaced);
+> >  		return ret;
+> > +	} else if (property == config->scaling_filter_property) {
+> > +		state->scaling_filter = val;
+> >  	} else if (plane->funcs->atomic_set_property) {
+> >  		return plane->funcs->atomic_set_property(plane, state,
+> >  				property, val);
+> > @@ -641,6 +647,8 @@ drm_atomic_plane_get_property(struct drm_plane *plane,
+> >  	} else if (property == config->prop_fb_damage_clips) {
+> >  		*val = (state->fb_damage_clips) ?
+> >  			state->fb_damage_clips->base.id : 0;
+> > +	} else if (property == config->scaling_filter_property) {
+> > +		*val = state->scaling_filter;
+> >  	} else if (plane->funcs->atomic_get_property) {
+> >  		return plane->funcs->atomic_get_property(plane, state, property, val);
+> >  	} else {
+> > diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
+> > index 4936e1080e41..1ce7b2ac9eb5 100644
+> > --- a/drivers/gpu/drm/drm_crtc.c
+> > +++ b/drivers/gpu/drm/drm_crtc.c
+> > @@ -748,3 +748,19 @@ int drm_mode_crtc_set_obj_prop(struct drm_mode_object *obj,
+> >  
+> >  	return ret;
+> >  }
+> > +
+> > +/**
+> > + * drm_crtc_enable_scaling_filter - Enables crtc scaling filter property.
+> > + * @crtc: CRTC on which to enable scaling filter property.
+> > + *
+> > + * This function lets driver to enable the scaling filter property on a crtc.
+> > + */
+> > +void drm_crtc_enable_scaling_filter(struct drm_crtc *crtc)
+> > +{
+> > +	struct drm_device *dev = crtc->dev;
+> > +
+> > +	drm_object_attach_property(&crtc->base,
+> > +				   dev->mode_config.scaling_filter_property,
+> > +				   0);
+> > +}
+> > +EXPORT_SYMBOL(drm_crtc_enable_scaling_filter);
+> > diff --git a/drivers/gpu/drm/drm_mode_config.c b/drivers/gpu/drm/drm_mode_config.c
+> > index 08e6eff6a179..1024a8d1cd5d 100644
+> > --- a/drivers/gpu/drm/drm_mode_config.c
+> > +++ b/drivers/gpu/drm/drm_mode_config.c
+> > @@ -214,6 +214,11 @@ static const struct drm_prop_enum_list drm_plane_type_enum_list[] = {
+> >  	{ DRM_PLANE_TYPE_CURSOR, "Cursor" },
+> >  };
+> >  
+> > +static const struct drm_prop_enum_list drm_scaling_filter_enum_list[] = {
+> > +	{ DRM_SCALING_FILTER_DEFAULT, "Default" },
+> > +	{ DRM_SCALING_FILTER_NEAREST_NEIGHBOR, "Nearest Neighbor" },
+> > +};
+> > +
+> >  static int drm_mode_create_standard_properties(struct drm_device *dev)
+> >  {
+> >  	struct drm_property *prop;
+> > @@ -370,6 +375,14 @@ static int drm_mode_create_standard_properties(struct drm_device *dev)
+> >  		return -ENOMEM;
+> >  	dev->mode_config.modifiers_property = prop;
+> >  
+> > +	prop = drm_property_create_enum(dev, 0,
+> > +				"SCALING_FILTER",
+> > +				drm_scaling_filter_enum_list,
+> > +				ARRAY_SIZE(drm_scaling_filter_enum_list));
+> > +	if (!prop)
+> > +		return -ENOMEM;
+> > +	dev->mode_config.scaling_filter_property = prop;
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
+> > index d6ad60ab0d38..ace7ee2775c8 100644
+> > --- a/drivers/gpu/drm/drm_plane.c
+> > +++ b/drivers/gpu/drm/drm_plane.c
+> > @@ -1221,3 +1221,38 @@ int drm_mode_page_flip_ioctl(struct drm_device *dev,
+> >  
+> >  	return ret;
+> >  }
+> > +
+> > +/**
+> > + * DOC: Scaling filter property
+> > + *
+> > + *
+> > + * SCALING_FILTER:
+> > + *
+> > + *	Indicates scaling filter to be used for CRTC/plane scaler
+> > + *
+> > + *	The value of this property can be one of the following:
+> > + *	Default:
+> > + *		Driver's default scaling filter
+> > + *	Nearest Neighbor:
+> > + *		Nearest Neighbor scaling filter
+> > + *
+> > + * Drivers can set up this property for a plane by calling
+> > + * drm_plane_enable_scaling_filter() and for a CRTC by calling
+> > + * drm_crtc_enable_scaling_filter()
+> > + */
+> > +
+> > +/**
+> > + * drm_plane_enable_scaling_filter - Enables plane scaling filter property.
+> > + * @plane: Plane on which to enable scaling filter property.
+> > + *
+> > + * This function lets driver to enable the scaling filter property on a plane.
+> > + */
+> > +void drm_plane_enable_scaling_filter(struct drm_plane *plane)
+> > +{
+> > +	struct drm_device *dev = plane->dev;
+> > +
+> > +	drm_object_attach_property(&plane->base,
+> > +				   dev->mode_config.scaling_filter_property,
+> > +				   0);
+> > +}
+> > +EXPORT_SYMBOL(drm_plane_enable_scaling_filter);
+> > diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
+> > index 59b51a09cae6..770f9328a5ba 100644
+> > --- a/include/drm/drm_crtc.h
+> > +++ b/include/drm/drm_crtc.h
+> > @@ -58,6 +58,7 @@ struct device_node;
+> >  struct dma_fence;
+> >  struct edid;
+> >  
+> > +
+> >  static inline int64_t U642I64(uint64_t val)
+> >  {
+> >  	return (int64_t)*((int64_t *)&val);
+> > @@ -296,6 +297,13 @@ struct drm_crtc_state {
+> >  	 */
+> >  	u32 target_vblank;
+> >  
+> > +	/**
+> > +	 * @scaling_filter:
+> > +	 *
+> > +	 * Scaling filter mode to be applied
+> > +	 */
+> > +	enum drm_scaling_filter scaling_filter;
+> > +
+> >  	/**
+> >  	 * @async_flip:
+> >  	 *
+> > @@ -1266,4 +1274,6 @@ static inline struct drm_crtc *drm_crtc_find(struct drm_device *dev,
+> >  #define drm_for_each_crtc(crtc, dev) \
+> >  	list_for_each_entry(crtc, &(dev)->mode_config.crtc_list, head)
+> >  
+> > +void drm_crtc_enable_scaling_filter(struct drm_crtc *crtc);
+> > +
+> >  #endif /* __DRM_CRTC_H__ */
+> > diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
+> > index 3bcbe30339f0..8c308ae1056d 100644
+> > --- a/include/drm/drm_mode_config.h
+> > +++ b/include/drm/drm_mode_config.h
+> > @@ -914,6 +914,12 @@ struct drm_mode_config {
+> >  	 */
+> >  	struct drm_property *modifiers_property;
+> >  
+> > +	/**
+> > +	 * @scaling_filter_property: CRTC/plane property to apply a particular
+> > +	 * filter while scaling.
+> > +	 */
+> > +	struct drm_property *scaling_filter_property;
+> > +
+> >  	/* cursor size */
+> >  	uint32_t cursor_width, cursor_height;
+> >  
+> > diff --git a/include/drm/drm_plane.h b/include/drm/drm_plane.h
+> > index 3f396d94afe4..2bc665cc6071 100644
+> > --- a/include/drm/drm_plane.h
+> > +++ b/include/drm/drm_plane.h
+> > @@ -35,6 +35,11 @@ struct drm_crtc;
+> >  struct drm_printer;
+> >  struct drm_modeset_acquire_ctx;
+> >  
+> > +
+> > +enum drm_scaling_filter {
+> > +	DRM_SCALING_FILTER_DEFAULT,
+> > +	DRM_SCALING_FILTER_NEAREST_NEIGHBOR,
+> > +};
+> >  /**
+> >   * struct drm_plane_state - mutable plane state
+> >   *
+> > @@ -214,6 +219,13 @@ struct drm_plane_state {
+> >  	 */
+> >  	bool visible;
+> >  
+> > +	/**
+> > +	 * @scaling_filter:
+> > +	 *
+> > +	 * Scaling filter mode to be applied
+> > +	 */
+> > +	enum drm_scaling_filter scaling_filter;
+> > +
+> >  	/**
+> >  	 * @commit: Tracks the pending commit to prevent use-after-free conditions,
+> >  	 * and for async plane updates.
+> > @@ -862,4 +874,6 @@ drm_plane_get_damage_clips(const struct drm_plane_state *state)
+> >  					state->fb_damage_clips->data : NULL);
+> >  }
+> >  
+> > +void drm_plane_enable_scaling_filter(struct drm_plane *plane);
+> > +
+> >  #endif
+> > -- 
+> > 2.23.0
+> 
+> -- 
+> Ville Syrjälä
+> Intel
 
-This would certainly work, at the expense of a lot of wasted memory when
-PAGE_SIZE isn't 4k.
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
