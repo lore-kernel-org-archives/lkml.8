@@ -2,77 +2,191 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA7CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE97C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34ABB20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B36720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:20:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LvC1OSwZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732805AbgCPWTQ (ORCPT
+        id S1732783AbgCPWUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:19:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:8995 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732716AbgCPWTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:19:16 -0400
-IronPort-SDR: 50B5skU+j+Nj1lVld8103PDJDfNRKXrwiRt9I9zOcFZzv4zy41d2+IH9+yb+gnz2grMjBzzPLi
- QQ47P+iljhow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 15:19:15 -0700
-IronPort-SDR: wHdjhQsSeIkJPsCQJhsjtIcOOiIgXAqbgU0O4XenBzYIj+MmxXSWgF/lOJ5GbfUYJTmvXmfzca
- mtU12ZLuOkLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,561,1574150400"; 
-   d="scan'208";a="247617968"
-Received: from oaizenbe-mobl.ger.corp.intel.com ([10.254.149.199])
-  by orsmga006.jf.intel.com with ESMTP; 16 Mar 2020 15:19:06 -0700
-Message-ID: <f89b41ea8fc1ab84cc19fd1c1f9b048457bbc28d.camel@linux.intel.com>
-Subject: Re: [PATCH v3 3/3] KEYS: Use kvmalloc() to better handle large
- buffer allocation
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     David Howells <dhowells@redhat.com>,
-        Waiman Long <longman@redhat.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Date:   Tue, 17 Mar 2020 00:19:06 +0200
-In-Reply-To: <1809107.1584368672@warthog.procyon.org.uk>
-References: <20200313152102.1707-4-longman@redhat.com>
-         <20200313152102.1707-1-longman@redhat.com>
-         <1809107.1584368672@warthog.procyon.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.35.92-1 
+        Mon, 16 Mar 2020 18:20:42 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33111 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732739AbgCPWUl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 18:20:41 -0400
+Received: by mail-pg1-f193.google.com with SMTP id m5so10555649pgg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OdJL97TnHEiwXNrNot3Nu+tTBwH6OViCGp++MAMoJjI=;
+        b=LvC1OSwZYDZhevpzNqmBIv1hskVJduDT0SK46lnoXZM7yCRwcl/gdG0KzlWgHXMvhv
+         LUgm3GaQaWEMgxGVKKdpsiCMfOg/h3Jp+Ii4+XN8ntv9ZXXcZiaZFjr3KlGAZX4TFhrU
+         Z0d7m3y3RlzzMmNzKVc3B2P2bhbDiIsD36WbQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OdJL97TnHEiwXNrNot3Nu+tTBwH6OViCGp++MAMoJjI=;
+        b=lOEiXLijzypQ4deXqQj65fw6VEMdUfplZDqbOGkCyPzUndTWqktDEOdgI6kGF7eka0
+         SFD/Kz4flEA3oLaWfr3h6CcYO2AFkLHQQReHrhwvQRDVMk7TJGaMfuWCiSXA3XdmX4N5
+         mzGWQlnj+sHBhvKzD28bzPDNVo3oD6jijVy0yEe3fUUfqCFgno50RaUv7wRAEGVIE5XH
+         XmRpP8ZMqCaKgtv3re5Vnm1ivilNZJnR7iI1CIx/3rBGPHYhCC/dsGYaDS9547KjoBo9
+         Wf+F0Tqi2jWgTm3OfvPdJytyotHIMT7za83IYDlPtl9JXv291NtMTkaxR+CIrVIzj321
+         83RA==
+X-Gm-Message-State: ANhLgQ3sI2PQcUZEOGF5v2BOkXtMIVPJpdKPJyeN5olflwKRfFno6wr0
+        9QeEKhY8Wuvt4dNI9P9IWWMQ1Q==
+X-Google-Smtp-Source: ADFU+vuzlYlb8p9d2+T6E5oG1EolUGtKK3FaYXBJKoHapG07JRQmTGibH+PYw4PUZ72sqbeZD6jwGw==
+X-Received: by 2002:aa7:8d18:: with SMTP id j24mr1884679pfe.264.1584397238841;
+        Mon, 16 Mar 2020 15:20:38 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id f8sm828535pfq.178.2020.03.16.15.20.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 15:20:38 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Alok Chauhan <alokc@codeaurora.org>,
+        Dilip Kota <dkota@codeaurora.org>, skakit@codeaurora.org,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: [PATCH] spi: spi-geni-qcom: Speculative fix of "nobody cared" about interrupt
+Date:   Mon, 16 Mar 2020 15:20:01 -0700
+Message-Id: <20200316151939.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-16 at 14:24 +0000, David Howells wrote:
-> I wonder if it's worth merging this into patch 2.  I'm not sure it's really
-> worth its own patch.  If you want to generalise kvzfree(), then that could go
-> as its own patch first.
-> 
-> David
+Every once in a while (like once in a few months on a device) people
+have seen warnings on devices using spi-geni-qcom like:
 
-Also in the sense that there is no senseful situation where you'd
-only wanted to pick either but not both.
+  irq ...: nobody cared (try booting with the "irqpoll" option)
 
-/Jarkko
+...where the interrupt number listed matches up with "spi_geni" in
+/proc/interrupts.
+
+You can get "nobody cared" if the interrupt handler returns IRQ_NONE.
+Once you get into this state the driver will just stop working.
+
+Auditing the code makes me believe that it's probably not so good
+checking "cur_mcmd" in the interrupt handler not under spinlock.
+Let's move it to be under spinlock.  While we're at it, let's not
+return IRQ_NONE.  IRQ_NONE is supposed to check the _hardware_ status
+registers and only be returned if your hardware says that there's no
+interrupt present.  It's not supposed to check software state.  In any
+case, the whole point of IRQ_NONE is if two separate devices are
+trying to share an interrupt line, which just isn't true for anyone
+using geni.
+
+Looking more closely at the code, it looks as if there are some other
+places that could be under spinlock, so let's add.  It looks as if the
+original code was assuming that by the time that the interrupt handler
+got called that the write to "cur_mcmd" (to make it not CMD_NONE
+anymore) would make it to the processor handling the interrupt.
+Perhaps with weakly ordered memory this sometimes (though very rarely)
+happened.
+
+Patch is marked "speculative" because I have no way to reproduce this
+problem, so I'm just hoping this fixes it.  Weakly ordered memory
+makes my brain hurt.
+
+Fixes: 561de45f72bd ("spi: spi-geni-qcom: Add SPI driver support for GENI based QUP")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/spi/spi-geni-qcom.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+index c3972424af71..51290a3fd203 100644
+--- a/drivers/spi/spi-geni-qcom.c
++++ b/drivers/spi/spi-geni-qcom.c
+@@ -151,16 +151,19 @@ static void spi_geni_set_cs(struct spi_device *slv, bool set_flag)
+ 	struct geni_se *se = &mas->se;
+ 	unsigned long time_left;
+ 
+-	reinit_completion(&mas->xfer_done);
+ 	pm_runtime_get_sync(mas->dev);
+ 	if (!(slv->mode & SPI_CS_HIGH))
+ 		set_flag = !set_flag;
+ 
++	spin_lock_irq(&mas->lock);
++	reinit_completion(&mas->xfer_done);
++
+ 	mas->cur_mcmd = CMD_CS;
+ 	if (set_flag)
+ 		geni_se_setup_m_cmd(se, SPI_CS_ASSERT, 0);
+ 	else
+ 		geni_se_setup_m_cmd(se, SPI_CS_DEASSERT, 0);
++	spin_unlock_irq(&mas->lock);
+ 
+ 	time_left = wait_for_completion_timeout(&mas->xfer_done, HZ);
+ 	if (!time_left)
+@@ -307,6 +310,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
+ 	u32 spi_tx_cfg, len;
+ 	struct geni_se *se = &mas->se;
+ 
++	spin_lock_irq(&mas->lock);
++
+ 	spi_tx_cfg = readl(se->base + SE_SPI_TRANS_CFG);
+ 	if (xfer->bits_per_word != mas->cur_bits_per_word) {
+ 		spi_setup_word_len(mas, mode, xfer->bits_per_word);
+@@ -376,6 +381,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
+ 	 */
+ 	if (m_cmd & SPI_TX_ONLY)
+ 		writel(mas->tx_wm, se->base + SE_GENI_TX_WATERMARK_REG);
++
++	spin_unlock_irq(&mas->lock);
+ }
+ 
+ static int spi_geni_transfer_one(struct spi_master *spi,
+@@ -479,12 +486,17 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
+ 	u32 m_irq;
+ 	unsigned long flags;
+ 
+-	if (mas->cur_mcmd == CMD_NONE)
+-		return IRQ_NONE;
+-
+ 	spin_lock_irqsave(&mas->lock, flags);
+ 	m_irq = readl(se->base + SE_GENI_M_IRQ_STATUS);
+ 
++	/*
++	 * We don't expect to hit this, but if we do we should try our best
++	 * to clear the interrupts and return so we don't just get called
++	 * again.
++	 */
++	if (mas->cur_mcmd == CMD_NONE)
++		goto exit;
++
+ 	if ((m_irq & M_RX_FIFO_WATERMARK_EN) || (m_irq & M_RX_FIFO_LAST_EN))
+ 		geni_spi_handle_rx(mas);
+ 
+@@ -523,6 +535,7 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
+ 		complete(&mas->xfer_done);
+ 	}
+ 
++exit:
+ 	writel(m_irq, se->base + SE_GENI_M_IRQ_CLEAR);
+ 	spin_unlock_irqrestore(&mas->lock, flags);
+ 	return IRQ_HANDLED;
+-- 
+2.25.1.481.gfbce0eb801-goog
 
