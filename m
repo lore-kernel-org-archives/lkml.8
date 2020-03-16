@@ -2,85 +2,271 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DFC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA58C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB1B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E24B206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:38:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1R/Tuy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732213AbgCPQhu (ORCPT
+        id S1732219AbgCPQiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:37:50 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.10]:51684 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732074AbgCPQht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:37:49 -0400
-Received: from localhost.localdomain (unknown [61.129.42.58])
-        by app1 (Coremail) with SMTP id XAUFCgC3vztNq29eD6P2BA--.11495S3;
-        Tue, 17 Mar 2020 00:37:34 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Vishnu DASA <vdasa@vmware.com>, Xin Tan <tanxin.ctf@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu
-Subject: [PATCH] VMCI: Fix potential NULL pointer dereference when acquire a lock
-Date:   Tue, 17 Mar 2020 00:36:47 +0800
-Message-Id: <1584376610-11979-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XAUFCgC3vztNq29eD6P2BA--.11495S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruFy3Gry8Wr13KF4UZw17GFg_yoWfJrX_C3
-        4rZrsrJrW5CF9F9wnFyrnxZr9Yy395ZrnagwnFyrW3JFy7u3WxJr1vqFnxXay3urZrCF9x
-        Jr1q9ayIyasFgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbf8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
-        6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVWUMxAIw28IcxkI7VAKI48JMx
-        C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-        wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-        vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v2
-        0xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-        AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUVWlDUUUUU==
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Mon, 16 Mar 2020 12:38:14 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40592 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732044AbgCPQiO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 12:38:14 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a24so22803296edy.7;
+        Mon, 16 Mar 2020 09:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HuM304MO1/ZB/qBf9QvuGFLVkiNetb4DHuULLR29UtE=;
+        b=O1R/Tuy99Uc2SMTzuIKISJ/DTcWfVOeEI4FdK6RqhILSd5TF1DjAYyJgFm8/AhUesc
+         +I8ejSy7gf7oG7/kjM5XSFMzBCGPX8sGlqjMQSSimZvPCzGsrh826EV7pnsqovO8nJjE
+         0zolCX1BriW0+9ibBo5cxyHBD4XOGikQ1+N+FTBmzE6ULxFWxYMiC5X5jwDMbdfarO6O
+         4nrp8L6yZP8Mr9hk1Y14ItydygAWMpfi5jKq9N7EhNjDFQtrdS/tKsybGrUfZLRKDUrm
+         9j2lrjbcEoXOofU5uEm3K11cNJHAjdgs2vekaP8GXw09xV+kZW/ILzeh5WVYthIVi5s3
+         Ct4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HuM304MO1/ZB/qBf9QvuGFLVkiNetb4DHuULLR29UtE=;
+        b=Gvv5gacJGllH8PX63iT2Zl0nad/VW9XlJvP0rJj2qzb9tGK75taoksAyhmj4n2hsfn
+         2T1KistWCktfhsD/DSWgLBOzyw8CX+xBbKrMQcHy5EVD4IAKF/Fj7mCJLi0Jjj9ZQ+S9
+         f6zwhKHu8ay/xzbRyGgpd2WTtrNpbnC5zUF7Z65KH3X3GA4QhKBerXI0M20yAzAP2J3u
+         0zu7ZId8bu7jrXd6I8/ycftMKEyk7AFRl/3RjSSzKCagAxMGanuMbtM2dUF0vnuEDmHb
+         Qrrq6H0jUWWObgUjFdhWX2g2WH5nq6wHhfupRuXafRuBVgfVZRrhHlPhisKNnNPeHuBW
+         KKwA==
+X-Gm-Message-State: ANhLgQ09nDq0VmnDXzKe4NCYgfZDTPvxMhk5l6gpVTFye3mNbm3IGyKR
+        TXupkAc0LbeTMRMwMcMxo6K3OZFhyiDx193oxAs=
+X-Google-Smtp-Source: ADFU+vuMUSlm+j3u+hl4D2E/jIJ+Wy5ofrMVRGh+JieievTTKXTXv7iYStChy+cpuggq64vtIfoppJmk8TZPRcQoWhU=
+X-Received: by 2002:a17:906:b888:: with SMTP id hb8mr115808ejb.166.1584376691503;
+ Mon, 16 Mar 2020 09:38:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <1584356720-24411-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1584356720-24411-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 16 Mar 2020 09:38:01 -0700
+Message-ID: <CAF6AEGtKZUODb0gNdx7qdyzKMFnqvRYVbB--1owOsS=chcGgoQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        travitej@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A NULL pointer can be returned by vmci_ctx_get(). Thus add a
-corresponding check so that a NULL pointer dereference will
-be avoided when acquire a lock in spin_lock.
+On Mon, Mar 16, 2020 at 4:05 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+>
+> "The PM core always increments the runtime usage counter
+> before calling the ->suspend() callback and decrements it
+> after calling the ->resume() callback"
+>
+> DPU and DSI are managed as runtime devices. When
+> suspend is triggered, PM core adds a refcount on all the
+> devices and calls device suspend, since usage count is
+> already incremented, runtime suspend was not getting called
+> and it kept the clocks on which resulted in target not
+> entering into XO shutdown.
+>
+> Add changes to manage runtime devices during pm sleep.
+>
+> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 41 +++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/msm/dsi/dsi.c           |  7 ++++++
+>  drivers/gpu/drm/msm/msm_drv.c           | 14 +++++++++++
+>  drivers/gpu/drm/msm/msm_kms.h           |  2 ++
+>  4 files changed, 64 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index cb08faf..6e103d5 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -26,6 +26,7 @@
+>  #include "dpu_encoder.h"
+>  #include "dpu_plane.h"
+>  #include "dpu_crtc.h"
+> +#include "dsi.h"
+>
+>  #define CREATE_TRACE_POINTS
+>  #include "dpu_trace.h"
+> @@ -250,6 +251,37 @@ static void dpu_kms_disable_commit(struct msm_kms *kms)
+>         pm_runtime_put_sync(&dpu_kms->pdev->dev);
+>  }
+>
+> +static void _dpu_kms_disable_dpu(struct msm_kms *kms)
+> +{
+> +       struct drm_device *dev;
+> +       struct msm_drm_private *priv;
+> +       struct dpu_kms *dpu_kms;
+> +       int i = 0;
+> +       struct msm_dsi *dsi;
+> +
+> +       dpu_kms = to_dpu_kms(kms);
+> +       dev = dpu_kms->dev;
+> +       if (!dev) {
+> +               DPU_ERROR("invalid device\n");
+> +               return;
+> +       }
+> +
+> +       priv = dev->dev_private;
+> +       if (!priv) {
+> +               DPU_ERROR("invalid private data\n");
+> +               return;
+> +       }
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- drivers/misc/vmw_vmci/vmci_context.c | 2 ++
- 1 file changed, 2 insertions(+)
+the !dev and !priv checks can be dropped.. these aren't things a user
+should hit, and if I screw somethign up in development and hit that
+case, I'd rather see a stack trace
 
-diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
-index 16695366ec92..a20878fba374 100644
---- a/drivers/misc/vmw_vmci/vmci_context.c
-+++ b/drivers/misc/vmw_vmci/vmci_context.c
-@@ -898,6 +898,8 @@ void vmci_ctx_rcv_notifications_release(u32 context_id,
- 					bool success)
- {
- 	struct vmci_ctx *context = vmci_ctx_get(context_id);
-+	if (context == NULL)
-+		return;
- 
- 	spin_lock(&context->lock);
- 	if (!success) {
--- 
-2.7.4
+otherwise, I think it looks reasonable
 
+BR,
+-R
+
+> +
+> +       dpu_kms_disable_commit(kms);
+> +
+> +       for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
+> +               if (!priv->dsi[i])
+> +                       continue;
+> +               dsi = priv->dsi[i];
+> +               pm_runtime_put_sync(&dsi->pdev->dev);
+> +       }
+> +}
+> +
+>  static ktime_t dpu_kms_vsync_time(struct msm_kms *kms, struct drm_crtc *crtc)
+>  {
+>         struct drm_encoder *encoder;
+> @@ -683,6 +715,7 @@ static void dpu_irq_uninstall(struct msm_kms *kms)
+>  #ifdef CONFIG_DEBUG_FS
+>         .debugfs_init    = dpu_kms_debugfs_init,
+>  #endif
+> +       .disable_dpu = _dpu_kms_disable_dpu,
+>  };
+>
+>  static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
+> @@ -1053,7 +1086,15 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
+>         return rc;
+>  }
+>
+> +
+> +static int __maybe_unused dpu_pm_suspend_late(struct device *dev)
+> +{
+> +       pm_runtime_get_noresume(dev);
+> +       return 0;
+> +}
+> +
+>  static const struct dev_pm_ops dpu_pm_ops = {
+> +       SET_LATE_SYSTEM_SLEEP_PM_OPS(dpu_pm_suspend_late, NULL)
+>         SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
+>  };
+>
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
+> index 55ea4bc2..3d3740e 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi.c
+> @@ -154,12 +154,19 @@ static int dsi_dev_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +static int __maybe_unused dsi_pm_suspend_late(struct device *dev)
+> +{
+> +       pm_runtime_get_noresume(dev);
+> +       return 0;
+> +}
+> +
+>  static const struct of_device_id dt_match[] = {
+>         { .compatible = "qcom,mdss-dsi-ctrl" },
+>         {}
+>  };
+>
+>  static const struct dev_pm_ops dsi_pm_ops = {
+> +       SET_LATE_SYSTEM_SLEEP_PM_OPS(dsi_pm_suspend_late, NULL)
+>         SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
+>  };
+>
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index e4b750b..12ec1c6 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -1038,6 +1038,7 @@ static int msm_pm_suspend(struct device *dev)
+>  {
+>         struct drm_device *ddev = dev_get_drvdata(dev);
+>         struct msm_drm_private *priv = ddev->dev_private;
+> +       struct msm_kms *kms = priv->kms;
+>
+>         if (WARN_ON(priv->pm_state))
+>                 drm_atomic_state_put(priv->pm_state);
+> @@ -1049,6 +1050,11 @@ static int msm_pm_suspend(struct device *dev)
+>                 return ret;
+>         }
+>
+> +       if (kms->funcs->disable_dpu)
+> +               kms->funcs->disable_dpu(kms);
+> +
+> +       pm_runtime_put_sync(dev);
+> +
+>         return 0;
+>  }
+>
+> @@ -1067,6 +1073,13 @@ static int msm_pm_resume(struct device *dev)
+>
+>         return ret;
+>  }
+> +
+> +static int msm_pm_suspend_late(struct device *dev)
+> +{
+> +       pm_runtime_get_noresume(dev);
+> +       return 0;
+> +}
+> +
+>  #endif
+>
+>  #ifdef CONFIG_PM
+> @@ -1100,6 +1113,7 @@ static int msm_runtime_resume(struct device *dev)
+>  #endif
+>
+>  static const struct dev_pm_ops msm_pm_ops = {
+> +       SET_LATE_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend_late, NULL)
+>         SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
+>         SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
+>  };
+> diff --git a/drivers/gpu/drm/msm/msm_kms.h b/drivers/gpu/drm/msm/msm_kms.h
+> index 1cbef6b..c73a89b 100644
+> --- a/drivers/gpu/drm/msm/msm_kms.h
+> +++ b/drivers/gpu/drm/msm/msm_kms.h
+> @@ -126,6 +126,8 @@ struct msm_kms_funcs {
+>         /* debugfs: */
+>         int (*debugfs_init)(struct msm_kms *kms, struct drm_minor *minor);
+>  #endif
+> +       void (*disable_dpu)(struct msm_kms *kms);
+> +
+>  };
+>
+>  struct msm_kms;
+> --
+> 1.9.1
+>
