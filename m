@@ -2,170 +2,105 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E56C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A18C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C23205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFAD220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:45:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAeG3w3o"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="L/6FcIuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732799AbgCPVpj (ORCPT
+        id S1732807AbgCPVpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:45:39 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40566 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732652AbgCPVpi (ORCPT
+        Mon, 16 Mar 2020 17:45:53 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46358 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732691AbgCPVpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:45:38 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z12so10596530wmf.5;
-        Mon, 16 Mar 2020 14:45:37 -0700 (PDT)
+        Mon, 16 Mar 2020 17:45:53 -0400
+Received: by mail-il1-f196.google.com with SMTP id e8so18080601ilc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 14:45:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gUYCoVIK7PUThY294EuhqAEoLozrAWHRv6lYNhypBQQ=;
-        b=dAeG3w3oxBuut2H7TIufA82cgtu3W1EU6e4ZemxMlR+8EmoftRI3wJYfw+tof9aUoZ
-         5Ut7/mnOTY0nL5t1ipEuNEe1v6Dj0LXriMgMU3XuFgyyaheZMeFWyz5i/gTG4TL5QYFb
-         1vN6TcX9BCqBeGvCsZYE1qzwjnRTw0IBeWaQZpb/FDE85P5bIlVMvw/Gy3qbaP2s72Gw
-         iUexmrc8HvAAGfWJUYxxGNsH25JRTV4yEDVCyyZ3Q2pB/aWQKHYnzIO7qm/eGFoiQusl
-         56gnqA/cR7qCO4mi4ffA3OD9+UKDXou68hI/d30arK1N7Y18m6mpenHLwX5mXi4Rfnbz
-         OtJA==
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=25oGfnAMapreWVrdW3M5TiwQKc3mxX8/6TlU8vJbmXY=;
+        b=L/6FcIuAdA5FvZRHhSn5Hmz/voiJetply/Li6W/jrmoJ6MmOIl/qHIksuqlw09vo1o
+         4Ca3KeXkbU5Cewvrdxfl7lm8jcJCoTDx/F/1L1XS1Vs8WpDU6UBQlGkcJdSF38/VMNSI
+         /sKXgpeHPbSeDfS3FyGo+OGtmYMoL2VPrh3XE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=gUYCoVIK7PUThY294EuhqAEoLozrAWHRv6lYNhypBQQ=;
-        b=inK/I0JlaZU1+5x1/wMRAsdwJEyMKLvw1Q1EqFkFlKzgiWgsE5tKAJ4RW0JWhgChUU
-         g1cDdZZ9xoKyzG2PayjZK95JEB2slkrHBB3yuXwU2UfKFLWbxwblrelm7t9HzW+oNKvS
-         zfjC57LK/Llm9KTT+qKyXxxudvQj2LNlZEtRDbg3RhOnDX7x2JIt95A9F38WhV9+qoQR
-         9q5eTzUUtD1mKUFg5A4FVUmLeBt1c9uPAsD8E4/eJstbn+fzlW/hRPOeJtFK5bA3WfZn
-         8SYRSBxDU3ZqikvI81aWKL3YM9denGb0FdFMcdm90q4pCjPvG3rW+KYKpVH9vFMPZ/3Y
-         mo1w==
-X-Gm-Message-State: ANhLgQ10yV92P1fXRrmrU8ag48kYnshoEV7MiWGlYZ7B+KNbSQJenVlW
-        IsLKHNhDiHqiElJQoIMNaIc=
-X-Google-Smtp-Source: ADFU+vuALlmus4BUW5lH/Cx3UCTXUJJmfDy/g42T98ajHxmY3epNem8Zp0I2Ziz2JWsPHQZVuLgFjw==
-X-Received: by 2002:a1c:1f14:: with SMTP id f20mr1145977wmf.61.1584395136813;
-        Mon, 16 Mar 2020 14:45:36 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a13sm1625676wrh.80.2020.03.16.14.45.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 16 Mar 2020 14:45:36 -0700 (PDT)
-From:   Doug Berger <opendmb@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net 2/2] net: bcmgenet: keep MAC in reset until PHY is up
-Date:   Mon, 16 Mar 2020 14:44:56 -0700
-Message-Id: <1584395096-41674-3-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584395096-41674-1-git-send-email-opendmb@gmail.com>
-References: <1584395096-41674-1-git-send-email-opendmb@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=25oGfnAMapreWVrdW3M5TiwQKc3mxX8/6TlU8vJbmXY=;
+        b=jfud/Ry74GPOIlepBAIUKv9vWImPgVxgU5G2SaPRDnIetaGTTCrcE2SFTlus+8CkFX
+         Q9aS3vOYMCTlYJtw7HxrzWtTybP17W1LRGH1Idygdk2CRdIMxEwoqtQL4uzdWt/Z7UXz
+         I05j2rFnd0YErueX/TKzmnUs253hWq31UFJYOXguRkFuEUaDAXIIZvP0YNKEaCucDnxc
+         4DbT8JiFvKBFmwzNaW20qoBfpGGFlfZLAWRsXyUTX/D2oBKOSExLNwzeS4HrbDdGByB4
+         QDezbq/W1ng0AT+698SIoXxXOR6AyPwY1ClAlPAHe4lLE6MFfJ3zHW3uyUJjl2ptet3G
+         tJ7Q==
+X-Gm-Message-State: ANhLgQ0cSMWI39yQbcAD3JBkyUYXQEKDoCp7B4rBAfTmxHqhusgxKSeT
+        XAVp417kJIkr8T7eJAtRJ7nYh/TgD7pYz/ZCqJY3pw==
+X-Google-Smtp-Source: ADFU+vvUmmAwXlq13f181KZrcmyIEcAbNlQA2abcn+CqTyyjy3PKFII5C9B/RBr+2C2iYegyQFmxTWP9r7FqOY+XAVc=
+X-Received: by 2002:a92:8901:: with SMTP id n1mr2043465ild.176.1584395152003;
+ Mon, 16 Mar 2020 14:45:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200312181618.GA21271@paulmck-ThinkPad-P72> <20200312181702.8443-9-paulmck@kernel.org>
+ <20200316194754.GA172196@google.com> <CAEXW_YREzQ8hMP_vGiQFiNAtwxPn_C0TG6mH68QaS8cES-Jr3Q@mail.gmail.com>
+ <20200316203241.GB3199@paulmck-ThinkPad-P72> <20200316173219.1f8b7443@gandalf.local.home>
+In-Reply-To: <20200316173219.1f8b7443@gandalf.local.home>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Mon, 16 Mar 2020 17:45:40 -0400
+Message-ID: <CAEXW_YRtGhiaz+86pTL2WTyx5tqrpjB-bgQbnMLXjSQXPCmYfw@mail.gmail.com>
+Subject: Re: [PATCH RFC tip/core/rcu 09/16] rcu-tasks: Add an RCU-tasks rude variant
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "kernel-team@fb.com," <kernel-team@fb.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As noted in commit 28c2d1a7a0bf ("net: bcmgenet: enable loopback
-during UniMAC sw_reset") the UniMAC must be clocked at least 5
-cycles while the sw_reset is asserted to ensure a clean reset.
+On Mon, Mar 16, 2020 at 5:32 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Mon, 16 Mar 2020 13:32:41 -0700
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+>
+> > > Just curious, why is the "rude" version better than SRCU? Seems the
+> > > schedule_on_each_cpu() would be much slower than SRCU especially if
+> > > there are 1000s of CPUs involved. Is there any reason that is a better
+> > > alternative?
+> >
+> > The rude version has much faster readers, and the story I hear is that
+> > there are not expected to be all that many concurrent updaters.
+> >
+> > But to get more detail, why not ask Steven why he chose not to use SRCU?
+> > (I know the story for the BPF guys, and it is because of SRCU's read-side
+> > overhead.)
+>
+> Same for the function side (if not even more so). This would require adding
+> a srcu_read_lock() to all functions that can be traced! That would be a huge
+> kill in performance. Probably to the point no one would bother even using
+> function tracer.
 
-That commit enabled local loopback to provide an Rx clock from the
-GENET sourced Tx clk. However, when connected in MII mode the Tx
-clk is sourced by the PHY so if an EPHY is not supplying clocks
-(e.g. when the link is down) the UniMAC does not receive the
-necessary clocks.
+Point well taken! Thanks,
 
-This commit extends the sw_reset window until the PHY reports that
-the link is up thereby ensuring that the clocks are being provided
-to the MAC to produce a clean reset.
-
-One consequence is that if the system attempts to enter a Wake on
-LAN suspend state when the PHY link has not been active the MAC
-may not have had a chance to initialize cleanly. In this case, we
-remove the sw_reset and enable the WoL reception path as normal
-with the hope that the PHY will provide the necessary clocks to
-drive the WoL blocks if the link becomes active after the system
-has entered suspend.
-
-Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 10 ++++------
- drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |  6 +++++-
- drivers/net/ethernet/broadcom/genet/bcmmii.c       |  6 ++++++
- 3 files changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index c8ac2d83208f..ce64b4e47feb 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1965,6 +1965,8 @@ static void umac_enable_set(struct bcmgenet_priv *priv, u32 mask, bool enable)
- 	u32 reg;
- 
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
-+	if (reg & CMD_SW_RESET)
-+		return;
- 	if (enable)
- 		reg |= mask;
- 	else
-@@ -1984,13 +1986,9 @@ static void reset_umac(struct bcmgenet_priv *priv)
- 	bcmgenet_rbuf_ctrl_set(priv, 0);
- 	udelay(10);
- 
--	/* disable MAC while updating its registers */
--	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
--
--	/* issue soft reset with (rg)mii loopback to ensure a stable rxclk */
--	bcmgenet_umac_writel(priv, CMD_SW_RESET | CMD_LCL_LOOP_EN, UMAC_CMD);
-+	/* issue soft reset and disable MAC while updating its registers */
-+	bcmgenet_umac_writel(priv, CMD_SW_RESET, UMAC_CMD);
- 	udelay(2);
--	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
- }
- 
- static void bcmgenet_intr_disable(struct bcmgenet_priv *priv)
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-index ea20d94bd050..c9a43695b182 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-@@ -132,8 +132,12 @@ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
- 		return -EINVAL;
- 	}
- 
--	/* disable RX */
-+	/* Can't suspend with WoL if MAC is still in reset */
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
-+	if (reg & CMD_SW_RESET)
-+		reg &= ~CMD_SW_RESET;
-+
-+	/* disable RX */
- 	reg &= ~CMD_RX_EN;
- 	bcmgenet_umac_writel(priv, reg, UMAC_CMD);
- 	mdelay(10);
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index 69e80fb6e039..b5930f80039d 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -95,6 +95,12 @@ void bcmgenet_mii_setup(struct net_device *dev)
- 			       CMD_HD_EN |
- 			       CMD_RX_PAUSE_IGNORE | CMD_TX_PAUSE_IGNORE);
- 		reg |= cmd_bits;
-+		if (reg & CMD_SW_RESET) {
-+			reg &= ~CMD_SW_RESET;
-+			bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+			udelay(2);
-+			reg |= CMD_TX_EN | CMD_RX_EN;
-+		}
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
- 	} else {
- 		/* done if nothing has changed */
--- 
-2.7.4
-
+  -Joel
