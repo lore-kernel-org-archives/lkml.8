@@ -2,143 +2,190 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD00C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB784C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F9220575
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985E920575
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:17:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Zyopy8tX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wtJI4ofX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731461AbgCPORd (ORCPT
+        id S1731488AbgCPORi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:17:33 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:56050 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729631AbgCPORc (ORCPT
+        Mon, 16 Mar 2020 10:17:38 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:34772 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729631AbgCPORi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:17:32 -0400
-X-UUID: dc50a8bcb01b41beb835ff7de53b21ed-20200316
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SRpeHxLdUs2JaUSBptcw0BN5ugI5vspQEEiOxOwHGsM=;
-        b=Zyopy8tXYA9tPybre5A4lJStVWZjUHaBeNJ+OIkD1AYozRHZuEbwy66gQuVvpjOAeekDouFJ9f4UN+/ULv9bWHrmcXKOYMdHgDsP4opA2ZBS5G94uEdtk3O+Wy7b72g/rIp2FmAgRM4bLUxFXNWV998GFMZtD1R5wPuc2T6TvF0=;
-X-UUID: dc50a8bcb01b41beb835ff7de53b21ed-20200316
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1752193496; Mon, 16 Mar 2020 22:17:28 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 16 Mar 2020 22:16:29 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 16 Mar 2020 22:16:43 +0800
-Message-ID: <1584368247.14250.17.camel@mtksdccf07>
-Subject: Re: [scsi] 618b4d07a4: xfstests.generic.484.fail
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     kernel test robot <rong.a.chen@intel.com>
-CC:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        LKML <linux-kernel@vger.kernel.org>, <lkp@lists.01.org>
-Date:   Mon, 16 Mar 2020 22:17:27 +0800
-In-Reply-To: <20200316134148.GG11705@shao2-debian>
-References: <20200316134148.GG11705@shao2-debian>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 16 Mar 2020 10:17:38 -0400
+Received: by mail-vs1-f67.google.com with SMTP id t10so11372017vsp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gfpSr29ntUR/I/as2FQq9j0zRov447y/exMSEoJfydg=;
+        b=wtJI4ofXmDD1A9SJtl2cHZNW4zEcI9mspR3pkgS9x6qsrxGVFTfgFNc+OslwPl0EWI
+         FikZg4a0YBL5Teyixuzvvwrl1nqV/blw7wNZKa59V5JP6hAqdoKzN69X7ppg6xXgsSAZ
+         VZwIL83qK9FxJp4n941qkyxBh9eA6Nxw+8Tk0XWB7I/0h5Qao0NVPVtQclnkOJ/pS1bH
+         ls3PQHPNO+NtJmdiSr9WOmzLi9pMSziQCQLzqOMtSy/YJtyN+bN/U0sh7ICYIZHJZ2l3
+         pZmNDlOS8FnYGKZM9CSrnM1rV4Unk++4zZL4iPsfpZOw+G3I5MNG+8VhYbvqbeqJHxTB
+         FOmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gfpSr29ntUR/I/as2FQq9j0zRov447y/exMSEoJfydg=;
+        b=pFtjOBAw3oYsv8gCcBC4ELznDaMU7ii/PzubcEM4EXRI9+At33myK/RjBSc4+8E0Jm
+         kfBnwZGvE++IrmqG3PPjlwrSC7HY3p8eY4y8Q06snf2par2pQsuGCe/ZpEE/d+1KWmvb
+         Z/abGtkIi0HECxW9/5lQ1i/lGLtUv3c+EhKWfQXBOFkom53S3CYQHSGsbUAe0dddnbDC
+         y27QXGhRGFGV9KjntTzqGzNocZUhj2QWUHNqT6Syq1zEyP+8ZDptxZ8xHqc+tE1QPiNn
+         Abn0x8MNWkmgDmRUPsduqumowgw6/gnw+torB5k70jeHXsnrGP/EaOH5HAyalQYsQv+2
+         eTag==
+X-Gm-Message-State: ANhLgQ2zk28WwjVXT9vNMCknlCDo0rhYmGSTz0uzVA+fPlCnjRjmY2rc
+        F9bwo3p/6XZvWlmHzrUSfwNETn/Cd7qbIEvXVx7UamTG
+X-Google-Smtp-Source: ADFU+vsxkwXlJemW8aKdO41aOyBLa5RhNk7gSNyGUSH1YIJtaUWpgkkWDFYSXRhK6xqmc/5RnEQ6rEBKwKcHX3T5+bQ=
+X-Received: by 2002:a67:646:: with SMTP id 67mr17046878vsg.34.1584368256722;
+ Mon, 16 Mar 2020 07:17:36 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200316025232.1167-1-ricky_wu@realtek.com>
+In-Reply-To: <20200316025232.1167-1-ricky_wu@realtek.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 16 Mar 2020 15:16:59 +0100
+Message-ID: <CAPDyKFrWedEmZ=0trPEG8Z-11nyFX6_OB3cx7+SAdB5VW_vzgQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: rtsx: Fixed TX/RX register and optimized TX parameter
+To:     ricky_wu@realtek.com
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIE1vbiwgMjAyMC0wMy0xNiBhdCAyMTo0MSArMDgwMCwga2VybmVsIHRlc3Qgcm9i
-b3Qgd3JvdGU6DQo+IEZZSSwgd2Ugbm90aWNlZCB0aGUgZm9sbG93aW5nIGNvbW1pdCAoYnVpbHQg
-d2l0aCBnY2MtNyk6DQo+IA0KPiBjb21taXQ6IDYxOGI0ZDA3YTQ0MjBjYTlmMDE4MzdmMTgzY2U3
-YjFhYzBiMzEzMDcgKCJzY3NpOiB1ZnM6IHVmcy1tZWRpYXRlazogZml4IFRYIExDQyBkaXNhYmxp
-bmcgdGltaW5nIikNCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9n
-aXQvbmV4dC9saW51eC1uZXh0LmdpdCBtYXN0ZXINCj4gDQoNClRoZSBtb2RpZmllZCBmaWxlIGlu
-IGFib3ZlIGNvbW1pdCBpcyAvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0Kd2hpY2gg
-c2hhbGwgbm90IGJlIGJ1aWx0IGFjY29yZGluZyB0byB0aGUga2VybmVsIGNvbmZpZ3VyYXRpb24g
-dXNlZCBieQ0KdGhlIHJvYm90Lg0KDQpDb3VsZCB0aGlzIHBvc3NpYmx5IGJlIGEgZmFsc2UgYWxh
-cm0/DQoNClRoYW5rcywNClN0YW5sZXkgQ2h1DQoNCg0KPiBpbiB0ZXN0Y2FzZTogeGZzdGVzdHMN
-Cj4gd2l0aCBmb2xsb3dpbmcgcGFyYW1ldGVyczoNCj4gDQo+IAlkaXNrOiA0SEREDQo+IAlmczog
-eGZzDQo+IAl0ZXN0OiBnZW5lcmljLWdyb3VwMTENCj4gDQo+IHRlc3QtZGVzY3JpcHRpb246IHhm
-c3Rlc3RzIGlzIGEgcmVncmVzc2lvbiB0ZXN0IHN1aXRlIGZvciB4ZnMgYW5kIG90aGVyIGZpbGVz
-IHlzdGVtcy4NCj4gdGVzdC11cmw6IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vZnMveGZz
-L3hmc3Rlc3RzLWRldi5naXQNCj4gDQo+IA0KPiBvbiB0ZXN0IG1hY2hpbmU6IHFlbXUtc3lzdGVt
-LXg4Nl82NCAtZW5hYmxlLWt2bSAtY3B1IFNhbmR5QnJpZGdlIC1zbXAgMiAtbSA4Rw0KPiANCj4g
-Y2F1c2VkIGJlbG93IGNoYW5nZXMgKHBsZWFzZSByZWZlciB0byBhdHRhY2hlZCBkbWVzZy9rbXNn
-IGZvciBlbnRpcmUgbG9nL2JhY2t0cmFjZSk6DQo+IA0KPiANCj4gDQo+IA0KPiBJZiB5b3UgZml4
-IHRoZSBpc3N1ZSwga2luZGx5IGFkZCBmb2xsb3dpbmcgdGFnDQo+IFJlcG9ydGVkLWJ5OiBrZXJu
-ZWwgdGVzdCByb2JvdCA8cm9uZy5hLmNoZW5AaW50ZWwuY29tPg0KPiANCj4gMjAyMC0wMy0xNiAx
-ODozMzozNCBleHBvcnQgVEVTVF9ESVI9L2ZzL3ZkYQ0KPiAyMDIwLTAzLTE2IDE4OjMzOjM0IGV4
-cG9ydCBURVNUX0RFVj0vZGV2L3ZkYQ0KPiAyMDIwLTAzLTE2IDE4OjMzOjM0IGV4cG9ydCBGU1RZ
-UD14ZnMNCj4gMjAyMC0wMy0xNiAxODozMzozNCBleHBvcnQgU0NSQVRDSF9NTlQ9L2ZzL3NjcmF0
-Y2gNCj4gMjAyMC0wMy0xNiAxODozMzozNCBta2RpciAvZnMvc2NyYXRjaCAtcA0KPiAyMDIwLTAz
-LTE2IDE4OjMzOjM0IGV4cG9ydCBTQ1JBVENIX0RFVj0vZGV2L3ZkZA0KPiAyMDIwLTAzLTE2IDE4
-OjMzOjM0IGV4cG9ydCBTQ1JBVENIX0xPR0RFVj0vZGV2L3ZkYg0KPiBtZXRhLWRhdGE9L2Rldi92
-ZGEgICAgICAgICAgICAgICBpc2l6ZT01MTIgICAgYWdjb3VudD00LCBhZ3NpemU9MTY3NzcyMTYg
-Ymxrcw0KPiAgICAgICAgICA9ICAgICAgICAgICAgICAgICAgICAgICBzZWN0c3o9NTEyICAgYXR0
-cj0yLCBwcm9qaWQzMmJpdD0xDQo+ICAgICAgICAgID0gICAgICAgICAgICAgICAgICAgICAgIGNy
-Yz0xICAgICAgICBmaW5vYnQ9MSwgc3BhcnNlPTAsIHJtYXBidD0wLCByZWZsaW5rPTENCj4gZGF0
-YSAgICAgPSAgICAgICAgICAgICAgICAgICAgICAgYnNpemU9NDA5NiAgIGJsb2Nrcz02NzEwODg2
-NCwgaW1heHBjdD0yNQ0KPiAgICAgICAgICA9ICAgICAgICAgICAgICAgICAgICAgICBzdW5pdD0w
-ICAgICAgc3dpZHRoPTAgYmxrcw0KPiBuYW1pbmcgICA9dmVyc2lvbiAyICAgICAgICAgICAgICBi
-c2l6ZT00MDk2ICAgYXNjaWktY2k9MCBmdHlwZT0xDQo+IGxvZyAgICAgID1pbnRlcm5hbCBsb2cg
-ICAgICAgICAgIGJzaXplPTQwOTYgICBibG9ja3M9MzI3NjgsIHZlcnNpb249Mg0KPiAgICAgICAg
-ICA9ICAgICAgICAgICAgICAgICAgICAgICBzZWN0c3o9NTEyICAgc3VuaXQ9MCBibGtzLCBsYXp5
-LWNvdW50PTENCj4gcmVhbHRpbWUgPW5vbmUgICAgICAgICAgICAgICAgICAgZXh0c3o9NDA5NiAg
-IGJsb2Nrcz0wLCBydGV4dGVudHM9MA0KPiAyMDIwLTAzLTE2IDE4OjMzOjM1IGV4cG9ydCBNS0ZT
-X09QVElPTlM9LW1yZWZsaW5rPTENCj4gMjAyMC0wMy0xNiAxODozMzozNSBzZWQgInM6XjpnZW5l
-cmljLzoiIC8vbGtwL2JlbmNobWFya3MveGZzdGVzdHMvdGVzdHMvZ2VuZXJpYy1ncm91cDExDQo+
-IDIwMjAtMDMtMTYgMTg6MzM6MzUgLi9jaGVjayBnZW5lcmljLzAxNSBnZW5lcmljLzA1NiBnZW5l
-cmljLzA5MiBnZW5lcmljLzEyNCBnZW5lcmljLzE2MCBnZW5lcmljLzE5MiBnZW5lcmljLzIyMiBn
-ZW5lcmljLzI1NCBnZW5lcmljLzI4NyBnZW5lcmljLzMxOSBnZW5lcmljLzM1MCBnZW5lcmljLzM4
-MSBnZW5lcmljLzQxNiBnZW5lcmljLzQ0NiBnZW5lcmljLzQ4NCBnZW5lcmljLzUxOSBnZW5lcmlj
-LzU1MCBnZW5lcmljLzU4MA0KPiBGU1RZUCAgICAgICAgIC0tIHhmcyAoZGVidWcpDQo+IFBMQVRG
-T1JNICAgICAgLS0gTGludXgveDg2XzY0IHZtLXNuYi0xNSA1LjYuMC1yYzEtMDAwMjEtZzYxOGI0
-ZDA3YTQ0MjAgIzEgU01QIE1vbiBNYXIgMTYgMTc6NDI6MDggQ1NUIDIwMjANCj4gTUtGU19PUFRJ
-T05TICAtLSAtZiAtbXJlZmxpbms9MSAvZGV2L3ZkZA0KPiBNT1VOVF9PUFRJT05TIC0tIC9kZXYv
-dmRkIC9mcy9zY3JhdGNoDQo+IA0KPiBnZW5lcmljLzAxNQkgMnMNCj4gZ2VuZXJpYy8wNTYJIDNz
-DQo+IGdlbmVyaWMvMDkyCSAycw0KPiBnZW5lcmljLzEyNAkgNXMNCj4gZ2VuZXJpYy8xNjAJIDJz
-DQo+IGdlbmVyaWMvMTkyCSA3cw0KPiBnZW5lcmljLzIyMgkgNXMNCj4gZ2VuZXJpYy8yNTQJIDRz
-DQo+IGdlbmVyaWMvMjg3CSA0cw0KPiBnZW5lcmljLzMxOQkgMnMNCj4gZ2VuZXJpYy8zNTAJIDJz
-DQo+IGdlbmVyaWMvMzgxCSAycw0KPiBnZW5lcmljLzQxNgkgMTU3cw0KPiBnZW5lcmljLzQ0Ngkg
-OXMNCj4gZ2VuZXJpYy80ODQJLSBvdXRwdXQgbWlzbWF0Y2ggKHNlZSAvbGtwL2JlbmNobWFya3Mv
-eGZzdGVzdHMvcmVzdWx0cy8vZ2VuZXJpYy80ODQub3V0LmJhZCkNCj4gICAgIC0tLSB0ZXN0cy9n
-ZW5lcmljLzQ4NC5vdXQJMjAyMC0wMy0wNSAxNjozODo1NC4wMDAwMDAwMDAgKzA4MDANCj4gICAg
-ICsrKyAvbGtwL2JlbmNobWFya3MveGZzdGVzdHMvcmVzdWx0cy8vZ2VuZXJpYy80ODQub3V0LmJh
-ZAkyMDIwLTAzLTE2IDE4OjM3OjA3LjQ4NDU0NTI2MSArMDgwMA0KPiAgICAgQEAgLTEsMiArMSwz
-IEBADQo+ICAgICAgUUEgb3V0cHV0IGNyZWF0ZWQgYnkgNDg0DQo+ICAgICArcmVjb3JkIGxvY2sg
-aXMgbm90IHByZXNlcnZlZCBhY3Jvc3MgZXhlY3ZlKDIpDQo+ICAgICAgU2lsZW5jZSBpcyBnb2xk
-ZW4NCj4gICAgIC4uLg0KPiAgICAgKFJ1biAnZGlmZiAtdSAvbGtwL2JlbmNobWFya3MveGZzdGVz
-dHMvdGVzdHMvZ2VuZXJpYy80ODQub3V0IC9sa3AvYmVuY2htYXJrcy94ZnN0ZXN0cy9yZXN1bHRz
-Ly9nZW5lcmljLzQ4NC5vdXQuYmFkJyAgdG8gc2VlIHRoZSBlbnRpcmUgZGlmZikNCj4gZ2VuZXJp
-Yy81MTkJIDJzDQo+IGdlbmVyaWMvNTUwCVtub3QgcnVuXSB4ZnNfaW8gc2V0X2VuY3BvbGljeSAg
-c3VwcG9ydCBpcyBtaXNzaW5nDQo+IGdlbmVyaWMvNTgwCVtub3QgcnVuXSB4ZnNfaW8gc2V0X2Vu
-Y3BvbGljeSAgc3VwcG9ydCBpcyBtaXNzaW5nDQo+IFJhbjogZ2VuZXJpYy8wMTUgZ2VuZXJpYy8w
-NTYgZ2VuZXJpYy8wOTIgZ2VuZXJpYy8xMjQgZ2VuZXJpYy8xNjAgZ2VuZXJpYy8xOTIgZ2VuZXJp
-Yy8yMjIgZ2VuZXJpYy8yNTQgZ2VuZXJpYy8yODcgZ2VuZXJpYy8zMTkgZ2VuZXJpYy8zNTAgZ2Vu
-ZXJpYy8zODEgZ2VuZXJpYy80MTYgZ2VuZXJpYy80NDYgZ2VuZXJpYy80ODQgZ2VuZXJpYy81MTkg
-Z2VuZXJpYy81NTAgZ2VuZXJpYy81ODANCj4gTm90IHJ1bjogZ2VuZXJpYy81NTAgZ2VuZXJpYy81
-ODANCj4gRmFpbHVyZXM6IGdlbmVyaWMvNDg0DQo+IEZhaWxlZCAxIG9mIDE4IHRlc3RzDQo+IA0K
-PiANCj4gDQo+IA0KPiBUbyByZXByb2R1Y2U6DQo+IA0KPiAgICAgICAgICMgYnVpbGQga2VybmVs
-DQo+IAljZCBsaW51eA0KPiAJY3AgY29uZmlnLTUuNi4wLXJjMS0wMDAyMS1nNjE4YjRkMDdhNDQy
-MCAuY29uZmlnDQo+IAltYWtlIEhPU1RDQz1nY2MtNyBDQz1nY2MtNyBBUkNIPXg4Nl82NCBvbGRk
-ZWZjb25maWcgcHJlcGFyZSBtb2R1bGVzX3ByZXBhcmUgYnpJbWFnZSBtb2R1bGVzDQo+IAltYWtl
-IEhPU1RDQz1nY2MtNyBDQz1nY2MtNyBBUkNIPXg4Nl82NCBJTlNUQUxMX01PRF9QQVRIPTxtb2Qt
-aW5zdGFsbC1kaXI+IG1vZHVsZXNfaW5zdGFsbA0KPiAJY2QgPG1vZC1pbnN0YWxsLWRpcj4NCj4g
-CWZpbmQgbGliLyB8IGNwaW8gLW8gLUggbmV3YyAtLXF1aWV0IHwgZ3ppcCA+IG1vZHVsZXMuY2d6
-DQo+IA0KPiANCj4gICAgICAgICBnaXQgY2xvbmUgaHR0cHM6Ly9naXRodWIuY29tL2ludGVsL2xr
-cC10ZXN0cy5naXQNCj4gICAgICAgICBjZCBsa3AtdGVzdHMNCj4gICAgICAgICBiaW4vbGtwIHFl
-bXUgLWsgPGJ6SW1hZ2U+IC1tIG1vZHVsZXMuY2d6IGpvYi1zY3JpcHQgIyBqb2Itc2NyaXB0IGlz
-IGF0dGFjaGVkIGluIHRoaXMgZW1haWwNCj4gDQo+IA0KPiANCj4gVGhhbmtzLA0KPiBSb25nIENo
-ZW4NCj4gDQoNCg==
+On Mon, 16 Mar 2020 at 03:52, <ricky_wu@realtek.com> wrote:
+>
+> From: Ricky Wu <ricky_wu@realtek.com>
+>
+> Fixed sd_change_phase TX/RX register
+> Optimized rts522a rts524a rts525a rts5260 rts5261 TX initial parameter
 
+I don't understand what this actually fixes. Can you try to elaborate
+a bit on this, please?
+
+Do you think this is needed for stable, then why?
+
+Kind regards
+Uffe
+
+>
+> Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+> ---
+>  drivers/misc/cardreader/rts5227.c |  2 +-
+>  drivers/misc/cardreader/rts5249.c |  2 ++
+>  drivers/misc/cardreader/rts5260.c |  2 +-
+>  drivers/misc/cardreader/rts5261.c |  2 +-
+>  drivers/mmc/host/rtsx_pci_sdmmc.c | 13 ++++++++-----
+>  5 files changed, 13 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
+> index 4feed296a327..423fecc19fc4 100644
+> --- a/drivers/misc/cardreader/rts5227.c
+> +++ b/drivers/misc/cardreader/rts5227.c
+> @@ -394,7 +394,7 @@ static const struct pcr_ops rts522a_pcr_ops = {
+>  void rts522a_init_params(struct rtsx_pcr *pcr)
+>  {
+>         rts5227_init_params(pcr);
+> -
+> +       pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 20, 11);
+>         pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
+>
+>         pcr->option.ocp_en = 1;
+> diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
+> index db936e4d6e56..1a81cda948c1 100644
+> --- a/drivers/misc/cardreader/rts5249.c
+> +++ b/drivers/misc/cardreader/rts5249.c
+> @@ -618,6 +618,7 @@ static const struct pcr_ops rts524a_pcr_ops = {
+>  void rts524a_init_params(struct rtsx_pcr *pcr)
+>  {
+>         rts5249_init_params(pcr);
+> +       pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 29, 11);
+>         pcr->option.ltr_l1off_sspwrgate = LTR_L1OFF_SSPWRGATE_5250_DEF;
+>         pcr->option.ltr_l1off_snooze_sspwrgate =
+>                 LTR_L1OFF_SNOOZE_SSPWRGATE_5250_DEF;
+> @@ -733,6 +734,7 @@ static const struct pcr_ops rts525a_pcr_ops = {
+>  void rts525a_init_params(struct rtsx_pcr *pcr)
+>  {
+>         rts5249_init_params(pcr);
+> +       pcr->tx_initial_phase = SET_CLOCK_PHASE(25, 29, 11);
+>         pcr->option.ltr_l1off_sspwrgate = LTR_L1OFF_SSPWRGATE_5250_DEF;
+>         pcr->option.ltr_l1off_snooze_sspwrgate =
+>                 LTR_L1OFF_SNOOZE_SSPWRGATE_5250_DEF;
+> diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
+> index 4214f02a17fd..711054ebad74 100644
+> --- a/drivers/misc/cardreader/rts5260.c
+> +++ b/drivers/misc/cardreader/rts5260.c
+> @@ -662,7 +662,7 @@ void rts5260_init_params(struct rtsx_pcr *pcr)
+>         pcr->sd30_drive_sel_1v8 = CFG_DRIVER_TYPE_B;
+>         pcr->sd30_drive_sel_3v3 = CFG_DRIVER_TYPE_B;
+>         pcr->aspm_en = ASPM_L1_EN;
+> -       pcr->tx_initial_phase = SET_CLOCK_PHASE(1, 29, 16);
+> +       pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 29, 11);
+>         pcr->rx_initial_phase = SET_CLOCK_PHASE(24, 6, 5);
+>
+>         pcr->ic_version = rts5260_get_ic_version(pcr);
+> diff --git a/drivers/misc/cardreader/rts5261.c b/drivers/misc/cardreader/rts5261.c
+> index bc4967a6efa1..78c3b1d424c3 100644
+> --- a/drivers/misc/cardreader/rts5261.c
+> +++ b/drivers/misc/cardreader/rts5261.c
+> @@ -764,7 +764,7 @@ void rts5261_init_params(struct rtsx_pcr *pcr)
+>         pcr->sd30_drive_sel_1v8 = CFG_DRIVER_TYPE_B;
+>         pcr->sd30_drive_sel_3v3 = CFG_DRIVER_TYPE_B;
+>         pcr->aspm_en = ASPM_L1_EN;
+> -       pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 27, 16);
+> +       pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 27, 11);
+>         pcr->rx_initial_phase = SET_CLOCK_PHASE(24, 6, 5);
+>
+>         pcr->ic_version = rts5261_get_ic_version(pcr);
+> diff --git a/drivers/mmc/host/rtsx_pci_sdmmc.c b/drivers/mmc/host/rtsx_pci_sdmmc.c
+> index bd50935dc37d..11087976ab19 100644
+> --- a/drivers/mmc/host/rtsx_pci_sdmmc.c
+> +++ b/drivers/mmc/host/rtsx_pci_sdmmc.c
+> @@ -606,19 +606,22 @@ static int sd_change_phase(struct realtek_pci_sdmmc *host,
+>                 u8 sample_point, bool rx)
+>  {
+>         struct rtsx_pcr *pcr = host->pcr;
+> -
+> +       u16 SD_VP_CTL = 0;
+>         dev_dbg(sdmmc_dev(host), "%s(%s): sample_point = %d\n",
+>                         __func__, rx ? "RX" : "TX", sample_point);
+>
+>         rtsx_pci_write_register(pcr, CLK_CTL, CHANGE_CLK, CHANGE_CLK);
+> -       if (rx)
+> +       if (rx) {
+> +               SD_VP_CTL = SD_VPRX_CTL;
+>                 rtsx_pci_write_register(pcr, SD_VPRX_CTL,
+>                         PHASE_SELECT_MASK, sample_point);
+> -       else
+> +       } else {
+> +               SD_VP_CTL = SD_VPTX_CTL;
+>                 rtsx_pci_write_register(pcr, SD_VPTX_CTL,
+>                         PHASE_SELECT_MASK, sample_point);
+> -       rtsx_pci_write_register(pcr, SD_VPCLK0_CTL, PHASE_NOT_RESET, 0);
+> -       rtsx_pci_write_register(pcr, SD_VPCLK0_CTL, PHASE_NOT_RESET,
+> +       }
+> +       rtsx_pci_write_register(pcr, SD_VP_CTL, PHASE_NOT_RESET, 0);
+> +       rtsx_pci_write_register(pcr, SD_VP_CTL, PHASE_NOT_RESET,
+>                                 PHASE_NOT_RESET);
+>         rtsx_pci_write_register(pcr, CLK_CTL, CHANGE_CLK, 0);
+>         rtsx_pci_write_register(pcr, SD_CFG1, SD_ASYNC_FIFO_NOT_RST, 0);
+> --
+> 2.17.1
+>
