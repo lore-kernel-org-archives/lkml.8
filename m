@@ -2,77 +2,99 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E48BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C832BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F67205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D6520738
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584399416;
+	bh=TzgLtqq0RK8QYJMNHKKMtrDmIEHuvSE/eTPQdeKuuq0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aIVTptwqu+zvHFRIqZyI8CppfhOOlZCA4Gt/+tmzSZWlQOStRv6BHIdWTlgaw9CHi
+	 iogpMk14NmCR68GGkLT42Fc1YP/EqNry+lFhuLV8fhC564wjauKvUlKbhw3zowTuf6
+	 T42BMMers/3dZA7oRwEzlzhJSQ76vvzQ8adCchFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732881AbgCPWzf (ORCPT
+        id S1732885AbgCPW4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:55:35 -0400
-Received: from mga04.intel.com ([192.55.52.120]:11589 "EHLO mga04.intel.com"
+        Mon, 16 Mar 2020 18:56:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732846AbgCPWzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:55:35 -0400
-IronPort-SDR: 7WkIFmFQF6Bml4R2d5RXaEdz3L9peyCD/CXyAoOIb59qfznmoAzz+biS7hlzTlWWWXQ0aPuBzJ
- K40W8rDf6Vqw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 15:55:34 -0700
-IronPort-SDR: L2UZYp09IyTg9lHguWJOyfhxMETseoQhwxC5xJdF+NWb9h4rfOEvdD0BM+3RuV3M9BjueC4pVG
- TqG09vv7uGLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,561,1574150400"; 
-   d="scan'208";a="267744344"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Mar 2020 15:55:34 -0700
-Date:   Mon, 16 Mar 2020 15:55:34 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jethro Beekman <jethro@fortanix.com>
-Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200316225534.GK24267@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
- <20200315012523.GC208715@linux.intel.com>
- <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
- <7f9f2efe-e9af-44da-6719-040600f5b351@fortanix.com>
+        id S1732840AbgCPW4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 18:56:55 -0400
+Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59FC8205ED;
+        Mon, 16 Mar 2020 22:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584399414;
+        bh=TzgLtqq0RK8QYJMNHKKMtrDmIEHuvSE/eTPQdeKuuq0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WkLqPh8tvaVdZug19o9OYyOioZzZhJTLGUZi1tnf7F3X/vhFpVNoLO399Utat2hv+
+         VKRvfbe8eIPXEkkgVhNfLzWoT20tDmtiH4M6IEvvQ9nWtSEVi1SvKVOpugqkFQcqeB
+         oXqnJygKw8KdWM8b8Y7h+S3sRC2FW67NFL+pp3y0=
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     shuah@kernel.org, keescook@chromium.org
+Cc:     luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Tim.Bird@sony.com, Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH v3 0/6] kselftest: add fixture parameters
+Date:   Mon, 16 Mar 2020 15:56:40 -0700
+Message-Id: <20200316225647.3129354-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f9f2efe-e9af-44da-6719-040600f5b351@fortanix.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:31:36PM +0100, Jethro Beekman wrote:
-> Can someone remind me why we're not passing TCS in RBX but on the stack?
+Hi!
 
-I finally remembered why.  It's pulled off the stack and passed into the
-exit handler.  I'm pretty sure the vDSO could take it in %rbx and manually
-save it on the stack, but I'd rather keep the current behavior so that the
-vDSO is callable from C (assuming @leaf is changed to be passed via %rcx).
+Shuah please consider applying to the kselftest tree.
+
+This set is an attempt to make running tests for different
+sets of data easier. The direct motivation is the tls
+test which we'd like to run for TLS 1.2 and TLS 1.3,
+but currently there is no easy way to invoke the same
+tests with different parameters.
+
+Tested all users of kselftest_harness.h.
+
+v2:
+ - don't run tests by fixture
+ - don't pass params as an explicit argument
+
+v3:
+ - go back to the orginal implementation with an extra
+   parameter, and running by fixture (Kees);
+ - add LIST_APPEND helper (Kees);
+ - add a dot between fixture and param name (Kees);
+ - rename the params to variants (Tim);
+
+v1: https://lore.kernel.org/netdev/20200313031752.2332565-1-kuba@kernel.org/
+v2: https://lore.kernel.org/netdev/20200314005501.2446494-1-kuba@kernel.org/
+
+Jakub Kicinski (6):
+  selftests/seccomp: use correct FIXTURE macro
+  kselftest: factor out list manipulation to a helper
+  kselftest: create fixture objects
+  kselftest: run tests by fixture
+  kselftest: add fixture variants
+  selftests: tls: run all tests for TLS 1.2 and TLS 1.3
+
+ Documentation/dev-tools/kselftest.rst         |   3 +-
+ tools/testing/selftests/kselftest_harness.h   | 233 ++++++++++++++----
+ tools/testing/selftests/net/tls.c             |  93 ++-----
+ tools/testing/selftests/seccomp/seccomp_bpf.c |  10 +-
+ 4 files changed, 206 insertions(+), 133 deletions(-)
+
+-- 
+2.24.1
+
