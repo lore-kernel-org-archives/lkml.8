@@ -2,218 +2,184 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45337C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D361C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4F220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F0C20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JymR0FKo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bygEw+ut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732715AbgCPVjR (ORCPT
+        id S1732710AbgCPVlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:39:17 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:33312 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732636AbgCPVjR (ORCPT
+        Mon, 16 Mar 2020 17:41:37 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42467 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732636AbgCPVlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:39:17 -0400
-Received: by mail-pj1-f67.google.com with SMTP id dw20so4388947pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 14:39:16 -0700 (PDT)
+        Mon, 16 Mar 2020 17:41:37 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t3so8594232plz.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 14:41:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Iv7KMVJA85Sx1LgEUzFaUAJSP9avw45LZ2+zg6JYxC0=;
-        b=JymR0FKoBkS7vFA9Y9eHf56KJX5/lpQ6CnOhgF4ApCmOkhRuyrt/tL+iiadfwjJfJb
-         0QctrffzOqb8ejQptBMkab9Rqpl3CarXsDaZ9ksnHBUqU7skAHWnSLQen6ETTKRGEuof
-         BzCuM+OwkZp3Ch5ZEpAtllltH1eg6qJeID636d9MVp5u1cWvdE7WgeC3RiH3ciFUpFOq
-         tFM8On4+pa4wgQC0Y0NOqH9DjNheis+PvpoIT4YvayIUUxuFkLtgk7xdK+q8u0EVMtkP
-         7HA4xETo44jU6jZaQk7aIufFLMcMZAHfyl0iCni+AiWbGgvEwLgUCFiWzQzTfxkAmzWy
-         e5nA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9wf0Koz5Hqawzf6JsmYQiKszzPagSKBiZUUlt5oOYqk=;
+        b=bygEw+utdMG3J5vWZUoZSaS7LmV6Z5HdtyZV/VdNtbOd9xdi8xc0AugHxl6FD6zUyE
+         DYho48lurJEKOQsrXUCvVHgqwG5nzSQ9hCveGYqzxMmXyXHZZj4TSZj7imlQc1nxdiHm
+         AetbRzqEN6m4JOEDas4VlK2MDkOXsuAz8ba+zYfeZwrZ08d7nqfZUL7MWZDs3SuIb6Fg
+         hDEBTGIAwM7cIXBIUMAgMZeQtZQgPsr1VNX0Zbnn0UONxvqrcD7hzeT7XNNc1nrkrD6L
+         XWgo9QJuNS7GdyhnuwxaexJq3QG/5dIbA2yuW1NwoXOE95YUbvsI1GJ3JTlDNV/gN9oV
+         203Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Iv7KMVJA85Sx1LgEUzFaUAJSP9avw45LZ2+zg6JYxC0=;
-        b=L8GlNx8waDSrdDOPrS7KJlvRZWdcXEoKU/n8wUr91A2/vNflVrkuAQ50Wmf3gcqcFu
-         Zns4kcRa8U/cL0NG0PzXyMrXbUuPHH3MNiqCpPVbk2+XYuHzDpb0Dd/xmBK02UcB6ATL
-         9xBwy8Gub17t6p1UgoRrD6RS/qkMW9fixdw44JvFXe/Kix0i8608/l4IQUhctyL/9mXo
-         qtdRVUH1L+rVfYNLDbqBuISxjPbuJa1M0inMX3xLNoLLsCkqlVCJzftVC+RG8gXYHvdd
-         7O7YThenZvoJvyXw2PQG81iiawiXfeL5qvS2LIFG4EJWHk47GNYj9+xIEi5DGZbtTlh0
-         YZug==
-X-Gm-Message-State: ANhLgQ3u0DLcMpCLIdE7FhOZwVOr3zcNNInTPXeX77hPxc6SAJxQ+0V7
-        jEzs0lb5CVCPlv9x82qVKPM=
-X-Google-Smtp-Source: ADFU+vvPWLU8A4OXFX2ZE53ogKTzeu6QmkvmI3lQ/esLaVRKUv1TXt0q6nzE5CdBuByH5H8iYYu0Jg==
-X-Received: by 2002:a17:90a:c482:: with SMTP id j2mr1617116pjt.71.1584394755228;
-        Mon, 16 Mar 2020 14:39:15 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id c16sm635317pfn.86.2020.03.16.14.39.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Mar 2020 14:39:14 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 14:39:27 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     m.szyprowski@samsung.com, hch@lst.de, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [RFC][PATCH] dma-mapping: align default segment_boundary_mask
- with dma_mask
-Message-ID: <20200316213923.GA18970@Asurada-Nvidia.nvidia.com>
-References: <20200314000007.13778-1-nicoleotsuka@gmail.com>
- <f36ac67e-0eca-46df-78ec-c8b1c4fbe951@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9wf0Koz5Hqawzf6JsmYQiKszzPagSKBiZUUlt5oOYqk=;
+        b=kUy3khUzDsc9x1e/i1XiL7y/z6n3Op9DPhvDLN5L3Vfun+ghVjmaJF9b20fEaxwxYK
+         80E4HwPJJ2UOYKZQP8rV65pHqQsd7G2ryKCG/lmSC0suHcrdPDCDlerfwZd/VN69f0Rm
+         2LsGY5Fd7J17qX8D9jnooZ7RJe0wjEWoT1jH+eXP5jGWh6zzvmp/8Pv5dxWlMkwNHo2O
+         8/a3ulACbTGEubsSO3i1mxRD7k9fEkOa1ibzub1PRWGsvpFV60xqDQCdRETqTnpurONL
+         pfMOKYhYpe7fxVrJuFoaySJ6vqTwU6BiwG30qJi1aoaSkfiS89l4AksZS+BRcnD17SNE
+         L1Nw==
+X-Gm-Message-State: ANhLgQ2vluv133GJDpPrGSaxIr5PlD2jj1cNoNqExfm7YHuzkC/o1ety
+        flFOSQkaXnw3fMh02BpfF+0KoZDzQmxta1oDO9+WZQ==
+X-Google-Smtp-Source: ADFU+vtTQK5TD1ku2W52cwb9IcN2NIxSX4pkJHwb1CiOr27o/QEwR2bJm0JvInszSDbMqcrpiTnEbBwxyDyJBxR5jGk=
+X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr1121105plo.179.1584394895359;
+ Mon, 16 Mar 2020 14:41:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f36ac67e-0eca-46df-78ec-c8b1c4fbe951@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200214054706.33870-1-natechancellor@gmail.com>
+ <87v9o965gg.fsf@intel.com> <158166913989.4660.10674824117292988120@skylake-alporthouse-com>
+ <87o8u1wfqs.fsf@intel.com> <ff302c03-d012-a80d-b818-b7feababb86b@daenzer.net>
+In-Reply-To: <ff302c03-d012-a80d-b818-b7feababb86b@daenzer.net>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 16 Mar 2020 14:41:23 -0700
+Message-ID: <CAKwvOdnaRG=7mib9vtWX4wkjQXHeUiioonTaZLStMVXfOOSUfw@mail.gmail.com>
+Subject: Re: [PATCH] drm/i915: Cast remain to unsigned long in eb_relocate_vma
+To:     =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel@daenzer.net>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+On Fri, Feb 14, 2020 at 7:36 AM Michel D=C3=A4nzer <michel@daenzer.net> wro=
+te:
+>
+> On 2020-02-14 12:49 p.m., Jani Nikula wrote:
+> > On Fri, 14 Feb 2020, Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> >> Quoting Jani Nikula (2020-02-14 06:36:15)
+> >>> On Thu, 13 Feb 2020, Nathan Chancellor <natechancellor@gmail.com> wro=
+te:
+> >>>> A recent commit in clang added -Wtautological-compare to -Wall, whic=
+h is
+> >>>> enabled for i915 after -Wtautological-compare is disabled for the re=
+st
+> >>>> of the kernel so we see the following warning on x86_64:
+> >>>>
+> >>>>  ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1433:22: warning:
+> >>>>  result of comparison of constant 576460752303423487 with expression=
+ of
+> >>>>  type 'unsigned int' is always false
+> >>>>  [-Wtautological-constant-out-of-range-compare]
+> >>>>          if (unlikely(remain > N_RELOC(ULONG_MAX)))
+> >>>>             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+> >>>>  ../include/linux/compiler.h:78:42: note: expanded from macro 'unlik=
+ely'
+> >>>>  # define unlikely(x)    __builtin_expect(!!(x), 0)
+> >>>>                                             ^
+> >>>>  1 warning generated.
+> >>>>
+> >>>> It is not wrong in the case where ULONG_MAX > UINT_MAX but it does n=
+ot
+> >>>> account for the case where this file is built for 32-bit x86, where
+> >>>> ULONG_MAX =3D=3D UINT_MAX and this check is still relevant.
+> >>>>
+> >>>> Cast remain to unsigned long, which keeps the generated code the sam=
+e
+> >>>> (verified with clang-11 on x86_64 and GCC 9.2.0 on x86 and x86_64) a=
+nd
+> >>>> the warning is silenced so we can catch more potential issues in the
+> >>>> future.
+> >>>>
+> >>>> Link: https://github.com/ClangBuiltLinux/linux/issues/778
+> >>>> Suggested-by: Michel D=C3=A4nzer <michel@daenzer.net>
+> >>>> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> >>>
+> >>> Works for me as a workaround,
+> >>
+> >> But the whole point was that the compiler could see that it was
+> >> impossible and not emit the code. Doesn't this break that?
+> >
+> > It seems that goal and the warning are fundamentally incompatible.
+>
+> Not really:
+>
+>     if (sizeof(remain) >=3D sizeof(unsigned long) &&
+>         unlikely(remain > N_RELOC(ULONG_MAX)))
+>              return -EINVAL;
+>
+> In contrast to the cast, this doesn't generate any machine code on 64-bit=
+:
+>
+> https://godbolt.org/z/GmUE4S
+>
+> but still generates the same code on 32-bit:
+>
+> https://godbolt.org/z/hAoz8L
 
-Thank you for the inputs.
+Exactly.
 
-On Mon, Mar 16, 2020 at 12:12:08PM +0000, Robin Murphy wrote:
-> On 2020-03-14 12:00 am, Nicolin Chen wrote:
-> > More and more drivers set dma_masks above DMA_BIT_MAKS(32) while
-> > only a handful of drivers call dma_set_seg_boundary(). This means
-> > that most drivers have a 4GB segmention boundary because DMA API
-> > returns DMA_BIT_MAKS(32) as a default value, though they might be
-> > able to handle things above 32-bit.
-> 
-> Don't assume the boundary mask and the DMA mask are related. There do exist
-> devices which can DMA to a 64-bit address space in general, but due to
-> descriptor formats/hardware design/whatever still require any single
-> transfer not to cross some smaller boundary. XHCI is 64-bit yet requires
-> most things not to cross a 64KB boundary. EHCI's 64-bit mode is an example
-> of the 4GB boundary (not the best example, admittedly, but it undeniably
-> exists).
+This check is only a tautology when `sizeof(long) =3D=3D sizeof(int)` (ie.
+ILP32 platforms, like 32b x86), notice how BOTH GCC AND Clang generate
+exactly the same code: https://godbolt.org/z/6ShrDM
 
-I see. But for those cases, they should set seg_boundary_mask in
-the drivers, in my opinion, because only they know what hardware
-limits are, same as they set dma_mask and coherent_dma_mask.
+Both compilers eliminate the check when `-m32` is not set, and
+generate the exact same check otherwise.  How about:
+```
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+index d3f4f28e9468..25b9d3f3ad57 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+@@ -1415,8 +1415,10 @@ static int eb_relocate_vma(struct
+i915_execbuffer *eb, struct eb_vma *ev)
 
-The reason for I picked dma_mask was because we won't likely hit
-the boundary, if it's >= dma_mask -- maybe I am wrong here.
+        urelocs =3D u64_to_user_ptr(entry->relocs_ptr);
+        remain =3D entry->relocation_count;
++#ifndef CONFIG_64BIT
+        if (unlikely(remain > N_RELOC(ULONG_MAX)))
+                return -EINVAL;
++#endif
 
-> > This might result in a situation that iommu_map_sg() cuts an IOVA
-> > region, larger than 4GB, into discontiguous pieces and creates a
-> > faulty IOVA mapping that overlaps some physical memory being out
-> > of the scatter list, which might lead to some random kernel panic
-> > after DMA overwrites that faulty IOVA space.
-> 
-> If that's really a problem, then what about users who set a non-default
-> mask?
+        /*
+         * We must check that the entire relocation array is safe
+```
 
-I got a (downstream) bug report from our GPU side. I am not 100%
-sure if it's a real world case. But I can't simply ignore -- even
-if it's not at this point, sooner or later it'd be.
-
-Not quite getting what could be a user case for non-default mask.
-Yet, whoever sets the mask should take the responsibility for any
-bad thing happens.
-
-> Furthermore, scatterlist segments are just DMA duffers - if there is no
-> IOMMU and a device accesses outside a buffer, Bad Things can and will
-> happen; if the ends of the buffer don't line up exactly to page boundaries
-> even with an IOMMU, if the device accesses outside the buffer then Bad
-> Things can happen; even if an IOMMU can map a buffer perfectly, accesses
-> outside it will either hit other buffers or generate unexpected faults,
-> which are both - you guessed it - Bad Things.
-> 
-> In short, if this is happening then something is certainly broken, but it
-> isn't the DMA layer.
-
-I don't mean DMA API should be blamed for bad thing happening.
-Yet, it sets the 32-bit boundary by returning in the get(), so
-it's just easier to do the flu-shot in the API; otherwise, we
-will end up with patching every single driver. Maybe not quite
-a lot at this point, but there will be potentially.
-
-> > We have CONFIG_DMA_API_DEBUG_SG in kernel/dma/debug.c that checks
-> > such situations to prevent bad things from happening. However, it
-> > is not a mandatory check. And one might not think of enabling it
-> > when debugging a random kernel panic until figuring out that it's
-> > related to iommu_map_sg().
-> > 
-> > A safer solution may be to align the default segmention boundary
-> > with the configured dma_mask, so DMA API may create a contiguous
-> > IOVA space as a device "expect" -- what tries to make sense is:
-> > Though it's device driver's responsibility to set dma_parms, it
-> > is not fair or even safe to apply a 4GB boundary here, which was
-> > added a decade ago to work for up-to-4GB mappings at that time.
-> > 
-> > This patch updates the default segment_boundary_mask by aligning
-> > it with dma_mask.
-> 
-> Why bother even interrogating the device? You can trivially express "no
-> limit" as "~0UL", which is arguably less confusing than pretending this
-> bears any relation to DMA masks. However, like Christoph I'm concerned that
-> we don't know how many drivers are relying on the current default (and to a
-> lesser extent that it leads to a subtle difference in behaviour between
-> 32-bit PAE and 'proper' 64-bit builds).
-
-I stated the reason in my first inline reply. But I don't have a
-problem for "~0UL", if it feels less confusing to most of people.
-
-And I agree with the concern. Yet we still need to do something,
-right? Is there any other value that we may rely on, rather than
-dma_mask, even if just for safety? Or would it be possible for us
-to warn user when mapping gets out of the given physical address
-space, since this is the point when thing goes wrong?
-
-> And in the specific case of iommu-dma, this only comes into the picture at
-> all if a single scatterlist maps more than 4GB at once, which isn't exactly
-> typical streaming DMA behaviour - given that that implies a rather absurd
-> figure of more than 65536 entries at the default max_segment_size, the
-> relevant device probably doesn't want to be relying on the default dma_parms
-> in the first place.
-
-From my point of view, when a device doesn't set dma_params but
-uses the default one, it sounds like "I don't have such a limit
-in my hardware so you can just give me whatever you can prepare
-for me", instead of "I am just a non-absurd case" :)
-
-Overall, I do see a fear of regression for touching the default
-segmentation boundary mask. At least I want to see if there can
-be anything that we can or will likely do in the future, rather
-than adding dma_set_seg_boundary() to all the drivers.
-
-> [ I though I'd replied to your previous mail already; let me go see what
-> happened to that... ]
-
-I did send a related bug-reporting email a couple of weeks ago:
-https://lists.linuxfoundation.org/pipermail/iommu/2020-March/042220.html
-
-Yet have not seen any reply.
-
-Thanks a lot!
-
-> Robin.
-> 
-> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> > ---
-> >   include/linux/dma-mapping.h | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> > index 330ad58fbf4d..0df0ee92eba1 100644
-> > --- a/include/linux/dma-mapping.h
-> > +++ b/include/linux/dma-mapping.h
-> > @@ -736,7 +736,7 @@ static inline unsigned long dma_get_seg_boundary(struct device *dev)
-> >   {
-> >   	if (dev->dma_parms && dev->dma_parms->segment_boundary_mask)
-> >   		return dev->dma_parms->segment_boundary_mask;
-> > -	return DMA_BIT_MASK(32);
-> > +	return (unsigned long)dma_get_mask(dev);
-> >   }
-> >   static inline int dma_set_seg_boundary(struct device *dev, unsigned long mask)
-> > 
+We now have 4 proposed solutions:
+1. https://lore.kernel.org/lkml/20191123195321.41305-1-natechancellor@gmail=
+.com/
+2. https://lore.kernel.org/lkml/20200211050808.29463-1-natechancellor@gmail=
+.com/
+3. https://lore.kernel.org/lkml/20200214054706.33870-1-natechancellor@gmail=
+.com/
+4. my diff above
+Let's please come to a resolution on this.
+--=20
+Thanks,
+~Nick Desaulniers
