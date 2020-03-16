@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6331C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F56C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974EF20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82202051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="GhvdHBWp"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="HUf43cOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731612AbgCPOj6 (ORCPT
+        id S1731621AbgCPOkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:39:58 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35024 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731597AbgCPOj5 (ORCPT
+        Mon, 16 Mar 2020 10:40:04 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38644 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731572AbgCPOkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:39:57 -0400
-Received: by mail-pj1-f65.google.com with SMTP id mq3so8822231pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:39:56 -0700 (PDT)
+        Mon, 16 Mar 2020 10:40:04 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x7so9874458pgh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BBUeXVxAq+EmN+1GPqITYbbNMUjqDoXzGs9Et5OlzcY=;
-        b=GhvdHBWpXtpgR3Hhk8y3gEIvVK0GpET9RwyOt/734utRDOPRy8C48XmLph/E5fPHH1
-         vqw6iGlTI3zGY/zgKwWIeMBjm5tqFxHHx5j9YmArUYSurDb8tt0yKzYB+bn6+ASKrV7b
-         VoM2rf8YAh2mE13yQd2LPV+Zp8duQRDtTDo+qk6VONtfpXf5XdEoFptJ//4IATLdycEC
-         gN4L5QfoHmGBW1zMdLjhwKzEeirbmOPzq35nbvrZ1I7VQpzlxl8yCxWko8kx4HOKV3XZ
-         8YMUEtm8S+U/u5xUXamcqPDOZ0Z+nbZ2kvs2SrQ3loR6CbtpSyrou7LYJ/ruMbGh+ybg
-         rzUg==
+        bh=WRycM3kvderYb9CwKZ+TYqaJ73yGSs7D+hHRot+jXvM=;
+        b=HUf43cOYSl5Ax/fWaclU2KwFUT7Mwg2q8rOdMnZbO0gqt1/k9zjUFcbUU50Scy+R/X
+         Tw+jrhgXncye3ZiyrJwiSk2N4oAeJKe6UCargnOwPyszZfdP44T34vJnHkuPpOQVGDbT
+         W7rBvsVCb8BB8yO7zAuwz3cY5InPNGnmp1OBCU6fDgUj7nF172DR+CXJ7Q/+Emo059Ko
+         KlesoY9hqusjR0Z0KiAjQoHQQu0mxWHaxSYH92FF0UC4vKSqhIbSp0RP78haFToleRlb
+         sk9RtZfFOrrGWNZ6igKDqKw1QFdlqh7k1pKnIMeJoyiCAqwy3tNiy133z3mS926LSXMV
+         v7bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BBUeXVxAq+EmN+1GPqITYbbNMUjqDoXzGs9Et5OlzcY=;
-        b=F6LqNj+58Fee0wO7hyNWjeB55ZS+ZBASAZcPy3pOsTgza8vYrzHnVJlUIcsWIcChR1
-         +5pnu5bZ5n/erFy9FAQXBow4PijYtyI5gqVcKaSgk2xJo+FI66dN0NEVIB3lRviu0gFt
-         Dvrcy54c6je46tFJnRKUKCGkkCslmvThm6yiEpHBSsH2P1CH9vO4zkTKe/UZ1f7Fe1mL
-         UnRgIUVOS5rHwoJe5iAAoFu6DGavkMM+A0YDy0L83t+Y4rFlcBdpoKFZe4SH0N8w/FV1
-         2CAMg48ZRNeWdqfA2mvdtA3IiWgrooDukXSBt7mzkp8VIjJ1jNfZ9edjba91T79VerXf
-         EuFw==
-X-Gm-Message-State: ANhLgQ1kdNwq4vFnLjgz//FEHulyqNS2voqLjnhKjLBYRKP/cB3YS3Ts
-        L3OtZxo7nCxkoMDAd209ftOorIxg+lWYvw==
-X-Google-Smtp-Source: ADFU+vuBUPHG35c4F1mbkDyxS1MGsWLQo0xMxqUa7tuBtwG1IKz6wWYMmb8olg23cVgOqQ/OVmznng==
-X-Received: by 2002:a17:90a:394d:: with SMTP id n13mr27419698pjf.125.1584369595687;
-        Mon, 16 Mar 2020 07:39:55 -0700 (PDT)
+        bh=WRycM3kvderYb9CwKZ+TYqaJ73yGSs7D+hHRot+jXvM=;
+        b=e6iYLqd9Yr9n6tfvQgzMPjF0beZID4cYIMwvwWzXPBGs5tXsRPxqzHctSmh9M5JkaD
+         qpSsQmaXW+IG+6h+9gZmCLg1Q8PTd345jRZLxzbhIdN3XDLd2dek67bMA5iyOsKJhmaH
+         xEPKIEDp/THvPDl2erg6usoqyIETje/YfzYrjQknZuJmjc9p8YF4e6qVAcRKzMnCQ7Js
+         /XY17WonwdBcIkHLJcNLN/+fDFC7NJ5w59BfAPQAmGFldZWTnhTdtlxWFWNAIjhs7fRr
+         i+w9uz6X6gER/942JAhN28SMfu93hReWxZ75zGlOGFZtwxJh1/MV7a7N/d+/g7x4aL10
+         N7Bw==
+X-Gm-Message-State: ANhLgQ2DsEA0dxGsHyQyuO9S7N61dCX70u9LYxodvpfnrF4riqnydX6l
+        pg/0x1n69NdtibbCAgsylYSHXS40cOI7ZQ==
+X-Google-Smtp-Source: ADFU+vvNGndmDLdbuAl2FMjLfkFtwyASEmyqaj7ZVt3NTnGfj55nVCmperlLspPTEWNVPpNkQ+pljg==
+X-Received: by 2002:a63:1862:: with SMTP id 34mr164092pgy.191.1584369600556;
+        Mon, 16 Mar 2020 07:40:00 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.39.51
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.39.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:39:55 -0700 (PDT)
+        Mon, 16 Mar 2020 07:39:59 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,11 +67,13 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCHv2 03/50] arc: Add show_stack_loglvl()
-Date:   Mon, 16 Mar 2020 14:38:29 +0000
-Message-Id: <20200316143916.195608-4-dima@arista.com>
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCHv2 04/50] arm/asm: Add loglvl to c_backtrace()
+Date:   Mon, 16 Mar 2020 14:38:30 +0000
+Message-Id: <20200316143916.195608-5-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -98,94 +100,230 @@ Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
 an easier approach than introducing more printk buffers.
 Also, it will consolidate printings with headers.
 
-Introduce show_stack_loglvl(), that eventually will substitute
-show_stack().
+Add log level argument to c_backtrace() as a preparation for introducing
+show_stack_loglvl().
 
-As a good side-effect header "Stack Trace:" is now printed with the same
-log level as the rest of backtrace.
-
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: linux-snps-arc@lists.infradead.org
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: clang-built-linux@googlegroups.com
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/arc/include/asm/bug.h     |  3 ++-
- arch/arc/kernel/stacktrace.c   | 21 +++++++++++++++------
- arch/arc/kernel/troubleshoot.c |  2 +-
- 3 files changed, 18 insertions(+), 8 deletions(-)
+ arch/arm/include/asm/bug.h     |  3 ++-
+ arch/arm/include/asm/traps.h   |  3 ++-
+ arch/arm/kernel/traps.c        |  9 +++++----
+ arch/arm/kernel/unwind.c       |  2 +-
+ arch/arm/lib/backtrace-clang.S |  9 +++++++--
+ arch/arm/lib/backtrace.S       | 14 ++++++++++----
+ 6 files changed, 27 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arc/include/asm/bug.h b/arch/arc/include/asm/bug.h
-index 0be19fd1a412..4c453ba96c51 100644
---- a/arch/arc/include/asm/bug.h
-+++ b/arch/arc/include/asm/bug.h
-@@ -13,7 +13,8 @@
- struct task_struct;
+diff --git a/arch/arm/include/asm/bug.h b/arch/arm/include/asm/bug.h
+index deef4d0cb3b5..673c7dd75ab9 100644
+--- a/arch/arm/include/asm/bug.h
++++ b/arch/arm/include/asm/bug.h
+@@ -82,7 +82,8 @@ void hook_ifault_code(int nr, int (*fn)(unsigned long, unsigned int,
+ 				       struct pt_regs *),
+ 		     int sig, int code, const char *name);
  
- void show_regs(struct pt_regs *regs);
--void show_stacktrace(struct task_struct *tsk, struct pt_regs *regs);
-+void show_stacktrace(struct task_struct *tsk, struct pt_regs *regs,
-+		     const char *loglvl);
- void show_kernel_fault_diag(const char *str, struct pt_regs *regs,
- 			    unsigned long address);
- void die(const char *str, struct pt_regs *regs, unsigned long address);
-diff --git a/arch/arc/kernel/stacktrace.c b/arch/arc/kernel/stacktrace.c
-index 1e440bbfa876..24f9cd8a12c9 100644
---- a/arch/arc/kernel/stacktrace.c
-+++ b/arch/arc/kernel/stacktrace.c
-@@ -158,9 +158,11 @@ arc_unwind_core(struct task_struct *tsk, struct pt_regs *regs,
- /* Call-back which plugs into unwinding core to dump the stack in
-  * case of panic/OOPs/BUG etc
-  */
--static int __print_sym(unsigned int address, void *unused)
-+static int __print_sym(unsigned int address, void *arg)
+-extern asmlinkage void c_backtrace(unsigned long fp, int pmode);
++extern asmlinkage void c_backtrace(unsigned long fp, int pmode,
++				   const char *loglvl);
+ 
+ struct mm_struct;
+ void show_pte(const char *lvl, struct mm_struct *mm, unsigned long addr);
+diff --git a/arch/arm/include/asm/traps.h b/arch/arm/include/asm/traps.h
+index 172b08ff3760..987fefb0a4db 100644
+--- a/arch/arm/include/asm/traps.h
++++ b/arch/arm/include/asm/traps.h
+@@ -29,7 +29,8 @@ static inline int __in_irqentry_text(unsigned long ptr)
+ }
+ 
+ extern void __init early_trap_init(void *);
+-extern void dump_backtrace_entry(unsigned long where, unsigned long from, unsigned long frame);
++extern void dump_backtrace_entry(unsigned long where, unsigned long from,
++				 unsigned long frame, const char *loglvl);
+ extern void ptrace_break(struct pt_regs *regs);
+ 
+ extern void *vectors_page;
+diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
+index 1e70e7227f0f..2030611f22b8 100644
+--- a/arch/arm/kernel/traps.c
++++ b/arch/arm/kernel/traps.c
+@@ -62,7 +62,8 @@ __setup("user_debug=", user_debug_setup);
+ 
+ static void dump_mem(const char *, const char *, unsigned long, unsigned long);
+ 
+-void dump_backtrace_entry(unsigned long where, unsigned long from, unsigned long frame)
++void dump_backtrace_entry(unsigned long where, unsigned long from,
++			  unsigned long frame, const char *loglvl)
  {
--	printk("  %pS\n", (void *)address);
-+	const char *loglvl = arg;
-+
-+	printk("%s  %pS\n", loglvl, (void *)address);
- 	return 0;
+ 	unsigned long end = frame + 4 + sizeof(struct pt_regs);
+ 
+@@ -76,7 +77,7 @@ void dump_backtrace_entry(unsigned long where, unsigned long from, unsigned long
+ 		dump_mem("", "Exception stack", frame + 4, end);
  }
  
-@@ -217,17 +219,24 @@ static int __get_first_nonsched(unsigned int address, void *unused)
-  *-------------------------------------------------------------------------
-  */
- 
--noinline void show_stacktrace(struct task_struct *tsk, struct pt_regs *regs)
-+noinline void show_stacktrace(struct task_struct *tsk, struct pt_regs *regs,
-+			      const char *loglvl)
+-void dump_backtrace_stm(u32 *stack, u32 instruction)
++void dump_backtrace_stm(u32 *stack, u32 instruction, const char *loglvl)
  {
--	pr_info("\nStack Trace:\n");
--	arc_unwind_core(tsk, regs, __print_sym, NULL);
-+	printk("%s\nStack Trace:\n", loglvl);
-+	arc_unwind_core(tsk, regs, __print_sym, (void *)loglvl);
- }
- EXPORT_SYMBOL(show_stacktrace);
+ 	char str[80], *p;
+ 	unsigned int x;
+@@ -238,7 +239,7 @@ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+ 	pr_cont("\n");
  
- /* Expected by sched Code */
-+void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
-+			const char *loglvl)
-+{
-+	show_stacktrace(tsk, NULL, loglvl);
-+}
-+
- void show_stack(struct task_struct *tsk, unsigned long *sp)
- {
--	show_stacktrace(tsk, NULL);
-+	show_stack_loglvl(tsk, sp, KERN_DEFAULT);
+ 	if (ok)
+-		c_backtrace(fp, mode);
++		c_backtrace(fp, mode, NULL);
+ }
+ #endif
+ 
+@@ -666,7 +667,7 @@ asmlinkage int arm_syscall(int no, struct pt_regs *regs)
+ 		dump_instr("", regs);
+ 		if (user_mode(regs)) {
+ 			__show_regs(regs);
+-			c_backtrace(frame_pointer(regs), processor_mode(regs));
++			c_backtrace(frame_pointer(regs), processor_mode(regs), NULL);
+ 		}
+ 	}
+ #endif
+diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
+index 4574e6aea0a5..0a65005e10f0 100644
+--- a/arch/arm/kernel/unwind.c
++++ b/arch/arm/kernel/unwind.c
+@@ -493,7 +493,7 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+ 		urc = unwind_frame(&frame);
+ 		if (urc < 0)
+ 			break;
+-		dump_backtrace_entry(where, frame.pc, frame.sp - 4);
++		dump_backtrace_entry(where, frame.pc, frame.sp - 4, NULL);
+ 	}
  }
  
- /* Another API expected by schedular, shows up in "ps" as Wait Channel
-diff --git a/arch/arc/kernel/troubleshoot.c b/arch/arc/kernel/troubleshoot.c
-index d2999503fb8a..660681101523 100644
---- a/arch/arc/kernel/troubleshoot.c
-+++ b/arch/arc/kernel/troubleshoot.c
-@@ -242,5 +242,5 @@ void show_kernel_fault_diag(const char *str, struct pt_regs *regs,
+diff --git a/arch/arm/lib/backtrace-clang.S b/arch/arm/lib/backtrace-clang.S
+index 2ff375144b55..6174c45f53a5 100644
+--- a/arch/arm/lib/backtrace-clang.S
++++ b/arch/arm/lib/backtrace-clang.S
+@@ -17,6 +17,7 @@
+ #define sv_pc	r6
+ #define mask	r7
+ #define sv_lr	r8
++#define loglvl	r9
  
- 	/* Show stack trace if this Fatality happened in kernel mode */
- 	if (!user_mode(regs))
--		show_stacktrace(current, regs);
-+		show_stacktrace(current, regs, KERN_DEFAULT);
- }
+ ENTRY(c_backtrace)
+ 
+@@ -99,6 +100,7 @@ ENDPROC(c_backtrace)
+ 						@ to ensure 8 byte alignment
+ 		movs	frame, r0		@ if frame pointer is zero
+ 		beq	no_frame		@ we have no stack frames
++		mov	loglvl, r2
+ 		tst	r1, #0x10		@ 26 or 32-bit mode?
+ 		moveq	mask, #0xfc000003
+ 		movne	mask, #0		@ mask for 32-bit
+@@ -167,6 +169,7 @@ finished_setup:
+ 		mov	r1, sv_lr
+ 		mov	r2, frame
+ 		bic	r1, r1, mask		@ mask PC/LR for the mode
++		mov	r3, loglvl
+ 		bl	dump_backtrace_entry
+ 
+ /*
+@@ -183,6 +186,7 @@ finished_setup:
+ 		ldr	r0, [frame]		@ locals are stored in
+ 						@ the preceding frame
+ 		subeq	r0, r0, #4
++		mov	r2, loglvl
+ 		bleq	dump_backtrace_stm	@ dump saved registers
+ 
+ /*
+@@ -196,7 +200,8 @@ finished_setup:
+ 		bhi	for_each_frame
+ 
+ 1006:		adr	r0, .Lbad
+-		mov	r1, frame
++		mov	r1, loglvl
++		mov	r2, frame
+ 		bl	printk
+ no_frame:	ldmfd	sp!, {r4 - r9, fp, pc}
+ ENDPROC(c_backtrace)
+@@ -209,7 +214,7 @@ ENDPROC(c_backtrace)
+ 		.long   1005b, 1006b
+ 		.popsection
+ 
+-.Lbad:		.asciz	"Backtrace aborted due to bad frame pointer <%p>\n"
++.Lbad:		.asciz	"%sBacktrace aborted due to bad frame pointer <%p>\n"
+ 		.align
+ .Lopcode:	.word	0xe92d4800 >> 11	@ stmfd sp!, {... fp, lr}
+ 		.word	0x0b000000		@ bl if these bits are set
+diff --git a/arch/arm/lib/backtrace.S b/arch/arm/lib/backtrace.S
+index 582925238d65..872f658638d9 100644
+--- a/arch/arm/lib/backtrace.S
++++ b/arch/arm/lib/backtrace.S
+@@ -18,6 +18,7 @@
+ #define sv_pc	r6
+ #define mask	r7
+ #define offset	r8
++#define loglvl	r9
+ 
+ ENTRY(c_backtrace)
+ 
+@@ -25,9 +26,10 @@ ENTRY(c_backtrace)
+ 		ret	lr
+ ENDPROC(c_backtrace)
+ #else
+-		stmfd	sp!, {r4 - r8, lr}	@ Save an extra register so we have a location...
++		stmfd	sp!, {r4 - r9, lr}	@ Save an extra register so we have a location...
+ 		movs	frame, r0		@ if frame pointer is zero
+ 		beq	no_frame		@ we have no stack frames
++		mov	loglvl, r2
+ 
+ 		tst	r1, #0x10		@ 26 or 32-bit mode?
+  ARM(		moveq	mask, #0xfc000003	)
+@@ -73,6 +75,7 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
+ 		ldr	r1, [frame, #-4]	@ get saved lr
+ 		mov	r2, frame
+ 		bic	r1, r1, mask		@ mask PC/LR for the mode
++		mov	r3, loglvl
+ 		bl	dump_backtrace_entry
+ 
+ 		ldr	r1, [sv_pc, #-4]	@ if stmfd sp!, {args} exists,
+@@ -80,12 +83,14 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
+ 		teq	r3, r1, lsr #11
+ 		ldreq	r0, [frame, #-8]	@ get sp
+ 		subeq	r0, r0, #4		@ point at the last arg
++		mov	r2, loglvl
+ 		bleq	dump_backtrace_stm	@ dump saved registers
+ 
+ 1004:		ldr	r1, [sv_pc, #0]		@ if stmfd sp!, {..., fp, ip, lr, pc}
+ 		ldr	r3, .Ldsi		@ instruction exists,
+ 		teq	r3, r1, lsr #11
+ 		subeq	r0, frame, #16
++		mov	r2, loglvl
+ 		bleq	dump_backtrace_stm	@ dump saved registers
+ 
+ 		teq	sv_fp, #0		@ zero saved fp means
+@@ -96,9 +101,10 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
+ 		bhi	for_each_frame
+ 
+ 1006:		adr	r0, .Lbad
+-		mov	r1, frame
++		mov	r1, loglvl
++		mov	r2, frame
+ 		bl	printk
+-no_frame:	ldmfd	sp!, {r4 - r8, pc}
++no_frame:	ldmfd	sp!, {r4 - r9, pc}
+ ENDPROC(c_backtrace)
+ 		
+ 		.pushsection __ex_table,"a"
+@@ -109,7 +115,7 @@ ENDPROC(c_backtrace)
+ 		.long	1004b, 1006b
+ 		.popsection
+ 
+-.Lbad:		.asciz	"Backtrace aborted due to bad frame pointer <%p>\n"
++.Lbad:		.asciz	"%sBacktrace aborted due to bad frame pointer <%p>\n"
+ 		.align
+ .Ldsi:		.word	0xe92dd800 >> 11	@ stmfd sp!, {... fp, ip, lr, pc}
+ 		.word	0xe92d0000 >> 11	@ stmfd sp!, {}
 -- 
 2.25.1
 
