@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94BFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F12C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B538E205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD48205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326502;
-	bh=zfd67u+rmC+7o1QvaUow5GVSNreqIe3rocf3yS5pvKo=;
+	s=default; t=1584326506;
+	bh=ClFWbM6KRvO0jA0ltmJ0uDe7H7a6wSR5QyRk4Y8M8UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SR7b2MVoCpSHMBMOwUXdIkSU3qT80WoidSDdXSLIAKH3dNeMTO653zHBNBUBqevUC
-	 MABDxs43xi1EBFvEuVAyCtC7w0s0w7orOtylF1Fz1g5+0b1dTVroxo7pHKEFQ7+O5W
-	 vXG0o82V54EF8pPknhIZ4ME09ZHO27QHxUPoLq6M=
+	b=oVWP3fzlO5etp5wzQfScIgMKvuliRiQAvxJUo2lbPdJj3X+OemZxa332qW/nmti0r
+	 Yuhfg0DsMtzTfc1qkt1OGOnPoQfiXKumpyTnsXh6Tc6NOFppUPfGi8h0ANIZcyVruE
+	 3Od0iP7m40qCJ7PerVzV0b/deNKZCdEYlrNIotUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbgCPClm (ORCPT
+        id S1730542AbgCPClo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:41:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36156 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729529AbgCPCdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:33:31 -0400
+        id S1729482AbgCPCda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:33:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28F8B20722;
-        Mon, 16 Mar 2020 02:33:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7F90206E9;
+        Mon, 16 Mar 2020 02:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326011;
-        bh=zfd67u+rmC+7o1QvaUow5GVSNreqIe3rocf3yS5pvKo=;
+        s=default; t=1584326009;
+        bh=ClFWbM6KRvO0jA0ltmJ0uDe7H7a6wSR5QyRk4Y8M8UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15z2Hr4N62lgDadgu2e6hhFsEsBVengXHRV3veArs8MJzogYZAAdxI1NOUHxS9adh
-         0Xx9A+ttRGdQNuCDWBnCZfhdYlkMr/yD8/d5EEuB/5vrVwOvcNWb3tEHNFmn7Fn4+v
-         tpPGmV1/xwKc1LKtDOlUDXzVR1KDIZ+2xXaD83CE=
+        b=LybBq0H8VByDyd+dKIhDlbk5tGG2NvY7aLudfI8iL9/Uo256lmFcZBmbRzRGXa5cO
+         SUjiV2q/YX7XrOasMnTacY4KQ0gjcUoSyXaNBGWA5h6VTGAJdZINusblnkMEjYcIKp
+         izVYHJjXta2kuK05wEllgL8YODq9MQoEgLCaIDjg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 09/41] ASoC: meson: g12a: add tohdmitx reset
-Date:   Sun, 15 Mar 2020 22:32:47 -0400
-Message-Id: <20200316023319.749-9-sashal@kernel.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 08/41] ARM: dts: dra7-l4: mark timer13-16 as pwm capable
+Date:   Sun, 15 Mar 2020 22:32:46 -0400
+Message-Id: <20200316023319.749-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
@@ -61,44 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit 22946f37557e27697aabc8e4f62642bfe4a17fd8 ]
+[ Upstream commit 00a39c92c8ab94727f021297d1748531af113fcd ]
 
-Reset the g12a hdmi codec glue on probe. This ensure a sane startup state.
+DMTimers 13 - 16 are PWM capable and also can be used for CPTS input
+signals generation. Hence, mark them as "ti,timer-pwm".
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200221121146.1498427-1-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/g12a-tohdmitx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/dra7-l4.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
-index 9cfbd343a00c8..8a0db28a6a406 100644
---- a/sound/soc/meson/g12a-tohdmitx.c
-+++ b/sound/soc/meson/g12a-tohdmitx.c
-@@ -8,6 +8,7 @@
- #include <linux/module.h>
- #include <sound/pcm_params.h>
- #include <linux/regmap.h>
-+#include <linux/reset.h>
- #include <sound/soc.h>
- #include <sound/soc-dai.h>
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index 7e7aa101d8a49..912ee8778830a 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3461,6 +3461,7 @@
+ 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER13_CLKCTRL 24>;
+ 				clock-names = "fck";
+ 				interrupts = <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>;
++				ti,timer-pwm;
+ 			};
+ 		};
  
-@@ -378,6 +379,11 @@ static int g12a_tohdmitx_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	void __iomem *regs;
- 	struct regmap *map;
-+	int ret;
-+
-+	ret = device_reset(dev);
-+	if (ret)
-+		return ret;
+@@ -3489,6 +3490,7 @@
+ 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER14_CLKCTRL 24>;
+ 				clock-names = "fck";
+ 				interrupts = <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>;
++				ti,timer-pwm;
+ 			};
+ 		};
  
- 	regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(regs))
+@@ -3517,6 +3519,7 @@
+ 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER15_CLKCTRL 24>;
+ 				clock-names = "fck";
+ 				interrupts = <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>;
++				ti,timer-pwm;
+ 			};
+ 		};
+ 
+@@ -3545,6 +3548,7 @@
+ 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER16_CLKCTRL 24>;
+ 				clock-names = "fck";
+ 				interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
++				ti,timer-pwm;
+ 			};
+ 		};
+ 
 -- 
 2.20.1
 
