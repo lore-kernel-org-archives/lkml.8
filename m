@@ -2,132 +2,126 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037C3C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2A9C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F8F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C76C20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbtgZ4fc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ph0i383T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbgCPHQA (ORCPT
+        id S1729834AbgCPHS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:16:00 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43394 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728302AbgCPHQA (ORCPT
+        Mon, 16 Mar 2020 03:18:28 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50179 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729694AbgCPHS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:16:00 -0400
-Received: by mail-il1-f193.google.com with SMTP id d14so14901681ilq.10;
-        Mon, 16 Mar 2020 00:15:58 -0700 (PDT)
+        Mon, 16 Mar 2020 03:18:27 -0400
+Received: by mail-pj1-f68.google.com with SMTP id o23so2036246pjp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 00:18:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tRh0qGsHo1Z8/8EsTHyXL3Vn9WTVBKRNVDpdnxNvsWU=;
-        b=sbtgZ4fcgpuUhIPdsfN86WqZ2Z3IKkM7ZUIa3UnsbXvVMMvEM5UulAwdMpvlQMRABu
-         NOgyRpFJzQaKdYHO3n64PY+He+tvBhGOZ+nvQwGUSSYWlylCtk5pJePV6CBs5DqSjluO
-         mtkBLQfX6fJg1hO/Hbo4KLondpf6k9vmeNv8gZyDze9nF+DNZbBnBymDNmd1TFxW1lYq
-         4F0Y+xZnGnh8qasrIhTXn3oMGvAmPgURcP11NWuDZWtLiSBM8clE86G5LWdD2GFMLC7X
-         Zl8o2y5SM2HDmYg/6MTVMzmUaytPDPu0H0Z2NHyGmvRd3iy+yRPKo1U27GIccXE7bOR9
-         7Iew==
+        h=from:to:cc:subject:date:message-id;
+        bh=eYiMJvzhgU8cefu9p/MQZ5kiTc4aQrMez5IEQVm5JBQ=;
+        b=ph0i383Trlk3tr0BOHQ3ZTIv3dERcGn4yWxpSSs6S/wrY+6zqgZXPwiFfJHWt1FDzu
+         nj0hvpHu7uTzjAZndTAYwvLRSQmpiJxAfdDCBkXGHYbGndjiiHjBeD9UXs7YMx/hSSM4
+         eRvnqere1oSk7E3qTRQozUBhOK5LDOZ7ZpwGEta9Twx2/hs5Yq2prnbabIVPwok42HT6
+         jE5k3QLttsVttRGloBRHySlYUeXhTCxdNEgw9W0ItWwXz1cgb/llw+sTGplvdoPS8UCG
+         52onSfRLjWDZFpDzg4Oqhtlva4FaUWhPVMh2C4iXRXUQnNofg4IcO6oO969suLvkCBid
+         eeKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tRh0qGsHo1Z8/8EsTHyXL3Vn9WTVBKRNVDpdnxNvsWU=;
-        b=Hrda7V4uffvLoCjS9ra6kbAh5Sm9cdgPlPwPaL4ix3xBm9/9rwfBJFEmu999hE+LFg
-         EM9gABy1bwd2Qd8xSsj+Za3uuP2lz6CYvVdXz3+UNjjYW93Uf75JPVLJt9gmI9zMRxf8
-         oBaGsxOKa4gv5BE+IBGKwLGEiCM71D/WMEHqid3CocYXIRPovNVfUsSLHRLnbXnbUqta
-         0GWHbwAhtrC9rEsNiz6TTXVKzphEeUhfZRINJHmrWV3f0ikCFw2fsArTdh1+mZPqr9jC
-         5Ig1WrmSjMHBQuuyhPF4DBFsMurGGnLqjzQ8iYe35sDkT6Tb9Nn+10JBbsYwutJ6D/if
-         A2dA==
-X-Gm-Message-State: ANhLgQ0p+N0infP7zRll5+xx/Y0egE5rJhRBP6ifOBOQfs/rENw3ZK3y
-        DjIVSoLdICipNCtTeIP2xMQTEhTVfVlk+0IN4QY=
-X-Google-Smtp-Source: ADFU+vuwyY6yUEhRU+0bXIjjvAJjxvEP7ZJrXrSiHKFUMWhDQrDXRhZFaMVz6T+YtT+E0hIPwj4EiME6IaF5YZJzlJA=
-X-Received: by 2002:a92:dd0e:: with SMTP id n14mr9668098ilm.0.1584342957526;
- Mon, 16 Mar 2020 00:15:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584341983-11245-1-git-send-email-hqjagain@gmail.com>
-In-Reply-To: <1584341983-11245-1-git-send-email-hqjagain@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eYiMJvzhgU8cefu9p/MQZ5kiTc4aQrMez5IEQVm5JBQ=;
+        b=cDOBBDLsu6kJXl/lnEaOBQ8iRW5SR5G4f8s2pJrQm+H+hpwxxXIdAVoVPGMJV3NEGJ
+         /216tKXREwddTxVDqnGRyw12XaPW22QrGFDELYetkmQPnCvhv8grNAMykBSJOc5TAXie
+         qzCQ4QeuP7kWIki5cT698ih7c/lcq4dipNRqlrLllQ1elOcHh628WJG9ZA3AiSiiK7fB
+         G+SeBrqx7zFXTUpCZXDJw2QQxrooUkoiIZzNPMFpKFWp1kYMlGNmQ7WiS1vO1DSAd+MP
+         7VjcqEONvx1K4NnE6EQKSFR5KUg01F4nVYkC8wZuGIDGcKpXPxJP4IamToHY89nupTpz
+         8hBA==
+X-Gm-Message-State: ANhLgQ3bPbQaMir9frmxwbl7F2NJeGwRVwH3UWlMgaC6TgbazqVW+/9J
+        KR6dFs0cdvqrNCOyzb0k7Rw=
+X-Google-Smtp-Source: ADFU+vsyHvb9S+87dueVvHsTA4hufzgoTni9cVQgu2qepNbFJTvGvm2nK8xbbO+q+yDYBQV43X4KZw==
+X-Received: by 2002:a17:902:9a06:: with SMTP id v6mr25968701plp.304.1584343107104;
+        Mon, 16 Mar 2020 00:18:27 -0700 (PDT)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id e9sm22170618pfl.179.2020.03.16.00.18.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Mar 2020 00:18:26 -0700 (PDT)
 From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Mon, 16 Mar 2020 15:15:46 +0800
-Message-ID: <CAJRQjofA4+LJxYn-HQdBZ_Lxv3DgS1WrPtM3L1z4-ycRKPS5nw@mail.gmail.com>
-Subject: Re: [PATCH] drm/lease: fix potential race in fill_object_idr
-To:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH RESEND] drm/lease: fix potential race in fill_object_idr
+Date:   Mon, 16 Mar 2020 15:18:23 +0800
+Message-Id: <1584343103-13896-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry about sending to wrong maintainers. Please ignore it.
-I'll resend it.
+We should hold idr_mutex for idr_alloc.
 
-On Mon, Mar 16, 2020 at 2:59 PM Qiujun Huang <hqjagain@gmail.com> wrote:
->
-> We should hold idr_mutex for idr_alloc.
->
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> ---
->  drivers/gpu/drm/drm_lease.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
-> index b481caf..427ee21 100644
-> --- a/drivers/gpu/drm/drm_lease.c
-> +++ b/drivers/gpu/drm/drm_lease.c
-> @@ -418,6 +418,7 @@ static int fill_object_idr(struct drm_device *dev,
->                 goto out_free_objects;
->         }
->
-> +       mutex_lock(&dev->mode_config.idr_mutex);
->         /* add their IDs to the lease request - taking into account
->            universal planes */
->         for (o = 0; o < object_count; o++) {
-> @@ -437,7 +438,7 @@ static int fill_object_idr(struct drm_device *dev,
->                 if (ret < 0) {
->                         DRM_DEBUG_LEASE("Object %d cannot be inserted into leases (%d)\n",
->                                         object_id, ret);
-> -                       goto out_free_objects;
-> +                       goto out_unlock;
->                 }
->                 if (obj->type == DRM_MODE_OBJECT_CRTC && !universal_planes) {
->                         struct drm_crtc *crtc = obj_to_crtc(obj);
-> @@ -445,20 +446,22 @@ static int fill_object_idr(struct drm_device *dev,
->                         if (ret < 0) {
->                                 DRM_DEBUG_LEASE("Object primary plane %d cannot be inserted into leases (%d)\n",
->                                                 object_id, ret);
-> -                               goto out_free_objects;
-> +                               goto out_unlock;
->                         }
->                         if (crtc->cursor) {
->                                 ret = idr_alloc(leases, &drm_lease_idr_object, crtc->cursor->base.id, crtc->cursor->base.id + 1, GFP_KERNEL);
->                                 if (ret < 0) {
->                                         DRM_DEBUG_LEASE("Object cursor plane %d cannot be inserted into leases (%d)\n",
->                                                         object_id, ret);
-> -                                       goto out_free_objects;
-> +                                       goto out_unlock;
->                                 }
->                         }
->                 }
->         }
->
->         ret = 0;
-> +out_unlock:
-> +       mutex_unlock(&dev->mode_config.idr_mutex);
->  out_free_objects:
->         for (o = 0; o < object_count; o++) {
->                 if (objects[o])
-> --
-> 1.8.3.1
->
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ drivers/gpu/drm/drm_lease.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
+index b481caf..427ee21 100644
+--- a/drivers/gpu/drm/drm_lease.c
++++ b/drivers/gpu/drm/drm_lease.c
+@@ -418,6 +418,7 @@ static int fill_object_idr(struct drm_device *dev,
+ 		goto out_free_objects;
+ 	}
+ 
++	mutex_lock(&dev->mode_config.idr_mutex);
+ 	/* add their IDs to the lease request - taking into account
+ 	   universal planes */
+ 	for (o = 0; o < object_count; o++) {
+@@ -437,7 +438,7 @@ static int fill_object_idr(struct drm_device *dev,
+ 		if (ret < 0) {
+ 			DRM_DEBUG_LEASE("Object %d cannot be inserted into leases (%d)\n",
+ 					object_id, ret);
+-			goto out_free_objects;
++			goto out_unlock;
+ 		}
+ 		if (obj->type == DRM_MODE_OBJECT_CRTC && !universal_planes) {
+ 			struct drm_crtc *crtc = obj_to_crtc(obj);
+@@ -445,20 +446,22 @@ static int fill_object_idr(struct drm_device *dev,
+ 			if (ret < 0) {
+ 				DRM_DEBUG_LEASE("Object primary plane %d cannot be inserted into leases (%d)\n",
+ 						object_id, ret);
+-				goto out_free_objects;
++				goto out_unlock;
+ 			}
+ 			if (crtc->cursor) {
+ 				ret = idr_alloc(leases, &drm_lease_idr_object, crtc->cursor->base.id, crtc->cursor->base.id + 1, GFP_KERNEL);
+ 				if (ret < 0) {
+ 					DRM_DEBUG_LEASE("Object cursor plane %d cannot be inserted into leases (%d)\n",
+ 							object_id, ret);
+-					goto out_free_objects;
++					goto out_unlock;
+ 				}
+ 			}
+ 		}
+ 	}
+ 
+ 	ret = 0;
++out_unlock:
++	mutex_unlock(&dev->mode_config.idr_mutex);
+ out_free_objects:
+ 	for (o = 0; o < object_count; o++) {
+ 		if (objects[o])
+-- 
+1.8.3.1
+
