@@ -2,106 +2,238 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BAFC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20CEC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20264205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:36:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fw1UmYYU"
+	by mail.kernel.org (Postfix) with ESMTP id A4B12205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbgCPDgN (ORCPT
+        id S1729782AbgCPDgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 23:36:13 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38313 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729750AbgCPDgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 23:36:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w3so7343930plz.5
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 20:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=RN5LEm2Ln6UJgsZb2Xcgn8JEfugZQTYW/WUCQ061ChE=;
-        b=fw1UmYYU9/rm9lgm2cwI72orTS1NcCsphYzCKyo3sxJoTiOH4SnhSoa8Mn+2RhdhIU
-         uzx3IV/AzdVuGGJDk9sYHYz9CDfHFFGDCfPJSPlQmaCMQM089fcoklutF2gS7ji5dExk
-         rCOM7D5anxq8bEMPwHiXLz7rPW6ekh5zWN110w198ZgFE6iqGsgVE9eoI+lE51xgFnfB
-         WN8kvNzbfBB/Fn7ujhXOo/2bOFp5fRywaRxqOgIVUQ8die8xy1uiWYho/R2Hu2VIN22B
-         rjPPtlXoQj45IXB4eL6Ya97g3ywLIqlwhH61SDjnPbozbsVIZ1Dtnob+OQNsQCkFDEXM
-         /Rqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RN5LEm2Ln6UJgsZb2Xcgn8JEfugZQTYW/WUCQ061ChE=;
-        b=SmhScKKhyRmnpbXwbVuDjr2WYjf0cF9k69yZdVXNomlPt0CsP4aqweSdICqmt8u2p8
-         wt16dwIZRNUJhL8Q5NoAYacsUbbPXv6WAdQ+CYYnavOQSagrIEXIgs9bXfGazLguzAqa
-         UvFn6oiNq6KKt0hIOL7uNkTq2Tw8ULq2SM0HE40Qc82tyBfbkwOAlSzPhOcfhaXBGj/G
-         wqc9pcmpqyx/YMimDTvzuA07rVFlTb5j+UjVP0/b6/nJyJ2WzWHBFsCmjKKpOpObgK63
-         ZOEwCA2Jwhcp/0HqJuj6k5CpCSuyYprx0CAGIhb2oab9P6ZTvV+RA19vED2sjkvi/4QD
-         7noA==
-X-Gm-Message-State: ANhLgQ3AHkGOR0zM5F9hLJUfWyE3U3bqyyQam9wLvFkDwInu3Ml7+Mck
-        +LCq/7pL4Z3z50fwSrMOZZBJbU0t
-X-Google-Smtp-Source: ADFU+vsZ//NWLkkQzxFIYJQuFmwMBRXMmi6l8kqyMnAHHWqVpYMJACZhlO6eHteKivEnhtXDqyOX1w==
-X-Received: by 2002:a17:90b:8f:: with SMTP id bb15mr21271182pjb.186.1584329772317;
-        Sun, 15 Mar 2020 20:36:12 -0700 (PDT)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id my6sm20167168pjb.10.2020.03.15.20.36.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Mar 2020 20:36:11 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] drm/lease: fix WARNING in idr_destroy
-Date:   Mon, 16 Mar 2020 11:36:08 +0800
-Message-Id: <1584329768-16119-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 15 Mar 2020 23:36:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31122 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729666AbgCPDgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 23:36:49 -0400
+IronPort-SDR: zMuC3DUHepuXYqciO6VuXz2tBNcBfJ2Qfot9XGbDskXzhaT3KNyoI2NyIV/6d9vQAHOnIS7kUW
+ Vu3FMHHmc62g==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2020 20:36:48 -0700
+IronPort-SDR: +glQMpT4DgqNnPXYxw9Ty0qU3ZUW6dvzdsNz//wkANIMId9hPHBOSf2RCaA1hfzj+LnuGZWqPu
+ jQh2LpXlnRTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,558,1574150400"; 
+   d="asc'?scan'208";a="235906544"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.160.147])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Mar 2020 20:36:46 -0700
+Date:   Mon, 16 Mar 2020 11:24:08 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Yan Zhao <yan.y.zhao@intel.com>,
+        intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhenyuw@linux.intel.com,
+        pbonzini@redhat.com, kevin.tian@intel.com, peterx@redhat.com,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        "Neo Jia (cjia@nvidia.com)" <cjia@nvidia.com>
+Subject: Re: [PATCH v4 0/7] use vfio_dma_rw to read/write IOVAs from CPU side
+Message-ID: <20200316032408.GF8880@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20200313030548.7705-1-yan.y.zhao@intel.com>
+ <20200313162958.5bfb5b82@x1.home>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="+KJYzRxRHjYqLGl5"
+Content-Disposition: inline
+In-Reply-To: <20200313162958.5bfb5b82@x1.home>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-leases has been destroyed:
-drm_master_put
-    ->drm_master_destroy
-            ->idr_destroy
 
-so the "out_lessee" needn't to call idr_destroy again.
+--+KJYzRxRHjYqLGl5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/gpu/drm/drm_lease.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On 2020.03.13 16:29:58 -0600, Alex Williamson wrote:
+> [Cc +NVIDIA]
+>=20
+> On Thu, 12 Mar 2020 23:05:48 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+>=20
+> > It is better for a device model to use IOVAs to read/write memory to
+> > perform some sort of virtual DMA on behalf of the device.
+> >=20
+> > patch 1 exports VFIO group to external user so that it can hold the gro=
+up
+> > reference until finishing using of it. It saves ~500 cycles that are sp=
+ent
+> > on VFIO group looking up, referencing and dereferencing. (this data is
+> > measured with 1 VFIO user).
+> >=20
+> > patch 2 introduces interface vfio_dma_rw().
+> >=20
+> > patch 3 introduces interfaces vfio_group_pin_pages() and
+> > vfio_group_unpin_pages() to get rid of VFIO group looking-up in
+> > vfio_pin_pages() and vfio_unpin_pages().
+> >=20
+> > patch 4-5 let kvmgt switch from calling kvm_read/write_guest() to calli=
+ng
+> > vfio_dma_rw to rw IOVAs.
+> >=20
+> > patch 6 let kvmgt switch to use lighter version of vfio_pin/unpin_pages=
+(),
+> > i.e. vfio_group_pin/unpin_pages()
+> >=20
+> > patch 7 enables kvmgt to read/write IOVAs of size larger than PAGE_SIZE.
+>=20
+> This looks pretty good to me, hopefully Kirti and Neo can find some
+> advantage with this series as well.  Given that we're also trying to
+> get the migration interface and dirty page tracking integrated for
+> v5.7, would it make sense to merge the first 3 patches via my next
+> branch?  This is probably the easiest way to update the dirty tracking.
 
-diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
-index b481caf..54506c2 100644
---- a/drivers/gpu/drm/drm_lease.c
-+++ b/drivers/gpu/drm/drm_lease.c
-@@ -577,11 +577,14 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
- 
- out_lessee:
- 	drm_master_put(&lessee);
-+	goto err_exit;
- 
- out_leases:
--	put_unused_fd(fd);
- 	idr_destroy(&leases);
- 
-+err_exit:
-+	put_unused_fd(fd);
-+
- 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
- 	return ret;
- }
--- 
-1.8.3.1
+I think that should be ok, other kvmgt change for 5.7 has already been in q=
+ueue,
+once merge window is open, can send left kvmgt patches.
 
+For kvmgt patch 4-6,
+
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+
+>=20
+> Alex
+>=20
+> > Performance:
+> >=20
+> > Comparison between vfio_dma_rw() and kvm_read/write_guest():
+> >=20
+> > 1. avergage CPU cycles of each interface measured with 1 running VM:
+> >  --------------------------------------------------
+> > |  rw       |          avg cycles of               |
+> > |  size     | (vfio_dma_rw - kvm_read/write_guest) |
+> > |---------- ---------------------------------------|
+> > | <=3D 1 page |            +155 ~ +195               |       =20
+> > |--------------------------------------------------|
+> > | 5 pages   |                -530                  |
+> > |--------------------------------------------------|
+> > | 20 pages  |           -2005 ~ -2533              |
+> >  --------------------------------------------------
+> >=20
+> > 2. average scores
+> >=20
+> > base: base code before applying code in this series. use
+> > kvm_read/write_pages() to rw IOVAs
+> >=20
+> > base + this series: use vfio_dma_rw() to read IOVAs and use
+> > vfio_group_pin/unpin_pages(), and kvmgt is able to rw several pages
+> > at a time.
+> >=20
+> > Scores of benchmarks running in 1 VM each:
+> >  -----------------------------------------------------------------
+> > |                    | glmark2 | lightsmark | openarena | heavens |
+> > |-----------------------------------------------------------------|
+> > |       base         |  1248   |  219.70    |  114.9    |   560   |
+> > |-----------------------------------------------------------------|
+> > |base + this series  |  1248   |  225.8     |   115     |   559   |
+> >  -----------------------------------------------------------------
+> >=20
+> > Sum of scores of two benchmark instances running in 2 VMs each:
+> >  -------------------------------------------------------
+> > |                    | glmark2 | lightsmark | openarena |
+> > |-------------------------------------------------------|
+> > |       base         |  812    |  211.46    |  115.3    |
+> > |-------------------------------------------------------|
+> > |base + this series  |  814    |  214.69    |  115.9    |
+> >  -------------------------------------------------------
+> >=20
+> >=20
+> > Changelogs:
+> > v3 --> v4:
+> > - rebased to 5.6.0-rc4+
+> > - adjust wrap position for vfio_group_get_external_user_from_dev() in
+> >   header file.(Alex)
+> > - updated function description of vfio_group_get_external_user_from_dev=
+()
+> >   (Alex)
+> > - fixed Error path group reference leaking in
+> >   vfio_group_get_external_user_from_dev()  (Alex)
+> > - reurn 0 for success or errno in vfio_dma_rw_chunk(). (Alex)
+> > - renamed iova to user_iova in interface vfio_dam_rw().
+> > - renamed vfio_pin_pages_from_group() and vfio_unpin_pages_from_group()=
+ to
+> >   vfio_group_pin_pages() and vfio_group_unpin_pages()
+> > - renamed user_pfn to user_iova_pfn in vfio_group_pin_pages() and
+> >   vfio_group_unpin_pages()
+> >=20
+> > v2 --> v3:
+> > - add vfio_group_get_external_user_from_dev() to improve performance (A=
+lex)
+> > - add vfio_pin/unpin_pages_from_group() to avoid repeated looking up of
+> >   VFIO group in vfio_pin/unpin_pages() (Alex)
+> > - add a check for IOMMU_READ permission. (Alex)
+> > - rename vfio_iommu_type1_rw_dma_nopin() to
+> >   vfio_iommu_type1_dma_rw_chunk(). (Alex)
+> > - in kvmgt, change "write ? vfio_dma_rw(...,true) :
+> >   vfio_dma_rw(...,false)" to vfio_dma_rw(dev, gpa, buf, len, write)
+> >   (Alex and Paolo)
+> > - in kvmgt, instead of read/write context pages 1:1, combining the
+> >   reads/writes of continuous IOVAs to take advantage of vfio_dma_rw() f=
+or
+> >   faster crossing page boundary accesses.
+> >=20
+> > v1 --> v2:
+> > - rename vfio_iova_rw to vfio_dma_rw, vfio iommu driver ops .iova_rw
+> > to .dma_rw. (Alex).
+> > - change iova and len from unsigned long to dma_addr_t and size_t,
+> > respectively. (Alex)
+> > - fix possible overflow in dma->vaddr + iova - dma->iova + offset (Alex)
+> > - split DMAs from on page boundary to on max available size to eliminate
+> >   redundant searching of vfio_dma and switching mm. (Alex)
+> > - add a check for IOMMU_WRITE permission.
+> >=20
+> >=20
+> > Yan Zhao (7):
+> >   vfio: allow external user to get vfio group from device
+> >   vfio: introduce vfio_dma_rw to read/write a range of IOVAs
+> >   vfio: avoid inefficient operations on VFIO group in
+> >     vfio_pin/unpin_pages
+> >   drm/i915/gvt: hold reference of VFIO group during opening of vgpu
+> >   drm/i915/gvt: subsitute kvm_read/write_guest with vfio_dma_rw
+> >   drm/i915/gvt: switch to user vfio_group_pin/upin_pages
+> >   drm/i915/gvt: rw more pages a time for shadow context
+> >=20
+> >  drivers/gpu/drm/i915/gvt/kvmgt.c     |  46 ++++---
+> >  drivers/gpu/drm/i915/gvt/scheduler.c |  97 ++++++++++-----
+> >  drivers/vfio/vfio.c                  | 180 +++++++++++++++++++++++++++
+> >  drivers/vfio/vfio_iommu_type1.c      |  76 +++++++++++
+> >  include/linux/vfio.h                 |  13 ++
+> >  5 files changed, 360 insertions(+), 52 deletions(-)
+> >=20
+>=20
+
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--+KJYzRxRHjYqLGl5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXm7xWAAKCRCxBBozTXgY
+JzsUAJ4ql9OdukYF5F1t5Q/sO6yJcEKojQCfS53RSxPXqeH0HitCOlTrsRBhYBk=
+=Dorv
+-----END PGP SIGNATURE-----
+
+--+KJYzRxRHjYqLGl5--
