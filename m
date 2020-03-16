@@ -2,118 +2,78 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32277C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36FFC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1127520658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8132071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730688AbgCPKfF (ORCPT
+        id S1730680AbgCPKhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:35:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:45780 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 06:37:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:26973 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730582AbgCPKfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:35:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5AE21FB;
-        Mon, 16 Mar 2020 03:35:03 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF7E33F534;
-        Mon, 16 Mar 2020 03:35:00 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 10:34:54 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
-Message-ID: <20200316103437.GD3005@mbp>
-References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
- <20200313154345.56760-19-vincenzo.frascino@arm.com>
- <20200315182950.GB32205@mbp>
- <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1730497AbgCPKhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 06:37:47 -0400
+IronPort-SDR: UDXvqxzMYB9NxNXWpvn2DKcZho46AVjHu6oaeTgTqmnUR10AKQtvRHpn/6A7AYeHRpfxAO/31y
+ 4ejUP5b89vYA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 03:37:46 -0700
+IronPort-SDR: +yOYCpQQmAvMHWv5T76iAjArCJkMt3v+Ysd1H3lDGIxbjJtH7agzPOV0ZaHsTNar5jZ9kKJ5aW
+ V3/C8uFaf3dQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,560,1574150400"; 
+   d="scan'208";a="267522683"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Mar 2020 03:37:44 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH 0/2] phy: intel: Add Keem Bay eMMC PHY support
+Date:   Mon, 16 Mar 2020 18:37:24 +0800
+Message-Id: <20200316103726.16339-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 09:42:32AM +0000, Vincenzo Frascino wrote:
-> you should not really work on Sunday ;-)
+Hi.
 
-I was getting bored ;).
+The first part is to document DT bindings for Keem Bay eMMC PHY.
 
-> On 3/15/20 6:30 PM, Catalin Marinas wrote:
-> > On Fri, Mar 13, 2020 at 03:43:37PM +0000, Vincenzo Frascino wrote:
-> >> --- /dev/null
-> >> +++ b/arch/arm64/include/asm/vdso/processor.h
-> >> @@ -0,0 +1,31 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-only */
-> >> +/*
-> >> + * Copyright (C) 2020 ARM Ltd.
-> >> + */
-> >> +#ifndef __ASM_VDSO_PROCESSOR_H
-> >> +#define __ASM_VDSO_PROCESSOR_H
-> >> +
-> >> +#ifndef __ASSEMBLY__
-> >> +
-> >> +#include <asm/page-def.h>
-> >> +
-> >> +#ifdef CONFIG_COMPAT
-> >> +#if defined(CONFIG_ARM64_64K_PAGES) && defined(CONFIG_KUSER_HELPERS)
-> >> +/*
-> >> + * With CONFIG_ARM64_64K_PAGES enabled, the last page is occupied
-> >> + * by the compat vectors page.
-> >> + */
-> >> +#define TASK_SIZE_32		UL(0x100000000)
-> >> +#else
-> >> +#define TASK_SIZE_32		(UL(0x100000000) - PAGE_SIZE)
-> >> +#endif /* CONFIG_ARM64_64K_PAGES */
-> >> +#endif /* CONFIG_COMPAT */
-> > 
-> > Just curious, what's TASK_SIZE_32 used for in the vDSO code? You don't
-> > seem to move TASK_SIZE.
-> > 
-> 
-> I tried to fine grain the headers as much as I could in order to avoid
-> unneeded/unwanted inclusions:
->  * TASK_SIZE_32 is used to verify ABI consistency on vdso32 (please refer to
->    arch/arm64/kernel/vdso32/vgettimeofday.c).
+The second is the driver file, loosely based on phy-rockchip-emmc.c
+and phy-intel-emmc.c. The latter is not being reused as there are
+quite a number of differences i.e. registers offset, supported clock
+rates, bitfield to set.
 
-I see. But the test is probably useless. With 4K pages, TASK_SIZE_32 is
-1UL << 32, so you can't have a u32 greater than this. So I'd argue that
-the ABI compatibility here doesn't matter.
+The patch was tested with Keem Bay evaluation module board.
 
-With 16K or 64K pages, TASK_SIZE_32 is slightly smaller but arm32 never
-supported it.
+Thank you.
 
-What's the side-effect of dropping this check altogether?
+Best regards,
+Zainie
+
+
+Wan Ahmad Zainie (2):
+  dt-bindings: phy: intel: Add documentation for Keem Bay eMMC PHY
+  phy: intel: Add Keem Bay eMMC PHY support
+
+ .../bindings/phy/intel,keembay-emmc-phy.yaml  |  57 +++++
+ drivers/phy/intel/Kconfig                     |   7 +
+ drivers/phy/intel/Makefile                    |   1 +
+ drivers/phy/intel/phy-keembay-emmc.c          | 231 ++++++++++++++++++
+ 4 files changed, 296 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+ create mode 100644 drivers/phy/intel/phy-keembay-emmc.c
 
 -- 
-Catalin
+2.17.1
+
