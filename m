@@ -2,145 +2,145 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A209C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F220C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B27B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15F920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t9LsGEiZ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YJS9yu6K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729986AbgCPIBV (ORCPT
+        id S1730006AbgCPIEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:01:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35029 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728302AbgCPIBV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:01:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 7so9294471pgr.2;
-        Mon, 16 Mar 2020 01:01:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=kgzIsaXzzgS+ugoZTepolnzMAM1edOw9x44MV63g4bw=;
-        b=t9LsGEiZByN2tSr65pYqj7k0d+8XlrFuLW5flEuZtMBeeUT7fNQzCpfISHZlgevRE4
-         eElK7aT7qGdm3aD3uEPmzykK/mZaBddswF5/n1Ckf//fV9KDXiiqYsL1L+RW8Ov/ZDzI
-         CV9Fs4SMF9gMjl/HOCzuaaNaNEaa2ynRvj292NoVIHX+1RTabKqz5HmYHoz0Kc3B+W5f
-         k5upL7mztsj0SU71/j8+/7Mrs0JiHDni1Zu3rhPOcGqmHJTqjzqtHAIvwtrAnTJNBsCM
-         PUehyoWzEuxX8noH1L33UOBl99O7h4s6hLSM7SnGk60Fb4zJ/SEpDahQbIpHqRgmMDwX
-         4+CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=kgzIsaXzzgS+ugoZTepolnzMAM1edOw9x44MV63g4bw=;
-        b=YG3gVCkUVVUVBRSsHc9rQL3diPBYnuXG1xs6rhQn86WKHrSlcz+uKjyaqjcWVKXKOV
-         acOWMB+U2FFce7xanbKGHh2YP8cEtl1hH0DgcsvvaqKhrU5ij/1f+LEdS/NK9wrdEh/N
-         m8igkyvbBKagCv2aFrAGdbVSHDCW6fSfJHF7NZXXHhfMrp/faCVqCt1MPzZh6dqGR3eM
-         uzT9WiPPefaPBcennHiRwCiAuYBMkVMENoEAgrMFuTDwktPssyGVC9YdrqiVCtd2k+yz
-         wb3DwswlzKCn3CakgPJCySj+xVCvlYM7pfxez6uoDQ1EmK332XhgBUfY/Mr58cb9Y2/D
-         YjQw==
-X-Gm-Message-State: ANhLgQ3z7Cs7lrWCcqQcRYYAbXnAgUfZQXypsoaTdw1UmZqLZ96gesDx
-        VXC5gky+MOOiP9NwYJ4/FlJpzQDU
-X-Google-Smtp-Source: ADFU+vv+8lt+/Nw4rxCfS3CzlzS05SlZW/RnNNxc5KjXJn3MqzVksm0+Q0xycwI7WGC8W0gVzBbCNw==
-X-Received: by 2002:a62:507:: with SMTP id 7mr6313751pff.222.1584345680008;
-        Mon, 16 Mar 2020 01:01:20 -0700 (PDT)
-Received: from [127.0.0.1] ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id 144sm69861324pfc.45.2020.03.16.01.01.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2020 01:01:19 -0700 (PDT)
-Subject: Re: [PATCH] ext4: mark extents index blocks as dirty to avoid
- information leakage
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <e988a1db-3105-07a0-6399-38af80656af1@gmail.com>
- <20200312144642.GF7159@mit.edu>
-From:   brookxu <brookxu.cn@gmail.com>
-Message-ID: <d9209144-4b20-61c7-aff3-942150806b9a@gmail.com>
-Date:   Mon, 16 Mar 2020 16:01:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200312144642.GF7159@mit.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Mar 2020 04:04:21 -0400
+Received: from mail-eopbgr60076.outbound.protection.outlook.com ([40.107.6.76]:13134
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729662AbgCPIEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:04:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sfzz/mDV3m5yrxra0iRiLgmNE+Roaw9J7H3WcV8wTah/jq5Zqgm7Cu4xcYyeN75oArnJCuz1hGKQtrtWsMj7szwkQGFb3X67bm8JHZtBjw6DNoKMvXXCig155UciHrdbnEP1+WSNwXS+h3vN6EK2DtLIMmyS7oNvT87N5VKTRXeNc+bEDlQlTvnC8Zg1zLF2t975ofduqzEGeAxKOMZ+nxn6G3NKaAAyL58vMvFxalVKhDny7pFABbH+Wv2yMc1Ojy+q97exaDKEuv4DSO1VMmXNAJpbwZRi6AaQ2HIUSFE3NHJabuPhBskdAsxcRE9qbe0Kqf1iUzLM4nGtM7SnTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FB2KQdt4bvhM7vJjhQpzX2QtoUUNy7y0lyUIHfc+ySw=;
+ b=QCEDwv32mqiWw0hEqceesrqvp7NqoOES+ZGTNJfG1XHUj/0rYPcV9wgbTkEezhee+ieQdTlgjfIWsai2MERbpP2pK20eZb8ow//uEpHc7tjHm3IooT2VjImbiD/VW9cYB/1wRYEm7U9EiWG9hYSDIKIW9E/oer9ggs36Pv0zUa1ks1/KiowxYQHnisPQciv1rJYzlax3TPRm7TmkeGAjSw4y+YnwpTV5vzvIBiapNoMwz/FBociv+/2+rnCznKOL9AtvZXQYiYfzReVfor0vrkVlEs3aDlOS7qERT3FctaMlqSjseaPc5IZphhijR+Wohga53xvny9U9VTTXe/COOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FB2KQdt4bvhM7vJjhQpzX2QtoUUNy7y0lyUIHfc+ySw=;
+ b=YJS9yu6KQSuzmpMJfZ8qdyvqExLJRGidJdku8SqEN5rWVoJa7FlyqllkfE1MYDt7/T22Vy0HNCqu8p1LBVXQT8ZgmiRJV/6viwgsNLJH6oBDLsLH1/cLfr/P0HVGrG7OHTmDwc8FMHLlu9oH4zS+4gOjNn83NV9PMzhNuDgIuHU=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3836.eurprd04.prod.outlook.com (52.134.71.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.21; Mon, 16 Mar 2020 08:04:18 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2814.021; Mon, 16 Mar 2020
+ 08:04:17 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Peng Fan <peng.fan@nxp.com>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "ronald@innovation.ch" <ronald@innovation.ch>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+Thread-Topic: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+Thread-Index: AQHV9av62LAReQhoZkKZ9LnT5dFdbahARTIAgAopwQCAACFfgIAABHaAgAADEYCAAAR+AIAASuWQ
+Date:   Mon, 16 Mar 2020 08:04:17 +0000
+Message-ID: <DB3PR0402MB3916DA9F0F175B9D2E9E684FF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
+ <AM0PR04MB4481F087AC3CDA691300710288FE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316005219.GD17221@dragon>
+ <AM0PR04MB44819E4A9E027F1555C33D0B88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316030744.GC17221@dragon>
+ <AM0PR04MB44817A48746601EADA4E06BC88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316033447.GE17221@dragon>
+In-Reply-To: <20200316033447.GE17221@dragon>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a94a5824-3e5e-44cc-cf9d-08d7c980a061
+x-ms-traffictypediagnostic: DB3PR0402MB3836:|DB3PR0402MB3836:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3836BA6BCAAB19E18E4A98F7F5F90@DB3PR0402MB3836.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 03449D5DD1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(199004)(8936002)(81156014)(6636002)(81166006)(8676002)(66476007)(76116006)(186003)(66446008)(478600001)(7416002)(66946007)(64756008)(66556008)(26005)(44832011)(5660300002)(2906002)(52536014)(71200400001)(86362001)(4744005)(4326008)(54906003)(316002)(6506007)(7696005)(33656002)(55016002)(110136005)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3836;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7mIvZQH8kT2B20hgr666qEntcYyVnnD2Ky/O951zaq5N2ha6WDDDr62Qj7jEgVY9L7IrFKdzpJ/QYZcHgDvrptYGMCq6jMwnqoOsRgfSSa0V6Gnox9j5xGWlGfRGRrwWy+UvD3JS8tUavhRWg+qpbTWst43UxRH9iBXL3OW6jPz3GysnKAtg1iR5apc/k2dgJsW8WbpJRgkXWeYYRu4I2zwdwQG4BupsRGuLJTC5ScAzokvUL1PVRYBBA5yVkYYITwQtw9tEFIoOieir0OEBYMwFHzzSnwpC4J1Rs/1z7julpuP+uoNeZFchUVGZ8oz7vMJ7hcLChuV21HygGgQ/YoV2iJqGXhHOa4ipLpzXj/BZ1xMSeBBhFBQIYhaNUDnnE+Sf5VE7oMeMM9CiD06PnSDpjMnmn67xIQHTvdbEDSRY2TYkaowEkOfHPGlAF4OV
+x-ms-exchange-antispam-messagedata: z/vskLYknWNPTKSYEfY8+jGHw7z54AU0v5ZmdBZ7+x8XE+YvwWfL6y5fUZFHLD7ylJOigpHUctuhNo+EGFujdgVVOAj3qt0hc3rpkOg0gDuTryhyZUuz2z58O6uXjv+CIbmiZfAJY8aS75abCyPnEQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a94a5824-3e5e-44cc-cf9d-08d7c980a061
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2020 08:04:17.8147
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yR1YQXQ47xvIGfi3ZtHFCbzPPP2MxQ1WrqtKztZfYco4ctbv2tn9Y6yEiH7PAjfa0YtN2kz9L8ggWMwcb5FcQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3836
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your reply, but threre's some points implement inconsistently
-
-1. + s attribute will cause a big performance problem. With only data
-   blocks but no index blocks, it is difficult to recover the complete
-   data. Therefore, we can also improve data security with the lowest
-   cost.
-2. In the SSD scenario, discard on some devices cannot guarantee that
-   data is erased. but if we update the dirty pages of memory to disk.
-   ssd will remap the corresponding lba, then the user will not be able
-   to access the old data, it's security.
-3. In the small file scenario, the file extent is stored on the inode.
-   Because the inode block will not be forgotten by jbd2, the extent on
-   the disk is always cleared after the small file is deleted. If security
-   is only pretended, why not take effect on the small file.
-4. If to facilitate data recovery, why do need to clear extents in
-   memory? This operation does not seem to make sense.
-
-I think that the page of the index block is not updated to disk after
-the file is deleted, which may be a logical defect.
-
-Theodore Y. Ts'o wrote on 2020/3/12 22:46:
-> On Tue, Mar 03, 2020 at 04:51:06PM +0800, brookxu wrote:
->> From: Chunguang Xu <brookxu@tencent.com>
->>
->> In the scene of deleting a file, the physical block information in the
->> extent will be cleared to 0, the buffer_head contains these extents is
->> marked as dirty, and then managed by jbd2, which will clear the
->> buffer_head's dirty flag by clear_buffer_dirty. However, when the entire
->> extent block is deleted, it is revoked from the jbd2, but  the extents
->> block is not redirtied.
->>
->> Not quite reasonable here, for the following concerns:
->>
->> 1. This has the risk of information leakage and leads to an interesting
->> phenomenon that deleting the entire file is no more secure than truncate
->> to 1 byte, because the whole extents physical block clear to zero in cache
->> will never written back as the page is not redirtied.
->>
->> 2. For large files, the number of index block is usually very small.
->> Ignoring index pages not get much more benefit in IO performance. But if
->> we remark the page as dirty, the page is then written back by the system
->> writeback mechanism asynchronously with little performance impact. As a
->> result, the risk of information leakage can be avoided. At least not wrose
->> than truncate file length to 1 byte
->>
->> Therefore, when the index block is released, we need to remark its page
->> as dirty, so that the index block on the disk will be updated and the
->> data is more security.
->>
->> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
-> Trying to zero the extent block is only going to provide pretend
-> security; the data blocks are still there, and anyone looking for the
-> data can still find it if they look hard enough.  Also, for most
-> files, it really doesn't matter.
->
-> So, no, I don't think this patch is appropriate.a
->
-> If you are really worried about the security for deleted files, I
-> would suggest trying to implement the secure delete flag (chattr +s)
-> for ext4, and actually trying to zero out the data blocks for those
-> files where this kind of security is required.  (Please note that for
-> SSD's, this probably won't provide as much security as you would like
-> unless they implement the secure discard operation.)
->
-> 							- Ted
+SGksIFNoYXduDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAxLzddIGZpcm13YXJlOiBpbXg6
+IEFkZCBzdHVicyBmb3IgIUNPTkZJR19JTVhfU0NVDQo+IGNhc2UNCj4gDQo+IE9uIE1vbiwgTWFy
+IDE2LCAyMDIwIGF0IDAzOjE4OjQzQU0gKzAwMDAsIFBlbmcgRmFuIHdyb3RlOg0KPiA+IEp1c3Qg
+c2VudCBvdXQuIE9uZSBtb3JlIHRoaW5nLCBJIHRoaW5rIGFsbCBkcml2ZXJzIGRlcGVuZHMgb24g
+SU1YX1NDVQ0KPiA+IHNob3VsZCBub3QgaGF2ZSBDT01QSUxFX1RFU1QgaWYgd2UgcGxhbiBub3Qg
+dG8gYWRkIGR1bW15IGZ1bmN0aW9ucy4gSQ0KPiA+IHNlZSB5b3UgcGlja2VkIHVwIEFuc29uJ3Mg
+cGF0Y2ggaW4gaW14L2RyaXZlcnMgYnJhbmNoLCBwbGVhc2UgY2hlY2sgbW9yZS4NCj4gDQo+IEhh
+LCB5ZXMuIENPTVBJTEVfVEVTVCBzaG91bGQgYmUgZHJvcHBlZCBmb3IgSU1YX1NDVV9QRCBpbiBB
+bnNvbidzIHBhdGNoLg0KPiBUaGFua3MgZm9yIHJlbWluZGluZy4NCg0KSSBzdGlsbCBOT1QgcXVp
+dGUgdW5kZXJzdGFuZCB3aHkgd2Ugd29uJ3Qgc3VwcG9ydCBDT01QSUxFX1RFU1QgZm9yIFNDVSBk
+cml2ZXJzLA0Kd2l0aCB3aG9zZSBzdHVicywgdGhlIGJ1aWxkIHNob3VsZCBiZSBPSywgaWYgdGhl
+cmUgaXMgYW55IGJ1aWxkIGVycm9yLCB3ZSBzaG91bGQgdHJ5DQp0byBmaXggaXQsIE5PVCBqdXN0
+IHJlbW92ZSB0aGUgQ09NUElMRV9URVNUIHN1cHBvcnQsIGFueSBzcGVjaWFsIHJlYXNvbj8NCg0K
+VGhhbmtzLA0KQW5zb24NCg==
