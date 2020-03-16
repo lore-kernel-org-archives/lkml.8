@@ -2,99 +2,73 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFA0C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01482C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E23820674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:08:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZSyiK0rT"
+	by mail.kernel.org (Postfix) with ESMTP id D434120674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732348AbgCPSIZ (ORCPT
+        id S1732350AbgCPSJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 14:08:25 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53454 "EHLO mail.skyhub.de"
+        Mon, 16 Mar 2020 14:09:05 -0400
+Received: from mga14.intel.com ([192.55.52.115]:35650 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732242AbgCPSIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 14:08:25 -0400
-Received: from zn.tnic (p200300EC2F06AB00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E85871EC0C84;
-        Mon, 16 Mar 2020 19:08:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584382103;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=BWcGdDqsDLKukOwUdjv1uByG4xJeZMLjRXLsayzjkaE=;
-        b=ZSyiK0rTzOfdUWBy80UPgJ1F0kWy8AOIcOnfpO9jCLDjyguTmras8/gvB0ruNU4J4pCt01
-        +71UQAiN0kbs6IOtbYrBWwZ++25bwdK+amIA6DKyPWMM7VF99h92dJDCPIXC3lbwmSHak+
-        fNBIFlrCFGDhvqUpFyXoRWC0TTLU4Ns=
-Date:   Mon, 16 Mar 2020 19:08:29 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Wei Huang <wei.huang2@amd.com>
-Cc:     linux-kernel@vger.kernel.org, tony.luck@intel.com,
-        yazen.ghannam@amd.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, linux-edac@vger.kernel.org, x86@kernel.org,
-        smita.koralahallichannabasappa@amd.com
-Subject: Re: [PATCH 1/1] x86/mce/amd: Add PPIN support for AMD MCE
-Message-ID: <20200316180829.GP26126@zn.tnic>
-References: <20200311044409.2717587-1-wei.huang2@amd.com>
+        id S1732187AbgCPSJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 14:09:05 -0400
+IronPort-SDR: ER/kw9YZIDAMXvkib9OQH2bGLfbAxHQl9H3vruB2XiiS8q5w7E2CXAsWyzScTUIwB+i9iB41Yj
+ g9zEzh0V+bLg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 11:09:05 -0700
+IronPort-SDR: pMN7f1wp5FIHoSowEgrupSmix4PySELm+2jRtnplfi/5yHaNQn9idVQrnJehhw/H5f4tqFOMHm
+ dYKH/FSI5O4A==
+X-IronPort-AV: E=Sophos;i="5.70,561,1574150400"; 
+   d="scan'208";a="390785292"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.77.132]) ([10.254.77.132])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 11:09:04 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Subject: Re: [PATCH 01/10] x86/resctrl: Nothing uses struct mbm_state
+ chunks_bw
+To:     James Morse <james.morse@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>
+References: <20200214182401.39008-1-james.morse@arm.com>
+ <20200214182401.39008-2-james.morse@arm.com>
+Message-ID: <6bc0e3e8-5a04-71e1-aa3f-4356379d0cf9@intel.com>
+Date:   Mon, 16 Mar 2020 11:09:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200214182401.39008-2-james.morse@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200311044409.2717587-1-wei.huang2@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 11:44:09PM -0500, Wei Huang wrote:
-> Newer AMD CPUs support the feature of protected processor identification
-> number (PPIN). This patch detects and enables PPIN support on AMD platforms
+Hi James,
 
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
+On 2/14/2020 10:23 AM, James Morse wrote:
+> Nothing reads struct mbm_states's chunks_bw value, its a copy of
+> chunks. Remove it.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
 
-Also, do
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 
-$ git grep 'This patch' Documentation/process
+Thank you
 
-for more details.
+Reinette
 
-> and includes PPIN info in MCE records if available. Because this feature is
-> almost identical on both Intel and AMD, it re-uses X86_FEATURE_INTEL_PPIN
-> feature bit and renames it to X86_FEATURE_PPIN.
 
-Strictly speaking, you can't rename it anymore because it is visible in
-/proc/cpuinfo and thus ABI.
-
-Besides, we have already a cpufeatures.h leaf for exactly that word:
-
-/* AMD-defined CPU features, CPUID level 0x80000008 (EBX), word 13 */
-
-which means you can call the AMD define
-
-#define X86_FEATURE_AMD_PPIN               ( 13*32+23) /* AMD Protected Processor Inventory Number */
-
-and /proc/cpuinfo will have "amd_ppin" and the code will use the
-respective vendor flag to test.
-
-> Signed-off-by: Wei Huang <wei.huang2@amd.com>
-> Signed-off-by: Smita Koralahalli Channabasappa <smita.koralahallichannabasappa@amd.com>
-
-What does this SOB mean? Grep Documentation/ for "Co-developed-by" in
-case this is what you're trying to express.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
