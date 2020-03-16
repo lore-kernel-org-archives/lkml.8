@@ -2,180 +2,178 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD8DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD44C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A95206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A5D206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 18:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ceDaX64L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IifTKMxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732393AbgCPSyZ (ORCPT
+        id S1732405AbgCPSz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 14:54:25 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44688 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732298AbgCPSyY (ORCPT
+        Mon, 16 Mar 2020 14:55:29 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45615 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732298AbgCPSz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 14:54:24 -0400
-Received: by mail-qk1-f195.google.com with SMTP id j4so11560981qkc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 11:54:23 -0700 (PDT)
+        Mon, 16 Mar 2020 14:55:29 -0400
+Received: by mail-lj1-f193.google.com with SMTP id e18so19945473ljn.12;
+        Mon, 16 Mar 2020 11:55:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=j32gmo/PWyKSH2KKl33eo3+SCvi6lrdhWIC2GDs4hzo=;
-        b=ceDaX64LDB5mV76tG8Bfals1ox4n3w7v0y7LV6OXFe9M/JiYK9sujkHWz9OmhJxnYn
-         hYPrupyZqumt9QjZsOnn9N8YFbwAGhIbs0U+uuDnGHwzmUrCtX471/atMrDkGA0XomNL
-         GCU7E48vn+AEVU8KyP9so9W6hJQ8Idf2svmRw6eFz45mKsWurYtCxDHuFVNMy2+6YFKO
-         o7e341biClIFOGiTO0/g1cVuXBgxIzSEIqd2Py2b2iQ9Uc4wP2a6hCyRLGy1ufYIvRVu
-         y+9do1eQ0MPGGMCgJOpzMPYv61AVi/ntYbvnPPiZu/cOU55uk1f1FqsvT0PbY/ZAFyp1
-         yJkw==
+        bh=2VuFMwbSu/LOip+pf/0EM/ytgjmPQBGyBHk/pyoOkUA=;
+        b=IifTKMxZknDHUK/wXsvyDcVUO8YIi2r71zftzFwWNNYT2cu8VZ/d9cOgEkjdyTlQWc
+         6o7+S8DsgTWWxkx/ZdQ7XliNJgaBeeyAm2y8QKR8oidVPZsd/lMe0rvEwqrq/g/wpNPR
+         MS1FYrns0qFXlBwiWgaV5ZwiswYHnPolGRWa3x3Qp3l/NiyUI5GuKsgR8SHgjyLeCkx0
+         bQGLwD+89HtxO+9EYnfUtHBc4f4PIzxp2f/8ZZH1iTv4ZYwzbr4zoY5rLZeI88KaFE80
+         ciQ3bLjJ2M3/WA2UTG2hnI9MwF630A3yv2YGw5HRseiAhZOCv3IUb6COSi1hQwjuaUCR
+         ia/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j32gmo/PWyKSH2KKl33eo3+SCvi6lrdhWIC2GDs4hzo=;
-        b=KOLk2J891fseUg/Ys8QrFTdDr9yMFJfbjGevOOKLU+a6ra20+AY3M/legZzRzffi12
-         EvddT2jx7/76B60Pm6QSuA/A2vAAywo8L8hFXQPltXEdcz+9hUSQU4PJSHv5VzrdxIoL
-         xso8D7MIiqfX/2MszYYmGnMAfrUHI+kNDmrUeHBWZpZavQtvgvT1DAO0D6CKlA9ZduGb
-         iSPp3fCDLJTNfPhO1UtJy8fDPEwOELtbareA6Tz4ARonQC9Oez6lojaoK94b0zXSCv1g
-         eae+MVgLDtDO/RSw2R9I1rwwLauUzxoIqSLE0iw56h1rzCUkbqOtrfhTP0OSnQJ9Wqsu
-         j1Nw==
-X-Gm-Message-State: ANhLgQ3NRRI9RdBt5DqvVUsCxwWRPoSsiS5UCSaSJs219I/26Q/bKX4W
-        2CRe7gE7/4huGZQz2gj61to=
-X-Google-Smtp-Source: ADFU+vuldi0WS5oZiFmvPDbwNsuRDauCg5AB7Cz2t4qWxrvcHDggnvOpefb9qoF2jqItmlnq/j4Mfg==
-X-Received: by 2002:a37:b944:: with SMTP id j65mr1154498qkf.374.1584384863306;
-        Mon, 16 Mar 2020 11:54:23 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id w16sm334727qkw.37.2020.03.16.11.54.22
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2VuFMwbSu/LOip+pf/0EM/ytgjmPQBGyBHk/pyoOkUA=;
+        b=DL+GtIH2jsVQvEfaqyCGNu8WbHYLDEg/xAOxqizz0rbyfJgDqxAQXMtnlsv8WAYDkZ
+         4/UNUolUTF9TVbqFp/OEqGixiHs9o3HJIVghHgfWl3bnwSOU/4IZuDFUWwur2CIch7jL
+         3H2D6QfSnP2i9ZECyYUAo+tfDKzK9L6bHPLvsyKclPmGaDGueUcF/Yj9tdyGkhLF/UDs
+         ek4X5+zp2a1/SH0DmpXfceXMqsO4N9ZoQ3EIkr8mQcRyHUB359PsbJH2CdIFA+enZ/Mv
+         fwBGMSEYhgwO6yl1kX/x8aK0yA0Y7lORtPGPUY8uBCf1B8tVxCTuD2FqqQGeuxjjEQhi
+         YiQg==
+X-Gm-Message-State: ANhLgQ0HDY3h5dT6iF6n2mtq5Cst5iBS3UWNzrOg/OQOi78dpUEzgYy9
+        o5TbOYsn/eLJSQ3Tprv5OEU=
+X-Google-Smtp-Source: ADFU+vtxsaKYbIwfkrxB8obYCaCNAhJ/raX2AWSS3ZHkuh1FwL8E3jiBT0ZDGu6QXp8+4QTyAcupEQ==
+X-Received: by 2002:a2e:a0cd:: with SMTP id f13mr429032ljm.198.1584384926427;
+        Mon, 16 Mar 2020 11:55:26 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id q4sm621656lfp.18.2020.03.16.11.55.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 11:54:22 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 16 Mar 2020 14:54:21 -0400
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jakub Jelinek <jakub@redhat.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
-Message-ID: <20200316185418.GA372474@rani.riverdale.lan>
-References: <20200314164451.346497-1-slyfox@gentoo.org>
- <20200316130414.GC12561@hirez.programming.kicks-ass.net>
- <20200316132648.GM2156@tucnak>
- <20200316134234.GE12561@hirez.programming.kicks-ass.net>
- <20200316175450.GO26126@zn.tnic>
- <20200316181957.GA348193@rani.riverdale.lan>
+        Mon, 16 Mar 2020 11:55:25 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 16 Mar 2020 19:55:19 +0100
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        RCU <rcu@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v1 2/6] rcu: introduce kvfree_rcu() interface
+Message-ID: <20200316185519.GA10577@pc636>
+References: <20200315181840.6966-1-urezki@gmail.com>
+ <20200315181840.6966-3-urezki@gmail.com>
+ <20200316154539.GE190951@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316181957.GA348193@rani.riverdale.lan>
+In-Reply-To: <20200316154539.GE190951@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:20:00PM -0400, Arvind Sankar wrote:
-> On Mon, Mar 16, 2020 at 06:54:50PM +0100, Borislav Petkov wrote:
-> > On Mon, Mar 16, 2020 at 02:42:34PM +0100, Peter Zijlstra wrote:
-> > > Right I know, I looked for it recently :/ But since this is new in 10
-> > > and 10 isn't released yet, I figured someone can add the attribute
-> > > before it does get released.
+On Mon, Mar 16, 2020 at 11:45:39AM -0400, Joel Fernandes wrote:
+> On Sun, Mar 15, 2020 at 07:18:36PM +0100, Uladzislau Rezki (Sony) wrote:
+> > kvfree_rcu() can deal with an allocated memory that is obtained
+> > via kvmalloc(). It can return two types of allocated memory or
+> > "pointers", one can belong to regular SLAB allocator and another
+> > one can be vmalloc one. It depends on requested size and memory
+> > pressure.
 > > 
-> > Yes, that would be a good solution.
+> > Based on that, two streams are split, thus if a pointer belongs
+> > to vmalloc allocator it is queued to the list, otherwise SLAB
+> > one is queued into "bulk array" for further processing.
 > > 
-> > I looked at what happens briefly after building gcc10 from git and IINM,
-> > the function in question - start_secondary() - already gets the stack
-> > canary asm glue added so it checks for a stack canary.
+> > The main reason of such splitting is:
+> >     a) to distinguish kmalloc()/vmalloc() ptrs;
+> >     b) there is no vmalloc_bulk() interface.
 > > 
-> > However, the stack canary value itself gets set later in that same
-> > function:
+> > As of now we have list_lru.c user that needs such interface,
+> > also there will be new comers. Apart of that it is preparation
+> > to have a head-less variant later.
 > > 
-> >         /* to prevent fake stack check failure in clock setup */
-> >         boot_init_stack_canary();
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  include/linux/rcupdate.h |  9 +++++++++
+> >  kernel/rcu/tiny.c        |  3 ++-
+> >  kernel/rcu/tree.c        | 17 ++++++++++++-----
+> >  3 files changed, 23 insertions(+), 6 deletions(-)
 > > 
-> > so the asm glue which checks for it would need to reload the newly
-> > computed canary value (it is 0 before we compute it and thus the
-> > mismatch).
-> > 
-> > So having a way to state "do not add stack canary checking to this
-> > particular function" would be optimal. And since you already have the
-> > "stack_protect" function attribute I figure adding a "no_stack_protect"
-> > one should be easy...
-> > 
-> > > > Or of course you could add noinline attribute to whatever got inlined
-> > > > and contains some array or addressable variable that whatever
-> > > > -fstack-protector* mode kernel uses triggers it.  With -fstack-protector-all
-> > > > it would never work even in the past I believe.
-> > > 
-> > > I don't think the kernel supports -fstack-protector-all, but I could be
-> > > mistaken.
-> > 
-> > The other thing I was thinking was to carve out only that function into
-> > a separate compilation unit and disable stack protector only for it.
-> > 
-> > All IMHO of course.
-> > 
-> > Thx.
-> > 
-> > -- 
-> > Regards/Gruss,
-> >     Boris.
-> > 
-> > https://people.kernel.org/tglx/notes-about-netiquette
+> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> > index 2be97a83f266..bb270221dbdc 100644
+> > --- a/include/linux/rcupdate.h
+> > +++ b/include/linux/rcupdate.h
+> > @@ -845,6 +845,15 @@ do {									\
+> >  		__kfree_rcu(&((___p)->rhf), offsetof(typeof(*(ptr)), rhf)); \
+> >  } while (0)
+> >  
+> > +/**
+> > + * kvfree_rcu() - kvfree an object after a grace period.
+> > + * @ptr:	pointer to kvfree
+> > + * @rhf:	the name of the struct rcu_head within the type of @ptr.
+> > + *
+> > + * Same as kfree_rcu(), just simple alias.
+> > + */
+> > +#define kvfree_rcu(ptr, rhf) kfree_rcu(ptr, rhf)
+> > +
+> >  /*
+> >   * Place this after a lock-acquisition primitive to guarantee that
+> >   * an UNLOCK+LOCK pair acts as a full barrier.  This guarantee applies
+> > diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
+> > index dd572ce7c747..4b99f7b88bee 100644
+> > --- a/kernel/rcu/tiny.c
+> > +++ b/kernel/rcu/tiny.c
+> > @@ -23,6 +23,7 @@
+> >  #include <linux/cpu.h>
+> >  #include <linux/prefetch.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/mm.h>
+> >  
+> >  #include "rcu.h"
+> >  
+> > @@ -86,7 +87,7 @@ static inline bool rcu_reclaim_tiny(struct rcu_head *head)
+> >  	rcu_lock_acquire(&rcu_callback_map);
+> >  	if (__is_kfree_rcu_offset(offset)) {
+> >  		trace_rcu_invoke_kfree_callback("", head, offset);
+> > -		kfree((void *)head - offset);
+> > +		kvfree((void *)head - offset);
+> >  		rcu_lock_release(&rcu_callback_map);
+> >  		return true;
+> >  	}
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 2f4c91a3713a..1c0a73616872 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -2899,9 +2899,9 @@ static void kfree_rcu_work(struct work_struct *work)
+> >  	}
+> >  
+> >  	/*
+> > -	 * Emergency case only. It can happen under low memory
+> > -	 * condition when an allocation gets failed, so the "bulk"
+> > -	 * path can not be temporary maintained.
+> > +	 * vmalloc() pointers end up here also emergency case. It can
 > 
-> With STACKPROTECTOR_STRONG, gcc9 (at least gentoo's version, not sure if
-> they have some patches that affect it) already adds stack canary into
-> start_secondary. Not sure why it doesn't panic already with gcc9?
+> Suggest rephrase for clarity:
 > 
-> 00000000000008f0 <start_secondary>:
->      8f0:       53                      push   %rbx
->      8f1:       48 83 ec 10             sub    $0x10,%rsp
->      8f5:       65 48 8b 04 25 28 00    mov    %gs:0x28,%rax
->      8fc:       00 00
->      8fe:       48 89 44 24 08          mov    %rax,0x8(%rsp)
->      903:       31 c0                   xor    %eax,%eax
-> ...
->      a2e:       e8 00 00 00 00          callq  a33 <start_secondary+0x143>
->                         a2f: R_X86_64_PLT32     cpu_startup_entry-0x4
->      a33:       48 8b 44 24 08          mov    0x8(%rsp),%rax
->      a38:       65 48 33 04 25 28 00    xor    %gs:0x28,%rax
->      a3f:       00 00 
->      a41:       75 12                   jne    a55 <start_secondary+0x165>
->      a43:       48 83 c4 10             add    $0x10,%rsp
->      a47:       5b                      pop    %rbx
->      a48:       c3                      retq   
->      a49:       0f 01 1d 00 00 00 00    lidt   0x0(%rip)        # a50 <start_secondary+0x160>
->                         a4c: R_X86_64_PC32      debug_idt_descr-0x4
->      a50:       e9 cb fe ff ff          jmpq   920 <start_secondary+0x30>
->      a55:       e8 00 00 00 00          callq  a5a <start_secondary+0x16a>
->                         a56: R_X86_64_PLT32     __stack_chk_fail-0x4
+> nit: We can end up here either with 1) vmalloc() pointers or 2) low on memory
+> and could not allocate a bulk array.
+> 
+Let's go with your suggestion. I see that you took patches to your tree.
+Could you please update it on your own? Otherwise i can send out V2, so
+please let me know.
 
-Wait a sec, this function calls cpu_startup_entry as the last thing it
-does, which should never return, and hence the stack canary value should
-never get checked.
+Thanks for the comments!
 
-How does the canary get checked with the gcc10 code?
-
-boot_init_stack_canary depends on working if called from functions that
-don't return. If that doesn't work with gcc10, we need to disable stack
-protector for the other callpoints too -- start_kernel in init/main.c
-and cpu_bringup_and_idle in arch/x86/xen/smp_pv.c.
-
-/*
- * Initialize the stackprotector canary value.
- *
- * NOTE: this must only be called from functions that never return,
- * and it must always be inlined.
- */
-static __always_inline void boot_init_stack_canary(void)
+--
+Vlad Rezki
