@@ -2,115 +2,122 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06E3C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43341C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76742071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584370768;
-	bh=F8ExpDYTSm2ccZjcOgp7UIFc5x/0wMVp2nTW1OCy2rg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XHJaiJw9qs/L+n2elOFyl3D7VhVd/0FMnZnwk9/a44MT5agXOSdhrKRsWulzny/Kg
-	 Wvptk/h3mXr2OVeJi03dPZiAseLhHtdh3h0rKnTrreBl266IU3FZrvt3RIb9zmr905
-	 ZlFxSDCLOAYo6TmA/ZscSXPTnFtMz0ikkyrpkxRA=
+	by mail.kernel.org (Postfix) with ESMTP id 1A75520679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjPfR7YF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbgCPO71 (ORCPT
+        id S1731668AbgCPPBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:59:27 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50341 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731629AbgCPO71 (ORCPT
+        Mon, 16 Mar 2020 11:01:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36290 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731556AbgCPPBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:59:27 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z13so1971913wml.0;
-        Mon, 16 Mar 2020 07:59:25 -0700 (PDT)
+        Mon, 16 Mar 2020 11:01:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i13so10096904pfe.3;
+        Mon, 16 Mar 2020 08:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=y0Kh2+LS4t0Gn18HgPrQ7Dx9B87FOQXhtsCkrbuPHSE=;
+        b=hjPfR7YFCSspiBssrhLO0118tojUGw3XN/gHbYr6h68xMxP1AIK3OzsjEW+WldfUmX
+         23ozeQ3xUQ12mypSaeK/7tATUdxjberBMjqtjiSEoDjTnvDzS9XOGlQpyrsuTEogEJlU
+         GzcW9h/CQiK+ryvFs7org0XtQO+tDklbU8HC8N7BskP2fNP9kSftiw4D+RtITDho0CYw
+         yvaxxXbqhDiUD2PBBOdlU3n/iqqiumNGmAgg2BaGFj0mHUxnAr/KpI00n9FhlI5P+a4i
+         HEArAtJqvx3t+8bRz9uj0tfYWPqi+VfYpx0TnkWbbVKISfa6KC9ywwGWlHWxuD4eHBub
+         dimA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4FvxAgszQ++g/zBJBmYryRtulzv92eq2k64hW2XTxyI=;
-        b=KJ8dn3BzFIyRA9SGk+20C70HQStvMy0R6edJhIefx0BKO6p40F9Odbb6/uK3VZGdWi
-         gMXr5hFNeJ9gFLQIFMaI5DI1X8eskmWZ4q5ySvDKSB/dp+mZQ8ezXTU3qDC/Agq64pFJ
-         MEBT4pIJo4ebRc4lLVKSV5AATOR19zBpQdHcgYFsVFZS0eE5SYuM1yZnEgWy9Yj7Rb3O
-         j/2JbOz0s6Mnyuj6+K0C+DDptrSZmQuTlBQeiH5dAJ/Nh7xXZvVVa7/x0pwjCJFgfpyW
-         TC+sdTNkRQ1azPgzVcasNShQnW3BZNtOu2pjMtLhq+eQuVSTklUNhSaCCkQTj6iljOY+
-         1ClA==
-X-Gm-Message-State: ANhLgQ1mAU7FCjSvuAWuxkvOCMAEDvkj+IzexIveITSPjXbJdT7DGV4q
-        pETQgri0MYMN2CpXmXE67+M=
-X-Google-Smtp-Source: ADFU+vsmj1xkbZ9kxBp+/4xkXEym15gDWpWFuxQ0MIWoC15PvOzXSMYHNNI+AHLL8TfC9S/gjtvdjg==
-X-Received: by 2002:a7b:c75a:: with SMTP id w26mr10572063wmk.2.1584370765264;
-        Mon, 16 Mar 2020 07:59:25 -0700 (PDT)
-Received: from localhost ([37.188.132.163])
-        by smtp.gmail.com with ESMTPSA id i67sm256021wri.50.2020.03.16.07.59.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=y0Kh2+LS4t0Gn18HgPrQ7Dx9B87FOQXhtsCkrbuPHSE=;
+        b=OaVh8hUmM5tPZXxB44RllmLGNA79cyNcVt1iBAz/pqXGkDkbVAor4yOhmkjhD7cv0f
+         6rlXHXwRYGchEbnUW5NvD6dZ7XwUub97cFeZeThiH2eh3CF4cf1G/UeYdV9apSjVOTNC
+         Dhg+2qXoH2XuMyU1cu7YSImWPrLVj8iGCflF+rrjIP+b1prUEoljj9CWqBfQ6MyQe5kl
+         5LCZjNbzmZCDDhCOITGtMWBD4+1Xc+sauEPhU3rswUe7lKoWH7UXd/XFOj8hbzWUhObN
+         mBZ2+UYt2xVM6j+zc994yVFnYwzHYO4ZzsYwRnB7iPiURzlH055m9HTEh1Y16mW9LBVX
+         OUXg==
+X-Gm-Message-State: ANhLgQ2jt2ROtkV3YjiEaboK6vBBPO1sI7+EbE0f1aNcdlA7bK9w+67k
+        v2Bg1zKCVKVuXmg+VUF5FSYJ8nDl
+X-Google-Smtp-Source: ADFU+vsTTtN/HPWOdFHcvalqUd9XsRBQ4rGiHfxHr+Mlsa53oZIthzk7icK6ml93nCkxEhv4+XNkYg==
+X-Received: by 2002:a62:5c07:: with SMTP id q7mr67445pfb.200.1584370861806;
+        Mon, 16 Mar 2020 08:01:01 -0700 (PDT)
+Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
+        by smtp.gmail.com with ESMTPSA id o128sm256354pfg.5.2020.03.16.08.01.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:59:24 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 15:59:23 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH 6/6] mm, memcg: Prevent mem_cgroup_protected store tearing
-Message-ID: <20200316145923.GR11482@dhcp22.suse.cz>
-References: <cover.1584034301.git.chris@chrisdown.name>
- <d1e9fbc0379fe8db475d82c8b6fbe048876e12ae.1584034301.git.chris@chrisdown.name>
+        Mon, 16 Mar 2020 08:01:00 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 1/8] crypto: caam - allocate RNG instantiation descriptor with GFP_DMA
+Date:   Mon, 16 Mar 2020 08:00:40 -0700
+Message-Id: <20200316150047.30828-2-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200316150047.30828-1-andrew.smirnov@gmail.com>
+References: <20200316150047.30828-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1e9fbc0379fe8db475d82c8b6fbe048876e12ae.1584034301.git.chris@chrisdown.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12-03-20 17:33:16, Chris Down wrote:
-> The read side of this is all protected, but we can still tear if
-> multiple iterations of mem_cgroup_protected are going at the same time.
-> 
-> There's some intentional racing in mem_cgroup_protected which is ok, but
-> load/store tearing should be avoided.
-> 
-> Signed-off-by: Chris Down <chris@chrisdown.name>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Roman Gushchin <guro@fb.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: linux-mm@kvack.org
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kernel-team@fb.com
+Be consistent with the rest of the codebase and use GFP_DMA when
+allocating memory for a CAAM JR descriptor.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Horia Geantă <horia.geanta@nxp.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc: linux-imx@nxp.com
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/crypto/caam/ctrl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> ---
->  mm/memcontrol.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 57048a38c75d..e9af606238ab 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6301,8 +6301,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->  	}
->  
->  exit:
-> -	memcg->memory.emin = emin;
-> -	memcg->memory.elow = elow;
-> +	WRITE_ONCE(memcg->memory.emin, emin);
-> +	WRITE_ONCE(memcg->memory.elow, elow);
->  
->  	if (usage <= emin)
->  		return MEMCG_PROT_MIN;
-> -- 
-> 2.25.1
-
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 7139366da016..7f7f2960b0cc 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -196,7 +196,7 @@ static int deinstantiate_rng(struct device *ctrldev, int state_handle_mask)
+ 	u32 *desc, status;
+ 	int sh_idx, ret = 0;
+ 
+-	desc = kmalloc(CAAM_CMD_SZ * 3, GFP_KERNEL);
++	desc = kmalloc(CAAM_CMD_SZ * 3, GFP_KERNEL | GFP_DMA);
+ 	if (!desc)
+ 		return -ENOMEM;
+ 
+@@ -273,7 +273,7 @@ static int instantiate_rng(struct device *ctrldev, int state_handle_mask,
+ 	int ret = 0, sh_idx;
+ 
+ 	ctrl = (struct caam_ctrl __iomem *)ctrlpriv->ctrl;
+-	desc = kmalloc(CAAM_CMD_SZ * 7, GFP_KERNEL);
++	desc = kmalloc(CAAM_CMD_SZ * 7, GFP_KERNEL | GFP_DMA);
+ 	if (!desc)
+ 		return -ENOMEM;
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
