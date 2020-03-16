@@ -2,68 +2,99 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9888DC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECFDC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA8E20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584338490;
-	bh=3E+8EY5GoqEbt0DmQz71Yz7/T4lemKjXRfDDEbV70W8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W/KoipZVNVwHpMa1gBuiOzYN/YwYS06BDWKJLA71a1lVOqDfRJDxtLujYRTsqsbzG
-	 CdJz93OpwOG6t2RrWilGn+t7XMxZBokwT9a9Z4tOL0CfrFXj+OOXB/Bt6pTvqs/QJc
-	 azGP42F9LGOXPHx8uoJpXPSCv4ioMek7Z72i1Dh8=
+	by mail.kernel.org (Postfix) with ESMTP id 7193120674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:13:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cGUYkrmw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729547AbgCPGB3 (ORCPT
+        id S1729505AbgCPGNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:01:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35702 "EHLO mail.kernel.org"
+        Mon, 16 Mar 2020 02:13:31 -0400
+Received: from ozlabs.org ([203.11.71.1]:55291 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbgCPGB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:01:28 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729319AbgCPGNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 02:13:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B79B320674;
-        Mon, 16 Mar 2020 06:01:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584338488;
-        bh=3E+8EY5GoqEbt0DmQz71Yz7/T4lemKjXRfDDEbV70W8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VBHsJxlTgfi25qEPvpFz+mLkyN05bNt+46fz37+J39kCA7kVcXKF0uMpKKKWc2Ql9
-         HvjoU9JMgHaw9u1/VhBiVkgabuPouW+cl8GVbRuGWMElla9ekWxtxOEKeTfS5d5ima
-         GgNSZKxUUxQqkgSBxwOVan9Hw5etNz8eFAgwQuzE=
-Date:   Mon, 16 Mar 2020 14:01:23 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: imx: drop COMPILE_TEST for IMX_SCU_SOC
-Message-ID: <20200316060122.GH17221@dragon>
-References: <1584328142-11810-1-git-send-email-peng.fan@nxp.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gmFh4nSDz9sP7;
+        Mon, 16 Mar 2020 17:13:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584339208;
+        bh=R+csjcOqNqi7S115Kcf8DsKcsipg4+MKhtDLsAEzD78=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cGUYkrmw995IVpdSjxqX8ef2uo5KKRDfxULYBIe6tsKRlJGVLO7iOiycaAdKPpvU7
+         KfMfAoYlVfU56uP0LkLZQou/I14RxodF1d605Ymf8UiOiJl3IU6fUrGz8UZ1XTmt5U
+         tRxdsAgayoqp1n5o8tQGiuoDCkB6Hvkbxyq18fgWCQfzbLNGJTUf7MXfcqX4i2sMgh
+         EA56Hqp4zu+PLZTTppnd8pXdJ0wy0RDR4ZV2keyQX89cGzHlhu5kD2M7rEjPD20HC1
+         6Sat5omINJzwKNF8lnO/gWbnIAAE6sI2UI5sBMypdrRoqw9Aff8OMn0dznMlEeXNGZ
+         Va0RaPSt9+A+g==
+Date:   Mon, 16 Mar 2020 17:13:26 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200316171326.7ee3eebd@canb.auug.org.au>
+In-Reply-To: <20200316045804.GC3486@MiWiFi-R3L-srv>
+References: <20200313214214.4d2e2af6@canb.auug.org.au>
+        <20200316045804.GC3486@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584328142-11810-1-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/92b7T1mW=iE4ZvhDpnm80gA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 11:09:02AM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> With COMPILE_TEST, there will be build error, because IMX_SCU
-> might be set to n, so drop COMPILE_TEST.
-> 
-> Suggested-by: Shawn Guo <shawnguo@kernel.org>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+--Sig_/92b7T1mW=iE4ZvhDpnm80gA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi Baoquan,
+
+On Mon, 16 Mar 2020 12:58:04 +0800 Baoquan He <bhe@redhat.com> wrote:
+>
+> I made a patch to fix these warnings, the reason has been told in the
+> log. Or just drop below patch. Both is fine to me.
+>=20
+> mm-sparsec-move-subsection_map-related-functions-together.patch
+>=20
+> From 273196eeb7bbc4af93bef18f594af91541e3ce8a Mon Sep 17 00:00:00 2001
+> From: Baoquan He <bhe@redhat.com>
+> Date: Sat, 14 Mar 2020 17:01:01 +0800
+> Subject: [PATCH] mm/sparse.c: move functions into CONFIG_MEMORY_HOTPLUG
+>  ifdeffery scope
+
+I have applied this to linux-next today to see how it goes.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/92b7T1mW=iE4ZvhDpnm80gA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5vGQYACgkQAVBC80lX
+0GyY1QgAnoF4yv+kGFQApYoLlk6Xa5EYqNPdge0oJf2Vbu8SbrnM4u86OSmJo9GC
+GHWWrDvyDlwRG0Jizl2Y5ETcT9o/t7Nxh8mZV5mB2arKZHEQvZP37r6iL3wRCbjx
+AYQSkKnR6CRVdF6OWW65mfnlAN+yCF9qgO5YtcJ/0Zs7O+lm8UuntxvbOlmX0L92
+zLkMfy2t5xrb/jXNL4dqMp+1wH8YQo6FxsaarP9AljwQoQY/ClI4RjdN5vVuEmV2
+AOiyguQn8VxjjP666fzCBRE4BIL7wiepemamjBTXvJ/SbEGlueiWec2diFskVLLh
+V6L1p12uTzb/Zue7jmKFU84HFWP7pw==
+=Zr0I
+-----END PGP SIGNATURE-----
+
+--Sig_/92b7T1mW=iE4ZvhDpnm80gA--
