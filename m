@@ -2,52 +2,54 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F22C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D25EC5ACBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E85F206EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE0520736
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326059;
-	bh=R9Zg3BZuq8xXCD2pKaZIxwK+qNJmdOsTsf8VDK1m7VU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NW+Bahcfy9i4QqU5rVPrkvqRva6f/NuHdjnufaMAHBLViJL5sVH2tiC7Im/t+PwbC
-	 DmteUFok5DRBrFLhsArjVjB+m2P7JCNgOkgWeOy8F1fVNXH7B/KpC9DwaomkY3iZdI
-	 bafhBM5yi4nYL0eq2upTwfA/iwXk/ylKd6RbNvIw=
+	s=default; t=1584326062;
+	bh=c89utpjyJCM1WC9RrJfhwK+FgjmLnvI7luTATiwF9VM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=z0PSAuRM2xJtiUhb1+wbx1EQGcWYWtYyqEfdygg+5v8Eod6QfpmN8bgKbiLzddzFJ
+	 sYh6hsybS+onIxXOa+DFfS/hVadg4SGKnwTnKuEdktV+sQiHa8V+bblsxYO7sOk4A+
+	 4vn+FkdShrPJPdIoV06E6CJojGNsq3vv5XtiWCok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbgCPCeR (ORCPT
+        id S1729819AbgCPCeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37468 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbgCPCeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:14 -0400
+        id S1729803AbgCPCeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA2C206E9;
-        Mon, 16 Mar 2020 02:34:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E92820754;
+        Mon, 16 Mar 2020 02:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326053;
-        bh=R9Zg3BZuq8xXCD2pKaZIxwK+qNJmdOsTsf8VDK1m7VU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iB9mTEmnWwriGjkDe0T++58PUuq8KEeBMVA35wo5brYcxlHjjodXAryBK4zvr317h
-         s6tQ/dbD9VI2uzNJsLXbfI4XQp2KSCnfsHkcy/XyNL0TQblp2uQMA4XdgstGsljkuy
-         jsJ8rFt7HCMjQes0U5+WEsHB7WScJb9GS4sd/aE8=
+        s=default; t=1584326057;
+        bh=c89utpjyJCM1WC9RrJfhwK+FgjmLnvI7luTATiwF9VM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1mwb3GOq16Hjo2WrxgWSeB9gBnmvWq7mWPC0NgUOWI15USmapXNrxJZgTPU8UMPFF
+         HceVuMd9Iq8G0V90yH4SNnWsmlI32gAOFTlzvxeaeJbz2FvMyWIgRzFo0ORcLMHnh9
+         xn3b+x+SbXLBvUuPhf/lwbTf7Zzr4eRrdOrFZDW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 01/35] spi: spi-omap2-mcspi: Handle DMA size restriction on AM65x
-Date:   Sun, 15 Mar 2020 22:33:37 -0400
-Message-Id: <20200316023411.1263-1-sashal@kernel.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 05/35] phy: ti: gmii-sel: fix set of copy-paste errors
+Date:   Sun, 15 Mar 2020 22:33:41 -0400
+Message-Id: <20200316023411.1263-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
+References: <20200316023411.1263-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,101 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh Raghavendra <vigneshr@ti.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit e4e8276a4f652be2c7bb783a0155d4adb85f5d7d ]
+[ Upstream commit eefed634eb61e4094b9fb8183cb8d43b26838517 ]
 
-On AM654, McSPI can only support 4K - 1 bytes per transfer when DMA is
-enabled. Therefore populate master->max_transfer_size callback to
-inform client drivers of this restriction when DMA channels are
-available.
+- under PHY_INTERFACE_MODE_MII the 'mode' func parameter is assigned
+instead of 'gmii_sel_mode' and it's working only because the default value
+'gmii_sel_mode' is set to 0.
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Link: https://lore.kernel.org/r/20200204124816.16735-2-vigneshr@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+- console outputs use 'rgmii_id' and 'mode' values to print PHY mode
+instead of using 'submode' value which is representing PHY interface mode
+now.
+
+This patch fixes above two cases.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-omap2-mcspi.c                 | 26 +++++++++++++++++++
- include/linux/platform_data/spi-omap2-mcspi.h |  1 +
- 2 files changed, 27 insertions(+)
+ drivers/phy/ti/phy-gmii-sel.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 848e03e5f42d5..8e435da730996 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -130,6 +130,7 @@ struct omap2_mcspi {
- 	int			fifo_depth;
- 	bool			slave_aborted;
- 	unsigned int		pin_dir:1;
-+	size_t			max_xfer_len;
- };
+diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
+index a28bd15297f53..e998e9cd8d1f8 100644
+--- a/drivers/phy/ti/phy-gmii-sel.c
++++ b/drivers/phy/ti/phy-gmii-sel.c
+@@ -80,20 +80,19 @@ static int phy_gmii_sel_mode(struct phy *phy, enum phy_mode mode, int submode)
+ 		break;
  
- struct omap2_mcspi_cs {
-@@ -1316,6 +1317,18 @@ static bool omap2_mcspi_can_dma(struct spi_master *master,
- 	return (xfer->len >= DMA_MIN_BYTES);
- }
+ 	case PHY_INTERFACE_MODE_MII:
+-		mode = AM33XX_GMII_SEL_MODE_MII;
++		gmii_sel_mode = AM33XX_GMII_SEL_MODE_MII;
+ 		break;
  
-+static size_t omap2_mcspi_max_xfer_size(struct spi_device *spi)
-+{
-+	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
-+	struct omap2_mcspi_dma *mcspi_dma =
-+		&mcspi->dma_channels[spi->chip_select];
-+
-+	if (mcspi->max_xfer_len && mcspi_dma->dma_rx)
-+		return mcspi->max_xfer_len;
-+
-+	return SIZE_MAX;
-+}
-+
- static int omap2_mcspi_controller_setup(struct omap2_mcspi *mcspi)
- {
- 	struct spi_master	*master = mcspi->master;
-@@ -1384,6 +1397,11 @@ static struct omap2_mcspi_platform_config omap4_pdata = {
- 	.regs_offset = OMAP4_MCSPI_REG_OFFSET,
- };
- 
-+static struct omap2_mcspi_platform_config am654_pdata = {
-+	.regs_offset = OMAP4_MCSPI_REG_OFFSET,
-+	.max_xfer_len = SZ_4K - 1,
-+};
-+
- static const struct of_device_id omap_mcspi_of_match[] = {
- 	{
- 		.compatible = "ti,omap2-mcspi",
-@@ -1393,6 +1411,10 @@ static const struct of_device_id omap_mcspi_of_match[] = {
- 		.compatible = "ti,omap4-mcspi",
- 		.data = &omap4_pdata,
- 	},
-+	{
-+		.compatible = "ti,am654-mcspi",
-+		.data = &am654_pdata,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, omap_mcspi_of_match);
-@@ -1450,6 +1472,10 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
- 		mcspi->pin_dir = pdata->pin_dir;
+ 	default:
+-		dev_warn(dev,
+-			 "port%u: unsupported mode: \"%s\". Defaulting to MII.\n",
+-			 if_phy->id, phy_modes(rgmii_id));
++		dev_warn(dev, "port%u: unsupported mode: \"%s\"\n",
++			 if_phy->id, phy_modes(submode));
+ 		return -EINVAL;
  	}
- 	regs_offset = pdata->regs_offset;
-+	if (pdata->max_xfer_len) {
-+		mcspi->max_xfer_len = pdata->max_xfer_len;
-+		master->max_transfer_size = omap2_mcspi_max_xfer_size;
-+	}
  
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	mcspi->base = devm_ioremap_resource(&pdev->dev, r);
-diff --git a/include/linux/platform_data/spi-omap2-mcspi.h b/include/linux/platform_data/spi-omap2-mcspi.h
-index 0bf9fddb83064..3b400b1919a9b 100644
---- a/include/linux/platform_data/spi-omap2-mcspi.h
-+++ b/include/linux/platform_data/spi-omap2-mcspi.h
-@@ -11,6 +11,7 @@ struct omap2_mcspi_platform_config {
- 	unsigned short	num_cs;
- 	unsigned int regs_offset;
- 	unsigned int pin_dir:1;
-+	size_t max_xfer_len;
- };
+ 	if_phy->phy_if_mode = submode;
  
- struct omap2_mcspi_device_config {
+ 	dev_dbg(dev, "%s id:%u mode:%u rgmii_id:%d rmii_clk_ext:%d\n",
+-		__func__, if_phy->id, mode, rgmii_id,
++		__func__, if_phy->id, submode, rgmii_id,
+ 		if_phy->rmii_clock_external);
+ 
+ 	regfield = if_phy->fields[PHY_GMII_SEL_PORT_MODE];
 -- 
 2.20.1
 
