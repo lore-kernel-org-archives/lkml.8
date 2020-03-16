@@ -2,87 +2,99 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C129C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D71BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750232071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762D920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:27:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bn0D8HiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbgCPK1L (ORCPT
+        id S1730627AbgCPK1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:27:11 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:58729 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730550AbgCPK1L (ORCPT
+        Mon, 16 Mar 2020 06:27:47 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37436 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730550AbgCPK1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:27:11 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id EF11B100050;
-        Mon, 16 Mar 2020 10:25:58 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rtc: 88pm860x: remove platform data support
-Date:   Mon, 16 Mar 2020 11:25:37 +0100
-Message-Id: <20200316102537.180398-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 16 Mar 2020 06:27:47 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GARc2X015637;
+        Mon, 16 Mar 2020 05:27:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584354458;
+        bh=cM3M0WhMJb1kHAJscz665SQ5kqkj1mspK4tHy4EMD1A=;
+        h=From:To:CC:Subject:Date;
+        b=bn0D8HiP6PPr9ULgYGQwSixr07CWkBFxpuskovMMSGZ4+Gm9/5RF+ZcmwqyfjFpgR
+         Hy/ylBE+iBt8EPRNZJbXQBi47yN9GFuhuubUHA0S6ueJpv2/OuVoV4B30w4o75Gf3T
+         bbE8D0Zwntw9XRGVRfnxeLA87wBqYWgtSB5/JxZA=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GARcrZ060549;
+        Mon, 16 Mar 2020 05:27:38 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Mar 2020 05:27:38 -0500
+Received: from localhost.localdomain (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Mar 2020 05:27:38 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02GARWNu121191;
+        Mon, 16 Mar 2020 05:27:33 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <tony@atomide.com>
+CC:     <hch@lst.de>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
+        <nm@ti.com>, <t-kristo@ti.com>, <nsekhar@ti.com>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <stable@kernel.org>
+Subject: [PATCH] ARM: dts: omap5: Add bus_dma_limit for L3 bus
+Date:   Mon, 16 Mar 2020 12:27:31 +0200
+Message-ID: <20200316102731.15467-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no users of the rtc platform data left, remove its support.
+The L3 interconnect's memory map is from 0x0 to
+0xffffffff. Out of this, System memory (SDRAM) can be
+accessed from 0x80000000 to 0xffffffff (2GB)
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+OMAP5 does support 4GB of SDRAM but upper 2GB can only be
+accessed by the MPU subsystem.
+
+Add the dma-ranges property to reflect the physical address limit
+of the L3 bus.
+
+Cc: stable@kernel.org
+Signed-off-by: Roger Quadros <rogerq@ti.com>
 ---
- drivers/rtc/rtc-88pm860x.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ arch/arm/boot/dts/omap5.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 88bda3e072d8..12d75d717730 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -267,18 +267,15 @@ static int pm860x_rtc_dt_init(struct platform_device *pdev,
- 	return 0;
- }
- #else
--#define pm860x_rtc_dt_init(x, y)	(-1)
-+#define pm860x_rtc_dt_init(x, y)	do { } while (0)
- #endif
- 
- static int pm860x_rtc_probe(struct platform_device *pdev)
- {
- 	struct pm860x_chip *chip = dev_get_drvdata(pdev->dev.parent);
--	struct pm860x_rtc_pdata *pdata = NULL;
- 	struct pm860x_rtc_info *info;
- 	int ret;
- 
--	pdata = dev_get_platdata(&pdev->dev);
--
- 	info = devm_kzalloc(&pdev->dev, sizeof(struct pm860x_rtc_info),
- 			    GFP_KERNEL);
- 	if (!info)
-@@ -328,12 +325,6 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
- 
- #ifdef VRTC_CALIBRATION
- 	/* <00> -- 2.7V, <01> -- 2.9V, <10> -- 3.1V, <11> -- 3.3V */
--	if (pm860x_rtc_dt_init(pdev, info)) {
--		if (pdata && pdata->vrtc)
--			info->vrtc = pdata->vrtc & 0x3;
--		else
--			info->vrtc = 1;
--	}
- 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, MEAS2_VRTC);
- 
- 	/* calibrate VRTC */
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index d0ecf54d5a23..a7562d3deb1a 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -143,6 +143,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0 0 0 0xc0000000>;
++		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
+ 		ti,hwmods = "l3_main_1", "l3_main_2", "l3_main_3";
+ 		reg = <0 0x44000000 0 0x2000>,
+ 		      <0 0x44800000 0 0x3000>,
 -- 
-2.24.1
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
