@@ -2,102 +2,112 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350D8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6301FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173CC2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382E9205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584353699;
+	bh=DFAsW5BCw7jOq218iRus2k5QQlmGy0khiOahlBnPX5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=llD4otnEwGITqZUchv2C9/nVM/UYEmZjye3jjiuZjVqW1a21HZoJuqE6Pwchkprdv
+	 PtKnoF6FMSjQH7r9sUmFnme/dqqMwY8aAhRNjcI69CcFzpSBqHImflYKPf4RlEv3Uf
+	 aGpNSmJjcbP1SIObqOaAyHHsnmePYgy5ixAbssfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbgCPKF6 (ORCPT
+        id S1730557AbgCPKO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:05:58 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:37275 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730491AbgCPKF5 (ORCPT
+        Mon, 16 Mar 2020 06:14:58 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50330 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730538AbgCPKO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:05:57 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 34E39240037;
-        Mon, 16 Mar 2020 10:00:17 +0000 (UTC)
-Date:   Mon, 16 Mar 2020 11:00:17 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Message-ID: <20200316100017.GM4518@piout.net>
-References: <20200316030744.GC17221@dragon>
- <AM0PR04MB44817A48746601EADA4E06BC88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200316033447.GE17221@dragon>
- <DB3PR0402MB3916DA9F0F175B9D2E9E684FF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20200316084056.GG4518@piout.net>
- <DB3PR0402MB391663DB37A8D241092AD708F5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20200316090053.GH4518@piout.net>
- <DB3PR0402MB391683A05820920158DFDA77F5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20200316091541.GI4518@piout.net>
- <DB3PR0402MB39169528B3FF39E23C7A90FCF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Mon, 16 Mar 2020 06:14:57 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z13so898431wml.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 03:14:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mT1+gDN6f+fs8b4YY3DWtQhvan8/bp51m7MCR4G4Mzo=;
+        b=FpWtw7SuvswMu9i1u6lEcZ+rlwhwb/vHKajYgTFlr00whKvJng7+GMA4Fnb5l7gDbC
+         Sx1vob+GefNQcNsER4I3d46ad9wJLWr7L1x7pzigDXx5sxQGLY4YKHj/09CVZK8qW4ZY
+         75hHS+Mx3rccymWAWaapf0P0RjuTAF1lL2yEhxwV1KMnn6WtoP/FEMMoqnYQINZupDmU
+         X4sTVy51wom5NIiReS31XsMkDDZzgHEuebp2o0Ve2fDPFWSy85g6EIivZkzoFsi82bDu
+         4FiAJtOKczCB+9Suz5gfLnvCc6TILsMU5rRoBTNWsjlQHHS7L7CZOiCPTxkWaSZ8zDFd
+         GwrA==
+X-Gm-Message-State: ANhLgQ3puuzmObOUZNZ5ptVpAowLY9rVGI6BAF12164oYqKtnvu4nnmi
+        U9QsHeoZsRWHB+7rwAhG7Dk=
+X-Google-Smtp-Source: ADFU+vtA/WLpwlxPON9GJCyTDEGOBVOLAOZyuD5aJpEMOo4RR9nE2eqbad++oqGEagHw2b3VZuEEfQ==
+X-Received: by 2002:a1c:2d4f:: with SMTP id t76mr26782494wmt.60.1584353693932;
+        Mon, 16 Mar 2020 03:14:53 -0700 (PDT)
+Received: from localhost (ip-37-188-254-25.eurotel.cz. [37.188.254.25])
+        by smtp.gmail.com with ESMTPSA id j39sm14665548wre.11.2020.03.16.03.14.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 03:14:52 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 11:14:49 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
+Message-ID: <20200316101449.GG11482@dhcp22.suse.cz>
+References: <993e7783-60e9-ba03-b512-c829b9e833fd@i-love.sakura.ne.jp>
+ <alpine.DEB.2.21.2003111513180.195367@chino.kir.corp.google.com>
+ <202003120012.02C0CEUB043533@www262.sakura.ne.jp>
+ <alpine.DEB.2.21.2003121101030.158939@chino.kir.corp.google.com>
+ <20200312153238.c8d25ea6994b54a2c4d5ae1f@linux-foundation.org>
+ <20200316093152.GE11482@dhcp22.suse.cz>
+ <3be371a0-5b1e-7115-8659-186612ad5fb0@i-love.sakura.ne.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39169528B3FF39E23C7A90FCF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <3be371a0-5b1e-7115-8659-186612ad5fb0@i-love.sakura.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/03/2020 09:40:52+0000, Anson Huang wrote:
-> > Why is that an issue? If they don't have IMX_SCU selected, then the other
-> > SCU driver are not selected either, having stubs doesn't change that you will
-> > have to select at least one option. Please explain what is the issue that is not
-> > solved here.
+On Mon 16-03-20 19:04:44, Tetsuo Handa wrote:
+> On 2020/03/16 18:31, Michal Hocko wrote:
+> >> What happens if the allocator has SCHED_FIFO?
+> > 
+> > The same thing as a SCHED_FIFO running in a tight loop in the userspace.
+> > 
+> > As long as a high priority context depends on a resource held by a low
+> > priority task then we have a priority inversion problem and the page
+> > allocator is no real exception here. But I do not see the allocator
+> > is much different from any other code in the kernel. We do not add
+> > random sleeps here and there to push a high priority FIFO or RT tasks
+> > out of the execution context. We do cond_resched to help !PREEMPT
+> > kernels but priority related issues are really out of scope of that
+> > facility.
+> > 
 > 
-> OK, what I thought is even without IMX_SCU selected, other SCU drivers still can be
-> selected for build test after adding "COMPILE_TEST" to the kconfig, like below, if
-> without IMX_SCU API stubs, the "COMPILE_TEST" can NOT be added to SCU drivers
-> to enable build test, so I think the IMX_SCU API stubs should be added?
-> 
+> Spinning with realtime priority in userspace is a userspace's bug.
+> Spinning with realtime priority in kernelspace until watchdog fires is
+> a kernel's bug. We are not responsible for userspace's bug, and I'm
+> asking whether the memory allocator kernel code can give enough CPU
+> time to other threads even if current thread has realtime priority.
 
-No they shouldn't because there is not point adding COMPILE_TEST to the
-SCU drivers. We don't add COMPILE_TEST to all the drivers and add stubs
-to all the subsystems. E.g there is no point trying to compile an I2C
-driver if the I2C core is not enabled. 
+We've been through that discussion many times and the core point is that
+this requires a large surgery to work properly. It is not just to add a
+sleep into the page allocator and be done with that. Page allocator
+cannot really do much on its own. It relies on many other contexts to
+make a forward progress. What you really demand is far from trivial.
+Maybe you are looking something much closer to the RT kernel than what
+other preemption modes can offer currently.
 
+Right now, you really have to be careful when running FIFO/RT processes
+and plan their resources very carefully. Is that ideal? Not really but
+considering that this is the status quo for many years it seems that
+the usecases tend to find their way around that restriction.
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Michal Hocko
+SUSE Labs
