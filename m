@@ -2,174 +2,138 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF63C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F33C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8385C205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1605320719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:01:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bCfCbFFp"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="hLFzca+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbgCPLAX (ORCPT
+        id S1730748AbgCPLBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:00:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28984 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730624AbgCPLAX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:00:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584356421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=cSdLtCGEh4iL+FNlWi4IjCbozZyk8pdJbi3dct/QbPU=;
-        b=bCfCbFFpdtuLwwwtfb7b3gAshC0PWIGLfrE2CfCDq+6aBAzimw393a2J6z5dV8VwmG+V5r
-        WRL3F4CQxOfp9BaRqIXDZw1i93EcD3lxFEDqEnE9SEnsJQ29p1u7s4Fi61oJlJv8Mu/895
-        7LmGcnrJD3ozwyMVjcUHP9uG51UTzew=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-1hi_PFM5Ps6xbGG7zZQclw-1; Mon, 16 Mar 2020 07:00:13 -0400
-X-MC-Unique: 1hi_PFM5Ps6xbGG7zZQclw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AF74101FC60;
-        Mon, 16 Mar 2020 11:00:12 +0000 (UTC)
-Received: from [10.36.118.207] (unknown [10.36.118.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE86592F9A;
-        Mon, 16 Mar 2020 11:00:09 +0000 (UTC)
-Subject: Re: [PATCH v4 1/2] mm/sparse.c: Use kvmalloc/kvfree to alloc/free
- memmap for the classic sparse
-To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, mhocko@suse.com, akpm@linux-foundation.org,
-        willy@infradead.org, richard.weiyang@gmail.com, vbabka@suse.cz
-References: <20200316102150.16487-1-bhe@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <1f5b22ac-283e-3b69-f443-528f09edaf60@redhat.com>
-Date:   Mon, 16 Mar 2020 12:00:04 +0100
+        Mon, 16 Mar 2020 07:01:24 -0400
+Received: from mail-dm6nam10on2083.outbound.protection.outlook.com ([40.107.93.83]:29376
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730529AbgCPLBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 07:01:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yic8bWbd6r4KWu6mcklpARP26qccSQV6C9qM2R+GTsYSqU5s5L5fUm0D135dxu7fqPlD/kcELrahms+zN+lk8iycDSruAnaSMWZdpjDMopYakOLunoqToX/Sy5afJO46CELcIQkSNAQM/74PbcJvdgxVPApvfBQfjViaIeMOlcFniOuvE66B7qcg7Jm0Qg+ppGJG038JeiUM0HHzXN/fTGn78hUkt4jD3NMICFHd9fpLypuVDb7G1nOmnvW5IdR3m6Zqdgj57mscA4VjS3DDwhnTnfWUhEqSqrSerShKzBkTfOURxyxplGMn6vrR4RiMzT/gr8HMW2iqTamRPvC9aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mSGvJbXM33xPSnnkeaBqQ1Ol9q4oCZWy3ZPh3UQmYF0=;
+ b=Fy6iQ0OhdjQYFV+0F1Sawqjah7tq4iRgcEjuLzJeUrGFMqcKaBCJWSkzGr8nQ6stfavLAUTpahzYi7yfwMM7heGygWyjdQe4nSZSF5dEAkRymzLadYgtZwjnw2PeJHPxtd0tLPRqz9oNUvaeb+rmZgYuPjsQawzZc9p37YKzEmOev20ftrFjYbXY+lDvq16DHjSQ3s2eSwWk/Kpf1iKsK0AzhzSHbcRUUS4w3xx+vJwnJHDcRo4yZ1jitm6b/6MZhea3U/Jo91BaxqB97CH6sj9gCKiBCd2Nm7iE2Rn4Z5AQb5BTuKUD3An5rn26LrUN6eATENYD8x615ibn722/Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mSGvJbXM33xPSnnkeaBqQ1Ol9q4oCZWy3ZPh3UQmYF0=;
+ b=hLFzca+6/IhVV15WDSwQgzE7WtwjHohomWxAiedOcPGXvZOgdLuuI4WkzioubVxodD4G+IlbNaKcaFHF4rOnkR3rdsHheAtLDvNGS3VeyexhMe79UW6GdhLT4stAXZhWMvTj/la3Wvd3iVSkaO+AbbIUWzFnXz1JT1JSWAVZ98Q=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Zhe.He@windriver.com; 
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
+ by SN6PR11MB3504.namprd11.prod.outlook.com (2603:10b6:805:d0::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 16 Mar
+ 2020 11:01:19 +0000
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::d852:181d:278b:ba9d]) by SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::d852:181d:278b:ba9d%5]) with mapi id 15.20.2814.021; Mon, 16 Mar 2020
+ 11:01:19 +0000
+Subject: Re: disk revalidation updates and OOM
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     jack@suse.cz, Jens Axboe <axboe@kernel.dk>,
+        viro@zeniv.linux.org.uk, bvanassche@acm.org, keith.busch@intel.com,
+        tglx@linutronix.de, mwilck@suse.com, yuyufen@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <93b395e6-5c3f-0157-9572-af0f9094dbd7@windriver.com>
+ <20200310074018.GB26381@lst.de>
+ <75865e17-48f8-a63a-3a29-f995115ffcfc@windriver.com>
+ <20200310162647.GA6361@lst.de>
+ <f48683d9-7854-ba5f-da3a-7ef987a539b8@windriver.com>
+ <20200311155458.GA24376@lst.de>
+From:   He Zhe <zhe.he@windriver.com>
+Message-ID: <18bbb6cd-578e-5ead-f2cd-a8a01db17e29@windriver.com>
+Date:   Mon, 16 Mar 2020 19:01:09 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200316102150.16487-1-bhe@redhat.com>
+ Thunderbird/68.4.1
+In-Reply-To: <20200311155458.GA24376@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Language: en-US
+X-ClientProxiedBy: HK2PR02CA0146.apcprd02.prod.outlook.com
+ (2603:1096:202:16::30) To SN6PR11MB3360.namprd11.prod.outlook.com
+ (2603:10b6:805:c8::30)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [128.224.162.175] (60.247.85.82) by HK2PR02CA0146.apcprd02.prod.outlook.com (2603:1096:202:16::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14 via Frontend Transport; Mon, 16 Mar 2020 11:01:15 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d904ece3-2459-439c-ba3c-08d7c9995b3f
+X-MS-TrafficTypeDiagnostic: SN6PR11MB3504:
+X-Microsoft-Antispam-PRVS: <SN6PR11MB350484B8EEDE2CB87907CA4E8FF90@SN6PR11MB3504.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 03449D5DD1
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(366004)(39850400004)(396003)(199004)(31686004)(4326008)(36756003)(6666004)(7416002)(478600001)(186003)(5660300002)(16526019)(2906002)(6486002)(16576012)(316002)(8676002)(26005)(81166006)(6706004)(81156014)(53546011)(2616005)(66946007)(66476007)(66556008)(86362001)(8936002)(31696002)(52116002)(6916009)(956004)(78286006);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB3504;H:SN6PR11MB3360.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: windriver.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eBmOEcDepPr3tU3FnqpbpCAyXpOHgr9r0W8J5Qo6vc3+ycCbdCKsVV8Nxc9P34BhwnngYM6Tfoe8wIhbxRvrMp7BKScnBh7zaMFwRSZTqk4TP0WH7V5JJprJ+N9/xYyQfUGL3BfEQpEW8mEHPhKeAslctifdzBy+rOiG+zxS69lJHougzyWCDGF/hi9JpazMX58h4KC5PiwpY+AW4Fo64kjvPXYpIT+EWFNKAYJFgN6ZsXoJoQIPrVYFJnPKXXH0kGOkDNLzIaKGn1+MCZCV4wWh2B9ai1CEx/+6l4D1Elak1dsZngfIUWhp0l1Zpm6LWs5Djq3/I6d4BXdWSXRI5g1UI5HuMr9wQ1U4YJU/CC11WfiLT8OO3VGqyijzmZ4oIZyvhSG0UXbGY8k9DKNN2G5PcVRRWsjX0oUbA37vWzEcVXoCrbcVbY2qCNjismuC7Hy2XBaT4T8PEtNlcmq1Ljp3W5Ld6IiOgOpMl+0vvIwqv2EBRRC5BietA0/E2g3kVoHwI+uFGNcX4ViX/wumsjsgIVRaI+LRl3OjIf6uDoI=
+X-MS-Exchange-AntiSpam-MessageData: AD3zQnz9QSrZUDzL+8Oyc5goDOgeP6J1GlSdpWeC4fCDldtM8kiLEvTmBckJ4qQ6D08qy7FOYpsrZOmisjxqXEvGB+NXnDut8jCD8kybYVJx0wdy5MTnwdW0fed9ZTDgHJBKFN5g6FDkoX1N5lU+fA==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d904ece3-2459-439c-ba3c-08d7c9995b3f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2020 11:01:19.7195
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UvXwwcoyfs8EhRtIMSvg4teBwbDSXqfbNFnTaA2B8pZaJhomavJzqIEWtcZZ6OdcRqxp8dUp4osq8rN+kGVkig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.03.20 11:21, Baoquan He wrote:
-> This change makes populate_section_memmap()/depopulate_section_memmap
-> much simpler.
-> 
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> ---
-> v3->v4:
->   Split the old v3 into two patches, to carve out the using 'nid'
->   as preferred node to allocate memmap into a separate patch. This
->   is suggested by Michal, and the carving out is put in patch 2.
-> 
-> v2->v3:
->   Remove __GFP_NOWARN and use array_size when calling kvmalloc_node()
->   per Matthew's comments.
-> http://lkml.kernel.org/r/20200312141749.GL27711@MiWiFi-R3L-srv
-> 
->  mm/sparse.c | 27 +++------------------------
->  1 file changed, 3 insertions(+), 24 deletions(-)
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index e747a238a860..d01d09cc7d99 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -719,35 +719,14 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
->  struct page * __meminit populate_section_memmap(unsigned long pfn,
->  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
->  {
-> -	struct page *page, *ret;
-> -	unsigned long memmap_size = sizeof(struct page) * PAGES_PER_SECTION;
-> -
-> -	page = alloc_pages(GFP_KERNEL|__GFP_NOWARN, get_order(memmap_size));
-> -	if (page)
-> -		goto got_map_page;
-> -
-> -	ret = vmalloc(memmap_size);
-> -	if (ret)
-> -		goto got_map_ptr;
-> -
-> -	return NULL;
-> -got_map_page:
-> -	ret = (struct page *)pfn_to_kaddr(page_to_pfn(page));
-> -got_map_ptr:
-> -
-> -	return ret;
-> +	return kvmalloc(array_size(sizeof(struct page),
-> +			PAGES_PER_SECTION), GFP_KERNEL);
-
-FWIW, this is what I meant:
-
-        return kvmalloc(array_size(sizeof(struct page),
-                                   PAGES_PER_SECTION), GFP_KERNEL);
 
 
+On 3/11/20 11:54 PM, Christoph Hellwig wrote:
+> On Wed, Mar 11, 2020 at 12:03:43PM +0800, He Zhe wrote:
+>>>> 979c690d block: move clearing bd_invalidated into check_disk_size_change
+>>>> f0b870d block: remove (__)blkdev_reread_part as an exported API
+>>>> 142fe8f block: fix bdev_disk_changed for non-partitioned devices
+>>>> a1548b6 block: move rescan_partitions to fs/block_dev.c
+>>> Just to make sure we are on the same page:  if you revert all four it
+>>> works, if you rever all but
+>>>
+>>> a1548b6 block: move rescan_partitions to fs/block_dev.c
+>>>
+>>> it doesn't?
+>> After reverting 142fe8f, rescan_partitions would be called in block/ioctl.c
+>> and cause a build failure. So I need to also revert a1548b6 to provide
+>> rescan_partitions.
+>>
+>> OR if I manually add the following diff instead of reverting a1548b6, then yes,
+>> it works too.
+> Ok, so 142fe8f is good except for the build failure.
+>
+> Do 142fe8f and 979c690d work with the build fix applied? (f0b870d
+> shouldn't be interesting for this case).
 
--- 
-Thanks,
+Sorry for slow reply.
 
-David / dhildenb
+With my build fix applied, the issue is triggered since 142fe8f.
+And I can see the endless loop of invalidate and revalidate...
 
+Zhe
