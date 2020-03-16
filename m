@@ -2,94 +2,143 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617DCC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D409C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C24E2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA5220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731980AbgCPPtf (ORCPT
+        id S1731987AbgCPPtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:49:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1476 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731936AbgCPPtd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:49:33 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02GFX7qp187981;
-        Mon, 16 Mar 2020 11:49:32 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yrtwtwe4x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Mar 2020 11:49:32 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02GFjMfp003245;
-        Mon, 16 Mar 2020 15:49:30 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma05wdc.us.ibm.com with ESMTP id 2yrpw612b3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Mar 2020 15:49:30 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02GFnSWV36569570
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Mar 2020 15:49:28 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45FE178067;
-        Mon, 16 Mar 2020 15:49:28 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F291778064;
-        Mon, 16 Mar 2020 15:49:27 +0000 (GMT)
-Received: from habcap11p1.aus.stglabs.ibm.com (unknown [9.41.164.53])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Mar 2020 15:49:27 +0000 (GMT)
-From:   Adriana Kobylak <anoo@linux.ibm.com>
-To:     mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, anoo@us.ibm.com
-Subject: [PATCH] tools/bootconfig: Makefile: Create destination directory
-Date:   Mon, 16 Mar 2020 10:49:26 -0500
-Message-Id: <1584373766-3509-1-git-send-email-anoo@linux.ibm.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-16_06:2020-03-12,2020-03-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 phishscore=0 suspectscore=1
- priorityscore=1501 mlxlogscore=855 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003160074
+        Mon, 16 Mar 2020 11:49:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:51048 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731924AbgCPPtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:49:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9B171FB;
+        Mon, 16 Mar 2020 08:49:44 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C67CB3F534;
+        Mon, 16 Mar 2020 08:49:41 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 15:49:31 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
+Message-ID: <20200316154930.GG3005@mbp>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-19-vincenzo.frascino@arm.com>
+ <20200315182950.GB32205@mbp>
+ <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
+ <20200316103437.GD3005@mbp>
+ <77a2e91a-58f4-3ba3-9eef-42d6a8faf859@arm.com>
+ <20200316112205.GE3005@mbp>
+ <9a0a9285-8a45-4f65-3a83-813cabd0f0d3@arm.com>
+ <20200316144346.GF3005@mbp>
+ <427064ee-45df-233c-0281-69e3d62ba784@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <427064ee-45df-233c-0281-69e3d62ba784@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adriana Kobylak <anoo@us.ibm.com>
+On Mon, Mar 16, 2020 at 03:33:30PM +0000, Vincenzo Frascino wrote:
+> On 3/16/20 2:43 PM, Catalin Marinas wrote[...]
+> >> To me does not seem optimized out. Which version of the compiler are you using?
+> > 
+> > I misread the #ifdef'ery in asm/processor.h. So with 4K pages,
+> > TASK_SIZE_32 is (1UL<<32)-PAGE_SIZE. However, with 64K pages _and_
+> > CONFIG_KUSER_HELPERS, TASK_SIZE_32 is 1UL<<32 and the check is removed
+> > by the compiler.
+> > 
+> > With the 4K build, __vdso_clock_gettime starts as:
+> > 
+> > 00000194 <__vdso_clock_gettime>:
+> >  194:   f511 5f80       cmn.w   r1, #4096       ; 0x1000
+> >  198:   d214            bcs.n   1c4 <__vdso_clock_gettime+0x30>
+> >  19a:   b5b0            push    {r4, r5, r7, lr}
+> >  ...
+> >  1c4:   f06f 000d       mvn.w   r0, #13
+> >  1c8:   4770            bx      lr
+> > 
+> > With 64K pages:
+> > 
+> > 00000194 <__vdso_clock_gettime>:
+> >  194:   b5b0            push    {r4, r5, r7, lr}
+> >  ...
+> >  1be:   bdb0            pop     {r4, r5, r7, pc}
+> > 
+> > I haven't tried but it's likely that the vdsotest fails with 64K pages
+> > and compat enabled (requires EXPERT).
+> 
+> This makes more sense. Thanks for the clarification.
+> 
+> I agree on the behavior of 64K pages and I think as well that the
+> "compatibility" issue is still there. However as you correctly stated in your
+> first email arm32 never supported 16K or 64K pages, hence I think we should not
+> be concerned about compatibility in this cases.
 
-The DESTDIR path may not be available to the caller, such as
-compiling the bootconfig tool from a Yocto native recipe. Have
-the Makefile create the directory instead.
+My point is that even with 4K pages it's not really compatibility. The
+test uses UINTPTR_MAX but on arm32 it would also fail with 0xc0000000.
+On arm64 compat, however, this value would pass just fine.
 
-Signed-off-by: Adriana Kobylak <anoo@us.ibm.com>
----
- tools/bootconfig/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+> To make it more explicit we could make COMPAT_VDSO on arm64 depend on
+> ARM64_4K_PAGES. What do you think?
 
-diff --git a/tools/bootconfig/Makefile b/tools/bootconfig/Makefile
-index a6146ac..470b6f0 100644
---- a/tools/bootconfig/Makefile
-+++ b/tools/bootconfig/Makefile
-@@ -14,6 +14,7 @@ bootconfig: ../../lib/bootconfig.c main.c $(HEADER)
- 	$(CC) $(filter %.c,$^) $(CFLAGS) -o $@
- 
- install: $(PROGS)
-+	install -d $(DESTDIR)$(bindir)
- 	install bootconfig $(DESTDIR)$(bindir)
- 
- test: bootconfig
+No, I don't see why we should add this limitation.
+
+> >> Please find below the list of errors for clock_gettime (similar for the other):
+> >>
+> >> passing UINTPTR_MAX to clock_gettime (VDSO): terminated by unexpected signal 7
+> >> clock-gettime-monotonic/abi: 1 failures/inconsistencies encountered
+> > 
+> > Ah, so it uses UINTPTR_MAX in the test. Fair enough but I don't think
+> > the arm64 check is entirely useful. On arm32, the check was meant to
+> > return -EFAULT for addresses beyond TASK_SIZE that may enter into the
+> > kernel or module space. On arm64 compat, the kernel space is well above
+> > the reach of the 32-bit code.
+> > 
+> > If you want to preserve some compatibility for this specific test, what
+> > about checking for wrapping around 0, I think it would make more sense.
+> > Something like:
+> > 
+> > 	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
+> 
+> Ok, sounds good to me. But it is something that this patch series inherited,
+> hence I would prefer to send a separate patch that introduces what you are
+> proposing and removes TASK_SIZE_32 from the headers. How does it sound?
+
+I'd rather avoid moving TASK_SIZE_32 unnecessarily. Just add a
+preparatory patch to your series for arm64 compat vdso and follow with
+the rest without moving TASK_SIZE_32 around.
+
 -- 
-1.8.3.1
-
+Catalin
