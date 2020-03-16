@@ -2,174 +2,151 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0596AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32979C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D095C2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jODSjjQ0"
+	by mail.kernel.org (Postfix) with ESMTP id F21BB20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584371972;
+	bh=vwFph6J4YYNCu1jwpACBwCgCWFgEVYR0VP9mAAgYohM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rp2BTCBFemOeQsVfPX1SD3Xb7lOlFPgXCDWiDJYb+q1xfT5eHeSWtUxbjNfsxxJUf
+	 MZyHCdXdbZ3puyGoN46NJeoWk1BgXh3wnOlNGLzFFURzOYnhW8FBRE32xA2qn8srOI
+	 bo+SzDGRu/Dvb7YHm0J0N5b3dK0G/ujwOQGb80V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731820AbgCPPO0 (ORCPT
+        id S1731727AbgCPPT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:14:26 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38561 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731740AbgCPPOZ (ORCPT
+        Mon, 16 Mar 2020 11:19:26 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38289 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729856AbgCPPT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:14:25 -0400
-Received: by mail-qt1-f195.google.com with SMTP id e20so14472238qto.5;
-        Mon, 16 Mar 2020 08:14:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ixSqifDu9ZEefUiTiNVPd6ssEpIkNW/tDU5FVkyvqtI=;
-        b=jODSjjQ0stgdcIWw5FmNkmjAJbTA++R+6bwpB71tEMevOeCcXd6xRVARjGV6eA0CIi
-         ff/X0cqc3mG5P8xo3ALlOOD9yIN1eKOZnl+XS/gir3lTYF6EHyDVA05tqdoM6knnVx4v
-         4rqF4mQv2EsNdCTTlmer+lofMTczcxeWTk9EWJszdxQxitwWB+JzL1s/INbWDK+pVd9K
-         O3//Ds8qzs5cZbx9oW6HTLeEP45LAAhcYTX2WDK1/mYZTi+h/Ck95PmuDg9/CEaZ3m2p
-         BSKg7H8zJVrxufhYNbUJEFK+QPj5SmObaORY5xRgPytcv17CrRenHsis4z5cBxO8yxF4
-         5zCA==
+        Mon, 16 Mar 2020 11:19:26 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t13so12164402wmi.3;
+        Mon, 16 Mar 2020 08:19:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ixSqifDu9ZEefUiTiNVPd6ssEpIkNW/tDU5FVkyvqtI=;
-        b=o3Jjli9GSVx/tll2kaP4ErsfHyr42HWHh2L7q1EU+xwSRvdCgi3zRZ3QELCwM6dNY0
-         z2qv1xQQqhGBkJlbtPYrOR7P78WDcDWcAYu9tscvTBUcirqImigtZU0cyda1xrrTSAza
-         MrVXg+2zHI2AhQlRVeG74fzcvaGLfCeI6WVCYxdjy3vewO4kV8pA7Be0ZJQVOuFENq9R
-         ILzxYJAuBdFmoajw4RYLPSCOLqNT50vpCl+9Vvb7ydASkmbRrr0RAIPWi+sM5fd9RaJd
-         IiGCdHVCJP2gssUJg5MKMvT4yMY2CvfWmMpzrPNLvgldxU9tX/zP4jxjOrWvdnj8VR7v
-         L4YA==
-X-Gm-Message-State: ANhLgQ0SjnM9A+Vt5YSgDx+7bfqWWNWOAUTHkBszrH5hcUcc1/FpPeup
-        ePkA5rlnA57jwiG+Fxn3S4MPlnQZs9QgKBzBoPE=
-X-Google-Smtp-Source: ADFU+vtaag5GWTvm5ae+UqCD8pDJpDkpGX5U8Xx5cRDVwrLRbKT5Gb0dsxv/L7NnGU4/QwOiZhjTd9NsL1SQAbY2uyA=
-X-Received: by 2002:ac8:683:: with SMTP id f3mr540411qth.356.1584371664321;
- Mon, 16 Mar 2020 08:14:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9gCLfTwG3giIuIHsNt54BqZ2oPFCe851NK97n7eWk0U=;
+        b=kjAsd3vqIDXPBheSE4Ep3nle0/UXfTq4ajDnjCnQBA3a4wA1FJ2epKcA0mgchyjSgs
+         bZiQMO2Oxk6U5j/4pNPj4BStVgc2Ub6b+EjAgX+N6UpDiV14stVDgStnDjxc3LMcglC1
+         jGwPizkc4Oqy7lMtV7IzXMBdXhfwmdY+jzJNFQFMW2EbFm6xoHWhncTFCUkcrkjXnSVi
+         3VQNFLVi34INX/r/j4eTUYAP7s6JuD9lirX4p8SXEGIIdIor2ZOhKX850DbjBrFZt82G
+         MVYEZE335ILbUGP2PpOQ0QmEvGiIfL+nQvtIJOoBjNNB/KlvGU4oX8zudJmQnhKZtGi5
+         lO8w==
+X-Gm-Message-State: ANhLgQ0MAnaKRYHtxcWaDnAIz9WPrHz2F6GLTaG679D9CHtlmSQsBeiq
+        QZGIr+5qoQ+PPv53tAJ7zD4=
+X-Google-Smtp-Source: ADFU+vvOYExuooXZ898XQrqAGBWNBedWRADee7iQ/jiwP4Lm03/iQnl4/TOMx1px3Igm+ARPH+fmlA==
+X-Received: by 2002:a7b:c0cf:: with SMTP id s15mr29520903wmh.106.1584371964191;
+        Mon, 16 Mar 2020 08:19:24 -0700 (PDT)
+Received: from localhost ([37.188.132.163])
+        by smtp.gmail.com with ESMTPSA id w204sm79069wma.1.2020.03.16.08.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 08:19:23 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 16:19:22 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v1 2/5] drivers/base/memory: map MMOP_OFFLINE to 0
+Message-ID: <20200316151922.GT11482@dhcp22.suse.cz>
+References: <20200311123026.16071-1-david@redhat.com>
+ <20200311123026.16071-3-david@redhat.com>
 MIME-Version: 1.0
-References: <20200316090021.52148-1-pmalani@chromium.org> <20200316090021.52148-2-pmalani@chromium.org>
-In-Reply-To: <20200316090021.52148-2-pmalani@chromium.org>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Mon, 16 Mar 2020 16:14:13 +0100
-Message-ID: <CAFqH_50eGjYu7dHFW82CY4-EyDtq+AF+6tHCAjKbaAjW5_7WYA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: Add cros-ec Type C port driver
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311123026.16071-3-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On Wed 11-03-20 13:30:23, David Hildenbrand wrote:
+> I have no idea why we have to start at -1.
 
-Missatge de Prashant Malani <pmalani@chromium.org> del dia dl., 16 de
-mar=C3=A7 2020 a les 10:02:
->
-> Some Chrome OS devices with Embedded Controllers (EC) can read and
-> modify Type C port state.
->
-> Add an entry in the DT Bindings documentation that lists out the logical
-> device and describes the relevant port information, to be used by the
-> corresponding driver.
->
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Because this is how the offline state offline was represented
+originally.
 
-After Rob review, it can go together with the other patches through
-the chrome-platform tree. From my side:
+> Just treat 0 as the special
+> case. Clarify a comment (which was wrong, when we come via
+> device_online() the first time, the online_type would have been 0 /
+> MEM_ONLINE). The default is now always MMOP_OFFLINE.
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+git grep says that you have covered the only remaining place which
+hasn't used the enum value.
+
+> This is a preparation to use the online_type as an array index.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
 
 > ---
->
-> Changes in v5:
-> - Updated License identifier.
-> - Updated DT example to be a full example.
->
-> Changes in v4:
-> - Rebased on top of usb-connector.yaml, so the connector property now
->   directly references the usb-connector DT binding.
->
->  .../bindings/chrome/google,cros-ec-typec.yaml | 54 +++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-=
-ec-typec.yaml
->
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-type=
-c.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> new file mode 100644
-> index 0000000000000..6d7396ab8beec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Prashant Malani <pmalani@chromium.org>
-> +
-> +description:
-> +  Chrome OS devices have an Embedded Controller(EC) which has access to
-> +  Type C port state. This node is intended to allow the host to read and
-> +  control the Type C ports. The node for this device should be under a
-> +  cros-ec node like google,cros-ec-spi.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,cros-ec-typec
-> +
-> +  connector:
-> +    $ref: /schemas/connector/usb-connector.yaml#
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |+
-> +    spi0 {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      cros_ec: ec@0 {
-> +        compatible =3D "google,cros-ec-spi";
-> +        reg =3D <0>;
-> +
-> +        typec {
-> +          compatible =3D "google,cros-ec-typec";
-> +
-> +          #address-cells =3D <1>;
-> +          #size-cells =3D <0>;
-> +
-> +          connector@0 {
-> +            compatible =3D "usb-c-connector";
-> +            reg =3D <0>;
-> +            power-role =3D "dual";
-> +            data-role =3D "dual";
-> +            try-power-role =3D "source";
-> +          };
-> +        };
-> +      };
-> +    };
-> --
-> 2.25.1.481.gfbce0eb801-goog
->
+>  drivers/base/memory.c          | 11 ++++-------
+>  include/linux/memory_hotplug.h |  2 +-
+>  2 files changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 8c5ce42c0fc3..e7e77cafef80 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -211,17 +211,14 @@ static int memory_subsys_online(struct device *dev)
+>  		return 0;
+>  
+>  	/*
+> -	 * If we are called from state_store(), online_type will be
+> -	 * set >= 0 Otherwise we were called from the device online
+> -	 * attribute and need to set the online_type.
+> +	 * When called via device_online() without configuring the online_type,
+> +	 * we want to default to MMOP_ONLINE.
+>  	 */
+> -	if (mem->online_type < 0)
+> +	if (mem->online_type == MMOP_OFFLINE)
+>  		mem->online_type = MMOP_ONLINE;
+>  
+>  	ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+> -
+> -	/* clear online_type */
+> -	mem->online_type = -1;
+> +	mem->online_type = MMOP_OFFLINE;
+>  
+>  	return ret;
+>  }
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 261dbf010d5d..c2e06ed5e0e9 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -48,7 +48,7 @@ enum {
+>  /* Types for control the zone type of onlined and offlined memory */
+>  enum {
+>  	/* Offline the memory. */
+> -	MMOP_OFFLINE = -1,
+> +	MMOP_OFFLINE = 0,
+>  	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
+>  	MMOP_ONLINE,
+>  	/* Online the memory to ZONE_NORMAL. */
+> -- 
+> 2.24.1
+
+-- 
+Michal Hocko
+SUSE Labs
