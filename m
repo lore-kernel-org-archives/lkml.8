@@ -2,400 +2,118 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD88DC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2DCC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B499205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF0F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hHtzqGW2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="NHilyZgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbgCPUVv (ORCPT
+        id S1732545AbgCPUZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:21:51 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:37326 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732535AbgCPUVv (ORCPT
+        Mon, 16 Mar 2020 16:25:11 -0400
+Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:31743 "EHLO
+        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732505AbgCPUZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:21:51 -0400
-Received: by mail-pg1-f201.google.com with SMTP id q29so12856939pgk.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 13:21:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=To5N8tUaCvz6MVLHlfCQ9mbVyH/J+Wx9dmrV0++j4lg=;
-        b=hHtzqGW2wqp+frqqcV5F6ULbiTUd+KNsCjFgkkR6VUHzqMqAzmW7BZgNddhTlWR097
-         NvSNHNUslVQPh2yVlBZ7OcDGTTHbPpPbc+2em1gzfwMUcJ4rV2omEabS55+EDGJ2vzYC
-         vcqBpYFw6pKPRdsp4KkS75br6p391Xz14pXKasPdT3Q1qVDMAyeuT5apvhPvuWbnzCFV
-         xCZ3NB5Q+cz3dpyEtsDkTkcHGChY6aNbT54XXP4xamsR8SaNgaQvUqyUcYJ/Ad+8TjLo
-         DTePvbC0eoXKXnSxDtdqZr14znb7z+ESuzRGlV/vVFu2Ekq9NKqw4Qd48Kh8wI3VhEiz
-         t+aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=To5N8tUaCvz6MVLHlfCQ9mbVyH/J+Wx9dmrV0++j4lg=;
-        b=pb45ho+8U/dhlZIE9+ERu0/giMV3p0g8GAZ85MoY54EYR+54uj1Fj7rTI55oCGjw79
-         RBLea0BtnwRc9WeMEdJH8oy0sNZ3lNsjsCdG9998nOZulcc4N8R6F7V1hJsOVZPJKVTN
-         mFiP2tyZb2aeahGdhS0DP42579EIaQPuVA6/hERkbIj9cEtm9T+OdFzCXiN+d2LaU1g7
-         9UXhEjq4yW7dtosQ1QHNcfk05zyLB39Y04xbRBgZMsrfQTxa4XDo3KDEHBOW7nn6vQZ5
-         JfocG90kCPeTPJNgXpUmgE1XSI8cve8h2W16Y79fSpv0c+FNZmXJ3pI8p55UuODzMJtY
-         z4QA==
-X-Gm-Message-State: ANhLgQ2SD0Uz6dkDsZEzDkrRKrXeM5S1Wv1exA4DjtK1mWRo5k2r1/4i
-        HnI0wEF1PC3PCJLEmr7i1ggt6QJytcE7Z1bb
-X-Google-Smtp-Source: ADFU+vudic1Hqys5mhWZo4n3tXuf/uO0RkDAaANduCIY7/w+eDZqBZGdeokIqwjtq1a/MhwWU6G9/YSRXcGUiNi6
-X-Received: by 2002:a65:5905:: with SMTP id f5mr1411993pgu.87.1584390108022;
- Mon, 16 Mar 2020 13:21:48 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 13:21:25 -0700
-In-Reply-To: <20200316202125.15852-1-heidifahim@google.com>
-Message-Id: <20200316202125.15852-2-heidifahim@google.com>
-Mime-Version: 1.0
-References: <20200316202125.15852-1-heidifahim@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v3 2/2] kunit: Run all KUnit tests through allyesconfig
-From:   Heidi Fahim <heidifahim@google.com>
-To:     shuah@kernel.org, brendanhiggins@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com
-Cc:     Heidi Fahim <heidifahim@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 16 Mar 2020 16:25:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1584390309; x=1615926309;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=oEuZ697fpN3VMiiWha7d/Dl3C5sMFsmwp8ShroavJmw=;
+  b=NHilyZgvlF3Wn55rWsGajrL9Qz7VDm2J57lXvsjsO4c+JVz1cBmowP6p
+   KJi46H3kz53u1PmE/ceoU3JcDrzzoAngzK0qWJ4Z3LY1We+W7blfoP1S5
+   qREYsYfqqqK0Xo2LI9B0cWk7l4yosIwS4TbpDLa8DWzYG63WlXKj4/g6P
+   vd1f/YcOLcmJhVCCRdYc6sLu+Shna/WNzG71sj+BdAr4yuYhEFW6CeWog
+   NY4/ISzIVNI36Q7Uv0TXuZ4HpW7Pek9+HH2kPy+Tu7ltOgCLCUzXL7niP
+   mbP3zXIPlaa9jVL1MUPlLFJ9wt66xZo3oXcvdkRXl0Z+y7ApVAKPl7P7p
+   w==;
+IronPort-SDR: yBwmUqifiKg6kNQNTp+cKxWFKvqwKQHMEx/aUrgwCJ/Moc08X36jPPRJ+ai0g66+KevvbKZ6JX
+ rNgpUqz0JUDA==
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 2/3] leds: pwm: add support for default-state device
+ property
+Thread-Topic: [PATCH v3 2/3] leds: pwm: add support for default-state device
+ property
+Thread-Index: AQHV+5H21uxgWjW9wEe6B/TzHpI386hLe6EAgAAeVQA=
+Date:   Mon, 16 Mar 2020 20:24:48 +0000
+Message-ID: <e2835f58aead3ca85ad47e9769b393addcd19f2a.camel@diehl.com>
+References: <20200316124851.6303-1-Denis.Osterland@diehl.com>
+         <20200316124851.6303-3-Denis.Osterland@diehl.com>
+         <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
+In-Reply-To: <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <91C99D695C10214E93AE3AE8B7A09929@diehl.internal>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-TrailerSkip: 1
+X-GBS-PROC: byQFdw3ukCM+zy1/poiPcwvMiO0gPpQfBgEl6CP/J6HYOXhaUBXefvRQ1Zrwlkv4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implemented the functionality to run all KUnit tests through kunit_tool
-by specifying an --alltests flag, which builds UML with allyesconfig
-enabled, and consequently runs every KUnit test. A new function was
-added to kunit_kernel: make_allyesconfig.
-Firstly, if --alltests is specified, kunit.py triggers build_um_kernel
-which call make_allyesconfig. This function calls the make command,
-disables the broken configs that would otherwise prevent UML from
-building, then starts the kernel with all possible configurations
-enabled. All stdout and stderr is sent to test.log and read from there
-then fed through kunit_parser to parse the tests to the user. Also added
-a signal_handler in case kunit is interrupted while running.
-Tested: Run under different conditions such as testing with
---raw_output, testing program interrupt then immediately running kunit
-again without --alltests and making sure to clean the console.
-
-Signed-off-by: Heidi Fahim <heidifahim@google.com>
----
-Changelog:
- v3:
- - Minor change since v2 in message for program interruption. Changed
-   "Cleaning config." to "Cleaning console."
-
- .../kunit/configs/broken_on_uml.config        | 41 ++++++++++++
- tools/testing/kunit/kunit.py                  | 30 +++++----
- tools/testing/kunit/kunit_kernel.py           | 62 ++++++++++++++-----
- tools/testing/kunit/kunit_parser.py           |  1 +
- tools/testing/kunit/kunit_tool_test.py        | 17 ++---
- 5 files changed, 115 insertions(+), 36 deletions(-)
- create mode 100644 tools/testing/kunit/configs/broken_on_uml.config
-
-diff --git a/tools/testing/kunit/configs/broken_on_uml.config b/tools/testing/kunit/configs/broken_on_uml.config
-new file mode 100644
-index 000000000000..239b9f03da2c
---- /dev/null
-+++ b/tools/testing/kunit/configs/broken_on_uml.config
-@@ -0,0 +1,41 @@
-+# These are currently broken on UML and prevent allyesconfig from building
-+# CONFIG_STATIC_LINK is not set
-+# CONFIG_UML_NET_VECTOR is not set
-+# CONFIG_UML_NET_VDE is not set
-+# CONFIG_UML_NET_PCAP is not set
-+# CONFIG_NET_PTP_CLASSIFY is not set
-+# CONFIG_IP_VS is not set
-+# CONFIG_BRIDGE_EBT_BROUTE is not set
-+# CONFIG_BRIDGE_EBT_T_FILTER is not set
-+# CONFIG_BRIDGE_EBT_T_NAT is not set
-+# CONFIG_MTD_NAND_CADENCE is not set
-+# CONFIG_MTD_NAND_NANDSIM is not set
-+# CONFIG_BLK_DEV_NULL_BLK is not set
-+# CONFIG_BLK_DEV_RAM is not set
-+# CONFIG_SCSI_DEBUG is not set
-+# CONFIG_NET_VENDOR_XILINX is not set
-+# CONFIG_NULL_TTY is not set
-+# CONFIG_PTP_1588_CLOCK is not set
-+# CONFIG_PINCTRL_EQUILIBRIUM is not set
-+# CONFIG_DMABUF_SELFTESTS is not set
-+# CONFIG_COMEDI is not set
-+# CONFIG_XIL_AXIS_FIFO is not set
-+# CONFIG_EXFAT_FS is not set
-+# CONFIG_STM_DUMMY is not set
-+# CONFIG_FSI_MASTER_ASPEED is not set
-+# CONFIG_JFS_FS is not set
-+# CONFIG_UBIFS_FS is not set
-+# CONFIG_CRAMFS is not set
-+# CONFIG_CRYPTO_DEV_SAFEXCEL is not set
-+# CONFIG_CRYPTO_DEV_AMLOGIC_GXL is not set
-+# CONFIG_KCOV is not set
-+# CONFIG_LKDTM is not set
-+# CONFIG_REED_SOLOMON_TEST is not set
-+# CONFIG_TEST_RHASHTABLE is not set
-+# CONFIG_TEST_MEMINIT is not set
-+# CONFIG_NETWORK_PHY_TIMESTAMPING is not set
-+# CONFIG_DEBUG_INFO_BTF is not set
-+# CONFIG_PTP_1588_CLOCK_INES is not set
-+# CONFIG_QCOM_CPR is not set
-+# CONFIG_RESET_BRCMSTB_RESCAL is not set
-+# CONFIG_RESET_INTEL_GW is not set
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index 180ad1e1b04f..650bb4cfc544 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -22,7 +22,9 @@ import kunit_parser
- 
- KunitResult = namedtuple('KunitResult', ['status','result'])
- 
--KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
-+KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs',
-+					   'build_dir', 'defconfig',
-+					   'alltests'])
- 
- KernelDirectoryPath = sys.argv[0].split('tools/testing/kunit/')[0]
- 
-@@ -55,24 +57,23 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	kunit_parser.print_with_timestamp('Building KUnit Kernel ...')
- 
- 	build_start = time.time()
--	success = linux.build_um_kernel(request.jobs, request.build_dir)
-+	success = linux.build_um_kernel(request.alltests,
-+					request.jobs,
-+					request.build_dir)
- 	build_end = time.time()
- 	if not success:
- 		return KunitResult(KunitStatus.BUILD_FAILURE, 'could not build kernel')
- 
- 	kunit_parser.print_with_timestamp('Starting KUnit Kernel ...')
- 	test_start = time.time()
--
--	test_result = kunit_parser.TestResult(kunit_parser.TestStatus.SUCCESS,
--					      [],
--					      'Tests not Parsed.')
-+	kunit_output = linux.run_kernel(
-+		timeout=None if request.alltests else request.timeout,
-+		build_dir=request.build_dir)
- 	if request.raw_output:
--		kunit_parser.raw_output(
--			linux.run_kernel(timeout=request.timeout,
--					 build_dir=request.build_dir))
-+		raw_output = kunit_parser.raw_output(kunit_output)
-+		isolated = list(kunit_parser.isolate_kunit_output(raw_output))
-+		test_result = kunit_parser.parse_test_result(isolated)
- 	else:
--		kunit_output = linux.run_kernel(timeout=request.timeout,
--						build_dir=request.build_dir)
- 		test_result = kunit_parser.parse_run_tests(kunit_output)
- 	test_end = time.time()
- 
-@@ -120,6 +121,10 @@ def main(argv, linux=None):
- 				help='Uses a default .kunitconfig.',
- 				action='store_true')
- 
-+	run_parser.add_argument('--alltests',
-+				help='Run all KUnit tests through allyesconfig',
-+				action='store_true')
-+
- 	cli_args = parser.parse_args(argv)
- 
- 	if cli_args.subcommand == 'run':
-@@ -143,7 +148,8 @@ def main(argv, linux=None):
- 				       cli_args.timeout,
- 				       cli_args.jobs,
- 				       cli_args.build_dir,
--				       cli_args.defconfig)
-+				       cli_args.defconfig,
-+				       cli_args.alltests)
- 		result = run_tests(linux, request)
- 		if result.status != KunitStatus.SUCCESS:
- 			sys.exit(1)
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index d99ae75ef72f..415d8f3c4fe4 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -10,11 +10,16 @@
- import logging
- import subprocess
- import os
-+import signal
-+
-+from contextlib import ExitStack
- 
- import kunit_config
-+import kunit_parser
- 
- KCONFIG_PATH = '.config'
- kunitconfig_path = '.kunitconfig'
-+BROKEN_ALLCONFIG_PATH = 'tools/testing/kunit/configs/broken_on_uml.config'
- 
- class ConfigError(Exception):
- 	"""Represents an error trying to configure the Linux kernel."""
-@@ -40,12 +45,29 @@ class LinuxSourceTreeOperations(object):
- 		if build_dir:
- 			command += ['O=' + build_dir]
- 		try:
--			subprocess.check_output(command)
-+			subprocess.check_output(command, stderr=subprocess.PIPE)
- 		except OSError as e:
- 			raise ConfigError('Could not call make command: ' + e)
- 		except subprocess.CalledProcessError as e:
- 			raise ConfigError(e.output)
- 
-+	def make_allyesconfig(self):
-+		kunit_parser.print_with_timestamp(
-+			'Enabling all CONFIGs for UML...')
-+		process = subprocess.Popen(
-+			['make', 'ARCH=um', 'allyesconfig'],
-+			stdout=subprocess.DEVNULL,
-+			stderr=subprocess.STDOUT)
-+		process.wait()
-+		kunit_parser.print_with_timestamp(
-+			'Disabling broken configs to run KUnit tests...')
-+		with ExitStack() as es:
-+			config = open(KCONFIG_PATH, 'a')
-+			disable = open(BROKEN_ALLCONFIG_PATH, 'r').read()
-+			config.write(disable)
-+		kunit_parser.print_with_timestamp(
-+			'Starting Kernel with all configs takes a few minutes...')
-+
- 	def make(self, jobs, build_dir):
- 		command = ['make', 'ARCH=um', '--jobs=' + str(jobs)]
- 		if build_dir:
-@@ -57,18 +79,16 @@ class LinuxSourceTreeOperations(object):
- 		except subprocess.CalledProcessError as e:
- 			raise BuildError(e.output)
- 
--	def linux_bin(self, params, timeout, build_dir):
-+	def linux_bin(self, params, timeout, build_dir, outfile):
- 		"""Runs the Linux UML binary. Must be named 'linux'."""
- 		linux_bin = './linux'
- 		if build_dir:
- 			linux_bin = os.path.join(build_dir, 'linux')
--		process = subprocess.Popen(
--			[linux_bin] + params,
--			stdin=subprocess.PIPE,
--			stdout=subprocess.PIPE,
--			stderr=subprocess.PIPE)
--		process.wait(timeout=timeout)
--		return process
-+		with open(outfile, 'w') as output:
-+			process = subprocess.Popen([linux_bin] + params,
-+						   stdout=output,
-+						   stderr=subprocess.STDOUT)
-+			process.wait(timeout)
- 
- 
- def get_kconfig_path(build_dir):
-@@ -84,6 +104,7 @@ class LinuxSourceTree(object):
- 		self._kconfig = kunit_config.Kconfig()
- 		self._kconfig.read_from_file(kunitconfig_path)
- 		self._ops = LinuxSourceTreeOperations()
-+		signal.signal(signal.SIGINT, self.signal_handler)
- 
- 	def clean(self):
- 		try:
-@@ -135,7 +156,9 @@ class LinuxSourceTree(object):
- 			print('Generating .config ...')
- 			return self.build_config(build_dir)
- 
--	def build_um_kernel(self, jobs, build_dir):
-+	def build_um_kernel(self, alltests, jobs, build_dir):
-+		if alltests:
-+			self._ops.make_allyesconfig()
- 		try:
- 			self._ops.make_olddefconfig(build_dir)
- 			self._ops.make(jobs, build_dir)
-@@ -144,10 +167,15 @@ class LinuxSourceTree(object):
- 			return False
- 		return self.validate_config(build_dir)
- 
--	def run_kernel(self, args=[], timeout=None, build_dir=''):
--		args.extend(['mem=256M'])
--		process = self._ops.linux_bin(args, timeout, build_dir)
--		with open(os.path.join(build_dir, 'test.log'), 'w') as f:
--			for line in process.stdout:
--				f.write(line.rstrip().decode('ascii') + '\n')
--				yield line.rstrip().decode('ascii')
-+	def run_kernel(self, args=[], build_dir='', timeout=None):
-+		args.extend(['mem=1G'])
-+		outfile = 'test.log'
-+		self._ops.linux_bin(args, timeout, build_dir, outfile)
-+		subprocess.call(['stty', 'sane'])
-+		with open(outfile, 'r') as file:
-+			for line in file:
-+				yield line
-+
-+	def signal_handler(self, sig, frame):
-+		logging.error('Build interruption occurred. Cleaning console.')
-+		subprocess.call(['stty', 'sane'])
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index adf86747b07f..02815062d5a6 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -65,6 +65,7 @@ def isolate_kunit_output(kernel_output):
- def raw_output(kernel_output):
- 	for line in kernel_output:
- 		print(line)
-+		yield line
- 
- DIVIDER = '=' * 60
- 
-diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-index 0efae697f396..ce47e87b633a 100755
---- a/tools/testing/kunit/kunit_tool_test.py
-+++ b/tools/testing/kunit/kunit_tool_test.py
-@@ -243,7 +243,8 @@ class KUnitMainTest(unittest.TestCase):
- 		kunit.main(['run'], self.linux_source_mock)
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
- 		assert self.linux_source_mock.run_kernel.call_count == 1
--		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(
-+			build_dir='', timeout=300)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
- 
- 	def test_run_passes_args_fail(self):
-@@ -258,25 +259,27 @@ class KUnitMainTest(unittest.TestCase):
- 
- 	def test_run_raw_output(self):
- 		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
--		kunit.main(['run', '--raw_output'], self.linux_source_mock)
-+		with self.assertRaises(SystemExit) as e:
-+			kunit.main(['run', '--raw_output'], self.linux_source_mock)
-+		assert type(e.exception) == SystemExit
-+		assert e.exception.code == 1
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
- 		assert self.linux_source_mock.run_kernel.call_count == 1
--		for kall in self.print_mock.call_args_list:
--			assert kall != mock.call(StrContains('Testing complete.'))
--			assert kall != mock.call(StrContains(' 0 tests run'))
- 
- 	def test_run_timeout(self):
- 		timeout = 3453
- 		kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
--		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(
-+			build_dir='', timeout=timeout)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
- 
- 	def test_run_builddir(self):
- 		build_dir = '.kunit'
- 		kunit.main(['run', '--build_dir', build_dir], self.linux_source_mock)
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
--		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(
-+			build_dir=build_dir, timeout=300)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
- 
- if __name__ == '__main__':
--- 
-2.25.1.481.gfbce0eb801-goog
-
+SGkgSmFjZWssDQoNCkFtIE1vbnRhZywgZGVuIDE2LjAzLjIwMjAsIDE5OjM2ICswMTAwIHNj
+aHJpZWIgSmFjZWsgQW5hc3pld3NraToNCj4gSGkgRGVuaXMsDQo+IA0KPiBPbiAzLzE2LzIw
+IDE6NTMgUE0sIERlbmlzIE9zdGVybGFuZC1IZWltIHdyb3RlOg0KLi4uDQo+ID4gIA0KPiA+
+IEBAIC05MiwxMyArOTYsMjcgQEAgc3RhdGljIGludCBsZWRfcHdtX2FkZChzdHJ1Y3QgZGV2
+aWNlICpkZXYsIHN0cnVjdCBsZWRfcHdtX3ByaXYgKnByaXYsDQo+ID4gIA0KPiA+ICAJcHdt
+X2luaXRfc3RhdGUobGVkX2RhdGEtPnB3bSwgJmxlZF9kYXRhLT5wd21zdGF0ZSk7DQo+ID4g
+IA0KPiA+ICsJaWYgKGxlZC0+ZGVmYXVsdF9zdGF0ZSA9PSBMRURTX1BXTV9ERUZTVEFURV9P
+TikNCj4gPiArCQlsZWRfZGF0YS0+Y2Rldi5icmlnaHRuZXNzID0gbGVkLT5tYXhfYnJpZ2h0
+bmVzczsNCj4gPiArCWVsc2UgaWYgKGxlZC0+ZGVmYXVsdF9zdGF0ZSA9PSBMRURTX1BXTV9E
+RUZTVEFURV9LRUVQKSB7DQo+ID4gKwkJdWludDY0X3QgYnJpZ2h0bmVzczsNCj4gPiArDQo+
+ID4gKwkJcHdtX2dldF9zdGF0ZShsZWRfZGF0YS0+cHdtLCAmbGVkX2RhdGEtPnB3bXN0YXRl
+KTsNCj4gDQo+IFRoaXMgc2VlbXMgdG8gbm90IGJlIHJlYWRpbmcgdGhlIGRldmljZSBzdGF0
+ZSwgaS5lLiB3aGF0IHlvdSB0cmllZA0KPiB0byBhZGRyZXNzIGJ5IGRpcmVjdCBjYWxsIHRv
+IHB3bS0+Y2hpcC0+b3BzLT5nZXRfc3RhdGUoKSBiZWZvcmUuDQo+IA0KPiBBbSBJIG1pc3Np
+bmcgc29tZXRoaW5nPw0KPiANCg0Kd2VsbCwgbm90IHlvdSwgYnV0IEkgbWlzc2VkIGNmYzRj
+MTg5YmM3MGIxYWNjMTdlNmYxYWJmMWRjMWMwYWU4OTBiZDguDQpTaW5jZSB0aGlzIGNvbW1p
+dCBwd21fZ2V0X3N0YXRlKCkgaXMgc3VmZmljaWVudC4NCg0KUmVnYXJkcyBEZW5pcw0KDQoN
+Cg0KRGllaGwgQ29ubmVjdGl2aXR5IFNvbHV0aW9ucyBHbWJIDQpHZXNjaMOkZnRzZsO8aHJ1
+bmc6IEhvcnN0IExlb25iZXJnZXINClNpdHogZGVyIEdlc2VsbHNjaGFmdDogTsO8cm5iZXJn
+IC0gUmVnaXN0ZXJnZXJpY2h0OiBBbXRzZ2VyaWNodA0KTsO8cm5iZXJnOiBIUkIgMzIzMTUN
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpEZXIg
+SW5oYWx0IGRlciB2b3JzdGVoZW5kZW4gRS1NYWlsIGlzdCBuaWNodCByZWNodGxpY2ggYmlu
+ZGVuZC4gRGllc2UgRS1NYWlsIGVudGhhZWx0IHZlcnRyYXVsaWNoZSB1bmQvb2RlciByZWNo
+dGxpY2ggZ2VzY2h1ZXR6dGUgSW5mb3JtYXRpb25lbi4NCkluZm9ybWllcmVuIFNpZSB1bnMg
+Yml0dGUsIHdlbm4gU2llIGRpZXNlIEUtTWFpbCBmYWVsc2NobGljaGVyd2Vpc2UgZXJoYWx0
+ZW4gaGFiZW4uIEJpdHRlIGxvZXNjaGVuIFNpZSBpbiBkaWVzZW0gRmFsbCBkaWUgTmFjaHJp
+Y2h0Lg0KSmVkZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwgQmVrYW5udGdh
+YmUsIEFlbmRlcnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlvbiBkaWVzZXIg
+RS1NYWlsIGlzdCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQotIEluZm9ybWF0aW9uZW4genVt
+IERhdGVuc2NodXR6LCBpbnNiZXNvbmRlcmUgenUgSWhyZW4gUmVjaHRlbiwgZXJoYWx0ZW4g
+U2llIHVudGVyIGh0dHBzOi8vd3d3LmRpZWhsLmNvbS9ncm91cC9kZS90cmFuc3BhcmVuei11
+bmQtaW5mb3JtYXRpb25zcGZsaWNodGVuLw0KDQpUaGUgY29udGVudHMgb2YgdGhlIGFib3Zl
+IG1lbnRpb25lZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGluZy4gVGhpcyBlLW1haWwg
+Y29udGFpbnMgY29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHByb3RlY3RlZCBpbmZvcm1h
+dGlvbi4gUGxlYXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFp
+bCBieQ0KbWlzdGFrZSBhbmQgZGVsZXRlIGl0IGluIHN1Y2ggYSBjYXNlLiBFYWNoIHVuYXV0
+aG9yaXplZCByZXByb2R1Y3Rpb24sIGRpc2Nsb3N1cmUsIGFsdGVyYXRpb24sIGRpc3RyaWJ1
+dGlvbiBhbmQvb3IgcHVibGljYXRpb24gb2YgdGhpcyBlLW1haWwgaXMgc3RyaWN0bHkgcHJv
+aGliaXRlZC4gDQotIEZvciBnZW5lcmFsIGluZm9ybWF0aW9uIG9uIGRhdGEgcHJvdGVjdGlv
+biBhbmQgeW91ciByZXNwZWN0aXZlIHJpZ2h0cyBwbGVhc2UgdmlzaXQgaHR0cHM6Ly93d3cu
+ZGllaGwuY29tL2dyb3VwL2VuL3RyYW5zcGFyZW5jeS1hbmQtaW5mb3JtYXRpb24tb2JsaWdh
+dGlvbnMvDQo=
