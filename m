@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F94C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50174C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6A32051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC172051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:43:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="X6Ep94lO"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="FlRBNpaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731569AbgCPOnY (ORCPT
+        id S1731680AbgCPOnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:43:24 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37336 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731634AbgCPOnY (ORCPT
+        Mon, 16 Mar 2020 10:43:31 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37514 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731634AbgCPOna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:43:24 -0400
-Received: by mail-pj1-f68.google.com with SMTP id ca13so8825647pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:43:23 -0700 (PDT)
+        Mon, 16 Mar 2020 10:43:30 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 3so2212126pff.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=k2DKMzLKpWPoePhkNzUYoz346KeCU9iJAnRLemYYamI=;
-        b=X6Ep94lO4hEAubgNo5c3gfXUM887DGyMnATJNudkbeyHEU1B/xwY6agzgeAgl15sqZ
-         XbcKI5HDS6M8GO/M2vQqFqYKc7+x6/GtELckop+mTsYMqDURW9sCf0+E8Om1MhtrEiYD
-         MozVkxacGNAidvqsFkrREQUTfSpp210cSLf0870wIVChda7hv9j32gBNkxncd2Uoc5WV
-         RFNfhn9VxlFVa6s4JQVwvyNVfpV88t810Nt1/OEa3uO43PDk5S+c5OSF4UwRWCn9J+29
-         f4efAMnIOOKe2RSimJiaxaHvIMzReWdtgTle8FXMbIyI8FstuZD/oaI9fcrZc1Yt28xJ
-         zDng==
+        bh=VfDXChHGdoSjfLnV3mfvgQ6aT9l1X7OLIoozsnEJ28E=;
+        b=FlRBNpajOQqHKpmcI5UiDjrK0EUJZkM+Ixlyx0kZUAmYBfmN+9PBGjoUAcUCwi8UyJ
+         5NFmMY7Vi/MkgfrDvTZFoQDRCSVV9czWvyVX8tIQhTrDd4P8W5yW9xq1KzxN7L6E8ZnT
+         qtBcisrC+vG1cANnv8nq8yyC8U3aFVX+xfI/zyohSzoSrksn7XE1we6+Rjsl3ytKcWUu
+         j+p1b2AP/v4fb33M9vdniF/xctefm4ltPkMI1woeHrNSn+2sXF/eA0uX47HHbAMYY2od
+         YuDo7CUd/B0y+h6yLc2cyKWIfg8epe5/SPiiNg3GLFMMBk2U1VnlwkRlXgYnPtKzydYg
+         PiFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k2DKMzLKpWPoePhkNzUYoz346KeCU9iJAnRLemYYamI=;
-        b=XxMNlPxTQq77lFZvREOhwchd4u8YM/J6a8F294Xv5gN2+0LC2VhnvxSjLo7+1834sW
-         uPX21iUWoR3Q5vvARQ093uu8qQnSvsmkSvAUDHothCH5DWrKOacBEY7ENztNtKGll1WH
-         /miVi/LzJhmBk57h2ImJlwRTSslNG/0dhFdHgFjRXI5Aq0ob+q+iHOVDu68OKgtaU90I
-         8veyxkwJ10Y8xRp37vgwBWx+iurFMIODp0IxBYTysmjUIXUFoKQ6tDd0i2KGy+BEd0NV
-         GntVD2d++/aCRmxEcINj3mZR9FQvCIe2L37TFj5/EOeOKw6SrQT2idIzC0hIXI55gHpj
-         36xw==
-X-Gm-Message-State: ANhLgQ23uXtwmY6ULYmGKIn/YQEfJs++7yzTgBu2+PBH7cauTMb94Eyt
-        sLRk7C2a3+KzVCmOkNHP6l/ifU/OsU6ZEg==
-X-Google-Smtp-Source: ADFU+vv7z0EaZP1JK86FaA1e9qRhNjU7eg6oUr006KcIxkJx9/pbC7MK4KMNoxy6quWosDIXWbCB2A==
-X-Received: by 2002:a17:902:b58b:: with SMTP id a11mr27782580pls.9.1584369802459;
-        Mon, 16 Mar 2020 07:43:22 -0700 (PDT)
+        bh=VfDXChHGdoSjfLnV3mfvgQ6aT9l1X7OLIoozsnEJ28E=;
+        b=IEWH34LmUqo2Y6twvAkTehiVLOrIUw6SEwF3XyJORvSyhJscxvwYlqxgzM1ZOzoo9B
+         vBMPEoMhKX1NXmBOwruLrG2bC77ch8A9EBGCmHuDGTw4lSnAWCzy6AeE6144sDnSxgGV
+         b26F5eLJWbkwXSYPadG6vphlraELE22MFLm9aNNelyxfbC097Ztg+/iOwj89EbRXNvc8
+         dtNxhnLiNYGY+VMAlIqjiqFnxebdyJfU1Rfa7bAbjfe4yQ4F2U+NkyDIu+cBcTnThy4n
+         pxv9qYVAtk18443ng91I5k2ZoE9Hwr+QK7pN2dP6Mm/lke4c3AydsWhF77dboRUBYrS9
+         TlMw==
+X-Gm-Message-State: ANhLgQ2xpVwkapOiAMmtG+on106GZsH17IVpwpCbxDEmYHisBVdi0UTX
+        EAbbhCVTnIBNmnuYsB+OdmswrNx6/rH0Nw==
+X-Google-Smtp-Source: ADFU+vslbJNSlR/4aZ4aBYmR+IUr/uWT+/7K65eoh/82qJWAVtjbb1zsYqD8a+3hn9osXwhGXVaUtQ==
+X-Received: by 2002:aa7:9588:: with SMTP id z8mr10385907pfj.145.1584369807408;
+        Mon, 16 Mar 2020 07:43:27 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.43.17
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.43.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:43:21 -0700 (PDT)
+        Mon, 16 Mar 2020 07:43:26 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -66,13 +66,10 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCHv2 49/50] kernel: Use show_stack_loglvl()
-Date:   Mon, 16 Mar 2020 14:39:15 +0000
-Message-Id: <20200316143916.195608-50-dima@arista.com>
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCHv2 50/50] kernel: Rename show_stack_loglvl() => show_stack()
+Date:   Mon, 16 Mar 2020 14:39:16 +0000
+Message-Id: <20200316143916.195608-51-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -83,41 +80,933 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Align the last users of show_stack() by KERN_DEFAULT as the surrounding
-headers/messages.
+Now the last users of show_stack() got converted to use an explicit log
+level, show_stack_loglvl() can drop it's redundant suffix and become
+once again well known show_stack().
 
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- kernel/locking/rtmutex-debug.c | 2 +-
- lib/dump_stack.c               | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/alpha/kernel/traps.c        |  8 +-------
+ arch/arc/kernel/stacktrace.c     |  8 +-------
+ arch/arm/kernel/traps.c          |  8 +-------
+ arch/arm64/kernel/traps.c        |  8 +-------
+ arch/c6x/kernel/traps.c          |  7 +------
+ arch/csky/kernel/dumpstack.c     |  7 +------
+ arch/csky/kernel/ptrace.c        |  4 ++--
+ arch/h8300/kernel/traps.c        |  8 +-------
+ arch/hexagon/kernel/traps.c      |  8 +-------
+ arch/ia64/kernel/mca.c           |  2 +-
+ arch/ia64/kernel/process.c       | 11 ++---------
+ arch/m68k/kernel/traps.c         | 11 +++--------
+ arch/microblaze/kernel/traps.c   |  8 +-------
+ arch/mips/kernel/traps.c         |  8 +-------
+ arch/nds32/kernel/traps.c        |  8 +-------
+ arch/nios2/kernel/traps.c        | 12 +++---------
+ arch/openrisc/kernel/traps.c     | 10 ++--------
+ arch/parisc/kernel/traps.c       |  8 +-------
+ arch/powerpc/kernel/process.c    | 11 +++--------
+ arch/powerpc/kernel/stacktrace.c |  2 +-
+ arch/riscv/kernel/stacktrace.c   |  8 +-------
+ arch/s390/kernel/dumpstack.c     |  9 ++-------
+ arch/sh/kernel/dumpstack.c       |  8 +-------
+ arch/sh/kernel/process_64.c      |  3 +--
+ arch/sparc/kernel/process_32.c   | 11 ++---------
+ arch/sparc/kernel/process_64.c   |  2 +-
+ arch/um/drivers/mconsole_kern.c  |  2 +-
+ arch/um/kernel/sysrq.c           |  7 +------
+ arch/unicore32/kernel/traps.c    |  7 +------
+ arch/x86/kernel/amd_gart_64.c    |  2 +-
+ arch/x86/kernel/dumpstack.c      |  7 +------
+ arch/xtensa/kernel/traps.c       | 10 ++--------
+ drivers/base/power/main.c        |  2 +-
+ drivers/tty/sysrq.c              |  2 +-
+ include/linux/sched/debug.h      |  5 ++---
+ kernel/debug/kdb/kdb_bt.c        |  2 +-
+ kernel/locking/rtmutex-debug.c   |  2 +-
+ kernel/sched/core.c              |  2 +-
+ lib/dump_stack.c                 |  2 +-
+ 39 files changed, 52 insertions(+), 198 deletions(-)
 
+diff --git a/arch/alpha/kernel/traps.c b/arch/alpha/kernel/traps.c
+index 2402f1777f54..8383ccfaccdc 100644
+--- a/arch/alpha/kernel/traps.c
++++ b/arch/alpha/kernel/traps.c
+@@ -144,8 +144,7 @@ dik_show_trace(unsigned long *sp, const char *loglvl)
+ 
+ static int kstack_depth_to_print = 24;
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+-			const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *sp, const char *loglvl)
+ {
+ 	unsigned long *stack;
+ 	int i;
+@@ -174,11 +173,6 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+ 	dik_show_trace(sp, loglvl);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *sp)
+-{
+-	show_stack_loglvl(task, sp, KERN_DEFAULT);
+-}
+-
+ void
+ die_if_kernel(char * str, struct pt_regs *regs, long err, unsigned long *r9_15)
+ {
+diff --git a/arch/arc/kernel/stacktrace.c b/arch/arc/kernel/stacktrace.c
+index 24f9cd8a12c9..feba91c9d969 100644
+--- a/arch/arc/kernel/stacktrace.c
++++ b/arch/arc/kernel/stacktrace.c
+@@ -228,17 +228,11 @@ noinline void show_stacktrace(struct task_struct *tsk, struct pt_regs *regs,
+ EXPORT_SYMBOL(show_stacktrace);
+ 
+ /* Expected by sched Code */
+-void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
+-			const char *loglvl)
++void show_stack(struct task_struct *tsk, unsigned long *sp, const char *loglvl)
+ {
+ 	show_stacktrace(tsk, NULL, loglvl);
+ }
+ 
+-void show_stack(struct task_struct *tsk, unsigned long *sp)
+-{
+-	show_stack_loglvl(tsk, sp, KERN_DEFAULT);
+-}
+-
+ /* Another API expected by schedular, shows up in "ps" as Wait Channel
+  * Of course just returning schedule( ) would be pointless so unwind until
+  * the function is not in schedular code
+diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
+index 00455b5bbf8a..09faa0efe47b 100644
+--- a/arch/arm/kernel/traps.c
++++ b/arch/arm/kernel/traps.c
+@@ -247,18 +247,12 @@ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+ }
+ #endif
+ 
+-void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *tsk, unsigned long *sp, const char *loglvl)
+ {
+ 	dump_backtrace(NULL, tsk, loglvl);
+ 	barrier();
+ }
+ 
+-void show_stack(struct task_struct *tsk, unsigned long *sp)
+-{
+-	show_stack_loglvl(tsk, sp, KERN_DEFAULT);
+-}
+-
+ #ifdef CONFIG_PREEMPT
+ #define S_PREEMPT " PREEMPT"
+ #elif defined(CONFIG_PREEMPT_RT)
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index 516e92332fd0..4857e9d60359 100644
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -137,18 +137,12 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+ 	put_task_stack(tsk);
+ }
+ 
+-void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *tsk, unsigned long *sp, const char *loglvl)
+ {
+ 	dump_backtrace(NULL, tsk, loglvl);
+ 	barrier();
+ }
+ 
+-void show_stack(struct task_struct *tsk, unsigned long *sp)
+-{
+-	show_stack_loglvl(tsk, sp, KERN_DEFAULT);
+-}
+-
+ #ifdef CONFIG_PREEMPT
+ #define S_PREEMPT " PREEMPT"
+ #elif defined(CONFIG_PREEMPT_RT)
+diff --git a/arch/c6x/kernel/traps.c b/arch/c6x/kernel/traps.c
+index 4afbf48f1ce0..2b9121c755be 100644
+--- a/arch/c6x/kernel/traps.c
++++ b/arch/c6x/kernel/traps.c
+@@ -374,7 +374,7 @@ static void show_trace(unsigned long *stack, unsigned long *endstack,
+ 	printk("%s\n", loglvl);
+ }
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
++void show_stack(struct task_struct *task, unsigned long *stack,
+ 		const char *loglvl)
+ {
+ 	unsigned long *p, *endstack;
+@@ -403,11 +403,6 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
+ 	show_trace(stack, endstack, loglvl);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *stack)
+-{
+-	show_stack_loglvl(task, stack, KERN_DEBUG);
+-}
+-
+ int is_valid_bugaddr(unsigned long addr)
+ {
+ 	return __kernel_text_address(addr);
+diff --git a/arch/csky/kernel/dumpstack.c b/arch/csky/kernel/dumpstack.c
+index c500837390d3..b9660b1944a1 100644
+--- a/arch/csky/kernel/dumpstack.c
++++ b/arch/csky/kernel/dumpstack.c
+@@ -32,7 +32,7 @@ static void show_trace(unsigned long *stack, const char *loglvl)
+ 	pr_cont("\n");
+ }
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
++void show_stack(struct task_struct *task, unsigned long *stack,
+ 		const char *loglvl)
+ {
+ 	if (!stack) {
+@@ -48,8 +48,3 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
+ 
+ 	show_trace(stack, loglvl);
+ }
+-
+-void show_stack(struct task_struct *task, unsigned long *stack)
+-{
+-	show_stack_loglvl(task, stack, KERN_INFO);
+-}
+diff --git a/arch/csky/kernel/ptrace.c b/arch/csky/kernel/ptrace.c
+index 313623a19ecb..7fa7202e025f 100644
+--- a/arch/csky/kernel/ptrace.c
++++ b/arch/csky/kernel/ptrace.c
+@@ -235,7 +235,7 @@ asmlinkage void syscall_trace_exit(struct pt_regs *regs)
+ 		trace_sys_exit(regs, syscall_get_return_value(current, regs));
+ }
+ 
+-extern void show_stack(struct task_struct *task, unsigned long *stack);
++extern void show_stack(struct task_struct *task, unsigned long *stack, const char *loglvl);
+ void show_regs(struct pt_regs *fp)
+ {
+ 	unsigned long   *sp;
+@@ -311,6 +311,6 @@ void show_regs(struct pt_regs *fp)
+ 	}
+ 	pr_cont("\n");
+ 
+-	show_stack(NULL, (unsigned long *)fp->regs[4]);
++	show_stack(NULL, (unsigned long *)fp->regs[4], KERN_INFO);
+ 	return;
+ }
+diff --git a/arch/h8300/kernel/traps.c b/arch/h8300/kernel/traps.c
+index 6362446563d6..5d8b969cd8f3 100644
+--- a/arch/h8300/kernel/traps.c
++++ b/arch/h8300/kernel/traps.c
+@@ -115,8 +115,7 @@ void die(const char *str, struct pt_regs *fp, unsigned long err)
+ 
+ static int kstack_depth_to_print = 24;
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *esp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *esp, const char *loglvl)
+ {
+ 	unsigned long *stack,  addr;
+ 	int i;
+@@ -158,8 +157,3 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *esp,
+ 	}
+ 	printk("%s\n", loglvl);
+ }
+-
+-void show_stack(struct task_struct *task, unsigned long *esp)
+-{
+-	show_stack_loglvl(task, esp, KERN_INFO);
+-}
+diff --git a/arch/hexagon/kernel/traps.c b/arch/hexagon/kernel/traps.c
+index a8a3a210d781..904134b37232 100644
+--- a/arch/hexagon/kernel/traps.c
++++ b/arch/hexagon/kernel/traps.c
+@@ -175,18 +175,12 @@ static void do_show_stack(struct task_struct *task, unsigned long *fp,
+ 	}
+ }
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *fp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *fp, const char *loglvl)
+ {
+ 	/* Saved link reg is one word above FP */
+ 	do_show_stack(task, fp, 0, loglvl);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *fp)
+-{
+-	show_stack_loglvl(task, fp, 0, KERN_INFO);
+-}
+-
+ int die(const char *str, struct pt_regs *regs, long err)
+ {
+ 	static struct {
+diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
+index bf2cb9294795..1d4b8f619fd2 100644
+--- a/arch/ia64/kernel/mca.c
++++ b/arch/ia64/kernel/mca.c
+@@ -1630,7 +1630,7 @@ default_monarch_init_process(struct notifier_block *self, unsigned long val, voi
+ 	if (read_trylock(&tasklist_lock)) {
+ 		do_each_thread (g, t) {
+ 			printk("\nBacktrace of pid %d (%s)\n", t->pid, t->comm);
+-			show_stack(t, NULL);
++			show_stack(t, NULL, KERN_DEFAULT);
+ 		} while_each_thread (g, t);
+ 		read_unlock(&tasklist_lock);
+ 	}
+diff --git a/arch/ia64/kernel/process.c b/arch/ia64/kernel/process.c
+index b0eeb19bdd8d..aaabf515cef5 100644
+--- a/arch/ia64/kernel/process.c
++++ b/arch/ia64/kernel/process.c
+@@ -85,8 +85,7 @@ ia64_do_show_stack (struct unw_frame_info *info, void *arg)
+ }
+ 
+ void
+-show_stack_loglvl (struct task_struct *task, unsigned long *sp,
+-		   const char *loglvl)
++show_stack (struct task_struct *task, unsigned long *sp, const char *loglvl)
+ {
+ 	if (!task)
+ 		unw_init_running(ia64_do_show_stack, (void *)loglvl);
+@@ -98,12 +97,6 @@ show_stack_loglvl (struct task_struct *task, unsigned long *sp,
+ 	}
+ }
+ 
+-void
+-show_stack (struct task_struct *task, unsigned long *sp)
+-{
+-	show_stack_loglvl(task, sp, KERN_DEFAULT);
+-}
+-
+ void
+ show_regs (struct pt_regs *regs)
+ {
+@@ -158,7 +151,7 @@ show_regs (struct pt_regs *regs)
+ 			       ((i == sof - 1) || (i % 3) == 2) ? "\n" : " ");
+ 		}
+ 	} else
+-		show_stack(NULL, NULL);
++		show_stack(NULL, NULL, KERN_DEFAULT);
+ }
+ 
+ /* local support for deprecated console_print */
+diff --git a/arch/m68k/kernel/traps.c b/arch/m68k/kernel/traps.c
+index ffcc5ec4fac3..df6fc782754f 100644
+--- a/arch/m68k/kernel/traps.c
++++ b/arch/m68k/kernel/traps.c
+@@ -916,7 +916,7 @@ void show_registers(struct pt_regs *regs)
+ 	default:
+ 		pr_cont("\n");
+ 	}
+-	show_stack(NULL, (unsigned long *)addr);
++	show_stack(NULL, (unsigned long *)addr, KERN_INFO);
+ 
+ 	pr_info("Code:");
+ 	set_fs(KERNEL_DS);
+@@ -935,8 +935,8 @@ void show_registers(struct pt_regs *regs)
+ 	pr_cont("\n");
+ }
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
+-		       const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *stack,
++		const char *loglvl)
+ {
+ 	unsigned long *p;
+ 	unsigned long *endstack;
+@@ -963,11 +963,6 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
+ 	show_trace(stack, loglvl);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *stack)
+-{
+-	show_stack_loglvl(task, stack, KERN_INFO);
+-}
+-
+ /*
+  * The vector number returned in the frame pointer may also contain
+  * the "fs" (Fault Status) bits on ColdFire. These are in the bottom
+diff --git a/arch/microblaze/kernel/traps.c b/arch/microblaze/kernel/traps.c
+index 149ae534937e..94b6fe93147d 100644
+--- a/arch/microblaze/kernel/traps.c
++++ b/arch/microblaze/kernel/traps.c
+@@ -31,8 +31,7 @@ static int __init kstack_setup(char *s)
+ }
+ __setup("kstack=", kstack_setup);
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *sp, const char *loglvl)
+ {
+ 	unsigned long words_to_show;
+ 	u32 fp = (u32) sp;
+@@ -77,8 +76,3 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+ 
+ 	debug_show_held_locks(task);
+ }
+-
+-void show_stack(struct task_struct *task, unsigned long *sp)
+-{
+-	show_stack_loglvl(task, sp, KERN_INFO);
+-}
+diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+index 077aabbd6b9f..4522902228b5 100644
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -196,8 +196,7 @@ static void show_stacktrace(struct task_struct *task,
+ 	show_backtrace(task, regs, loglvl);
+ }
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *sp, const char *loglvl)
+ {
+ 	struct pt_regs regs;
+ 	mm_segment_t old_fs = get_fs();
+@@ -225,11 +224,6 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+ 	set_fs(old_fs);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *sp)
+-{
+-	show_stack_loglvl(task, sp, KERN_DEFAULT)
+-}
+-
+ static void show_code(unsigned int __user *pc)
+ {
+ 	long i;
+diff --git a/arch/nds32/kernel/traps.c b/arch/nds32/kernel/traps.c
+index 90f12582c218..6a9772ba7392 100644
+--- a/arch/nds32/kernel/traps.c
++++ b/arch/nds32/kernel/traps.c
+@@ -135,8 +135,7 @@ static void __dump(struct task_struct *tsk, unsigned long *base_reg,
+ 	printk("%s\n", loglvl);
+ }
+ 
+-void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *tsk, unsigned long *sp, const char *loglvl)
+ {
+ 	unsigned long *base_reg;
+ 
+@@ -157,11 +156,6 @@ void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
+ 	barrier();
+ }
+ 
+-void show_stack(struct task_struct *tsk, unsigned long *sp)
+-{
+-	show_stack_loglvl(tsk, sp, KERN_EMERG);
+-}
+-
+ DEFINE_SPINLOCK(die_lock);
+ 
+ /*
+diff --git a/arch/nios2/kernel/traps.c b/arch/nios2/kernel/traps.c
+index 08071caa9b36..b172da4eb1a9 100644
+--- a/arch/nios2/kernel/traps.c
++++ b/arch/nios2/kernel/traps.c
+@@ -52,14 +52,13 @@ void _exception(int signo, struct pt_regs *regs, int code, unsigned long addr)
+ }
+ 
+ /*
+- * The show_stack(), show_stack_loglvl() are external API
+- * which we do not use ourselves.
++ * The show_stack() is external API which we do not use ourselves.
+  */
+ 
+ int kstack_depth_to_print = 48;
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
+-		       const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *stack,
++		const char *loglvl)
+ {
+ 	unsigned long *endstack, addr;
+ 	int i;
+@@ -106,11 +105,6 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
+ 	printk("%s\n", loglvl);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *stack)
+-{
+-	show_stack_loglvl(task, stack, KERN_EMERG);
+-}
+-
+ void __init trap_init(void)
+ {
+ 	/* Nothing to do here */
+diff --git a/arch/openrisc/kernel/traps.c b/arch/openrisc/kernel/traps.c
+index 9d5a85dd1992..97163815bbc5 100644
+--- a/arch/openrisc/kernel/traps.c
++++ b/arch/openrisc/kernel/traps.c
+@@ -48,8 +48,7 @@ void print_trace(void *data, unsigned long addr, int reliable)
+ }
+ 
+ /* displays a short stack trace */
+-void show_stack_loglvl(struct task_struct *task, unsigned long *esp,
+-		const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *esp, const char *loglvl)
+ {
+ 	if (esp == NULL)
+ 		esp = (unsigned long *)&esp;
+@@ -58,11 +57,6 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *esp,
+ 	unwind_stack((void *)loglvl, esp, print_trace);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *esp)
+-{
+-	show_stack_loglvl(task, esp, KERN_EMERG);
+-}
+-
+ void show_trace_task(struct task_struct *tsk)
+ {
+ 	/*
+@@ -111,7 +105,7 @@ void show_registers(struct pt_regs *regs)
+ 	if (in_kernel) {
+ 
+ 		printk("\nStack: ");
+-		show_stack(NULL, (unsigned long *)esp);
++		show_stack(NULL, (unsigned long *)esp, KERN_EMERG);
+ 
+ 		printk("\nCode: ");
+ 		if (regs->pc < PAGE_OFFSET)
+diff --git a/arch/parisc/kernel/traps.c b/arch/parisc/kernel/traps.c
+index c2411de3730f..0a89899f154a 100644
+--- a/arch/parisc/kernel/traps.c
++++ b/arch/parisc/kernel/traps.c
+@@ -198,17 +198,11 @@ static void parisc_show_stack(struct task_struct *task,
+ 	do_show_stack(&info, loglvl);
+ }
+ 
+-void show_stack_loglvl(struct task_struct *t, unsigned long *sp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *t, unsigned long *sp, const char *loglvl)
+ {
+ 	parisc_show_stack(t, NULL, loglvl);
+ }
+ 
+-void show_stack(struct task_struct *t, unsigned long *sp)
+-{
+-	show_stack_loglvl(t, sp, KERN_CRIT)
+-}
+-
+ int is_valid_bugaddr(unsigned long iaoq)
+ {
+ 	return 1;
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index c1ab7f613da4..c4cf9274b2b3 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -1437,7 +1437,7 @@ void show_regs(struct pt_regs * regs)
+ 	printk("NIP ["REG"] %pS\n", regs->nip, (void *)regs->nip);
+ 	printk("LR ["REG"] %pS\n", regs->link, (void *)regs->link);
+ #endif
+-	show_stack(current, (unsigned long *) regs->gpr[1]);
++	show_stack(current, (unsigned long *) regs->gpr[1], KERN_DEFAULT);
+ 	if (!user_mode(regs))
+ 		show_instructions(regs);
+ }
+@@ -2034,8 +2034,8 @@ unsigned long get_wchan(struct task_struct *p)
+ 
+ static int kstack_depth_to_print = CONFIG_PRINT_STACK_DEPTH;
+ 
+-void show_stack_loglvl(struct task_struct *tsk, unsigned long *stack,
+-		       const char *loglvl)
++void show_stack(struct task_struct *tsk, unsigned long *stack,
++		const char *loglvl)
+ {
+ 	unsigned long sp, ip, lr, newsp;
+ 	int count = 0;
+@@ -2104,11 +2104,6 @@ void show_stack_loglvl(struct task_struct *tsk, unsigned long *stack,
+ 	put_task_stack(tsk);
+ }
+ 
+-void show_stack(struct task_struct *tsk, unsigned long *stack)
+-{
+-	show_stack_loglvl(tsk, stack, KERN_DEFAULT);
+-}
+-
+ #ifdef CONFIG_PPC64
+ /* Called with hard IRQs off */
+ void notrace __ppc64_runlatch_on(void)
+diff --git a/arch/powerpc/kernel/stacktrace.c b/arch/powerpc/kernel/stacktrace.c
+index e2a46cfed5fd..5efef8f35ad3 100644
+--- a/arch/powerpc/kernel/stacktrace.c
++++ b/arch/powerpc/kernel/stacktrace.c
+@@ -260,7 +260,7 @@ static void raise_backtrace_ipi(cpumask_t *mask)
+ 			pr_cont(" current pointer corrupt? (%px)\n", p->__current);
+ 
+ 		pr_warn("Back trace of paca->saved_r1 (0x%016llx) (possibly stale):\n", p->saved_r1);
+-		show_stack(p->__current, (unsigned long *)p->saved_r1);
++		show_stack(p->__current, (unsigned long *)p->saved_r1, KERN_WARNING);
+ 	}
+ }
+ 
+diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+index 5b414ba9848b..7d60aa44598e 100644
+--- a/arch/riscv/kernel/stacktrace.c
++++ b/arch/riscv/kernel/stacktrace.c
+@@ -104,18 +104,12 @@ static bool print_trace_address(unsigned long pc, void *arg)
+ 	return false;
+ }
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *sp, const char *loglvl)
+ {
+ 	pr_cont("Call Trace:\n");
+ 	walk_stackframe(task, NULL, print_trace_address, (void *)loglvl);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *sp)
+-{
+-	show_stack_loglvl(task, sp, KERN_DEFAULT);
+-}
+-
+ static bool save_wchan(unsigned long pc, void *arg)
+ {
+ 	if (!in_sched_functions(pc)) {
+diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
+index 887a054919fc..0dc4b258b98d 100644
+--- a/arch/s390/kernel/dumpstack.c
++++ b/arch/s390/kernel/dumpstack.c
+@@ -126,7 +126,7 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
+ 	return -EINVAL;
+ }
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
++void show_stack(struct task_struct *task, unsigned long *stack,
+ 		       const char *loglvl)
+ {
+ 	struct unwind_state state;
+@@ -139,11 +139,6 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
+ 	debug_show_held_locks(task ? : current);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *stack)
+-{
+-	show_stack_loglvl(task, stack, KERN_DEFAULT);
+-}
+-
+ static void show_last_breaking_event(struct pt_regs *regs)
+ {
+ 	printk("Last Breaking-Event-Address:\n");
+@@ -181,7 +176,7 @@ void show_regs(struct pt_regs *regs)
+ 	show_registers(regs);
+ 	/* Show stack backtrace if pt_regs is from kernel mode */
+ 	if (!user_mode(regs))
+-		show_stack(NULL, (unsigned long *) regs->gprs[15]);
++		show_stack(NULL, (unsigned long *) regs->gprs[15], KERN_DEFAULT);
+ 	show_last_breaking_event(regs);
+ }
+ 
+diff --git a/arch/sh/kernel/dumpstack.c b/arch/sh/kernel/dumpstack.c
+index cc51e9d74667..a13c045804ed 100644
+--- a/arch/sh/kernel/dumpstack.c
++++ b/arch/sh/kernel/dumpstack.c
+@@ -144,8 +144,7 @@ void show_trace(struct task_struct *tsk, unsigned long *sp,
+ 	debug_show_held_locks(tsk);
+ }
+ 
+-void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *tsk, unsigned long *sp, const char *loglvl)
+ {
+ 	unsigned long stack;
+ 
+@@ -161,8 +160,3 @@ void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
+ 		 (unsigned long)task_stack_page(tsk));
+ 	show_trace(tsk, sp, NULL, loglvl);
+ }
+-
+-void show_stack(struct task_struct *task, unsigned long *sp)
+-{
+-	show_stack_loglvl(task, sp, KERN_DEFAULT);
+-}
+diff --git a/arch/sh/kernel/process_64.c b/arch/sh/kernel/process_64.c
+index c2844a2e18cd..4c2144225c8e 100644
+--- a/arch/sh/kernel/process_64.c
++++ b/arch/sh/kernel/process_64.c
+@@ -275,13 +275,12 @@ void show_regs(struct pt_regs *regs)
+ 	 * If we're in kernel mode, dump the stack too..
+ 	 */
+ 	if (!user_mode(regs)) {
+-		void show_stack(struct task_struct *tsk, unsigned long *sp);
+ 		unsigned long sp = regs->regs[15] & 0xffffffff;
+ 		struct task_struct *tsk = get_current();
+ 
+ 		tsk->thread.kregs = regs;
+ 
+-		show_stack(tsk, (unsigned long *)sp);
++		show_stack(tsk, (unsigned long *)sp, KERN_DEFAULT);
+ 	}
+ }
+ 
+diff --git a/arch/sparc/kernel/process_32.c b/arch/sparc/kernel/process_32.c
+index 0b07de5618e5..65c0d5207b0c 100644
+--- a/arch/sparc/kernel/process_32.c
++++ b/arch/sparc/kernel/process_32.c
+@@ -145,12 +145,10 @@ void show_regs(struct pt_regs *r)
+ }
+ 
+ /*
+- * The show_stack(), show_stack_loglvl() are external APIs which
+- * we do not use ourselves.
++ * The show_stack() is external API which we do not use ourselves.
+  * The oops is printed in die_if_kernel.
+  */
+-void show_stack_loglvl(struct task_struct *tsk, unsigned long *_ksp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *tsk, unsigned long *_ksp, const char *loglvl)
+ {
+ 	unsigned long pc, fp;
+ 	unsigned long task_base;
+@@ -179,11 +177,6 @@ void show_stack_loglvl(struct task_struct *tsk, unsigned long *_ksp,
+ 	printk("%s\n", loglvl);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *sp)
+-{
+-	show_stack_loglvl(task, sp, KERN_DEFAULT);
+-}
+-
+ /*
+  * Free current thread data structures etc..
+  */
+diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
+index 4282116e28e7..b2e3fe729b7e 100644
+--- a/arch/sparc/kernel/process_64.c
++++ b/arch/sparc/kernel/process_64.c
+@@ -195,7 +195,7 @@ void show_regs(struct pt_regs *regs)
+ 	       regs->u_regs[15]);
+ 	printk("RPC: <%pS>\n", (void *) regs->u_regs[15]);
+ 	show_regwindow(regs);
+-	show_stack(current, (unsigned long *) regs->u_regs[UREG_FP]);
++	show_stack(current, (unsigned long *)regs->u_regs[UREG_FP], KERN_DEFAULT);
+ }
+ 
+ union global_cpu_snapshot global_cpu_snapshot[NR_CPUS];
+diff --git a/arch/um/drivers/mconsole_kern.c b/arch/um/drivers/mconsole_kern.c
+index b80a1d616e4e..697722fc58bd 100644
+--- a/arch/um/drivers/mconsole_kern.c
++++ b/arch/um/drivers/mconsole_kern.c
+@@ -642,7 +642,7 @@ static void stack_proc(void *arg)
+ {
+ 	struct task_struct *task = arg;
+ 
+-	show_stack(task, NULL);
++	show_stack(task, NULL, KERN_INFO);
+ }
+ 
+ /*
+diff --git a/arch/um/kernel/sysrq.c b/arch/um/kernel/sysrq.c
+index 1b54b6431499..acbc879d2773 100644
+--- a/arch/um/kernel/sysrq.c
++++ b/arch/um/kernel/sysrq.c
+@@ -27,7 +27,7 @@ static const struct stacktrace_ops stackops = {
+ 	.address = _print_addr
+ };
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
++void show_stack(struct task_struct *task, unsigned long *stack,
+ 		       const char *loglvl)
+ {
+ 	struct pt_regs *segv_regs = current->thread.segv_regs;
+@@ -56,8 +56,3 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
+ 	dump_trace(current, &stackops, (void *)loglvl);
+ 	printk("%s\n", loglvl);
+ }
+-
+-void show_stack(struct task_struct *task, unsigned long *stack)
+-{
+-	show_stack_loglvl(task, stack, KERN_INFO);
+-}
+diff --git a/arch/unicore32/kernel/traps.c b/arch/unicore32/kernel/traps.c
+index 8b1335997f50..a3ac01df1a2e 100644
+--- a/arch/unicore32/kernel/traps.c
++++ b/arch/unicore32/kernel/traps.c
+@@ -167,18 +167,13 @@ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+ 		c_backtrace(fp, loglvl);
+ }
+ 
+-void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
++void show_stack(struct task_struct *tsk, unsigned long *sp,
+ 		       const char *loglvl)
+ {
+ 	dump_backtrace(NULL, tsk, loglvl);
+ 	barrier();
+ }
+ 
+-void show_stack(struct task_struct *tsk, unsigned long *sp)
+-{
+-	show_stack_loglvl(tsk, sp, KERN_DEFAULT)
+-}
+-
+ static int __die(const char *str, int err, struct thread_info *thread,
+ 		struct pt_regs *regs)
+ {
+diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
+index c0fdf594709e..584016ff59b8 100644
+--- a/arch/x86/kernel/amd_gart_64.c
++++ b/arch/x86/kernel/amd_gart_64.c
+@@ -159,7 +159,7 @@ static void dump_leak(void)
+ 		return;
+ 	dump = 1;
+ 
+-	show_stack_loglvl(NULL, NULL, KERN_ERR);
++	show_stack(NULL, NULL, KERN_ERR);
+ 	debug_dma_dump_mappings(NULL);
+ }
+ #endif
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index 4396f2cfad19..456511b2284e 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -279,7 +279,7 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+ 	}
+ }
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
++void show_stack(struct task_struct *task, unsigned long *sp,
+ 		       const char *loglvl)
+ {
+ 	task = task ? : current;
+@@ -294,11 +294,6 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+ 	show_trace_log_lvl(task, NULL, sp, loglvl);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *sp)
+-{
+-	show_stack_loglvl(task, sp, KERN_DEFAULT);
+-}
+-
+ void show_stack_regs(struct pt_regs *regs)
+ {
+ 	show_trace_log_lvl(current, regs, NULL, KERN_DEFAULT);
+diff --git a/arch/xtensa/kernel/traps.c b/arch/xtensa/kernel/traps.c
+index 3a50813eeb70..1671fbb816fa 100644
+--- a/arch/xtensa/kernel/traps.c
++++ b/arch/xtensa/kernel/traps.c
+@@ -501,8 +501,7 @@ static void show_trace(struct task_struct *task, unsigned long *sp,
+ #define STACK_DUMP_LINE_SIZE 32
+ static size_t kstack_depth_to_print = CONFIG_PRINT_STACK_DEPTH;
+ 
+-void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+-		       const char *loglvl)
++void show_stack(struct task_struct *task, unsigned long *sp, const char *loglvl)
+ {
+ 	size_t len;
+ 
+@@ -519,11 +518,6 @@ void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+ 	show_trace(task, stack, loglvl);
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *sp)
+-{
+-	show_stack_loglvl(task, sp, KERN_INFO);
+-}
+-
+ DEFINE_SPINLOCK(die_lock);
+ 
+ void die(const char * str, struct pt_regs * regs, long err)
+@@ -540,7 +534,7 @@ void die(const char * str, struct pt_regs * regs, long err)
+ 	pr_info("%s: sig: %ld [#%d]%s\n", str, err, ++die_counter, pr);
+ 	show_regs(regs);
+ 	if (!user_mode(regs))
+-		show_stack(NULL, (unsigned long*)regs->areg[1]);
++		show_stack(NULL, (unsigned long *)regs->areg[1], KERN_INFO);
+ 
+ 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
+ 	spin_unlock_irq(&die_lock);
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index 9b8450eab02e..1f530479dd8b 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -515,7 +515,7 @@ static void dpm_watchdog_handler(struct timer_list *t)
+ 	struct dpm_watchdog *wd = from_timer(wd, t, timer);
+ 
+ 	dev_emerg(wd->dev, "**** DPM device timeout ****\n");
+-	show_stack_loglvl(wd->tsk, NULL, KERN_EMERG);
++	show_stack(wd->tsk, NULL, KERN_EMERG);
+ 	panic("%s %s: unrecoverable failure\n",
+ 		dev_driver_string(wd->dev), dev_name(wd->dev));
+ }
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index fe1ffcbda194..aa9a95ed3758 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -220,7 +220,7 @@ static void showacpu(void *dummy)
+ 
+ 	raw_spin_lock_irqsave(&show_lock, flags);
+ 	pr_info("CPU%d:\n", smp_processor_id());
+-	show_stack_loglvl(NULL, NULL, KERN_INFO);
++	show_stack(NULL, NULL, KERN_INFO);
+ 	raw_spin_unlock_irqrestore(&show_lock, flags);
+ }
+ 
+diff --git a/include/linux/sched/debug.h b/include/linux/sched/debug.h
+index 373e4e3faf2a..00c45a0e6abe 100644
+--- a/include/linux/sched/debug.h
++++ b/include/linux/sched/debug.h
+@@ -30,9 +30,8 @@ extern void show_regs(struct pt_regs *);
+  * task), SP is the stack pointer of the first frame that should be shown in the back
+  * trace (or NULL if the entire call-chain of the task should be shown).
+  */
+-extern void show_stack(struct task_struct *task, unsigned long *sp);
+-extern void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+-			      const char *loglvl);
++extern void show_stack(struct task_struct *task, unsigned long *sp,
++		       const char *loglvl);
+ 
+ extern void sched_show_task(struct task_struct *p);
+ 
+diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
+index 43f5dcd2b9ac..18e03aba2cfc 100644
+--- a/kernel/debug/kdb/kdb_bt.c
++++ b/kernel/debug/kdb/kdb_bt.c
+@@ -30,7 +30,7 @@ static void kdb_show_stack(struct task_struct *p, void *addr)
+ 		kdb_dump_stack_on_cpu(kdb_process_cpu(p));
+ 		console_loglevel = old_lvl;
+ 	} else {
+-		show_stack_loglvl(p, addr, KERN_EMERG);
++		show_stack(p, addr, KERN_EMERG);
+ 	}
+ 
+ 	kdb_trap_printk--;
 diff --git a/kernel/locking/rtmutex-debug.c b/kernel/locking/rtmutex-debug.c
-index fd4fe1f5b458..5e63d6e8a223 100644
+index 5e63d6e8a223..36e69100e8e0 100644
 --- a/kernel/locking/rtmutex-debug.c
 +++ b/kernel/locking/rtmutex-debug.c
 @@ -125,7 +125,7 @@ void debug_rt_mutex_print_deadlock(struct rt_mutex_waiter *waiter)
  
  	printk("\n%s/%d's [blocked] stackdump:\n\n",
  		task->comm, task_pid_nr(task));
--	show_stack(task, NULL);
-+	show_stack_loglvl(task, NULL, KERN_DEFAULT);
+-	show_stack_loglvl(task, NULL, KERN_DEFAULT);
++	show_stack(task, NULL, KERN_DEFAULT);
  	printk("\n%s/%d's [current] stackdump:\n\n",
  		current->comm, task_pid_nr(current));
  	dump_stack();
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bae2c84077bd..54b96d891f5d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5948,7 +5948,7 @@ void sched_show_task(struct task_struct *p)
+ 		(unsigned long)task_thread_info(p)->flags);
+ 
+ 	print_worker_info(KERN_INFO, p);
+-	show_stack_loglvl(p, NULL, KERN_INFO);
++	show_stack(p, NULL, KERN_INFO);
+ 	put_task_stack(p);
+ }
+ EXPORT_SYMBOL_GPL(sched_show_task);
 diff --git a/lib/dump_stack.c b/lib/dump_stack.c
-index 33ffbf308853..5595e8962cf6 100644
+index 5595e8962cf6..a00ee6eedc7c 100644
 --- a/lib/dump_stack.c
 +++ b/lib/dump_stack.c
 @@ -74,7 +74,7 @@ void show_regs_print_info(const char *log_lvl)
  static void __dump_stack(void)
  {
  	dump_stack_print_info(KERN_DEFAULT);
--	show_stack(NULL, NULL);
-+	show_stack_loglvl(NULL, NULL, KERN_DEFAULT);
+-	show_stack_loglvl(NULL, NULL, KERN_DEFAULT);
++	show_stack(NULL, NULL, KERN_DEFAULT);
  }
  
  /**
