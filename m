@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE96EC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4A3C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8993320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2ACA20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:41:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="VBBjmFrl"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WEXipQvs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731765AbgCPOlG (ORCPT
+        id S1731771AbgCPOlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:41:06 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46865 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731556AbgCPOlE (ORCPT
+        Mon, 16 Mar 2020 10:41:09 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35300 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731556AbgCPOlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:41:04 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c19so10042538pfo.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:41:04 -0700 (PDT)
+        Mon, 16 Mar 2020 10:41:08 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 7so9884390pgr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mxQZWLD7ZJycSQtcTjW3rDH+hRkvx7KnYbAdTQK5KgQ=;
-        b=VBBjmFrliWNWWPeKLcEesaN3ru++vhilB4PrrUmHyUf88Wu0JoPsC7U58HPISK9662
-         0rvVcnfW/isi87cxtfLjFaQ7G0rVwNuk9OTTMfJeyMMC1jbUUhgC5c3HmL9Hw6jMOWGR
-         fqNn7I5h72eGAaCj8odfEEOiVXPe2ucaKigOFK3du9fvxnfnNAZTztGTleBTfxnZOoEq
-         cGy0a31DXsZ0GfzyZAZXuQYUxhEDDmxqnzuhaUTeL7NPtBpqRd8OG0vK14b/gcxlhP6r
-         Hh+/ZF32rpUcWfTheCY2UMloyQUCIHz6pgTZbVtDlG8OgR+HRD6AORH49bbNvGgWl73j
-         s8Lw==
+        bh=XVNpRwDg0MuGmzFxA36r33yCChtq9x1Gs5FT6H3M82A=;
+        b=WEXipQvsuTlA0+MY4ArVFZJj4l0UkPQaEjj3vrMcJd3GX5u8yEAuYFyBVI9RQ9IDPz
+         5Fo7qeycvpKHWlY/HUV+IsnFJ3bkDlIfnIyxi5UPWuP0F5fuGMwudZTEtjqYKwDXLMS0
+         nuxObP2Ffm72vHA19VklehkDeaxdIF3c4RL9jGzCS8ZI/Yf532YM/wHkgmkyhcesGfEw
+         KQ8dgZhY3wY9uKSsdXMVwpD9Jh3+O3nFAzKizD+NKrzNkqIUjGivmjNag/fpBSEmAN4H
+         buq0eqsj9cvwmkHqPmrI73OtdqL3jnbAKHpTEq1yLwWl/zgDupeG/Af+77Kj3fUwU75o
+         WAUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mxQZWLD7ZJycSQtcTjW3rDH+hRkvx7KnYbAdTQK5KgQ=;
-        b=WUbVmfhL0Fmesn3WhwbdMN+Uz2Nkg8HHiyB/b35pIbQWRmWXUbVDmWcjCktMooUsW2
-         Je30aJUTVDVa1ay34J1xmsIk32aX4xXTlBYCo2TUUfJ37edj6DJksqmfRTfeowCMXcrA
-         8p0W6wI1EAhtt437+CN/rNhYPVAp03pO6XU9sUoydwU9arvhfCFzWYUopJYviFbNTYP7
-         7lLFtjjmWQSExXt5xQrBTZg/GIt7uTGrU/hPrtVOh9tCcKaGQRxEgCphkK7GHriFFIHQ
-         Sl03N6VajOFAVBSSuVpKqVCm1bbbSgn2dyVyycsTO+6u8G45gJaRwXFJKOvWkB406Ibo
-         hPKA==
-X-Gm-Message-State: ANhLgQ0MIYq9invczti53hNlzf6LOrnYtYkXuTX+ygb91HW+eCSqNDLf
-        nG5Jcq9D8leaBF3Od4QQ3ybBs7zqUApTEQ==
-X-Google-Smtp-Source: ADFU+vs/PLweAzu1NAleAS3yYnv4aPH6WkXFQk3kIHhLc62Xz7ZQX0SizyDCAlSf3GH+2wmj0gR0bw==
-X-Received: by 2002:a63:c445:: with SMTP id m5mr201674pgg.194.1584369663124;
-        Mon, 16 Mar 2020 07:41:03 -0700 (PDT)
+        bh=XVNpRwDg0MuGmzFxA36r33yCChtq9x1Gs5FT6H3M82A=;
+        b=T43R0pl4GZ3bDh1sg9ewe+4D1hw2aQ3hMr2IxFgbxXwVsMlcqUukHieRYFRVudvumG
+         f5ifRnuru8OqYtU1m1aKNqu3E2U26HVlm2zMhwUE0dXNjLOIucDprCrjYPC3RSq95pwH
+         audyvA6lRkD9RhdvqhzeMF8FDlyrQW/o+DTIzAzbGJxXbC4glm0cghZ4/jtYnRvqiHM5
+         ugv8NGDhaAdd47b/hiL9n1whLIbDfxDBsgl8bKCFJjCH9gYxAE4XIy2zeReS4746bXpN
+         1umCfMV0wSCdc9oZWl6K4xlRgwgfkaOsK7WHz2w6pOo7ngJjTrQiXSCaLjrDrokPFNmg
+         ZAtA==
+X-Gm-Message-State: ANhLgQ0Xg2W0hHKjhjsA7w/HolbQ1zqHsRlfTxjhkxyS4v0qL2g/4PEc
+        8gacjOWQs6AeiJVKaAcoGneyYCFDqYFhyA==
+X-Google-Smtp-Source: ADFU+vt3yredXLeDqKfiogW0YZXQQCh4jnp+OwYD5kx6CmCzMga/XGXLSbII9gENZrBDjAJ0uuh4Iw==
+X-Received: by 2002:a63:7c54:: with SMTP id l20mr212877pgn.158.1584369667011;
+        Mon, 16 Mar 2020 07:41:07 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.40.59
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.41.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:41:02 -0700 (PDT)
+        Mon, 16 Mar 2020 07:41:06 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
         Michal Simek <monstr@monstr.eu>
-Subject: [PATCHv2 18/50] microblaze: Add loglvl to microblaze_unwind_inner()
-Date:   Mon, 16 Mar 2020 14:38:44 +0000
-Message-Id: <20200316143916.195608-19-dima@arista.com>
+Subject: [PATCHv2 19/50] microblaze: Add loglvl to microblaze_unwind()
+Date:   Mon, 16 Mar 2020 14:38:45 +0000
+Message-Id: <20200316143916.195608-20-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -97,143 +97,84 @@ Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
 an easier approach than introducing more printk buffers.
 Also, it will consolidate printings with headers.
 
-Add log level argument to microblaze_unwind_inner() as a preparation for
-introducing show_stack_loglvl().
+Add log level parameter to microblaze_unwind() as a preparation to add
+show_stack_loglvl().
 
 Cc: Michal Simek <monstr@monstr.eu>
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/microblaze/kernel/unwind.c | 38 ++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 15 deletions(-)
+ arch/microblaze/include/asm/unwind.h | 3 ++-
+ arch/microblaze/kernel/stacktrace.c  | 4 ++--
+ arch/microblaze/kernel/traps.c       | 2 +-
+ arch/microblaze/kernel/unwind.c      | 6 +++---
+ 4 files changed, 8 insertions(+), 7 deletions(-)
 
+diff --git a/arch/microblaze/include/asm/unwind.h b/arch/microblaze/include/asm/unwind.h
+index d248b7de4b13..7c28f8d5a243 100644
+--- a/arch/microblaze/include/asm/unwind.h
++++ b/arch/microblaze/include/asm/unwind.h
+@@ -23,7 +23,8 @@ extern struct trap_handler_info microblaze_trap_handlers;
+ extern const char _hw_exception_handler;
+ extern const char ex_handler_unhandled;
+ 
+-void microblaze_unwind(struct task_struct *task, struct stack_trace *trace);
++void microblaze_unwind(struct task_struct *task, struct stack_trace *trace,
++		       const char *loglvl);
+ 
+ #endif	/* __MICROBLAZE_UNWIND_H */
+ 
+diff --git a/arch/microblaze/kernel/stacktrace.c b/arch/microblaze/kernel/stacktrace.c
+index b4debe283a79..b266c4d6ed9d 100644
+--- a/arch/microblaze/kernel/stacktrace.c
++++ b/arch/microblaze/kernel/stacktrace.c
+@@ -20,12 +20,12 @@ void save_stack_trace(struct stack_trace *trace)
+ {
+ 	/* Exclude our helper functions from the trace*/
+ 	trace->skip += 2;
+-	microblaze_unwind(NULL, trace);
++	microblaze_unwind(NULL, trace, "");
+ }
+ EXPORT_SYMBOL_GPL(save_stack_trace);
+ 
+ void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
+ {
+-	microblaze_unwind(tsk, trace);
++	microblaze_unwind(tsk, trace, "");
+ }
+ EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
+diff --git a/arch/microblaze/kernel/traps.c b/arch/microblaze/kernel/traps.c
+index 45bbba9d919f..be726ee120fb 100644
+--- a/arch/microblaze/kernel/traps.c
++++ b/arch/microblaze/kernel/traps.c
+@@ -68,7 +68,7 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+ 	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_ADDRESS, 32, 4, (void *)fp,
+ 		       words_to_show << 2, 0);
+ 	pr_info("\n\nCall Trace:\n");
+-	microblaze_unwind(task, NULL);
++	microblaze_unwind(task, NULL, KERN_INFO);
+ 	pr_info("\n");
+ 
+ 	if (!task)
 diff --git a/arch/microblaze/kernel/unwind.c b/arch/microblaze/kernel/unwind.c
-index 4241cdd28ee7..804bf0c99d8b 100644
+index 804bf0c99d8b..778a761af0a7 100644
 --- a/arch/microblaze/kernel/unwind.c
 +++ b/arch/microblaze/kernel/unwind.c
-@@ -154,7 +154,8 @@ static int lookup_prev_stack_frame(unsigned long fp, unsigned long pc,
- static void microblaze_unwind_inner(struct task_struct *task,
- 				    unsigned long pc, unsigned long fp,
- 				    unsigned long leaf_return,
--				    struct stack_trace *trace);
-+				    struct stack_trace *trace,
-+				    const char *loglvl);
- 
- /**
-  * unwind_trap - Unwind through a system trap, that stored previous state
-@@ -162,16 +163,18 @@ static void microblaze_unwind_inner(struct task_struct *task,
-  */
- #ifdef CONFIG_MMU
- static inline void unwind_trap(struct task_struct *task, unsigned long pc,
--				unsigned long fp, struct stack_trace *trace)
-+				unsigned long fp, struct stack_trace *trace,
-+				const char *loglvl)
- {
- 	/* To be implemented */
- }
- #else
- static inline void unwind_trap(struct task_struct *task, unsigned long pc,
--				unsigned long fp, struct stack_trace *trace)
-+				unsigned long fp, struct stack_trace *trace,
-+				const char *loglvl)
- {
- 	const struct pt_regs *regs = (const struct pt_regs *) fp;
--	microblaze_unwind_inner(task, regs->pc, regs->r1, regs->r15, trace);
-+	microblaze_unwind_inner(task, regs->pc, regs->r1, regs->r15, trace, loglvl);
- }
- #endif
- 
-@@ -184,11 +187,13 @@ static inline void unwind_trap(struct task_struct *task, unsigned long pc,
-  *				  the caller's return address.
+@@ -287,11 +287,11 @@ static void microblaze_unwind_inner(struct task_struct *task,
+  * @task  : Task whose stack we are to unwind (NULL == current)
   * @trace : Where to store stack backtrace (PC values).
   *	    NULL == print backtrace to kernel log
 + * @loglvl : Used for printk log level if (trace == NULL).
   */
- static void microblaze_unwind_inner(struct task_struct *task,
- 			     unsigned long pc, unsigned long fp,
- 			     unsigned long leaf_return,
--			     struct stack_trace *trace)
-+			     struct stack_trace *trace,
-+			     const char *loglvl)
+-void microblaze_unwind(struct task_struct *task, struct stack_trace *trace)
++void microblaze_unwind(struct task_struct *task, struct stack_trace *trace,
++		       const char *loglvl)
  {
- 	int ofs = 0;
- 
-@@ -214,11 +219,11 @@ static void microblaze_unwind_inner(struct task_struct *task,
- 			const struct pt_regs *regs =
- 				(const struct pt_regs *) fp;
- #endif
--			pr_info("HW EXCEPTION\n");
-+			printk("%sHW EXCEPTION\n", loglvl);
- #ifndef CONFIG_MMU
- 			microblaze_unwind_inner(task, regs->r17 - 4,
- 						fp + EX_HANDLER_STACK_SIZ,
--						regs->r15, trace);
-+						regs->r15, trace, loglvl);
- #endif
- 			return;
- 		}
-@@ -228,8 +233,8 @@ static void microblaze_unwind_inner(struct task_struct *task,
- 			if ((return_to >= handler->start_addr)
- 			    && (return_to <= handler->end_addr)) {
- 				if (!trace)
--					pr_info("%s\n", handler->trap_name);
--				unwind_trap(task, pc, fp, trace);
-+					printk("%s%s\n", loglvl, handler->trap_name);
-+				unwind_trap(task, pc, fp, trace, loglvl);
- 				return;
- 			}
- 		}
-@@ -248,13 +253,13 @@ static void microblaze_unwind_inner(struct task_struct *task,
- 		} else {
- 			/* Have we reached userland? */
- 			if (unlikely(pc == task_pt_regs(task)->pc)) {
--				pr_info("[<%p>] PID %lu [%s]\n",
--					(void *) pc,
-+				printk("%s[<%p>] PID %lu [%s]\n",
-+					loglvl, (void *) pc,
- 					(unsigned long) task->pid,
- 					task->comm);
- 				break;
- 			} else
--				print_ip_sym(KERN_INFO, pc);
-+				print_ip_sym(loglvl, pc);
- 		}
- 
- 		/* Stop when we reach anything not part of the kernel */
-@@ -285,11 +290,13 @@ static void microblaze_unwind_inner(struct task_struct *task,
-  */
- void microblaze_unwind(struct task_struct *task, struct stack_trace *trace)
- {
-+	const char *loglvl = KERN_INFO;
-+
+-	const char *loglvl = KERN_INFO;
+-
  	if (task) {
  		if (task == current) {
  			const struct pt_regs *regs = task_pt_regs(task);
- 			microblaze_unwind_inner(task, regs->pc, regs->r1,
--						regs->r15, trace);
-+						regs->r15, trace, loglvl);
- 		} else {
- 			struct thread_info *thread_info =
- 				(struct thread_info *)(task->stack);
-@@ -299,7 +306,8 @@ void microblaze_unwind(struct task_struct *task, struct stack_trace *trace)
- 			microblaze_unwind_inner(task,
- 						(unsigned long) &_switch_to,
- 						cpu_context->r1,
--						cpu_context->r15, trace);
-+						cpu_context->r15,
-+						trace, loglvl);
- 		}
- 	} else {
- 		unsigned long pc, fp;
-@@ -314,7 +322,7 @@ void microblaze_unwind(struct task_struct *task, struct stack_trace *trace)
- 		);
- 
- 		/* Since we are not a leaf function, use leaf_return = 0 */
--		microblaze_unwind_inner(current, pc, fp, 0, trace);
-+		microblaze_unwind_inner(current, pc, fp, 0, trace, loglvl);
- 	}
- }
- 
 -- 
 2.25.1
 
