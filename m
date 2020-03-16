@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F64C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30829C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C32206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B3A20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326168;
-	bh=+ugl1LPMDQjGW+NcOl45tiFNhxlRBG/P+8q7FHmK50Q=;
+	s=default; t=1584326179;
+	bh=MJ4NnFk1gq0C26Lqhv6kKTg7klRqtEZAytuFlAGKwLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qtFWoByBWNjsEWPKtqb4c68w+DqmAYXGH/flZwFss7KzOPLYO/ydN9vWusyr3Umua
-	 uq+tiXu91yusT1LOvN3YxIzR/BLTf7rztRb1B6t1qIb/EIWrfRoHu8NRdq9U5uRZgj
-	 B3VT50OqTAJ9iPpuBxO0b7Hm916IYF7Dt8WmJ4xo=
+	b=ykQ1dt3L7ABtnqcBvBhXDyN3VmhyXZRc2rykihLEoMvhnlDgtWLvt+j4Tz/QBpboO
+	 r0i2cE9NWy42j8UhfG2P4bKffTDi5DtRb4SLw99ur/i7jsRABwsEdgTi9OdVXdPd4P
+	 ngEocnHbWVTqmdIBztgbCymb+/SVPiArD+Iut2Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbgCPCgH (ORCPT
+        id S1730337AbgCPCgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:36:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:36:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729712AbgCPCf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:35:56 -0400
+        id S1729586AbgCPCfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11FBD206BE;
-        Mon, 16 Mar 2020 02:35:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5579B20738;
+        Mon, 16 Mar 2020 02:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326156;
-        bh=+ugl1LPMDQjGW+NcOl45tiFNhxlRBG/P+8q7FHmK50Q=;
+        s=default; t=1584326151;
+        bh=MJ4NnFk1gq0C26Lqhv6kKTg7klRqtEZAytuFlAGKwLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ltA4EhWPpk7SLduvSFmQEtDLUO7enwnCKerTEtqLZxowFfbcEbQ7kTJ1CKYMzMZjx
-         FCj730D6Ikus9JUzzcLMeZtSj9ltNwyq6P2yzeggdNMQcgqOS3BkT0xVcvJ00nmx1r
-         24WjIAsfZKEPJgJePMEWkZpdYS3nNa4qbYdEaUa8=
+        b=XUMUCVxjlcY8ddq7HGCuAXjWWDB7QR+9XHEejm2p5JjEK7GvVcHTm+NvpsrZCwbrJ
+         EpND66Q9bAzsl8UJ3My3lciyJ95uC0q8kKa2PJ5NMkeOLm/3Y+qkUa9/XwPPeQNKIM
+         bNrOtTHEcLN8rrwoOgi7uw8ocmZGMMtHt1bV/Xag=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 6/7] drm/exynos: dsi: fix workaround for the legacy clock name
-Date:   Sun, 15 Mar 2020 22:35:46 -0400
-Message-Id: <20200316023548.2347-6-sashal@kernel.org>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 2/7] powerpc: Include .BTF section
+Date:   Sun, 15 Mar 2020 22:35:42 -0400
+Message-Id: <20200316023548.2347-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023548.2347-1-sashal@kernel.org>
 References: <20200316023548.2347-1-sashal@kernel.org>
@@ -63,72 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 
-[ Upstream commit c0fd99d659ba5582e09625c7a985d63fc2ca74b5 ]
+[ Upstream commit cb0cc635c7a9fa8a3a0f75d4d896721819c63add ]
 
-Writing to the built-in strings arrays doesn't work if driver is loaded
-as kernel module. This is also considered as a bad pattern. Fix this by
-adding a call to clk_get() with legacy clock name. This fixes following
-kernel oops if driver is loaded as module:
+Selecting CONFIG_DEBUG_INFO_BTF results in the below warning from ld:
+  ld: warning: orphan section `.BTF' from `.btf.vmlinux.bin.o' being placed in section `.BTF'
 
-Unable to handle kernel paging request at virtual address bf047978
- pgd = (ptrval)
- [bf047978] *pgd=59344811, *pte=5903c6df, *ppte=5903c65f
- Internal error: Oops: 80f [#1] SMP ARM
- Modules linked in: mc exynosdrm(+) analogix_dp rtc_s3c exynos_ppmu i2c_gpio
- CPU: 1 PID: 212 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200219 #326
- videodev: Linux video capture interface: v2.00
- Hardware name: Samsung Exynos (Flattened Device Tree)
- PC is at exynos_dsi_probe+0x1f0/0x384 [exynosdrm]
- LR is at exynos_dsi_probe+0x1dc/0x384 [exynosdrm]
- ...
- Process systemd-udevd (pid: 212, stack limit = 0x(ptrval))
- ...
- [<bf03cf14>] (exynos_dsi_probe [exynosdrm]) from [<c09b1ca0>] (platform_drv_probe+0x6c/0xa4)
- [<c09b1ca0>] (platform_drv_probe) from [<c09afcb8>] (really_probe+0x210/0x350)
- [<c09afcb8>] (really_probe) from [<c09aff74>] (driver_probe_device+0x60/0x1a0)
- [<c09aff74>] (driver_probe_device) from [<c09b0254>] (device_driver_attach+0x58/0x60)
- [<c09b0254>] (device_driver_attach) from [<c09b02dc>] (__driver_attach+0x80/0xbc)
- [<c09b02dc>] (__driver_attach) from [<c09ade00>] (bus_for_each_dev+0x68/0xb4)
- [<c09ade00>] (bus_for_each_dev) from [<c09aefd8>] (bus_add_driver+0x130/0x1e8)
- [<c09aefd8>] (bus_add_driver) from [<c09b0d64>] (driver_register+0x78/0x110)
- [<c09b0d64>] (driver_register) from [<bf038558>] (exynos_drm_init+0xe8/0x11c [exynosdrm])
- [<bf038558>] (exynos_drm_init [exynosdrm]) from [<c0302fa8>] (do_one_initcall+0x50/0x220)
- [<c0302fa8>] (do_one_initcall) from [<c03dd02c>] (do_init_module+0x60/0x210)
- [<c03dd02c>] (do_init_module) from [<c03dbf44>] (load_module+0x1c0c/0x2310)
- [<c03dbf44>] (load_module) from [<c03dc85c>] (sys_finit_module+0xac/0xbc)
- [<c03dc85c>] (sys_finit_module) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
- Exception stack(0xd979bfa8 to 0xd979bff0)
- ...
- ---[ end trace db16efe05faab470 ]---
+Include .BTF section in vmlinux explicitly to fix the same.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200220113132.857132-1-naveen.n.rao@linux.vnet.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_drm_dsi.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/vmlinux.lds.S | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-index 1ee0b70472fd8..77ff3eed65d62 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-@@ -1914,9 +1914,10 @@ static int exynos_dsi_probe(struct platform_device *pdev)
- 		dsi->clks[i] = devm_clk_get(dev, clk_names[i]);
- 		if (IS_ERR(dsi->clks[i])) {
- 			if (strcmp(clk_names[i], "sclk_mipi") == 0) {
--				strcpy(clk_names[i], OLD_SCLK_MIPI_CLK_NAME);
--				i--;
--				continue;
-+				dsi->clks[i] = devm_clk_get(dev,
-+							OLD_SCLK_MIPI_CLK_NAME);
-+				if (!IS_ERR(dsi->clks[i]))
-+					continue;
- 			}
+diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+index 876ac9d52afcb..9b1e297be6730 100644
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -255,6 +255,12 @@ SECTIONS
+ 		*(.branch_lt)
+ 	}
  
- 			dev_info(dev, "failed to get the clock: %s\n",
++#ifdef CONFIG_DEBUG_INFO_BTF
++	.BTF : AT(ADDR(.BTF) - LOAD_OFFSET) {
++		*(.BTF)
++	}
++#endif
++
+ 	.opd : AT(ADDR(.opd) - LOAD_OFFSET) {
+ 		*(.opd)
+ 	}
 -- 
 2.20.1
 
