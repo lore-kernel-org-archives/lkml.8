@@ -2,199 +2,152 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E708FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D750C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBB7205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F18205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:51:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lK56xoYj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kckx/+5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732856AbgCPWsl (ORCPT
+        id S1732869AbgCPWvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:48:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:35275 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732837AbgCPWsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:48:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hBKy6d9vz9sNg;
-        Tue, 17 Mar 2020 09:48:38 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584398919;
-        bh=7R1vF2L5HQ/2lAhDfjx1Mr2bVwvkLoa1bb8nn1tmw4M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lK56xoYj0kQXXiqHbcpDhnn/BVbEKmn7MePIqrLC5x8dt8J/PTodmoF38phZ3fRNG
-         Hw+jpmAdp0UrpMXukoFU6xUHq+qtVfHim0RPpdH/ZIPqYSRBsBbTKrb2uIfwI/IvgL
-         BKV1XPCo8vFad/AR0M2nn8ClH3iVSpXFxCNgpVscSXjFD1y6u5KbjLtuJQq6SRr6k8
-         Hfhu97i73zNjJMwJf0p+YCFeHI5jWKcWl+rOEa+s4XMjnCbDdk9fz4QshEwLsVep38
-         KT2s363UW06rGAB+XLar82yT+VXu+QQ7i7xqlK2h+uMAEMZuFRarZ7WrhcJx7s97Wh
-         JfTPuOfUp5JBQ==
-Date:   Tue, 17 Mar 2020 09:48:33 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Shawn Guo <shawnguo@kernel.org>, Andy Gross <agross@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Li Yang <leoyang.li@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: linux-next: manual merge of the renesas tree with the imx-mxs and
- qcom trees
-Message-ID: <20200317094833.07a520bd@canb.auug.org.au>
+        Mon, 16 Mar 2020 18:51:31 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:36655 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732843AbgCPWva (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 18:51:30 -0400
+Received: by mail-qt1-f174.google.com with SMTP id m33so15844374qtb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wZC7KqQ/+MEL0RDvWDxQg83WbFpNiASJj0i4ST9YezU=;
+        b=Kckx/+5TKFM6oNsXeSsWaGuvP98pQxJb9gmnW77ZG1854D8UFfynC0jAggJwtrhjIF
+         9alhhG9kfxEQB+YNC40JYxo0vD/uSbjJPYBn3dWOpVSm7Fm7MHa2QxeWQqDgZoCbxq1v
+         Mq1bg9Vqty9S+tTJnVkHE6ndbYTqoiGaKqmrmetM+FQyOYnjm612DFSChlCtm9z1f0dJ
+         bioD/QXFU2jPo3+w520F4CsZnMwAxdi1BqcllQguHryhQeqlK9ZFkb4HF3/LnDnuccc1
+         47xOdxBbA4eD8ITBbgNUuFQeuonc70oQp8VFos7CbwrwWNB4S4gh/+n1DIBM8tZ3tuRl
+         VQng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wZC7KqQ/+MEL0RDvWDxQg83WbFpNiASJj0i4ST9YezU=;
+        b=hsQ16ZlnmsaxBqBvU+ixz3gxv4jWZUfG+aqsPXE2lYhT8N8FuJhThk3ga+vtb0PusK
+         M8pwVn973MY7pzCPRBMTdasRR0DCcGFy7fpJvL4tY4pds5JT7hItbFf1QuJ38UJ4HIJ6
+         uHes07PNFXwHEqH2opYGRnKaMC+Jfk3SCEh7udsk1yPOQS9iIVXV0pyzXFp5cXKL0gwo
+         Rek50kyaPJ03Jnr00yxWDCwmCkq2cfgDZgu/XXWPttphSWV4hZWXLfoFzzmxrLsxNaRk
+         N+C12oybVcTTNc0h5DZcqFTNXq1eY8mi+pfRfur33R9qusT0AhAx1G4LjJLepP9zYK2x
+         NUDg==
+X-Gm-Message-State: ANhLgQ3jl1mQuoGAObkduLTN/yna4+MyyFfkHGz1ZJsxFMV6T2lcvwdV
+        1aBEMCioQhIokITIUVScaOiRqQ==
+X-Google-Smtp-Source: ADFU+vtS5ehGLxCEUNEx01AjWQCPaIOivLegew1i/z6iCJOeLXOM4UVmIMp8KMFPiE9hAtmvjmcsOw==
+X-Received: by 2002:aed:37c3:: with SMTP id j61mr2627756qtb.284.1584399086746;
+        Mon, 16 Mar 2020 15:51:26 -0700 (PDT)
+Received: from localhost.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id 31sm838735qta.56.2020.03.16.15.51.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 15:51:25 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] remoteproc: clean up notification config
+Date:   Mon, 16 Mar 2020 17:51:21 -0500
+Message-Id: <20200316225121.29905-1-elder@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/C/qlNtvxLkhzbwYptzmBCJn";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/C/qlNtvxLkhzbwYptzmBCJn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Rearrange the config files for remoteproc and IPA to fix their
+interdependencies.
 
-Hi all,
+First, have CONFIG_QCOM_Q6V5_MSS select QCOM_Q6V5_IPA_NOTIFY so the
+notification code is built regardless of whether IPA needs it.
 
-Today's linux-next merge of the renesas tree got a conflict in:
+Next, represent QCOM_IPA as being dependent on QCOM_Q6V5_MSS rather
+than setting its value to match QCOM_Q6V5_COMMON (which is selected
+by QCOM_Q6V5_MSS).
 
-  arch/arm64/configs/defconfig
+Drop all dependencies from QCOM_Q6V5_IPA_NOTIFY.  The notification
+code will be built whenever QCOM_Q6V5_MSS is set, and it has no other
+dependencies.
 
-between commits:
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
+v2: - Fix subject line
+    - Incorporate a change I thought I had already squashed
 
-  3fbd82f9af29 ("arm64: defconfig: run through savedefconfig for ordering")
-  60f84e65da59 ("arm64: defconfig: Enable NXP flexcan driver")
-  d0a9e6319257 ("arm64: defconfig: Enable Truly NT35597 WQXGA panel")
+Dave,
+    I noticed some problems with the interaction between the IPA and
+    remoteproc configs, and after some discussion with Bjorn we came
+    up with this, which simplifies things a bit.  Both Kconfig files
+    are in net-next now, so I'm sending this to you.
 
-from the imx-mxs and qcom trees and commit:
+    Two other things:
+    - I will *not* be implementing the COMPILE_TEST suggestion until
+      after the next merge window.
+    - I learned of another issue that arises when ARM64 is built
+      with PAGE_SIZE > 4096.  I intend to fix that in the next day
+      or so.
 
-  bf9e333ec0d5 ("arm64: defconfig: Enable additional support for Renesas pl=
-atforms")
+      					-Alex
 
-from the renesas tree.
+ drivers/net/ipa/Kconfig    | 2 +-
+ drivers/remoteproc/Kconfig | 4 +---
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+diff --git a/drivers/net/ipa/Kconfig b/drivers/net/ipa/Kconfig
+index b8cb7cadbf75..9f0d2a93379c 100644
+--- a/drivers/net/ipa/Kconfig
++++ b/drivers/net/ipa/Kconfig
+@@ -1,9 +1,9 @@
+ config QCOM_IPA
+ 	tristate "Qualcomm IPA support"
+ 	depends on ARCH_QCOM && 64BIT && NET
++	depends on QCOM_Q6V5_MSS
+ 	select QCOM_QMI_HELPERS
+ 	select QCOM_MDT_LOADER
+-	default QCOM_Q6V5_COMMON
+ 	help
+ 	  Choose Y or M here to include support for the Qualcomm
+ 	  IP Accelerator (IPA), a hardware block present in some
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index 56084635dd63..ffdb5bc25d6d 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -128,6 +128,7 @@ config QCOM_Q6V5_MSS
+ 	select MFD_SYSCON
+ 	select QCOM_MDT_LOADER
+ 	select QCOM_Q6V5_COMMON
++	select QCOM_Q6V5_IPA_NOTIFY
+ 	select QCOM_RPROC_COMMON
+ 	select QCOM_SCM
+ 	help
+@@ -169,9 +170,6 @@ config QCOM_Q6V5_WCSS
+ 
+ config QCOM_Q6V5_IPA_NOTIFY
+ 	tristate
+-	depends on QCOM_IPA
+-	depends on QCOM_Q6V5_MSS
+-	default QCOM_IPA
+ 
+ config QCOM_SYSMON
+ 	tristate "Qualcomm sysmon driver"
+-- 
+2.20.1
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/configs/defconfig
-index ff4bee8c3158,49053323323f..000000000000
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@@ -164,7 -162,8 +164,9 @@@ CONFIG_QRTR_SMD=3D
-  CONFIG_QRTR_TUN=3Dm
-  CONFIG_BPF_JIT=3Dy
-  CONFIG_CAN=3Dm
- +CONFIG_CAN_FLEXCAN=3Dm
-+ CONFIG_CAN_RCAR=3Dm
-+ CONFIG_CAN_RCAR_CANFD=3Dm
-  CONFIG_BT=3Dm
-  CONFIG_BT_HIDP=3Dm
-  # CONFIG_BT_HS is not set
-@@@ -568,11 -535,13 +575,14 @@@ CONFIG_V4L_MEM2MEM_DRIVERS=3D
-  CONFIG_VIDEO_SAMSUNG_S5P_JPEG=3Dm
-  CONFIG_VIDEO_SAMSUNG_S5P_MFC=3Dm
-  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=3Dm
-+ CONFIG_VIDEO_RENESAS_FDP1=3Dm
-  CONFIG_VIDEO_RENESAS_FCP=3Dm
-  CONFIG_VIDEO_RENESAS_VSP1=3Dm
-+ CONFIG_SDR_PLATFORM_DRIVERS=3Dy
-+ CONFIG_VIDEO_RCAR_DRIF=3Dm
-  CONFIG_DRM=3Dm
-  CONFIG_DRM_I2C_NXP_TDA998X=3Dm
- +CONFIG_DRM_MALI_DISPLAY=3Dm
-  CONFIG_DRM_NOUVEAU=3Dm
-  CONFIG_DRM_EXYNOS=3Dm
-  CONFIG_DRM_EXYNOS5433_DECON=3Dy
-@@@ -588,17 -557,21 +598,23 @@@ CONFIG_ROCKCHIP_DW_HDMI=3D
-  CONFIG_ROCKCHIP_DW_MIPI_DSI=3Dy
-  CONFIG_ROCKCHIP_INNO_HDMI=3Dy
-  CONFIG_DRM_RCAR_DU=3Dm
-+ CONFIG_DRM_RCAR_DW_HDMI=3Dm
-  CONFIG_DRM_SUN4I=3Dm
- +CONFIG_DRM_SUN6I_DSI=3Dm
-  CONFIG_DRM_SUN8I_DW_HDMI=3Dm
-  CONFIG_DRM_SUN8I_MIXER=3Dm
-  CONFIG_DRM_MSM=3Dm
-  CONFIG_DRM_TEGRA=3Dm
-+ CONFIG_DRM_PANEL_LVDS=3Dm
-  CONFIG_DRM_PANEL_SIMPLE=3Dm
- +CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=3Dm
-+ CONFIG_DRM_DUMB_VGA_DAC=3Dm
-  CONFIG_DRM_SII902X=3Dm
-+ CONFIG_DRM_THINE_THC63LVD1024=3Dm
-  CONFIG_DRM_TI_SN65DSI86=3Dm
-  CONFIG_DRM_I2C_ADV7511=3Dm
-+ CONFIG_DRM_DW_HDMI_AHB_AUDIO=3Dm
-+ CONFIG_DRM_DW_HDMI_CEC=3Dm
-  CONFIG_DRM_VC4=3Dm
-  CONFIG_DRM_ETNAVIV=3Dm
-  CONFIG_DRM_HISI_HIBMC=3Dm
-@@@ -759,7 -728,9 +776,8 @@@ CONFIG_COMMON_CLK_RK808=3D
-  CONFIG_COMMON_CLK_SCPI=3Dy
-  CONFIG_COMMON_CLK_CS2000_CP=3Dy
-  CONFIG_COMMON_CLK_S2MPS11=3Dy
- -CONFIG_CLK_QORIQ=3Dy
-  CONFIG_COMMON_CLK_PWM=3Dy
-+ CONFIG_COMMON_CLK_VC5=3Dy
-  CONFIG_CLK_RASPBERRYPI=3Dm
-  CONFIG_CLK_IMX8MM=3Dy
-  CONFIG_CLK_IMX8MN=3Dy
-@@@ -843,8 -808,10 +861,9 @@@ CONFIG_ARCH_K3_J721E_SOC=3D
-  CONFIG_TI_SCI_PM_DOMAINS=3Dy
-  CONFIG_EXTCON_USB_GPIO=3Dy
-  CONFIG_EXTCON_USBC_CROS_EC=3Dy
- -CONFIG_MEMORY=3Dy
-  CONFIG_IIO=3Dy
-  CONFIG_EXYNOS_ADC=3Dy
-+ CONFIG_MAX9611=3Dm
-  CONFIG_QCOM_SPMI_ADC5=3Dm
-  CONFIG_ROCKCHIP_SARADC=3Dm
-  CONFIG_IIO_CROS_EC_SENSORS_CORE=3Dm
-@@@ -938,12 -900,12 +957,13 @@@ CONFIG_NLS_ISO8859_1=3D
-  CONFIG_SECURITY=3Dy
-  CONFIG_CRYPTO_ECHAINIV=3Dy
-  CONFIG_CRYPTO_ANSI_CPRNG=3Dy
- +CONFIG_CRYPTO_USER_API_RNG=3Dm
-  CONFIG_CRYPTO_DEV_SUN8I_CE=3Dm
-  CONFIG_CRYPTO_DEV_FSL_CAAM=3Dm
- -CONFIG_CRYPTO_DEV_HISI_ZIP=3Dm
- -CONFIG_CRYPTO_USER_API_RNG=3Dm
- +CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM=3Dm
-  CONFIG_CRYPTO_DEV_QCOM_RNG=3Dm
- +CONFIG_CRYPTO_DEV_HISI_ZIP=3Dm
-+ CONFIG_CRYPTO_DEV_CCREE=3Dm
-  CONFIG_CMA_SIZE_MBYTES=3D32
-  CONFIG_PRINTK_TIME=3Dy
-  CONFIG_DEBUG_INFO=3Dy
-
---Sig_/C/qlNtvxLkhzbwYptzmBCJn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5wAkEACgkQAVBC80lX
-0GxDygf9FVX0pM5JpU8+cKOnnWh4Mt7HDm98ht56BaBxBmEtNgV403biSU+cI5dx
-s5TJ7HRWlL5zLdig2QKAPmS8YH0uXM2EAmsXZ0S2djsSDuyYyaRTT5Zo5Wmgg+SO
-/98/gc3/YpEw6HFp8D/lZ+u9Dz6vXeuEocR2TGD29uMUVuzV52/wRwNrpuMyKRgN
-riYbFubt9QjFgTQptlInZcamIwXcgJYRejAQRljqyHe0mxvS0Evv5mcsLQOyeYnz
-udaS7WNBDNuuCoxYOVXrWkhnGRZZW+vtHXm19c/gt/QuKcDMisMsam//8WEACb31
-nbn0t6HeuSMB5/j12BzT8yE9MrSFbw==
-=SlW7
------END PGP SIGNATURE-----
-
---Sig_/C/qlNtvxLkhzbwYptzmBCJn--
