@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B9EC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81959C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D959A206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C7B20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:55:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="LbKDrk3A"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SBnAtZ/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbgCPNzk (ORCPT
+        id S1731501AbgCPNzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:55:40 -0400
-Received: from mail-bn8nam11on2083.outbound.protection.outlook.com ([40.107.236.83]:19325
+        Mon, 16 Mar 2020 09:55:49 -0400
+Received: from mail-bn8nam11on2081.outbound.protection.outlook.com ([40.107.236.81]:48577
         "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731110AbgCPNzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:55:36 -0400
+        id S1731110AbgCPNzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 09:55:48 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H7lcAS40MJb9XD0iIlZI9xLsvNVtFudKMbpgkPVZOr7b5i4OUSu8Z+EPwjFUgJlX8DSA2dAev27TUIs7ryj0JLPNQk9RTADTRguRZr7/XK/GD97nofNk4xkqWy7oRM1B3nPhoJUP8zg3IijZDCXSqyHP1TDJZ48yGcW+VI/Gi1BLpzZ7cNH0jnc/XtfHyKmJCqnUmoHPNaI7JyD+f1ufTpFBw6FJ/wX5/BRczgBOioO7CsMfI4W9bugztDScux8a87rtMhqFd/1DJPHMMBMGlYLYDoXqJinZICmO8rPoGybej1WolyooXECzvvuoQ9miGnYKISM5WtDA04oZyNR5dA==
+ b=m5JOLpafivqyKCv360sRSIZNHiX5LBQm/jO8FNAYsdJuVjO50oxQlP7IA3x3gDWKThUEmSobQIWYAtIPSSep3GorWuUAW50C+qEIq3bPUXmvq8JEC05+ZqmOhGFlfd88DXpDMHV2cwm8Vj0Wt0VntYb34N5VeGuDfVKS24ZkEsjGZbtCFywio2qL6xYB3KeLS41z6w2oQPqE29pU/pMuiraxSScdrkJsP9dYia4i/zkafQYekBHKCzCZQ3xEV5taZ/AX2DyHtMdjlSWI1mC8qYIfebu3Z6ayJfotAnlUXAF1mxHV5Sryl3/plSWYpUZeB7Nr8IavP64fwRkbnn8n7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uXIPSGmdJG21ikb/sK3lpgdrOg0gpNf68qdUnYJvn60=;
- b=PfUviCSaFtEWGxE/ITpl5VHtPgLjsgUq0hQL3JylQUi0qfXtnHmnL/it3VRKPEX8cPK5dQLLXU7Lhj9mzJnFg143fXQDtd7hMP+DA6eeADRqbffloSVgUV30jUdv7o7FYdFr+3wxnT0zXUOVpr0jcDDbTwBEmqWT2bB+WDoL9QSw7LLU37zmi6pQb+/cCXBYgTFmpBmqoz+fXyVHSDwi2N5yDtlAvxzJUojigo2dHntxpF92NUJNolZqmNBUS//9KooLXxjFdv/St+l7AzeX8BS8D8b4bN2q6qjqJSb8D7Y3w1IIRQWAKGx4vU5eyxX6qkyeJOF3S0WhyGnGP66DbQ==
+ bh=5c9FJdUWAQIhX4eABbbIpwM7kuroKBQ4y9kv0SPLcU0=;
+ b=EvCjRe0t7zQnH6k0P2zkf6AlFV+ijw3haumTs8OOXK5l9Bq94S9rz1DLJ2TDPMlXiQGk2+GXldGBitovVcFLizN0j1U0VtKj07jqvssF8a0XQUJdw92M0LOyKbZ6cUyN7Lqqj081TvydhvVX7BIlRPyS9A/s+q6v6A134JvaivdrNhqXawz75d3qTPCh21nJA9Tl782IPlCt3gzx+hnAiRgbVWpBwOQl5GXcdYFAkCNc4mkzU5pzeY73IunZFK+zxC0Bbp920jmUw6Jq8KtNg6Syuxenhkl0JUDd/q4nF9uluO+Xd3J8A4/MY04huKIQyIAjFusVqgRFns/mNd2Ojw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uXIPSGmdJG21ikb/sK3lpgdrOg0gpNf68qdUnYJvn60=;
- b=LbKDrk3AgQx43YJvGDyFGBZ53zCA/ym3QPVuKKrPRZrly0GEp8aeXXvUsNqQmGXyMqb5s41uiCRuRnAvBRB0dEH12+V+/wJBUr+FmTfLGN3K8oEwzZfVc6Xsr5D4n06BH6T+mwu+zCLzoTAww8cD7UPBESH9MEXvF8h0SUfSR7g=
-Received: from DM5PR11CA0005.namprd11.prod.outlook.com (2603:10b6:3:115::15)
- by BL0PR02MB4691.namprd02.prod.outlook.com (2603:10b6:208:59::15) with
+ bh=5c9FJdUWAQIhX4eABbbIpwM7kuroKBQ4y9kv0SPLcU0=;
+ b=SBnAtZ/iVbd3H8hXSf7HjoH2ohyPNvXUvijn/d+j7ozTSvB4UwILrmpBOQ2VJGk7ZGJTfCHHe8PfwUq5+Sse38z0owDXud5Yls4RcCoY4+iP9JlmpW7qj7qB/aE1d49kJ4NWSjN1Dddlc83LTJq4zZkXFXc93dG390OJcZ6WEU4=
+Received: from MN2PR02CA0025.namprd02.prod.outlook.com (2603:10b6:208:fc::38)
+ by CH2PR02MB6508.namprd02.prod.outlook.com (2603:10b6:610:36::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18; Mon, 16 Mar
- 2020 13:55:32 +0000
-Received: from CY1NAM02FT008.eop-nam02.prod.protection.outlook.com
- (2603:10b6:3:115:cafe::8c) by DM5PR11CA0005.outlook.office365.com
- (2603:10b6:3:115::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend
- Transport; Mon, 16 Mar 2020 13:55:32 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Mon, 16 Mar
+ 2020 13:55:44 +0000
+Received: from BL2NAM02FT052.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:fc:cafe::21) by MN2PR02CA0025.outlook.office365.com
+ (2603:10b6:208:fc::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21 via Frontend
+ Transport; Mon, 16 Mar 2020 13:55:43 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -57,33 +57,33 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT008.mail.protection.outlook.com (10.152.75.59) with Microsoft SMTP
+ BL2NAM02FT052.mail.protection.outlook.com (10.152.77.0) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2814.13
- via Frontend Transport; Mon, 16 Mar 2020 13:55:31 +0000
+ via Frontend Transport; Mon, 16 Mar 2020 13:55:41 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <mubin.usman.sayyed@xilinx.com>)
-        id 1jDqDL-00041P-4n; Mon, 16 Mar 2020 06:55:31 -0700
+        id 1jDqDV-00041c-E8; Mon, 16 Mar 2020 06:55:41 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <mubin.usman.sayyed@xilinx.com>)
-        id 1jDqDG-0003xV-1W; Mon, 16 Mar 2020 06:55:26 -0700
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 02GDtFHv027781;
-        Mon, 16 Mar 2020 06:55:16 -0700
+        id 1jDqDQ-0003zh-At; Mon, 16 Mar 2020 06:55:36 -0700
+Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 02GDtOAv027807;
+        Mon, 16 Mar 2020 06:55:25 -0700
 Received: from [10.140.6.23] (helo=xhdmubinusm40.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <mubin.usman.sayyed@xilinx.com>)
-        id 1jDqD5-0003l2-GY; Mon, 16 Mar 2020 06:55:15 -0700
+        id 1jDqDE-0003l2-DF; Mon, 16 Mar 2020 06:55:24 -0700
 From:   Mubin Usman Sayyed <mubin.usman.sayyed@xilinx.com>
 To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
         michals@xilinx.com, linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, sivadur@xilinx.com,
-        anirudh@xilinx.com, Mubin Sayyed <mubin.usman.sayyed@xilinx.com>,
-        Anirudha Sarangi <anirudha.sarangi@xilinx.com>
-Subject: [PATCH v4 1/3] irqchip: xilinx: Add support for multiple instances
-Date:   Mon, 16 Mar 2020 19:24:45 +0530
-Message-Id: <20200316135447.30162-2-mubin.usman.sayyed@xilinx.com>
+        anirudh@xilinx.com, Michal Simek <michal.simek@xilinx.com>,
+        Stefan Asserhall <stefan.asserhall@xilinx.com>
+Subject: [PATCH v4 3/3] irqchip: xilinx: Enable generic irq multi handler
+Date:   Mon, 16 Mar 2020 19:24:47 +0530
+Message-Id: <20200316135447.30162-4-mubin.usman.sayyed@xilinx.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200316135447.30162-1-mubin.usman.sayyed@xilinx.com>
 References: <20200316135447.30162-1-mubin.usman.sayyed@xilinx.com>
@@ -94,328 +94,170 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(136003)(39850400004)(199004)(46966005)(103116003)(54906003)(478600001)(2906002)(81166006)(9786002)(26005)(8676002)(5660300002)(8936002)(81156014)(336012)(426003)(316002)(186003)(7696005)(107886003)(4326008)(356004)(2616005)(70586007)(36756003)(47076004)(6666004)(1076003)(70206006);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB4691;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(199004)(46966005)(356004)(6666004)(70206006)(5660300002)(4326008)(2906002)(107886003)(47076004)(1076003)(70586007)(36756003)(103116003)(9786002)(7696005)(81166006)(81156014)(54906003)(8676002)(316002)(186003)(26005)(426003)(8936002)(2616005)(478600001)(336012)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6508;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 97f0e5b8-4a9f-4aa6-0aa0-08d7c9b1b155
-X-MS-TrafficTypeDiagnostic: BL0PR02MB4691:
-X-Microsoft-Antispam-PRVS: <BL0PR02MB4691B9610010BE732D36BF88A1F90@BL0PR02MB4691.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: b04311a5-1e80-4527-f27a-08d7c9b1b790
+X-MS-TrafficTypeDiagnostic: CH2PR02MB6508:
+X-Microsoft-Antispam-PRVS: <CH2PR02MB650819BC425FFA17FA1559EAA1F90@CH2PR02MB6508.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:854;
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
 X-Forefront-PRVS: 03449D5DD1
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7ook9cREjHgUHXJIXNMD2E5Nlw3157smkOHPCcHLIubKLKvvXw48vgYJu5ZpGbeF8Tpef6cNJaHrRMwnhSs1vmeDu2Z3ZVNLzTQM9ppbOs8MaE4MLmuDcEeOMtQQJhQYz/GyozXye5uR9xUfOsFRZ8+akxUBE5/9diFJYjXYo+D0I29NcD85mpeUO/yyc8U/93zwgVMMXdT3aoV62ZACx+BPGv3mojqenDYJu7Sv1YExw5C3/rwjF7Guf4+qIlVY0G3O5E4t7hdprcU++9Enkw5bLFeSUR5LklIBY8m8MOmlTDtDxyLTsvJ/X+bdP1UDm4mZ/gRdUcz3rWl62A8HAd5oYDswKtFK2xesND5eoS/iBC3TOLvzQLaSjC+jxLC+HJBamdURtccYxES75+mAoDcWXl7i/NAw8twbgMaQp150ctCFKZOC6XqWevTpV80P74rodB1PEVyqGjVYbU0IgBqqR2s+OHIsXvVdtzlYtbS+EvWXFAaPNmNv1mh0Sz+lA3C1h5e5RaHWDGSVOqbcIQ==
+X-Microsoft-Antispam-Message-Info: B0M7hJPcxgMuucF8J5C8yA3B5IUzJhrnVwh5QXdg41mq/bEZW4DmvVVUI9AGHPxaN37cbvgo0tik5na9cILsCbPxj3iGA5Z7pAxftva2MfVgoKj8CmkQrp6MAXLBAWzqjtKJUYFcQQylE3nWqiJpVjxyJth54N2yDdVFkNNTAc3QNAoVw9moS4RfO4iUmKUALOMUWhs5kwKqh+QTKU7viKjTE+6B8EaDD7eM3pHqqsRW41OA1DQ0FMHAs5JQXU1PcOXBd5JL/Y8wwZ3wrt4VBATvY9nZI09qBc8NIkd2RWqkethKGY8Cd9KHBtAzEO6eE/oY6ejTQKWf5Zmz3ynH548a4YyS7QXeJPlrd7+oS9lnsInWmGEsk5HW16xaP/DwfJ6EbHwyPFf+m755ILD6znbBisnSC/REh7jB96t8sg/NXZ6/JA5dplrscmmpAo7Wy98TJd6ktKHVjSsN4YFDdZAUc12mlYTDhf+Fl+ip7fSBiBHIXt7CF0XhrEN7nQbCRrHHGhlp0PH6KRJQm55NXbFKDWJ0ojhAHFD+ZigzngU=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2020 13:55:31.5617
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2020 13:55:41.9936
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97f0e5b8-4a9f-4aa6-0aa0-08d7c9b1b155
+X-MS-Exchange-CrossTenant-Network-Message-Id: b04311a5-1e80-4527-f27a-08d7c9b1b790
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4691
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6508
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
+From: Michal Simek <michal.simek@xilinx.com>
 
-Added support for cascaded interrupt controllers.
+Register default arch handler via driver instead of directly pointing to
+xilinx intc controller. This patch makes architecture code more generic.
 
-Following cascaded configurations have been tested,
+Driver calls generic domain specific irq handler which does the most of
+things self. Also get rid of concurrent_irq counting which hasn't been
+exported anywhere.
+Based on this loop was also optimized by using do/while loop instead of
+goto loop.
 
-- peripheral->xilinx-intc->xilinx-intc->gic->Cortexa53 processor
-  on zcu102 board
-- peripheral->xilinx-intc->xilinx-intc->microblaze processor
-  on kcu105 board
-
-Signed-off-by: Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
-Signed-off-by: Anirudha Sarangi <anirudha.sarangi@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
 ---
-Changes for v4:
-	- Fixed review comments from Thomas - updated commit
-	  message, variable declarations changed to reverse
-	  fir tree and cleaned up some code.
+ arch/microblaze/Kconfig           |  2 ++
+ arch/microblaze/include/asm/irq.h |  3 ---
+ arch/microblaze/kernel/irq.c      | 21 +------------------
+ drivers/irqchip/irq-xilinx-intc.c | 34 ++++++++++++++++++-------------
+ 4 files changed, 23 insertions(+), 37 deletions(-)
 
-Changes for v3:
-	- Modified prototype of xintc_write/xintc_read
-	- Fixed review comments regarding indentation/variable
-	  names, used BIT
-	- Modified xintc_get_irq_local to return 0
-	  in case of failure/no pending interrupts
-	- Fixed return type of xintc_read
-	- Reverted changes related to device name and
-	  kept intc_dev as static
-
-Changes for v2:
-        - Removed write_fn/read_fn hooks, used xintc_write/
-	  xintc_read directly
-        - Moved primary_intc declaration after xintc_irq_chip
----
- drivers/irqchip/irq-xilinx-intc.c | 121 ++++++++++++++++++------------
- 1 file changed, 71 insertions(+), 50 deletions(-)
-
+diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+index a75896f18e58..b5a87c294925 100644
+--- a/arch/microblaze/Kconfig
++++ b/arch/microblaze/Kconfig
+@@ -47,6 +47,8 @@ config MICROBLAZE
+ 	select CPU_NO_EFFICIENT_FFS
+ 	select MMU_GATHER_NO_RANGE if MMU
+ 	select SPARSE_IRQ
++	select GENERIC_IRQ_MULTI_HANDLER
++	select HANDLE_DOMAIN_IRQ
+ 
+ # Endianness selection
+ choice
+diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
+index eac2fb4b3fb9..5166f0893e2b 100644
+--- a/arch/microblaze/include/asm/irq.h
++++ b/arch/microblaze/include/asm/irq.h
+@@ -14,7 +14,4 @@
+ struct pt_regs;
+ extern void do_IRQ(struct pt_regs *regs);
+ 
+-/* should be defined in each interrupt controller driver */
+-extern unsigned int xintc_get_irq(void);
+-
+ #endif /* _ASM_MICROBLAZE_IRQ_H */
+diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
+index 903dad822fad..0b37dde60a1e 100644
+--- a/arch/microblaze/kernel/irq.c
++++ b/arch/microblaze/kernel/irq.c
+@@ -20,29 +20,10 @@
+ #include <linux/irqchip.h>
+ #include <linux/of_irq.h>
+ 
+-static u32 concurrent_irq;
+-
+ void __irq_entry do_IRQ(struct pt_regs *regs)
+ {
+-	unsigned int irq;
+-	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	trace_hardirqs_off();
+-
+-	irq_enter();
+-	irq = xintc_get_irq();
+-next_irq:
+-	BUG_ON(!irq);
+-	generic_handle_irq(irq);
+-
+-	irq = xintc_get_irq();
+-	if (irq != -1U) {
+-		pr_debug("next irq: %d\n", irq);
+-		++concurrent_irq;
+-		goto next_irq;
+-	}
+-
+-	irq_exit();
+-	set_irq_regs(old_regs);
++	handle_arch_irq(regs);
+ 	trace_hardirqs_on();
+ }
+ 
 diff --git a/drivers/irqchip/irq-xilinx-intc.c b/drivers/irqchip/irq-xilinx-intc.c
-index e3043ded8973..65b77720ef2e 100644
+index f2a359e2feaa..390476b8d719 100644
 --- a/drivers/irqchip/irq-xilinx-intc.c
 +++ b/drivers/irqchip/irq-xilinx-intc.c
-@@ -38,29 +38,32 @@ struct xintc_irq_chip {
- 	void		__iomem *base;
- 	struct		irq_domain *root_domain;
- 	u32		intr_mask;
-+	struct		irq_chip *intc_dev;
-+	u32		nr_irq;
- };
- 
--static struct xintc_irq_chip *xintc_irqc;
-+static struct xintc_irq_chip *primary_intc;
- 
--static void xintc_write(int reg, u32 data)
-+static void xintc_write(struct xintc_irq_chip *irqc, int reg, u32 data)
- {
- 	if (static_branch_unlikely(&xintc_is_be))
--		iowrite32be(data, xintc_irqc->base + reg);
-+		iowrite32be(data, irqc->base + reg);
- 	else
--		iowrite32(data, xintc_irqc->base + reg);
-+		iowrite32(data, irqc->base + reg);
+@@ -125,20 +125,6 @@ static unsigned int xintc_get_irq_local(struct xintc_irq_chip *irqc)
+ 	return irq;
  }
  
--static unsigned int xintc_read(int reg)
-+static u32 xintc_read(struct xintc_irq_chip *irqc, int reg)
- {
- 	if (static_branch_unlikely(&xintc_is_be))
--		return ioread32be(xintc_irqc->base + reg);
-+		return ioread32be(irqc->base + reg);
- 	else
--		return ioread32(xintc_irqc->base + reg);
-+		return ioread32(irqc->base + reg);
- }
- 
- static void intc_enable_or_unmask(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->hwirq;
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+	unsigned long mask = BIT(d->hwirq);
- 
- 	pr_debug("irq-xilinx: enable_or_unmask: %ld\n", d->hwirq);
- 
-@@ -69,30 +72,35 @@ static void intc_enable_or_unmask(struct irq_data *d)
- 	 * acks the irq before calling the interrupt handler
- 	 */
- 	if (irqd_is_level_type(d))
--		xintc_write(IAR, mask);
-+		xintc_write(irqc, IAR, mask);
- 
--	xintc_write(SIE, mask);
-+	xintc_write(irqc, SIE, mask);
- }
- 
- static void intc_disable_or_mask(struct irq_data *d)
- {
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+
- 	pr_debug("irq-xilinx: disable: %ld\n", d->hwirq);
--	xintc_write(CIE, 1 << d->hwirq);
-+	xintc_write(irqc, CIE, BIT(d->hwirq));
- }
- 
- static void intc_ack(struct irq_data *d)
- {
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+
- 	pr_debug("irq-xilinx: ack: %ld\n", d->hwirq);
--	xintc_write(IAR, 1 << d->hwirq);
-+	xintc_write(irqc, IAR, BIT(d->hwirq));
- }
- 
- static void intc_mask_ack(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->hwirq;
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+	unsigned long mask = BIT(d->hwirq);
- 
- 	pr_debug("irq-xilinx: disable_and_ack: %ld\n", d->hwirq);
--	xintc_write(CIE, mask);
--	xintc_write(IAR, mask);
-+	xintc_write(irqc, CIE, mask);
-+	xintc_write(irqc, IAR, mask);
- }
- 
- static struct irq_chip intc_dev = {
-@@ -103,13 +111,28 @@ static struct irq_chip intc_dev = {
- 	.irq_mask_ack = intc_mask_ack,
- };
- 
-+static unsigned int xintc_get_irq_local(struct xintc_irq_chip *irqc)
-+{
-+	unsigned int irq = 0;
-+	u32 hwirq;
-+
-+	hwirq = xintc_read(irqc, IVR);
-+	if (hwirq != -1U)
-+		irq = irq_find_mapping(irqc->root_domain, hwirq);
-+
-+	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
-+
-+	return irq;
-+}
-+
- unsigned int xintc_get_irq(void)
- {
--	unsigned int hwirq, irq = -1;
-+	unsigned int irq = -1;
-+	u32 hwirq;
- 
--	hwirq = xintc_read(IVR);
-+	hwirq = xintc_read(primary_intc, IVR);
- 	if (hwirq != -1U)
--		irq = irq_find_mapping(xintc_irqc->root_domain, hwirq);
-+		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
- 
- 	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
- 
-@@ -118,15 +141,18 @@ unsigned int xintc_get_irq(void)
- 
+-unsigned int xintc_get_irq(void)
+-{
+-	unsigned int irq = -1;
+-	u32 hwirq;
+-
+-	hwirq = xintc_read(primary_intc, IVR);
+-	if (hwirq != -1U)
+-		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
+-
+-	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
+-
+-	return irq;
+-}
+-
  static int xintc_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hw)
  {
--	if (xintc_irqc->intr_mask & (1 << hw)) {
--		irq_set_chip_and_handler_name(irq, &intc_dev,
--						handle_edge_irq, "edge");
-+	struct xintc_irq_chip *irqc = d->host_data;
-+
-+	if (irqc->intr_mask & BIT(hw)) {
-+		irq_set_chip_and_handler_name(irq, irqc->intc_dev,
-+					      handle_edge_irq, "edge");
- 		irq_clear_status_flags(irq, IRQ_LEVEL);
- 	} else {
--		irq_set_chip_and_handler_name(irq, &intc_dev,
--						handle_level_irq, "level");
-+		irq_set_chip_and_handler_name(irq, irqc->intc_dev,
-+					      handle_level_irq, "level");
- 		irq_set_status_flags(irq, IRQ_LEVEL);
- 	}
-+	irq_set_chip_data(irq, irqc);
- 	return 0;
+ 	struct xintc_irq_chip *irqc = d->host_data;
+@@ -178,6 +164,25 @@ static void xil_intc_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
  }
  
-@@ -138,12 +164,14 @@ static const struct irq_domain_ops xintc_irq_domain_ops = {
- static void xil_intc_irq_handler(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct xintc_irq_chip *irqc;
- 	u32 pending;
- 
-+	irqc = irq_data_get_irq_handler_data(&desc->irq_data);
- 	chained_irq_enter(chip, desc);
- 	do {
--		pending = xintc_get_irq();
--		if (pending == -1U)
-+		pending = xintc_get_irq_local(irqc);
-+		if (pending == 0U)
- 			break;
- 		generic_handle_irq(pending);
- 	} while (true);
-@@ -153,28 +181,19 @@ static void xil_intc_irq_handler(struct irq_desc *desc)
++static void xil_intc_handle_irq(struct pt_regs *regs)
++{
++	u32 hwirq;
++	struct xintc_irq_chip *irqc = primary_intc;
++
++	do {
++		hwirq = xintc_read(irqc, IVR);
++		if (likely(hwirq != -1U)) {
++			int ret;
++
++			ret = handle_domain_irq(irqc->root_domain, hwirq, regs);
++			WARN_ONCE(ret, "Unhandled HWIRQ %d\n", hwirq);
++			continue;
++		}
++
++		break;
++	} while (1);
++}
++
  static int __init xilinx_intc_of_init(struct device_node *intc,
  					     struct device_node *parent)
  {
--	u32 nr_irq;
--	int ret, irq;
- 	struct xintc_irq_chip *irqc;
--
--	if (xintc_irqc) {
--		pr_err("irq-xilinx: Multiple instances aren't supported\n");
--		return -EINVAL;
--	}
-+	int ret, irq;
- 
- 	irqc = kzalloc(sizeof(*irqc), GFP_KERNEL);
- 	if (!irqc)
- 		return -ENOMEM;
--
--	xintc_irqc = irqc;
--
- 	irqc->base = of_iomap(intc, 0);
- 	BUG_ON(!irqc->base);
- 
--	ret = of_property_read_u32(intc, "xlnx,num-intr-inputs", &nr_irq);
-+	ret = of_property_read_u32(intc, "xlnx,num-intr-inputs", &irqc->nr_irq);
- 	if (ret < 0) {
- 		pr_err("irq-xilinx: unable to read xlnx,num-intr-inputs\n");
--		goto err_alloc;
-+		goto error;
- 	}
- 
- 	ret = of_property_read_u32(intc, "xlnx,kind-of-intr", &irqc->intr_mask);
-@@ -183,34 +202,35 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 		irqc->intr_mask = 0;
- 	}
- 
--	if (irqc->intr_mask >> nr_irq)
-+	if (irqc->intr_mask >> irqc->nr_irq)
- 		pr_warn("irq-xilinx: mismatch in kind-of-intr param\n");
- 
- 	pr_info("irq-xilinx: %pOF: num_irq=%d, edge=0x%x\n",
--		intc, nr_irq, irqc->intr_mask);
-+		intc, irqc->nr_irq, irqc->intr_mask);
- 
-+	irqc->intc_dev = &intc_dev;
- 
- 	/*
- 	 * Disable all external interrupts until they are
- 	 * explicity requested.
- 	 */
--	xintc_write(IER, 0);
-+	xintc_write(irqc, IER, 0);
- 
- 	/* Acknowledge any pending interrupts just in case. */
--	xintc_write(IAR, 0xffffffff);
-+	xintc_write(irqc, IAR, 0xffffffff);
- 
- 	/* Turn on the Master Enable. */
--	xintc_write(MER, MER_HIE | MER_ME);
--	if (!(xintc_read(MER) & (MER_HIE | MER_ME))) {
-+	xintc_write(irqc, MER, MER_HIE | MER_ME);
-+	if (xintc_read(irqc, MER) != (MER_HIE | MER_ME)) {
- 		static_branch_enable(&xintc_is_be);
--		xintc_write(MER, MER_HIE | MER_ME);
-+		xintc_write(irqc, MER, MER_HIE | MER_ME);
- 	}
- 
--	irqc->root_domain = irq_domain_add_linear(intc, nr_irq,
-+	irqc->root_domain = irq_domain_add_linear(intc, irqc->nr_irq,
- 						  &xintc_irq_domain_ops, irqc);
- 	if (!irqc->root_domain) {
- 		pr_err("irq-xilinx: Unable to create IRQ domain\n");
--		goto err_alloc;
-+		goto error;
- 	}
- 
- 	if (parent) {
-@@ -222,16 +242,17 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 		} else {
- 			pr_err("irq-xilinx: interrupts property not in DT\n");
- 			ret = -EINVAL;
--			goto err_alloc;
-+			goto error;
- 		}
+@@ -248,6 +253,7 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
  	} else {
--		irq_set_default_host(irqc->root_domain);
-+		primary_intc = irqc;
-+		irq_set_default_host(primary_intc->root_domain);
+ 		primary_intc = irqc;
+ 		irq_set_default_host(primary_intc->root_domain);
++		set_handle_irq(xil_intc_handle_irq);
  	}
  
  	return 0;
- 
--err_alloc:
--	xintc_irqc = NULL;
-+error:
-+	iounmap(irqc->base);
- 	kfree(irqc);
- 	return ret;
- 
 -- 
 2.25.0
 
