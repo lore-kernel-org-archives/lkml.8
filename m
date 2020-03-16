@@ -2,112 +2,118 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA0BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C223C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680EC2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049CC20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SOcDdD2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbgCPJmK (ORCPT
+        id S1730456AbgCPJpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:42:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:44804 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 05:45:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36112 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730088AbgCPJmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:42:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A1361FB;
-        Mon, 16 Mar 2020 02:42:10 -0700 (PDT)
-Received: from [10.37.9.38] (unknown [10.37.9.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E587B3F534;
-        Mon, 16 Mar 2020 02:42:04 -0700 (PDT)
-Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
- <20200313154345.56760-19-vincenzo.frascino@arm.com>
- <20200315182950.GB32205@mbp>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
-Date:   Mon, 16 Mar 2020 09:42:32 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1730088AbgCPJpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:45:19 -0400
+Received: from zn.tnic (p200300EC2F06AB0069F33882ABEAD541.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:69f3:3882:abea:d541])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6D7781EC0A9C;
+        Mon, 16 Mar 2020 10:45:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584351917;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=er1/yi3HrpV0pKbBvQNLcsrrISJcbRo0gz2JglnSHYA=;
+        b=SOcDdD2uAhMLX8/rfv4mvESr5GbRTWbfRrTXCC88Pt0fDoZQSqQso/kcaBSYgoHy0kqxAB
+        fXNKH7mfYE1lj471zikh1Mj5MewzDJLeai9M17WecqslbNwPYsoJLSl4YDlukuAuDpueyD
+        d+AzHVyTwd2rKLzYpU2AtZcTQ94unhQ=
+Date:   Mon, 16 Mar 2020 10:45:27 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/11] EDAC/ghes: Create an own device for each mci
+Message-ID: <20200316094527.GD26126@zn.tnic>
+References: <20200306151318.17422-1-rrichter@marvell.com>
+ <20200306151318.17422-11-rrichter@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <20200315182950.GB32205@mbp>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200306151318.17422-11-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
-
-you should not really work on Sunday ;-) Joking, thanks for reviewing my patches.
-
-On 3/15/20 6:30 PM, Catalin Marinas wrote:
-> On Fri, Mar 13, 2020 at 03:43:37PM +0000, Vincenzo Frascino wrote:
->> --- /dev/null
->> +++ b/arch/arm64/include/asm/vdso/processor.h
->> @@ -0,0 +1,31 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (C) 2020 ARM Ltd.
->> + */
->> +#ifndef __ASM_VDSO_PROCESSOR_H
->> +#define __ASM_VDSO_PROCESSOR_H
->> +
->> +#ifndef __ASSEMBLY__
->> +
->> +#include <asm/page-def.h>
->> +
->> +#ifdef CONFIG_COMPAT
->> +#if defined(CONFIG_ARM64_64K_PAGES) && defined(CONFIG_KUSER_HELPERS)
->> +/*
->> + * With CONFIG_ARM64_64K_PAGES enabled, the last page is occupied
->> + * by the compat vectors page.
->> + */
->> +#define TASK_SIZE_32		UL(0x100000000)
->> +#else
->> +#define TASK_SIZE_32		(UL(0x100000000) - PAGE_SIZE)
->> +#endif /* CONFIG_ARM64_64K_PAGES */
->> +#endif /* CONFIG_COMPAT */
+On Fri, Mar 06, 2020 at 04:13:17PM +0100, Robert Richter wrote:
+> Each edac mc must have a unique device for identification (see
+> add_mc_to_global_list()). This 1:1 mapping between parent device and
+> mci is a limitation for supporting multiple instances created by the
+> ghes driver. Solve this by creating an own device in between of the
+> ghes parent and the mci struct, this allows a 1:n mapping between
+> both.
 > 
-> Just curious, what's TASK_SIZE_32 used for in the vDSO code? You don't
-> seem to move TASK_SIZE.
+> Implement this using a platform device as this is the least possible
+> effort to create and free a device. It shows up nicely in sysfs:
 > 
+>  # find /sys/ -name ghes_mc*
+>  /sys/devices/platform/GHES.0/ghes_mc.1
+>  /sys/devices/platform/GHES.0/ghes_mc.0
+>  /sys/bus/platform/devices/ghes_mc.1
+>  /sys/bus/platform/devices/ghes_mc.0
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/ghes_edac.c | 26 +++++++++++++++++++++++---
+>  1 file changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index cd61b8ae49f6..64220397296e 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -539,6 +539,8 @@ static struct acpi_platform_list plat_list[] = {
+>  static struct mem_ctl_info *ghes_mc_create(struct device *dev, int mc_idx,
+>  					int num_dimm)
+>  {
+> +	struct platform_device_info pdevinfo;
+> +	struct platform_device *pdev;
+>  	struct edac_mc_layer layers[1];
+>  	struct mem_ctl_info *mci;
+>  	struct ghes_mci *pvt;
+> @@ -547,13 +549,23 @@ static struct mem_ctl_info *ghes_mc_create(struct device *dev, int mc_idx,
+>  	layers[0].size = num_dimm;
+>  	layers[0].is_virt_csrow = true;
+>  
+> +	pdevinfo	= (struct platform_device_info){
+> +		.parent	= dev,
+> +		.name	= "ghes_mc",
+> +		.id	= mc_idx,
+> +	};
 
-I tried to fine grain the headers as much as I could in order to avoid
-unneeded/unwanted inclusions:
- * TASK_SIZE_32 is used to verify ABI consistency on vdso32 (please refer to
-   arch/arm64/kernel/vdso32/vgettimeofday.c).
- * TASK_SIZE is not required by the vdso library hence it is not present in
-   these headers.
+You can statically allocate that one once at the top of the file and
+assign ->parent and ->id each time before calling the function below.
+
+> +
+> +	pdev = platform_device_register_full(&pdevinfo);
+> +	if (IS_ERR(pdev))
+> +		goto fail;
+> +
 
 -- 
-Regards,
-Vincenzo
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
