@@ -2,85 +2,101 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFA8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419C5C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC6420719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584356011;
-	bh=eBB9d+s1Ia6M0wmpG1R/nd0F36p2cG+AgTHTE9+6xvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RtnU3LK8BmMM9pB4bbsiEVLXp0du0ThkeTGke34kP63JvfWiljAIbKwNlEoG2YdBy
-	 aEt1SOopkXduMWm1v4/5UQbYO/mmiPh9Tp4PGEm925FFoB34WdEuaQM0zJwMOcYfTR
-	 mBLQ49j6DFdQ4hcglto07mjDp1B+I7u81QmiTf14=
+	by mail.kernel.org (Postfix) with ESMTP id 1AA772071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbgCPKxa (ORCPT
+        id S1730708AbgCPKyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:53:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
+        Mon, 16 Mar 2020 06:54:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:46096 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730529AbgCPKx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:53:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DABFC2051A;
-        Mon, 16 Mar 2020 10:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584356009;
-        bh=eBB9d+s1Ia6M0wmpG1R/nd0F36p2cG+AgTHTE9+6xvs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bo1G9tyYxX0NSYGyvfSJzitE1wz6QETFwI5eXPoAPYJL7iRw5Bmxc10r9qM7NyTw2
-         +K0NI4z62zZNFA+IpTGQ7EL7G9tZJMhuXoWBr35teXiotyd98E04EsfKVxfZaH6E7Q
-         iDCq0K82E0oyDovADH4Hrm5U0lxheW93xGb0Vt9c=
-Date:   Mon, 16 Mar 2020 11:53:27 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     nobuhiro1.iwamatsu@toshiba.co.jp
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        yukuai3@huawei.com, alexander.deucher@amd.com, sashal@kernel.org
-Subject: Re: [PATCH 4.4 035/113] drm/amdgpu: remove 4 set but not used
- variable in amdgpu_atombios_get_connector_info_from_object_table
-Message-ID: <20200316105327.GA3509566@kroah.com>
-References: <20200227132211.791484803@linuxfoundation.org>
- <20200227132217.325886959@linuxfoundation.org>
- <OSAPR01MB3667601BEAABB5AF95FB799592FC0@OSAPR01MB3667.jpnprd01.prod.outlook.com>
+        id S1730529AbgCPKyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 06:54:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5497431B;
+        Mon, 16 Mar 2020 03:54:38 -0700 (PDT)
+Received: from [10.37.9.38] (unknown [10.37.9.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 240FD3F52E;
+        Mon, 16 Mar 2020 03:54:32 -0700 (PDT)
+Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-19-vincenzo.frascino@arm.com>
+ <20200315182950.GB32205@mbp> <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
+ <20200316103437.GD3005@mbp>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <77a2e91a-58f4-3ba3-9eef-42d6a8faf859@arm.com>
+Date:   Mon, 16 Mar 2020 10:55:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OSAPR01MB3667601BEAABB5AF95FB799592FC0@OSAPR01MB3667.jpnprd01.prod.outlook.com>
+In-Reply-To: <20200316103437.GD3005@mbp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 09:07:47AM +0000, nobuhiro1.iwamatsu@toshiba.co.jp wrote:
-> Hi,
-> 
-> This commit has a issue with duplicate grph_obj_type declarations.
-> And this has been fixed in commit:d785476c608c621b345dd9396e8b21e90375cb0.
-> 
-> ----
-> commit d785476c608c621b345dd9396e8b21e90375cb0e
-> Author: Colin Ian King <colin.king@canonical.com>
-> Date:   Fri Nov 8 14:45:27 2019 +0000
-> 
->     drm/amd/display: remove duplicated assignment to grph_obj_type
->     
->     Variable grph_obj_type is being assigned twice, one of these is
->     redundant so remove it.
->     
->     Addresses-Coverity: ("Evaluation order violation")
->     Signed-off-by: Colin Ian King <colin.king@canonical.com>
->     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>                                                                                                                    
-> ----
-> 
-> Please apply to all LTS without 3.16.y.
+Hi Catalin,
 
-Now applied, thanks.
+On 3/16/20 10:34 AM, Catalin Marinas wrote:
+[...]
 
-greg k-h
+
+>>
+>> I tried to fine grain the headers as much as I could in order to avoid
+>> unneeded/unwanted inclusions:
+>>  * TASK_SIZE_32 is used to verify ABI consistency on vdso32 (please refer to
+>>    arch/arm64/kernel/vdso32/vgettimeofday.c).
+> 
+> I see. But the test is probably useless. With 4K pages, TASK_SIZE_32 is
+> 1UL << 32, so you can't have a u32 greater than this. So I'd argue that
+> the ABI compatibility here doesn't matter.
+> 
+> With 16K or 64K pages, TASK_SIZE_32 is slightly smaller but arm32 never
+> supported it.
+> 
+> What's the side-effect of dropping this check altogether?
+> 
+
+The main side-effect is that arm32 and arm64 compat have a different behavior,
+that it is what we want to avoid.
+
+The vdsotest [1] I am using, verifies all the side conditions with respect to
+the ABI, which we are now compatible with. Removing those checks would break
+this condition.
+
+[1] https://github.com/nlynch-mentor/vdsotest
+
+-- 
+Regards,
+Vincenzo
