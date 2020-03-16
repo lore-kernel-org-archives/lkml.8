@@ -2,111 +2,128 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B96C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD12C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C827F20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FA620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:08:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NOO+6cnr"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="fm03qKP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgCPIFq (ORCPT
+        id S1730005AbgCPIIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:05:46 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4442 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729745AbgCPIFq (ORCPT
+        Mon, 16 Mar 2020 04:08:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39298 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729966AbgCPIIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:05:46 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02G7vZsG023088;
-        Mon, 16 Mar 2020 09:05:30 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=74p6j09OgCD44qKERldrfn1TGhnsclJWh4IGsQrPgUs=;
- b=NOO+6cnr0gI9l59bNS7o++DFseCA5paZlami+ViY1zcsWowTSrCxjbugKLYdzh/iDMDJ
- +V/vXWUWwMj7VqYkO2V+Rx3+i8vuFNBbM7RBG0vU3yEfUIZbnL8RBM84CVeIEX+XhnRh
- gLEOHX/Udwi2x8K7bw9PMIOikLyRunp/magUpPp6DCNlbCNEX9YmSnCGnqdybEnbHLh7
- /fWx5Fv+bnhnB2OhrFgicDQgo80cBOZq3cHc4kBCfKnBVZnPCWmQ0So+sluy86vVoOo9
- MMzc98iysNKWk7vaZgqclhuFWMs72lcVJY2ykvLhEB72oixGMKtqK1C9GJAkB25i+UPN ew== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yrqaye8pm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Mar 2020 09:05:30 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4847F100039;
-        Mon, 16 Mar 2020 09:05:29 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 36DE821E687;
-        Mon, 16 Mar 2020 09:05:29 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 16 Mar
- 2020 09:05:28 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Mon, 16 Mar 2020 09:05:28 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Rob Herring <robh@kernel.org>
-CC:     Dan Murphy <dmurphy@ti.com>, Sriram Dash <sriram.dash@samsung.com>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: adjust to MCAN MMIO schema conversion
-Thread-Topic: [PATCH] MAINTAINERS: adjust to MCAN MMIO schema conversion
-Thread-Index: AQHV+p7q/dc7FHitnU+am9MRNeQXR6hKzU0A
-Date:   Mon, 16 Mar 2020 08:05:28 +0000
-Message-ID: <28f8b502-1f33-1da2-e2b8-3a727db58eea@st.com>
-References: <20200315075356.8596-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20200315075356.8596-1-lukas.bulwahn@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2B429A41A546874391B681CDAA92AAC5@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 16 Mar 2020 04:08:32 -0400
+Received: by mail-io1-f67.google.com with SMTP id c19so15096397ioo.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:08:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4C2QkAKPFn1QPCfwIwQSCmTCJeHSpIXw2b0k4lFrSqw=;
+        b=fm03qKP6u2MIv0CLrzY6ofU6yjZHgvQe+TbeLEntGXpI0hO9eXYatpS9h57CEiZIr6
+         1ySpUt7WdvD5OnUwPShXMoisuWsd4epIw+0qkyDd/uc0RF8KmlYU3tI8eFCcexvH4rAA
+         Eqizgf7FiaTXaWdZ50zDduVks6W5BQE7rxDRc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4C2QkAKPFn1QPCfwIwQSCmTCJeHSpIXw2b0k4lFrSqw=;
+        b=h7CXSWx9d/6cGQ1s176/bwNsoNSxvIM0a0UvnXa5pWZHxfcsp6EGU7H2BnfsIN/fpq
+         itBq7vQwSWhcH3z/7NwrpEpOZAmp2MfdlUdfXEs9uXFA3l8AFG3mY3z10W3XqWQhjSg+
+         FPHpFTaMwstGf8AIyLUWgHuBJnuo5Ly34UyhakAm5FoxUsTruvqIGWcCBKSRdJRL5Cic
+         FuBrAra7chgcVf6gGDPtarZoLkGoPxsQ2dmpHOGsI8kjRz1/nUr/I2TabeIKJ5mogUp7
+         TwsM2ttEpa07cA2/+HS9xof7wP4NIcBdlGPh8iTgxsA7WlC9K6QaVOadlaeqAQ3T7egj
+         xtRw==
+X-Gm-Message-State: ANhLgQ1+5gKnwmcIDeEotJdIyVRa0JtAkiuHHnsleGemmZq4cDicN1vl
+        kH7HOoMHahRyTq0yeTBaTyZgn2EWsKUd4hQYdYIjeg==
+X-Google-Smtp-Source: ADFU+vvUoUlnuc+QBhJPp+Zphd2rGyw07LcSM/dHzCQLm0j6Q1O+0HputdWdJU3Z6rEnbvLjs0RfwrkIUSOkBCmF23M=
+X-Received: by 2002:a02:3b4a:: with SMTP id i10mr25473277jaf.131.1584346111516;
+ Mon, 16 Mar 2020 01:08:31 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-16_02:2020-03-12,2020-03-16 signatures=0
+References: <5e6afe0d.1c69fb81.25912.f2eb@mx.google.com> <20200315124955.207d515c@archlinux>
+In-Reply-To: <20200315124955.207d515c@archlinux>
+From:   Matt Ranostay <matt.ranostay@konsulko.com>
+Date:   Mon, 16 Mar 2020 01:08:20 -0700
+Message-ID: <CAJCx=gk-oycno_NPtNFAvuX8ibsLEGLq0FrLvfXeaJwuvuTjcg@mail.gmail.com>
+Subject: Re: [PATCH] iio: health: max30100: use generic property handler
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        dragos.bogdan@analog.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDMvMTUvMjAgODo1MyBBTSwgTHVrYXMgQnVsd2FobiB3cm90ZToNCj4gQ29tbWl0IDgy
-NDY3NGI1OWY3MiAoImR0LWJpbmRpbmdzOiBuZXQ6IGNhbjogQ29udmVydCBNX0NBTiB0byBqc29u
-LXNjaGVtYSIpDQo+IG1pc3NlZCB0byBhZGp1c3QgdGhlIE1DQU4gTU1JTyBERVZJQ0UgRFJJVkVS
-IGVudHJ5IGluIE1BSU5UQUlORVJTLg0KPg0KPiBTaW5jZSB0aGVuLCAuL3NjcmlwdHMvZ2V0X21h
-aW50YWluZXIucGwgLS1zZWxmLXRlc3QgY29tcGxhaW5zOg0KPg0KPiAgICB3YXJuaW5nOiBubyBm
-aWxlIG1hdGNoZXMgXA0KPiAgICBGOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bmV0L2Nhbi9tX2Nhbi50eHQNCj4NCj4gVXBkYXRlIE1BSU5UQUlORVJTIGVudHJ5IHRvIGxvY2F0
-aW9uIG9mIGNvbnZlcnRlZCBzY2hlbWEuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEx1a2FzIEJ1bHdh
-aG4gPGx1a2FzLmJ1bHdhaG5AZ21haWwuY29tPg0KUmV2aWV3ZWQtYnk6IEJlbmphbWluIEdhaWdu
-YXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQoNClRoYW5rcw0KPiAtLS0NCj4gYXBwbGll
-cyBjbGVhbmx5IG9uIG5leHQtMjAyMDAzMTMNCj4NCj4gQmVuamFtaW4sIHBsZWFzZSBhY2suDQo+
-IFJvYiwgcGxlYXNlIHBpY2sgdGhpcyBwYXRjaCAoaXQgaXMgbm90IHVyZ2VudCwgdGhvdWdoKS4N
-Cj4NCj4gICBNQUlOVEFJTkVSUyB8IDIgKy0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
-b24oKyksIDEgZGVsZXRpb24oLSkNCj4NCj4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJ
-TlRBSU5FUlMNCj4gaW5kZXggMzJhOTVkMTYyZjA2Li5lYmMzZDkxMjk0YzYgMTAwNjQ0DQo+IC0t
-LSBhL01BSU5UQUlORVJTDQo+ICsrKyBiL01BSU5UQUlORVJTDQo+IEBAIC0xMDMyMyw3ICsxMDMy
-Myw3IEBAIE06CURhbiBNdXJwaHkgPGRtdXJwaHlAdGkuY29tPg0KPiAgIE06CVNyaXJhbSBEYXNo
-IDxzcmlyYW0uZGFzaEBzYW1zdW5nLmNvbT4NCj4gICBMOglsaW51eC1jYW5Admdlci5rZXJuZWwu
-b3JnDQo+ICAgUzoJTWFpbnRhaW5lZA0KPiAtRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL25ldC9jYW4vbV9jYW4udHh0DQo+ICtGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbmV0L2Nhbi9ib3NjaCxtX2Nhbi55YW1sDQo+ICAgRjoJZHJpdmVycy9uZXQvY2Fu
-L21fY2FuL21fY2FuLmMNCj4gICBGOglkcml2ZXJzL25ldC9jYW4vbV9jYW4vbV9jYW4uaA0KPiAg
-IEY6CWRyaXZlcnMvbmV0L2Nhbi9tX2Nhbi9tX2Nhbl9wbGF0Zm9ybS5jDQo=
+On Sun, Mar 15, 2020 at 5:50 AM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Fri, 13 Mar 2020 08:59:13 +0530
+> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+>
+> > Instead of of_property_read_xxx use device_property_read_xxx as it is
+> > compatible with ACPI too as opposed to only device tree.
+> >
+> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+>
+> Look at how this driver is probing from DT.  There is another thing you need
+> to do to make it possible to use PRP001 ACPI based bindings.
+>
+> (check what Andy Shevchenko did in a similar patch)
+>
+> I'm being deliberately vague as useful for you to understand what is going
+> on here for yourself :)
+>
+> Also, make sure to check you have cc'd everyone relevant.  Here you are missing
+> the driver author. +cc Matt
+> Jonathan
+>
+
+Highly doubt anyone is using this in an ACPI setting. Am I missing
+something though?
+
+- Matt
+
+> > ---
+> >  drivers/iio/health/max30100.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+> > index 84010501762d..8249c6b36818 100644
+> > --- a/drivers/iio/health/max30100.c
+> > +++ b/drivers/iio/health/max30100.c
+> > @@ -16,7 +16,7 @@
+> >  #include <linux/irq.h>
+> >  #include <linux/i2c.h>
+> >  #include <linux/mutex.h>
+> > -#include <linux/of.h>
+> > +#include <linux/property.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/iio/iio.h>
+> >  #include <linux/iio/buffer.h>
+> > @@ -267,11 +267,10 @@ static int max30100_get_current_idx(unsigned int val, int *reg)
+> >  static int max30100_led_init(struct max30100_data *data)
+> >  {
+> >       struct device *dev = &data->client->dev;
+> > -     struct device_node *np = dev->of_node;
+> >       unsigned int val[2];
+> >       int reg, ret;
+> >
+> > -     ret = of_property_read_u32_array(np, "maxim,led-current-microamp",
+> > +     ret = device_property_read_u32_array(dev, "maxim,led-current-microamp",
+> >                                       (unsigned int *) &val, 2);
+> >       if (ret) {
+> >               /* Default to 24 mA RED LED, 50 mA IR LED */
+>
