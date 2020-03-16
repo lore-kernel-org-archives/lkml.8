@@ -2,187 +2,90 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962D4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D809EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6435B20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81FA2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="nQPS5z3P"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Yje1cTAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731022AbgCPMNH (ORCPT
+        id S1730966AbgCPMQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:13:07 -0400
-Received: from ozlabs.org ([203.11.71.1]:36911 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730931AbgCPMNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:13:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gwDX5qGrz9sPR;
-        Mon, 16 Mar 2020 23:13:00 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1584360783;
-        bh=snOsoTHH+Aabb2P355c26XBFeN4O7bKpJryxsh2JuUM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=nQPS5z3PnaQYTsTt7P/efS/59UTCNapp72VHWbUlw6Boi8EHWDevOs0BAo7bzLfe5
-         69gBYNoWSNfIfk6v1m3ENsZMn8BcodFjz/lCWpBAmCI1nzcIGUjcwN8Ig8jQ2uPAf3
-         UVJvfSCS+iMkpZJUEPPGfZsabq5aPSvSmHJ/CkfIpaegrhvk2ulyj8SpbtDLuJxA8R
-         +tWR6HC/UnIB9M/LLb+FakMYq7wRQH0ZziMOBjCSxFW+Ey6K2M/N4MXRz/2+h3F9O7
-         +gI+L2/8/7CoQMqZTCHt430UgCq5hHGa73aiV1jubhatUfSNQalXY+JxM1p9HluHvj
-         UsFiCFb3egm4w==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Shuah Khan <skhan@linuxfoundation.org>, shuah@kernel.org,
-        keescook@chromium.org, luto@amacapital.net, wad@chromium.org,
-        daniel@iogearbox.net, kafai@fb.com, yhs@fb.com, andriin@fb.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, khilman@baylibre.com,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v3] selftests: Fix seccomp to support relocatable build (O=objdir)
-In-Reply-To: <20200313212404.24552-1-skhan@linuxfoundation.org>
-References: <20200313212404.24552-1-skhan@linuxfoundation.org>
-Date:   Mon, 16 Mar 2020 23:12:57 +1100
-Message-ID: <8736a8qz06.fsf@mpe.ellerman.id.au>
+        Mon, 16 Mar 2020 08:16:44 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:21972 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730902AbgCPMQo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:16:44 -0400
+X-UUID: ec2881c02c9f420c96da1362f9eb7070-20200316
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=rwQaVz2lOkNOsMwjmIb1LBzk1XQeJzfgIv8n7AqSQsM=;
+        b=Yje1cTAemjks09evdCbLUcLJTTTPmwPS82EUaVkeXVtYFr7fQbtNvaruGZh9MHtlfVyjOmZnQ9FhYFQYNtNXP/hHGQsIuGHYXimhlwypLvoUbgocMF+Akv4L0HNaYOeB0voJplq74MdZQP1gDTeccss7PEJdZky7YRRDWKU4VrI=;
+X-UUID: ec2881c02c9f420c96da1362f9eb7070-20200316
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1031916809; Mon, 16 Mar 2020 20:16:39 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 16 Mar 2020 20:15:38 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 16 Mar 2020 20:13:40 +0800
+Message-ID: <1584360997.14769.1.camel@mtkswgap22>
+Subject: Re: [PATCH v2 1/1] dt-bindings: cpu: Add a support cpu type for
+ cortex-a75
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Devicetree List <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Date:   Mon, 16 Mar 2020 20:16:37 +0800
+In-Reply-To: <CANMq1KA1ngYhr7XO0k3xb0h7L-DX+TjiekvnGGOTRqz=BQPREA@mail.gmail.com>
+References: <1584345050-3738-1-git-send-email-hanks.chen@mediatek.com>
+         <CANMq1KA1ngYhr7XO0k3xb0h7L-DX+TjiekvnGGOTRqz=BQPREA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shuah Khan <skhan@linuxfoundation.org> writes:
-> Fix seccomp relocatable builds. This is a simple fix to use the right
-> lib.mk variable TEST_GEN_PROGS with dependency on kselftest_harness.h
-> header, and defining LDFLAGS for pthread lib.
->
-> Removes custom clean rule which is no longer necessary with the use of
-> TEST_GEN_PROGS. 
->
-> Uses $(OUTPUT) defined in lib.mk to handle build relocation.
->
-> The following use-cases work with this change:
->
-> In seccomp directory:
-> make all and make clean
->
-> From top level from main Makefile:
-> make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
->  CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
->
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
->
-> Changes since v2:
-> -- Using TEST_GEN_PROGS is sufficient to generate objects.
->    Addresses review comments from Kees Cook.
->
->  tools/testing/selftests/seccomp/Makefile | 18 ++++++++----------
->  1 file changed, 8 insertions(+), 10 deletions(-)
->
-> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
-> index 1760b3e39730..a0388fd2c3f2 100644
-> --- a/tools/testing/selftests/seccomp/Makefile
-> +++ b/tools/testing/selftests/seccomp/Makefile
-> @@ -1,17 +1,15 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -all:
-> -
-> -include ../lib.mk
-> +CFLAGS += -Wl,-no-as-needed -Wall
-> +LDFLAGS += -lpthread
->  
->  .PHONY: all clean
->  
-> -BINARIES := seccomp_bpf seccomp_benchmark
-> -CFLAGS += -Wl,-no-as-needed -Wall
-> +include ../lib.mk
-> +
-> +# OUTPUT set by lib.mk
-> +TEST_GEN_PROGS := $(OUTPUT)/seccomp_bpf $(OUTPUT)/seccomp_benchmark
->  
-> -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
-> -	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
-> +$(TEST_GEN_PROGS): ../kselftest_harness.h
->  
-> -TEST_PROGS += $(BINARIES)
-> -EXTRA_CLEAN := $(BINARIES)
-> +all: $(TEST_GEN_PROGS)
->  
-> -all: $(BINARIES)
+T24gTW9uLCAyMDIwLTAzLTE2IGF0IDE5OjAyICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
+DQo+IE9uIE1vbiwgTWFyIDE2LCAyMDIwIGF0IDM6NTEgUE0gSGFua3MgQ2hlbiA8aGFua3MuY2hl
+bkBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gQWRkIGFybSBjcHUgdHlwZSBjb3J0ZXgt
+YTc1Lg0KPiANCj4gQWxyZWFkeSBpbiBSb2IncyB0cmVlIGhlcmU6DQo+IGh0dHBzOi8vZ2l0Lmtl
+cm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3JvYmgvbGludXguZ2l0L2NvbW1pdC8/
+aD1kdC9uZXh0JmlkPTVjMjYxNGU5OTVkZTA3YjQxZWIzNTUxNTVlYjVlMGUzZDU5MzcxOGINCj4g
+DQpHb3QgaXQsIFRoYW5rcyBmb3IgcmV2aWV3aW5nIDopDQoNCj4gPiBTaWduZWQtb2ZmLWJ5OiBI
+YW5rcyBDaGVuIDxoYW5rcy5jaGVuQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9jcHVzLnlhbWwgfCAgICAxICsNCj4gPiAg
+MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9jcHVzLnlhbWwgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMueWFtbA0KPiA+IGluZGV4IGMyM2MyNGYu
+LjUxYjc1ZjcgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2FybS9jcHVzLnlhbWwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvYXJtL2NwdXMueWFtbA0KPiA+IEBAIC0xMjgsNiArMTI4LDcgQEAgcHJvcGVydGllczoN
+Cj4gPiAgICAgICAgLSBhcm0sY29ydGV4LWE1Nw0KPiA+ICAgICAgICAtIGFybSxjb3J0ZXgtYTcy
+DQo+ID4gICAgICAgIC0gYXJtLGNvcnRleC1hNzMNCj4gPiArICAgICAgLSBhcm0sY29ydGV4LWE3
+NQ0KPiA+ICAgICAgICAtIGFybSxjb3J0ZXgtbTANCj4gPiAgICAgICAgLSBhcm0sY29ydGV4LW0w
+Kw0KPiA+ICAgICAgICAtIGFybSxjb3J0ZXgtbTENCj4gPiAtLQ0KPiA+IDEuNy45LjUNCj4gPiBf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IExpbnV4
+LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiA+IExpbnV4LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVh
+ZC5vcmcNCj4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LW1lZGlhdGVrDQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXw0KPiBMaW51eC1tZWRpYXRlayBtYWlsaW5nIGxpc3QNCj4gTGludXgtbWVkaWF0
+ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrDQoNCg==
 
-
-It shouldn't be that complicated. We just need to define TEST_GEN_PROGS
-before including lib.mk, and then add the dependency on the harness
-after we include lib.mk (so that TEST_GEN_PROGS has been updated to
-prefix $(OUTPUT)).
-
-eg:
-
-  # SPDX-License-Identifier: GPL-2.0
-  CFLAGS += -Wl,-no-as-needed -Wall
-  LDFLAGS += -lpthread
-  
-  TEST_GEN_PROGS := seccomp_bpf seccomp_benchmark
-  
-  include ../lib.mk
-  
-  $(TEST_GEN_PROGS): ../kselftest_harness.h
-
-
-Normal in-tree build:
-
-  selftests$ make TARGETS=seccomp
-  make[1]: Entering directory '/home/michael/linux/tools/testing/selftests/seccomp'
-  gcc -Wl,-no-as-needed -Wall  -lpthread  seccomp_bpf.c ../kselftest_harness.h  -o /home/michael/linux/tools/testing/selftests/seccomp/seccomp_bpf
-  gcc -Wl,-no-as-needed -Wall  -lpthread  seccomp_benchmark.c ../kselftest_harness.h  -o /home/michael/linux/tools/testing/selftests/seccomp/seccomp_benchmark
-  make[1]: Leaving directory '/home/michael/linux/tools/testing/selftests/seccomp'
-  
-  selftests$ ls -l seccomp/
-  total 388
-  -rw-rw-r-- 1 michael michael     41 Jan  9 12:00 config
-  -rw-rw-r-- 1 michael michael    201 Mar 16 23:04 Makefile
-  -rwxrwxr-x 1 michael michael  70824 Mar 16 23:07 seccomp_benchmark*
-  -rw-rw-r-- 1 michael michael   2289 Feb 17 21:39 seccomp_benchmark.c
-  -rwxrwxr-x 1 michael michael 290520 Mar 16 23:07 seccomp_bpf*
-  -rw-rw-r-- 1 michael michael  94778 Mar  5 23:33 seccomp_bpf.c
-
-
-O= build:
-
-  selftests$ make TARGETS=seccomp O=$PWD/build
-  make[1]: Entering directory '/home/michael/linux/tools/testing/selftests/seccomp'
-  gcc -Wl,-no-as-needed -Wall  -lpthread  seccomp_bpf.c ../kselftest_harness.h  -o /home/michael/linux/tools/testing/selftests/build/seccomp/seccomp_bpf
-  gcc -Wl,-no-as-needed -Wall  -lpthread  seccomp_benchmark.c ../kselftest_harness.h  -o /home/michael/linux/tools/testing/selftests/build/seccomp/seccomp_benchmark
-  make[1]: Leaving directory '/home/michael/linux/tools/testing/selftests/seccomp'
-  
-  selftests$ ls -l build/seccomp/
-  total 280
-  -rwxrwxr-x 1 michael michael  70824 Mar 16 23:05 seccomp_benchmark*
-  -rwxrwxr-x 1 michael michael 290520 Mar 16 23:05 seccomp_bpf*
-
-
-Build in the directory itself:
-  selftests$ cd seccomp
-  seccomp$ make
-  gcc -Wl,-no-as-needed -Wall  -lpthread  seccomp_bpf.c ../kselftest_harness.h  -o /home/michael/linux/tools/testing/selftests/seccomp/seccomp_bpf
-  gcc -Wl,-no-as-needed -Wall  -lpthread  seccomp_benchmark.c ../kselftest_harness.h  -o /home/michael/linux/tools/testing/selftests/seccomp/seccomp_benchmark
-  
-  seccomp$ ls -l
-  total 388
-  -rw-rw-r-- 1 michael michael     41 Jan  9 12:00 config
-  -rw-rw-r-- 1 michael michael    201 Mar 16 23:04 Makefile
-  -rwxrwxr-x 1 michael michael  70824 Mar 16 23:06 seccomp_benchmark*
-  -rw-rw-r-- 1 michael michael   2289 Feb 17 21:39 seccomp_benchmark.c
-  -rwxrwxr-x 1 michael michael 290520 Mar 16 23:06 seccomp_bpf*
-  -rw-rw-r-- 1 michael michael  94778 Mar  5 23:33 seccomp_bpf.c
-
-
-cheers
