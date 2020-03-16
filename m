@@ -2,82 +2,74 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44343C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8896CC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A33420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC4F20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730405AbgCPJQ6 (ORCPT
+        id S1730377AbgCPJR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:16:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56309 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730025AbgCPJQ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:16:57 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jDlrh-0006T8-Od; Mon, 16 Mar 2020 09:16:53 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: fix spelling mistake "exceds" -> "exceeds"
-Date:   Mon, 16 Mar 2020 09:16:53 +0000
-Message-Id: <20200316091653.110984-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 16 Mar 2020 05:17:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:44470 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730025AbgCPJR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:17:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 810021FB;
+        Mon, 16 Mar 2020 02:17:57 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FAFE3F534;
+        Mon, 16 Mar 2020 02:17:54 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 09:17:47 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH v3 26/26] arm64: vdso32: Enable Clang Compilation
+Message-ID: <20200316091730.GB3005@mbp>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-27-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313154345.56760-27-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, Mar 13, 2020 at 03:43:45PM +0000, Vincenzo Frascino wrote:
+> Enable Clang Compilation for the vdso32 library.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-There are a couple of spelling mistakes in dev_err error messages.
-Fix them.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/dma/sh/rcar-dmac.c  | 2 +-
- drivers/dma/sh/shdma-base.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index f06016d38a05..59b36ab5d684 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1219,7 +1219,7 @@ rcar_dmac_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr,
- 	sg_len = buf_len / period_len;
- 	if (sg_len > RCAR_DMAC_MAX_SG_LEN) {
- 		dev_err(chan->device->dev,
--			"chan%u: sg length %d exceds limit %d",
-+			"chan%u: sg length %d exceeds limit %d",
- 			rchan->index, sg_len, RCAR_DMAC_MAX_SG_LEN);
- 		return NULL;
- 	}
-diff --git a/drivers/dma/sh/shdma-base.c b/drivers/dma/sh/shdma-base.c
-index c51de498b5b4..2deeaab078a4 100644
---- a/drivers/dma/sh/shdma-base.c
-+++ b/drivers/dma/sh/shdma-base.c
-@@ -709,7 +709,7 @@ static struct dma_async_tx_descriptor *shdma_prep_dma_cyclic(
- 	BUG_ON(!schan->desc_num);
- 
- 	if (sg_len > SHDMA_MAX_SG_LEN) {
--		dev_err(schan->dev, "sg length %d exceds limit %d",
-+		dev_err(schan->dev, "sg length %d exceeds limit %d",
- 				sg_len, SHDMA_MAX_SG_LEN);
- 		return NULL;
- 	}
--- 
-2.25.1
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
