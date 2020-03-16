@@ -2,153 +2,149 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6FEC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA67C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B78206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E04020679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sp8cn/io"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vqHl/Ae6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732617AbgCPU4N (ORCPT
+        id S1732628AbgCPU6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:56:13 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33852 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732567AbgCPU4N (ORCPT
+        Mon, 16 Mar 2020 16:58:23 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49342 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732591AbgCPU6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:56:13 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t3so10418953pgn.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 13:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NZ/7vQHI7KE97BesE+3WxlmFuT1Y/pVRDjy/XH5FkC0=;
-        b=sp8cn/ioOKcQrBGgpv/MwvdbUYmqLpY3kwI0x736FzBzMjDBs+K3pg5UUG1Q1DCeI5
-         1zn/f5brLanFHqo0Pi0PlKHd5FTKycUoSSyfxNbIRzD0Gm8PrzXSWOP/yv1NXIywvuWV
-         NvWUdv8eYUpXPvoGC6Q7n8PkYcU1IOx3Ty8eAJPkTabAUsLDTP0BN+QnS2rYduD9ixFa
-         x8DTDXw1Y8QHmn3HdSK2F61wnQzHBQBCPgkC9kZDUmTWVrr3qd+cK8dXytoA6SleFib7
-         dNliIlDgmEDxwl4YuOOZ5bVeMwLMEEXEedpVexup+LT/AAjgdd16EmutVUrhVjABss71
-         cTQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NZ/7vQHI7KE97BesE+3WxlmFuT1Y/pVRDjy/XH5FkC0=;
-        b=Jj0LhxD/9vO++w3kIh6eRX0zCNqXLU30XDf26QyDOSdR5kUbp/2YPVoAcZotRhgzBv
-         aJ+go+stOWe8KRHHSlSM35XQSgW4exzOtQycOa4HQQLAHsUPQrhIM4I4adkxkNNirvPP
-         CAD7AGtIPiuc62H5qfEwqviQ1a0TpvtTBIeH6TWNx/sqYiHDDyABufWKsv+Z+PANpuzl
-         v8Re4BzwOjaXVq1HjYGyiUerL2pUibNw5H4G40JI8wuRO4SVGAFoQ0IBU7L0xtad9ZSa
-         nONZeHbaNM3DTZgKeIofW5mu0iWt+ytZizz6+xdh1Iz4v7+igG8jKjKDQuu7gFFyaxE4
-         e1Fw==
-X-Gm-Message-State: ANhLgQ1dLLart//o1cc2L/Opd2IoljRGJDgSNQG8ICytmtyyXXVa5VR+
-        mcAPJ/q8nObDx2JRKV7ovpE4iJz2Kvp3ckxfxhNJkg==
-X-Google-Smtp-Source: ADFU+vuCQ97q6HcYQkHwhQj8C1S5Oa2alEBysaM6RamyvELgnI7a1zylhDyl+jjS4YkMyCE133hnoh3bBFYURu9FD5U=
-X-Received: by 2002:a05:6a00:42:: with SMTP id i2mr1554887pfk.108.1584392167596;
- Mon, 16 Mar 2020 13:56:07 -0700 (PDT)
+        Mon, 16 Mar 2020 16:58:22 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02GKrC6p132467;
+        Mon, 16 Mar 2020 20:58:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=l3Njn0pKDKSPlwzoyxhch719HDQHMS55c8rsnHebCzA=;
+ b=vqHl/Ae6I0EEecqgXXfxfZmAjUkKiHSCziPCdx8TvwjcnsQiVAxbBstlJ+Mn8j11IbF4
+ E+R9FyEdbIjOxFbqpNZtHQsRpktaFS42awAU3C4phbMPzTw6cjTnwz+PnLFmkdK9r0lb
+ R2AApgrPGxdr5VRW5NAJl/c77DL9DgExG0rEtM9NGEw9LGuwgUVK00+TEUoQmz0Ox+IW
+ FCrYGQ2/IiTQseYy34Yhl9xJ9QjJIxGZVfJiRTi3yZctbTRginYNuu/Mc75xXYREFuiM
+ kR+RQhMb1MIx2mmIyuc2+bmGG6B1X1esktHj7QETf7A+SKTJUnsgfoQqPCJfGWO20UNa xQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2yrq7ks8xu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Mar 2020 20:58:04 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02GKriGT136395;
+        Mon, 16 Mar 2020 20:58:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2ys92aqbc8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Mar 2020 20:58:04 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02GKw1Xx027835;
+        Mon, 16 Mar 2020 20:58:01 GMT
+Received: from monkey.oracle.com (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 16 Mar 2020 13:58:01 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Michal Hocko <mhocko@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Prakash Sangappa <prakash.sangappa@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH v2 0/2] hugetlbfs: use i_mmap_rwsem for more synchronization
+Date:   Mon, 16 Mar 2020 13:57:54 -0700
+Message-Id: <20200316205756.146666-1-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200316203452.32998-1-natechancellor@gmail.com>
-In-Reply-To: <20200316203452.32998-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 16 Mar 2020 13:55:55 -0700
-Message-ID: <CAKwvOdkDUYYm9ZoTeKt-5kGhDTxo6w2XhOjONWhzh6M4rE5LpA@mail.gmail.com>
-Subject: Re: [PATCH] mlx5: Remove uninitialized use of key in mlx5_core_create_mkey
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9562 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=585
+ mlxscore=0 spamscore=0 bulkscore=0 adultscore=0 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003160087
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9562 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 bulkscore=0 mlxlogscore=627 priorityscore=1501 clxscore=1015
+ malwarescore=0 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003160087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 1:35 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> ../drivers/net/ethernet/mellanox/mlx5/core/mr.c:63:21: warning: variable
-> 'key' is uninitialized when used here [-Wuninitialized]
->                       mkey_index, key, mkey->key);
->                                   ^~~
-> ../drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:54:6: note:
-> expanded from macro 'mlx5_core_dbg'
->                  ##__VA_ARGS__)
->                    ^~~~~~~~~~~
-> ../include/linux/dev_printk.h:114:39: note: expanded from macro
-> 'dev_dbg'
->         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
->                                              ^~~~~~~~~~~
-> ../include/linux/dynamic_debug.h:158:19: note: expanded from macro
-> 'dynamic_dev_dbg'
->                            dev, fmt, ##__VA_ARGS__)
->                                        ^~~~~~~~~~~
-> ../include/linux/dynamic_debug.h:143:56: note: expanded from macro
-> '_dynamic_func_call'
->         __dynamic_func_call(__UNIQUE_ID(ddebug), fmt, func, ##__VA_ARGS__)
->                                                               ^~~~~~~~~~~
-> ../include/linux/dynamic_debug.h:125:15: note: expanded from macro
-> '__dynamic_func_call'
->                 func(&id, ##__VA_ARGS__);               \
->                             ^~~~~~~~~~~
-> ../drivers/net/ethernet/mellanox/mlx5/core/mr.c:47:8: note: initialize
-> the variable 'key' to silence this warning
->         u8 key;
->               ^
->                = '\0'
-> 1 warning generated.
->
-> key's initialization was removed in commit fc6a9f86f08a ("{IB,net}/mlx5:
-> Assign mkey variant in mlx5_ib only") but its use was not fully removed.
-> Remove it now so that there is no more warning.
->
-> Fixes: fc6a9f86f08a ("{IB,net}/mlx5: Assign mkey variant in mlx5_ib only")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/932
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+v2
+- Fixed a hang that could be reproduced via a ltp test [4].
+  Note that the issue was in one of the return paths of one of the
+  callers of hugetlb_page_mapping_lock_write which left a huge page
+  locked.  The routine hugetlb_page_mapping_lock_write was not modified
+  in v2, and is still in need of review/comments.
+- Cleaned up warnings produced on powerpc builds [5].
 
-Thanks for the patch and analysis, looks good to me!
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+While discussing the issue with huge_pte_offset [1], I remembered that
+there were more outstanding hugetlb races.  These issues are:
 
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/mr.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mr.c b/drivers/net/ethernet/mellanox/mlx5/core/mr.c
-> index fd3e6d217c3b..366f2cbfc6db 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/mr.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/mr.c
-> @@ -44,7 +44,6 @@ int mlx5_core_create_mkey(struct mlx5_core_dev *dev,
->         u32 mkey_index;
->         void *mkc;
->         int err;
-> -       u8 key;
->
->         MLX5_SET(create_mkey_in, in, opcode, MLX5_CMD_OP_CREATE_MKEY);
->
-> @@ -59,8 +58,7 @@ int mlx5_core_create_mkey(struct mlx5_core_dev *dev,
->         mkey->key |= mlx5_idx_to_mkey(mkey_index);
->         mkey->pd = MLX5_GET(mkc, mkc, pd);
->
-> -       mlx5_core_dbg(dev, "out 0x%x, key 0x%x, mkey 0x%x\n",
-> -                     mkey_index, key, mkey->key);
-> +       mlx5_core_dbg(dev, "out 0x%x, mkey 0x%x\n", mkey_index, mkey->key);
->         return 0;
->  }
->  EXPORT_SYMBOL(mlx5_core_create_mkey);
-> --
-> 2.26.0.rc1
->
-> --
+1) For shared pmds, huge PTE pointers returned by huge_pte_alloc can become
+   invalid via a call to huge_pmd_unshare by another thread.
+2) hugetlbfs page faults can race with truncation causing invalid global
+   reserve counts and state.
+
+A previous attempt was made to use i_mmap_rwsem in this manner as described
+at [2].  However, those patches were reverted starting with [3] due to
+locking issues.
+
+To effectively use i_mmap_rwsem to address the above issues it needs to
+be held (in read mode) during page fault processing.  However, during
+fault processing we need to lock the page we will be adding.  Lock
+ordering requires we take page lock before i_mmap_rwsem.  Waiting until
+after taking the page lock is too late in the fault process for the
+synchronization we want to do.
+
+To address this lock ordering issue, the following patches change the
+lock ordering for hugetlb pages.  This is not too invasive as hugetlbfs
+processing is done separate from core mm in many places.  However, I
+don't really like this idea.  Much ugliness is contained in the new
+routine hugetlb_page_mapping_lock_write() of patch 1.
+
+The only other way I can think of to address these issues is by catching
+all the races.  After catching a race, cleanup, backout, retry ... etc,
+as needed.  This can get really ugly, especially for huge page reservations.
+At one time, I started writing some of the reservation backout code for
+page faults and it got so ugly and complicated I went down the path of
+adding synchronization to avoid the races.  Any other suggestions would
+be welcome.
+
+[1] https://lore.kernel.org/linux-mm/1582342427-230392-1-git-send-email-longpeng2@huawei.com/
+[2] https://lore.kernel.org/linux-mm/20181222223013.22193-1-mike.kravetz@oracle.com/
+[3] https://lore.kernel.org/linux-mm/20190103235452.29335-1-mike.kravetz@oracle.com
+[4] https://lore.kernel.org/linux-mm/1584028670.7365.182.camel@lca.pw/
+[5] https://lore.kernel.org/lkml/20200312183142.108df9ac@canb.auug.org.au/
+
+Mike Kravetz (2):
+  hugetlbfs: use i_mmap_rwsem for more pmd sharing synchronization
+  hugetlbfs: Use i_mmap_rwsem to address page fault/truncate race
+
+ fs/hugetlbfs/inode.c    |  30 +++++--
+ include/linux/fs.h      |   5 ++
+ include/linux/hugetlb.h |   8 ++
+ mm/hugetlb.c            | 175 +++++++++++++++++++++++++++++++++++-----
+ mm/memory-failure.c     |  29 ++++++-
+ mm/migrate.c            |  25 +++++-
+ mm/rmap.c               |  17 +++-
+ mm/userfaultfd.c        |  11 ++-
+ 8 files changed, 263 insertions(+), 37 deletions(-)
 
 -- 
-Thanks,
-~Nick Desaulniers
+2.24.1
+
