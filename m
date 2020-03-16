@@ -2,140 +2,209 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D50C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4BEC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC102051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0903220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KWi+mz5M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZaNJNA/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732015AbgCPPui (ORCPT
+        id S1732020AbgCPPuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:50:38 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33561 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731890AbgCPPuh (ORCPT
+        Mon, 16 Mar 2020 11:50:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46019 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731890AbgCPPuy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:50:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a25so21873051wrd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:50:36 -0700 (PDT)
+        Mon, 16 Mar 2020 11:50:54 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t2so11805252wrx.12;
+        Mon, 16 Mar 2020 08:50:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ppucAR3jBSlUx3f6FMEJLnESjyE6tqFd9bVOCG9Ch70=;
-        b=KWi+mz5Ml7txmdoZr19aVQmfuq4pxYfgRps9r2wW5ZsBdqZUhieYBFFgGOjP2Y6bx4
-         Wyhz0sJVzU+ttJVQaciTpiR1C0VRxuyTIVO+dc22nAk47TiATbV0DDmHWZKNHrvm2d4C
-         vUaa0hW1YGFbvsd4Uq2C+TXdm+UshPrNCJCR7kDzhdknhAK2c/faq2qcpOcTCILD4e73
-         SanxGSnN9MZ59DsdmAjiBTz1XxdiLtNTzfhIHxG2HnSi1v3DnTsQ2LGv/Q8k3NkWXNkz
-         QoSGyKn9pcROOSXjXbika5mVnv89BwzwPk4bOrNqAP29KhbsRRP7ajNL8l0XJVmaY1q3
-         +MfQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RmLZ2qN4R4wKBOzN/0eeaAXSnhYva6IoUpfiG2sUI4U=;
+        b=ZaNJNA/izv2UTTE0fphMn1Y3rPyGlxHJYmCq9jMTdAGslvX0XRh8BaBdXtEN4bBFIr
+         8gVewYBotOBoYW6HaQzhwYu4Tquy5TmSjvPUnBGX+q40EXlXDuIVH4Yay0Drmv6cMd6D
+         6p11mg9aBwAHoLmNp7G3UdhEo7CUKro9IOM7qd20lIYRJRlmhs4HQGjUrCbNDzNXAMi7
+         ZD6uBeydU/bjFOeQILfUDm5MMxjw0PFHDoQuqGqVxDtvjLBWYklg9/pTtUZIwHBXnv0y
+         uhLUcM2O4Sb0GhliG3mQQLFRJj09SRzP9I+JJ5ktxwAGiWl+Q7KJme0y5Au4tGx3jaFV
+         oHSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ppucAR3jBSlUx3f6FMEJLnESjyE6tqFd9bVOCG9Ch70=;
-        b=hHICkm4ysKVHE82x88fMf3nBwIz/aM62heUJnS4LpM6IbnhaQb5hqZa3hM+VdOnPD8
-         Z68snaURYWpSaczGsjFAbNfKT/OPUZdE4sgcGuYg/DDn+FcJGec7Nfg8c7ICYbJIElXK
-         alMYaFrqMCNmzekAJvzOZwsCkrSRuuSVvrmmNYa2AlJ1tZ9CNTeJheKz0fdsogwAh82H
-         6iMcsPek2KhDcvJjqnjF6+iePx0SUpx4vHjtOZmsUs0/z2MiGmWRORxO7WjINHyBiVw6
-         1E5xerRk2/K8yTF/8vkt3SsNyX/h3woXYYvngUajHrI8B/7kyJwz0MOj+2yQ6LpdlZsu
-         Hc3w==
-X-Gm-Message-State: ANhLgQ0pMHJwkxTBsNjqT3Me8CS4j8mYBrQVffd01bfp2gDlWvVr1h1j
-        wLfH62W+Pp6i5dCqzG++tL1Yjg==
-X-Google-Smtp-Source: ADFU+vvMLgpIudyWQDIKiFCwE2bd5t8QaZ3ZQI2eMwU4VsE9JIaD98F8TicbYAXHc+pSTvK+AYpoyA==
-X-Received: by 2002:adf:dfc1:: with SMTP id q1mr43953wrn.62.1584373836280;
-        Mon, 16 Mar 2020 08:50:36 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id p16sm147962wmg.22.2020.03.16.08.50.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RmLZ2qN4R4wKBOzN/0eeaAXSnhYva6IoUpfiG2sUI4U=;
+        b=m2AePkPpCrNk5n/Y9UV4W8l0ZvnsSb0gUVqf8bByfhlGVaHN2JJx8nsopdLES1B8+k
+         zIOFmSqVxpebgIphbxU4NqLZrzUcZAg6nyWEJ/i8xu7A/foRn03Y6+/A0F9mYemU3sUa
+         +DDxWcgGJG4fKvY/yeHhiWZYU5E3TvqyZCo9k84UFxHYSfRh/mqmVsHRAshGbUkCxW3g
+         wAoK456QCtvCzGMeCxmklzrxqNPutPUn+zZLACiCzpxx9D4yKgG7t/dHs/GYb1kMUlHA
+         0L6qamwa9fA7j0CcL2fPw3QIt7hZsGMsjXofLOP4YR+TEZT6kDbZeq9axYu8gO75u13d
+         RfRA==
+X-Gm-Message-State: ANhLgQ1/M/+2sHWaPUHEAHAqPBFHYQDy0jvxBYSX+7corQ4eqrjoy92k
+        Z9fVf/+7ZWsPv/kmr071ZytW2r5v
+X-Google-Smtp-Source: ADFU+vssUSCgq7o2kXHdmInIcujdbFxVHI1N1v0Q6p3GHf7PP2lPeydG+by10GWhERmRAPwzHA6h3g==
+X-Received: by 2002:adf:fd81:: with SMTP id d1mr45471wrr.82.1584373851467;
+        Mon, 16 Mar 2020 08:50:51 -0700 (PDT)
+Received: from saturn.lan ([188.26.73.247])
+        by smtp.gmail.com with ESMTPSA id n14sm153558wmi.19.2020.03.16.08.50.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:50:35 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 16:50:28 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 11/15] iommu/renesas: Use accessor functions for iommu
- private data
-Message-ID: <20200316155028.GK304669@myrica>
-References: <20200310091229.29830-1-joro@8bytes.org>
- <20200310091229.29830-12-joro@8bytes.org>
+        Mon, 16 Mar 2020 08:50:50 -0700 (PDT)
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+X-Google-Original-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     jic23@kernel.org, robh+dt@kernel.org, Laszlo.Nagy@analog.com,
+        Andrei.Grozav@analog.com, Michael.Hennerich@analog.com,
+        Istvan.Csomortani@analog.com, Adrian.Costina@analog.com,
+        Dragos.Bogdan@analog.com,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v10 0/8] iio: adi-axi-adc,ad9647: Add support for AD9467 ADC
+Date:   Mon, 16 Mar 2020 17:50:27 +0200
+Message-Id: <20200316155035.25500-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310091229.29830-12-joro@8bytes.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:12:25AM +0100, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Make use of dev_iommu_priv_set/get() functions.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  drivers/iommu/ipmmu-vmsa.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-> index ecb3f9464dd5..310cf09feea3 100644
-> --- a/drivers/iommu/ipmmu-vmsa.c
-> +++ b/drivers/iommu/ipmmu-vmsa.c
-> @@ -89,9 +89,7 @@ static struct ipmmu_vmsa_domain *to_vmsa_domain(struct iommu_domain *dom)
->  
->  static struct ipmmu_vmsa_device *to_ipmmu(struct device *dev)
->  {
-> -	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
-> -
-> -	return fwspec ? fwspec->iommu_priv : NULL;
-> +	return dev_iommu_priv_get(dev);
+This changeset adds support for the AD9467 LVDS High-Speed ADC.
+In order to support it, support for an FPGA ADI AXI ADC is added in this
+set.
+This uses the current support for IIO buffer DMAEngine.
 
-The removal of the fwspec NULL check was worrying me a little. Now any
-user of to_ipmmu() directly dereferences dev->iommu->priv where they
-previously tested first whether dev->fwspec was set. But I didn't find
-anything that could go wrong, and the resulting code looks better.
+Changelog v9 -> v10:
+* patch 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
+  - removed IQ correction logic; the AD9467 ADC driver has only 1 channel,
+    so it can't have I & Q; also the IQ correction assumes that all
+    even channels are Q and all odd channels are I, which is true for
+    current ADI-AXI ADC IP cores, but shouldn't be an assumption designed
+    in the driver; the IQ correction stuff will be re-added later,
+    and will try to use the IIO_MOD_I & IIO_MOD_Q modifiers
 
-Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Changelog v8 -> v9:
+* adding more Analog people to the list; predominantly HDL people; this
+  should help me sync people about the details of regs/reg-names
+* added 'Acked-by: Moritz Fischer <mdf@kernel.org>' tag to fpga patches
+  - we can always re-update these patches if something else is decided about
+    the location of the 'adi-axi-common.h' header; I'm not insisting about
+    where to put it; I'm open to other proposals
+* patch 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
+  - prefixed regs ADI_AXI_ ; I tried ADI_AXI_ADC_, but that seemed to make
+    them too long
+  - dropped unused regs; will add them as stuff gets added in the upstream
+    driver; in the meantime, reg-names can be reworked
+  - dropped generic LOWERXY_SET/GET macros
+  - update reg-names a bit; will update them in the docs and HDL
+  - order in adi_axi_adc_conv_unregister() should now be symmetrically
+    oppposite now to the register function
+  - implemented 'is_visible()' callback to adi_axi_adc_attributes[] so that
+    attrs can be made invisible to userspace if needed;
+  - 'indio_dev->name = "adi-axi-adc";'
+  - added kernel doc-string for @reg_access
+* patch 'iio: adc: ad9467: add support AD9467 ADC'
+  - ad9467_spi_read() split in 2 buffers; tbuf & rbuf
+  - removed 'if (chan->extend_name)' test ; left-over from initial driver
+  - removed 'if (!st->clk)' check; driver will fail probe without a clock
+  - removed 'if (!spi->dev.of_node)' in probe; shouldn't be needed
+  - using 'of_device_get_match_data()' in probe to get data; moved chip
+    info table entry as data on the of_device_id table
 
->  }
->  
->  #define TLB_LOOP_TIMEOUT		100	/* 100us */
-> @@ -727,14 +725,13 @@ static phys_addr_t ipmmu_iova_to_phys(struct iommu_domain *io_domain,
->  static int ipmmu_init_platform_device(struct device *dev,
->  				      struct of_phandle_args *args)
->  {
-> -	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
->  	struct platform_device *ipmmu_pdev;
->  
->  	ipmmu_pdev = of_find_device_by_node(args->np);
->  	if (!ipmmu_pdev)
->  		return -ENODEV;
->  
-> -	fwspec->iommu_priv = platform_get_drvdata(ipmmu_pdev);
-> +	dev_iommu_priv_set(dev, platform_get_drvdata(ipmmu_pdev));
->  
->  	return 0;
->  }
-> -- 
-> 2.17.1
-> 
+Changelog v7 -> v8:
+* in 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
+  - updated register definitions and bits to newer format/docs; the ref driver wasn't really up-to-date
+    -- prefixed bit names with reg-name to avoid bit definition colisions; that makes some macros longer, but at least the format is consistent
+  - using dev_name(&pdev->dev) for indio_dev->name
+  - moved reset to own axi_adc_reset() function; may be re-used later
+  - some re-formatting/alignment changes
+  - address ENOSYS checkpatch complaint; changed with EOPNOTSUPP
+
+Changelog v6 -> v7:
+* Fixed dt-schema build for adi,axi-adc.yaml based on Rob's suggestion
+  - added '$ref: /schemas/types.yaml#/definitions/phandle' to 'adi,adc-dev'
+  - dropped 'maxItems' from 'adi,adc-dev'
+
+Changelog v5 -> v6
+* fix URLs; got changed during rename
+   https://wiki.analog.com/resources/fpga/docs/adi_axi_adc_ip ->
+   https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
+  - noticed while working on the AXI DAC driver
+
+Changelog v4 -> v5:
+* update drivers/iio/adc/Kconfig note about module name; omitted during first rename
+   - 'module will be called axi-adc.' -> 'module will be called adi-axi-adc.'
+
+Changelog v3 -> v4:
+* addressed Rob's dt-remarks
+   - change 'adi-axi-adc-client' prop to 'adi,adc-dev'
+
+Changelog v2 -> v3:
+* addressed compiler warning
+
+Changelog v1 -> v2:
+* first series was added a bit hastily
+* addressed  'make dt_binding_check' complaints; seems I missed a few when running the check; 
+* added missing patches to include/linux/fpga/adi-axi-common.h
+   - 'include: fpga: adi-axi-common.h: fixup whitespace tab -> space'
+   - 'include: fpga: adi-axi-common.h: add version helper macros'
+* patch 'iio: buffer-dmaengine: add dev-managed calls for buffer alloc/free'
+   - remove copy+pasted comment for 'devm_iio_dmaengine_buffer_alloc()'
+   - removed devm_iio_dmaengine_buffer_free() ; hopefully it might never be needed
+   - fix-up alignment for devm_iio_dmaengine_buffer_alloc() in header
+* patch 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
+   - renamed axi-adc.c -> adi-axi-adc.c & Kconfig symbol
+   - prefix all axi_adc -> adi_axi_adc
+   - removed switch statement in axi_adc_read_raw() & axi_adc_write_raw()
+   - remove axi_adc_chan_spec ; replaced with iio_chan_spec directly ; will think of a simpler solution for extra chan params
+   - removed left-over 'struct axi_adc_cleanup_data'
+   - moved 'devm_add_action_or_reset()' call right after 'adi_axi_adc_attach_client()'
+   - switched to using 'devm_platform_ioremap_resource()'
+* patch 'iio: adc: ad9467: add support AD9467 ADC'
+  - renamed ADI_ADC reg prefixes to AN877_ADC
+  - dropped 'info_mask_separate' field in AD9467_CHAN - will be re-added later when driver gets more features; was left-over from the initial ref driver
+  - remove .shift = 0,  in AD9467_CHAN
+  - renamed 'sample-clock' -> 'adc-clock'
+  - direct returns in ad9467_read_raw() & ad9467_write_raw() & ad9467_setup() switch statements
+  - removed blank line after devm_axi_adc_conv_register()
+  - removed ad9467_id & reworked to use ad9467_of_match
+
+Alexandru Ardelean (6):
+  include: fpga: adi-axi-common.h: fixup whitespace tab -> space
+  include: fpga: adi-axi-common.h: add version helper macros
+  iio: buffer-dmaengine: use %zu specifier for sprintf(align)
+  iio: buffer-dmaengine: add dev-managed calls for buffer alloc
+  dt-bindings: iio: adc: add bindings doc for AXI ADC driver
+  dt-bindings: iio: adc: add bindings doc for AD9467 ADC
+
+Michael Hennerich (2):
+  iio: adc: adi-axi-adc: add support for AXI ADC IP core
+  iio: adc: ad9467: add support AD9467 ADC
+
+ .../bindings/iio/adc/adi,ad9467.yaml          |  65 +++
+ .../bindings/iio/adc/adi,axi-adc.yaml         |  63 +++
+ drivers/iio/adc/Kconfig                       |  35 ++
+ drivers/iio/adc/Makefile                      |   2 +
+ drivers/iio/adc/ad9467.c                      | 420 +++++++++++++++
+ drivers/iio/adc/adi-axi-adc.c                 | 495 ++++++++++++++++++
+ .../buffer/industrialio-buffer-dmaengine.c    |  41 +-
+ include/linux/fpga/adi-axi-common.h           |   6 +-
+ include/linux/iio/adc/adi-axi-adc.h           |  64 +++
+ include/linux/iio/buffer-dmaengine.h          |   3 +
+ 10 files changed, 1192 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+ create mode 100644 drivers/iio/adc/ad9467.c
+ create mode 100644 drivers/iio/adc/adi-axi-adc.c
+ create mode 100644 include/linux/iio/adc/adi-axi-adc.h
+
+-- 
+2.20.1
+
