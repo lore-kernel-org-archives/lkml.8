@@ -2,87 +2,63 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F911C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D270C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448F4205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7363E206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E6HALyGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732229AbgCPQjS (ORCPT
+        id S1732170AbgCPQl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:39:18 -0400
-Received: from sauhun.de ([88.99.104.3]:54480 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732183AbgCPQjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:39:14 -0400
-Received: from localhost (p54B334BA.dip0.t-ipconnect.de [84.179.52.186])
-        by pokefinder.org (Postfix) with ESMTPSA id 7F4EC2C1F53;
-        Mon, 16 Mar 2020 17:39:12 +0100 (CET)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm: encoder_slave: use new I2C API
-Date:   Mon, 16 Mar 2020 17:39:07 +0100
-Message-Id: <20200316163907.13709-3-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316163907.13709-1-wsa+renesas@sang-engineering.com>
-References: <20200316163907.13709-1-wsa+renesas@sang-engineering.com>
+        Mon, 16 Mar 2020 12:41:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53270 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732149AbgCPQl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 12:41:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yIPai28MQMK5lRJnqJuabulZFAzep7tvbRM36Tir//s=; b=E6HALyGxPMtkxeZUe706w/QqAV
+        qwZu7ZfFvCuZiOn6ySUTz4V8gJkyk9FUXE5ZVP9KPYkEAKXWUxzGY6D0RfXTz4K2zHPSMhniJk74i
+        7aXZB/VWjhZ2DSwMd4vpcSjp7Ja9FWbxXtY4AcKvU9LlGW8eW93w6cS/YmxtKpa/jyAjAJSgDvqkV
+        9f+VAv5sW/zeZoYGsTHPHSCg0+grlWXmSAmjyAL9G9jaF2gwIV+4T0uhVzMlNom0Qb86qXCrUpE8X
+        jgyr+uaUIBiJaR/PPefYv8xp+Ham5MZsRNpUWFzSHVAcojcW6Wvn2gcwx3C0KU8HV87mP8ir5pX/5
+        95W4OdKg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jDsnQ-0000rD-Sx; Mon, 16 Mar 2020 16:40:56 +0000
+Date:   Mon, 16 Mar 2020 09:40:56 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     hannes@cmpxchg.org, akpm@linux-foundation.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] psi: move PF_MEMSTALL out of task->flags
+Message-ID: <20200316164056.GY22433@bombadil.infradead.org>
+References: <1584355585-10210-1-git-send-email-laoar.shao@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584355585-10210-1-git-send-email-laoar.shao@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i2c_new_client() is deprecated, use the replacement
-i2c_new_client_device(). Also, we have a helper to check if a driver is
-bound. Use it to simplify the code. Note that this changes the errno for
-a failed device creation from ENOMEM to ENODEV. No callers currently
-interpret this errno, though, so we use this condensed error check.
+On Mon, Mar 16, 2020 at 06:46:25AM -0400, Yafang Shao wrote:
+> +++ b/include/linux/sched.h
+> @@ -786,6 +786,10 @@ struct task_struct {
+>  	/* to be used once the psi infrastructure lands upstream. */
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/gpu/drm/drm_encoder_slave.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+That comment looks out of date ...
 
-diff --git a/drivers/gpu/drm/drm_encoder_slave.c b/drivers/gpu/drm/drm_encoder_slave.c
-index d50a7884e69e..e464429d32df 100644
---- a/drivers/gpu/drm/drm_encoder_slave.c
-+++ b/drivers/gpu/drm/drm_encoder_slave.c
-@@ -61,13 +61,8 @@ int drm_i2c_encoder_init(struct drm_device *dev,
- 
- 	request_module("%s%s", I2C_MODULE_PREFIX, info->type);
- 
--	client = i2c_new_device(adap, info);
--	if (!client) {
--		err = -ENOMEM;
--		goto fail;
--	}
--
--	if (!client->dev.driver) {
-+	client = i2c_new_client_device(adap, info);
-+	if (!i2c_client_has_driver(client)) {
- 		err = -ENODEV;
- 		goto fail_unregister;
- 	}
-@@ -96,7 +91,6 @@ int drm_i2c_encoder_init(struct drm_device *dev,
- 	module_put(module);
- fail_unregister:
- 	i2c_unregister_device(client);
--fail:
- 	return err;
- }
- EXPORT_SYMBOL(drm_i2c_encoder_init);
--- 
-2.20.1
-
+>  	unsigned			use_memdelay:1;
