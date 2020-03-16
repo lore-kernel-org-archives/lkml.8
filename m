@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A336C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5413AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D97320724
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C3B20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326233;
-	bh=T7EptmKtFcmwZNYtW2NJwIhPk4hbrAUxmdJ1+Wx/nAc=;
+	s=default; t=1584326239;
+	bh=bnIZ+VDJdYnoXNs28ppMqKW5Lgz6HtETtN+RlPx/diQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ziYvQof/VV6r8SYqMo2XDFvzT4haewyfnchSWDzNJuUU9evKQeT3wp1VgkQ8FKXxK
-	 9HuzvrzmOezCbqZDM1B8BIJlZ7SoITFbVxVPIXb7TuUL3ezNUIlJFybwxZle2XOhaL
-	 8Lb6VZqRwVMIseJxZrWfMmBDxwR20XhWtmnGL2T4=
+	b=VOaVpKr21P20ZxHg/GoSFYFaas3Yl/5SVSghYjmrmyrHa8I1WbH9jcsZ95n58E/0I
+	 6ZUakTI6dJdJBuHYwlnioDo6gc84EEJLOv/CVeoPsc6ZRsZ2xAchX/8gjBaHF/E5Qr
+	 fjGS81cptOrZVku73UgMXY5AYkw1WrXu2DmhI/Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbgCPChL (ORCPT
+        id S1730362AbgCPChR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:37:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39912 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:37:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730160AbgCPCf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:35:27 -0400
+        id S1730155AbgCPCfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D37E206EB;
-        Mon, 16 Mar 2020 02:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 051EA20739;
+        Mon, 16 Mar 2020 02:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326127;
-        bh=T7EptmKtFcmwZNYtW2NJwIhPk4hbrAUxmdJ1+Wx/nAc=;
+        s=default; t=1584326124;
+        bh=bnIZ+VDJdYnoXNs28ppMqKW5Lgz6HtETtN+RlPx/diQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lBA1/lwPo4Pe9KvBXJ2liqX/vpUmFrDnv/4FqvfgAGTGksmzHPUTgdAQkxaPMNfH5
-         J33zKusBc+Btj8CauVyx1IrcxW6Vcr3wHgcAxbR0sL/P6tkiwVka96a6+L6epVq3Oh
-         Cf97A3RMsm8QI0my9Sp1YMVteekMERRYRCLbBL2w=
+        b=kC9rhE/Cd4ayPgmuAM4GZblJXwGXjL7Vsys9U/RFU17e8zSdxO3efgilmJAc2PJfz
+         7BzGNTnYOAvDEVjIxfJONx7gFPaAR88X8f6L8qXsZU1GU8Q2hCujEuB+5LUl8OOh1I
+         hSrNhzEjMLgO6Rp4q430poBuTHS/AsdXpB6bxILE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thommy Jakobsson <thommyj@gmail.com>,
-        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 06/15] spi/zynqmp: remove entry that causes a cs glitch
-Date:   Sun, 15 Mar 2020 22:35:10 -0400
-Message-Id: <20200316023519.2050-6-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/15] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
+Date:   Sun, 15 Mar 2020 22:35:08 -0400
+Message-Id: <20200316023519.2050-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023519.2050-1-sashal@kernel.org>
 References: <20200316023519.2050-1-sashal@kernel.org>
@@ -61,56 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thommy Jakobsson <thommyj@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 5dd8304981ecffa77bb72b1c57c4be5dfe6cfae9 ]
+[ Upstream commit 27f13774654ea6bd0b6fc9b97cce8d19e5735661 ]
 
-In the public interface for chipselect, there is always an entry
-commented as "Dummy generic FIFO entry" pushed down to the fifo right
-after the activate/deactivate command. The dummy entry is 0x0,
-irregardless if the intention was to activate or deactive the cs. This
-causes the cs line to glitch rather than beeing activated in the case
-when there was an activate command.
+'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
+has RAM above 32-bit boundary (accessible with LPAE config) though the
+PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
+property in PCIe RC DT nodes to indicate the host bridge can access
+only 32 bits.
 
-This has been observed on oscilloscope, and have caused problems for at
-least one specific flash device type connected to the qspi port. After
-the change the glitch is gone and cs goes active when intended.
-
-The reason why this worked before (except for the glitch) was because
-when sending the actual data, the CS bits are once again set. Since
-most flashes uses mode 0, there is always a half clk period anyway for
-cs to clk active setup time. If someone would rely on timing from a
-chip_select call to a transfer_one, it would fail though.
-
-It is unknown why the dummy entry was there in the first place, git log
-seems to be of no help in this case. The reference manual gives no
-indication of the necessity of this. In fact the lower 8 bits are a
-setup (or hold in case of deactivate) time expressed in cycles. So this
-should not be needed to fulfill any setup/hold timings.
-
-Signed-off-by: Thommy Jakobsson <thommyj@gmail.com>
-Reviewed-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Link: https://lore.kernel.org/r/20200224162643.29102-1-thommyj@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-zynqmp-gqspi.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
-index 18aeaceee2862..d26c0eda2d9ea 100644
---- a/drivers/spi/spi-zynqmp-gqspi.c
-+++ b/drivers/spi/spi-zynqmp-gqspi.c
-@@ -415,9 +415,6 @@ static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
- 
- 	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, genfifoentry);
- 
--	/* Dummy generic FIFO entry */
--	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, 0x0);
--
- 	/* Manually start the generic FIFO command */
- 	zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
- 			zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index fec965009b9fc..a40a7af85d020 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -302,6 +302,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -356,6 +357,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
 -- 
 2.20.1
 
