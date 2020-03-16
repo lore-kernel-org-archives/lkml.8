@@ -7,223 +7,234 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8867DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53539C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56051205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C2620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IoVYZJc5"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="twMRBgVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731236AbgCPMgV (ORCPT
+        id S1731427AbgCPMhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:36:21 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:25118 "EHLO pegase1.c-s.fr"
+        Mon, 16 Mar 2020 08:37:16 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:52502 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731180AbgCPMgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:36:12 -0400
+        id S1731226AbgCPMgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:36:20 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48gwlB0ymZz9v02l;
-        Mon, 16 Mar 2020 13:36:06 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 48gwlK3tLPz9v02j;
+        Mon, 16 Mar 2020 13:36:13 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=IoVYZJc5; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=twMRBgVA; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cG2d8UF2a7Jt; Mon, 16 Mar 2020 13:36:06 +0100 (CET)
+        with ESMTP id E2Oz-AGXRa-U; Mon, 16 Mar 2020 13:36:13 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwl972jjz9v02f;
-        Mon, 16 Mar 2020 13:36:05 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlK2cybz9v02f;
+        Mon, 16 Mar 2020 13:36:13 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584362166; bh=o1SlEZz+Awhnm5bSq+8fgheIzjCx3KGw3W3VMVbmJv0=;
+        t=1584362173; bh=lxEjxdlNh1mEcPZdSK5ZjILJTRbe8epmY3CEHIbt1QA=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=IoVYZJc5QXzBh9G+FWc9be0cKjYcLrK3DIOUHAUk/hpvoDay6Z2DWcv5YXXRZJ5sL
-         4mHgATE5RwKBe8cOWU5X5cXa0Ebi8ZtsJYa4565vrB+WKgFbocMMAK0lLdmNgsJUXE
-         YzNankmMIl8gRIWCDUwXowEAqHGN5Vu85lU5ipz8=
+        b=twMRBgVALkWgAv13i26ki9jU9qOjJ1BayJHHX9/YB74rALo/Iwgnch1HAaMWak8S/
+         g/7tiU8rssvOfb+phkPNH4KNJMQgzUTWQ+7hNDw9zY25JD1eKUzRKx1esB+Ku7ckXv
+         Sv5JUIStYLuoJHjgNvI8G4xA4GIT5a7xKPRCbRqw=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EFC708B7D0;
-        Mon, 16 Mar 2020 13:36:10 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 49A7D8B7D0;
+        Mon, 16 Mar 2020 13:36:18 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xcenVoVwBBlG; Mon, 16 Mar 2020 13:36:10 +0100 (CET)
+        with ESMTP id foNF39EXjs16; Mon, 16 Mar 2020 13:36:18 +0100 (CET)
 Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C6A7E8B7CB;
-        Mon, 16 Mar 2020 13:36:10 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1AF158B7CB;
+        Mon, 16 Mar 2020 13:36:18 +0100 (CET)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id B5CE565595; Mon, 16 Mar 2020 12:36:10 +0000 (UTC)
-Message-Id: <56d433fcf335e08b990730f1eca8547e851fd185.1584360344.git.christophe.leroy@c-s.fr>
+        id 0F39B65595; Mon, 16 Mar 2020 12:36:18 +0000 (UTC)
+Message-Id: <4f5a73b921b164be820b24ecaa74622cc2e6e9b8.1584360344.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1584360343.git.christophe.leroy@c-s.fr>
 References: <cover.1584360343.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 25/46] powerpc/8xx: Drop CONFIG_8xx_COPYBACK option
+Subject: [PATCH v1 32/46] powerpc/8xx: Don't set IMMR map anymore at boot
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Mar 2020 12:36:10 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 12:36:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_8xx_COPYBACK was there to help disabling copyback cache mode
-for debuging hardware. But nobody will design new boards with 8xx now.
+Only early debug requires IMMR to be mapped early.
 
-All 8xx platforms select it, so make it the default and remove
-the option.
+No need to set it up and pin it in assembly. Map it
+through page tables at udbg init when necessary.
 
-Also remove the Mx_RESETVAL values which are pretty useless and hide
-the real value while reading code.
+If CONFIG_PIN_TLB_IMMR is selected, pin it once we
+don't need the 32 Mb pinned RAM anymore.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/configs/adder875_defconfig      |  1 -
- arch/powerpc/configs/ep88xc_defconfig        |  1 -
- arch/powerpc/configs/mpc866_ads_defconfig    |  1 -
- arch/powerpc/configs/mpc885_ads_defconfig    |  1 -
- arch/powerpc/configs/tqm8xx_defconfig        |  1 -
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h |  2 --
- arch/powerpc/kernel/head_8xx.S               | 15 +--------------
- arch/powerpc/platforms/8xx/Kconfig           |  9 ---------
- 8 files changed, 1 insertion(+), 30 deletions(-)
+ arch/powerpc/kernel/head_8xx.S     | 36 ++++++++++++------------------
+ arch/powerpc/mm/mmu_decl.h         |  4 ++++
+ arch/powerpc/mm/nohash/8xx.c       | 15 +++++++++----
+ arch/powerpc/platforms/8xx/Kconfig |  2 +-
+ arch/powerpc/sysdev/cpm_common.c   |  2 ++
+ 5 files changed, 32 insertions(+), 27 deletions(-)
 
-diff --git a/arch/powerpc/configs/adder875_defconfig b/arch/powerpc/configs/adder875_defconfig
-index f55e23cb176c..5326bc739279 100644
---- a/arch/powerpc/configs/adder875_defconfig
-+++ b/arch/powerpc/configs/adder875_defconfig
-@@ -10,7 +10,6 @@ CONFIG_EXPERT=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_PPC_ADDER875=y
--CONFIG_8xx_COPYBACK=y
- CONFIG_GEN_RTC=y
- CONFIG_HZ_1000=y
- # CONFIG_SECCOMP is not set
-diff --git a/arch/powerpc/configs/ep88xc_defconfig b/arch/powerpc/configs/ep88xc_defconfig
-index 0e2e5e81a359..f5c3e72da719 100644
---- a/arch/powerpc/configs/ep88xc_defconfig
-+++ b/arch/powerpc/configs/ep88xc_defconfig
-@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_PPC_EP88XC=y
--CONFIG_8xx_COPYBACK=y
- CONFIG_GEN_RTC=y
- CONFIG_HZ_100=y
- # CONFIG_SECCOMP is not set
-diff --git a/arch/powerpc/configs/mpc866_ads_defconfig b/arch/powerpc/configs/mpc866_ads_defconfig
-index 5320735395e7..5c56d36cdfc5 100644
---- a/arch/powerpc/configs/mpc866_ads_defconfig
-+++ b/arch/powerpc/configs/mpc866_ads_defconfig
-@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_MPC86XADS=y
--CONFIG_8xx_COPYBACK=y
- CONFIG_GEN_RTC=y
- CONFIG_HZ_1000=y
- CONFIG_MATH_EMULATION=y
-diff --git a/arch/powerpc/configs/mpc885_ads_defconfig b/arch/powerpc/configs/mpc885_ads_defconfig
-index 82a008c04eae..949ff9ccda5e 100644
---- a/arch/powerpc/configs/mpc885_ads_defconfig
-+++ b/arch/powerpc/configs/mpc885_ads_defconfig
-@@ -11,7 +11,6 @@ CONFIG_EXPERT=y
- # CONFIG_VM_EVENT_COUNTERS is not set
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
--CONFIG_8xx_COPYBACK=y
- CONFIG_GEN_RTC=y
- CONFIG_HZ_100=y
- # CONFIG_SECCOMP is not set
-diff --git a/arch/powerpc/configs/tqm8xx_defconfig b/arch/powerpc/configs/tqm8xx_defconfig
-index eda8bfb2d0a3..77857d513022 100644
---- a/arch/powerpc/configs/tqm8xx_defconfig
-+++ b/arch/powerpc/configs/tqm8xx_defconfig
-@@ -15,7 +15,6 @@ CONFIG_MODULE_SRCVERSION_ALL=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_TQM8XX=y
--CONFIG_8xx_COPYBACK=y
- # CONFIG_8xx_CPU15 is not set
- CONFIG_GEN_RTC=y
- CONFIG_HZ_100=y
-diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-index 76af5b0cb16e..26b7cee34dfe 100644
---- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-@@ -19,7 +19,6 @@
- #define MI_RSV4I	0x08000000	/* Reserve 4 TLB entries */
- #define MI_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
- #define MI_IDXMASK	0x00001f00	/* TLB index to be loaded */
--#define MI_RESETVAL	0x00000000	/* Value of register at reset */
- 
- /* These are the Ks and Kp from the PowerPC books.  For proper operation,
-  * Ks = 0, Kp = 1.
-@@ -95,7 +94,6 @@
- #define MD_TWAM		0x04000000	/* Use 4K page hardware assist */
- #define MD_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
- #define MD_IDXMASK	0x00001f00	/* TLB index to be loaded */
--#define MD_RESETVAL	0x04000000	/* Value of register at reset */
- 
- #define SPRN_M_CASID	793	/* Address space ID (context) to match */
- #define MC_ASIDMASK	0x0000000f	/* Bits used for ASID value */
 diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 073a651787df..905205c79a25 100644
+index 84b3c7692b37..6a1a74e9b011 100644
 --- a/arch/powerpc/kernel/head_8xx.S
 +++ b/arch/powerpc/kernel/head_8xx.S
-@@ -779,10 +779,7 @@ start_here:
- initial_mmu:
- 	li	r8, 0
- 	mtspr	SPRN_MI_CTR, r8		/* remove PINNED ITLB entries */
--	lis	r10, MD_RESETVAL@h
--#ifndef CONFIG_8xx_COPYBACK
--	oris	r10, r10, MD_WTDEF@h
--#endif
-+	lis	r10, MD_TWAM@h
- 	mtspr	SPRN_MD_CTR, r10	/* remove PINNED DTLB entries */
+@@ -748,6 +748,20 @@ start_here:
+ 	rfi
+ /* Load up the kernel context */
+ 2:
++#ifdef CONFIG_PIN_TLB_IMMR
++	mfspr	r0, SPRN_MD_CTR
++	ori	r0, r0, 0x1f00
++	mtspr	SPRN_MD_CTR, r0
++	LOAD_REG_IMMEDIATE(r0, VIRT_IMMR_BASE | MD_EVALID)
++	mtspr	SPRN_MD_EPN, r0
++	LOAD_REG_IMMEDIATE(r0, MD_SVALID | MD_PS512K | MD_GUARDED)
++	mtspr	SPRN_MD_TWC, r0
++	mfspr   r0, SPRN_IMMR
++	rlwinm	r0, r0, 0, 0xfff80000
++	ori	r0, r0, 0xf0 | _PAGE_DIRTY | _PAGE_SPS | _PAGE_SH | \
++			_PAGE_NO_CACHE | _PAGE_PRESENT
++	mtspr	SPRN_MD_RPN, r0
++#endif
+ 	tlbia			/* Clear all TLB entries */
+ 	sync			/* wait for tlbia/tlbie to finish */
  
- 	tlbia			/* Invalidate all TLB entries */
-@@ -857,17 +854,7 @@ initial_mmu:
- 	mtspr	SPRN_DC_CST, r8
- 	lis	r8, IDC_ENABLE@h
- 	mtspr	SPRN_IC_CST, r8
--#ifdef CONFIG_8xx_COPYBACK
--	mtspr	SPRN_DC_CST, r8
--#else
--	/* For a debug option, I left this here to easily enable
--	 * the write through cache mode
+@@ -796,28 +810,6 @@ initial_mmu:
+ 	ori	r8, r8, MD_APG_INIT@l
+ 	mtspr	SPRN_MD_AP, r8
+ 
+-	/* Map a 512k page for the IMMR to get the processor
+-	 * internal registers (among other things).
 -	 */
--	lis	r8, DC_SFWT@h
- 	mtspr	SPRN_DC_CST, r8
--	lis	r8, IDC_ENABLE@h
--	mtspr	SPRN_DC_CST, r8
+-#ifdef CONFIG_PIN_TLB_IMMR
+-	oris	r10, r10, MD_RSV4I@h
+-	ori	r10, r10, 0x1c00
+-	mtspr	SPRN_MD_CTR, r10
+-
+-	mfspr	r9, 638			/* Get current IMMR */
+-	andis.	r9, r9, 0xfff8		/* Get 512 kbytes boundary */
+-
+-	lis	r8, VIRT_IMMR_BASE@h	/* Create vaddr for TLB */
+-	ori	r8, r8, MD_EVALID	/* Mark it valid */
+-	mtspr	SPRN_MD_EPN, r8
+-	li	r8, MD_PS512K | MD_GUARDED	/* Set 512k byte page */
+-	ori	r8, r8, MD_SVALID	/* Make it valid */
+-	mtspr	SPRN_MD_TWC, r8
+-	mr	r8, r9			/* Create paddr for TLB */
+-	ori	r8, r8, MI_BOOTINIT|0x2 /* Inhibit cache -- Cort */
+-	mtspr	SPRN_MD_RPN, r8
 -#endif
- 	/* Disable debug mode entry on breakpoints */
- 	mfspr	r8, SPRN_DER
- #ifdef CONFIG_PERF_EVENTS
+-
+ 	/* Now map the lower RAM (up to 32 Mbytes) into the ITLB. */
+ #ifdef CONFIG_PIN_TLB_TEXT
+ 	lis	r8, MI_RSV4I@h
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index 7097e07a209a..1b6d39e9baed 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -182,6 +182,10 @@ static inline void mmu_mark_initmem_nx(void) { }
+ static inline void mmu_mark_rodata_ro(void) { }
+ #endif
+ 
++#ifdef CONFIG_PPC_8xx
++void __init mmu_mapin_immr(void);
++#endif
++
+ #ifdef CONFIG_PPC_DEBUG_WX
+ void ptdump_check_wx(void);
+ #else
+diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
+index 3189308dece4..2a55904986c6 100644
+--- a/arch/powerpc/mm/nohash/8xx.c
++++ b/arch/powerpc/mm/nohash/8xx.c
+@@ -65,7 +65,7 @@ void __init MMU_init_hw(void)
+ 	if (IS_ENABLED(CONFIG_PIN_TLB_DATA)) {
+ 		unsigned long ctr = mfspr(SPRN_MD_CTR) & 0xfe000000;
+ 		unsigned long flags = 0xf0 | MD_SPS16K | _PAGE_SH | _PAGE_DIRTY;
+-		int i = IS_ENABLED(CONFIG_PIN_TLB_IMMR) ? 29 : 28;
++		int i = 28;
+ 		unsigned long addr = 0;
+ 		unsigned long mem = total_lowmem;
+ 
+@@ -80,12 +80,19 @@ void __init MMU_init_hw(void)
+ 	}
+ }
+ 
+-static void __init mmu_mapin_immr(void)
++static bool immr_is_mapped __initdata;
++
++void __init mmu_mapin_immr(void)
+ {
+ 	unsigned long p = PHYS_IMMR_BASE;
+ 	unsigned long v = VIRT_IMMR_BASE;
+ 	int offset;
+ 
++	if (immr_is_mapped)
++		return;
++
++	immr_is_mapped = true;
++
+ 	for (offset = 0; offset < IMMR_SIZE; offset += PAGE_SIZE)
+ 		map_kernel_page(v + offset, p + offset, PAGE_KERNEL_NCG);
+ }
+@@ -121,9 +128,10 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ {
+ 	unsigned long mapped;
+ 
++	mmu_mapin_immr();
++
+ 	if (__map_without_ltlbs) {
+ 		mapped = 0;
+-		mmu_mapin_immr();
+ 		if (!IS_ENABLED(CONFIG_PIN_TLB_IMMR))
+ 			patch_instruction_site(&patch__dtlbmiss_immr_jmp, PPC_INST_NOP);
+ 		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
+@@ -142,7 +150,6 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		 */
+ 		mmu_mapin_ram_chunk(0, einittext8, PAGE_KERNEL_X);
+ 		mmu_mapin_ram_chunk(einittext8, mapped, PAGE_KERNEL);
+-		mmu_mapin_immr();
+ 	}
+ 
+ 	mmu_patch_cmp_limit(&patch__dtlbmiss_linmem_top, mapped);
 diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
-index e0fe670f06f6..b37de62d7e7f 100644
+index 0d036cd868ef..04ea1a8a0bdc 100644
 --- a/arch/powerpc/platforms/8xx/Kconfig
 +++ b/arch/powerpc/platforms/8xx/Kconfig
-@@ -98,15 +98,6 @@ menu "MPC8xx CPM Options"
- # 8xx specific questions.
- comment "Generic MPC8xx Options"
+@@ -187,7 +187,7 @@ config PIN_TLB_DATA
  
--config 8xx_COPYBACK
--	bool "Copy-Back Data Cache (else Writethrough)"
--	help
--	  Saying Y here will cause the cache on an MPC8xx processor to be used
--	  in Copy-Back mode.  If you say N here, it is used in Writethrough
--	  mode.
--
--	  If in doubt, say Y here.
--
- config 8xx_GPIO
- 	bool "GPIO API Support"
- 	select GPIOLIB
+ config PIN_TLB_IMMR
+ 	bool "Pinned TLB for IMMR"
+-	depends on PIN_TLB || PPC_EARLY_DEBUG_CPM
++	depends on PIN_TLB
+ 	default y
+ 	help
+ 	  This pins the IMMR area with a 512kbytes page. In case
+diff --git a/arch/powerpc/sysdev/cpm_common.c b/arch/powerpc/sysdev/cpm_common.c
+index 71660bacb264..7dc1960f8bdb 100644
+--- a/arch/powerpc/sysdev/cpm_common.c
++++ b/arch/powerpc/sysdev/cpm_common.c
+@@ -68,6 +68,8 @@ static void udbg_putc_cpm(char c)
+ void __init udbg_init_cpm(void)
+ {
+ #ifdef CONFIG_PPC_8xx
++	mmu_mapin_immr();
++
+ 	cpm_udbg_txdesc = (u32 __iomem __force *)
+ 			  (CONFIG_PPC_EARLY_DEBUG_CPM_ADDR - PHYS_IMMR_BASE +
+ 			   VIRT_IMMR_BASE);
 -- 
 2.25.0
 
