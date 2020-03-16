@@ -2,116 +2,612 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD69C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A935C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B711620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09DB620679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:45:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xJqpOXfN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vt9xGjrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732847AbgCPWnG (ORCPT
+        id S1732858AbgCPWpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:43:06 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:43440 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732739AbgCPWnG (ORCPT
+        Mon, 16 Mar 2020 18:45:22 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46125 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732739AbgCPWpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:43:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584398586; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=8RXmUUdj99K0SeMhBlE3eAxq4g+Jx7OU47A7A+eN1IM=; b=xJqpOXfNPWwxZGznKjrSXlU8Ndh7Coeaxc7/tS26GpkMa+DaDQsj+kOTfLk4fEez2U6iO0a+
- 6jRgQ+gadcpINC5FXE7P61J4a7IydSpnuAcqINV557OEEp1MdlMGlNhonU9PZHSvoMd9vDuf
- /YNMN3v2x9mMnUFTvIBjflgi7Oc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7000f2.7f4415630ab0-smtp-out-n03;
- Mon, 16 Mar 2020 22:42:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 594E9C433D2; Mon, 16 Mar 2020 22:42:58 +0000 (UTC)
-Received: from majja-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: majja)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9149DC433CB;
-        Mon, 16 Mar 2020 22:42:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9149DC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=majja@codeaurora.org
-From:   Maheshwar Ajja <majja@codeaurora.org>
-To:     mchehab@kernel.org
-Cc:     Maheshwar Ajja <majja@codeaurora.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: v4l2-ctrl: Add H264 profile and levels
-Date:   Mon, 16 Mar 2020 15:42:30 -0700
-Message-Id: <1584398550-19727-1-git-send-email-majja@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 16 Mar 2020 18:45:22 -0400
+Received: by mail-qk1-f193.google.com with SMTP id f28so29280280qkk.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hgJDmNWpEQbJNc4mEAcOWwsH7T6CJyPxmEKaqzHkWRI=;
+        b=vt9xGjrzy1sllJMWQyLR9YN6PSvzCc45anF78sNauPPwQ80lenVoIb8FJFwav/nU6k
+         tqbTYI2fPtG8BjltvYblpOYEPnnU4JgNcxGXN7VoVQ00Gkvp0uYskz4OyzhsBSgrbrOs
+         lYq/3u6Oxhl7oWt4xtLpqlFDSGBdmLA50INziLyVxC68CYIErlHO+Vt5ySlt2FGpMk7u
+         KuesN4LLsLC7ZU5Hf5uu4Lre0Sxl4jTq2bPMo62U3/cgeRwmd97XU2dMzUbRQCoTQgpZ
+         VzeEbIlfoJHL2VkRsyz+QInt/xFZiE/z5i8I3CKYSXiOtGUZ2MqQ0tt4k5xETol5dlyg
+         tIog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hgJDmNWpEQbJNc4mEAcOWwsH7T6CJyPxmEKaqzHkWRI=;
+        b=skb+OayQPlDpptpCNG6sIvLJgcgBepD1MnvjF8LXghYNpehCgsPf/ENMU0FXtj3e/K
+         qPjmwOsY6+EXE03Z1Ojd0XtleApxEo1A8L4clctBBL/py3B1V8rj+hPz5DHvdsuihDca
+         cS5hVZ5r4U8YYn/50C1mY06gR+sS1TSbdHgkTaPlpnElvvihWKtBN+m84IfP6JDIuWZQ
+         7jt67bj8wfOO4SSuzrkrbUyTcsZPd4BxQR+HyC7SA1TkxJV/utXdQr2mCt/qH/922Y0K
+         D5ZQqeOBGSkLmn+4TPu47VakXVFDDN4DUKfpRFzohFlZ+RwCbgh74tA2WYdT0aVwCF7M
+         Kw0w==
+X-Gm-Message-State: ANhLgQ1mcGLcx6AZeCKCVG5q56hst6ZUkBibqLeDwS+p2HsdH1j+RW7v
+        0zs3GfUp3emzIpWNveG601inGHXzqzOpUowyooQd7Q==
+X-Google-Smtp-Source: ADFU+vsWuZfS9776j83LnbndqR5TE3XPh9nfhfkXEuMsxVFxFoVnY3pJnwaVZEFFVknptVWgaxNboLiWPv09KHkUElo=
+X-Received: by 2002:a37:7a04:: with SMTP id v4mr2074695qkc.340.1584398720257;
+ Mon, 16 Mar 2020 15:45:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
+ <20200313152420.138777-1-christian.brauner@ubuntu.com> <20200313152420.138777-3-christian.brauner@ubuntu.com>
+ <202003131608.DA96ECE4D@keescook>
+In-Reply-To: <202003131608.DA96ECE4D@keescook>
+From:   Hridya Valsaraju <hridya@google.com>
+Date:   Mon, 16 Mar 2020 15:44:44 -0700
+Message-ID: <CA+wgaPNETmZHeiTeV4q1YkJU=yNXfN4hap5KS_cdR7YLJHnF5w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] binderfs: add stress test for binderfs binder devices
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Todd Kjos <tkjos@android.com>,
+        LKML <linux-kernel@vger.kernel.org>, ard.biesheuvel@linaro.org,
+        ardb@kernel.org,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        linux-kselftest@vger.kernel.org, Martijn Coenen <maco@android.com>,
+        naresh.kamboju@linaro.org, shuah@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add H264 profile "Contrained High" and H264 levels "5.2",
-"6.0", "6.1" and "6.2".
+On Fri, Mar 13, 2020 at 4:08 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Mar 13, 2020 at 04:24:20PM +0100, Christian Brauner wrote:
+> > This adds a stress test that should hopefully help us catch regressions
+> > for [1], [2], and [3].
+> >
+> > [1]: 2669b8b0c798 ("binder: prevent UAF for binderfs devices")
+> > [2]: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+> > [3]: 211b64e4b5b6 ("binderfs: use refcount for binder control devices too")
+> > Cc: Kees Cook <keescook@chromium.org>:
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> -Kees
+>
 
-Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
----
- drivers/media/v4l2-core/v4l2-ctrls.c | 5 +++++
- include/uapi/linux/v4l2-controls.h   | 5 +++++
- 2 files changed, 10 insertions(+)
+Thank you for creating these tests Christian! I was able to get them
+running on the cuttlefish platform with the ACK android-mainline
+branch.
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 2928c5e..67ce711 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -336,6 +336,10 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
- 		"4.2",
- 		"5",
- 		"5.1",
-+		"5.2",
-+		"6.0",
-+		"6.1",
-+		"6.2",
- 		NULL,
- 	};
- 	static const char * const h264_loop_filter[] = {
-@@ -362,6 +366,7 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
- 		"Scalable High Intra",
- 		"Stereo High",
- 		"Multiview High",
-+		"Constrained High",
- 		NULL,
- 	};
- 	static const char * const vui_sar_idc[] = {
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 5a7bede..fbe3f82d 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -467,6 +467,10 @@ enum v4l2_mpeg_video_h264_level {
- 	V4L2_MPEG_VIDEO_H264_LEVEL_4_2	= 13,
- 	V4L2_MPEG_VIDEO_H264_LEVEL_5_0	= 14,
- 	V4L2_MPEG_VIDEO_H264_LEVEL_5_1	= 15,
-+	V4L2_MPEG_VIDEO_H264_LEVEL_5_2	= 16,
-+	V4L2_MPEG_VIDEO_H264_LEVEL_6_0	= 17,
-+	V4L2_MPEG_VIDEO_H264_LEVEL_6_1	= 18,
-+	V4L2_MPEG_VIDEO_H264_LEVEL_6_2	= 19,
- };
- #define V4L2_CID_MPEG_VIDEO_H264_LOOP_FILTER_ALPHA	(V4L2_CID_MPEG_BASE+360)
- #define V4L2_CID_MPEG_VIDEO_H264_LOOP_FILTER_BETA	(V4L2_CID_MPEG_BASE+361)
-@@ -495,6 +499,7 @@ enum v4l2_mpeg_video_h264_profile {
- 	V4L2_MPEG_VIDEO_H264_PROFILE_SCALABLE_HIGH_INTRA	= 14,
- 	V4L2_MPEG_VIDEO_H264_PROFILE_STEREO_HIGH		= 15,
- 	V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH		= 16,
-+	V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_HIGH		= 17,
- };
- #define V4L2_CID_MPEG_VIDEO_H264_VUI_EXT_SAR_HEIGHT	(V4L2_CID_MPEG_BASE+364)
- #define V4L2_CID_MPEG_VIDEO_H264_VUI_EXT_SAR_WIDTH	(V4L2_CID_MPEG_BASE+365)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+Hridya
+
+> > ---
+> > /* v2 */
+> > - Kees Cook <keescook@chromium.org>:
+> >   - Switch to unique mountpoint through mkdtemp().
+> > ---
+> >  .../selftests/filesystems/binderfs/Makefile   |   2 +-
+> >  .../filesystems/binderfs/binderfs_test.c      | 426 ++++++++++++++----
+> >  2 files changed, 334 insertions(+), 94 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/filesystems/binderfs/Makefile b/tools/testing/selftests/filesystems/binderfs/Makefile
+> > index 75315d9ba7a9..8af25ae96049 100644
+> > --- a/tools/testing/selftests/filesystems/binderfs/Makefile
+> > +++ b/tools/testing/selftests/filesystems/binderfs/Makefile
+> > @@ -1,6 +1,6 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >
+> > -CFLAGS += -I../../../../../usr/include/
+> > +CFLAGS += -I../../../../../usr/include/ -pthread
+> >  TEST_GEN_PROGS := binderfs_test
+> >
+> >  binderfs_test: binderfs_test.c ../../kselftest.h ../../kselftest_harness.h
+> > diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+> > index 818eb49f8125..8a6b507e34a8 100644
+> > --- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+> > +++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+> > @@ -3,15 +3,20 @@
+> >  #define _GNU_SOURCE
+> >  #include <errno.h>
+> >  #include <fcntl.h>
+> > +#include <pthread.h>
+> >  #include <sched.h>
+> >  #include <stdbool.h>
+> >  #include <stdio.h>
+> >  #include <stdlib.h>
+> >  #include <string.h>
+> > +#include <sys/fsuid.h>
+> >  #include <sys/ioctl.h>
+> >  #include <sys/mount.h>
+> > +#include <sys/socket.h>
+> >  #include <sys/stat.h>
+> > +#include <sys/sysinfo.h>
+> >  #include <sys/types.h>
+> > +#include <sys/wait.h>
+> >  #include <unistd.h>
+> >  #include <linux/android/binder.h>
+> >  #include <linux/android/binderfs.h>
+> > @@ -19,100 +24,26 @@
+> >  #include "../../kselftest.h"
+> >  #include "../../kselftest_harness.h"
+> >
+> > -static ssize_t write_nointr(int fd, const void *buf, size_t count)
+> > -{
+> > -     ssize_t ret;
+> > -again:
+> > -     ret = write(fd, buf, count);
+> > -     if (ret < 0 && errno == EINTR)
+> > -             goto again;
+> > -
+> > -     return ret;
+> > -}
+> > -
+> > -static void write_to_file(const char *filename, const void *buf, size_t count,
+> > -                       int allowed_errno)
+> > -{
+> > -     int fd, saved_errno;
+> > -     ssize_t ret;
+> > -
+> > -     fd = open(filename, O_WRONLY | O_CLOEXEC);
+> > -     if (fd < 0)
+> > -             ksft_exit_fail_msg("%s - Failed to open file %s\n",
+> > -                                strerror(errno), filename);
+> > +#define DEFAULT_THREADS 4
+> >
+> > -     ret = write_nointr(fd, buf, count);
+> > -     if (ret < 0) {
+> > -             if (allowed_errno && (errno == allowed_errno)) {
+> > -                     close(fd);
+> > -                     return;
+> > -             }
+> > +#define PTR_TO_INT(p) ((int)((intptr_t)(p)))
+> > +#define INT_TO_PTR(u) ((void *)((intptr_t)(u)))
+> >
+> > -             goto on_error;
+> > +#define close_prot_errno_disarm(fd) \
+> > +     if (fd >= 0) {              \
+> > +             int _e_ = errno;    \
+> > +             close(fd);          \
+> > +             errno = _e_;        \
+> > +             fd = -EBADF;        \
+> >       }
+> >
+> > -     if ((size_t)ret != count)
+> > -             goto on_error;
+> > -
+> > -     close(fd);
+> > -     return;
+> > -
+> > -on_error:
+> > -     saved_errno = errno;
+> > -     close(fd);
+> > -     errno = saved_errno;
+> > -
+> > -     if (ret < 0)
+> > -             ksft_exit_fail_msg("%s - Failed to write to file %s\n",
+> > -                                strerror(errno), filename);
+> > -
+> > -     ksft_exit_fail_msg("Failed to write to file %s\n", filename);
+> > -}
+> > -
+> > -static void change_to_userns(void)
+> > -{
+> > -     int ret;
+> > -     uid_t uid;
+> > -     gid_t gid;
+> > -     /* {g,u}id_map files only allow a max of 4096 bytes written to them */
+> > -     char idmap[4096];
+> > -
+> > -     uid = getuid();
+> > -     gid = getgid();
+> > -
+> > -     ret = unshare(CLONE_NEWUSER);
+> > -     if (ret < 0)
+> > -             ksft_exit_fail_msg("%s - Failed to unshare user namespace\n",
+> > -                                strerror(errno));
+> > -
+> > -     write_to_file("/proc/self/setgroups", "deny", strlen("deny"), ENOENT);
+> > -
+> > -     ret = snprintf(idmap, sizeof(idmap), "0 %d 1", uid);
+> > -     if (ret < 0 || (size_t)ret >= sizeof(idmap))
+> > -             ksft_exit_fail_msg("%s - Failed to prepare uid mapping\n",
+> > -                                strerror(errno));
+> > -
+> > -     write_to_file("/proc/self/uid_map", idmap, strlen(idmap), 0);
+> > -
+> > -     ret = snprintf(idmap, sizeof(idmap), "0 %d 1", gid);
+> > -     if (ret < 0 || (size_t)ret >= sizeof(idmap))
+> > -             ksft_exit_fail_msg("%s - Failed to prepare uid mapping\n",
+> > -                                strerror(errno));
+> > -
+> > -     write_to_file("/proc/self/gid_map", idmap, strlen(idmap), 0);
+> > -
+> > -     ret = setgid(0);
+> > -     if (ret)
+> > -             ksft_exit_fail_msg("%s - Failed to setgid(0)\n",
+> > -                                strerror(errno));
+> > +#define log_exit(format, ...)                                                  \
+> > +     ({                                                                     \
+> > +             fprintf(stderr, format "\n", ##__VA_ARGS__);                   \
+> > +             exit(EXIT_FAILURE);                                            \
+> > +     })
+> >
+> > -     ret = setuid(0);
+> > -     if (ret)
+> > -             ksft_exit_fail_msg("%s - Failed to setgid(0)\n",
+> > -                                strerror(errno));
+> > -}
+> > -
+> > -static void change_to_mountns(void)
+> > +static void change_mountns(void)
+> >  {
+> >       int ret;
+> >
+> > @@ -144,7 +75,7 @@ static int __do_binderfs_test(void)
+> >       char binderfs_mntpt[] = P_tmpdir "/binderfs_XXXXXX",
+> >               device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") + BINDERFS_MAX_NAME];
+> >
+> > -     change_to_mountns();
+> > +     change_mountns();
+> >
+> >       if (!mkdtemp(binderfs_mntpt))
+> >               ksft_exit_fail_msg(
+> > @@ -253,6 +184,288 @@ static int __do_binderfs_test(void)
+> >       return 0;
+> >  }
+> >
+> > +static int wait_for_pid(pid_t pid)
+> > +{
+> > +     int status, ret;
+> > +
+> > +again:
+> > +     ret = waitpid(pid, &status, 0);
+> > +     if (ret == -1) {
+> > +             if (errno == EINTR)
+> > +                     goto again;
+> > +
+> > +             return -1;
+> > +     }
+> > +
+> > +     if (!WIFEXITED(status))
+> > +             return -1;
+> > +
+> > +     return WEXITSTATUS(status);
+> > +}
+> > +
+> > +static int setid_userns_root(void)
+> > +{
+> > +     if (setuid(0))
+> > +             return -1;
+> > +     if (setgid(0))
+> > +             return -1;
+> > +
+> > +     setfsuid(0);
+> > +     setfsgid(0);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +enum idmap_type {
+> > +     UID_MAP,
+> > +     GID_MAP,
+> > +};
+> > +
+> > +static ssize_t read_nointr(int fd, void *buf, size_t count)
+> > +{
+> > +     ssize_t ret;
+> > +again:
+> > +     ret = read(fd, buf, count);
+> > +     if (ret < 0 && errno == EINTR)
+> > +             goto again;
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static ssize_t write_nointr(int fd, const void *buf, size_t count)
+> > +{
+> > +     ssize_t ret;
+> > +again:
+> > +     ret = write(fd, buf, count);
+> > +     if (ret < 0 && errno == EINTR)
+> > +             goto again;
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int write_id_mapping(enum idmap_type type, pid_t pid, const char *buf,
+> > +                         size_t buf_size)
+> > +{
+> > +     int fd;
+> > +     int ret;
+> > +     char path[4096];
+> > +
+> > +     if (type == GID_MAP) {
+> > +             int setgroups_fd;
+> > +
+> > +             snprintf(path, sizeof(path), "/proc/%d/setgroups", pid);
+> > +             setgroups_fd = open(path, O_WRONLY | O_CLOEXEC | O_NOFOLLOW);
+> > +             if (setgroups_fd < 0 && errno != ENOENT)
+> > +                     return -1;
+> > +
+> > +             if (setgroups_fd >= 0) {
+> > +                     ret = write_nointr(setgroups_fd, "deny", sizeof("deny") - 1);
+> > +                     close_prot_errno_disarm(setgroups_fd);
+> > +                     if (ret != sizeof("deny") - 1)
+> > +                             return -1;
+> > +             }
+> > +     }
+> > +
+> > +     switch (type) {
+> > +     case UID_MAP:
+> > +             ret = snprintf(path, sizeof(path), "/proc/%d/uid_map", pid);
+> > +             break;
+> > +     case GID_MAP:
+> > +             ret = snprintf(path, sizeof(path), "/proc/%d/gid_map", pid);
+> > +             break;
+> > +     default:
+> > +             return -1;
+> > +     }
+> > +     if (ret < 0 || ret >= sizeof(path))
+> > +             return -E2BIG;
+> > +
+> > +     fd = open(path, O_WRONLY | O_CLOEXEC | O_NOFOLLOW);
+> > +     if (fd < 0)
+> > +             return -1;
+> > +
+> > +     ret = write_nointr(fd, buf, buf_size);
+> > +     close_prot_errno_disarm(fd);
+> > +     if (ret != buf_size)
+> > +             return -1;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void change_userns(int syncfds[2])
+> > +{
+> > +     int ret;
+> > +     char buf;
+> > +
+> > +     close_prot_errno_disarm(syncfds[1]);
+> > +
+> > +     ret = unshare(CLONE_NEWUSER);
+> > +     if (ret < 0)
+> > +             ksft_exit_fail_msg("%s - Failed to unshare user namespace\n",
+> > +                                strerror(errno));
+> > +
+> > +     ret = write_nointr(syncfds[0], "1", 1);
+> > +     if (ret != 1)
+> > +             ksft_exit_fail_msg("write_nointr() failed\n");
+> > +
+> > +     ret = read_nointr(syncfds[0], &buf, 1);
+> > +     if (ret != 1)
+> > +             ksft_exit_fail_msg("read_nointr() failed\n");
+> > +
+> > +     close_prot_errno_disarm(syncfds[0]);
+> > +
+> > +     if (setid_userns_root())
+> > +             ksft_exit_fail_msg("setid_userns_root() failed");
+> > +}
+> > +
+> > +static void change_idmaps(int syncfds[2], pid_t pid)
+> > +{
+> > +     int ret;
+> > +     char buf;
+> > +     char id_map[4096];
+> > +
+> > +     close_prot_errno_disarm(syncfds[0]);
+> > +
+> > +     ret = read_nointr(syncfds[1], &buf, 1);
+> > +     if (ret != 1)
+> > +             ksft_exit_fail_msg("read_nointr() failed\n");
+> > +
+> > +     snprintf(id_map, sizeof(id_map), "0 %d 1\n", getuid());
+> > +     ret = write_id_mapping(UID_MAP, pid, id_map, strlen(id_map));
+> > +     if (ret)
+> > +             ksft_exit_fail_msg("write_id_mapping(UID_MAP) failed");
+> > +
+> > +     snprintf(id_map, sizeof(id_map), "0 %d 1\n", getgid());
+> > +     ret = write_id_mapping(GID_MAP, pid, id_map, strlen(id_map));
+> > +     if (ret)
+> > +             ksft_exit_fail_msg("write_id_mapping(GID_MAP) failed");
+> > +
+> > +     ret = write_nointr(syncfds[1], "1", 1);
+> > +     if (ret != 1)
+> > +             ksft_exit_fail_msg("write_nointr() failed");
+> > +
+> > +     close_prot_errno_disarm(syncfds[1]);
+> > +}
+> > +
+> > +static void *binder_version_thread(void *data)
+> > +{
+> > +     int fd = PTR_TO_INT(data);
+> > +     struct binder_version version = { 0 };
+> > +     int ret;
+> > +
+> > +     ret = ioctl(fd, BINDER_VERSION, &version);
+> > +     if (ret < 0)
+> > +             ksft_print_msg("%s - Failed to open perform BINDER_VERSION request\n", strerror(errno));
+> > +
+> > +     pthread_exit(data);
+> > +}
+> > +
+> > +/*
+> > + * Regression test:
+> > + * 2669b8b0c798 ("binder: prevent UAF for binderfs devices")
+> > + * f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+> > + * 211b64e4b5b6 ("binderfs: use refcount for binder control devices too")
+> > + */
+> > +TEST(binderfs_stress)
+> > +{
+> > +     int fds[1000];
+> > +     int syncfds[2];
+> > +     pid_t pid;
+> > +     int fd, ret;
+> > +     size_t len;
+> > +     struct binderfs_device device = { 0 };
+> > +     char binderfs_mntpt[] = P_tmpdir "/binderfs_XXXXXX",
+> > +             device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") + BINDERFS_MAX_NAME];
+> > +
+> > +     ret = socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, syncfds);
+> > +     if (ret < 0)
+> > +             ksft_exit_fail_msg("%s - Failed to create socket pair", strerror(errno));
+> > +
+> > +     pid = fork();
+> > +     if (pid < 0) {
+> > +             close_prot_errno_disarm(syncfds[0]);
+> > +             close_prot_errno_disarm(syncfds[1]);
+> > +             ksft_exit_fail_msg("%s - Failed to fork", strerror(errno));
+> > +     }
+> > +
+> > +     if (pid == 0) {
+> > +             int i, j, k, nthreads;
+> > +             pthread_attr_t attr;
+> > +             pthread_t threads[DEFAULT_THREADS];
+> > +             change_userns(syncfds);
+> > +             change_mountns();
+> > +
+> > +             if (!mkdtemp(binderfs_mntpt))
+> > +                     log_exit("%s - Failed to create binderfs mountpoint\n",
+> > +                              strerror(errno));
+> > +
+> > +             ret = mount(NULL, binderfs_mntpt, "binder", 0, 0);
+> > +             if (ret < 0)
+> > +                     log_exit("%s - Failed to mount binderfs\n", strerror(errno));
+> > +
+> > +             for (int i = 0; i < ARRAY_SIZE(fds); i++) {
+> > +
+> > +                     snprintf(device_path, sizeof(device_path),
+> > +                              "%s/binder-control", binderfs_mntpt);
+> > +                     fd = open(device_path, O_RDONLY | O_CLOEXEC);
+> > +                     if (fd < 0)
+> > +                             log_exit("%s - Failed to open binder-control device\n", strerror(errno));
+> > +
+> > +                     memset(&device, 0, sizeof(device));
+> > +                     snprintf(device.name, sizeof(device.name), "%d", i);
+> > +                     ret = ioctl(fd, BINDER_CTL_ADD, &device);
+> > +                     close_prot_errno_disarm(fd);
+> > +                     if (ret < 0)
+> > +                             log_exit("%s - Failed to allocate new binder device\n", strerror(errno));
+> > +
+> > +                     snprintf(device_path, sizeof(device_path), "%s/%d",
+> > +                              binderfs_mntpt, i);
+> > +                     fds[i] = open(device_path, O_RDONLY | O_CLOEXEC);
+> > +                     if (fds[i] < 0)
+> > +                             log_exit("%s - Failed to open binder device\n", strerror(errno));
+> > +             }
+> > +
+> > +             ret = umount2(binderfs_mntpt, MNT_DETACH);
+> > +             rmdir_protect_errno(binderfs_mntpt);
+> > +             if (ret < 0)
+> > +                     log_exit("%s - Failed to unmount binderfs\n", strerror(errno));
+> > +
+> > +             nthreads = get_nprocs_conf();
+> > +             if (nthreads > DEFAULT_THREADS)
+> > +                     nthreads = DEFAULT_THREADS;
+> > +
+> > +             pthread_attr_init(&attr);
+> > +             for (k = 0; k < ARRAY_SIZE(fds); k++) {
+> > +                     for (i = 0; i < nthreads; i++) {
+> > +                             ret = pthread_create(&threads[i], &attr, binder_version_thread, INT_TO_PTR(fds[k]));
+> > +                             if (ret) {
+> > +                                     ksft_print_msg("%s - Failed to create thread %d\n", strerror(errno), i);
+> > +                                     break;
+> > +                             }
+> > +                     }
+> > +
+> > +                     for (j = 0; j < i; j++) {
+> > +                             void *fdptr = NULL;
+> > +
+> > +                             ret = pthread_join(threads[j], &fdptr);
+> > +                             if (ret)
+> > +                                     ksft_print_msg("%s - Failed to join thread %d for fd %d\n", strerror(errno), j, PTR_TO_INT(fdptr));
+> > +                     }
+> > +             }
+> > +             pthread_attr_destroy(&attr);
+> > +
+> > +             for (k = 0; k < ARRAY_SIZE(fds); k++)
+> > +                     close(fds[k]);
+> > +
+> > +             exit(EXIT_SUCCESS);
+> > +     }
+> > +
+> > +     change_idmaps(syncfds, pid);
+> > +
+> > +     ret = wait_for_pid(pid);
+> > +     if (ret)
+> > +             ksft_exit_fail_msg("wait_for_pid() failed");
+> > +}
+> > +
+> >  TEST(binderfs_test_privileged)
+> >  {
+> >       if (geteuid() != 0)
+> > @@ -264,10 +477,37 @@ TEST(binderfs_test_privileged)
+> >
+> >  TEST(binderfs_test_unprivileged)
+> >  {
+> > -     change_to_userns();
+> > +     int ret;
+> > +     int syncfds[2];
+> > +     pid_t pid;
+> >
+> > -     if (__do_binderfs_test() == 1)
+> > -             XFAIL(return, "The Android binderfs filesystem is not available");
+> > +     ret = socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, syncfds);
+> > +     if (ret < 0)
+> > +             ksft_exit_fail_msg("%s - Failed to create socket pair", strerror(errno));
+> > +
+> > +     pid = fork();
+> > +     if (pid < 0) {
+> > +             close_prot_errno_disarm(syncfds[0]);
+> > +             close_prot_errno_disarm(syncfds[1]);
+> > +             ksft_exit_fail_msg("%s - Failed to fork", strerror(errno));
+> > +     }
+> > +
+> > +     if (pid == 0) {
+> > +             change_userns(syncfds);
+> > +             if (__do_binderfs_test() == 1)
+> > +                     exit(2);
+> > +             exit(EXIT_SUCCESS);
+> > +     }
+> > +
+> > +     change_idmaps(syncfds, pid);
+> > +
+> > +     ret = wait_for_pid(pid);
+> > +     if (ret) {
+> > +             if (ret == 2)
+> > +                     XFAIL(return, "The Android binderfs filesystem is not available");
+> > +             else
+> > +                     ksft_exit_fail_msg("wait_for_pid() failed");
+> > +     }
+> >  }
+> >
+> >  TEST_HARNESS_MAIN
+> > --
+> > 2.25.1
+> >
+>
+> --
+> Kees Cook
