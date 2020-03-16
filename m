@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F56C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2DFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82202051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2732051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="HUf43cOY"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Cc7unAu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgCPOkE (ORCPT
+        id S1731632AbgCPOkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:40:04 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38644 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731572AbgCPOkE (ORCPT
+        Mon, 16 Mar 2020 10:40:07 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41498 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731623AbgCPOkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:40:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id x7so9874458pgh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:40:01 -0700 (PDT)
+        Mon, 16 Mar 2020 10:40:06 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z65so10043355pfz.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:40:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WRycM3kvderYb9CwKZ+TYqaJ73yGSs7D+hHRot+jXvM=;
-        b=HUf43cOYSl5Ax/fWaclU2KwFUT7Mwg2q8rOdMnZbO0gqt1/k9zjUFcbUU50Scy+R/X
-         Tw+jrhgXncye3ZiyrJwiSk2N4oAeJKe6UCargnOwPyszZfdP44T34vJnHkuPpOQVGDbT
-         W7rBvsVCb8BB8yO7zAuwz3cY5InPNGnmp1OBCU6fDgUj7nF172DR+CXJ7Q/+Emo059Ko
-         KlesoY9hqusjR0Z0KiAjQoHQQu0mxWHaxSYH92FF0UC4vKSqhIbSp0RP78haFToleRlb
-         sk9RtZfFOrrGWNZ6igKDqKw1QFdlqh7k1pKnIMeJoyiCAqwy3tNiy133z3mS926LSXMV
-         v7bQ==
+        bh=Hoy3hKjGTKbXFgtJqdy0XVVKGayseSyt+olpDXinT2U=;
+        b=Cc7unAu9Anwjtat9ViQI6hUMfTEEr1QN/Dk29hmYCfqmNwxS4G5mt3+ZknLVZwK9lJ
+         Fn7kw+SwhGfcAb7zqmUQcmZD24weZEW0zbW/DoklcrkKTFtFerRcTWx5A8gRnLnpMTlT
+         Wsgt2fqKgd4ZvGX/uMiX69EjDzE69BCoA6X/qVbPaLAgNRi7in7XhdgI3scFNC2beP6a
+         y3OKV8DrhUnZfZRR77Df4TYIbFLZRbOEh6l9JBjHbqD6Ga+TjalZKArVThDDH+k/n36z
+         Jnbp92mVIIMKt17zJduWtYAbxpeiRK0bjtQdu+50/oPlAiolhCUsCTWJmmAkQI3LOWpb
+         olDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WRycM3kvderYb9CwKZ+TYqaJ73yGSs7D+hHRot+jXvM=;
-        b=e6iYLqd9Yr9n6tfvQgzMPjF0beZID4cYIMwvwWzXPBGs5tXsRPxqzHctSmh9M5JkaD
-         qpSsQmaXW+IG+6h+9gZmCLg1Q8PTd345jRZLxzbhIdN3XDLd2dek67bMA5iyOsKJhmaH
-         xEPKIEDp/THvPDl2erg6usoqyIETje/YfzYrjQknZuJmjc9p8YF4e6qVAcRKzMnCQ7Js
-         /XY17WonwdBcIkHLJcNLN/+fDFC7NJ5w59BfAPQAmGFldZWTnhTdtlxWFWNAIjhs7fRr
-         i+w9uz6X6gER/942JAhN28SMfu93hReWxZ75zGlOGFZtwxJh1/MV7a7N/d+/g7x4aL10
-         N7Bw==
-X-Gm-Message-State: ANhLgQ2DsEA0dxGsHyQyuO9S7N61dCX70u9LYxodvpfnrF4riqnydX6l
-        pg/0x1n69NdtibbCAgsylYSHXS40cOI7ZQ==
-X-Google-Smtp-Source: ADFU+vvNGndmDLdbuAl2FMjLfkFtwyASEmyqaj7ZVt3NTnGfj55nVCmperlLspPTEWNVPpNkQ+pljg==
-X-Received: by 2002:a63:1862:: with SMTP id 34mr164092pgy.191.1584369600556;
-        Mon, 16 Mar 2020 07:40:00 -0700 (PDT)
+        bh=Hoy3hKjGTKbXFgtJqdy0XVVKGayseSyt+olpDXinT2U=;
+        b=C3kuyQQQFRJWVx5KeaF2dlk2/P5yMf0h1YBXc4B8kCgDOxY5LKgVE/zPuxVrLJLtJN
+         ZHJp+HuD4KaQ091qseEQdB8A+xT8QW0tD3AdrSjJRAPKzb+IpxEL+DCWq/Ijh+m3g8Mo
+         dPJb4QyQR2S1K4Mfsvkt0dNkTgCSpxvfUUXXtcd3iCCDGvLB9Vx0S8qrhIazm2q0i1Qx
+         krgwGrBzmrfpJJY8XEwbNM241OOtHNyzcqhTMYCCIA+zgfPBh+sxefEqppB+1cUVP+Os
+         JyE1bWkbdCRAUrsSa0WquJORwljbx74hH/MGRpPLO9sL1zcLsO/uu3D0VXkPV1FCUwuh
+         zaUQ==
+X-Gm-Message-State: ANhLgQ3tP25g37UwJLhWTSvwS4+FUDOjhWhPnPzhAnTCY1qGxnGHPR0C
+        umlJ4RpDiyZ6SlDXVjOuGBTnDyjsTvLliQ==
+X-Google-Smtp-Source: ADFU+vsmdBTG8h+I0+57PwK8SCtkglhmlOG2yqWD9E6W5HThFUi8tikgPfVL5i1Ky7xL1/ihQ/QiLQ==
+X-Received: by 2002:a63:330f:: with SMTP id z15mr215975pgz.104.1584369605413;
+        Mon, 16 Mar 2020 07:40:05 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.39.56
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.40.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:39:59 -0700 (PDT)
+        Mon, 16 Mar 2020 07:40:04 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCHv2 04/50] arm/asm: Add loglvl to c_backtrace()
-Date:   Mon, 16 Mar 2020 14:38:30 +0000
-Message-Id: <20200316143916.195608-5-dima@arista.com>
+Subject: [PATCHv2 05/50] arm: Add loglvl to unwind_backtrace()
+Date:   Mon, 16 Mar 2020 14:38:31 +0000
+Message-Id: <20200316143916.195608-6-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -100,8 +100,11 @@ Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
 an easier approach than introducing more printk buffers.
 Also, it will consolidate printings with headers.
 
-Add log level argument to c_backtrace() as a preparation for introducing
-show_stack_loglvl().
+Add log level argument to unwind_backtrace() as a preparation for
+introducing show_stack_loglvl().
+
+As a good side-effect arm_syscall() is now printing errors with the same
+log level as the backtrace.
 
 Cc: Russell King <linux@armlinux.org.uk>
 Cc: Will Deacon <will@kernel.org>
@@ -110,220 +113,74 @@ Cc: clang-built-linux@googlegroups.com
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/arm/include/asm/bug.h     |  3 ++-
- arch/arm/include/asm/traps.h   |  3 ++-
- arch/arm/kernel/traps.c        |  9 +++++----
- arch/arm/kernel/unwind.c       |  2 +-
- arch/arm/lib/backtrace-clang.S |  9 +++++++--
- arch/arm/lib/backtrace.S       | 14 ++++++++++----
- 6 files changed, 27 insertions(+), 13 deletions(-)
+ arch/arm/include/asm/unwind.h | 3 ++-
+ arch/arm/kernel/traps.c       | 6 +++---
+ arch/arm/kernel/unwind.c      | 5 +++--
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/include/asm/bug.h b/arch/arm/include/asm/bug.h
-index deef4d0cb3b5..673c7dd75ab9 100644
---- a/arch/arm/include/asm/bug.h
-+++ b/arch/arm/include/asm/bug.h
-@@ -82,7 +82,8 @@ void hook_ifault_code(int nr, int (*fn)(unsigned long, unsigned int,
- 				       struct pt_regs *),
- 		     int sig, int code, const char *name);
+diff --git a/arch/arm/include/asm/unwind.h b/arch/arm/include/asm/unwind.h
+index 6e282c33126b..0f8a3439902d 100644
+--- a/arch/arm/include/asm/unwind.h
++++ b/arch/arm/include/asm/unwind.h
+@@ -36,7 +36,8 @@ extern struct unwind_table *unwind_table_add(unsigned long start,
+ 					     unsigned long text_addr,
+ 					     unsigned long text_size);
+ extern void unwind_table_del(struct unwind_table *tab);
+-extern void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk);
++extern void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
++			     const char *loglvl);
  
--extern asmlinkage void c_backtrace(unsigned long fp, int pmode);
-+extern asmlinkage void c_backtrace(unsigned long fp, int pmode,
-+				   const char *loglvl);
+ #endif	/* !__ASSEMBLY__ */
  
- struct mm_struct;
- void show_pte(const char *lvl, struct mm_struct *mm, unsigned long addr);
-diff --git a/arch/arm/include/asm/traps.h b/arch/arm/include/asm/traps.h
-index 172b08ff3760..987fefb0a4db 100644
---- a/arch/arm/include/asm/traps.h
-+++ b/arch/arm/include/asm/traps.h
-@@ -29,7 +29,8 @@ static inline int __in_irqentry_text(unsigned long ptr)
- }
- 
- extern void __init early_trap_init(void *);
--extern void dump_backtrace_entry(unsigned long where, unsigned long from, unsigned long frame);
-+extern void dump_backtrace_entry(unsigned long where, unsigned long from,
-+				 unsigned long frame, const char *loglvl);
- extern void ptrace_break(struct pt_regs *regs);
- 
- extern void *vectors_page;
 diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index 1e70e7227f0f..2030611f22b8 100644
+index 2030611f22b8..685e17c2e275 100644
 --- a/arch/arm/kernel/traps.c
 +++ b/arch/arm/kernel/traps.c
-@@ -62,7 +62,8 @@ __setup("user_debug=", user_debug_setup);
- 
- static void dump_mem(const char *, const char *, unsigned long, unsigned long);
- 
--void dump_backtrace_entry(unsigned long where, unsigned long from, unsigned long frame)
-+void dump_backtrace_entry(unsigned long where, unsigned long from,
-+			  unsigned long frame, const char *loglvl)
+@@ -204,7 +204,7 @@ static void dump_instr(const char *lvl, struct pt_regs *regs)
+ #ifdef CONFIG_ARM_UNWIND
+ static inline void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
  {
- 	unsigned long end = frame + 4 + sizeof(struct pt_regs);
- 
-@@ -76,7 +77,7 @@ void dump_backtrace_entry(unsigned long where, unsigned long from, unsigned long
- 		dump_mem("", "Exception stack", frame + 4, end);
+-	unwind_backtrace(regs, tsk);
++	unwind_backtrace(regs, tsk, KERN_DEFAULT);
  }
- 
--void dump_backtrace_stm(u32 *stack, u32 instruction)
-+void dump_backtrace_stm(u32 *stack, u32 instruction, const char *loglvl)
- {
- 	char str[80], *p;
- 	unsigned int x;
-@@ -238,7 +239,7 @@ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
- 	pr_cont("\n");
- 
- 	if (ok)
--		c_backtrace(fp, mode);
-+		c_backtrace(fp, mode, NULL);
- }
- #endif
- 
-@@ -666,7 +667,7 @@ asmlinkage int arm_syscall(int no, struct pt_regs *regs)
- 		dump_instr("", regs);
+ #else
+ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+@@ -664,10 +664,10 @@ asmlinkage int arm_syscall(int no, struct pt_regs *regs)
+ 	if (user_debug & UDBG_SYSCALL) {
+ 		pr_err("[%d] %s: arm syscall %d\n",
+ 		       task_pid_nr(current), current->comm, no);
+-		dump_instr("", regs);
++		dump_instr(KERN_ERR, regs);
  		if (user_mode(regs)) {
  			__show_regs(regs);
--			c_backtrace(frame_pointer(regs), processor_mode(regs));
-+			c_backtrace(frame_pointer(regs), processor_mode(regs), NULL);
+-			c_backtrace(frame_pointer(regs), processor_mode(regs), NULL);
++			c_backtrace(frame_pointer(regs), processor_mode(regs), KERN_ERR);
  		}
  	}
  #endif
 diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
-index 4574e6aea0a5..0a65005e10f0 100644
+index 0a65005e10f0..9222649ebe0f 100644
 --- a/arch/arm/kernel/unwind.c
 +++ b/arch/arm/kernel/unwind.c
-@@ -493,7 +493,7 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+@@ -455,7 +455,8 @@ int unwind_frame(struct stackframe *frame)
+ 	return URC_OK;
+ }
+ 
+-void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk)
++void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
++		      const char *loglvl)
+ {
+ 	struct stackframe frame;
+ 
+@@ -493,7 +494,7 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk)
  		urc = unwind_frame(&frame);
  		if (urc < 0)
  			break;
--		dump_backtrace_entry(where, frame.pc, frame.sp - 4);
-+		dump_backtrace_entry(where, frame.pc, frame.sp - 4, NULL);
+-		dump_backtrace_entry(where, frame.pc, frame.sp - 4, NULL);
++		dump_backtrace_entry(where, frame.pc, frame.sp - 4, loglvl);
  	}
  }
  
-diff --git a/arch/arm/lib/backtrace-clang.S b/arch/arm/lib/backtrace-clang.S
-index 2ff375144b55..6174c45f53a5 100644
---- a/arch/arm/lib/backtrace-clang.S
-+++ b/arch/arm/lib/backtrace-clang.S
-@@ -17,6 +17,7 @@
- #define sv_pc	r6
- #define mask	r7
- #define sv_lr	r8
-+#define loglvl	r9
- 
- ENTRY(c_backtrace)
- 
-@@ -99,6 +100,7 @@ ENDPROC(c_backtrace)
- 						@ to ensure 8 byte alignment
- 		movs	frame, r0		@ if frame pointer is zero
- 		beq	no_frame		@ we have no stack frames
-+		mov	loglvl, r2
- 		tst	r1, #0x10		@ 26 or 32-bit mode?
- 		moveq	mask, #0xfc000003
- 		movne	mask, #0		@ mask for 32-bit
-@@ -167,6 +169,7 @@ finished_setup:
- 		mov	r1, sv_lr
- 		mov	r2, frame
- 		bic	r1, r1, mask		@ mask PC/LR for the mode
-+		mov	r3, loglvl
- 		bl	dump_backtrace_entry
- 
- /*
-@@ -183,6 +186,7 @@ finished_setup:
- 		ldr	r0, [frame]		@ locals are stored in
- 						@ the preceding frame
- 		subeq	r0, r0, #4
-+		mov	r2, loglvl
- 		bleq	dump_backtrace_stm	@ dump saved registers
- 
- /*
-@@ -196,7 +200,8 @@ finished_setup:
- 		bhi	for_each_frame
- 
- 1006:		adr	r0, .Lbad
--		mov	r1, frame
-+		mov	r1, loglvl
-+		mov	r2, frame
- 		bl	printk
- no_frame:	ldmfd	sp!, {r4 - r9, fp, pc}
- ENDPROC(c_backtrace)
-@@ -209,7 +214,7 @@ ENDPROC(c_backtrace)
- 		.long   1005b, 1006b
- 		.popsection
- 
--.Lbad:		.asciz	"Backtrace aborted due to bad frame pointer <%p>\n"
-+.Lbad:		.asciz	"%sBacktrace aborted due to bad frame pointer <%p>\n"
- 		.align
- .Lopcode:	.word	0xe92d4800 >> 11	@ stmfd sp!, {... fp, lr}
- 		.word	0x0b000000		@ bl if these bits are set
-diff --git a/arch/arm/lib/backtrace.S b/arch/arm/lib/backtrace.S
-index 582925238d65..872f658638d9 100644
---- a/arch/arm/lib/backtrace.S
-+++ b/arch/arm/lib/backtrace.S
-@@ -18,6 +18,7 @@
- #define sv_pc	r6
- #define mask	r7
- #define offset	r8
-+#define loglvl	r9
- 
- ENTRY(c_backtrace)
- 
-@@ -25,9 +26,10 @@ ENTRY(c_backtrace)
- 		ret	lr
- ENDPROC(c_backtrace)
- #else
--		stmfd	sp!, {r4 - r8, lr}	@ Save an extra register so we have a location...
-+		stmfd	sp!, {r4 - r9, lr}	@ Save an extra register so we have a location...
- 		movs	frame, r0		@ if frame pointer is zero
- 		beq	no_frame		@ we have no stack frames
-+		mov	loglvl, r2
- 
- 		tst	r1, #0x10		@ 26 or 32-bit mode?
-  ARM(		moveq	mask, #0xfc000003	)
-@@ -73,6 +75,7 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
- 		ldr	r1, [frame, #-4]	@ get saved lr
- 		mov	r2, frame
- 		bic	r1, r1, mask		@ mask PC/LR for the mode
-+		mov	r3, loglvl
- 		bl	dump_backtrace_entry
- 
- 		ldr	r1, [sv_pc, #-4]	@ if stmfd sp!, {args} exists,
-@@ -80,12 +83,14 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
- 		teq	r3, r1, lsr #11
- 		ldreq	r0, [frame, #-8]	@ get sp
- 		subeq	r0, r0, #4		@ point at the last arg
-+		mov	r2, loglvl
- 		bleq	dump_backtrace_stm	@ dump saved registers
- 
- 1004:		ldr	r1, [sv_pc, #0]		@ if stmfd sp!, {..., fp, ip, lr, pc}
- 		ldr	r3, .Ldsi		@ instruction exists,
- 		teq	r3, r1, lsr #11
- 		subeq	r0, frame, #16
-+		mov	r2, loglvl
- 		bleq	dump_backtrace_stm	@ dump saved registers
- 
- 		teq	sv_fp, #0		@ zero saved fp means
-@@ -96,9 +101,10 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
- 		bhi	for_each_frame
- 
- 1006:		adr	r0, .Lbad
--		mov	r1, frame
-+		mov	r1, loglvl
-+		mov	r2, frame
- 		bl	printk
--no_frame:	ldmfd	sp!, {r4 - r8, pc}
-+no_frame:	ldmfd	sp!, {r4 - r9, pc}
- ENDPROC(c_backtrace)
- 		
- 		.pushsection __ex_table,"a"
-@@ -109,7 +115,7 @@ ENDPROC(c_backtrace)
- 		.long	1004b, 1006b
- 		.popsection
- 
--.Lbad:		.asciz	"Backtrace aborted due to bad frame pointer <%p>\n"
-+.Lbad:		.asciz	"%sBacktrace aborted due to bad frame pointer <%p>\n"
- 		.align
- .Ldsi:		.word	0xe92dd800 >> 11	@ stmfd sp!, {... fp, ip, lr, pc}
- 		.word	0xe92d0000 >> 11	@ stmfd sp!, {}
 -- 
 2.25.1
 
