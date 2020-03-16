@@ -2,176 +2,111 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AC4C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7867C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED875205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772EB20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:36:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+YssmEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgCPE0n (ORCPT
+        id S1729583AbgCPEg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 00:26:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45836 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729269AbgCPE0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 00:26:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7607AB241;
-        Mon, 16 Mar 2020 04:26:40 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 16 Mar 2020 15:26:31 +1100
-Cc:     Jeff Layton <jlayton@kernel.org>, yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
-In-Reply-To: <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
-References: <20200308140314.GQ5972@shao2-debian>
- <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
- <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
- <87blp5urwq.fsf@notabene.neil.brown.name>
- <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
- <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
- <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
- <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
- <878sk7vs8q.fsf@notabene.neil.brown.name>
- <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
- <875zfbvrbm.fsf@notabene.neil.brown.name>
- <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
- <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
- <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
- <87v9nattul.fsf@notabene.neil.brown.name>
- <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
- <87o8t2tc9s.fsf@notabene.neil.brown.name>
- <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
- <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
- <877dznu0pk.fsf@notabene.neil.brown.name>
- <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
-Message-ID: <87sgi9rklk.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Mon, 16 Mar 2020 00:36:26 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46042 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729423AbgCPEgZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 00:36:25 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b22so7388164pls.12
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 21:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lXdwJTvT1iuUgFQw8gaQa71v7GEvPOebjKf9KF4NkGk=;
+        b=m+YssmEXSmxxKpanK0Py/G1CD7THoku3KfWUEjhQ64ywgxFx7K04VJsvqUa+zQ0TJc
+         oQGIJTQNoxlz648QVzrDfVhfmWtUddCXWRwvi3t6xgBqFmXTieRwvYMdNy8M7FaPF/ni
+         KCzrOyNBMhpqfMkIe7jlupVWTfS1MMYDjzlRkvNDti3/Xat/AGwOEWu51eS3kpX02CKZ
+         PocLODYkwiIxKgvNuPAcEPl0q7O9zRoe3fKZ9BbBIucQIanw7PN3J9c03G1uEkDfAMQ7
+         2FozxnrOiPBOO2gy4lLkF/BSqL8kbH7jp5bqqT5q4EeNh5xcYqmwkQ+EMwtTOw/h8sw/
+         by0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lXdwJTvT1iuUgFQw8gaQa71v7GEvPOebjKf9KF4NkGk=;
+        b=tVLX5Bc9yBCTyGbvRIul7MWF+fO/JlNBEbZwLeGTM/I+spjaTfYI4DR6KbuG30BqnS
+         evJN6PA2Mx00NXgTuOFlI2VRQ8D7A3CUO8IXxGhi/B0F+5QtoWAVG6pyNKPQtwtR7OMA
+         E5tBkr2dWE6o6I6THzZYCd4XVmlaQ/DkhM1dN0ttTLRroIBp6Zxa5YaI8MKhz72cPeA1
+         umSVRS/WBvuEjd1vBN95+nDMK0A1txds/DzFFHxQazIr8umgh0HvCb/+QAfT0xyCpCB6
+         o7LbGKfcz0ZqOJk2pqkiih3qvkLPEEuc0drxX2ccOc7PVbh1HyEV1nzrjihD095YC7la
+         /0Mg==
+X-Gm-Message-State: ANhLgQ3AJagpzGuyAi73XJQKL0dhK7cgT8I2qRIyNC8nkUwFRRntSwFP
+        ClhyPOmrbp8Mn7I44NNjMA==
+X-Google-Smtp-Source: ADFU+vtpikXbG80LUhDgL6M5gaBDKvXS9P9nuWps703VcR0eojTmUjTTdQ2WJ8FmAdERUj0r3IvO8Q==
+X-Received: by 2002:a17:90a:654a:: with SMTP id f10mr23563849pjs.50.1584333384681;
+        Sun, 15 Mar 2020 21:36:24 -0700 (PDT)
+Received: from mylaptop.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id d6sm18544296pjz.39.2020.03.15.21.36.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 15 Mar 2020 21:36:24 -0700 (PDT)
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCHv6 0/3] fix omission of check on FOLL_LONGTERM in gup fast path
+Date:   Mon, 16 Mar 2020 12:34:01 +0800
+Message-Id: <1584333244-10480-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+v5 -> v6:
+  rebase code to latest linux-mm git tree
 
-On Sat, Mar 14 2020, Linus Torvalds wrote:
+  improve commit log
 
-> On Fri, Mar 13, 2020 at 7:31 PM NeilBrown <neilb@suse.de> wrote:
->>
->> The idea of list_del_init_release() and list_empty_acquire() is growing
->> on me though.  See below.
->
-> This does look like a promising approach.
+  [3/3], rename GUP_FAST_LONGTERM_BENCHMARK as PIN_FAST_LONGTERM_BENCHMARK due
+  to LONGTERM should be a special case of pin page.
 
-Thanks.
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 
->
-> However:
->
->> +       if (waiter->fl_blocker =3D=3D NULL &&
->> +           list_empty(&waiter->fl_blocked_requests) &&
->> +           list_empty_acquire(&waiter->fl_blocked_member))
->> +               return status;
->
-> This does not seem sensible to me.
->
-> The thing is, the whole point about "acquire" semantics is that it
-> should happen _first_ - because a load-with-acquire only orders things
-> _after_ it.
+Pingfan Liu (3):
+  mm/gup: rename nr as nr_pinned in get_user_pages_fast()
+  mm/gup: fix omission of check on FOLL_LONGTERM in gup fast path
+  mm/gup_benchemark: add LONGTERM_BENCHMARK test in gup fast path
 
-Agreed.
+ mm/gup.c                                   | 29 +++++++++++++++++++----------
+ mm/gup_benchmark.c                         |  7 +++++++
+ tools/testing/selftests/vm/gup_benchmark.c |  6 +++++-
+ 3 files changed, 31 insertions(+), 11 deletions(-)
 
->
-> So testing some other non-locked state before testing the load-acquire
-> state makes little sense: it means that the other tests you do are
-> fundamentally unordered and nonsensical in an unlocked model.
->
-> So _if_ those other tests matter (do they?), then they should be after
-> the acquire test (because they test things that on the writer side are
-> set before the "store-release"). Otherwise you're testing random
-> state.
->
-> And if they don't matter, then they shouldn't exist at all.
+--
+2.7.5
 
-The ->fl_blocker =3D=3D NULL test isn't needed. It is effectively equivalent
-to the list_empty(fl_blocked_member) test.
-
-The fl_blocked_requests test *is* needed (because a tree is dismantled
-from the root to the leaves, so it stops being a member while it still
-holds other requests).  I didn't think the ordering mattered all that
-much but having pondered it again I see that it does.
-
->
-> IOW, if you depend on ordering, then the _only_ ordering that exists is:
->
->  - writer side: writes done _before_ the smp_store_release() are visible
->
->  - to the reader side done _after_ the smp_load_acquire()
->
-> and absolutely no other ordering exists or makes sense to test for.
->
-> That limited ordering guarantee is why a store-release -> load-acquire
-> is fundamentally cheaper than any other serialization.
->
-> So the optimistic "I don't need to do anything" case should start ouf with
->
->         if (list_empty_acquire(&waiter->fl_blocked_member)) {
->
-> and go from there. Does it actually need to do anything else at all?
-> But if it does need to check the other fields, they should be checked
-> after that acquire.
-
-So it should be
-   if (list_empty_acquire(&wait->fl_blocked_member) &&
-       list_empty_acquire(&wait->fl_blocked_requests))
-           return status;
-
-And because that second list_empty_acquire() is on the list head, and
-pairs with a list_del_init_release() on a list member, I would need to
-fix the __list_del() part to be
-  next->prev =3D prev;
-  smp_store_release(prev->next, next)
-
->
-> Also, it worries me that the comment talks about "if fl_blocker is
-> NULL". But it realy now is that fl_blocked_member list being empty
-> that is the real serialization test, adn that's the one that the
-> comment should primarily talk about.
-
-Yes, I see that now.  Thanks.
-
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5u//gACgkQOeye3VZi
-gbnq1w/+ISFyciqvPqWS1Ax64gsWPXZ6+lksRem8n8G3K2xBqJbF1Y95tXRV+m5j
-hTwxRgNLJxskC8rh9Rj2IaklxHqXatVNbYqpqcvr8NjJIi0HyMtj46bjDflSeki3
-vNJ1fEHEFyE4YauHccqMiUC8pKat3nWc7fHjZDO6LKp+G4NRNXBLGHlYoKYEComp
-HZB/WvVZu8j/GKp/tbt5f7WyYb7HYyUNjytqQlF1T6BopwM47ah8c5BBGk73ZdQt
-ODTHHZ1ohl9mfs1APbJXl/LKt8JP3LqMHn/JoD/o+WM2hPFIvjDjOLk4d6+zc9OJ
-uf5b3PhuYt6wYcdyN4SDVPcczL0NyOJB84LBW+BCgU4NGaGiL9BcDPvegO5bt8do
-JXfT18DVZFhFUGvw8IH4J6DHlSZVrH+yJwahBF2Unvei9InVWBXX/ocVi5ilOKWx
-8qgbrRDNuUXiojiSJcaR2+h90LUF3ZlY2bbuM23zK8TlprQwP2uDr9aRTYUiaOTE
-i09jnEtrwgD++P2keNoTRAL1VcDM66Z5ZyZtwwA4f6ZmoRxE9MCfBq+hJNb81MKB
-Mbdj2/fH1v7rXMqgOW7YGZK0OijcPu40+qZx7B1UbgVwS2SgDPTfbtXNoymx+SGB
-bmdx+dfnvVH0wxZKKdHWlNl0U1dF+5dNDzEHJZTtTLp3jnbE4pk=
-=7lj8
------END PGP SIGNATURE-----
---=-=-=--
