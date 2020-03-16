@@ -2,164 +2,112 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4798C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1C5C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85CE02051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660A620575
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:33:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTSg24jq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731587AbgCPOdK (ORCPT
+        id S1731573AbgCPOdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:33:10 -0400
-Received: from smtp2.ustc.edu.cn ([202.38.64.46]:45413 "EHLO ustc.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731535AbgCPOdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:33:10 -0400
-Received: from xhacker (unknown [101.86.20.80])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygBnbZEgjm9esEFPAA--.20107S2;
-        Mon, 16 Mar 2020 22:33:05 +0800 (CST)
-Date:   Mon, 16 Mar 2020 22:31:27 +0800
-From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 16 Mar 2020 10:33:54 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33949 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731535AbgCPOdy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 10:33:54 -0400
+Received: by mail-lj1-f196.google.com with SMTP id s13so18921520ljm.1;
+        Mon, 16 Mar 2020 07:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ze2fZQQej6uS2QviuuQ6/4nfx3KKsQROZMmrRSSZ7Mo=;
+        b=WTSg24jq5f01YWvW8xwVD7FeWVKRz0ev4TrAtFnCp7bQttppRvY61XPKhpHSPTpJxa
+         Jqt0OkgtbYRv/kB2p3JPMJwQsUhWVOHReNRhcUwHwrbbR1B2Mj7WBR5AzhGZ4G9HEjDM
+         Fe0twJ1FTBDULVIH52D/u4zws9crwTPxXQTJ/8FDaqJJQvkwD6cRpYStxmGtNuCgllq3
+         6/FDqNggxXFSlY+QpIhbKD0fb+xNsmzLIeRgE72Zj7gY377+3ihNuZu+x+LL/TFG2Zky
+         4K/3TXWoPvGGXSK+W3z3ALoKJt2EZWFnGROZppSCFc5NNooE4Oly8G/OnD34XmlOCZNq
+         0W/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ze2fZQQej6uS2QviuuQ6/4nfx3KKsQROZMmrRSSZ7Mo=;
+        b=Fw752n+/XgF+5qi/dOl5G2dA6XYO2PZeXiIn2kDTSKiKpCLwax1+NECfHD4uCJF5Ti
+         HDINhUHUou4qzCS0YBuLmied80BkBfWVnongb2xveRRIEH5bjiLroXcCk8SKBATP9m2D
+         DdOOBFM+krKKfPFWS3MsDEeeO042+4zi2CDSU5TEzut6J7WTJGqnFjgUpatSuB21yIuv
+         T/JhZz2sS2He/jgF622VE9x1saDS7/bv0Dna5zg5nqZggUS/rAHDocGvRcM7Adb7EZb/
+         NypGaphqNY8iESOIh2P5niMARRC7KYL14jN30Mde7dX421HhoD8rJEXA3l9Dhe5r6jm0
+         hUMw==
+X-Gm-Message-State: ANhLgQ14TBbp+WFJws330/HM5W+sn/+uQ4wWZPKXImtxo6elrGnqbJL8
+        C0zZES3VfUc89Fc1SwN4ubA=
+X-Google-Smtp-Source: ADFU+vuBwvid4HuMhjL8+kI1y+c4AzWbZXr1n+ZWQpJcTKm+LxnZytIGS/gy+1StNbKlROkMPPPB3Q==
+X-Received: by 2002:a05:651c:112c:: with SMTP id e12mr17521019ljo.7.1584369231861;
+        Mon, 16 Mar 2020 07:33:51 -0700 (PDT)
+Received: from localhost (host-176-37-176-139.la.net.ua. [176.37.176.139])
+        by smtp.gmail.com with ESMTPSA id w3sm60540lfe.9.2020.03.16.07.33.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Mar 2020 07:33:51 -0700 (PDT)
+From:   Igor Opaniuk <igor.opaniuk@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 4/4] regulator: mp886x: add MP8867 support
-Message-ID: <20200316223127.4b1ecc92@xhacker>
-In-Reply-To: <20200316222808.6453d849@xhacker>
-References: <20200316222808.6453d849@xhacker>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LkAmygBnbZEgjm9esEFPAA--.20107S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWry5Wr1ruF1ftw4fKF4xtFb_yoW5Aw45pF
-        W5WFsIkrWkXa4xGF4xCFya93Wa9wn7K3s7ZryIkw4av3ZxJF4xXFn7ZFySvFyrCrWkJF1j
-        yayUCFW09F4UJrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyFb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s02
-        6xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
-        I_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
-        6r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj4
-        0_Gr0_Zr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-        JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8TCJPUUUUU==
-X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Jones <rjones@gateworks.com>,
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 1/2] dt-bindings: arm: fsl: add nxp based toradex colibri bindings
+Date:   Mon, 16 Mar 2020 16:33:44 +0200
+Message-Id: <20200316143345.30823-1-igor.opaniuk@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Igor Opaniuk <igor.opaniuk@toradex.com>
 
-MP8867 is an I2C-controlled adjustable voltage regulator made by
-Monolithic Power Systems. The difference between MP8867 and MP8869
-are:
-1.If V_BOOT, the vref of MP8869 is fixed at 600mv while vref of
-MP8867 is determined by the I2C control.
-2.For MP8867, when setting voltage, if the step is within 5, we
-need to manually set the GO BIT to 0.
+Document Colibri iMX6S/DL V1.1x re-design devicetree binding.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
 ---
- drivers/regulator/mp886x.c | 62 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 61 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/mp886x.c b/drivers/regulator/mp886x.c
-index f77321a449ca..1786f7162019 100644
---- a/drivers/regulator/mp886x.c
-+++ b/drivers/regulator/mp886x.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- //
--// MP8869 regulator driver
-+// MP8867/MP8869 regulator driver
- //
- // Copyright (C) 2020 Synaptics Incorporated
- //
-@@ -119,6 +119,62 @@ static const struct regulator_ops mp8869_regulator_ops = {
- 	.get_mode = mp886x_get_mode,
- };
- 
-+static int mp8867_set_voltage_sel(struct regulator_dev *rdev, unsigned int sel)
-+{
-+	struct mp886x_device_info *di = rdev_get_drvdata(rdev);
-+	int ret, delta;
-+
-+	ret = mp8869_set_voltage_sel(rdev, sel);
-+	if (ret < 0)
-+		return ret;
-+
-+	delta = di->sel - sel;
-+	if (abs(delta) <= 5)
-+		ret = regmap_update_bits(rdev->regmap, MP886X_SYSCNTLREG1,
-+					 MP886X_GO, 0);
-+	di->sel = sel;
-+
-+	return ret;
-+}
-+
-+static int mp8867_get_voltage_sel(struct regulator_dev *rdev)
-+{
-+	struct mp886x_device_info *di = rdev_get_drvdata(rdev);
-+	int ret, uv;
-+	unsigned int val;
-+	bool fbloop;
-+
-+	ret = regmap_read(rdev->regmap, rdev->desc->vsel_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	fbloop = val & MP886X_V_BOOT;
-+
-+	val &= rdev->desc->vsel_mask;
-+	val >>= ffs(rdev->desc->vsel_mask) - 1;
-+
-+	if (fbloop) {
-+		uv = regulator_list_voltage_linear(rdev, val);
-+		uv = mp8869_scale(uv, di->r[0], di->r[1]);
-+		return regulator_map_voltage_linear(rdev, uv, uv);
-+	}
-+
-+	return val;
-+}
-+
-+static const struct regulator_ops mp8867_regulator_ops = {
-+	.set_voltage_sel = mp8867_set_voltage_sel,
-+	.get_voltage_sel = mp8867_get_voltage_sel,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.map_voltage = regulator_map_voltage_linear,
-+	.list_voltage = regulator_list_voltage_linear,
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.set_mode = mp886x_set_mode,
-+	.get_mode = mp886x_get_mode,
-+};
-+
- static int mp886x_regulator_register(struct mp886x_device_info *di,
- 				     struct regulator_config *config)
- {
-@@ -201,6 +257,10 @@ static int mp886x_i2c_probe(struct i2c_client *client,
- }
- 
- static const struct of_device_id mp886x_dt_ids[] = {
-+	{
-+		.compatible = "mps,mp8867",
-+		.data = &mp8867_regulator_ops
-+	},
- 	{
- 		.compatible = "mps,mp8869",
- 		.data = &mp8869_regulator_ops
+ Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 0e17e1f6fb80..7342097056c3 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -169,7 +169,9 @@ properties:
+               - technologic,imx6dl-ts4900
+               - technologic,imx6dl-ts7970
+               - toradex,colibri_imx6dl          # Colibri iMX6 Module
++              - toradex,colibri_imx6dl-v1_1     # Colibri iMX6 Module V1.1
+               - toradex,colibri_imx6dl-eval-v3  # Colibri iMX6 Module on Colibri Evaluation Board V3
++              - toradex,colibri_imx6dl-v1_1-eval-v3 # Colibri iMX6 Module V1.1 on Colibri Evaluation Board V3
+               - ysoft,imx6dl-yapp4-draco  # i.MX6 DualLite Y Soft IOTA Draco board
+               - ysoft,imx6dl-yapp4-hydra  # i.MX6 DualLite Y Soft IOTA Hydra board
+               - ysoft,imx6dl-yapp4-ursa   # i.MX6 Solo Y Soft IOTA Ursa board
 -- 
-2.24.0
-
+2.17.1
 
