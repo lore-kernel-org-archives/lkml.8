@@ -7,177 +7,130 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D92C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B29C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8DD2206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E11D2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qo0qPsPa"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pXCJ3nPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbgCPMgo (ORCPT
+        id S1731381AbgCPMgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:36:44 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56390 "EHLO pegase1.c-s.fr"
+        Mon, 16 Mar 2020 08:36:43 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:52014 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731337AbgCPMgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:36:35 -0400
+        id S1731331AbgCPMge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:36:34 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48gwlc4SYQz9v02h;
-        Mon, 16 Mar 2020 13:36:28 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 48gwlb1cPCz9v02g;
+        Mon, 16 Mar 2020 13:36:27 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=qo0qPsPa; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=pXCJ3nPV; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Q5PWwzMy3B4I; Mon, 16 Mar 2020 13:36:28 +0100 (CET)
+        with ESMTP id 4vTW1xe9IS24; Mon, 16 Mar 2020 13:36:27 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlc3STbz9v02f;
-        Mon, 16 Mar 2020 13:36:28 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlb0Ws9z9v02f;
+        Mon, 16 Mar 2020 13:36:27 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584362188; bh=zNnc9O4/vwtw/F3Axa8mmKYvU3JmzJf5xpClufXa9KA=;
+        t=1584362187; bh=IQAE5xsf4JKfTQvGnWUT3Dq95zXpNWlpks4QGKGDZUk=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=qo0qPsPaeBv3I4q479tW2xeX+aWVe/i9s5tzSJt4HgoKxaFq1u56zvfeJEbbhNBrp
-         ChJ6QbMCuayq4GtThQQppf0AFCOcXFphAOV58f7X9g+nd03TvkyYfuouM6tzjCqKL7
-         BpMbWDxBz9L1aOnLy5YuRL+Es66McAt9f2nJjTPY=
+        b=pXCJ3nPVXiFic4gAs5SGg7NC2PocLDXTkzFT/n1fflMj0yCQoicNNTpXQVXVJYGMm
+         I0VCqPtDE+xldEV24rygH9f3mioc60MDQgli1G20nFkHI5xwpH65pJENt0iCNTKAob
+         XFJSlzPJ4mcs/UxbDkh8SN0AqMVGvtwzBqvfvZzo=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id ED33F8B7D0;
-        Mon, 16 Mar 2020 13:36:32 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ADDE18B7D0;
+        Mon, 16 Mar 2020 13:36:31 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id VprAHJUhopTR; Mon, 16 Mar 2020 13:36:32 +0100 (CET)
+        with ESMTP id nb2XzBIaXayj; Mon, 16 Mar 2020 13:36:31 +0100 (CET)
 Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9835F8B7CB;
-        Mon, 16 Mar 2020 13:36:32 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 900308B7CB;
+        Mon, 16 Mar 2020 13:36:31 +0100 (CET)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 87C6965595; Mon, 16 Mar 2020 12:36:32 +0000 (UTC)
-Message-Id: <165be4c0f0ba674846a244edf9e1116b832d3bfb.1584360344.git.christophe.leroy@c-s.fr>
+        id 8004965595; Mon, 16 Mar 2020 12:36:31 +0000 (UTC)
+Message-Id: <08f37b5315c5d8029c066d0ffecd3439003b18ae.1584360344.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1584360343.git.christophe.leroy@c-s.fr>
 References: <cover.1584360343.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 46/46] powerpc/32s: Implement dedicated kasan_init_region()
+Subject: [PATCH v1 45/46] powerpc/32s: Allow mapping with BATs with
+ DEBUG_PAGEALLOC
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Mar 2020 12:36:32 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 12:36:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a kasan_init_region() dedicated to book3s/32 that
-allocates KASAN regions using BATs.
+DEBUG_PAGEALLOC only manages RW data.
+
+Text and RO data can still be mapped with BATs.
+
+In order to map with BATs, also enforce data alignment. Set
+by default to 256M which is a good compromise for keeping
+enough BATs for also KASAN and IMMR.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/kasan.h      |  1 +
- arch/powerpc/mm/kasan/Makefile        |  1 +
- arch/powerpc/mm/kasan/book3s_32.c     | 57 +++++++++++++++++++++++++++
- arch/powerpc/mm/kasan/kasan_init_32.c |  2 +-
- 4 files changed, 60 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/mm/kasan/book3s_32.c
+ arch/powerpc/Kconfig           | 1 +
+ arch/powerpc/mm/book3s32/mmu.c | 6 ++++++
+ arch/powerpc/mm/init_32.c      | 5 ++---
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-index 107a24c3f7b3..be85c7005fb1 100644
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -34,6 +34,7 @@ static inline void kasan_init(void) { }
- static inline void kasan_late_init(void) { }
- #endif
- 
-+void kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte);
- int kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end);
- int kasan_init_region(void *start, size_t size);
- 
-diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
-index 440038ea79f1..bb1a5408b86b 100644
---- a/arch/powerpc/mm/kasan/Makefile
-+++ b/arch/powerpc/mm/kasan/Makefile
-@@ -4,3 +4,4 @@ KASAN_SANITIZE := n
- 
- obj-$(CONFIG_PPC32)           += kasan_init_32.o
- obj-$(CONFIG_PPC_8xx)		+= 8xx.o
-+obj-$(CONFIG_PPC_BOOK3S_32)	+= book3s_32.o
-diff --git a/arch/powerpc/mm/kasan/book3s_32.c b/arch/powerpc/mm/kasan/book3s_32.c
-new file mode 100644
-index 000000000000..4bc491a4a1fd
---- /dev/null
-+++ b/arch/powerpc/mm/kasan/book3s_32.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define DISABLE_BRANCH_PROFILING
-+
-+#include <linux/kasan.h>
-+#include <linux/memblock.h>
-+#include <asm/pgalloc.h>
-+#include <mm/mmu_decl.h>
-+
-+int __init kasan_init_region(void *start, size_t size)
-+{
-+	unsigned long k_start = (unsigned long)kasan_mem_to_shadow(start);
-+	unsigned long k_end = (unsigned long)kasan_mem_to_shadow(start + size);
-+	unsigned long k_cur = k_start;
-+	int k_size = k_end - k_start;
-+	int k_size_base = 1 << (ffs(k_size) - 1);
-+	int ret;
-+	void *block;
-+
-+	block = memblock_alloc(k_size, k_size_base);
-+
-+	if (block && k_size_base >= SZ_128K && k_start == ALIGN(k_start, k_size_base)) {
-+		int k_size_more = 1 << (ffs(k_size - k_size_base) - 1);
-+
-+		setbat(-1, k_start, __pa(block), k_size_base, PAGE_KERNEL);
-+		if (k_size_more >= SZ_128K)
-+			setbat(-1, k_start + k_size_base, __pa(block) + k_size_base,
-+			       k_size_more, PAGE_KERNEL);
-+		if (v_block_mapped(k_start))
-+			k_cur = k_start + k_size_base;
-+		if (v_block_mapped(k_start + k_size_base))
-+			k_cur = k_start + k_size_base + k_size_more;
-+
-+		update_bats();
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index c086992573d3..44c490e05954 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -793,6 +793,7 @@ config DATA_SHIFT
+ 	range 17 28 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_BOOK3S_32
+ 	range 19 23 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_8xx
+ 	default 22 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
++	default 18 if DEBUG_PAGEALLOC && PPC_BOOK3S_32
+ 	default 23 if STRICT_KERNEL_RWX && PPC_8xx
+ 	default 23 if DEBUG_PAGEALLOC && PPC_8xx && PIN_TLB_DATA
+ 	default 19 if DEBUG_PAGEALLOC && PPC_8xx
+diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
+index a9b2cbc74797..a6dcc708eee3 100644
+--- a/arch/powerpc/mm/book3s32/mmu.c
++++ b/arch/powerpc/mm/book3s32/mmu.c
+@@ -170,6 +170,12 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		pr_debug("RAM mapped without BATs\n");
+ 		return base;
+ 	}
++	if (debug_pagealloc_enabled()) {
++		if (base >= border)
++			return base;
++		if (top >= border)
++			top = border;
 +	}
+ 
+ 	if (!strict_kernel_rwx_enabled() || base >= border || top <= border)
+ 		return __mmu_mapin_ram(base, top);
+diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
+index 8977a7c2543d..36c39bd37256 100644
+--- a/arch/powerpc/mm/init_32.c
++++ b/arch/powerpc/mm/init_32.c
+@@ -99,10 +99,9 @@ static void __init MMU_setup(void)
+ 	if (IS_ENABLED(CONFIG_PPC_8xx))
+ 		return;
+ 
+-	if (debug_pagealloc_enabled()) {
+-		__map_without_bats = 1;
++	if (debug_pagealloc_enabled())
+ 		__map_without_ltlbs = 1;
+-	}
 +
-+	if (!block)
-+		block = memblock_alloc(k_size, PAGE_SIZE);
-+	if (!block)
-+		return -ENOMEM;
-+
-+	ret = kasan_init_shadow_page_tables(k_start, k_end);
-+	if (ret)
-+		return ret;
-+
-+	kasan_update_early_region(k_start, k_cur, __pte(0));
-+
-+	for (; k_cur < k_end; k_cur += PAGE_SIZE) {
-+		pmd_t *pmd = pmd_ptr_k(k_cur);
-+		void *va = block + k_cur - k_start;
-+		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
-+
-+		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
-+	}
-+	flush_tlb_kernel_range(k_start, k_end);
-+	return 0;
-+}
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 03d30ec7a858..e9fda8451718 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -79,7 +79,7 @@ int __init __weak kasan_init_region(void *start, size_t size)
- 	return 0;
+ 	if (strict_kernel_rwx_enabled())
+ 		__map_without_ltlbs = 1;
  }
- 
--static void __init
-+void __init
- kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte)
- {
- 	unsigned long k_cur;
 -- 
 2.25.0
 
