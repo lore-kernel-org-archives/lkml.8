@@ -7,111 +7,139 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51777C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F48C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB8D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD74720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="DPXptArc"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iSSTETNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731159AbgCPMgJ (ORCPT
+        id S1731149AbgCPMgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:36:09 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:43841 "EHLO pegase1.c-s.fr"
+        Mon, 16 Mar 2020 08:36:08 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37771 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731103AbgCPMgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731097AbgCPMgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Mar 2020 08:36:01 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48gwkz5QqFz9v02k;
-        Mon, 16 Mar 2020 13:35:55 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 48gwky4rDHz9v02j;
+        Mon, 16 Mar 2020 13:35:54 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=DPXptArc; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=iSSTETNh; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id H9KWIfoUvdr9; Mon, 16 Mar 2020 13:35:55 +0100 (CET)
+        with ESMTP id A4z25AipUBKg; Mon, 16 Mar 2020 13:35:54 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwkz4R6bz9v02g;
-        Mon, 16 Mar 2020 13:35:55 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwky3rCMz9v02g;
+        Mon, 16 Mar 2020 13:35:54 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584362155; bh=hibOU5R/OOVSCbKxBckJsXxey54bepL2u8F60pyCjN0=;
+        t=1584362154; bh=OvYSJZYDXUDD3TulXN4Kh1QEXL7hszEQ5ArTg602e9Y=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=DPXptArcV0m32C0yXO4COIQT9BfklaYWZm+jL6dYSP1FkCvQDrQaXQblEIB8LA2EU
-         Jn3auOrFL3O4kIcDu5GzIxzs0GZWSA2PTty43sdbc0fz+OGkCQw+56N58KiwllUPC5
-         01oTzhuQc6fbAL+wVG4zaHI+eWaC41FLtjbVTjOc=
+        b=iSSTETNhSLwXNxZgE3vdLLkulSGd9ZfyxCf2QDsffKyPOVuiNlKu4dsWWrBpUPIbc
+         CAm9+63ly4ucoV47XjK+AlkfoWw/wVmfdozNj0SO5RghnHKOkshdKQSM3Wz1Y7FTQC
+         h+GDbeD7ra8FdQ8PkbMollAKm78FZEIGvebmjJwc=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 939408B7D0;
-        Mon, 16 Mar 2020 13:36:00 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8130B8B7D0;
+        Mon, 16 Mar 2020 13:35:59 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id cWfAhbgEwlxF; Mon, 16 Mar 2020 13:36:00 +0100 (CET)
+        with ESMTP id RXU0fAePLlBw; Mon, 16 Mar 2020 13:35:59 +0100 (CET)
 Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 76A088B7CB;
-        Mon, 16 Mar 2020 13:36:00 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 674C68B7CB;
+        Mon, 16 Mar 2020 13:35:59 +0100 (CET)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 6D5FD65595; Mon, 16 Mar 2020 12:36:00 +0000 (UTC)
-Message-Id: <caa758035a784351194d35f84c095f3230dc9070.1584360344.git.christophe.leroy@c-s.fr>
+        id 5EDC665595; Mon, 16 Mar 2020 12:35:59 +0000 (UTC)
+Message-Id: <1264b2813ecb073b8a8b0387e6af081d5495410e.1584360344.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1584360343.git.christophe.leroy@c-s.fr>
 References: <cover.1584360343.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 15/46] powerpc/32s: Don't warn when mapping RO data ROX.
+Subject: [PATCH v1 14/46] powerpc/ptdump: Handle hugepd at PGD level
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Mar 2020 12:36:00 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 12:35:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mapping RO data as ROX is not an issue since that data
-cannot be modified to introduce an exploit.
+The 8xx is about to map kernel linear space and IMMR using huge
+pages.
 
-PPC64 accepts to have RO data mapped ROX, as a trade off
-between kernel size and strictness of protection.
+In order to display those pages properly, ptdump needs to handle
+hugepd tables at PGD level.
 
-On PPC32, kernel size is even more critical as amount of
-memory is usually small.
-
-Depending on the number of available IBATs, the last IBATs
-might overflow the end of text. Only warn if it crosses
-the end of RO data.
+For the time being do it only at PGD level. Further patches may
+add handling of hugepd tables at lower level for other platforms
+when needed in the future.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/mm/book3s32/mmu.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/ptdump/ptdump.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
-index 39ba53ca5bb5..a9b2cbc74797 100644
---- a/arch/powerpc/mm/book3s32/mmu.c
-+++ b/arch/powerpc/mm/book3s32/mmu.c
-@@ -187,6 +187,7 @@ void mmu_mark_initmem_nx(void)
- 	int i;
- 	unsigned long base = (unsigned long)_stext - PAGE_OFFSET;
- 	unsigned long top = (unsigned long)_etext - PAGE_OFFSET;
-+	unsigned long border = (unsigned long)__init_begin - PAGE_OFFSET;
- 	unsigned long size;
+diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
+index 64434b66f240..1adaa7e794f3 100644
+--- a/arch/powerpc/mm/ptdump/ptdump.c
++++ b/arch/powerpc/mm/ptdump/ptdump.c
+@@ -23,6 +23,7 @@
+ #include <linux/const.h>
+ #include <asm/page.h>
+ #include <asm/pgalloc.h>
++#include <asm/hugetlb.h>
  
- 	if (IS_ENABLED(CONFIG_PPC_BOOK3S_601))
-@@ -201,9 +202,10 @@ void mmu_mark_initmem_nx(void)
- 		size = block_size(base, top);
- 		size = max(size, 128UL << 10);
- 		if ((top - base) > size) {
--			if (strict_kernel_rwx_enabled())
--				pr_warn("Kernel _etext not properly aligned\n");
- 			size <<= 1;
-+			if (strict_kernel_rwx_enabled() && base + size > border)
-+				pr_warn("Some RW data is getting mapped X. "
-+					"Adjust CONFIG_DATA_SHIFT to avoid that.\n");
- 		}
- 		setibat(i++, PAGE_OFFSET + base, base, size, PAGE_KERNEL_TEXT);
- 		base += size;
+ #include <mm/mmu_decl.h>
+ 
+@@ -270,6 +271,26 @@ static void walk_pte(struct pg_state *st, pmd_t *pmd, unsigned long start)
+ 	}
+ }
+ 
++static void walk_hugepd(struct pg_state *st, hugepd_t *phpd, unsigned long start,
++			int pdshift, int level)
++{
++#ifdef CONFIG_ARCH_HAS_HUGEPD
++	unsigned int i;
++	int shift = hugepd_shift(*phpd);
++	int ptrs_per_hpd = pdshift - shift > 0 ? 1 << (pdshift - shift) : 1;
++
++	if (start & ((1 << shift) - 1))
++		return;
++
++	for (i = 0; i < ptrs_per_hpd; i++) {
++		unsigned long addr = start + (i << shift);
++		pte_t *pte = hugepte_offset(*phpd, addr, pdshift);
++
++		note_page(st, addr, level + 1, pte_val(*pte), shift);
++	}
++#endif
++}
++
+ static void walk_pmd(struct pg_state *st, pud_t *pud, unsigned long start)
+ {
+ 	pmd_t *pmd = pmd_offset(pud, 0);
+@@ -313,11 +334,13 @@ static void walk_pagetables(struct pg_state *st)
+ 	 * the hash pagetable.
+ 	 */
+ 	for (i = pgd_index(addr); i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
+-		if (!pgd_none(*pgd) && !pgd_is_leaf(*pgd))
++		if (pgd_none(*pgd) || pgd_is_leaf(*pgd))
++			note_page(st, addr, 1, pgd_val(*pgd), PUD_SHIFT);
++		else if (is_hugepd(__hugepd(pgd_val(*pgd))))
++			walk_hugepd(st, (hugepd_t *)pgd, addr, PGDIR_SHIFT, 1);
++		else
+ 			/* pgd exists */
+ 			walk_pud(st, pgd, addr);
+-		else
+-			note_page(st, addr, 1, pgd_val(*pgd), PUD_SHIFT);
+ 	}
+ }
+ 
 -- 
 2.25.0
 
