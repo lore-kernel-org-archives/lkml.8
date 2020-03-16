@@ -2,56 +2,53 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32559C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F22C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027532072A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E85F206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326055;
-	bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=toGtvex6SvQwhwb8PZUiN3111+uUN8sA8PrmLRsuXeZm7ASCV2Ro5BAThIvGe9hcu
-	 FzG4m4cAw3Ce7eZWgNGf9sOJyWVMXthKoArnbKuM1Y303hUfD/H2Ih2uFiwSWbcYLG
-	 viHGejyvSVzrOq6w5gFvPxlMMQAzmN6NTpBOSHJo=
+	s=default; t=1584326059;
+	bh=R9Zg3BZuq8xXCD2pKaZIxwK+qNJmdOsTsf8VDK1m7VU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NW+Bahcfy9i4QqU5rVPrkvqRva6f/NuHdjnufaMAHBLViJL5sVH2tiC7Im/t+PwbC
+	 DmteUFok5DRBrFLhsArjVjB+m2P7JCNgOkgWeOy8F1fVNXH7B/KpC9DwaomkY3iZdI
+	 bafhBM5yi4nYL0eq2upTwfA/iwXk/ylKd6RbNvIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgCPCeK (ORCPT
+        id S1729800AbgCPCeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbgCPCeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:08 -0400
+        id S1729412AbgCPCeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BAC320724;
-        Mon, 16 Mar 2020 02:34:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DA2C206E9;
+        Mon, 16 Mar 2020 02:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326048;
-        bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UgHir014DyBWELC3QV/zGRKxs0b5zVaj7iFLVE8ePxgHM0G+v5N9pebrpwQmaJMQC
-         FUI8X82a/hB+K6pPpLjixs418PKj2sF2WAB3AG8ysfeW6Jv3AN2FOY/FWGGGYQv1rW
-         viMFhZH+TGaCTwMPDyaYIGJimwVwC5l0cREX8XAc=
+        s=default; t=1584326053;
+        bh=R9Zg3BZuq8xXCD2pKaZIxwK+qNJmdOsTsf8VDK1m7VU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iB9mTEmnWwriGjkDe0T++58PUuq8KEeBMVA35wo5brYcxlHjjodXAryBK4zvr317h
+         s6tQ/dbD9VI2uzNJsLXbfI4XQp2KSCnfsHkcy/XyNL0TQblp2uQMA4XdgstGsljkuy
+         jsJ8rFt7HCMjQes0U5+WEsHB7WScJb9GS4sd/aE8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 40/41] parse-maintainers: Mark as executable
-Date:   Sun, 15 Mar 2020 22:33:18 -0400
-Message-Id: <20200316023319.749-40-sashal@kernel.org>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 01/35] spi: spi-omap2-mcspi: Handle DMA size restriction on AM65x
+Date:   Sun, 15 Mar 2020 22:33:37 -0400
+Message-Id: <20200316023411.1263-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
-References: <20200316023319.749-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,23 +57,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-[ Upstream commit 611d61f9ac99dc9e1494473fb90117a960a89dfa ]
+[ Upstream commit e4e8276a4f652be2c7bb783a0155d4adb85f5d7d ]
 
-This makes the script more convenient to run.
+On AM654, McSPI can only support 4K - 1 bytes per transfer when DMA is
+enabled. Therefore populate master->max_transfer_size callback to
+inform client drivers of this restriction when DMA channels are
+available.
 
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Link: https://lore.kernel.org/r/20200204124816.16735-2-vigneshr@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/parse-maintainers.pl | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- mode change 100644 => 100755 scripts/parse-maintainers.pl
+ drivers/spi/spi-omap2-mcspi.c                 | 26 +++++++++++++++++++
+ include/linux/platform_data/spi-omap2-mcspi.h |  1 +
+ 2 files changed, 27 insertions(+)
 
-diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
-old mode 100644
-new mode 100755
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index 848e03e5f42d5..8e435da730996 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -130,6 +130,7 @@ struct omap2_mcspi {
+ 	int			fifo_depth;
+ 	bool			slave_aborted;
+ 	unsigned int		pin_dir:1;
++	size_t			max_xfer_len;
+ };
+ 
+ struct omap2_mcspi_cs {
+@@ -1316,6 +1317,18 @@ static bool omap2_mcspi_can_dma(struct spi_master *master,
+ 	return (xfer->len >= DMA_MIN_BYTES);
+ }
+ 
++static size_t omap2_mcspi_max_xfer_size(struct spi_device *spi)
++{
++	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
++	struct omap2_mcspi_dma *mcspi_dma =
++		&mcspi->dma_channels[spi->chip_select];
++
++	if (mcspi->max_xfer_len && mcspi_dma->dma_rx)
++		return mcspi->max_xfer_len;
++
++	return SIZE_MAX;
++}
++
+ static int omap2_mcspi_controller_setup(struct omap2_mcspi *mcspi)
+ {
+ 	struct spi_master	*master = mcspi->master;
+@@ -1384,6 +1397,11 @@ static struct omap2_mcspi_platform_config omap4_pdata = {
+ 	.regs_offset = OMAP4_MCSPI_REG_OFFSET,
+ };
+ 
++static struct omap2_mcspi_platform_config am654_pdata = {
++	.regs_offset = OMAP4_MCSPI_REG_OFFSET,
++	.max_xfer_len = SZ_4K - 1,
++};
++
+ static const struct of_device_id omap_mcspi_of_match[] = {
+ 	{
+ 		.compatible = "ti,omap2-mcspi",
+@@ -1393,6 +1411,10 @@ static const struct of_device_id omap_mcspi_of_match[] = {
+ 		.compatible = "ti,omap4-mcspi",
+ 		.data = &omap4_pdata,
+ 	},
++	{
++		.compatible = "ti,am654-mcspi",
++		.data = &am654_pdata,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, omap_mcspi_of_match);
+@@ -1450,6 +1472,10 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
+ 		mcspi->pin_dir = pdata->pin_dir;
+ 	}
+ 	regs_offset = pdata->regs_offset;
++	if (pdata->max_xfer_len) {
++		mcspi->max_xfer_len = pdata->max_xfer_len;
++		master->max_transfer_size = omap2_mcspi_max_xfer_size;
++	}
+ 
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	mcspi->base = devm_ioremap_resource(&pdev->dev, r);
+diff --git a/include/linux/platform_data/spi-omap2-mcspi.h b/include/linux/platform_data/spi-omap2-mcspi.h
+index 0bf9fddb83064..3b400b1919a9b 100644
+--- a/include/linux/platform_data/spi-omap2-mcspi.h
++++ b/include/linux/platform_data/spi-omap2-mcspi.h
+@@ -11,6 +11,7 @@ struct omap2_mcspi_platform_config {
+ 	unsigned short	num_cs;
+ 	unsigned int regs_offset;
+ 	unsigned int pin_dir:1;
++	size_t max_xfer_len;
+ };
+ 
+ struct omap2_mcspi_device_config {
 -- 
 2.20.1
 
