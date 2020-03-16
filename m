@@ -2,104 +2,118 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B43C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32277C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C102C20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1127520658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730677AbgCPKe5 convert rfc822-to-8bit (ORCPT
+        id S1730688AbgCPKfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:34:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51394 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730604AbgCPKe5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:34:57 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jDn5C-0004bb-2E; Mon, 16 Mar 2020 11:34:54 +0100
-Date:   Mon, 16 Mar 2020 11:34:54 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/9] Documentation: Add lock ordering and nesting
- documentation
-Message-ID: <20200316103454.iodi65uzbpat4kv5@linutronix.de>
-References: <20200313174701.148376-1-bigeasy@linutronix.de>
- <20200313174701.148376-2-bigeasy@linutronix.de>
- <2e0912cc-6780-18e9-4e4c-7cc60da6709f@infradead.org>
+        Mon, 16 Mar 2020 06:35:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:45780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730582AbgCPKfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 06:35:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5AE21FB;
+        Mon, 16 Mar 2020 03:35:03 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF7E33F534;
+        Mon, 16 Mar 2020 03:35:00 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 10:34:54 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
+Message-ID: <20200316103437.GD3005@mbp>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-19-vincenzo.frascino@arm.com>
+ <20200315182950.GB32205@mbp>
+ <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <2e0912cc-6780-18e9-4e4c-7cc60da6709f@infradead.org>
+In-Reply-To: <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-14 15:57:24 [-0700], Randy Dunlap wrote:
-> Hi,
-Hi Randy,
+On Mon, Mar 16, 2020 at 09:42:32AM +0000, Vincenzo Frascino wrote:
+> you should not really work on Sunday ;-)
 
-> A few comments for your consideration:
+I was getting bored ;).
 
-I merged all of you comments but two:
-
-> On 3/13/20 10:46 AM, Sebastian Andrzej Siewior wrote:
-…
-> > +rwlock_t and PREEMPT_RT
-> > +-----------------------
-> > +
-> > +On a PREEMPT_RT enabled kernel rwlock_t is mapped to a separate
-> > +implementation based on rt_mutex which changes the semantics:
-> > +
-> > + - Same changes as for spinlock_t
-> > +
-> > + - The implementation is not fair and can cause writer starvation under
-> > +   certain circumstances. The reason for this is that a writer cannot
-> > +   inherit its priority to multiple readers. Readers which are blocked
+> On 3/15/20 6:30 PM, Catalin Marinas wrote:
+> > On Fri, Mar 13, 2020 at 03:43:37PM +0000, Vincenzo Frascino wrote:
+> >> --- /dev/null
+> >> +++ b/arch/arm64/include/asm/vdso/processor.h
+> >> @@ -0,0 +1,31 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0-only */
+> >> +/*
+> >> + * Copyright (C) 2020 ARM Ltd.
+> >> + */
+> >> +#ifndef __ASM_VDSO_PROCESSOR_H
+> >> +#define __ASM_VDSO_PROCESSOR_H
+> >> +
+> >> +#ifndef __ASSEMBLY__
+> >> +
+> >> +#include <asm/page-def.h>
+> >> +
+> >> +#ifdef CONFIG_COMPAT
+> >> +#if defined(CONFIG_ARM64_64K_PAGES) && defined(CONFIG_KUSER_HELPERS)
+> >> +/*
+> >> + * With CONFIG_ARM64_64K_PAGES enabled, the last page is occupied
+> >> + * by the compat vectors page.
+> >> + */
+> >> +#define TASK_SIZE_32		UL(0x100000000)
+> >> +#else
+> >> +#define TASK_SIZE_32		(UL(0x100000000) - PAGE_SIZE)
+> >> +#endif /* CONFIG_ARM64_64K_PAGES */
+> >> +#endif /* CONFIG_COMPAT */
+> > 
+> > Just curious, what's TASK_SIZE_32 used for in the vDSO code? You don't
+> > seem to move TASK_SIZE.
+> > 
 > 
->       ^^^^^^^ I think this is backwards. Maybe more like so:
->                                                          a writer cannot
->       bequeath or grant or bestow or pass down    ...    its priority to
+> I tried to fine grain the headers as much as I could in order to avoid
+> unneeded/unwanted inclusions:
+>  * TASK_SIZE_32 is used to verify ABI consistency on vdso32 (please refer to
+>    arch/arm64/kernel/vdso32/vgettimeofday.c).
 
-So the term "inherit" is the problem. The protocol is officially called
-PI which is short for Priority Inheritance. Other documentation,
-RT-mutex for instance, is also using this term when it is referring to
-altering the priority of a task. For that reason I prefer to keep using
-this term.
+I see. But the test is probably useless. With 4K pages, TASK_SIZE_32 is
+1UL << 32, so you can't have a u32 greater than this. So I'd argue that
+the ABI compatibility here doesn't matter.
 
-> > +   on a writer fully support the priority inheritance protocol.
-…
-> > +raw_spinlock_t
-> > +--------------
-> > +
-> > +As raw_spinlock_t locking disables preemption and eventually interrupts the
-> > +code inside the critical region has to be careful to avoid calls into code
-> 
-> Can I buy a comma in there somewhere, please?
-> I don't get it as is.
+With 16K or 64K pages, TASK_SIZE_32 is slightly smaller but arm32 never
+supported it.
 
-What about
+What's the side-effect of dropping this check altogether?
 
-| As raw_spinlock_t locking disables preemption, and eventually interrupts, the
-| code inside the critical region has to be careful to avoid calls into code
-
-any better?
-
-…
-
-Sebastian
+-- 
+Catalin
