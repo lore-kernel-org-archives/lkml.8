@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD835C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB38C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643B520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFBB20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:43:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SuBjR7SX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEq8/ZMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbgCPPmT (ORCPT
+        id S1731852AbgCPPnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:42:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45759 "EHLO
+        Mon, 16 Mar 2020 11:43:10 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37500 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731554AbgCPPmT (ORCPT
+        with ESMTP id S1731744AbgCPPnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:42:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t2so11769221wrx.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:42:17 -0700 (PDT)
+        Mon, 16 Mar 2020 11:43:09 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 6so21825210wre.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:43:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=EuH2JuinWmp99M5kgpRBVbGMWPMpSteTL2l8ALHXOxA=;
-        b=SuBjR7SXVaKqCALkd1H8UtvNwExNZJ6zJgrMM6mOmR/V8duV2z/Ny/rgwl/ICWYmHv
-         RWBK+M3PyiJlb3+IMItQHsDQF5jSLhvuAHwNcv6LMVHk4wOfYJKCJcuzotqrz3dAGYH1
-         ZoMfxYPhj1aGisNVytbbz16FGd19F/GLWWKqmyz5QVUWCH852OZkHrnPPIWPrqC4neyS
-         a7v3wobNSSlJVCWjnzCdEU/vJKwAqNo9QlJDdZZzhe6JJt9HI/Adz/aIlbUVRlVc5+r/
-         Wh3K+T1U8mRgzEN73lsQyDrC/jgt58bTBPttxWkvcuF/uHNDyFjl6FzCmQvD6Dy4PO5f
-         8Mtw==
+        bh=DdvuxQV8MUJ3DF0txatG/PoeJXobhfl8uAplHUnRQXw=;
+        b=gEq8/ZMBwfLkBD9tGRHGjZfTd20HP1xHo/lJCYGOxGAYI7JgVG9jMowKPQSyqmQoJH
+         Q9ZbaY7SOKJp8K4eyLHZOG5BXM7bIz0LDg0iLZ0C7XwnSZgO4Q7ql/grJgyu+f0XKKiZ
+         8hj2Hl5fh1i6wP+q7uq/YnEi3K13FYNSMiMBiMDb9rTjtVKuKwTX2bq22JmdTliOTXP2
+         K+5zCU0/1lWFBSvTXbDx9fEkSA/zS7i5vKY3n2XrAijwrJW7uI1+D+Ab8wO+LOpxCjFg
+         cLiZ+CoMaM/7tmWRw/RxFAOt/xBIBCD8p1Ekq22vHH0ospnbZ5362hTq6dFil73T5VxH
+         cAwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=EuH2JuinWmp99M5kgpRBVbGMWPMpSteTL2l8ALHXOxA=;
-        b=LP9U5u4BDH5h/Tgnp83XtZxMjiGuO6n7oz5Is1zzvywAp6AlJHGuOqzoGOYhW7Xysq
-         uiaOwI8/juCnVvOI9f1WiA3Zld/zJBfavpWA+fB9R1LYmr/7dHYf+LHyEEHdJGdOZUe2
-         c8rtP3IGyUSgO6iFZ3e1yU6CfUw4Rc7eqrb+0hAcxe1BHb4Hrs+lB7yLJvGuuw6xY8rv
-         PLFNsndiqqTf4r6qkuMXuen3zqny6fMbcAn/8ewoizAjf4OS11oXfImhmR3aAPQn7FdL
-         N7E/tapOp0ILKSeso7H/xD0YM7IOzWDqypY5JpC5OjB7dHk5zB7BIS6iHsXXmodHH6aN
-         GPCw==
-X-Gm-Message-State: ANhLgQ0l3THsudhW7F2WCoTdm1+wO+4hL5RewC81ZXhkoA0CkSWsBF90
-        FV1FZhaEygUnya4kdZLpGQDoaQ==
-X-Google-Smtp-Source: ADFU+vtvdsyytNA9HXn2kU8Gc/Wj/vUyTOW35SEjh5aHAlAPKupONXAmkHYxA+n8rH6jwZStjuAuGg==
-X-Received: by 2002:adf:9e8b:: with SMTP id a11mr9088wrf.32.1584373337353;
-        Mon, 16 Mar 2020 08:42:17 -0700 (PDT)
+        bh=DdvuxQV8MUJ3DF0txatG/PoeJXobhfl8uAplHUnRQXw=;
+        b=XpPGxm3gqRFQ/eji6RqU9OK2CyFJiyaZb/kf++o1sQKEXPOSypxqfFU47a6pWkCvVB
+         DITcReVP1G910dSRGdnHoJpzGPiu28gRTccxOCeLUL1qn4izSr0Fai0aWiX0/9LB6ncb
+         eJlPuJe15MqrHo9ST4PhVzKocadeChX7mesOz7tOhpgPeZUmdD9L0+5yf1ChfA6nr1DN
+         75ebyCa0Hk9CKiRH52CxhzKBlcmkSzrYXGGW8x17HJhw+H847M+kuPyruu+8+BMVmm23
+         TtzRWR84yDqTjhUD8i5IC81WBiKJj/+xuyuHq18rrtMINpAFMDa3hFGIm6tl49cMQk2I
+         9Hjw==
+X-Gm-Message-State: ANhLgQ2yNy1GwYAupWx3PA8aVX8tJ6xYOCjydwpFZ0vE58lqmjCBB/1F
+        jqUL5hiqZiMHnXeZaoylXjULEw==
+X-Google-Smtp-Source: ADFU+vukGMBSU+PIquYB6P7V4T5BWKneai54XgateQmlyq1EDcQ3i3rP1F+AK6w2nNtuc0TA4HUjIw==
+X-Received: by 2002:a5d:43cc:: with SMTP id v12mr35844297wrr.125.1584373387505;
+        Mon, 16 Mar 2020 08:43:07 -0700 (PDT)
 Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id y80sm85174wmc.45.2020.03.16.08.42.15
+        by smtp.gmail.com with ESMTPSA id h13sm433117wrv.39.2020.03.16.08.43.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:42:16 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 16:42:09 +0100
+        Mon, 16 Mar 2020 08:43:07 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 16:42:59 +0100
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
@@ -73,21 +73,21 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 03/15] drm/msm/mdp5: Remove direct access of
+Subject: Re: [PATCH 04/15] iommu/tegra-gart: Remove direct access of
  dev->iommu_fwspec
-Message-ID: <20200316154209.GD304669@myrica>
+Message-ID: <20200316154259.GE304669@myrica>
 References: <20200310091229.29830-1-joro@8bytes.org>
- <20200310091229.29830-4-joro@8bytes.org>
+ <20200310091229.29830-5-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310091229.29830-4-joro@8bytes.org>
+In-Reply-To: <20200310091229.29830-5-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:12:17AM +0100, Joerg Roedel wrote:
+On Tue, Mar 10, 2020 at 10:12:18AM +0100, Joerg Roedel wrote:
 > From: Joerg Roedel <jroedel@suse.de>
 > 
 > Use the accessor functions instead of directly dereferencing
@@ -98,22 +98,22 @@ On Tue, Mar 10, 2020 at 10:12:17AM +0100, Joerg Roedel wrote:
 Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
 > ---
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 2 +-
+>  drivers/iommu/tegra-gart.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> index e43ecd4be10a..1252e1d76340 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> @@ -725,7 +725,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+> diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
+> index 3fb7ba72507d..db6559e8336f 100644
+> --- a/drivers/iommu/tegra-gart.c
+> +++ b/drivers/iommu/tegra-gart.c
+> @@ -247,7 +247,7 @@ static int gart_iommu_add_device(struct device *dev)
+>  {
+>  	struct iommu_group *group;
 >  
->  	if (config->platform.iommu) {
->  		iommu_dev = &pdev->dev;
-> -		if (!iommu_dev->iommu_fwspec)
-> +		if (!dev_iommu_fwspec_get(iommu_dev))
->  			iommu_dev = iommu_dev->parent;
+> -	if (!dev->iommu_fwspec)
+> +	if (!dev_iommu_fwspec_get(dev))
+>  		return -ENODEV;
 >  
->  		aspace = msm_gem_address_space_create(iommu_dev,
+>  	group = iommu_group_get_for_dev(dev);
 > -- 
 > 2.17.1
 > 
