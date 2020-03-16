@@ -2,115 +2,132 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18B7C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D050C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976D4205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:28:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="NS8QyZzH"
+	by mail.kernel.org (Postfix) with ESMTP id 3D01F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbgCPK2T (ORCPT
+        id S1730644AbgCPK2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:28:19 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:39289 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730550AbgCPK2T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:28:19 -0400
-Received: by mail-il1-f196.google.com with SMTP id w15so8590618ilq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 03:28:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TxPRfk6sibY6hpJglSupQUWB4+HiT17NTnwoa76dgxM=;
-        b=NS8QyZzH0cEZAFqfqWtUf3zJCYnpsnhJjKa5s3AUlVWCrMS2r7XYcDufh6I1YFVumW
-         m7Zp0uUr+kFRhuKC2BDSDlFXQK/chRvliVzCKQ+nvCDYDyL/fcgNfgPuyroJRHceRZHw
-         mQgHMR+kpAaA2GSHPEiI6IFtgIWPYuZq0SEIPhAu8vFNcWoJEIwQt2tibUWQ8+73SHuA
-         GU5Mrzd4DvirYUXKFM3Pay0gwYbTUwOvECoWWYu94azUBXk+a/jkbhyWUMGOFOilyA9k
-         TqbbBbQzW8N1ot7huNmMyKI5GF9YGRYXmT93bXOsnNcV6d9WPmjmpoBmR63a+MP32Scr
-         Y7gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TxPRfk6sibY6hpJglSupQUWB4+HiT17NTnwoa76dgxM=;
-        b=qQYKrOUaAq02+NTYd0xlLvC7HLpukJrDnea3bK9NMO1njXKcuyiu8sXGdXJDpkeubD
-         KLfxEWunE2n1N5fpf3SOYVEn234xDZsqqfDoRZIQoFzuqVJKrcf9rX+P5Nee1xPzmlwE
-         nu70XBYdjgC9tfsydeQHyRsAw9Z9bzW6YNRkrVEWzLhsQB4weMWrLrPc0JzVmgoGoXQi
-         piNZr8aX5PKvDCKm+TUIGaZJHXQym0T2lctPEaDw9VroouVDGeQ+FbyDjtU5Rnjs5CKx
-         0XqLU9+2KvLrabf3KAL3tD0s4WYjh8QO570rvgLxL+KC2JxsZ9l7sQeJ74pv8l6TNnS8
-         YKkw==
-X-Gm-Message-State: ANhLgQ0YBZApp5Y4kurDbMofiELsYb4earoHKJpiu7iDSeEFUX2YFe70
-        IN2a5hJw+IG8h6dDhXbu4roWJUJASv+nmliHsVrjfw==
-X-Google-Smtp-Source: ADFU+vsGVHx5bpn0+ubycNUe48ocy51bgN7prtIEKTgKxls3K76EhhgDAeT/EfgqdKb2LN6no63jMXRb45trrW4Gu/Y=
-X-Received: by 2002:a92:8c42:: with SMTP id o63mr25215708ild.189.1584354496594;
- Mon, 16 Mar 2020 03:28:16 -0700 (PDT)
+        Mon, 16 Mar 2020 06:28:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:45530 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730550AbgCPK2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 06:28:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 236D31FB;
+        Mon, 16 Mar 2020 03:28:50 -0700 (PDT)
+Received: from [10.37.9.38] (unknown [10.37.9.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E38D43F534;
+        Mon, 16 Mar 2020 03:28:45 -0700 (PDT)
+Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-19-vincenzo.frascino@arm.com>
+ <20200315182950.GB32205@mbp> <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
+ <20200316102214.GA5746@lakrids.cambridge.arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <c1ebab37-4df5-a763-129c-bb088cc0b151@arm.com>
+Date:   Mon, 16 Mar 2020 10:29:13 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <64270a8cc4bfca77ef4e280e5ab4623f4525ff39.1584290011.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <64270a8cc4bfca77ef4e280e5ab4623f4525ff39.1584290011.git.mirq-linux@rere.qmqm.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 16 Mar 2020 11:28:05 +0100
-Message-ID: <CAMRc=Me8ceOfP2cH-35qTsVSQq0tTKgW8+kW0u7WOhwWs4sAfQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: gpio_name_to_desc: factor out !name check
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200316102214.GA5746@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-niedz., 15 mar 2020 o 17:34 Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm=
-.pl>
-napisa=C5=82(a):
->
-> Since name =3D=3D NULL can't ever match, move the check out of
-> IRQ-disabled region.
->
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/gpio/gpiolib.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 175c6363cf61..20fbeffbdd91 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -301,6 +301,9 @@ static struct gpio_desc *gpio_name_to_desc(const char=
- * const name)
->         struct gpio_device *gdev;
->         unsigned long flags;
->
-> +       if (!name)
-> +               return NULL;
-> +
->         spin_lock_irqsave(&gpio_lock, flags);
->
->         list_for_each_entry(gdev, &gpio_devices, list) {
-> @@ -309,7 +312,7 @@ static struct gpio_desc *gpio_name_to_desc(const char=
- * const name)
->                 for (i =3D 0; i !=3D gdev->ngpio; ++i) {
->                         struct gpio_desc *desc =3D &gdev->descs[i];
->
-> -                       if (!desc->name || !name)
-> +                       if (!desc->name)
->                                 continue;
->
->                         if (!strcmp(desc->name, name)) {
-> --
-> 2.20.1
+
+On 3/16/20 10:22 AM, Mark Rutland wrote:
+> Hi Vincenzo,
+> 
+> On Mon, Mar 16, 2020 at 09:42:32AM +0000, Vincenzo Frascino wrote:
+>> On 3/15/20 6:30 PM, Catalin Marinas wrote:
+>>> On Fri, Mar 13, 2020 at 03:43:37PM +0000, Vincenzo Frascino wrote:
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/include/asm/vdso/processor.h
+>>>> @@ -0,0 +1,31 @@
+>>>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>>> +/*
+>>>> + * Copyright (C) 2020 ARM Ltd.
+>>>> + */
+>>>> +#ifndef __ASM_VDSO_PROCESSOR_H
+>>>> +#define __ASM_VDSO_PROCESSOR_H
+>>>> +
+>>>> +#ifndef __ASSEMBLY__
+>>>> +
+>>>> +#include <asm/page-def.h>
+>>>> +
+>>>> +#ifdef CONFIG_COMPAT
+>>>> +#if defined(CONFIG_ARM64_64K_PAGES) && defined(CONFIG_KUSER_HELPERS)
+>>>> +/*
+>>>> + * With CONFIG_ARM64_64K_PAGES enabled, the last page is occupied
+>>>> + * by the compat vectors page.
+>>>> + */
+>>>> +#define TASK_SIZE_32		UL(0x100000000)
+>>>> +#else
+>>>> +#define TASK_SIZE_32		(UL(0x100000000) - PAGE_SIZE)
+>>>> +#endif /* CONFIG_ARM64_64K_PAGES */
+>>>> +#endif /* CONFIG_COMPAT */
+>>>
+>>> Just curious, what's TASK_SIZE_32 used for in the vDSO code? You don't
+>>> seem to move TASK_SIZE.
+>>>
+>>
+>> I tried to fine grain the headers as much as I could in order to avoid
+>> unneeded/unwanted inclusions:
+>>  * TASK_SIZE_32 is used to verify ABI consistency on vdso32 (please refer to
+>>    arch/arm64/kernel/vdso32/vgettimeofday.c).
+>>  * TASK_SIZE is not required by the vdso library hence it is not present in
+>>    these headers.
+> 
+> It would be worth noting the former point in the commit message, since
+> it can be surprising.
 >
 
-Patch applied, thanks!
+Sure it is a good point, I will add this to the commit message.
 
-Bartosz
+> I also think it's worth keeping the definitions together if that's easy,
+> as it makes it easier to navigate the codebase, even if TASK_SIZE isn't
+> necessary for the VDSO itself.
+
+This can't be done because TASK_SIZE on arm64 requires test_thread_flag() with
+is not suited for vDSO. In other words can cause the same problem we are trying
+to solve.
+
+> 
+> Thanks,
+> Mark.
+> 
+
+-- 
+Regards,
+Vincenzo
