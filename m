@@ -2,153 +2,110 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D5DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CAFC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D5A205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:33:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fJrpDMRh"
+	by mail.kernel.org (Postfix) with ESMTP id D00D720719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584380013;
+	bh=noJiYeNxO1vTklOyBmJZQU4z5U+Vfo1ntvqKH/nE5Q8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QuTAtpGO/ItOD1ufaAeNJrghzZhgxivvJwFS+Aam3WspXgXNW57hko3aHFCXOM4xo
+	 PaIkYT7iInpR+0ncQ+XdI0iqxBckuyXUPY4wGhwGPyIVq8n+ylZhdbJEKEsnGSdBhY
+	 KmebwQNUZYTn7h01B4YfouGIH9Vf5qU6aXtbBRWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731992AbgCPRdE (ORCPT
+        id S1732070AbgCPRdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:33:04 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:31502 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731664AbgCPRdD (ORCPT
+        Mon, 16 Mar 2020 13:33:32 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39781 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732008AbgCPRdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 13:33:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584379981;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=14nagzG00kW25fpr2NHXBqWB0Eexn4LV6EB16qmcCL8=;
-        b=fJrpDMRho0DKHwpfFUFIwIDbsKiI3mP9O+r9/LaQx5WqGBxtWbE+w4eLZxn/dS3f/Uz5Hw
-        fhnIRNORnX70BIogODgbdzGU7vmfw+JamfVJVf3MKuSShn8HlRFGRV9zTKdSCEA/1B61wl
-        5ij9G3exfxDqdiQuV+QqgC19MTjNWJM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-ciCPNaszOSCGf2ATooge6Q-1; Mon, 16 Mar 2020 13:25:54 -0400
-X-MC-Unique: ciCPNaszOSCGf2ATooge6Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D116126CBE7;
-        Mon, 16 Mar 2020 17:10:28 +0000 (UTC)
-Received: from [10.36.118.12] (ovpn-118-12.ams2.redhat.com [10.36.118.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C032560BFB;
-        Mon, 16 Mar 2020 17:10:23 +0000 (UTC)
-Subject: Re: [PATCH v5 07/23] irqchip/gic-v4.1: Map the ITS SGIR register page
-To:     Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-8-maz@kernel.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <0f0b3613-0306-a43c-b935-c842c1025b6b@redhat.com>
-Date:   Mon, 16 Mar 2020 18:10:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 16 Mar 2020 13:33:32 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j15so14833169lfk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 10:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7PTWvIyjfvgfI+AbbkM8uGjoiifhnlvV3GafuV1Cqc8=;
+        b=RZOkHoG6bG5PRXDItscgc46suq4mTsbo6XPWhssqKTvVMozW8s73T/8weflqCoPnVx
+         C8H0wKeZkrSpnte2xq3Tsr4CPOzNfEwBOJoITgL7KLHhVHVo5nXZqWFHvfIOvkmjRiXo
+         tq5QazNudSYv+mfvtxTGlkoupzplWXGDDix6M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7PTWvIyjfvgfI+AbbkM8uGjoiifhnlvV3GafuV1Cqc8=;
+        b=h+dW+teXJC6k2AhMyST5uhxfNFB820DEwpuoLGcAC2P9M02FXlRblJLJeF8RGqRjHr
+         tZ+u7ScLBIyDEOnUsNFaDkE/gznNW+8XlEZnNRt9o9DnMsJLzNWaDxlNZfIR7BW2czVE
+         pFLeHUMb8GuVn0qD1g3d073Vx0bsuINlDUyQRLt74oUSjyXEv7CYq2oaygSNgLWjgWhs
+         57/aJopH1A9XGLz5vdkGDfcif0624REy4Shh5rhJMz+4HhRm/Xr3185OD+J5aqejxF2l
+         lSWlzyZ1adMGL3Ice3BaU0dEyIyyoK4Jk2lwwJ7HbOtWw1gGQErgvpWiIQFjEjYwQpyX
+         uvpQ==
+X-Gm-Message-State: ANhLgQ2+oymd54DkC30E5a0wq4+uWXERBsh/Av5IdWluV69P2qjMVYt4
+        cCG1HiLWhu7dAN/4gMUGg/gRaENfQ7w=
+X-Google-Smtp-Source: ADFU+vs/4qcFL+LVTCtAlz2NjTYmsbdTKDdGmhTGaY+3HbTYzPaEnO4r5lRSUNXh5N1edssPZntRww==
+X-Received: by 2002:a19:4cc2:: with SMTP id z185mr314829lfa.0.1584380008824;
+        Mon, 16 Mar 2020 10:33:28 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id l22sm319600ljc.32.2020.03.16.10.33.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2020 10:33:27 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id b13so14788329lfb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 10:33:27 -0700 (PDT)
+X-Received: by 2002:a19:c7:: with SMTP id 190mr316101lfa.30.1584380007220;
+ Mon, 16 Mar 2020 10:33:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-8-maz@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <1973193.1584373757@warthog.procyon.org.uk>
+In-Reply-To: <1973193.1584373757@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 16 Mar 2020 10:33:10 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wih0Uq8CB+wk1heOobmS3Yuehnp5bqx=4fj=chzAHJoLw@mail.gmail.com>
+Message-ID: <CAHk-=wih0Uq8CB+wk1heOobmS3Yuehnp5bqx=4fj=chzAHJoLw@mail.gmail.com>
+Subject: Re: To split or not to split a syscall implementation from its wireup?
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+On Mon, Mar 16, 2020 at 8:49 AM David Howells <dhowells@redhat.com> wrote:
+>
+> When it comes to creating a new system call, do you have a preference as to
+> whether the system call implementation should be in the same patch as the
+> wire-up or is it preferable that the two be split into separate patches?
 
-On 3/4/20 9:33 PM, Marc Zyngier wrote:
-> One of the new features of GICv4.1 is to allow virtual SGIs to be
-> directly signaled to a VPE. For that, the ITS has grown a new
-> 64kB page containing only a single register that is used to
-> signal a SGI to a given VPE.
-> 
-> Add a second mapping covering this new 64kB range, and take this
-> opportunity to limit the original mapping to 64kB, which is enough
-> to cover the span of the ITS registers.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+It depends.
 
-Eric
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index bcc1a0957cda..54d6fdf7a28e 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -96,6 +96,7 @@ struct its_node {
->  	struct mutex		dev_alloc_lock;
->  	struct list_head	entry;
->  	void __iomem		*base;
-> +	void __iomem		*sgir_base;
->  	phys_addr_t		phys_base;
->  	struct its_cmd_block	*cmd_base;
->  	struct its_cmd_block	*cmd_write;
-> @@ -4456,7 +4457,7 @@ static int __init its_probe_one(struct resource *res,
->  	struct page *page;
->  	int err;
->  
-> -	its_base = ioremap(res->start, resource_size(res));
-> +	its_base = ioremap(res->start, SZ_64K);
->  	if (!its_base) {
->  		pr_warn("ITS@%pa: Unable to map ITS registers\n", &res->start);
->  		return -ENOMEM;
-> @@ -4507,6 +4508,13 @@ static int __init its_probe_one(struct resource *res,
->  
->  		if (is_v4_1(its)) {
->  			u32 svpet = FIELD_GET(GITS_TYPER_SVPET, typer);
-> +
-> +			its->sgir_base = ioremap(res->start + SZ_128K, SZ_64K);
-> +			if (!its->sgir_base) {
-> +				err = -ENOMEM;
-> +				goto out_free_its;
-> +			}
-> +
->  			its->mpidr = readl_relaxed(its_base + GITS_MPIDR);
->  
->  			pr_info("ITS@%pa: Using GICv4.1 mode %08x %08x\n",
-> @@ -4520,7 +4528,7 @@ static int __init its_probe_one(struct resource *res,
->  				get_order(ITS_CMD_QUEUE_SZ));
->  	if (!page) {
->  		err = -ENOMEM;
-> -		goto out_free_its;
-> +		goto out_unmap_sgir;
->  	}
->  	its->cmd_base = (void *)page_address(page);
->  	its->cmd_write = its->cmd_base;
-> @@ -4587,6 +4595,9 @@ static int __init its_probe_one(struct resource *res,
->  	its_free_tables(its);
->  out_free_cmd:
->  	free_pages((unsigned long)its->cmd_base, get_order(ITS_CMD_QUEUE_SZ));
-> +out_unmap_sgir:
-> +	if (its->sgir_base)
-> +		iounmap(its->sgir_base);
->  out_free_its:
->  	kfree(its);
->  out_unmap:
-> 
+If it's "new code that has no other use than the system call", then
+splitting it up is pointless: you'll just have a commit with dead code
+first and no test coverage, and then a commit that adds the system
+call. If it results in the problems, the new system call commit is the
+one that gets fingered as the problematic one, but it doesn't actually
+really _do_ anything.
 
+However, if adding a new system call is preceded by first
+re-organizing existing code so that you have the infrastructure set up
+for the new system call, then that re-organization should be done
+separately, and then one commit that just adds the new system call
+that uses the newly organized code.  In fact, in that case if the new
+organization is at all subtle, I'd prefer not just splitting it, but
+waiting a bit before adding the new system call - because if the
+changes cause problems, then the reord may be fundamentally broken and
+maybe the new system call isn't even worth the pain at all.
+
+So the difference is that in that second case, testing the
+re-organized code on its own is meaningful (and arguably more
+important than the new system call, since it's a potential for
+regression on its own).
+
+            Linus
