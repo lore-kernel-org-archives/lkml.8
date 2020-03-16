@@ -2,72 +2,73 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F56C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3651CC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2CA206B1
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095AB20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:39:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DqG8FnLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbgCPIiv (ORCPT
+        id S1730176AbgCPIjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:38:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51216 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730048AbgCPIiv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:38:51 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jDlGo-0002u8-JF; Mon, 16 Mar 2020 09:38:46 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 06B1D100F5A; Mon, 16 Mar 2020 09:38:45 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Prasad Sodagudi <psodagud@codeaurora.org>, john.stultz@linaro.org,
-        sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org, saravanak@google.com,
-        tsoni@codeaurora.org, tj@kernel.org,
-        Prasad Sodagudi <psodagud@codeaurora.org>
-Subject: Re: [PATCH 2/2] sched: Add a check for cpu unbound deferrable timers
-In-Reply-To: <1584326350-30275-3-git-send-email-psodagud@codeaurora.org>
-References: <1584326350-30275-1-git-send-email-psodagud@codeaurora.org> <1584326350-30275-3-git-send-email-psodagud@codeaurora.org>
-Date:   Mon, 16 Mar 2020 09:38:45 +0100
-Message-ID: <874kuoelt6.fsf@nanos.tec.linutronix.de>
+        Mon, 16 Mar 2020 04:39:21 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:37850 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730048AbgCPIjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:39:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=3DP+sd7j/ZzTQQA7FONRN+KtsAjsjix8FVp93YaNriU=; b=DqG8FnLtpeAGJ3ywim5K/6XLR8
+        KJKW2ANqD9R5c5BIyyf0I6y8xuf2QXqo76vZxNUG5if+MiPqe2YGXKltmG+qXfLJGp20v+wfzkXpi
+        9q8Xk+fLg8JWmSsRgYIjKqWUKh1LepfNq+29d65MyaFVdEZgg/TZXsG8LLXQTi4/E6bg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jDlHF-0005ox-7G; Mon, 16 Mar 2020 09:39:13 +0100
+Date:   Mon, 16 Mar 2020 09:39:13 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net 1/3] net: fsl/fman: treat all RGMII modes in
+ memac_adjust_link()
+Message-ID: <20200316083913.GC8524@lunn.ch>
+References: <1584101065-3482-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1584101065-3482-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20200314211601.GA8622@lunn.ch>
+ <DB8PR04MB69859D7B209FEA972409FEEBECF90@DB8PR04MB6985.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB8PR04MB69859D7B209FEA972409FEEBECF90@DB8PR04MB6985.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prasad Sodagudi <psodagud@codeaurora.org> writes:
-> @@ -948,6 +949,11 @@ static void __tick_nohz_idle_stop_tick(struct tick_sched *ts)
->  	ktime_t expires;
->  	int cpu = smp_processor_id();
->  
-> +#ifdef CONFIG_SMP
-> +	if (check_pending_deferrable_timers(cpu))
-> +		raise_softirq_irqoff(TIMER_SOFTIRQ);
-> +#endif
+> > Hi Madalin
+> > 
+> > You can use phy_interface_mode_is_rgmii()
+> > 
+> >     Andrew
+> 
+> I have that on the todo list for all the places in the code, but that's
+> net-next material.
 
-So if that raises the soft interrupt then the warning in 
+I don't see why it cannot be used here, for this case, now.
 
-can_stop_idle_tick()
-
-	if (unlikely(local_softirq_pending())) {
-		....
-                pr_warn()
-
-will trigger. Try again.
-
-Thanks,
-
-        tglx
+  Andrew
