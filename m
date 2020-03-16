@@ -2,106 +2,109 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B332DC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF439C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D2920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83BF20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kMuQxiqU"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TEuM7M94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbgCPHYe (ORCPT
+        id S1729951AbgCPHYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:24:34 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:51314 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729811AbgCPHYe (ORCPT
+        Mon, 16 Mar 2020 03:24:37 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:44565 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729638AbgCPHYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:24:34 -0400
-Received: by mail-pj1-f68.google.com with SMTP id hg10so3866443pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 00:24:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cLUgCPvVOCvF8ic/BSG/ZxXsTtJMwTgOpQVJ7e+heWY=;
-        b=kMuQxiqU57kWg/ztLMlBenWljwjmhZQDTdo8lF6ZnktWO9hAQoLEW0vmC+GR6Fr2XF
-         SUNvaEk/hiVoLdT6jvusYNa1z8OKm2OOMAvzHfu+VPGtzzhBQkHfmB1cAKM78SPAo0iC
-         KrPQCq+o6VcV5YiWZbz0/HW3XGpXKg6KhZU1I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cLUgCPvVOCvF8ic/BSG/ZxXsTtJMwTgOpQVJ7e+heWY=;
-        b=htt/zREW1weJTjH+H+FT34laX1VrTYT8R5laClIrJLGZwIGmwyf2qQwljXQZeL7KwN
-         A3RRi5coeE7pWJsN/kJlz9MhzhiZksn00x6rvnIUPb4GbsxG/ivGaEcUB6OwIj0vNxuu
-         sawT7kyh3VLV/lRfl7V9q3LNd9l0Ig7U2sjuqVFAz3a5htQGbcqhyyv96we9Ccq7o2Z0
-         sO6UrV5+dgAJGtQYQnw6FalZ4ifPdJYio0R6VUHlfpdgJ9t97Q2xD1DFd6fzWS8Ejv5V
-         pmWCOujDEQ48JF+e42qpdjBQZaVtKVGmD8rjtohM6GxdvMjwxwz4mAhIbjTi+PqoQf+Z
-         vv7w==
-X-Gm-Message-State: ANhLgQ3UbiBJ7iSyyXzzgUovBxLTy2r5f4iTr7U6kVziGSgFrjvxRhGz
-        yZ12FE+lBcBwvb1NXSw4IVJ6YpOpCdM=
-X-Google-Smtp-Source: ADFU+vucMcjPp3LwOXrUtWLkuAbmJ2uc05Q9aXkxqUCrIKWthUBIo5SspQ+RNFdUy6ZVmfbPnj/q0w==
-X-Received: by 2002:a17:902:8215:: with SMTP id x21mr26540359pln.59.1584343471978;
-        Mon, 16 Mar 2020 00:24:31 -0700 (PDT)
-Received: from chentsungp920.tpe.corp.google.com ([2401:fa00:1:10:6780:e5ae:c662:3d59])
-        by smtp.gmail.com with ESMTPSA id kb18sm1204543pjb.14.2020.03.16.00.24.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 00:24:31 -0700 (PDT)
-From:   Chen-Tsung Hsieh <chentsung@chromium.org>
-To:     jikos@kernel.org
-Cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, drinkcat@chromium.org
-Subject: [PATCH] HID: google: add moonball USB id
-Date:   Mon, 16 Mar 2020 15:24:19 +0800
-Message-Id: <20200316072419.65274-1-chentsung@chromium.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        Mon, 16 Mar 2020 03:24:36 -0400
+X-UUID: edeebb8b7704427090312173cae9ccee-20200316
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=SME2J3snLnpUKDZ+/mhvA9A9BXydvq2FK3+5529r+Aw=;
+        b=TEuM7M9480zmjH6HOjHEjnQC2v3iyUJKS1vHVOqQ4N0JqI67LVIPLJaknbBtkI2O81gvICQ8uvzTf+4E+LinJUlyXkSk9Tx+P65Y8EIo8p7w1npEbYmKrdygg1GCWKL9liNej+Y4IFX/SXNL9pnT+VRrChi6TPagiBGz9snH55Q=;
+X-UUID: edeebb8b7704427090312173cae9ccee-20200316
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <roger.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 628648822; Mon, 16 Mar 2020 15:24:29 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 16 Mar 2020 15:22:50 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 16 Mar 2020 15:21:29 +0800
+From:   Roger Lu <roger.lu@mediatek.com>
+To:     Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Fan Chen <fan.chen@mediatek.com>,
+        HenryC Chen <HenryC.Chen@mediatek.com>,
+        YT Lee <yt.lee@mediatek.com>,
+        Xiaoqing Liu <Xiaoqing.Liu@mediatek.com>,
+        Charles Yang <Charles.Yang@mediatek.com>,
+        Angus Lin <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>, Roger Lu <roger.lu@mediatek.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: [PATCH v7 0/3] PM / AVS: SVS: Introduce SVS engine
+Date:   Mon, 16 Mar 2020 15:23:14 +0800
+Message-ID: <20200316072316.7156-1-roger.lu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: FAAF471B3CEBE181E2299E54C03D13A8F639F8379D2227AA0B0EE8D05A49E7012000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 1 additional hammer-like device.
-
-Signed-off-by: Chen-Tsung Hsieh <chentsung@chromium.org>
----
- drivers/hid/hid-google-hammer.c | 2 ++
- drivers/hid/hid-ids.h           | 1 +
- 2 files changed, 3 insertions(+)
-
-diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
-index 2aa4ed157aec..85a054f1ce38 100644
---- a/drivers/hid/hid-google-hammer.c
-+++ b/drivers/hid/hid-google-hammer.c
-@@ -532,6 +532,8 @@ static const struct hid_device_id hammer_devices[] = {
- 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MAGNEMITE) },
- 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
- 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MASTERBALL) },
-+	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
-+		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MOONBALL) },
- 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
- 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_STAFF) },
- 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 3a400ce603c4..33fddab41722 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -478,6 +478,7 @@
- #define USB_DEVICE_ID_GOOGLE_WHISKERS	0x5030
- #define USB_DEVICE_ID_GOOGLE_MASTERBALL	0x503c
- #define USB_DEVICE_ID_GOOGLE_MAGNEMITE	0x503d
-+#define USB_DEVICE_ID_GOOGLE_MOONBALL	0x5044
- 
- #define USB_VENDOR_ID_GOTOP		0x08f2
- #define USB_DEVICE_ID_SUPER_Q2		0x007f
--- 
-2.25.1.481.gfbce0eb801-goog
+MS4gU1ZTIGRyaXZlciB1c2UgT1BQIGFkanVzdCBldmVudCBpbiBbMV0gdG8gdXBkYXRlIE9QUCB0
+YWJsZSB2b2x0YWdlIHBhcnQuDQoyLiBTVlMgZHRzIG5vZGUgcmVmZXJzIHRvIENQVSBvcHAgdGFi
+bGUgWzJdIGFuZCBHUFUgb3BwIHRhYmxlIFszXS4NCjMuIFNWUyBhbmQgdGhlcm1hbCBkdHMgdXNl
+IHRoZSBzYW1lIHRoZXJtYWwgZWZ1c2UgWzRdLg0KNC4gU1ZTIGR0cyBuZWVkcyBQTUlDIHJlZ3Vs
+YXRvciBbNV0uDQogDQpbMV0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE5
+MzUxMy8NClsyXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMzA0OTM1Lw0K
+WzNdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTE0MjMwMDkvDQpbNF0gaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTMxNjQ5NS8NCls1XSBodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMjg0NjE3Lw0KDQpwZW5kaW5nIGRpc2N1c3Npb24g
+b24gdjc6DQotIFNWUyBzdWItbm9kZSBhcmNoaXRlY3R1cmUgcGVuZGluZyBkaXNjdXNzaW9uIGlu
+IGJlbG93IHBhdGNoLg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzEx
+NzU5OTQvDQoNCmNoYW5nZXMgc2luY2UgdjY6DQotIHN2c19pc3JfaGFuZGxlcigpIGZ1bmN0aW9u
+IGlzIG1lcmdlZCBpbnRvIHN2c19pc3IoKS4NCi0gSW4gc3ZzX2lzcigpLCB3ZSBmaW5kIHdoaWNo
+IGJhbmsgZmlyZXMgaW50ZXJydXB0IGZpcnN0IGFuZCBjaGVjayB0aGlzIGJhbmsNCmlzIHN1c3Bl
+bmRlZCBvciBub3Qgc2Vjb25kbHkuDQotIFVzZSBtZW1kdXBfdXNlcl9udWwoKSBpbnN0ZWFkIG9m
+IGNvcHlfZnJvbV91c2VyKCkuDQotIFVzZSBVMzJfTUFYIGluc3RlYWQgb2YgIih1MzIpLTEuDQot
+IFNWUyBuZWVkcyB0byBkbyByZXN1bWUgYWZ0ZXIgdGhlcm1hbCByZXN1bWUgaW4gc3lzdGVtIHN1
+c3BlbmQgZmxvdy4NClRoZXJlZm9yZSwgY2hhbmdlIFNWUyBwbV9vcHMgdG8gcHJlcGFyZS9jb21w
+bGV0ZS4NCi0gQWRkIGhpZ2ggdGVtcGVyYXR1cmUgdm9sdGFnZXMgY29tcGVuc2F0aW9uIGNvZGVz
+Lg0KLSBBZGQgaXJxZmxhZ3MgaW4gInN0cnVjdCBzdnNfcGxhdGZvcm0iIGZvciBzdXBwb3J0aW5n
+IGRpZmZlcmVudCBTVlMgSFcgc2V0dGluZy4NCi0gU2V0IHNpZ25lZC1vZmYgdm9sdGFnZXMgdG8g
+c3lzdGVtIHdoZW4gc3lzdGVtIHN1c3BlbmQuDQotIEFkZCBTVlMgSFcgcmVzZXQgZmxhZyBmb3Ig
+ZnV0dXJlIFNWUyBIVyBzdXBwb3J0Lg0KLSBDb2Rpbmcgc3R5bGUgcmVmaW5lbWVudC4NCg0KUm9n
+ZXIgTHUgKDMpOg0KICBkdC1iaW5kaW5nczogc29jOiBhZGQgbXRrIHN2cyBkdC1iaW5kaW5ncw0K
+ICBhcm02NDogZHRzOiBtdDgxODM6IGFkZCBzdnMgZGV2aWNlIGluZm9ybWF0aW9uDQogIFBNIC8g
+QVZTOiBTVlM6IEludHJvZHVjZSBTVlMgZW5naW5lDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9wb3dlci9tdGstc3ZzLnR4dCAgICAgfCAgIDc2ICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210ODE4My1ldmIuZHRzICAgfCAgIDE2ICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210ODE4My5kdHNpICAgICAgfCAgIDQxICsNCiBkcml2ZXJzL3Bvd2VyL2F2cy9LY29u
+ZmlnICAgICAgICAgICAgICAgICAgICAgfCAgIDEwICsNCiBkcml2ZXJzL3Bvd2VyL2F2cy9NYWtl
+ZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgICAxICsNCiBkcml2ZXJzL3Bvd2VyL2F2cy9tdGtf
+c3ZzLmMgICAgICAgICAgICAgICAgICAgfCAyMDc0ICsrKysrKysrKysrKysrKysrDQogaW5jbHVk
+ZS9saW51eC9wb3dlci9tdGtfc3ZzLmggICAgICAgICAgICAgICAgIHwgICAyMyArDQogNyBmaWxl
+cyBjaGFuZ2VkLCAyMjQxIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL210ay1zdnMudHh0DQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvcG93ZXIvYXZzL210a19zdnMuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBpbmNsdWRlL2xpbnV4L3Bvd2VyL210a19zdnMuaA0KDQo=
 
