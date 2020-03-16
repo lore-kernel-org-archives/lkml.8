@@ -2,142 +2,139 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1559C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666CDC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6921720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:40:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iv2J3Jh3"
+	by mail.kernel.org (Postfix) with ESMTP id 397EE20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732587AbgCPUkF (ORCPT
+        id S1732576AbgCPUne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:40:05 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:37383 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732516AbgCPUkE (ORCPT
+        Mon, 16 Mar 2020 16:43:34 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38201 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732537AbgCPUnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:40:04 -0400
-Received: by mail-qv1-f67.google.com with SMTP id n1so5888203qvz.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 13:40:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XwiLZWZJb8LiTm8ChhHd1B7qjQwdImHaIuZO9qfo7Wk=;
-        b=iv2J3Jh3WGpOtrZZo0BUOC8zfCEp1RreMxscAFeisExPnF+fn8M1sV5Biw+viJS2KQ
-         tB92PwP/q6Z9Oy3CmhZIixYUJIPgoxlWpEBDWPUKs0jsgcol2cZ/KX0SMQIn1fOsIiXL
-         B5G4IkZxRzwL9YLoLis36ChA1ULWssU0UQDEv1skK2Lk1E9cx4qd1Uk5KBays/IpYpPL
-         uN4kdVZm1svPKQ8bv/ik1B8wCm+dE4a3a1QwKueppZ8OmFogsZMS6YLdkYs5CC+EImme
-         Dx/fdNhe/QegIDXVeCQXirnSdT7EtahJ9OfHiNMJGPqNus2CDeFvegINY4IOe74KCxve
-         7pww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XwiLZWZJb8LiTm8ChhHd1B7qjQwdImHaIuZO9qfo7Wk=;
-        b=KLr6hre4e9+ad6Sx8jGznGMtnEtnSklKgnKaWzD+MF8HjDSKAIrfu96qSETj7LVLf0
-         C7ozAUhCtRmNmDUhjuDsjgdVJ1zo6+CPxk+rAaYPIGO9GIekTLJk581hrnjJmyek3KAX
-         ckXKUQTJ1+S8mak/g4YrX416KT6r7KeTvD/yTTY92b7xBl4AmKhaCs9iIyV2mgrqsp/P
-         g4gnmSIYrTSGhTKFEs4MlB5IEq2qVTMlT0OXJtmA6UtrEe9NPj7SnEahvjKNp9K7KjQ0
-         +EZO2IXk/uvWU4PH3Tw+XXXV5jXg0ffiXGkp5X1iFTvzs7LrzYAd0ZoG253IQHCNxxxK
-         ZEiA==
-X-Gm-Message-State: ANhLgQ14oAGTqFB/Z/tXAZH7GnSuCbRVbfjsekyyB2z8/C5NSAU5Vzu6
-        27U6bR0Q+MEfwphyKJEaRY8=
-X-Google-Smtp-Source: ADFU+vv2+vKfio6iiWvZ0GA+eJ3vXgQOR2sOWbIcab5wTSzUjjumuTV6Xiw8aziHro3crbDxEPO+Sw==
-X-Received: by 2002:a0c:c246:: with SMTP id w6mr1690744qvh.250.1584391203426;
-        Mon, 16 Mar 2020 13:40:03 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id i13sm523174qke.56.2020.03.16.13.40.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 13:40:02 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 16 Mar 2020 16:40:01 -0400
-To:     Jakub Jelinek <jakub@redhat.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
-Message-ID: <20200316204000.GB768497@rani.riverdale.lan>
-References: <20200314164451.346497-1-slyfox@gentoo.org>
- <20200316130414.GC12561@hirez.programming.kicks-ass.net>
- <20200316132648.GM2156@tucnak>
- <20200316134234.GE12561@hirez.programming.kicks-ass.net>
- <20200316175450.GO26126@zn.tnic>
- <20200316181957.GA348193@rani.riverdale.lan>
- <20200316185418.GA372474@rani.riverdale.lan>
- <20200316195340.GA768497@rani.riverdale.lan>
- <20200316200855.GS2156@tucnak>
+        Mon, 16 Mar 2020 16:43:33 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jDwa3-0006n7-SB; Mon, 16 Mar 2020 21:43:23 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jDwa2-0007Vh-2S; Mon, 16 Mar 2020 21:43:22 +0100
+Date:   Mon, 16 Mar 2020 21:43:22 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Stefan Lengfeld <contact@stefanchrist.eu>
+Cc:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: at91: support atomic write xfer
+Message-ID: <20200316204322.GB17716@pengutronix.de>
+References: <c05f76f74cd6a7ec2735c96861f9d5933631c112.1584296795.git.mirq-linux@rere.qmqm.pl>
+ <9924dd54-dd8b-d130-9607-2bbbc65675d5@gmail.com>
+ <20200316144221.GC19141@qmqm.qmqm.pl>
+ <20200316172003.lguso2fczz5imh6g@porty>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200316200855.GS2156@tucnak>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200316172003.lguso2fczz5imh6g@porty>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 21:08:32 up 24 days,  7:25, 51 users,  load average: 0.31, 0.28,
+ 0.21
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 09:08:55PM +0100, Jakub Jelinek wrote:
-> On Mon, Mar 16, 2020 at 03:53:41PM -0400, Arvind Sankar wrote:
-> > > /*
-> > >  * Initialize the stackprotector canary value.
-> > >  *
-> > >  * NOTE: this must only be called from functions that never return,
-> > >  * and it must always be inlined.
-> > >  */
-> > > static __always_inline void boot_init_stack_canary(void)
+On 20-03-16 18:20, Stefan Lengfeld wrote:
+> Hi Michał,
+> 
+> On Mon, Mar 16, 2020 at 03:42:21PM +0100, Michał Mirosław wrote:
+> > On Sun, Mar 15, 2020 at 11:46:33PM +0300, Dmitry Osipenko wrote:
+> > > 15.03.2020 21:27, Michał Mirosław пишет:
+> > > > Implement basic support for atomic write - enough to get a simple
+> > > > write to PMIC on shutdown. Only for chips having ALT_CMD register,
+> > > > eg. SAMA5D2.
+> > > > 
+> > > > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > > > ---
+> > > 
+> > > Hello Michał,
+> > > 
+> > > ...
+> > > > +	ret = pm_runtime_get_sync(dev->dev);
+> > > > +	if (ret < 0)
+> > > > +		goto out;
+> > > 
+> > > Runtime PM can't be used while interrupts are disabled, unless
+> > > pm_runtime_irq_safe() is used and driver's RPM callback is IRQ-safe.
 > > 
-> > Ugh, gcc10 tail-call optimizes the cpu_startup_entry call, and so checks
-> > the canary before jumping out. The xen one will need to have stack
-> > protector disabled too. It doesn't optimize the arch_call_rest_init call
-> > in start_kernel for some reason, but we should probably disable it there
-> > too.
+> > I didn't get any warnings from lockdep and friends, but I'll double
+> > check if this is by luck.
 > 
-> If you mark cpu_startup_entry with __attribute__((noreturn)), then gcc won't
-> tail call it.
+> You can have a look at the I2C atomic patch for the imx-driver. See
+> 
+>    https://patchwork.ozlabs.org/patch/1225802/
+> 
+> In that patch Marco Felsch is using clk_enable() and clk_disable() calls.
 
-So I've actually noticed this before -- what's the reason we don't
-tail-call optimize calls to noreturn functions? The code remains a call
-with nothing after it, but wouldn't a jump still be better? Or if it has
-to be a call, at least an undefined opcode or int 3 after the call in
-case it was erroneously annotated and returns anyway?
+Yep because we need to handle the runtime_pm stuff by our-self. So for
+the imx case we need to handle the clk en-/disable stuff. Runtime pm is
+using a workqueue which can't be used in that late case.
 
-objtool apparently doesn't like what gcc does when calling noreturn
-functions, complains about control falling through to next function.
-Though it isn't good enough to detect that that's happening even in
-start_secondary because there's some cold code following the call :)
+Regards,
+  Marco
 
-init/main.o: warning: objtool: rest_init() falls through to next function kernel_init()
-
-> If you don't, you could add asm (""); after the call to avoid the tail call
-> too.
+> > > ...
+> > > > +	timeout = jiffies + (2 + msg->len) * HZ/1000;
+> > > > +	for (;;) {
+> > > > +		stat = at91_twi_read(dev, AT91_TWI_SR);
+> > > > +		if (stat & AT91_TWI_TXCOMP)
+> > > > +			break;
+> > > > +		if (time_after(jiffies, timeout)) {
+> > > > +			ret = -ETIMEDOUT;
+> > > > +			goto out;
+> > > > +		}
+> > > > +		udelay(100);
+> > > > +	}
+> > > 
+> > > Jiffies can't be used with the disabled interrupts because jiffies are
+> > > updated by timer's interrupt.
+> > > 
+> > > Either ktime() API or iterator-based loop should be used.
 > > 
-> >      a06:       0f ae f8                sfence
-> >      a09:       48 8b 44 24 08          mov    0x8(%rsp),%rax
-> >      a0e:       65 48 2b 04 25 28 00    sub    %gs:0x28,%rax
-> >      a15:       00 00
-> >      a17:       75 1b                   jne    a34 <start_secondary+0x164>
-> >      a19:       48 83 c4 10             add    $0x10,%rsp
-> >      a1d:       bf 8d 00 00 00          mov    $0x8d,%edi
-> >      a22:       5b                      pop    %rbx
-> >      a23:       e9 00 00 00 00          jmpq   a28 <start_secondary+0x158>
-> >                         a24: R_X86_64_PLT32     cpu_startup_entry-0x4
-> >      a28:       0f 01 1d 00 00 00 00    lidt   0x0(%rip)        # a2f <start_secondary+0x15f>
-> >                         a2b: R_X86_64_PC32      debug_idt_descr-0x4
-> >      a2f:       e9 cc fe ff ff          jmpq   900 <start_secondary+0x30>
-> >      a34:       e8 00 00 00 00          callq  a39 <start_secondary+0x169>
-> >                         a35: R_X86_64_PLT32     __stack_chk_fail-0x4
+> > Thanks for the pointers. In my use-case power is cut from the CPU at this
+> > point so it didn't matter that the loop was infinite.
 > 
-> 	Jakub
+> Here again you can have a look at Marco Felsch's patch. He used the
+> function readb_poll_timeout_atomic(). So the loop can potentially
+> replaced by a single line.
 > 
+> Kind regards,
+> Stefan
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
