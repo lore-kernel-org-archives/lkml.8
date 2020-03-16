@@ -2,125 +2,106 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1EBC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B332DC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4747F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D2920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kMuQxiqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgCPHXt (ORCPT
+        id S1729935AbgCPHYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:23:49 -0400
-Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:63610 "HELO
-        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1728120AbgCPHXt (ORCPT
+        Mon, 16 Mar 2020 03:24:34 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:51314 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729811AbgCPHYe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:23:49 -0400
-Received: from 137.localdomain (unknown [218.107.205.216])
-        by app1 (Coremail) with SMTP id xjNnewDn7Q1cHm9ew20FAA--.217S5;
-        Mon, 16 Mar 2020 14:36:25 +0800 (CST)
-From:   Pengcheng Yang <yangpc@wangsu.com>
-To:     edumazet@google.com, ncardwell@google.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pengcheng Yang <yangpc@wangsu.com>
-Subject: [PATCH RESEND net-next v2 3/5] tcp: stretch ACK fixes in Veno prep
-Date:   Mon, 16 Mar 2020 14:35:09 +0800
-Message-Id: <1584340511-9870-4-git-send-email-yangpc@wangsu.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
-References: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
-X-CM-TRANSID: xjNnewDn7Q1cHm9ew20FAA--.217S5
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw1kAF13urWDGFyxKryrtFb_yoW8Ww47pa
-        43Wrs3KF1aqFs7KrZxAFWUJw45G3Z7KayUJ3y7CF1fXw4avr1a9FyDXr4YvrWUGrWxt3Wa
-        vr4Uur1fKFn7ArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUgI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
-        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
-        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
-        F7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F4
-        0EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Gr4lOx8S6xCaFVCjc4AY6r1j6r4U
-        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF1l42
-        xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8GwCFx2IqxVCFs4IE7xkEbVWUJVW8
-        JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
-        AFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
-        A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU
-        0xZFpf9x0Jj2-eOUUUUU=
-X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
+        Mon, 16 Mar 2020 03:24:34 -0400
+Received: by mail-pj1-f68.google.com with SMTP id hg10so3866443pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 00:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cLUgCPvVOCvF8ic/BSG/ZxXsTtJMwTgOpQVJ7e+heWY=;
+        b=kMuQxiqU57kWg/ztLMlBenWljwjmhZQDTdo8lF6ZnktWO9hAQoLEW0vmC+GR6Fr2XF
+         SUNvaEk/hiVoLdT6jvusYNa1z8OKm2OOMAvzHfu+VPGtzzhBQkHfmB1cAKM78SPAo0iC
+         KrPQCq+o6VcV5YiWZbz0/HW3XGpXKg6KhZU1I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cLUgCPvVOCvF8ic/BSG/ZxXsTtJMwTgOpQVJ7e+heWY=;
+        b=htt/zREW1weJTjH+H+FT34laX1VrTYT8R5laClIrJLGZwIGmwyf2qQwljXQZeL7KwN
+         A3RRi5coeE7pWJsN/kJlz9MhzhiZksn00x6rvnIUPb4GbsxG/ivGaEcUB6OwIj0vNxuu
+         sawT7kyh3VLV/lRfl7V9q3LNd9l0Ig7U2sjuqVFAz3a5htQGbcqhyyv96we9Ccq7o2Z0
+         sO6UrV5+dgAJGtQYQnw6FalZ4ifPdJYio0R6VUHlfpdgJ9t97Q2xD1DFd6fzWS8Ejv5V
+         pmWCOujDEQ48JF+e42qpdjBQZaVtKVGmD8rjtohM6GxdvMjwxwz4mAhIbjTi+PqoQf+Z
+         vv7w==
+X-Gm-Message-State: ANhLgQ3UbiBJ7iSyyXzzgUovBxLTy2r5f4iTr7U6kVziGSgFrjvxRhGz
+        yZ12FE+lBcBwvb1NXSw4IVJ6YpOpCdM=
+X-Google-Smtp-Source: ADFU+vucMcjPp3LwOXrUtWLkuAbmJ2uc05Q9aXkxqUCrIKWthUBIo5SspQ+RNFdUy6ZVmfbPnj/q0w==
+X-Received: by 2002:a17:902:8215:: with SMTP id x21mr26540359pln.59.1584343471978;
+        Mon, 16 Mar 2020 00:24:31 -0700 (PDT)
+Received: from chentsungp920.tpe.corp.google.com ([2401:fa00:1:10:6780:e5ae:c662:3d59])
+        by smtp.gmail.com with ESMTPSA id kb18sm1204543pjb.14.2020.03.16.00.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 00:24:31 -0700 (PDT)
+From:   Chen-Tsung Hsieh <chentsung@chromium.org>
+To:     jikos@kernel.org
+Cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, drinkcat@chromium.org
+Subject: [PATCH] HID: google: add moonball USB id
+Date:   Mon, 16 Mar 2020 15:24:19 +0800
+Message-Id: <20200316072419.65274-1-chentsung@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No code logic has been changed in this patch.
+Add 1 additional hammer-like device.
 
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+Signed-off-by: Chen-Tsung Hsieh <chentsung@chromium.org>
 ---
- net/ipv4/tcp_veno.c | 44 +++++++++++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 21 deletions(-)
+ drivers/hid/hid-google-hammer.c | 2 ++
+ drivers/hid/hid-ids.h           | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/net/ipv4/tcp_veno.c b/net/ipv4/tcp_veno.c
-index 3b36bb1..857491c 100644
---- a/net/ipv4/tcp_veno.c
-+++ b/net/ipv4/tcp_veno.c
-@@ -153,31 +153,33 @@ static void tcp_veno_cong_avoid(struct sock *sk, u32 ack, u32 acked)
- 		veno->diff = (tp->snd_cwnd << V_PARAM_SHIFT) - target_cwnd;
+diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
+index 2aa4ed157aec..85a054f1ce38 100644
+--- a/drivers/hid/hid-google-hammer.c
++++ b/drivers/hid/hid-google-hammer.c
+@@ -532,6 +532,8 @@ static const struct hid_device_id hammer_devices[] = {
+ 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MAGNEMITE) },
+ 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+ 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MASTERBALL) },
++	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
++		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MOONBALL) },
+ 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+ 		     USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_STAFF) },
+ 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 3a400ce603c4..33fddab41722 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -478,6 +478,7 @@
+ #define USB_DEVICE_ID_GOOGLE_WHISKERS	0x5030
+ #define USB_DEVICE_ID_GOOGLE_MASTERBALL	0x503c
+ #define USB_DEVICE_ID_GOOGLE_MAGNEMITE	0x503d
++#define USB_DEVICE_ID_GOOGLE_MOONBALL	0x5044
  
- 		if (tcp_in_slow_start(tp)) {
--			/* Slow start.  */
-+			/* Slow start. */
- 			tcp_slow_start(tp, acked);
-+			goto done;
-+		}
-+
-+		/* Congestion avoidance. */
-+		if (veno->diff < beta) {
-+			/* In the "non-congestive state", increase cwnd
-+			 * every rtt.
-+			 */
-+			tcp_cong_avoid_ai(tp, tp->snd_cwnd, 1);
- 		} else {
--			/* Congestion avoidance. */
--			if (veno->diff < beta) {
--				/* In the "non-congestive state", increase cwnd
--				 *  every rtt.
--				 */
--				tcp_cong_avoid_ai(tp, tp->snd_cwnd, 1);
--			} else {
--				/* In the "congestive state", increase cwnd
--				 * every other rtt.
--				 */
--				if (tp->snd_cwnd_cnt >= tp->snd_cwnd) {
--					if (veno->inc &&
--					    tp->snd_cwnd < tp->snd_cwnd_clamp) {
--						tp->snd_cwnd++;
--						veno->inc = 0;
--					} else
--						veno->inc = 1;
--					tp->snd_cwnd_cnt = 0;
-+			/* In the "congestive state", increase cwnd
-+			 * every other rtt.
-+			 */
-+			if (tp->snd_cwnd_cnt >= tp->snd_cwnd) {
-+				if (veno->inc &&
-+				    tp->snd_cwnd < tp->snd_cwnd_clamp) {
-+					tp->snd_cwnd++;
-+					veno->inc = 0;
- 				} else
--					tp->snd_cwnd_cnt++;
--			}
-+					veno->inc = 1;
-+				tp->snd_cwnd_cnt = 0;
-+			} else
-+				tp->snd_cwnd_cnt++;
- 		}
-+done:
- 		if (tp->snd_cwnd < 2)
- 			tp->snd_cwnd = 2;
- 		else if (tp->snd_cwnd > tp->snd_cwnd_clamp)
+ #define USB_VENDOR_ID_GOTOP		0x08f2
+ #define USB_DEVICE_ID_SUPER_Q2		0x007f
 -- 
-1.8.3.1
+2.25.1.481.gfbce0eb801-goog
 
