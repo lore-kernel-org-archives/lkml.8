@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AB4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE4EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81366205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C77205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rQLOqbAG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdCgpzmc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733011AbgCPXjA (ORCPT
+        id S1732949AbgCPXiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 19:39:00 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50813 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732982AbgCPXi5 (ORCPT
+        Mon, 16 Mar 2020 19:38:51 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46527 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732873AbgCPXiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 19:38:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z13so3508909wml.0;
-        Mon, 16 Mar 2020 16:38:55 -0700 (PDT)
+        Mon, 16 Mar 2020 19:38:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w16so6996580wrv.13;
+        Mon, 16 Mar 2020 16:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nOl1AKXgStV93i06X/WL0ilGV0db2i3MJV2zuTRnHiE=;
-        b=rQLOqbAGyKRVc3FWPBnLv/9m0l8mWZUgw2umajD/W+V79krhzZBswsGmABz/TIeZFi
-         taFfKcN3pov/T3iBXclZ08BDJZxNdNB1GP2GWS/OLjSMGgGv0JPWunqrv3OjYwmeAK2z
-         I3mZGU1QBtQ/dLdW247fUjf9BxHkg+ksCqZAU0g77Yoxfk7aBR4Ld6UUe7eu0YYz91Oi
-         ytp1L40qadUprCb2+iYbKoSM6P1wfLSvXiS5FL2LVI5cuvL3NtmIeiiuPADeL3TjTVAt
-         uKSZfRGbKziV2rpS7XolejYRz89TOEJO+udQJo81kRT1uw5bNLJqX1xoZ5xyuc4F/6Oa
-         6Okg==
+        bh=yXTTrsWcQVqx3rmui/RNjZ9XiC0WGWd6yJp/fFg7kAQ=;
+        b=XdCgpzmc7GRx1jmSmH993jW/2VnF4RED7od9tiUjv7ulQ9BKGcNAjla8KDIVG9wEUK
+         YBDR6jszETj2YOyCk3IsEHnMWVIdyNE+/FBoL2uWbPaT+WoUtg17lCdBtl8JeZFnh88f
+         las07iGsqb7SuRo3kJ3+enTStF7sR7AR5jBq4Dt3nUc5MdZgU7QpS2tYrHT1f5P9zOdg
+         f8asAng+zWkSLT/IONO1G09vA7hOlXjAs8tmpBVGg4ocfMpLad/YdFKZZ0S4kk5rNDUn
+         2ObGT/YCFAFsfjZFiRnJSVrM/z3aoercr06QYHjV0ryUjSwNdu8E1DZSCjTxHgVHLKOn
+         0thg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nOl1AKXgStV93i06X/WL0ilGV0db2i3MJV2zuTRnHiE=;
-        b=tIUvA1O2RHzQEnQwHbJg2+VxghlJaZUFr9MD97iIzeHF4otvjA1oet9UaxNjU2S2A4
-         i7VTrgd1nUtwKj9VyGf1qllcXmAmdg5cAyCFicgJJDd7gl3GGe1Ru2Sd1fhnUEB0TYi7
-         t/v8SMtSt6MdKVORFATFNrXzPIjBrymnT6PPSk3s4MPufyxuo6RPGJes/OVwdVwrHJXq
-         XHJvHPEsoaTSwAO4L4PVF7iPC5STMzFvzFu3E1z1UuylWXSYSIZlYvrVpUeyTaHZ8waF
-         mgr7vJRsA9tUtD6anWoSgGGQm46euoXizExyPuCmB8bzG8dgSm6aZZSMGsD5Tnyxpdh5
-         9iPQ==
-X-Gm-Message-State: ANhLgQ3aTTkAbUfceasyPTBoex8oC+A++eRRyq23qyLiTES48HpCTg9m
-        wWq2qj/DgePfX/SJ0WIFyCiMstEwlw==
-X-Google-Smtp-Source: ADFU+vu8a+WaamHkyH+MHqM2Mo5VLLtsW60ZgnT1nDGilxwc78iRnjCmLxoUtEl672tAjFvag07AjQ==
-X-Received: by 2002:a1c:2c8a:: with SMTP id s132mr1460869wms.22.1584401934867;
-        Mon, 16 Mar 2020 16:38:54 -0700 (PDT)
+        bh=yXTTrsWcQVqx3rmui/RNjZ9XiC0WGWd6yJp/fFg7kAQ=;
+        b=D67MavO4OzTBLlekX8q43MUaopZt22Vorm9BOgZQcpCeoHIRhNZQynw3ts+GpOONV7
+         EIu268JApzpO++XGT1+nT6Dbk6S24lVmSgJqzxtLYM04Hxu2DyaopV9Cb9fjnt5dh+TR
+         abZT8oyBMwv22GWDsYSUuIHljmtIrNTAL7sRXioUFnhMNXMTdQnWrUeM0wBr/NqRmeFo
+         4cR6bcvxNwvvRD3N0OBQYarMAq8JsfNNQ6aMl5E1uYtptONjLc9+xql6s2GzD+5bUrOZ
+         77pM6fE/F0963nA52cvOaEPoAxvbWsWAUHE3qRlC/tevPi75zDf2Cik3x8/knJuXFO0t
+         27uQ==
+X-Gm-Message-State: ANhLgQ1O31SU++9vzjsB+h8Go3zFVhw4t54LJsm7ja9tv9nmOIOoQKV2
+        uMjiwHqJXgGsnuQMb2Sf+A==
+X-Google-Smtp-Source: ADFU+vtJQwqUb3Sg3gxPN/EEhyFnx3mQTKRU/lB5Q92YGroSWkdI3nvlPMsWSmpJ7WE0DTJwbr4sVQ==
+X-Received: by 2002:a5d:6ac3:: with SMTP id u3mr1913581wrw.358.1584401929075;
+        Mon, 16 Mar 2020 16:38:49 -0700 (PDT)
 Received: from localhost.localdomain (host-92-23-82-35.as13285.net. [92.23.82.35])
-        by smtp.googlemail.com with ESMTPSA id i9sm1510495wmd.37.2020.03.16.16.38.54
+        by smtp.googlemail.com with ESMTPSA id i9sm1510495wmd.37.2020.03.16.16.38.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 16:38:54 -0700 (PDT)
+        Mon, 16 Mar 2020 16:38:48 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 6/6] fs: add missing annotation for pin_kill()
-Date:   Mon, 16 Mar 2020 23:38:04 +0000
-Message-Id: <20200316233804.96657-7-jbi.octave@gmail.com>
+Subject: [PATCH 2/6] namei: Add missing annotation for unlazy_child()
+Date:   Mon, 16 Mar 2020 23:38:00 +0000
+Message-Id: <20200316233804.96657-3-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200316233804.96657-1-jbi.octave@gmail.com>
 References: <0/6>
@@ -75,30 +75,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at pin_kill()
+Sparse reports a warning at unlazy_child()
 
-warning: context imbalance in pin_kill() - unexpected unlock
+warning: context imbalance in unlazy_child() - unexpected unlock
 
-The root cause is the missing annotation at pin_kill()
+The root cause is the missing annotation at unlazy_walk()
 
-Add the missing __releases(RCU)
+Add the missing __releases(RCU) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- fs/fs_pin.c | 1 +
+ fs/namei.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/fs_pin.c b/fs/fs_pin.c
-index 47ef3c71ce90..ee57700740df 100644
---- a/fs/fs_pin.c
-+++ b/fs/fs_pin.c
-@@ -28,6 +28,7 @@ void pin_insert(struct fs_pin *pin, struct vfsmount *m)
- }
- 
- void pin_kill(struct fs_pin *p)
+diff --git a/fs/namei.c b/fs/namei.c
+index d80e1ac8c211..9af3e8e438a1 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -717,6 +717,7 @@ static int unlazy_walk(struct nameidata *nd)
+  * terminate_walk().
+  */
+ static int unlazy_child(struct nameidata *nd, struct dentry *dentry, unsigned seq)
 +	__releases(RCU)
  {
- 	wait_queue_entry_t wait;
+ 	BUG_ON(!(nd->flags & LOOKUP_RCU));
  
 -- 
 2.24.1
