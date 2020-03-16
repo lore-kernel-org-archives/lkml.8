@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F05C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AB4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427BD20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81366205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:39:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqCtwXg4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rQLOqbAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732980AbgCPXiy (ORCPT
+        id S1733011AbgCPXjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 19:38:54 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39562 "EHLO
+        Mon, 16 Mar 2020 19:39:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50813 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732965AbgCPXix (ORCPT
+        with ESMTP id S1732982AbgCPXi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 19:38:53 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f7so19990543wml.4;
-        Mon, 16 Mar 2020 16:38:52 -0700 (PDT)
+        Mon, 16 Mar 2020 19:38:57 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z13so3508909wml.0;
+        Mon, 16 Mar 2020 16:38:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JcxuHAW37OjzFVtEwmZsPENLIkG+JBjq5NGDlYypiIs=;
-        b=lqCtwXg4k9EIMoRFMa4jK+CVdo7cegfkYQw7gQR2bwcAQmd0cwdiIBt9BSk6BREbt5
-         ztOJ1NHIFEbjDyA70yPF90EvV5w+zW/k9Th0v9tTKz2FpEQSfhFhowC508V0NXH/DVVN
-         ELoZGii4qePdtcZap0eopPL7Ec6Rgc85mNwHBvyR4ax0Jr1DXaK8aWrsnTxOin+cEoGB
-         9r5gGg3cRuR9yJ/OdSFKKRYJotKHCd5LsML4ObieSQO9Ol0+pq0NH+NB+LohOp8H8ipv
-         5XOdJWc6FxOLqYVWHaqCndYHCd0GgEDuZPrtHg5uWvrkIAT8clwMN+Qk9IFXRTkmoWhT
-         9npQ==
+        bh=nOl1AKXgStV93i06X/WL0ilGV0db2i3MJV2zuTRnHiE=;
+        b=rQLOqbAGyKRVc3FWPBnLv/9m0l8mWZUgw2umajD/W+V79krhzZBswsGmABz/TIeZFi
+         taFfKcN3pov/T3iBXclZ08BDJZxNdNB1GP2GWS/OLjSMGgGv0JPWunqrv3OjYwmeAK2z
+         I3mZGU1QBtQ/dLdW247fUjf9BxHkg+ksCqZAU0g77Yoxfk7aBR4Ld6UUe7eu0YYz91Oi
+         ytp1L40qadUprCb2+iYbKoSM6P1wfLSvXiS5FL2LVI5cuvL3NtmIeiiuPADeL3TjTVAt
+         uKSZfRGbKziV2rpS7XolejYRz89TOEJO+udQJo81kRT1uw5bNLJqX1xoZ5xyuc4F/6Oa
+         6Okg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JcxuHAW37OjzFVtEwmZsPENLIkG+JBjq5NGDlYypiIs=;
-        b=WPbbGqts8fsOSLk5jL/DjvsC4DQDyFetFEkgum9CoYranyq3bMOkRnHyBubtRae7Ct
-         f8BSYWtJFmR7TxuilLFzC8KRWBq8sRCBSuOxVDjP8GzsrFjhZKjAUs8tsbyD2eCVTrDj
-         1GxE7x1feGy1Zitq0QK7bomDIZVmgMQ+3gmBmDPtRItseYnsFyZo/BVCTlUx0KofwNKb
-         JxXkIRpszRfLvNR/X6rmg8o75BTZKs6K3VuVTuEQo7JQZzJn8KKZenAjN5FtjUFTLIlk
-         +DeYAXO9TPm9n9ahFyju9H4TlsI7z1cMN0urjv6bMEzdwGEjbSQ70rBhITXwlHLfjr74
-         7ciw==
-X-Gm-Message-State: ANhLgQ3KMBN9xsw8sWH6JL9DNF6wJ0tqZTksb03PLtYgEX+LeOIpHgHB
-        Lt9eQHGH6Sr+gj83Bcwx5c0QfwzsCw==
-X-Google-Smtp-Source: ADFU+vvis1ODa/CKkRIv31JR7FGkm14YQKSbtQ37CZWE4yMC/00Q54t9tG7NHErPFCj3IpHvIsK73w==
-X-Received: by 2002:a7b:c194:: with SMTP id y20mr1539453wmi.129.1584401931297;
-        Mon, 16 Mar 2020 16:38:51 -0700 (PDT)
+        bh=nOl1AKXgStV93i06X/WL0ilGV0db2i3MJV2zuTRnHiE=;
+        b=tIUvA1O2RHzQEnQwHbJg2+VxghlJaZUFr9MD97iIzeHF4otvjA1oet9UaxNjU2S2A4
+         i7VTrgd1nUtwKj9VyGf1qllcXmAmdg5cAyCFicgJJDd7gl3GGe1Ru2Sd1fhnUEB0TYi7
+         t/v8SMtSt6MdKVORFATFNrXzPIjBrymnT6PPSk3s4MPufyxuo6RPGJes/OVwdVwrHJXq
+         XHJvHPEsoaTSwAO4L4PVF7iPC5STMzFvzFu3E1z1UuylWXSYSIZlYvrVpUeyTaHZ8waF
+         mgr7vJRsA9tUtD6anWoSgGGQm46euoXizExyPuCmB8bzG8dgSm6aZZSMGsD5Tnyxpdh5
+         9iPQ==
+X-Gm-Message-State: ANhLgQ3aTTkAbUfceasyPTBoex8oC+A++eRRyq23qyLiTES48HpCTg9m
+        wWq2qj/DgePfX/SJ0WIFyCiMstEwlw==
+X-Google-Smtp-Source: ADFU+vu8a+WaamHkyH+MHqM2Mo5VLLtsW60ZgnT1nDGilxwc78iRnjCmLxoUtEl672tAjFvag07AjQ==
+X-Received: by 2002:a1c:2c8a:: with SMTP id s132mr1460869wms.22.1584401934867;
+        Mon, 16 Mar 2020 16:38:54 -0700 (PDT)
 Received: from localhost.localdomain (host-92-23-82-35.as13285.net. [92.23.82.35])
-        by smtp.googlemail.com with ESMTPSA id i9sm1510495wmd.37.2020.03.16.16.38.50
+        by smtp.googlemail.com with ESMTPSA id i9sm1510495wmd.37.2020.03.16.16.38.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 16:38:50 -0700 (PDT)
+        Mon, 16 Mar 2020 16:38:54 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4/6] fs/fs-writeback.c: Add missing annotation for wbc_attach_and_unlock_inode()
-Date:   Mon, 16 Mar 2020 23:38:02 +0000
-Message-Id: <20200316233804.96657-5-jbi.octave@gmail.com>
+Subject: [PATCH 6/6] fs: add missing annotation for pin_kill()
+Date:   Mon, 16 Mar 2020 23:38:04 +0000
+Message-Id: <20200316233804.96657-7-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200316233804.96657-1-jbi.octave@gmail.com>
 References: <0/6>
@@ -75,30 +75,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at wbc_attach_and_unlock_inode()
+Sparse reports a warning at pin_kill()
 
-warning: context imbalance in wbc_attach_and_unlock_inode() - unexpected unlock
+warning: context imbalance in pin_kill() - unexpected unlock
 
-The root cause is the missing annotation at wbc_attach_and_unlock_inode()
-Add the missing __releases(&inode->i_lock) annotation
+The root cause is the missing annotation at pin_kill()
+
+Add the missing __releases(RCU)
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- fs/fs-writeback.c | 1 +
+ fs/fs_pin.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 76ac9c7d32ec..008e572faf32 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -556,6 +556,7 @@ static void inode_switch_wbs(struct inode *inode, int new_wb_id)
-  */
- void wbc_attach_and_unlock_inode(struct writeback_control *wbc,
- 				 struct inode *inode)
-+	__releases(&inode->i_lock)
+diff --git a/fs/fs_pin.c b/fs/fs_pin.c
+index 47ef3c71ce90..ee57700740df 100644
+--- a/fs/fs_pin.c
++++ b/fs/fs_pin.c
+@@ -28,6 +28,7 @@ void pin_insert(struct fs_pin *pin, struct vfsmount *m)
+ }
+ 
+ void pin_kill(struct fs_pin *p)
++	__releases(RCU)
  {
- 	if (!inode_cgwb_enabled(inode)) {
- 		spin_unlock(&inode->i_lock);
+ 	wait_queue_entry_t wait;
+ 
 -- 
 2.24.1
 
