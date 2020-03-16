@@ -2,149 +2,112 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52296C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF56C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CED20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A402320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:18:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7QUWfZ2"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ApyqAQUX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="03BaVv6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgCPIPc (ORCPT
+        id S1730038AbgCPISl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:15:32 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41809 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729975AbgCPIPb (ORCPT
+        Mon, 16 Mar 2020 04:18:41 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:38847 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729987AbgCPISl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:15:31 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s11so13290643qks.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=F/i4UURiGEiDmJWiySfSNZr+o1KHFsCHgdng66n03Q0=;
-        b=B7QUWfZ2p0iHwX6wNgX6U4yztQAMGDAiU1KFSHsaBYgSKDV+Kdl+8H155Lfmbg+9o/
-         TxGbcBBwEqOPQ/B/w6jAG6N0rUQpjSNA+s/F/Tud+SRpVnYFph4gVet/kfh28qnd9zQt
-         +zSo6COsT5fR35kjG2HJUXBsYVrX9cRZUknKCS7W5sr1GYRTBMEC1QpOzQ7viSl+n2pN
-         cGaEg2tPimuaF7sbPikYKrNGerAbRU77SHD6nW+mqtjD7aZXVr2oYClwzswetpGkUdY6
-         ldrXWz4oCSqcw2vqUL3VtrVAEe7+21fSUUt9pt7RqkY8U0lRZc6KjarLjC7fRfr6wPSh
-         YpKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=F/i4UURiGEiDmJWiySfSNZr+o1KHFsCHgdng66n03Q0=;
-        b=ptw+E/+r3i5pzGi6HvTp3aQqPPbWPXqbJyhzxjBf0bOs/EjNF3a3Dl2rUbtpwJFlFJ
-         eNSZsS6aE00aKhm0m/nEq5rN1LKMzT3IxLsnsuTe26Pl2GqIg2kdIOc3WF+FV2PD3/dA
-         kjAl9nnP9LkeTCsOqx+NgmmsvBnydar2IzwEz9OUczCEw6iSjXOiQzuZdO4TpNf8CM76
-         wDgBuAHu02gnTxaL7FMlxX4bNYxCmEUS4st9ZyvSat+zEC1/m68ytG4ttaAwSFz7FPv8
-         C6/3y/IB5WwntbejrEspm9XOGWf4EBagavzArzMkDihRyXIcgtVI+QGk7LcAUSRal/Sg
-         YACg==
-X-Gm-Message-State: ANhLgQ2YCF7mIuiewOSZtIN4Nhm60evSemWV+7GzUJdQYZ9j13EhIIjT
-        XIIIKl6hyyDdPPLoretcmzNIFKxxfYPtO7VKXMg=
-X-Google-Smtp-Source: ADFU+vtuhvzirDhMCsmE4l39TWh2tgFAp6304DDB1OcJOZvmemJgfuS7i39szr9xiMsVL2Kk2XCoJDL/oQcWR3C4GH0=
-X-Received: by 2002:a37:546:: with SMTP id 67mr24213408qkf.272.1584346530319;
- Mon, 16 Mar 2020 01:15:30 -0700 (PDT)
+        Mon, 16 Mar 2020 04:18:41 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id BC93C70E;
+        Mon, 16 Mar 2020 04:18:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 16 Mar 2020 04:18:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=jwBbpgCR1030QrOT3kjlmogmZ+0
+        V/6fGklSYVB8Lins=; b=ApyqAQUXLnPnKPJD936ZR/38JWLO378pq4aKpRcN1fx
+        bPjW6PTgUJKhM2M5qn4KA4cuW0mjf2QmOWkLG391Wn6UWT+YR9X3tXxGB8ndJE0g
+        JhopSaB6FqpYtDCd86/PS6Vz6/aJWGTMH1K44K/EHlkZhQHWWd0mvUIOQHWaf0FQ
+        dM2uHroim+nGwRueGW5Iq8A8WvmU+j9VE69+0zn9bPl2V1yfGpbCNDUVq601/DS+
+        AvmFb0oY+58MuLWQRbLrBD2g3Dfknc4Tfa3Z8jeXS7PZtsJ0LdNiRjjNyfckzxA6
+        KnAPoLqzoaVd29mbSn9OD6SOgkLC4W2FRgnqCrROUUQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=jwBbpg
+        CR1030QrOT3kjlmogmZ+0V/6fGklSYVB8Lins=; b=03BaVv6u2b1h6xObItxkl1
+        fSZ7CR+0M4jvwJK+kDF/yxAiu7+bX+xok9r7qskL1zDf3PwAFZjeWzksIQ7KXthX
+        bDR5oT1mHfkrT/701A7YFkbce3yDqr8PbBu7VnSnld1SgNSz79d/ekG/+4gahkt7
+        MP40FtuadxGxRCsRgtbcUvrH8F1rwtiWl9GC4LV0TPSiapDJWfJVa6g7otONTeUx
+        wivCO2jkzb8QYfGrxlkDIY6hBOCmj7mtDBFR5tf7QTsy66tv6BsuVF7/gfI3vAie
+        5atQNM23Z2i+5pza/OSu3oS472mVrvHsnjkrCgzBvUZxF8tJRLz+DfYJfwYNvEvA
+        ==
+X-ME-Sender: <xms:XjZvXq93X-hiB1iiwBfzg-T69j7vMnJE7GmuP41gj-jmyO9agK99DQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefvddgfeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
+    vghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:XjZvXjv19yQzwElwXeFeAx2tE8SxCWRJ-ilf8QtQwIsZwiXJ83ouTQ>
+    <xmx:XjZvXpt_J3ciZBKC9Lsq2zBtQLaoyNshq10G1bRK_G_2JYqfGWALcw>
+    <xmx:XjZvXpbmpmkW3dfg4Mwo__g4pywPIMA--9EPvLkKxrCjxgrIgFxwuQ>
+    <xmx:XzZvXu1jg-EfhTK6kImPDIb5cFlR28mFroKL4zDL4lTNMA3y90GBoQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 956DD3061856;
+        Mon, 16 Mar 2020 04:18:38 -0400 (EDT)
+Date:   Mon, 16 Mar 2020 09:18:36 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Yue Wang <yue.wang@amlogic.com>
+Subject: Re: linux-next: manual merge of the usb-gadget tree with the usb tree
+Message-ID: <20200316081836.GA3131812@kroah.com>
+References: <20200316142309.19cb3aa8@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200311110237.5731-2-srikar@linux.vnet.ibm.com>
- <20200311115735.GM23944@dhcp22.suse.cz> <20200312052707.GA3277@linux.vnet.ibm.com>
- <C5560C71-483A-41FB-BDE9-526F1E0CFA36@linux.vnet.ibm.com> <5e5c736a-a88c-7c76-fc3d-7bc765e8dcba@suse.cz>
- <20200312131438.GB3277@linux.vnet.ibm.com> <61437352-8b54-38fa-4471-044a65c9d05a@suse.cz>
- <20200312161310.GC3277@linux.vnet.ibm.com> <e115048c-be38-c298-b8d1-d4b513e7d2fb@suse.cz>
- <CAAmzW4OFy51BhAT62tdVQD52NNMWm+UPgoGAX97omY7P+nJ+5w@mail.gmail.com>
- <20200313110440.GA25144@linux.vnet.ibm.com> <06be5908-9af6-2892-0333-e9558b2cf474@suse.cz>
-In-Reply-To: <06be5908-9af6-2892-0333-e9558b2cf474@suse.cz>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Mon, 16 Mar 2020 17:15:19 +0900
-Message-ID: <CAAmzW4ME_WLYZPCt4+82RNKstv-H=LK5MKGGJR=6ha-ALS+FSw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] powerpc/numa: Set numa_node for all possible cpus
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christopher Lameter <cl@linux.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316142309.19cb3aa8@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 3=EC=9B=94 13=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 8:38, V=
-lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 3/13/20 12:04 PM, Srikar Dronamraju wrote:
-> >> I lost all the memory about it. :)
-> >> Anyway, how about this?
-> >>
-> >> 1. make node_present_pages() safer
-> >> static inline node_present_pages(nid)
-> >> {
-> >> if (!node_online(nid)) return 0;
-> >> return (NODE_DATA(nid)->node_present_pages);
-> >> }
-> >>
-> >
-> > Yes this would help.
->
-> Looks good, yeah.
->
-> >> 2. make node_to_mem_node() safer for all cases
-> >> In ppc arch's mem_topology_setup(void)
-> >> for_each_present_cpu(cpu) {
-> >>  numa_setup_cpu(cpu);
-> >>  mem_node =3D node_to_mem_node(numa_mem_id());
-> >>  if (!node_present_pages(mem_node)) {
-> >>   _node_numa_mem_[numa_mem_id()] =3D first_online_node;
-> >>  }
-> >> }
-> >>
-> >
-> > But here as discussed above, we miss the case of possible but not prese=
-nt nodes.
-> > For such nodes, the above change may not update, resulting in they stil=
-l
-> > having 0. And node 0 can be only possible but not present.
+On Mon, Mar 16, 2020 at 02:23:09PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the usb-gadget tree got a conflict in:
+> 
+>   drivers/usb/dwc3/dwc3-meson-g12a.c
+> 
+> between commit:
+> 
+>   bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the switch in the API")
+> 
+> from the usb tree and commit:
+> 
+>   1e355f21d3fb ("usb: dwc3: Add Amlogic A1 DWC3 glue")
+> 
+> from the usb-gadget tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-Oops, I don't read full thread so miss the case.
+Thanks, this matched up with my merge, I've now done this in my tree.
 
-> So is there other way to do the setup so that node_to_mem_node() returns =
-an
-> online+present node when called for any possible node?
-
-Two changes seems to be sufficient.
-
-1. initialize all node's _node_numa_mem_[] =3D first_online_node in
-mem_topology_setup()
-2. replace the node with online+present node for _node_to_mem_node_[]
-in set_cpu_numa_mem().
-
- static inline void set_cpu_numa_mem(int cpu, int node)
- {
-        per_cpu(_numa_mem_, cpu) =3D node;
-+       if (!node_present_pages(node))
-+               node =3D first_online_node;
-        _node_numa_mem_[cpu_to_node(cpu)] =3D node;
- }
- #endif
-
-With these two change, we can safely call node_to_mem_node() anywhere.
-
-Thanks.
+greg k-h
