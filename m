@@ -2,128 +2,107 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3B6C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4D9C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C59920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:47:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CognDl13"
+	by mail.kernel.org (Postfix) with ESMTP id 3DFB120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732947AbgCPXrH (ORCPT
+        id S1732971AbgCPXrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 19:47:07 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38502 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732900AbgCPXrH (ORCPT
+        Mon, 16 Mar 2020 19:47:20 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:45999 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732900AbgCPXrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 19:47:07 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t28so17165310ott.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 16:47:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aVXf02gC+H4hnLytwgf022jEbvbc1T3drxGD+ZV/fXY=;
-        b=CognDl138DrQV5mRCWSZeKD5h8R45GijjA7lHIVKHSd3M2gwoWTuh1CcWFxzJggwT9
-         +mbFzZina4y6S4NrXLQtdNputZ25VHTvUZvB7PuH8rhkzW+olXLws4Z5JEsrXpgZfghh
-         Q5ewT2IWI6/Qc4K8qvjubZSvWQN7lfmzEv3dch7MOqipMe7tm/IgsUgUSKKPoW1pTniu
-         CaxxmKPSIIxvIj3Q/XUIfSEDQhibdE0swIgP8XyaUOWD4Exih2jFC98zL4qtxgiqWHxZ
-         ufbESvKXQ695ue4yzniVnGXSGcrOVedTcuuISqN6pfzXeBMLpy3wjLO4n5wgoeUzdTWF
-         la3g==
+        Mon, 16 Mar 2020 19:47:19 -0400
+Received: by mail-il1-f199.google.com with SMTP id h12so15341883ils.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 16:47:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aVXf02gC+H4hnLytwgf022jEbvbc1T3drxGD+ZV/fXY=;
-        b=FaUOulssSeJOqvBLSdq8Kn5+Izp582ihVS/jkqrLssz0MmYxf5FfZ9ljKsiQUVfTxX
-         Tgw0MZE9fu60GzC9BXuyb31rQqRx29dwkHtNuFZu/ThifX7T5QfUXyy/F6+MIzq8gwr8
-         I5X/mIQdYMEgvbi95VwyIH30r0BzMr1tOfSC2BGpGU7SQft4mRReKuDrw2fRenceTycH
-         QAOVgRGkUOwGvviQLmK5WcyU7rrLZhDeEW22e5e+FHNgZyAJTjEJCatYBn/XhZJZIld+
-         /dCZvczGtpZ0S1CHIRqGan714xp3jPgYSG81kGBBs/M3jPScIlMQ5icLptlnj6gtybTt
-         fgqQ==
-X-Gm-Message-State: ANhLgQ1SfcWazP+2OfQdDTuvht8yDjQuxyidL8+hT0SacZeBaBFITqBO
-        Ko+mCUGGibIbCfBfP6qwQrHL1AoCGkUX2gLk4/hO96CbHcY=
-X-Google-Smtp-Source: ADFU+vtLX9oIptyOrpGbEjvdyuNKgTeAthRn4FGLayQM9052N1kUTixf37hS0KhTcqxCa/Be6gmO09gRriEIpnqMuwI=
-X-Received: by 2002:a9d:6c99:: with SMTP id c25mr1407317otr.124.1584402425776;
- Mon, 16 Mar 2020 16:47:05 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=NlyCPiQeeXe46SWO6vOpnbLfRJ41bBQJbSHfng0kaHk=;
+        b=oiRd9nd8F7+loa+mez/5jznuBzO4jLtRSzatzVS6Lc9/wYKuaiV3Tn2I2261tWDfPj
+         buyARkRYMfrAP71cz8nY5TbDHKWU+aeSC1K9hH4LKOLT1UXooWgn1hgQhLO1cNWbW+Uu
+         s2lqLahrdmgmwVg0VVWcTRG6HDO0ZwbCeJuxIuMWl/yfyTyN3olRlmnS2nbGOd98IT9I
+         uXVunMLG/d9B/gYyL4/9OjfWTiASoil2/ouClt+vL0gr3KcmHvShiGPJbs2kq63yv+N+
+         Yes4vd0PpBYT9Qc7xuItmTrWTb7KkG04GoPi1G3NRYBtnerBN+zOgpOo6t0xhwUtn6Mw
+         0xGA==
+X-Gm-Message-State: ANhLgQ1erggx1PyJAmIiGHY8q6VPOHzj+TIUtNt1cij3ZVhtk5VoACTF
+        fsUa68Pcx3Jx+E67FaWBUTTrkpejevUKPoWMfXgc9+BM+/nQ
+X-Google-Smtp-Source: ADFU+vsryNBcEg/zB8G6qOT+eYg/7l8gp78N4VCAXM42eZb7GFS9/j+AUdUkUK+g4/94bj3W1buRUJ4+QlmxMTwAn6TFwRWpsCA0
 MIME-Version: 1.0
-References: <1584397455-28701-1-git-send-email-yang.shi@linux.alibaba.com>
-In-Reply-To: <1584397455-28701-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 16 Mar 2020 16:46:54 -0700
-Message-ID: <CALvZod72O-9Qm5bvr2MWKPRiDV3oFCmujawr28DnsSdJx+PmjQ@mail.gmail.com>
-Subject: Re: [v2 PATCH 1/2] mm: swap: make page_evictable() inline
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a92:6a10:: with SMTP id f16mr2392363ilc.113.1584402437253;
+ Mon, 16 Mar 2020 16:47:17 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 16:47:17 -0700
+In-Reply-To: <000000000000b380de059f5ff6aa@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000742e9e05a10170bc@google.com>
+Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
+From:   syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 3:24 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
->
-> When backporting commit 9c4e6b1a7027 ("mm, mlock, vmscan: no more
-> skipping pagevecs") to our 4.9 kernel, our test bench noticed around 10%
-> down with a couple of vm-scalability's test cases (lru-file-readonce,
-> lru-file-readtwice and lru-file-mmap-read).  I didn't see that much down
-> on my VM (32c-64g-2nodes).  It might be caused by the test configuration,
-> which is 32c-256g with NUMA disabled and the tests were run in root memcg,
-> so the tests actually stress only one inactive and active lru.  It
-> sounds not very usual in mordern production environment.
->
-> That commit did two major changes:
-> 1. Call page_evictable()
-> 2. Use smp_mb to force the PG_lru set visible
->
-> It looks they contribute the most overhead.  The page_evictable() is a
-> function which does function prologue and epilogue, and that was used by
-> page reclaim path only.  However, lru add is a very hot path, so it
-> sounds better to make it inline.  However, it calls page_mapping() which
-> is not inlined either, but the disassemble shows it doesn't do push and
-> pop operations and it sounds not very straightforward to inline it.
->
-> Other than this, it sounds smp_mb() is not necessary for x86 since
-> SetPageLRU is atomic which enforces memory barrier already, replace it
-> with smp_mb__after_atomic() in the following patch.
->
-> With the two fixes applied, the tests can get back around 5% on that
-> test bench and get back normal on my VM.  Since the test bench
-> configuration is not that usual and I also saw around 6% up on the
-> latest upstream, so it sounds good enough IMHO.
->
-> The below is test data (lru-file-readtwice throughput) against the v5.6-rc4:
->         mainline        w/ inline fix
->           150MB            154MB
->
-> With this patch the throughput gets 2.67% up.  The data with using
-> smp_mb__after_atomic() is showed in the following patch.
->
-> Fixes: 9c4e6b1a7027 ("mm, mlock, vmscan: no more skipping pagevecs")
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+syzbot has found a reproducer for the following crash on:
 
+HEAD commit:    74522e7b net: sched: set the hw_stats_type in pedit loop
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14c85173e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b5acf5ac38a50651
+dashboard link: https://syzkaller.appspot.com/bug?extid=46f513c3033d592409d2
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17bfff65e00000
 
-So, I tested on a real machine with limiting the 'dd' on a single node
-and reading 100 GiB sparse file (less than a single node). I just ran
-a single instance to not cause the lru lock contention. The cmd I used
-is "dd if=file-100GiB of=/dev/null bs=4k". I ran the cmd 10 times with
-drop_caches in between and measured the time it took.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com
 
-Without patch: 56.64143 +- 0.672 sec
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object type: work_struct hint: tcindex_destroy_rexts_work+0x0/0x20 net/sched/cls_tcindex.c:143
+WARNING: CPU: 1 PID: 7 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 7 Comm: kworker/u4:0 Not tainted 5.6.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: tc_filter_workqueue tcindex_destroy_work
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
+Code: dd c0 fa 51 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd c0 fa 51 88 48 c7 c7 20 f0 51 88 e8 a8 bd b1 fd <0f> 0b 83 05 8b cf d3 06 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+RSP: 0018:ffffc90000cdfc40 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815bfe61 RDI: fffff5200019bf7a
+RBP: 0000000000000001 R08: ffff8880a95de1c0 R09: ffffed1015ce45c9
+R10: ffffed1015ce45c8 R11: ffff8880ae722e43 R12: ffffffff8977aba0
+R13: ffffffff814a9360 R14: ffff88807e278f98 R15: ffff88809835c6c8
+ __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
+ debug_check_no_obj_freed+0x2e1/0x445 lib/debugobjects.c:998
+ kfree+0xf6/0x2b0 mm/slab.c:3756
+ tcindex_destroy_work+0x2e/0x70 net/sched/cls_tcindex.c:231
+ process_one_work+0x94b/0x1690 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x357/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-With patches: 56.10 +- 0.21 sec
-
-Reviewed-and-Tested-by: Shakeel Butt <shakeelb@google.com>
