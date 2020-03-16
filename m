@@ -2,94 +2,90 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4252DC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AA2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A4E20753
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:23:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ASoFodBc"
+	by mail.kernel.org (Postfix) with ESMTP id 5A23320753
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732427AbgCPTXO (ORCPT
+        id S1732440AbgCPTZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 15:23:14 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:22151 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732366AbgCPTXN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 15:23:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584386592;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vay+P7VHYEUob1GMEwWjqDc6BMYFaq9l6VayXSGNdnw=;
-        b=ASoFodBcpv8c7k873w3Z/slQnqOH0GQ/H/LE24iqV82MwPKWRiOzaCwT/jewEv5l6dRoxg
-        w7FTdDpV7NUmanO8id5Ummtwiq8UcFzRP1xrGvf9WBtwSNHEcgEcPWnHYDs8EjZ/EBRgBx
-        Fh2RLx3/kTEQVTlJUtlmvEG8ZQPb3qQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-112-rxec9ER_NPuyfLLZKExdmA-1; Mon, 16 Mar 2020 15:23:08 -0400
-X-MC-Unique: rxec9ER_NPuyfLLZKExdmA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 678AC92784;
-        Mon, 16 Mar 2020 19:20:56 +0000 (UTC)
-Received: from treble (ovpn-127-104.rdu2.redhat.com [10.10.127.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F9B27E301;
-        Mon, 16 Mar 2020 19:20:55 +0000 (UTC)
-Date:   Mon, 16 Mar 2020 14:20:53 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [RFC][PATCH 15/16] objtool: Implement noinstr validation
-Message-ID: <20200316192053.5oactl56lo6w7vw4@treble>
-References: <20200312134107.700205216@infradead.org>
- <20200312135042.288201372@infradead.org>
- <20200315180320.cgy2ealklbjlx4g7@treble>
- <20200316132419.GF12521@hirez.programming.kicks-ass.net>
- <20200316161904.zouwkwup6vwsmxgp@treble>
- <20200316164827.GH12521@hirez.programming.kicks-ass.net>
+        Mon, 16 Mar 2020 15:25:15 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:51002 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732366AbgCPTZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 15:25:15 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jDvM7-0002Tq-EK; Mon, 16 Mar 2020 13:24:56 -0600
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+References: <20200313174701.148376-1-bigeasy@linutronix.de>
+ <20200313174701.148376-4-bigeasy@linutronix.de>
+ <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com>
+ <87sgibeqcs.fsf@nanos.tec.linutronix.de>
+ <9213d617-207e-da4e-094a-45ae587fdc98@deltatee.com>
+ <871rpsdter.fsf@nanos.tec.linutronix.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <66997357-37db-b7ca-b6e8-0f6a17e09308@deltatee.com>
+Date:   Mon, 16 Mar 2020 13:24:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <871rpsdter.fsf@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200316164827.GH12521@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, torvalds@linux-foundation.org, rostedt@goodmis.org, joel@joelfernandes.org, paulmck@kernel.org, will@kernel.org, mingo@kernel.org, peterz@infradead.org, linux-kernel@vger.kernel.org, bigeasy@linutronix.de, tglx@linutronix.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 3/9] pci/switchtec: Don't abuse completion wait queue for
+ poll
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 05:48:27PM +0100, Peter Zijlstra wrote:
-> On Mon, Mar 16, 2020 at 11:19:04AM -0500, Josh Poimboeuf wrote:
-> > On Mon, Mar 16, 2020 at 02:24:19PM +0100, Peter Zijlstra wrote:
-> > > > And "read_instr_hints" reads as "read_instruction_hints()".
-> > > > 
-> > > > Can we come up with a more readable name?  Why not just "notrace"?
-> > > > 
-> > > > The trace begin/end annotations could be
-> > > > 
-> > > >   trace_allow_begin()
-> > > >   trace_allow_end()
-> > > 
-> > > notrace already exists and we didn't want to confuse things further.
-> > 
-> > Um, why would it confuse things to call a section of notrace code
-> > ".notrace.text"???
+
+
+On 2020-03-16 12:52 p.m., Thomas Gleixner wrote:
+> Logan Gunthorpe <logang@deltatee.com> writes:
+>> On 2020-03-13 6:23 p.m., Thomas Gleixner wrote:
+>> I'm in awe at the lack of professionalism in your emails. If you
+>> bothered to edit out the ad hominems, you might have noticed that nobody
+>> has yet described how the poll interface fails here (with
+>> EPOLLEXCLUSIVE) or how replacing one wait queue for another fixes the
+>> purported problem.
 > 
-> Because it is strictly stronger than the notrace attribute is. And we
-> certainly don't want all that is now marked notrace to end up there.
+> I merily stated an opinion, but if you consider this an ad hominem
+> attack, then let me ensure you this wasn't my intention and accept my
+> apology.
 
-Ok, I must have misunderstood, I thought it was *all* notrace code going
-in there.
+A technical opinion, and a valid argument, does *not* involve telling me
+what my decision process was ("You decided this was smart to do"), or
+mocking it as "hillarious" (sic).
 
-I still hope we can come up with a better name.
+Your actual opinion was drowned out by these attacks. And, while valid,
+your opinion is very much subjective and I, personally, disagree with it.
 
--- 
-Josh
+I accept your apology and hope this doesn't happen again.
 
+Thanks,
+
+Logan
