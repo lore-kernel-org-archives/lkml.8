@@ -2,288 +2,75 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B732EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9BAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D00320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CEC32074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="a321yIZ+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZX5/mtQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732473AbgCPTr7 (ORCPT
+        id S1732507AbgCPTsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 15:47:59 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41143 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732413AbgCPTr7 (ORCPT
+        Mon, 16 Mar 2020 15:48:05 -0400
+Received: from mail-oi1-f169.google.com ([209.85.167.169]:37209 "EHLO
+        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732436AbgCPTsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 15:47:59 -0400
-Received: by mail-qt1-f193.google.com with SMTP id i26so5595132qtq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 12:47:56 -0700 (PDT)
+        Mon, 16 Mar 2020 15:48:04 -0400
+Received: by mail-oi1-f169.google.com with SMTP id w13so19198698oih.4;
+        Mon, 16 Mar 2020 12:48:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9at46gZVGRmfo97kGLXCVY992jesaxTvYo4eKqTd6FA=;
-        b=a321yIZ+clDsY41c9h0HbtzYN1tZnrw7f6NTr1cAV7wXPX2/dFXECqHypR5Kxw7WkW
-         N1jw+h0X2auJTqkuVN3WORjxEBHwNeY2sAEMeo21DOns0wWsaX9dV8/ou9MYy2HFIsco
-         mhvVMad10W+pjQEtavQSZ9Dv0otNihtbOUu/o=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gmf6IFRjpSX4UmNYPdLrHJndBgHmddXwR9Ebepw6Kis=;
+        b=ZZX5/mtQ4Ymm+bzCRblc7VnA8dzj+9dRq6R/DSXJx3sfkPfjUc9ObTL+KQvqAJKQ3Y
+         aYo27QAb5SBINMlJcgxDan8M/tq2pjjKeopBG3uE+IOv6obIZIj3cC3METJ9RhLG+pyj
+         LT0nD2hCVEYCyKrWQcFIAU8TPoQLXSYiGCDV4M7SVv/XIOwlfykOGNXmPpOETd46XFPS
+         8gdubWEJn1xZSqcqLziSeesYHZsPedyxUN+0vCJtlGfTRETFUe4XeJiNrPoVOdzoKS36
+         opnNEhjfNjTiej3nLvf2iRKznMZXZqvI2DoYhS1Od1Y1PBswRROdFAx1yc1VXpnTuVNB
+         86PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9at46gZVGRmfo97kGLXCVY992jesaxTvYo4eKqTd6FA=;
-        b=nhjFGW2mdPceN26ggytFbP2H5WiKIOjRf7u00UsFF9XghDMnDrorbqdA+WWofKQ2/9
-         nBFHQm0iUqor8KXEgmIM3rRkemgjJBkTwNAr7bGP2WN9XdBMZhuORK7O49NvIA1AdAmx
-         NIjGNUMFqqVepoBa5TThlBdA56OdhO58gUXIW50aNsUyczIgu63hKX6NLyLWq7Jv3rDj
-         34FiiTQkTXGvez/T7WkKLxnwattcEX3Z7OE6v35gX/pvu7DiGOPoVle8lUMIu2SzQEYG
-         BJBoxsvQA5MPgRHR7xOg4O+se8g4+5DJhveLF3LeDZgPiw7hI8f8jq0WNI1piOIAoNOB
-         hycw==
-X-Gm-Message-State: ANhLgQ0niZg2NId4asEno3ZPEa7hqWWnB4AKTsSVyFBrJjvEwKABlxsx
-        Mi78ckr9A5P5P3SnV3ok3k9gWw==
-X-Google-Smtp-Source: ADFU+vsmPPLATxBvZU3v2EvXbYV/FvEQlJE1xFA+xr0v7kSWjBpOblBoDbSj/C8pxzG9wL5RFUcVVw==
-X-Received: by 2002:ac8:7511:: with SMTP id u17mr1751667qtq.316.1584388075704;
-        Mon, 16 Mar 2020 12:47:55 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id r4sm431401qkm.98.2020.03.16.12.47.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 12:47:55 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 15:47:54 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com
-Subject: Re: [PATCH RFC tip/core/rcu 09/16] rcu-tasks: Add an RCU-tasks rude
- variant
-Message-ID: <20200316194754.GA172196@google.com>
-References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
- <20200312181702.8443-9-paulmck@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gmf6IFRjpSX4UmNYPdLrHJndBgHmddXwR9Ebepw6Kis=;
+        b=M6jvfQrdsI/sKrwF/twp3OCBvuZNTfmtSGgRKhYP9x5REvrOym27KJZkdlha2EAWzk
+         uZyzdmkXd1ZTx5PsM6J8BKPklbubfE1mjay0YlDn4bk013OPPzmNApfYPq8Tr0QZzHx9
+         6AU9JrILHmPdAG0H/07OUxUOIaV9o/5W+z8mw8DVCO90Mwf2/906p+iP5ULR6T/wYiVv
+         maRK58pVp44yKNwajSFw5L+TOupSmkGCQWxZtD2+GfSq7pF9LQY1iCEKQtTG5Q7zXft2
+         CrHXLUjIUQTxjCQ8tvVbyPZnl0GklMvI/TTkrffPm8Pb0Ch/QrFSaSeUlt6ncslauC3o
+         iZHQ==
+X-Gm-Message-State: ANhLgQ2YhLhcUqqPIwFzfPsrwUZPtDkzJAiy5vuXLHAtsWiKF8PNG5A4
+        ct0cby7E7C9vPmtBm71gxorYCzbIZL1tx+n8N5M=
+X-Google-Smtp-Source: ADFU+vu3e+BAypw5BF+UC15bybXKNCSkNC/k8bcnEqHVhOsvvmJ1cAODT1vr1OqWqhET4541h7kSEGUmRIjsmoiYAkk=
+X-Received: by 2002:aca:ecd0:: with SMTP id k199mr935567oih.60.1584388084207;
+ Mon, 16 Mar 2020 12:48:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312181702.8443-9-paulmck@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <000000000000efa06005a0879722@google.com>
+In-Reply-To: <000000000000efa06005a0879722@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 16 Mar 2020 12:47:53 -0700
+Message-ID: <CAM_iQpVj0Oe-oNTRLQidoKOAuKB9Yh=VNjxWba+1Sv+9idEF3A@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in tcindex_dump
+To:     syzbot <syzbot+653090db2562495901dc@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 11:16:55AM -0700, paulmck@kernel.org wrote:
-> From: "Paul E. McKenney" <paulmck@kernel.org>
-> 
-> This commit adds a "rude" variant of RCU-tasks that has as quiescent
-> states schedule(), cond_resched_tasks_rcu_qs(), userspace execution,
-> and (in theory, anyway) cond_resched().  Updates make use of IPIs and
-> force an IPI and a context switch on each online CPU.  This variant
-> is useful in some situations in tracing.
-
-Would it be possible to better clarify that the "rude version" works only
-from preempt-disabled regions? Is that also true for the "non-rude" version?
-
-Also it would be good to clarify better in cover letter, how these new
-flavors relate to the existing Tasks-RCU implementation.
-
-In the existing one, a quiescent state is a task updating its context switch
-counters such that it went to sleep at least once, implying there is no
-chance it is on an about to be destroyed trampoline.
-
-However, here we are trying to determine if a task state is no longer on an
-RQ (which I gleaned from the first patch). Sounds very similar, would the
-context switch counters not help in that determination as well? If it is Ok,
-it would be good to describe in cover letter about what is exactly is a
-quiescent state and what exactly is a reader section in the cover letter, for
-both non-rude and rude version. Thanks!
-
-thanks,
-
- - Joel
-
-
-
-> 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  include/linux/rcupdate.h |  3 ++
->  kernel/rcu/Kconfig       | 12 +++++-
->  kernel/rcu/tasks.h       | 99 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 113 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> index 5523145..2be97a8 100644
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -37,6 +37,7 @@
->  /* Exported common interfaces */
->  void call_rcu(struct rcu_head *head, rcu_callback_t func);
->  void rcu_barrier_tasks(void);
-> +void rcu_barrier_tasks_rude(void);
->  void synchronize_rcu(void);
->  
->  #ifdef CONFIG_PREEMPT_RCU
-> @@ -138,6 +139,8 @@ static inline void rcu_init_nohz(void) { }
->  #define rcu_note_voluntary_context_switch(t) rcu_tasks_qs(t)
->  void call_rcu_tasks(struct rcu_head *head, rcu_callback_t func);
->  void synchronize_rcu_tasks(void);
-> +void call_rcu_tasks_rude(struct rcu_head *head, rcu_callback_t func);
-> +void synchronize_rcu_tasks_rude(void);
->  void exit_tasks_rcu_start(void);
->  void exit_tasks_rcu_finish(void);
->  #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
-> diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-> index 38475d0..0d43ec1 100644
-> --- a/kernel/rcu/Kconfig
-> +++ b/kernel/rcu/Kconfig
-> @@ -71,7 +71,7 @@ config TREE_SRCU
->  	  This option selects the full-fledged version of SRCU.
->  
->  config TASKS_RCU_GENERIC
-> -	def_bool TASKS_RCU
-> +	def_bool TASKS_RCU || TASKS_RUDE_RCU
->  	select SRCU
->  	help
->  	  This option enables generic infrastructure code supporting
-> @@ -84,6 +84,16 @@ config TASKS_RCU
->  	  only voluntary context switch (not preemption!), idle, and
->  	  user-mode execution as quiescent states.  Not for manual selection.
->  
-> +config TASKS_RUDE_RCU
-> +	def_bool 0
-> +	default n
-> +	help
-> +	  This option enables a task-based RCU implementation that uses
-> +	  only context switch (including preemption) and user-mode
-> +	  execution as quiescent states.  It forces IPIs and context
-> +	  switches on all online CPUs, including idle ones, so use
-> +	  with caution.  Not for manual selection.
-> +
->  config RCU_STALL_COMMON
->  	def_bool TREE_RCU
->  	help
-> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> index d77921e..1d25c50 100644
-> --- a/kernel/rcu/tasks.h
-> +++ b/kernel/rcu/tasks.h
-> @@ -180,6 +180,9 @@ static void __init rcu_tasks_bootup_oddness(void)
->  	else
->  		pr_info("\tTasks RCU enabled.\n");
->  #endif /* #ifdef CONFIG_TASKS_RCU */
-> +#ifdef CONFIG_TASKS_RUDE_RCU
-> +	pr_info("\tRude variant of Tasks RCU enabled.\n");
-> +#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
->  }
->  
->  #endif /* #ifndef CONFIG_TINY_RCU */
-> @@ -410,3 +413,99 @@ static int __init rcu_spawn_tasks_kthread(void)
->  core_initcall(rcu_spawn_tasks_kthread);
->  
->  #endif /* #ifdef CONFIG_TASKS_RCU */
-> +
-> +#ifdef CONFIG_TASKS_RUDE_RCU
-> +
-> +////////////////////////////////////////////////////////////////////////
-> +//
-> +// "Rude" variant of Tasks RCU, inspired by Steve Rostedt's trick of
-> +// passing an empty function to schedule_on_each_cpu().  This approach
-> +// provides an asynchronous call_rcu_rude() API and batching of concurrent
-> +// calls to the synchronous synchronize_rcu_rude() API.  This sends IPIs
-> +// far and wide and induces otherwise unnecessary context switches on all
-> +// online CPUs, whether online or not.
-> +
-> +// Empty function to allow workqueues to force a context switch.
-> +static void rcu_tasks_be_rude(struct work_struct *work)
-> +{
-> +}
-> +
-> +// Wait for one rude RCU-tasks grace period.
-> +static void rcu_tasks_rude_wait_gp(struct rcu_tasks *rtp)
-> +{
-> +	schedule_on_each_cpu(rcu_tasks_be_rude);
-> +}
-> +EXPORT_SYMBOL_GPL(rcu_tasks_rude_wait_gp);
-> +
-> +void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func);
-> +DEFINE_RCU_TASKS(rcu_tasks_rude, rcu_tasks_rude_wait_gp, call_rcu_tasks_rude);
-> +
-> +/**
-> + * call_rcu_tasks_rude() - Queue a callback rude task-based grace period
-> + * @rhp: structure to be used for queueing the RCU updates.
-> + * @func: actual callback function to be invoked after the grace period
-> + *
-> + * The callback function will be invoked some time after a full grace
-> + * period elapses, in other words after all currently executing RCU
-> + * read-side critical sections have completed. call_rcu_tasks_rude()
-> + * assumes that the read-side critical sections end at context switch,
-> + * cond_resched_rcu_qs(), or transition to usermode execution.  As such,
-> + * there are no read-side primitives analogous to rcu_read_lock() and
-> + * rcu_read_unlock() because this primitive is intended to determine
-> + * that all tasks have passed through a safe state, not so much for
-> + * data-strcuture synchronization.
-> + *
-> + * See the description of call_rcu() for more detailed information on
-> + * memory ordering guarantees.
-> + */
-> +void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func)
-> +{
-> +	call_rcu_tasks_generic(rhp, func, &rcu_tasks_rude);
-> +}
-> +EXPORT_SYMBOL_GPL(call_rcu_tasks_rude);
-> +
-> +/**
-> + * synchronize_rcu_tasks_rude - wait for a rude rcu-tasks grace period
-> + *
-> + * Control will return to the caller some time after a rude rcu-tasks
-> + * grace period has elapsed, in other words after all currently
-> + * executing rcu-tasks read-side critical sections have elapsed.  These
-> + * read-side critical sections are delimited by calls to schedule(),
-> + * cond_resched_tasks_rcu_qs(), userspace execution, and (in theory,
-> + * anyway) cond_resched().
-> + *
-> + * This is a very specialized primitive, intended only for a few uses in
-> + * tracing and other situations requiring manipulation of function preambles
-> + * and profiling hooks.  The synchronize_rcu_tasks_rude() function is not
-> + * (yet) intended for heavy use from multiple CPUs.
-> + *
-> + * See the description of synchronize_rcu() for more detailed information
-> + * on memory ordering guarantees.
-> + */
-> +void synchronize_rcu_tasks_rude(void)
-> +{
-> +	synchronize_rcu_tasks_generic(&rcu_tasks_rude);
-> +}
-> +EXPORT_SYMBOL_GPL(synchronize_rcu_tasks_rude);
-> +
-> +/**
-> + * rcu_barrier_tasks_rude - Wait for in-flight call_rcu_tasks_rude() callbacks.
-> + *
-> + * Although the current implementation is guaranteed to wait, it is not
-> + * obligated to, for example, if there are no pending callbacks.
-> + */
-> +void rcu_barrier_tasks_rude(void)
-> +{
-> +	/* There is only one callback queue, so this is easy.  ;-) */
-> +	synchronize_rcu_tasks_rude();
-> +}
-> +EXPORT_SYMBOL_GPL(rcu_barrier_tasks_rude);
-> +
-> +static int __init rcu_spawn_tasks_rude_kthread(void)
-> +{
-> +	rcu_spawn_tasks_kthread_generic(&rcu_tasks_rude);
-> +	return 0;
-> +}
-> +core_initcall(rcu_spawn_tasks_rude_kthread);
-> +
-> +#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
-> -- 
-> 2.9.5
-> 
+#syz fix: net_sched: hold rtnl lock in tcindex_partial_destroy_work()
