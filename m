@@ -2,107 +2,91 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B03C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB4EC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D63B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:55:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="q5eInVCY"
+	by mail.kernel.org (Postfix) with ESMTP id D6B7820679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbgCPGy7 (ORCPT
+        id S1729772AbgCPGzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:54:59 -0400
-Received: from ozlabs.org ([203.11.71.1]:36169 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbgCPGy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:54:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gn9X4Tsnz9sP7;
-        Mon, 16 Mar 2020 17:54:56 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584341696;
-        bh=XlmEu88MeNswrIBkto+AsqiLwJFmzqSmLy4Et4feMCc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=q5eInVCYlF2LQ4OmtymQC5RFgotP3kej0orC6/Z08JIYNxr+jsCuV4v3mV/ekOyQT
-         igwtkLpjdyJimYki3wI7DqfQ1Ws3J8uLMRt7MzzLoU7CKr7PrkwSLUfRx0F3opW33o
-         cQKeOqdxALsJ4E1HAAEFtIladCMHg/cAzACXMfW1/noEqig+l98jcyQ6iNLSkmKmmm
-         aTyvA+uVOwfh0Rjogo+OfUEYVs8tePqt4pWvWYlOsW2Tlu1l4nZkX6Bqc2Rjl/xlix
-         4dtvZhp7mDvV77TW/OKvS3h0jC5fknC6C5Kcz8ip/ZqDN0PPR+G8H6eBucCgFrOE2Q
-         ChZpj9MTQ6YtA==
-Date:   Mon, 16 Mar 2020 17:54:54 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200316175454.0e14673e@canb.auug.org.au>
-In-Reply-To: <20200316171326.7ee3eebd@canb.auug.org.au>
-References: <20200313214214.4d2e2af6@canb.auug.org.au>
-        <20200316045804.GC3486@MiWiFi-R3L-srv>
-        <20200316171326.7ee3eebd@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/d87vcSoy9WboTxLE=nYu4ga";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 16 Mar 2020 02:55:43 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.88.91]:26760 "HELO
+        aliyun-sdnproxy-2.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with SMTP id S1729319AbgCPGzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 02:55:43 -0400
+Received: from 137.localdomain (unknown [218.107.205.216])
+        by app1 (Coremail) with SMTP id xjNnewDn7Q1cHm9ew20FAA--.217S3;
+        Mon, 16 Mar 2020 14:36:20 +0800 (CST)
+From:   Pengcheng Yang <yangpc@wangsu.com>
+To:     edumazet@google.com, ncardwell@google.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pengcheng Yang <yangpc@wangsu.com>
+Subject: [PATCH RESEND net-next v2 1/5] tcp: fix stretch ACK bugs in BIC
+Date:   Mon, 16 Mar 2020 14:35:07 +0800
+Message-Id: <1584340511-9870-2-git-send-email-yangpc@wangsu.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
+References: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
+X-CM-TRANSID: xjNnewDn7Q1cHm9ew20FAA--.217S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWkGF4DXr4rWF4xXF1DZFb_yoWfCrg_u3
+        WxKa9rCry8XFs5ZrZF9ry8Ar18Ka93uFsaqF17Jayftr18tFyUJw4kGF95ur1vgF40gF9r
+        Xr9rJFyYva47WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbYxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kI
+        II0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7
+        xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84AC
+        jcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrV
+        ACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8VW8GwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
+        F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8AwCF04
+        k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r48MxC20s026xCaFVCjc4AY6r1j6r4U
+        MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+        AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_JFI_Gr1lIxAIcVC2z2
+        80aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI
+        43ZEXa7VU00PfPUUUUU==
+X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/d87vcSoy9WboTxLE=nYu4ga
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Changes BIC to properly handle stretch ACKs in additive
+increase mode by passing in the count of ACKed packets
+to tcp_cong_avoid_ai().
 
-Hi all,
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+---
+ net/ipv4/tcp_bic.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-On Mon, 16 Mar 2020 17:13:26 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi Baoquan,
->=20
-> On Mon, 16 Mar 2020 12:58:04 +0800 Baoquan He <bhe@redhat.com> wrote:
-> >
-> > I made a patch to fix these warnings, the reason has been told in the
-> > log. Or just drop below patch. Both is fine to me.
-> >=20
-> > mm-sparsec-move-subsection_map-related-functions-together.patch
-> >=20
-> > From 273196eeb7bbc4af93bef18f594af91541e3ce8a Mon Sep 17 00:00:00 2001
-> > From: Baoquan He <bhe@redhat.com>
-> > Date: Sat, 14 Mar 2020 17:01:01 +0800
-> > Subject: [PATCH] mm/sparse.c: move functions into CONFIG_MEMORY_HOTPLUG
-> >  ifdeffery scope =20
->=20
-> I have applied this to linux-next today to see how it goes.
+diff --git a/net/ipv4/tcp_bic.c b/net/ipv4/tcp_bic.c
+index 645cc30..f5f588b 100644
+--- a/net/ipv4/tcp_bic.c
++++ b/net/ipv4/tcp_bic.c
+@@ -145,12 +145,13 @@ static void bictcp_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+ 	if (!tcp_is_cwnd_limited(sk))
+ 		return;
+ 
+-	if (tcp_in_slow_start(tp))
+-		tcp_slow_start(tp, acked);
+-	else {
+-		bictcp_update(ca, tp->snd_cwnd);
+-		tcp_cong_avoid_ai(tp, ca->cnt, 1);
++	if (tcp_in_slow_start(tp)) {
++		acked = tcp_slow_start(tp, acked);
++		if (!acked)
++			return;
+ 	}
++	bictcp_update(ca, tp->snd_cwnd);
++	tcp_cong_avoid_ai(tp, ca->cnt, acked);
+ }
+ 
+ /*
+-- 
+1.8.3.1
 
-Tested-by: Stephen Rothwell <sfr@canb.auug.org.au> # compile tested
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/d87vcSoy9WboTxLE=nYu4ga
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5vIr4ACgkQAVBC80lX
-0GxduggAkhNm4JGG6vOfZZDVA/SpSv6LCy7/8JJbea6JxT5nhr0O4l3JfDoCpx5R
-9v4ZojpZuP2QbwpYuet2lbrJNEI7igRlzX9l2mVmnCAELoJ3V4uk049RClYUQhd2
-InrTSRgdrQtE2HNYoBgxhC73NsVE2pO3HLsFfJXv/FzlY8IRbp154CnS0dH0i1pS
-pIimXE6SPhLDgGBIaYhtQpiUFc7X27SZvPzKSMQFsi6uqVVYSbbavvIIUag4NpBn
-aF6x/bZH1D/l9E6Vk9d2P96km0MgKDXrWAZTtUApbpymfk50XJwMZwoKZJc+u8q6
-5BU/TxWwrq0o014gzCi2i5atMRlnMA==
-=pmCZ
------END PGP SIGNATURE-----
-
---Sig_/d87vcSoy9WboTxLE=nYu4ga--
