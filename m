@@ -7,54 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001B9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B1AC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA290206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778D020737
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326457;
-	bh=Unh3rPOkR4ko5NKQUaz+SBxCMdPJ9H1YJmGubzUTjOo=;
+	s=default; t=1584326460;
+	bh=4yw0STCK+C5NSsvnEalgO/FdaunLe8EGQsfjZzCvPV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I86GFUAjz2Zz3570FEKSp+U9M1tgeY8XVMd0w2Xxz5o6cdeIRL5Fqnyoqn8po/3S0
-	 /lrLt674Cq4ooapIT53ZDFX76Uqf+bRCc11AuFyktU6EtSYmTy8CXhgM2sxsHXK2pD
-	 jVchXeld9pkJrsqdap/0rxga80o2fyrB9lQZyxMI=
+	b=ME7YV6gUlryUL/iNava04AQaNSMSmszdQXQf+8H4bE4itorYeKAtkijLqIDKl1Mti
+	 hD5bXqSxBzuceEl1CrHEnNmNjPHEUEj1g/K5E5IMwcF1f0c7w9tLtTCql6VUYa3P6p
+	 3lCPYASiibmb/ElNd8EwKluIaNgAM5lrWCX4ev9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbgCPCdv (ORCPT
+        id S1730458AbgCPCk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:33:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36486 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbgCPCdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:33:41 -0400
+        id S1729644AbgCPCdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:33:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E09C20746;
-        Mon, 16 Mar 2020 02:33:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5629820724;
+        Mon, 16 Mar 2020 02:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326020;
-        bh=Unh3rPOkR4ko5NKQUaz+SBxCMdPJ9H1YJmGubzUTjOo=;
+        s=default; t=1584326030;
+        bh=4yw0STCK+C5NSsvnEalgO/FdaunLe8EGQsfjZzCvPV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DSIRRo3fl3pfuWhCdj3wnpLyejqLEdWu2+x+vGG7eBMrcLDflhTXY5/iA3fXGT/2E
-         Kr3NADl7fFEismTvumrxV7ADNgnOEAUMiOgz3VhzrvAIjdsgDtmNu0Jl3Q3WVG1TcL
-         jrYj/DO1HP5YOCqv6driebciUyHZmcQg/hOiGW2c=
+        b=2CmbMjB+TdZ93JJL8T+7UnqTaV0vlCUS2KDz5Bh0rgn+9mOsmCHhVSq20QF7vNMQk
+         ETat+uSDNrJY7qN3lzF8t3qcdkMWUPcQGokHhIUuHB398CkdHa/MLHuuYFjrCe2zZi
+         Dk6qB0SsJnmiPEL5xvZuSjqNh5tRH0DzaVPVpESg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 17/41] ARM: dts: bcm283x: Add missing properties to the PWR LED
-Date:   Sun, 15 Mar 2020 22:32:55 -0400
-Message-Id: <20200316023319.749-17-sashal@kernel.org>
+Cc:     Daniel Axtens <dja@axtens.net>,
+        "Igor M. Liplianin" <liplianin@netup.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 25/41] altera-stapl: altera_get_note: prevent write beyond end of 'key'
+Date:   Sun, 15 Mar 2020 22:33:03 -0400
+Message-Id: <20200316023319.749-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,63 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Daniel Axtens <dja@axtens.net>
 
-[ Upstream commit bff211bab301db890e38de872d43cbb459940daa ]
+[ Upstream commit 3745488e9d599916a0b40d45d3f30e3d4720288e ]
 
-This adds the missing properties to the PWR LED for the RPi 3 & 4 boards,
-which are already set for the other boards. Without them we will lose
-the LED state after suspend.
+altera_get_note is called from altera_init, where key is kzalloc(33).
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Tested-by: Peter Robinson <pbrobinson@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+When the allocation functions are annotated to allow the compiler to see
+the sizes of objects, and with FORTIFY_SOURCE, we see:
+
+In file included from drivers/misc/altera-stapl/altera.c:14:0:
+In function ‘strlcpy’,
+    inlined from ‘altera_init’ at drivers/misc/altera-stapl/altera.c:2189:5:
+include/linux/string.h:378:4: error: call to ‘__write_overflow’ declared with attribute error: detected write beyond size of object passed as 1st parameter
+    __write_overflow();
+    ^~~~~~~~~~~~~~~~~~
+
+That refers to this code in altera_get_note:
+
+    if (key != NULL)
+            strlcpy(key, &p[note_strings +
+                            get_unaligned_be32(
+                            &p[note_table + (8 * i)])],
+                    length);
+
+The error triggers because the length of 'key' is 33, but the copy
+uses length supplied as the 'length' parameter, which is always
+256. Split the size parameter into key_len and val_len, and use the
+appropriate length depending on what is being copied.
+
+Detected by compiler error, only compile-tested.
+
+Cc: "Igor M. Liplianin" <liplianin@netup.ru>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Link: https://lore.kernel.org/r/20200120074344.504-2-dja@axtens.net
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/202002251042.D898E67AC@keescook
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts      | 2 ++
- arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts | 2 ++
- arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 2 ++
- 3 files changed, 6 insertions(+)
+ drivers/misc/altera-stapl/altera.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index 1b5a835f66bd3..b8c4b5bb265a9 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -31,6 +31,8 @@
- 		pwr {
- 			label = "PWR";
- 			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-+			default-state = "keep";
-+			linux,default-trigger = "default-on";
- 		};
- 	};
+diff --git a/drivers/misc/altera-stapl/altera.c b/drivers/misc/altera-stapl/altera.c
+index 25e5f24b3fecd..5bdf574723144 100644
+--- a/drivers/misc/altera-stapl/altera.c
++++ b/drivers/misc/altera-stapl/altera.c
+@@ -2112,8 +2112,8 @@ static int altera_execute(struct altera_state *astate,
+ 	return status;
+ }
  
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
-index 66ab35eccba7b..28be0332c1c81 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
-@@ -26,6 +26,8 @@
- 		pwr {
- 			label = "PWR";
- 			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-+			default-state = "keep";
-+			linux,default-trigger = "default-on";
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-index 74ed6d0478070..37343148643db 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-@@ -27,6 +27,8 @@
- 		pwr {
- 			label = "PWR";
- 			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-+			default-state = "keep";
-+			linux,default-trigger = "default-on";
- 		};
- 	};
+-static int altera_get_note(u8 *p, s32 program_size,
+-			s32 *offset, char *key, char *value, int length)
++static int altera_get_note(u8 *p, s32 program_size, s32 *offset,
++			   char *key, char *value, int keylen, int vallen)
+ /*
+  * Gets key and value of NOTE fields in the JBC file.
+  * Can be called in two modes:  if offset pointer is NULL,
+@@ -2170,7 +2170,7 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 						&p[note_table + (8 * i) + 4])];
  
+ 				if (value != NULL)
+-					strlcpy(value, value_ptr, length);
++					strlcpy(value, value_ptr, vallen);
+ 
+ 			}
+ 		}
+@@ -2189,13 +2189,13 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 				strlcpy(key, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i)])],
+-					length);
++					keylen);
+ 
+ 			if (value != NULL)
+ 				strlcpy(value, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i) + 4])],
+-					length);
++					vallen);
+ 
+ 			*offset = i + 1;
+ 		}
+@@ -2449,7 +2449,7 @@ int altera_init(struct altera_config *config, const struct firmware *fw)
+ 			__func__, (format_version == 2) ? "Jam STAPL" :
+ 						"pre-standardized Jam 1.1");
+ 		while (altera_get_note((u8 *)fw->data, fw->size,
+-					&offset, key, value, 256) == 0)
++					&offset, key, value, 32, 256) == 0)
+ 			printk(KERN_INFO "%s: NOTE \"%s\" = \"%s\"\n",
+ 					__func__, key, value);
+ 	}
 -- 
 2.20.1
 
