@@ -2,77 +2,70 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155B4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4E6C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC25D20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB2C20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 01:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584321387;
-	bh=K/2TyTWuO7HMKTMpKR0lHTm952L2DxBq1R6oWuYbQbk=;
+	s=default; t=1584321619;
+	bh=NpcPe7Ai8DtmCkNoujPUXQxlPOJtFn5fStnHfbYQr2M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RyHmjrAWgtBlCcvHDNxTO1S30udhZTIJqXrk41/8w5r+/y73LkYQ3VRlVsK/mjL44
-	 DWyFdmovaLSj2rC4Bb15CY7kYBpyBgBjDPuwWYWUkvma9YR0UNbftComW2hc2HnrRM
-	 xPN6kcLGtYZ3A8Uv1zUDWGR8LVllsRxmPiqDEyb0=
+	b=HTs7SDF+/+N6o7czn6JVoIg7yQbfkMggJALuXUSKXnP+OkiHRc6BV7QBJBKpwANB+
+	 8kNeNTLC4h2U/yjvgQb2h4x9gX5XXlH5GDMcuPMLPHaYzckpjHLx6JDfNnTaabxWhv
+	 dOffLE4dbte1VCB1V9JqRDRQsp0m5ZXfE0rGVWIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgCPBQ1 (ORCPT
+        id S1729378AbgCPBUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 21:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55948 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 21:20:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbgCPBQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 21:16:26 -0400
+        id S1729300AbgCPBUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 21:20:18 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A850620663;
-        Mon, 16 Mar 2020 01:16:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AA6520663;
+        Mon, 16 Mar 2020 01:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584321386;
-        bh=K/2TyTWuO7HMKTMpKR0lHTm952L2DxBq1R6oWuYbQbk=;
+        s=default; t=1584321617;
+        bh=NpcPe7Ai8DtmCkNoujPUXQxlPOJtFn5fStnHfbYQr2M=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tu3qyTlZGxxvR5ZetlNI0bbW26PcCKHp7Yn33e9SInPwRHln6DUKyYEXSntj+/aS2
-         0UGQQ7DseT+64bEYGCypHa1XQtQKheTfwSNcyAaiUn0U34hjBiFaxqAC2xWVbWo4gb
-         Aq6Jx6v9xX6dmW9q1gTp/9H9/qCPYn0Z2qiTGUkE=
-Date:   Mon, 16 Mar 2020 09:16:20 +0800
+        b=dSitzUaMjYusX1X5Wgt08MHAkQqf3S96UrYn8aAQ60qoyQyfqxmYazyR9bvWGLUML
+         ELKQ+ltX7vq4Naka3CPwmfpDjdGCZFrWmkWgnNE7bn9BCzerUWDh+XF4hDqcvMq0Kz
+         NrUdHM8a42yBABAYx0GjU1LG/XKJX9CHJDMM0ikg=
+Date:   Mon, 16 Mar 2020 09:20:11 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH v2 0/4] arm64: dts: ls1028a: various sl28 fixes/updates
-Message-ID: <20200316011620.GM17221@dragon>
-References: <20200311074929.19569-1-michael@walle.cc>
+To:     peng.fan@nxp.com
+Cc:     s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, Anson.Huang@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2] ARM: dts: imx: add nvmem property for cpu0
+Message-ID: <20200316012010.GN17221@dragon>
+References: <1583917326-5550-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311074929.19569-1-michael@walle.cc>
+In-Reply-To: <1583917326-5550-1-git-send-email-peng.fan@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 08:49:25AM +0100, Michael Walle wrote:
-> Hi,
+On Wed, Mar 11, 2020 at 05:02:06PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> this patchset contains device tree fixes and updates for the Kontron
-> SMARC-sAL28 board.
+> Add nvmem related property for cpu0, then nvmem API could be used
+> to read cpu speed grading to avoid directly read OCOTP registers
+> mapped which could not handle defer probe.
 > 
-> Changes since v1:
->  - added "arm64: dts: freescale: sl28: add SPI flash" which was forgotten
->    in the first series.
-> 
-> Michael Walle (4):
->   arm64: dts: freescale: sl28: add SPI flash
->   arm64: dts: ls1028a: sl28: fix on-board EEPROMS
->   arm64: dts: ls1028a: sl28: expose switch ports in KBox A-230-LS
->   arm64: dts: ls1028a: sl28: add support for variant 2
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Applied all, thanks.
+Applied, thanks.
