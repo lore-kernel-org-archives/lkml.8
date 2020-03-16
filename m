@@ -2,205 +2,145 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF0AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B0EC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CE920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3F620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbgCPH0Q (ORCPT
+        id S1729945AbgCPH0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:26:16 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:47858 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729554AbgCPH0Q (ORCPT
+        Mon, 16 Mar 2020 03:26:24 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57451 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729554AbgCPH0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:26:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id w21so11148952iod.14
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 00:26:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=QkyM0ZAEqmVZ45byMP9eq8r024Rg7yOIHRDL7H8ep+U=;
-        b=O9939HoojwI33ykW7Zm6oH19Tp7LwUTmK4ObrWsTid7k/+lF9SB/GOQhCFSjGrmhYF
-         YXifZvjCraVtC1dYxD7QiwZgi/DrPfVZetPE5+GrawaU+iqb2CayiOhI9SzMcZIMOO4t
-         +3PX1u85uczCwUjjoBacZOdUMpd1/NmOEv0zbEbs30E1xdHpF+4v3F3fu+ujN2itKFuI
-         aFtCWwCYgGMMJbFpLpnrB+RicTGq6jkQuxDhKkeA8FXr2CNoTv4/PjEquT+4cP/GmYTo
-         9Gre+pJbANfrJpOBRahTHHi3iJomLzyb3c372mzHetchGIPnERUgjKNWIC0u2oJy5/8g
-         /5pg==
-X-Gm-Message-State: ANhLgQ1JoL/ooAQQOQ96ogaS8LZZkgJpmyj5tipbYjCuLqwif92WrKtE
-        BlQht3fiG6KN1eBzHXZkJ0uyZ0pkg302la6Lea+HUEGyKToh
-X-Google-Smtp-Source: ADFU+vuaiQTiBb13LHNwB6lFPVcgadMFWyzPCzZz8BECpWOsQLVjrTo+WiApTVbeWOgVyoWZouanYC3Vje6iv5zysevBt2TOjwdX
+        Mon, 16 Mar 2020 03:26:24 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jDk8e-0006VD-7S; Mon, 16 Mar 2020 08:26:16 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jDk8b-0003K3-GS; Mon, 16 Mar 2020 08:26:13 +0100
+Date:   Mon, 16 Mar 2020 08:26:13 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
+Message-ID: <20200316072613.37lnjfloac4npudf@pengutronix.de>
+References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
+ <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
+ <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:e70d:: with SMTP id b13mr21641021ioh.91.1584343572869;
- Mon, 16 Mar 2020 00:26:12 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 00:26:12 -0700
-In-Reply-To: <0000000000002ef1120597b1bc92@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dcf6ef05a0f3bb1b@google.com>
-Subject: Re: possible deadlock in lock_trace (3)
-From:   syzbot <syzbot+985c8a3c7f3668d31a49@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        casey@schaufler-ca.com, christian@brauner.io, guro@fb.com,
-        kent.overstreet@gmail.com, khlebnikov@yandex-team.ru,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhocko@suse.com, shakeelb@google.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hello,
 
-HEAD commit:    a42a7bb6 Merge tag 'irq-urgent-2020-03-15' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1237321de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
-dashboard link: https://syzkaller.appspot.com/bug?extid=985c8a3c7f3668d31a49
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1185f753e00000
+On Thu, Mar 12, 2020 at 04:06:07PM +0100, Pascal Roeleven wrote:
+> On 2020-03-12 14:29, Uwe Kleine-König wrote:
+> > On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
+> > > Hi all,
+> > > 
+> > > I am working on adding an old A10 device to mainline and noticed an
+> > > issue
+> > > when testing on 5.5.8 vs master.
+> > > 
+> > > Since 5.6-rc1, I can't control the brightness of my LCD backlight
+> > > anymore.
+> > > The backlight stays on full brightness instead. I am controlling the
+> > > brightness value via sysfs for testing.
+> > > 
+> > > I am not sure if this is a general pwm-sun4i issue or if it is
+> > > related to
+> > > the backlight. However I narrowed it down to one commit for pwm-sun4i:
+> > > 
+> > > fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+> > > 
+> > > If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
+> > > master, the backlight works fine. Unfortunately, due to my lack of
+> > > kernel
+> > > experience, I can't see how the commit above broke it.
+> > 
+> > Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
+> > this. Looking at the output of
+> > 
+> > 	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+> > 
+> > (i.e. ignoring whitespace changes) I don't see how the behaviour you're
+> > reporting can be explained.
+> > 
+> > Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
+> > commit?
+> > 
+> > Can you install a tool to inspect register values and check how the
+> > affected registers change if you switch kernel versions and/or pwm
+> > settings?
+> > 
+> > (e.g.
+> > 	memtool md 0x1c20e00+0xc
+> > )
+> > 
+> > Best regards
+> > Uwe
+> 
+> Thanks for your response.
+> 
+> Yes I am sure that is the commit. If I am on master, and replace pwm-sun4i.c
+> with the one from 5b090b43, everything works. If I then apply fa4d8178, it
+> stops working.
+> 
+> And strangely the output of the registers is exactly the same before and
+> after fa4d8178:
+> 
+> 01c20e00: 00000050 00130014 00000000 (full brightness)
+> 01c20e00: 00000050 00130006 00000000 (min brightness)
+> 
+> Even when I'm on 5b090b43 and cherry-pick fa4d8178 can I reproduce the
+> issue.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+985c8a3c7f3668d31a49@syzkaller.appspotmail.com
+Very strange. I'm out of sensible ideas. The remaining ones are:
 
-overlayfs: './file0' not a directory
-======================================================
-WARNING: possible circular locking dependency detected
-5.6.0-rc5-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.3/11170 is trying to acquire lock:
-ffff888097db9c50 (&sig->cred_guard_mutex){+.+.}, at: lock_trace+0x45/0xe0 fs/proc/base.c:408
+- enable tracing in the kernel and boot with
 
-but task is already holding lock:
-ffff8880913eebe0 (&p->lock){+.+.}, at: seq_read+0x6b/0x1160 fs/seq_file.c:161
+	trace_event=pwm
 
-which lock already depends on the new lock.
+  And then check after the problem occurred in
+  /sys/kernel/debug/tracing/trace if something sticks out.
 
+- Try modifying the registers using memtool. E.g.
 
-the existing dependency chain (in reverse order) is:
+	memtool mw 0x01c20e04 0x00130012
 
--> #3 (&p->lock){+.+.}:
-       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-       __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-       seq_read+0x6b/0x1160 fs/seq_file.c:161
-       do_loop_readv_writev fs/read_write.c:714 [inline]
-       do_loop_readv_writev fs/read_write.c:701 [inline]
-       do_iter_read+0x47f/0x650 fs/read_write.c:935
-       vfs_readv+0xf0/0x160 fs/read_write.c:1053
-       kernel_readv fs/splice.c:365 [inline]
-       default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
-       do_splice_to+0x10e/0x160 fs/splice.c:892
-       splice_direct_to_actor+0x307/0x980 fs/splice.c:971
-       do_splice_direct+0x1a8/0x270 fs/splice.c:1080
-       do_sendfile+0x549/0xc40 fs/read_write.c:1520
-       __do_sys_sendfile64 fs/read_write.c:1581 [inline]
-       __se_sys_sendfile64 fs/read_write.c:1567 [inline]
-       __x64_sys_sendfile64+0x1cc/0x210 fs/read_write.c:1567
-       do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+- Do you have equipment to check the actual output of the PWM hardware?
+  If so, what do you see?
 
--> #2 (sb_writers#4){.+.+}:
-       percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-       __sb_start_write+0x21b/0x430 fs/super.c:1674
-       sb_start_write include/linux/fs.h:1650 [inline]
-       mnt_want_write+0x3a/0xb0 fs/namespace.c:354
-       ovl_setattr+0xdd/0x8b0 fs/overlayfs/inode.c:27
-       notify_change+0xb6d/0x1060 fs/attr.c:336
-       do_truncate+0x134/0x1f0 fs/open.c:64
-       handle_truncate fs/namei.c:3083 [inline]
-       do_last fs/namei.c:3496 [inline]
-       path_openat+0x291f/0x32b0 fs/namei.c:3607
-       do_filp_open+0x192/0x260 fs/namei.c:3637
-       do_sys_openat2+0x54c/0x740 fs/open.c:1146
-       do_sys_open+0xc3/0x140 fs/open.c:1162
-       do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Best regards
+Uwe
 
--> #1 (&ovl_i_mutex_key[depth]){+.+.}:
-       down_write+0x8d/0x150 kernel/locking/rwsem.c:1534
-       inode_lock include/linux/fs.h:792 [inline]
-       process_measurement+0x68a/0x1740 security/integrity/ima/ima_main.c:230
-       ima_file_check+0xb9/0x100 security/integrity/ima/ima_main.c:442
-       do_last fs/namei.c:3494 [inline]
-       path_openat+0x127f/0x32b0 fs/namei.c:3607
-       do_filp_open+0x192/0x260 fs/namei.c:3637
-       do_open_execat+0x122/0x600 fs/exec.c:860
-       __do_execve_file.isra.0+0x16d5/0x2270 fs/exec.c:1765
-       do_execveat_common fs/exec.c:1871 [inline]
-       do_execve fs/exec.c:1888 [inline]
-       __do_sys_execve fs/exec.c:1964 [inline]
-       __se_sys_execve fs/exec.c:1959 [inline]
-       __x64_sys_execve+0x8a/0xb0 fs/exec.c:1959
-       do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (&sig->cred_guard_mutex){+.+.}:
-       check_prev_add kernel/locking/lockdep.c:2475 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-       validate_chain kernel/locking/lockdep.c:2970 [inline]
-       __lock_acquire+0x201b/0x3ca0 kernel/locking/lockdep.c:3954
-       lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-       __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-       lock_trace+0x45/0xe0 fs/proc/base.c:408
-       proc_pid_personality+0x17/0xc0 fs/proc/base.c:3052
-       proc_single_show+0xf7/0x1c0 fs/proc/base.c:758
-       seq_read+0x4b9/0x1160 fs/seq_file.c:229
-       do_loop_readv_writev fs/read_write.c:714 [inline]
-       do_loop_readv_writev fs/read_write.c:701 [inline]
-       do_iter_read+0x47f/0x650 fs/read_write.c:935
-       vfs_readv+0xf0/0x160 fs/read_write.c:1053
-       kernel_readv fs/splice.c:365 [inline]
-       default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
-       do_splice_to+0x10e/0x160 fs/splice.c:892
-       splice_direct_to_actor+0x307/0x980 fs/splice.c:971
-       do_splice_direct+0x1a8/0x270 fs/splice.c:1080
-       do_sendfile+0x549/0xc40 fs/read_write.c:1520
-       __do_sys_sendfile64 fs/read_write.c:1581 [inline]
-       __se_sys_sendfile64 fs/read_write.c:1567 [inline]
-       __x64_sys_sendfile64+0x1cc/0x210 fs/read_write.c:1567
-       do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-  &sig->cred_guard_mutex --> sb_writers#4 --> &p->lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&p->lock);
-                               lock(sb_writers#4);
-                               lock(&p->lock);
-  lock(&sig->cred_guard_mutex);
-
- *** DEADLOCK ***
-
-2 locks held by syz-executor.3/11170:
- #0: ffff88809fa24428 (sb_writers#13){.+.+}, at: file_start_write include/linux/fs.h:2904 [inline]
- #0: ffff88809fa24428 (sb_writers#13){.+.+}, at: do_sendfile+0x939/0xc40 fs/read_write.c:1519
- #1: ffff8880913eebe0 (&p->lock){+.+.}, at: seq_read+0x6b/0x1160 fs/seq_file.c:161
-
-stack backtrace:
-CPU: 0 PID: 11170 Comm: syz-executor.3 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
- check_prev_add kernel/locking/lockdep.c:2475 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain kernel/locking/lockdep.c:2970 [inline]
- __lock_acquire+0x201b/0x3ca0 kernel/locking/lockdep.c:3954
- lock_acqu
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
