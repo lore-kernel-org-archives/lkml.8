@@ -2,90 +2,96 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE1AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FA0C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781C1205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584359461;
-	bh=l6F1XWmO/Be0QKahuz5D5djcbaOCPXDU2fWatSvvxdk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v+Hkhw3sJyXVxJHsh1N8wnF14c1pU0aj7qwJHGhMZq9FQ08Ky6a7BjGhyjcUKm4i+
-	 sQPZxfRNiuVeywzh7bSRg9iqNwozePrrT7/EtNPnlyGUo8axjH8QC8ECbdgymWImBz
-	 6KXQZjD1Pj0jQ6jAtA9CjpJ/slWFmT+IkpZpzLOA=
+	by mail.kernel.org (Postfix) with ESMTP id 8C077205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:51:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5MHYWGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbgCPLvA (ORCPT
+        id S1730925AbgCPLvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:51:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:46802 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730882AbgCPLvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:51:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD1D330E;
-        Mon, 16 Mar 2020 04:50:59 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FF693F52E;
-        Mon, 16 Mar 2020 04:50:59 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 11:50:57 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 01/41] spi: spi-omap2-mcspi: Handle DMA size
- restriction on AM65x
-Message-ID: <20200316115057.GB5010@sirena.org.uk>
-References: <20200316023319.749-1-sashal@kernel.org>
+        Mon, 16 Mar 2020 07:51:04 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53040 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730915AbgCPLvD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 07:51:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584359463;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tryDzo9SohMjPK6GcmpV+7d9g8Sngd5hQyCi5ctTNMA=;
+        b=a5MHYWGuyMaD2C5GKLQP9ijHgdGoq9uOV4wqMVOfx55TRkijN0WI6EWi9rookr5GA5ioaj
+        nt77shBdLbN9kjyDPzWmARXJjLNx0qeuhBRvAzc3WuVlrRUSqSbXuWxzCf8Cx2Z3QweMw6
+        MHPMWzyScxaGiI2dxvq1XBF7xb870dM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-iG6UQSl3NH2zipfAM4M8Sg-1; Mon, 16 Mar 2020 07:50:59 -0400
+X-MC-Unique: iG6UQSl3NH2zipfAM4M8Sg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 76A4218B5FAC;
+        Mon, 16 Mar 2020 11:50:57 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B84DE92F83;
+        Mon, 16 Mar 2020 11:50:52 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200313152102.1707-2-longman@redhat.com>
+References: <20200313152102.1707-2-longman@redhat.com> <20200313152102.1707-1-longman@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     dhowells@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v3 1/3] KEYS: Don't write out to userspace while holding key semaphore
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
-Content-Disposition: inline
-In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
-X-Cookie: I thought YOU silenced the guard!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1797277.1584359451.1@warthog.procyon.org.uk>
+Date:   Mon, 16 Mar 2020 11:50:51 +0000
+Message-ID: <1797278.1584359451@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Waiman Long <longman@redhat.com> wrote:
 
---mxv5cy4qt+RJ9ypb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>  include/linux/key-type.h                  |  2 +-
+>  security/keys/big_key.c                   | 11 ++---
+>  security/keys/encrypted-keys/encrypted.c  |  7 ++-
+>  security/keys/keyctl.c                    | 57 +++++++++++++++++++----
+>  security/keys/keyring.c                   |  6 +--
+>  security/keys/request_key_auth.c          |  7 ++-
+>  security/keys/trusted-keys/trusted_tpm1.c | 14 +-----
+>  security/keys/user_defined.c              |  5 +-
+> ...
+> -	long (*read)(const struct key *key, char __user *buffer, size_t buflen);
+> +	long (*read)(const struct key *key, char *buffer, size_t buflen);
 
-On Sun, Mar 15, 2020 at 10:32:39PM -0400, Sasha Levin wrote:
-> From: Vignesh Raghavendra <vigneshr@ti.com>
->=20
-> [ Upstream commit e4e8276a4f652be2c7bb783a0155d4adb85f5d7d ]
->=20
-> On AM654, McSPI can only support 4K - 1 bytes per transfer when DMA is
-> enabled. Therefore populate master->max_transfer_size callback to
-> inform client drivers of this restriction when DMA channels are
-> available.
+Note that there are read functions outside of security/keys/ that also need
+fixing - dns_resolver_read() and rxrpc_read().
 
-As ever this only provides information to other drivers which may be
-buggy.
+David
 
---mxv5cy4qt+RJ9ypb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5vaCEACgkQJNaLcl1U
-h9Dyuwf/fRi4iGdV1A9vW0+wTm8Pznka9n9+PoM5TuqyP0qrul8iIK7h/H6xS7bF
-wRQVfQDzo/SfuONZlUUZOvtQXevqHPOtFl2x3Qe1sVnE39byJc6qu/EDsrNYVLgg
-DLzo+493Fh+HQgfAb+b80kh9XbZ4rN0qSsyPpt7Ygqj8EpG/so3qCir1BtkKBYAx
-nVN/HglbGLu0VosqwfRzpUSgPp0mQlVVhrBX3eyL62c3GQ3+R2Fk9namhq4GYNDv
-rcKj4Fi/WhkKOIzmjwPtep6I4uY5ZnM6XVFxa1KuM2p7NVMWlvSZhdn2wvWR0kOr
-+dB4D+JEBdndXoBkq3Ywisrppx4JNQ==
-=73L/
------END PGP SIGNATURE-----
-
---mxv5cy4qt+RJ9ypb--
