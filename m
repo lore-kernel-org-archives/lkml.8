@@ -2,116 +2,100 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052D8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A80C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D6C2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7598206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:23:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vSg0a1+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731024AbgCPMUI (ORCPT
+        id S1730978AbgCPMXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:20:08 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11651 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730949AbgCPMUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:20:08 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DF309E461F1EDD361A1F;
-        Mon, 16 Mar 2020 20:19:52 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.195) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 16 Mar 2020
- 20:19:46 +0800
-Subject: Re: [PATCH v4 0/6] implement KASLR for powerpc/fsl_booke/64
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>,
-        <dja@axtens.net>
-References: <20200306064033.3398-1-yanaijie@huawei.com>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <9e70dcc1-647a-f9a8-2262-87e7528523d2@huawei.com>
-Date:   Mon, 16 Mar 2020 20:19:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 16 Mar 2020 08:23:52 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52740 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730878AbgCPMXw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:23:52 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GCNWG8055256;
+        Mon, 16 Mar 2020 07:23:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584361412;
+        bh=/axxTSN4rOjW8bh6Kbh93WtVu/tmmhKSGynWOWCPzuY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vSg0a1+QKByxeZQ7KBTjfgkxDI9IEY9zlUWk/fQEdnbGDiw7iS+KNJxMY7pblqv91
+         xcRc9iE/EmWBlfMtFx29z1Q7oLaJDwW3ojWz/gBihLpbblaWUvjPcymhZ6fkd6lTnK
+         L6gF9F4A/jU3aB+ibd8fH0XVfsLOOvs8npPetIlU=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GCNWpJ082049;
+        Mon, 16 Mar 2020 07:23:32 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Mar 2020 07:23:32 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Mar 2020 07:23:32 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GCNS4R121266;
+        Mon, 16 Mar 2020 07:23:29 -0500
+Subject: Re: [PATCH] kthread: Mark timer used by delayed kthread works as IRQ
+ safe
+To:     Tejun Heo <tj@kernel.org>, Petr Mladek <pmladek@suse.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        <linux-rt-users@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>
+References: <20200217120709.1974-1-pmladek@suse.com>
+ <20200219152248.GC698990@mtj.thefacebook.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <6a4c07df-8971-8637-5251-ce177c3a08ce@ti.com>
+Date:   Mon, 16 Mar 2020 14:23:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200306064033.3398-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.221.195]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200219152248.GC698990@mtj.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping...
+Hi Petr,
 
-ÔÚ 2020/3/6 14:40, Jason Yan Ð´µÀ:
-> This is a try to implement KASLR for Freescale BookE64 which is based on
-> my earlier implementation for Freescale BookE32:
-> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718&state=*
+On 19/02/2020 17:22, Tejun Heo wrote:
+> On Mon, Feb 17, 2020 at 01:07:09PM +0100, Petr Mladek wrote:
+>> The timer used by delayed kthread works are IRQ safe because the used
+>> kthread_delayed_work_timer_fn() is IRQ safe.
+>>
+>> It is properly marked when initialized by KTHREAD_DELAYED_WORK_INIT().
+>> But TIMER_IRQSAFE flag is missing when initialized by
+>> kthread_init_delayed_work().
+>>
+>> The missing flag might trigger invalid warning from del_timer_sync()
+>> when kthread_mod_delayed_work() is called with interrupts disabled.
+>>
+>> Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> Signed-off-by: Petr Mladek <pmladek@suse.com>
+>> Tested-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > 
-> The implementation for Freescale BookE64 is similar as BookE32. One
-> difference is that Freescale BookE64 set up a TLB mapping of 1G during
-> booting. Another difference is that ppc64 needs the kernel to be
-> 64K-aligned. So we can randomize the kernel in this 1G mapping and make
-> it 64K-aligned. This can save some code to creat another TLB map at
-> early boot. The disadvantage is that we only have about 1G/64K = 16384
-> slots to put the kernel in.
-> 
->      KERNELBASE
-> 
->            64K                     |--> kernel <--|
->             |                      |              |
->          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
->          |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
->          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
->          |                         |                        1G
->          |----->   offset    <-----|
-> 
->                                kernstart_virt_addr
-> 
-> I'm not sure if the slot numbers is enough or the design has any
-> defects. If you have some better ideas, I would be happy to hear that.
-> 
-> Thank you all.
-> 
-> v3->v4:
->    Do not define __kaslr_offset as a fixed symbol. Reference __run_at_load and
->      __kaslr_offset by symbol instead of magic offsets.
->    Use IS_ENABLED(CONFIG_PPC32) instead of #ifdef CONFIG_PPC32.
->    Change kaslr-booke32 to kaslr-booke in index.rst
->    Switch some instructions to 64-bit.
-> v2->v3:
->    Fix build error when KASLR is disabled.
-> v1->v2:
->    Add __kaslr_offset for the secondary cpu boot up.
-> 
-> Jason Yan (6):
->    powerpc/fsl_booke/kaslr: refactor kaslr_legal_offset() and
->      kaslr_early_init()
->    powerpc/fsl_booke/64: introduce reloc_kernel_entry() helper
->    powerpc/fsl_booke/64: implement KASLR for fsl_booke64
->    powerpc/fsl_booke/64: do not clear the BSS for the second pass
->    powerpc/fsl_booke/64: clear the original kernel if randomized
->    powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst
->      and add 64bit part
-> 
->   Documentation/powerpc/index.rst               |  2 +-
->   .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 +++++++-
->   arch/powerpc/Kconfig                          |  2 +-
->   arch/powerpc/kernel/exceptions-64e.S          | 23 +++++
->   arch/powerpc/kernel/head_64.S                 | 13 +++
->   arch/powerpc/kernel/setup_64.c                |  3 +
->   arch/powerpc/mm/mmu_decl.h                    | 23 ++---
->   arch/powerpc/mm/nohash/kaslr_booke.c          | 88 +++++++++++++------
->   8 files changed, 144 insertions(+), 45 deletions(-)
->   rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
-> 
+> Acked-by: Tejun Heo <tj@kernel.org>
 
+I'm worry shouldn't this patch have "fixes" tag?
+
+-- 
+Best regards,
+grygorii
