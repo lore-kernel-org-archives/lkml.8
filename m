@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B60C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D93C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C2A20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5AC20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdMrPmsU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2vAn/Vq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732043AbgCPPu7 (ORCPT
+        id S1732054AbgCPPvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:50:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42756 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731890AbgCPPu4 (ORCPT
+        Mon, 16 Mar 2020 11:51:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36557 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732045AbgCPPvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:50:56 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v11so21891710wrm.9;
-        Mon, 16 Mar 2020 08:50:55 -0700 (PDT)
+        Mon, 16 Mar 2020 11:51:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s5so21918781wrg.3;
+        Mon, 16 Mar 2020 08:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0xnbWFaqEy6PVLM8ZKG+N67R4SBBzTWWNlJtBlkSfr4=;
-        b=sdMrPmsUMcuYYTgsmg+zH1y3mE73L1A2luLZgGCiMM/I3s736IfmJJ+BtcXcD0aqZS
-         MdI3ROHcIlS3aWUaAvwKkSNm3XAQ641SUvsD7vE2L1hWKMf09pbmSM2IvpMl3Q27SKgH
-         WymZWRnt2JNorRQcIiJOZXahYLVi7EpdH5jc++dIRfKQMYNa3AytasAfjK2CLmlOJt7l
-         w2PpIhvb8pLu3y6hb+xTM8etvBgN6V+Ivn4Y7JVD0XWj9EUCalPEpL8LVRas+/WTyDZ7
-         viK1GaXtpr7tU5dcv+zr5kfVRQfM1Ae0IM5ta2GO/zmkEjeGJGK1LduV+WnelN05aqzD
-         xH8A==
+        bh=ARobwbMkxpnKD/itXwOoAdtTkWOvbLodvJtLsq09FXI=;
+        b=N2vAn/VqQjbs57AhGfDEn3ERSAFuemwBLrYdhCPOVaWBeZeAFyU5Z0ypB+H5SczB8z
+         aecqNmCW8sZI2RVYRUFm75+2/D8opwFhh0gEfmy3BtHyAijTRtFgfovO1TtUDWhTC6he
+         HZW0S15d8P+jSXz1H03Iubqd/+Anm8g2iQHo7lb9RF83dXRENzrJKBsZEVLqyQgP+kDA
+         BrwHRMhEZF2Nh0rvt8K+b3KPJYJWzhsIyG0o9Ifww9PoKoZJ3GB2dPzy3hImVFNtp2rB
+         qubiJHQW8fTcZJ9RYLVYloba0rXd3CrF/O88AAOFuDey2A6S3zCwKUW6DBP9W8eQRK3p
+         41Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0xnbWFaqEy6PVLM8ZKG+N67R4SBBzTWWNlJtBlkSfr4=;
-        b=kleTmKhHxUB5jNyD13/3kaC5NKUm11gVvNxK/KPajW5usz5O+1Y7yCkSMKhQYJ6RGY
-         8rgaF2EirvobgtNbLjexFnH725mO5Uff9h8/hdvWJu3D8uZjF9X9OzCR1CPFfA+5jkUC
-         Sd1kJnnMlZ/PXpK8zb1DJCz6URsiHfpiwWKaz/DBLaKBLmS6cQVcROBnJy6mYXNxOYKp
-         F0wbxj9rasiC5NfI8Cq2w9g+lnZxYcCpnnj1CrEcHHjY6DIqtHzOMhEikMOfs5Lr0OIc
-         atLd7Xm8MljBN/Iig54PRjmjWu+AspSDFfw9IBqRmcxVl+AonmamgPvdmON0zGTFigGg
-         d4TA==
-X-Gm-Message-State: ANhLgQ3454zrKHuUHziojzGxfT2MHkf5Be8AawDsCCffpgNr3d8EFQxs
-        k2oVNPCsI/yOQfvvak/0Fl6rCJIa
-X-Google-Smtp-Source: ADFU+vull3v7slEnRUkbqO0h19tyS3WmuX1jJ4RdE0ety6S1F3oAqs3/fGOKTAlSiRU8p8LQAiGhJA==
-X-Received: by 2002:adf:82b0:: with SMTP id 45mr36236wrc.120.1584373854302;
-        Mon, 16 Mar 2020 08:50:54 -0700 (PDT)
+        bh=ARobwbMkxpnKD/itXwOoAdtTkWOvbLodvJtLsq09FXI=;
+        b=m7WDoZkPJuGwr1KUKiwH3R0hvLfF//hwaBEZCW83t62T9Q6tG2p6CZ9k/TFF/3/QBP
+         Teq4Y3XngUpT4I+6+oD1UNYk0qU0Zoi05MFtDbtAXlBnIItXY5oWmScQZL9fsGmZ+yON
+         GBL0dWrwIYCYaXmflxAO+Wx8gGUacwhq8BDeBKNkOUQjA9u9eQg82EEUZZ1hfzgUcc+/
+         MK3VxGSJnEUQ1Z3feJQBSWkr8QnqbovemKVdq/DsEJvm1kGzSii8vXJruyCtwYIcAqpP
+         xJ8RD+9UTixEs/uPsle/Jaco49cuocYueli34dJoJX1d/TkkmqB/wWLDAKDKWGQMS0XA
+         t++A==
+X-Gm-Message-State: ANhLgQ0TrmoUh4tS5Ucb3Z8rM/iPyaFPl0I7xl4OBBdOh6X5l4UqTPLP
+        J7LpJt3ms5+GfrgNXEB5VY+aObUk
+X-Google-Smtp-Source: ADFU+vsmPewO42KpiPcOa0lADe84yEUecpaV2WBwPc6111xNRqK7efvqJoGDIMXfkxx11CZOZtNJew==
+X-Received: by 2002:adf:82a6:: with SMTP id 35mr13691507wrc.307.1584373859159;
+        Mon, 16 Mar 2020 08:50:59 -0700 (PDT)
 Received: from saturn.lan ([188.26.73.247])
-        by smtp.gmail.com with ESMTPSA id n14sm153558wmi.19.2020.03.16.08.50.52
+        by smtp.gmail.com with ESMTPSA id n14sm153558wmi.19.2020.03.16.08.50.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:50:53 -0700 (PDT)
+        Mon, 16 Mar 2020 08:50:56 -0700 (PDT)
 From:   Alexandru Ardelean <ardeleanalex@gmail.com>
 X-Google-Original-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -65,11 +65,10 @@ Cc:     jic23@kernel.org, robh+dt@kernel.org, Laszlo.Nagy@analog.com,
         Andrei.Grozav@analog.com, Michael.Hennerich@analog.com,
         Istvan.Csomortani@analog.com, Adrian.Costina@analog.com,
         Dragos.Bogdan@analog.com,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Moritz Fischer <mdf@kernel.org>
-Subject: [PATCH v10 2/8] include: fpga: adi-axi-common.h: add version helper macros
-Date:   Mon, 16 Mar 2020 17:50:29 +0200
-Message-Id: <20200316155035.25500-3-alexandru.ardelean@analog.com>
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v10 4/8] iio: buffer-dmaengine: add dev-managed calls for buffer alloc
+Date:   Mon, 16 Mar 2020 17:50:31 +0200
+Message-Id: <20200316155035.25500-5-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316155035.25500-1-alexandru.ardelean@analog.com>
 References: <20200316155035.25500-1-alexandru.ardelean@analog.com>
@@ -80,30 +79,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The format for all ADI AXI IP cores is the same.
-i.e. 'major.minor.patch'.
+Currently, when using a 'iio_dmaengine_buffer_alloc()', an matching call to
+'iio_dmaengine_buffer_free()' must be made.
 
-This patch adds the helper macros to be re-used in ADI AXI drivers.
+With this change, this can be avoided by using
+'devm_iio_dmaengine_buffer_alloc()'. The buffer will get free'd via the
+device's devres handling.
 
-Acked-by: Moritz Fischer <mdf@kernel.org>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- include/linux/fpga/adi-axi-common.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../buffer/industrialio-buffer-dmaengine.c    | 39 +++++++++++++++++++
+ include/linux/iio/buffer-dmaengine.h          |  3 ++
+ 2 files changed, 42 insertions(+)
 
-diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-index ebd4e07ae3d8..141ac3f251e6 100644
---- a/include/linux/fpga/adi-axi-common.h
-+++ b/include/linux/fpga/adi-axi-common.h
-@@ -16,4 +16,8 @@
- #define ADI_AXI_PCORE_VER(major, minor, patch)	\
- 	(((major) << 16) | ((minor) << 8) | (patch))
+diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+index 94da3b1ca3a2..6dedf12b69a4 100644
+--- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
++++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+@@ -229,6 +229,45 @@ void iio_dmaengine_buffer_free(struct iio_buffer *buffer)
+ }
+ EXPORT_SYMBOL_GPL(iio_dmaengine_buffer_free);
  
-+#define ADI_AXI_PCORE_VER_MAJOR(version)	(((version) >> 16) & 0xff)
-+#define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
-+#define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
++static void __devm_iio_dmaengine_buffer_free(struct device *dev, void *res)
++{
++	iio_dmaengine_buffer_free(*(struct iio_buffer **)res);
++}
 +
- #endif /* ADI_AXI_COMMON_H_ */
++/**
++ * devm_iio_dmaengine_buffer_alloc() - Resource-managed iio_dmaengine_buffer_alloc()
++ * @dev: Parent device for the buffer
++ * @channel: DMA channel name, typically "rx".
++ *
++ * This allocates a new IIO buffer which internally uses the DMAengine framework
++ * to perform its transfers. The parent device will be used to request the DMA
++ * channel.
++ *
++ * The buffer will be automatically de-allocated once the device gets destroyed.
++ */
++struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
++	const char *channel)
++{
++	struct iio_buffer **bufferp, *buffer;
++
++	bufferp = devres_alloc(__devm_iio_dmaengine_buffer_free,
++			       sizeof(*bufferp), GFP_KERNEL);
++	if (!bufferp)
++		return ERR_PTR(-ENOMEM);
++
++	buffer = iio_dmaengine_buffer_alloc(dev, channel);
++	if (IS_ERR(buffer)) {
++		devres_free(bufferp);
++		return buffer;
++	}
++
++	*bufferp = buffer;
++	devres_add(dev, bufferp);
++
++	return buffer;
++}
++EXPORT_SYMBOL_GPL(devm_iio_dmaengine_buffer_alloc);
++
+ MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
+ MODULE_DESCRIPTION("DMA buffer for the IIO framework");
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/iio/buffer-dmaengine.h b/include/linux/iio/buffer-dmaengine.h
+index b3a57444a886..0e503db71289 100644
+--- a/include/linux/iio/buffer-dmaengine.h
++++ b/include/linux/iio/buffer-dmaengine.h
+@@ -14,4 +14,7 @@ struct iio_buffer *iio_dmaengine_buffer_alloc(struct device *dev,
+ 	const char *channel);
+ void iio_dmaengine_buffer_free(struct iio_buffer *buffer);
+ 
++struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
++						   const char *channel);
++
+ #endif
 -- 
 2.20.1
 
