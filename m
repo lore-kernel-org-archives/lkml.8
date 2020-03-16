@@ -2,75 +2,176 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2846C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB8CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A239120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEDE20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqT9L+d/"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="KK07tLL6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tPWJ9tgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732482AbgCPTqN (ORCPT
+        id S1732498AbgCPTqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 15:46:13 -0400
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:42862 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732416AbgCPTqN (ORCPT
+        Mon, 16 Mar 2020 15:46:40 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:50351 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732413AbgCPTqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 15:46:13 -0400
-Received: by mail-ot1-f41.google.com with SMTP id 66so19144233otd.9;
-        Mon, 16 Mar 2020 12:46:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dD9qGn/FmD1rIVTC9XP6vGVct8WmBBkX3v6FBswGPLo=;
-        b=FqT9L+d/z12NLuSeT3JrqFMnKilv4DWfJckRqN3s7x44mG05Dt295h39OD4Oi+Cryj
-         +y88K4HcKPEqz1CZZ0z54c5NMFAp/R1b1zJZEnD6/imKqbg3iNBKdW0j9hMbXxcoHHau
-         O9daOgKikTP8NO5otGV2veBUKB6h6wePj4mjQatfuaavjgZS1vck0XWezWWfpDJawwpJ
-         LovCgFOM0ROSmBMRnsSddxYClXGNy3fpXvjDdo10gN8s1LZ3N0/RQeEo4AKIo4E5IKjK
-         OYlnQSvrpgp9rcfBXnOd7xPwy5vUBg0nzPUJEhwsebLvEoH3BD7dbrUS8rpWZp+NXjkA
-         XtKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dD9qGn/FmD1rIVTC9XP6vGVct8WmBBkX3v6FBswGPLo=;
-        b=kzU620ZnROI8MH8OffE3/wYULHCfNTVX7OCsh5w06CX/1WllwfVHqeaHv9uMZYkIUO
-         gfNlOQSEt5KAOZfDBo2CFmO4qWpFiQvFqNXdz26+VyAnIbC+AFa0xrnnRmCSIsszGgtN
-         qKb+LMnmzAJ5wf7UHSuKvZ9jwm2a7UJSRd/k+WlrzMu9GG75PibRLMHPdo9tmfUH4ZHk
-         aW3JhtlmjHvC8f+E5bf0R0zVRUZm/3ZD4CMvjGSNjhiEOSGMkf4OwYWO1eESCYW6J2DW
-         DsNNTR/t3q3bIy+tivbc2FQ0Fd+kxQzzxVWDiVQsQDZgFvyK/D78e2RvnP5RD2i7aFEA
-         pUYw==
-X-Gm-Message-State: ANhLgQ3+AWzBP+Vh4j4n6vMpIxIQ2EyZapTmgTrM54L2+FAaXEWFAyRf
-        7Ed7mCLTKmCEkD5wtCILERjr63KzYY3kF3ekXwA=
-X-Google-Smtp-Source: ADFU+vtA7AzP+zXTm4BQNcSJHb20DfzuwnHnw+xS+lfJ+KbxiiJD/nA8Wgqaj1wL9kQWkN+9/TzCJDBQPXH5BQOJP6Q=
-X-Received: by 2002:a05:6830:1e96:: with SMTP id n22mr692919otr.189.1584387972457;
- Mon, 16 Mar 2020 12:46:12 -0700 (PDT)
+        Mon, 16 Mar 2020 15:46:39 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 744635C029C;
+        Mon, 16 Mar 2020 15:46:38 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 16 Mar 2020 15:46:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=F+L/RnrZWA8hJfqh8UJGEn/VcqJ
+        5iOlEAqD0BCAvsvY=; b=KK07tLL6ZJ3e7X2CN9KgOGpO4qt1O64GF8PxQ67q130
+        adM4yQTITcBvUGQBhSt4sCXYAQkgq+UX7dRVO0hYiAQKibFzuf5gQ64tul25QQX7
+        McsPYfpcn4/XXapnF3S2KXk7Viwm8WeJiw791xHsGr8ADeFFPQsewfSV6m2LKXhb
+        HJ9jR7tP5IimiA/7IiOI6qEDIDEq/JOysSZdHK6vZ9yyn+S9m9/RylqWGjp1Vt8Q
+        ileP4COWqCPo6EoT8YDfep83WWxuPmrd2V4Ow5mkAgrn1wxQBQOxu7YUqoAh3wnS
+        vs4L8xgU6DDNqgL3Ww0RCTKgx23eJBljjF+Aw7JgXQQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=F+L/Rn
+        rZWA8hJfqh8UJGEn/VcqJ5iOlEAqD0BCAvsvY=; b=tPWJ9tgHcSw/bOJ4yyHpMo
+        Urojvf0PHFsqBmjfaQD/pAhPYRB4JSo52OZrEmv0V74m+SzhpXtdvlyLq1MF9l1A
+        ChOP0G/g4IuXjOm6GhFaY2rWl080maNGYOphkASki9sxYitLhXjBtJGP1u5FLkp0
+        FMICmauDM7H0FY/h8MJI5JlS0nWaOCRx5eSrbgwoF+sZOUEQ0ObnscSHvVYWmVvZ
+        3BfdyfePHtHkrf3Fqwk+PblYSx+6hU0Gdvjs2s4uIfVmggZhq+19QviR1yIHB+Nq
+        AEe2AIsQevFxWs20WlJBFShejruPWFfU5hoAvQXwrsf37U+MnAeAtz9wTAUCwlDQ
+        ==
+X-ME-Sender: <xms:nddvXmw1QVmTZv6htHkGqvqqyKEO3LauCopZ3m1nP9p42M_P4IX9_w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeffedguddvjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehg
+    rhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:nddvXj0EAbEEpSe7UVC7ysp_GnLaEX40b64Ij7aYqHaFTwY2OwxZYA>
+    <xmx:nddvXnkyBFwmdlNamEyC2LJ215JHkqp8XaBtPN0FfnjtJtr5yX2yvA>
+    <xmx:nddvXi8FrZOPEnNu_fL8UrNFBBSVCzMPvfyh-_It6ELbq_9GXjdtOA>
+    <xmx:ntdvXqGgZezPTIZRUYZclW3eaJG5UCUYqFMEIWNV6x3Eg38OxJNuOg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3B9D930624CC;
+        Mon, 16 Mar 2020 15:46:37 -0400 (EDT)
+Date:   Mon, 16 Mar 2020 20:46:26 +0100
+From:   Greg KH <greg@kroah.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Felipe Balbi <balbi@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: linux-next: build failure after merge of the usb-gadget tree
+Message-ID: <20200316194626.GC327539@kroah.com>
+References: <20200316143752.473f1073@canb.auug.org.au>
+ <CALAqxLVbG8C0h3OkCGOAQPpFjrwiqddjONTO-EGmhzz52LnKMw@mail.gmail.com>
+ <CALAqxLXfgv0Wt_OhOvYUiorJaSP=9wJj2Nqs-7a5VAs=8T2SHA@mail.gmail.com>
 MIME-Version: 1.0
-References: <000000000000fd030905a0b75ac8@google.com>
-In-Reply-To: <000000000000fd030905a0b75ac8@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 16 Mar 2020 12:46:01 -0700
-Message-ID: <CAM_iQpXMckb7O6Fje30icqpHuhmzYNOx_ugnVWoOpgGteVTtdw@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in route4_get
-To:     syzbot <syzbot+1cba26af4a37d30e8040@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALAqxLXfgv0Wt_OhOvYUiorJaSP=9wJj2Nqs-7a5VAs=8T2SHA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz fix: net_sched: cls_route: remove the right filter from hashtable
+On Mon, Mar 16, 2020 at 11:11:00AM -0700, John Stultz wrote:
+> On Mon, Mar 16, 2020 at 10:42 AM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Sun, Mar 15, 2020 at 8:37 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > >
+> > > After merging the usb-gadget tree, today's linux-next build (arm
+> > > multi_v7_defconfig) failed like this:
+> > >
+> > > drivers/usb/dwc3/drd.c: In function 'dwc3_setup_role_switch':
+> > > drivers/usb/dwc3/drd.c:551:23: error: assignment to 'usb_role_switch_set_t' {aka 'int (*)(struct usb_role_switch *, enum usb_role)'} from incompatible pointer type 'int (*)(struct device *, enum usb_role)' [-Werror=incompatible-pointer-types]
+> > >   551 |  dwc3_role_switch.set = dwc3_usb_role_switch_set;
+> > >       |                       ^
+> > > drivers/usb/dwc3/drd.c:552:23: error: assignment to 'usb_role_switch_get_t' {aka 'enum usb_role (*)(struct usb_role_switch *)'} from incompatible pointer type 'enum usb_role (*)(struct device *)' [-Werror=incompatible-pointer-types]
+> > >   552 |  dwc3_role_switch.get = dwc3_usb_role_switch_get;
+> > >       |                       ^
+> > >
+> > > Caused by commit
+> > >
+> > >   8a0a13799744 ("usb: dwc3: Registering a role switch in the DRD code.")
+> > >
+> > > interacting with commit
+> > >
+> > >   bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the switch in the API")
+> > >
+> > > from the usb tree.
+> > >
+> > > I have added the following merge fix patch (which may need more work):
+> > >
+> > > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Date: Mon, 16 Mar 2020 14:34:31 +1100
+> > > Subject: [PATCH] usb: dwc3: fix up for role switch API change
+> > >
+> > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > ---
+> > >  drivers/usb/dwc3/drd.c | 10 ++++++----
+> > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> > > index db68d48c2267..7db1ffc92bbd 100644
+> > > --- a/drivers/usb/dwc3/drd.c
+> > > +++ b/drivers/usb/dwc3/drd.c
+> > > @@ -478,9 +478,10 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
+> > >
+> > >  #if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
+> > >  #define ROLE_SWITCH 1
+> > > -static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
+> > > +static int dwc3_usb_role_switch_set(struct usb_role_switch *sw,
+> > > +                                   enum usb_role role)
+> > >  {
+> > > -       struct dwc3 *dwc = dev_get_drvdata(dev);
+> > > +       struct dwc3 *dwc = usb_role_switch_get_drvdata(sw);
+> > >         u32 mode;
+> > >
+> > >         switch (role) {
+> > > @@ -502,9 +503,9 @@ static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
+> > >         return 0;
+> > >  }
+> > >
+> > > -static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
+> > > +static enum usb_role dwc3_usb_role_switch_get(struct usb_role_switch *sw)
+> > >  {
+> > > -       struct dwc3 *dwc = dev_get_drvdata(dev);
+> > > +       struct dwc3 *dwc = usb_role_switch_get_drvdata(sw);
+> > >         unsigned long flags;
+> > >         enum usb_role role;
+> > >
+> > > @@ -550,6 +551,7 @@ static int dwc3_setup_role_switch(struct dwc3 *dwc)
+> > >         dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
+> > >         dwc3_role_switch.set = dwc3_usb_role_switch_set;
+> > >         dwc3_role_switch.get = dwc3_usb_role_switch_get;
+> > > +       dwc3_role_switch.driver_data = dwc;
+> > >         dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
+> > >         if (IS_ERR(dwc->role_sw))
+> > >                 return PTR_ERR(dwc->role_sw);
+> >
+> > Yes, thanks. Bryan pointed out there was a problem with the internal
+> > api change in -next, and I intended to resend the set this week.
+> > Your solution looks like what I have in my tree at first glance, but
+> > I'll double check to be sure.
+> 
+> Yes. Just confirmed its the same as what I had in my tree.
+> 
+> Acked-by: John Stultz <john.stultz@linaro.org>
+> 
+> Greg: Could you pull Stephen's fix into your tree?
+
+It's been there for many hours now :)
