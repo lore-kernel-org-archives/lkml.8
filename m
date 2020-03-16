@@ -2,182 +2,183 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25FBC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEAAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDC6206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:15:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BUT2OrTN"
+	by mail.kernel.org (Postfix) with ESMTP id 462F620409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbgCPRPv (ORCPT
+        id S1732041AbgCPRRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:15:51 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:45033 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731507AbgCPRPv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 13:15:51 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 38F1323E61;
-        Mon, 16 Mar 2020 18:15:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584378948;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FkBQjGfFX4RPCtdPTA+h09kDR0zYfg6Q74m+HlrgZjg=;
-        b=BUT2OrTNA5Xq/cAeO91FOmT4Vzjbe6rHKp1In93/VKCG4yRRkIBEMx1g8VM3ucWOhC99tQ
-        gXXjObJS/iVcITZh4uIi7mw2bxGCDz3580knWKtQ+9bQNN5z/dwyG9cvE46izCjWFCPPSu
-        lOykjNLBPPfmahq+zd4DDQykcUgwifE=
+        Mon, 16 Mar 2020 13:17:22 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43559 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731507AbgCPRRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 13:17:21 -0400
+IronPort-SDR: K0NB5rVmdkiD58MEQBWI20B9/8Kb6THDSk7m3h1NPUXrHod7hX11HxSICBQSzS5+KpNnzQfsx+
+ P2paUghjYf4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 10:17:21 -0700
+IronPort-SDR: 89TgovsS+wPctmLe6qcX+9E9bZjgh4/kNBdZIB0o8siPkvfm83eMykN5LNt5gdjNSIopsgoopy
+ tNRuQLIl4mIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,561,1574150400"; 
+   d="scan'208";a="237673369"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Mar 2020 10:17:20 -0700
+Date:   Mon, 16 Mar 2020 10:17:20 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200316171720.GG24267@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <20200315012523.GC208715@linux.intel.com>
+ <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <7f9f2efe-e9af-44da-6719-040600f5b351@fortanix.com>
+ <CAOASepNifZdBmg59sJcP1mqSYMW_C=KsdKq-fCmvAU_5iQ9DFw@mail.gmail.com>
+ <db12016d-8719-daa0-4742-7d7c43dd464d@fortanix.com>
+ <CAOASepNZZ8rGmJNvSdFHbtYpJkfkHp4vAdDFOmR4BcuOcCRgNQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 16 Mar 2020 18:15:48 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
- queue with a simple completion
-In-Reply-To: <CA+h21hqt7Xe1LrSDsCVS8zqunQp2tKGhmHDraMirxL595go4nA@mail.gmail.com>
-References: <20200314224340.1544-1-olteanv@gmail.com>
- <20200314224340.1544-7-olteanv@gmail.com>
- <20200316122613.GE5010@sirena.org.uk>
- <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
- <20200316124945.GF5010@sirena.org.uk>
- <CA+h21hpoHGuDwpOqtWJFO7+0mQVUrmcBLW7nnGq6dt3QU5axfw@mail.gmail.com>
- <d05fda0e119405343e540b9768db534f@walle.cc>
- <CA+h21hqt7Xe1LrSDsCVS8zqunQp2tKGhmHDraMirxL595go4nA@mail.gmail.com>
-Message-ID: <8c22cb70b7c0acb6769e0c68540ab523@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 38F1323E61
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.660];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOASepNZZ8rGmJNvSdFHbtYpJkfkHp4vAdDFOmR4BcuOcCRgNQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-16 17:23, schrieb Vladimir Oltean:
-> On Mon, 16 Mar 2020 at 15:25, Michael Walle <michael@walle.cc> wrote:
->> 
->> Am 2020-03-16 14:00, schrieb Vladimir Oltean:
->> > On Mon, 16 Mar 2020 at 14:49, Mark Brown <broonie@kernel.org> wrote:
->> >>
->> >> On Mon, Mar 16, 2020 at 02:29:09PM +0200, Vladimir Oltean wrote:
->> >>
->> >> > Correct, the real problem is that I forgot to add a Fixes: tag for
->> >> > patch 5. I'll do that now.
->> >>
->> >> OK.  The series otherwise looked fine but I'll wait for testing.
->> >> Michael, if there's issues remaining it might be good to get some
->> >> Tested-bys for the patches prior to whatever's broken so we can get
->> >> those fixes in (but obviously verifying that is work so only if you
->> >> have time).
->> 
->> I'm just about to test it. While my former "cat /dev/mtdN > /dev/null"
->> is working. I had the impression that it was slower, so I tried to 
->> test
->> it with dd now and a known chunk size.. only to find out that it is
->> still not working:
->> 
->> # dmesg|grep spi
->> [    1.894891] spi-nor spi1.0: w25q128fw (16384 Kbytes)
->> ..
->> # time cat /dev/mtd0 > /dev/null
->> real    0m 30.73s
->> user    0m 0.00s
->> sys     0m 1.02s
->> # dd if=/dev/mtd0 of=/dev/null bs=64
->> 262144+0 records in
->> 262144+0 records out
->> # dd if=/dev/mtd0 of=/dev/null bs=64
->> 262144+0 records in
->> 262144+0 records out
->> # dd if=/dev/mtd0 of=/dev/null bs=64
->> dd: /dev/mtd0: Input/output error
+On Mon, Mar 16, 2020 at 10:03:31AM -0400, Nathaniel McCallum wrote:
+> On Mon, Mar 16, 2020 at 9:59 AM Jethro Beekman <jethro@fortanix.com> wrote:
+> >
+> > On 2020-03-16 14:57, Nathaniel McCallum wrote:
+> > > On Mon, Mar 16, 2020 at 9:32 AM Jethro Beekman <jethro@fortanix.com> wrote:
+> > >>
+> > >> On 2020-03-15 18:53, Nathaniel McCallum wrote:
+> > >>> On Sat, Mar 14, 2020 at 9:25 PM Jarkko Sakkinen
+> > >>> <jarkko.sakkinen@linux.intel.com> wrote:
+> > >>>>
+> > >>>> On Wed, Mar 11, 2020 at 01:30:07PM -0400, Nathaniel McCallum wrote:
+> > >>>>> Currently, the selftest has a wrapper around
+> > >>>>> __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
+> > >>>>> registers (CSRs), though it uses none of them. Then it calls this
+> > >>>>> function which uses %rbx but preserves none of the CSRs. Then it jumps
+> > >>>>> into an enclave which zeroes all these registers before returning.
+> > >>>>> Thus:
+> > >>>>>
+> > >>>>>   1. wrapper saves all CSRs
+> > >>>>>   2. wrapper repositions stack arguments
+> > >>>>>   3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
+> > >>>>>   4. selftest zeros all CSRs
+> > >>>>>   5. wrapper loads all CSRs
+> > >>>>>
+> > >>>>> I'd like to propose instead that the enclave be responsible for saving
+> > >>>>> and restoring CSRs. So instead of the above we have:
+> > >>>>>   1. __vdso_sgx_enter_enclave() saves %rbx
+> > >>>>>   2. enclave saves CSRs
+> > >>>>>   3. enclave loads CSRs
+> > >>>>>   4. __vdso_sgx_enter_enclave() loads %rbx
+> > >>>>>
+> > >>>>> I know that lots of other stuff happens during enclave transitions,
+> > >>>>> but at the very least we could reduce the number of instructions
+> > >>>>> through this critical path.
+> > >>>>
+> > >>>> What Jethro said and also that it is a good general principle to cut
+> > >>>> down the semantics of any vdso as minimal as possible.
+> > >>>>
+> > >>>> I.e. even if saving RBX would make somehow sense it *can* be left
+> > >>>> out without loss in terms of what can be done with the vDSO.
+> > >>>
+> > >>> Please read the rest of the thread. Sean and I have hammered out some
+> > >>> sensible and effective changes.
+> > >>
+> > >> I'm not sure they're sensible? By departing from the ENCLU calling
+> > >> convention, both the VDSO and the wrapper become more complicated.
+> > >
+> > > For the vDSO, only marginally. I'm counting +4,-2 instructions in my
+> > > suggestions. For the wrapper, things become significantly simpler.
+> > >
+> > >> The wrapper because now it needs to implement all kinds of logic for
+> > >> different behavior depending on whether the VDSO is or isn't available.
+
+How so?  The wrapper, if one is needed, will need to have dedicated logic
+for the vDSO no matter what interface is defined by the vDSO.  Taking the
+leaf in %rcx instead of %rax would at worst add a single instruction.  At
+best, it would eliminate the wrapper entirely by making the vDSO callable
+from C, e.g. for enclaves+runtimes that treat EENTER/ERESUME as glorified
+function calls, i.e. more or less follow the x86-64 ABI.
+
+> > > When isn't the vDSO available?
+> >
+> > When you're not on Linux. Or when you're on an old kernel.
 > 
-> I don't really have a SPI flash connected to DSPI on any LS1028A board.
+> I fail to see why the Linux kernel should degrade its new interfaces for
+> those use cases.
 
-I'm already debugging it again.
+There are effectively four related, but independent, changes to consider:
 
-> Is this DMA or XSPI mode?
+  1. Make the RSP fixup in the "return from handler" path relative instead
+     of absolute.
 
-XSPI mode. DMA mode looked good for now.
+  2. Preserve RBX in the vDSO.
 
->> 
->> I also wanted to test how it behaves if there are multiple processes
->> access the /dev/mtdN device. I haven't found the time to dig into
->> the call chain if see if there is any locking. Because what happens
->> if transfer_one_message() is called twice at the same time from two
->> different processes?
->> 
-> 
-> There is a mutex on the SPI bus, and therefore all variants of the
-> .transfer() call are operating under this lock protection, which
-> simplifies things quite a bit.
+  3. Use %rcx instead of %rax to pass @leaf.
 
-Ok, thanks.
+  4. Allow the untrusted runtime to pass a parameter directly to its exit
+     handler.
 
--michael
 
->> >
->> > This time I verified with a protocol analyzer all transfer lengths
->> > from 1 all the way to 256, with this script:
->> >
->> > #!/bin/bash
->> >
->> > buf=''
->> >
->> > for i in $(seq 0 255); do
->> > »       buf="${buf}\x$(printf '%02x' ${i})"
->> > »       spidev_test --device /dev/spidev2.0 --bpw 8 --cpha --speed
->> > 5000000 -p "${buf}"
->> > done
->> >
->> > It looked fine as far as I could tell, and also the problems
->> > surrounding Ctrl-C are no longer present. Nonetheless it would be good
->> > if Michael could confirm, but I know that he's very busy too so it's
->> > understandable if he can no longer spend time on this.
->> 
->> I'm working on it ;)
->> 
->> -michael
-> 
-> Thanks,
-> -Vladimir
+For me, #1 is an easy "yes".  It's arguably a bug fix, and the cost is one
+uop.
+
+My vote for #2 and #3 would also be a strong "yes".  Although passing @leaf
+in %rcx technically diverges from ENCLU, I actually think it will make it
+easier to swap between the vDSO and a bare ENCLU.  E.g. have the prototype
+for the vDSO be the prototype for the assembly wrapper:
+
+typedef void (*enter_enclave_fn)(unsigned long rdi, unsigned long rsi,
+				 unsigned long rdx, unsigned int leaf,
+				 unsigned long r8,  unsigned long r9,
+				 void *tcs,
+				 struct sgx_enclave_exception *e,
+				 sgx_enclave_exit_handler_t handler);
+
+int run_enclave(...)
+{
+	enter_enclave_fn enter_enclave;
+
+	if (vdso)
+		enter_enclave = vdso;
+	else
+		enter_enclave = my_wrapper;
+	return enter_enclave(...);
+}
+
+
+I don't have a strong opinion on #4.  It seems superfluous, but if the
+parameter is buried at the end of the prototype then it can be completely
+ignored by runtimes that don't utilize a handler.
