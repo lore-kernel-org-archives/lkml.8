@@ -2,95 +2,96 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9919C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBBBC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9175120658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB0520658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbgCPJwa (ORCPT
+        id S1730533AbgCPJxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:52:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42708 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730088AbgCPJwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:52:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8A7E7B117;
-        Mon, 16 Mar 2020 09:52:28 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 555B51E10DA; Mon, 16 Mar 2020 10:52:24 +0100 (CET)
-Date:   Mon, 16 Mar 2020 10:52:24 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
-Message-ID: <20200316095224.GF12783@quack2.suse.cz>
-References: <20200227052442.22524-1-ira.weiny@intel.com>
- <20200305155144.GA5598@lst.de>
- <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
- <20200311033614.GQ1752567@magnolia>
- <20200311062952.GA11519@lst.de>
- <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
+        Mon, 16 Mar 2020 05:53:09 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:56833 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730431AbgCPJxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:53:01 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: sC2KMEzaRyiEAqfCSUIZXkRbjMbVbehFCbA4z+3IqH3UXYcvvRJB9ga/QubJAqoOnktW9xggfz
+ eDgDT9fFMIeAbJeP53MIjw3aNGjzUENpJsJvLtKzpS8JFCjPVHixoGv7etqdugBkF/Cj1XiDnq
+ kiscYTDjmbYWcGb+XnWlN6wdG8mHa6O2qU3IZu2RWBuAL7qRP/a1IRb1ZHLJSNhMUSUxMdKQtU
+ 9hVz0TqXTdJzyVhvkO7mw8Vpm0V7YWx9dig4OU8v+UneBC5J/LagF8USvxyZaIsPxOqIeWBfe6
+ Meo=
+X-IronPort-AV: E=Sophos;i="5.70,559,1574146800"; 
+   d="scan'208";a="5786408"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Mar 2020 02:53:01 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 16 Mar 2020 02:53:00 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Mon, 16 Mar 2020 02:53:01 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
+CC:     <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH] clocksource/drivers/timer-microchip-pit64b: set rate for gck
+Date:   Mon, 16 Mar 2020 11:52:56 +0200
+Message-ID: <1584352376-32585-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-03-20 10:07:18, Dan Williams wrote:
-> On Tue, Mar 10, 2020 at 11:30 PM Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > On Tue, Mar 10, 2020 at 08:36:14PM -0700, Darrick J. Wong wrote:
-> > > 1) Leave the inode flag (FS_XFLAG_DAX) as it is, and export the S_DAX
-> > > status via statx.  Document that changes to FS_XFLAG_DAX do not take
-> > > effect immediately and that one must check statx to find out the real
-> > > mode.  If we choose this, I would also deprecate the dax mount option;
-> > > send in my mkfs.xfs patch to make it so that you can set FS_XFLAG_DAX on
-> > > all files at mkfs time; and we can finally lay this whole thing to rest.
-> > > This is the closest to what we have today.
-> > >
-> > > 2) Withdraw FS_XFLAG_DAX entirely, and let the kernel choose based on
-> > > usage patterns, hardware heuristics, or spiteful arbitrariness.
-> >
-> > 3) Only allow changing FS_XFLAG_DAX on directories or files that do
-> > not have blocks allocated to them yet, and side step all the hard
-> > problems.
-> 
-> This sounds reasonable to me.
-> 
-> As for deprecating the mount option, I think at a minimum it needs to
-> continue be accepted as an option even if it is ignored to not break
-> existing setups.
+Generic clock rate needs to be set in case it was selected as timer clock
+source in mchp_pit64b_init_mode(). Otherwise it will be enabled with wrong
+rate.
 
-Agreed. But that's how we usually deprecate mount options. Also I'd say
-that statx() support for reporting DAX state and some education of
-programmers using DAX is required before we deprecate the mount option
-since currently applications check 'dax' mount option to determine how much
-memory they need to set aside for page cache before they consume everything
-else on the machine...
+Fixes: 625022a5f160 ("clocksource/drivers/timer-microchip-pit64b: Add Microchip PIT64B support")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/clocksource/timer-microchip-pit64b.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-								Honza
+diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
+index bd63d3484838..59e11ca8ee73 100644
+--- a/drivers/clocksource/timer-microchip-pit64b.c
++++ b/drivers/clocksource/timer-microchip-pit64b.c
+@@ -264,6 +264,7 @@ static int __init mchp_pit64b_init_mode(struct mchp_pit64b_timer *timer,
+ 
+ 	if (!best_diff) {
+ 		timer->mode |= MCHP_PIT64B_MR_SGCLK;
++		clk_set_rate(timer->gclk, gclk_round);
+ 		goto done;
+ 	}
+ 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.7.4
+
