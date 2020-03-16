@@ -2,108 +2,122 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D59C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0A0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8719120658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:39:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WPUvthuE"
+	by mail.kernel.org (Postfix) with ESMTP id 5140E20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbgCPNjY (ORCPT
+        id S1731383AbgCPNlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:39:24 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51750 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731330AbgCPNjY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:39:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=BaRGNKQoR/jrhx6/KSsGNdhrEF6jcrpsPC4IKGlhMFI=; b=WPUvthuEug6gpm35QMMqVvEc1P
-        DOFr3Fi3AI9FzBrXgn9aseRLFv1dkD8MwN4Bnruv9vw0VRZVnozJfIpCpRcJ2g4gD48zWpT4FFo+6
-        0/8vk36awSocJEidgtN/yxqmxOY56+3rhq4N5/+EAlA6gGtqVAFKSxqvlHPVj63cNEmw01IQ2Vmv9
-        wNVdyHKuXDUe0L6I5OOR0hsLqeaQB1ar9Tm34kmIOTm07SW2pySxJduV6Qyz7o7PTBdFDzDZ06/Sy
-        7VzsmR9kxGluYjdTaI12N7QGXIH+C3opbggU+kP0ORXWzVahSF2NOLpe8zV11iUPFvqYDXpVemHWE
-        XlSrNZOA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jDpxe-0006hA-El; Mon, 16 Mar 2020 13:39:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 49A8330110E;
-        Mon, 16 Mar 2020 14:39:17 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F2A4D20B151F2; Mon, 16 Mar 2020 14:39:16 +0100 (CET)
-Date:   Mon, 16 Mar 2020 14:39:16 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ling Ma <ling.ma.program@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        "ling.ma" <ling.ml@antfin.com>, viro@zeniv.linux.org.uk
-Subject: Re: [RFC PATCH] locks:Remove spinlock in unshare_files
-Message-ID: <20200316133916.GD12561@hirez.programming.kicks-ass.net>
-References: <20200313031017.71090-1-ling.ma.program@gmail.com>
- <CAOGi=dNniSgkUtJPfaYLAbR+_8DMFdU59mx7hf8Otj_VjDF_dQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOGi=dNniSgkUtJPfaYLAbR+_8DMFdU59mx7hf8Otj_VjDF_dQ@mail.gmail.com>
+        Mon, 16 Mar 2020 09:41:35 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54992 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730970AbgCPNlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 09:41:35 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A4EBC200A2C;
+        Mon, 16 Mar 2020 14:41:32 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ED6EA200A31;
+        Mon, 16 Mar 2020 14:41:26 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DEFEC402E4;
+        Mon, 16 Mar 2020 21:41:19 +0800 (SGT)
+From:   Sherry Sun <sherry.sun@nxp.com>
+To:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
+        james.morse@arm.com, rrichter@marvell.com, michal.simek@xilinx.com,
+        manish.narani@xilinx.com
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, frank.li@nxp.com
+Subject: [patch v3] EDAC: synopsys: Fix the wrong call of pinf->col parameter
+Date:   Mon, 16 Mar 2020 21:34:39 +0800
+Message-Id: <1584365679-27443-1-git-send-email-sherry.sun@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 09:25:42PM +0800, Ling Ma wrote:
-> Any comments ?
+Since ZynqMP platform call zynqmp_get_error_info() function to get ce/ue
+information. In this function, pinf->col parameter is not used, this
+parameter is only used by Zynq platforme in zynq_get_error_info(). So
+here pinf->col should not be called and printed for ZynqMP, need remove
+it.
 
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+In order to show which function called handle_error() explicitly, here
+use DDR_ECC_INTR_SUPPORT as check condition to distinguish Zynq and
+ZynqMP platform instead the current way.
 
-Also, it probably helps to Cc the right people.
+Fixes: b500b4a029d57 ("EDAC, synopsys: Add ECC support for ZynqMP DDR controller")
+Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+Reviewed-by: Manish Narani <manish.narani@xilinx.com>
+---
+Changes in V3:
+- Make the check condition in handle_error() more explicitly, use 
+quirks & DDR_ECC_INTR_SUPPORT instead !quirks, and exchange the context in
+if/else.
 
-> <ling.ma.program@gmail.com> 于2020年3月13日周五 上午11:09写道：
-> >
-> > From: Ma Ling <ling.ml@antfin.com>
-> >
-> > Processor support atomic operation for long/int/short/char type,
-> > we use the feature to avoid spinlock, which cost hundreds cycles.
-> >
-> > Appreciate your comments
-> > Ling
-> >
-> > Signed-off-by: Ma Ling <ling.ml@antfin.com>
-> > ---
-> >  kernel/fork.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 60a1295..fe54600 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -3041,9 +3041,7 @@ int unshare_files(struct files_struct **displaced)
-> >                 return error;
-> >         }
-> >         *displaced = task->files;
-> > -       task_lock(task);
-> > -       task->files = copy;
-> > -       task_unlock(task);
-> > +       WRITE_ONCE(task->files, copy);
-> >         return 0;
-> >  }
+Changes in V2:
+- Separated this patch from the original patchset.
 
-AFAICT this is completely and utterly buggered.
+---
+ drivers/edac/synopsys_edac.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-IFF task->files was lockless, like say RCU, then you'd still need
-smp_store_release(). But if we look at fs/file.c then everything uses
-task_lock() and removing it like the above is actively broken.
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index 880ffd833718..12211dc040e8 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -477,16 +477,16 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+ 
+ 	if (p->ce_cnt) {
+ 		pinf = &p->ceinfo;
+-		if (!priv->p_data->quirks) {
++		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
+-				 "CE", pinf->row, pinf->bank, pinf->col,
++				 "DDR ECC error type:%s Row %d Bank %d BankGroup Number %d Block Number %d Bit Position: %d Data: 0x%08x",
++				 "CE", pinf->row, pinf->bank,
++				 pinf->bankgrpnr, pinf->blknr,
+ 				 pinf->bitpos, pinf->data);
+ 		} else {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type:%s Row %d Bank %d Col %d BankGroup Number %d Block Number %d Bit Position: %d Data: 0x%08x",
++				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
+ 				 "CE", pinf->row, pinf->bank, pinf->col,
+-				 pinf->bankgrpnr, pinf->blknr,
+ 				 pinf->bitpos, pinf->data);
+ 		}
+ 
+@@ -497,15 +497,15 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+ 
+ 	if (p->ue_cnt) {
+ 		pinf = &p->ueinfo;
+-		if (!priv->p_data->quirks) {
++		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type :%s Row %d Bank %d Col %d ",
+-				"UE", pinf->row, pinf->bank, pinf->col);
++				 "DDR ECC error type :%s Row %d Bank %d BankGroup Number %d Block Number %d",
++				 "UE", pinf->row, pinf->bank,
++				 pinf->bankgrpnr, pinf->blknr);
+ 		} else {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type :%s Row %d Bank %d Col %d BankGroup Number %d Block Number %d",
+-				 "UE", pinf->row, pinf->bank, pinf->col,
+-				 pinf->bankgrpnr, pinf->blknr);
++				 "DDR ECC error type :%s Row %d Bank %d Col %d ",
++				 "UE", pinf->row, pinf->bank, pinf->col);
+ 		}
+ 
+ 		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
+-- 
+2.17.1
 
