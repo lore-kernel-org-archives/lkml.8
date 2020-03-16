@@ -2,90 +2,106 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 069D4C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A144C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC96B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C5820679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ynm27Tfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732102AbgCPQQm (ORCPT
+        id S1732107AbgCPQRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:16:42 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:55131 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732009AbgCPQQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:16:42 -0400
-X-Greylist: delayed 409 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Mar 2020 12:16:40 EDT
-Received: from localhost.localdomain (unknown [61.129.42.58])
-        by app2 (Coremail) with SMTP id XQUFCgAnLTmzpG9egfZIBQ--.6846S3;
-        Tue, 17 Mar 2020 00:09:24 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] VMCI: Fix dereference before NULL-check of context ptr
-Date:   Tue, 17 Mar 2020 00:05:51 +0800
-Message-Id: <1584374754-9515-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgAnLTmzpG9egfZIBQ--.6846S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruFy3Gry8Wr13KF4UZw17GFg_yoWfGFc_Wa
-        45WFsrJr4FkFnI9wnrArnxZryrtFZ3Zr1xG3Wq9343JFW29w13JF1qvr9xJr43urZrtFnr
-        Jr4qka4Sy3y2kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbTkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_GcCE
-        3s1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-        1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v
-        4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK67AK6r1l42xK82IYc2Ij64vIr41l4I
-        8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
-        xVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
-        AFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
-        cIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-        0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU0_M3UUUUU=
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Mon, 16 Mar 2020 12:17:17 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]:36301 "EHLO
+        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731993AbgCPQRQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 12:17:16 -0400
+Received: by mail-qt1-f176.google.com with SMTP id m33so14680089qtb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:17:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0n3SIaDpi5LQqX+o3orVS785fReSy2zpbwRqWh4oqjg=;
+        b=ynm27TfrRyKHAdDFIldkhG7zJ/MQQzoo7CW9RUu1IRwZZKTY1YJLX/RF5sj0k8BO4c
+         rxPZWouCgToBlOFDFH4B3uK//Gwb0sXote7N713pA1rQzs44kdkNM2oalwGihI8WTN9y
+         GHJw++6mIfIwrkX5gmwAe6KsnpqHQOBCQeClbzUUm08mJM9YGGMNmdNbL8y+thQolOS3
+         yZJ41oZGobwR9U86gk2hdjfYlv4770HZRYJTv38pVhbMojBmeO3AeexZpgTw5b3sgXwb
+         Mu48kDivG9+LnvAqK7LDJKcEdj/nOOwXijYzvPAzNIbKNa5+zDJt275V1LtwHNg0AwUj
+         v/LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0n3SIaDpi5LQqX+o3orVS785fReSy2zpbwRqWh4oqjg=;
+        b=I7dz7Slqkcgm7Bs/Zw8tdU2pqDNYtdUl9A2MVKOVm3hMKNJHa0kz+SATH/CAsw21sv
+         PSiFNmVl1CSIO5foD41tf2PTopuGzlT+nXbNpLU0XjsMUvT1dtViVevXlyTmQnTuN6oV
+         7L3fPlGdrdT/HO+REZUtdMTh93ZiMPo0Qi4TskPajwOGqbqefyxJmjLvj9Y96ksb5J6z
+         Zk6DrOnl2a4iKX62tPw9C2afxbmkMgb8Jbj4iA/VFe1C8ohj66y2q0rwJqNUWTGJJCHA
+         Or2jVixnja1sF3bd6Pr7ocHhynYUfu/LBG5isCz7RDpw04S1eUqCxlmjwIJkgITGC9Tp
+         jbTg==
+X-Gm-Message-State: ANhLgQ2Pcz1DBarHfq18/56Txs0ew/48DimAeypTNi4wuIe2P77CqQqy
+        1adZYvOIQFqJw9Z2ahSg3bjp6Q==
+X-Google-Smtp-Source: ADFU+vt032PPmh975UT1PwegSeKaA58S8zk7+EcNr5p80dx0htNQY3KSgKW9kDPPZkVlLaMDgiijEg==
+X-Received: by 2002:ac8:6b95:: with SMTP id z21mr860291qts.358.1584375435596;
+        Mon, 16 Mar 2020 09:17:15 -0700 (PDT)
+Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
+        by smtp.gmail.com with ESMTPSA id x9sm121128qtk.7.2020.03.16.09.17.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 09:17:14 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 12:17:13 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH -V2] mm: Code cleanup for MADV_FREE
+Message-ID: <20200316161713.GD67986@cmpxchg.org>
+References: <20200316063740.2542014-1-ying.huang@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316063740.2542014-1-ying.huang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A NULL pointer can be returned by vmci_ctx_get(). Thus add a
-corresponding check so that a NULL pointer dereference will
-be avoided in vmci_ctx_put().
+On Mon, Mar 16, 2020 at 02:37:40PM +0800, Huang, Ying wrote:
+> From: Huang Ying <ying.huang@intel.com>
+> 
+> Some comments for MADV_FREE is revised and added to help people understand the
+> MADV_FREE code, especially the page flag, PG_swapbacked.  This makes
+> page_is_file_cache() isn't consistent with its comments.  So the function is
+> renamed to page_is_file_lru() to make them consistent again.  All these are put
+> in one patch as one logical change.
+> 
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Suggested-and-acked-by: David Rientjes <rientjes@google.com>
+> Acked-by: Michal Hocko <mhocko@kernel.org>
+> Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Rik van Riel <riel@surriel.com>
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- drivers/misc/vmw_vmci/vmci_queue_pair.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks, this is definitely an improvement.
 
-diff --git a/drivers/misc/vmw_vmci/vmci_queue_pair.c b/drivers/misc/vmw_vmci/vmci_queue_pair.c
-index 8531ae781195..032617101ebc 100644
---- a/drivers/misc/vmw_vmci/vmci_queue_pair.c
-+++ b/drivers/misc/vmw_vmci/vmci_queue_pair.c
-@@ -1859,7 +1859,8 @@ static int qp_detatch_host_work(struct vmci_handle handle)
- 
- 	result = vmci_qp_broker_detach(handle, context);
- 
--	vmci_ctx_put(context);
-+	if (context)
-+		vmci_ctx_put(context);
- 	return result;
- }
- 
--- 
-2.7.4
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
