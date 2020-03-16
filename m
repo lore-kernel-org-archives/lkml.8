@@ -2,85 +2,79 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB91C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6750C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8899320724
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:34:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PYbkCAIx"
+	by mail.kernel.org (Postfix) with ESMTP id A8D3220724
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730853AbgCPLec (ORCPT
+        id S1730859AbgCPLhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:34:32 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51074 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730845AbgCPLec (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:34:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584358471;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z4yHxb7pYbdu/8lnkdFoPeZU8J+nX5WxMfkBKfFUCQ4=;
-        b=PYbkCAIx/7/LSBPrMeBR9oCoOP2/BRKSs08/MpMO6v2OKRc5q+8qrapkafkNUs53CDipDv
-        8nAw+b8bhoIeQbGExdMjxNoB+6c5IIehNn1h4vih5BrEDPAnEe6RhxsuXfAbPwqqb+NGZv
-        sPb6AAlLodMLNpfyF3cDuhQhXpP8bw8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-UZw6igqXO-ay-k0IbW6pKw-1; Mon, 16 Mar 2020 07:34:28 -0400
-X-MC-Unique: UZw6igqXO-ay-k0IbW6pKw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1AC248017DF;
-        Mon, 16 Mar 2020 11:34:26 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A8C219CA3;
-        Mon, 16 Mar 2020 11:34:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200315212706.GE224162@linux.intel.com>
-References: <20200315212706.GE224162@linux.intel.com> <20200313152102.1707-1-longman@redhat.com> <20200313152102.1707-2-longman@redhat.com> <20200315192104.GD224162@linux.intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     dhowells@redhat.com, Waiman Long <longman@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Subject: Re: [PATCH v3 1/3] KEYS: Don't write out to userspace while holding key semaphore
+        Mon, 16 Mar 2020 07:37:50 -0400
+Received: from verein.lst.de ([213.95.11.211]:53902 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730783AbgCPLhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 07:37:50 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A9E1C68CEC; Mon, 16 Mar 2020 12:37:46 +0100 (CET)
+Date:   Mon, 16 Mar 2020 12:37:46 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     He Zhe <zhe.he@windriver.com>
+Cc:     Christoph Hellwig <hch@lst.de>, jack@suse.cz,
+        Jens Axboe <axboe@kernel.dk>, viro@zeniv.linux.org.uk,
+        bvanassche@acm.org, keith.busch@intel.com, tglx@linutronix.de,
+        mwilck@suse.com, yuyufen@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: disk revalidation updates and OOM
+Message-ID: <20200316113746.GA15930@lst.de>
+References: <93b395e6-5c3f-0157-9572-af0f9094dbd7@windriver.com> <20200310074018.GB26381@lst.de> <75865e17-48f8-a63a-3a29-f995115ffcfc@windriver.com> <20200310162647.GA6361@lst.de> <f48683d9-7854-ba5f-da3a-7ef987a539b8@windriver.com> <20200311155458.GA24376@lst.de> <18bbb6cd-578e-5ead-f2cd-a8a01db17e29@windriver.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1794025.1584358459.1@warthog.procyon.org.uk>
-Date:   Mon, 16 Mar 2020 11:34:19 +0000
-Message-ID: <1794026.1584358459@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <18bbb6cd-578e-5ead-f2cd-a8a01db17e29@windriver.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+On Mon, Mar 16, 2020 at 07:01:09PM +0800, He Zhe wrote:
+> > Do 142fe8f and 979c690d work with the build fix applied? (f0b870d
+> > shouldn't be interesting for this case).
+> 
+> Sorry for slow reply.
+> 
+> With my build fix applied, the issue is triggered since 142fe8f.
+> And I can see the endless loop of invalidate and revalidate...
 
-> Do you have a test case that can reproduce this on a constant basis?
+Thanks.  Can you test the patch below that restores the previous
+rather odd behavior of not clearing the capacity to 0 if partition
+scanning is not enabled?
 
-In this case it's quite tricky because a network filesystem is involved.  I
-wonder if it might be possible to do it with fscrypt or ecryptfs.
 
-David
-
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 69bf2fb6f7cd..daac27f4b821 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1520,10 +1520,13 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (invalidate)
+-		set_capacity(disk, 0);
+-	else if (disk->fops->revalidate_disk)
+-		disk->fops->revalidate_disk(disk);
++	if (invalidate) {
++		if (disk_part_scan_enabled(disk))
++			set_capacity(disk, 0);
++	} else {
++		if (disk->fops->revalidate_disk)
++			disk->fops->revalidate_disk(disk);
++	}
+ 
+ 	check_disk_size_change(disk, bdev, !invalidate);
+ 
