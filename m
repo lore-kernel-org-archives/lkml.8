@@ -2,170 +2,90 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324D2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE1AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC8C206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781C1205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584359461;
+	bh=l6F1XWmO/Be0QKahuz5D5djcbaOCPXDU2fWatSvvxdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v+Hkhw3sJyXVxJHsh1N8wnF14c1pU0aj7qwJHGhMZq9FQ08Ky6a7BjGhyjcUKm4i+
+	 sQPZxfRNiuVeywzh7bSRg9iqNwozePrrT7/EtNPnlyGUo8axjH8QC8ECbdgymWImBz
+	 6KXQZjD1Pj0jQ6jAtA9CjpJ/slWFmT+IkpZpzLOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbgCPLtY (ORCPT
+        id S1730912AbgCPLvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:49:24 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2562 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730882AbgCPLtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:49:23 -0400
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 88596452F718665D9F9F;
-        Mon, 16 Mar 2020 11:49:22 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 16 Mar 2020 11:49:21 +0000
-Received: from localhost (10.47.94.88) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 16 Mar
- 2020 11:49:21 +0000
-Date:   Mon, 16 Mar 2020 11:49:20 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Matt Ranostay <matt.ranostay@konsulko.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Rohit Sarkar <rohitsarkar5398@gmail.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: health: max30100: remove mlock usage
-Message-ID: <20200316114920.00000689@Huawei.com>
-In-Reply-To: <CAJCx=g=7_S5=JJ1K8JCLd06hTbhqTHupUJ1tYX6uiAP+1WtjsQ@mail.gmail.com>
-References: <5e668b89.1c69fb81.d7e4f.0f61@mx.google.com>
-        <20200315094604.62dc96be@archlinux>
-        <CAJCx=gkZEDa5vg1R2gta9vERy2+W4vst0et0THO9Oth3d3Yzfg@mail.gmail.com>
-        <CAJCx=g=7_S5=JJ1K8JCLd06hTbhqTHupUJ1tYX6uiAP+1WtjsQ@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 16 Mar 2020 07:51:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:46802 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730882AbgCPLvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 07:51:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD1D330E;
+        Mon, 16 Mar 2020 04:50:59 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FF693F52E;
+        Mon, 16 Mar 2020 04:50:59 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 11:50:57 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 01/41] spi: spi-omap2-mcspi: Handle DMA size
+ restriction on AM65x
+Message-ID: <20200316115057.GB5010@sirena.org.uk>
+References: <20200316023319.749-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.94.88]
-X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
+Content-Disposition: inline
+In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
+X-Cookie: I thought YOU silenced the guard!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Mar 2020 01:29:28 -0700
-Matt Ranostay <matt.ranostay@konsulko.com> wrote:
 
-> On Mon, Mar 16, 2020 at 1:21 AM Matt Ranostay
-> <matt.ranostay@konsulko.com> wrote:
-> >
-> > On Sun, Mar 15, 2020 at 2:46 AM Jonathan Cameron <jic23@kernel.org> wrote:  
-> > >
-> > > On Tue, 10 Mar 2020 00:01:28 +0530
-> > > Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
-> > >  
-> > > > Use local lock instead of indio_dev's mlock.
-> > > > The mlock was being used to protect local driver state thus using the
-> > > > local lock is a better option here.
-> > > >
-> > > > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>  
-> > >
-> > > Matt.  Definitely need your input on this.
-> > >  
-> > > > ---
-> > > >  drivers/iio/health/max30100.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
-> > > > index 84010501762d..8ddc4649547d 100644
-> > > > --- a/drivers/iio/health/max30100.c
-> > > > +++ b/drivers/iio/health/max30100.c
-> > > > @@ -388,7 +388,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
-> > > >                * Temperature reading can only be acquired while engine
-> > > >                * is running
-> > > >                */
-> > > > -             mutex_lock(&indio_dev->mlock);
-> > > > +             mutex_lock(&data->lock);  
-> > >
-> > > Hmm.. It's another complex one.  What is actually being protected here is
-> > > the buffer state, but not to take it exclusively like claim_direct does.
-> > >
-> > > Here we need the inverse, we want to ensure we are 'not' in the direct
-> > > mode because this hardware requires the buffer to be running to read the
-> > > temperature.
-> > >
-> > > That is the sort of interface that is going to get userspace very
-> > > confused.
-> > >
-> > > Matt, normally what I'd suggest here is that the temperature read should:
-> > >
-> > > 1) Claim direct mode, if it fails then do the dance you have here
-> > > (with more comments to explain why you are taking an internal lock)
-> > > 2) Start up capture as if we were in buffered mode
-> > > 3) Grab that temp
-> > > 4) stop capture to return to non buffered mode.
-> > > 5) Release direct mode.
-> > >
-> > > I guess we decided it wasn't worth the hassle.
-> > >
-> > > So Rohit.  This one probably needs a comment rather than any change.
-> > > We 'could' add a 'hold_buffered_mode' function that takes the mlock,
-> > > verifies we are in buffered mode and continues to hold the lock
-> > > until the 'release_buffered_mode'.  However, I'm not sure any other
-> > > drivers do this particular dance, so clear commenting in the driver
-> > > might be enough.   Should we ever change how mlock is used in the
-> > > core, we'd have to fix this driver up as well.
-> > >
-> > > Hmm.  This is really hammering home that perhaps all the remaining
-> > > mlock cases are 'hard'.  
-> >
-> > Heh really had to look this over what I was doing since it has been
-> > almost half a decade now :).
-> >
-> > Think locking that mutex was only to prevent another read during the
-> > temp reading, and not really
-> > not sure how effective that is actually. Especially since the I2C
-> > subsystem should handle those reads
-> > in a queue like fashion.
-> >
-> > - Matt
-> >  
-> 
-> So to be clear I think we can just remove the lock period since the
-> odds of this actually being requested (or disabled) at the
-> exact time so very remote. Along with the worse case being a failed read.
+--mxv5cy4qt+RJ9ypb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I disagree.   What that lock prevents is disabling buffered mode between
-the check on whether it is enabled and the read.   That's a clear race
-so we should keep the lock.
+On Sun, Mar 15, 2020 at 10:32:39PM -0400, Sasha Levin wrote:
+> From: Vignesh Raghavendra <vigneshr@ti.com>
+>=20
+> [ Upstream commit e4e8276a4f652be2c7bb783a0155d4adb85f5d7d ]
+>=20
+> On AM654, McSPI can only support 4K - 1 bytes per transfer when DMA is
+> enabled. Therefore populate master->max_transfer_size callback to
+> inform client drivers of this restriction when DMA channels are
+> available.
 
-Jonathan
+As ever this only provides information to other drivers which may be
+buggy.
 
+--mxv5cy4qt+RJ9ypb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> - Matt
-> 
-> > >
-> > > Thanks,
-> > >
-> > > Jonathan
-> > >  
-> > > >
-> > > >               if (!iio_buffer_enabled(indio_dev))
-> > > >                       ret = -EAGAIN;
-> > > > @@ -399,7 +399,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
-> > > >
-> > > >               }
-> > > >
-> > > > -             mutex_unlock(&indio_dev->mlock);
-> > > > +             mutex_unlock(&data->lock);
-> > > >               break;
-> > > >       case IIO_CHAN_INFO_SCALE:
-> > > >               *val = 1;  /* 0.0625 */  
-> > >  
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5vaCEACgkQJNaLcl1U
+h9Dyuwf/fRi4iGdV1A9vW0+wTm8Pznka9n9+PoM5TuqyP0qrul8iIK7h/H6xS7bF
+wRQVfQDzo/SfuONZlUUZOvtQXevqHPOtFl2x3Qe1sVnE39byJc6qu/EDsrNYVLgg
+DLzo+493Fh+HQgfAb+b80kh9XbZ4rN0qSsyPpt7Ygqj8EpG/so3qCir1BtkKBYAx
+nVN/HglbGLu0VosqwfRzpUSgPp0mQlVVhrBX3eyL62c3GQ3+R2Fk9namhq4GYNDv
+rcKj4Fi/WhkKOIzmjwPtep6I4uY5ZnM6XVFxa1KuM2p7NVMWlvSZhdn2wvWR0kOr
++dB4D+JEBdndXoBkq3Ywisrppx4JNQ==
+=73L/
+-----END PGP SIGNATURE-----
 
+--mxv5cy4qt+RJ9ypb--
