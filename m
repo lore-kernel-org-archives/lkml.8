@@ -2,102 +2,107 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3F7C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA51C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2C920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E147420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730662AbgCPK3y (ORCPT
+        id S1730671AbgCPKaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:29:54 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:43853 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730550AbgCPK3y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:29:54 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 74FA720003B;
-        Mon, 16 Mar 2020 10:29:05 +0000 (UTC)
-Date:   Mon, 16 Mar 2020 11:29:05 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Mohit Aggarwal <maggarwa@codeaurora.org>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
-Message-ID: <20200316102905.GN4518@piout.net>
-References: <1584342688-14035-1-git-send-email-maggarwa@codeaurora.org>
+        Mon, 16 Mar 2020 06:30:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:45672 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730550AbgCPKaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 06:30:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 671991FB;
+        Mon, 16 Mar 2020 03:30:03 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C3FA3F534;
+        Mon, 16 Mar 2020 03:30:00 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 10:29:58 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
+Message-ID: <20200316102958.GC5746@lakrids.cambridge.arm.com>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-19-vincenzo.frascino@arm.com>
+ <20200315182950.GB32205@mbp>
+ <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
+ <20200316102214.GA5746@lakrids.cambridge.arm.com>
+ <20200316102621.GC3005@mbp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584342688-14035-1-git-send-email-maggarwa@codeaurora.org>
+In-Reply-To: <20200316102621.GC3005@mbp>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 16/03/2020 12:41:28+0530, Mohit Aggarwal wrote:
-> Currently, alarm register is not cleared on resume
-> leading to reboot during power off charging mode.
+On Mon, Mar 16, 2020 at 10:26:22AM +0000, Catalin Marinas wrote:
+> On Mon, Mar 16, 2020 at 10:22:15AM +0000, Mark Rutland wrote:
+> > On Mon, Mar 16, 2020 at 09:42:32AM +0000, Vincenzo Frascino wrote:
+> > > On 3/15/20 6:30 PM, Catalin Marinas wrote:
+> > > > On Fri, Mar 13, 2020 at 03:43:37PM +0000, Vincenzo Frascino wrote:
+> > > >> +#ifdef CONFIG_COMPAT
+> > > >> +#if defined(CONFIG_ARM64_64K_PAGES) && defined(CONFIG_KUSER_HELPERS)
+> > > >> +/*
+> > > >> + * With CONFIG_ARM64_64K_PAGES enabled, the last page is occupied
+> > > >> + * by the compat vectors page.
+> > > >> + */
+> > > >> +#define TASK_SIZE_32		UL(0x100000000)
+> > > >> +#else
+> > > >> +#define TASK_SIZE_32		(UL(0x100000000) - PAGE_SIZE)
+> > > >> +#endif /* CONFIG_ARM64_64K_PAGES */
+> > > >> +#endif /* CONFIG_COMPAT */
+> > > > 
+> > > > Just curious, what's TASK_SIZE_32 used for in the vDSO code? You don't
+> > > > seem to move TASK_SIZE.
+> > > 
+> > > I tried to fine grain the headers as much as I could in order to avoid
+> > > unneeded/unwanted inclusions:
+> > >  * TASK_SIZE_32 is used to verify ABI consistency on vdso32 (please refer to
+> > >    arch/arm64/kernel/vdso32/vgettimeofday.c).
+> > >  * TASK_SIZE is not required by the vdso library hence it is not present in
+> > >    these headers.
+> > 
+> > It would be worth noting the former point in the commit message, since
+> > it can be surprising.
+> > 
+> > I also think it's worth keeping the definitions together if that's easy,
+> > as it makes it easier to navigate the codebase, even if TASK_SIZE isn't
+> > necessary for the VDSO itself.
 > 
-> Change-Id: Ie2e6bbab8aa46e4e9b9cc984181ffab557cbbdae
+> It won't work as TASK_SIZE requires (on arm64) test_thread_flag() which
+> can't be made available to the vDSO.
 
-No Change-Id upstream please.
+Ah; fair enough.
 
-> Signed-off-by: Mohit Aggarwal <maggarwa@codeaurora.org>
-> ---
->  drivers/rtc/rtc-pm8xxx.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-> index bbe013f..96e7985 100644
-> --- a/drivers/rtc/rtc-pm8xxx.c
-> +++ b/drivers/rtc/rtc-pm8xxx.c
-> @@ -1,5 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0-only
-> -/* Copyright (c) 2010-2011, 2019, The Linux Foundation. All rights reserved. */
-> +/* Copyright (c) 2010-2011, 2019-2020, The Linux Foundation. All rights reserved. */
->  
->  #include <linux/of.h>
->  #include <linux/module.h>
-> @@ -301,6 +301,7 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
->  	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
->  	const struct pm8xxx_rtc_regs *regs = rtc_dd->regs;
->  	unsigned int ctrl_reg;
-> +	u8 value[NUM_8_BIT_RTC_REGS] = {0};
->  
->  	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
->  
-> @@ -319,6 +320,16 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
->  		goto rtc_rw_fail;
->  	}
->  
-> +	/* Clear Alarm register */
-> +	if (!enable) {
-> +		rc = regmap_bulk_write(rtc_dd->regmap, regs->alarm_rw, value,
-> +					sizeof(value));
-
-This is not properly aligned.
-
-> +		if (rc) {
-> +			dev_err(dev, "Write to RTC ALARM register failed\n");
-
-Is that error message necessary? What would be the user action after
-seeing that in the logs? Will the logs actually be seen?
-
-> +			goto rtc_rw_fail;
-> +		}
-> +	}
-> +
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Mark.
