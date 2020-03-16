@@ -2,92 +2,84 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69232C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44801C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA24205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A163205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731205AbgCPMi6 (ORCPT
+        id S1731050AbgCPMkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:38:58 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33290 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731027AbgCPMi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:38:57 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7A402E500B6ABF9507E3;
-        Mon, 16 Mar 2020 20:38:48 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 16 Mar 2020
- 20:38:38 +0800
-Subject: Re: [PATCH] KVM: arm64: Use the correct timer for accessing CNT
-To:     Marc Zyngier <maz@kernel.org>
-CC:     KarimAllah Ahmed <karahmed@amazon.de>,
-        <linux-kernel@vger.kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1584351546-5018-1-git-send-email-karahmed@amazon.de>
- <7ed91b9b-e968-770c-28f9-0ca479359657@huawei.com>
- <a8b72d6c0a28e0554050e98d011f32d9@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <a9fd7e22-f46a-fd47-26ee-44d2d36783fd@huawei.com>
-Date:   Mon, 16 Mar 2020 20:38:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 16 Mar 2020 08:40:49 -0400
+Received: from poy.remlab.net ([94.23.215.26]:34254 "EHLO
+        ns207790.ip-94-23-215.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731003AbgCPMks (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:40:48 -0400
+Received: from basile.remlab.net (ip6-localhost [IPv6:::1])
+        by ns207790.ip-94-23-215.eu (Postfix) with ESMTP id BEBCD5FAC8;
+        Mon, 16 Mar 2020 13:40:46 +0100 (CET)
+From:   =?UTF-8?q?R=C3=A9mi=20Denis-Courmont?= <remi@remlab.net>
+To:     catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     mark.rutland@arm.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] arm64: clean up trampoline vector loads
+Date:   Mon, 16 Mar 2020 14:40:44 +0200
+Message-Id: <20200316124046.103844-1-remi@remlab.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <a8b72d6c0a28e0554050e98d011f32d9@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+From: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
 
-On 2020/3/16 19:09, Marc Zyngier wrote:
-> Hi Zenghui,
-> 
-> On 2020-03-16 10:49, Zenghui Yu wrote:
->> Hi,
->>
->> On 2020/3/16 17:39, KarimAllah Ahmed wrote:
->>> Use the physical timer object when reading the physical timer counter
->>> instead of using the virtual timer object. This is only visible when
->>> reading it from user-space as kvm_arm_timer_get_reg() is only 
->>> executed on
->>> the get register patch from user-space.
->>
->> s/patch/path/
->>
->> I think the physical counter hasn't yet been accessed by the current
->> userspace, wrong?
-> 
-> I don't think userspace can access it, as the ONE_REG API only exposes 
-> the virtual
-> timer so far, and userspace is much better off just reading the counter 
-> directly
-> (it has access to the virtual counter, and the guarantee that cntvoff is 
-> 0 in this
-> context).
+This switches from custom instruction patterns to the regular large
+memory model sequence with ADRP and LDR. In doing so, the ADD
+instruction can be eliminated in the SDEI handler, and the code no
+longer assumes that the trampoline vectors and the vectors address both
+start on a page boundary.
 
-Yeah, I see. The physical timer registers are all ignored in
-walk_one_sys_reg() and won't be exposed.
+Signed-off-by: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
+---
+ arch/arm64/kernel/entry.S | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-> 
-> But as we move towards a situation where we can save/restore the 
-> physical timer
-> just like the virtual one, we're going to use this path and hit this bug.
-
-Thanks for the explanation.
-
-
-Zenghui
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index e5d4e30ee242..24f828739696 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -805,9 +805,9 @@ alternative_else_nop_endif
+ 2:
+ 	tramp_map_kernel	x30
+ #ifdef CONFIG_RANDOMIZE_BASE
+-	adr	x30, tramp_vectors + PAGE_SIZE
++	adrp	x30, tramp_vectors + PAGE_SIZE
+ alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
+-	ldr	x30, [x30]
++	ldr	x30, [x30, #:lo12:__entry_tramp_data_start]
+ #else
+ 	ldr	x30, =vectors
+ #endif
+@@ -953,9 +953,8 @@ SYM_CODE_START(__sdei_asm_entry_trampoline)
+ 1:	str	x4, [x1, #(SDEI_EVENT_INTREGS + S_ORIG_ADDR_LIMIT)]
+ 
+ #ifdef CONFIG_RANDOMIZE_BASE
+-	adr	x4, tramp_vectors + PAGE_SIZE
+-	add	x4, x4, #:lo12:__sdei_asm_trampoline_next_handler
+-	ldr	x4, [x4]
++	adrp	x4, tramp_vectors + PAGE_SIZE
++	ldr	x4, [x4, #:lo12:__sdei_asm_trampoline_next_handler]
+ #else
+ 	ldr	x4, =__sdei_asm_handler
+ #endif
+-- 
+2.25.1
 
