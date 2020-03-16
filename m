@@ -2,74 +2,113 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8896CC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE853C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC4F20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89ADB2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:18:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="xnDXV/hx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgCPJR6 (ORCPT
+        id S1730417AbgCPJSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:17:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:44470 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730025AbgCPJR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:17:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 810021FB;
-        Mon, 16 Mar 2020 02:17:57 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FAFE3F534;
-        Mon, 16 Mar 2020 02:17:54 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 09:17:47 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH v3 26/26] arm64: vdso32: Enable Clang Compilation
-Message-ID: <20200316091730.GB3005@mbp>
-References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
- <20200313154345.56760-27-vincenzo.frascino@arm.com>
+        Mon, 16 Mar 2020 05:18:37 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:37067 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730025AbgCPJSh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:18:37 -0400
+Received: by mail-vk1-f196.google.com with SMTP id o124so4642091vkc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 02:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xS1w6b9dGNxOYZgn4XqIsKqMFqWDeiCDvqlu4Cc2qb8=;
+        b=xnDXV/hxwqGt009+I3FBwB8fLLhBVcO6v21MqAzIxBgCZ2q9ZUfSnVGKHDpIwcNUQX
+         hajdIKjDWiM9wPD4n9GCOk3b6y5IcSF092I0S8x6fJGvW+sH42iV/J6WHM9tt+C7vEZF
+         jl4oZ168qMMXgOXkw/govVYYtLVFcfaj7zpfmsnGvZRBTKj2u6j9B5mHyLqsYOMXkYFF
+         JTZkazg1IZX9qDjyFtVdg/LZZ3snSKEHxReNjHW4pvikHuHLuBDckOwvR1nCSf6YvmgE
+         zeXnBophhXqLmdmjTJWHkz93QXPukqVYXYyRZL5gFFM4sGb4e3pMhz8WegZ6w0EBSkV1
+         uvjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xS1w6b9dGNxOYZgn4XqIsKqMFqWDeiCDvqlu4Cc2qb8=;
+        b=FRbATOEh7MoeQEJDd8mqjZL1pDtHEbQvkAJzIYG/rjG4OZHGc0okfJ7Aq5vTjq+aT6
+         lt/axeOyUh+J0g5azMdG1PNmJRQ+hVgDsS0KWSO2Be7BW1DzpNo50Btm919458OMj0Bv
+         nq1+CbPW8ItgtooPn87FtaOiBaSNavKxSx4zyso0rVvNhG2fm9Gs9G0LuLAwnGbS2y9f
+         1RkeKxOyTSFIhIveXKvY3nxzZKGwSGNLAzMgyP1+bWQGk18qY1YlzyGGYCphi5GM/DwU
+         F2gCD2r/27G1hKwlDC2dSkm+94OfUI99TJwAW2Rity943T3wMTey1mE2bAhomh8zkE6l
+         QJfQ==
+X-Gm-Message-State: ANhLgQ2vhmNN+v/noFRmsz8K3amiq78/1Q1ry5ic+/OztQzQK66x+pg7
+        2vn4P2qeEIFs3dYwbyzHI231iiwzVyJcnjll8zIgFQ==
+X-Google-Smtp-Source: ADFU+vu26XRxSxwCaT6vnRCiejRxHsSjxolFEGSMIeKbwDFbcaLA927cijTLnlzzA4QRtWQr/dvD7OnuZmcs91NIUaA=
+X-Received: by 2002:a1f:a286:: with SMTP id l128mr15786621vke.31.1584350313783;
+ Mon, 16 Mar 2020 02:18:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313154345.56760-27-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200312083341.9365-1-jian-hong@endlessm.com> <20200312104643.GA15619@zn.tnic>
+In-Reply-To: <20200312104643.GA15619@zn.tnic>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Mon, 16 Mar 2020 17:17:56 +0800
+Message-ID: <CAPpJ_eetjhmPwXXXn2y-vibRCK6rrKsFZgC+YGzxO4fMrCKpuQ@mail.gmail.com>
+Subject: Re: [PATCH] Revert "x86/reboot, efi: Use EFI reboot for Acer
+ TravelMate X514-51T"
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 03:43:45PM +0000, Vincenzo Frascino wrote:
-> Enable Clang Compilation for the vdso32 library.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Borislav Petkov <bp@alien8.de> =E6=96=BC 2020=E5=B9=B43=E6=9C=8812=E6=97=A5=
+ =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=886:46=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, Mar 12, 2020 at 04:33:42PM +0800, Jian-Hong Pan wrote:
+> > This reverts commit 0082517fa4bce073e7cf542633439f26538a14cc.
+> >
+> > According to Acer's information, this reboot issue is fixed since 1.08
+> > and newer BIOS. So, we can revert the quirk.
+>
+> We can?
+>
+> How do you know *everyone* affected will update their BIOS?
+>
+> And what's the downside of keeping it?
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Good question!
+How about add DMI_BIOS_VERSION for BIOS DMI_MATCH.  For example,
+DMI_MATCH(DMI_BIOS_VERSION, "V1.0")
+
+The BIOS versions listed on Acer website [1] are 1.04, 1.10 ...
+The reboot issue is fixed since BIOS 1.08.  So, the only the string
+like "V1.0*" should apply the quirk.
+
+But, that will raise another question:  Since the original quirk works
+for all Acer X514-51T and the quirk cannot be removed for older BIOS.
+Why not keep only original matching items for all Acer X514-51T
+laptops?
+
+I am not sure which option is better.  Any comment?
+
+[1] https://www.acer.com/ac/en/US/content/support-product/7889?b=3D1
+
+BR,
+Jian-Hong Pan
