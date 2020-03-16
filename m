@@ -2,98 +2,137 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88235C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070EFC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67BA220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB84206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qwBQX/Av"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbgCPMdm (ORCPT
+        id S1731021AbgCPMfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:33:42 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:22833 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730878AbgCPMdk (ORCPT
+        Mon, 16 Mar 2020 08:35:15 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35695 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730878AbgCPMfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:33:40 -0400
-X-IronPort-AV: E=Sophos;i="5.70,560,1574092800"; 
-   d="scan'208";a="86408493"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 16 Mar 2020 20:33:36 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 9FD3E50A9967;
-        Mon, 16 Mar 2020 20:23:29 +0800 (CST)
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.85) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Mon, 16 Mar 2020 20:33:32 +0800
-Received: from Fedora-30.g08.fujitsu.local (10.167.220.106) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- id 14.3.439.0; Mon, 16 Mar 2020 20:33:32 +0800
-From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
-To:     <yamada.masahiro@socionext.com>, <michal.lkml@markovi.net>
-CC:     <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>
-Subject: [PATCH] modpost: Get proper section index by get_secindex() instead of st_shndx
-Date:   Mon, 16 Mar 2020 20:28:20 +0800
-Message-ID: <20200316122820.11032-1-yangx.jy@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 16 Mar 2020 08:35:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h4so373123wru.2;
+        Mon, 16 Mar 2020 05:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=mli3LATmq+tFwnP+8wWyRQBvASbiDCrn7g0yvxiqGEM=;
+        b=qwBQX/AvaM4WuENy/l9OVAIvMREaTwowHyXP2qUkfKSxWkLwA7pgDo5EsqULYQ3h6P
+         zKqVvtvlJY7gBnKIZRPD4SftZxNw7fK3PW6XHOioqTEpCJLl3zC6/zULHQvfHlKuDoez
+         P0+2q7S/8Rz4gQrvOr/xc2RzVOEwmAxBbsHVmkSdDOxUDP6ip59GU84uZ4nZ2zmkzzpL
+         zl7vzuV7ig182VLbQbClF1gWDMwwIWq/hZ8JB0kdnO2PzdNkvzBbV3i4Sma+oxNvTDPi
+         0rD5ttY2ltCVNjYtcl8+FDBikVqqaGnstjAbtF7mO+We07muT1FNiQ8Obaqi9/hDdrO5
+         /ldQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=mli3LATmq+tFwnP+8wWyRQBvASbiDCrn7g0yvxiqGEM=;
+        b=Pz8prVnBBECdkFLv/LYklIaLI7OwQ7tAHaDrytu/Ln4cKhXu5xTqMGG7W3OPwCbHcy
+         TjX4vvyr02ZCB2RxxodDb7at/Pct66lMqA3viMT2TBTQujgylhgUpkMQ7trFxGTcNcm+
+         5zHMmb64GTb2qbVKJOhz/Oh8rprxiJ8QHaVt44A9q14dDyFlSe4eNz58RpCud/RbmmmV
+         alWd1Bltlq4dw9jHwyq07BxQG6F5CdwhsE5+CHcOOCGC6kxx22OPuSO8DTQQxADoVlsg
+         pkut6c+qMnp7qvCZUuF8RprR2Io2Vq6NGTqnVjn4kx1XypllXS5+EybSF8HPJoHs+InG
+         6pcw==
+X-Gm-Message-State: ANhLgQ34an4dup1z199nn6Qq9q0HTh6ta3egjHGxIOW7mTGw3SIFSMlX
+        mfqHzk6QdICT6SGsSf2W2W8gDIQZstkuig==
+X-Google-Smtp-Source: ADFU+vsHDnRP7JNKklpe0mDZqdlh4tIegobsZzOI6NOa5tscYI8VO/tOfbj17EQIQ3lOecUh05XLEQ==
+X-Received: by 2002:a5d:522f:: with SMTP id i15mr34617007wra.231.1584362112960;
+        Mon, 16 Mar 2020 05:35:12 -0700 (PDT)
+Received: from [127.0.0.1] ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id g127sm31266941wmf.10.2020.03.16.05.35.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Mar 2020 05:35:12 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 12:35:04 +0000 (UTC)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Message-ID: <0ed0f4c8-5901-4d0f-b6e0-d641b3299e64@localhost>
+In-Reply-To: <20200314224340.1544-6-olteanv@gmail.com>
+References: <20200314224340.1544-1-olteanv@gmail.com> <20200314224340.1544-6-olteanv@gmail.com>
+Subject: Re: [PATCH v3 05/12] spi: spi-fsl-dspi: Protect against races on
+ dspi->words_in_flight
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-yoursite-MailScanner-ID: 9FD3E50A9967.AA9D8
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Correlation-ID: <0ed0f4c8-5901-4d0f-b6e0-d641b3299e64@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(uint16_t) st_shndx is limited to 65535(i.e. SHN_XINDEX) so sym_get_data() gets
-wrong section index by st_shndx if object file(e.g. vmlinux.o) has more than
-65535 sessions.  In this case, we need to get proper section index by .symtab_shndx
-section.
+Mar 15, 2020 12:44:02 AM Vladimir Oltean <olteanv@gmail.com>:
 
-Module.symvers generated by building kernel with "-ffunction-sections -fdata-sections"
-shows the issue(i.e. cannot get 89902 by st_shndx):
--------------------------------------------------------------------
-[root@Fedora-30 linux]# file Module.symvers
-Module.symvers: data
-[root@Fedora-30 linux]# head -n1 Module.symvers
-0x5caf3011      ipv6_chk_custom_prefix  ▒▒▒▒▒▒▒▒        vmlinux EXPORT_SYMBOL
-...
-[root@Fedora-30 linux]# readelf -s -W vmlinux.o | grep __kstrtabns_ipv6_chk_custom_prefix
-199174: 0000000000032578     1 OBJECT  LOCAL  DEFAULT 89902 __kstrtabns_ipv6_chk_custom_prefix
-[root@Fedora-30 linux]# readelf -S -W vmlinux.o | grep 89902
-  [89902] __ksymtab_strings PROGBITS        0000000000000000 a94e00 0345a2 00   A  0   0  1
--------------------------------------------------------------------
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+>
+> dspi->words_in_flight is a variable populated in the *_write functions
+> and used in the dspi_fifo_read function. It is also used in
+> dspi_fifo_write, immediately after transmission, to update the
+> message->actual_length variable used by higher layers such as spi-mem
+> for integrity checking.
+>
+> But it may happen that the IRQ which calls dspi_fifo_read to be
+> triggered before the updating of message->actual_length takes place. In
+> that case, dspi_fifo_read will decrement dspi->words_in_flight to -1,
+> and that will cause an invalid modification of message->actual_length.
+>
+> Make the simplest fix possible: don't decrement the actual shared
+> variable in dspi->words_in_flight from dspi_fifo_read, but actually a
+> copy of it which is on stack.
+>
+> Suggested-by: Michael Walle <michael@walle.cc>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+> Changes in v4:
+> Patch is new.
+>
+> drivers/spi/spi-fsl-dspi.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 51224b772680..3ac004aa2abd 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -765,8 +765,10 @@ static u32 dspi_popr_read(struct fsl_dspi *dspi)
+>
+> static void dspi_fifo_read(struct fsl_dspi *dspi)
+> {
+> + int num_fifo_entries = dspi->words_in_flight;
+> +
+> /* Read one FIFO entry and push to rx buffer */
+> - while (dspi->words_in_flight--)
+> + while (num_fifo_entries--)
+> dspi_push_rx(dspi, dspi_popr_read(dspi));
+> }
+>
+> --
+> 2.17.1
+>
+>
 
-Fixes: afa0459daa7b ("modpost: add a helper to get data pointed by a symbol")
-Fixes: 5545322c86d9 ("modpost: refactor namespace_from_kstrtabns() to not hard-code section name")
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
----
- scripts/mod/modpost.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Fixes: d59c90a2400f ("spi: spi-fsl-dspi: Convert TCFQ users to XSPI FIFO mode")
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index d9418c58a8c0..c1fec8cac257 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -310,7 +310,8 @@ static const char *sec_name(struct elf_info *elf, int secindex)
- 
- static void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym)
- {
--	Elf_Shdr *sechdr = &info->sechdrs[sym->st_shndx];
-+	unsigned int secindex = get_secindex(info, sym);
-+	Elf_Shdr *sechdr = &info->sechdrs[secindex];
- 	unsigned long offset;
- 
- 	offset = sym->st_value;
--- 
-2.21.0
+Patchwork should know to pick up this tag.
+
+Thanks,
+-Vladimir
 
 
 
