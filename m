@@ -2,195 +2,111 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00481C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA806C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4231205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pUjrMXS0"
+	by mail.kernel.org (Postfix) with ESMTP id CA8DC2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732163AbgCPRmY (ORCPT
+        id S1732008AbgCPRor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:42:24 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34359 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732008AbgCPRmY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 13:42:24 -0400
-Received: by mail-qk1-f196.google.com with SMTP id f3so27694285qkh.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 10:42:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ID3H30czz/FP3Uv6UAzC/d4Q+G/GcberRTPzu1ZMo3E=;
-        b=pUjrMXS0RNct/9Enu86BqiyDEyDA19V03PxzPGB6D8+iM2iV7UoDhLF8BPum0uzAyr
-         T/IufEnDOIte1DkXg/9yRlJhtFt8uoXQCuWg9Czdg7Ow+DEVIAOhl/Zj2NnOrEHNhuXG
-         bR9IifFrczz8icm/pyp4HFEjqnfA/Mhi0e1ik=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ID3H30czz/FP3Uv6UAzC/d4Q+G/GcberRTPzu1ZMo3E=;
-        b=MytV7uIY42T9fJxtnmOaOvABbssUb3oDQxAP/jT1y9jVWpnFxWlAx58jf9jz1qB70Y
-         QssorblLQNQo5Sbm0GTotFXIys5t+GXlc9clJ/TxthCJZNdYLor7kpcmy6DZIII/u+1B
-         2jSKgbSwfnzN3qcjn2sC5HhZ5vs5A3qLxxSpe2/bzFRHEaZKC7UP51VTpMcfvAGgM738
-         M52E9vpGO1nFrY/67mW6gZ7wUzZ29nANxsYV50a0WtlWZpx+TNIxdOOEMA4TG2vdUDLp
-         c6zZLjA1332hWAbVCUGkZUnS/Fe7Be0p26j9UfLOJECIdjRU7QRz5iAZ0AbOzkX8ys/+
-         szig==
-X-Gm-Message-State: ANhLgQ0K1smk6VPuiKcIMm0Ajz3N0nlQdIvb3ggWtFN9j1XI5WW+mrv3
-        siQVxV6WGS5sRd+oKfV6zkK0vODMdAk=
-X-Google-Smtp-Source: ADFU+vsUqZ3usZr2Eg81VF8mEAQnj3RaqBD5qL05O2zypbQOSU/izpiqRllh9ZyhbPi+zjBxCqAQdg==
-X-Received: by 2002:a37:e47:: with SMTP id 68mr807305qko.17.1584380542178;
-        Mon, 16 Mar 2020 10:42:22 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h138sm205962qke.86.2020.03.16.10.42.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 10:42:21 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, linux-mm@kvack.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: [RFC] Simplify debug_objects handling in kfree_rcu
-Date:   Mon, 16 Mar 2020 13:42:18 -0400
-Message-Id: <20200316174218.154090-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        Mon, 16 Mar 2020 13:44:47 -0400
+Received: from stcim.de ([78.46.90.227]:58902 "EHLO stcim.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730437AbgCPRor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 13:44:47 -0400
+X-Greylist: delayed 1475 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Mar 2020 13:44:46 EDT
+Received: from [2001:4dd7:15f0:0:a288:b4ff:fee5:f5cc] (helo=porty)
+        by stcim with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <contact@stefanchrist.eu>)
+        id 1jDtPI-00011x-JQ; Mon, 16 Mar 2020 18:20:04 +0100
+Date:   Mon, 16 Mar 2020 18:20:03 +0100
+From:   Stefan Lengfeld <contact@stefanchrist.eu>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH] i2c: at91: support atomic write xfer
+Message-ID: <20200316172003.lguso2fczz5imh6g@porty>
+References: <c05f76f74cd6a7ec2735c96861f9d5933631c112.1584296795.git.mirq-linux@rere.qmqm.pl>
+ <9924dd54-dd8b-d130-9607-2bbbc65675d5@gmail.com>
+ <20200316144221.GC19141@qmqm.qmqm.pl>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200316144221.GC19141@qmqm.qmqm.pl>
+X-PGP-Key: https://stefanchrist.eu/personal/Stefan_Lengfeld_0xE44A23B289092311.asc
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to prepare for future changes to headless RCU support, make the
-debug_objects handling in kfree_rcu use the final 'pointer' value of the
-object, instead of depending on the head.
+Hi Michał,
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
-Paul, Vlad, I am adding this to my rcu/kfree tree for further testing. Let me know any
-comments. I have only build-tested this patch.
+On Mon, Mar 16, 2020 at 03:42:21PM +0100, Michał Mirosław wrote:
+> On Sun, Mar 15, 2020 at 11:46:33PM +0300, Dmitry Osipenko wrote:
+> > 15.03.2020 21:27, Michał Mirosław пишет:
+> > > Implement basic support for atomic write - enough to get a simple
+> > > write to PMIC on shutdown. Only for chips having ALT_CMD register,
+> > > eg. SAMA5D2.
+> > > 
+> > > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > > ---
+> > 
+> > Hello Michał,
+> > 
+> > ...
+> > > +	ret = pm_runtime_get_sync(dev->dev);
+> > > +	if (ret < 0)
+> > > +		goto out;
+> > 
+> > Runtime PM can't be used while interrupts are disabled, unless
+> > pm_runtime_irq_safe() is used and driver's RPM callback is IRQ-safe.
+> 
+> I didn't get any warnings from lockdep and friends, but I'll double
+> check if this is by luck.
 
- kernel/rcu/tree.c | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+You can have a look at the I2C atomic patch for the imx-driver. See
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 32152be9a09ac..0e2632622176b 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2758,7 +2758,6 @@ struct kfree_rcu_bulk_data {
- 	unsigned long nr_records;
- 	void *records[KFREE_BULK_MAX_ENTR];
- 	struct kfree_rcu_bulk_data *next;
--	struct rcu_head *head_free_debug;
- };
- 
- /**
-@@ -2808,11 +2807,11 @@ struct kfree_rcu_cpu {
- static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc);
- 
- static __always_inline void
--debug_rcu_head_unqueue_bulk(struct rcu_head *head)
-+debug_rcu_bhead_unqueue(struct kfree_rcu_bulk_data *bhead)
- {
- #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
--	for (; head; head = head->next)
--		debug_rcu_head_unqueue(head);
-+	for (int i = 0; i < bhead->nr_records; i++)
-+		debug_rcu_head_unqueue((struct rcu_head *)(bhead->records[i]));
- #endif
- }
- 
-@@ -2842,7 +2841,7 @@ static void kfree_rcu_work(struct work_struct *work)
- 	for (; bhead; bhead = bnext) {
- 		bnext = bhead->next;
- 
--		debug_rcu_head_unqueue_bulk(bhead->head_free_debug);
-+		debug_rcu_bhead_unqueue(bhead);
- 
- 		rcu_lock_acquire(&rcu_callback_map);
- 		trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
-@@ -2864,14 +2863,15 @@ static void kfree_rcu_work(struct work_struct *work)
- 	 */
- 	for (; head; head = next) {
- 		unsigned long offset = (unsigned long)head->func;
-+		void *ptr = (void *)head - offset;
- 
- 		next = head->next;
--		debug_rcu_head_unqueue(head);
-+		debug_rcu_head_unqueue((struct rcu_head *)ptr);
- 		rcu_lock_acquire(&rcu_callback_map);
- 		trace_rcu_invoke_kvfree_callback(rcu_state.name, head, offset);
- 
- 		if (!WARN_ON_ONCE(!__is_kvfree_rcu_offset(offset)))
--			kvfree((void *)head - offset);
-+			kvfree(ptr);
- 
- 		rcu_lock_release(&rcu_callback_map);
- 		cond_resched_tasks_rcu_qs();
-@@ -2995,18 +2995,11 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
- 		/* Initialize the new block. */
- 		bnode->nr_records = 0;
- 		bnode->next = krcp->bhead;
--		bnode->head_free_debug = NULL;
- 
- 		/* Attach it to the head. */
- 		krcp->bhead = bnode;
- 	}
- 
--#ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
--	head->func = func;
--	head->next = krcp->bhead->head_free_debug;
--	krcp->bhead->head_free_debug = head;
--#endif
--
- 	/* Finally insert. */
- 	krcp->bhead->records[krcp->bhead->nr_records++] =
- 		(void *) head - (unsigned long) func;
-@@ -3030,14 +3023,17 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- {
- 	unsigned long flags;
- 	struct kfree_rcu_cpu *krcp;
-+	void *ptr;
- 
- 	local_irq_save(flags);	// For safely calling this_cpu_ptr().
- 	krcp = this_cpu_ptr(&krc);
- 	if (krcp->initialized)
- 		spin_lock(&krcp->lock);
- 
-+	ptr = (void *)head - (unsigned long)func;
-+
- 	// Queue the object but don't yet schedule the batch.
--	if (debug_rcu_head_queue(head)) {
-+	if (debug_rcu_head_queue(ptr)) {
- 		// Probable double kfree_rcu(), just leak.
- 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
- 			  __func__, head);
-@@ -3054,8 +3050,8 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	 * Under high memory pressure GFP_NOWAIT can fail,
- 	 * in that case the emergency path is maintained.
- 	 */
--	if (is_vmalloc_addr((void *) head - (unsigned long) func) ||
--			!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func)) {
-+	if (is_vmalloc_addr(ptr) ||
-+	    !kfree_call_rcu_add_ptr_to_bulk(krcp, head, func)) {
- 		head->func = func;
- 		head->next = krcp->head;
- 		krcp->head = head;
--- 
-2.25.1.481.gfbce0eb801-goog
+   https://patchwork.ozlabs.org/patch/1225802/
+
+In that patch Marco Felsch is using clk_enable() and clk_disable() calls.
+
+> 
+> > ...
+> > > +	timeout = jiffies + (2 + msg->len) * HZ/1000;
+> > > +	for (;;) {
+> > > +		stat = at91_twi_read(dev, AT91_TWI_SR);
+> > > +		if (stat & AT91_TWI_TXCOMP)
+> > > +			break;
+> > > +		if (time_after(jiffies, timeout)) {
+> > > +			ret = -ETIMEDOUT;
+> > > +			goto out;
+> > > +		}
+> > > +		udelay(100);
+> > > +	}
+> > 
+> > Jiffies can't be used with the disabled interrupts because jiffies are
+> > updated by timer's interrupt.
+> > 
+> > Either ktime() API or iterator-based loop should be used.
+> 
+> Thanks for the pointers. In my use-case power is cut from the CPU at this
+> point so it didn't matter that the loop was infinite.
+
+Here again you can have a look at Marco Felsch's patch. He used the
+function readb_poll_timeout_atomic(). So the loop can potentially
+replaced by a single line.
+
+Kind regards,
+Stefan
