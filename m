@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6DEC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B444FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A34120726
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813A92074E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326154;
-	bh=MHzvLO6pQ9hDsO4k5x5F0p44tCBqF8g2CiJnwVzl7XU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cMHnou1/h4Ap4rrpuJqhA0EbMCgOH8zkPoXBNkEWkqe+zMvF72kOzYzHnaZdWIGbz
-	 MhesC2eM8/B+8BbCOPgB+dpKu+KZY6e40+hgnVGYgovc3uDs8m92J4EElwoWMmd+QO
-	 8bk3du4sn4Zisc+ZMIk4efGY8g53lZbQEsNs2+JQ=
+	s=default; t=1584326155;
+	bh=gjhoOloQBD59gFMnNazCDCwzPSf+vl9lMqmIUM7SoHY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QV4BCHxSpjANE8wcbsFzSzgaQCoDVEy74w6II6v3ToosjPLm2cgbZXmbRRMcN76BN
+	 IB4pnFLc1Nxl1NChHT0qIgpBDYLk8oVF2tKXO+QCmcPal/xLex4IALz3QvTru/B2MH
+	 pTcp8IXvxhIW8r12ikaXLBlAcCaImdmiLGvUCWgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbgCPCfw (ORCPT
+        id S1730292AbgCPCfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:35:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40638 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:35:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729525AbgCPCfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:35:50 -0400
+        id S1729530AbgCPCfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 255D320724;
-        Mon, 16 Mar 2020 02:35:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 628F920739;
+        Mon, 16 Mar 2020 02:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326150;
-        bh=MHzvLO6pQ9hDsO4k5x5F0p44tCBqF8g2CiJnwVzl7XU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wVMOJiqgc5lAsfx4WyIh0WrHhbDwKZSbedDf+p/XxpHYTMVZYkqaXKsIcI6iQBLjq
-         S4vjhVgeTMhxLnQ0jM10I455fv9zrXQTzS32AyajZHlkW1A5M3guCpJGCQ6C9KBQOO
-         GsQ3/vOtdUxjzR0xg5j9wk7JY1hUMBKJCeEgHKrM=
+        s=default; t=1584326152;
+        bh=gjhoOloQBD59gFMnNazCDCwzPSf+vl9lMqmIUM7SoHY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zUSGAVvLaWl7LoNMbRa6AT7C5+0flsdp2HQzxg0GMsreQMTrLVLnaY3KeIJ3abcZb
+         TSaGRrXDkhe1BEx/TKfQghXHcHYca347KWH4fcFDwntuS6YconYGV5nkkdk5PGk9b5
+         G/rnKt0nzPtdtvsdX21UyuLJ+WtyN6yF7pfwn/bY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yuji Sasaki <sasakiy@chromium.org>, Vinod Koul <vkoul@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 1/7] spi: qup: call spi_qup_pm_resume_runtime before suspending
-Date:   Sun, 15 Mar 2020 22:35:41 -0400
-Message-Id: <20200316023548.2347-1-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 3/7] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
+Date:   Sun, 15 Mar 2020 22:35:43 -0400
+Message-Id: <20200316023548.2347-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200316023548.2347-1-sashal@kernel.org>
+References: <20200316023548.2347-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,40 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuji Sasaki <sasakiy@chromium.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 136b5cd2e2f97581ae560cff0db2a3b5369112da ]
+[ Upstream commit 27f13774654ea6bd0b6fc9b97cce8d19e5735661 ]
 
-spi_qup_suspend() will cause synchronous external abort when
-runtime suspend is enabled and applied, as it tries to
-access SPI controller register while clock is already disabled
-in spi_qup_pm_suspend_runtime().
+'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
+has RAM above 32-bit boundary (accessible with LPAE config) though the
+PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
+property in PCIe RC DT nodes to indicate the host bridge can access
+only 32 bits.
 
-Signed-off-by: Yuji sasaki <sasakiy@chromium.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200214074340.2286170-1-vkoul@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-qup.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 810a7fae34798..2487a91c4cfdb 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -961,6 +961,11 @@ static int spi_qup_suspend(struct device *device)
- 	struct spi_qup *controller = spi_master_get_devdata(master);
- 	int ret;
- 
-+	if (pm_runtime_suspended(device)) {
-+		ret = spi_qup_pm_resume_runtime(device);
-+		if (ret)
-+			return ret;
-+	}
- 	ret = spi_master_suspend(master);
- 	if (ret)
- 		return ret;
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index e6a3a94bac693..2cdaa38c114e8 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -227,6 +227,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -263,6 +264,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
 -- 
 2.20.1
 
