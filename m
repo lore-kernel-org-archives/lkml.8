@@ -2,95 +2,119 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2DFC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CECC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4C5205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5487B205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584326417;
+	bh=cffXXnGE5zy+o0fQH1NWf2WJWAmcQ27vougEbStwcsU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=W9EW7+QIkDb3PGidRKzsF5yILihDpHT4YkqnnsDh5KyZlZ7aWVd3oZajclM5frXgf
+	 oFlKiELIaXfXDoisG7h5R8gMhS6ug1/zcUc4T5j6LTNSi3S1tprVpfnsQIoEpqS1ea
+	 0HabUhkFi2SCZFeDNSm45q0oqfvb9PCMUwW+63n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbgCPCkG convert rfc822-to-8bit (ORCPT
+        id S1730498AbgCPCkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:40:06 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:53421 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729348AbgCPCkE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:40:04 -0400
-Received: by mail-il1-f198.google.com with SMTP id z19so10143478ils.20
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 19:40:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to:content-transfer-encoding;
-        bh=G7pIHMXafOLm3F/2/i2LvBMFMIvTzROgcOUTWFn2X6I=;
-        b=dl/DQ3SQaqFCSEyMJ9OqcOBl9qS6BjMjCe8F+0rgGqrAK31yXle5E9ZBzAWgKGZmSX
-         9PxzyGjONZcW/sr6xutjkQpR9bDGT5buw91q6ikutP4gpwKo0hA2WPaliGxLe83jByBX
-         LuQlFtHDZOB4Zcqqk8NArhaS35EWhLEoWcBMXdpPt4bSyFgkKCRpLk4SfkYoSMDQKyo3
-         c2YdzOjF/2J4T8OzhfeU7JlaZnFRfOx5xatnJArDucrgxaJG3U8c12jNWJbblEQC5ZMG
-         WWMeLAyrZlHLkGT69sR7FxzspGFqFExRIIEH+6pqIBx6aM5nnuxB1ahcTW5VhyJcCwya
-         gQLw==
-X-Gm-Message-State: ANhLgQ1hviQxIWwa6BbIoRlHOpfbt0q4ohkhJiuaeaCjRF0TQ81Zzb4f
-        85HCjHy4BJDFJLVW/WdFBsxcUnTbtPzUxG/2ffTVtrpB0CtH
-X-Google-Smtp-Source: ADFU+vsoZxccOxRhbL4Y/MIwgxSx220g7zIbktYsAfwneEMRwc/N8lW0/7POXMyHaJ8GuPRqszlVeuTTjg5as1yqhzbhVmbrzHSZ
+        Sun, 15 Mar 2020 22:40:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729753AbgCPCeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:07 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12772206E9;
+        Mon, 16 Mar 2020 02:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584326047;
+        bh=cffXXnGE5zy+o0fQH1NWf2WJWAmcQ27vougEbStwcsU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xjsVeYfcWjO9C279RjU3/chEWtdpX8INw1vpxs6vBl5SeWXCiwZ8N8+bZ/KA6I4t/
+         4xGDERwyVn6wRYLWVb9vshoy7tuWROknbvdhUfzCmMjcKf6Omn5tkc6FEpkAbZyRRu
+         jAOvyLQ7ZVkE5/MTLu8Q2D70nvLEn7VRs7msW0gw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Carlo Nonato <carlo.nonato95@gmail.com>,
+        Kwon Je Oh <kwonje.oh2@gmail.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 39/41] block, bfq: fix overwrite of bfq_group pointer in bfq_find_set_group()
+Date:   Sun, 15 Mar 2020 22:33:17 -0400
+Message-Id: <20200316023319.749-39-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
+References: <20200316023319.749-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3dd:: with SMTP id r29mr2463944jaq.94.1584326403449;
- Sun, 15 Mar 2020 19:40:03 -0700 (PDT)
-Date:   Sun, 15 Mar 2020 19:40:03 -0700
-In-Reply-To: <000000000000bdb5b2059c865f5c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007c695f05a0efbc52@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in bitmap_ip_ext_cleanup
-From:   syzbot <syzbot+6491ea8f6dddbf04930e@syzkaller.appspotmail.com>
-To:     a@unstable.cc, akpm@linux-foundation.org, allison@lohutok.net,
-        arnd@arndb.de, axboe@kernel.dk, b.a.t.m.a.n@lists.open-mesh.org,
-        bp@alien8.de, catalin.marinas@arm.com, chris@zankel.net,
-        christian.brauner@ubuntu.com, christian@brauner.io,
-        coreteam@netfilter.org, dan.carpenter@oracle.com,
-        davem@davemloft.net, elena.reshetova@intel.com,
-        florent.fourcot@wifirst.fr, fw@strlen.de, geert@linux-m68k.org,
-        hare@suse.com, heiko.carstens@de.ibm.com, hpa@zytor.com,
-        info@drgreenstore.com, info@metux.net, jcmvbkbc@gmail.com,
-        jeremy@azazel.net, johannes.berg@intel.com,
-        kadlec@blackhole.kfki.hu, kadlec@netfilter.org,
-        linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux@armlinux.org.uk, mareklindner@neomailbox.ch,
-        mingo@redhat.com, netdev@vger.kernel.org,
-        netfilter-core-owner@lists.netfilter.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        peterz@infradead.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk, will@kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+From: Carlo Nonato <carlo.nonato95@gmail.com>
 
-commit 32c72165dbd0e246e69d16a3ad348a4851afd415
-Author: Kadlecsik József <kadlec@blackhole.kfki.hu>
-Date:   Sun Jan 19 21:06:49 2020 +0000
+[ Upstream commit 14afc59361976c0ba39e3a9589c3eaa43ebc7e1d ]
 
-    netfilter: ipset: use bitmap infrastructure completely
+The bfq_find_set_group() function takes as input a blkcg (which represents
+a cgroup) and retrieves the corresponding bfq_group, then it updates the
+bfq internal group hierarchy (see comments inside the function for why
+this is needed) and finally it returns the bfq_group.
+In the hierarchy update cycle, the pointer holding the correct bfq_group
+that has to be returned is mistakenly used to traverse the hierarchy
+bottom to top, meaning that in each iteration it gets overwritten with the
+parent of the current group. Since the update cycle stops at root's
+children (depth = 2), the overwrite becomes a problem only if the blkcg
+describes a cgroup at a hierarchy level deeper than that (depth > 2). In
+this case the root's child that happens to be also an ancestor of the
+correct bfq_group is returned. The main consequence is that processes
+contained in a cgroup at depth greater than 2 are wrongly placed in the
+group described above by BFQ.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16b8e545e00000
-start commit:   d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cf8e288883e40aba
-dashboard link: https://syzkaller.appspot.com/bug?extid=6491ea8f6dddbf04930e
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=126748d6e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1385f959e00000
+This commits fixes this problem by using a different bfq_group pointer in
+the update cycle in order to avoid the overwrite of the variable holding
+the original group reference.
 
-If the result looks correct, please mark the bug fixed by replying with:
+Reported-by: Kwon Je Oh <kwonje.oh2@gmail.com>
+Signed-off-by: Carlo Nonato <carlo.nonato95@gmail.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/bfq-cgroup.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-#syz fix: netfilter: ipset: use bitmap infrastructure completely
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 5a64607ce7744..facbf4db19428 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -610,12 +610,13 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
+ 	 */
+ 	entity = &bfqg->entity;
+ 	for_each_entity(entity) {
+-		bfqg = container_of(entity, struct bfq_group, entity);
+-		if (bfqg != bfqd->root_group) {
+-			parent = bfqg_parent(bfqg);
++		struct bfq_group *curr_bfqg = container_of(entity,
++						struct bfq_group, entity);
++		if (curr_bfqg != bfqd->root_group) {
++			parent = bfqg_parent(curr_bfqg);
+ 			if (!parent)
+ 				parent = bfqd->root_group;
+-			bfq_group_set_parent(bfqg, parent);
++			bfq_group_set_parent(curr_bfqg, parent);
+ 		}
+ 	}
+ 
+-- 
+2.20.1
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
