@@ -2,145 +2,113 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B0EC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B7BC1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3F620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7C520674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:29:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="JF3JUlcf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgCPH0Y (ORCPT
+        id S1729897AbgCPH31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:26:24 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57451 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729554AbgCPH0Y (ORCPT
+        Mon, 16 Mar 2020 03:29:27 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:39880 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729554AbgCPH30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:26:24 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jDk8e-0006VD-7S; Mon, 16 Mar 2020 08:26:16 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jDk8b-0003K3-GS; Mon, 16 Mar 2020 08:26:13 +0100
-Date:   Mon, 16 Mar 2020 08:26:13 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
-Message-ID: <20200316072613.37lnjfloac4npudf@pengutronix.de>
-References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
- <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
- <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
+        Mon, 16 Mar 2020 03:29:26 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B2170891AD;
+        Mon, 16 Mar 2020 20:29:21 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1584343761;
+        bh=6/Yhqp19M+yds+hz4CupW64wOVNXV7hqNXWPcJyyrTo=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=JF3JUlcfUyANbpc159tRbJKrhEwJgdXOzDRsWU76ejS0U2yWgjsUER/PkFNjbM+Xy
+         i3bMOxW8UbUJxLYBnGNKhbDeb18YMmH70A4uZ98O5dlF+9ykGP3lRul/1B14WUwH3P
+         RxKLMxod1qP/i5CF6YMRDf/irDX45pX8DAfbrhOMBTCbOwQgKL3G/rn8OBDxtibFtF
+         XQ8i04fvPMT4AegTociH5+CF4X9p8T64o7pzjo58OmoJpATTKNQPR+NJIUqaAW/CQe
+         0xcxgSShJlWpWFclfjmO2Hzjz7Apsp6VBC72K5GLDYEjvSxIu0wTC8GkfCB8jqsF2S
+         2lf0cUQKGy9Vg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e6f2ad10001>; Mon, 16 Mar 2020 20:29:21 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Mon, 16 Mar 2020 20:29:20 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Mon, 16 Mar 2020 20:29:20 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "josua@solid-run.com" <josua@solid-run.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] net: mvmdio: avoid error message for optional IRQ
+Thread-Topic: [PATCH v2] net: mvmdio: avoid error message for optional IRQ
+Thread-Index: AQHV9+B2ZGst8pFaOk2XUMzXhPXGHqhJ/4cA
+Date:   Mon, 16 Mar 2020 07:29:20 +0000
+Message-ID: <63905ad2134b4d19cb274c9e082a9326a07991ac.camel@alliedtelesis.co.nz>
+References: <20200311200546.9936-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200311200546.9936-1-chris.packham@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.14.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CFB33A6EA81CA1409524B0401684FEF1@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Thu, Mar 12, 2020 at 04:06:07PM +0100, Pascal Roeleven wrote:
-> On 2020-03-12 14:29, Uwe Kleine-König wrote:
-> > On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
-> > > Hi all,
-> > > 
-> > > I am working on adding an old A10 device to mainline and noticed an
-> > > issue
-> > > when testing on 5.5.8 vs master.
-> > > 
-> > > Since 5.6-rc1, I can't control the brightness of my LCD backlight
-> > > anymore.
-> > > The backlight stays on full brightness instead. I am controlling the
-> > > brightness value via sysfs for testing.
-> > > 
-> > > I am not sure if this is a general pwm-sun4i issue or if it is
-> > > related to
-> > > the backlight. However I narrowed it down to one commit for pwm-sun4i:
-> > > 
-> > > fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
-> > > 
-> > > If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
-> > > master, the backlight works fine. Unfortunately, due to my lack of
-> > > kernel
-> > > experience, I can't see how the commit above broke it.
-> > 
-> > Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
-> > this. Looking at the output of
-> > 
-> > 	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
-> > 
-> > (i.e. ignoring whitespace changes) I don't see how the behaviour you're
-> > reporting can be explained.
-> > 
-> > Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
-> > commit?
-> > 
-> > Can you install a tool to inspect register values and check how the
-> > affected registers change if you switch kernel versions and/or pwm
-> > settings?
-> > 
-> > (e.g.
-> > 	memtool md 0x1c20e00+0xc
-> > )
-> > 
-> > Best regards
-> > Uwe
-> 
-> Thanks for your response.
-> 
-> Yes I am sure that is the commit. If I am on master, and replace pwm-sun4i.c
-> with the one from 5b090b43, everything works. If I then apply fa4d8178, it
-> stops working.
-> 
-> And strangely the output of the registers is exactly the same before and
-> after fa4d8178:
-> 
-> 01c20e00: 00000050 00130014 00000000 (full brightness)
-> 01c20e00: 00000050 00130006 00000000 (min brightness)
-> 
-> Even when I'm on 5b090b43 and cherry-pick fa4d8178 can I reproduce the
-> issue.
-
-Very strange. I'm out of sensible ideas. The remaining ones are:
-
-- enable tracing in the kernel and boot with
-
-	trace_event=pwm
-
-  And then check after the problem occurred in
-  /sys/kernel/debug/tracing/trace if something sticks out.
-
-- Try modifying the registers using memtool. E.g.
-
-	memtool mw 0x01c20e04 0x00130012
-
-- Do you have equipment to check the actual output of the PWM hardware?
-  If so, what do you see?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+T24gVGh1LCAyMDIwLTAzLTEyIGF0IDA5OjA1ICsxMzAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0K
+PiBQZXIgdGhlIGR0LWJpbmRpbmcgdGhlIGludGVycnVwdCBpcyBvcHRpb25hbCBzbyB1c2UNCj4g
+cGxhdGZvcm1fZ2V0X2lycV9vcHRpb25hbCgpIGluc3RlYWQgb2YgcGxhdGZvcm1fZ2V0X2lycSgp
+LiBTaW5jZQ0KPiBjb21taXQgNzcyM2Y0YzVlY2RiICgiZHJpdmVyIGNvcmU6IHBsYXRmb3JtOiBB
+ZGQgYW4gZXJyb3IgbWVzc2FnZSB0bw0KPiBwbGF0Zm9ybV9nZXRfaXJxKigpIikgcGxhdGZvcm1f
+Z2V0X2lycSgpIHByb2R1Y2VzIGFuIGVycm9yIG1lc3NhZ2UNCj4gDQo+ICAgb3Jpb24tbWRpbyBm
+MTA3MjAwNC5tZGlvOiBJUlEgaW5kZXggMCBub3QgZm91bmQNCj4gDQo+IHdoaWNoIGlzIHBlcmZl
+Y3RseSBub3JtYWwgaWYgb25lIGhhc24ndCBzcGVjaWZpZWQgdGhlIG9wdGlvbmFsDQo+IHByb3Bl
+cnR5DQo+IGluIHRoZSBkZXZpY2UgdHJlZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IENocmlzIFBh
+Y2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNpcy5jby5uej4NCj4gUmV2aWV3ZWQtYnk6
+IEFuZHJldyBMdW5uIDxhbmRyZXdAbHVubi5jaD4NCj4gLS0tDQo+IA0KPiBOb3RlczoNCj4gICAg
+IENoYW5nZXMgaW4gdjI6DQo+ICAgICAtIEFkZCByZXZpZXcgZnJvbSBBbmRyZXcNCj4gICAgIC0g
+Q2xlYW4gdXAgZXJyb3IgaGFuZGxpbmcgY2FzZQ0KPiANCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0
+L21hcnZlbGwvbXZtZGlvLmMgfCA2ICsrKy0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0
+aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9l
+dGhlcm5ldC9tYXJ2ZWxsL212bWRpby5jDQo+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFydmVs
+bC9tdm1kaW8uYw0KPiBpbmRleCAwYjllODUxZjNkYTQuLmQyZTJkYzUzODQyOCAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFydmVsbC9tdm1kaW8uYw0KPiArKysgYi9kcml2
+ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL212bWRpby5jDQo+IEBAIC0zNDcsNyArMzQ3LDcgQEAg
+c3RhdGljIGludCBvcmlvbl9tZGlvX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpDQo+ICAJfQ0KPiAgDQo+ICANCj4gLQlkZXYtPmVycl9pbnRlcnJ1cHQgPSBwbGF0Zm9ybV9n
+ZXRfaXJxKHBkZXYsIDApOw0KPiArCWRldi0+ZXJyX2ludGVycnVwdCA9IHBsYXRmb3JtX2dldF9p
+cnFfb3B0aW9uYWwocGRldiwgMCk7DQo+ICAJaWYgKGRldi0+ZXJyX2ludGVycnVwdCA+IDAgJiYN
+Cj4gIAkgICAgcmVzb3VyY2Vfc2l6ZShyKSA8IE1WTURJT19FUlJfSU5UX01BU0sgKyA0KSB7DQo+
+ICAJCWRldl9lcnIoJnBkZXYtPmRldiwNCj4gQEAgLTM2NCw4ICszNjQsOCBAQCBzdGF0aWMgaW50
+IG9yaW9uX21kaW9fcHJvYmUoc3RydWN0DQo+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAkJ
+d3JpdGVsKE1WTURJT19FUlJfSU5UX1NNSV9ET05FLA0KPiAgCQkJZGV2LT5yZWdzICsgTVZNRElP
+X0VSUl9JTlRfTUFTSyk7DQo+ICANCj4gLQl9IGVsc2UgaWYgKGRldi0+ZXJyX2ludGVycnVwdCA9
+PSAtRVBST0JFX0RFRkVSKSB7DQo+IC0JCXJldCA9IC1FUFJPQkVfREVGRVI7DQo+ICsJfSBlbHNl
+IGlmIChkZXYtPmVycl9pbnRlcnJ1cHQgPCAwKSB7DQo+ICsJCXJldCA9IGRldi0+ZXJyX2ludGVy
+cnVwdDsNCj4gIAkJZ290byBvdXRfbWRpbzsNCj4gIAl9DQoNCkFjdHVhbGx5IG9uIGNsb3NlciBp
+bnNwZWN0aW9uIEkgdGhpbmsgdGhpcyBpcyB3cm9uZy4NCnBsYXRmb3JtX2dldF9pcnFfb3B0aW9u
+YWwoKSB3aWxsIHJldHVybiAtRU5YSU8gaWYgdGhlIGlycSBpcyBub3QNCnNwZWNpZmllZC4NCg0K
+U28gSSB0aGluayB2MSB3YXMgdGhlIGNvcnJlY3QgcGF0Y2ggYW5kIHRoZSBleHRyYSBjbGVhbnVw
+IGluIHYyIGlzDQp3cm9uZy4NCg0KRGF2ZSwNCg0KRG8geW91IHdhbnQgbWUgdG8gc2VuZCBhIHJl
+dmVydCBhbmQgcmUtc2VuZCB2MT8NCg==
