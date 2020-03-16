@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46D5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47190C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB73205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D111205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326422;
-	bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
+	s=default; t=1584326426;
+	bh=HDWemFmS6sNHHvqLejbRyMAPEs6e+okEDrDeTOhqVWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y1BXQjxy6+8t3zpCy49KhiCUMBN9FeG01KeMiSKLcpjOKOM06mseEvlbP/1HJraq/
-	 i4JdbzMSAmGpNE/4xAAMES2IeNraBFaVr3pjnga7oefRGccYKalGpirHeHU6Wu3acF
-	 /WOTwSsRkq0m8IXpybATJc75JGIEtpNQ905muqZA=
+	b=yr7KTXnkyEjJDITcO6ni6HWHyVEPzvvLIQ0Ff/SZUSIJ7+d1UySXd7RfmoS5X+bH0
+	 yJRT3WrNmHbk84c5B7fCCBtJ0Snrv2Fc4lXL8AXZKDDXoF9/6RW+N+WEji33kYtx/5
+	 x6ATPhbUMhAXVcGNL/0dX13XAZROC9mnFLxRIWCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbgCPCeF (ORCPT
+        id S1729718AbgCPCeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:34:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37192 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729380AbgCPCeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:04 -0400
+        id S1729670AbgCPCdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:33:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82EBB206E9;
-        Mon, 16 Mar 2020 02:34:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E197E206BE;
+        Mon, 16 Mar 2020 02:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326044;
-        bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
+        s=default; t=1584326034;
+        bh=HDWemFmS6sNHHvqLejbRyMAPEs6e+okEDrDeTOhqVWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JfnYNtjCNxMe9zicNGm/QBDAOSlenHB7OBs5gRFfLNX/9kqvcISmAoFv2uVxmiOHl
-         E+kTtwbDGxUkz1tUDwn/IP6vbW+crJ25+8ex0SM2lLE1dLZ+0AfTI7nuN2SnRAIrRe
-         nB8/DBjaNXP1nmFhEmTSdCx3APkd/cNj9mkUTFuI=
+        b=sWoGXueoh9RRb9ZfMtqEouGMFCL9su9O4nrtnMEYxzO7hijuqz8FKpnxfH81EoccB
+         w/SNJcnkP5oPSyAJvIzeTlxsAd3g+Z3e1n6OkGEfDXHk+kfY3HNI/UZ4zro6+n3Rby
+         iVX22a/EeVg6vnFjla588hMJKfoFrL74BAX8xMg8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
-        Julien Grall <jgrall@amazon.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 5.5 37/41] xenbus: req->err should be updated before req->state
-Date:   Sun, 15 Mar 2020 22:33:15 -0400
-Message-Id: <20200316023319.749-37-sashal@kernel.org>
+Cc:     Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 29/41] ASoC: stm32: sai: manage rebind issue
+Date:   Sun, 15 Mar 2020 22:33:07 -0400
+Message-Id: <20200316023319.749-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
@@ -60,38 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit 8130b9d5b5abf26f9927b487c15319a187775f34 ]
+[ Upstream commit 0d6defc7e0e437a9fd53622f7fd85740f38d5693 ]
 
-This patch adds the barrier to guarantee that req->err is always updated
-before req->state.
+The commit e894efef9ac7 ("ASoC: core: add support to card rebind")
+allows to rebind the sound card after a rebind of one of its component.
+With this commit, the sound card is actually rebound,
+but may be no more functional. The following problems have been seen
+with STM32 SAI driver.
 
-Otherwise, read_reply() would not return ERR_PTR(req->err) but
-req->body, when process_writes()->xb_write() is failed.
+1) DMA channel is not requested:
 
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Link: https://lore.kernel.org/r/20200303221423.21962-2-dongli.zhang@oracle.com
-Reviewed-by: Julien Grall <jgrall@amazon.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+With the sound card rebind the simplified call sequence is:
+stm32_sai_sub_probe
+	snd_soc_register_component
+		snd_soc_try_rebind_card
+			snd_soc_instantiate_card
+	devm_snd_dmaengine_pcm_register
+
+The problem occurs because the pcm must be registered,
+before snd_soc_instantiate_card() is called.
+
+Modify SAI driver, to change the call sequence as follows:
+stm32_sai_sub_probe
+	devm_snd_dmaengine_pcm_register
+	snd_soc_register_component
+		snd_soc_try_rebind_card
+
+2) DMA channel is not released:
+
+dma_release_channel() is not called when
+devm_dmaengine_pcm_release() is executed.
+This occurs because SND_DMAENGINE_PCM_DRV_NAME component,
+has already been released through devm_component_release().
+
+devm_dmaengine_pcm_release() should be called before
+devm_component_release() to avoid this problem.
+
+Call snd_dmaengine_pcm_unregister() and snd_soc_unregister_component()
+explicitly from SAI driver, to have the right sequence.
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Message-Id: <20200304102406.8093-1-olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_comms.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/stm/stm32_sai_sub.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
-index 852ed161fc2a7..eb5151fc8efab 100644
---- a/drivers/xen/xenbus/xenbus_comms.c
-+++ b/drivers/xen/xenbus/xenbus_comms.c
-@@ -397,6 +397,8 @@ static int process_writes(void)
- 	if (state.req->state == xb_req_state_aborted)
- 		kfree(state.req);
- 	else {
-+		/* write err, then update state */
-+		virt_wmb();
- 		state.req->state = xb_req_state_got_reply;
- 		wake_up(&state.req->wq);
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 30bcd5d3a32a8..10eb4b8e8e7ee 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -1543,20 +1543,20 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
+ 		return ret;
  	}
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev, &stm32_component,
+-					      &sai->cpu_dai_drv, 1);
++	ret = snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
++	if (ret) {
++		dev_err(&pdev->dev, "Could not register pcm dma\n");
++		return ret;
++	}
++
++	ret = snd_soc_register_component(&pdev->dev, &stm32_component,
++					 &sai->cpu_dai_drv, 1);
+ 	if (ret)
+ 		return ret;
+ 
+ 	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
+ 		conf = &stm32_sai_pcm_config_spdif;
+ 
+-	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Could not register pcm dma\n");
+-		return ret;
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -1565,6 +1565,8 @@ static int stm32_sai_sub_remove(struct platform_device *pdev)
+ 	struct stm32_sai_sub_data *sai = dev_get_drvdata(&pdev->dev);
+ 
+ 	clk_unprepare(sai->pdata->pclk);
++	snd_dmaengine_pcm_unregister(&pdev->dev);
++	snd_soc_unregister_component(&pdev->dev);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
