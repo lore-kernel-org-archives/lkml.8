@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222DBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6331C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED49720658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974EF20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:40:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WKf5Gnvm"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="GhvdHBWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731595AbgCPOjy (ORCPT
+        id S1731612AbgCPOj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:39:54 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37165 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731572AbgCPOjx (ORCPT
+        Mon, 16 Mar 2020 10:39:58 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35024 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731597AbgCPOj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:39:53 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f16so8109525plj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:39:52 -0700 (PDT)
+        Mon, 16 Mar 2020 10:39:57 -0400
+Received: by mail-pj1-f65.google.com with SMTP id mq3so8822231pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Zku3gYtegdivuyVdz79vHefY5lOBMVX+wXMMYAiZ+NE=;
-        b=WKf5GnvmXhvVA4DxzPPfzsd2Rc2/Z1+VTXY1J3w+oW9gKuJCYU02BAFddRUuh4qEKK
-         6BxpN+0SaP/s32hujCUWhaFAygo0o+dRCw9H53gUijl07I6sc7xuF8k8GEcnkhFwhRdA
-         tpAFN2ANcbdUbvmkxVZQsSArHyJ6qvpYiMQp4gOk1fG3ntONRL0KO2K6tNpixvBVohKw
-         di8QqXauNo2B9I3ryAhYbVR6tYzbpPGUbPmcfT8SGmOEEBjTasvH5wQ4dIlX7KvpotOk
-         BXDsiLZiozCsL9YohSMaLgXKfQB/eAEzxZr1ZwVh8U8fb3Fk+FIgp7e9NINrSGDwCAcP
-         JvBA==
+        bh=BBUeXVxAq+EmN+1GPqITYbbNMUjqDoXzGs9Et5OlzcY=;
+        b=GhvdHBWpXtpgR3Hhk8y3gEIvVK0GpET9RwyOt/734utRDOPRy8C48XmLph/E5fPHH1
+         vqw6iGlTI3zGY/zgKwWIeMBjm5tqFxHHx5j9YmArUYSurDb8tt0yKzYB+bn6+ASKrV7b
+         VoM2rf8YAh2mE13yQd2LPV+Zp8duQRDtTDo+qk6VONtfpXf5XdEoFptJ//4IATLdycEC
+         gN4L5QfoHmGBW1zMdLjhwKzEeirbmOPzq35nbvrZ1I7VQpzlxl8yCxWko8kx4HOKV3XZ
+         8YMUEtm8S+U/u5xUXamcqPDOZ0Z+nbZ2kvs2SrQ3loR6CbtpSyrou7LYJ/ruMbGh+ybg
+         rzUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Zku3gYtegdivuyVdz79vHefY5lOBMVX+wXMMYAiZ+NE=;
-        b=KkYxpRRwEEwXKwyPqTKWIYPXEwIHoSm2eg5PcokJnkhVUuUJFI+2q4ULa1/KsO8aFk
-         9egkebaOGXn8wL/I1NCjOG8qKv9X6LLYjpNy4HQp5IpMBzaTIQMu2KMherGlqY91Oagg
-         Y22h31z4s9/m9r4KP8QMrDRpey1n4KfoOq9LRUBbtKjoNoJHq8jgWADEski5JNRcwKa6
-         MA2rp0cCVTZbWFF5Hi3x9At+o4O98/xzPfGrsj8JzXhwnpjWFzMJ/TQpNwe3sLtPSKka
-         yXU0FvFenUxvM/aZh8WRRlO6bTIFTGXbkvowQ01pTkzx9XtlcJekj0Ms4kdOA0hN31WQ
-         F6BQ==
-X-Gm-Message-State: ANhLgQ2nxn2cyKGUhOEpaXwuOv7yPJ3H+doaUYPc7AnOxGaDH4aCXdwA
-        3mv5Ast2k9nn0HTX3OdlhIwyRPM0Ze2xVg==
-X-Google-Smtp-Source: ADFU+vtiKGNSRYoPM3pTwE6au0ABiF7VSY7Yq/xvnLVs4MaGZeWn+VEDdXf7tZqlXXOlOj9M9cuJww==
-X-Received: by 2002:a17:90b:14c2:: with SMTP id jz2mr25747348pjb.152.1584369591646;
-        Mon, 16 Mar 2020 07:39:51 -0700 (PDT)
+        bh=BBUeXVxAq+EmN+1GPqITYbbNMUjqDoXzGs9Et5OlzcY=;
+        b=F6LqNj+58Fee0wO7hyNWjeB55ZS+ZBASAZcPy3pOsTgza8vYrzHnVJlUIcsWIcChR1
+         +5pnu5bZ5n/erFy9FAQXBow4PijYtyI5gqVcKaSgk2xJo+FI66dN0NEVIB3lRviu0gFt
+         Dvrcy54c6je46tFJnRKUKCGkkCslmvThm6yiEpHBSsH2P1CH9vO4zkTKe/UZ1f7Fe1mL
+         UnRgIUVOS5rHwoJe5iAAoFu6DGavkMM+A0YDy0L83t+Y4rFlcBdpoKFZe4SH0N8w/FV1
+         2CAMg48ZRNeWdqfA2mvdtA3IiWgrooDukXSBt7mzkp8VIjJ1jNfZ9edjba91T79VerXf
+         EuFw==
+X-Gm-Message-State: ANhLgQ1kdNwq4vFnLjgz//FEHulyqNS2voqLjnhKjLBYRKP/cB3YS3Ts
+        L3OtZxo7nCxkoMDAd209ftOorIxg+lWYvw==
+X-Google-Smtp-Source: ADFU+vuBUPHG35c4F1mbkDyxS1MGsWLQo0xMxqUa7tuBtwG1IKz6wWYMmb8olg23cVgOqQ/OVmznng==
+X-Received: by 2002:a17:90a:394d:: with SMTP id n13mr27419698pjf.125.1584369595687;
+        Mon, 16 Mar 2020 07:39:55 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.39.47
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.39.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:39:51 -0700 (PDT)
+        Mon, 16 Mar 2020 07:39:55 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,13 +67,11 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Richard Henderson <rth@twiddle.net>,
-        linux-alpha@vger.kernel.org
-Subject: [PATCHv2 02/50] alpha: Add show_stack_loglvl()
-Date:   Mon, 16 Mar 2020 14:38:28 +0000
-Message-Id: <20200316143916.195608-3-dima@arista.com>
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCHv2 03/50] arc: Add show_stack_loglvl()
+Date:   Mon, 16 Mar 2020 14:38:29 +0000
+Message-Id: <20200316143916.195608-4-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -103,104 +101,91 @@ Also, it will consolidate printings with headers.
 Introduce show_stack_loglvl(), that eventually will substitute
 show_stack().
 
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: linux-alpha@vger.kernel.org
+As a good side-effect header "Stack Trace:" is now printed with the same
+log level as the rest of backtrace.
+
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: linux-snps-arc@lists.infradead.org
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/alpha/kernel/traps.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ arch/arc/include/asm/bug.h     |  3 ++-
+ arch/arc/kernel/stacktrace.c   | 21 +++++++++++++++------
+ arch/arc/kernel/troubleshoot.c |  2 +-
+ 3 files changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/arch/alpha/kernel/traps.c b/arch/alpha/kernel/traps.c
-index f6b9664ac504..2402f1777f54 100644
---- a/arch/alpha/kernel/traps.c
-+++ b/arch/alpha/kernel/traps.c
-@@ -121,10 +121,10 @@ dik_show_code(unsigned int *pc)
- }
+diff --git a/arch/arc/include/asm/bug.h b/arch/arc/include/asm/bug.h
+index 0be19fd1a412..4c453ba96c51 100644
+--- a/arch/arc/include/asm/bug.h
++++ b/arch/arc/include/asm/bug.h
+@@ -13,7 +13,8 @@
+ struct task_struct;
  
- static void
--dik_show_trace(unsigned long *sp)
-+dik_show_trace(unsigned long *sp, const char *loglvl)
+ void show_regs(struct pt_regs *regs);
+-void show_stacktrace(struct task_struct *tsk, struct pt_regs *regs);
++void show_stacktrace(struct task_struct *tsk, struct pt_regs *regs,
++		     const char *loglvl);
+ void show_kernel_fault_diag(const char *str, struct pt_regs *regs,
+ 			    unsigned long address);
+ void die(const char *str, struct pt_regs *regs, unsigned long address);
+diff --git a/arch/arc/kernel/stacktrace.c b/arch/arc/kernel/stacktrace.c
+index 1e440bbfa876..24f9cd8a12c9 100644
+--- a/arch/arc/kernel/stacktrace.c
++++ b/arch/arc/kernel/stacktrace.c
+@@ -158,9 +158,11 @@ arc_unwind_core(struct task_struct *tsk, struct pt_regs *regs,
+ /* Call-back which plugs into unwinding core to dump the stack in
+  * case of panic/OOPs/BUG etc
+  */
+-static int __print_sym(unsigned int address, void *unused)
++static int __print_sym(unsigned int address, void *arg)
  {
- 	long i = 0;
--	printk("Trace:\n");
-+	printk("%sTrace:\n", loglvl);
- 	while (0x1ff8 & (unsigned long) sp) {
- 		extern char _stext[], _etext[];
- 		unsigned long tmp = *sp;
-@@ -133,24 +133,25 @@ dik_show_trace(unsigned long *sp)
- 			continue;
- 		if (tmp >= (unsigned long) &_etext)
- 			continue;
--		printk("[<%lx>] %pSR\n", tmp, (void *)tmp);
-+		printk("%s[<%lx>] %pSR\n", loglvl, tmp, (void *)tmp);
- 		if (i > 40) {
--			printk(" ...");
-+			printk("%s ...", loglvl);
- 			break;
- 		}
- 	}
--	printk("\n");
-+	printk("%s\n", loglvl);
+-	printk("  %pS\n", (void *)address);
++	const char *loglvl = arg;
++
++	printk("%s  %pS\n", loglvl, (void *)address);
+ 	return 0;
  }
  
- static int kstack_depth_to_print = 24;
+@@ -217,17 +219,24 @@ static int __get_first_nonsched(unsigned int address, void *unused)
+  *-------------------------------------------------------------------------
+  */
  
--void show_stack(struct task_struct *task, unsigned long *sp)
-+void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+-noinline void show_stacktrace(struct task_struct *tsk, struct pt_regs *regs)
++noinline void show_stacktrace(struct task_struct *tsk, struct pt_regs *regs,
++			      const char *loglvl)
+ {
+-	pr_info("\nStack Trace:\n");
+-	arc_unwind_core(tsk, regs, __print_sym, NULL);
++	printk("%s\nStack Trace:\n", loglvl);
++	arc_unwind_core(tsk, regs, __print_sym, (void *)loglvl);
+ }
+ EXPORT_SYMBOL(show_stacktrace);
+ 
+ /* Expected by sched Code */
++void show_stack_loglvl(struct task_struct *tsk, unsigned long *sp,
 +			const char *loglvl)
- {
- 	unsigned long *stack;
- 	int i;
- 
- 	/*
--	 * debugging aid: "show_stack(NULL);" prints the
-+	 * debugging aid: "show_stack(NULL, NULL, KERN_EMERG);" prints the
- 	 * back trace for this cpu.
- 	 */
- 	if(sp==NULL)
-@@ -163,14 +164,19 @@ void show_stack(struct task_struct *task, unsigned long *sp)
- 		if ((i % 4) == 0) {
- 			if (i)
- 				pr_cont("\n");
--			printk("       ");
-+			printk("%s       ", loglvl);
- 		} else {
- 			pr_cont(" ");
- 		}
- 		pr_cont("%016lx", *stack++);
- 	}
- 	pr_cont("\n");
--	dik_show_trace(sp);
-+	dik_show_trace(sp, loglvl);
++{
++	show_stacktrace(tsk, NULL, loglvl);
 +}
 +
-+void show_stack(struct task_struct *task, unsigned long *sp)
-+{
-+	show_stack_loglvl(task, sp, KERN_DEFAULT);
+ void show_stack(struct task_struct *tsk, unsigned long *sp)
+ {
+-	show_stacktrace(tsk, NULL);
++	show_stack_loglvl(tsk, sp, KERN_DEFAULT);
  }
  
- void
-@@ -184,7 +190,7 @@ die_if_kernel(char * str, struct pt_regs *regs, long err, unsigned long *r9_15)
- 	printk("%s(%d): %s %ld\n", current->comm, task_pid_nr(current), str, err);
- 	dik_show_regs(regs, r9_15);
- 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
--	dik_show_trace((unsigned long *)(regs+1));
-+	dik_show_trace((unsigned long *)(regs+1), KERN_DEFAULT);
- 	dik_show_code((unsigned int *)regs->pc);
+ /* Another API expected by schedular, shows up in "ps" as Wait Channel
+diff --git a/arch/arc/kernel/troubleshoot.c b/arch/arc/kernel/troubleshoot.c
+index d2999503fb8a..660681101523 100644
+--- a/arch/arc/kernel/troubleshoot.c
++++ b/arch/arc/kernel/troubleshoot.c
+@@ -242,5 +242,5 @@ void show_kernel_fault_diag(const char *str, struct pt_regs *regs,
  
- 	if (test_and_set_thread_flag (TIF_DIE_IF_KERNEL)) {
-@@ -625,7 +631,7 @@ do_entUna(void * va, unsigned long opcode, unsigned long reg,
- 	printk("gp = %016lx  sp = %p\n", regs->gp, regs+1);
- 
- 	dik_show_code((unsigned int *)pc);
--	dik_show_trace((unsigned long *)(regs+1));
-+	dik_show_trace((unsigned long *)(regs+1), KERN_DEFAULT);
- 
- 	if (test_and_set_thread_flag (TIF_DIE_IF_KERNEL)) {
- 		printk("die_if_kernel recursion detected.\n");
+ 	/* Show stack trace if this Fatality happened in kernel mode */
+ 	if (!user_mode(regs))
+-		show_stacktrace(current, regs);
++		show_stacktrace(current, regs, KERN_DEFAULT);
+ }
 -- 
 2.25.1
 
