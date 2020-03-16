@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C05CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B675C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A312051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBAB2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="W+9dXAtn"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="PuFLnGkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbgCPOnB (ORCPT
+        id S1731935AbgCPOnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:43:01 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:53126 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731589AbgCPOm7 (ORCPT
+        Mon, 16 Mar 2020 10:43:05 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44419 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbgCPOnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:42:59 -0400
-Received: by mail-pj1-f68.google.com with SMTP id ng8so1482129pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:42:58 -0700 (PDT)
+        Mon, 16 Mar 2020 10:43:04 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 37so9867320pgm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WmFBS14JXMEXPenWApvnYz3pDrUtv1d4djT5B5BXbiU=;
-        b=W+9dXAtnYaZ8gb9dzNSVG2ORLV6t4E0Aw9yad9zGvnMHRdAnmYdLvqOpnjRH3txku+
-         CkFoOxCrvYtY6PyjpDzY9T2nIRDxc5ESHZVHH3Ko+NMh1lHdpBvJgeGw+Qy9uKAMJcwZ
-         WnlHIGHklBepL82SiSnp/chQZf+mTihOY83u0FzXQ2J9o8bqHa8p96PWeKFV3BRme73V
-         WruhZA4xc4G6jr5mUrEtgCqAzFFyTKmMssum/4wcbpR3+oWGXbau5Szo6wQBLjv6UwHj
-         ixWmn9LDQlFA82iAl6nDHirGb+Jk8YUH3WXSEWmPP0km+cwKQV7n1ZYmRgoTGSqZLS5A
-         3f2A==
+        bh=T0qqTPkX+mDcXv1jOokn32GElsZQ+Yr4A6SJDSHq5Kw=;
+        b=PuFLnGkvg05+A9SgK7xJ8SaP4m9fp5PyfFn0mFmc76CxWOiGpRu8vpwbGU5ur28qeV
+         lVkcwFrOgnghNLd3/NZW6uqZtJUYQHb9li1nPgAp7cn98/S7kYvrwse6xLXFm6I7ySX1
+         VFEZoyKc5Zxg8/ZeUOE/dUTuX4cUhbuYE9TNqv+cBE+E88sFQ+EtxEY4wN5pcTa30INZ
+         EgVqUk/NjBMFEe3MyHhg0i+iRnIAC9GGb9DnZGsMwpF2wlO0P3DOwuOtB7UDRmnTJgxW
+         NmWaZuKmEUJlnKDejcfrN+DRHL/dxnP8z2Ol5G+BgusdCOFIuhXBZ/l6HSgdbdtxdo8v
+         tDBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WmFBS14JXMEXPenWApvnYz3pDrUtv1d4djT5B5BXbiU=;
-        b=j/7X2DmF/Ukth0ORKK+lbIpQlYPrJRuqdf20l8DjuuyNfjYM51Vxunra/CGji7j8YZ
-         MUvQASHLi3Ca7ZA8vOYBTZ+z1631LhvYRN5vThycJ9XjNWOtxxCZPhkT7GTq21ujG74S
-         DFpAUf1RmBGkXjL4vKC2Xv1IOOTf15QQ08AzXHpZ4FTyKEsmgmCqZ3HKpXEIvPdKdCzY
-         y5wJaB1lowzSmEATZLw+Gcl1sUV8Tzag52IIo/zfRpRTwGdbxCgW28CHX5kFjDVBfpMG
-         EUB6dzfy+5BM/sPC5yPc3Jx6H5BgEHnU/evdGt7s3WxJZPwWptXA04jfhcGo6sJwm9Os
-         w0cA==
-X-Gm-Message-State: ANhLgQ1lDyNn+LJ8hQ7dY0p8NPL989N2l5JpuXjHiPCRmC1Gz8/mYCsY
-        dRX2KSQfnfOXEKD2rXIEOAJQZqy+FEuMng==
-X-Google-Smtp-Source: ADFU+vth/ejP9tW5A/PSBxo3pnW44jD9HKUmh+HMKxy95ZAtVhdr53IZZdydEPgOzA/jnF8ZkONEqQ==
-X-Received: by 2002:a17:902:9a08:: with SMTP id v8mr24845571plp.251.1584369778057;
-        Mon, 16 Mar 2020 07:42:58 -0700 (PDT)
+        bh=T0qqTPkX+mDcXv1jOokn32GElsZQ+Yr4A6SJDSHq5Kw=;
+        b=ELieNFjEo9T38wqPfc4D3/M74MbUjl0/AQIAbDeCl3pQ4It8J9t+TxbB3vwBPyXHC9
+         B3JFNb2FhVfhfNNigVGwC9Js97X0SnVMz4lGBZV1wu6KrIaYSRt1HpvR7s0SL8lw+IcS
+         kN0lIwBXLlwc+TyWADAhczhaxqAIrZdqC7dRHpFf888mzLCUwU/sVPpK/AzacekBQKsb
+         0vU7vs9QrLD2J9tyFDhvx7/+N9DhGyVcyAoD6Qq2dSJjS1SvSdFjNh5ieo9ya2HTrwSk
+         +h6EAYEwdifPvpO4EYCJOY6xTY9zUcM7lQP6B7SwZJb89vKGd+o+nO2t3TOIMHHJO+iR
+         R5Dw==
+X-Gm-Message-State: ANhLgQ2ZEVd97FuCbcYLQU/3EUtviwHjTZblgFUfG5qXlZejxWxJQyJs
+        EoBwnx8GqTn5adSmQrc6C5Tq2qJlDy+q0g==
+X-Google-Smtp-Source: ADFU+vtV9A9Dnu1i9/nyv01E+pBw4vXUuhWmiNwqDWi1NlPpA+QZFslO9bH3x/EeFADOIxRkO+LSdA==
+X-Received: by 2002:a62:6842:: with SMTP id d63mr28679997pfc.113.1584369783065;
+        Mon, 16 Mar 2020 07:43:03 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.42.54
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.42.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:42:57 -0700 (PDT)
+        Mon, 16 Mar 2020 07:43:02 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -66,10 +66,13 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [PATCHv2 44/50] sysrq: Use show_stack_loglvl()
-Date:   Mon, 16 Mar 2020 14:39:10 +0000
-Message-Id: <20200316143916.195608-45-dima@arista.com>
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+Subject: [PATCHv2 45/50] x86/amd_gart: Print stacktrace for a leak with KERN_ERR
+Date:   Mon, 16 Mar 2020 14:39:11 +0000
+Message-Id: <20200316143916.195608-46-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
@@ -80,42 +83,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show the stack trace on a CPU with the same log level as "CPU%d" header.
+It's under CONFIG_IOMMU_LEAK option which is enabled by debug config.
+Likely the backtrace is worth to be seen - so aligning with log level of
+error message in iommu_full().
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86@kernel.org
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/tty/sysrq.c         | 2 +-
- include/linux/sched/debug.h | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kernel/amd_gart_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index f724962a5906..fe1ffcbda194 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -220,7 +220,7 @@ static void showacpu(void *dummy)
+diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
+index 4e5f50236048..c0fdf594709e 100644
+--- a/arch/x86/kernel/amd_gart_64.c
++++ b/arch/x86/kernel/amd_gart_64.c
+@@ -159,7 +159,7 @@ static void dump_leak(void)
+ 		return;
+ 	dump = 1;
  
- 	raw_spin_lock_irqsave(&show_lock, flags);
- 	pr_info("CPU%d:\n", smp_processor_id());
 -	show_stack(NULL, NULL);
-+	show_stack_loglvl(NULL, NULL, KERN_INFO);
- 	raw_spin_unlock_irqrestore(&show_lock, flags);
++	show_stack_loglvl(NULL, NULL, KERN_ERR);
+ 	debug_dma_dump_mappings(NULL);
  }
- 
-diff --git a/include/linux/sched/debug.h b/include/linux/sched/debug.h
-index 95fb9e025247..373e4e3faf2a 100644
---- a/include/linux/sched/debug.h
-+++ b/include/linux/sched/debug.h
-@@ -31,6 +31,8 @@ extern void show_regs(struct pt_regs *);
-  * trace (or NULL if the entire call-chain of the task should be shown).
-  */
- extern void show_stack(struct task_struct *task, unsigned long *sp);
-+extern void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
-+			      const char *loglvl);
- 
- extern void sched_show_task(struct task_struct *p);
- 
+ #endif
 -- 
 2.25.1
 
