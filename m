@@ -2,116 +2,130 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6203CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CD4C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B01120679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:39:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584373185;
-	bh=BF/Y6VdwrEGYZgDYRo8+Zp93Zdq85GyGk4o7+hsg5UU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=hyKa8U5ROa+ZjWNWWFZgS2J0DAK9NymlVcG3JYyZwn+ikMAi2EU9P/733QpJJcdBs
-	 22j8ogQVKL2jjp5BhjcAYyfxOlbLVNWK1OsfHOLbxczJnXuekpnMWZm6TxCEClgf3m
-	 D+X+UqfzyFW9VntoX9C/GBHVGyryCpLvbInvzBf4=
+	by mail.kernel.org (Postfix) with ESMTP id 16BC520663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w84O1QQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbgCPPjo (ORCPT
+        id S1731879AbgCPPkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731780AbgCPPjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:39:43 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5F4720719;
-        Mon, 16 Mar 2020 15:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584373182;
-        bh=BF/Y6VdwrEGYZgDYRo8+Zp93Zdq85GyGk4o7+hsg5UU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=MJoPs6o6i35Vcgl3lZ4NI4X5LKNVqBMQ3tRpe8xHgHtE1SjxVdrCSDGhAaLOspQOF
-         giOWYDYJY3iVb6Jy3Xj0RVEAa+xjmudZAbQBWPQMGGqTK5+oWifGNV5/4sMM6PEUoC
-         KATXZRnN+BV7IOI2iBEW4TyTEle8VaLvG8uU39oo=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7C3323522DE1; Mon, 16 Mar 2020 08:39:42 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 08:39:42 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     mutt@paulmck-ThinkPad-P72, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC tip/core/rcu 0/16] Prototype RCU usable from idle,
- exception, offline
-Message-ID: <20200316153942.GW3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
- <20200313144145.GA31604@lenoir>
- <20200313154243.GU3199@paulmck-ThinkPad-P72>
- <20200316144535.GA501@lenoir>
+        Mon, 16 Mar 2020 11:40:14 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38532 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731550AbgCPPkO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:40:14 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s1so91756wrv.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:40:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vJQ7s9x85ia8HxlMYprwaZJGn4L6RP+BR7+jWVKPLTo=;
+        b=w84O1QQJwU6wMTGEhyd3tdZmzyokkNQNgtvlgCbk7JrgRg0w2R3EtdUzes5TKo/XyE
+         0GN9BzerCd+PBe2gdX+VVWalWV0GvUaZ1Hvpn02xC7Z6cQbZ9zUYoVR8SlrMkeTHa5pO
+         ZNV7G4zwVtMQAtwNFVsP7G9rAugODJUvegfg+Joz2/pLSwTVFLeBdLC69Mm9fmsFaT0H
+         4lQ985eQTWmn73BDP/WhhWDXVBZBfC45ZHQLQxe35G5uOfpUGYH7dFLUTw7I6qKsVqm6
+         VCf79+8VBzgdX46YQ4mkH13lYwMdQrGC6Ai/EhOinV88dF/tVd63mOiTbTus//PTo1AD
+         eHZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vJQ7s9x85ia8HxlMYprwaZJGn4L6RP+BR7+jWVKPLTo=;
+        b=mU1KArjaLdF/I0V4dFaLCWv3hUhi9KAbqXifL86HKoYUwBfmKF38qsn226MGkq/FMG
+         00VW7igsYthEVJM+NCVqEk6wEY6nwfz7ZwOxAcaYGlzZxvgW5iq7sigLEIj19akPYesF
+         yF6LLsOeSf0XenLa3v7aZnDddYbKmS7Pj+Lh0WufyBCNMZKJ/CZ/QwMp52DCbOR6KBcF
+         evOYSYf4d1oKdPrqhSGvi/WaHPNuBM9HN4o0Pmlkmm5Pi+Iagv2MMKi9/i8nEy5uWr+i
+         QRHnRviuhN9ZCFD4K7UUcK4JT9nE7HdNnnb1/eZXCknCZ9QhPcIvOCpM0AJHBfOudyCz
+         XIiw==
+X-Gm-Message-State: ANhLgQ2bzUv7eKOa5dbO755jAhG4yZHeTm1YFTYtlfnUj0Vub4kf3PFK
+        wfVitVF1+im5Y0j6bHNJUQDaJg==
+X-Google-Smtp-Source: ADFU+vu5RlEmmjxd74oFX3RvJEdQFPOMmKqi/N4OkXyJVDSx1NxqeLTrLEHwet7QRQD2B1qytUrz8w==
+X-Received: by 2002:a5d:4ad1:: with SMTP id y17mr29213545wrs.119.1584373212032;
+        Mon, 16 Mar 2020 08:40:12 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id u17sm393519wrm.43.2020.03.16.08.40.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 08:40:11 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 16:40:03 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        virtualization@lists.linux-foundation.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 02/15] ACPI/IORT: Remove direct access of
+ dev->iommu_fwspec
+Message-ID: <20200316154003.GC304669@myrica>
+References: <20200310091229.29830-1-joro@8bytes.org>
+ <20200310091229.29830-3-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316144535.GA501@lenoir>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200310091229.29830-3-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 03:45:36PM +0100, Frederic Weisbecker wrote:
-> On Fri, Mar 13, 2020 at 08:42:43AM -0700, Paul E. McKenney wrote:
-> > On Fri, Mar 13, 2020 at 03:41:46PM +0100, Frederic Weisbecker wrote:
-> > > On Thu, Mar 12, 2020 at 11:16:18AM -0700, Paul E. McKenney wrote:
-> > > > Hello!
-> > > > 
-> > > > This series provides two variants of Tasks RCU, a rude variant inspired
-> > > > by Steven Rostedt's use of schedule_on_each_cpu(), and a tracing variant
-> > > > requested by the BPF folks and perhaps also of use for other tracing
-> > > > use cases.
-> > > > 
-> > > > The tracing variant has explicit read-side markers to permit finite grace
-> > > > periods even given in-kernel loops in PREEMPT=n builds It also protects
-> > > > code in the idle loop, on exception entry/exit paths, and on the various
-> > > > CPU-hotplug online/offline code paths, thus having protection properties
-> > > > similar to SRCU.  However, unlike SRCU, this variant avoids expensive
-> > > > instructions in the read-side primitives, thus having read-side overhead
-> > > > similar to that of preemptible RCU.
-> > > > 
-> > > > There are of course downsides.  The grace-period code can send IPIs to
-> > > > CPUs, even when those CPUs are in the idle loop or in nohz_full userspace.
-> > > > It is necessary to scan the full tasklist, much as for Tasks RCU.  There
-> > > > is a single callback queue guarded by a single lock, again, much as for
-> > > > Tasks RCU.  If needed, these downsides can be at least partially remedied
-> > > 
-> > > So what we trade to fix the issues we are having with tracing against extended
-> > > grace periods, we lose in CPU isolation. That worries me a bit as tracing can
-> > > be thoroughly used with nohz_full and CPU isolation.
-> > 
-> > First, disturbing nohz_full CPUs can be avoided by the sysadm simply
-> > refusing to remove tracepoints while sensitive applications are running
-> > on nohz_full CPUs.
+On Tue, Mar 10, 2020 at 10:12:16AM +0100, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> So, in that case we'll need to modify the tools such as perf tools to avoid
-> releasing the related buffers until we are ready to do so.
+> Use the accessor functions instead of directly dereferencing
+> dev->iommu_fwspec.
 > 
-> That's possible but it's kindof an ABI breakage. Also what if there is a
-> long running service on that nohz full CPU polling on the networking card...
+> Tested-by: Hanjun Guo <guohanjun@huawei.com>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
-In the near term, I do admit that Mathieu's point about using smp_mb()
-in readers but only on nohz_full CPUs is attractive.
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-I have some other ideas, but simplicity has its advantages, and if no
-one complains, perhaps those advantages are also good for the long term.
-
-							Thanx, Paul
+> ---
+>  drivers/acpi/arm64/iort.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index ed3d2d1a7ae9..7d04424189df 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -1015,6 +1015,7 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+>  		return ops;
+>  
+>  	if (dev_is_pci(dev)) {
+> +		struct iommu_fwspec *fwspec;
+>  		struct pci_bus *bus = to_pci_dev(dev)->bus;
+>  		struct iort_pci_alias_info info = { .dev = dev };
+>  
+> @@ -1027,8 +1028,9 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+>  		err = pci_for_each_dma_alias(to_pci_dev(dev),
+>  					     iort_pci_iommu_init, &info);
+>  
+> -		if (!err && iort_pci_rc_supports_ats(node))
+> -			dev->iommu_fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
+> +		fwspec = dev_iommu_fwspec_get(dev);
+> +		if (fwspec && iort_pci_rc_supports_ats(node))
+> +			fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
+>  	} else {
+>  		int i = 0;
+>  
+> -- 
+> 2.17.1
+> 
