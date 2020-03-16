@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4139CC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC32C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236D620658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F194420658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgCPIki (ORCPT
+        id S1730273AbgCPIkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:40:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38460 "EHLO huawei.com"
+        Mon, 16 Mar 2020 04:40:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60394 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730126AbgCPIkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:40:37 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 84C48E8881D087B6834A;
-        Mon, 16 Mar 2020 16:40:34 +0800 (CST)
+        id S1730157AbgCPIkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:40:39 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 45155F18BCC496273A12;
+        Mon, 16 Mar 2020 16:40:29 +0800 (CST)
 Received: from localhost.localdomain (10.175.34.53) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 16 Mar 2020 16:40:23 +0800
+ 14.3.487.0; Mon, 16 Mar 2020 16:40:22 +0800
 From:   Luo bin <luobin9@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         <aviad.krawczyk@huawei.com>, <luoxianjun@huawei.com>,
         <cloud.wangxiaoyun@huawei.com>, <yin.yinshi@huawei.com>
-Subject: [PATCH net 6/6] hinic: fix wrong value of MIN_SKB_LEN
-Date:   Mon, 16 Mar 2020 00:56:30 +0000
-Message-ID: <20200316005630.9817-7-luobin9@huawei.com>
+Subject: [PATCH net 3/6] hinic: fix the bug of clearing event queue
+Date:   Mon, 16 Mar 2020 00:56:27 +0000
+Message-ID: <20200316005630.9817-4-luobin9@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200316005630.9817-1-luobin9@huawei.com>
 References: <20200316005630.9817-1-luobin9@huawei.com>
@@ -46,26 +46,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the minimum value of skb len that hw supports is 32 rather than 17
+should disable and synchronize eq irq before freeing it, must
+clear event queue depth in hw before freeing relevant memory
+to avoid illegal memory access and update consumer idx to avoid
+invalid interrupt
 
 Signed-off-by: Luo bin <luobin9@huawei.com>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_tx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/ethernet/huawei/hinic/hinic_hw_eqs.c  | 25 +++++++++++++------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index cabcc9019ee4..8993f5b07059 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -45,7 +45,7 @@
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+index 79243b626ddb..13f3abac54ea 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+@@ -188,7 +188,7 @@ static u8 eq_cons_idx_checksum_set(u32 val)
+  * eq_update_ci - update the HW cons idx of event queue
+  * @eq: the event queue to update the cons idx for
+  **/
+-static void eq_update_ci(struct hinic_eq *eq)
++static void eq_update_ci(struct hinic_eq *eq, u32 arm_state)
+ {
+ 	u32 val, addr = EQ_CONS_IDX_REG_ADDR(eq);
  
- #define HW_CONS_IDX(sq)                 be16_to_cpu(*(u16 *)((sq)->hw_ci_addr))
+@@ -202,7 +202,7 @@ static void eq_update_ci(struct hinic_eq *eq)
  
--#define MIN_SKB_LEN			17
-+#define MIN_SKB_LEN			32
- #define HINIC_GSO_MAX_SIZE		65536
+ 	val |= HINIC_EQ_CI_SET(eq->cons_idx, IDX)    |
+ 	       HINIC_EQ_CI_SET(eq->wrapped, WRAPPED) |
+-	       HINIC_EQ_CI_SET(EQ_ARMED, INT_ARMED);
++	       HINIC_EQ_CI_SET(arm_state, INT_ARMED);
  
- #define	MAX_PAYLOAD_OFFSET		221
+ 	val |= HINIC_EQ_CI_SET(eq_cons_idx_checksum_set(val), XOR_CHKSUM);
+ 
+@@ -347,7 +347,7 @@ static void eq_irq_handler(void *data)
+ 	else if (eq->type == HINIC_CEQ)
+ 		ceq_irq_handler(eq);
+ 
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
+ }
+ 
+ /**
+@@ -702,7 +702,7 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
+ 	}
+ 
+ 	set_eq_ctrls(eq);
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
+ 
+ 	err = alloc_eq_pages(eq);
+ 	if (err) {
+@@ -752,18 +752,29 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
+  **/
+ static void remove_eq(struct hinic_eq *eq)
+ {
+-	struct msix_entry *entry = &eq->msix_entry;
+-
+-	free_irq(entry->vector, eq);
++	hinic_set_msix_state(eq->hwif, eq->msix_entry.entry,
++			     HINIC_MSIX_DISABLE);
++	synchronize_irq(eq->msix_entry.vector);
++	free_irq(eq->msix_entry.vector, eq);
+ 
+ 	if (eq->type == HINIC_AEQ) {
+ 		struct hinic_eq_work *aeq_work = &eq->aeq_work;
+ 
+ 		cancel_work_sync(&aeq_work->work);
++		/* clear aeq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_AEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	} else if (eq->type == HINIC_CEQ) {
+ 		tasklet_kill(&eq->ceq_tasklet);
++		/* clear ceq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_CEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	}
+ 
++	/* update cons_idx to avoid invalid interrupt */
++	eq->cons_idx = hinic_hwif_read_reg(eq->hwif, EQ_PROD_IDX_REG_ADDR(eq));
++	eq_update_ci(eq, EQ_NOT_ARMED);
++
+ 	free_eq_pages(eq);
+ }
+ 
 -- 
 2.17.1
 
