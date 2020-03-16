@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9D5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008D4C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE657206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD70206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326076;
-	bh=X2U8BZK1mRjV0hmRrAocA+0FcUAr5GGTKyHMMuN4tbE=;
+	s=default; t=1584326082;
+	bh=e0FJE4mmKOLy1FnSL5Kj2UeQ9zkdN+4VFJKPic2+/YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdpYBwsQFgQEz+vlJ6aMdic9KN4N6YgGfs//cI/oNGIqv3fxPG1uWohwSA63sAb3n
-	 uK9cjMLjWqyTOsRyG3Ds/T+ivhyb6cDsvGF1sCf4kPj+lzBFY4L2uI9gHCo5q7Jc9y
-	 btSM1aNUiLSwM373hYxjszU7Db3S0qjqsu5SpFYc=
+	b=He2HP+iH0OQcqbhX4W6QCF0/aow/VB+JKqqvR/2VYWm84RFroV89r+XkNjgoW1lb7
+	 Ry/JN4UyyBrpVM5yV337H0Awg84tIXfnXm9JB7HTXXSPgQQrjvu4myDMdz5VR+VZIM
+	 1HO3fQ/QKdbSla8dM1OpkYx210i1XLzbhI+KA0LE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgCPCee (ORCPT
+        id S1729925AbgCPCel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:34:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37874 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729836AbgCPCeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:25 -0400
+        id S1729863AbgCPCe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99F66206E9;
-        Mon, 16 Mar 2020 02:34:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 458F2206EB;
+        Mon, 16 Mar 2020 02:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326064;
-        bh=X2U8BZK1mRjV0hmRrAocA+0FcUAr5GGTKyHMMuN4tbE=;
+        s=default; t=1584326069;
+        bh=e0FJE4mmKOLy1FnSL5Kj2UeQ9zkdN+4VFJKPic2+/YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AtVwOheDgvUvC+N9WPF5dOtk0bWPA3qURdR43A5XKjvuG6YnDaKXM7wdNmNED6QPp
-         Cb4ztAQ953t9S4j7nN+DD/2kVn4XaI+aq18wihbm2MLsUwtVYz8jC4xrgknGKkLmNj
-         Np2e8cbhc6B4YQesp4N3JSfJCZmu7hepTDhjqp/U=
+        b=1H7e6jNQV/uEP1DIpBMu2yQRk45k61PLBy4WHfeteDe2rfxueBIn7s+U+tRFLozEq
+         0oSwFxU86mt+xY48JLNlhggm1omr0krCgiZg8kK/8t26Pp9/qIwzvA7OR7ihYm/0fB
+         zqROxLaVTWP+HV6/bYIHSt1UcE8ooOUdV0EmCVJw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 5.4 11/35] cifs: fix potential mismatch of UNC paths
-Date:   Sun, 15 Mar 2020 22:33:47 -0400
-Message-Id: <20200316023411.1263-11-sashal@kernel.org>
+Cc:     Thommy Jakobsson <thommyj@gmail.com>,
+        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 15/35] spi/zynqmp: remove entry that causes a cs glitch
+Date:   Sun, 15 Mar 2020 22:33:51 -0400
+Message-Id: <20200316023411.1263-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
 References: <20200316023411.1263-1-sashal@kernel.org>
@@ -61,38 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paulo Alcantara (SUSE)" <pc@cjr.nz>
+From: Thommy Jakobsson <thommyj@gmail.com>
 
-[ Upstream commit 154255233830e1e4dd0d99ac929a5dce588c0b81 ]
+[ Upstream commit 5dd8304981ecffa77bb72b1c57c4be5dfe6cfae9 ]
 
-Ensure that full_path is an UNC path that contains '\\' as delimiter,
-which is required by cifs_build_devname().
+In the public interface for chipselect, there is always an entry
+commented as "Dummy generic FIFO entry" pushed down to the fifo right
+after the activate/deactivate command. The dummy entry is 0x0,
+irregardless if the intention was to activate or deactive the cs. This
+causes the cs line to glitch rather than beeing activated in the case
+when there was an activate command.
 
-The build_path_from_dentry_optional_prefix() function may return a
-path with '/' as delimiter when using SMB1 UNIX extensions, for
-example.
+This has been observed on oscilloscope, and have caused problems for at
+least one specific flash device type connected to the qspi port. After
+the change the glitch is gone and cs goes active when intended.
 
-Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
+The reason why this worked before (except for the glitch) was because
+when sending the actual data, the CS bits are once again set. Since
+most flashes uses mode 0, there is always a half clk period anyway for
+cs to clk active setup time. If someone would rely on timing from a
+chip_select call to a transfer_one, it would fail though.
+
+It is unknown why the dummy entry was there in the first place, git log
+seems to be of no help in this case. The reference manual gives no
+indication of the necessity of this. In fact the lower 8 bits are a
+setup (or hold in case of deactivate) time expressed in cycles. So this
+should not be needed to fulfill any setup/hold timings.
+
+Signed-off-by: Thommy Jakobsson <thommyj@gmail.com>
+Reviewed-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Link: https://lore.kernel.org/r/20200224162643.29102-1-thommyj@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifs_dfs_ref.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-zynqmp-gqspi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
-index 606f26d862dc1..cc3ada12848d9 100644
---- a/fs/cifs/cifs_dfs_ref.c
-+++ b/fs/cifs/cifs_dfs_ref.c
-@@ -324,6 +324,8 @@ static struct vfsmount *cifs_dfs_do_automount(struct dentry *mntpt)
- 	if (full_path == NULL)
- 		goto cdda_exit;
+diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+index 60c4de4e44856..7412a3042a8d2 100644
+--- a/drivers/spi/spi-zynqmp-gqspi.c
++++ b/drivers/spi/spi-zynqmp-gqspi.c
+@@ -401,9 +401,6 @@ static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
  
-+	convert_delimiter(full_path, '\\');
-+
- 	cifs_dbg(FYI, "%s: full_path: %s\n", __func__, full_path);
+ 	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, genfifoentry);
  
- 	if (!cifs_sb_master_tlink(cifs_sb)) {
+-	/* Dummy generic FIFO entry */
+-	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, 0x0);
+-
+ 	/* Manually start the generic FIFO command */
+ 	zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
+ 			zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
 -- 
 2.20.1
 
