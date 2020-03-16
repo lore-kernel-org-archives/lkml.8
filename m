@@ -2,184 +2,126 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B366C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B9EC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB70F20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075F72051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bo+g9H5s"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Mr3tuqDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732081AbgCPQ7M (ORCPT
+        id S1732190AbgCPRAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:59:12 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37932 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731703AbgCPQ7M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:59:12 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t13so12549899wmi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=70bPCyhJBrlXCD6u4BZvfDKaTIsnRKUAtd6mHmHNkO8=;
-        b=bo+g9H5sgga1CQI782F0U5JGaD5OixtDP9xwsrDac6yLRXh7E3mXFcS2MwXAUltvqk
-         oig9JuatzgRD3DHuaiDsIOOxCtV/HD9LUicXusRdFcFb2flyoWyeKk02lFp3AWYsqEUp
-         y7eF7FXMnF2GInGSSTLlo02jbCnFCW7Q7QozQWiWMvNcA6jPy/vB9YRqsdv18/CApPiV
-         p9pzt9XKWyfAj95te4NSsaus5J+hGeoS1wRhZoG3EPU63mceWfpg3p1TvcXBnQRfcW7A
-         lUN5Sg/fIHMAlhpfK/0XNwIFoFpEC0VkdWMkILnFBND0oDtPjUTP+zusox50Bwy2fWoL
-         NI6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=70bPCyhJBrlXCD6u4BZvfDKaTIsnRKUAtd6mHmHNkO8=;
-        b=GGYd6pL/6mqFB9AqPIdi2X7qQB6CEeuIeUUX/L6Wp93ca7CpemrkqJ1qsOouo0iAu0
-         N/12PfKmDo4ya/zqMcq5qe5x5J0tZU5G66e6IijAzzq3krRxEvGYCK4EzrOoqlMhFCum
-         X3jEGxzjVut5pVc33BOPPlE+9W+3+J2iqT4OBymKssp5gyV/5hdKzpmE21Q9GDieG9ST
-         1z2tCkthvb1R6SWCLJB7POFbppipnhO6ReC98kpCPFp7GJpTliepr6GI2gjgUk+5tl/j
-         kVu6iKxUOtlHbIJz7Wi+UDKhj+46xAzRjZUmNKAx3XSIuCA9ckXqVtcYW9vkeM7E2MXW
-         jwHA==
-X-Gm-Message-State: ANhLgQ0BQa1Xilu0aSQjvDGgHIOWRW09wPBm1nNAzDjt6XJlEFnDwaXf
-        eC9F0kRSoDzZeQuFynyoOWSbneb2FKkGlA==
-X-Google-Smtp-Source: ADFU+vtkMtOnq5sYx80ZSfNUtRWvo4B5Ztb/wVyfdfHTyMZTewF7ZtCdNNRdjzUC7AC64N6cys/yWg==
-X-Received: by 2002:a7b:c3cf:: with SMTP id t15mr33400wmj.183.1584377947584;
-        Mon, 16 Mar 2020 09:59:07 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id v26sm722008wra.7.2020.03.16.09.59.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2020 09:59:06 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: meson-g12-common: add spicc controller nodes
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200313091401.15888-1-narmstrong@baylibre.com>
- <7hfte8wc29.fsf@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <a4dae52a-7e5d-b5fe-ee88-6e9a7b793b31@baylibre.com>
-Date:   Mon, 16 Mar 2020 17:59:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 16 Mar 2020 13:00:49 -0400
+Received: from mail-vi1eur05on2063.outbound.protection.outlook.com ([40.107.21.63]:5244
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731864AbgCPRAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 13:00:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PI3RoUo62WdeDhHiVAkcTTWIVMn+NpDA28rN0uCHZpcFzKLrDr+4Raotafx4s+rVAfKOHEFo0eoFF8LOvI+9s4BfkddAh6HlrgN3FVZY88mRXDGe9GWNOv5v/9w0TinYCwBr3efBNzUNh2pkOkCaSEmyXNnpgucsTb8Cq5cNk78Mt/1g/d2MOSf5HQngEtHTyUAUQD72kZJqezMdUbPw2JrHDpU3FMF8//5p3uAQLR+jZgl9mcuDkIvowhcY8P6ko3TvkUB+k9WXrPiCnbme6NoEQkKp9KRs6oE7/y3N4F8FC9cfy6aoU745xnRq1O49Tn70RId7tuuBrSfMNPpd1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fYgFIIpLJXRDfGwMKZk+nUwzZmq0FbxqU9h2j7alqNo=;
+ b=jTbQB8ssBTVGVzJ4G9PAmqnX7JKKQDCmee9NiD0lNdCe1hkvm6qkDkX0NGnbJMp88dXuwSA0pkXYJD/EKWGbK+pwK22Wor74v9lgKD9ODOITVCxRWYqG+i0+2CwJQTcJeuYBYxlkxxlOpCqkwSiDNtW78GIFVJ2QoNHJrH6iOhYKnKwg+UxHDDwHV+RdfdYU9Cbg/JQ8aF6nG2PLDjghJvlvpRFIiYrooJlhi/4lHdF+qCV8WPIymvX2H5tl7feCDAGX66qbZW1w7dCkuAYkls1LMsu0vLoLcB9muifkWLvbE+br0ki1YmSoQkvoXffhF1pQxtCxIz7edNd2+oRZVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fYgFIIpLJXRDfGwMKZk+nUwzZmq0FbxqU9h2j7alqNo=;
+ b=Mr3tuqDb2AzNhWUcuonscj/43j3T7Zj/0NTQS8PNYliTZWB5CiBogP6qp8ZxpkC1w+ve4uwpPSuxfv3gsyDqxuWWoMUwawU46b8qRRJdsiF2g5PHwT1t2ca4lixKT1+i3YSFyS72aKTNjZKYxMaymLdM+tsdqsoFQ07riNPKjng=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=petrm@mellanox.com; 
+Received: from HE1PR05MB4746.eurprd05.prod.outlook.com (20.176.168.150) by
+ AM6SPR01MB0062.eurprd05.prod.outlook.com (20.179.19.207) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14; Mon, 16 Mar 2020 17:00:44 +0000
+Received: from HE1PR05MB4746.eurprd05.prod.outlook.com
+ ([fe80::c146:9acd:f4dc:4e32]) by HE1PR05MB4746.eurprd05.prod.outlook.com
+ ([fe80::c146:9acd:f4dc:4e32%7]) with mapi id 15.20.2793.018; Mon, 16 Mar 2020
+ 17:00:44 +0000
+References: <000000000000c08f2005a0ed60d4@google.com> <00000000000081b1df05a0f40d13@google.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Petr Machata <petrm@mellanox.com>
+To:     syzbot <syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Subject: Re: general protection fault in erspan_netlink_parms
+In-reply-to: <00000000000081b1df05a0f40d13@google.com>
+Date:   Mon, 16 Mar 2020 18:00:41 +0100
+Message-ID: <87zhcgw7ye.fsf@mellanox.com>
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR10CA0002.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:17c::12) To HE1PR05MB4746.eurprd05.prod.outlook.com
+ (2603:10a6:7:a3::22)
 MIME-Version: 1.0
-In-Reply-To: <7hfte8wc29.fsf@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from yaviefel (213.220.234.169) by AM0PR10CA0002.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13 via Frontend Transport; Mon, 16 Mar 2020 17:00:43 +0000
+X-Originating-IP: [213.220.234.169]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4c3152a8-14ac-45d1-d24a-08d7c9cb907b
+X-MS-TrafficTypeDiagnostic: AM6SPR01MB0062:
+X-Microsoft-Antispam-PRVS: <AM6SPR01MB0062A3634E73025020A5A703DBF90@AM6SPR01MB0062.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-Forefront-PRVS: 03449D5DD1
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(39860400002)(376002)(346002)(136003)(366004)(396003)(199004)(8936002)(316002)(16526019)(478600001)(8676002)(966005)(6496006)(52116002)(186003)(81156014)(81166006)(26005)(5660300002)(36756003)(66556008)(66476007)(66946007)(86362001)(956004)(2616005)(2906002)(6486002)(4326008)(99710200001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6SPR01MB0062;H:HE1PR05MB4746.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: q9QJs4i69rVCJmVxy1so6Tt8T6REhekvE+gKnERnR2sbNzSyOfDcBuh9/cRWNw1bO5fYJIjEMKtF2CApGpNDZZKEstP3Y+s0Rb8nBsmQeGvKcpmLHtKMBCY+dfUYTUCyW9yuzSPb+T0AkNWrkE66H8m1VznT3YuGoo1TYrnowyHLw9Pnb1ovD7hqe8jEDxKu3mfB2Ig4bpLaEaW1Zc1kBRjJse5qNkah5ik1eOYqRQ3HPIYQd3Ual+l4XjpwyKdW0Avs1yiKkHZsCNRYM/BiwZxG/bAZOKFq3lxzGKdx25eXNbhJAVR3+3IAQuz1PCFEuuUH/CVeRB+czda2aBDwMf9/vbLL62hXCRyMnRTqo148GlWabu3tm55cNEa9Am6dlikRMG1nwgSJTLPhOBHZE8NQ0MTCLSZGddyplK8aJtwfWIXI3jGXRFZg9q2T6rlWpe97tYX9oQtGenrzXI1StUKpoSbV+lcOrKa52H31VOgetimtfVa1+MZ+FEi5HJ1CGllpHr1HcTM3Wbhc+sYPCeNZrFcIfD971rnMG/zwFEFUFnBCKXlSibThimIyCyx7cPyYaIAh6pokBnPG5nBt4SJC8ecnSqCoxArzQzWfqQ63D2J7No/Gj0F7pZjEb93cbyrpyEBi3UlxN85JC3OeNg==
+X-MS-Exchange-AntiSpam-MessageData: lO0jv0lcvhcDIftKr6PydYT0rMQ+V0ynlPuFCMBo+aFYEEhw2i2/Vzf/J1bin0d/k+2POdIPrE6kP9BnnFYk2F6ANAD0Ux51TPEJfCS2T+4shghsmj8nLiZ5y/MX3pWgLNJdp6FBK5pfkb3UVAKC9g==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c3152a8-14ac-45d1-d24a-08d7c9cb907b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2020 17:00:43.8820
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: c/zsbEH/BOCu7dW3zI19VT8x5HzcUgCoXwhLcNmKMHSpJx2jU1waLO72eF5buU9yToxXKN/PQtfHXxeqZo23LA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6SPR01MB0062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+I've got this reproduced, it happens when IFLA_INFO_DATA is not passed,
+so "ip link add type erspan". The problem is that the commit referenced
+below doesn't check data != NULL in the ERSPAN branch. I'll send a fix
+later today.
 
-On 16/03/2020 16:31, Kevin Hilman wrote:
-> Neil Armstrong <narmstrong@baylibre.com> writes:
-> 
->> This adds the controller and pinctrl nodes for the Amlogic G12A SPICC
->> controllers.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->> Kevin,
->>
->> This depends on the CLKID_SPICC0_SCLK and CLKID_SPICC1_SCLK introduced
->> in https://lore.kernel.org/linux-arm-kernel/20200219084928.28707-2-narmstrong@baylibre.com/
-> 
-> Looks like this is merged in clk-meson.  Can I get a stable tag to use
-> in my tree please?
-> 
-> Thanks,
-> 
-> Kevin
-> 
+syzbot <syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com> writes:
 
-Here you go:
+> syzbot has bisected this bug to:
+>
+> commit e1f8f78ffe9854308b9e12a73ebe4e909074fc33
+> Author: Petr Machata <petrm@mellanox.com>
+> Date:   Fri Mar 13 11:39:36 2020 +0000
+>
+>     net: ip_gre: Separate ERSPAN newlink / changelink callbacks
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=101477fde00000
+> start commit:   0fda7600 geneve: move debug check after netdev unregister
+> git tree:       net
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=121477fde00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=141477fde00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1b4ebf4dae4e510dd219
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1627f955e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111ac52de00000
+>
+> Reported-by: syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com
+> Fixes: e1f8f78ffe98 ("net: ip_gre: Separate ERSPAN newlink / changelink callbacks")
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
-
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-
-are available in the Git repository at:
-
-  git://github.com/BayLibre/clk-meson.git tags/clk-meson-dt-v5.7-1
-
-for you to fetch changes up to 42be7c41a5edc990e329b991b4ad6ec172e72e18:
-
-  dt-bindings: clk: g12a-clkc: add SPICC SCLK Source clock IDs (2020-02-19 18:40:00 +0100)
-
-----------------------------------------------------------------
-- Add gxl internal dac gate clock id
-- Add g12a SPICC SCLK Source clock IDs
-
-----------------------------------------------------------------
-Jerome Brunet (1):
-      dt-bindings: clk: meson: add the gxl internal dac gate
-
-Neil Armstrong (1):
-      dt-bindings: clk: g12a-clkc: add SPICC SCLK Source clock IDs
-
- include/dt-bindings/clock/g12a-clkc.h | 2 ++
- include/dt-bindings/clock/gxbb-clkc.h | 1 +
- 2 files changed, 3 insertions(+)
-
-
-Neil
