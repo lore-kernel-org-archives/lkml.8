@@ -2,106 +2,212 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6082BC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4A2C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2671620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:19:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584343158;
-	bh=RotL3CgXoR6T5UIHr7aPqpQ44J38JKKkEPnvOHGpZbU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Av89Xiu0FC6T4jQJAhpm6mZHe28JlrmGaGn/Z1LZrg+9niHTbZv975jZizi0iuqzL
-	 PPs8datyi4Yr+7emLsJA70qJBV5YkF2j/NFxV+HIYAlgj0ULn6nHiMX2h90BzbKvMf
-	 AiZ2RL+/3pTOo/rNtxF4igrWacAkmk4o1VqR9MqY=
+	by mail.kernel.org (Postfix) with ESMTP id 86EC020663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:20:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cThaAhey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbgCPHTR (ORCPT
+        id S1729817AbgCPHUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:19:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbgCPHTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:19:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFADD205ED;
-        Mon, 16 Mar 2020 07:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584343156;
-        bh=RotL3CgXoR6T5UIHr7aPqpQ44J38JKKkEPnvOHGpZbU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YixRJO0m80NiLVZZzN7qFjNWfZ85DrLh5xJeDSseQlPC4OVu3cmDS3nLMFlG9zcKi
-         6bc8R0DMI6HiIL/57C+WL58SthGUvgOleibcSewVCfkR5YgG6x15CFqaIWLr90vC9X
-         atXuceLHQAS0BfTKZmL4IfTdRn/b4eC5rs6OtghY=
-Date:   Mon, 16 Mar 2020 08:19:13 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Johan Hovold <johan@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH] usb: get rid of 'choice' for legacy gadget drivers
-Message-ID: <20200316071913.GA3019942@kroah.com>
-References: <20200315154948.26569-1-masahiroy@kernel.org>
- <875zf42313.fsf@kernel.org>
+        Mon, 16 Mar 2020 03:20:47 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33044 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728120AbgCPHUr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 03:20:47 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02G7KhLg012845;
+        Mon, 16 Mar 2020 02:20:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584343243;
+        bh=Yisa4qZBXogsjsu0UBUCrwgSHPoybqOn38y9aI+oMAQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cThaAheyHJ+EAotUZu9KeHnIO+DWyRdUTC6rVjqSrE+ScMlFRGn3F4x2XRkXJQABq
+         EdHCiLd6GigEA84MMDEwswrCIaWRitdgsaOB6XsqE7qmDBa/ImOgzwqQvR06O8HnwY
+         SR65BEC+q7sTETLFTR+Q66jbuoYtIDZed9oT9RE0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02G7KhTi112724
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Mar 2020 02:20:43 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Mar 2020 02:20:42 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Mar 2020 02:20:42 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02G7KepR117384;
+        Mon, 16 Mar 2020 02:20:41 -0500
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix an error handling path in
+ 'k3_udma_glue_cfg_rx_flow()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <grygorii.strashko@ti.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20200315155015.27303-1-christophe.jaillet@wanadoo.fr>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <49a35126-3cc6-0cbb-e632-42a237ef353e@ti.com>
+Date:   Mon, 16 Mar 2020 09:20:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zf42313.fsf@kernel.org>
+In-Reply-To: <20200315155015.27303-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 09:05:12AM +0200, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> Masahiro Yamada <masahiroy@kernel.org> writes:
-> > drivers/usb/gadget/legacy/Kconfig creates a 'choice' inside another
-> > 'choice'.
-> >
-> > The outer choice: line 17 "USB Gadget precomposed configurations"
-> > The inner choice: line 484 "EHCI Debug Device mode"
-> >
-> > I wondered why the whole legacy gadget drivers reside in such a big
-> > choice block.
-> >
-> > This dates back to 2003, "[PATCH] USB: fix for multiple definition of
-> > `usb_gadget_get_string'". [1]
-> >
-> > At that time, the global function, usb_gadget_get_string(), was linked
-> > into multiple drivers. That was why only one driver was able to become
-> > built-in at the same time.
-> >
-> > Later, commit a84d9e5361bc ("usb: gadget: start with libcomposite")
-> > moved usb_gadget_get_string() to a separate module, libcomposite.ko
-> > instead of including usbstring.c from multiple modules.
-> >
-> > More and more refactoring was done, and after commit 1bcce939478f
-> > ("usb: gadget: multi: convert to new interface of f_mass_storage"),
-> > you can link multiple gadget drivers into vmlinux without causing
-> > multiple definition error.
-> >
-> > This is the only user of the nested choice structure ever. Removing
-> > this mess will make some Kconfig cleanups possible.
-> >
-> > [1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=fee4cf49a81381e072c063571d1aadbb29207408
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> 
-> Greg, if you want to pick this for v5.7, please go ahead:
-> 
-> Acked-by: Felipe Balbi <balbi@kernel.org>
+Hi Christophe,
 
-Thanks, will take it later today.
+On 15/03/2020 17.50, Christophe JAILLET wrote:
+> All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
+> function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
+> 
+> This not correct because this function has a 'channel->flows_ready--;' at
+> the end, but 'flows_ready' has not been incremented here, when we branch to
+> the error handling path.
+> 
+> In order to keep a correct value in 'flows_ready', un-roll
+> 'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
+> at the correct places when an error is detected.
 
-greg k-h
+Good catch!
+
+> Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
+
+Even better catch ;)
+
+> Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Not sure that the last point of the description is correct. Maybe, the
+> 'xudma_rflow_put / return -ENODEV;' should be kept in order not to
+> override 'flow->udma_rflow'.
+> ---
+>  drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+> index dbccdc7c0ed5..890573eb1625 100644
+> --- a/drivers/dma/ti/k3-udma-glue.c
+> +++ b/drivers/dma/ti/k3-udma-glue.c
+> @@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (IS_ERR(flow->udma_rflow)) {
+>  		ret = PTR_ERR(flow->udma_rflow);
+>  		dev_err(dev, "UDMAX rflow get err %d\n", ret);
+> -		goto err;
+> +		goto err_return;
+
+return err; ?
+
+>  	}
+
+Optionally you could have moved the
+	rx_chn->flows_ready++;
+here and
+
+>  
+>  	if (flow->udma_rflow_id != xudma_rflow_get_id(flow->udma_rflow)) {
+> -		xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto err_rflow_put;
+
+goto err;
+
+>  	}
+>  
+>  	/* request and cfg rings */
+> @@ -592,7 +592,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (!flow->ringrx) {
+>  		ret = -ENODEV;
+>  		dev_err(dev, "Failed to get RX ring\n");
+> -		goto err;
+> +		goto err_rflow_put;
+>  	}
+>  
+>  	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
+> @@ -600,19 +600,19 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (!flow->ringrxfdq) {
+>  		ret = -ENODEV;
+>  		dev_err(dev, "Failed to get RXFDQ ring\n");
+> -		goto err;
+> +		goto err_ringrx_free;
+>  	}
+>  
+>  	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
+> -		goto err;
+> +		goto err_ringrxfdq_free;
+>  	}
+>  
+>  	ret = k3_ringacc_ring_cfg(flow->ringrxfdq, &flow_cfg->rxfdq_cfg);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to cfg ringrxfdq %d\n", ret);
+> -		goto err;
+> +		goto err_ringrxfdq_free;
+>  	}
+>  
+>  	if (rx_chn->remote) {
+> @@ -662,7 +662,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (ret) {
+>  		dev_err(dev, "flow%d config failed: %d\n", flow->udma_rflow_id,
+>  			ret);
+> -		goto err;
+> +		goto err_ringrxfdq_free;
+>  	}
+>  
+>  	rx_chn->flows_ready++;
+> @@ -670,8 +670,18 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  		flow->udma_rflow_id, rx_chn->flows_ready);
+>  
+>  	return 0;
+> -err:
+> -	k3_udma_glue_release_rx_flow(rx_chn, flow_idx);
+> +
+> +err_ringrxfdq_free:
+> +	k3_ringacc_ring_free(flow->ringrxfdq);
+> +
+> +err_ringrx_free:
+> +	k3_ringacc_ring_free(flow->ringrx);
+> +
+> +err_rflow_put:
+> +	xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
+> +	flow->udma_rflow = NULL;
+> +
+> +err_return:
+
+You could have kept the single err label and just copy the
+release_rx_flow() without the rx_chn->flows_ready--;
+
+I don't have anything against multiple labels as such, but a single one
+might be easier to follow?
+
+and you don't need the err_return, just return in place when you would
+jump to it.
+
+>  	return ret;
+>  }
+>  
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
