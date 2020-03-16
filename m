@@ -2,99 +2,174 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0535DC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBB1C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD80820719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:02:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zem311Tm"
+	by mail.kernel.org (Postfix) with ESMTP id A7495205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730822AbgCPLCY (ORCPT
+        id S1730833AbgCPLCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:02:24 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33626 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730811AbgCPLCX (ORCPT
+        Mon, 16 Mar 2020 07:02:55 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:43796 "EHLO
+        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730678AbgCPLCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:02:23 -0400
-Received: by mail-vs1-f67.google.com with SMTP id y138so3138627vsy.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 04:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HYXCjPHfs8dDfhMy2nCW/5veOTWbVHj4w+BgbYglN9w=;
-        b=Zem311Tm82+PW9OL0vHqTxopdfny3jc3ZE+5GcIB/k1E6y26PuHdotm31jnVEgAu2b
-         yYWBSFnKG1yumWYVwPsTOthW1KXvZzj8qOFYZn8U/LSQPeQvBWgSEzaWyUl29RslaE22
-         OoDm8bwT1CbaIQ4FEs8oahpIjPMC5ERkBHvsM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HYXCjPHfs8dDfhMy2nCW/5veOTWbVHj4w+BgbYglN9w=;
-        b=c+0gwoWbdld8ZW3hu5akkcQK7sq8xzsI592kW3ZrsWsheYtzP+swahpsXnyfkD8Z/3
-         gah6vTtatf5eZc9TojgkKIul+f1RUdP6HVjTZwCSYNzX/svHF/J7T9HnyBKfoiLFmVU9
-         0irF8SnBg1dOdyp2IURxEqk24kglWCWF0OpeNmaxPR6WAgmzN97mMvk+NdKjqMUZcYuK
-         gJtQHaUz38+LSp2XnwZL7+ux8dNjZaF7ofjobQzpoNEk4pI4Qk20qvaMeS6f6CW3atpJ
-         9ma3enkFxRBl5yh97Mk/2VUMBVtP8Yz1d18Xc31cPhzWwLo0CwfOtBOA9NShJKdc9w27
-         bhNg==
-X-Gm-Message-State: ANhLgQ0HBR17rg/1kLIxZ1XvtptWhrIrIy8Y2TLAUbYMP9FM6gg72JTv
-        vmXJrBgD5SEqZ3/aIcU/SrGoMUr/oPTL9uPx+u600h0fkcY=
-X-Google-Smtp-Source: ADFU+vslL7SUJTVlPVk2d8S7a0jEhOnlOTTT7KU8Dg+Uf7BqOBjcuL5F5OWDFxyBWnAFO5VFRqBRQWH6xWxqn5a3M3c=
-X-Received: by 2002:a05:6102:392:: with SMTP id m18mr15598517vsq.79.1584356542437;
- Mon, 16 Mar 2020 04:02:22 -0700 (PDT)
+        Mon, 16 Mar 2020 07:02:55 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.227])
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id DC89A261636;
+        Mon, 16 Mar 2020 19:02:43 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jaskaran Singh <jaskaransingh7654321@gmail.com>,
+        Wang Wenhu <wenhu.wang@vivo.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     kernel@vivo.com
+Subject: [PATCH v3,2/2] doc: zh_CN: add translation for virtiofs
+Date:   Mon, 16 Mar 2020 04:01:32 -0700
+Message-Id: <20200316110143.97848-2-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200316110143.97848-1-wenhu.wang@vivo.com>
+References: <20200315155258.91725-1-wenhu.wang@vivo.com>
+ <20200316110143.97848-1-wenhu.wang@vivo.com>
 MIME-Version: 1.0
-References: <1584345050-3738-1-git-send-email-hanks.chen@mediatek.com>
-In-Reply-To: <1584345050-3738-1-git-send-email-hanks.chen@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 16 Mar 2020 19:02:11 +0800
-Message-ID: <CANMq1KA1ngYhr7XO0k3xb0h7L-DX+TjiekvnGGOTRqz=BQPREA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] dt-bindings: cpu: Add a support cpu type for cortex-a75
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VOSE9CQkJDT0xPSklKSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PhQ6FBw*FTg1SzZLMhIWMS8U
+        HRIaCwJVSlVKTkNPSE5NTk1CTU5LVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlMWVdZCAFZQUxKS0M3Bg++
+X-HM-Tid: 0a70e3029e069375kuwsdc89a261636
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 3:51 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
->
-> Add arm cpu type cortex-a75.
+Translate virtiofs.rst in Documentation/filesystems/ into Chinese.
 
-Already in Rob's tree here:
-https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=5c2614e995de07b41eb355155eb5e0e3d593718b
+Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+---
+Changelog:
+v2:
+ - add a blank line in the end of index.rst to index virtiofs.rst
+ - Asked-by Stefan Hajnoczi
+ - added SPDX header and Copyright info
+v3:
+ - rm raw latex field in translations/zh_CN/filesystems/index.rst
+   for none compatibility test with Sphinx 1.7.9 or later(only v1.6.7 avalible for me now).
+ - mv SPDX-License-Identifier to the top
+ - Reviewed-by labels added
+---
+ Documentation/filesystems/virtiofs.rst        |  2 +
+ .../translations/zh_CN/filesystems/index.rst  |  2 +
+ .../zh_CN/filesystems/virtiofs.rst            | 58 +++++++++++++++++++
+ 3 files changed, 62 insertions(+)
+ create mode 100644 Documentation/translations/zh_CN/filesystems/virtiofs.rst
 
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> index c23c24f..51b75f7 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> @@ -128,6 +128,7 @@ properties:
->        - arm,cortex-a57
->        - arm,cortex-a72
->        - arm,cortex-a73
-> +      - arm,cortex-a75
->        - arm,cortex-m0
->        - arm,cortex-m0+
->        - arm,cortex-m1
-> --
-> 1.7.9.5
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+diff --git a/Documentation/filesystems/virtiofs.rst b/Documentation/filesystems/virtiofs.rst
+index 4f338e3cb3f7..e06e4951cb39 100644
+--- a/Documentation/filesystems/virtiofs.rst
++++ b/Documentation/filesystems/virtiofs.rst
+@@ -1,5 +1,7 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ 
++.. _virtiofs_index:
++
+ ===================================================
+ virtiofs: virtio-fs host<->guest shared file system
+ ===================================================
+diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
+index f5adcdc5fa1c..14f155edaf69 100644
+--- a/Documentation/translations/zh_CN/filesystems/index.rst
++++ b/Documentation/translations/zh_CN/filesystems/index.rst
+@@ -23,3 +23,5 @@ Linux Kernel中的文件系统
+ .. toctree::
+    :maxdepth: 2
+ 
++   virtiofs
++
+diff --git a/Documentation/translations/zh_CN/filesystems/virtiofs.rst b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
+new file mode 100644
+index 000000000000..09bc9e012e2a
+--- /dev/null
++++ b/Documentation/translations/zh_CN/filesystems/virtiofs.rst
+@@ -0,0 +1,58 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++.. include:: ../disclaimer-zh_CN.rst
++
++:Original: :ref:`Documentation/filesystems/virtiofs.rst <virtiofs_index>`
++
++译者
++::
++
++	中文版维护者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
++	中文版翻译者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
++	中文版校译者： 王文虎 Wang Wenhu <wenhu.wang@vivo.com>
++
++===========================================
++virtiofs: virtio-fs 主机<->客机共享文件系统
++===========================================
++
++- Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
++
++介绍
++====
++Linux的virtiofs文件系统实现了一个半虚拟化VIRTIO类型“virtio-fs”设备的驱动，通过该\
++类型设备实现客机<->主机文件系统共享。它允许客机挂载一个已经导出到主机的目录。
++
++客机通常需要访问主机或者远程系统上的文件。使用场景包括：在新客机安装时让文件对其\
++可见；从主机上的根文件系统启动；对无状态或临时客机提供持久存储和在客机之间共享目录。
++
++尽管在某些任务可能通过使用已有的网络文件系统完成，但是却需要非常难以自动化的配置\
++步骤，且将存储网络暴露给客机。而virtio-fs设备通过提供不经过网络的文件系统访问文件\
++的设计方式解决了这些问题。
++
++另外，virto-fs设备发挥了主客机共存的优点提高了性能，并且提供了网络文件系统所不具备
++的一些语义功能。
++
++用法
++====
++以``myfs``标签将文件系统挂载到``/mnt``:
++
++.. code-block:: sh
++
++  guest# mount -t virtiofs myfs /mnt
++
++请查阅 https://virtio-fs.gitlab.io/ 了解配置QEMU和virtiofsd守护程序的详细信息。
++
++内幕
++====
++由于virtio-fs设备将FUSE协议用于文件系统请求，因此Linux的virtiofs文件系统与FUSE文\
++件系统客户端紧密集成在一起。客机充当FUSE客户端而主机充当FUSE服务器，内核与用户空\
++间之间的/dev/fuse接口由virtio-fs设备接口代替。
++
++FUSE请求被置于虚拟队列中由主机处理。主机填充缓冲区中的响应部分，而客机处理请求的完成部分。
++
++将/dev/fuse映射到虚拟队列需要解决/dev/fuse和虚拟队列之间语义上的差异。每次读取\
++/dev/fuse设备时，FUSE客户端都可以选择要传输的请求，从而可以使某些请求优先于其他\
++请求。虚拟队列有其队列语义，无法更改已入队请求的顺序。在虚拟队列已满的情况下尤
++其关键，因为此时不可能加入高优先级的请求。为了解决此差异，virtio-fs设备采用“hiprio”\
++（高优先级）虚拟队列，专门用于有别于普通请求的高优先级请求。
++
+-- 
+2.17.1
+
