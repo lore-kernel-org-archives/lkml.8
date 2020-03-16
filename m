@@ -2,91 +2,73 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55D2C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F07C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DCA20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B833B20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgCPIU4 (ORCPT
+        id S1730123AbgCPIVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:20:56 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:48799 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730034AbgCPIU4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:20:56 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MEVqu-1j6Yv62DbW-00G0Hm; Mon, 16 Mar 2020 09:20:54 +0100
-Received: by mail-qk1-f180.google.com with SMTP id c145so24591174qke.12;
-        Mon, 16 Mar 2020 01:20:54 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ25IJsjCF4738PIkgJ2tExxjlDAHAquM/L5EXO1shlp/BalAUv4
-        g9OETrClgVxEBs19Y7GPjuSWBJBpRrm5fYr24dA=
-X-Google-Smtp-Source: ADFU+vtZkjo0vBQ9aoA74/yqa0lPFIa34VkRS7tbzInZGxQBVX7guZUNzz41ojACEOaEmnmy5gmfBpvemtmAz+Tp3s4=
-X-Received: by 2002:a37:b984:: with SMTP id j126mr23717429qkf.3.1584346853152;
- Mon, 16 Mar 2020 01:20:53 -0700 (PDT)
+        Mon, 16 Mar 2020 04:21:44 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38294 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730034AbgCPIVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:21:43 -0400
+IronPort-SDR: z89UwK3TC8ejhNIappCF+/V0a+IC0ae6F1+emltIEJGVw8TfxdsX/jqgCpd4q08N5Gq+YCiUY7
+ /7+YxyQhdxFw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 01:21:43 -0700
+IronPort-SDR: /jz3pzFR88ralGOhiHgtDcnqVIsUJvQ1UVaMlktLkLHHgJQ/i8dE+UW2kS8dJJhoEaFUfZlJt7
+ 6wh7XWux9E1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,559,1574150400"; 
+   d="scan'208";a="244069261"
+Received: from eliteleevi.tm.intel.com ([10.237.54.20])
+  by orsmga003.jf.intel.com with ESMTP; 16 Mar 2020 01:21:41 -0700
+Date:   Mon, 16 Mar 2020 10:21:40 +0200 (EET)
+From:   Kai Vehmanen <kai.vehmanen@linux.intel.com>
+X-X-Sender: kvehmane@eliteleevi.tm.intel.com
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: linux-next: Fixes tag needs some work in the sound-asoc tree
+In-Reply-To: <20200314215023.36d41bb9@canb.auug.org.au>
+Message-ID: <alpine.DEB.2.21.2003160953020.2957@eliteleevi.tm.intel.com>
+References: <20200314215023.36d41bb9@canb.auug.org.au>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
 MIME-Version: 1.0
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com> <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
-In-Reply-To: <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 16 Mar 2020 09:20:37 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
-Message-ID: <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
-Subject: Re: [PATCH v6 09/10] arm64: efi: Export screen_info
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, olaf@aepfle.de,
-        Andy Whitcroft <apw@canonical.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, marcelo.cerri@canonical.com,
-        "K. Y. Srinivasan" <kys@microsoft.com>, sunilmut@microsoft.com,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:3oiE+Otbi3jGoRi0yjnKv95hDDl7bcMuoGX6Dw9D31mFMPeYSYV
- /VFxgUr5NoC+gzUi/shyYcUzhROyvji2QmRVwepKFeCCQSqxBS1FJsQ8iDXSl/dlplv8h3C
- Klt6YPtEyXC4PLvLTD4R1/sdFcz8nqEZ0+GhkUvneACxcHzhz0K0IxUCgZyUcNmgTt0ldpw
- lUHE/Z8cSJ7M/3SZEt7qg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EzFEDNwqUXg=:Te3pPTz/fHgCxcuNS/q6Yd
- b3bjIcurtb42JyNfB/YwiM1+xkT6bCyBSwg63OT00C76m9rLzdWUUVLaaWFPJWo+rXvYC5XNr
- uwSSMlxWYW6l9Oanyd0sPvQk1jTWHy+xUqXRRSkloXo0zYYZaeUAz4Pjx7UtDjF6/5oOKLIpN
- 9xMlYC7TyI5Ij0+d9Yh3r4qLyfFvHs6z/7iK4rkusl33pX+AHvhD4sQWvmb/hvYOcrvC/+H0r
- Zgsr5tXFHCNEdd22VZY5yuj9KALnY1fE359j2BeouftK8lvYALNm0a1C4WBK+f5CVa5Wa8Gvj
- Fr4Hm43UshnnC2pISSpr0wvAUzla+n3aCVL1Twn9/WZbAs4cI9eoz+3owPd4MyuHkZxAq7E4r
- qpzAg8hciQkGoeqmmBrS6fezCT/I7kMDtck1Hlogi39OgkJr7+i1K1qxm1vsG1d8EEaxcJ272
- D5N1OubPzk/u8FPxpciaRydt3zi7FTo7NSlWrIW6a0/Ci0UySbdDbGtLmDB2BhK2+CnzPLCNc
- JHoFX5uWIMP1x7EaJuOIroIWftYotzYxnRDAmoUZTqA7yKIJysfIyTZR43MKSUrOa4b5aqa55
- ldIDr2CnZup+fckT7MwA41yyGKcn3vWqAzJ8DItg+HBH+BTRUjAsLjTxf4SoQnQK2dIluuL7U
- MKVukYbKQeFHId1biQroJm6KV4u7zllQ5oa+HUF10WK5m1xYV8QauC+BjCjhkT3rJc3umIvgG
- zBOO0ppvtZW7TBI0K5i1kWzGRcpGb2267RdO24e4TIWUJs3soH8rJfhvA8cUBPlpuax2BHii4
- JfNHzfETBJNSBD3Qp4eqOZbhJ4zvKpmOQNueLRt1E2zaMVNhEY=
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
->
-> The Hyper-V frame buffer driver may be built as a module, and
-> it needs access to screen_info. So export screen_info.
->
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Hi,
 
-Is there any chance of using a more modern KMS based driver for the screen
-than the old fbdev subsystem? I had hoped to one day completely remove
-support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
-architectures.
+On Sat, 14 Mar 2020, Stephen Rothwell wrote:
 
-     Arnd
+> n commit
+>   5c82813ce43e ("ASoC: Intel: boards: drop reverse deps for SND_HDA_CODEC_HDMI")
+> 
+> Fixes tag
+>   Fixes: aa2b4a5 ('ASoC: Intel: boards: fix incorrect HDMI Kconfig dependency')[
+> 
+>  - SHA1 should be at least 12 digits long
+
+ack, thanks, this is a plain oversight -- other fixes tags from same 
+author (i.e. me) as well as other use of the tag in the sound-asoc tree 
+appear fine. So my bad, sorry!
+
+Br, Kai
