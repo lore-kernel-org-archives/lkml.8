@@ -2,125 +2,92 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341AAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04630C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C15920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB29F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:44:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="snUnay4X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n7TUMxfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732725AbgCPVot (ORCPT
+        id S1732768AbgCPVow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:44:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:44917 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732652AbgCPVos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:44:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48h8wF0L0dz9sPF;
-        Tue, 17 Mar 2020 08:44:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584395086;
-        bh=qbTFgV14ckkB7rAIrq9ihJqPBeXY8LPVtrjwzECDf6s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=snUnay4XdoM7ctIBRTBGerBxFzvnSAjGWtGtOWNzKcc6e4jHO4FY9nIP+FlN9xNK5
-         3Vj/oo6p+4Pvs8kZeeF6AjK8qykqCmAEqfvl5svmyy0I6SL0SR8m6nfRNsOZR5rqpV
-         55p7fmjt9HRDz+3X+GVucbv+3UTKdAH3dpRso9TKfRE7sbCVlWAiNkyRz+bzB4OBt1
-         0efYUzIG+TyS43EmPNgbjFOGcM3kKNiTi8brXeCKSzsdi5InrZL/yMN7VYKzngk8kN
-         y43FLgrFszoyi7wXEXLcA75ydkSZ+BsR8TTIBSqB+ZBMSe8g6ORzlVnzYRLhJxfF0m
-         UHa4wQKIUOMAQ==
-Date:   Tue, 17 Mar 2020 08:44:41 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Li Yang <leoyang.li@nxp.com>
-Subject: linux-next: manual merge of the imx-mxs tree with Linus' tree
-Message-ID: <20200317084441.1f59756d@canb.auug.org.au>
+        Mon, 16 Mar 2020 17:44:52 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:39348 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732652AbgCPVow (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 17:44:52 -0400
+Received: by mail-pj1-f68.google.com with SMTP id d8so9373007pje.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 14:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D3D+qRAc+7oS8J6Sb2B1Mz4hpBLBqFH8O13t3FcfVa4=;
+        b=n7TUMxfS05q1sAGxhXfS9KBXthw4r/gV1wXyY3/HpwXnOs+Yf4tGf5oszH9qukZVML
+         Woma4yNpxC5KWOU6oTIBDHv/5/ZOV5plbE8NVxCxOmEAK+nVWI0W/MmSWVPVSwDdtLha
+         skblwS0q9kA8z6T7FDwQcwTZJI1UofMPLd8rpqDlQPEwCp5TdX+CJh3xxCQGkTKFDLX6
+         lxXaJPjSxD8mLnFCjTOTifmCJ5qyABOPd/kHcOZDE077fAGrmFbdZD5eUu/aC8F8FGMq
+         cLG3FOnrfaRSlMtmlqvG0zr4Wtew6oQhNzY8Xm3csG5EPY3Fn56nbQAhcKNGnt+WVg7g
+         inrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D3D+qRAc+7oS8J6Sb2B1Mz4hpBLBqFH8O13t3FcfVa4=;
+        b=RCZsvzRWgLhMVAbnWeYVsv+eEhMRxwXQ1SEHI3jtemNVsbI6i8rt9PTvPwBR0oT6v/
+         SwmcLh98k/fu+z690kzEJxywGxQzBKa3NxW/vW3TFvGvpf8ZwhEE7feLR63O1IBeJx/h
+         1OEQckKsn5FLRIxoaurljv0O8ndpg7RYPM69Lxc4c0pFIJlOqLAQ61zRJwZMEoQwPrMY
+         oCQ3Dr8TIUa6iJqkgT1VVDg5J4I6T+ly7XzBuDFE5szpsXKLNo2YMe9J0esNZW6D3WrZ
+         izyS54jcQ0UjaqqtRT9L4zlBKeEdqY3KSzmuWsohbBTfmibvxJ/G1v5jOiWX4caGRse7
+         s7JA==
+X-Gm-Message-State: ANhLgQ1MwWy46aHGNFL/E5NevJE7SwhhPo8T/GvPCUcBkDa/ReChNSzD
+        W+snIboXAztoSEMrIgW2EDIQvOtO
+X-Google-Smtp-Source: ADFU+vs60R8/j/ZW6FCkLMviIra7UhFL+U4BLcl8OYqLfjSUIx79EqZSX89WiGJDT2CyWWVnFVsKfg==
+X-Received: by 2002:a17:902:b118:: with SMTP id q24mr1265410plr.0.1584395091130;
+        Mon, 16 Mar 2020 14:44:51 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id j1sm812274pfg.64.2020.03.16.14.44.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Mar 2020 14:44:51 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 14:45:06 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     robin.murphy@arm.com, m.szyprowski@samsung.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: [RFC][PATCH] dma-mapping: align default segment_boundary_mask
+ with dma_mask
+Message-ID: <20200316214506.GC18970@Asurada-Nvidia.nvidia.com>
+References: <20200314000007.13778-1-nicoleotsuka@gmail.com>
+ <20200316124850.GB17386@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=E/+sR8xhTsjJ0D4koT7qa6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316124850.GB17386@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=E/+sR8xhTsjJ0D4koT7qa6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Christoph,
 
-Hi all,
+On Mon, Mar 16, 2020 at 01:48:50PM +0100, Christoph Hellwig wrote:
+> On Fri, Mar 13, 2020 at 05:00:07PM -0700, Nicolin Chen wrote:
+> > @@ -736,7 +736,7 @@ static inline unsigned long dma_get_seg_boundary(struct device *dev)
+> >  {
+> >  	if (dev->dma_parms && dev->dma_parms->segment_boundary_mask)
+> >  		return dev->dma_parms->segment_boundary_mask;
+> > -	return DMA_BIT_MASK(32);
+> > +	return (unsigned long)dma_get_mask(dev);
+> 
+> Just thinking out loud after my reply - shouldn't we just return ULONG_MAX
+> by default here to mark this as no limit?
 
-Today's linux-next merge of the imx-mxs tree got a conflict in:
-
-  arch/arm64/configs/defconfig
-
-between commits:
-
-  4a453ccf87d5 ("arm64: defconfig: Enable CONFIG_SUN8I_THERMAL")
-  d5888c8e5586 ("arm64: defconfig: Replace ARCH_R8A7796 by ARCH_R8A77960")
-
-from Linus' tree and commits:
-
-  34e46ed80df6 ("arm64: defconfig: add i.MX system controller thermal suppo=
-rt")
-  63cccc8401c2 ("arm64: defconfig: Enable CONFIG_IMX8MM_THERMAL as module")
-  3fbd82f9af29 ("arm64: defconfig: run through savedefconfig for ordering")
-
-from the imx-mxs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/configs/defconfig
-index 4db223dbc549,0c110182497a..000000000000
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@@ -452,7 -485,8 +485,9 @@@ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3D
-  CONFIG_CPU_THERMAL=3Dy
-  CONFIG_THERMAL_EMULATION=3Dy
-  CONFIG_QORIQ_THERMAL=3Dm
- +CONFIG_SUN8I_THERMAL=3Dy
-+ CONFIG_IMX_SC_THERMAL=3Dm
-+ CONFIG_IMX8MM_THERMAL=3Dm
-  CONFIG_ROCKCHIP_THERMAL=3Dm
-  CONFIG_RCAR_THERMAL=3Dy
-  CONFIG_RCAR_GEN3_THERMAL=3Dy
-
---Sig_/=E/+sR8xhTsjJ0D4koT7qa6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5v80kACgkQAVBC80lX
-0GyE+wf/X2Ly3SBmOM/aVObHrHk1NmULalkPmlYP8kSL7g/RCtwV2tW21fT0xsJW
-FY+QG+UZYeyWuK9V3OsgNIfmn6TfSRWUe83it3xrGeA9JC031MV7V6Q1v64gpTsf
-o5YzFlpUHPb2OD/4o7JmBJS4HqONxzEf7bv0bQ01+D3zmcTzu2DnmLdZkEwjvqTu
-bLcgkxmL6U4t6Mnczc4h4WmObPRrTh3mtso6TWN2+feuUtdpEmz264mbGmULh90c
-uw/F4+f5neldgTXjEVa6JQtvfWJoq0nwE4RBpfNG/ecOd7zQNXdjbcyQdhFdX0mq
-Qz+cBvMSU/HQzGOoPqOTBNPlzjVKuw==
-=/xXn
------END PGP SIGNATURE-----
-
---Sig_/=E/+sR8xhTsjJ0D4koT7qa6--
+Yea, ULONG_MAX (saying no limit) sounds good to me.
