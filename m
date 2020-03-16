@@ -2,273 +2,139 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C82C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F93C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF3B20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="fskKj2fn"
+	by mail.kernel.org (Postfix) with ESMTP id DE0CB20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 19:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732450AbgCPTNu (ORCPT
+        id S1732421AbgCPTPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 15:13:50 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35615 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732413AbgCPTNt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 15:13:49 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d8so28256556qka.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 12:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=khwS4toKf6D+DVV7MNME1Tx0UEPy+NTQSpLO/dCP8hg=;
-        b=fskKj2fnyAqGP5sXUZVY11JWJAFy/swvEwszQx9S2O5xcibUiW25SdUiEzks/+MHII
-         TfOllR0qH841Vwq6JydD2OolpB36o1u5sve0UOzbLKDGbZMWj6HkBV07wBX16BeQSzxZ
-         g9slUVHbYyICdyCGiL9hXTGsjR3WKJJPifFXxFFUTdH8Ml4zvJgsVnWhCGSmphDAgUAU
-         EHRZF3f98FKq46UG+eHB36sysYaUZPpytN9TasCw+jQIItHsYtiYbc//hPRn84LJkruk
-         xgA98z3f3FyuGIOmfiFMln8cZocfrv3HnqNx59Ort6AKRftVnq1b6jiBpcwPEsIRdRLA
-         HDkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=khwS4toKf6D+DVV7MNME1Tx0UEPy+NTQSpLO/dCP8hg=;
-        b=dLxSg+nY3p2MglcTMP4IQD7CTKP3RXE5q8NU/mkcCfDS2IdIzka4og/xpWxz8oxuSD
-         Zsd/10ZCvOkHJFuaWyoRIWpOOasDmf2eQrNxokrWnGZJr8GiSXmec1HDEciPWyLuAl/E
-         uqtl+dZi8KkPYzEVzdEaZ0jV4g/RAsYOdbomMnlaciiw7iwyFUABY/Q7wHyyPoqxJCMp
-         Kj5DQtLuBD7LxMl9wsXG0zNDZvJP8AjLDi7SHf+JPutwKuepIFMhMZzEM/BBtim0WPy1
-         M23ZTrshmj1e1UDIIIKnrcNLBPegKMVa3kf3oX6yXf3g+t9J29uRhQnwJa8LiyvOS2sU
-         lweA==
-X-Gm-Message-State: ANhLgQ00W6FM6TBnbPKO3ikgF/XiZ9MKP3txRk8NVkpldVUS3iXgWhcH
-        /4u3FkWeYrd7qQtugXFLdVGfTA==
-X-Google-Smtp-Source: ADFU+vtzo7fFFZ7eZBPyAoRx0vsgSz8fWwGa2RHrVVI0bZpnMZ4GPpFDg2+xEmXTjtQKXSb64JqnkA==
-X-Received: by 2002:a05:620a:1192:: with SMTP id b18mr1203027qkk.334.1584386026761;
-        Mon, 16 Mar 2020 12:13:46 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:f40d])
-        by smtp.gmail.com with ESMTPSA id r46sm453498qtb.87.2020.03.16.12.13.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 12:13:46 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 2/3] psi: optimize switching tasks inside shared cgroups
-Date:   Mon, 16 Mar 2020 15:13:32 -0400
-Message-Id: <20200316191333.115523-3-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200316191333.115523-1-hannes@cmpxchg.org>
-References: <20200316191333.115523-1-hannes@cmpxchg.org>
+        Mon, 16 Mar 2020 15:15:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:6031 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732298AbgCPTPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 15:15:05 -0400
+IronPort-SDR: 58X2ejzMizY67rgXyv2yJBjxr7UZQTbVPrfx6p3HH2PmAuQ6g/YoMmdF4AGLBulLoR5Ub9m8g2
+ yCVVhl2GSLBA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 12:15:04 -0700
+IronPort-SDR: BkxMwYmGdmJL6bboIYVi1p4yGEi4lwtwLzcR/d0ngV74pLIjsdWFhK6pgUuMwbnjsirJR6lMqk
+ GT+celwN2SiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,561,1574150400"; 
+   d="scan'208";a="267685306"
+Received: from saholmes-mobl.amr.corp.intel.com (HELO [10.255.32.131]) ([10.255.32.131])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Mar 2020 12:15:02 -0700
+Subject: Re: [PATCH 1/8] soundwire: bus_type: add master_device/driver support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+References: <20200304095312.GT4148@vkoul-mobl>
+ <05dbe43c-abf8-9d5a-d808-35bf4defe4ba@linux.intel.com>
+ <20200305063646.GW4148@vkoul-mobl>
+ <eb30ac49-788f-b856-6fcf-84ae580eb3c8@linux.intel.com>
+ <20200306050115.GC4148@vkoul-mobl>
+ <4fabb135-6fbb-106f-44fd-8155ea716c00@linux.intel.com>
+ <20200311063645.GH4885@vkoul-mobl>
+ <0fafb567-10e5-a1ea-4a6d-b3c53afb215e@linux.intel.com>
+ <20200313115011.GD4885@vkoul-mobl>
+ <4cb16467-87d0-ef99-e471-9eafa9e669d2@linux.intel.com>
+ <20200314094904.GP4885@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <3c32830c-cd12-867f-a763-7c3e385cb1e9@linux.intel.com>
+Date:   Mon, 16 Mar 2020 14:15:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200314094904.GP4885@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When switching tasks running on a CPU, the psi state of a cgroup
-containing both of these tasks does not change. Right now, we don't
-exploit that, and can perform many unnecessary state changes in nested
-hierarchies, especially when most activity comes from one leaf cgroup.
 
-This patch implements an optimization where we only update cgroups
-whose state actually changes during a task switch. These are all
-cgroups that contain one task but not the other, up to the first
-shared ancestor. When both tasks are in the same group, we don't need
-to update anything at all.
 
-We can identify the first shared ancestor by walking the groups of the
-incoming task until we see TSK_ONCPU set on the local CPU; that's the
-first group that also contains the outgoing task.
+>> It's really down to your objection to the use of 'struct driver'... For ASoC
+>> support we only need the .name and .pm_ops, so there's really no possible
+>> path forward otherwise.
+> 
+> It means that we cannot have a solution which is Intel specific into
+> core. If you has a standalone controller you do not need this.
 
-The new psi_task_switch() is similar to psi_task_change(). To allow
-code reuse, move the task flag maintenance code into a new function
-and the poll/avg worker wakeups into the shared psi_group_change().
+A 'struct driver' is not Intel-specific, sorry.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- include/linux/psi.h  |  2 +
- kernel/sched/psi.c   | 87 ++++++++++++++++++++++++++++++++++----------
- kernel/sched/stats.h |  9 +----
- 3 files changed, 70 insertions(+), 28 deletions(-)
+>> Like I said, we have 3 options
+> 
+> Repeating the already discussed doesn't help. I have already told you the
+> constraint to work is not to add Intel specific change into core.
+> 
+> I have already said that expect the driver part I dont have objections
+> to rest of this series and am ready to merge
+> 
+>> a) stay with platform devices for now. You will need to have a conversation
+>> with Greg on this.
+>>
+>> b) use a minimal sdw_master_device with a minimal 'struct driver' use.
+>>
+>> c) use a more elaborate solution suggested in this patchset and yes that
+>> means the Qualcomm driver would need to change a bit.
+>>
+>> Pick one or suggest something that is implementable. The first version of
+>> the patches was provided in October, the last RFC was provided on January
+>> 31, time's up. At the moment you are preventing ASoC integration from moving
+>> forward.
+> 
+> In opensource review we go back and forth and we debate and come to a
+> common conclusion. Choosing a specific set of solutions and constraining
+> yourself to pick one does not help.
 
-diff --git a/include/linux/psi.h b/include/linux/psi.h
-index 7b3de7321219..7361023f3fdd 100644
---- a/include/linux/psi.h
-+++ b/include/linux/psi.h
-@@ -17,6 +17,8 @@ extern struct psi_group psi_system;
- void psi_init(void);
- 
- void psi_task_change(struct task_struct *task, int clear, int set);
-+void psi_task_switch(struct task_struct *prev, struct task_struct *next,
-+		     bool sleep);
- 
- void psi_memstall_tick(struct task_struct *task, int cpu);
- void psi_memstall_enter(unsigned long *flags);
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 50128297a4f9..955a124bae81 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -669,13 +669,14 @@ static void record_times(struct psi_group_cpu *groupc, int cpu,
- 		groupc->times[PSI_NONIDLE] += delta;
- }
- 
--static u32 psi_group_change(struct psi_group *group, int cpu,
--			    unsigned int clear, unsigned int set)
-+static void psi_group_change(struct psi_group *group, int cpu,
-+			     unsigned int clear, unsigned int set,
-+			     bool wake_clock)
- {
- 	struct psi_group_cpu *groupc;
-+	u32 state_mask = 0;
- 	unsigned int t, m;
- 	enum psi_states s;
--	u32 state_mask = 0;
- 
- 	groupc = per_cpu_ptr(group->pcpu, cpu);
- 
-@@ -717,7 +718,11 @@ static u32 psi_group_change(struct psi_group *group, int cpu,
- 
- 	write_seqcount_end(&groupc->seq);
- 
--	return state_mask;
-+	if (state_mask & group->poll_states)
-+		psi_schedule_poll_work(group, 1);
-+
-+	if (wake_clock && !delayed_work_pending(&group->avgs_work))
-+		schedule_delayed_work(&group->avgs_work, PSI_FREQ);
- }
- 
- static struct psi_group *iterate_groups(struct task_struct *task, void **iter)
-@@ -744,27 +749,32 @@ static struct psi_group *iterate_groups(struct task_struct *task, void **iter)
- 	return &psi_system;
- }
- 
--void psi_task_change(struct task_struct *task, int clear, int set)
-+static void psi_flags_change(struct task_struct *task, int clear, int set)
- {
--	int cpu = task_cpu(task);
--	struct psi_group *group;
--	bool wake_clock = true;
--	void *iter = NULL;
--
--	if (!task->pid)
--		return;
--
- 	if (((task->psi_flags & set) ||
- 	     (task->psi_flags & clear) != clear) &&
- 	    !psi_bug) {
- 		printk_deferred(KERN_ERR "psi: inconsistent task state! task=%d:%s cpu=%d psi_flags=%x clear=%x set=%x\n",
--				task->pid, task->comm, cpu,
-+				task->pid, task->comm, task_cpu(task),
- 				task->psi_flags, clear, set);
- 		psi_bug = 1;
- 	}
- 
- 	task->psi_flags &= ~clear;
- 	task->psi_flags |= set;
-+}
-+
-+void psi_task_change(struct task_struct *task, int clear, int set)
-+{
-+	int cpu = task_cpu(task);
-+	struct psi_group *group;
-+	bool wake_clock = true;
-+	void *iter = NULL;
-+
-+	if (!task->pid)
-+		return;
-+
-+	psi_flags_change(task, clear, set);
- 
- 	/*
- 	 * Periodic aggregation shuts off if there is a period of no
-@@ -777,14 +787,51 @@ void psi_task_change(struct task_struct *task, int clear, int set)
- 		     wq_worker_last_func(task) == psi_avgs_work))
- 		wake_clock = false;
- 
--	while ((group = iterate_groups(task, &iter))) {
--		u32 state_mask = psi_group_change(group, cpu, clear, set);
-+	while ((group = iterate_groups(task, &iter)))
-+		psi_group_change(group, cpu, clear, set, wake_clock);
-+}
-+
-+void psi_task_switch(struct task_struct *prev, struct task_struct *next,
-+		     bool sleep)
-+{
-+	struct psi_group *group, *common = NULL;
-+	int cpu = task_cpu(prev);
-+	void *iter;
-+
-+	if (next->pid) {
-+		psi_flags_change(next, 0, TSK_ONCPU);
-+		/*
-+		 * When moving state between tasks, the group that
-+		 * contains them both does not change: we can stop
-+		 * updating the tree once we reach the first common
-+		 * ancestor. Iterate @next's ancestors until we
-+		 * encounter @prev's state.
-+		 */
-+		iter = NULL;
-+		while ((group = iterate_groups(next, &iter))) {
-+			if (per_cpu_ptr(group->pcpu, cpu)->tasks[NR_ONCPU]) {
-+				common = group;
-+				break;
-+			}
-+
-+			psi_group_change(group, cpu, 0, TSK_ONCPU, true);
-+		}
-+	}
-+
-+	/*
-+	 * If this is a voluntary sleep, dequeue will have taken care
-+	 * of the outgoing TSK_ONCPU alongside TSK_RUNNING already. We
-+	 * only need to deal with it during preemption.
-+	 */
-+	if (sleep)
-+		return;
- 
--		if (state_mask & group->poll_states)
--			psi_schedule_poll_work(group, 1);
-+	if (prev->pid) {
-+		psi_flags_change(prev, TSK_ONCPU, 0);
- 
--		if (wake_clock && !delayed_work_pending(&group->avgs_work))
--			schedule_delayed_work(&group->avgs_work, PSI_FREQ);
-+		iter = NULL;
-+		while ((group = iterate_groups(prev, &iter)) && group != common)
-+			psi_group_change(group, cpu, TSK_ONCPU, 0, true);
- 	}
- }
- 
-diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
-index 6ff0ac1a803f..1339f5bfe513 100644
---- a/kernel/sched/stats.h
-+++ b/kernel/sched/stats.h
-@@ -141,14 +141,7 @@ static inline void psi_sched_switch(struct task_struct *prev,
- 	if (static_branch_likely(&psi_disabled))
- 		return;
- 
--	/*
--	 * Clear the TSK_ONCPU state if the task was preempted. If
--	 * it's a voluntary sleep, dequeue will have taken care of it.
--	 */
--	if (!sleep)
--		psi_task_change(prev, TSK_ONCPU, 0);
--
--	psi_task_change(next, 0, TSK_ONCPU);
-+	psi_task_switch(prev, next, sleep);
- }
- 
- static inline void psi_task_tick(struct rq *rq)
--- 
-2.25.1
+First off, the ask to move away from platform devices came from Greg. 
+Not me. All I did here was suggest solutions, one reviewed by Greg as 
+'sane' and 'nice work'. Greg essentially wrote the book on 
+devices/drivers so his review means I am not completely senile just yet.
 
+You pushed back with two proposals that don't account for power 
+management and the driver name required for ASoC. That was on top on 
+another suggestion to use platform devices that was shot down by Greg 
+himself with language I can't quote here.
+
+Please re-read my words: my ask was "Pick one or suggest something that 
+is implementable."
+
+You don't pick one and don't suggest anything implementable either, so 
+there's really not much I can do, can I? I don't have a solution without 
+a 'struct driver', and you don't want it.
+
+The only short-term path forward I see is to ask Greg to agree to keep 
+the platform devices for now.
+
+> I have only _one_ constraint no platform specific change in core. If that
+> is satisfied I will go with it. Sorry but this is non-negotiable for me.
+
+How is a 'struct driver' platform specific?
+
+> Ask yourself, do you need this intrusive core change if you had this
+> exact same controller(s) but only as standalone one...
+
+That would really not change anything. There would be some sort of ID 
+(PCI or something else) for the controller and multiple masters below. 
+The ACPI/DisCo spec does not account for masters so they would have to 
+be created by hand.
+
+Again how is a 'struct driver' an 'intrusive change'?
