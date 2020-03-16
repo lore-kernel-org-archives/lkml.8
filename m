@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C73C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32559C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463EA20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027532072A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326053;
-	bh=cCg0M0loROU58Zt2BRB0MoP92hqsihIZYRkM3zwyyRk=;
+	s=default; t=1584326055;
+	bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uoLzoiMAOaiSLQfbsLxYAoY5opbft5CeNz3vjLG4H+tiPZa1QJAzoQVvjgRBUBg9d
-	 90r+AyD8PIFZ5jbIyk0XbWIhBHNaDTfAlEpYoFm5qEJG9/cqNEJjHvkfkUl4Iz77J/
-	 y8TIIqDwToGDWsLZ0VX5IeM6I8N+Rl9Y2vUwhGsg=
+	b=toGtvex6SvQwhwb8PZUiN3111+uUN8sA8PrmLRsuXeZm7ASCV2Ro5BAThIvGe9hcu
+	 FzG4m4cAw3Ce7eZWgNGf9sOJyWVMXthKoArnbKuM1Y303hUfD/H2Ih2uFiwSWbcYLG
+	 viHGejyvSVzrOq6w5gFvPxlMMQAzmN6NTpBOSHJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgCPCeM (ORCPT
+        id S1729787AbgCPCeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729777AbgCPCeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:09 -0400
+        id S1729770AbgCPCeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7030120726;
-        Mon, 16 Mar 2020 02:34:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BAC320724;
+        Mon, 16 Mar 2020 02:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326049;
-        bh=cCg0M0loROU58Zt2BRB0MoP92hqsihIZYRkM3zwyyRk=;
+        s=default; t=1584326048;
+        bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KWL3pWbjXJfFfFs+oJnvQLlToapXO9JKU6+KSTFIMbNLLfYcJCQ5lxyTkl3J7J+ae
-         RFbT65nzR1DX93pmt6vjUiEs7yZRBmHkABjh9Ax3Ct8iUIPsm8VssQJPRYulEqZqqy
-         wvIctqijqI48aXudkADLDrEND9hnUSymkxF4ADHs=
+        b=UgHir014DyBWELC3QV/zGRKxs0b5zVaj7iFLVE8ePxgHM0G+v5N9pebrpwQmaJMQC
+         FUI8X82a/hB+K6pPpLjixs418PKj2sF2WAB3AG8ysfeW6Jv3AN2FOY/FWGGGYQv1rW
+         viMFhZH+TGaCTwMPDyaYIGJimwVwC5l0cREX8XAc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 41/41] io_uring: fix lockup with timeouts
-Date:   Sun, 15 Mar 2020 22:33:19 -0400
-Message-Id: <20200316023319.749-41-sashal@kernel.org>
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 40/41] parse-maintainers: Mark as executable
+Date:   Sun, 15 Mar 2020 22:33:18 -0400
+Message-Id: <20200316023319.749-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,39 +60,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-[ Upstream commit f0e20b8943509d81200cef5e30af2adfddba0f5c ]
+[ Upstream commit 611d61f9ac99dc9e1494473fb90117a960a89dfa ]
 
-There is a recipe to deadlock the kernel: submit a timeout sqe with a
-linked_timeout (e.g.  test_single_link_timeout_ception() from liburing),
-and SIGKILL the process.
+This makes the script more convenient to run.
 
-Then, io_kill_timeouts() takes @ctx->completion_lock, but the timeout
-isn't flagged with REQ_F_COMP_LOCKED, and will try to double grab it
-during io_put_free() to cancel the linked timeout. Probably, the same
-can happen with another io_kill_timeout() call site, that is
-io_commit_cqring().
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/parse-maintainers.pl | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ mode change 100644 => 100755 scripts/parse-maintainers.pl
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 60a4832089982..fd28f85677225 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -688,6 +688,7 @@ static void io_kill_timeout(struct io_kiocb *req)
- 	if (ret != -1) {
- 		atomic_inc(&req->ctx->cq_timeouts);
- 		list_del_init(&req->list);
-+		req->flags |= REQ_F_COMP_LOCKED;
- 		io_cqring_fill_event(req, 0);
- 		io_put_req(req);
- 	}
+diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
+old mode 100644
+new mode 100755
 -- 
 2.20.1
 
