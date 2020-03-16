@@ -2,165 +2,102 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0A5C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C1BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2209020663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:23:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jLjBxAz0"
+	by mail.kernel.org (Postfix) with ESMTP id ADECC20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584329704;
+	bh=r42/8/8azYLBlsApDX8O9MEW2SBamAdDhjr7m0WF5uA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jwTZR6f8DUiwll412iY8GBCNV2Ek4XpG3WjBuYwidr6zmXsU0osFXoIsWCJ4Eg9nB
+	 uEchTbgJbq5Z6x5ArFrsLtmKvMJ3U67rQvu8BMxmLVvTtKp72fvfjWwL8qdZvFYpOD
+	 /nJuC8XX9CcVA/EDNBO5B2CZ9J3+l1eCarc+RyeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbgCPDXP (ORCPT
+        id S1729725AbgCPDfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 23:23:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:34907 "EHLO ozlabs.org"
+        Sun, 15 Mar 2020 23:35:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbgCPDXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 23:23:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1729383AbgCPDfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 23:35:02 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ghTC5tPNz9sP7;
-        Mon, 16 Mar 2020 14:23:11 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584328992;
-        bh=YckoU2FJHhEBGM3DYcWS9rZ8ocZFXiJ8Us337YfMlKo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jLjBxAz02i4FoMXnnIwVXTTqcQ4XnpH28MeKgIFh9M2TtBU0MZpss5OtLx63V/HDK
-         GQlYQCz9Fntn+iYpO82Wr9VoExVUZO/fY5DoOhQdfKiTYYvm7yDO01bH5ZjwtRXN6I
-         W1JuqX9XvnQAuHvAnj1Onppq8XH1PQMAugoeVMVRCRIuRuy95dpqrNC1PRhzOAyduu
-         L6GZ/i9RCx+MzVCQvnWHIcf9Hh4YSvPdX0OV2GHNevDBOmCVx80IZAxrTkEe0jJmOW
-         WFFlvyw9C1cRGBtXhqA9am3ZbJxhXk6pXHKg8l6R6U9iKCNK3/GY6TgR877vI1IK2E
-         kU8RHqvlnoQlg==
-Date:   Mon, 16 Mar 2020 14:23:09 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Felipe Balbi <balbi@kernel.org>, Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Yue Wang <yue.wang@amlogic.com>
-Subject: linux-next: manual merge of the usb-gadget tree with the usb tree
-Message-ID: <20200316142309.19cb3aa8@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E95A205ED;
+        Mon, 16 Mar 2020 03:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584329701;
+        bh=r42/8/8azYLBlsApDX8O9MEW2SBamAdDhjr7m0WF5uA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wLl7yHrTPgnRo2y9ZL1GfWAgFzWMel3NtzBUo/WChpeJW4HH9xBJ1bz7hce7OfUB6
+         a9jL3h/792H3sPHpVWi4pu8x2CpxPkDN1xQDUaRUILaL2Mk+kiDwmP+7g2bBik7RTL
+         kyJ1qLO3lC2gFx6143VQULpcEE/I8GzvBCSGzgzM=
+Date:   Mon, 16 Mar 2020 11:34:48 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "ronald@innovation.ch" <ronald@innovation.ch>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+Message-ID: <20200316033447.GE17221@dragon>
+References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
+ <AM0PR04MB4481F087AC3CDA691300710288FE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316005219.GD17221@dragon>
+ <AM0PR04MB44819E4A9E027F1555C33D0B88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316030744.GC17221@dragon>
+ <AM0PR04MB44817A48746601EADA4E06BC88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ch=Gh9hu/coqNj_Gr.lg8x6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB44817A48746601EADA4E06BC88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ch=Gh9hu/coqNj_Gr.lg8x6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Mar 16, 2020 at 03:18:43AM +0000, Peng Fan wrote:
+> Just sent out. One more thing, I think all drivers depends on IMX_SCU should not
+> have COMPILE_TEST if we plan not to add dummy functions. I see you picked up
+> Anson's patch in imx/drivers branch, please check more.
 
-Hi all,
+Ha, yes. COMPILE_TEST should be dropped for IMX_SCU_PD in Anson's patch.
+Thanks for reminding.
 
-Today's linux-next merge of the usb-gadget tree got a conflict in:
-
-  drivers/usb/dwc3/dwc3-meson-g12a.c
-
-between commit:
-
-  bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the switc=
-h in the API")
-
-from the usb tree and commit:
-
-  1e355f21d3fb ("usb: dwc3: Add Amlogic A1 DWC3 glue")
-
-from the usb-gadget tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/usb/dwc3/dwc3-meson-g12a.c
-index 3309ce90ca14,902553f39889..000000000000
---- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-+++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@@ -381,6 -408,53 +409,54 @@@ static struct device *dwc3_meson_g12_fi
-  	return &pdev->dev;
-  }
- =20
-+ static int dwc3_meson_g12a_otg_init(struct platform_device *pdev,
-+ 				    struct dwc3_meson_g12a *priv)
-+ {
-+ 	enum phy_mode otg_id;
-+ 	int ret, irq;
-+ 	struct device *dev =3D &pdev->dev;
-+=20
-+ 	if (!priv->drvdata->otg_switch_supported)
-+ 		return 0;
-+=20
-+ 	if (priv->otg_mode =3D=3D USB_DR_MODE_OTG) {
-+ 		/* Ack irq before registering */
-+ 		regmap_update_bits(priv->regmap, USB_R5,
-+ 				   USB_R5_ID_DIG_IRQ, 0);
-+=20
-+ 		irq =3D platform_get_irq(pdev, 0);
-+ 		ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL,
-+ 						dwc3_meson_g12a_irq_thread,
-+ 						IRQF_ONESHOT, pdev->name, priv);
-+ 		if (ret)
-+ 			return ret;
-+ 	}
-+=20
-+ 	/* Setup OTG mode corresponding to the ID pin */
-+ 	if (priv->otg_mode =3D=3D USB_DR_MODE_OTG) {
-+ 		otg_id =3D dwc3_meson_g12a_get_id(priv);
-+ 		if (otg_id !=3D priv->otg_phy_mode) {
-+ 			if (dwc3_meson_g12a_otg_mode_set(priv, otg_id))
-+ 				dev_warn(dev, "Failed to switch OTG mode\n");
-+ 		}
-+ 	}
-+=20
-+ 	/* Setup role switcher */
-+ 	priv->switch_desc.usb2_port =3D dwc3_meson_g12_find_child(dev,
-+ 								"snps,dwc3");
-+ 	priv->switch_desc.udc =3D dwc3_meson_g12_find_child(dev, "snps,dwc2");
-+ 	priv->switch_desc.allow_userspace_control =3D true;
-+ 	priv->switch_desc.set =3D dwc3_meson_g12a_role_set;
-+ 	priv->switch_desc.get =3D dwc3_meson_g12a_role_get;
-++	priv->switch_desc.driver_data =3D priv;
-+=20
-+ 	priv->role_switch =3D usb_role_switch_register(dev, &priv->switch_desc);
-+ 	if (IS_ERR(priv->role_switch))
-+ 		dev_warn(dev, "Unable to register Role Switch\n");
-+=20
-+ 	return 0;
-+ }
-+=20
-  static int dwc3_meson_g12a_probe(struct platform_device *pdev)
-  {
-  	struct dwc3_meson_g12a	*priv;
-
---Sig_/ch=Gh9hu/coqNj_Gr.lg8x6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5u8R0ACgkQAVBC80lX
-0GwM9Af/QPpC71d6MIom2jRdVHcxvxySN3LfQoIpAz+REdRJnGvCm+Xgx8GMxrpx
-f1NLOSxPx0NSELJtPkm89q0LYGap3QnRfhugcv1x4H4W58oJYy7iIWkNjOYKh0tN
-5TlFekBrSe5Dw+gCSgIhVb16ilRZqJnza2wi9mcS1l+hPdb89XK6yy33wQcg2cdZ
-/ZCvajVxog9ky0VRaGjqs07zWliq7Y+KFq3G4QsXycEATix7HCxny/5AQPC8xYPf
-q7N2f8dBpvdI/8FjKLP/to3E3oAQwOArJV0xLL4s+2g3NorYkbCi4MmeKwqmGKY3
-Sa7MerYuWIZ/KqIjTvZzgrCu27uAXA==
-=kwyJ
------END PGP SIGNATURE-----
-
---Sig_/ch=Gh9hu/coqNj_Gr.lg8x6--
+Shawn
