@@ -2,101 +2,115 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A16DC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95930C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF24B20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FEC20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 20:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mVM25MR7"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VG07PfzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732524AbgCPUOw (ORCPT
+        id S1732540AbgCPUSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:14:52 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:56559 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732486AbgCPUOw (ORCPT
+        Mon, 16 Mar 2020 16:18:05 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40242 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732467AbgCPUSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:14:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584389691; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=kFghqr0ZrR/IOj3V3EhBLNTYMa8w7BS109LPhT7qitM=; b=mVM25MR7MrCCpF5gMbr0RucGbE00TlgA7Of8GixcE4cIvuPUZnfwE300fexkQ5yxDwUaTka+
- L/rQ9V+DNTPt6nh1553bznrHGgsWxd1dp5JJaDEzL0HdwYJWBQh1OjJy/RRse1V8xjfqrQBB
- CCJCD5RKFkUDj8h2hILRv5L0Tnw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6fde2d.7f35ca500960-smtp-out-n01;
- Mon, 16 Mar 2020 20:14:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6D79DC432C2; Mon, 16 Mar 2020 20:14:37 +0000 (UTC)
-Received: from mrana-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mrana)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B08A7C433D2;
-        Mon, 16 Mar 2020 20:14:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B08A7C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mrana@codeaurora.org
-From:   Mayank Rana <mrana@codeaurora.org>
-To:     myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc:     Mayank Rana <mrana@codeaurora.org>, linux-kernel@vger.kernel.org,
-        jackp@codeaurora.org
-Subject: [PATCH] extcon: Mark extcon_get_edev_name() function as exported symbol
-Date:   Mon, 16 Mar 2020 13:14:32 -0700
-Message-Id: <1584389672-9195-1-git-send-email-mrana@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 16 Mar 2020 16:18:04 -0400
+Received: by mail-il1-f194.google.com with SMTP id p12so3195960ilm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 13:18:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y4LE69CtgmHSa6+ujtK+0FhmSJ81UdxYmv4ZawIVShQ=;
+        b=VG07PfzCoXZaY28uW8BV7Y3nOHaSbqzz/9XQN7J6vP6qShNjz/QNiUqmhsEEOHV7Hu
+         Vyusdy+r17T/7fL7QeaUDnZVAMpL2ab3dVHBPz03z93l6POEAca/Qm2n6fQJtOPAwEm/
+         n4sBnhSjql19s679ntzoCd7F8n9eKAkt0vssY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y4LE69CtgmHSa6+ujtK+0FhmSJ81UdxYmv4ZawIVShQ=;
+        b=jUf1hTjJ4tduBGOu1lNCInNWVz4BcV344LH69xjkQJ4Ei5D1XwnWDycLTt0N8h+ah9
+         EgCMWnY33wsnqsb7sKSfgLH+kO6GCwFHXsxqwzgIYmeLM/+/IahzAbz0+OIzNmaB60ts
+         dYWpLCH5Gl5nq26OJyjoSCgAeRd5z+NP6NI63pebtEEpKYdtK5dsR3Tda2OlfnxpPfqo
+         SFgAg38UTyXAg2JaTSxpg0W3jrAxllpwk3jq/2CZuomyoz9fTA7iEWM5QicsDljuOoIK
+         w/Wf3w26C5vbewy5RVpz+Ww/KPpDubrQ7TGvKg24FvS0WXGPode0sklgzRu0q5pPnOJR
+         OFkw==
+X-Gm-Message-State: ANhLgQ08JpVSitsY8OvYM0mZtLFCEiuiOj27RUdir+Y5CSegI9BqI8PF
+        BHU7xcp9yvYFiaC1wI8UE1dJ2yLF5l3NDw/8O3lFfw==
+X-Google-Smtp-Source: ADFU+vv4rUs/X7PQ1b3v37vyN6v0ioG/SiBa6ADtvcphgyGrf9G16NSPrMbVGu5XqyGKkDPtaqbOoXmrrZqJXJ76Rfk=
+X-Received: by 2002:a92:1e0e:: with SMTP id e14mr1659768ile.13.1584389882356;
+ Mon, 16 Mar 2020 13:18:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200312181618.GA21271@paulmck-ThinkPad-P72> <20200312181702.8443-9-paulmck@kernel.org>
+ <20200316194754.GA172196@google.com>
+In-Reply-To: <20200316194754.GA172196@google.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Mon, 16 Mar 2020 16:17:51 -0400
+Message-ID: <CAEXW_YREzQ8hMP_vGiQFiNAtwxPn_C0TG6mH68QaS8cES-Jr3Q@mail.gmail.com>
+Subject: Re: [PATCH RFC tip/core/rcu 09/16] rcu-tasks: Add an RCU-tasks rude variant
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        "kernel-team@fb.com," <kernel-team@fb.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-extcon_get_edev_name() function provides client driver to request
-extcon dev's name. If extcon driver and client driver are compiled
-as loadable modules, extcon_get_edev_name() function symbol is not
-visible to client driver. Hence mark extcon_find_edev_name() function
-as exported symbol.
+On Mon, Mar 16, 2020 at 3:47 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> On Thu, Mar 12, 2020 at 11:16:55AM -0700, paulmck@kernel.org wrote:
+> > From: "Paul E. McKenney" <paulmck@kernel.org>
+> >
+> > This commit adds a "rude" variant of RCU-tasks that has as quiescent
+> > states schedule(), cond_resched_tasks_rcu_qs(), userspace execution,
+> > and (in theory, anyway) cond_resched().  Updates make use of IPIs and
+> > force an IPI and a context switch on each online CPU.  This variant
+> > is useful in some situations in tracing.
+>
+> Would it be possible to better clarify that the "rude version" works only
+> from preempt-disabled regions? Is that also true for the "non-rude" version?
+>
+> Also it would be good to clarify better in cover letter, how these new
+> flavors relate to the existing Tasks-RCU implementation.
+>
+> In the existing one, a quiescent state is a task updating its context switch
+> counters such that it went to sleep at least once, implying there is no
+> chance it is on an about to be destroyed trampoline.
+>
+> However, here we are trying to determine if a task state is no longer on an
+> RQ (which I gleaned from the first patch). Sounds very similar, would the
+> context switch counters not help in that determination as well? If it is Ok,
+> it would be good to describe in cover letter about what is exactly is a
+> quiescent state and what exactly is a reader section in the cover letter, for
+> both non-rude and rude version. Thanks!
 
-Signed-off-by: Mayank Rana <mrana@codeaurora.org>
----
- drivers/extcon/extcon.c | 1 +
- include/linux/extcon.h  | 5 +++++
- 2 files changed, 6 insertions(+)
+Just curious, why is the "rude" version better than SRCU? Seems the
+schedule_on_each_cpu() would be much slower than SRCU especially if
+there are 1000s of CPUs involved. Is there any reason that is a better
+alternative?
 
-diff --git a/drivers/extcon/extcon.c b/drivers/extcon/extcon.c
-index e055893..2dfbfec 100644
---- a/drivers/extcon/extcon.c
-+++ b/drivers/extcon/extcon.c
-@@ -1406,6 +1406,7 @@ const char *extcon_get_edev_name(struct extcon_dev *edev)
- {
- 	return !edev ? NULL : edev->name;
- }
-+EXPORT_SYMBOL_GPL(extcon_get_edev_name);
- 
- static int __init extcon_class_init(void)
- {
-diff --git a/include/linux/extcon.h b/include/linux/extcon.h
-index 1b1d77e..fd183fb 100644
---- a/include/linux/extcon.h
-+++ b/include/linux/extcon.h
-@@ -286,6 +286,11 @@ static inline struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev,
- {
- 	return ERR_PTR(-ENODEV);
- }
-+
-+static inline const char *extcon_get_edev_name(struct extcon_dev *edev)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_EXTCON */
- 
- /*
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+thanks,
+
+ - Joel
