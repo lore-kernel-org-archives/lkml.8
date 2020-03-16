@@ -2,211 +2,104 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C598FC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE525C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4D320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A026A20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lv8HOtjS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbeX5UKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgCPDwx (ORCPT
+        id S1729387AbgCPDxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 23:52:53 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:51847 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729387AbgCPDwx (ORCPT
+        Sun, 15 Mar 2020 23:53:30 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35754 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729412AbgCPDxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 23:52:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584330772; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=dX/HmR6sozhxPO42JTLUS5ksGpbvHKOZ+PUUche2qGQ=; b=lv8HOtjS6aOR/12R/DTlhbhL7uWQv/Fs0e+YPqMBwytrYiLDKUuX5u4yI2ZSk14IpBlfJPZg
- TuvOjodbH1Cy87yGrEA82RTL899NGf7rsE57Grays7AlnoYNK1ZravjVxjGwBY9Gpv8VYVuy
- m0E1lKjc163JE5EuIJcXGRRgq28=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6ef809.7fa71dff6730-smtp-out-n04;
- Mon, 16 Mar 2020 03:52:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 67FC5C44791; Mon, 16 Mar 2020 03:52:40 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AD61DC4478C;
-        Mon, 16 Mar 2020 03:52:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AD61DC4478C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Mon, 16 Mar 2020 09:22:33 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, stummala@codeaurora.org
-Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
-Message-ID: <20200316035233.GM20234@codeaurora.org>
-References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
- <fa7d88ee-01e2-e82c-6c79-f24b90fbd472@huawei.com>
- <20200313033912.GJ20234@codeaurora.org>
- <a8f01157-0b1b-d83a-488d-bb48cf8954ab@huawei.com>
- <20200313110846.GL20234@codeaurora.org>
- <20d3b7ef-b216-6e46-58fd-7f1c96d4a8d3@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20d3b7ef-b216-6e46-58fd-7f1c96d4a8d3@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Sun, 15 Mar 2020 23:53:30 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g6so7365353plt.2;
+        Sun, 15 Mar 2020 20:53:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=C249CL9vZbJjGY5SY9HaOYPXZNrUoazqr8vVdhSJLxc=;
+        b=YbeX5UKoLAWoeqcw7Q/c9tQyAMJcC+JzZ9CnlGn1ov5ohmb8qb6dSbK23haVP5/FyF
+         nh0GPdgl34Ie646XT9QBX8ixIYobJHzWAf19eQ7HtKIOpDZRmi5d+j4PaKK59JO1ZYN2
+         BUx9mnikzXn6lmFRd5j96sK77UGDRYpw+5chW6ZsfhREn0A8R7KaaWabPBYcCwc7k95c
+         PGdDHBe+LsdxMdsA06WIS/hoM9ruojvEjdHqz39klHVGY8EuV/qxJM0yrvf+145CISNt
+         lZQ0V2YIte00cH+u12YGPlCxl0Q5BgG4eTLx2BpGi/16DYWe0XTXj9S4GZqYSAAhU6B0
+         8e1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=C249CL9vZbJjGY5SY9HaOYPXZNrUoazqr8vVdhSJLxc=;
+        b=BivR4MCVcexaeOhjDXLRvU1LYcOD6T4FxTpFY6xDt/z9Sco9U3c0Wh58TbQ/DQIYOd
+         mf2/SkCjJ/UDR7bKe8wtxRJj5ROf0b0bt93T2J73xVeJPbJW8e8zXOpky8cUPO9mhK4X
+         kQR3bi8MK0xdXyD2cgnK9W3LvQ5sQUjlCSeaEEhKlX4fJabqnAM1xQFQgDmWQfAxKLdv
+         GXCKj4IwbHui329N9k2KP85Xd4VpUHMcHIau3QP9/bmvGbSMdlXy9NUfdj67aYY7pTwO
+         YbZHoY/S+Ae0u6I0NU5UhrYuBIxBoXb8e6GMDvIvi4a6nH7xXi54M+faOUWyzHnDU/rn
+         tj6Q==
+X-Gm-Message-State: ANhLgQ3i1XR2Si/AEOsNfPe3mH3f2ImyiN7/ld8FJwJrR67JNwV6y+fX
+        9EltG15NcTmXP96pMmsKRbs=
+X-Google-Smtp-Source: ADFU+vt8j7rx0vgN/MuXOrCtGwcpsFMUkwXZDEP+KtICMmp/pv9FflGadulya+vhgWSw7QEClX4Vsw==
+X-Received: by 2002:a17:902:7583:: with SMTP id j3mr25527955pll.236.1584330808708;
+        Sun, 15 Mar 2020 20:53:28 -0700 (PDT)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id h23sm14077457pfo.220.2020.03.15.20.53.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 15 Mar 2020 20:53:28 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     vyasevich@gmail.com, nhorman@tuxdriver.com,
+        marcelo.leitner@gmail.com, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] sctp: fix refcount bug in sctp_wfree
+Date:   Mon, 16 Mar 2020 11:53:24 +0800
+Message-Id: <1584330804-18477-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+Do accounting for skb's real sk.
+In some case skb->sk != asoc->base.sk.
 
-On Mon, Mar 16, 2020 at 08:52:25AM +0800, Chao Yu wrote:
-> On 2020/3/13 19:08, Sahitya Tummala wrote:
-> > On Fri, Mar 13, 2020 at 02:30:55PM +0800, Chao Yu wrote:
-> >> On 2020/3/13 11:39, Sahitya Tummala wrote:
-> >>> On Fri, Mar 13, 2020 at 10:20:04AM +0800, Chao Yu wrote:
-> >>>> On 2020/3/12 19:14, Sahitya Tummala wrote:
-> >>>>> F2FS already has a default timeout of 5 secs for discards that
-> >>>>> can be issued during umount, but it can take more than the 5 sec
-> >>>>> timeout if the underlying UFS device queue is already full and there
-> >>>>> are no more available free tags to be used. In that case, submit_bio()
-> >>>>> will wait for the already queued discard requests to complete to get
-> >>>>> a free tag, which can potentially take way more than 5 sec.
-> >>>>>
-> >>>>> Fix this by submitting the discard requests with REQ_NOWAIT
-> >>>>> flags during umount. This will return -EAGAIN for UFS queue/tag full
-> >>>>> scenario without waiting in the context of submit_bio(). The FS can
-> >>>>> then handle these requests by retrying again within the stipulated
-> >>>>> discard timeout period to avoid long latencies.
-> >>>>>
-> >>>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> >>>>> ---
-> >>>>>  fs/f2fs/segment.c | 14 +++++++++++++-
-> >>>>>  1 file changed, 13 insertions(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> >>>>> index fb3e531..a06bbac 100644
-> >>>>> --- a/fs/f2fs/segment.c
-> >>>>> +++ b/fs/f2fs/segment.c
-> >>>>> @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >>>>>  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> >>>>>  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
-> >>>>>  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> >>>>> -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> >>>>> +	int flag;
-> >>>>>  	block_t lstart, start, len, total_len;
-> >>>>>  	int err = 0;
-> >>>>>  
-> >>>>> +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> >>>>> +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> >>>>> +
-> >>>>>  	if (dc->state != D_PREP)
-> >>>>>  		return 0;
-> >>>>>  
-> >>>>> @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >>>>>  		bio->bi_end_io = f2fs_submit_discard_endio;
-> >>>>>  		bio->bi_opf |= flag;
-> >>>>>  		submit_bio(bio);
-> >>>>> +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
-> >>>>
-> >>>> If we want to update dc->state, we need to cover it with dc->lock.
-> >>>
-> >>> Sure, will update it.
-> >>>
-> >>>>
-> >>>>> +			dc->state = D_PREP;
-> >>>>
-> >>>> BTW, one dc can be referenced by multiple bios, so dc->state could be updated to
-> >>>> D_DONE later by f2fs_submit_discard_endio(), however we just relocate it to
-> >>>> pending list... which is inconsistent status.
-> >>>
-> >>> In that case dc->bio_ref will reflect it and until it becomes 0, the dc->state
-> >>> will not be updated to D_DONE in f2fs_submit_discard_endio()?
-> >>
-> >> __submit_discard_cmd()
-> >>  lock()
-> >>  dc->state = D_SUBMIT;
-> >>  dc->bio_ref++;
-> >>  unlock()
-> >> ...
-> >>  submit_bio()
-> >> 				f2fs_submit_discard_endio()
-> >> 				 dc->error = -EAGAIN;
-> >> 				 lock()
-> >> 				 dc->bio_ref--;
-> >>
-> >>  dc->state = D_PREP;
-> >>
-> >> 				 dc->state = D_DONE;
-> >> 				 unlock()
-> >>
-> >> So finally, dc's state is D_DONE, and it's in wait list, then will be relocated
-> >> to pending list.
-> > 
-> > In case of queue full, f2fs_submit_discard_endio() will not be called
-> 
-> I guess the case is there are multiple bios related to one dc and partially callback
-> of bio is called asynchronously and the other is called synchronously, so the race
-> condition could happen.
+Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ net/sctp/socket.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You are right. Let me review that case and try to fix it.
-
-Thanks,
-
-> 
-> Thanks,
-> 
-> > asynchronously. It will be called in the context of submit_bio() itself.
-> > So by the time, submit_bio returns dc->error will be -EAGAIN and dc->state
-> > will be D_DONE. 
-> > 
-> > submit_bio()
-> > ->blk_mq_make_request
-> > ->blk_mq_get_request()
-> >   ->bio_wouldblock_error() (called due to queue full)
-> >     ->bio_endio()
-> >     
-> > Thanks,
-> >>
-> >>>
-> >>> Thanks,
-> >>>
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>>> +			err = dc->error;
-> >>>>> +			break;
-> >>>>> +		}
-> >>>>>  
-> >>>>>  		atomic_inc(&dcc->issued_discard);
-> >>>>>  
-> >>>>> @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> >>>>>  			}
-> >>>>>  
-> >>>>>  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> >>>>> +			if (dc->error == -EAGAIN) {
-> >>>>> +				congestion_wait(BLK_RW_ASYNC, HZ/50);
-> >>>>> +				__relocate_discard_cmd(dcc, dc);
-> >>>>> +			}
-> >>>>>  
-> >>>>>  			if (issued >= dpolicy->max_requests)
-> >>>>>  				break;
-> >>>>>
-> >>>
-> > 
-
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index 1b56fc4..5f5c28b 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -9080,7 +9080,7 @@ static void sctp_wfree(struct sk_buff *skb)
+ {
+ 	struct sctp_chunk *chunk = skb_shinfo(skb)->destructor_arg;
+ 	struct sctp_association *asoc = chunk->asoc;
+-	struct sock *sk = asoc->base.sk;
++	struct sock *sk = skb->sk;
+ 
+ 	sk_mem_uncharge(sk, skb->truesize);
+ 	sk->sk_wmem_queued -= skb->truesize + sizeof(struct sctp_chunk);
+@@ -9109,7 +9109,7 @@ static void sctp_wfree(struct sk_buff *skb)
+ 	}
+ 
+ 	sock_wfree(skb);
+-	sctp_wake_up_waiters(sk, asoc);
++	sctp_wake_up_waiters(asoc->base.sk, asoc);
+ 
+ 	sctp_association_put(asoc);
+ }
 -- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+1.8.3.1
+
