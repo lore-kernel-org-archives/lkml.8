@@ -2,184 +2,170 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D27BC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324D2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FEE20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bnbh9AJ1"
+	by mail.kernel.org (Postfix) with ESMTP id 0BC8C206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbgCPLsS (ORCPT
+        id S1730910AbgCPLtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:48:18 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:45370 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730875AbgCPLsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:48:17 -0400
-Received: by mail-vs1-f67.google.com with SMTP id x82so10991600vsc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 04:48:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hwg98eSj5AvN+n9LqyLq1HfFtpBX4891xtP0x63HRRo=;
-        b=Bnbh9AJ1nGpYl39RiuMC7eK1V2xLE9pQ6UN95mQJs9otlzB1cyCJ0gpcjFrGwlvd7X
-         YEct+PprYP0LdxRSj3aAZsjo7Qn0tnsRkPJ5M8b6eLR0QiU70oohnhRe9UBgFpkOjIUK
-         EmUyfZ/Cm1runPuX6lFBsJsSw+eA3Dd3YxsCC47w5ywjvBzEYtDGVAflw7sb2WxFx5Hn
-         yeFVe+hndZdajE+yaNIS1O5zRz4JJ9inBci4XCJOD5PSPWRlgQd0tjABWBHZkqH5+dVA
-         Wb9vvWmyt9S4rCHj1tGp9bGiRIdLs5KMkKxXZOkkov9G7C51vHQ3g2M4fOL9gq25tm0n
-         rAmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hwg98eSj5AvN+n9LqyLq1HfFtpBX4891xtP0x63HRRo=;
-        b=TZoFmScoovMf3bY2f/ByqpwYwPekXPll9824IiktaxfMKOX4RAhHizIwOCOpuqLC1m
-         KdUmeKiI6Gr1+cQXk3k8jUdJ2BpkcFCeNOY4MrChk2bjij2oCITnwHK8fs1IT6gaTAwJ
-         j7u6OlH1uwDtIS5pMVTpJC/OQRjJl5Y7mQavp5G2cGCKC8OHjQNlfmKdn6cmVZuR5aFe
-         3yWfBg/XyALV8C193EtWZatns7ZlcAYGTuMvKmrp2l4WhPe5ss2JjfcfkYo2tEvZHC/5
-         ZJc8sYG3fEKnXgTLFz5G2ONoPA8XHkPxdazgf0mS3onYWYwwPa6LAuILdBv1svYDumNv
-         4byw==
-X-Gm-Message-State: ANhLgQ2t4Olm/iD9yacfkjgRVoa7UJjwSYCCHiEjE0rlLqIOXp6onYGG
-        ulSXzoQHPUTi9zsrTyIQjJ5ioA8QEK2JQyQJSAT60A==
-X-Google-Smtp-Source: ADFU+vtONaSXwYoqZwxzyu+DxqUCuZhAuA4KROccUIP7E0mjR7itCXDr0lHeeHfuKa8qrweO7J5CisAlE88MmBNyv1w=
-X-Received: by 2002:a67:a81:: with SMTP id 123mr17067122vsk.191.1584359295692;
- Mon, 16 Mar 2020 04:48:15 -0700 (PDT)
+        Mon, 16 Mar 2020 07:49:24 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2562 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730882AbgCPLtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 07:49:23 -0400
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 88596452F718665D9F9F;
+        Mon, 16 Mar 2020 11:49:22 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 16 Mar 2020 11:49:21 +0000
+Received: from localhost (10.47.94.88) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 16 Mar
+ 2020 11:49:21 +0000
+Date:   Mon, 16 Mar 2020 11:49:20 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Rohit Sarkar <rohitsarkar5398@gmail.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: health: max30100: remove mlock usage
+Message-ID: <20200316114920.00000689@Huawei.com>
+In-Reply-To: <CAJCx=g=7_S5=JJ1K8JCLd06hTbhqTHupUJ1tYX6uiAP+1WtjsQ@mail.gmail.com>
+References: <5e668b89.1c69fb81.d7e4f.0f61@mx.google.com>
+        <20200315094604.62dc96be@archlinux>
+        <CAJCx=gkZEDa5vg1R2gta9vERy2+W4vst0et0THO9Oth3d3Yzfg@mail.gmail.com>
+        <CAJCx=g=7_S5=JJ1K8JCLd06hTbhqTHupUJ1tYX6uiAP+1WtjsQ@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <cover.1583307441.git.baolin.wang7@gmail.com> <ace53bca354e2846f19684bd33a9c0f3c2ee2c44.1583307441.git.baolin.wang7@gmail.com>
-In-Reply-To: <ace53bca354e2846f19684bd33a9c0f3c2ee2c44.1583307441.git.baolin.wang7@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 16 Mar 2020 12:47:39 +0100
-Message-ID: <CAPDyKFp-HvMtEX4F-aumBy93DMn8aPjx8kBm+rCSL316HFPL0w@mail.gmail.com>
-Subject: Re: [RESEND PATCH 1/3] mmc: host: Introduce the request_atomic() for
- the host
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.94.88]
+X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 08:42, Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> The SD host controller can process one request in the atomic context if
-> the card is nonremovable, which means we can submit next request in the
-> irq hard handler when using the MMC software queue to reduce the latency.
-> Thus this patch adds a new API request_atomic() for the host controller
-> and implement it for the SD host controller.
->
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> ---
->  drivers/mmc/host/sdhci.c | 27 +++++++++++++++++++--------
->  drivers/mmc/host/sdhci.h |  1 +
->  include/linux/mmc/host.h |  3 +++
->  3 files changed, 23 insertions(+), 8 deletions(-)
+On Mon, 16 Mar 2020 01:29:28 -0700
+Matt Ranostay <matt.ranostay@konsulko.com> wrote:
 
-I think the code split of the changes in the series can be improved a
-bit, so I suggest you move the code around in the series to reach
-this:
+> On Mon, Mar 16, 2020 at 1:21 AM Matt Ranostay
+> <matt.ranostay@konsulko.com> wrote:
+> >
+> > On Sun, Mar 15, 2020 at 2:46 AM Jonathan Cameron <jic23@kernel.org> wrote:  
+> > >
+> > > On Tue, 10 Mar 2020 00:01:28 +0530
+> > > Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+> > >  
+> > > > Use local lock instead of indio_dev's mlock.
+> > > > The mlock was being used to protect local driver state thus using the
+> > > > local lock is a better option here.
+> > > >
+> > > > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>  
+> > >
+> > > Matt.  Definitely need your input on this.
+> > >  
+> > > > ---
+> > > >  drivers/iio/health/max30100.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+> > > > index 84010501762d..8ddc4649547d 100644
+> > > > --- a/drivers/iio/health/max30100.c
+> > > > +++ b/drivers/iio/health/max30100.c
+> > > > @@ -388,7 +388,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+> > > >                * Temperature reading can only be acquired while engine
+> > > >                * is running
+> > > >                */
+> > > > -             mutex_lock(&indio_dev->mlock);
+> > > > +             mutex_lock(&data->lock);  
+> > >
+> > > Hmm.. It's another complex one.  What is actually being protected here is
+> > > the buffer state, but not to take it exclusively like claim_direct does.
+> > >
+> > > Here we need the inverse, we want to ensure we are 'not' in the direct
+> > > mode because this hardware requires the buffer to be running to read the
+> > > temperature.
+> > >
+> > > That is the sort of interface that is going to get userspace very
+> > > confused.
+> > >
+> > > Matt, normally what I'd suggest here is that the temperature read should:
+> > >
+> > > 1) Claim direct mode, if it fails then do the dance you have here
+> > > (with more comments to explain why you are taking an internal lock)
+> > > 2) Start up capture as if we were in buffered mode
+> > > 3) Grab that temp
+> > > 4) stop capture to return to non buffered mode.
+> > > 5) Release direct mode.
+> > >
+> > > I guess we decided it wasn't worth the hassle.
+> > >
+> > > So Rohit.  This one probably needs a comment rather than any change.
+> > > We 'could' add a 'hold_buffered_mode' function that takes the mlock,
+> > > verifies we are in buffered mode and continues to hold the lock
+> > > until the 'release_buffered_mode'.  However, I'm not sure any other
+> > > drivers do this particular dance, so clear commenting in the driver
+> > > might be enough.   Should we ever change how mlock is used in the
+> > > core, we'd have to fix this driver up as well.
+> > >
+> > > Hmm.  This is really hammering home that perhaps all the remaining
+> > > mlock cases are 'hard'.  
+> >
+> > Heh really had to look this over what I was doing since it has been
+> > almost half a decade now :).
+> >
+> > Think locking that mutex was only to prevent another read during the
+> > temp reading, and not really
+> > not sure how effective that is actually. Especially since the I2C
+> > subsystem should handle those reads
+> > in a queue like fashion.
+> >
+> > - Matt
+> >  
+> 
+> So to be clear I think we can just remove the lock period since the
+> odds of this actually being requested (or disabled) at the
+> exact time so very remote. Along with the worse case being a failed read.
 
-1. A patch that adds the new host ops callback, combined with the
-change you have in patch3.
-2. The sdhci core specific changes, from $subject patch.
-3. The sdhci-sprd changes, as in patch2.
+I disagree.   What that lock prevents is disabling buffered mode between
+the check on whether it is enabled and the read.   That's a clear race
+so we should keep the lock.
 
-Other than that, I think the code looks good to me, besides a minor
-comment on patch2, see separate reply.
-
-Kind regards
-Uffe
+Jonathan
 
 
->
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 9c37451..4febbcb 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -2016,17 +2016,12 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->   *                                                                           *
->  \*****************************************************************************/
->
-> -void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> +static void sdhci_start_request(struct mmc_host *mmc, struct mmc_request *mrq,
-> +                               int present)
->  {
-> -       struct sdhci_host *host;
-> -       int present;
-> +       struct sdhci_host *host = mmc_priv(mmc);
->         unsigned long flags;
->
-> -       host = mmc_priv(mmc);
-> -
-> -       /* Firstly check card presence */
-> -       present = mmc->ops->get_cd(mmc);
-> -
->         spin_lock_irqsave(&host->lock, flags);
->
->         sdhci_led_activate(host);
-> @@ -2043,6 +2038,22 @@ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
->
->         spin_unlock_irqrestore(&host->lock, flags);
->  }
-> +
-> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq)
-> +{
-> +       sdhci_start_request(mmc, mrq, 1);
-> +}
-> +EXPORT_SYMBOL_GPL(sdhci_request_atomic);
-> +
-> +void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> +{
-> +       int present;
-> +
-> +       /* Firstly check card presence */
-> +       present = mmc->ops->get_cd(mmc);
-> +
-> +       sdhci_start_request(mmc, mrq, present);
-> +}
->  EXPORT_SYMBOL_GPL(sdhci_request);
->
->  void sdhci_set_bus_width(struct sdhci_host *host, int width)
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index cac2d97..5507a73 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -775,6 +775,7 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
->                            unsigned short vdd);
->  void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
-> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
->  void sdhci_set_bus_width(struct sdhci_host *host, int width);
->  void sdhci_reset(struct sdhci_host *host, u8 mask);
->  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
-> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> index 562ed06..db5e59c 100644
-> --- a/include/linux/mmc/host.h
-> +++ b/include/linux/mmc/host.h
-> @@ -92,6 +92,9 @@ struct mmc_host_ops {
->                             int err);
->         void    (*pre_req)(struct mmc_host *host, struct mmc_request *req);
->         void    (*request)(struct mmc_host *host, struct mmc_request *req);
-> +       /* Submit one request to host in atomic context. */
-> +       void    (*request_atomic)(struct mmc_host *host,
-> +                                 struct mmc_request *req);
->
->         /*
->          * Avoid calling the next three functions too often or in a "fast
-> --
-> 1.9.1
->
+> 
+> - Matt
+> 
+> > >
+> > > Thanks,
+> > >
+> > > Jonathan
+> > >  
+> > > >
+> > > >               if (!iio_buffer_enabled(indio_dev))
+> > > >                       ret = -EAGAIN;
+> > > > @@ -399,7 +399,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+> > > >
+> > > >               }
+> > > >
+> > > > -             mutex_unlock(&indio_dev->mlock);
+> > > > +             mutex_unlock(&data->lock);
+> > > >               break;
+> > > >       case IIO_CHAN_INFO_SCALE:
+> > > >               *val = 1;  /* 0.0625 */  
+> > >  
+
+
