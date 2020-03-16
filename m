@@ -2,106 +2,81 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3078BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2775C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CD22051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:44:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CRCojlnq"
+	by mail.kernel.org (Postfix) with ESMTP id 7710D206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584326865;
+	bh=2+qcIOCOkKHZNw4l4h7nefYzKid9thmlUS+TXFtvQ5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sfiUXGQFIdpqBffY4/T+cRnn2gz0LPBaAtedfCD87yzyY2U61A/OM/wWfkasmtiTM
+	 7pvO7vGjwooWl1g8smR1tQqhLAIklN2Nk1v6glMQBJEoshuMZerXWLWWKHwBjnF7bA
+	 bnJy0JWYXjmp3rq04eQ75mjq06PvMTNPc0eIvaT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbgCPCov (ORCPT
+        id S1729553AbgCPCro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:44:51 -0400
-Received: from ozlabs.org ([203.11.71.1]:45863 "EHLO ozlabs.org"
+        Sun, 15 Mar 2020 22:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729348AbgCPCou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:44:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1729348AbgCPCro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:47:44 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ggcv3gWSz9sQt;
-        Mon, 16 Mar 2020 13:44:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584326688;
-        bh=r2yy0AcpeEUNNS7rHmuG3ftnuWMz+KvixUCl+V0bheM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CRCojlnqV/BvW/eP2xJDepvU7K+22BqRB0mIGcRba2nhcWcSx/eaL4DC1xL6CnRC2
-         dveoklX++0AcCZ1EQ6BPmrRHXyeB/I8UnFamDCHLUoCd/dZrLL6JtslK7BfP5WC9I4
-         udTahwzrAHzt/P5+VLixkYoIuF6WBQR+GDIeM1ARNjkUjBmzrUD77h0/+DFRKSaNiQ
-         mfmKRjGiIFuUqkMFzxSCcWXQQjg9yl2o+xHPkYY8m9XY9rRTmMaKljNTJy97zSLTda
-         TEKtf22Ydb4sB6SZIIw4Pxr1QNs7l7hpTuGWex4ZpNdJBPa0XHjGsOBnsm/4d285ne
-         /+3xgqKuZLEIg==
-Date:   Mon, 16 Mar 2020 13:44:45 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Colin Cross <ccross@android.com>,
-        Olof Johansson <olof@lixom.net>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: linux-next: manual merge of the usb tree with the tegra tree
-Message-ID: <20200316134445.343e7c97@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 95EA02051A;
+        Mon, 16 Mar 2020 02:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584326863;
+        bh=2+qcIOCOkKHZNw4l4h7nefYzKid9thmlUS+TXFtvQ5U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uLczIeoOq59Jz02rRHZvUWao/SCC5s6iUN2NnBAjGYYCV7VwdGlLthl9Ic3mzsjQz
+         az36797F0eejGPaBJCqYq9bcpO14f+epnG48RGUYPMLFjlg4RFnjbR589tn0ftHtcV
+         4J2+YDwm1eZD+RDXWivRF0MWbgvp6U9H5N4Ns8jI=
+Date:   Mon, 16 Mar 2020 10:47:36 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2 0/2] properly define some of PHYs
+Message-ID: <20200316024735.GB17221@dragon>
+References: <20200313102534.5438-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rf7oPnAFWl+rnUKbWd7sNpx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313102534.5438-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rf7oPnAFWl+rnUKbWd7sNpx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 13, 2020 at 11:25:32AM +0100, Oleksij Rempel wrote:
+> changes v3:
+> - add phy-handle on the marsboard
+> 
+> changes v2:
+> - remove spaces
+> 
+> Oleksij Rempel (2):
+>   ARM: dts: imx6dl-riotboard: properly define rgmii PHY
+>   ARM: dts: imx6q-marsboard: properly define rgmii PHY
 
-Hi all,
-
-Today's linux-next merge of the usb tree got conflicts in:
-
-  drivers/usb/gadget/udc/tegra-xudc.c
-
-between commit:
-
-  041960cf6937 ("usb: gadget: tegra-xudc: Remove usb-role-switch support")
-
-from the tegra tree and commit:
-
-  bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the switc=
-h in the API")
-
-from the usb tree.
-
-I fixed it up (I basically used the tegra tree version) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/rf7oPnAFWl+rnUKbWd7sNpx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5u6B0ACgkQAVBC80lX
-0Gzz7wf/cT6VWvdwPoY2k6IemoYPNQGEnzWhgT65BtXUVG4s5LTVAT+cAHH8aRTk
-F7Tn3hHSxds9jtLjbIhL5Fuv5qlSeVT1KXi+sWGVzrAuL/XNy8Xou5ue10qPU+Qt
-CZfc7arq3b+1kpSVVHVKqcYQQxzLXYtHvcETHfQej1S1zUrE83Hr9Ut7YnA52dAs
-qn1bmdoeRX4q9sgvhbMUxCllgi8F8JjgIKyA+laCcr61/UeXBRNl/43d2Q7mKMF1
-JeTu2wCMVzXaZFEqcqhI7CkCS3gkbdOORV64r9P5ro1l1HKGQyN1cPQy5/npbZu1
-mDERkaRH3dIpIqp4Drbx3oq46BcvFQ==
-=Qu3/
------END PGP SIGNATURE-----
-
---Sig_/rf7oPnAFWl+rnUKbWd7sNpx--
+Applied both, thanks.
