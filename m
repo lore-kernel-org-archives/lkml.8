@@ -2,100 +2,71 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B269BC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B017DC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3AB20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584361074;
-	bh=fFz5+gvXzmOrpuY8ZHDT9sdLk2O/vOrVVMCc9vpwRqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qpyM2CKL9w7ZKWtHMNiyxYEVxP5Ni3rBNaa180s/boPCcFcCt1cbmOk188G5Nq4d4
-	 VdhNYTdzoxZgJveJ2Vs2r63ABEdjpye+iwUUkLqQ8I5ED4spfSA+j9nLN7KeYu+IgH
-	 wYZU5KDkRFwBO7QVNd8pprS23J85vnVCfz/y2AsI=
+	by mail.kernel.org (Postfix) with ESMTP id 7339020663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s4Fa/txq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730986AbgCPMRx (ORCPT
+        id S1730989AbgCPMSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:17:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:47236 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730969AbgCPMRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:17:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A74D830E;
-        Mon, 16 Mar 2020 05:17:52 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BB503F52E;
-        Mon, 16 Mar 2020 05:17:52 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 12:17:50 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] spi: fix cs_change for last transfer
-Message-ID: <20200316121750.GD5010@sirena.org.uk>
-References: <45912ba25c34a63b8098f471c3c8ebf8857a4716.1584292056.git.mirq-linux@rere.qmqm.pl>
+        Mon, 16 Mar 2020 08:18:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37240 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730902AbgCPMSu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:18:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VYqKvlIFkQW+pYWKw2xVsDJi1K3BGJvUDJbFubWL0xw=; b=s4Fa/txqhFusSCj//z0CGHHLnt
+        SzCovk4A9hIakdxXBSWwrUr3oebo6/kI+ZA0GqaiyA1BKdVIOanqg4YpnBT3+oR5qQMz6uK4Nm67i
+        UGhhtL0E6B+4bVcGeaG4B/VZpedBfuRIXuLoXSFtipOh4/usKFOj4Gf7oiEqEXSXYhM1AFr9g290w
+        T/bwvigK4HyMPrFH7bK4sj88OaERz0osPh4BNanoKy2FAxvd7HXC9LPOGxx9i4SkXutYS6NjaCG0v
+        I9Zjp22V1gZGuZQm1vuZeYsKTv53VZBT6DCWT2dZuEH5IXEIbNqo6VgNng5j7+6pir5Ok9dJRc+U7
+        bpT7PfgA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jDohj-00007t-7P; Mon, 16 Mar 2020 12:18:47 +0000
+Date:   Mon, 16 Mar 2020 05:18:47 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mhocko@suse.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        richard.weiyang@gmail.com, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v4 1/2] mm/sparse.c: Use kvmalloc/kvfree to alloc/free
+ memmap for the classic sparse
+Message-ID: <20200316121847.GX22433@bombadil.infradead.org>
+References: <20200316102150.16487-1-bhe@redhat.com>
+ <CAM9Jb+iow40dCvrC8xoKAv5di2J_TDxvAkzKkHk5a0OXNaq3Yg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9UV9rz0O2dU/yYYn"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <45912ba25c34a63b8098f471c3c8ebf8857a4716.1584292056.git.mirq-linux@rere.qmqm.pl>
-X-Cookie: I thought YOU silenced the guard!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAM9Jb+iow40dCvrC8xoKAv5di2J_TDxvAkzKkHk5a0OXNaq3Yg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 16, 2020 at 12:17:49PM +0100, Pankaj Gupta wrote:
+> > This change makes populate_section_memmap()/depopulate_section_memmap
+> > much simpler.
+> >
+> > Suggested-by: Michal Hocko <mhocko@kernel.org>
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > Reviewed-by: David Hildenbrand <david@redhat.com>
+> > Acked-by: Michal Hocko <mhocko@suse.com>
 
---9UV9rz0O2dU/yYYn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> With David's indentation suggestion:
+> Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-On Sun, Mar 15, 2020 at 06:08:53PM +0100, Micha=C5=82 Miros=C5=82aw wrote:
-
-> Generic spi_transfer_one_message() implementation introduced in
-> commit b158935f70b9 has a bug in cs_change handling: it keeps CS
-> asserted when cs_change is set. Fix it.
-
->  	struct spi_transfer *xfer;
-> -	bool keep_cs =3D false;
-> +	bool keep_cs =3D true;
->  	int ret =3D 0;
->  	struct spi_statistics *statm =3D &ctlr->statistics;
->  	struct spi_statistics *stats =3D &msg->spi->statistics;
-> @@ -1268,7 +1268,7 @@ static int spi_transfer_one_message(struct spi_cont=
-roller *ctlr,
->  		if (xfer->cs_change) {
->  			if (list_is_last(&xfer->transfer_list,
->  					 &msg->transfers)) {
-> -				keep_cs =3D true;
-> +				keep_cs =3D false;
->  			} else {
-
-This is the opposite of the intended behaviour - we want to deassert
-chip select at the end of the message unless cs_change is set on the
-last transfer.  If this were broken I would expect to see widespread
-problems being reported.
-
---9UV9rz0O2dU/yYYn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5vbm0ACgkQJNaLcl1U
-h9BMdQf5AWzcmvns3J9jyWP93QCJquixA0rC5Yq66TDu3Vo6Qrfavnr7xme7k1Wh
-y6MTSaGKPYH1Y0WzSuQfoFzNOK8dTs9LskJ3D+rZo3hC4IhDKiJQzlEJXK45uLBu
-7dQK6bfsI1wSkL6PW89MmfxhrtFV+/EtlocxGVcyy50c1Wo6bGC/U6rak0GUjQhj
-xD9ig3QyjEBIqvVnv8+FxdE8bjQm2KEhcNOwcKveKKB1YtdYbNeiGw0qY3X6RaFD
-oNGdZTtvaz5GoT9Wr11qWMWqD/fjecNXwxXWSioAm/UWCO3xN471cO2Ip8TXMZbU
-Hr2VvQWOFAf5zN6N4XPf3/ZHGhku6A==
-=1SXT
------END PGP SIGNATURE-----
-
---9UV9rz0O2dU/yYYn--
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+(for both patches)
