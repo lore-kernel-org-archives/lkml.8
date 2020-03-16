@@ -2,137 +2,223 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070EFC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EE8C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB84206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD59205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:35:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qwBQX/Av"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="G2GWrkeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbgCPMfP (ORCPT
+        id S1731031AbgCPMfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:35:15 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35695 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730878AbgCPMfP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:35:15 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so373123wru.2;
-        Mon, 16 Mar 2020 05:35:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=mli3LATmq+tFwnP+8wWyRQBvASbiDCrn7g0yvxiqGEM=;
-        b=qwBQX/AvaM4WuENy/l9OVAIvMREaTwowHyXP2qUkfKSxWkLwA7pgDo5EsqULYQ3h6P
-         zKqVvtvlJY7gBnKIZRPD4SftZxNw7fK3PW6XHOioqTEpCJLl3zC6/zULHQvfHlKuDoez
-         P0+2q7S/8Rz4gQrvOr/xc2RzVOEwmAxBbsHVmkSdDOxUDP6ip59GU84uZ4nZ2zmkzzpL
-         zl7vzuV7ig182VLbQbClF1gWDMwwIWq/hZ8JB0kdnO2PzdNkvzBbV3i4Sma+oxNvTDPi
-         0rD5ttY2ltCVNjYtcl8+FDBikVqqaGnstjAbtF7mO+We07muT1FNiQ8Obaqi9/hDdrO5
-         /ldQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=mli3LATmq+tFwnP+8wWyRQBvASbiDCrn7g0yvxiqGEM=;
-        b=Pz8prVnBBECdkFLv/LYklIaLI7OwQ7tAHaDrytu/Ln4cKhXu5xTqMGG7W3OPwCbHcy
-         TjX4vvyr02ZCB2RxxodDb7at/Pct66lMqA3viMT2TBTQujgylhgUpkMQ7trFxGTcNcm+
-         5zHMmb64GTb2qbVKJOhz/Oh8rprxiJ8QHaVt44A9q14dDyFlSe4eNz58RpCud/RbmmmV
-         alWd1Bltlq4dw9jHwyq07BxQG6F5CdwhsE5+CHcOOCGC6kxx22OPuSO8DTQQxADoVlsg
-         pkut6c+qMnp7qvCZUuF8RprR2Io2Vq6NGTqnVjn4kx1XypllXS5+EybSF8HPJoHs+InG
-         6pcw==
-X-Gm-Message-State: ANhLgQ34an4dup1z199nn6Qq9q0HTh6ta3egjHGxIOW7mTGw3SIFSMlX
-        mfqHzk6QdICT6SGsSf2W2W8gDIQZstkuig==
-X-Google-Smtp-Source: ADFU+vsHDnRP7JNKklpe0mDZqdlh4tIegobsZzOI6NOa5tscYI8VO/tOfbj17EQIQ3lOecUh05XLEQ==
-X-Received: by 2002:a5d:522f:: with SMTP id i15mr34617007wra.231.1584362112960;
-        Mon, 16 Mar 2020 05:35:12 -0700 (PDT)
-Received: from [127.0.0.1] ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id g127sm31266941wmf.10.2020.03.16.05.35.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Mar 2020 05:35:12 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 12:35:04 +0000 (UTC)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Message-ID: <0ed0f4c8-5901-4d0f-b6e0-d641b3299e64@localhost>
-In-Reply-To: <20200314224340.1544-6-olteanv@gmail.com>
-References: <20200314224340.1544-1-olteanv@gmail.com> <20200314224340.1544-6-olteanv@gmail.com>
-Subject: Re: [PATCH v3 05/12] spi: spi-fsl-dspi: Protect against races on
- dspi->words_in_flight
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Correlation-ID: <0ed0f4c8-5901-4d0f-b6e0-d641b3299e64@localhost>
+        Mon, 16 Mar 2020 08:35:47 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:5341 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730878AbgCPMfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:35:47 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48gwkh3drBz9tygG;
+        Mon, 16 Mar 2020 13:35:40 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=G2GWrkeK; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id jFgipoEaC1LX; Mon, 16 Mar 2020 13:35:40 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwkh2Y3qz9tyg5;
+        Mon, 16 Mar 2020 13:35:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1584362140; bh=ivi67ooOYR4NIcKJvR+0+FvNkWM7JlV6Tch7soe4bFM=;
+        h=From:Subject:To:Cc:Date:From;
+        b=G2GWrkeKkUDGHu7p0zWyS98Zia78Gfr95R93ddIUQtznS4hruuI0vPb1d7rGL5S/M
+         Yual5rCH5SR4fsZRgNmt3hYTHWGr7C4mQ6YxXd7OAd0YPNhpiQTXdQo203OoRN6CEq
+         aU/dj8Zb/1yrtLQk4otSjYVbqyx3Pc6DcYrLdLUQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 47A9E8B7D0;
+        Mon, 16 Mar 2020 13:35:45 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ubuyxrt3CRxg; Mon, 16 Mar 2020 13:35:45 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1DC598B7CB;
+        Mon, 16 Mar 2020 13:35:45 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id F37D465595; Mon, 16 Mar 2020 12:35:44 +0000 (UTC)
+Message-Id: <cover.1584360343.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v1 00/46] Use hugepages to map kernel mem on 8xx
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 16 Mar 2020 12:35:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mar 15, 2020 12:44:02 AM Vladimir Oltean <olteanv@gmail.com>:
+The main purpose of this big series is to:
+- reorganise huge page handling to avoid using mm_slices.
+- use huge pages to map kernel memory on the 8xx.
 
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
->
-> dspi->words_in_flight is a variable populated in the *_write functions
-> and used in the dspi_fifo_read function. It is also used in
-> dspi_fifo_write, immediately after transmission, to update the
-> message->actual_length variable used by higher layers such as spi-mem
-> for integrity checking.
->
-> But it may happen that the IRQ which calls dspi_fifo_read to be
-> triggered before the updating of message->actual_length takes place. In
-> that case, dspi_fifo_read will decrement dspi->words_in_flight to -1,
-> and that will cause an invalid modification of message->actual_length.
->
-> Make the simplest fix possible: don't decrement the actual shared
-> variable in dspi->words_in_flight from dspi_fifo_read, but actually a
-> copy of it which is on stack.
->
-> Suggested-by: Michael Walle <michael@walle.cc>
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
-> Changes in v4:
-> Patch is new.
->
-> drivers/spi/spi-fsl-dspi.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 51224b772680..3ac004aa2abd 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -765,8 +765,10 @@ static u32 dspi_popr_read(struct fsl_dspi *dspi)
->
-> static void dspi_fifo_read(struct fsl_dspi *dspi)
-> {
-> + int num_fifo_entries = dspi->words_in_flight;
-> +
-> /* Read one FIFO entry and push to rx buffer */
-> - while (dspi->words_in_flight--)
-> + while (num_fifo_entries--)
-> dspi_push_rx(dspi, dspi_popr_read(dspi));
-> }
->
-> --
-> 2.17.1
->
->
+The 8xx supports 4 page sizes: 4k, 16k, 512k and 8M.
+It uses 2 Level page tables, PGD having 1024 entries, each entry
+covering 4M address space. Then each page table has 1024 entries.
 
-Fixes: d59c90a2400f ("spi: spi-fsl-dspi: Convert TCFQ users to XSPI FIFO mode")
+At the time being, page sizes are managed in PGD entries, implying
+the use of mm_slices as it can't mix several pages of the same size
+in one page table.
 
-Patchwork should know to pick up this tag.
+The first purpose of this series is to reorganise things so that
+standard page tables can also handle 512k pages. This is done by
+adding a new _PAGE_HUGE flag which will be copied into the Level 1
+entry in the TLB miss handler. That done, we have 2 types of pages:
+- PGD entries to regular page tables handling 4k/16k and 512k pages
+- PGD entries to hugepd tables handling 8M pages.
 
-Thanks,
--Vladimir
+There is no need to mix 8M pages with other sizes, because a 8M page
+will use more than what a single PGD covers.
 
+Then comes the second purpose of this series. At the time being, the
+8xx has implemented special handling in the TLB miss handlers in order
+to transparently map kernel linear address space and the IMMR using
+huge pages by building the TLB entries in assembly at the time of the
+exception.
 
+As mm_slices is only for user space pages, and also because it would
+anyway not be convenient to slice kernel address space, it was not
+possible to use huge pages for kernel address space. But after step
+one of the series, it is now more flexible to use huge pages.
+
+This series drop all assembly 'just in time' handling of huge pages
+and use huge pages in page tables instead.
+
+Once the above is done, then comes the cherry on cake:
+- Use huge pages for KASAN shadow mapping
+- Allow pinned TLBs with strict kernel rwx
+- Allow pinned TLBs with debug pagealloc
+
+Then, last but not least, those modifications for the 8xx allows the
+following improvement on book3s/32:
+- Mapping KASAN shadow with BATs
+- Allowing BATs with debug pagealloc
+
+All this allows to considerably simplify TLB miss handlers and associated
+initialisation. The overhead of reading page tables is negligible
+compared to the reduction of the miss handlers.
+
+While we were at touching pte_update(), some cleanup was done
+there too.
+
+Tested widely on 8xx and 832x. Boot tested on QEMU MAC99.
+
+Christophe Leroy (46):
+  powerpc/kasan: Fix shadow memory protection with CONFIG_KASAN_VMALLOC
+  powerpc/kasan: Fix error detection on memory allocation
+  powerpc/kasan: Fix issues by lowering KASAN_SHADOW_END
+  powerpc/kasan: Fix shadow pages allocation failure
+  powerpc/kasan: Remove unnecessary page table locking
+  powerpc/kasan: Refactor update of early shadow mappings
+  powerpc/kasan: Declare kasan_init_region() weak
+  powerpc/ptdump: Limit size of flags text to 1/2 chars on PPC32
+  powerpc/ptdump: Reorder flags
+  powerpc/ptdump: Add _PAGE_COHERENT flag
+  powerpc/ptdump: Display size of BATs
+  powerpc/ptdump: Standardise display of BAT flags
+  powerpc/ptdump: Properly handle non standard page size
+  powerpc/ptdump: Handle hugepd at PGD level
+  powerpc/32s: Don't warn when mapping RO data ROX.
+  powerpc/mm: Allocate static page tables for fixmap
+  powerpc/mm: Fix conditions to perform MMU specific management by
+    blocks on PPC32.
+  powerpc/mm: PTE_ATOMIC_UPDATES is only for 40x
+  powerpc/mm: Refactor pte_update() on nohash/32
+  powerpc/mm: Refactor pte_update() on book3s/32
+  powerpc/mm: Standardise __ptep_test_and_clear_young() params between
+    PPC32 and PPC64
+  powerpc/mm: Standardise pte_update() prototype between PPC32 and PPC64
+  powerpc/mm: Create a dedicated pte_update() for 8xx
+  powerpc/mm: Reduce hugepd size for 8M hugepages on 8xx
+  powerpc/8xx: Drop CONFIG_8xx_COPYBACK option
+  powerpc/8xx: Prepare handlers for _PAGE_HUGE for 512k pages.
+  powerpc/8xx: Manage 512k huge pages as standard pages.
+  powerpc/8xx: Only 8M pages are hugepte pages now
+  powerpc/8xx: MM_SLICE is not needed anymore
+  powerpc/8xx: Move PPC_PIN_TLB options into 8xx Kconfig
+  powerpc/8xx: Add function to update pinned TLBs
+  powerpc/8xx: Don't set IMMR map anymore at boot
+  powerpc/8xx: Always pin TLBs at startup.
+  powerpc/8xx: Drop special handling of Linear and IMMR mappings in I/D
+    TLB handlers
+  powerpc/8xx: Remove now unused TLB miss functions
+  powerpc/8xx: Move DTLB perf handling closer.
+  powerpc/mm: Don't be too strict with _etext alignment on PPC32
+  powerpc/8xx: Refactor kernel address boundary comparison
+  powerpc/8xx: Add a function to early map kernel via huge pages
+  powerpc/8xx: Map IMMR with a huge page
+  powerpc/8xx: Map linear memory with huge pages
+  powerpc/8xx: Allow STRICT_KERNEL_RwX with pinned TLB
+  powerpc/8xx: Allow large TLBs with DEBUG_PAGEALLOC
+  powerpc/8xx: Implement dedicated kasan_init_region()
+  powerpc/32s: Allow mapping with BATs with DEBUG_PAGEALLOC
+  powerpc/32s: Implement dedicated kasan_init_region()
+
+ arch/powerpc/Kconfig                          |  62 +---
+ arch/powerpc/configs/adder875_defconfig       |   1 -
+ arch/powerpc/configs/ep88xc_defconfig         |   1 -
+ arch/powerpc/configs/mpc866_ads_defconfig     |   1 -
+ arch/powerpc/configs/mpc885_ads_defconfig     |   1 -
+ arch/powerpc/configs/tqm8xx_defconfig         |   1 -
+ arch/powerpc/include/asm/book3s/32/pgtable.h  |  78 ++---
+ arch/powerpc/include/asm/fixmap.h             |   4 +
+ arch/powerpc/include/asm/hugetlb.h            |   6 +-
+ arch/powerpc/include/asm/kasan.h              |  10 +-
+ .../include/asm/nohash/32/hugetlb-8xx.h       |  32 +-
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h  |  75 +----
+ arch/powerpc/include/asm/nohash/32/pgtable.h  | 104 +++----
+ arch/powerpc/include/asm/nohash/32/pte-8xx.h  |   4 +-
+ arch/powerpc/include/asm/nohash/32/slice.h    |  20 --
+ arch/powerpc/include/asm/nohash/64/pgtable.h  |  28 +-
+ arch/powerpc/include/asm/nohash/pgtable.h     |   2 +-
+ arch/powerpc/include/asm/pgtable.h            |   2 +
+ arch/powerpc/include/asm/slice.h              |   2 -
+ arch/powerpc/kernel/head_8xx.S                | 292 ++++++------------
+ arch/powerpc/kernel/setup_32.c                |   2 +-
+ arch/powerpc/kernel/vmlinux.lds.S             |   3 +-
+ arch/powerpc/mm/book3s32/mmu.c                |  12 +-
+ arch/powerpc/mm/hugetlbpage.c                 |  43 +--
+ arch/powerpc/mm/init_32.c                     |  12 +-
+ arch/powerpc/mm/kasan/8xx.c                   |  74 +++++
+ arch/powerpc/mm/kasan/Makefile                |   2 +
+ arch/powerpc/mm/kasan/book3s_32.c             |  57 ++++
+ arch/powerpc/mm/kasan/kasan_init_32.c         |  91 +++---
+ arch/powerpc/mm/mmu_decl.h                    |   4 +
+ arch/powerpc/mm/nohash/8xx.c                  | 250 ++++++++-------
+ arch/powerpc/mm/pgtable.c                     |  34 +-
+ arch/powerpc/mm/pgtable_32.c                  |  22 +-
+ arch/powerpc/mm/ptdump/8xx.c                  |  52 ++--
+ arch/powerpc/mm/ptdump/bats.c                 |  41 ++-
+ arch/powerpc/mm/ptdump/ptdump.c               |  72 +++--
+ arch/powerpc/mm/ptdump/ptdump.h               |   2 +
+ arch/powerpc/mm/ptdump/shared.c               |  58 ++--
+ arch/powerpc/perf/8xx-pmu.c                   |  10 -
+ arch/powerpc/platforms/8xx/Kconfig            |  50 ++-
+ arch/powerpc/platforms/Kconfig.cputype        |   2 +-
+ arch/powerpc/sysdev/cpm_common.c              |   2 +
+ 42 files changed, 820 insertions(+), 801 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/nohash/32/slice.h
+ create mode 100644 arch/powerpc/mm/kasan/8xx.c
+ create mode 100644 arch/powerpc/mm/kasan/book3s_32.c
+
+-- 
+2.25.0
 
