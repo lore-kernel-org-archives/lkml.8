@@ -2,105 +2,249 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CB1C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8237BC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FE22076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TG2pE5vA"
+	by mail.kernel.org (Postfix) with ESMTP id 539BD20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731138AbgCPNCx (ORCPT
+        id S1731167AbgCPNDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:02:53 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37558 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731062AbgCPNCx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:02:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584363772;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LLQsyKzFI2FWMsfb3WnnDbhofXGcpSrAYcxTSH7lcYc=;
-        b=TG2pE5vAZL9AMj9b2S4oQAmmVKvtMcY1AoTXTMcIWD5TyZNHgaXoQBvQSyfYbtJfczDqRL
-        LUrYN/YX/veQ6fNWtaneuWxq4jj3bS84ceJMJuaSk+JVDIJs9YVwhVGuaUZL4k1DcShcfE
-        cOCj5SXcebXF2W73VLkYs8kal89FvOs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-qiNL0Hy_PamcS1YiC1ZLyw-1; Mon, 16 Mar 2020 09:02:44 -0400
-X-MC-Unique: qiNL0Hy_PamcS1YiC1ZLyw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 722D81005516;
-        Mon, 16 Mar 2020 13:02:43 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-121-211.rdu2.redhat.com [10.10.121.211])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AC04C92D0C;
-        Mon, 16 Mar 2020 13:02:34 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 1FFCA2234E4; Mon, 16 Mar 2020 09:02:34 -0400 (EDT)
-Date:   Mon, 16 Mar 2020 09:02:34 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Patrick Ohly <patrick.ohly@intel.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 00/20] virtiofs: Add DAX support
-Message-ID: <20200316130234.GA4013@redhat.com>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <yrjh1rpzggg4.fsf@pohly-mobl1.fritz.box>
+        Mon, 16 Mar 2020 09:03:03 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2566 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730974AbgCPNDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 09:03:01 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id ADFD9642A8E0D40B1058;
+        Mon, 16 Mar 2020 13:02:59 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 16 Mar 2020 13:02:56 +0000
+Received: from [127.0.0.1] (10.210.166.242) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 16 Mar
+ 2020 13:02:55 +0000
+Subject: Re: [PATCH v3 2/2] irqchip/gic-v3-its: Balance initial LPI affinity
+ across CPUs
+To:     Marc Zyngier <maz@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     chenxiang <chenxiang66@hisilicon.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>
+References: <20200316115433.9017-1-maz@kernel.org>
+ <20200316115433.9017-3-maz@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2c367508-f81b-342e-eb05-8bbd1b056279@huawei.com>
+Date:   Mon, 16 Mar 2020 13:02:48 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yrjh1rpzggg4.fsf@pohly-mobl1.fritz.box>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200316115433.9017-3-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.166.242]
+X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 02:38:03PM +0100, Patrick Ohly wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
-> > This patch series adds DAX support to virtiofs filesystem. This allows
-> > bypassing guest page cache and allows mapping host page cache directly
-> > in guest address space.
-> >
-> > When a page of file is needed, guest sends a request to map that page
-> > (in host page cache) in qemu address space. Inside guest this is
-> > a physical memory range controlled by virtiofs device. And guest
-> > directly maps this physical address range using DAX and hence gets
-> > access to file data on host.
-> >
-> > This can speed up things considerably in many situations. Also this
-> > can result in substantial memory savings as file data does not have
-> > to be copied in guest and it is directly accessed from host page
-> > cache.
+On 16/03/2020 11:54, Marc Zyngier wrote:
+> When mapping a LPI, the ITS driver picks the first possible
+> affinity, which is in most cases CPU0, assuming that if
+> that's not suitable, someone will come and set the affinity
+> to something more interesting.
 > 
-> As a potential user of this, let me make sure I understand the expected
-> outcome: is the goal to let virtiofs use DAX (for increased performance,
-> etc.) or also let applications that use virtiofs use DAX?
+> It apparently isn't the case, and people complain of poor
+> performance when many interrupts are glued to the same CPU.
+> So let's place the interrupts by finding the "least loaded"
+> CPU (that is, the one that has the fewer LPIs mapped to it).
+> So called 'managed' interrupts are an interesting case where
+> the affinity is actually dictated by the kernel itself, and
+> we should honor this.
 > 
-> You are mentioning using the host's page cache, so it's probably the
-> former and MAP_SYNC on virtiofs will continue to be rejected, right?
+> Reported-by: John Garry <john.garry@huawei.com>
+> Link: https://lore.kernel.org/r/1575642904-58295-1-git-send-email-john.garry@huawei.com
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>   drivers/irqchip/irq-gic-v3-its.c | 118 ++++++++++++++++++++++++-------
+>   1 file changed, 92 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 941786e1e8f7..7f1b731c04bb 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -1531,31 +1531,107 @@ static void its_dec_lpi_count(struct irq_data *d, int cpu)
+>   		atomic_dec(&per_cpu_ptr(&cpu_lpi_count, cpu)->unmanaged);
+>   }
+>   
+> +static unsigned int cpumask_pick_least_loaded(struct irq_data *d,
+> +					      const struct cpumask *cpu_mask)
+> +{
+> +	unsigned int cpu = nr_cpu_ids, tmp;
+> +	int count = S32_MAX;
+> +
+> +	for_each_cpu(tmp, cpu_mask) {
 
-Hi Patrick,
+Hi Marc,
 
-You are right. Its the former. That is we want virtiofs to be able to
-make use of DAX to bypass guest page cache. But there is no persistent
-memory so no persistent memory programming semantics available to user
-space. For that I guess we have virtio-pmem.
+> +		int this_count = its_read_lpi_count(d, tmp);
 
-We expect users will issue fsync/msync like a regular filesystem to
-make changes persistent. So in that aspect, rejecting MAP_SYNC
-makes sense. I will test and see if current code is rejecting MAP_SYNC
-or not.
+Not sure if it's intentional, but now there seems to be a subtle 
+difference to what Thomas described for non-managed interrupts - for 
+non-managed interrupts, x86 selects the CPU based on the total interrupt 
+load per CPU (or, more specifically, lowest vector allocation count), 
+and not just the non-managed load. Or maybe I misread it.
 
-Thanks
-Vivek
+Anyway, we can test this now for NVMe with its managed interrupts.
+
+Cheers,
+John
+
+> +		if (this_count < count) {
+> +			cpu = tmp;
+> +		        count = this_count;
+> +		}
+> +	}
+> +
+> +	return cpu;
+> +}
+> +
+> +/*
+> + * As suggested by Thomas Gleixner in:
+> + * https://lore.kernel.org/r/87h80q2aoc.fsf@nanos.tec.linutronix.de
+> + */
+> +static int its_select_cpu(struct irq_data *d,
+> +			  const struct cpumask *aff_mask)
+> +{
+> +	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+> +	cpumask_var_t tmpmask;
+> +	int cpu, node;
+> +
+> +	if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
+> +		return -ENOMEM;
+> +
+> +	node = its_dev->its->numa_node;
+> +
+> +	if (!irqd_affinity_is_managed(d)) {
+> +		/* First try the NUMA node */
+> +		if (node != NUMA_NO_NODE) {
+> +			/*
+> +			 * Try the intersection of the affinity mask and the
+> +			 * node mask (and the online mask, just to be safe).
+> +			 */
+> +			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
+> +			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
+> +
+> +			/* If that doesn't work, try the nodemask itself */
+> +			if (cpumask_empty(tmpmask))
+> +				cpumask_and(tmpmask, cpumask_of_node(node), cpu_online_mask);
+> +
+> +			cpu = cpumask_pick_least_loaded(d, tmpmask);
+> +			if (cpu < nr_cpu_ids)
+> +				goto out;
+> +
+> +			/* If we can't cross sockets, give up */
+> +			if ((its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144))
+> +				goto out;
+> +
+> +			/* If the above failed, expand the search */
+> +		}
+> +
+> +		/* Try the intersection of the affinity and online masks */
+> +		cpumask_and(tmpmask, aff_mask, cpu_online_mask);
+> +
+> +		/* If that doesn't fly, the online mask is the last resort */
+> +		if (cpumask_empty(tmpmask))
+> +			cpumask_copy(tmpmask, cpu_online_mask);
+> +
+> +		cpu = cpumask_pick_least_loaded(d, tmpmask);
+> +	} else {
+> +		cpumask_and(tmpmask, irq_data_get_affinity_mask(d), cpu_online_mask);
+> +
+> +		/* If we cannot cross sockets, limit the search to that node */
+> +		if ((its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) &&
+> +		    node != NUMA_NO_NODE)
+> +			cpumask_and(tmpmask, tmpmask, cpumask_of_node(node));
+> +
+> +		cpu = cpumask_pick_least_loaded(d, tmpmask);
+> +	}
+> +out:
+> +	free_cpumask_var(tmpmask);
+> +
+> +	pr_debug("IRQ%d -> %*pbl CPU%d\n", d->irq, cpumask_pr_args(aff_mask), cpu);
+> +	return cpu;
+> +}
+> +
+>   static int its_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+>   			    bool force)
+>   {
+> -	unsigned int cpu;
+> -	const struct cpumask *cpu_mask = cpu_online_mask;
+>   	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+>   	struct its_collection *target_col;
+>   	u32 id = its_get_event_id(d);
+> +	int cpu;
+>   
+>   	/* A forwarded interrupt should use irq_set_vcpu_affinity */
+>   	if (irqd_is_forwarded_to_vcpu(d))
+>   		return -EINVAL;
+>   
+> -       /* lpi cannot be routed to a redistributor that is on a foreign node */
+> -	if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) {
+> -		if (its_dev->its->numa_node >= 0) {
+> -			cpu_mask = cpumask_of_node(its_dev->its->numa_node);
+> -			if (!cpumask_intersects(mask_val, cpu_mask))
+> -				return -EINVAL;
+> -		}
+> -	}
+> -
+> -	cpu = cpumask_any_and(mask_val, cpu_mask);
+> +	if (!force)
+> +		cpu = its_select_cpu(d, mask_val);
+> +	else
+> +		cpu = cpumask_pick_least_loaded(d, mask_val);
+>   
+> -	if (cpu >= nr_cpu_ids)
+> +	if (cpu < 0 || cpu >= nr_cpu_ids)
+>   		return -EINVAL;
+>   
+>   	/* don't set the affinity when the target cpu is same as current one */
+> @@ -3455,21 +3531,11 @@ static int its_irq_domain_activate(struct irq_domain *domain,
+>   {
+>   	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+>   	u32 event = its_get_event_id(d);
+> -	const struct cpumask *cpu_mask = cpu_online_mask;
+>   	int cpu;
+>   
+> -	/* get the cpu_mask of local node */
+> -	if (its_dev->its->numa_node >= 0)
+> -		cpu_mask = cpumask_of_node(its_dev->its->numa_node);
+> -
+> -	/* Bind the LPI to the first possible CPU */
+> -	cpu = cpumask_first_and(cpu_mask, cpu_online_mask);
+> -	if (cpu >= nr_cpu_ids) {
+> -		if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144)
+> -			return -EINVAL;
+> -
+> -		cpu = cpumask_first(cpu_online_mask);
+> -	}
+> +	cpu = its_select_cpu(d, cpu_online_mask);
+> +	if (cpu < 0 || cpu >= nr_cpu_ids)
+> +		return -EINVAL;
+>   
+>   	its_inc_lpi_count(d, cpu);
+>   	its_dev->event_map.col_map[event] = cpu;
+> 
 
