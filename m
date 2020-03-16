@@ -2,150 +2,101 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A1DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0CDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC38120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A00820679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:21:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="BIdRz1p8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732119AbgCPQVH (ORCPT
+        id S1732129AbgCPQVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:21:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36672 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731875AbgCPQVH (ORCPT
+        Mon, 16 Mar 2020 12:21:31 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:39321 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731545AbgCPQVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:21:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 39so3022028otu.3;
-        Mon, 16 Mar 2020 09:21:07 -0700 (PDT)
+        Mon, 16 Mar 2020 12:21:30 -0400
+Received: by mail-qv1-f65.google.com with SMTP id v38so5125262qvf.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:21:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9klmvsCDbXb5UYRZlQllkDdUD0lGfzdSvUkSWWRacQo=;
+        b=BIdRz1p8gE7zQuk9C9oV2HUNArw5x43uMFazoWlkrlXCvsSeUsivCaSdXGEbbFTYjy
+         nVHA9sJZ7eETinHItrBU4wkyITu/QJh0Hk7+Zg4PL5xep7s0jQVsZRD4ZWsnd5ipJD9v
+         sapWytPkQe7cpFo/rwKJ+7zg+T6UXo8doO5npkHb/HZMK7ZCgLKDLWa4AJ94FFjM+cx2
+         RbztSybf9OHQoAu+GbPdpNc0d7bgoYECl7ZfwdX1uisQIF3JKgd5exWrQzIH8FwYxLvK
+         7LoFUX9bkY1j/teBAy37KVGtZTsTa3q/X6cjYnD7zY79l6KnHy70ahkT8I/rVjcAcc1z
+         pwiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LJifg6Ktp1NK1uHmjwaX7dp/t9zxCzEVMxQ0Jij2Or4=;
-        b=XZ1JbYHRwlMT88Qn2gbAVBymt+OEEUCWbmoA3mL/QvXfZAJlaYLSP6MPYkOmWJxdke
-         jxUgQdElJw1eIud6VxSCgUHMKjkA/HyJPx2WFTm5hefloixigyYvLwuR6CizH4iTZXLI
-         tCS1wyeNksBHvlY6XSXlrsx+0F1+1LU5R5U24I1ML5SxZVmCVWNvd54VhRnBHRm7pr7Y
-         gNqkP8EECIeXedDIrPEZc15ZKVH0cAFkyct3THs0ZmixYeNSM0ymnawN7YOXwDa0xvbF
-         xRXy/7Nn3Ymo+dyFHZXkoFVMhuK2wqclq0fhYdnHhx1BL3iWBifJafc/oj5fzpSJx1LQ
-         /Bzw==
-X-Gm-Message-State: ANhLgQ0L2ToQsDxYX6rI7vR+ltvMxqdu3o/S+mDL7ckdxK4QAY3iJz2b
-        SKsQm3n+3V6BvQi9hIY60E6Fdwg2Cv6evGyq4D5Z0EQh
-X-Google-Smtp-Source: ADFU+vsh2R6+fVy5SdGy4MQXtSg6SAr17XAlHFOULaDGUiHv7RDiKl+xwnZvb/vrmq7HKN+kAoSeKV+RZDTKGCRCEHE=
-X-Received: by 2002:a9d:1708:: with SMTP id i8mr79567ota.250.1584375665600;
- Mon, 16 Mar 2020 09:21:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9klmvsCDbXb5UYRZlQllkDdUD0lGfzdSvUkSWWRacQo=;
+        b=gHEjUGRhH87+V0Fru79SeXXXBn9E+Fv0z0q1XkQ6YX/CHVhFNUPM54tEdLcaBMMv5O
+         OJO2c+RUOuoFjQM/pQX10X/nXhLz0pBlKUt/XIMTtvVtn0rcLS97Vyn/Oc2iJG9Ocvgb
+         TYWiIIJxeT0IEistXpmx7QJfZuLcxnXGbqMlOMCTqcbxr0EkWfj4dFENajvD+eyQhy47
+         6CRO6NpbliBRSMO/PV9IdeswPlIt6/ZJvy998ml/wTpUd6BLuZa24kwr/pTQazd/2wsm
+         WHPZnOWzXH82IlfXNYV1KM4MT7otaotM7+9YU0zjFIWkm49yc3tOF3hSWrL/GbyW0gzY
+         RMEA==
+X-Gm-Message-State: ANhLgQ13UrfmCE/0NqJKkwCtH90PjGdsmZW62TaV9qgq32CBxlXSFkhu
+        CSBdzKMttkvc1j47PoUoT92b/A==
+X-Google-Smtp-Source: ADFU+vt/P7ZURa36l2KZQ/dCMCuB9sP/P1NIhNUnoYuUrITCwV6n9U2JPEM6tTD4GaQXZXYkNktwxw==
+X-Received: by 2002:ad4:57a8:: with SMTP id g8mr584591qvx.78.1584375689499;
+        Mon, 16 Mar 2020 09:21:29 -0700 (PDT)
+Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
+        by smtp.gmail.com with ESMTPSA id z19sm85599qts.86.2020.03.16.09.21.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 09:21:28 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 12:21:28 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 2/2] mm, memcg: Throttle allocators based on ancestral
+ memory.high
+Message-ID: <20200316162128.GF67986@cmpxchg.org>
+References: <80780887060514967d414b3cd91f9a316a16ab98.1584036142.git.chris@chrisdown.name>
+ <8cd132f84bd7e16cdb8fde3378cdbf05ba00d387.1584036142.git.chris@chrisdown.name>
 MIME-Version: 1.0
-References: <20200211091937.29558-1-brgl@bgdev.pl> <20200211091937.29558-6-brgl@bgdev.pl>
-In-Reply-To: <20200211091937.29558-6-brgl@bgdev.pl>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 16 Mar 2020 17:20:54 +0100
-Message-ID: <CAMuHMdUc9Vwh=B5nA2tW66DwYr3AE6g2Jvd_o0W-oShDs+QQEg@mail.gmail.com>
-Subject: Re: [RESEND PATCH v6 5/7] gpiolib: provide a dedicated function for
- setting lineinfo
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8cd132f84bd7e16cdb8fde3378cdbf05ba00d387.1584036142.git.chris@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartosz,
+On Thu, Mar 12, 2020 at 06:03:04PM +0000, Chris Down wrote:
+> Prior to this commit, we only directly check the affected cgroup's
+> memory.high against its usage. However, it's possible that we are being
+> reclaimed as a result of hitting an ancestor memory.high and should be
+> penalised based on that, instead.
+> 
+> This patch changes memory.high overage throttling to use the largest
+> overage in its ancestors when considering how many penalty jiffies to
+> charge. This makes sure that we penalise poorly behaving cgroups in the
+> same way regardless of at what level of the hierarchy memory.high was
+> breached.
+> 
+> Fixes: 0e4b01df8659 ("mm, memcg: throttle allocators when failing reclaim over memory.high")
+> Reported-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-mm@kvack.org
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@fb.com
+> Cc: stable@vger.kernel.org # 5.4.x
 
-On Tue, Feb 11, 2020 at 10:21 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> We'll soon be filling out the gpioline_info structure in multiple
-> places. Add a separate function that given a gpio_desc sets all relevant
-> fields.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-This is now commit d2ac25798208fb85 ("gpiolib: provide a dedicated
-function for setting lineinfo") in gpio/for-next.
-
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1147,6 +1147,60 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->         return ret;
->  }
->
-> +static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
-> +                                 struct gpioline_info *info)
-> +{
-> +       struct gpio_chip *chip = desc->gdev->chip;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&gpio_lock, flags);
-
-spinlock taken
-
-> +
-> +       if (desc->name) {
-> +               strncpy(info->name, desc->name, sizeof(info->name));
-> +               info->name[sizeof(info->name) - 1] = '\0';
-> +       } else {
-> +               info->name[0] = '\0';
-> +       }
-> +
-> +       if (desc->label) {
-> +               strncpy(info->consumer, desc->label, sizeof(info->consumer));
-> +               info->consumer[sizeof(info->consumer) - 1] = '\0';
-> +       } else {
-> +               info->consumer[0] = '\0';
-> +       }
-> +
-> +       /*
-> +        * Userspace only need to know that the kernel is using this GPIO so
-> +        * it can't use it.
-> +        */
-> +       info->flags = 0;
-> +       if (test_bit(FLAG_REQUESTED, &desc->flags) ||
-> +           test_bit(FLAG_IS_HOGGED, &desc->flags) ||
-> +           test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
-> +           test_bit(FLAG_EXPORT, &desc->flags) ||
-> +           test_bit(FLAG_SYSFS, &desc->flags) ||
-> +           !pinctrl_gpio_can_use_line(chip->base + info->line_offset))
-
-pinctrl_gpio_can_use_line(), and pinctrl_get_device_gpio_range() called
-from it, call mutex_lock():
-
-    BUG: sleeping function called from invalid context at
-kernel/locking/mutex.c:281
-    in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 652, name: lsgpio
-    CPU: 1 PID: 652 Comm: lsgpio Not tainted
-5.6.0-rc1-koelsch-00008-gd2ac25798208fb85 #755
-    Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
-    [<c020e3f0>] (unwind_backtrace) from [<c020a5b8>] (show_stack+0x10/0x14)
-    [<c020a5b8>] (show_stack) from [<c07d31b4>] (dump_stack+0x88/0xa8)
-    [<c07d31b4>] (dump_stack) from [<c0241318>] (___might_sleep+0xf8/0x168)
-    [<c0241318>] (___might_sleep) from [<c07ec13c>] (mutex_lock+0x24/0x7c)
-    [<c07ec13c>] (mutex_lock) from [<c046f47c>]
-(pinctrl_get_device_gpio_range+0x1c/0xb4)
-    [<c046f47c>] (pinctrl_get_device_gpio_range) from [<c046f5e8>]
-(pinctrl_gpio_can_use_line+0x24/0x88)
-    [<c046f5e8>] (pinctrl_gpio_can_use_line) from [<c0478bd0>]
-(gpio_ioctl+0x270/0x584)
-    [<c0478bd0>] (gpio_ioctl) from [<c03194c0>] (vfs_ioctl+0x20/0x38)
-
-Reproducer is "lsgpio" with CONFIG_DEBUG_ATOMIC_SLEEP=y.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
