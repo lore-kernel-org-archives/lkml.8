@@ -2,612 +2,169 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A935C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C2BC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DB620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:45:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vt9xGjrz"
+	by mail.kernel.org (Postfix) with ESMTP id E25FF205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732858AbgCPWpW (ORCPT
+        id S1732868AbgCPWpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:45:22 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46125 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732739AbgCPWpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:45:22 -0400
-Received: by mail-qk1-f193.google.com with SMTP id f28so29280280qkk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hgJDmNWpEQbJNc4mEAcOWwsH7T6CJyPxmEKaqzHkWRI=;
-        b=vt9xGjrzy1sllJMWQyLR9YN6PSvzCc45anF78sNauPPwQ80lenVoIb8FJFwav/nU6k
-         tqbTYI2fPtG8BjltvYblpOYEPnnU4JgNcxGXN7VoVQ00Gkvp0uYskz4OyzhsBSgrbrOs
-         lYq/3u6Oxhl7oWt4xtLpqlFDSGBdmLA50INziLyVxC68CYIErlHO+Vt5ySlt2FGpMk7u
-         KuesN4LLsLC7ZU5Hf5uu4Lre0Sxl4jTq2bPMo62U3/cgeRwmd97XU2dMzUbRQCoTQgpZ
-         VzeEbIlfoJHL2VkRsyz+QInt/xFZiE/z5i8I3CKYSXiOtGUZ2MqQ0tt4k5xETol5dlyg
-         tIog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hgJDmNWpEQbJNc4mEAcOWwsH7T6CJyPxmEKaqzHkWRI=;
-        b=skb+OayQPlDpptpCNG6sIvLJgcgBepD1MnvjF8LXghYNpehCgsPf/ENMU0FXtj3e/K
-         qPjmwOsY6+EXE03Z1Ojd0XtleApxEo1A8L4clctBBL/py3B1V8rj+hPz5DHvdsuihDca
-         cS5hVZ5r4U8YYn/50C1mY06gR+sS1TSbdHgkTaPlpnElvvihWKtBN+m84IfP6JDIuWZQ
-         7jt67bj8wfOO4SSuzrkrbUyTcsZPd4BxQR+HyC7SA1TkxJV/utXdQr2mCt/qH/922Y0K
-         D5ZQqeOBGSkLmn+4TPu47VakXVFDDN4DUKfpRFzohFlZ+RwCbgh74tA2WYdT0aVwCF7M
-         Kw0w==
-X-Gm-Message-State: ANhLgQ1mcGLcx6AZeCKCVG5q56hst6ZUkBibqLeDwS+p2HsdH1j+RW7v
-        0zs3GfUp3emzIpWNveG601inGHXzqzOpUowyooQd7Q==
-X-Google-Smtp-Source: ADFU+vsWuZfS9776j83LnbndqR5TE3XPh9nfhfkXEuMsxVFxFoVnY3pJnwaVZEFFVknptVWgaxNboLiWPv09KHkUElo=
-X-Received: by 2002:a37:7a04:: with SMTP id v4mr2074695qkc.340.1584398720257;
- Mon, 16 Mar 2020 15:45:20 -0700 (PDT)
+        Mon, 16 Mar 2020 18:45:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47768 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732837AbgCPWpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 18:45:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3EE80ABBE;
+        Mon, 16 Mar 2020 22:45:45 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Jeff Layton <jlayton@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 17 Mar 2020 09:45:37 +1100
+Cc:     yangerkun <yangerkun@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
+In-Reply-To: <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
+References: <20200308140314.GQ5972@shao2-debian>
+ <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+ <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
+ <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
+ <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
+ <878sk7vs8q.fsf@notabene.neil.brown.name>
+ <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+ <875zfbvrbm.fsf@notabene.neil.brown.name>
+ <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+ <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
+ <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
+ <87v9nattul.fsf@notabene.neil.brown.name>
+ <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
+ <87o8t2tc9s.fsf@notabene.neil.brown.name>
+ <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
+ <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
+ <877dznu0pk.fsf@notabene.neil.brown.name>
+ <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
+ <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
+ <87pndcsxc6.fsf@notabene.neil.brown.name>
+ <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
+Message-ID: <87k13jsyum.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
- <20200313152420.138777-1-christian.brauner@ubuntu.com> <20200313152420.138777-3-christian.brauner@ubuntu.com>
- <202003131608.DA96ECE4D@keescook>
-In-Reply-To: <202003131608.DA96ECE4D@keescook>
-From:   Hridya Valsaraju <hridya@google.com>
-Date:   Mon, 16 Mar 2020 15:44:44 -0700
-Message-ID: <CA+wgaPNETmZHeiTeV4q1YkJU=yNXfN4hap5KS_cdR7YLJHnF5w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] binderfs: add stress test for binderfs binder devices
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Todd Kjos <tkjos@android.com>,
-        LKML <linux-kernel@vger.kernel.org>, ard.biesheuvel@linaro.org,
-        ardb@kernel.org,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-kselftest@vger.kernel.org, Martijn Coenen <maco@android.com>,
-        naresh.kamboju@linaro.org, shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 4:08 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Mar 13, 2020 at 04:24:20PM +0100, Christian Brauner wrote:
-> > This adds a stress test that should hopefully help us catch regressions
-> > for [1], [2], and [3].
-> >
-> > [1]: 2669b8b0c798 ("binder: prevent UAF for binderfs devices")
-> > [2]: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-> > [3]: 211b64e4b5b6 ("binderfs: use refcount for binder control devices too")
-> > Cc: Kees Cook <keescook@chromium.org>:
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> -Kees
->
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for creating these tests Christian! I was able to get them
-running on the cuttlefish platform with the ACK android-mainline
-branch.
+On Mon, Mar 16 2020, Jeff Layton wrote:
 
-Regards,
-Hridya
+> @@ -740,6 +739,12 @@ static void __locks_wake_up_blocks(struct file_lock =
+*blocker)
+>  			waiter->fl_lmops->lm_notify(waiter);
+>  		else
+>  			wake_up(&waiter->fl_wait);
+> +
+> +		/*
+> +		 * Tell the world we're done with it - see comment at
+> +		 * top of locks_delete_block().
+> +		 */
+> +		smp_store_release(&waiter->fl_blocker, NULL);
+>  	}
+>  }
+>=20=20
+> @@ -753,11 +758,30 @@ int locks_delete_block(struct file_lock *waiter)
+>  {
+>  	int status =3D -ENOENT;
+>=20=20
+> +	/*
+> +	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
+> +	 * the lock and is the only one that might try to claim the lock.
+> +	 * Because fl_blocker is explicitly set last during a delete, it's
+> +	 * safe to locklessly test to see if it's NULL. If it is, then we know
+> +	 * that no new locks can be inserted into its fl_blocked_requests list,
+> +	 * and we can therefore avoid doing anything further as long as that
+> +	 * list is empty.
 
-> > ---
-> > /* v2 */
-> > - Kees Cook <keescook@chromium.org>:
-> >   - Switch to unique mountpoint through mkdtemp().
-> > ---
-> >  .../selftests/filesystems/binderfs/Makefile   |   2 +-
-> >  .../filesystems/binderfs/binderfs_test.c      | 426 ++++++++++++++----
-> >  2 files changed, 334 insertions(+), 94 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/filesystems/binderfs/Makefile b/tools/testing/selftests/filesystems/binderfs/Makefile
-> > index 75315d9ba7a9..8af25ae96049 100644
-> > --- a/tools/testing/selftests/filesystems/binderfs/Makefile
-> > +++ b/tools/testing/selftests/filesystems/binderfs/Makefile
-> > @@ -1,6 +1,6 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >
-> > -CFLAGS += -I../../../../../usr/include/
-> > +CFLAGS += -I../../../../../usr/include/ -pthread
-> >  TEST_GEN_PROGS := binderfs_test
-> >
-> >  binderfs_test: binderfs_test.c ../../kselftest.h ../../kselftest_harness.h
-> > diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-> > index 818eb49f8125..8a6b507e34a8 100644
-> > --- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-> > +++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-> > @@ -3,15 +3,20 @@
-> >  #define _GNU_SOURCE
-> >  #include <errno.h>
-> >  #include <fcntl.h>
-> > +#include <pthread.h>
-> >  #include <sched.h>
-> >  #include <stdbool.h>
-> >  #include <stdio.h>
-> >  #include <stdlib.h>
-> >  #include <string.h>
-> > +#include <sys/fsuid.h>
-> >  #include <sys/ioctl.h>
-> >  #include <sys/mount.h>
-> > +#include <sys/socket.h>
-> >  #include <sys/stat.h>
-> > +#include <sys/sysinfo.h>
-> >  #include <sys/types.h>
-> > +#include <sys/wait.h>
-> >  #include <unistd.h>
-> >  #include <linux/android/binder.h>
-> >  #include <linux/android/binderfs.h>
-> > @@ -19,100 +24,26 @@
-> >  #include "../../kselftest.h"
-> >  #include "../../kselftest_harness.h"
-> >
-> > -static ssize_t write_nointr(int fd, const void *buf, size_t count)
-> > -{
-> > -     ssize_t ret;
-> > -again:
-> > -     ret = write(fd, buf, count);
-> > -     if (ret < 0 && errno == EINTR)
-> > -             goto again;
-> > -
-> > -     return ret;
-> > -}
-> > -
-> > -static void write_to_file(const char *filename, const void *buf, size_t count,
-> > -                       int allowed_errno)
-> > -{
-> > -     int fd, saved_errno;
-> > -     ssize_t ret;
-> > -
-> > -     fd = open(filename, O_WRONLY | O_CLOEXEC);
-> > -     if (fd < 0)
-> > -             ksft_exit_fail_msg("%s - Failed to open file %s\n",
-> > -                                strerror(errno), filename);
-> > +#define DEFAULT_THREADS 4
-> >
-> > -     ret = write_nointr(fd, buf, count);
-> > -     if (ret < 0) {
-> > -             if (allowed_errno && (errno == allowed_errno)) {
-> > -                     close(fd);
-> > -                     return;
-> > -             }
-> > +#define PTR_TO_INT(p) ((int)((intptr_t)(p)))
-> > +#define INT_TO_PTR(u) ((void *)((intptr_t)(u)))
-> >
-> > -             goto on_error;
-> > +#define close_prot_errno_disarm(fd) \
-> > +     if (fd >= 0) {              \
-> > +             int _e_ = errno;    \
-> > +             close(fd);          \
-> > +             errno = _e_;        \
-> > +             fd = -EBADF;        \
-> >       }
-> >
-> > -     if ((size_t)ret != count)
-> > -             goto on_error;
-> > -
-> > -     close(fd);
-> > -     return;
-> > -
-> > -on_error:
-> > -     saved_errno = errno;
-> > -     close(fd);
-> > -     errno = saved_errno;
-> > -
-> > -     if (ret < 0)
-> > -             ksft_exit_fail_msg("%s - Failed to write to file %s\n",
-> > -                                strerror(errno), filename);
-> > -
-> > -     ksft_exit_fail_msg("Failed to write to file %s\n", filename);
-> > -}
-> > -
-> > -static void change_to_userns(void)
-> > -{
-> > -     int ret;
-> > -     uid_t uid;
-> > -     gid_t gid;
-> > -     /* {g,u}id_map files only allow a max of 4096 bytes written to them */
-> > -     char idmap[4096];
-> > -
-> > -     uid = getuid();
-> > -     gid = getgid();
-> > -
-> > -     ret = unshare(CLONE_NEWUSER);
-> > -     if (ret < 0)
-> > -             ksft_exit_fail_msg("%s - Failed to unshare user namespace\n",
-> > -                                strerror(errno));
-> > -
-> > -     write_to_file("/proc/self/setgroups", "deny", strlen("deny"), ENOENT);
-> > -
-> > -     ret = snprintf(idmap, sizeof(idmap), "0 %d 1", uid);
-> > -     if (ret < 0 || (size_t)ret >= sizeof(idmap))
-> > -             ksft_exit_fail_msg("%s - Failed to prepare uid mapping\n",
-> > -                                strerror(errno));
-> > -
-> > -     write_to_file("/proc/self/uid_map", idmap, strlen(idmap), 0);
-> > -
-> > -     ret = snprintf(idmap, sizeof(idmap), "0 %d 1", gid);
-> > -     if (ret < 0 || (size_t)ret >= sizeof(idmap))
-> > -             ksft_exit_fail_msg("%s - Failed to prepare uid mapping\n",
-> > -                                strerror(errno));
-> > -
-> > -     write_to_file("/proc/self/gid_map", idmap, strlen(idmap), 0);
-> > -
-> > -     ret = setgid(0);
-> > -     if (ret)
-> > -             ksft_exit_fail_msg("%s - Failed to setgid(0)\n",
-> > -                                strerror(errno));
-> > +#define log_exit(format, ...)                                                  \
-> > +     ({                                                                     \
-> > +             fprintf(stderr, format "\n", ##__VA_ARGS__);                   \
-> > +             exit(EXIT_FAILURE);                                            \
-> > +     })
-> >
-> > -     ret = setuid(0);
-> > -     if (ret)
-> > -             ksft_exit_fail_msg("%s - Failed to setgid(0)\n",
-> > -                                strerror(errno));
-> > -}
-> > -
-> > -static void change_to_mountns(void)
-> > +static void change_mountns(void)
-> >  {
-> >       int ret;
-> >
-> > @@ -144,7 +75,7 @@ static int __do_binderfs_test(void)
-> >       char binderfs_mntpt[] = P_tmpdir "/binderfs_XXXXXX",
-> >               device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") + BINDERFS_MAX_NAME];
-> >
-> > -     change_to_mountns();
-> > +     change_mountns();
-> >
-> >       if (!mkdtemp(binderfs_mntpt))
-> >               ksft_exit_fail_msg(
-> > @@ -253,6 +184,288 @@ static int __do_binderfs_test(void)
-> >       return 0;
-> >  }
-> >
-> > +static int wait_for_pid(pid_t pid)
-> > +{
-> > +     int status, ret;
-> > +
-> > +again:
-> > +     ret = waitpid(pid, &status, 0);
-> > +     if (ret == -1) {
-> > +             if (errno == EINTR)
-> > +                     goto again;
-> > +
-> > +             return -1;
-> > +     }
-> > +
-> > +     if (!WIFEXITED(status))
-> > +             return -1;
-> > +
-> > +     return WEXITSTATUS(status);
-> > +}
-> > +
-> > +static int setid_userns_root(void)
-> > +{
-> > +     if (setuid(0))
-> > +             return -1;
-> > +     if (setgid(0))
-> > +             return -1;
-> > +
-> > +     setfsuid(0);
-> > +     setfsgid(0);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +enum idmap_type {
-> > +     UID_MAP,
-> > +     GID_MAP,
-> > +};
-> > +
-> > +static ssize_t read_nointr(int fd, void *buf, size_t count)
-> > +{
-> > +     ssize_t ret;
-> > +again:
-> > +     ret = read(fd, buf, count);
-> > +     if (ret < 0 && errno == EINTR)
-> > +             goto again;
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static ssize_t write_nointr(int fd, const void *buf, size_t count)
-> > +{
-> > +     ssize_t ret;
-> > +again:
-> > +     ret = write(fd, buf, count);
-> > +     if (ret < 0 && errno == EINTR)
-> > +             goto again;
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int write_id_mapping(enum idmap_type type, pid_t pid, const char *buf,
-> > +                         size_t buf_size)
-> > +{
-> > +     int fd;
-> > +     int ret;
-> > +     char path[4096];
-> > +
-> > +     if (type == GID_MAP) {
-> > +             int setgroups_fd;
-> > +
-> > +             snprintf(path, sizeof(path), "/proc/%d/setgroups", pid);
-> > +             setgroups_fd = open(path, O_WRONLY | O_CLOEXEC | O_NOFOLLOW);
-> > +             if (setgroups_fd < 0 && errno != ENOENT)
-> > +                     return -1;
-> > +
-> > +             if (setgroups_fd >= 0) {
-> > +                     ret = write_nointr(setgroups_fd, "deny", sizeof("deny") - 1);
-> > +                     close_prot_errno_disarm(setgroups_fd);
-> > +                     if (ret != sizeof("deny") - 1)
-> > +                             return -1;
-> > +             }
-> > +     }
-> > +
-> > +     switch (type) {
-> > +     case UID_MAP:
-> > +             ret = snprintf(path, sizeof(path), "/proc/%d/uid_map", pid);
-> > +             break;
-> > +     case GID_MAP:
-> > +             ret = snprintf(path, sizeof(path), "/proc/%d/gid_map", pid);
-> > +             break;
-> > +     default:
-> > +             return -1;
-> > +     }
-> > +     if (ret < 0 || ret >= sizeof(path))
-> > +             return -E2BIG;
-> > +
-> > +     fd = open(path, O_WRONLY | O_CLOEXEC | O_NOFOLLOW);
-> > +     if (fd < 0)
-> > +             return -1;
-> > +
-> > +     ret = write_nointr(fd, buf, buf_size);
-> > +     close_prot_errno_disarm(fd);
-> > +     if (ret != buf_size)
-> > +             return -1;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void change_userns(int syncfds[2])
-> > +{
-> > +     int ret;
-> > +     char buf;
-> > +
-> > +     close_prot_errno_disarm(syncfds[1]);
-> > +
-> > +     ret = unshare(CLONE_NEWUSER);
-> > +     if (ret < 0)
-> > +             ksft_exit_fail_msg("%s - Failed to unshare user namespace\n",
-> > +                                strerror(errno));
-> > +
-> > +     ret = write_nointr(syncfds[0], "1", 1);
-> > +     if (ret != 1)
-> > +             ksft_exit_fail_msg("write_nointr() failed\n");
-> > +
-> > +     ret = read_nointr(syncfds[0], &buf, 1);
-> > +     if (ret != 1)
-> > +             ksft_exit_fail_msg("read_nointr() failed\n");
-> > +
-> > +     close_prot_errno_disarm(syncfds[0]);
-> > +
-> > +     if (setid_userns_root())
-> > +             ksft_exit_fail_msg("setid_userns_root() failed");
-> > +}
-> > +
-> > +static void change_idmaps(int syncfds[2], pid_t pid)
-> > +{
-> > +     int ret;
-> > +     char buf;
-> > +     char id_map[4096];
-> > +
-> > +     close_prot_errno_disarm(syncfds[0]);
-> > +
-> > +     ret = read_nointr(syncfds[1], &buf, 1);
-> > +     if (ret != 1)
-> > +             ksft_exit_fail_msg("read_nointr() failed\n");
-> > +
-> > +     snprintf(id_map, sizeof(id_map), "0 %d 1\n", getuid());
-> > +     ret = write_id_mapping(UID_MAP, pid, id_map, strlen(id_map));
-> > +     if (ret)
-> > +             ksft_exit_fail_msg("write_id_mapping(UID_MAP) failed");
-> > +
-> > +     snprintf(id_map, sizeof(id_map), "0 %d 1\n", getgid());
-> > +     ret = write_id_mapping(GID_MAP, pid, id_map, strlen(id_map));
-> > +     if (ret)
-> > +             ksft_exit_fail_msg("write_id_mapping(GID_MAP) failed");
-> > +
-> > +     ret = write_nointr(syncfds[1], "1", 1);
-> > +     if (ret != 1)
-> > +             ksft_exit_fail_msg("write_nointr() failed");
-> > +
-> > +     close_prot_errno_disarm(syncfds[1]);
-> > +}
-> > +
-> > +static void *binder_version_thread(void *data)
-> > +{
-> > +     int fd = PTR_TO_INT(data);
-> > +     struct binder_version version = { 0 };
-> > +     int ret;
-> > +
-> > +     ret = ioctl(fd, BINDER_VERSION, &version);
-> > +     if (ret < 0)
-> > +             ksft_print_msg("%s - Failed to open perform BINDER_VERSION request\n", strerror(errno));
-> > +
-> > +     pthread_exit(data);
-> > +}
-> > +
-> > +/*
-> > + * Regression test:
-> > + * 2669b8b0c798 ("binder: prevent UAF for binderfs devices")
-> > + * f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-> > + * 211b64e4b5b6 ("binderfs: use refcount for binder control devices too")
-> > + */
-> > +TEST(binderfs_stress)
-> > +{
-> > +     int fds[1000];
-> > +     int syncfds[2];
-> > +     pid_t pid;
-> > +     int fd, ret;
-> > +     size_t len;
-> > +     struct binderfs_device device = { 0 };
-> > +     char binderfs_mntpt[] = P_tmpdir "/binderfs_XXXXXX",
-> > +             device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") + BINDERFS_MAX_NAME];
-> > +
-> > +     ret = socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, syncfds);
-> > +     if (ret < 0)
-> > +             ksft_exit_fail_msg("%s - Failed to create socket pair", strerror(errno));
-> > +
-> > +     pid = fork();
-> > +     if (pid < 0) {
-> > +             close_prot_errno_disarm(syncfds[0]);
-> > +             close_prot_errno_disarm(syncfds[1]);
-> > +             ksft_exit_fail_msg("%s - Failed to fork", strerror(errno));
-> > +     }
-> > +
-> > +     if (pid == 0) {
-> > +             int i, j, k, nthreads;
-> > +             pthread_attr_t attr;
-> > +             pthread_t threads[DEFAULT_THREADS];
-> > +             change_userns(syncfds);
-> > +             change_mountns();
-> > +
-> > +             if (!mkdtemp(binderfs_mntpt))
-> > +                     log_exit("%s - Failed to create binderfs mountpoint\n",
-> > +                              strerror(errno));
-> > +
-> > +             ret = mount(NULL, binderfs_mntpt, "binder", 0, 0);
-> > +             if (ret < 0)
-> > +                     log_exit("%s - Failed to mount binderfs\n", strerror(errno));
-> > +
-> > +             for (int i = 0; i < ARRAY_SIZE(fds); i++) {
-> > +
-> > +                     snprintf(device_path, sizeof(device_path),
-> > +                              "%s/binder-control", binderfs_mntpt);
-> > +                     fd = open(device_path, O_RDONLY | O_CLOEXEC);
-> > +                     if (fd < 0)
-> > +                             log_exit("%s - Failed to open binder-control device\n", strerror(errno));
-> > +
-> > +                     memset(&device, 0, sizeof(device));
-> > +                     snprintf(device.name, sizeof(device.name), "%d", i);
-> > +                     ret = ioctl(fd, BINDER_CTL_ADD, &device);
-> > +                     close_prot_errno_disarm(fd);
-> > +                     if (ret < 0)
-> > +                             log_exit("%s - Failed to allocate new binder device\n", strerror(errno));
-> > +
-> > +                     snprintf(device_path, sizeof(device_path), "%s/%d",
-> > +                              binderfs_mntpt, i);
-> > +                     fds[i] = open(device_path, O_RDONLY | O_CLOEXEC);
-> > +                     if (fds[i] < 0)
-> > +                             log_exit("%s - Failed to open binder device\n", strerror(errno));
-> > +             }
-> > +
-> > +             ret = umount2(binderfs_mntpt, MNT_DETACH);
-> > +             rmdir_protect_errno(binderfs_mntpt);
-> > +             if (ret < 0)
-> > +                     log_exit("%s - Failed to unmount binderfs\n", strerror(errno));
-> > +
-> > +             nthreads = get_nprocs_conf();
-> > +             if (nthreads > DEFAULT_THREADS)
-> > +                     nthreads = DEFAULT_THREADS;
-> > +
-> > +             pthread_attr_init(&attr);
-> > +             for (k = 0; k < ARRAY_SIZE(fds); k++) {
-> > +                     for (i = 0; i < nthreads; i++) {
-> > +                             ret = pthread_create(&threads[i], &attr, binder_version_thread, INT_TO_PTR(fds[k]));
-> > +                             if (ret) {
-> > +                                     ksft_print_msg("%s - Failed to create thread %d\n", strerror(errno), i);
-> > +                                     break;
-> > +                             }
-> > +                     }
-> > +
-> > +                     for (j = 0; j < i; j++) {
-> > +                             void *fdptr = NULL;
-> > +
-> > +                             ret = pthread_join(threads[j], &fdptr);
-> > +                             if (ret)
-> > +                                     ksft_print_msg("%s - Failed to join thread %d for fd %d\n", strerror(errno), j, PTR_TO_INT(fdptr));
-> > +                     }
-> > +             }
-> > +             pthread_attr_destroy(&attr);
-> > +
-> > +             for (k = 0; k < ARRAY_SIZE(fds); k++)
-> > +                     close(fds[k]);
-> > +
-> > +             exit(EXIT_SUCCESS);
-> > +     }
-> > +
-> > +     change_idmaps(syncfds, pid);
-> > +
-> > +     ret = wait_for_pid(pid);
-> > +     if (ret)
-> > +             ksft_exit_fail_msg("wait_for_pid() failed");
-> > +}
-> > +
-> >  TEST(binderfs_test_privileged)
-> >  {
-> >       if (geteuid() != 0)
-> > @@ -264,10 +477,37 @@ TEST(binderfs_test_privileged)
-> >
-> >  TEST(binderfs_test_unprivileged)
-> >  {
-> > -     change_to_userns();
-> > +     int ret;
-> > +     int syncfds[2];
-> > +     pid_t pid;
-> >
-> > -     if (__do_binderfs_test() == 1)
-> > -             XFAIL(return, "The Android binderfs filesystem is not available");
-> > +     ret = socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, syncfds);
-> > +     if (ret < 0)
-> > +             ksft_exit_fail_msg("%s - Failed to create socket pair", strerror(errno));
-> > +
-> > +     pid = fork();
-> > +     if (pid < 0) {
-> > +             close_prot_errno_disarm(syncfds[0]);
-> > +             close_prot_errno_disarm(syncfds[1]);
-> > +             ksft_exit_fail_msg("%s - Failed to fork", strerror(errno));
-> > +     }
-> > +
-> > +     if (pid == 0) {
-> > +             change_userns(syncfds);
-> > +             if (__do_binderfs_test() == 1)
-> > +                     exit(2);
-> > +             exit(EXIT_SUCCESS);
-> > +     }
-> > +
-> > +     change_idmaps(syncfds, pid);
-> > +
-> > +     ret = wait_for_pid(pid);
-> > +     if (ret) {
-> > +             if (ret == 2)
-> > +                     XFAIL(return, "The Android binderfs filesystem is not available");
-> > +             else
-> > +                     ksft_exit_fail_msg("wait_for_pid() failed");
-> > +     }
-> >  }
-> >
-> >  TEST_HARNESS_MAIN
-> > --
-> > 2.25.1
-> >
->
-> --
-> Kees Cook
+I think it would be worth spelling out what the 'acquire' is needed
+for.  We seem to have a general policy of requiring comment to explain
+the presence of barriers.
+
+  The 'acquire' on fl_blocker guarantees two things.
+  1/ that fl_blocked_requests can be tested locklessly. If something was
+     recently added to that list it must have been in a locked region
+     *before* the locked region when fl_blocker was set to NULL.
+  2/ that no other thread is accessing 'waiter', so it is safe to free it.
+      __locks_wake_up_blocks is careful not to touch waiter after
+      fl_blocker is released.=20=20
+=20=20
+
+> +	 */
+> +	if (!smp_load_acquire(&waiter->fl_blocker) &&
+> +	    list_empty(&waiter->fl_blocked_requests))
+> +		return status;
+> +
+>  	spin_lock(&blocked_lock_lock);
+>  	if (waiter->fl_blocker)
+>  		status =3D 0;
+>  	__locks_wake_up_blocks(waiter);
+>  	__locks_delete_block(waiter);
+> +
+> +	/*
+> +	 * Tell the world we're done with it - see comment at top
+> +	 * of this function
+
+This comment might be misleading.  The world doesn't care.
+Only this thread cares where ->fl_blocker is NULL.  We need the release
+semantics when some *other* thread sets fl_blocker to NULL, not when
+this thread does.
+I don't think we need to spell that out and I'm not against using
+store_release here, but locks_delete_block cannot race with itself, so
+referring to the comment at the top of this function is misleading.
+
+So:
+  Reviewed-by: NeilBrown <neilb@suse.de>
+
+but I'm not totally happy with the comments.
+
+Thanks,
+NeilBrown
+
+
+> +	 */
+> +	smp_store_release(&waiter->fl_blocker, NULL);
+>  	spin_unlock(&blocked_lock_lock);
+>  	return status;
+>  }
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5wAZEACgkQOeye3VZi
+gbkp1hAAvcReTfAMi662+qaArjpYDm+EphVfKwaUj2/HDfd5H9uZYVuAcg35JN1s
+7sWlQXHxQvijoF5Eo5mu3v6pqu63EdxWK2i1bcOZQ8VcGpmY0DF+448idlYdLQ2C
+dIp9PrhiFdcutLg9DtV84mH6rjWqhE9whiW7StmUWcgGs1ow5flloLefIVNfzz1n
+ndoZJuLhim93l1fQD2CWDZih5Trr6r/gtmUQUqHjqfGMH92gZbIdm2VZWDBeD2QS
+Rcyyi5GOWL/4zFjz5iLGHgVAo6nk7SkJTy0c2GdsnSse1ZZ1U5DKfFiah5eYvrcy
+hrCkosQcKzsbKUrYO3PqtUzi6R74iZSqIZHvqbOW3YCqlcBKfsc7bzP17mv5I7Xq
+T3z9mtPYx8REv89e+LGUzuXokXt5MVmP1bfPM513x7QTptNWIDj0JH7+SMpWeiYR
+ZrHWmNK4sRoA3wG858KbVmQl/DLXtvCrnIFHqo43AXAPjiEHxM3YBGstf7PyorlZ
+6qfK6vlgw82YAhWXnh5i/fg3Mtw5WEPEi7AUJ44btmhgw1XbzfoJQUEnVPssmjyZ
+9nKdygR9GWsPFvAQJBr3pdpkPl/1TL8olJLj4EDBkL0lpnqNLZegfvG9d1V0Icjs
+zHeUOFo97uGmJgkSHEfGK8e7IMQQaq7zbVoOZJWv74Sw6MsP7lo=
+=M9Ll
+-----END PGP SIGNATURE-----
+--=-=-=--
