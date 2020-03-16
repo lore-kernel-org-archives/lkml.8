@@ -2,91 +2,117 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00088C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECB0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA6E20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 719CD20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:08:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J3qYEiBT"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="OK0QZP+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbgCPPHe (ORCPT
+        id S1731810AbgCPPIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:07:34 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:59202 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731810AbgCPPHd (ORCPT
+        Mon, 16 Mar 2020 11:08:11 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:52565 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731688AbgCPPIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:07:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584371253; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=I74FzD8gT42MrBJOC+YUJAHq1MUTpP7zxvPx0mJUftQ=;
- b=J3qYEiBToEpwwlVrAK431NJ5oBbt+Zhbl5nyasgEPTHTHVYdlpDbR9w279KMkFIEXoAz+eii
- 5AYeWBEZxmnohoGduJ/8n4qhgWqljj0e1wMVO23Cq2+CPGJPfC6rnU42nWay3KpjJReqmkem
- uvSh5kL1Yq0f+N5V3SZiZ+cILTk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6f9623.7f69d522ab20-smtp-out-n01;
- Mon, 16 Mar 2020 15:07:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2E512C433CB; Mon, 16 Mar 2020 15:07:14 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bgodavar)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94B9CC44791;
-        Mon, 16 Mar 2020 15:07:13 +0000 (UTC)
+        Mon, 16 Mar 2020 11:08:10 -0400
+Received: by mail-pj1-f67.google.com with SMTP id ng8so1521416pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SueAxX5eGkVwaiqNpop9oq5H6n/zweDvWrtavlfgylY=;
+        b=OK0QZP+iaxu4V61Q+ur02KwyU6iEqC36paQ8AvV6u8bQ5aiakL8fpQeZym9hJ+TxEG
+         yF2h9LjKGAtvRG4XmZtFKVGsxprDgxXFcb/fq3SL1bfTPtfbhAvwSe066pLBWvJ97MkI
+         Orh2ySIDEQcvdIcbk5bx8E74isNPevMyu3RUMnyayyHH1rxnF8h4AUdGMjW4MpwNTD5y
+         0F6qieajinziIRvT+08kjw0mnH79Sk4YiWcvR+ZUd5Rs7KUj/Ezjhyn5KGe+z31wPGjM
+         SAL2OvCGdtMxn7ssOqCFsFelS7l2mNAKlAJ8m5dntO2LOfLWucMbVdJ9eFJdisfa1mTx
+         ClVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SueAxX5eGkVwaiqNpop9oq5H6n/zweDvWrtavlfgylY=;
+        b=nhvmVlIaIJziWXz6v2PNO7wvUAmeOQOYKkJ7LBpN9EEfDYKD7cQEiMLrtsCMD7X7Di
+         5xUs2ndSUDxD+QKm5XgnuyDrLRq/7tG4n/7AG/tezJc4sqdh3gC9TBAuL/LaGBcR8Yi8
+         jIZQsYGasn4jmG8zjCxK1EDL2cyk1bRQKyAoUVAoraXuX/HyCnZFZMEgBdfDpSf14xiJ
+         g6vBRF2Qzpx9LaV0WX7kn09tTyEvEAQqzBWtcQEsIPO6mrhOTGm+W70HJRqVJyUJVuL4
+         Hd81byao1r0R9EF93shRIZFnr+bhXEY75TDP76BbimEYSiFqUHrpbLx1aj4ePYm3BpdH
+         x6oA==
+X-Gm-Message-State: ANhLgQ2KKg91NsoEB0dOpON5df0NDVmlBTCEZs4SqgmGG/EME0bL25kH
+        Broj/rbqzhC1o3g4bXzkAH+Hkw==
+X-Google-Smtp-Source: ADFU+vtG3XzehIqqMBGu/eDH7NBJ2L35kdPeTQgmGBiEeCXw8j9V44Fw4/LJnEx/j/HnLSnNs5lJSw==
+X-Received: by 2002:a17:902:421:: with SMTP id 30mr5034500ple.271.1584371289283;
+        Mon, 16 Mar 2020 08:08:09 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id a18sm238701pfr.109.2020.03.16.08.08.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2020 08:08:08 -0700 (PDT)
+Subject: Re: [GIT PULL] Floppy cleanups for next
+To:     efremov@linux.com
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Willy Tarreau <w@1wt.eu>
+References: <57ce0ee0-839c-a889-0bc0-ec46985e76d3@linux.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6f4fd061-a47e-7de5-df6e-c3002beedee0@kernel.dk>
+Date:   Mon, 16 Mar 2020 09:08:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <57ce0ee0-839c-a889-0bc0-ec46985e76d3@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 16 Mar 2020 20:37:13 +0530
-From:   bgodavar@codeaurora.org
-To:     Rocky Liao <rjliao@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, c-hbandi@codeaurora.org,
-        hemantg@codeaurora.org, mka@chromium.org
-Subject: Re: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QCA chip QCA6390
-In-Reply-To: <20200314094328.3331-2-rjliao@codeaurora.org>
-References: <20200314094328.3331-1-rjliao@codeaurora.org>
- <20200314094328.3331-2-rjliao@codeaurora.org>
-Message-ID: <1ac67f48f34bc91e89a1b3a5d1c23453@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-14 15:13, Rocky Liao wrote:
-> This patch adds compatible string for the QCA chip QCA6390.
+On 3/16/20 4:47 AM, Denis Efremov wrote:
+> Hi Jens,
 > 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
->  1 file changed, 1 insertion(+)
+> The following changes since commit 5d50c8f405bf91d9d9a48628fde0f2f4ff069d7b:
 > 
-> diff --git
-> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> index beca6466d59a..badf597c0e58 100644
-> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> @@ -13,6 +13,7 @@ Required properties:
->     * "qcom,wcn3990-bt"
->     * "qcom,wcn3991-bt"
->     * "qcom,wcn3998-bt"
-> +   * "qcom,qca6390-bt"
+>   Merge branch 'for-5.7/io_uring' into for-next (2020-03-14 17:20:45 -0600)
 > 
+> are available in the Git repository at:
+> 
+>   https://github.com/evdenis/linux-floppy tags/floppy-for-5.7
+> 
+> Please pull
+> 
+> ----------------------------------------------------------------
+> Floppy patches for 5.7
+> 
+> Cleanups from Willy Tarreau:
+>   - expansion of macros referencing global or local variables with
+>     equivalent code
+>   - removal of incomplete support for second FDC from ARM code
+>   - renaming the "fdc" global variable to "current_fdc" to differ
+>     between global and local context
+> 
+> Changes were compile tested on arm, x86 arches. Changes introduce
+> no binary difference on x86 arch (before and after the patches).
+> On arm, incomplete support for second FDC removed. This set of
+> patches with commit 2e90ca68 ("floppy: check FDC index for errors
+> before assigning it") was tested with syzkaller and simple
+> write/read/format tests for no new issues.
+> 
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-[Bala]: Can you add a example snippet of QCA6390 dts
+Thanks - I hand applied the series, my for-next branch isn't really
+stable, only the parent branches are.
 
->  Optional properties for compatible string qcom,qca6174-bt:
+-- 
+Jens Axboe
+
