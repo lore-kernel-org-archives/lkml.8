@@ -2,73 +2,156 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F07C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D522C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B833B20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E886B20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:21:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="Qdlvvbcj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgCPIVo (ORCPT
+        id S1730109AbgCPIVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 16 Mar 2020 04:21:44 -0400
-Received: from mga11.intel.com ([192.55.52.93]:38294 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730034AbgCPIVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35474 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730026AbgCPIVn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Mar 2020 04:21:43 -0400
-IronPort-SDR: z89UwK3TC8ejhNIappCF+/V0a+IC0ae6F1+emltIEJGVw8TfxdsX/jqgCpd4q08N5Gq+YCiUY7
- /7+YxyQhdxFw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 01:21:43 -0700
-IronPort-SDR: /jz3pzFR88ralGOhiHgtDcnqVIsUJvQ1UVaMlktLkLHHgJQ/i8dE+UW2kS8dJJhoEaFUfZlJt7
- 6wh7XWux9E1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,559,1574150400"; 
-   d="scan'208";a="244069261"
-Received: from eliteleevi.tm.intel.com ([10.237.54.20])
-  by orsmga003.jf.intel.com with ESMTP; 16 Mar 2020 01:21:41 -0700
-Date:   Mon, 16 Mar 2020 10:21:40 +0200 (EET)
-From:   Kai Vehmanen <kai.vehmanen@linux.intel.com>
-X-X-Sender: kvehmane@eliteleevi.tm.intel.com
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: linux-next: Fixes tag needs some work in the sound-asoc tree
-In-Reply-To: <20200314215023.36d41bb9@canb.auug.org.au>
-Message-ID: <alpine.DEB.2.21.2003160953020.2957@eliteleevi.tm.intel.com>
-References: <20200314215023.36d41bb9@canb.auug.org.au>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
+Received: by mail-io1-f65.google.com with SMTP id h8so16207990iob.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:21:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fZYO6PdRUaR2GzeYHtNLWRoMQgJ9+WJyqfFclTBz8Is=;
+        b=Qdlvvbcj/qr4QzRGGZQWnxl9bC8JQb/EovzyCFwHoSeSq0PfsxKGU8msQitfHR6YHd
+         JmAOwBxsdqyoTq07A6d+nkzEJxEhdMMOyC6iUvMBxrmz1c6j8VU6IGatnTIaD5zEWRMe
+         DjkrQkqHgcGbO6Th22lb92dvS9hAWERdo5K+Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fZYO6PdRUaR2GzeYHtNLWRoMQgJ9+WJyqfFclTBz8Is=;
+        b=e5JicvrIia8G4t3eAU3ez+i7SW70rr2oWWDvQQm70FIT1t/up2nkxapynKfN78GI/+
+         O68RTmicWSEVj+7WPqiDzR33ndYAeWfbn+FYAvpkPBRhaPI+Iypk5Z8cv7q42eA/W6zc
+         tTaSemscqlSbRFK22YFIoTjt45epMjzSkXnsnDMe7SLiaC9z7VMiJLRbf1UAkap2BZMU
+         8BlOFBGx8Xy0+UcU+uhlTrtTFfVHZH0y/caSf8Z+U5lNID2brrO9hy+Sa4/jinXx04Ax
+         UP0AOSZtJ923bqsDhLW8XL2nekdpcSYVBsqX7L9tiCMWdio4xlcInGhQ8em49N++ALws
+         X9jQ==
+X-Gm-Message-State: ANhLgQ3lg4VbKIZv0ERiN1hFHCd3xN5BFkWfQ3sabG5EaIOQyMV9vL22
+        ru2NbmeIwvLpX6Bv1fjwHrBzQmfxx+s17BWJI28AzA==
+X-Google-Smtp-Source: ADFU+vusngpc29O5m0Xi8COoflqmamL0gNziA8vMQem/YIDZwQGt/+dNb/hGQXkepJsvZCJE/vipLoUtsvBzvFgREag=
+X-Received: by 2002:a05:6638:103:: with SMTP id x3mr12142684jao.62.1584346902777;
+ Mon, 16 Mar 2020 01:21:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <5e668b89.1c69fb81.d7e4f.0f61@mx.google.com> <20200315094604.62dc96be@archlinux>
+In-Reply-To: <20200315094604.62dc96be@archlinux>
+From:   Matt Ranostay <matt.ranostay@konsulko.com>
+Date:   Mon, 16 Mar 2020 01:21:32 -0700
+Message-ID: <CAJCx=gkZEDa5vg1R2gta9vERy2+W4vst0et0THO9Oth3d3Yzfg@mail.gmail.com>
+Subject: Re: [PATCH] iio: health: max30100: remove mlock usage
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Mar 15, 2020 at 2:46 AM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Tue, 10 Mar 2020 00:01:28 +0530
+> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+>
+> > Use local lock instead of indio_dev's mlock.
+> > The mlock was being used to protect local driver state thus using the
+> > local lock is a better option here.
+> >
+> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+>
+> Matt.  Definitely need your input on this.
+>
+> > ---
+> >  drivers/iio/health/max30100.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+> > index 84010501762d..8ddc4649547d 100644
+> > --- a/drivers/iio/health/max30100.c
+> > +++ b/drivers/iio/health/max30100.c
+> > @@ -388,7 +388,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+> >                * Temperature reading can only be acquired while engine
+> >                * is running
+> >                */
+> > -             mutex_lock(&indio_dev->mlock);
+> > +             mutex_lock(&data->lock);
+>
+> Hmm.. It's another complex one.  What is actually being protected here is
+> the buffer state, but not to take it exclusively like claim_direct does.
+>
+> Here we need the inverse, we want to ensure we are 'not' in the direct
+> mode because this hardware requires the buffer to be running to read the
+> temperature.
+>
+> That is the sort of interface that is going to get userspace very
+> confused.
+>
+> Matt, normally what I'd suggest here is that the temperature read should:
+>
+> 1) Claim direct mode, if it fails then do the dance you have here
+> (with more comments to explain why you are taking an internal lock)
+> 2) Start up capture as if we were in buffered mode
+> 3) Grab that temp
+> 4) stop capture to return to non buffered mode.
+> 5) Release direct mode.
+>
+> I guess we decided it wasn't worth the hassle.
+>
+> So Rohit.  This one probably needs a comment rather than any change.
+> We 'could' add a 'hold_buffered_mode' function that takes the mlock,
+> verifies we are in buffered mode and continues to hold the lock
+> until the 'release_buffered_mode'.  However, I'm not sure any other
+> drivers do this particular dance, so clear commenting in the driver
+> might be enough.   Should we ever change how mlock is used in the
+> core, we'd have to fix this driver up as well.
+>
+> Hmm.  This is really hammering home that perhaps all the remaining
+> mlock cases are 'hard'.
 
-On Sat, 14 Mar 2020, Stephen Rothwell wrote:
+Heh really had to look this over what I was doing since it has been
+almost half a decade now :).
 
-> n commit
->   5c82813ce43e ("ASoC: Intel: boards: drop reverse deps for SND_HDA_CODEC_HDMI")
-> 
-> Fixes tag
->   Fixes: aa2b4a5 ('ASoC: Intel: boards: fix incorrect HDMI Kconfig dependency')[
-> 
->  - SHA1 should be at least 12 digits long
+Think locking that mutex was only to prevent another read during the
+temp reading, and not really
+not sure how effective that is actually. Especially since the I2C
+subsystem should handle those reads
+in a queue like fashion.
 
-ack, thanks, this is a plain oversight -- other fixes tags from same 
-author (i.e. me) as well as other use of the tag in the sound-asoc tree 
-appear fine. So my bad, sorry!
+- Matt
 
-Br, Kai
+>
+> Thanks,
+>
+> Jonathan
+>
+> >
+> >               if (!iio_buffer_enabled(indio_dev))
+> >                       ret = -EAGAIN;
+> > @@ -399,7 +399,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+> >
+> >               }
+> >
+> > -             mutex_unlock(&indio_dev->mlock);
+> > +             mutex_unlock(&data->lock);
+> >               break;
+> >       case IIO_CHAN_INFO_SCALE:
+> >               *val = 1;  /* 0.0625 */
+>
