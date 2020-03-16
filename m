@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBEEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A183C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A9F206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312EE206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326465;
-	bh=glIX5Z7bJqEDQ5JgvMe9Z3yqwXPHOV3ppkP4+fwmd/g=;
+	s=default; t=1584326469;
+	bh=6h5MTVyaKyz4i4lsW9DXrzFXoUBWZQhfBhzWyfVeCLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hIJgaaDL2Cby/qqOFzomPgI0O1koa1Zm8xmEGKAbto6WCJt/7tB78mHdmImdmyOFi
-	 S4/10QlwY2/rqMvlgEtRjp0Q1j/82zaAT1bl4rQN+Qq5heUHAJqpxON8NK67CXjmtE
-	 najfgxqvysToIPFpJJtavZpPFIeY1WOPR4KLsYSU=
+	b=p7CfCV7gxexVN4N2Ld78yRrhKTDZTTSwY9tOGtdRs7cLDBhyCbbatBhUX/kGSZhFZ
+	 5wjAtAimQrcfdH5IqkJpyMqCW9iZUXPuEMVnCewuvZPZ/u+MVPrTvR7wSTA4eZI7hg
+	 88p7iYmZY4CB9iDDl8RsXY94ccMj8xBI3Bj8DYPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbgCPClD (ORCPT
+        id S1730522AbgCPClI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:41:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36764 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:41:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729584AbgCPCdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:33:49 -0400
+        id S1729632AbgCPCds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:33:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FB1E20737;
-        Mon, 16 Mar 2020 02:33:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE76C20746;
+        Mon, 16 Mar 2020 02:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326029;
-        bh=glIX5Z7bJqEDQ5JgvMe9Z3yqwXPHOV3ppkP4+fwmd/g=;
+        s=default; t=1584326027;
+        bh=6h5MTVyaKyz4i4lsW9DXrzFXoUBWZQhfBhzWyfVeCLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MExo3ygi1aa5Pbf/WpfwN9WQD6IwYAl+52M/EV5jch7Pu3mgrnvb2GIm95TKXDDAU
-         Pv75Y/7SSXUJjkh66yPCIVq8rdVMdt9SorUV/NOjYDwXALsXGlVLSCwvnp16/jHn5t
-         xTknl9+VbDgNkuw9xDPELxufPAknkJ8mbhC7IIMs=
+        b=URk591NVGcVyVwEB0aUr5wl0htT9LUfliNxr4ZJX46qkJGXvRS3CAVzFdFiS5hPL3
+         pGbzmHH1BsnLNG79Spp/wWL/i2D5IcKBu23kBiSKwnj6TTbn3L4m+y77h5KUkR7yBF
+         1j9uKATdRlNZfj0sGeO1BnX0AgL4AP9JWI+cRwJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 24/41] ARM: bcm2835_defconfig: Explicitly restore CONFIG_DEBUG_FS
-Date:   Sun, 15 Mar 2020 22:33:02 -0400
-Message-Id: <20200316023319.749-24-sashal@kernel.org>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 23/41] io-wq: fix IO_WQ_WORK_NO_CANCEL cancellation
+Date:   Sun, 15 Mar 2020 22:33:01 -0400
+Message-Id: <20200316023319.749-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
@@ -63,35 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit 1bba60808404b873defa0f3560497eb2e8fe86b8 ]
+[ Upstream commit fc04c39bae01a607454f7619665309870c60937a ]
 
-The commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS dependency")
-accidentally dropped the DEBUG FS support in bcm2835_defconfig. So
-restore the config as before the commit.
+To cancel a work, io-wq sets IO_WQ_WORK_CANCEL and executes the
+callback. However, IO_WQ_WORK_NO_CANCEL works will just execute and may
+return next work, which will be ignored and lost.
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Fixes: 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS dependency")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Cancel the whole link.
+
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/configs/bcm2835_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ fs/io-wq.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
-index 519ff58e67b30..0afcae9f7cf8a 100644
---- a/arch/arm/configs/bcm2835_defconfig
-+++ b/arch/arm/configs/bcm2835_defconfig
-@@ -178,6 +178,7 @@ CONFIG_SCHED_TRACER=y
- CONFIG_STACK_TRACER=y
- CONFIG_FUNCTION_PROFILER=y
- CONFIG_TEST_KSTRTOX=y
-+CONFIG_DEBUG_FS=y
- CONFIG_KGDB=y
- CONFIG_KGDB_KDB=y
- CONFIG_STRICT_DEVMEM=y
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index 25ffb6685baea..1f46fe663b287 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -733,6 +733,17 @@ static bool io_wq_can_queue(struct io_wqe *wqe, struct io_wqe_acct *acct,
+ 	return true;
+ }
+ 
++static void io_run_cancel(struct io_wq_work *work)
++{
++	do {
++		struct io_wq_work *old_work = work;
++
++		work->flags |= IO_WQ_WORK_CANCEL;
++		work->func(&work);
++		work = (work == old_work) ? NULL : work;
++	} while (work);
++}
++
+ static void io_wqe_enqueue(struct io_wqe *wqe, struct io_wq_work *work)
+ {
+ 	struct io_wqe_acct *acct = io_work_get_acct(wqe, work);
+@@ -745,8 +756,7 @@ static void io_wqe_enqueue(struct io_wqe *wqe, struct io_wq_work *work)
+ 	 * It's close enough to not be an issue, fork() has the same delay.
+ 	 */
+ 	if (unlikely(!io_wq_can_queue(wqe, acct, work))) {
+-		work->flags |= IO_WQ_WORK_CANCEL;
+-		work->func(&work);
++		io_run_cancel(work);
+ 		return;
+ 	}
+ 
+@@ -882,8 +892,7 @@ static enum io_wq_cancel io_wqe_cancel_cb_work(struct io_wqe *wqe,
+ 	spin_unlock_irqrestore(&wqe->lock, flags);
+ 
+ 	if (found) {
+-		work->flags |= IO_WQ_WORK_CANCEL;
+-		work->func(&work);
++		io_run_cancel(work);
+ 		return IO_WQ_CANCEL_OK;
+ 	}
+ 
+@@ -957,8 +966,7 @@ static enum io_wq_cancel io_wqe_cancel_work(struct io_wqe *wqe,
+ 	spin_unlock_irqrestore(&wqe->lock, flags);
+ 
+ 	if (found) {
+-		work->flags |= IO_WQ_WORK_CANCEL;
+-		work->func(&work);
++		io_run_cancel(work);
+ 		return IO_WQ_CANCEL_OK;
+ 	}
+ 
 -- 
 2.20.1
 
