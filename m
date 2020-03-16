@@ -2,143 +2,154 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D409C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910CDC0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA5220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCF02071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bLP9tzXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731987AbgCPPtq (ORCPT
+        id S1732004AbgCPPuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:49:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:51048 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731924AbgCPPtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:49:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9B171FB;
-        Mon, 16 Mar 2020 08:49:44 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C67CB3F534;
-        Mon, 16 Mar 2020 08:49:41 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 15:49:31 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
-Message-ID: <20200316154930.GG3005@mbp>
-References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
- <20200313154345.56760-19-vincenzo.frascino@arm.com>
- <20200315182950.GB32205@mbp>
- <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
- <20200316103437.GD3005@mbp>
- <77a2e91a-58f4-3ba3-9eef-42d6a8faf859@arm.com>
- <20200316112205.GE3005@mbp>
- <9a0a9285-8a45-4f65-3a83-813cabd0f0d3@arm.com>
- <20200316144346.GF3005@mbp>
- <427064ee-45df-233c-0281-69e3d62ba784@arm.com>
+        Mon, 16 Mar 2020 11:50:00 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36135 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731914AbgCPPt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:49:59 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g62so18661181wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:49:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cOIEYtWNEzlYYthtD0spEjkukXqfmxlfoFYyEio2yD4=;
+        b=bLP9tzXHgsnZOO+gQY30NTwMxHujM+PxDf2Pr2BsRs9UN3PNl67882FriKQhyCzQBr
+         TQvoYRDzZIEuZjT7HWvj9ryRh0wafj4b7mSPg86iUfXDu3MNCvfAIbQ4I6SS/cLilfBh
+         zMVdnQIcxINkndSo9MyT7JC/g4ws4131+16aS9y6jaXhUaO7tb8k1sGg+cmElZUSjHvf
+         nKD3AWMMSBYWgumDkjJNP77sHEVHIJpLXozOmkpGlN6fzZlvjPS6WDKFGpj2t6vQjwFm
+         6iyRvLJuu8HH4z1PQSOJsYFBsODpIu2hXolpCRed+/OXwkJGe0xQdQ4Mvpx9JFxwkUU9
+         wcFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cOIEYtWNEzlYYthtD0spEjkukXqfmxlfoFYyEio2yD4=;
+        b=Q7c2K1/qBQeTQQE3+D3teEfhJ0bZZvIDm0Mldr2NU3rkjgA+c5Z81bJsNAF1mGs+IM
+         CtrDZIGyKTWl+Hxy6qoK6Hl4kEc1l3u+Y8FprOiZ4YoChkPXJt5q9a194kN4TU8Cryi3
+         dueEE303BduKtQWuLHDq6ErDwwg24rk9Zt4KWei264/7QaaLEV6U9jxyZOZXkHXOcCKh
+         wHxt+n1XSE96gfjMBKmtr+nQmrVLf6VbFexAaDDjL3l/0BC+0JksPLBdQzr+V66ygPXi
+         ZuVwKJAWax9IuqxrERCrHJ8FGWfyWaq2mQp2gHHof8qbqzLfy984nmpq52AabNOHJJPM
+         Yaqg==
+X-Gm-Message-State: ANhLgQ2FK8xrMl9g7O6cqEo1uC/2kTx0WwHC08e7lG3ZMXOYJVa7HQqB
+        3mp/kuFv2CFDrKXzbt7FbkNITA==
+X-Google-Smtp-Source: ADFU+vv4N7xQNm1wFNrIZmN2Kg+Ua4DIBj8t6C6sgaFA18dYvUkMu368tWpVIaA4w1ORNN6r5eo5hg==
+X-Received: by 2002:a1c:7c05:: with SMTP id x5mr28123545wmc.67.1584373796917;
+        Mon, 16 Mar 2020 08:49:56 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id 9sm127395wmx.32.2020.03.16.08.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 08:49:56 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 16:49:48 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        virtualization@lists.linux-foundation.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 09/15] iommu/arm-smmu-v3: Use accessor functions for
+ iommu private data
+Message-ID: <20200316154948.GJ304669@myrica>
+References: <20200310091229.29830-1-joro@8bytes.org>
+ <20200310091229.29830-10-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <427064ee-45df-233c-0281-69e3d62ba784@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200310091229.29830-10-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 03:33:30PM +0000, Vincenzo Frascino wrote:
-> On 3/16/20 2:43 PM, Catalin Marinas wrote[...]
-> >> To me does not seem optimized out. Which version of the compiler are you using?
-> > 
-> > I misread the #ifdef'ery in asm/processor.h. So with 4K pages,
-> > TASK_SIZE_32 is (1UL<<32)-PAGE_SIZE. However, with 64K pages _and_
-> > CONFIG_KUSER_HELPERS, TASK_SIZE_32 is 1UL<<32 and the check is removed
-> > by the compiler.
-> > 
-> > With the 4K build, __vdso_clock_gettime starts as:
-> > 
-> > 00000194 <__vdso_clock_gettime>:
-> >  194:   f511 5f80       cmn.w   r1, #4096       ; 0x1000
-> >  198:   d214            bcs.n   1c4 <__vdso_clock_gettime+0x30>
-> >  19a:   b5b0            push    {r4, r5, r7, lr}
-> >  ...
-> >  1c4:   f06f 000d       mvn.w   r0, #13
-> >  1c8:   4770            bx      lr
-> > 
-> > With 64K pages:
-> > 
-> > 00000194 <__vdso_clock_gettime>:
-> >  194:   b5b0            push    {r4, r5, r7, lr}
-> >  ...
-> >  1be:   bdb0            pop     {r4, r5, r7, pc}
-> > 
-> > I haven't tried but it's likely that the vdsotest fails with 64K pages
-> > and compat enabled (requires EXPERT).
+On Tue, Mar 10, 2020 at 10:12:23AM +0100, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> This makes more sense. Thanks for the clarification.
+> Make use of dev_iommu_priv_set/get() functions in the code.
 > 
-> I agree on the behavior of 64K pages and I think as well that the
-> "compatibility" issue is still there. However as you correctly stated in your
-> first email arm32 never supported 16K or 64K pages, hence I think we should not
-> be concerned about compatibility in this cases.
+> Tested-by: Hanjun Guo <guohanjun@huawei.com>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
-My point is that even with 4K pages it's not really compatibility. The
-test uses UINTPTR_MAX but on arm32 it would also fail with 0xc0000000.
-On arm64 compat, however, this value would pass just fine.
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-> To make it more explicit we could make COMPAT_VDSO on arm64 depend on
-> ARM64_4K_PAGES. What do you think?
-
-No, I don't see why we should add this limitation.
-
-> >> Please find below the list of errors for clock_gettime (similar for the other):
-> >>
-> >> passing UINTPTR_MAX to clock_gettime (VDSO): terminated by unexpected signal 7
-> >> clock-gettime-monotonic/abi: 1 failures/inconsistencies encountered
-> > 
-> > Ah, so it uses UINTPTR_MAX in the test. Fair enough but I don't think
-> > the arm64 check is entirely useful. On arm32, the check was meant to
-> > return -EFAULT for addresses beyond TASK_SIZE that may enter into the
-> > kernel or module space. On arm64 compat, the kernel space is well above
-> > the reach of the 32-bit code.
-> > 
-> > If you want to preserve some compatibility for this specific test, what
-> > about checking for wrapping around 0, I think it would make more sense.
-> > Something like:
-> > 
-> > 	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> Ok, sounds good to me. But it is something that this patch series inherited,
-> hence I would prefer to send a separate patch that introduces what you are
-> proposing and removes TASK_SIZE_32 from the headers. How does it sound?
-
-I'd rather avoid moving TASK_SIZE_32 unnecessarily. Just add a
-preparatory patch to your series for arm64 compat vdso and follow with
-the rest without moving TASK_SIZE_32 around.
-
--- 
-Catalin
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index aa3ac2a03807..2b68498dfb66 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2659,7 +2659,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>  	if (!fwspec)
+>  		return -ENOENT;
+>  
+> -	master = fwspec->iommu_priv;
+> +	master = dev_iommu_priv_get(dev);
+>  	smmu = master->smmu;
+>  
+>  	arm_smmu_detach_dev(master);
+> @@ -2795,7 +2795,7 @@ static int arm_smmu_add_device(struct device *dev)
+>  	if (!fwspec || fwspec->ops != &arm_smmu_ops)
+>  		return -ENODEV;
+>  
+> -	if (WARN_ON_ONCE(fwspec->iommu_priv))
+> +	if (WARN_ON_ONCE(dev_iommu_priv_get(dev)))
+>  		return -EBUSY;
+>  
+>  	smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
+> @@ -2810,7 +2810,7 @@ static int arm_smmu_add_device(struct device *dev)
+>  	master->smmu = smmu;
+>  	master->sids = fwspec->ids;
+>  	master->num_sids = fwspec->num_ids;
+> -	fwspec->iommu_priv = master;
+> +	dev_iommu_priv_set(dev, master);
+>  
+>  	/* Check the SIDs are in range of the SMMU and our stream table */
+>  	for (i = 0; i < master->num_sids; i++) {
+> @@ -2852,7 +2852,7 @@ static int arm_smmu_add_device(struct device *dev)
+>  	iommu_device_unlink(&smmu->iommu, dev);
+>  err_free_master:
+>  	kfree(master);
+> -	fwspec->iommu_priv = NULL;
+> +	dev_iommu_priv_set(dev, NULL);
+>  	return ret;
+>  }
+>  
+> @@ -2865,7 +2865,7 @@ static void arm_smmu_remove_device(struct device *dev)
+>  	if (!fwspec || fwspec->ops != &arm_smmu_ops)
+>  		return;
+>  
+> -	master = fwspec->iommu_priv;
+> +	master = dev_iommu_priv_get(dev);
+>  	smmu = master->smmu;
+>  	arm_smmu_detach_dev(master);
+>  	iommu_group_remove_device(dev);
+> -- 
+> 2.17.1
+> 
