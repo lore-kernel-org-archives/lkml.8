@@ -2,134 +2,71 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC2EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B24C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83698205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6DE820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732736AbgCPVyC (ORCPT
+        id S1732751AbgCPV6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:54:02 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:52766 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732636AbgCPVyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:54:02 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jDxgE-0004oM-6R; Mon, 16 Mar 2020 15:53:51 -0600
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20200313174701.148376-1-bigeasy@linutronix.de>
- <20200313174701.148376-4-bigeasy@linutronix.de>
- <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com>
- <87v9n4ccvp.fsf@nanos.tec.linutronix.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <39f2bd27-1a4a-f7ad-5d54-7fe133390cd0@deltatee.com>
-Date:   Mon, 16 Mar 2020 15:53:47 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <87v9n4ccvp.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
+        Mon, 16 Mar 2020 17:58:49 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:48446 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732652AbgCPV6t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 17:58:49 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 941D0156D1DB5;
+        Mon, 16 Mar 2020 14:58:48 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 14:58:47 -0700 (PDT)
+Message-Id: <20200316.145847.669961790477208036.davem@davemloft.net>
+To:     madalin.bucur@oss.nxp.com
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2 0/3] QorIQ DPAA ARM RDBs need internal delay on
+ RGMII
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
+References: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, torvalds@linux-foundation.org, rostedt@goodmis.org, joel@joelfernandes.org, paulmck@kernel.org, will@kernel.org, mingo@kernel.org, peterz@infradead.org, linux-kernel@vger.kernel.org, bigeasy@linutronix.de, tglx@linutronix.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 3/9] pci/switchtec: Don't abuse completion wait queue for
- poll
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Mar 2020 14:58:49 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Date: Mon, 16 Mar 2020 14:05:55 +0200
 
-
-On 2020-03-16 1:34 p.m., Thomas Gleixner wrote:
-> Logan Gunthorpe <logang@deltatee.com> writes:
->> On 2020-03-13 11:46 a.m., Sebastian Andrzej Siewior wrote:
->>>  1) It cannot work with EPOLLEXCLUSIVE
->>
->> Why? You don't explain this.
+> v2: used phy_interface_mode_is_rgmii() to identify RGMII
 > 
-> man epoll_ctt(2)
+> The QorIQ DPAA 1 based RDB boards require internal delay on
+> both Tx and Rx to be set. The patch set ensures all RGMII
+> modes are treated correctly by the FMan driver and sets the
+> phy-connection-type to "rgmii-id" to restore functionality.
+> Previously Rx internal delay was set by board pull-ups and
+> was left untouched by the PHY driver. Since commit
+> 1b3047b5208a80 ("net: phy: realtek: add support for
+> configuring the RX delay on RTL8211F") the Realtek 8211F PHY
+> driver has control over the RGMII RX delay and it is
+> disabling it for other modes than RGMII_RXID and RGMII_ID.
 > 
-> EPOLLEXCLUSIVE (since Linux 4.5)
-> 
->   Sets an exclusive wakeup mode for the epoll file descriptor that is
->   being attached to the target file descriptor, fd.  When a wakeup event
->   occurs and multiple epoll file descriptors are attached to the same
->   target file using EPOLLEXCLUSIVE, one or more of the epoll file
->   descriptors will receive an event with epoll_wait(2).
-> 
-> As this uses complete_all() there is no distinction possible, because
-> complete_all() wakes up everything.
-> 
->> And I don't see how this patch would change anything to do with the
->> call to poll_wait(). All you've done is open-code the completion.
-> 
-> wake_up_interruptible(x) resolves to: 
-> 
->      __wake_up(x, TASK_INTERRUPTIBLE, 1, NULL)
-> 
-> which wakes exactly 1 exclusive waiter.
-> 
-> Also the other way round is just working because the waker side uses
-> complete_all(). Why? Because completion internally defaults to exclusive
-> mode and complete() wakes exactly one exlusive waiter.
-> 
-> There is a conceptual difference and while it works for that particular
-> purpose to some extent it's not suitable as a general wait notification
-> construct.
+> Please note that u-boot in particular performs a fix-up of
+> the PHY connection type and will overwrite the values from
+> the Linux device tree. Another patch set was sent for u-boot
+> and one needs to apply that [1] to the boot loader, to ensure
+> this fix is complete, unless a different bootloader is used.
 
-Ok, I now understand this point. That's exceedingly subtle.
-
-I certainly would not agree that this qualifies as "seriously broken",
-and I'm not even sure I'd agree that this actually violates the
-semantics of poll() seeing the man page clearly states that with
-EPOLLEXCLUSIVE set, "one or more" pollers will be woken up. So waking up
-all of them is still allowed. Ensuring fewer pollers wake up is just an
-optimization to avoid the thundering herd problem which users of this
-interface are very unlikely to ever have (I can confidently tell you
-that none have this problem now).
-
-If we do want to say that all poll_wait() users *must* respect
-EPOLLEXCLUSIVE, we should at least have some documentation saying that
-combining poll_wait() with wake_up_all() (or similar) is not allowed. A
-*very* quick check finds there's at least a few drivers doing this:
-
-  drivers/char/ipmi/ipmb_dev_int.c
-  drivers/dma-buf/sync_file.c
-  drivers/gpu/vga/vgaarb.c
-
-(That's just looking at the drivers tree, up to "G".)
-
-Finally, since we seem to back to more reasonable discussion, I will
-make this point: it's fairly common for wait queue users to directly use
-the spinlock from within wait_queue_head_t without an interface (even
-completion.c does it). How are developers supposed to know when an
-interface is required and when it's not? Sometimes using
-"implementation" details interface-free is standard practice, but other
-times it's "yuck" and will illicit ire from other developers? Is it
-valid to use completion.wait.lock? Where's the line?
-
-Logan
-
-
+Series applied, thanks.
