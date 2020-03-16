@@ -2,156 +2,105 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D522C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A90C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E886B20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:21:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="Qdlvvbcj"
+	by mail.kernel.org (Postfix) with ESMTP id 08C922071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbgCPIVo (ORCPT
+        id S1730090AbgCPIXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:21:44 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35474 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730026AbgCPIVn (ORCPT
+        Mon, 16 Mar 2020 04:23:04 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:58117 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729996AbgCPIXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:21:43 -0400
-Received: by mail-io1-f65.google.com with SMTP id h8so16207990iob.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:21:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fZYO6PdRUaR2GzeYHtNLWRoMQgJ9+WJyqfFclTBz8Is=;
-        b=Qdlvvbcj/qr4QzRGGZQWnxl9bC8JQb/EovzyCFwHoSeSq0PfsxKGU8msQitfHR6YHd
-         JmAOwBxsdqyoTq07A6d+nkzEJxEhdMMOyC6iUvMBxrmz1c6j8VU6IGatnTIaD5zEWRMe
-         DjkrQkqHgcGbO6Th22lb92dvS9hAWERdo5K+Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fZYO6PdRUaR2GzeYHtNLWRoMQgJ9+WJyqfFclTBz8Is=;
-        b=e5JicvrIia8G4t3eAU3ez+i7SW70rr2oWWDvQQm70FIT1t/up2nkxapynKfN78GI/+
-         O68RTmicWSEVj+7WPqiDzR33ndYAeWfbn+FYAvpkPBRhaPI+Iypk5Z8cv7q42eA/W6zc
-         tTaSemscqlSbRFK22YFIoTjt45epMjzSkXnsnDMe7SLiaC9z7VMiJLRbf1UAkap2BZMU
-         8BlOFBGx8Xy0+UcU+uhlTrtTFfVHZH0y/caSf8Z+U5lNID2brrO9hy+Sa4/jinXx04Ax
-         UP0AOSZtJ923bqsDhLW8XL2nekdpcSYVBsqX7L9tiCMWdio4xlcInGhQ8em49N++ALws
-         X9jQ==
-X-Gm-Message-State: ANhLgQ3lg4VbKIZv0ERiN1hFHCd3xN5BFkWfQ3sabG5EaIOQyMV9vL22
-        ru2NbmeIwvLpX6Bv1fjwHrBzQmfxx+s17BWJI28AzA==
-X-Google-Smtp-Source: ADFU+vusngpc29O5m0Xi8COoflqmamL0gNziA8vMQem/YIDZwQGt/+dNb/hGQXkepJsvZCJE/vipLoUtsvBzvFgREag=
-X-Received: by 2002:a05:6638:103:: with SMTP id x3mr12142684jao.62.1584346902777;
- Mon, 16 Mar 2020 01:21:42 -0700 (PDT)
+        Mon, 16 Mar 2020 04:23:03 -0400
+Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N95qT-1jPBAJ3dQd-016BI8; Mon, 16 Mar 2020 09:23:01 +0100
+Received: by mail-qt1-f169.google.com with SMTP id i26so3623539qtq.8;
+        Mon, 16 Mar 2020 01:23:00 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3xyfcPRwFSzpeJHpB02bVNYnMix+hqaL2TAx+V5/DHrVCtMDwV
+        APA9BSIltVIHF3dEDKrOIaC7gTDksyZLSOuXI2A=
+X-Google-Smtp-Source: ADFU+vtvCxAlAeHfmkkAPmp7/hL77mUzkuyTzG3N03DevkjajATYqP8pbnWgan39uFZ96E87M222njLjT5t037hM4uU=
+X-Received: by 2002:ac8:6f6e:: with SMTP id u14mr3828514qtv.304.1584346979438;
+ Mon, 16 Mar 2020 01:22:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <5e668b89.1c69fb81.d7e4f.0f61@mx.google.com> <20200315094604.62dc96be@archlinux>
-In-Reply-To: <20200315094604.62dc96be@archlinux>
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-Date:   Mon, 16 Mar 2020 01:21:32 -0700
-Message-ID: <CAJCx=gkZEDa5vg1R2gta9vERy2+W4vst0et0THO9Oth3d3Yzfg@mail.gmail.com>
-Subject: Re: [PATCH] iio: health: max30100: remove mlock usage
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com> <1584200119-18594-5-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1584200119-18594-5-git-send-email-mikelley@microsoft.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 16 Mar 2020 09:22:43 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2Hnm74aUMNFHbjMr4HwHGZn1+xa4ERsxAJY6hMzhEOhQ@mail.gmail.com>
+Message-ID: <CAK8P3a2Hnm74aUMNFHbjMr4HwHGZn1+xa4ERsxAJY6hMzhEOhQ@mail.gmail.com>
+Subject: Re: [PATCH v6 04/10] arm64: hyperv: Add memory alloc/free functions
+ for Hyper-V size pages
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>, olaf@aepfle.de,
+        Andy Whitcroft <apw@canonical.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, marcelo.cerri@canonical.com,
+        "K. Y. Srinivasan" <kys@microsoft.com>, sunilmut@microsoft.com,
+        Boqun Feng <boqun.feng@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:rqvFYvTxsNB/VV4Ocr+6BAiwKkIrYd8B02+pZ+Os++8CyuYV2q6
+ AHa4ZaI92MwibaXB/GPD6z10SooQtH4JTmEB0orR7G3WmI9D3NSi8e4lKRzk92yuqt+2/1H
+ cxWPTsUPyfiwMLwiOnhEDJi3APVLJ3vRulumgKMgqLq+El7+OLjp5eEII1Lf5Xb6cP6TN54
+ V9NiW07GxzXvrD4bNGFuw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:v1VISpsAiv8=:+8YnIBomi1CFkBf1trecP1
+ x7wAohu20sbMq/WFkqpq7UNc59Qedqyy3k/u2jIa+VUYVF04aeUae9w628Uh/ni1XLnf1UsnO
+ cpJJSLxE0HS34dYCKozr8VU31i3eRJ4exNQxIzOxkJg2ZiuWP9pUrgu3YwwU9cC3LLB+f/xK8
+ fu2bksv46j9KtS/JVS90rJ9WkI9hL+RCQSm96o6+b8xhwHdzUSr7OwNVYlP3XOHUed/iv2OZu
+ Wumm2oKIzlEQlyFg9N2osIyLbYy7ZnT7u54YDF/Zu5vQmEFd/CrWyBUu7E1QwEy0i33e2mFRC
+ H+BRwBGknsFFUHBPf/9YFXhlcEHrlS+I3L2gCHa2G9P01DBrMH6lK/gQAMxWp0SQwwUAH3U03
+ NGzp77jeD04JjXA6LsEFVc8e4YcVitp+zAo+tXpoVM1//Tx6rU4B7oGEf0E/eTBjus0uoy8x3
+ eEtSCGr/PHkJc0NzVLmh5UmfXfNvLcVkrf+6so6B2FTpnwv8I8XtTisj5GUxSR4vLcXmm1poD
+ DANLgtR6x3u+RfimdBB9ZldOQxcmujUUn8b69SQxBZLZDZ01v/b+WCJ2Vvtkbypl4msYzVeOr
+ QjYCS/ephQzGsswq8z6B+zK+NMMFq6Z79fIZ65EEHsBg2dtVylF4X3Nm74dG7FSnal1tsBvJN
+ RUBQDxpa0ZLgWcG/ma8iSL/5Q//J/dj5FVsFec7PP5wyql8K4CoBBkEvO+Akcnk12Qh4xdyj2
+ D2gpDjqPGgISdbJPk+Dq2ij8QU+hAX9JlEp15XGwBuLL/jo+D/WkA4xFzcqiCm8ofZaW1Tr+V
+ ReIPtGupH3qQkig4TOdrr1KIcIB6NynTkaHB8DcpEt83zRKkkk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 2:46 AM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Tue, 10 Mar 2020 00:01:28 +0530
-> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
->
-> > Use local lock instead of indio_dev's mlock.
-> > The mlock was being used to protect local driver state thus using the
-> > local lock is a better option here.
-> >
-> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
->
-> Matt.  Definitely need your input on this.
->
-> > ---
-> >  drivers/iio/health/max30100.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
-> > index 84010501762d..8ddc4649547d 100644
-> > --- a/drivers/iio/health/max30100.c
-> > +++ b/drivers/iio/health/max30100.c
-> > @@ -388,7 +388,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
-> >                * Temperature reading can only be acquired while engine
-> >                * is running
-> >                */
-> > -             mutex_lock(&indio_dev->mlock);
-> > +             mutex_lock(&data->lock);
->
-> Hmm.. It's another complex one.  What is actually being protected here is
-> the buffer state, but not to take it exclusively like claim_direct does.
->
-> Here we need the inverse, we want to ensure we are 'not' in the direct
-> mode because this hardware requires the buffer to be running to read the
-> temperature.
->
-> That is the sort of interface that is going to get userspace very
-> confused.
->
-> Matt, normally what I'd suggest here is that the temperature read should:
->
-> 1) Claim direct mode, if it fails then do the dance you have here
-> (with more comments to explain why you are taking an internal lock)
-> 2) Start up capture as if we were in buffered mode
-> 3) Grab that temp
-> 4) stop capture to return to non buffered mode.
-> 5) Release direct mode.
->
-> I guess we decided it wasn't worth the hassle.
->
-> So Rohit.  This one probably needs a comment rather than any change.
-> We 'could' add a 'hold_buffered_mode' function that takes the mlock,
-> verifies we are in buffered mode and continues to hold the lock
-> until the 'release_buffered_mode'.  However, I'm not sure any other
-> drivers do this particular dance, so clear commenting in the driver
-> might be enough.   Should we ever change how mlock is used in the
-> core, we'd have to fix this driver up as well.
->
-> Hmm.  This is really hammering home that perhaps all the remaining
-> mlock cases are 'hard'.
+On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
+>  /*
+> + * Functions for allocating and freeing memory with size and
+> + * alignment HV_HYP_PAGE_SIZE. These functions are needed because
+> + * the guest page size may not be the same as the Hyper-V page
+> + * size. We depend upon kmalloc() aligning power-of-two size
+> + * allocations to the allocation size boundary, so that the
+> + * allocated memory appears to Hyper-V as a page of the size
+> + * it expects.
+> + *
+> + * These functions are used by arm64 specific code as well as
+> + * arch independent Hyper-V drivers.
+> + */
+> +
+> +void *hv_alloc_hyperv_page(void)
+> +{
+> +       BUILD_BUG_ON(PAGE_SIZE <  HV_HYP_PAGE_SIZE);
+> +       return kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+> +}
+> +EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
 
-Heh really had to look this over what I was doing since it has been
-almost half a decade now :).
+I don't think there is any guarantee that kmalloc() returns page-aligned
+allocations in general. How about using get_free_pages()
+to implement this?
 
-Think locking that mutex was only to prevent another read during the
-temp reading, and not really
-not sure how effective that is actually. Especially since the I2C
-subsystem should handle those reads
-in a queue like fashion.
-
-- Matt
-
->
-> Thanks,
->
-> Jonathan
->
-> >
-> >               if (!iio_buffer_enabled(indio_dev))
-> >                       ret = -EAGAIN;
-> > @@ -399,7 +399,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
-> >
-> >               }
-> >
-> > -             mutex_unlock(&indio_dev->mlock);
-> > +             mutex_unlock(&data->lock);
-> >               break;
-> >       case IIO_CHAN_INFO_SCALE:
-> >               *val = 1;  /* 0.0625 */
->
+       Arnd
