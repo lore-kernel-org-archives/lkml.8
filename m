@@ -2,118 +2,71 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF64C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA52C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDE120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994082051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730717AbgCPKrQ (ORCPT
+        id S1730719AbgCPKsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:47:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46645 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730478AbgCPKrQ (ORCPT
+        Mon, 16 Mar 2020 06:48:30 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:46165 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730478AbgCPKsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:47:16 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w16so4121113wrv.13;
-        Mon, 16 Mar 2020 03:47:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:from:subject:to:cc:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=vibrpsfD5nBtWhWdlH3ux6m1+gQfms/bPDCbvYSFzpo=;
-        b=edUqCDWd5hANKotdVUU0tGSWv+oTEeXqrS8e1dZf78UMP6YSX+Qrc92jmvxYMq7BCF
-         kWmeUKT4LENlzODB+Kzs66GS1vWpNByu4/fkdovwBQr1RQoNY8UVGNSgVDDr3cJ+ajXt
-         AYWD2/bEQo8Pw+sMEHUf3+v0VbIqnUB6RdoNhuYId3GDlzcKUIXMOaGCN2D8jtgf9+rL
-         kT16hcuaf8qW9hxQO8Aya89Z4RKwoNLIt+a0BM6/9l+Id9jOqJVLgpbDiHxlniGEhvK6
-         SBjZouuAEFUFM7r3krUs06SYcSsWXSz3ODb1molnNFCJr/1CuAn2OuHhy2FXn7K5IfTI
-         pktA==
-X-Gm-Message-State: ANhLgQ3t0EM6VxbSRReJoxkVEYkkd7rleeXSQJ+5YDtkzTWO8skk8Bv4
-        JeZKAatCaWeHyWqBshE4PdVHceXY
-X-Google-Smtp-Source: ADFU+vtfqmhyM8ZGOur535mw2J65SLHFV+3Dyr1SkDMRkjVA7DD0D2EXtkp/u/lK5t9hze4MfQnGzQ==
-X-Received: by 2002:a5d:5586:: with SMTP id i6mr35833352wrv.338.1584355634281;
-        Mon, 16 Mar 2020 03:47:14 -0700 (PDT)
-Received: from [10.10.2.174] (winnie.ispras.ru. [83.149.199.91])
-        by smtp.gmail.com with ESMTPSA id f11sm5988514wrq.88.2020.03.16.03.47.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2020 03:47:13 -0700 (PDT)
-Reply-To: efremov@linux.com
-From:   Denis Efremov <efremov@linux.com>
-Subject: [GIT PULL] Floppy cleanups for next
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Willy Tarreau <w@1wt.eu>
-Message-ID: <57ce0ee0-839c-a889-0bc0-ec46985e76d3@linux.com>
-Date:   Mon, 16 Mar 2020 13:47:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 16 Mar 2020 06:48:30 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 227A9240024;
+        Mon, 16 Mar 2020 10:47:18 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] rtc: mt2712: fix build without PM_SLEEP
+Date:   Mon, 16 Mar 2020 11:47:00 +0100
+Message-Id: <20200316104701.209293-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+Move SIMPLE_DEV_PM_OPS out of #ifdef to fix build issues when PM_SLEEP is
+not selected.
 
-The following changes since commit 5d50c8f405bf91d9d9a48628fde0f2f4ff069d7b:
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/rtc-mt2712.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  Merge branch 'for-5.7/io_uring' into for-next (2020-03-14 17:20:45 -0600)
+diff --git a/drivers/rtc/rtc-mt2712.c b/drivers/rtc/rtc-mt2712.c
+index 432df9b0a3ac..c2709c1602f0 100644
+--- a/drivers/rtc/rtc-mt2712.c
++++ b/drivers/rtc/rtc-mt2712.c
+@@ -394,10 +394,10 @@ static int mt2712_rtc_resume(struct device *dev)
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static SIMPLE_DEV_PM_OPS(mt2712_pm_ops, mt2712_rtc_suspend,
+ 			 mt2712_rtc_resume);
+-#endif
+ 
+ static const struct of_device_id mt2712_rtc_of_match[] = {
+ 	{ .compatible = "mediatek,mt2712-rtc", },
+-- 
+2.24.1
 
-are available in the Git repository at:
-
-  https://github.com/evdenis/linux-floppy tags/floppy-for-5.7
-
-Please pull
-
-----------------------------------------------------------------
-Floppy patches for 5.7
-
-Cleanups from Willy Tarreau:
-  - expansion of macros referencing global or local variables with
-    equivalent code
-  - removal of incomplete support for second FDC from ARM code
-  - renaming the "fdc" global variable to "current_fdc" to differ
-    between global and local context
-
-Changes were compile tested on arm, x86 arches. Changes introduce
-no binary difference on x86 arch (before and after the patches).
-On arm, incomplete support for second FDC removed. This set of
-patches with commit 2e90ca68 ("floppy: check FDC index for errors
-before assigning it") was tested with syzkaller and simple
-write/read/format tests for no new issues.
-
-Signed-off-by: Denis Efremov <efremov@linux.com>
-
-----------------------------------------------------------------
-Willy Tarreau (16):
-      floppy: cleanup: expand macro FDCS
-      floppy: cleanup: expand macro UFDCS
-      floppy: cleanup: expand macro UDP
-      floppy: cleanup: expand macro UDRS
-      floppy: cleanup: expand macro UDRWE
-      floppy: cleanup: expand macro DP
-      floppy: cleanup: expand macro DRS
-      floppy: cleanup: expand macro DRWE
-      floppy: cleanup: expand the R/W / format command macros
-      floppy: cleanup: expand the reply_buffer macros
-      floppy: remove dead code for drives scanning on ARM
-      floppy: remove incomplete support for second FDC from ARM code
-      floppy: prepare ARM code to simplify base address separation
-      floppy: introduce new functions fdc_inb() and fdc_outb()
-      floppy: separate the FDC's base address from its registers
-      floppy: rename the global "fdc" variable to "current_fdc"
-
- arch/arm/include/asm/floppy.h |   88 +----
- drivers/block/floppy.c        | 1093 +++++++++++++++++++++++++++++++----------------------------
- include/uapi/linux/fdreg.h    |   18 +-
- 3 files changed, 586 insertions(+), 613 deletions(-)
