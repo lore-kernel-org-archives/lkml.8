@@ -2,109 +2,114 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC26C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E615FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E48B320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:05:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="f2vC4Eae"
+	by mail.kernel.org (Postfix) with ESMTP id C31BA20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbgCPIFa (ORCPT
+        id S1730040AbgCPIFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:05:30 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29648 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729745AbgCPIFa (ORCPT
+        Mon, 16 Mar 2020 04:05:35 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:51631 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729745AbgCPIFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:05:30 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02G7x3fB004532;
-        Mon, 16 Mar 2020 09:05:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=aAX015zEGt1iDYd9fLCWz8ZRf1VeNZVoWYmUVUrHks0=;
- b=f2vC4EaeDXBjoM0/YX0nT/EhpV5U2WjmtwN+wNbFsRnKDCeUC4oxyYFOqzbtdOIaNKB3
- 38gSfGtLXWQ9j/VNRqXm9g4HxG5gPGd3pSc0uVeQdAWo5tG0OWarn6hQsVEYu3WFrVSI
- 6pAG1WgNVMvdwub+41DryELM43TBY/RZUaYgUTD3ducrNqLOanuXoBS/wTJNiePSlZ6x
- tFPbnlKLUznJv6yWirKahnHEcKlnEHU0uU7Zq060Q5dkRjHac2XKCATtEdA/q2vtWMuJ
- IzHKMbTxYIOnts2a5c08j76MjtmAh3ZFAK2xI8q5wj2TMwktQGrVN0u1j/FRkq2Jj9Y7 FA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yrqa9e9hg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Mar 2020 09:05:15 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B18E410003B;
-        Mon, 16 Mar 2020 09:05:07 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A1DF221E687;
-        Mon, 16 Mar 2020 09:05:07 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 16 Mar
- 2020 09:05:07 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Mon, 16 Mar 2020 09:05:07 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Rob Herring <robh@kernel.org>
-CC:     Lucas Stach <l.stach@pengutronix.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Joe Perches <joe@perches.com>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: adjust to VIVANTE GPU schema conversion
-Thread-Topic: [PATCH] MAINTAINERS: adjust to VIVANTE GPU schema conversion
-Thread-Index: AQHV+ppWk7Ve7/6Ys0G/uL6TUzmfJKhKzTwA
-Date:   Mon, 16 Mar 2020 08:05:07 +0000
-Message-ID: <18450dfa-a150-45df-5b9c-c543c110c478@st.com>
-References: <20200315072109.6815-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20200315072109.6815-1-lukas.bulwahn@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6D3788AD8A1BE941B64C12E7789BE437@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 16 Mar 2020 04:05:34 -0400
+Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MfYDO-1jpHQi43i4-00fy0Q; Mon, 16 Mar 2020 09:05:33 +0100
+Received: by mail-qt1-f170.google.com with SMTP id l13so13339604qtv.10;
+        Mon, 16 Mar 2020 01:05:32 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3SHLogusaAsBjNcX+ufaupENI1ADQCk2SLjDz+X2WSE1EEXOqx
+        laZWC0J20bnXBsrzBw6aMz58ZARaZ9k8PyP1L4I=
+X-Google-Smtp-Source: ADFU+vscHuj0T93JjgojfKfyFtbyqwhr+FzDIfyfzVkaoXDOWQcAs9KVhaCUmDBS62IUcGSpwhk7Bx9472iMoIVCU1o=
+X-Received: by 2002:ac8:5193:: with SMTP id c19mr23911589qtn.204.1584345931621;
+ Mon, 16 Mar 2020 01:05:31 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-16_02:2020-03-12,2020-03-16 signatures=0
+References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com>
+ <1584070036-26447-4-git-send-email-peng.fan@nxp.com> <CAK8P3a14BU5uHEqkVyWkeFVmxA1hJifQE+GkXFgmn59s_TL+Rw@mail.gmail.com>
+ <AM0PR04MB4481E7BC1DF01CFC975577A088F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB4481E7BC1DF01CFC975577A088F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 16 Mar 2020 09:05:15 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2F4oREw8AgNqQo18hLfVG4GcMJ72bST6EBd_KYhsRfsA@mail.gmail.com>
+Message-ID: <CAK8P3a2F4oREw8AgNqQo18hLfVG4GcMJ72bST6EBd_KYhsRfsA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] soc: imx: select ARM_GIC_V3 for i.MX8M
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:C/9dMaP4OGvrdGP60xaL66vbJGrhUEzebMdVLmwJzaqNP/7u4m4
+ QpfeAQAZU3zScueyx71GmSAHdrOR6dvyPskEUPVg1aCbh6cHKpl9tOI08z3c9l6w31gEO+P
+ UaLVZxn7b0D3dhBRhyxbQxqmkqvzIKQ2LV/ArDo0lYSwC8AKyzLd08+7AjUKHF4/kqXszPQ
+ MrJFRGoGY7xSS0Zm10Hug==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:K9XUUBtc12Q=:PjHFrfC0O5vPJlhc9Rhm+C
+ uXPm9YvEgE10OZHHTEvGqHbHySmHpNs6ZKInsG1dVz+he0h289VJEwoHjRR6Ymi1d29Y7FsEm
+ 2TTStf1doy/Y1bkeJjMcTrpxv14K8sV4VQSa4/XbNH/K4XCdBQhFsaSnhTdnH3KUcMVyQ56dP
+ tCzfQ7ln2cK04IztVSTFOvsiHUerSZA7i/KjYwHTl3OkAox8pU7Gl0PcdRVjsVDXKSs5pbG6/
+ FVH1W36fJeNcvUqfFfcZOTAo1abDGLMihVGlFYoNnXlIOKnixdwnar98UgBGmiHh9uC3LfJFl
+ BNWRfGfjiV35WFWM9XIAcK+jDaeHDH06VAiYN3rLLvFAvFOrKos0dWtxK41jgAXiJpMuV2Q0X
+ Fqi5DINDO1mn20WWxXou/9V4aSorRnFVWz/fGXLjmSSWhmmgzJGZRFT6Uqxjl+aQJXfY5UzGa
+ 0PWXT4JFUarmUMhDQoDU42LUCw6ab4TIZBssZ+WirUcYOX7/94Wxi9jwh6mnFwx3xdOHbiEPQ
+ rxH0xV8P6a69S/0DoWpBEa+NRWBnLgYB5VaJemp8wQaSgA77tBRp0SPhDEhgX3qbQttH2Bx3w
+ cWL7OllgXsA8ra8bMUYNtGYzwsw16ngHlIhcbQmPjwN6QciXAHTefeAvZhgpZI+B6GxhUhBdL
+ /UeJQbHlZSMKWuHHEGmsbE63Sa3qaP1R7drDFpRFQLOEpa4zqT6e1dcapTSi2fm/pAE3c+Nmc
+ mErHbPSE4KDsIT+tcSS+sCYVl7+KZu8hK+vFTT7QQcpckayK9fXBvwS+Gyvqc0lok/MHEDn8u
+ oNd+gdPNrrXro1hP3vF79VFCeCqnAxEsDXWeFXSoNgkKjI9U/c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDMvMTUvMjAgODoyMSBBTSwgTHVrYXMgQnVsd2FobiB3cm90ZToNCj4gQ29tbWl0IDkw
-YWVjYTg3NWY4YSAoImR0LWJpbmRpbmdzOiBkaXNwbGF5OiBDb252ZXJ0IGV0bmF2aXYgdG8NCj4g
-anNvbi1zY2hlbWEiKSBtaXNzZWQgdG8gYWRqdXN0IHRoZSBEUk0gRFJJVkVSUyBGT1IgVklWQU5U
-RSBHUFUgSVAgZW50cnkNCj4gaW4gTUFJTlRBSU5FUlMuDQo+DQo+IFNpbmNlIHRoZW4sIC4vc2Ny
-aXB0cy9nZXRfbWFpbnRhaW5lci5wbCAtLXNlbGYtdGVzdCBjb21wbGFpbnM6DQo+DQo+ICAgIHdh
-cm5pbmc6IG5vIGZpbGUgbWF0Y2hlcyBcDQo+ICAgIEY6IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvDQo+DQo+IFVwZGF0ZSBNQUlOVEFJTkVSUyBlbnRy
-eSB0byBsb2NhdGlvbiBvZiBjb252ZXJ0ZWQgc2NoZW1hLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBM
-dWthcyBCdWx3YWhuIDxsdWthcy5idWx3YWhuQGdtYWlsLmNvbT4NClJldmlld2VkLWJ5OiBCZW5q
-YW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KDQpUaGFua3MNCj4gLS0t
-DQo+IGFwcGxpZXMgY2xlYW5seSBvbiBuZXh0LTIwMjAwMzEzDQo+DQo+IEJlbmphbWluLCBwbGVh
-c2UgYWNrLg0KPiBSb2IsIHBsZWFzZSBwaWNrIHRoaXMgcGF0Y2ggKGl0IGlzIG5vdCB1cmdlbnQs
-IHRob3VnaCkNCj4NCj4NCj4gICBNQUlOVEFJTkVSUyB8IDIgKy0NCj4gICAxIGZpbGUgY2hhbmdl
-ZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4NCj4gZGlmZiAtLWdpdCBhL01BSU5U
-QUlORVJTIGIvTUFJTlRBSU5FUlMNCj4gaW5kZXggNzdlZWRlOTc2ZDBmLi41MGE3YTZkNjJlMDYg
-MTAwNjQ0DQo+IC0tLSBhL01BSU5UQUlORVJTDQo+ICsrKyBiL01BSU5UQUlORVJTDQo+IEBAIC01
-NzY2LDcgKzU3NjYsNyBAQCBMOglkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+ICAg
-UzoJTWFpbnRhaW5lZA0KPiAgIEY6CWRyaXZlcnMvZ3B1L2RybS9ldG5hdml2Lw0KPiAgIEY6CWlu
-Y2x1ZGUvdWFwaS9kcm0vZXRuYXZpdl9kcm0uaA0KPiAtRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi8NCj4gK0Y6CURvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9ncHUvdml2YW50ZSxnYy55YW1sDQo+ICAgDQo+ICAgRFJNIERSSVZFUlMg
-Rk9SIFpURSBaWA0KPiAgIE06CVNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCg==
+On Mon, Mar 16, 2020 at 7:43 AM Peng Fan <peng.fan@nxp.com> wrote:
+> > Subject: Re: [PATCH 3/3] soc: imx: select ARM_GIC_V3 for i.MX8M
+> >
+> > On Fri, Mar 13, 2020 at 4:34 AM <peng.fan@nxp.com> wrote:
+> > >
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > Select ARM_GIC_V3, then it is able to use gic v3 driver in aarch32
+> > > mode linux on aarch64 hardware. For aarch64 mode, it not hurts to
+> > > select ARM_GIC_V3.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> >
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > > diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig index
+> > > 70019cefa617..0b69024296d5 100644
+> > > --- a/drivers/soc/imx/Kconfig
+> > > +++ b/drivers/soc/imx/Kconfig
+> > > @@ -21,6 +21,7 @@ config SOC_IMX8M
+> > >         bool "i.MX8M SoC family support"
+> > >         depends on ARCH_MXC || COMPILE_TEST
+> > >         default ARCH_MXC && ARM64
+> > > +       select ARM_GIC_V3
+> >
+> > It would seem sensible to also drop the dependency on the 'default'
+>
+> If drop default, we need enable this config option in ARM64 defconfig,
+> I would leave it as is for now.
+
+I meant making it 'default ARCH_MXC' so it gets enabled for both
+32-bit and 64-bit i.MX configurations, not just 64-bit.
+
+      Arnd
