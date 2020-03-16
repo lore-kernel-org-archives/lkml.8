@@ -2,169 +2,199 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C2BC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E708FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25FF205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBB7205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:48:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lK56xoYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732868AbgCPWpr (ORCPT
+        id S1732856AbgCPWsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:45:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47768 "EHLO mx2.suse.de"
+        Mon, 16 Mar 2020 18:48:41 -0400
+Received: from ozlabs.org ([203.11.71.1]:35275 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732837AbgCPWpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:45:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3EE80ABBE;
-        Mon, 16 Mar 2020 22:45:45 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 17 Mar 2020 09:45:37 +1100
-Cc:     yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
-In-Reply-To: <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
-References: <20200308140314.GQ5972@shao2-debian>
- <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
- <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
- <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
- <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
- <878sk7vs8q.fsf@notabene.neil.brown.name>
- <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
- <875zfbvrbm.fsf@notabene.neil.brown.name>
- <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
- <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
- <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
- <87v9nattul.fsf@notabene.neil.brown.name>
- <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
- <87o8t2tc9s.fsf@notabene.neil.brown.name>
- <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
- <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
- <877dznu0pk.fsf@notabene.neil.brown.name>
- <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
- <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
- <87pndcsxc6.fsf@notabene.neil.brown.name>
- <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
-Message-ID: <87k13jsyum.fsf@notabene.neil.brown.name>
+        id S1732837AbgCPWsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 18:48:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hBKy6d9vz9sNg;
+        Tue, 17 Mar 2020 09:48:38 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584398919;
+        bh=7R1vF2L5HQ/2lAhDfjx1Mr2bVwvkLoa1bb8nn1tmw4M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lK56xoYj0kQXXiqHbcpDhnn/BVbEKmn7MePIqrLC5x8dt8J/PTodmoF38phZ3fRNG
+         Hw+jpmAdp0UrpMXukoFU6xUHq+qtVfHim0RPpdH/ZIPqYSRBsBbTKrb2uIfwI/IvgL
+         BKV1XPCo8vFad/AR0M2nn8ClH3iVSpXFxCNgpVscSXjFD1y6u5KbjLtuJQq6SRr6k8
+         Hfhu97i73zNjJMwJf0p+YCFeHI5jWKcWl+rOEa+s4XMjnCbDdk9fz4QshEwLsVep38
+         KT2s363UW06rGAB+XLar82yT+VXu+QQ7i7xqlK2h+uMAEMZuFRarZ7WrhcJx7s97Wh
+         JfTPuOfUp5JBQ==
+Date:   Tue, 17 Mar 2020 09:48:33 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Shawn Guo <shawnguo@kernel.org>, Andy Gross <agross@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Li Yang <leoyang.li@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: linux-next: manual merge of the renesas tree with the imx-mxs and
+ qcom trees
+Message-ID: <20200317094833.07a520bd@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: multipart/signed; boundary="Sig_/C/qlNtvxLkhzbwYptzmBCJn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+--Sig_/C/qlNtvxLkhzbwYptzmBCJn
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 16 2020, Jeff Layton wrote:
+Hi all,
 
-> @@ -740,6 +739,12 @@ static void __locks_wake_up_blocks(struct file_lock =
-*blocker)
->  			waiter->fl_lmops->lm_notify(waiter);
->  		else
->  			wake_up(&waiter->fl_wait);
-> +
-> +		/*
-> +		 * Tell the world we're done with it - see comment at
-> +		 * top of locks_delete_block().
-> +		 */
-> +		smp_store_release(&waiter->fl_blocker, NULL);
->  	}
->  }
->=20=20
-> @@ -753,11 +758,30 @@ int locks_delete_block(struct file_lock *waiter)
->  {
->  	int status =3D -ENOENT;
->=20=20
-> +	/*
-> +	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
-> +	 * the lock and is the only one that might try to claim the lock.
-> +	 * Because fl_blocker is explicitly set last during a delete, it's
-> +	 * safe to locklessly test to see if it's NULL. If it is, then we know
-> +	 * that no new locks can be inserted into its fl_blocked_requests list,
-> +	 * and we can therefore avoid doing anything further as long as that
-> +	 * list is empty.
+Today's linux-next merge of the renesas tree got a conflict in:
 
-I think it would be worth spelling out what the 'acquire' is needed
-for.  We seem to have a general policy of requiring comment to explain
-the presence of barriers.
+  arch/arm64/configs/defconfig
 
-  The 'acquire' on fl_blocker guarantees two things.
-  1/ that fl_blocked_requests can be tested locklessly. If something was
-     recently added to that list it must have been in a locked region
-     *before* the locked region when fl_blocker was set to NULL.
-  2/ that no other thread is accessing 'waiter', so it is safe to free it.
-      __locks_wake_up_blocks is careful not to touch waiter after
-      fl_blocker is released.=20=20
-=20=20
+between commits:
 
-> +	 */
-> +	if (!smp_load_acquire(&waiter->fl_blocker) &&
-> +	    list_empty(&waiter->fl_blocked_requests))
-> +		return status;
-> +
->  	spin_lock(&blocked_lock_lock);
->  	if (waiter->fl_blocker)
->  		status =3D 0;
->  	__locks_wake_up_blocks(waiter);
->  	__locks_delete_block(waiter);
-> +
-> +	/*
-> +	 * Tell the world we're done with it - see comment at top
-> +	 * of this function
+  3fbd82f9af29 ("arm64: defconfig: run through savedefconfig for ordering")
+  60f84e65da59 ("arm64: defconfig: Enable NXP flexcan driver")
+  d0a9e6319257 ("arm64: defconfig: Enable Truly NT35597 WQXGA panel")
 
-This comment might be misleading.  The world doesn't care.
-Only this thread cares where ->fl_blocker is NULL.  We need the release
-semantics when some *other* thread sets fl_blocker to NULL, not when
-this thread does.
-I don't think we need to spell that out and I'm not against using
-store_release here, but locks_delete_block cannot race with itself, so
-referring to the comment at the top of this function is misleading.
+from the imx-mxs and qcom trees and commit:
 
-So:
-  Reviewed-by: NeilBrown <neilb@suse.de>
+  bf9e333ec0d5 ("arm64: defconfig: Enable additional support for Renesas pl=
+atforms")
 
-but I'm not totally happy with the comments.
+from the renesas tree.
 
-Thanks,
-NeilBrown
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
+--=20
+Cheers,
+Stephen Rothwell
 
-> +	 */
-> +	smp_store_release(&waiter->fl_blocker, NULL);
->  	spin_unlock(&blocked_lock_lock);
->  	return status;
->  }
+diff --cc arch/arm64/configs/defconfig
+index ff4bee8c3158,49053323323f..000000000000
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@@ -164,7 -162,8 +164,9 @@@ CONFIG_QRTR_SMD=3D
+  CONFIG_QRTR_TUN=3Dm
+  CONFIG_BPF_JIT=3Dy
+  CONFIG_CAN=3Dm
+ +CONFIG_CAN_FLEXCAN=3Dm
++ CONFIG_CAN_RCAR=3Dm
++ CONFIG_CAN_RCAR_CANFD=3Dm
+  CONFIG_BT=3Dm
+  CONFIG_BT_HIDP=3Dm
+  # CONFIG_BT_HS is not set
+@@@ -568,11 -535,13 +575,14 @@@ CONFIG_V4L_MEM2MEM_DRIVERS=3D
+  CONFIG_VIDEO_SAMSUNG_S5P_JPEG=3Dm
+  CONFIG_VIDEO_SAMSUNG_S5P_MFC=3Dm
+  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=3Dm
++ CONFIG_VIDEO_RENESAS_FDP1=3Dm
+  CONFIG_VIDEO_RENESAS_FCP=3Dm
+  CONFIG_VIDEO_RENESAS_VSP1=3Dm
++ CONFIG_SDR_PLATFORM_DRIVERS=3Dy
++ CONFIG_VIDEO_RCAR_DRIF=3Dm
+  CONFIG_DRM=3Dm
+  CONFIG_DRM_I2C_NXP_TDA998X=3Dm
+ +CONFIG_DRM_MALI_DISPLAY=3Dm
+  CONFIG_DRM_NOUVEAU=3Dm
+  CONFIG_DRM_EXYNOS=3Dm
+  CONFIG_DRM_EXYNOS5433_DECON=3Dy
+@@@ -588,17 -557,21 +598,23 @@@ CONFIG_ROCKCHIP_DW_HDMI=3D
+  CONFIG_ROCKCHIP_DW_MIPI_DSI=3Dy
+  CONFIG_ROCKCHIP_INNO_HDMI=3Dy
+  CONFIG_DRM_RCAR_DU=3Dm
++ CONFIG_DRM_RCAR_DW_HDMI=3Dm
+  CONFIG_DRM_SUN4I=3Dm
+ +CONFIG_DRM_SUN6I_DSI=3Dm
+  CONFIG_DRM_SUN8I_DW_HDMI=3Dm
+  CONFIG_DRM_SUN8I_MIXER=3Dm
+  CONFIG_DRM_MSM=3Dm
+  CONFIG_DRM_TEGRA=3Dm
++ CONFIG_DRM_PANEL_LVDS=3Dm
+  CONFIG_DRM_PANEL_SIMPLE=3Dm
+ +CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=3Dm
++ CONFIG_DRM_DUMB_VGA_DAC=3Dm
+  CONFIG_DRM_SII902X=3Dm
++ CONFIG_DRM_THINE_THC63LVD1024=3Dm
+  CONFIG_DRM_TI_SN65DSI86=3Dm
+  CONFIG_DRM_I2C_ADV7511=3Dm
++ CONFIG_DRM_DW_HDMI_AHB_AUDIO=3Dm
++ CONFIG_DRM_DW_HDMI_CEC=3Dm
+  CONFIG_DRM_VC4=3Dm
+  CONFIG_DRM_ETNAVIV=3Dm
+  CONFIG_DRM_HISI_HIBMC=3Dm
+@@@ -759,7 -728,9 +776,8 @@@ CONFIG_COMMON_CLK_RK808=3D
+  CONFIG_COMMON_CLK_SCPI=3Dy
+  CONFIG_COMMON_CLK_CS2000_CP=3Dy
+  CONFIG_COMMON_CLK_S2MPS11=3Dy
+ -CONFIG_CLK_QORIQ=3Dy
+  CONFIG_COMMON_CLK_PWM=3Dy
++ CONFIG_COMMON_CLK_VC5=3Dy
+  CONFIG_CLK_RASPBERRYPI=3Dm
+  CONFIG_CLK_IMX8MM=3Dy
+  CONFIG_CLK_IMX8MN=3Dy
+@@@ -843,8 -808,10 +861,9 @@@ CONFIG_ARCH_K3_J721E_SOC=3D
+  CONFIG_TI_SCI_PM_DOMAINS=3Dy
+  CONFIG_EXTCON_USB_GPIO=3Dy
+  CONFIG_EXTCON_USBC_CROS_EC=3Dy
+ -CONFIG_MEMORY=3Dy
+  CONFIG_IIO=3Dy
+  CONFIG_EXYNOS_ADC=3Dy
++ CONFIG_MAX9611=3Dm
+  CONFIG_QCOM_SPMI_ADC5=3Dm
+  CONFIG_ROCKCHIP_SARADC=3Dm
+  CONFIG_IIO_CROS_EC_SENSORS_CORE=3Dm
+@@@ -938,12 -900,12 +957,13 @@@ CONFIG_NLS_ISO8859_1=3D
+  CONFIG_SECURITY=3Dy
+  CONFIG_CRYPTO_ECHAINIV=3Dy
+  CONFIG_CRYPTO_ANSI_CPRNG=3Dy
+ +CONFIG_CRYPTO_USER_API_RNG=3Dm
+  CONFIG_CRYPTO_DEV_SUN8I_CE=3Dm
+  CONFIG_CRYPTO_DEV_FSL_CAAM=3Dm
+ -CONFIG_CRYPTO_DEV_HISI_ZIP=3Dm
+ -CONFIG_CRYPTO_USER_API_RNG=3Dm
+ +CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM=3Dm
+  CONFIG_CRYPTO_DEV_QCOM_RNG=3Dm
+ +CONFIG_CRYPTO_DEV_HISI_ZIP=3Dm
++ CONFIG_CRYPTO_DEV_CCREE=3Dm
+  CONFIG_CMA_SIZE_MBYTES=3D32
+  CONFIG_PRINTK_TIME=3Dy
+  CONFIG_DEBUG_INFO=3Dy
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/C/qlNtvxLkhzbwYptzmBCJn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5wAZEACgkQOeye3VZi
-gbkp1hAAvcReTfAMi662+qaArjpYDm+EphVfKwaUj2/HDfd5H9uZYVuAcg35JN1s
-7sWlQXHxQvijoF5Eo5mu3v6pqu63EdxWK2i1bcOZQ8VcGpmY0DF+448idlYdLQ2C
-dIp9PrhiFdcutLg9DtV84mH6rjWqhE9whiW7StmUWcgGs1ow5flloLefIVNfzz1n
-ndoZJuLhim93l1fQD2CWDZih5Trr6r/gtmUQUqHjqfGMH92gZbIdm2VZWDBeD2QS
-Rcyyi5GOWL/4zFjz5iLGHgVAo6nk7SkJTy0c2GdsnSse1ZZ1U5DKfFiah5eYvrcy
-hrCkosQcKzsbKUrYO3PqtUzi6R74iZSqIZHvqbOW3YCqlcBKfsc7bzP17mv5I7Xq
-T3z9mtPYx8REv89e+LGUzuXokXt5MVmP1bfPM513x7QTptNWIDj0JH7+SMpWeiYR
-ZrHWmNK4sRoA3wG858KbVmQl/DLXtvCrnIFHqo43AXAPjiEHxM3YBGstf7PyorlZ
-6qfK6vlgw82YAhWXnh5i/fg3Mtw5WEPEi7AUJ44btmhgw1XbzfoJQUEnVPssmjyZ
-9nKdygR9GWsPFvAQJBr3pdpkPl/1TL8olJLj4EDBkL0lpnqNLZegfvG9d1V0Icjs
-zHeUOFo97uGmJgkSHEfGK8e7IMQQaq7zbVoOZJWv74Sw6MsP7lo=
-=M9Ll
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5wAkEACgkQAVBC80lX
+0GxDygf9FVX0pM5JpU8+cKOnnWh4Mt7HDm98ht56BaBxBmEtNgV403biSU+cI5dx
+s5TJ7HRWlL5zLdig2QKAPmS8YH0uXM2EAmsXZ0S2djsSDuyYyaRTT5Zo5Wmgg+SO
+/98/gc3/YpEw6HFp8D/lZ+u9Dz6vXeuEocR2TGD29uMUVuzV52/wRwNrpuMyKRgN
+riYbFubt9QjFgTQptlInZcamIwXcgJYRejAQRljqyHe0mxvS0Evv5mcsLQOyeYnz
+udaS7WNBDNuuCoxYOVXrWkhnGRZZW+vtHXm19c/gt/QuKcDMisMsam//8WEACb31
+nbn0t6HeuSMB5/j12BzT8yE9MrSFbw==
+=SlW7
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--Sig_/C/qlNtvxLkhzbwYptzmBCJn--
