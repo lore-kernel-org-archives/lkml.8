@@ -2,110 +2,163 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9EDC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2970C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4CE20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:11:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l1jWliND"
+	by mail.kernel.org (Postfix) with ESMTP id BAD4B20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584371550;
+	bh=tqLRpWzabXSno1lAbdQPzhkVdhyf+MB1/ZDWg2u0nP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JX/Ple3alm8UmVFsz/s7WZc1wkjZK/2ZSko4YyOVVsbBS8GbD0xU5YzFhJKuBb54k
+	 kxlSbaYqPIQD/JtNLmw93JtebL7T+3rU6tBYAG9K1jPiPCDUksquy6ru7aReY+FYw9
+	 ZCk2NXr6qH5tQyzwz1EAEAs1vPjuVVCPQjVlJPck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731738AbgCPPLY (ORCPT
+        id S1731749AbgCPPM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:11:24 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38449 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731631AbgCPPLX (ORCPT
+        Mon, 16 Mar 2020 11:12:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35169 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729964AbgCPPM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:11:23 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x11so16950155wrv.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uMLkobIeM9DCkYCP5Y/MHr6L2BuJYzjWCEI6GI6xP84=;
-        b=l1jWliNDgPxq9N9s7HgwP/YBv3zwSYsNS2CAOnN8TAfAGqm/CbNWBl828eQoD9dQp3
-         DL27nsTNd0QBLJp+3wBm9uTsH593tulDiGCmrN4sWt+voD3enxJLMUsC0aDvk9rMR2rB
-         U5PVx3oXWJTNPVNawqWuDSG8yeqEFpOrxP1pKSepO/KA8TNkjnAWVGUBte0E7JX6ldH9
-         3qO2Xxa+n8H8Yn1ui+6se0WSHVL4EW0//PvtpmpLZBYzVf9zRtHCurouZCxdZ98tBkDy
-         8IRpgXO6yak0zwFnXVNwXpRrNJak5+mSb18bW5W0aQcwCL/JfwpaF14mm7A5BUk6CLL3
-         oyKA==
+        Mon, 16 Mar 2020 11:12:29 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m3so18493922wmi.0;
+        Mon, 16 Mar 2020 08:12:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uMLkobIeM9DCkYCP5Y/MHr6L2BuJYzjWCEI6GI6xP84=;
-        b=brYYwXQnJ2McavYwz33qMvC7AQOoVbOpdeHZ5O05mGhZFi7Rv21bsZ3jZiw1Qnipnw
-         3tE38E9gLgR2FW+EDuN0ZhZVjlQqAq1qhN5z7ueoO5mQ1Z7xo2c3dWqqnFmXOKRNkN8/
-         KlkPWNEy95rN/hC0389/zBEx0/0cKdCgZuB2pLl63QIIT5hL8VuzKdS6xc+kjG4ux4HG
-         LavfhbWhYBLAAkp3p3vbG8BSSmEs8mU240aQY9oA0AN+2o4zGz/fjFcAVbuL6IqPYxpi
-         9KOkFGCxI7pQ+XF8yRRfeRNzgAUOzaAO0MUp1bsLpL/4n45vpo4Of6MS/krYiFt+quMN
-         WHqA==
-X-Gm-Message-State: ANhLgQ0t4/6+SqnYbj8kOVs85/3cRlNSK8T57qdMwSj5HdQQJJW2BEM3
-        FdhhupQ71c0eiohEFNieQ3y5Nw==
-X-Google-Smtp-Source: ADFU+vvnSbRNrjh7UKOltQra2NXVuqL+ACmrLbkOHpSHUtXiWR8Zc936fH6eF5TIBGv8gmyyfa/0Og==
-X-Received: by 2002:adf:e550:: with SMTP id z16mr11337435wrm.394.1584371480434;
-        Mon, 16 Mar 2020 08:11:20 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id y69sm31530923wmd.46.2020.03.16.08.11.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pP29NNx6Ci3tKu2VMQ6svFhSLpTYpkSdhU02iawHkFs=;
+        b=Dnwlz34mWXgBWLnFf8OBoTMCCjGEIjnY7+NNYOn65l9S3hkmn81ytzDfT6y9PhntMr
+         SFLK54ZKh9T0dnqBCNjg18J/5xXqU6Dutf65o0mA9LJ8tUK/KdKNChq8ouj9QeRcRCbS
+         8n501882hm2Sc8eBAPEhX3CMGqQqmzy9vUs4LqvYxBoLveX9Q/FO07l2DJCXPUnEwsHX
+         YtQnY5FLBu4kySaj89LiqlrQQbbiwwE21QFOyfe4ybweOkNlHfxnktLSO6qeWRxQYzX+
+         4ZUSW3yMfjcdy+eoEC1nCzKPtrjSTvAUJKm5we85MalKwaG0fMwCMGOY7Z8try3A1Y8O
+         Iv7g==
+X-Gm-Message-State: ANhLgQ0W5UHiRbs/JemC3KLjZLExWn9Qp5gdfhE+bwbL5oyIhngWTDWj
+        /0hgMDXn9rQ8ikPfltraVe8=
+X-Google-Smtp-Source: ADFU+vu/tvS5V97YVVfKD2ivxmneOufMFO5W9ErMHPP4C5Ju1eQN39CBYRDgFDWYm0T37VQ9dxYtJg==
+X-Received: by 2002:a7b:c75a:: with SMTP id w26mr10625158wmk.2.1584371544960;
+        Mon, 16 Mar 2020 08:12:24 -0700 (PDT)
+Received: from localhost ([37.188.132.163])
+        by smtp.gmail.com with ESMTPSA id s15sm347045wrr.45.2020.03.16.08.12.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:11:19 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        linux-kernel@vger.kernel.org, pierre-louis.bossart@linux.intel.com,
-        vkoul@kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] ASoC: soc-dai: return proper error for get_sdw_stream()
-Date:   Mon, 16 Mar 2020 15:11:10 +0000
-Message-Id: <20200316151110.2580-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Mon, 16 Mar 2020 08:12:24 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 16:12:23 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v1 1/5] drivers/base/memory: rename MMOP_ONLINE_KEEP to
+ MMOP_ONLINE
+Message-ID: <20200316151223.GS11482@dhcp22.suse.cz>
+References: <20200311123026.16071-1-david@redhat.com>
+ <20200311123026.16071-2-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311123026.16071-2-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-snd_soc_dai_get_sdw_stream() returns null if dai does not support
-this callback, this is no very useful for the caller to
-differentiate if this is an error or unsupported call for the dai.
+On Wed 11-03-20 13:30:22, David Hildenbrand wrote:
+> The name is misleading. Let's just name it like the online_type name we
+> expose to user space ("online").
 
-return -ENOTSUPP in cases where this callback is not supported.
+I would disagree the name is misleading. It just says that you want to
+online and keep the zone type. Nothing I would insist on though.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- include/sound/soc-dai.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Add some documentation to the types.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/base/memory.c          | 9 +++++----
+>  include/linux/memory_hotplug.h | 6 +++++-
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 6448c9ece2cb..8c5ce42c0fc3 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -216,7 +216,7 @@ static int memory_subsys_online(struct device *dev)
+>  	 * attribute and need to set the online_type.
+>  	 */
+>  	if (mem->online_type < 0)
+> -		mem->online_type = MMOP_ONLINE_KEEP;
+> +		mem->online_type = MMOP_ONLINE;
+>  
+>  	ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+>  
+> @@ -251,7 +251,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+>  	else if (sysfs_streq(buf, "online_movable"))
+>  		online_type = MMOP_ONLINE_MOVABLE;
+>  	else if (sysfs_streq(buf, "online"))
+> -		online_type = MMOP_ONLINE_KEEP;
+> +		online_type = MMOP_ONLINE;
+>  	else if (sysfs_streq(buf, "offline"))
+>  		online_type = MMOP_OFFLINE;
+>  	else {
+> @@ -262,7 +262,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+>  	switch (online_type) {
+>  	case MMOP_ONLINE_KERNEL:
+>  	case MMOP_ONLINE_MOVABLE:
+> -	case MMOP_ONLINE_KEEP:
+> +	case MMOP_ONLINE:
+>  		/* mem->online_type is protected by device_hotplug_lock */
+>  		mem->online_type = online_type;
+>  		ret = device_online(&mem->dev);
+> @@ -342,7 +342,8 @@ static ssize_t valid_zones_show(struct device *dev,
+>  	}
+>  
+>  	nid = mem->nid;
+> -	default_zone = zone_for_pfn_range(MMOP_ONLINE_KEEP, nid, start_pfn, nr_pages);
+> +	default_zone = zone_for_pfn_range(MMOP_ONLINE, nid, start_pfn,
+> +					  nr_pages);
+>  	strcat(buf, default_zone->name);
+>  
+>  	print_allowed_zone(buf, nid, start_pfn, nr_pages, MMOP_ONLINE_KERNEL,
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index f4d59155f3d4..261dbf010d5d 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -47,9 +47,13 @@ enum {
+>  
+>  /* Types for control the zone type of onlined and offlined memory */
+>  enum {
+> +	/* Offline the memory. */
+>  	MMOP_OFFLINE = -1,
+> -	MMOP_ONLINE_KEEP,
+> +	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
+> +	MMOP_ONLINE,
+> +	/* Online the memory to ZONE_NORMAL. */
+>  	MMOP_ONLINE_KERNEL,
+> +	/* Online the memory to ZONE_MOVABLE. */
+>  	MMOP_ONLINE_MOVABLE,
+>  };
+>  
+> -- 
+> 2.24.1
 
-diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
-index 7f70db149b81..78bac995db15 100644
---- a/include/sound/soc-dai.h
-+++ b/include/sound/soc-dai.h
-@@ -433,7 +433,7 @@ static inline int snd_soc_dai_set_sdw_stream(struct snd_soc_dai *dai,
-  * This routine only retrieves that was previously configured
-  * with snd_soc_dai_get_sdw_stream()
-  *
-- * Returns pointer to stream or NULL;
-+ * Returns pointer to stream or -ENOTSUPP if callback is not supported;
-  */
- static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai *dai,
- 					       int direction)
-@@ -441,7 +441,7 @@ static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai *dai,
- 	if (dai->driver->ops->get_sdw_stream)
- 		return dai->driver->ops->get_sdw_stream(dai, direction);
- 	else
--		return NULL;
-+		return ERR_PTR(-ENOTSUPP);
- }
- 
- #endif
 -- 
-2.21.0
-
+Michal Hocko
+SUSE Labs
