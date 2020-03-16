@@ -2,85 +2,118 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDFEC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD835C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C665B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643B520663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SuBjR7SX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731888AbgCPPkb (ORCPT
+        id S1731716AbgCPPmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:40:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:50870 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731554AbgCPPkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:40:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EA1E1FB;
-        Mon, 16 Mar 2020 08:40:30 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AC763F534;
-        Mon, 16 Mar 2020 08:40:29 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 15:40:23 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Murali Karicheri <m-karicheri2@ti.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCH v2 0/3] PCIe: Endpoint: Redesign MSI-X support
-Message-ID: <20200316154023.GA8550@e121166-lin.cambridge.arm.com>
-References: <20200225081703.8857-1-kishon@ti.com>
+        Mon, 16 Mar 2020 11:42:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45759 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731554AbgCPPmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:42:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t2so11769221wrx.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EuH2JuinWmp99M5kgpRBVbGMWPMpSteTL2l8ALHXOxA=;
+        b=SuBjR7SXVaKqCALkd1H8UtvNwExNZJ6zJgrMM6mOmR/V8duV2z/Ny/rgwl/ICWYmHv
+         RWBK+M3PyiJlb3+IMItQHsDQF5jSLhvuAHwNcv6LMVHk4wOfYJKCJcuzotqrz3dAGYH1
+         ZoMfxYPhj1aGisNVytbbz16FGd19F/GLWWKqmyz5QVUWCH852OZkHrnPPIWPrqC4neyS
+         a7v3wobNSSlJVCWjnzCdEU/vJKwAqNo9QlJDdZZzhe6JJt9HI/Adz/aIlbUVRlVc5+r/
+         Wh3K+T1U8mRgzEN73lsQyDrC/jgt58bTBPttxWkvcuF/uHNDyFjl6FzCmQvD6Dy4PO5f
+         8Mtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EuH2JuinWmp99M5kgpRBVbGMWPMpSteTL2l8ALHXOxA=;
+        b=LP9U5u4BDH5h/Tgnp83XtZxMjiGuO6n7oz5Is1zzvywAp6AlJHGuOqzoGOYhW7Xysq
+         uiaOwI8/juCnVvOI9f1WiA3Zld/zJBfavpWA+fB9R1LYmr/7dHYf+LHyEEHdJGdOZUe2
+         c8rtP3IGyUSgO6iFZ3e1yU6CfUw4Rc7eqrb+0hAcxe1BHb4Hrs+lB7yLJvGuuw6xY8rv
+         PLFNsndiqqTf4r6qkuMXuen3zqny6fMbcAn/8ewoizAjf4OS11oXfImhmR3aAPQn7FdL
+         N7E/tapOp0ILKSeso7H/xD0YM7IOzWDqypY5JpC5OjB7dHk5zB7BIS6iHsXXmodHH6aN
+         GPCw==
+X-Gm-Message-State: ANhLgQ0l3THsudhW7F2WCoTdm1+wO+4hL5RewC81ZXhkoA0CkSWsBF90
+        FV1FZhaEygUnya4kdZLpGQDoaQ==
+X-Google-Smtp-Source: ADFU+vtvdsyytNA9HXn2kU8Gc/Wj/vUyTOW35SEjh5aHAlAPKupONXAmkHYxA+n8rH6jwZStjuAuGg==
+X-Received: by 2002:adf:9e8b:: with SMTP id a11mr9088wrf.32.1584373337353;
+        Mon, 16 Mar 2020 08:42:17 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id y80sm85174wmc.45.2020.03.16.08.42.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 08:42:16 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 16:42:09 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        virtualization@lists.linux-foundation.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 03/15] drm/msm/mdp5: Remove direct access of
+ dev->iommu_fwspec
+Message-ID: <20200316154209.GD304669@myrica>
+References: <20200310091229.29830-1-joro@8bytes.org>
+ <20200310091229.29830-4-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225081703.8857-1-kishon@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200310091229.29830-4-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 01:47:00PM +0530, Kishon Vijay Abraham I wrote:
-> Existing MSI-X support in Endpoint core has limitations:
->  1) MSIX table (which is mapped to a BAR) is not allocated by
->     anyone. Ideally this should be allocated by endpoint
->     function driver.
->  2) Endpoint controller can choose any random BARs for MSIX
->     table (irrespective of whether the endpoint function driver
->     has allocated memory for it or not)
+On Tue, Mar 10, 2020 at 10:12:17AM +0100, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> In order to avoid these limitations, pci_epc_set_msix() is
-> modified to include BAR Indicator register (BIR) configuration
-> and MSIX table offset as arguments. This series also fixed MSIX
-> support in dwc driver and add MSI-X support in Cadence PCIe driver.
+> Use the accessor functions instead of directly dereferencing
+> dev->iommu_fwspec.
 > 
-> Changes from v1:
-> *) Removed Cadence MSI-X support from the series
-> *) Fixed nits pointed out by Bjorn
-> 
-> Kishon Vijay Abraham I (3):
->   PCI: endpoint: Fix ->set_msix() to take BIR and offset as arguments
->   PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get correct MSI-X table
->     address
->   PCI: keystone: Allow AM654 PCIe Endpoint to raise MSI-X interrupt
-> 
->  drivers/pci/controller/dwc/pci-keystone.c     |  5 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   | 61 +++++++++----------
->  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->  drivers/pci/endpoint/functions/pci-epf-test.c | 31 ++++++++--
->  drivers/pci/endpoint/pci-epc-core.c           |  7 ++-
->  drivers/pci/endpoint/pci-epf-core.c           |  2 +
->  include/linux/pci-epc.h                       |  6 +-
->  include/linux/pci-epf.h                       | 15 +++++
->  8 files changed, 86 insertions(+), 42 deletions(-)
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
-I have applied it to pci/endpoint for v5.7, thanks.
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-Lorenzo
+> ---
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> index e43ecd4be10a..1252e1d76340 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> @@ -725,7 +725,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+>  
+>  	if (config->platform.iommu) {
+>  		iommu_dev = &pdev->dev;
+> -		if (!iommu_dev->iommu_fwspec)
+> +		if (!dev_iommu_fwspec_get(iommu_dev))
+>  			iommu_dev = iommu_dev->parent;
+>  
+>  		aspace = msm_gem_address_space_create(iommu_dev,
+> -- 
+> 2.17.1
+> 
