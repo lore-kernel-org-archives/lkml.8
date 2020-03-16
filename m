@@ -2,84 +2,109 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD3AC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EF8C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928DC20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88285206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="McR/6Lub"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gdL0v/ZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732033AbgCPQsc (ORCPT
+        id S1732153AbgCPQtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:48:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56886 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731414AbgCPQsc (ORCPT
+        Mon, 16 Mar 2020 12:49:00 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:44740 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731665AbgCPQs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:48:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=LLi4rnfdkVXqdOVLhVNnFoS19kOHY+Adb3HPtcUQkPg=; b=McR/6LubocQwK/n57ZLi3g+ZIv
-        +EPQw9yt+oOOllYfukakkZxu5pvaJXpRpeuh2jX5zf1x9LESuvzgmh45eSpweorY8qrVe7gzTHu9z
-        DmigqOOhUHFO2EH4bg2+D8q3IHTI+Xl+PZrornPmJiEStWraMupSumG15C6MJPwO4Adbhszh40wN9
-        ChEbr+qrkRjBzp6rxxEnYR2tFVj9ONviWSXc173Tzhd9/NI3fu0c4VHN7LjY3DMnWVtSGXapdCT3E
-        7JFf+w9+gFpxmA5LFVtFPEoYE49ode70e8HNdasV1GR8+ilGzSl0scfOX24Y4PfoGeulbmUWAebnI
-        BZQHKyVQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jDsuj-0003Yt-An; Mon, 16 Mar 2020 16:48:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BB9E130138D;
-        Mon, 16 Mar 2020 17:48:27 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 916FA2B4E3C70; Mon, 16 Mar 2020 17:48:27 +0100 (CET)
-Date:   Mon, 16 Mar 2020 17:48:27 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [RFC][PATCH 15/16] objtool: Implement noinstr validation
-Message-ID: <20200316164827.GH12521@hirez.programming.kicks-ass.net>
-References: <20200312134107.700205216@infradead.org>
- <20200312135042.288201372@infradead.org>
- <20200315180320.cgy2ealklbjlx4g7@treble>
- <20200316132419.GF12521@hirez.programming.kicks-ass.net>
- <20200316161904.zouwkwup6vwsmxgp@treble>
+        Mon, 16 Mar 2020 12:48:59 -0400
+X-Greylist: delayed 557 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Mar 2020 12:48:59 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584377338;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qJ0Dh7UwY9/JBhA8PMSrlRvaVmrVnOei0kD1wp+5Gzw=;
+        b=gdL0v/ZWNl1KsPa6+NNqOiaNdOGQl8mZ3NArBj9l3A3pN7P3HCHlJkS0RvkCBpCxJZ2Whi
+        mhUJeSPpijLKsyEg2Ws12XOvTHR9ZRnktKTpMW6CXzQQJGK8mNaJtQA+2AzfTu2kKmdWzH
+        5Dm0NxjHEHV8DNm/G3JKz5jCm+JyYXs=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-mIG9uFeXNB6uEn8bMyH3eA-1; Mon, 16 Mar 2020 12:39:39 -0400
+X-MC-Unique: mIG9uFeXNB6uEn8bMyH3eA-1
+Received: by mail-wm1-f71.google.com with SMTP id p18so2002070wmk.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:39:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qJ0Dh7UwY9/JBhA8PMSrlRvaVmrVnOei0kD1wp+5Gzw=;
+        b=DMgqYa0Mpesas5pRHt+nPhBvYN8J6cXWwPCJw3t2suzGTsMS5FqQfDwMay55Cyccv8
+         hEw89g1pTsBw0CBIYWy9RnGbo9pTVZQOxF+YnpfQrYfOoiy3q17koAiNEP3QJpRWLxU+
+         AVRYfXfinTBIGeZSU/hy2u9W0UDa9O7+Y/bLd81K9yVZmTGIE752xVTjG9yBc/mr7Uec
+         ldkpcGhNZeh4cVBl0FRBvcriTQd+HmnsnOFBATSSYTQHuPM+C+i9HfE6ypbRdQhtXe4K
+         Au6QLKnqrtZ04TRPxC/uSs3KyQWHKlxtj1f0hGiDhKtA7lZBI3s35CccR0vIjkNASUZq
+         xtLQ==
+X-Gm-Message-State: ANhLgQ1JNRA5SACNlB3cZ73osDA4l5Xa3TUWmkTQFW0dJ+YxJhRGxzMP
+        AGePoISTtub0DxiKqwKh+OX2Z4Wxrp1/u09Fgmf/+yK/eFLojqES4JM5e2DRHAm8DQnHu8r5lYj
+        teHE+c2Jc7vD+EHYaN+k1AB6i
+X-Received: by 2002:adf:9307:: with SMTP id 7mr198223wro.171.1584376778098;
+        Mon, 16 Mar 2020 09:39:38 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuKIEKBn5OJ0vxo6JLB1xdXH+6qMUW1IHmoNonOU1p4vkVSNPtTBCf6jdRflKCnpsGtQo6veg==
+X-Received: by 2002:adf:9307:: with SMTP id 7mr198208wro.171.1584376777886;
+        Mon, 16 Mar 2020 09:39:37 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7de8:5d90:2370:d1ac? ([2001:b07:6468:f312:7de8:5d90:2370:d1ac])
+        by smtp.gmail.com with ESMTPSA id n10sm694062wro.14.2020.03.16.09.39.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2020 09:39:37 -0700 (PDT)
+Subject: Re: [PATCH] KVM: X86: correct meaningless kvm_apicv_activated() check
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linmiaohe@huawei.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <1584185480-3556-1-git-send-email-pbonzini@redhat.com>
+ <878sk0n1g1.fsf@vitty.brq.redhat.com>
+ <20200316152650.GD24267@linux.intel.com>
+ <87zhcgl2xc.fsf@vitty.brq.redhat.com>
+ <20200316155911.GE24267@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <eb1037c8-fdb5-4f4c-4641-915c0e3d01bc@redhat.com>
+Date:   Mon, 16 Mar 2020 17:39:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316161904.zouwkwup6vwsmxgp@treble>
+In-Reply-To: <20200316155911.GE24267@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 11:19:04AM -0500, Josh Poimboeuf wrote:
-> On Mon, Mar 16, 2020 at 02:24:19PM +0100, Peter Zijlstra wrote:
-> > > And "read_instr_hints" reads as "read_instruction_hints()".
-> > > 
-> > > Can we come up with a more readable name?  Why not just "notrace"?
-> > > 
-> > > The trace begin/end annotations could be
-> > > 
-> > >   trace_allow_begin()
-> > >   trace_allow_end()
-> > 
-> > notrace already exists and we didn't want to confuse things further.
+On 16/03/20 16:59, Sean Christopherson wrote:
+>>>
+>> 	if (!!old == !!new)
+>> 		return;
+>>
+>> to make it clear we're converting them to 1/0 :-)
+>
+> All I can think of now is the Onion article regarding razor blades...
 > 
-> Um, why would it confuse things to call a section of notrace code
-> ".notrace.text"???
+> 	if (!!!!old == !!!!new)
+> 		return;
+> 
 
-Because it is strictly stronger than the notrace attribute is. And we
-certainly don't want all that is now marked notrace to end up there.
+That would be !!!!!, but seriously I'll go with two.
 
-Our section also very much excludes kprobes and hardware breakpoints for
-starters.
+(Thanks for giving me a chuckle, it's sorely needed these days).
+
+Paolo
+
