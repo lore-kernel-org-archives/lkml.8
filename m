@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A328C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B842AC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010BB20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81DD220724
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326220;
-	bh=OfXpKBA7jzQyXn/bl/k84peHRGE0FjKMueS/+tHh9G8=;
+	s=default; t=1584326223;
+	bh=43+7cUiKLkoOj2SVKxaj6tMcNBy8dpXDhSh3pCvkzNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L95YFUReLjMH8rSTUGAgf+NNg6eUctWRDxmwqaPmmfyrYSS+LEUAfRip1bZQc6Xjy
-	 P8ZTx42ZSMTnQJwr7dPSNv+BvTL1Whv6MQU1ciD+syOF9/3emrpS2Mk7SfjEjJvxU7
-	 TLt2VE66xGv0ScLPF5g6jm9I5tcGM07FfVjcJKvg=
+	b=RPrtUvF8qDq8qQdmn4/rDj/luPAsTbLlOvAKRS8aFSDVqX1S2fTfpI7YJIICOHLp4
+	 nYpJ/UGpGRpB4kJNdJIgeECTzTV7av2nBE/SLWuqBiYetOmfZaQR65wxNgs0NAyFic
+	 jspu4uCvovZHqKNfP1rgbG038eHwVVNUAQpWrIU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730180AbgCPCfb (ORCPT
+        id S1730070AbgCPChC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:35:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39896 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbgCPCf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:35:27 -0400
+        id S1730177AbgCPCfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 286AA206BE;
-        Mon, 16 Mar 2020 02:35:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3441F206EB;
+        Mon, 16 Mar 2020 02:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326126;
-        bh=OfXpKBA7jzQyXn/bl/k84peHRGE0FjKMueS/+tHh9G8=;
+        s=default; t=1584326130;
+        bh=43+7cUiKLkoOj2SVKxaj6tMcNBy8dpXDhSh3pCvkzNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMlayoh02FkyRE7/X/Hfi8A/MIlx3a64Kf1d2BE0bYzHRFeelYuH50HqiGxafg+vI
-         poqBajzGvEW3XrAhwU6LfAs327cA7tQD++RebqY8J/2t905jADcms6n31cs+OpRA89
-         au9ydplBayo9GLRyfXckEKsvLgY4ruwe73sgfFmg=
+        b=uScwK0yPmBYWv8I+PmTKGcrqU7EfcOZFKGu20+fpeeKi5llJMIzGQ5N37H3HlVcdF
+         PRYT9wv8wneosDGToD1j7HZb8fWDicUUBCL3VsP/e80OTAkrP0wvQxprrShXxRQCIc
+         ZJzgYZUwI3Y11mZqjf+WViQeoirt3BpLhVmSlZ5w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Green <evgreen@chromium.org>, Rajat Jain <rajatja@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 05/15] spi: pxa2xx: Add CS control clock quirk
-Date:   Sun, 15 Mar 2020 22:35:09 -0400
-Message-Id: <20200316023519.2050-5-sashal@kernel.org>
+Cc:     luanshi <zhangliguang@linux.alibaba.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 09/15] drivers/perf: arm_pmu_acpi: Fix incorrect checking of gicc pointer
+Date:   Sun, 15 Mar 2020 22:35:13 -0400
+Message-Id: <20200316023519.2050-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023519.2050-1-sashal@kernel.org>
 References: <20200316023519.2050-1-sashal@kernel.org>
@@ -60,85 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: luanshi <zhangliguang@linux.alibaba.com>
 
-[ Upstream commit 683f65ded66a9a7ff01ed7280804d2132ebfdf7e ]
+[ Upstream commit 3ba52ad55b533760a1f65836aa0ec9d35e36bb4f ]
 
-In some circumstances on Intel LPSS controllers, toggling the LPSS
-CS control register doesn't actually cause the CS line to toggle.
-This seems to be failure of dynamic clock gating that occurs after
-going through a suspend/resume transition, where the controller
-is sent through a reset transition. This ruins SPI transactions
-that either rely on delay_usecs, or toggle the CS line without
-sending data.
+Fix bogus NULL checks on the return value of acpi_cpu_get_madt_gicc()
+by checking for a 0 'gicc->performance_interrupt' value instead.
 
-Whenever CS is toggled, momentarily set the clock gating register
-to "Force On" to poke the controller into acting on CS.
-
-Signed-off-by: Rajat Jain <rajatja@google.com>
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Link: https://lore.kernel.org/r/20200211223700.110252-1-rajatja@google.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/perf/arm_pmu_acpi.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index b2245cdce230b..5160e16d3a985 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -76,6 +76,10 @@ MODULE_ALIAS("platform:pxa2xx-spi");
- #define LPSS_CAPS_CS_EN_SHIFT			9
- #define LPSS_CAPS_CS_EN_MASK			(0xf << LPSS_CAPS_CS_EN_SHIFT)
+diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+index 3303dd8d8eb57..604e549a9a47d 100644
+--- a/drivers/perf/arm_pmu_acpi.c
++++ b/drivers/perf/arm_pmu_acpi.c
+@@ -25,8 +25,6 @@ static int arm_pmu_acpi_register_irq(int cpu)
+ 	int gsi, trigger;
  
-+#define LPSS_PRIV_CLOCK_GATE 0x38
-+#define LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK 0x3
-+#define LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON 0x3
-+
- struct lpss_config {
- 	/* LPSS offset from drv_data->ioaddr */
- 	unsigned offset;
-@@ -92,6 +96,8 @@ struct lpss_config {
- 	unsigned cs_sel_shift;
- 	unsigned cs_sel_mask;
- 	unsigned cs_num;
-+	/* Quirks */
-+	unsigned cs_clk_stays_gated : 1;
- };
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (WARN_ON(!gicc))
+-		return -EINVAL;
  
- /* Keep these sorted with enum pxa_ssp_type */
-@@ -162,6 +168,7 @@ static const struct lpss_config lpss_platforms[] = {
- 		.tx_threshold_hi = 56,
- 		.cs_sel_shift = 8,
- 		.cs_sel_mask = 3 << 8,
-+		.cs_clk_stays_gated = true,
- 	},
- };
+ 	gsi = gicc->performance_interrupt;
  
-@@ -385,6 +392,22 @@ static void lpss_ssp_cs_control(struct driver_data *drv_data, bool enable)
- 	else
- 		value |= LPSS_CS_CONTROL_CS_HIGH;
- 	__lpss_ssp_write_priv(drv_data, config->reg_cs_ctrl, value);
-+	if (config->cs_clk_stays_gated) {
-+		u32 clkgate;
-+
-+		/*
-+		 * Changing CS alone when dynamic clock gating is on won't
-+		 * actually flip CS at that time. This ruins SPI transfers
-+		 * that specify delays, or have no data. Toggle the clock mode
-+		 * to force on briefly to poke the CS pin to move.
-+		 */
-+		clkgate = __lpss_ssp_read_priv(drv_data, LPSS_PRIV_CLOCK_GATE);
-+		value = (clkgate & ~LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK) |
-+			LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON;
-+
-+		__lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE, value);
-+		__lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE, clkgate);
-+	}
+@@ -65,11 +63,10 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
+ 	int gsi;
+ 
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (!gicc)
+-		return;
+ 
+ 	gsi = gicc->performance_interrupt;
+-	acpi_unregister_gsi(gsi);
++	if (gsi)
++		acpi_unregister_gsi(gsi);
  }
  
- static void cs_assert(struct driver_data *drv_data)
+ static int arm_pmu_acpi_parse_irqs(void)
 -- 
 2.20.1
 
