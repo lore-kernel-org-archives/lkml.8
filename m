@@ -2,357 +2,160 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B385C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 05:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD59FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 05:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4421620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 05:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F0A2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 05:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X/B0ndRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729648AbgCPFGN (ORCPT
+        id S1729685AbgCPFQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 01:06:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54734 "EHLO mx2.suse.de"
+        Mon, 16 Mar 2020 01:16:04 -0400
+Received: from ozlabs.org ([203.11.71.1]:55573 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729536AbgCPFGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 01:06:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BBB02AC37;
-        Mon, 16 Mar 2020 05:06:09 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 16 Mar 2020 16:06:01 +1100
-Cc:     yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
-In-Reply-To: <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
-References: <20200308140314.GQ5972@shao2-debian>
- <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
- <87blp5urwq.fsf@notabene.neil.brown.name>
- <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
- <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
- <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
- <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
- <878sk7vs8q.fsf@notabene.neil.brown.name>
- <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
- <875zfbvrbm.fsf@notabene.neil.brown.name>
- <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
- <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
- <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
- <87v9nattul.fsf@notabene.neil.brown.name>
- <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
- <87o8t2tc9s.fsf@notabene.neil.brown.name>
- <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
- <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
- <877dznu0pk.fsf@notabene.neil.brown.name>
- <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
- <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
-Message-ID: <87pndcsxc6.fsf@notabene.neil.brown.name>
+        id S1729536AbgCPFQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 01:16:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gkzN5yj7z9sPR;
+        Mon, 16 Mar 2020 16:16:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584335761;
+        bh=ne8widqpB0YTpGojiSmKxEjgpJNxgIxVAi0uoqIn7qI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=X/B0ndRlOgw0inc/V2enEUsgij0Rz9XPF0UULOH8dxP7HxI4Sao72hCBmM9D+y96Z
+         UjZn4hpwrkp/ip3UJur6QcudOdXTpyNeOEyhoRi1ZJ+ykkq12+3SFHlnrPA5SNK5od
+         IdZqu2Zjw1D8mTP4Dsp0qW6/qab+6v7pHLND/7MpLPc3NlG9C9rU+uuEdwauJyVzI2
+         OgwrlARhzn5PKHLmVPYskS4LR3vfXyNKO6i8ITBOb5vzDpHVDLOguxHiBs5BjlFOvW
+         q+oufKest1qGaAiRxAsBACvTDv1XWhI0bCPXHv+h6DxYhJVKBBV0lv0VF4Mi00h6+m
+         GZiaiQczZRu9Q==
+Date:   Mon, 16 Mar 2020 16:15:58 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ran Bi <ran.bi@mediatek.com>
+Subject: linux-next: build failure after merge of the rtc tree
+Message-ID: <20200316161558.438c7d8b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: multipart/signed; boundary="Sig_/rm8O9DsQOe1Jpo87kaInry5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+--Sig_/rm8O9DsQOe1Jpo87kaInry5
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 15 2020, Jeff Layton wrote:
+Hi all,
 
-> On Sat, 2020-03-14 at 08:58 -0700, Linus Torvalds wrote:
->> On Fri, Mar 13, 2020 at 7:31 PM NeilBrown <neilb@suse.de> wrote:
->> > The idea of list_del_init_release() and list_empty_acquire() is growing
->> > on me though.  See below.
->>=20
->> This does look like a promising approach.
->>=20
->> However:
->>=20
->> > +       if (waiter->fl_blocker =3D=3D NULL &&
->> > +           list_empty(&waiter->fl_blocked_requests) &&
->> > +           list_empty_acquire(&waiter->fl_blocked_member))
->> > +               return status;
->>=20
->> This does not seem sensible to me.
->>=20
->> The thing is, the whole point about "acquire" semantics is that it
->> should happen _first_ - because a load-with-acquire only orders things
->> _after_ it.
->>=20
->> So testing some other non-locked state before testing the load-acquire
->> state makes little sense: it means that the other tests you do are
->> fundamentally unordered and nonsensical in an unlocked model.
->>=20
->> So _if_ those other tests matter (do they?), then they should be after
->> the acquire test (because they test things that on the writer side are
->> set before the "store-release"). Otherwise you're testing random
->> state.
->>=20
->> And if they don't matter, then they shouldn't exist at all.
->>=20
->> IOW, if you depend on ordering, then the _only_ ordering that exists is:
->>=20
->>  - writer side: writes done _before_ the smp_store_release() are visible
->>=20
->>  - to the reader side done _after_ the smp_load_acquire()
->>=20
->> and absolutely no other ordering exists or makes sense to test for.
->>=20
->> That limited ordering guarantee is why a store-release -> load-acquire
->> is fundamentally cheaper than any other serialization.
->>=20
->> So the optimistic "I don't need to do anything" case should start ouf wi=
-th
->>=20
->>         if (list_empty_acquire(&waiter->fl_blocked_member)) {
->>=20
->> and go from there. Does it actually need to do anything else at all?
->> But if it does need to check the other fields, they should be checked
->> after that acquire.
->>=20
->> Also, it worries me that the comment talks about "if fl_blocker is
->> NULL". But it realy now is that fl_blocked_member list being empty
->> that is the real serialization test, adn that's the one that the
->> comment should primarily talk about.
->>=20
->
-> Good point. The list manipulation and setting of fl_blocker are always
-> done in conjunction, so I don't see why we'd need to check but one
-> condition there (whichever gets the explicit acquire/release semantics).
->
-> The fl_blocker pointer seems like the clearest way to indicate that to
-> me, but if using list_empty makes sense for other reasons, I'm fine with
-> that.
->
-> This is what I have so far (leaving Linus as author since he did the
-> original patch):
->
-> ------------8<-------------
->
-> From 1493f539e09dfcd5e0862209c6f7f292a2f2d228 Mon Sep 17 00:00:00 2001
-> From: Linus Torvalds <torvalds@linux-foundation.org>
-> Date: Mon, 9 Mar 2020 14:35:43 -0400
-> Subject: [PATCH] locks: reinstate locks_delete_block optimization
->
-> There is measurable performance impact in some synthetic tests due to
-> commit 6d390e4b5d48 (locks: fix a potential use-after-free problem when
-> wakeup a waiter). Fix the race condition instead by clearing the
-> fl_blocker pointer after the wake_up, using explicit acquire/release
-> semantics.
->
-> With this change, we can just check for fl_blocker to clear as an
-> indicator that the block is already deleted, and eliminate the
-> list_empty check that was in the old optimization.
->
-> This does mean that we can no longer use the clearing of fl_blocker as
-> the wait condition, so switch the waiters over to checking whether the
-> fl_blocked_member list_head is empty.
->
-> Cc: yangerkun <yangerkun@huawei.com>
-> Cc: NeilBrown <neilb@suse.de>
-> Fixes: 6d390e4b5d48 (locks: fix a potential use-after-free problem when w=
-akeup a waiter)
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/cifs/file.c |  3 ++-
->  fs/locks.c     | 38 ++++++++++++++++++++++++++++++++------
->  2 files changed, 34 insertions(+), 7 deletions(-)
->
-> diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-> index 3b942ecdd4be..8f9d849a0012 100644
-> --- a/fs/cifs/file.c
-> +++ b/fs/cifs/file.c
-> @@ -1169,7 +1169,8 @@ cifs_posix_lock_set(struct file *file, struct file_=
-lock *flock)
->  	rc =3D posix_lock_file(file, flock, NULL);
->  	up_write(&cinode->lock_sem);
->  	if (rc =3D=3D FILE_LOCK_DEFERRED) {
-> -		rc =3D wait_event_interruptible(flock->fl_wait, !flock->fl_blocker);
-> +		rc =3D wait_event_interruptible(flock->fl_wait,
-> +					list_empty(&flock->fl_blocked_member));
->  		if (!rc)
->  			goto try_again;
->  		locks_delete_block(flock);
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 426b55d333d5..652a09ab02d7 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -725,7 +725,6 @@ static void __locks_delete_block(struct file_lock *wa=
-iter)
->  {
->  	locks_delete_global_blocked(waiter);
->  	list_del_init(&waiter->fl_blocked_member);
-> -	waiter->fl_blocker =3D NULL;
->  }
->=20=20
->  static void __locks_wake_up_blocks(struct file_lock *blocker)
-> @@ -740,6 +739,12 @@ static void __locks_wake_up_blocks(struct file_lock =
-*blocker)
->  			waiter->fl_lmops->lm_notify(waiter);
->  		else
->  			wake_up(&waiter->fl_wait);
-> +
-> +		/*
-> +		 * Tell the world we're done with it - see comment at
-> +		 * top of locks_delete_block().
-> +		 */
-> +		smp_store_release(&waiter->fl_blocker, NULL);
->  	}
->  }
->=20=20
-> @@ -753,11 +758,27 @@ int locks_delete_block(struct file_lock *waiter)
->  {
->  	int status =3D -ENOENT;
->=20=20
-> +	/*
-> +	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
-> +	 * the lock and is the only one that might try to claim the lock.
-> +	 * Because fl_blocker is explicitly set last during a delete, it's
-> +	 * safe to locklessly test to see if it's NULL and avoid doing
-> +	 * anything further if it is.
-> +	 */
-> +	if (!smp_load_acquire(&waiter->fl_blocker))
-> +		return status;
+After merging the rtc tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-No, we really do need fl_blocked_requests to be empty.
-After fl_blocker is cleared, the owner might check for other blockers
-and might queue behind them leaving the blocked requests in place.
-Or it might have to detach all those blocked requests and wake them up
-so they can go and fend for themselves.
+drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_set_alarm':
+drivers/rtc/rtc-mt2712.c:235:6: warning: unused variable 'irqen' [-Wunused-=
+variable]
+  235 |  u16 irqen;
+      |      ^~~~~
+drivers/rtc/rtc-mt2712.c: At top level:
+drivers/rtc/rtc-mt2712.c:409:1: error: expected ',' or ';' before 'static'
+  409 | static struct platform_driver mt2712_rtc_driver =3D {
+      | ^~~~~~
+In file included from drivers/rtc/rtc-mt2712.c:14:
+drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_driver_init':
+drivers/rtc/rtc-mt2712.c:418:24: error: 'mt2712_rtc_driver' undeclared (fir=
+st use in this function); did you mean 'mt2712_rtc_probe'?
+  418 | module_platform_driver(mt2712_rtc_driver);
+      |                        ^~~~~~~~~~~~~~~~~
+include/linux/platform_device.h:214:29: note: in definition of macro 'platf=
+orm_driver_register'
+  214 |  __platform_driver_register(drv, THIS_MODULE)
+      |                             ^~~
+include/linux/platform_device.h:244:2: note: in expansion of macro 'module_=
+driver'
+  244 |  module_driver(__platform_driver, platform_driver_register, \
+      |  ^~~~~~~~~~~~~
+drivers/rtc/rtc-mt2712.c:418:1: note: in expansion of macro 'module_platfor=
+m_driver'
+  418 | module_platform_driver(mt2712_rtc_driver);
+      | ^~~~~~~~~~~~~~~~~~~~~~
+drivers/rtc/rtc-mt2712.c:418:24: note: each undeclared identifier is report=
+ed only once for each function it appears in
+  418 | module_platform_driver(mt2712_rtc_driver);
+      |                        ^~~~~~~~~~~~~~~~~
+include/linux/platform_device.h:214:29: note: in definition of macro 'platf=
+orm_driver_register'
+  214 |  __platform_driver_register(drv, THIS_MODULE)
+      |                             ^~~
+include/linux/platform_device.h:244:2: note: in expansion of macro 'module_=
+driver'
+  244 |  module_driver(__platform_driver, platform_driver_register, \
+      |  ^~~~~~~~~~~~~
+drivers/rtc/rtc-mt2712.c:418:1: note: in expansion of macro 'module_platfor=
+m_driver'
+  418 | module_platform_driver(mt2712_rtc_driver);
+      | ^~~~~~~~~~~~~~~~~~~~~~
+In file included from include/linux/device.h:31,
+                 from include/linux/platform_device.h:13,
+                 from drivers/rtc/rtc-mt2712.c:14:
+drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_driver_exit':
+drivers/rtc/rtc-mt2712.c:418:24: error: 'mt2712_rtc_driver' undeclared (fir=
+st use in this function); did you mean 'mt2712_rtc_probe'?
+  418 | module_platform_driver(mt2712_rtc_driver);
+      |                        ^~~~~~~~~~~~~~~~~
+include/linux/device/driver.h:266:17: note: in definition of macro 'module_=
+driver'
+  266 |  __unregister(&(__driver) , ##__VA_ARGS__); \
+      |                 ^~~~~~~~
+drivers/rtc/rtc-mt2712.c:418:1: note: in expansion of macro 'module_platfor=
+m_driver'
+  418 | module_platform_driver(mt2712_rtc_driver);
+      | ^~~~~~~~~~~~~~~~~~~~~~
+drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_driver_init':
+drivers/rtc/rtc-mt2712.c:418:1: warning: control reaches end of non-void fu=
+nction [-Wreturn-type]
+  418 | module_platform_driver(mt2712_rtc_driver);
+      | ^~~~~~~~~~~~~~~~~~~~~~
+At top level:
+drivers/rtc/rtc-mt2712.c:312:12: warning: 'mt2712_rtc_probe' defined but no=
+t used [-Wunused-function]
+  312 | static int mt2712_rtc_probe(struct platform_device *pdev)
+      |            ^~~~~~~~~~~~~~~~
 
-I think the worse-case scenario could go something like that.
-Process A get a lock - Al
-Process B tries to get a conflicting lock and blocks Bl -> Al
-Process C tries to get a conflicting lock and blocks on B:
-   Cl -> Bl -> Al
+Caused by commit
 
-At much the same time that C goes to attach Cl to Bl, A
-calls unlock and B get signaled.
+  00c36d73171b ("rtc: add support for the MediaTek MT2712 RTC")
 
-So A is calling locks_wake_up_blocks(Al) - which takes blocked_lock_lock.
-C is calling  locks_insert_block(Bl, Cl) - which also takes the lock
-B is calling  locks_delete_block(Bl)  which might not take the lock.
+I have used the version from next-20200313 for today.
 
-Assume C gets the lock first.
+--=20
+Cheers,
+Stephen Rothwell
 
-Before C calls locks_insert_block, Bl->fl_blocked_requests is empty.
-After A finishes in locks_wake_up_blocks, Bl->fl_blocker is NULL
-
-If B sees that fl_blocker is NULL, we need it to see that
-fl_blocked_requests is no longer empty, so that it takes the lock and
-cleans up fl_blocked_requests.
-
-If the list_empty test on fl_blocked_request goes after the fl_blocker
-test, the memory barriers we have should assure that.  I had thought
-that it would need an extra barrier, but as a spinlock places the change
-to fl_blocked_requests *before* the change to fl_blocker, I no longer
-think that is needed.
-
-Thanks,
-NeilBrown
-
-
-> +
->  	spin_lock(&blocked_lock_lock);
->  	if (waiter->fl_blocker)
->  		status =3D 0;
->  	__locks_wake_up_blocks(waiter);
->  	__locks_delete_block(waiter);
-> +
-> +	/*
-> +	 * Tell the world we're done with it - see comment at top
-> +	 * of this function
-> +	 */
-> +	smp_store_release(&waiter->fl_blocker, NULL);
->  	spin_unlock(&blocked_lock_lock);
->  	return status;
->  }
-> @@ -1350,7 +1371,8 @@ static int posix_lock_inode_wait(struct inode *inod=
-e, struct file_lock *fl)
->  		error =3D posix_lock_inode(inode, fl, NULL);
->  		if (error !=3D FILE_LOCK_DEFERRED)
->  			break;
-> -		error =3D wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
-> +		error =3D wait_event_interruptible(fl->fl_wait,
-> +					list_empty(&fl->fl_blocked_member));
->  		if (error)
->  			break;
->  	}
-> @@ -1435,7 +1457,8 @@ int locks_mandatory_area(struct inode *inode, struc=
-t file *filp, loff_t start,
->  		error =3D posix_lock_inode(inode, &fl, NULL);
->  		if (error !=3D FILE_LOCK_DEFERRED)
->  			break;
-> -		error =3D wait_event_interruptible(fl.fl_wait, !fl.fl_blocker);
-> +		error =3D wait_event_interruptible(fl.fl_wait,
-> +					list_empty(&fl.fl_blocked_member));
->  		if (!error) {
->  			/*
->  			 * If we've been sleeping someone might have
-> @@ -1638,7 +1661,8 @@ int __break_lease(struct inode *inode, unsigned int=
- mode, unsigned int type)
->=20=20
->  	locks_dispose_list(&dispose);
->  	error =3D wait_event_interruptible_timeout(new_fl->fl_wait,
-> -						!new_fl->fl_blocker, break_time);
-> +					list_empty(&new_fl->fl_blocked_member),
-> +					break_time);
->=20=20
->  	percpu_down_read(&file_rwsem);
->  	spin_lock(&ctx->flc_lock);
-> @@ -2122,7 +2146,8 @@ static int flock_lock_inode_wait(struct inode *inod=
-e, struct file_lock *fl)
->  		error =3D flock_lock_inode(inode, fl);
->  		if (error !=3D FILE_LOCK_DEFERRED)
->  			break;
-> -		error =3D wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
-> +		error =3D wait_event_interruptible(fl->fl_wait,
-> +				list_empty(&fl->fl_blocked_member));
->  		if (error)
->  			break;
->  	}
-> @@ -2399,7 +2424,8 @@ static int do_lock_file_wait(struct file *filp, uns=
-igned int cmd,
->  		error =3D vfs_lock_file(filp, cmd, fl, NULL);
->  		if (error !=3D FILE_LOCK_DEFERRED)
->  			break;
-> -		error =3D wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
-> +		error =3D wait_event_interruptible(fl->fl_wait,
-> +					list_empty(&fl->fl_blocked_member));
->  		if (error)
->  			break;
->  	}
-> --=20
-> 2.24.1
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/rm8O9DsQOe1Jpo87kaInry5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5vCTkACgkQOeye3VZi
-gbmNeQ/+KswYY+Rmw0irgoahIBJWUky+S4bxNi9MrLC/V5MJe1lhi+qQxWhl2E6D
-98DiTKsV6VdPdpZntg5csIR18fU75qYBilW/gG+5J8kE+dh/JGqMgGWosHjb3X0d
-+MUPKwmDvuYGFciLQJMI/Y/D9+ylckTI8FjL79Kf3Pz8fpuPYMiGlQ9y135l5FaS
-SjgyAUTi/eLr8ehf6Oy+z/1OYmWFai4HMhxC1Bv5oSNgiWl4yXPxb3ps60agAoEp
-OxmqgNKcCl0D1esb3Qnap06LPY7H2kPs9EPp+SpzTKaraJrPRTfsErV5d8wKvOwL
-BqR+28a/Eo+x+NSog8GJRnFufHAXsISDkZDF29979BAks1y5Ybcor/Vb12aArnm5
-+sym68DAlPHkpkZC/zJdKTsX761owRpMUyg7HaE+UIAK34oz5uM2n5H2sye1ZwH2
-02VUwVMGOP6a5aJxmA8Stnhb+Qz6QyMoS37sphOQnUo6HJC2B2HqQRSp/5qtvlnr
-kwnYy4d8HFutcW7TUgXWBWKxXEKen7GTmyZGOBZHccf0hY8vJKUkIJ+4ml3eZebj
-bXF8CYirdi6Tdrls3ydCZT/MOd5HruuWuVnh3SD4iTdo7jYC/s02zEkJ/e0635Zt
-cWHhrAOxTNPtyo7AWLIh2znipHPzVgXkQ6KAn5wt7oiXHvY25OA=
-=RFqA
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5vC44ACgkQAVBC80lX
+0GySCAf9HVA8LQvxAlrLgmr1lybrFZAcE9YxZh0nILbgs3nDwnx1uuItaU1n+w6n
+Vw36LqVLlFdvqLtldgpq8BtrlnwOWQcAlJsfpReGuTGx8Tlp8m+aAnT9p6BhAoOo
+s1+adcdyLXXanXvyyIx9ZKS11t56glPhOazKTt4G9oHGPWkHrqdCi0iZvJJNkxYy
+Wg32sGxfdV4pOoM13X9Tgv5HgbfAbKK1Q8jh90xuwOUbrJ41LW+1g73D5VR/0lcQ
+Alv7nFJJjhPD40/AxDQw+QaExb1P8Nlndq0K//lXZVUaeZfSxDZ1drt+F0Tzbcq+
+xakVbr0uFdD21eARs1VDcAKKYI8bxg==
+=GXeH
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--Sig_/rm8O9DsQOe1Jpo87kaInry5--
