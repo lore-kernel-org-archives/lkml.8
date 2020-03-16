@@ -2,96 +2,151 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBBBC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A7EC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB0520658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09FFF206B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="RRRaKsZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbgCPJxJ (ORCPT
+        id S1730484AbgCPJyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:53:09 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:56833 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730431AbgCPJxB (ORCPT
+        Mon, 16 Mar 2020 05:54:22 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42422 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730025AbgCPJyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:53:01 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: sC2KMEzaRyiEAqfCSUIZXkRbjMbVbehFCbA4z+3IqH3UXYcvvRJB9ga/QubJAqoOnktW9xggfz
- eDgDT9fFMIeAbJeP53MIjw3aNGjzUENpJsJvLtKzpS8JFCjPVHixoGv7etqdugBkF/Cj1XiDnq
- kiscYTDjmbYWcGb+XnWlN6wdG8mHa6O2qU3IZu2RWBuAL7qRP/a1IRb1ZHLJSNhMUSUxMdKQtU
- 9hVz0TqXTdJzyVhvkO7mw8Vpm0V7YWx9dig4OU8v+UneBC5J/LagF8USvxyZaIsPxOqIeWBfe6
- Meo=
-X-IronPort-AV: E=Sophos;i="5.70,559,1574146800"; 
-   d="scan'208";a="5786408"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Mar 2020 02:53:01 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 16 Mar 2020 02:53:00 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 16 Mar 2020 02:53:01 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
-CC:     <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH] clocksource/drivers/timer-microchip-pit64b: set rate for gck
-Date:   Mon, 16 Mar 2020 11:52:56 +0200
-Message-ID: <1584352376-32585-1-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 16 Mar 2020 05:54:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v11so20337568wrm.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 02:54:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zSC6oywTzGEcsERVAal6BgbGEUVylhtga/Ve0wR+QRc=;
+        b=RRRaKsZunyqDMQVwDP9D6Nu+AmSqGr/H4565L2bBRQhll0tBF9qebcJGYMlHrB2gds
+         h9Y1J9KgmKQy8VpoQ4FMYiIfSnhwuft5cTK+obEJAswssCVZ+kYxv6DWBlz4i07R9FCM
+         6JIwhFd4Ew3+W57/EHzL40CxmKzFKvwJCHbeo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=zSC6oywTzGEcsERVAal6BgbGEUVylhtga/Ve0wR+QRc=;
+        b=ZvUXgJ5V9DTPhRbei7cs/wKNr0U3IgWH1uxF0AsMxvFZraFuqpGxOGUuHEGavo/3+u
+         P/jIGu8ORdunbiURxA6JEEOOIIkEerm7DagKkd7NOe0wzg2Xn9AuUcyhm4LCL3wCoK7W
+         wawV1KzC2Mv+9sAcoj3XzI7qRpo0nUWXTorSclC0UTgGa9/ZqqgS5hO5QAZc8QpBeaYu
+         ixjzxSv+G+xuJ6HK+tiwi1nvBIZhw9s52CbwMcab06oVuwaBcGRfL8eW0nrwiFkFGa0p
+         Vr3/xRSxy+TUZzW//m8ef4Fucyv/AGH6UrhIg7i8URB164WFUVi/C8aoreaowNqiwB38
+         3eGA==
+X-Gm-Message-State: ANhLgQ2cF2gYDIzskomPcUJdjeNFzujM+ionS0dI8F0hJc802n4AsfHq
+        7lJp7VLSWfWhgKWI37FYPee38g==
+X-Google-Smtp-Source: ADFU+vurrbpA/epmkOYU7s8Kn94q0u3aqT2RnagU7067QxIDTERhlXeUzcuowJp9G/4OzldwVyDHEg==
+X-Received: by 2002:a5d:480a:: with SMTP id l10mr1681118wrq.178.1584352459668;
+        Mon, 16 Mar 2020 02:54:19 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id a186sm29813829wmh.33.2020.03.16.02.54.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 02:54:18 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 10:54:17 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm/edid: Distribute switch variables for
+ initialization
+Message-ID: <20200316095417.GJ2363188@phenom.ffwll.local>
+Mail-Followup-To: Kees Cook <keescook@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org
+References: <202003060930.DDCCB6659@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202003060930.DDCCB6659@keescook>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Generic clock rate needs to be set in case it was selected as timer clock
-source in mchp_pit64b_init_mode(). Otherwise it will be enabled with wrong
-rate.
+On Fri, Mar 06, 2020 at 09:32:13AM -0800, Kees Cook wrote:
+> Variables declared in a switch statement before any case statements
+> cannot be automatically initialized with compiler instrumentation (as
+> they are not part of any execution flow). With GCC's proposed automatic
+> stack variable initialization feature, this triggers a warning (and they
+> don't get initialized). Clang's automatic stack variable initialization
+> (via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+> doesn't initialize such variables[1]. Note that these warnings (or silent
+> skipping) happen before the dead-store elimination optimization phase,
+> so even when the automatic initializations are later elided in favor of
+> direct initializations, the warnings remain.
+> 
+> To avoid these problems, lift such variables up into the next code
+> block.
+> 
+> drivers/gpu/drm/drm_edid.c: In function ‘drm_edid_to_eld’:
+> drivers/gpu/drm/drm_edid.c:4395:9: warning: statement will never be
+> executed [-Wswitch-unreachable]
+>  4395 |     int sad_count;
+>       |         ^~~~~~~~~
+> 
+> [1] https://bugs.llvm.org/show_bug.cgi?id=44916
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Fixes: 625022a5f160 ("clocksource/drivers/timer-microchip-pit64b: Add Microchip PIT64B support")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/clocksource/timer-microchip-pit64b.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for your patch, applied to drm-misc-next.
+-Daniel
 
-diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
-index bd63d3484838..59e11ca8ee73 100644
---- a/drivers/clocksource/timer-microchip-pit64b.c
-+++ b/drivers/clocksource/timer-microchip-pit64b.c
-@@ -264,6 +264,7 @@ static int __init mchp_pit64b_init_mode(struct mchp_pit64b_timer *timer,
- 
- 	if (!best_diff) {
- 		timer->mode |= MCHP_PIT64B_MR_SGCLK;
-+		clk_set_rate(timer->gclk, gclk_round);
- 		goto done;
- 	}
- 
+> ---
+> v2: move into function block instead being switch-local (Ville Syrjälä)
+> ---
+>  drivers/gpu/drm/drm_edid.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 805fb004c8eb..46cee78bc175 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -4381,6 +4381,7 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
+>  
+>  	if (cea_revision(cea) >= 3) {
+>  		int i, start, end;
+> +		int sad_count;
+>  
+>  		if (cea_db_offsets(cea, &start, &end)) {
+>  			start = 0;
+> @@ -4392,8 +4393,6 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
+>  			dbl = cea_db_payload_len(db);
+>  
+>  			switch (cea_db_tag(db)) {
+> -				int sad_count;
+> -
+>  			case AUDIO_BLOCK:
+>  				/* Audio Data Block, contains SADs */
+>  				sad_count = min(dbl / 3, 15 - total_sad_count);
+> -- 
+> 2.20.1
+> 
+> 
+> -- 
+> Kees Cook
+
 -- 
-2.7.4
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
