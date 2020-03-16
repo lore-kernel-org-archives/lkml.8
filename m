@@ -2,155 +2,98 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C59C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9987C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2106C2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCD62051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 13:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731132AbgCPNJO (ORCPT
+        id S1731145AbgCPNNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 09:09:14 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25949 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbgCPNJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 09:09:14 -0400
-IronPort-SDR: VGinNkE0QJ8atWsdctpYzrxADn6puc7SHHqn32XUPbATYHrzEcvnQZKrARR0Imv1fq5ghv6r+E
- dq/2VlThmd7g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 06:09:13 -0700
-IronPort-SDR: 0CeY80JCmqMRFF8PRRwqjCJTuc1Tu7GsgKQr52YKi11iJStA/m1bmE/80Ik3TgXwgODzGweN8w
- O4YWoKhrBOMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,560,1574150400"; 
-   d="scan'208";a="247451195"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by orsmga006.jf.intel.com with ESMTP; 16 Mar 2020 06:09:11 -0700
-Subject: Re: [RESEND PATCH 1/3] mmc: host: Introduce the request_atomic() for
- the host
-To:     Baolin Wang <baolin.wang7@gmail.com>, ulf.hansson@linaro.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1583307441.git.baolin.wang7@gmail.com>
- <ace53bca354e2846f19684bd33a9c0f3c2ee2c44.1583307441.git.baolin.wang7@gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <dd44e606-3eb5-f7fc-5995-021705a9b5d9@intel.com>
-Date:   Mon, 16 Mar 2020 15:08:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 16 Mar 2020 09:13:19 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11702 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731025AbgCPNNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 09:13:19 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8D0A22A0B1305EC4C0D3;
+        Mon, 16 Mar 2020 21:13:14 +0800 (CST)
+Received: from huawei.com (10.175.113.25) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 16 Mar 2020
+ 21:13:04 +0800
+From:   Zheng Zengkai <zhengzengkai@huawei.com>
+To:     <davem@davemloft.net>, <aelior@marvell.com>,
+        <GR-everest-linux-l2@marvell.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <zhengzengkai@huawei.com>
+Subject: [PATCH net-next] qede: remove some unused code in function qede_selftest_receive_traffic
+Date:   Mon, 16 Mar 2020 21:05:24 +0800
+Message-ID: <20200316130524.140421-1-zhengzengkai@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <ace53bca354e2846f19684bd33a9c0f3c2ee2c44.1583307441.git.baolin.wang7@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/03/20 9:42 am, Baolin Wang wrote:
-> The SD host controller can process one request in the atomic context if
-> the card is nonremovable, which means we can submit next request in the
-> irq hard handler when using the MMC software queue to reduce the latency.
-> Thus this patch adds a new API request_atomic() for the host controller
-> and implement it for the SD host controller.
-> 
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> ---
->  drivers/mmc/host/sdhci.c | 27 +++++++++++++++++++--------
->  drivers/mmc/host/sdhci.h |  1 +
->  include/linux/mmc/host.h |  3 +++
->  3 files changed, 23 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 9c37451..4febbcb 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -2016,17 +2016,12 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->   *                                                                           *
->  \*****************************************************************************/
->  
-> -void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> +static void sdhci_start_request(struct mmc_host *mmc, struct mmc_request *mrq,
-> +				int present)
->  {
-> -	struct sdhci_host *host;
-> -	int present;
-> +	struct sdhci_host *host = mmc_priv(mmc);
->  	unsigned long flags;
->  
-> -	host = mmc_priv(mmc);
-> -
-> -	/* Firstly check card presence */
-> -	present = mmc->ops->get_cd(mmc);
-> -
->  	spin_lock_irqsave(&host->lock, flags);
->  
->  	sdhci_led_activate(host);
-> @@ -2043,6 +2038,22 @@ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
->  
->  	spin_unlock_irqrestore(&host->lock, flags);
->  }
-> +
-> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq)
-> +{
-> +	sdhci_start_request(mmc, mrq, 1);
-> +}
-> +EXPORT_SYMBOL_GPL(sdhci_request_atomic);
-> +
-> +void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> +{
-> +	int present;
-> +
-> +	/* Firstly check card presence */
-> +	present = mmc->ops->get_cd(mmc);
-> +
-> +	sdhci_start_request(mmc, mrq, present);
-> +}
->  EXPORT_SYMBOL_GPL(sdhci_request);
->  
->  void sdhci_set_bus_width(struct sdhci_host *host, int width)
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index cac2d97..5507a73 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -775,6 +775,7 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
->  			   unsigned short vdd);
->  void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
-> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
->  void sdhci_set_bus_width(struct sdhci_host *host, int width);
->  void sdhci_reset(struct sdhci_host *host, u8 mask);
->  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
-> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> index 562ed06..db5e59c 100644
-> --- a/include/linux/mmc/host.h
-> +++ b/include/linux/mmc/host.h
-> @@ -92,6 +92,9 @@ struct mmc_host_ops {
->  			    int err);
->  	void	(*pre_req)(struct mmc_host *host, struct mmc_request *req);
->  	void	(*request)(struct mmc_host *host, struct mmc_request *req);
-> +	/* Submit one request to host in atomic context. */
-> +	void	(*request_atomic)(struct mmc_host *host,
-> +				  struct mmc_request *req);
+Remove set but not used variables 'sw_comp_cons' and 'hw_comp_cons'
+to fix gcc '-Wunused-but-set-variable' warning:
 
-This doesn't have the flexibility to return "busy".  For example,
-sdhci_send_command() will potentially wait quite some time if the inhibit
-bits are set.  That is not good in interrupt context.  It would be better to
-return immediately in that case and have the caller fall back to a
-non-atomic context.  Thoughts?
+drivers/net/ethernet/qlogic/qede/qede_ethtool.c: In function qede_selftest_receive_traffic:
+drivers/net/ethernet/qlogic/qede/qede_ethtool.c:1569:20:
+ warning: variable sw_comp_cons set but not used [-Wunused-but-set-variable]
+drivers/net/ethernet/qlogic/qede/qede_ethtool.c: In function qede_selftest_receive_traffic:
+drivers/net/ethernet/qlogic/qede/qede_ethtool.c:1569:6:
+ warning: variable hw_comp_cons set but not used [-Wunused-but-set-variable]
 
->  
->  	/*
->  	 * Avoid calling the next three functions too often or in a "fast
-> 
+After removing 'hw_comp_cons',the memory barrier 'rmb()' and its comments become useless,
+so remove them as well.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zheng Zengkai <zhengzengkai@huawei.com>
+---
+ drivers/net/ethernet/qlogic/qede/qede_ethtool.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
+index 8a426afb6a55..f5141d1f19bf 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
+@@ -1566,7 +1566,7 @@ static int qede_selftest_transmit_traffic(struct qede_dev *edev,
+ 
+ static int qede_selftest_receive_traffic(struct qede_dev *edev)
+ {
+-	u16 hw_comp_cons, sw_comp_cons, sw_rx_index, len;
++	u16 sw_rx_index, len;
+ 	struct eth_fast_path_rx_reg_cqe *fp_cqe;
+ 	struct qede_rx_queue *rxq = NULL;
+ 	struct sw_rx_data *sw_rx_data;
+@@ -1596,17 +1596,6 @@ static int qede_selftest_receive_traffic(struct qede_dev *edev)
+ 			continue;
+ 		}
+ 
+-		hw_comp_cons = le16_to_cpu(*rxq->hw_cons_ptr);
+-		sw_comp_cons = qed_chain_get_cons_idx(&rxq->rx_comp_ring);
+-
+-		/* Memory barrier to prevent the CPU from doing speculative
+-		 * reads of CQE/BD before reading hw_comp_cons. If the CQE is
+-		 * read before it is written by FW, then FW writes CQE and SB,
+-		 * and then the CPU reads the hw_comp_cons, it will use an old
+-		 * CQE.
+-		 */
+-		rmb();
+-
+ 		/* Get the CQE from the completion ring */
+ 		cqe = (union eth_rx_cqe *)qed_chain_consume(&rxq->rx_comp_ring);
+ 
+-- 
+2.20.1
 
