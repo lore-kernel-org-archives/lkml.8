@@ -2,123 +2,148 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2361AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CB7C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB19E20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFCD20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 22:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mM4lwSG1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIU/bY9A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732849AbgCPWfV (ORCPT
+        id S1732850AbgCPWiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 18:35:21 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:17476 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732836AbgCPWfU (ORCPT
+        Mon, 16 Mar 2020 18:38:18 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55158 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732739AbgCPWiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 18:35:20 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02GMUen6021564
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:35:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=8v1OnHmR5wX5fICDYV1U9HUzSwtkFptrUKwgJuVU9co=;
- b=mM4lwSG146ZpE7yCU7c2bx8k3Nx2oj8WSsZFuqDD3zireAZV990AovTSEZgmf6Jz2GOK
- E7teFoCvRH3egG89aHA59BlZ7wLPF1srfyiCDaGBr+UWQaNlMV40hys3yGhHYA54+uoF
- eydnEwwc9a2KJS6nkQhNVRpaJuvq1/8OAg8= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yrvsnsuvq-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:35:19 -0700
-Received: from intmgw002.06.prn3.facebook.com (2620:10d:c085:108::4) by
- mail.thefacebook.com (2620:10d:c085:11d::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Mon, 16 Mar 2020 15:35:17 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 494903BA0D448; Mon, 16 Mar 2020 15:35:16 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH] mm: memcg: make memory.oom.group tolerable to task migration
-Date:   Mon, 16 Mar 2020 15:35:10 -0700
-Message-ID: <20200316223510.3176148-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Mon, 16 Mar 2020 18:38:18 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n8so19452628wmc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 15:38:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1fBBOx02VcEYppdCNi5Xl2Em7WTei4uipjmvF9jzRYs=;
+        b=VIU/bY9At5xVG9wGhnfLBhqN5QhHGKCCXmnN0KqYvjF5a52JUlieZIV/k3W7Zj8g1F
+         MFNBVubiu0gUfDZ9X2oPNmd5daPqxz2V2TAmpJkUMKOmsWxB11u4e9+XB4aMZZpiWATd
+         aLmESwpnTHPZNYPpBtRmFdVWiS/8d3rxkCcyUENSLnbb/NZq2Su3zNs3hOJJ4Iwsv6kY
+         6OAmsB+ki3dgNsnGBnnPErL28p9mGumyb/c6ufE/eE0zt4wX7PLbjPI09wsx+mjohR2y
+         XeRLugX//utJqPKRSD2TAVvv1avqSVifEO0XR1NrCG75QuxCio5D4R8Qb/FXNN/Sp+lD
+         Ml2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1fBBOx02VcEYppdCNi5Xl2Em7WTei4uipjmvF9jzRYs=;
+        b=o56cAxHzXi+eIwUuB7gBXD0vJPN4K9b0nUZfO6GMZrO53ftQckWFuRcle3uWOsq9sQ
+         nfqDRo+jRPIAzNK5F9kLVVubIqrIcr4E5g1qoA+iDwQBXhh+1+rir3U5t3lk8gnGWo7N
+         /BpuHGtwnNIzhOVJwFgWZU95YQSZLjumCin2SxtVkiW/GF7kbyvA6ulhIFlYp0Uu4hI/
+         PAnfrU/Dbj65aBqhCyIRVecZ2stYJmYK4Jpq+3CGZeGFhfRl5Dm2IX/phez24jLn/ILR
+         H6762d9dXHKnVMdWEyzFVaQbTv5vzsIrB5EeBg5TUWsAhoAjeQeKPEmTnycfQJoG8DIj
+         2YDA==
+X-Gm-Message-State: ANhLgQ35ODq7xy/b/80D2UJ4AAhNgZ5g2fA5JhciLjChTwsGF9LIfQHo
+        c3hytMM58ok8pWI7nRB39k8=
+X-Google-Smtp-Source: ADFU+vtChtP3lSKZ8/B9vEVi/mPCHm0+iHAc+RkasjUxXmYPvAx9TcuNhExKUL1CJUWuiaYhpG/LpA==
+X-Received: by 2002:a1c:3dd7:: with SMTP id k206mr1292164wma.147.1584398296193;
+        Mon, 16 Mar 2020 15:38:16 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id w204sm1427927wma.1.2020.03.16.15.38.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Mar 2020 15:38:15 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 22:38:14 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        Mika Penttil?? <mika.penttila@nextfour.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [RFC 2/3] mm: Add a new page flag PageLayzyFree() for MADV_FREE
+Message-ID: <20200316223814.dpzlmfpb6a2cus25@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200228033819.3857058-1-ying.huang@intel.com>
+ <20200228033819.3857058-3-ying.huang@intel.com>
+ <20200315081854.rcqlmfckeqrh7fbt@master>
+ <92d4b0fe-f592-8da6-0282-2ea8a015b247@nextfour.com>
+ <20200315122217.45mioaxzuulwvx2f@master>
+ <87pnddrt5t.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-16_10:2020-03-12,2020-03-16 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
- bulkscore=0 clxscore=1015 spamscore=0 impostorscore=0 priorityscore=1501
- mlxscore=0 phishscore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003160092
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87pnddrt5t.fsf@yhuang-dev.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a task is getting moved out of the OOMing cgroup, it might
-result in unexpected OOM killings if memory.oom.group is used
-anywhere in the cgroup tree.
+On Mon, Mar 16, 2020 at 09:21:34AM +0800, Huang, Ying wrote:
+>Wei Yang <richard.weiyang@gmail.com> writes:
+>
+>> On Sun, Mar 15, 2020 at 10:54:03AM +0200, Mika Penttil?? wrote:
+>>>
+>>>
+>>>On 15.3.2020 10.18, Wei Yang wrote:
+>>>> On Fri, Feb 28, 2020 at 11:38:18AM +0800, Huang, Ying wrote:
+>>>> > From: Huang Ying <ying.huang@intel.com>
+>>>> > 
+>>>> > Now !PageSwapBacked() is used as the flag for the pages freed lazily
+>>>> > via MADV_FREE.  This isn't obvious enough.  So Dave suggested to add a
+>>>> > new page flag for that to improve the code readability.
+>>>> I am confused with the usage of PageSwapBacked().
+>>>> 
+>>>> Previously I thought this flag means the page is swapin, set in
+>>>> swapin_readahead(). While I found page_add_new_anon_rmap() would set it too.
+>>>> This means every anon page would carry this flag. Then what is this flag
+>>>> means?
+>>>> 
+>>>> 
+>>>
+>>>But not all PageSwapBacked() pages are anon, like shmem.
+>>>
+>>
+>> Yes, while it looks shmem is the only exception.
+>
+>Another exception is the pages freed lazily via MADV_FREE.
+>
+>> I am still struggling to understand the meaning of this flag.
+>
+>You can use `git blame` to find out the commit which introduces this
+>flag.  Which describes why this flag is introduced.
 
-Imagine the following example:
+Thanks, I see the purpose is to distinguish a page:
 
-          A (oom.group = 1)
-         / \
-  (OOM) B   C
+   a) file backed
+   b) or otheres
 
-Let's say B's memory.max is exceeded and it's OOMing. The OOM killer
-selects a task in B as a victim, but someone asynchronously moves
-the task into C. mem_cgroup_get_oom_group() will iterate over all
-ancestors of C up to the root cgroup. In theory it had to stop
-at the oom_domain level - the memory cgroup which is OOMing.
-But because B is not an ancestor of C, it's not happening.
-Instead it chooses A (because it's oom.group is set), and kills
-all tasks in A. This behavior is wrong because the OOM happened in B,
-so there is no reason to kill anything outside.
+This sound more clear.
 
-Fix this by checking it the memory cgroup to which the task belongs
-is a descendant of the oom_domain. If not, memory.oom.group should
-be ignored, and the OOM killer should kill only the victim task.
+And now this flag is also used for MADV_FREE, which sounds a little abuse.
+This is the purpose of this patch to make a dedicate flag for MADV_FREE.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reported-by: Dan Schatzberg <dschatzberg@fb.com>
----
- mm/memcontrol.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+BTW, the name, swapbacked, is a little misleading. Maybe just to me. But I
+can't come up with better naming. :-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index daa399be4688..d8c4b7aa4e73 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1930,6 +1930,14 @@ struct mem_cgroup *mem_cgroup_get_oom_group(struct task_struct *victim,
- 	if (memcg == root_mem_cgroup)
- 		goto out;
- 
-+	/*
-+	 * If the victim task has been asynchronously moved to a different
-+	 * memory cgroup, we might end up killing tasks outside oom_domain.
-+	 * In this case it's better to ignore memory.group.oom.
-+	 */
-+	if (unlikely(!mem_cgroup_is_descendant(memcg, oom_domain)))
-+		goto out;
-+
- 	/*
- 	 * Traverse the memory cgroup hierarchy from the victim task's
- 	 * cgroup up to the OOMing cgroup (or root) to find the
+>
+>Best Regards,
+>Huang, Ying
+>
+>>>
+>>>--Mika
+
 -- 
-2.24.1
-
+Wei Yang
+Help you, Help me
