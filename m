@@ -2,99 +2,131 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D620FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB26C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B440C20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30F220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 08:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="l3Gqhn+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbgCPIZU (ORCPT
+        id S1730078AbgCPI2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:25:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:59141 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728302AbgCPIZT (ORCPT
+        Mon, 16 Mar 2020 04:28:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41604 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728302AbgCPI2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:25:19 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M3DBd-1jABcW2wc1-003ckp; Mon, 16 Mar 2020 09:25:17 +0100
-Received: by mail-qt1-f177.google.com with SMTP id l13so13371896qtv.10;
-        Mon, 16 Mar 2020 01:25:17 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1SmegqKI9XIC1GBqCwgbf25tv5rj83+7XQ8JxPFsCDSr2/f8mC
-        c1EA88wi7dIVibVAVWFxRNPZs6+ia7WzNsE5V7w=
-X-Google-Smtp-Source: ADFU+vsWAC/0lo+zE5AbQT0noMV/ZvJVnNxBInM+WO6OIJI68cMfZZhm1vhJ/+ZDY5xIHR7TVICkzE3S8xA3+jp3s3U=
-X-Received: by 2002:aed:3b4c:: with SMTP id q12mr23609109qte.18.1584347116325;
- Mon, 16 Mar 2020 01:25:16 -0700 (PDT)
+        Mon, 16 Mar 2020 04:28:17 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f11so3193091wrp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 01:28:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=szWYYRkGahxA61hsmRUJ5tS74K70qXB8+PDKduH3nHs=;
+        b=l3Gqhn+/M4Ha0UXVm0T3q6iV8ObxlaoHrtfqnRe+mfq3J/sCzFKJf4x7NlK7oimIwz
+         tN1cuQljn0V24A6ikzf7Lh2Z5FZgBuhhcvzzlycmoWTw5AO/wLuLWUbxFwyAxd0Jt38q
+         /YbIiOe4knXylQmu+M/SKDnkj5Ce2vCTOSweGQH50Ef2xnZ4js/HFbH2hFYpHx3TALhu
+         4wjaB4vv3tSbPvQLG21Ggst/b5DfZRjtQt537OaHLyEY5TqcODhqXaffxWBzdSqdvD78
+         jTvX9ZUunrrWo00MZaFdHDpcGEp9sBOUca60V1fbLklrtGD+8Iu+s+9w+fpmj5Vravvv
+         5iNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=szWYYRkGahxA61hsmRUJ5tS74K70qXB8+PDKduH3nHs=;
+        b=NPKp/WO3y3sFgQsOozJBpXr6qdFmdQ3l1182Zue5i/oCH6vuvWXbLJ2pms/cAGvjmC
+         eRX/gVcDpZPwykmaSNtUQJSieYSO42kxkDY7VhBZNdBSAuXGlnX6SeJ5dwPmpsB1RpGu
+         aB/HcXna2drRCE/RNl4mN8h0TtSlvR7YQ/UTZOw1l5VwFJ8gEMOLvqSGlF+6baMZIxkw
+         KkrNCKWryhVyzAfoGciY8uLe1T48nFVe+rDeihqM/eO1Uvgez1iAFZSjU79JiHqiCaZ9
+         ta/TVDTxsdVGy72627So7UXIC0ALFSC9R78XcL6EcK+CjkwuJ+cGux3kYbkCfiOAE8A9
+         UoWg==
+X-Gm-Message-State: ANhLgQ3jIHoGuKvNJfNjbAybuwC47NdOxOYBEkwnzn6Ihe8xdfd4nPK6
+        iubymcgDmx4hAmrAz1tMa34J3w==
+X-Google-Smtp-Source: ADFU+vtF0RfkG0k25HaWGkNvoj16Mvu5LgZ52qoUMhowQkFr4iYwgmRJjGLbQodQSmkECLChCJor9w==
+X-Received: by 2002:a5d:530e:: with SMTP id e14mr34558588wrv.245.1584347293228;
+        Mon, 16 Mar 2020 01:28:13 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id k133sm30082169wma.11.2020.03.16.01.28.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 01:28:12 -0700 (PDT)
+References: <20200316023411.1263-1-sashal@kernel.org> <20200316023411.1263-8-sashal@kernel.org>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH AUTOSEL 5.4 08/35] ASoC: meson: g12a: add tohdmitx reset
+In-reply-to: <20200316023411.1263-8-sashal@kernel.org>
+Date:   Mon, 16 Mar 2020 09:28:11 +0100
+Message-ID: <1ja74gg0v8.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com> <1584200119-18594-6-git-send-email-mikelley@microsoft.com>
-In-Reply-To: <1584200119-18594-6-git-send-email-mikelley@microsoft.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 16 Mar 2020 09:25:00 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2yve3R1w5igBYMy3HSFJ8Xt4BHhXQcaTAkNCdZXZ1v-w@mail.gmail.com>
-Message-ID: <CAK8P3a2yve3R1w5igBYMy3HSFJ8Xt4BHhXQcaTAkNCdZXZ1v-w@mail.gmail.com>
-Subject: Re: [PATCH v6 05/10] arm64: hyperv: Add interrupt handlers for VMbus
- and stimer
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, olaf@aepfle.de,
-        Andy Whitcroft <apw@canonical.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, marcelo.cerri@canonical.com,
-        "K. Y. Srinivasan" <kys@microsoft.com>, sunilmut@microsoft.com,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:RSt4Vy8AZ22Uplf08DmKL+IBZhi00ObAlZi+4cX/qqvqut+iWjl
- ABahf7e/i29lFZWFpsYdXLBuGTnWfHBd3Wo2hMu71x6+vPeXJHU21Rjdic01Gl6nwEc3kxX
- yFlhfBAPTdWKI0+9U737iax4AyH0pCFI7fLmzSjjwvBuknpU7/XIaJpO23N3N2GpJUwVP3B
- YzIXd24CHuNzuPouL6yag==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9C7T5Fy+g94=:DFUeRhoatv9F65NQ52yJhW
- Sir3aFC5t6lZtj0qNno5WK+VBCOdiYUhV64W4qtB2/I8COipbxA/sP+VEfGktEfO2u5nkfPDJ
- alwwPR0S6/Dtwj7cv4w5JHKfBA+VwkvHtfpB+zZ9S/Xqt3vZ+8fjGtpsFZIbov+tKnpqsCf7K
- ZSXlnyMMZ1luzg36ArCyxt6ASXr5ixAA0zULIbDkILojey/EenJ9EljQPSJUpO5OCN/qsRF/W
- Qd923KmYC+ZdIg1L9T630OU+MUIjwt8pR1yw3uS1VSdKxksrkMcyJibUS5Csy3cxJNw9z/Hry
- qnDZEeN/o/CKC3Y3ntDdgcZFzB7Hmu02amw2yRVqbRAbrUJ8WchO9nNroZGVkYnt2JOsqcWv7
- 4rLzJ9U6BjtZLxfiTtnglrXWviftbR+d7sBZuz+9t+JoTcR89x+rogmwTEv1+NoXAEzNcr6TD
- xiJ+jmHBd4D8TFHCb1kYi25UqKEY2X3z3B3CMZpN8Wet0PZWTQd0uQY7Adv6h0k1RU+1r63Z1
- Bp/oxEuQN6nesz5Oq/4DT7cteK6XYP3Vb1/ca/TLnipJn+YuVCoJb6tQMKkkRp0X+RU2+CUmp
- Rv1d3z8AHNOlGtip4RMfOk3TNxOCFW6EsolJ2AYrzDCKG0EOlFt2T0+Rcj9/gt26Ll4ipywl7
- mCvQhYivu8DvP/PngtfAQnP0htduWKjvzc+HArROhZs4R9DfGGJ/8oWnOkb+SqVc1YCI3Ygvr
- VrUsX+lLkrQ66JJTQT8OwAOjoE6FmpmkYqUr4txdlKcByshxYsbq2x1bjdTwpBU02WxuRJ+RM
- xg/dcIwe1JAr+Dkcpn0gTeviuQ7RrCZMxk2yUkhAzZjytoj++g=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
->
-> Add ARM64-specific code to set up and handle the interrupts
-> generated by Hyper-V for VMbus messages and for stimer expiration.
->
-> This code is architecture dependent and is mostly driven by
-> architecture independent code in the VMbus driver and the
-> Hyper-V timer clocksource driver.
->
-> This code is built only when CONFIG_HYPERV is enabled.
->
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 
-This looks like it should be a nested irqchip driver instead, so your
-device drivers can use the normal request_irq() functions etc.
+On Mon 16 Mar 2020 at 03:33, Sasha Levin <sashal@kernel.org> wrote:
 
-Is anything preventing you from doing that? If so, please describe
-that in the changelog and in a comment in the driver.
+> From: Jerome Brunet <jbrunet@baylibre.com>
+>
+> [ Upstream commit 22946f37557e27697aabc8e4f62642bfe4a17fd8 ]
+>
+> Reset the g12a hdmi codec glue on probe. This ensure a sane startup state.
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Link: https://lore.kernel.org/r/20200221121146.1498427-1-jbrunet@baylibre.com
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-     Arnd
+Hi Sasha,
+
+The tohdmitx reset property is not in the amlogic g12a DT in v5.4.
+Backporting this patch on v5.4 would break the hdmi sound, and probably
+the related sound card since the reset is not optional.
+
+Could you please drop this from v5.4 stable ?
+It is ok to keep it for v5.5.
+
+Thanks
+Jerome
+
+> ---
+>  sound/soc/meson/g12a-tohdmitx.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
+> index 9cfbd343a00c8..8a0db28a6a406 100644
+> --- a/sound/soc/meson/g12a-tohdmitx.c
+> +++ b/sound/soc/meson/g12a-tohdmitx.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/module.h>
+>  #include <sound/pcm_params.h>
+>  #include <linux/regmap.h>
+> +#include <linux/reset.h>
+>  #include <sound/soc.h>
+>  #include <sound/soc-dai.h>
+>  
+> @@ -378,6 +379,11 @@ static int g12a_tohdmitx_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	void __iomem *regs;
+>  	struct regmap *map;
+> +	int ret;
+> +
+> +	ret = device_reset(dev);
+> +	if (ret)
+> +		return ret;
+>  
+>  	regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(regs))
+
