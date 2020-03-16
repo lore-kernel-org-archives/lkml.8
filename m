@@ -6,102 +6,95 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A144C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CF4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C5820679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4AF2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 16:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ynm27Tfr"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="SHgvwS9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732107AbgCPQRR (ORCPT
+        id S1732099AbgCPQTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:17:17 -0400
-Received: from mail-qt1-f176.google.com ([209.85.160.176]:36301 "EHLO
-        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731993AbgCPQRQ (ORCPT
+        Mon, 16 Mar 2020 12:19:10 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34903 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732021AbgCPQTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:17:16 -0400
-Received: by mail-qt1-f176.google.com with SMTP id m33so14680089qtb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:17:16 -0700 (PDT)
+        Mon, 16 Mar 2020 12:19:10 -0400
+Received: by mail-qt1-f194.google.com with SMTP id v15so14702843qto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 09:19:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=0n3SIaDpi5LQqX+o3orVS785fReSy2zpbwRqWh4oqjg=;
-        b=ynm27TfrRyKHAdDFIldkhG7zJ/MQQzoo7CW9RUu1IRwZZKTY1YJLX/RF5sj0k8BO4c
-         rxPZWouCgToBlOFDFH4B3uK//Gwb0sXote7N713pA1rQzs44kdkNM2oalwGihI8WTN9y
-         GHJw++6mIfIwrkX5gmwAe6KsnpqHQOBCQeClbzUUm08mJM9YGGMNmdNbL8y+thQolOS3
-         yZJ41oZGobwR9U86gk2hdjfYlv4770HZRYJTv38pVhbMojBmeO3AeexZpgTw5b3sgXwb
-         Mu48kDivG9+LnvAqK7LDJKcEdj/nOOwXijYzvPAzNIbKNa5+zDJt275V1LtwHNg0AwUj
-         v/LA==
+        bh=FGmHo0X0ug88xLxL5VEMvKfeQgO1Bzc/6oEObLpalt0=;
+        b=SHgvwS9ZQXVqWJj5Zg/whvmP0uVvCvk7nB+wXhoy06AICUCarPw4d95BS7CJvG67UU
+         NX8wP9DEQJ0mgCrwGOWKtNK59MMqvFI00+RHuh0T+yO1RTHxBEtxCbEK2FT8r+V2tB9h
+         Mk1bzFa1SvwjUcS6Q7GSk61qqUhraymSLxN7La1EGmsw+Qxumbbns6Wb1kYMHPlLtkxe
+         9JEk6yL6bHZszcytqNRZZSfQAp498YTvNeyQjFBVRM6Ckt1osk3zGZvEMoaGp9qkKZvP
+         0ILeErzkPHYfFxCPj9zcFZL6pVv34cuxBMBtFOMl/RegHfvHd5bpoXm8eLeqMpNhP21R
+         C0Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=0n3SIaDpi5LQqX+o3orVS785fReSy2zpbwRqWh4oqjg=;
-        b=I7dz7Slqkcgm7Bs/Zw8tdU2pqDNYtdUl9A2MVKOVm3hMKNJHa0kz+SATH/CAsw21sv
-         PSiFNmVl1CSIO5foD41tf2PTopuGzlT+nXbNpLU0XjsMUvT1dtViVevXlyTmQnTuN6oV
-         7L3fPlGdrdT/HO+REZUtdMTh93ZiMPo0Qi4TskPajwOGqbqefyxJmjLvj9Y96ksb5J6z
-         Zk6DrOnl2a4iKX62tPw9C2afxbmkMgb8Jbj4iA/VFe1C8ohj66y2q0rwJqNUWTGJJCHA
-         Or2jVixnja1sF3bd6Pr7ocHhynYUfu/LBG5isCz7RDpw04S1eUqCxlmjwIJkgITGC9Tp
-         jbTg==
-X-Gm-Message-State: ANhLgQ2Pcz1DBarHfq18/56Txs0ew/48DimAeypTNi4wuIe2P77CqQqy
-        1adZYvOIQFqJw9Z2ahSg3bjp6Q==
-X-Google-Smtp-Source: ADFU+vt032PPmh975UT1PwegSeKaA58S8zk7+EcNr5p80dx0htNQY3KSgKW9kDPPZkVlLaMDgiijEg==
-X-Received: by 2002:ac8:6b95:: with SMTP id z21mr860291qts.358.1584375435596;
-        Mon, 16 Mar 2020 09:17:15 -0700 (PDT)
+        bh=FGmHo0X0ug88xLxL5VEMvKfeQgO1Bzc/6oEObLpalt0=;
+        b=RA/7Z7Eth5PRw+RAUcMUoEbb1C/ZEMoo5PGpVHSvxMZjameb0sYTytzRHI+iwzooLw
+         XYwzzKBCkU9yR1YPbgYf0Muye8toR8vH88XcubIZViNINp+xQ/aSvcJayar7nv4WCAq9
+         +64KNaIke5Z68L0k45BH9Y+Y5T49K18VvKqlua2fYVihkizOjFABDNMg3yezCXCj/122
+         9k7rbnttfxtW2PgE13LRGt/YeQxw1OEcPhJVLUPDBbYlyBkYunTBz2ErUBmrQdAAzJAl
+         m5Ol5DySATDUgPBQwHf4G2Fb1AL1x4GzwAonoJ5lZGfKawz7nwc1zNd+7HIbdkKs5KNA
+         HAxg==
+X-Gm-Message-State: ANhLgQ2kFQPDXVIi6aEoZ7k7eBYef+nYsPJXIM325Mp24AO1QCtFLIIQ
+        TW1XwLMhYLba3su+eDRUwmRPYg==
+X-Google-Smtp-Source: ADFU+vtx+zMj7eTBogu7AvmwKKGLCsGJnyGIB45kgyVWQ3gEMMOGIIAyfVwsIK6AVGNouJNqa0oo9g==
+X-Received: by 2002:ac8:18f3:: with SMTP id o48mr897399qtk.368.1584375549434;
+        Mon, 16 Mar 2020 09:19:09 -0700 (PDT)
 Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id x9sm121128qtk.7.2020.03.16.09.17.14
+        by smtp.gmail.com with ESMTPSA id y17sm108505qth.59.2020.03.16.09.19.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 09:17:14 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 12:17:13 -0400
+        Mon, 16 Mar 2020 09:19:08 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 12:19:07 -0400
 From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH -V2] mm: Code cleanup for MADV_FREE
-Message-ID: <20200316161713.GD67986@cmpxchg.org>
-References: <20200316063740.2542014-1-ying.huang@intel.com>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 1/2] mm, memcg: Fix corruption on 64-bit divisor in
+ memory.high throttling
+Message-ID: <20200316161907.GE67986@cmpxchg.org>
+References: <80780887060514967d414b3cd91f9a316a16ab98.1584036142.git.chris@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316063740.2542014-1-ying.huang@intel.com>
+In-Reply-To: <80780887060514967d414b3cd91f9a316a16ab98.1584036142.git.chris@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:37:40PM +0800, Huang, Ying wrote:
-> From: Huang Ying <ying.huang@intel.com>
+On Thu, Mar 12, 2020 at 06:02:54PM +0000, Chris Down wrote:
+> 0e4b01df8659 had a bunch of fixups to use the right division method.
+> However, it seems that after all that it still wasn't right -- div_u64
+> takes a 32-bit divisor.
 > 
-> Some comments for MADV_FREE is revised and added to help people understand the
-> MADV_FREE code, especially the page flag, PG_swapbacked.  This makes
-> page_is_file_cache() isn't consistent with its comments.  So the function is
-> renamed to page_is_file_lru() to make them consistent again.  All these are put
-> in one patch as one logical change.
+> The headroom is still large (2^32 pages), so on mundane systems you
+> won't hit this, but this should definitely be fixed.
 > 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Suggested-and-acked-by: David Rientjes <rientjes@google.com>
-> Acked-by: Michal Hocko <mhocko@kernel.org>
-> Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Rik van Riel <riel@surriel.com>
+> Fixes: 0e4b01df8659 ("mm, memcg: throttle allocators when failing reclaim over memory.high")
+> Reported-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-mm@kvack.org
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@fb.com
+> Cc: stable@vger.kernel.org # 5.4.x
 
-Thanks, this is definitely an improvement.
+div_u64 versus div64_u64 is really a handgrenade. We just fixed a
+bunch of those in psi as well.
 
 Acked-by: Johannes Weiner <hannes@cmpxchg.org>
