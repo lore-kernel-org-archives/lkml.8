@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBE2C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90096C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276B02051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633D92051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:42:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="h2FlJSNh"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YhoDYWj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731916AbgCPOmn (ORCPT
+        id S1731921AbgCPOms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:42:43 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37258 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731589AbgCPOml (ORCPT
+        Mon, 16 Mar 2020 10:42:48 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37895 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbgCPOmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:42:41 -0400
-Received: by mail-pj1-f67.google.com with SMTP id ca13so8824511pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:42:41 -0700 (PDT)
+        Mon, 16 Mar 2020 10:42:46 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x7so9878170pgh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:42:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=R3WlkMq8F0DL+8HOyrBobJIXLwasaELBzuoWoB4z8LM=;
-        b=h2FlJSNhqQea8YRgUjseza/AiVqSrTPb0VA9vJos6CxzbeAl+SPE5yxKqylPiaTRFx
-         Fe973kXwvy2nN/DBx745rnln1fjp6eoXO7JGUx0s+O15Tmp56NvYzcLo9KrrNT76EoGP
-         zpiCPRyZDH7NAtcXtIbprCX3gnXQ54KARECzrMN3EhvSSV7fSDS11P8RUco2dtoNzJsE
-         +iI39aIzYUfTR2nmhwJc2M8sLmuSyW+NJve7uRJjkWrAvy1zAe3Pp/CgJuzeLCLt8HjQ
-         7Teh+Ev/7JwjVWvEeLEX8IQjKl0PrG9Pm15vurctOPIuxiiC6s4oawscQ5j+DsoLGDKs
-         CP8g==
+        bh=ju3Njn5NotWuQ3oLE1KcS84vF3InDYC+aV5NVuCJqsk=;
+        b=YhoDYWj6l4mRX5dsP++3w+m8Z4HaLuNhLmjIGJpsJEOPXWkSRx6TJDVQtHfJDmIENO
+         2B69I24eEXomBnJuRJsAXSEd2erDBmlJ80CAE51EJS4E1eoVp0+VqI6kCIAIp6HcJhQr
+         DKxthTmn8jrrTRIHQurbAkxnocGe620X3fVBXJdyjh+5ZNDRpr+fdNiLQ9vX+GnyuqAi
+         klQwpYVvOitq46DB8HWGqHP7UdOH4Gk8cQda+QAbHe4vElmx2DwBr8J+CJxwoGy4Qc5H
+         g9FfnoC+GNwZBLm6b39vOXwai3Rj+0NPFWnmxCiSX2Jnae3E5CsMbP0pMt/KyKX2XjAe
+         5xGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=R3WlkMq8F0DL+8HOyrBobJIXLwasaELBzuoWoB4z8LM=;
-        b=k+jf9/95/FokoVsps4qdsmGJks5WPTKS2jH/4VSvnUT95/KB27RcvdAP1/sKOkuWVe
-         PcNFCT+/yw0uaousFkAH89EyCwItQl/nQulrrhtcuQ+hTVNrhq39zA346kWVrwvpsLRU
-         IhRlX5F8K1NNSty/48owQsIZFIdmpSSuakd57Asww2xMKGi7QgRIXeEyQHvH0BuqLsZR
-         oPzIJupAT+oXJ5FPslVrVE+N46MtBWEllfXX89QC9PSutmy6pGsPOniOI5e6eTw1EcVf
-         Q07lxGYal7qlY195V1ZKPxPsq+sNWOHPiB8j3s+wLnKtPTrqOChD5N62aXIZQGAAy2rO
-         lkVQ==
-X-Gm-Message-State: ANhLgQ2Rf5VJTkiK0HfZcs3Q00zudLqYoKZdyn+udhdsqJmxQLfe55bH
-        /n/RV/T1Ond7R5Yxrs8CpxVcqmVRJQT8BA==
-X-Google-Smtp-Source: ADFU+vvKPXCoJUUr3rHWxh4j6KZyTXYB5MQOyJngIPdBM0959euYJG8rAEGWfQPQz3Sg5wroZ/3Ycw==
-X-Received: by 2002:a17:90a:350d:: with SMTP id q13mr25248329pjb.171.1584369759940;
-        Mon, 16 Mar 2020 07:42:39 -0700 (PDT)
+        bh=ju3Njn5NotWuQ3oLE1KcS84vF3InDYC+aV5NVuCJqsk=;
+        b=D6EFhRE1Z0WLVeRi979iU3rlSMQ/nrBXLMrTb+DhR3+xKtRTfaCr7OAas9FOCOtFRK
+         7Q8DX6o1L7FDeugpuej8lgXAhNIy2ALmvt/6IZrhCAminXIYX94tgjQ7FN46IaygHV8t
+         XSvJor6pR8s5PRzbQQgXRX8/rw+LZMoK6j0yV8GBdKn84TWze5vufhC4qiXrlmqPUdfn
+         7MXEGr650CMMIdCsz79AZ+WzI8Ix+h5H6LO4EV/4JA3s9GgUGB+wrIS7r/K/2pRmGjAF
+         7pfOyFiB5hlqBJz9RSt/ckvXKp47ALAiw111ZrZpzAjgiu7HqJ3U3XwNQFCj1ErD2Rcg
+         H0xg==
+X-Gm-Message-State: ANhLgQ1xIcWk4xcHupDOFZGfwWNmBT/qxpFjDGLK+qdPLxmKLmxvM9Fo
+        Xr7AWclhIUwkzCVuNbVRojIqwUWtJIKuig==
+X-Google-Smtp-Source: ADFU+vuLwxIAH/W01ZsVoSHLQxItDbUipns0V56puawDa9JFjyo39OEZooDtS5vJmMorib0bFCx0+Q==
+X-Received: by 2002:a63:c445:: with SMTP id m5mr208045pgg.194.1584369764830;
+        Mon, 16 Mar 2020 07:42:44 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.42.35
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.42.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:42:39 -0700 (PDT)
+        Mon, 16 Mar 2020 07:42:44 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -70,14 +70,13 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: [PATCHv2 40/50] x86: Add missing const qualifiers for log_lvl
-Date:   Mon, 16 Mar 2020 14:39:06 +0000
-Message-Id: <20200316143916.195608-41-dima@arista.com>
+Subject: [PATCHv2 41/50] x86: Add show_stack_loglvl()
+Date:   Mon, 16 Mar 2020 14:39:07 +0000
+Message-Id: <20200316143916.195608-42-dima@arista.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200316143916.195608-1-dima@arista.com>
 References: <20200316143916.195608-1-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -100,18 +99,8 @@ Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
 an easier approach than introducing more printk buffers.
 Also, it will consolidate printings with headers.
 
-Keep log_lvl const show_trace_log_lvl() and printk_stack_address()
-as the new generic show_stack_loglvl() wants to have a proper const
-qualifier.
-
-And gcc rightfully produces warnings in case it's not keept:
-arch/x86/kernel/dumpstack.c: In function ‘show_stack’:
-arch/x86/kernel/dumpstack.c:294:37: warning: passing argument 4 of ‘show_trace_log_lv ’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
-  294 |  show_trace_log_lvl(task, NULL, sp, loglvl);
-      |                                     ^~~~~~
-arch/x86/kernel/dumpstack.c:163:32: note: expected ‘char *’ but argument is of type ‘const char *’
-  163 |    unsigned long *stack, char *log_lvl)
-      |                          ~~~~~~^~~~~~~
+Introduce show_stack_loglvl(), that eventually will substitute
+show_stack().
 
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
@@ -121,45 +110,37 @@ Cc: x86@kernel.org
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/include/asm/stacktrace.h | 2 +-
- arch/x86/kernel/dumpstack.c       | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/dumpstack.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
-index 14db05086bbf..5ae5a68e469d 100644
---- a/arch/x86/include/asm/stacktrace.h
-+++ b/arch/x86/include/asm/stacktrace.h
-@@ -87,7 +87,7 @@ get_stack_pointer(struct task_struct *task, struct pt_regs *regs)
- }
- 
- void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
--			unsigned long *stack, char *log_lvl);
-+			unsigned long *stack, const char *log_lvl);
- 
- /* The form of the top of the frame on the stack */
- struct stack_frame {
 diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index ae64ec7f752f..b94bc31a1757 100644
+index b94bc31a1757..4396f2cfad19 100644
 --- a/arch/x86/kernel/dumpstack.c
 +++ b/arch/x86/kernel/dumpstack.c
-@@ -65,7 +65,7 @@ bool in_entry_stack(unsigned long *stack, struct stack_info *info)
+@@ -279,7 +279,8 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+ 	}
  }
  
- static void printk_stack_address(unsigned long address, int reliable,
--				 char *log_lvl)
-+				 const char *log_lvl)
+-void show_stack(struct task_struct *task, unsigned long *sp)
++void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
++		       const char *loglvl)
  {
- 	touch_nmi_watchdog();
- 	printk("%s %s%pB\n", log_lvl, reliable ? "" : "? ", (void *)address);
-@@ -160,7 +160,7 @@ static void show_regs_if_on_stack(struct stack_info *info, struct pt_regs *regs,
+ 	task = task ? : current;
+ 
+@@ -290,7 +291,12 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+ 	if (!sp && task == current)
+ 		sp = get_stack_pointer(current, NULL);
+ 
+-	show_trace_log_lvl(task, NULL, sp, KERN_DEFAULT);
++	show_trace_log_lvl(task, NULL, sp, loglvl);
++}
++
++void show_stack(struct task_struct *task, unsigned long *sp)
++{
++	show_stack_loglvl(task, sp, KERN_DEFAULT);
  }
  
- void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
--			unsigned long *stack, char *log_lvl)
-+			unsigned long *stack, const char *log_lvl)
- {
- 	struct unwind_state state;
- 	struct stack_info stack_info = {0};
+ void show_stack_regs(struct pt_regs *regs)
 -- 
 2.25.1
 
