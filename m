@@ -2,128 +2,132 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F25C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037C3C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF8120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F8F20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:16:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GVR2OVGV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbtgZ4fc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbgCPHO7 (ORCPT
+        id S1729913AbgCPHQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:14:59 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43616 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728302AbgCPHO6 (ORCPT
+        Mon, 16 Mar 2020 03:16:00 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43394 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728302AbgCPHQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:14:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584342897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JPNnOddM2c90CWFUfutbV41h/MSedE2cTHjorY7SiB4=;
-        b=GVR2OVGVSiyuz3ouQ9lCLOTgpvSmKkXg5jw1vJEu3iup3OSwEJ3/UIaXbtncIWFCASIvnf
-        TYeCkNwjgo2vKM55fSULBPYRDZyJFeVatItpLQK8mQrnX80BORi47Y4/zKDE4mKjQB7E4c
-        rsqGfcOnSv4BH20Z4skHGR6Mrt0IvAA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-233-S2ZhaITeMfu5QyHDlb3BYA-1; Mon, 16 Mar 2020 03:14:54 -0400
-X-MC-Unique: S2ZhaITeMfu5QyHDlb3BYA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DAE3107ACC9;
-        Mon, 16 Mar 2020 07:14:53 +0000 (UTC)
-Received: from localhost (ovpn-12-129.pek2.redhat.com [10.72.12.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7866F5C1B2;
-        Mon, 16 Mar 2020 07:14:49 +0000 (UTC)
-Date:   Mon, 16 Mar 2020 15:14:47 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, willy@infradead.org,
-        linux-mm@kvack.org, mhocko@suse.com, akpm@linux-foundation.org,
-        richard.weiyang@gmail.com
-Subject: Re: [PATCH v3] mm/sparse.c: Use kvmalloc_node/kvfree to alloc/free
- memmap for the classic sparse
-Message-ID: <20200316071447.GD3486@MiWiFi-R3L-srv>
-References: <20200312130822.6589-1-bhe@redhat.com>
- <20200312141749.GL27711@MiWiFi-R3L-srv>
- <5c6351e9-1539-40c9-0057-cc58116ecc3a@redhat.com>
+        Mon, 16 Mar 2020 03:16:00 -0400
+Received: by mail-il1-f193.google.com with SMTP id d14so14901681ilq.10;
+        Mon, 16 Mar 2020 00:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tRh0qGsHo1Z8/8EsTHyXL3Vn9WTVBKRNVDpdnxNvsWU=;
+        b=sbtgZ4fcgpuUhIPdsfN86WqZ2Z3IKkM7ZUIa3UnsbXvVMMvEM5UulAwdMpvlQMRABu
+         NOgyRpFJzQaKdYHO3n64PY+He+tvBhGOZ+nvQwGUSSYWlylCtk5pJePV6CBs5DqSjluO
+         mtkBLQfX6fJg1hO/Hbo4KLondpf6k9vmeNv8gZyDze9nF+DNZbBnBymDNmd1TFxW1lYq
+         4F0Y+xZnGnh8qasrIhTXn3oMGvAmPgURcP11NWuDZWtLiSBM8clE86G5LWdD2GFMLC7X
+         Zl8o2y5SM2HDmYg/6MTVMzmUaytPDPu0H0Z2NHyGmvRd3iy+yRPKo1U27GIccXE7bOR9
+         7Iew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tRh0qGsHo1Z8/8EsTHyXL3Vn9WTVBKRNVDpdnxNvsWU=;
+        b=Hrda7V4uffvLoCjS9ra6kbAh5Sm9cdgPlPwPaL4ix3xBm9/9rwfBJFEmu999hE+LFg
+         EM9gABy1bwd2Qd8xSsj+Za3uuP2lz6CYvVdXz3+UNjjYW93Uf75JPVLJt9gmI9zMRxf8
+         oBaGsxOKa4gv5BE+IBGKwLGEiCM71D/WMEHqid3CocYXIRPovNVfUsSLHRLnbXnbUqta
+         0GWHbwAhtrC9rEsNiz6TTXVKzphEeUhfZRINJHmrWV3f0ikCFw2fsArTdh1+mZPqr9jC
+         5Ig1WrmSjMHBQuuyhPF4DBFsMurGGnLqjzQ8iYe35sDkT6Tb9Nn+10JBbsYwutJ6D/if
+         A2dA==
+X-Gm-Message-State: ANhLgQ0p+N0infP7zRll5+xx/Y0egE5rJhRBP6ifOBOQfs/rENw3ZK3y
+        DjIVSoLdICipNCtTeIP2xMQTEhTVfVlk+0IN4QY=
+X-Google-Smtp-Source: ADFU+vuwyY6yUEhRU+0bXIjjvAJjxvEP7ZJrXrSiHKFUMWhDQrDXRhZFaMVz6T+YtT+E0hIPwj4EiME6IaF5YZJzlJA=
+X-Received: by 2002:a92:dd0e:: with SMTP id n14mr9668098ilm.0.1584342957526;
+ Mon, 16 Mar 2020 00:15:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5c6351e9-1539-40c9-0057-cc58116ecc3a@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <1584341983-11245-1-git-send-email-hqjagain@gmail.com>
+In-Reply-To: <1584341983-11245-1-git-send-email-hqjagain@gmail.com>
+From:   Qiujun Huang <hqjagain@gmail.com>
+Date:   Mon, 16 Mar 2020 15:15:46 +0800
+Message-ID: <CAJRQjofA4+LJxYn-HQdBZ_Lxv3DgS1WrPtM3L1z4-ycRKPS5nw@mail.gmail.com>
+Subject: Re: [PATCH] drm/lease: fix potential race in fill_object_idr
+To:     vyasevich@gmail.com, nhorman@tuxdriver.com,
+        marcelo.leitner@gmail.com, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/13/20 at 04:04pm, David Hildenbrand wrote:
-> On 12.03.20 15:17, Baoquan He wrote:
-> > This change makes populate_section_memmap()/depopulate_section_memmap
-> > much simpler.
-> > 
-> > Suggested-by: Michal Hocko <mhocko@kernel.org>
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> > v2->v3:
-> >   Remove __GFP_NOWARN and use array_size when calling kvmalloc_node()
-> >   per Matthew's comments.
-> > 
-> >  mm/sparse.c | 27 +++------------------------
-> >  1 file changed, 3 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/mm/sparse.c b/mm/sparse.c
-> > index bf6c00a28045..bb99633575b5 100644
-> > --- a/mm/sparse.c
-> > +++ b/mm/sparse.c
-> > @@ -734,35 +734,14 @@ static void free_map_bootmem(struct page *memmap)
-> >  struct page * __meminit populate_section_memmap(unsigned long pfn,
-> >  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
-> >  {
-> > -	struct page *page, *ret;
-> > -	unsigned long memmap_size = sizeof(struct page) * PAGES_PER_SECTION;
-> > -
-> > -	page = alloc_pages(GFP_KERNEL|__GFP_NOWARN, get_order(memmap_size));
-> > -	if (page)
-> > -		goto got_map_page;
-> > -
-> > -	ret = vmalloc(memmap_size);
-> > -	if (ret)
-> > -		goto got_map_ptr;
-> > -
-> > -	return NULL;
-> > -got_map_page:
-> > -	ret = (struct page *)pfn_to_kaddr(page_to_pfn(page));
-> > -got_map_ptr:
-> > -
-> > -	return ret;
-> > +	return kvmalloc_node(array_size(sizeof(struct page),
-> > +			PAGES_PER_SECTION), GFP_KERNEL, nid);
-> 
-> 
-> Indentation of the parameters looks wrong/weird. Maybe just calculate
-> memmap_size outside of the call, makes it easier to read IMHO.
+Sorry about sending to wrong maintainers. Please ignore it.
+I'll resend it.
 
-I'll fix the indentation issue. Adding variable memmap_size seems not so
-necessary.
-
-> 
-> Apart from that, looks good to me.
-> 
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-
+On Mon, Mar 16, 2020 at 2:59 PM Qiujun Huang <hqjagain@gmail.com> wrote:
+>
+> We should hold idr_mutex for idr_alloc.
+>
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> ---
+>  drivers/gpu/drm/drm_lease.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
+> index b481caf..427ee21 100644
+> --- a/drivers/gpu/drm/drm_lease.c
+> +++ b/drivers/gpu/drm/drm_lease.c
+> @@ -418,6 +418,7 @@ static int fill_object_idr(struct drm_device *dev,
+>                 goto out_free_objects;
+>         }
+>
+> +       mutex_lock(&dev->mode_config.idr_mutex);
+>         /* add their IDs to the lease request - taking into account
+>            universal planes */
+>         for (o = 0; o < object_count; o++) {
+> @@ -437,7 +438,7 @@ static int fill_object_idr(struct drm_device *dev,
+>                 if (ret < 0) {
+>                         DRM_DEBUG_LEASE("Object %d cannot be inserted into leases (%d)\n",
+>                                         object_id, ret);
+> -                       goto out_free_objects;
+> +                       goto out_unlock;
+>                 }
+>                 if (obj->type == DRM_MODE_OBJECT_CRTC && !universal_planes) {
+>                         struct drm_crtc *crtc = obj_to_crtc(obj);
+> @@ -445,20 +446,22 @@ static int fill_object_idr(struct drm_device *dev,
+>                         if (ret < 0) {
+>                                 DRM_DEBUG_LEASE("Object primary plane %d cannot be inserted into leases (%d)\n",
+>                                                 object_id, ret);
+> -                               goto out_free_objects;
+> +                               goto out_unlock;
+>                         }
+>                         if (crtc->cursor) {
+>                                 ret = idr_alloc(leases, &drm_lease_idr_object, crtc->cursor->base.id, crtc->cursor->base.id + 1, GFP_KERNEL);
+>                                 if (ret < 0) {
+>                                         DRM_DEBUG_LEASE("Object cursor plane %d cannot be inserted into leases (%d)\n",
+>                                                         object_id, ret);
+> -                                       goto out_free_objects;
+> +                                       goto out_unlock;
+>                                 }
+>                         }
+>                 }
+>         }
+>
+>         ret = 0;
+> +out_unlock:
+> +       mutex_unlock(&dev->mode_config.idr_mutex);
+>  out_free_objects:
+>         for (o = 0; o < object_count; o++) {
+>                 if (objects[o])
+> --
+> 1.8.3.1
+>
