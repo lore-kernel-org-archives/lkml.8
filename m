@@ -2,70 +2,111 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD6BC1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1117DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A2020658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE22920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Jxr+spec"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lfpCtz3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbgCPHu6 (ORCPT
+        id S1730022AbgCPHvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 03:50:58 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:28447 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729745AbgCPHu6 (ORCPT
+        Mon, 16 Mar 2020 03:51:06 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:40598 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729973AbgCPHvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 03:50:58 -0400
-X-UUID: 303c1eb3ace14b8bb5b36e74a4de3748-20200316
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=yeo4h6DvN3NLgI/noju6bhQdpGHApRy5klUw2BjdFtc=;
-        b=Jxr+spec7j3GKcjuG4+wLqMymXiyGHEMRDUzlnB7XTjnZdCSlG7nrxqkj9FTP4cWfyrn8F94LwQWQGzW7juwdSpez7i3W8OopglWQRMqRCvbFLhTafc/35gJLOrtMGjrzL9575dDf9HLX1jiSrA+OF5sOETGnsr/dNvs5df2xsY=;
-X-UUID: 303c1eb3ace14b8bb5b36e74a4de3748-20200316
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 291186682; Mon, 16 Mar 2020 15:50:53 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 16 Mar 2020 15:49:55 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 16 Mar 2020 15:47:55 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>
-Subject: [PATCH v2 1/1] dt-bindings: cpu: Add a support cpu type for cortex-a75
-Date:   Mon, 16 Mar 2020 15:50:50 +0800
-Message-ID: <1584345050-3738-1-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Mon, 16 Mar 2020 03:51:06 -0400
+Received: by mail-ua1-f66.google.com with SMTP id t20so6135136uao.7
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 00:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i0zDChC/wEd931QcHPYFdsZbptmXL5czRy9fIJzF9Os=;
+        b=lfpCtz3okbIvkiKIsprySyGNw0WWfVbJqWnQpSrysHhl3opcygESioQgUUw5y8OIw8
+         0YlyBmrVGZqeMxbhvBDhb2oqbnjGugyu/qg/HxDJBB7pTei/FIlPMr6VV+MoJiA/sFXN
+         hwicZwzDF9qOY145bYD4UU0vh/NPw3LckjGNY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i0zDChC/wEd931QcHPYFdsZbptmXL5czRy9fIJzF9Os=;
+        b=uc9NDALRPyzW8a2JHSIGFGCYaQoA2+fFvfsQBesmWM2sieTWdNcJtDUuMueg9ldYrg
+         SCr+U6WXLM05HQHgzXh2qMqsy9Wc50Cu0d1jTZWtNz/AWtn1c7kAbAhQNQ/5iB7mw8mw
+         Hk5lLfhqnvJIbRlIz58PFw4c1P2n8pd4N11sPRcZVWgmLnugoARIinAsrFWD1RVzm527
+         ofW2kcLDjJP24u41Ty/UmHOjdXuGI+BQ4TxPrTDlRAa7eJr/xClWEySe4w2x3xNrQ+QH
+         53RS11IzMgxNvGI/INMG425mM0jaKG/VlG5i/mybHml9aJonomLzopcEIdU1mvnTA7M6
+         kLCQ==
+X-Gm-Message-State: ANhLgQ2Jr6/SgVDTd7Z1Y4iqeB6j6TZbhchbuRd10GGHAYMizuxG5Ah1
+        8TsAJhFKrFkKcUDB8rnKOiHYMyHlxAlvy6Psjt78gw==
+X-Google-Smtp-Source: ADFU+vsjo1dRLv/zfDMpdVrD9x5y9Nya6mOAFCScpBDgpmsQ2ypeVyujD90X50SbOKlS3aMqDRYItp3vkhNbHVPWdUE=
+X-Received: by 2002:ab0:28c9:: with SMTP id g9mr14197112uaq.117.1584345064363;
+ Mon, 16 Mar 2020 00:51:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200316072419.65274-1-chentsung@chromium.org>
+In-Reply-To: <20200316072419.65274-1-chentsung@chromium.org>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Mon, 16 Mar 2020 15:50:53 +0800
+Message-ID: <CANMq1KD1dLzd3cYmdsg5wF5z-prtdq41P8fuzDQomX=6UbZpeg@mail.gmail.com>
+Subject: Re: [PATCH] HID: google: add moonball USB id
+To:     Chen-Tsung Hsieh <chentsung@chromium.org>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGFybSBjcHUgdHlwZSBjb3J0ZXgtYTc1Lg0KDQpTaWduZWQtb2ZmLWJ5OiBIYW5rcyBDaGVu
-IDxoYW5rcy5jaGVuQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9hcm0vY3B1cy55YW1sIHwgICAgMSArDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL2NwdXMueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
-Y3B1cy55YW1sDQppbmRleCBjMjNjMjRmLi41MWI3NWY3IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9jcHVzLnlhbWwNCisrKyBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vY3B1cy55YW1sDQpAQCAtMTI4LDYgKzEyOCw3IEBA
-IHByb3BlcnRpZXM6DQogICAgICAgLSBhcm0sY29ydGV4LWE1Nw0KICAgICAgIC0gYXJtLGNvcnRl
-eC1hNzINCiAgICAgICAtIGFybSxjb3J0ZXgtYTczDQorICAgICAgLSBhcm0sY29ydGV4LWE3NQ0K
-ICAgICAgIC0gYXJtLGNvcnRleC1tMA0KICAgICAgIC0gYXJtLGNvcnRleC1tMCsNCiAgICAgICAt
-IGFybSxjb3J0ZXgtbTENCi0tIA0KMS43LjkuNQ0K
+Looks better with the mailing lists cc-ed, thanks!
 
+On Mon, Mar 16, 2020 at 3:24 PM Chen-Tsung Hsieh <chentsung@chromium.org> wrote:
+>
+> Add 1 additional hammer-like device.
+>
+> Signed-off-by: Chen-Tsung Hsieh <chentsung@chromium.org>
+
+Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+
+> ---
+>  drivers/hid/hid-google-hammer.c | 2 ++
+>  drivers/hid/hid-ids.h           | 1 +
+>  2 files changed, 3 insertions(+)
+>
+> diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
+> index 2aa4ed157aec..85a054f1ce38 100644
+> --- a/drivers/hid/hid-google-hammer.c
+> +++ b/drivers/hid/hid-google-hammer.c
+> @@ -532,6 +532,8 @@ static const struct hid_device_id hammer_devices[] = {
+>                      USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MAGNEMITE) },
+>         { HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+>                      USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MASTERBALL) },
+> +       { HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+> +                    USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_MOONBALL) },
+>         { HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+>                      USB_VENDOR_ID_GOOGLE, USB_DEVICE_ID_GOOGLE_STAFF) },
+>         { HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index 3a400ce603c4..33fddab41722 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -478,6 +478,7 @@
+>  #define USB_DEVICE_ID_GOOGLE_WHISKERS  0x5030
+>  #define USB_DEVICE_ID_GOOGLE_MASTERBALL        0x503c
+>  #define USB_DEVICE_ID_GOOGLE_MAGNEMITE 0x503d
+> +#define USB_DEVICE_ID_GOOGLE_MOONBALL  0x5044
+>
+>  #define USB_VENDOR_ID_GOTOP            0x08f2
+>  #define USB_DEVICE_ID_SUPER_Q2         0x007f
+> --
+> 2.25.1.481.gfbce0eb801-goog
+>
