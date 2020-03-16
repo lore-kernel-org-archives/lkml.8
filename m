@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01279C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E64C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8D7205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7D8205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326512;
-	bh=c89utpjyJCM1WC9RrJfhwK+FgjmLnvI7luTATiwF9VM=;
+	s=default; t=1584326518;
+	bh=jJ6FoTC0rDRACL2its/CkDc74bSU/qMWvlEPSUkHFvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z4UuoEOn/HZyBL7sGkhmUzM7plYxOGMoMni4HToJvccv58hb0liqkJPaUf0kcKr/h
-	 x++YZZqOVFoghhsuo+hcfJh8XIqn+NR+abNN4Tm1MDnPRHivjvNIDhbcRMisE6JmJR
-	 UyymDL+L3x/IoXFsjqEe7Y2ykg95G7Nm5nsRWlI0=
+	b=g0bYUA0XsKKZDX9M8FyfFmRZrvJ4pySIE+40j6zcAWqG6KbMLW7S1wJp35QXgtsns
+	 JYGPJxG0ZWrnEPBZldN9PGPLZ3YKlbz4QbYQzCvZKoqKKcSa10rdxADBt7kMSAxdp/
+	 qe1yqVQ7xO1X5f/4EiCZ3sEdSzYc97tVW9TQKvG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbgCPClv (ORCPT
+        id S1729509AbgCPCd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36066 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:33:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729515AbgCPCd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:33:28 -0400
+        id S1729433AbgCPCdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:33:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A72D206E9;
-        Mon, 16 Mar 2020 02:33:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A4CA206E9;
+        Mon, 16 Mar 2020 02:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326007;
-        bh=c89utpjyJCM1WC9RrJfhwK+FgjmLnvI7luTATiwF9VM=;
+        s=default; t=1584326002;
+        bh=jJ6FoTC0rDRACL2its/CkDc74bSU/qMWvlEPSUkHFvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P//H0Wj5Lc0Q1Xb/Qi358pvsRQOuq13joVChv3Ag1ExI7p+EKWGu54IbUVt2MUthi
-         yGeCupJACapS8p1Ra0o3fachISF008RPmwlKz/iTj0iFpsUOycyXUqRJEDDfNW7jHN
-         dOMLxBnPBNR4rmsbeMJGo/6Z3QY0Vlb9MAwymNfQ=
+        b=hCX1CY3FZbaylv98CkRIPYeWeKV9+i6BFSRNVtqcMDpSaIGD9WWBxvAhysw9cQrSb
+         stWaPji+UUapp5wSjD9Ax6iqi7ptlAClKb8FcRYMp80WrSxcUqJQJB1XyU+VL4BwSr
+         oFL/Ox2wDWy8dLucXXbIXf4Ht7zrC1QN34y+dOQI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 06/41] phy: ti: gmii-sel: fix set of copy-paste errors
-Date:   Sun, 15 Mar 2020 22:32:44 -0400
-Message-Id: <20200316023319.749-6-sashal@kernel.org>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 02/41] spi: spi-omap2-mcspi: Support probe deferral for DMA channels
+Date:   Sun, 15 Mar 2020 22:32:40 -0400
+Message-Id: <20200316023319.749-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
 References: <20200316023319.749-1-sashal@kernel.org>
@@ -59,56 +59,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-[ Upstream commit eefed634eb61e4094b9fb8183cb8d43b26838517 ]
+[ Upstream commit 32f2fc5dc3992b4b60cc6b1a6a31be605cc9c3a2 ]
 
-- under PHY_INTERFACE_MODE_MII the 'mode' func parameter is assigned
-instead of 'gmii_sel_mode' and it's working only because the default value
-'gmii_sel_mode' is set to 0.
+dma_request_channel() can return -EPROBE_DEFER, if DMA driver is not
+ready. Currently driver just falls back to PIO mode on probe deferral.
+Fix this by requesting all required channels during probe and
+propagating EPROBE_DEFER error code.
 
-- console outputs use 'rgmii_id' and 'mode' values to print PHY mode
-instead of using 'submode' value which is representing PHY interface mode
-now.
-
-This patch fixes above two cases.
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Link: https://lore.kernel.org/r/20200204124816.16735-3-vigneshr@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/ti/phy-gmii-sel.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/spi/spi-omap2-mcspi.c | 77 +++++++++++++++++------------------
+ 1 file changed, 38 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
-index a28bd15297f53..e998e9cd8d1f8 100644
---- a/drivers/phy/ti/phy-gmii-sel.c
-+++ b/drivers/phy/ti/phy-gmii-sel.c
-@@ -80,20 +80,19 @@ static int phy_gmii_sel_mode(struct phy *phy, enum phy_mode mode, int submode)
- 		break;
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index e9bc9cf984d60..e9e256718ef4a 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -975,20 +975,12 @@ static int omap2_mcspi_setup_transfer(struct spi_device *spi,
+  * Note that we currently allow DMA only if we get a channel
+  * for both rx and tx. Otherwise we'll do PIO for both rx and tx.
+  */
+-static int omap2_mcspi_request_dma(struct spi_device *spi)
++static int omap2_mcspi_request_dma(struct omap2_mcspi *mcspi,
++				   struct omap2_mcspi_dma *mcspi_dma)
+ {
+-	struct spi_master	*master = spi->master;
+-	struct omap2_mcspi	*mcspi;
+-	struct omap2_mcspi_dma	*mcspi_dma;
+ 	int ret = 0;
  
- 	case PHY_INTERFACE_MODE_MII:
--		mode = AM33XX_GMII_SEL_MODE_MII;
-+		gmii_sel_mode = AM33XX_GMII_SEL_MODE_MII;
- 		break;
- 
- 	default:
--		dev_warn(dev,
--			 "port%u: unsupported mode: \"%s\". Defaulting to MII.\n",
--			 if_phy->id, phy_modes(rgmii_id));
-+		dev_warn(dev, "port%u: unsupported mode: \"%s\"\n",
-+			 if_phy->id, phy_modes(submode));
- 		return -EINVAL;
+-	mcspi = spi_master_get_devdata(master);
+-	mcspi_dma = mcspi->dma_channels + spi->chip_select;
+-
+-	init_completion(&mcspi_dma->dma_rx_completion);
+-	init_completion(&mcspi_dma->dma_tx_completion);
+-
+-	mcspi_dma->dma_rx = dma_request_chan(&master->dev,
++	mcspi_dma->dma_rx = dma_request_chan(mcspi->dev,
+ 					     mcspi_dma->dma_rx_ch_name);
+ 	if (IS_ERR(mcspi_dma->dma_rx)) {
+ 		ret = PTR_ERR(mcspi_dma->dma_rx);
+@@ -996,7 +988,7 @@ static int omap2_mcspi_request_dma(struct spi_device *spi)
+ 		goto no_dma;
  	}
  
- 	if_phy->phy_if_mode = submode;
+-	mcspi_dma->dma_tx = dma_request_chan(&master->dev,
++	mcspi_dma->dma_tx = dma_request_chan(mcspi->dev,
+ 					     mcspi_dma->dma_tx_ch_name);
+ 	if (IS_ERR(mcspi_dma->dma_tx)) {
+ 		ret = PTR_ERR(mcspi_dma->dma_tx);
+@@ -1005,20 +997,40 @@ static int omap2_mcspi_request_dma(struct spi_device *spi)
+ 		mcspi_dma->dma_rx = NULL;
+ 	}
  
- 	dev_dbg(dev, "%s id:%u mode:%u rgmii_id:%d rmii_clk_ext:%d\n",
--		__func__, if_phy->id, mode, rgmii_id,
-+		__func__, if_phy->id, submode, rgmii_id,
- 		if_phy->rmii_clock_external);
++	init_completion(&mcspi_dma->dma_rx_completion);
++	init_completion(&mcspi_dma->dma_tx_completion);
++
+ no_dma:
+ 	return ret;
+ }
  
- 	regfield = if_phy->fields[PHY_GMII_SEL_PORT_MODE];
++static void omap2_mcspi_release_dma(struct spi_master *master)
++{
++	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
++	struct omap2_mcspi_dma	*mcspi_dma;
++	int i;
++
++	for (i = 0; i < master->num_chipselect; i++) {
++		mcspi_dma = &mcspi->dma_channels[i];
++
++		if (mcspi_dma->dma_rx) {
++			dma_release_channel(mcspi_dma->dma_rx);
++			mcspi_dma->dma_rx = NULL;
++		}
++		if (mcspi_dma->dma_tx) {
++			dma_release_channel(mcspi_dma->dma_tx);
++			mcspi_dma->dma_tx = NULL;
++		}
++	}
++}
++
+ static int omap2_mcspi_setup(struct spi_device *spi)
+ {
+ 	int			ret;
+ 	struct omap2_mcspi	*mcspi = spi_master_get_devdata(spi->master);
+ 	struct omap2_mcspi_regs	*ctx = &mcspi->ctx;
+-	struct omap2_mcspi_dma	*mcspi_dma;
+ 	struct omap2_mcspi_cs	*cs = spi->controller_state;
+ 
+-	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
+-
+ 	if (!cs) {
+ 		cs = kzalloc(sizeof *cs, GFP_KERNEL);
+ 		if (!cs)
+@@ -1043,13 +1055,6 @@ static int omap2_mcspi_setup(struct spi_device *spi)
+ 		}
+ 	}
+ 
+-	if (!mcspi_dma->dma_rx || !mcspi_dma->dma_tx) {
+-		ret = omap2_mcspi_request_dma(spi);
+-		if (ret)
+-			dev_warn(&spi->dev, "not using DMA for McSPI (%d)\n",
+-				 ret);
+-	}
+-
+ 	ret = pm_runtime_get_sync(mcspi->dev);
+ 	if (ret < 0) {
+ 		pm_runtime_put_noidle(mcspi->dev);
+@@ -1066,12 +1071,8 @@ static int omap2_mcspi_setup(struct spi_device *spi)
+ 
+ static void omap2_mcspi_cleanup(struct spi_device *spi)
+ {
+-	struct omap2_mcspi	*mcspi;
+-	struct omap2_mcspi_dma	*mcspi_dma;
+ 	struct omap2_mcspi_cs	*cs;
+ 
+-	mcspi = spi_master_get_devdata(spi->master);
+-
+ 	if (spi->controller_state) {
+ 		/* Unlink controller state from context save list */
+ 		cs = spi->controller_state;
+@@ -1080,19 +1081,6 @@ static void omap2_mcspi_cleanup(struct spi_device *spi)
+ 		kfree(cs);
+ 	}
+ 
+-	if (spi->chip_select < spi->master->num_chipselect) {
+-		mcspi_dma = &mcspi->dma_channels[spi->chip_select];
+-
+-		if (mcspi_dma->dma_rx) {
+-			dma_release_channel(mcspi_dma->dma_rx);
+-			mcspi_dma->dma_rx = NULL;
+-		}
+-		if (mcspi_dma->dma_tx) {
+-			dma_release_channel(mcspi_dma->dma_tx);
+-			mcspi_dma->dma_tx = NULL;
+-		}
+-	}
+-
+ 	if (gpio_is_valid(spi->cs_gpio))
+ 		gpio_free(spi->cs_gpio);
+ }
+@@ -1303,6 +1291,9 @@ static bool omap2_mcspi_can_dma(struct spi_master *master,
+ 	if (spi_controller_is_slave(master))
+ 		return true;
+ 
++	master->dma_rx = mcspi_dma->dma_rx;
++	master->dma_tx = mcspi_dma->dma_tx;
++
+ 	return (xfer->len >= DMA_MIN_BYTES);
+ }
+ 
+@@ -1490,6 +1481,11 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
+ 	for (i = 0; i < master->num_chipselect; i++) {
+ 		sprintf(mcspi->dma_channels[i].dma_rx_ch_name, "rx%d", i);
+ 		sprintf(mcspi->dma_channels[i].dma_tx_ch_name, "tx%d", i);
++
++		status = omap2_mcspi_request_dma(mcspi,
++						 &mcspi->dma_channels[i]);
++		if (status == -EPROBE_DEFER)
++			goto free_master;
+ 	}
+ 
+ 	status = platform_get_irq(pdev, 0);
+@@ -1527,6 +1523,7 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ free_master:
++	omap2_mcspi_release_dma(master);
+ 	spi_master_put(master);
+ 	return status;
+ }
+@@ -1536,6 +1533,8 @@ static int omap2_mcspi_remove(struct platform_device *pdev)
+ 	struct spi_master *master = platform_get_drvdata(pdev);
+ 	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
+ 
++	omap2_mcspi_release_dma(master);
++
+ 	pm_runtime_dont_use_autosuspend(mcspi->dev);
+ 	pm_runtime_put_sync(mcspi->dev);
+ 	pm_runtime_disable(&pdev->dev);
 -- 
 2.20.1
 
