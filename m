@@ -2,156 +2,98 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4B6C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30054C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E14B20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0023A206B1
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 09:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="pPkee8hr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgCPJjF (ORCPT
+        id S1730451AbgCPJjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:39:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56919 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730231AbgCPJjE (ORCPT
+        Mon, 16 Mar 2020 05:39:25 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:24746 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730088AbgCPJjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:39:04 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jDmCz-0008DD-9K; Mon, 16 Mar 2020 09:38:53 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf vendor events: fix spelling mistakes: "occurences" -> "occurrences"
-Date:   Mon, 16 Mar 2020 09:38:53 +0000
-Message-Id: <20200316093853.117752-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Mar 2020 05:39:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1584351565; x=1615887565;
+  h=from:to:cc:subject:date:message-id;
+  bh=qSfJ6u84LZu6czX0X2ef4AdDkN6oHZIFm1K2WciznEs=;
+  b=pPkee8hrRNrrAAYAl6xVYc1cCKytTUJJG71Vsp4oy8uAMXlbh/Mo+eY4
+   EaYpKqn0dOjPbBhepg9S2rzoNgRzB8MAP/7RPIgi74gjdsY2NlGoHilzc
+   OOQwJCad2XFEcJiVYwqQFebqstxgKxPlEzVkoACvsExtpXZP4DHXJpnnh
+   8=;
+IronPort-SDR: xsYhxKPGjqk2aAysy+zQY9HiQRGEhcQrSC6cz8QMXDMAK4Bl9ABga5RZJdQs+98Mauhlz0Fl+1
+ EnHgnQILdeOw==
+X-IronPort-AV: E=Sophos;i="5.70,559,1574121600"; 
+   d="scan'208";a="31381162"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 16 Mar 2020 09:39:23 +0000
+Received: from u54e1ad5160425a4b64ea.ant.amazon.com (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70])
+        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id F1E8DA175E;
+        Mon, 16 Mar 2020 09:39:21 +0000 (UTC)
+Received: from u54e1ad5160425a4b64ea.ant.amazon.com (localhost [127.0.0.1])
+        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id 02G9dI8G005147;
+        Mon, 16 Mar 2020 10:39:18 +0100
+Received: (from karahmed@localhost)
+        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Submit) id 02G9dHYs005143;
+        Mon, 16 Mar 2020 10:39:17 +0100
+From:   KarimAllah Ahmed <karahmed@amazon.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH] KVM: arm64: Use the correct timer for accessing CNT
+Date:   Mon, 16 Mar 2020 10:39:06 +0100
+Message-Id: <1584351546-5018-1-git-send-email-karahmed@amazon.de>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Use the physical timer object when reading the physical timer counter
+instead of using the virtual timer object. This is only visible when
+reading it from user-space as kvm_arm_timer_get_reg() is only executed on
+the get register patch from user-space.
 
-Fix spelling mistake of "occurrences"
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: kvmarm@lists.cs.columbia.edu
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
 ---
- tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json    | 2 +-
- tools/perf/pmu-events/arch/x86/ivytown/pipeline.json      | 2 +-
- tools/perf/pmu-events/arch/x86/jaketown/pipeline.json     | 2 +-
- .../perf/pmu-events/arch/x86/knightslanding/pipeline.json | 8 ++++----
- tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json  | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
+ virt/kvm/arm/arch_timer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json b/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json
-index 2a0aad91d83d..e5ca2d85e84d 100644
---- a/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json
-@@ -80,7 +80,7 @@
-         "EdgeDetect": "1",
-         "EventName": "INT_MISC.RECOVERY_STALLS_COUNT",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of occurences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc.)",
-+        "BriefDescription": "Number of occurrences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc.)",
-         "CounterMask": "1",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json b/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json
-index 2a0aad91d83d..e5ca2d85e84d 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json
-@@ -80,7 +80,7 @@
-         "EdgeDetect": "1",
-         "EventName": "INT_MISC.RECOVERY_STALLS_COUNT",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of occurences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc.)",
-+        "BriefDescription": "Number of occurrences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc.)",
-         "CounterMask": "1",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json b/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
-index 783a5b4a67b1..f32fd4aea6b1 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
-@@ -1019,7 +1019,7 @@
-         "EdgeDetect": "1",
-         "EventName": "INT_MISC.RECOVERY_STALLS_COUNT",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of occurences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc...).",
-+        "BriefDescription": "Number of occurrences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc...).",
-         "CounterMask": "1",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json b/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
-index 92e4ef2e22c6..17c92cdedde0 100644
---- a/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
-@@ -340,7 +340,7 @@
-         "UMask": "0x1",
-         "EventName": "RECYCLEQ.LD_BLOCK_ST_FORWARD",
-         "SampleAfterValue": "200003",
--        "BriefDescription": "Counts the number of occurences a retired load gets blocked because its address partially overlaps with a store",
-+        "BriefDescription": "Counts the number of occurrences a retired load gets blocked because its address partially overlaps with a store",
-         "Data_LA": "1"
-     },
-     {
-@@ -349,7 +349,7 @@
-         "UMask": "0x2",
-         "EventName": "RECYCLEQ.LD_BLOCK_STD_NOTREADY",
-         "SampleAfterValue": "200003",
--        "BriefDescription": "Counts the number of occurences a retired load gets blocked because its address overlaps with a store whose data is not ready"
-+        "BriefDescription": "Counts the number of occurrences a retired load gets blocked because its address overlaps with a store whose data is not ready"
-     },
-     {
-         "PublicDescription": "This event counts the number of retired store that experienced a cache line boundary split(Precise Event). Note that each spilt should be counted only once.",
-@@ -358,7 +358,7 @@
-         "UMask": "0x4",
-         "EventName": "RECYCLEQ.ST_SPLITS",
-         "SampleAfterValue": "200003",
--        "BriefDescription": "Counts the number of occurences a retired store that is a cache line split. Each split should be counted only once."
-+        "BriefDescription": "Counts the number of occurrences a retired store that is a cache line split. Each split should be counted only once."
-     },
-     {
-         "PEBS": "1",
-@@ -367,7 +367,7 @@
-         "UMask": "0x8",
-         "EventName": "RECYCLEQ.LD_SPLITS",
-         "SampleAfterValue": "200003",
--        "BriefDescription": "Counts the number of occurences a retired load that is a cache line split. Each split should be counted only once.",
-+        "BriefDescription": "Counts the number of occurrences a retired load that is a cache line split. Each split should be counted only once.",
-         "Data_LA": "1"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
-index b7150f65f16d..d69db55f33e7 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
-@@ -108,7 +108,7 @@
-         "EdgeDetect": "1",
-         "EventName": "INT_MISC.RECOVERY_STALLS_COUNT",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of occurences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc...).",
-+        "BriefDescription": "Number of occurrences waiting for the checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke due to all other cases except JEClear (e.g. whenever a ucode assist is needed like SSE exception, memory disambiguation, etc...).",
-         "CounterMask": "1",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
+diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
+index 0d9438e..93bd59b 100644
+--- a/virt/kvm/arm/arch_timer.c
++++ b/virt/kvm/arm/arch_timer.c
+@@ -788,7 +788,7 @@ u64 kvm_arm_timer_get_reg(struct kvm_vcpu *vcpu, u64 regid)
+ 					  vcpu_ptimer(vcpu), TIMER_REG_CTL);
+ 	case KVM_REG_ARM_PTIMER_CNT:
+ 		return kvm_arm_timer_read(vcpu,
+-					  vcpu_vtimer(vcpu), TIMER_REG_CNT);
++					  vcpu_ptimer(vcpu), TIMER_REG_CNT);
+ 	case KVM_REG_ARM_PTIMER_CVAL:
+ 		return kvm_arm_timer_read(vcpu,
+ 					  vcpu_ptimer(vcpu), TIMER_REG_CVAL);
 -- 
-2.25.1
+2.7.4
 
