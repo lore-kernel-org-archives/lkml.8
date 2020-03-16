@@ -2,267 +2,159 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABB0C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AD9C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29FC220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFE820752
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:52:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="JHt/AE69"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cCVmAu73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbgCPOrG (ORCPT
+        id S1731663AbgCPOwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:47:06 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:34142 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731445AbgCPOq7 (ORCPT
+        Mon, 16 Mar 2020 10:52:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44050 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729643AbgCPOwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:46:59 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5D5FF400B0;
-        Mon, 16 Mar 2020 14:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1584370018; bh=LN9uKbzVNlSJ2O4zRB08l1ExGsQQvCBB7mmSYtvGZrc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHt/AE69tmQHie6O79odi3mt5wnEPoAqmp0CGrK+zwUL+u34z3hWbVYxVWlP+fZ0G
-         tiVk6+wPCTwkWxtU4abWJATQhAJhZIAvZstkVT+NVFpRXiayMhrYcg7GPDafYy2gUm
-         QscLCvxLV4N4KtEIZMpYazinlKbz6jGWW1CxXOVpYy2kuy7FL5eUEq8lSZqCaw/daY
-         2lxkBJZ7mEs0I0GGH0IazfTW8ZZa9Y0gSmNmQC7XNgKJHT9iG8kZhr8jTAvmfscn1R
-         4OOjXILGNzb1n9kxxeI8brN7hSPhAKLvWKuPE5QVCf5yRf4/xkANwRutFJPhRO4/Dv
-         /03O4DT6UoRBw==
-Received: from paltsev-e7480.internal.synopsys.com (unknown [10.121.8.79])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 6520DA005F;
-        Mon, 16 Mar 2020 14:46:56 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     dri-devel@lists.freedesktop.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 1/2] DRM: ARC: add HDMI 2.0 TX encoder support
-Date:   Mon, 16 Mar 2020 17:46:46 +0300
-Message-Id: <20200316144647.10416-2-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200316144647.10416-1-Eugeniy.Paltsev@synopsys.com>
-References: <20200316144647.10416-1-Eugeniy.Paltsev@synopsys.com>
+        Mon, 16 Mar 2020 10:52:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y2so6120249wrn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 07:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=24RVJTW0vWtGHihskhs9PaNV6Je0F3F9IaYeZyt7csc=;
+        b=cCVmAu73XcGpzuRwb3qel+nbccoMU7XQb4SssDsnePi0F+ZS59UWbZotOz4NuerLAf
+         chktEd7j3l6qu40jdcFIVHrsqJaphCuXBoQTU1UfgcXaHVuTn/wBt2531q7OrKyqiAIZ
+         SVc7A4BFhnJcbaNnYasGYumKLPEShExOLlzStyd1E2nutxZHhK3NZ2B9J78wGWgeUPyK
+         lKpILKZ5hgrNWcNqiflp/pxlvbpN86KclU1UbRXbOCzoKb5XezBeo+iDIeQ1rJmsO1cO
+         LO9OxSBlw+6cul2PO5ma2C/PagW1f1TXikcnOei4Fb6wmWNpRbmPgPzzV4M+Z31JG5Xw
+         5iuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=24RVJTW0vWtGHihskhs9PaNV6Je0F3F9IaYeZyt7csc=;
+        b=HiaDekxoTGdCNR/6642675sghILeChg4WUxDnVSsb2a6In6aYH3xjqGZLo9K6+tgF7
+         cFi7E40JFGEfJxkZkFfgl2GOZ0hsMDcXZLz/K/his4ZXRdPln62xe5HbIs6QdHz1gxXf
+         wL7VgOHArgExBpv2NeAmKGCOeA113Mdw7sdL9fqGo1lrKwXujqLzfIjYYxkh9bv/SPur
+         QvcFipu9DcHeAnBF3ePv6TUVD4pnaF0rbP/WMnZNc/0vJLSSX8R9xjf1F9sx57f69wEX
+         7PBx6lR6BwFsWeYBINlexitqWIRFI6jab6jrbU1kcJjyNbPpo4e0ElvcYpC/4+P40nQe
+         C/JA==
+X-Gm-Message-State: ANhLgQ2x4j2RzdrlTXMDkTlQxwLFK95eEAJoW2eM9iz5aOZLMfFYx6XR
+        oufZU4vHqhJ4V3iP9fu1VEl+tg==
+X-Google-Smtp-Source: ADFU+vt3HXVKFatJ/Ywj8r6OHqaKSL/2/cozuugWrYrx1TdimwGlGmXxQcQ0YTV63i5gz9gkhGCMyQ==
+X-Received: by 2002:adf:a117:: with SMTP id o23mr18526579wro.219.1584370331219;
+        Mon, 16 Mar 2020 07:52:11 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f835:499f:9553:971a? ([2a01:e34:ed2f:f020:f835:499f:9553:971a])
+        by smtp.googlemail.com with ESMTPSA id x9sm281394wrx.0.2020.03.16.07.52.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2020 07:52:10 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: thermal: make cooling-maps property optional
+To:     andy.tang@nxp.com, edubezval@gmail.com, rui.zhang@intel.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@linaro.org>
+References: <20200309045411.21859-1-andy.tang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <18c58e1b-583c-2308-ee60-a8923c2027ee@linaro.org>
+Date:   Mon, 16 Mar 2020 15:52:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200309045411.21859-1-andy.tang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Synopsys ARC SoCs (like HSDK4xD) include on-chip DesignWare HDMI
-encoders. Support them with a platform driver to provide platform glue
-data to the dw-hdmi driver.
+On 09/03/2020 05:54, andy.tang@nxp.com wrote:
+> From: Yuantian Tang <andy.tang@nxp.com>
+> 
+> Cooling-maps doesn't have to be a required property because there may
+> be no cooling device on system, or there are no enough cooling devices for
+> each thermal zone in multiple thermal zone cases since cooling devices
+> can't be shared.
+> So make this property optional to remove such limitations.
+> 
+> For thermal zones with no cooling-maps, there could be critic trips
+> that can trigger CPU reset or shutdown. So they still can take actions.
+> 
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- MAINTAINERS                       |   6 ++
- drivers/gpu/drm/Makefile          |   2 +-
- drivers/gpu/drm/arc/Kconfig       |   7 ++
- drivers/gpu/drm/arc/Makefile      |   1 +
- drivers/gpu/drm/arc/arc-dw-hdmi.c | 126 ++++++++++++++++++++++++++++++
- 5 files changed, 141 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/arc/arc-dw-hdmi.c
+Amit, I'm about to pick this patch, it will collide with the yaml
+conversion changes.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6fbdf354d34..a6dd992c5f95 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1258,6 +1258,12 @@ S:	Supported
- F:	drivers/gpu/drm/arc/
- F:	Documentation/devicetree/bindings/display/snps,arcpgu.txt
- 
-+ARC DW HDMI DRIVER
-+M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+S:	Supported
-+F:	drivers/gpu/drm/arc/arc-dw-hdmi.c
-+F:	Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt
-+
- ARCNET NETWORK LAYER
- M:	Michael Grzeschik <m.grzeschik@pengutronix.de>
- L:	netdev@vger.kernel.org
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 6493088a0fdd..5b0bcf7f45cd 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -109,7 +109,7 @@ obj-y			+= panel/
- obj-y			+= bridge/
- obj-$(CONFIG_DRM_FSL_DCU) += fsl-dcu/
- obj-$(CONFIG_DRM_ETNAVIV) += etnaviv/
--obj-$(CONFIG_DRM_ARCPGU)+= arc/
-+obj-y			+= arc/
- obj-y			+= hisilicon/
- obj-$(CONFIG_DRM_ZTE)	+= zte/
- obj-$(CONFIG_DRM_MXSFB)	+= mxsfb/
-diff --git a/drivers/gpu/drm/arc/Kconfig b/drivers/gpu/drm/arc/Kconfig
-index e8f3d63e0b91..baec9d2a4fba 100644
---- a/drivers/gpu/drm/arc/Kconfig
-+++ b/drivers/gpu/drm/arc/Kconfig
-@@ -8,3 +8,10 @@ config DRM_ARCPGU
- 	  Choose this option if you have an ARC PGU controller.
- 
- 	  If M is selected the module will be called arcpgu.
-+
-+config DRM_ARC_DW_HDMI
-+	tristate "ARC DW HDMI"
-+	depends on DRM && OF
-+	select DRM_DW_HDMI
-+	help
-+	  Synopsys DW HDMI driver for various ARC development boards
-diff --git a/drivers/gpu/drm/arc/Makefile b/drivers/gpu/drm/arc/Makefile
-index c7028b7427b3..7a156d8c2c3c 100644
---- a/drivers/gpu/drm/arc/Makefile
-+++ b/drivers/gpu/drm/arc/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- arcpgu-y := arcpgu_crtc.o arcpgu_hdmi.o arcpgu_sim.o arcpgu_drv.o
- obj-$(CONFIG_DRM_ARCPGU) += arcpgu.o
-+obj-$(CONFIG_DRM_ARC_DW_HDMI) += arc-dw-hdmi.o
-diff --git a/drivers/gpu/drm/arc/arc-dw-hdmi.c b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-new file mode 100644
-index 000000000000..4869dd668a51
---- /dev/null
-+++ b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Synopsys DW HDMI driver for various ARC development boards
-+//
-+// Copyright (C) 2020 Synopsys
-+// Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+
-+#include <linux/component.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <drm/bridge/dw_hdmi.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_edid.h>
-+#include <drm/drm_encoder_slave.h>
-+#include <drm/drm_of.h>
-+
-+static const struct dw_hdmi_mpll_config snps_hdmi_mpll_cfg[] = {
-+	{
-+		27000000, {
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 }
-+		},
-+	}, {
-+		74250000, {
-+			{ 0x0072, 0x0001},
-+			{ 0x0072, 0x0001},
-+			{ 0x0072, 0x0001}
-+		},
-+	}, {
-+		148500000, {
-+			{ 0x0051, 0x0002},
-+			{ 0x0051, 0x0002},
-+			{ 0x0051, 0x0002}
-+		},
-+	}, {
-+		~0UL, {
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 },
-+		},
-+	}
-+};
-+
-+static const struct dw_hdmi_curr_ctrl snps_hdmi_cur_ctr[] = {
-+	/* pixelclk    bpp8    bpp10   bpp12 */
-+	{ 27000000,  { 0x0000, 0x0000, 0x0000 }, },
-+	{ 74250000,  { 0x0008, 0x0008, 0x0008 }, },
-+	{ 148500000, { 0x001b, 0x001b, 0x001b }, },
-+	{ ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
-+};
-+
-+
-+static const struct dw_hdmi_phy_config snps_hdmi_phy_config[] = {
-+	/* pixelclk   symbol  term    vlev */
-+	{ 27000000,   0x8009, 0x0004, 0x0232},
-+	{ 74250000,   0x8009, 0x0004, 0x0232},
-+	{ 148500000,  0x8009, 0x0004, 0x0232},
-+	{ ~0UL,       0x8009, 0x0004, 0x0232}
-+};
-+
-+static enum drm_mode_status snps_dw_hdmi_mode_valid(struct drm_connector *con,
-+						    const struct drm_display_mode *mode)
-+{
-+	return MODE_OK;
-+}
-+
-+static struct dw_hdmi_plat_data snps_dw_hdmi_drv_data = {
-+	.mpll_cfg   = snps_hdmi_mpll_cfg,
-+	.cur_ctr    = snps_hdmi_cur_ctr,
-+	.phy_config = snps_hdmi_phy_config,
-+	.mode_valid = snps_dw_hdmi_mode_valid,
-+};
-+
-+static const struct of_device_id snps_dw_hdmi_dt_ids[] = {
-+	{
-+		.compatible = "snps,dw-hdmi-hsdk",
-+		.data = &snps_dw_hdmi_drv_data
-+	}, { /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, snps_dw_hdmi_dt_ids);
-+
-+static int snps_dw_hdmi_probe(struct platform_device *pdev)
-+{
-+	const struct dw_hdmi_plat_data *plat_data;
-+	const struct of_device_id *match;
-+	struct dw_hdmi *hdmi;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	match = of_match_node(snps_dw_hdmi_dt_ids, pdev->dev.of_node);
-+	plat_data = match->data;
-+
-+	hdmi = dw_hdmi_probe(pdev, plat_data);
-+	if (IS_ERR(hdmi))
-+		return PTR_ERR(hdmi);
-+
-+	platform_set_drvdata(pdev, hdmi);
-+
-+	return 0;
-+}
-+
-+static int snps_dw_hdmi_remove(struct platform_device *pdev)
-+{
-+	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
-+
-+	dw_hdmi_remove(hdmi);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver snps_dw_hdmi_platform_driver = {
-+	.probe  = snps_dw_hdmi_probe,
-+	.remove = snps_dw_hdmi_remove,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = snps_dw_hdmi_dt_ids,
-+	},
-+};
-+module_platform_driver(snps_dw_hdmi_platform_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("ARC specific DW-HDMI driver extension");
-+MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
+
+
 -- 
-2.21.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
