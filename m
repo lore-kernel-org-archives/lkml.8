@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8412EC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F604C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523F5206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D22D20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326142;
-	bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/6Y/pYWlfZzRqHLBom+hYCtqf5I+7bvzjUUdpRBaEcfynz29dcTiXFoOWvtR0cTU
-	 ALkrXwJ3WZVq1cLj3hz0Lvua73GDytbh/5VKDeipw8IMPSD+XyrujnmHiaTwHa/w+X
-	 bGtxozINgz7pQb5pZ994N0b1YvqXA7HHMDVPLWyI=
+	s=default; t=1584326144;
+	bh=6Pe8o5i5K3qDvVX/UzNEoLD4bmR+7YYriviwdr0EBk8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=erevgbjMyMdbu60ZOnThONRJbe4Y6/Ys8/jSUTjjx01twz82puU2E9Z8KSZA8zATn
+	 gQRuBBaUbpQrVJRU4D0hMLb5Ik4VVqWhrwLob6x24QeDKCXXLZpxFNO9Gqx6yecb0I
+	 fK2DI+rCHN+j8iGBWuLwAox6eXB5OBnVWBTaatuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbgCPCfk (ORCPT
+        id S1730240AbgCPCfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:35:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730214AbgCPCfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:35:38 -0400
+        id S1730224AbgCPCfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F33272073C;
-        Mon, 16 Mar 2020 02:35:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54076206BE;
+        Mon, 16 Mar 2020 02:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326137;
-        bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oRArfrppGfipkHmlHooCa/erQ7utvKWVhlrTZpHjBMnQ0p/2qFPqx8I6rVjWFzeJU
-         1t2+VPrOZIBQ9TJSI8QzS+LgOJAUbzeA17mOLUsOH6A6E9Fc4wXnkHT9kWLWySPu+v
-         fM5f4yFL89gO+f09EVkwpQVLwmrKlIaAweIAR228=
+        s=default; t=1584326140;
+        bh=6Pe8o5i5K3qDvVX/UzNEoLD4bmR+7YYriviwdr0EBk8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uSizxwEdL8NkUeyqTOGZ3TV8iFEna6+OifOwsQ2BN2O+lmu1Wdjl/NFInBeB1LQGg
+         QiMnqx+fc69thie2mPpBpTsQGOPhkbuBAiG7if0VWFssLyTkxPrFwPtAGYSvWHyev6
+         7mavtjEKg/zvQnH/WcBc/6XJ1uu0tz46KqRUAVcQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 15/15] parse-maintainers: Mark as executable
-Date:   Sun, 15 Mar 2020 22:35:19 -0400
-Message-Id: <20200316023519.2050-15-sashal@kernel.org>
+Cc:     Yuji Sasaki <sasakiy@chromium.org>, Vinod Koul <vkoul@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 1/7] spi: qup: call spi_qup_pm_resume_runtime before suspending
+Date:   Sun, 15 Mar 2020 22:35:32 -0400
+Message-Id: <20200316023538.2232-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316023519.2050-1-sashal@kernel.org>
-References: <20200316023519.2050-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,23 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+From: Yuji Sasaki <sasakiy@chromium.org>
 
-[ Upstream commit 611d61f9ac99dc9e1494473fb90117a960a89dfa ]
+[ Upstream commit 136b5cd2e2f97581ae560cff0db2a3b5369112da ]
 
-This makes the script more convenient to run.
+spi_qup_suspend() will cause synchronous external abort when
+runtime suspend is enabled and applied, as it tries to
+access SPI controller register while clock is already disabled
+in spi_qup_pm_suspend_runtime().
 
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Yuji sasaki <sasakiy@chromium.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20200214074340.2286170-1-vkoul@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/parse-maintainers.pl | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- mode change 100644 => 100755 scripts/parse-maintainers.pl
+ drivers/spi/spi-qup.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
-old mode 100644
-new mode 100755
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index 1bfa889b8427a..88b108e1c85fe 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -974,6 +974,11 @@ static int spi_qup_suspend(struct device *device)
+ 	struct spi_qup *controller = spi_master_get_devdata(master);
+ 	int ret;
+ 
++	if (pm_runtime_suspended(device)) {
++		ret = spi_qup_pm_resume_runtime(device);
++		if (ret)
++			return ret;
++	}
+ 	ret = spi_master_suspend(master);
+ 	if (ret)
+ 		return ret;
+@@ -982,10 +987,8 @@ static int spi_qup_suspend(struct device *device)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (!pm_runtime_suspended(device)) {
+-		clk_disable_unprepare(controller->cclk);
+-		clk_disable_unprepare(controller->iclk);
+-	}
++	clk_disable_unprepare(controller->cclk);
++	clk_disable_unprepare(controller->iclk);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
