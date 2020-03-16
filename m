@@ -2,178 +2,170 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB87C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA82DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06932051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE3120679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lWNxgXfi"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="r0nS/dIG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731926AbgCPPrE (ORCPT
+        id S1731943AbgCPPr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:47:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50388 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731555AbgCPPrE (ORCPT
+        Mon, 16 Mar 2020 11:47:28 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43048 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731796AbgCPPr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:47:04 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z13so2170430wml.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:47:02 -0700 (PDT)
+        Mon, 16 Mar 2020 11:47:28 -0400
+Received: by mail-qk1-f196.google.com with SMTP id x18so6841149qki.10
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 08:47:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GYsjb8wyMpitfSH0f8PA0mHjVYM9QWEBO9gCjay1L20=;
-        b=lWNxgXfim4KYtEIBQRfki0eiyE/BWsrHh3mBkMGppzItkVPtihwUMSFvFNJ8xZBe/a
-         brVy81DoW/z2tKhjRZCiCm/G+1HhJ4ivW/m8mNYUQ+5UJU0ouy6jtCyhH/U78JntPD50
-         wA8YP4LnsMZBrluKad4Gdo4I6gdkfckXd+n28BgxyvvOZK40MupWY1itrZtSmK4bF7X3
-         Lf8kgqGrtsTg2Pm92hWC3TpUqUqzFNt3JRDsmfiXg94brnBo2XJWC7QC0YLSYk8SkyIu
-         pOSYqrLqVT2tAJ803lgFos/Qzi2xRy+O8Q6vbrgrPbyuCSc1hNAso5Tb2xZB8RKLPxC4
-         BJkw==
+         :content-disposition:in-reply-to:user-agent;
+        bh=GBys85i5HtZ0uNTaTkpVeMVABaxUVIjN4FUmfqqZy1s=;
+        b=r0nS/dIGdJLY8p8ypQFWnQcAHRvMkWwFbr5l89AlpmhEDT4kMc8Qtdn//mOfu/kxHL
+         /wdd2PLba3vXNP/LVJyLqtwN0d37w8AA3VBrrZ/TH+wq5mJ+6USQPY7oc8cMxBucxpDb
+         MLJJbN0qZe5pVq+tz5wDuQVoiGlgzwObHKGWk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GYsjb8wyMpitfSH0f8PA0mHjVYM9QWEBO9gCjay1L20=;
-        b=pyLELoUkA/+ecqjKsIOgj1CwADgBjr/DqnNOvMmjAgnW76HhCr0lY5HwYSIGL9pvl0
-         iCBhqwmE8lk9hnHN6E5IqxG5ZaLmfxapPH6dOKoepcs3l/zLxg1mAQtZR0i6QxLtVjs/
-         JgdJU6ekZJDaQdzyt9lepQYYP/rrNwbEZmtrHSvVRizqpf0CG11LJBaSxgZek5nwW2ch
-         VzdsulQDzr8jsYHnVl63vNHDZugH1N2TpBPCnsKEOwaodFb1BE8Y0MTK/FISh2U01ElN
-         vDaS0VC2qJce95a00bpkOj/KVK1MmFmZFvdvwk2CIOszO6Zn5Uen6iJIqt3QvXqGkwuD
-         DZsw==
-X-Gm-Message-State: ANhLgQ1kFU0gacDW/qHa/mvLB+vaBxcVR0MPtPCWWfbtJ/X96OubNC13
-        8TydeqLyQqd0YlCF+7RByjPYKg==
-X-Google-Smtp-Source: ADFU+vug65fGoL5TKdymAh0vmL/kEClqE8KiEqVXS5gBbtx7HyWfeUkjQSmjqTq49k3w6tjjBOsBAA==
-X-Received: by 2002:a7b:c019:: with SMTP id c25mr28919018wmb.126.1584373622085;
-        Mon, 16 Mar 2020 08:47:02 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id l8sm164858wmj.2.2020.03.16.08.47.01
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GBys85i5HtZ0uNTaTkpVeMVABaxUVIjN4FUmfqqZy1s=;
+        b=DrrUDbDYEKENZhGELbNRz/XRb7fJhMPAjNwTs8E21aA4aR1FL4oH+pZh7TGGpZ8oZb
+         pBk5tVgkQ5ErAHTgPb29AF4zLJdpAm7Jv5WqXquvX3URMhM8vJpzNUZPdgQkZIGCz8F+
+         s9IXIfhIdhtHnCmfaKdaM4Hn7qd7mJ7I4RtpI7WT29V5HsHhbvo4CU3cxKwYhF85k2ik
+         Iskadu26zfio0aCX9ulrTeP8G5lYJhBINNEkBGZ8JlBDJP3alrJinzjFbDbwAKfF3+Hp
+         7B/f3OEfdF9HqP9bOv6eqWJGShFwpq/2vNVRForfmA/n+2cT+T/ralR/PfyTz5BGcg1u
+         c8Fg==
+X-Gm-Message-State: ANhLgQ2XKp6w643q3nEBFJNjShPEaIeNr3AWXKe0PWHGRdboduXFvCkP
+        jPHF86L6PY99+S0ZDMAx6bEO/Q==
+X-Google-Smtp-Source: ADFU+vvV8P/2gCV8D2bb4sqQTrEDrxNocVSVcRCSeX0uBQUSyoZuFmrF1nfpJv5dCkc0jF5VP4xi8g==
+X-Received: by 2002:a37:2c81:: with SMTP id s123mr292500qkh.284.1584373646996;
+        Mon, 16 Mar 2020 08:47:26 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id m1sm63508qtk.16.2020.03.16.08.47.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:47:01 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 16:46:54 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 06/15] iommu: Move iommu_fwspec to struct dev_iommu
-Message-ID: <20200316154654.GG304669@myrica>
-References: <20200310091229.29830-1-joro@8bytes.org>
- <20200310091229.29830-7-joro@8bytes.org>
+        Mon, 16 Mar 2020 08:47:26 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 11:47:26 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        RCU <rcu@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v1 3/6] rcu: rename
+ rcu_invoke_kfree_callback/rcu_kfree_callback
+Message-ID: <20200316154726.GF190951@google.com>
+References: <20200315181840.6966-1-urezki@gmail.com>
+ <20200315181840.6966-4-urezki@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310091229.29830-7-joro@8bytes.org>
+In-Reply-To: <20200315181840.6966-4-urezki@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:12:20AM +0100, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
+On Sun, Mar 15, 2020 at 07:18:37PM +0100, Uladzislau Rezki (Sony) wrote:
+> Rename rcu_invoke_kfree_callback to rcu_invoke_kvfree_callback.
+> Do the same with second trace event, that is rcu_kfree_callback,
+> it becomes rcu_kvfree_callback. The reason is to be aligned with
+> kvfree notation.
+
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+
+thanks,
+
+ - Joel
 > 
-> Move the iommu_fwspec pointer in struct device into struct dev_iommu.
-> This is a step in the effort to reduce the iommu related pointers in
-> struct device to one.
-> 
-> Tested-by: Will Deacon <will@kernel.org> # arm-smmu
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 > ---
->  drivers/iommu/iommu.c  |  3 +++
->  include/linux/device.h |  1 -
->  include/linux/iommu.h  | 12 ++++++++----
->  3 files changed, 11 insertions(+), 5 deletions(-)
+>  include/trace/events/rcu.h | 8 ++++----
+>  kernel/rcu/tiny.c          | 2 +-
+>  kernel/rcu/tree.c          | 4 ++--
+>  3 files changed, 7 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index beac2ef063dd..826a67ba247f 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -2405,6 +2405,9 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
->  	if (fwspec)
->  		return ops == fwspec->ops ? 0 : -EINVAL;
+> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> index f9a7811148e2..0ee93d0b1daa 100644
+> --- a/include/trace/events/rcu.h
+> +++ b/include/trace/events/rcu.h
+> @@ -506,13 +506,13 @@ TRACE_EVENT_RCU(rcu_callback,
 >  
-> +	if (!dev_iommu_get(dev))
-> +		return -ENOMEM;
-> +
->  	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
->  	if (!fwspec)
->  		return -ENOMEM;
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 405a8f11bec1..ca29c39a6480 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -613,7 +613,6 @@ struct device {
->  
->  	void	(*release)(struct device *dev);
->  	struct iommu_group	*iommu_group;
-> -	struct iommu_fwspec	*iommu_fwspec;
->  	struct dev_iommu	*iommu;
->  
->  	bool			offline_disabled:1;
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 1c9fa5c1174b..f5edc21a644d 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -368,14 +368,15 @@ struct iommu_fault_param {
->   * struct dev_iommu - Collection of per-device IOMMU data
->   *
->   * @fault_param: IOMMU detected device fault reporting data
-> + * @fwspec:	 IOMMU fwspec data
->   *
->   * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
->   *	struct iommu_group	*iommu_group;
-> - *	struct iommu_fwspec	*iommu_fwspec;
+>  /*
+>   * Tracepoint for the registration of a single RCU callback of the special
+> - * kfree() form.  The first argument is the RCU type, the second argument
+> + * kvfree() form.  The first argument is the RCU type, the second argument
+>   * is a pointer to the RCU callback, the third argument is the offset
+>   * of the callback within the enclosing RCU-protected data structure,
+>   * the fourth argument is the number of lazy callbacks queued, and the
+>   * fifth argument is the total number of callbacks queued.
 >   */
->  struct dev_iommu {
->  	struct mutex lock;
-> -	struct iommu_fault_param *fault_param;
-> +	struct iommu_fault_param	*fault_param;
-> +	struct iommu_fwspec		*fwspec;
->  };
+> -TRACE_EVENT_RCU(rcu_kfree_callback,
+> +TRACE_EVENT_RCU(rcu_kvfree_callback,
 >  
->  int  iommu_device_register(struct iommu_device *iommu);
-> @@ -614,13 +615,16 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode);
+>  	TP_PROTO(const char *rcuname, struct rcu_head *rhp, unsigned long offset,
+>  		 long qlen),
+> @@ -596,12 +596,12 @@ TRACE_EVENT_RCU(rcu_invoke_callback,
 >  
->  static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
->  {
-> -	return dev->iommu_fwspec;
-> +	if (dev->iommu)
-> +		return dev->iommu->fwspec;
-> +	else
-> +		return NULL;
->  }
+>  /*
+>   * Tracepoint for the invocation of a single RCU callback of the special
+> - * kfree() form.  The first argument is the RCU flavor, the second
+> + * kvfree() form.  The first argument is the RCU flavor, the second
+>   * argument is a pointer to the RCU callback, and the third argument
+>   * is the offset of the callback within the enclosing RCU-protected
+>   * data structure.
+>   */
+> -TRACE_EVENT_RCU(rcu_invoke_kfree_callback,
+> +TRACE_EVENT_RCU(rcu_invoke_kvfree_callback,
 >  
->  static inline void dev_iommu_fwspec_set(struct device *dev,
->  					struct iommu_fwspec *fwspec)
->  {
-> -	dev->iommu_fwspec = fwspec;
-> +	dev->iommu->fwspec = fwspec;
-
-It may be worth moving the set() to iommu.c and prevent any misuse.
-Regardless:
-
-Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-
->  }
+>  	TP_PROTO(const char *rcuname, struct rcu_head *rhp, unsigned long offset),
 >  
->  int iommu_probe_device(struct device *dev);
+> diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
+> index 4b99f7b88bee..3dd8e6e207b0 100644
+> --- a/kernel/rcu/tiny.c
+> +++ b/kernel/rcu/tiny.c
+> @@ -86,7 +86,7 @@ static inline bool rcu_reclaim_tiny(struct rcu_head *head)
+>  
+>  	rcu_lock_acquire(&rcu_callback_map);
+>  	if (__is_kfree_rcu_offset(offset)) {
+> -		trace_rcu_invoke_kfree_callback("", head, offset);
+> +		trace_rcu_invoke_kvfree_callback("", head, offset);
+>  		kvfree((void *)head - offset);
+>  		rcu_lock_release(&rcu_callback_map);
+>  		return true;
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 1c0a73616872..eef75cd210fd 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -2720,7 +2720,7 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  	// If no-CBs CPU gets here, rcu_nocb_try_bypass() acquired ->nocb_lock.
+>  	rcu_segcblist_enqueue(&rdp->cblist, head);
+>  	if (__is_kfree_rcu_offset((unsigned long)func))
+> -		trace_rcu_kfree_callback(rcu_state.name, head,
+> +		trace_rcu_kvfree_callback(rcu_state.name, head,
+>  					 (unsigned long)func,
+>  					 rcu_segcblist_n_cbs(&rdp->cblist));
+>  	else
+> @@ -2909,7 +2909,7 @@ static void kfree_rcu_work(struct work_struct *work)
+>  		next = head->next;
+>  		debug_rcu_head_unqueue(head);
+>  		rcu_lock_acquire(&rcu_callback_map);
+> -		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
+> +		trace_rcu_invoke_kvfree_callback(rcu_state.name, head, offset);
+>  
+>  		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset)))
+>  			kvfree((void *)head - offset);
 > -- 
-> 2.17.1
+> 2.20.1
 > 
