@@ -2,169 +2,125 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC64BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06BBC1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9333C20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83DF2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 04:50:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uHezxfB6"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="WCFiOpu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbgCPEgn (ORCPT
+        id S1729591AbgCPEuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 00:36:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40449 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729423AbgCPEgn (ORCPT
+        Mon, 16 Mar 2020 00:50:09 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45275 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727626AbgCPEuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 00:36:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t24so8990703pgj.7
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Mar 2020 21:36:42 -0700 (PDT)
+        Mon, 16 Mar 2020 00:50:08 -0400
+Received: by mail-qk1-f196.google.com with SMTP id c145so23965717qke.12;
+        Sun, 15 Mar 2020 21:50:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=x2aIrmW9cjK3AgpyGIiS7LfjEbJ0vHmekSq11XjW84U=;
-        b=uHezxfB6KVcV9YYBFik9200F1Q4y/ehcQzB5jf54vlptqSWdZ3jJLn4xNpPBYgwIlK
-         vmSD8ooYCjlXZloxDZHYtzylV1gGJ7By8PpRCjRyUT4PNvfQMXKI6Tgv2pAYhFtIyGdV
-         lfhXu66n8BEGPws4QUjrFyfabLS8vrI4UTvtS0Dpu5RYuZBWgFsN+tumWcL0cj9eMwP1
-         lQXV2zUL0UF78XXWQ8nqlc9Y9FAIN6u4gCw/N+4NGEi8kfcvzzU7BADywDAeRhFXu89d
-         sKs8K0FFI9UeKscyTdBCyTIqN0HHULytKd8fplktKMe4unwI7B7lmFLOacuvBVqkPh4V
-         rpNg==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uxCRLDZ0IkMQwqs0XVpLiauYQ/QOJLqTZsxTkwxRAyY=;
+        b=WCFiOpu7CYhUUeWYfysTGcsR835PmVC/GV/aSKpxW+atVSjfK72AHRQ3T4uxqOHcMD
+         ygmW8Xe+hhjuc+zVNNmvLKsWo6IouNiBJIMG761CPajmDfxY1qeBto+g8sv0AYq6KxZ+
+         VPtUbPtKq4E14TOu92UDlrkuAF1ZyA3vQ7wFg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=x2aIrmW9cjK3AgpyGIiS7LfjEbJ0vHmekSq11XjW84U=;
-        b=FZvF52uX4RkrbXko2gOVh4lEeaQDCnIN8rAuk/M5b9up7AhM8v6VYOtldqFfX9Gci0
-         nQR9J24Qtr7XdkO4oFm8FUasT0/9V4XVlywpRx/yM/2l0L/65d9C9oBM3ccKAdXXiEDZ
-         qgRThYg+TbjdPKoKCX8BaRX61cp+BtZGm8GMommTb/01cuFGZiLd9YNSWC2pH5KHWb0x
-         11IC7/nmHt2RsArJMKITGbatMoqURXT7qMbeeZ0YA7z8zF8LiJGM5h2KIHdpUgxqmTac
-         ZAcR48Y7OlEqQRanFNjDwBwyE4SLppWhXxaqlfz+6vBmehYOacGnGRAHArRzIHAR2Yx+
-         qvdA==
-X-Gm-Message-State: ANhLgQ0S0KMrmWTQz0cfUG197cD1KdZCiYAQC4Q18egdnZ3rZGsit3ht
-        xHQhbRZXttSQp6IXO7yyaQ==
-X-Google-Smtp-Source: ADFU+vvD7ZY12Fv5AuWSMX8HBSYi+c/pA6BWamHOhmpp3/wxLvuyqf0jdFOYO2rfworbjAz/j+AM9w==
-X-Received: by 2002:a63:5859:: with SMTP id i25mr24389370pgm.74.1584333402141;
-        Sun, 15 Mar 2020 21:36:42 -0700 (PDT)
-Received: from mylaptop.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id d6sm18544296pjz.39.2020.03.15.21.36.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Mar 2020 21:36:41 -0700 (PDT)
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     linux-mm@kvack.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCHv6 3/3] mm/gup_benchemark: add LONGTERM_BENCHMARK test in gup fast path
-Date:   Mon, 16 Mar 2020 12:34:04 +0800
-Message-Id: <1584333244-10480-4-git-send-email-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.7.5
-In-Reply-To: <1584333244-10480-1-git-send-email-kernelfans@gmail.com>
-References: <1584333244-10480-1-git-send-email-kernelfans@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uxCRLDZ0IkMQwqs0XVpLiauYQ/QOJLqTZsxTkwxRAyY=;
+        b=FZzKmdD8f2csQapVKVI8eS2sT1cZi/+Hx4KQCFMbeYPeJ5nSrTPc0gFBbzY6wFATEK
+         wjrM3cFCuDdPy+6I5WPQBzw2ntIkhMWLosjSpRKOhMaZrghqTWkTomtTyF9Ah4SfVoJW
+         3FdYUQ30gvSdqGhmpVx0iyMEhsCn8mtJgQ1vfEXE9hHvlac1ys572RKKd1/b82dzV35v
+         AjoF9aIi/9BnOpEqY1R68agI+HizWoTWLSKZYAzopQ2uiPNPnVw9SXxn46oNqEX1gz7u
+         8lmAVcWzATRVe/P3IRrowewMXEjn/+r1Z20SpF3Msj1WQyT6gdhqFaRRJVBKNR+pL3H4
+         LzsQ==
+X-Gm-Message-State: ANhLgQ0gFwW7rOApDTfiVhMyCc2c2CZo02jUengkWr1y7nRSkLyxZoid
+        IagC5ZuTwUFdFM4+jDIs3ZInfQQEYjU+RvCtx1tWjZVF
+X-Google-Smtp-Source: ADFU+vt9p6Gc2hMT0p448VwZq+IUNrzJ5/vgFErcVtQKm6CZXXWDuj9Qqg7E4Y9B/H+Dx2mFG0PWSWrbG2zUbsiVJco=
+X-Received: by 2002:a37:6e06:: with SMTP id j6mr24529985qkc.171.1584334207132;
+ Sun, 15 Mar 2020 21:50:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
+ <1579123790-6894-7-git-send-email-eajames@linux.ibm.com> <CAK8P3a3HsdpLz0aDGem1BrQsNo2mEJOnOsLcKFcLjaERx9dhGg@mail.gmail.com>
+ <1a303336-9ffb-353f-efe3-7d45ed114fd0@linux.vnet.ibm.com>
+In-Reply-To: <1a303336-9ffb-353f-efe3-7d45ed114fd0@linux.vnet.ibm.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 16 Mar 2020 04:49:55 +0000
+Message-ID: <CACPK8XcD5O0dwEOSHqWfCu38B96JkdbcvzCuJhep+PXF6foC=g@mail.gmail.com>
+Subject: Re: [PATCH v6 06/12] soc: aspeed: Add XDMA Engine Driver
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Eddie James <eajames@linux.ibm.com>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a PIN_FAST_LONGTERM_BENCHMARK ioctl to test longterm pin in gup fast
-path.
+On Mon, 10 Feb 2020 at 17:10, Eddie James <eajames@linux.vnet.ibm.com> wrote:
+>
+>
+> On 2/10/20 10:35 AM, Arnd Bergmann wrote:
+> > On Wed, Jan 15, 2020 at 10:31 PM Eddie James <eajames@linux.ibm.com> wrote:
+> >> The XDMA engine embedded in the AST2500 and AST2600 SOCs performs PCI
+> >> DMA operations between the SOC (acting as a BMC) and a host processor
+> >> in a server.
+> >>
+> >> This commit adds a driver to control the XDMA engine and adds functions
+> >> to initialize the hardware and memory and start DMA operations.
+> >>
+> >> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> > Hi Eddie,
+> >
+> > I'm missing the bigger picture in the description here, how does this fit into
+> > the PCIe endpoint framework and the dmaengine subsystem?
+>
+>
+> Hi,
+>
+> It doesn't fit into the PCIe endpoint framework. The XDMA engine
+> abstracts all the PCIe details away so the BMC cannot configure any of
+> the things the PCIe endpoint exposes.
+>
+> It also doesn't fit into the dmaengine subsystem due to the restriction
+> on the ast2500 (and maybe the ast2600) that the XDMA engine can only
+> access certain areas of physical memory. Also problematic would be
+> pausing/resuming/terminating transfers because the XDMA engine can't do
+> those things.
+>
+>
+> >
+> > Does the AST2500 show up as a PCIe device in the host, or do you just
+> > inject DMAs into the host and hope that bypasses the IOMMU?
+> > If it shows up as an endpoint, how does the endpoint driver link into the
+> > dma driver?
+>
+>
+> The AST2500 and AST2600 have two PCIe devices on them, so these will
+> show up on the host if the BMC enables both of them. Either or both can
+> also be disabled and therefore will not show up. On the host side, in
+> order to receive DMA transfers, its simply a matter of registering a PCI
+> device driver and allocating some coherent DMA.... Not sure about the
+> details of endpoints/dma client driver?
+>
+>
+> Hopefully this answers your questions. Thanks,
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/gup_benchmark.c                         | 7 +++++++
- tools/testing/selftests/vm/gup_benchmark.c | 6 +++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-index be690fa..09fba20 100644
---- a/mm/gup_benchmark.c
-+++ b/mm/gup_benchmark.c
-@@ -10,6 +10,7 @@
- #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
- #define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
- #define PIN_BENCHMARK		_IOWR('g', 5, struct gup_benchmark)
-+#define PIN_FAST_LONGTERM_BENCHMARK	_IOWR('g', 6, struct gup_benchmark)
-
- struct gup_benchmark {
- 	__u64 get_delta_usec;
-@@ -101,6 +102,11 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
- 			nr = get_user_pages_fast(addr, nr, gup->flags,
- 						 pages + i);
- 			break;
-+		case PIN_FAST_LONGTERM_BENCHMARK:
-+			nr = get_user_pages_fast(addr, nr,
-+					gup->flags | FOLL_LONGTERM,
-+					pages + i);
-+			break;
- 		case GUP_LONGTERM_BENCHMARK:
- 			nr = get_user_pages(addr, nr,
- 					    gup->flags | FOLL_LONGTERM,
-@@ -166,6 +172,7 @@ static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
- 	case GUP_BENCHMARK:
- 	case PIN_FAST_BENCHMARK:
- 	case PIN_BENCHMARK:
-+	case PIN_FAST_LONGTERM_BENCHMARK:
- 		break;
- 	default:
- 		return -EINVAL;
-diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
-index 43b4dfe..f024ff3 100644
---- a/tools/testing/selftests/vm/gup_benchmark.c
-+++ b/tools/testing/selftests/vm/gup_benchmark.c
-@@ -21,6 +21,7 @@
- /* Similar to above, but use FOLL_PIN instead of FOLL_GET. */
- #define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
- #define PIN_BENCHMARK		_IOWR('g', 5, struct gup_benchmark)
-+#define PIN_FAST_LONGTERM_BENCHMARK	_IOWR('g', 6, struct gup_benchmark)
-
- /* Just the flags we need, copied from mm.h: */
- #define FOLL_WRITE	0x01	/* check pte is writable */
-@@ -44,7 +45,7 @@ int main(int argc, char **argv)
- 	char *file = "/dev/zero";
- 	char *p;
-
--	while ((opt = getopt(argc, argv, "m:r:n:f:abtTLUuwSH")) != -1) {
-+	while ((opt = getopt(argc, argv, "m:r:n:f:abtTlLUuwSH")) != -1) {
- 		switch (opt) {
- 		case 'a':
- 			cmd = PIN_FAST_BENCHMARK;
-@@ -67,6 +68,9 @@ int main(int argc, char **argv)
- 		case 'T':
- 			thp = 0;
- 			break;
-+		case 'l':
-+			cmd = PIN_FAST_LONGTERM_BENCHMARK;
-+			break;
- 		case 'L':
- 			cmd = GUP_LONGTERM_BENCHMARK;
- 			break;
---
-2.7.5
-
+Arnd, did you have further questions about this driver?
