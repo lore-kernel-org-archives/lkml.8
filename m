@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D170C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108E9C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32C2206EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF691206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326188;
-	bh=Wk5vG2jvv3zKm1H8ZHIEKdgfGVZnA91k1WpdRvzFCCI=;
+	s=default; t=1584326192;
+	bh=/o1Xr498tkQFQ/oFiaM4/uN7/67/7a1kWePFN3V31LI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nO3yZnighSqVuEDie+RMHRNCuZlNDlu0PUIkVwr5DlI7AYzGHN9FmKxelIWgosqBl
-	 GJTA2rc2RUTCZmXxtB66b/mXdiVBELmJ9zZ2XJPMyp3A0s1Xmkxc13DD8iCdHUtACK
-	 6rM4k5CnhpJAjCUC5GueTuBxuhBuhcBunM+weV/A=
+	b=vao7msLKVSJaVuf10k6iwjtIhJ98jGhMSaoW+f5J9h+Y1oJOYRSpnglqDT6d/RfwB
+	 u3ZR6QMRcCQzsdtUFNN+Ji6ocKGzDX2umTynTUXpNU8C8bIrgBgJO3SUN5xxM20yDe
+	 404MFR2V7HhPbVz/LkXvRSvrDX2A4YqlGZvREqOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbgCPCg1 (ORCPT
+        id S1730015AbgCPCgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:36:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40576 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:36:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729703AbgCPCfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:35:48 -0400
+        id S1729826AbgCPCfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F96620726;
-        Mon, 16 Mar 2020 02:35:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFB4B20722;
+        Mon, 16 Mar 2020 02:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326147;
-        bh=Wk5vG2jvv3zKm1H8ZHIEKdgfGVZnA91k1WpdRvzFCCI=;
+        s=default; t=1584326144;
+        bh=/o1Xr498tkQFQ/oFiaM4/uN7/67/7a1kWePFN3V31LI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R1Nu3dR7GFG+VKxUj8Uq511nmBjK/GMQXLpiQXNwssxTTRbkuT9aBqXrLB99OoT1J
-         4MiBWW75GVLnbuyEXzGQBnFxT7DqONXSgGzKC7xLOkpYDQva/D5ZGuZdCuXZVi0alK
-         Ynjcq5FMVkYbEznJ37YFM4i9vi+ChlWLkSovlPok=
+        b=ZTKIIRepsoM2vN8rGanJIGrb3iTku26rQqbA7d5JbUPf+k/ydpyAm0zjsZo+4v9jz
+         /9wtLoK6hY7+N5VEDZQJwmAm7Ila+JiWdYT+K9eNd6PHhXwtBOS2VY+T0cKaZ/1/To
+         k4C/yPGq80ieWIskh8x3HSuk1czNOsjKjGbmpkvU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Axtens <dja@axtens.net>,
-        "Igor M. Liplianin" <liplianin@netup.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 7/7] altera-stapl: altera_get_note: prevent write beyond end of 'key'
-Date:   Sun, 15 Mar 2020 22:35:38 -0400
-Message-Id: <20200316023538.2232-7-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 5/7] drm/exynos: dsi: propagate error value and silence meaningless warning
+Date:   Sun, 15 Mar 2020 22:35:36 -0400
+Message-Id: <20200316023538.2232-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023538.2232-1-sashal@kernel.org>
 References: <20200316023538.2232-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,97 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 3745488e9d599916a0b40d45d3f30e3d4720288e ]
+[ Upstream commit 0a9d1e3f3f038785ebc72d53f1c409d07f6b4ff5 ]
 
-altera_get_note is called from altera_init, where key is kzalloc(33).
+Properly propagate error value from devm_regulator_bulk_get() and don't
+confuse user with meaningless warning about failure in getting regulators
+in case of deferred probe.
 
-When the allocation functions are annotated to allow the compiler to see
-the sizes of objects, and with FORTIFY_SOURCE, we see:
-
-In file included from drivers/misc/altera-stapl/altera.c:14:0:
-In function ‘strlcpy’,
-    inlined from ‘altera_init’ at drivers/misc/altera-stapl/altera.c:2189:5:
-include/linux/string.h:378:4: error: call to ‘__write_overflow’ declared with attribute error: detected write beyond size of object passed as 1st parameter
-    __write_overflow();
-    ^~~~~~~~~~~~~~~~~~
-
-That refers to this code in altera_get_note:
-
-    if (key != NULL)
-            strlcpy(key, &p[note_strings +
-                            get_unaligned_be32(
-                            &p[note_table + (8 * i)])],
-                    length);
-
-The error triggers because the length of 'key' is 33, but the copy
-uses length supplied as the 'length' parameter, which is always
-256. Split the size parameter into key_len and val_len, and use the
-appropriate length depending on what is being copied.
-
-Detected by compiler error, only compile-tested.
-
-Cc: "Igor M. Liplianin" <liplianin@netup.ru>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Link: https://lore.kernel.org/r/20200120074344.504-2-dja@axtens.net
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/202002251042.D898E67AC@keescook
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Inki Dae <inki.dae@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/altera-stapl/altera.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/altera-stapl/altera.c b/drivers/misc/altera-stapl/altera.c
-index 494e263daa748..b7ee8043a133e 100644
---- a/drivers/misc/altera-stapl/altera.c
-+++ b/drivers/misc/altera-stapl/altera.c
-@@ -2126,8 +2126,8 @@ static int altera_execute(struct altera_state *astate,
- 	return status;
- }
- 
--static int altera_get_note(u8 *p, s32 program_size,
--			s32 *offset, char *key, char *value, int length)
-+static int altera_get_note(u8 *p, s32 program_size, s32 *offset,
-+			   char *key, char *value, int keylen, int vallen)
- /*
-  * Gets key and value of NOTE fields in the JBC file.
-  * Can be called in two modes:  if offset pointer is NULL,
-@@ -2184,7 +2184,7 @@ static int altera_get_note(u8 *p, s32 program_size,
- 						&p[note_table + (8 * i) + 4])];
- 
- 				if (value != NULL)
--					strlcpy(value, value_ptr, length);
-+					strlcpy(value, value_ptr, vallen);
- 
- 			}
- 		}
-@@ -2203,13 +2203,13 @@ static int altera_get_note(u8 *p, s32 program_size,
- 				strlcpy(key, &p[note_strings +
- 						get_unaligned_be32(
- 						&p[note_table + (8 * i)])],
--					length);
-+					keylen);
- 
- 			if (value != NULL)
- 				strlcpy(value, &p[note_strings +
- 						get_unaligned_be32(
- 						&p[note_table + (8 * i) + 4])],
--					length);
-+					vallen);
- 
- 			*offset = i + 1;
- 		}
-@@ -2463,7 +2463,7 @@ int altera_init(struct altera_config *config, const struct firmware *fw)
- 			__func__, (format_version == 2) ? "Jam STAPL" :
- 						"pre-standardized Jam 1.1");
- 		while (altera_get_note((u8 *)fw->data, fw->size,
--					&offset, key, value, 256) == 0)
-+					&offset, key, value, 32, 256) == 0)
- 			printk(KERN_INFO "%s: NOTE \"%s\" = \"%s\"\n",
- 					__func__, key, value);
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index e07cb1fe48604..5e202af7fbf53 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -1775,8 +1775,9 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dsi->supplies),
+ 				      dsi->supplies);
+ 	if (ret) {
+-		dev_info(dev, "failed to get regulators: %d\n", ret);
+-		return -EPROBE_DEFER;
++		if (ret != -EPROBE_DEFER)
++			dev_info(dev, "failed to get regulators: %d\n", ret);
++		return ret;
  	}
+ 
+ 	dsi->clks = devm_kzalloc(dev,
 -- 
 2.20.1
 
