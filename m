@@ -2,163 +2,96 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2970C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9C3C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD4B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5AD20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584371550;
-	bh=tqLRpWzabXSno1lAbdQPzhkVdhyf+MB1/ZDWg2u0nP0=;
+	s=default; t=1584371604;
+	bh=jzaKcrjBVVgXu4gQbm8RO2NC8KMRRW29Vaj/zvBoqKU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JX/Ple3alm8UmVFsz/s7WZc1wkjZK/2ZSko4YyOVVsbBS8GbD0xU5YzFhJKuBb54k
-	 kxlSbaYqPIQD/JtNLmw93JtebL7T+3rU6tBYAG9K1jPiPCDUksquy6ru7aReY+FYw9
-	 ZCk2NXr6qH5tQyzwz1EAEAs1vPjuVVCPQjVlJPck=
+	b=cPpevKTu12K4NK18JeNtKzkpv/AoxHw1NI7UTuup32slVwymQRYOr/gdTd2rbtKN6
+	 zPSPTtoVsud5DbaDQFpWQWbCmccPdPm6rkABztMCMMMw3OnwDGwpRH/C7KfAmiLlAn
+	 SwgeFlrCWqT/Cz/478eGO7Htnd1re5fOCoD6424k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731749AbgCPPM3 (ORCPT
+        id S1731760AbgCPPNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:12:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35169 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729964AbgCPPM3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:12:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m3so18493922wmi.0;
-        Mon, 16 Mar 2020 08:12:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pP29NNx6Ci3tKu2VMQ6svFhSLpTYpkSdhU02iawHkFs=;
-        b=Dnwlz34mWXgBWLnFf8OBoTMCCjGEIjnY7+NNYOn65l9S3hkmn81ytzDfT6y9PhntMr
-         SFLK54ZKh9T0dnqBCNjg18J/5xXqU6Dutf65o0mA9LJ8tUK/KdKNChq8ouj9QeRcRCbS
-         8n501882hm2Sc8eBAPEhX3CMGqQqmzy9vUs4LqvYxBoLveX9Q/FO07l2DJCXPUnEwsHX
-         YtQnY5FLBu4kySaj89LiqlrQQbbiwwE21QFOyfe4ybweOkNlHfxnktLSO6qeWRxQYzX+
-         4ZUSW3yMfjcdy+eoEC1nCzKPtrjSTvAUJKm5we85MalKwaG0fMwCMGOY7Z8try3A1Y8O
-         Iv7g==
-X-Gm-Message-State: ANhLgQ0W5UHiRbs/JemC3KLjZLExWn9Qp5gdfhE+bwbL5oyIhngWTDWj
-        /0hgMDXn9rQ8ikPfltraVe8=
-X-Google-Smtp-Source: ADFU+vu/tvS5V97YVVfKD2ivxmneOufMFO5W9ErMHPP4C5Ju1eQN39CBYRDgFDWYm0T37VQ9dxYtJg==
-X-Received: by 2002:a7b:c75a:: with SMTP id w26mr10625158wmk.2.1584371544960;
-        Mon, 16 Mar 2020 08:12:24 -0700 (PDT)
-Received: from localhost ([37.188.132.163])
-        by smtp.gmail.com with ESMTPSA id s15sm347045wrr.45.2020.03.16.08.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:12:24 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 16:12:23 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v1 1/5] drivers/base/memory: rename MMOP_ONLINE_KEEP to
- MMOP_ONLINE
-Message-ID: <20200316151223.GS11482@dhcp22.suse.cz>
-References: <20200311123026.16071-1-david@redhat.com>
- <20200311123026.16071-2-david@redhat.com>
+        Mon, 16 Mar 2020 11:13:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:50390 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729964AbgCPPNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:13:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 911181FB;
+        Mon, 16 Mar 2020 08:13:22 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13E253F534;
+        Mon, 16 Mar 2020 08:13:21 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 15:13:20 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: fix cs_change for last transfer
+Message-ID: <20200316151320.GI5010@sirena.org.uk>
+References: <45912ba25c34a63b8098f471c3c8ebf8857a4716.1584292056.git.mirq-linux@rere.qmqm.pl>
+ <20200316121750.GD5010@sirena.org.uk>
+ <20200316143455.GA19141@qmqm.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="81JctsDUVPekGcy+"
 Content-Disposition: inline
-In-Reply-To: <20200311123026.16071-2-david@redhat.com>
+In-Reply-To: <20200316143455.GA19141@qmqm.qmqm.pl>
+X-Cookie: I thought YOU silenced the guard!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-03-20 13:30:22, David Hildenbrand wrote:
-> The name is misleading. Let's just name it like the online_type name we
-> expose to user space ("online").
 
-I would disagree the name is misleading. It just says that you want to
-online and keep the zone type. Nothing I would insist on though.
+--81JctsDUVPekGcy+
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Add some documentation to the types.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/base/memory.c          | 9 +++++----
->  include/linux/memory_hotplug.h | 6 +++++-
->  2 files changed, 10 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 6448c9ece2cb..8c5ce42c0fc3 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -216,7 +216,7 @@ static int memory_subsys_online(struct device *dev)
->  	 * attribute and need to set the online_type.
->  	 */
->  	if (mem->online_type < 0)
-> -		mem->online_type = MMOP_ONLINE_KEEP;
-> +		mem->online_type = MMOP_ONLINE;
->  
->  	ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
->  
-> @@ -251,7 +251,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->  	else if (sysfs_streq(buf, "online_movable"))
->  		online_type = MMOP_ONLINE_MOVABLE;
->  	else if (sysfs_streq(buf, "online"))
-> -		online_type = MMOP_ONLINE_KEEP;
-> +		online_type = MMOP_ONLINE;
->  	else if (sysfs_streq(buf, "offline"))
->  		online_type = MMOP_OFFLINE;
->  	else {
-> @@ -262,7 +262,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->  	switch (online_type) {
->  	case MMOP_ONLINE_KERNEL:
->  	case MMOP_ONLINE_MOVABLE:
-> -	case MMOP_ONLINE_KEEP:
-> +	case MMOP_ONLINE:
->  		/* mem->online_type is protected by device_hotplug_lock */
->  		mem->online_type = online_type;
->  		ret = device_online(&mem->dev);
-> @@ -342,7 +342,8 @@ static ssize_t valid_zones_show(struct device *dev,
->  	}
->  
->  	nid = mem->nid;
-> -	default_zone = zone_for_pfn_range(MMOP_ONLINE_KEEP, nid, start_pfn, nr_pages);
-> +	default_zone = zone_for_pfn_range(MMOP_ONLINE, nid, start_pfn,
-> +					  nr_pages);
->  	strcat(buf, default_zone->name);
->  
->  	print_allowed_zone(buf, nid, start_pfn, nr_pages, MMOP_ONLINE_KERNEL,
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index f4d59155f3d4..261dbf010d5d 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -47,9 +47,13 @@ enum {
->  
->  /* Types for control the zone type of onlined and offlined memory */
->  enum {
-> +	/* Offline the memory. */
->  	MMOP_OFFLINE = -1,
-> -	MMOP_ONLINE_KEEP,
-> +	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
-> +	MMOP_ONLINE,
-> +	/* Online the memory to ZONE_NORMAL. */
->  	MMOP_ONLINE_KERNEL,
-> +	/* Online the memory to ZONE_MOVABLE. */
->  	MMOP_ONLINE_MOVABLE,
->  };
->  
-> -- 
-> 2.24.1
+On Mon, Mar 16, 2020 at 03:34:55PM +0100, Micha=C5=82 Miros=C5=82aw wrote:
+> On Mon, Mar 16, 2020 at 12:17:50PM +0000, Mark Brown wrote:
 
--- 
-Michal Hocko
-SUSE Labs
+> > This is the opposite of the intended behaviour - we want to deassert
+> > chip select at the end of the message unless cs_change is set on the
+> > last transfer.  If this were broken I would expect to see widespread
+> > problems being reported.
+
+> This is unfortunate naming I suppose. I reread the spi.h comments
+> a few more times and it seems indeed, that .cs_change =3D=3D 1 on last
+> transfer means to a driver: "you may leave CS unchanged" - quite the
+> reverse compared to non-last transfers.
+
+cs_change also means that we should add an extra chip select transition
+on transfers other than the last.
+
+> Please drop this patch then.
+
+OK.
+
+--81JctsDUVPekGcy+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5vl48ACgkQJNaLcl1U
+h9DeXgf+Msgq0Fm5YFrl6BpPbINtM7Fs6PHQdsIBzUMHwaUxzJ476+0jR9ILxEvu
+oCl/v/BLaAw/KY/8ThuxaxG4H6S4s2U81tyOzDDJGINf+DIkbsTytxcHzC8fHlmC
+cCX7v80+PGdLbNklVqd34sNgTPPiG0GgLUBbFJu4J9ALVA158w4RBYQMVRACaOi7
+iqxBkcb2LoZA3d4Ack098jTiyFEbV3yUJGWb3mkOzlvEsoZEbZOG5hU+1YH10roJ
+rXsen2GpoQ01/kt0T0qoPSMBPyVSYHcbs3mc+I3JroIo0my4bVTOxvMip+G33jwe
+ftkmcl8XS3KCBDNLs08TsBWjugPd0w==
+=4bFZ
+-----END PGP SIGNATURE-----
+
+--81JctsDUVPekGcy+--
