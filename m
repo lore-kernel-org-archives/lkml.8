@@ -2,98 +2,109 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A0BC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8D9C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E272520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="snHMyK9Q"
+	by mail.kernel.org (Postfix) with ESMTP id EAEE420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:03:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584360236;
+	bh=Ao5Ufi67EBcvrXC7ckGJZo7PFl03jsXdBJ0BnJUCpYM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uUsyU2VPhP9xWbw7GLve1hJJY5sVgCroJ3zMWYDskZLffb/B8VMFwPlC6DcVcKGls
+	 w6OU9wfw4yoxVUPJxtCTM4jHT8jwUTFmY5x9YGilSW8DrKXVCS50Hopas2Dm7XDZbH
+	 IdUpw6sCHo8Ltqe+nYu31uRwsFq+Czz5f88DEUzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730917AbgCPMDJ (ORCPT
+        id S1730932AbgCPMDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:03:09 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40840 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730845AbgCPMDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:03:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z12so8536484wmf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 05:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=onXCuvN65PHjTE+0EfUmxT7L78srpirmS0ZiKqVYQ5U=;
-        b=snHMyK9QEfcSuHHR9QLQWzaJpBO8Rr88B+jvXfHnzTR66EkQ2Pej0NSRiDsZb/Kndi
-         eRC96yDvyz66+9L+bqOnyTpqxw0nZHEsDJSLzrfJTYRj99844KDtM6f/V5G8BjjpFX02
-         ViNGXCXE9Yi6DwDXHEIvD892kbPDVUXPHc22fF5WdaiHvXbZJIp/1U30fvlX6TTn+hwD
-         Sd37LHjtS/diPIgHWzgE0Xzt+W7GQERZSOLv0WH24LjTSEortFghhHg/zrLKvYkAIlAa
-         lGqgD/wmS1rJu5o5Mvazf8BDZeBxje6om2OkmTjsEpwDTDkVBeoIpBg8OY2L+H/JupAU
-         rD9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=onXCuvN65PHjTE+0EfUmxT7L78srpirmS0ZiKqVYQ5U=;
-        b=pThN9bK9viCA9l0YaRDvkJWK26q8oxvGHou4rRqPvaxKZkG6SGFgFaQpG+dLb8UM0a
-         rl9yZK/4dXmOvPB2bmyD81QTawS5jeIFHcpkN9U3pK55bNrjS9Vrymt8Y+nup5EVtVCO
-         SWczP8rUF9PDJnZcfrjeXIDbkyrgLjyUUpLc/8d5PYOQlDS+oldVSNLxp9kWuWDha/Xm
-         lIf/3K4a3vAeavmOLwIsi2r6Mzi2r25WJNFzk+mFqW/vVDZUGhFq7CxysLBGFoZPoaai
-         +UNmS4fQ9yJ9pj5nE6qSneb5p9+K2+nxb9GhbRlLA+PXa9a2nZi77a542ThHeutz8Tn6
-         vz7w==
-X-Gm-Message-State: ANhLgQ0+G4bDOrg37hP1PJsxrQIgJ3EEavISycH9M16sf8ToHNexZg9t
-        Peqi0/vpeNnAXmcf6ZI9NKQmTg==
-X-Google-Smtp-Source: ADFU+vt5Dj2XldoYXwor9TGrDgmRHbP3oq0TBe8+yx22nJQkaLn1TP77bmBQAmSJ4rPh1mZmJ6grvA==
-X-Received: by 2002:a1c:e109:: with SMTP id y9mr26799734wmg.62.1584360186500;
-        Mon, 16 Mar 2020 05:03:06 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id p10sm93395549wrx.81.2020.03.16.05.03.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 05:03:05 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] ASoC: codecs: wsa881x: request gpio direction before setting
-Date:   Mon, 16 Mar 2020 12:03:03 +0000
-Message-Id: <20200316120303.3780-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Mon, 16 Mar 2020 08:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730845AbgCPMDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:03:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC3320663;
+        Mon, 16 Mar 2020 12:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584360234;
+        bh=Ao5Ufi67EBcvrXC7ckGJZo7PFl03jsXdBJ0BnJUCpYM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=V7uBJrET/I1l6cJmdpEF4zuBtW2oQPL23DFerce5GDJ5SmZBI/zmrFyMzJQ/QsZsn
+         5skG7cPPSzvwS9p0Lys5Hu3moWbfi+aWu4dIGoVLFbtf93K7XEKdZo6ji8qEKowbUw
+         OVxGViUKa/VYwIsjmPjPIYQu9TiBT3uktquIO6yU=
+Date:   Mon, 16 Mar 2020 13:03:51 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.19.110
+Message-ID: <20200316120351.GA3735485@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure that power down gpio direction is set to ouput
-before even setting it.
 
-Fixes: a0aab9e1404a ("ASoC: codecs: add wsa881x amplifier support")
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- sound/soc/codecs/wsa881x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/sound/soc/codecs/wsa881x.c b/sound/soc/codecs/wsa881x.c
-index 35b44b297f9e..1810e0775efe 100644
---- a/sound/soc/codecs/wsa881x.c
-+++ b/sound/soc/codecs/wsa881x.c
-@@ -1154,7 +1154,7 @@ static int wsa881x_probe(struct sdw_slave *pdev,
- 	wsa881x->sconfig.type = SDW_STREAM_PDM;
- 	pdev->prop.sink_ports = GENMASK(WSA881X_MAX_SWR_PORTS, 0);
- 	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
--	gpiod_set_value(wsa881x->sd_n, 1);
-+	gpiod_direction_output(wsa881x->sd_n, 1);
- 
- 	wsa881x->regmap = devm_regmap_init_sdw(pdev, &wsa881x_regmap_config);
- 	if (IS_ERR(wsa881x->regmap)) {
--- 
-2.21.0
+I'm announcing the release of the 4.19.110 kernel.
 
+This fixes a problem in 4.19.109 in the KVM subsystem.  If you use KVM,
+you are strongly encouraged to upgrade.  If not, no big deal, you can
+ignore this release.
+
+The updated 4.19.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.19.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile           |    2 +-
+ arch/x86/kvm/svm.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Greg Kroah-Hartman (2):
+      KVM: SVM: fix up incorrect backport
+      Linux 4.19.110
+
+
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl5vayQACgkQONu9yGCS
+aT793Q//UgYX230OzVujfRA80rNeQd2PlAH2wcoR/wHYLj2bAp1MIB2e5UX1uPyQ
+iXAm9BHL3vkupsxNVnTj5sD9/hDoacaOlwyqMRStvU/H0XuScq17Yec5e1wBLH9+
+eTdz48Xl75nmoocG40Hgb4+JkAnuLPR2R2RqPUa6dIqOswrU8oArgZOox5rCjVA6
+v6r2N4KfVPHHnPg09WidAeRhPB1k6lMrXQbaQk0X2nYV0n2dNlq02vw4MCN7ckku
+qdy2LZycqwiR0aeJTb9KiJ9MKcU8eHOSC2RsEVGL1rFUC4OLS4rDoB9ROXFViFn5
+yxxQM5dG3pJ0sXs9MW3ONTirjhYz0WIHrjdTy+PZ0Qh7gq/hzcX7RITRNuOXUaF0
+TXW0BPfGrelipCHB11ObzKRjaDxOMRlJYbtSY+WH/oaLkpCJswIpLiLwHszwHq7n
+W3IvdgpRBbeO+uor1g6lFn6SgH7DRG8ZegCqUoWPQ/zO1ziT56xu241eFx6I6XJm
+b7K2E6A6ESG9R+YQK0XZttrsEDxPTLvOa6ZP/GsjRuf2n6PGVPReGC4QyQvw9hoZ
++oMaihMeBih5cdSt/QOs7wEMVWPydabzVFGeCnfLXB+Bm2xsui+B79Dzv4YwKIQ1
+YvmsRo6dV43n2IkevAWPJFj7QvaBY6B4gb0WpSYGGmkGfWgIly8=
+=DgXC
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
