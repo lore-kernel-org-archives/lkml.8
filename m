@@ -2,113 +2,170 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC313C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA98FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E0D205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9310A206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:54:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnXOaYWU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="r9yeCIsn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731115AbgCPMux (ORCPT
+        id S1731071AbgCPMyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:50:53 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34613 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730919AbgCPMuw (ORCPT
+        Mon, 16 Mar 2020 08:54:03 -0400
+Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:15517 "EHLO
+        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730878AbgCPMyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:50:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a23so7977603plm.1;
-        Mon, 16 Mar 2020 05:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ZpMGbXXqa6m8v2kNHAjkP9KJ7pUf2Se2goyp9p1li6k=;
-        b=NnXOaYWUoKo1njr2t55uW/zLpCKfUWwvjr3b+cokM1mR9fcQFQRpINqCBE8U1i5BQK
-         zVdwbJPsBri/RXvJL3SEulKlFkZiQWBy83dxvT/IQVWbFERoFxFt+WFTX52Uwwv6h6E7
-         eT1Gd8B9WV9ukU2/LorE2hsqhMxIVNx2X7HDTiBzMh2ZmSCB6MNsVxa0R3w4x6z5rb8I
-         chO2G14Y1l4NvF4evo8hpkmHigA4IRUMtPkopNLMouvx2ygRbnCZCJnzKPLIcc30p+iL
-         jx3XUmc3WYkSRLzfSfUOa8Iq0mOESfGQUS6vaJ8bCyr354blfoIQNpWKNPrYn39HtCQw
-         446Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ZpMGbXXqa6m8v2kNHAjkP9KJ7pUf2Se2goyp9p1li6k=;
-        b=rlr+dMMu/P60ZmOrzwBF8h4D3wanJB5oOK1PmPkoMo+smLr2ZIomaB+a/WgvwVz5PZ
-         ONHEe/RYQyiEylln1ZDsdzqKLOLK+/kG2Ex4MdWGdhbfC+QlEOAVPBFxZn3cRSs0ZUAK
-         uhZmIASKV2B3wNNHQf6ZhaxHKd6P0/McBLH0yUrU3qj6EJjbI6y/I84PCbPCfkO+t0kR
-         gzKRIP7YCgLpi5xyLRWUWw7r8seqhNYnwppm1w8VtE7SANWUHBsVesARJ5sfHvcLroqv
-         mSai1G+ngbE+o2NZwl9c0FYKX9OU8agNk1MN3hEM8+moGvsgXOsO/OXd0cW1F2gnOAQ7
-         cvsA==
-X-Gm-Message-State: ANhLgQ3zND0UiMdFdJxNaWHDwqdG/TB/C5tgGBf5BlZEExVFfcHXiPzp
-        3mvqDDzrl83KMZfEF78gxl36XuWk
-X-Google-Smtp-Source: ADFU+vu/T0lBhYXxYtLJIVNw5uA6jj60DJQmEi8a7FlabEhKBO84KKPdVPI4bOmahLEeho6N0spV+Q==
-X-Received: by 2002:a17:902:bc47:: with SMTP id t7mr27046019plz.47.1584363051640;
-        Mon, 16 Mar 2020 05:50:51 -0700 (PDT)
-Received: from syed.domain.name ([103.201.127.108])
-        by smtp.gmail.com with ESMTPSA id e189sm61874290pfa.139.2020.03.16.05.50.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Mar 2020 05:50:51 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 18:20:46 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     vilhelm.gray@gmail.com
-Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/3] counter: 104-quad-8: Add lock guards - filter clock
- prescaler
-Message-ID: <20200316125046.GA447@syed.domain.name>
+        Mon, 16 Mar 2020 08:54:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1584363242; x=1615899242;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=feePxLU3b23qOHVy3Y3+dMLz8Wwo2J+vDu1gQ/r/Dlg=;
+  b=r9yeCIsnJiuJuU921o8JBcg7Y02/VuHT3lqGBUEKM5QmYfY329zctI5R
+   RR5jo589oe8Mv06A9fuGV9/Gakh4R7nuzZ5omtb2mTMJ85t4z9FuFh1N3
+   zKc32Vq4WeY0YmAjqjY/Vjfc/q+xlfo8VsT75+Jo79z5oypymcIjGuCJP
+   vSIyzXNDVRqcDgwciayGXVKCpP4O+sB3H8kjaVnbAhRd7Az4C1kes9A7C
+   F+Kpgp/tbLYd6nowXOhwArPAjcXHz9u2p0ZJD4HTXK6q3pcRuCfDFoWA6
+   SwC3plggKiTs+UlSLWq+3R4I/jzag8vLCx1KVA/pYnsJG0sDqWNsJK6yL
+   Q==;
+IronPort-SDR: WA+Aep83FvM9YI3o8dqfTDYhu4T82RRZQBGypZw1EWP7u5tOIByDt8zwlabX75il4Wd0Z584EG
+ VzNW1U+J0fvw==
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: [PATCH v3 1/3] leds: pwm: remove header
+Thread-Topic: [PATCH v3 1/3] leds: pwm: remove header
+Thread-Index: AQHV+5H1Iks8TeXaGE2TwcBBeYu7jA==
+Date:   Mon, 16 Mar 2020 12:53:58 +0000
+Message-ID: <20200316124851.6303-2-Denis.Osterland@diehl.com>
+References: <20200316124851.6303-1-Denis.Osterland@diehl.com>
+In-Reply-To: <20200316124851.6303-1-Denis.Osterland@diehl.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TrailerSkip: 1
+X-GBS-PROC: 415AWy8o668fDtCxszluz0usJCarfP6B29so9zGpOBBwmTyEXYBVke9EOfE4UxBx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add lock protection from race conditions to the 104-quad-8 counter
-driver for filter clock prescaler code changes. Mutex calls used for
-protection.
+The header is only used by leds_pwm.c, so move contents to leds_pwm.c
+and remove it.
+Apply minor changes suggested by checkpatch.
 
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+Suggested-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
 ---
-Changes in v5:
- - Change spin lock calls to mutex lock calls.
- - Modify the title description.
+ drivers/leds/leds-pwm.c  | 15 ++++++++++++++-
+ include/linux/leds_pwm.h | 22 ----------------------
+ 2 files changed, 14 insertions(+), 23 deletions(-)
+ delete mode 100644 include/linux/leds_pwm.h
 
- drivers/counter/104-quad-8.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
-index 9dab190..b268165 100644
---- a/drivers/counter/104-quad-8.c
-+++ b/drivers/counter/104-quad-8.c
-@@ -1230,6 +1230,8 @@ static ssize_t quad8_signal_fck_prescaler_write(struct counter_device *counter,
- 	if (ret)
- 		return ret;
- 
-+	mutex_lock(&priv->lock);
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 9111cdede0ee..5f69b6571595 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -16,9 +16,22 @@
+ #include <linux/leds.h>
+ #include <linux/err.h>
+ #include <linux/pwm.h>
+-#include <linux/leds_pwm.h>
+ #include <linux/slab.h>
+=20
++struct led_pwm {
++	const char	*name;
++	const char	*default_trigger;
++	unsigned int	pwm_id __deprecated;
++	u8		active_low;
++	unsigned int	max_brightness;
++	unsigned int	pwm_period_ns;
++};
 +
- 	priv->fck_prescaler[channel_id] = prescaler;
- 
- 	/* Reset Byte Pointer */
-@@ -1240,6 +1242,8 @@ static ssize_t quad8_signal_fck_prescaler_write(struct counter_device *counter,
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_PRESET_PSC,
- 	     base_offset + 1);
- 
-+	mutex_unlock(&priv->lock);
++struct led_pwm_platform_data {
++	int		num_leds;
++	struct led_pwm	*leds;
++};
 +
- 	return len;
- }
- 
--- 
-2.7.4
+ struct led_pwm_data {
+ 	struct led_classdev	cdev;
+ 	struct pwm_device	*pwm;
+diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
+deleted file mode 100644
+index 93d101d28943..000000000000
+--- a/include/linux/leds_pwm.h
++++ /dev/null
+@@ -1,22 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * PWM LED driver data - see drivers/leds/leds-pwm.c
+- */
+-#ifndef __LINUX_LEDS_PWM_H
+-#define __LINUX_LEDS_PWM_H
+-
+-struct led_pwm {
+-	const char	*name;
+-	const char	*default_trigger;
+-	unsigned	pwm_id __deprecated;
+-	u8 		active_low;
+-	unsigned 	max_brightness;
+-	unsigned	pwm_period_ns;
+-};
+-
+-struct led_pwm_platform_data {
+-	int			num_leds;
+-	struct led_pwm	*leds;
+-};
+-
+-#endif
+--=20
+2.25.1
 
+
+
+Diehl Connectivity Solutions GmbH
+Gesch=E4ftsf=FChrung: Horst Leonberger
+Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
+N=FCrnberg: HRB 32315
+_________________________________________________________________________=
+__________________________
+
+Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
+ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
+Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
+ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
+Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
+ und/oder Publikation dieser E-Mail ist strengstens untersagt.
+- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
+Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
+chten/
+
+The contents of the above mentioned e-mail is not legally binding. This e=
+-mail contains confidential and/or legally protected information. Please =
+inform us if you have received this e-mail by
+mistake and delete it in such a case. Each unauthorized reproduction, dis=
+closure, alteration, distribution and/or publication of this e-mail is st=
+rictly prohibited.=20
+- For general information on data protection and your respective rights p=
+lease visit https://www.diehl.com/group/en/transparency-and-information-o=
+bligations/
