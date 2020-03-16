@@ -2,99 +2,115 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D71BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18B7C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762D920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976D4205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:28:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bn0D8HiP"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="NS8QyZzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbgCPK1r (ORCPT
+        id S1730638AbgCPK2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:27:47 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37436 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730550AbgCPK1r (ORCPT
+        Mon, 16 Mar 2020 06:28:19 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:39289 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730550AbgCPK2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:27:47 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GARc2X015637;
-        Mon, 16 Mar 2020 05:27:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584354458;
-        bh=cM3M0WhMJb1kHAJscz665SQ5kqkj1mspK4tHy4EMD1A=;
-        h=From:To:CC:Subject:Date;
-        b=bn0D8HiP6PPr9ULgYGQwSixr07CWkBFxpuskovMMSGZ4+Gm9/5RF+ZcmwqyfjFpgR
-         Hy/ylBE+iBt8EPRNZJbXQBi47yN9GFuhuubUHA0S6ueJpv2/OuVoV4B30w4o75Gf3T
-         bbE8D0Zwntw9XRGVRfnxeLA87wBqYWgtSB5/JxZA=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GARcrZ060549;
-        Mon, 16 Mar 2020 05:27:38 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Mar 2020 05:27:38 -0500
-Received: from localhost.localdomain (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Mar 2020 05:27:38 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02GARWNu121191;
-        Mon, 16 Mar 2020 05:27:33 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <tony@atomide.com>
-CC:     <hch@lst.de>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
-        <nm@ti.com>, <t-kristo@ti.com>, <nsekhar@ti.com>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <stable@kernel.org>
-Subject: [PATCH] ARM: dts: omap5: Add bus_dma_limit for L3 bus
-Date:   Mon, 16 Mar 2020 12:27:31 +0200
-Message-ID: <20200316102731.15467-1-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 16 Mar 2020 06:28:19 -0400
+Received: by mail-il1-f196.google.com with SMTP id w15so8590618ilq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 03:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TxPRfk6sibY6hpJglSupQUWB4+HiT17NTnwoa76dgxM=;
+        b=NS8QyZzH0cEZAFqfqWtUf3zJCYnpsnhJjKa5s3AUlVWCrMS2r7XYcDufh6I1YFVumW
+         m7Zp0uUr+kFRhuKC2BDSDlFXQK/chRvliVzCKQ+nvCDYDyL/fcgNfgPuyroJRHceRZHw
+         mQgHMR+kpAaA2GSHPEiI6IFtgIWPYuZq0SEIPhAu8vFNcWoJEIwQt2tibUWQ8+73SHuA
+         GU5Mrzd4DvirYUXKFM3Pay0gwYbTUwOvECoWWYu94azUBXk+a/jkbhyWUMGOFOilyA9k
+         TqbbBbQzW8N1ot7huNmMyKI5GF9YGRYXmT93bXOsnNcV6d9WPmjmpoBmR63a+MP32Scr
+         Y7gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TxPRfk6sibY6hpJglSupQUWB4+HiT17NTnwoa76dgxM=;
+        b=qQYKrOUaAq02+NTYd0xlLvC7HLpukJrDnea3bK9NMO1njXKcuyiu8sXGdXJDpkeubD
+         KLfxEWunE2n1N5fpf3SOYVEn234xDZsqqfDoRZIQoFzuqVJKrcf9rX+P5Nee1xPzmlwE
+         nu70XBYdjgC9tfsydeQHyRsAw9Z9bzW6YNRkrVEWzLhsQB4weMWrLrPc0JzVmgoGoXQi
+         piNZr8aX5PKvDCKm+TUIGaZJHXQym0T2lctPEaDw9VroouVDGeQ+FbyDjtU5Rnjs5CKx
+         0XqLU9+2KvLrabf3KAL3tD0s4WYjh8QO570rvgLxL+KC2JxsZ9l7sQeJ74pv8l6TNnS8
+         YKkw==
+X-Gm-Message-State: ANhLgQ0YBZApp5Y4kurDbMofiELsYb4earoHKJpiu7iDSeEFUX2YFe70
+        IN2a5hJw+IG8h6dDhXbu4roWJUJASv+nmliHsVrjfw==
+X-Google-Smtp-Source: ADFU+vsGVHx5bpn0+ubycNUe48ocy51bgN7prtIEKTgKxls3K76EhhgDAeT/EfgqdKb2LN6no63jMXRb45trrW4Gu/Y=
+X-Received: by 2002:a92:8c42:: with SMTP id o63mr25215708ild.189.1584354496594;
+ Mon, 16 Mar 2020 03:28:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <64270a8cc4bfca77ef4e280e5ab4623f4525ff39.1584290011.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <64270a8cc4bfca77ef4e280e5ab4623f4525ff39.1584290011.git.mirq-linux@rere.qmqm.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 16 Mar 2020 11:28:05 +0100
+Message-ID: <CAMRc=Me8ceOfP2cH-35qTsVSQq0tTKgW8+kW0u7WOhwWs4sAfQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: gpio_name_to_desc: factor out !name check
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The L3 interconnect's memory map is from 0x0 to
-0xffffffff. Out of this, System memory (SDRAM) can be
-accessed from 0x80000000 to 0xffffffff (2GB)
+niedz., 15 mar 2020 o 17:34 Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm=
+.pl>
+napisa=C5=82(a):
+>
+> Since name =3D=3D NULL can't ever match, move the check out of
+> IRQ-disabled region.
+>
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/gpio/gpiolib.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 175c6363cf61..20fbeffbdd91 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -301,6 +301,9 @@ static struct gpio_desc *gpio_name_to_desc(const char=
+ * const name)
+>         struct gpio_device *gdev;
+>         unsigned long flags;
+>
+> +       if (!name)
+> +               return NULL;
+> +
+>         spin_lock_irqsave(&gpio_lock, flags);
+>
+>         list_for_each_entry(gdev, &gpio_devices, list) {
+> @@ -309,7 +312,7 @@ static struct gpio_desc *gpio_name_to_desc(const char=
+ * const name)
+>                 for (i =3D 0; i !=3D gdev->ngpio; ++i) {
+>                         struct gpio_desc *desc =3D &gdev->descs[i];
+>
+> -                       if (!desc->name || !name)
+> +                       if (!desc->name)
+>                                 continue;
+>
+>                         if (!strcmp(desc->name, name)) {
+> --
+> 2.20.1
+>
 
-OMAP5 does support 4GB of SDRAM but upper 2GB can only be
-accessed by the MPU subsystem.
+Patch applied, thanks!
 
-Add the dma-ranges property to reflect the physical address limit
-of the L3 bus.
-
-Cc: stable@kernel.org
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/omap5.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index d0ecf54d5a23..a7562d3deb1a 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -143,6 +143,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges = <0 0 0 0xc0000000>;
-+		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
- 		ti,hwmods = "l3_main_1", "l3_main_2", "l3_main_3";
- 		reg = <0 0x44000000 0 0x2000>,
- 		      <0 0x44800000 0 0x3000>,
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Bartosz
