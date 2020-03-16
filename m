@@ -2,107 +2,131 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4018C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C313C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B675320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 445B020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 17:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BWAA37IB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y/R6qyTP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732222AbgCPRyp (ORCPT
+        id S1732244AbgCPRz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:54:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:51610 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730437AbgCPRyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 13:54:45 -0400
-Received: from zn.tnic (p200300EC2F06AB00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:ab00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 39E1B1EC0C84;
-        Mon, 16 Mar 2020 18:54:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584381284;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=F0GgaJ9ZIP0KWGKKbs8QEzJhijPGxcv5KG9dWOxvw6k=;
-        b=BWAA37IBA9O9r7kNeskqZ2YRVdXgRX/vgM7Vqthb5fxNnDkNljKACVUrEBgDzcOGMjp5ts
-        Re1bj0Q86u82431jgKzJK07fHU7W8l8QHmlCYw5HTa+aEJ9g85YcjlPX55smPeiwpVJ9Ck
-        8jLJfpu3RFwF2DhY2Xgj9K0Oq0QSU7U=
-Date:   Mon, 16 Mar 2020 18:54:50 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Jakub Jelinek <jakub@redhat.com>
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
-Message-ID: <20200316175450.GO26126@zn.tnic>
-References: <20200314164451.346497-1-slyfox@gentoo.org>
- <20200316130414.GC12561@hirez.programming.kicks-ass.net>
- <20200316132648.GM2156@tucnak>
- <20200316134234.GE12561@hirez.programming.kicks-ass.net>
+        Mon, 16 Mar 2020 13:55:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38605 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732187AbgCPRz2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 13:55:28 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s1so665610wrv.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 10:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KZCpP6b3rcDrFb5nL77Llc1TqP6zJQRoyalcv/Uk/U4=;
+        b=Y/R6qyTPo9TH/wBiHH7KTVuPGU3xiYNdjGryws2oZjJT4EdE1Ukovm/qw0EUnU24gU
+         S55BE2BmG4HOCtOwEOXGyy7AXs7ku0tleXQgOw9PFvVcXjBuY7X76ik6J67WXOAkluwY
+         N8AUX6GldQgLMC2mjOJDUYeeFD61OI8upFJvU0u4LMkkLTWuKAqoRyeRXtYobTQC3CM1
+         DhcjEhjnIN+SU8WqnWGyVuamv6HlAzsykRt5ewg6nLfQTUffQQtYpl8UmUJbnXxtaH9t
+         SxVsykhhy/G0nCc53h3pcXuufWOU2IhPvnEjecW1aIFH4e1Rdj9IpsbjZMLyQjBC3MnB
+         v6Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KZCpP6b3rcDrFb5nL77Llc1TqP6zJQRoyalcv/Uk/U4=;
+        b=CTuXDSNnBzYoqoN8TFHxPZr8lMThyDyj8M8qRg2jcvtR2uLYM1iFgase4bYkpK1jRd
+         QDe0RlbS0HwSY7LqQI0+VWbdhk5VjPAS4WmeJrdk6itzWtQSk7/FVXjoot5zVCGp3XEg
+         2lFWynJT4GiG4giwkE3GSAxO/m4Per8AUpKH+BSxYBpElxap8tAFczPOFIjeZBQT5FrT
+         Q1CSqsJ7EbZLsJTGH2sHu/QScc6xnAx2NueU047cEmNqXOFUUHyTChvJ8bLpgOxaifbO
+         ycejs32hyiTNDIDg/cwwV5CelfszCnWVB7Vjgw3iIaGxblHtQTXNTtcguSBqP8JZdz1T
+         6Fxg==
+X-Gm-Message-State: ANhLgQ25TOyi8Ixt50qyj19b4U/y3txtVdJllpAmLJfOlGSpP5EPFsCx
+        q44B2f9axwUwwFyv3TId+6vytQ==
+X-Google-Smtp-Source: ADFU+vuHWkRqgMn4prXCXTnSNDBAjWBUzoa8syi0tqbAh8eRnR4X3rD/HVE1PtCHryXLNIoYPL6aMQ==
+X-Received: by 2002:adf:f14a:: with SMTP id y10mr485041wro.325.1584381324158;
+        Mon, 16 Mar 2020 10:55:24 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id n10sm964333wro.14.2020.03.16.10.55.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 10:55:23 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 18:55:15 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        virtualization@lists.linux-foundation.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 10/15] iommu/arm-smmu: Use accessor functions for iommu
+ private data
+Message-ID: <20200316175515.GP304669@myrica>
+References: <20200310091229.29830-1-joro@8bytes.org>
+ <20200310091229.29830-11-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316134234.GE12561@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200310091229.29830-11-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:42:34PM +0100, Peter Zijlstra wrote:
-> Right I know, I looked for it recently :/ But since this is new in 10
-> and 10 isn't released yet, I figured someone can add the attribute
-> before it does get released.
-
-Yes, that would be a good solution.
-
-I looked at what happens briefly after building gcc10 from git and IINM,
-the function in question - start_secondary() - already gets the stack
-canary asm glue added so it checks for a stack canary.
-
-However, the stack canary value itself gets set later in that same
-function:
-
-        /* to prevent fake stack check failure in clock setup */
-        boot_init_stack_canary();
-
-so the asm glue which checks for it would need to reload the newly
-computed canary value (it is 0 before we compute it and thus the
-mismatch).
-
-So having a way to state "do not add stack canary checking to this
-particular function" would be optimal. And since you already have the
-"stack_protect" function attribute I figure adding a "no_stack_protect"
-one should be easy...
-
-> > Or of course you could add noinline attribute to whatever got inlined
-> > and contains some array or addressable variable that whatever
-> > -fstack-protector* mode kernel uses triggers it.  With -fstack-protector-all
-> > it would never work even in the past I believe.
+On Tue, Mar 10, 2020 at 10:12:24AM +0100, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> I don't think the kernel supports -fstack-protector-all, but I could be
-> mistaken.
+> Make use of dev_iommu_priv_set/get() functions and simplify the code
+> where possible with this change.
+> 
+> Tested-by: Will Deacon <will@kernel.org> # arm-smmu
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+[...]
+> @@ -1467,7 +1470,7 @@ static void arm_smmu_remove_device(struct device *dev)
+>  	if (!fwspec || fwspec->ops != &arm_smmu_ops)
+>  		return;
+>  
+> -	cfg  = fwspec->iommu_priv;
+> +	cfg  = dev_iommu_priv_get(dev);
+>  	smmu = cfg->smmu;
+>  
+>  	ret = arm_smmu_rpm_get(smmu);
+> @@ -1475,23 +1478,22 @@ static void arm_smmu_remove_device(struct device *dev)
+>  		return;
+>  
+>  	iommu_device_unlink(&smmu->iommu, dev);
+> -	arm_smmu_master_free_smes(fwspec);
+> +	arm_smmu_master_free_smes(dev);
+>  
+>  	arm_smmu_rpm_put(smmu);
+>  
+>  	iommu_group_remove_device(dev);
+> -	kfree(fwspec->iommu_priv);
+>  	iommu_fwspec_free(dev);
+> +	kfree(cfg);
 
-The other thing I was thinking was to carve out only that function into
-a separate compilation unit and disable stack protector only for it.
+nit: cfg is allocated after fwspec so it might be cleaner to free cfg
+before fwspec.
 
-All IMHO of course.
+But more importantly, should we clear the private data here and in the
+other drivers, by calling dev_iommu_priv_set(dev, NULL) from
+remove_device()?  We are leaving stale pointers in dev->iommu and I think
+some of the drivers could end up reusing them.
 
-Thx.
+Thanks,
+Jean
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
