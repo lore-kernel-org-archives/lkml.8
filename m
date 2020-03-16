@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67002C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5E1C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EFA20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F0F20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731823AbgCPPEP (ORCPT
+        id S1731840AbgCPPEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:04:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:50014 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 11:04:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:50026 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731780AbgCPPEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:04:13 -0400
+        id S1731790AbgCPPEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:04:14 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE3BA1045;
-        Mon, 16 Mar 2020 08:04:12 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C5AA106F;
+        Mon, 16 Mar 2020 08:04:14 -0700 (PDT)
 Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF0313F534;
-        Mon, 16 Mar 2020 08:04:11 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D90D3F534;
+        Mon, 16 Mar 2020 08:04:13 -0700 (PDT)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
         cristian.marussi@arm.com
-Subject: [PATCH v5 03/13] firmware: arm_scmi: Add notifications support in transport layer
-Date:   Mon, 16 Mar 2020 15:03:24 +0000
-Message-Id: <20200316150334.47463-4-cristian.marussi@arm.com>
+Subject: [PATCH v5 04/13] firmware: arm_scmi: Add support for notifications message processing
+Date:   Mon, 16 Mar 2020 15:03:25 +0000
+Message-Id: <20200316150334.47463-5-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200316150334.47463-1-cristian.marussi@arm.com>
 References: <20200316150334.47463-1-cristian.marussi@arm.com>
@@ -41,114 +41,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add common transport-layer methods to:
- - fetch a notification instead of a response
- - clear a pending notification
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-Add also all the needed support in mailbox/shmem transports.
+Add the mechanisms to distinguish notifications from delayed responses and
+to properly fetch notification messages upon reception: notifications
+processing does not continue further after the fetch phase.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+[Reworked/renamed scmi_handle_xfer_delayed_resp()]
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
- drivers/firmware/arm_scmi/common.h  |  8 ++++++++
- drivers/firmware/arm_scmi/mailbox.c | 17 +++++++++++++++++
- drivers/firmware/arm_scmi/shmem.c   | 15 +++++++++++++++
- 3 files changed, 40 insertions(+)
+V1 --> V2
+- switch the notif/delayed_resp message processing logic to use new
+  transport independent layer methods
+- reviewed logic of scmi_handle_xfer_delayed_resp() while renaming it as
+  scmi_handle_response()
+- properly relocated tracer points
+---
+ drivers/firmware/arm_scmi/driver.c | 84 +++++++++++++++++++++++-------
+ 1 file changed, 64 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 5ac06469b01c..3c2e5d0d7b68 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -178,6 +178,8 @@ struct scmi_chan_info {
-  * @send_message: Callback to send a message
-  * @mark_txdone: Callback to mark tx as done
-  * @fetch_response: Callback to fetch response
-+ * @fetch_notification: Callback to fetch notification
-+ * @clear_notification: Callback to clear a pending notification
-  * @poll_done: Callback to poll transfer status
-  */
- struct scmi_transport_ops {
-@@ -190,6 +192,9 @@ struct scmi_transport_ops {
- 	void (*mark_txdone)(struct scmi_chan_info *cinfo, int ret);
- 	void (*fetch_response)(struct scmi_chan_info *cinfo,
- 			       struct scmi_xfer *xfer);
-+	void (*fetch_notification)(struct scmi_chan_info *cinfo,
-+				   size_t max_len, struct scmi_xfer *xfer);
-+	void (*clear_notification)(struct scmi_chan_info *cinfo);
- 	bool (*poll_done)(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer);
- };
- 
-@@ -222,5 +227,8 @@ void shmem_tx_prepare(struct scmi_shared_mem __iomem *shmem,
- u32 shmem_read_header(struct scmi_shared_mem __iomem *shmem);
- void shmem_fetch_response(struct scmi_shared_mem __iomem *shmem,
- 			  struct scmi_xfer *xfer);
-+void shmem_fetch_notification(struct scmi_shared_mem __iomem *shmem,
-+			      size_t max_len, struct scmi_xfer *xfer);
-+void shmem_clear_notification(struct scmi_shared_mem __iomem *shmem);
- bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
- 		     struct scmi_xfer *xfer);
-diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
-index 73077bbc4ad9..19ee058f9f44 100644
---- a/drivers/firmware/arm_scmi/mailbox.c
-+++ b/drivers/firmware/arm_scmi/mailbox.c
-@@ -158,6 +158,21 @@ static void mailbox_fetch_response(struct scmi_chan_info *cinfo,
- 	shmem_fetch_response(smbox->shmem, xfer);
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index efb660c34b57..868cc36a07c9 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -202,29 +202,42 @@ __scmi_xfer_put(struct scmi_xfers_info *minfo, struct scmi_xfer *xfer)
+ 	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
  }
  
-+static void mailbox_fetch_notification(struct scmi_chan_info *cinfo,
-+				       size_t max_len, struct scmi_xfer *xfer)
-+{
-+	struct scmi_mailbox *smbox = cinfo->transport_info;
-+
-+	shmem_fetch_notification(smbox->shmem, max_len, xfer);
-+}
-+
-+static void mailbox_clear_notification(struct scmi_chan_info *cinfo)
-+{
-+	struct scmi_mailbox *smbox = cinfo->transport_info;
-+
-+	shmem_clear_notification(smbox->shmem);
-+}
-+
- static bool
- mailbox_poll_done(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
+-/**
+- * scmi_rx_callback() - callback for receiving messages
+- *
+- * @cinfo: SCMI channel info
+- * @msg_hdr: Message header
+- *
+- * Processes one received message to appropriate transfer information and
+- * signals completion of the transfer.
+- *
+- * NOTE: This function will be invoked in IRQ context, hence should be
+- * as optimal as possible.
+- */
+-void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr)
++static void scmi_handle_notification(struct scmi_chan_info *cinfo, u32 msg_hdr)
  {
-@@ -173,6 +188,8 @@ static struct scmi_transport_ops scmi_mailbox_ops = {
- 	.send_message = mailbox_send_message,
- 	.mark_txdone = mailbox_mark_txdone,
- 	.fetch_response = mailbox_fetch_response,
-+	.fetch_notification = mailbox_fetch_notification,
-+	.clear_notification = mailbox_clear_notification,
- 	.poll_done = mailbox_poll_done,
- };
+-	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
+-	struct scmi_xfers_info *minfo = &info->tx_minfo;
+-	u16 xfer_id = MSG_XTRACT_TOKEN(msg_hdr);
+-	u8 msg_type = MSG_XTRACT_TYPE(msg_hdr);
+-	struct device *dev = cinfo->dev;
+ 	struct scmi_xfer *xfer;
++	struct device *dev = cinfo->dev;
++	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
++	struct scmi_xfers_info *minfo = &info->rx_minfo;
++
++	xfer = scmi_xfer_get(cinfo->handle, minfo);
++	if (IS_ERR(xfer)) {
++		dev_err(dev, "failed to get free message slot (%ld)\n",
++			PTR_ERR(xfer));
++		info->desc->ops->clear_notification(cinfo);
++		return;
++	}
++
++	unpack_scmi_header(msg_hdr, &xfer->hdr);
++	scmi_dump_header_dbg(dev, &xfer->hdr);
++	info->desc->ops->fetch_notification(cinfo, info->desc->max_msg_size,
++					    xfer);
++
++	trace_scmi_rx_done(xfer->transfer_id, xfer->hdr.id,
++			   xfer->hdr.protocol_id, xfer->hdr.seq,
++			   MSG_TYPE_NOTIFICATION);
  
-diff --git a/drivers/firmware/arm_scmi/shmem.c b/drivers/firmware/arm_scmi/shmem.c
-index ca0ffd302ea2..e1ab05be90e3 100644
---- a/drivers/firmware/arm_scmi/shmem.c
-+++ b/drivers/firmware/arm_scmi/shmem.c
-@@ -67,6 +67,21 @@ void shmem_fetch_response(struct scmi_shared_mem __iomem *shmem,
- 	memcpy_fromio(xfer->rx.buf, shmem->msg_payload + 4, xfer->rx.len);
+-	if (msg_type == MSG_TYPE_NOTIFICATION)
+-		return; /* Notifications not yet supported */
++	__scmi_xfer_put(minfo, xfer);
++
++	info->desc->ops->clear_notification(cinfo);
++}
++
++static void scmi_handle_response(struct scmi_chan_info *cinfo,
++				 u16 xfer_id, u8 msg_type)
++{
++	struct scmi_xfer *xfer;
++	struct device *dev = cinfo->dev;
++	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
++	struct scmi_xfers_info *minfo = &info->tx_minfo;
+ 
+ 	/* Are we even expecting this? */
+ 	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
+@@ -248,6 +261,37 @@ void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr)
+ 		complete(&xfer->done);
  }
  
-+void shmem_fetch_notification(struct scmi_shared_mem __iomem *shmem,
-+			      size_t max_len, struct scmi_xfer *xfer)
++/**
++ * scmi_rx_callback() - callback for receiving messages
++ *
++ * @cinfo: SCMI channel info
++ * @msg_hdr: Message header
++ *
++ * Processes one received message to appropriate transfer information and
++ * signals completion of the transfer.
++ *
++ * NOTE: This function will be invoked in IRQ context, hence should be
++ * as optimal as possible.
++ */
++void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr)
 +{
-+	/* Skip only the length of header in shmem area i.e 4 bytes */
-+	xfer->rx.len = min_t(size_t, max_len, ioread32(&shmem->length) - 4);
++	u16 xfer_id = MSG_XTRACT_TOKEN(msg_hdr);
++	u8 msg_type = MSG_XTRACT_TYPE(msg_hdr);
 +
-+	/* Take a copy to the rx buffer.. */
-+	memcpy_fromio(xfer->rx.buf, shmem->msg_payload, xfer->rx.len);
++	switch (msg_type) {
++	case MSG_TYPE_NOTIFICATION:
++		scmi_handle_notification(cinfo, msg_hdr);
++		break;
++	case MSG_TYPE_COMMAND:
++	case MSG_TYPE_DELAYED_RESP:
++		scmi_handle_response(cinfo, xfer_id, msg_type);
++		break;
++	default:
++		WARN_ONCE(1, "received unknown msg_type:%d\n", msg_type);
++		break;
++	}
 +}
 +
-+void shmem_clear_notification(struct scmi_shared_mem __iomem *shmem)
-+{
-+	iowrite32(SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE, &shmem->channel_status);
-+}
-+
- bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
- 		     struct scmi_xfer *xfer)
- {
+ /**
+  * scmi_xfer_put() - Release a transmit message
+  *
 -- 
 2.17.1
 
