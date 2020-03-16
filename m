@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B29C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89602C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E11D2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545C920736
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pXCJ3nPV"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="L+g80Htz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731381AbgCPMgn (ORCPT
+        id S1731371AbgCPMgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:36:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:52014 "EHLO pegase1.c-s.fr"
+        Mon, 16 Mar 2020 08:36:42 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:14689 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbgCPMge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:36:34 -0400
+        id S1731321AbgCPMgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:36:31 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48gwlb1cPCz9v02g;
-        Mon, 16 Mar 2020 13:36:27 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 48gwlX61P5z9v02t;
+        Mon, 16 Mar 2020 13:36:24 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=pXCJ3nPV; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=L+g80Htz; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 4vTW1xe9IS24; Mon, 16 Mar 2020 13:36:27 +0100 (CET)
+        with ESMTP id DYhGDslqA7ab; Mon, 16 Mar 2020 13:36:24 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlb0Ws9z9v02f;
-        Mon, 16 Mar 2020 13:36:27 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48gwlX4wS5z9v02f;
+        Mon, 16 Mar 2020 13:36:24 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584362187; bh=IQAE5xsf4JKfTQvGnWUT3Dq95zXpNWlpks4QGKGDZUk=;
+        t=1584362184; bh=REuVvmOuXOLfNa+mp9v1PVGylG1qMPWi4BVRMaCT6wY=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=pXCJ3nPVXiFic4gAs5SGg7NC2PocLDXTkzFT/n1fflMj0yCQoicNNTpXQVXVJYGMm
-         I0VCqPtDE+xldEV24rygH9f3mioc60MDQgli1G20nFkHI5xwpH65pJENt0iCNTKAob
-         XFJSlzPJ4mcs/UxbDkh8SN0AqMVGvtwzBqvfvZzo=
+        b=L+g80Htz8hhStaNcJ/juc9gKm5GZ47ymwSYpcBcf1wd4IYxODOB8jgmI7ZVo1zYeC
+         AYQ/U6lEdZVkb2BIHt8CBw1WVRpYZRKJxWgC4A4EHKKDS1sM2OW2Rj22douK/UeXW1
+         XT0Bk0F7/AOn1j6iqTxV0sMcrJwazmSTgtaAWrTw=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id ADDE18B7D0;
-        Mon, 16 Mar 2020 13:36:31 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A31408B7D0;
+        Mon, 16 Mar 2020 13:36:29 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id nb2XzBIaXayj; Mon, 16 Mar 2020 13:36:31 +0100 (CET)
+        with ESMTP id AkTQjgbylRrm; Mon, 16 Mar 2020 13:36:29 +0100 (CET)
 Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 900308B7CB;
-        Mon, 16 Mar 2020 13:36:31 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 795398B7CB;
+        Mon, 16 Mar 2020 13:36:29 +0100 (CET)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 8004965595; Mon, 16 Mar 2020 12:36:31 +0000 (UTC)
-Message-Id: <08f37b5315c5d8029c066d0ffecd3439003b18ae.1584360344.git.christophe.leroy@c-s.fr>
+        id 6C02C65595; Mon, 16 Mar 2020 12:36:29 +0000 (UTC)
+Message-Id: <1f1727581058b2d47ca390aec05cf15c98ae651e.1584360344.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1584360343.git.christophe.leroy@c-s.fr>
 References: <cover.1584360343.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 45/46] powerpc/32s: Allow mapping with BATs with
- DEBUG_PAGEALLOC
+Subject: [PATCH v1 43/46] powerpc/8xx: Allow large TLBs with DEBUG_PAGEALLOC
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Mar 2020 12:36:31 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 12:36:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -72,65 +71,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 DEBUG_PAGEALLOC only manages RW data.
 
-Text and RO data can still be mapped with BATs.
+Text and RO data can still be mapped with hugepages and pinned TLB.
 
-In order to map with BATs, also enforce data alignment. Set
-by default to 256M which is a good compromise for keeping
-enough BATs for also KASAN and IMMR.
+In order to map with hugepages, also enforce a 512kB data alignment
+minimum. That's a trade-off between size of speed, taking into
+account that DEBUG_PAGEALLOC is a debug option. Anyway the alignment
+is still tunable.
+
+We also allow tuning of alignment for book3s to limit the complexity
+of the test in Kconfig that will anyway disappear in the following
+patches once DEBUG_PAGEALLOC is handled together with BATs.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/Kconfig           | 1 +
- arch/powerpc/mm/book3s32/mmu.c | 6 ++++++
- arch/powerpc/mm/init_32.c      | 5 ++---
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ arch/powerpc/Kconfig               | 11 +++++++----
+ arch/powerpc/mm/init_32.c          |  5 ++++-
+ arch/powerpc/mm/nohash/8xx.c       | 11 ++++++++---
+ arch/powerpc/platforms/8xx/Kconfig |  2 +-
+ 4 files changed, 20 insertions(+), 9 deletions(-)
 
 diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index c086992573d3..44c490e05954 100644
+index 305c7b6a9229..c086992573d3 100644
 --- a/arch/powerpc/Kconfig
 +++ b/arch/powerpc/Kconfig
-@@ -793,6 +793,7 @@ config DATA_SHIFT
- 	range 17 28 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_BOOK3S_32
- 	range 19 23 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_8xx
+@@ -777,8 +777,9 @@ config THREAD_SHIFT
+ config DATA_SHIFT_BOOL
+ 	bool "Set custom data alignment"
+ 	depends on ADVANCED_OPTIONS
+-	depends on STRICT_KERNEL_RWX
+-	depends on PPC_BOOK3S_32 || (PPC_8xx && !PIN_TLB_DATA && !PIN_TLB_TEXT)
++	depends on STRICT_KERNEL_RWX || DEBUG_PAGEALLOC
++	depends on PPC_BOOK3S_32 || (PPC_8xx && !PIN_TLB_DATA && \
++				     (!PIN_TLB_TEXT || !STRICT_KERNEL_RWX))
+ 	help
+ 	  This option allows you to set the kernel data alignment. When
+ 	  RAM is mapped by blocks, the alignment needs to fit the size and
+@@ -789,10 +790,12 @@ config DATA_SHIFT_BOOL
+ config DATA_SHIFT
+ 	int "Data shift" if DATA_SHIFT_BOOL
+ 	default 24 if STRICT_KERNEL_RWX && PPC64
+-	range 17 28 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
+-	range 19 23 if STRICT_KERNEL_RWX && PPC_8xx
++	range 17 28 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_BOOK3S_32
++	range 19 23 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_8xx
  	default 22 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
-+	default 18 if DEBUG_PAGEALLOC && PPC_BOOK3S_32
  	default 23 if STRICT_KERNEL_RWX && PPC_8xx
- 	default 23 if DEBUG_PAGEALLOC && PPC_8xx && PIN_TLB_DATA
- 	default 19 if DEBUG_PAGEALLOC && PPC_8xx
-diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
-index a9b2cbc74797..a6dcc708eee3 100644
---- a/arch/powerpc/mm/book3s32/mmu.c
-+++ b/arch/powerpc/mm/book3s32/mmu.c
-@@ -170,6 +170,12 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- 		pr_debug("RAM mapped without BATs\n");
- 		return base;
- 	}
-+	if (debug_pagealloc_enabled()) {
-+		if (base >= border)
-+			return base;
-+		if (top >= border)
-+			top = border;
-+	}
- 
- 	if (!strict_kernel_rwx_enabled() || base >= border || top <= border)
- 		return __mmu_mapin_ram(base, top);
++	default 23 if DEBUG_PAGEALLOC && PPC_8xx && PIN_TLB_DATA
++	default 19 if DEBUG_PAGEALLOC && PPC_8xx
+ 	default PPC_PAGE_SHIFT
+ 	help
+ 	  On Book3S 32 (603+), DBATs are used to map kernel text and rodata RO.
 diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
-index 8977a7c2543d..36c39bd37256 100644
+index a6991ef8727d..8977a7c2543d 100644
 --- a/arch/powerpc/mm/init_32.c
 +++ b/arch/powerpc/mm/init_32.c
-@@ -99,10 +99,9 @@ static void __init MMU_setup(void)
- 	if (IS_ENABLED(CONFIG_PPC_8xx))
- 		return;
- 
--	if (debug_pagealloc_enabled()) {
--		__map_without_bats = 1;
-+	if (debug_pagealloc_enabled())
+@@ -96,11 +96,14 @@ static void __init MMU_setup(void)
+ 	if (strstr(boot_command_line, "noltlbs")) {
  		__map_without_ltlbs = 1;
--	}
+ 	}
++	if (IS_ENABLED(CONFIG_PPC_8xx))
++		return;
 +
- 	if (strict_kernel_rwx_enabled())
+ 	if (debug_pagealloc_enabled()) {
+ 		__map_without_bats = 1;
+ 		__map_without_ltlbs = 1;
+ 	}
+-	if (strict_kernel_rwx_enabled() && !IS_ENABLED(CONFIG_PPC_8xx))
++	if (strict_kernel_rwx_enabled())
  		__map_without_ltlbs = 1;
  }
+ 
+diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
+index 40815eba96f2..a122ec4806d0 100644
+--- a/arch/powerpc/mm/nohash/8xx.c
++++ b/arch/powerpc/mm/nohash/8xx.c
+@@ -149,7 +149,8 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ {
+ 	unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
+ 	unsigned long sinittext = __pa(_sinittext);
+-	unsigned long boundary = strict_kernel_rwx_enabled() ? sinittext : etext8;
++	bool strict_boundary = strict_kernel_rwx_enabled() || debug_pagealloc_enabled();
++	unsigned long boundary = strict_boundary ? sinittext : etext8;
+ 	unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
+ 
+ 	WARN_ON(top < einittext8);
+@@ -160,8 +161,12 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		return 0;
+ 
+ 	mmu_mapin_ram_chunk(0, boundary, PAGE_KERNEL_TEXT, true);
+-	mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL_TEXT, true);
+-	mmu_mapin_ram_chunk(einittext8, top, PAGE_KERNEL, true);
++	if (debug_pagealloc_enabled()) {
++		top = boundary;
++	} else {
++		mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL_TEXT, true);
++		mmu_mapin_ram_chunk(einittext8, top, PAGE_KERNEL, true);
++	}
+ 
+ 	if (top > SZ_32M)
+ 		memblock_set_current_limit(top);
+diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
+index 05669f2fadce..abb2b45b2789 100644
+--- a/arch/powerpc/platforms/8xx/Kconfig
++++ b/arch/powerpc/platforms/8xx/Kconfig
+@@ -167,7 +167,7 @@ menu "8xx advanced setup"
+ 
+ config PIN_TLB
+ 	bool "Pinned Kernel TLBs"
+-	depends on ADVANCED_OPTIONS && !DEBUG_PAGEALLOC
++	depends on ADVANCED_OPTIONS
+ 	help
+ 	  On the 8xx, we have 32 instruction TLBs and 32 data TLBs. In each
+ 	  table 4 TLBs can be pinned.
 -- 
 2.25.0
 
