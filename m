@@ -2,116 +2,174 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012FAC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0596AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A7C2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D095C2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:14:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jODSjjQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731794AbgCPPOS (ORCPT
+        id S1731820AbgCPPO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:14:18 -0400
-Received: from mga03.intel.com ([134.134.136.65]:61876 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731631AbgCPPOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:14:17 -0400
-IronPort-SDR: bWdQ6Dfk4JEYn31xf3c5Xwp29evPuMvyXky3178m7/2Pq0oRDFGSRQK+u0sExH/tcGHI7HDViY
- tcaRby6mYBmg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 08:14:16 -0700
-IronPort-SDR: SMrdSI+w47upSYJuzeWVXhH/NRV+HgwXOk6Ud/Sh2F8w0MinBcB7rAYKoAxxq9j0TzGHZ6Hr+B
- TSJzpG6GYyYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,560,1574150400"; 
-   d="scan'208";a="262705244"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga002.jf.intel.com with SMTP; 16 Mar 2020 08:14:12 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 16 Mar 2020 17:14:12 +0200
-Date:   Mon, 16 Mar 2020 17:14:12 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        jani.nikula@linux.intel.com, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, airlied@linux.ie,
-        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
-        mripard@kernel.org, mihail.atanassov@arm.com,
-        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
-Subject: Re: [RFC][PATCH 1/5] drm: Introduce scaling filter property
-Message-ID: <20200316151412.GS13686@intel.com>
-References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
- <20200225070545.4482-2-pankaj.laxminarayan.bharadiya@intel.com>
- <20200310160106.GH13686@intel.com>
- <20200316083132.GC2363188@phenom.ffwll.local>
+        Mon, 16 Mar 2020 11:14:26 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38561 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731740AbgCPPOZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:14:25 -0400
+Received: by mail-qt1-f195.google.com with SMTP id e20so14472238qto.5;
+        Mon, 16 Mar 2020 08:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ixSqifDu9ZEefUiTiNVPd6ssEpIkNW/tDU5FVkyvqtI=;
+        b=jODSjjQ0stgdcIWw5FmNkmjAJbTA++R+6bwpB71tEMevOeCcXd6xRVARjGV6eA0CIi
+         ff/X0cqc3mG5P8xo3ALlOOD9yIN1eKOZnl+XS/gir3lTYF6EHyDVA05tqdoM6knnVx4v
+         4rqF4mQv2EsNdCTTlmer+lofMTczcxeWTk9EWJszdxQxitwWB+JzL1s/INbWDK+pVd9K
+         O3//Ds8qzs5cZbx9oW6HTLeEP45LAAhcYTX2WDK1/mYZTi+h/Ck95PmuDg9/CEaZ3m2p
+         BSKg7H8zJVrxufhYNbUJEFK+QPj5SmObaORY5xRgPytcv17CrRenHsis4z5cBxO8yxF4
+         5zCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ixSqifDu9ZEefUiTiNVPd6ssEpIkNW/tDU5FVkyvqtI=;
+        b=o3Jjli9GSVx/tll2kaP4ErsfHyr42HWHh2L7q1EU+xwSRvdCgi3zRZ3QELCwM6dNY0
+         z2qv1xQQqhGBkJlbtPYrOR7P78WDcDWcAYu9tscvTBUcirqImigtZU0cyda1xrrTSAza
+         MrVXg+2zHI2AhQlRVeG74fzcvaGLfCeI6WVCYxdjy3vewO4kV8pA7Be0ZJQVOuFENq9R
+         ILzxYJAuBdFmoajw4RYLPSCOLqNT50vpCl+9Vvb7ydASkmbRrr0RAIPWi+sM5fd9RaJd
+         IiGCdHVCJP2gssUJg5MKMvT4yMY2CvfWmMpzrPNLvgldxU9tX/zP4jxjOrWvdnj8VR7v
+         L4YA==
+X-Gm-Message-State: ANhLgQ0SjnM9A+Vt5YSgDx+7bfqWWNWOAUTHkBszrH5hcUcc1/FpPeup
+        ePkA5rlnA57jwiG+Fxn3S4MPlnQZs9QgKBzBoPE=
+X-Google-Smtp-Source: ADFU+vtaag5GWTvm5ae+UqCD8pDJpDkpGX5U8Xx5cRDVwrLRbKT5Gb0dsxv/L7NnGU4/QwOiZhjTd9NsL1SQAbY2uyA=
+X-Received: by 2002:ac8:683:: with SMTP id f3mr540411qth.356.1584371664321;
+ Mon, 16 Mar 2020 08:14:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200316083132.GC2363188@phenom.ffwll.local>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200316090021.52148-1-pmalani@chromium.org> <20200316090021.52148-2-pmalani@chromium.org>
+In-Reply-To: <20200316090021.52148-2-pmalani@chromium.org>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Mon, 16 Mar 2020 16:14:13 +0100
+Message-ID: <CAFqH_50eGjYu7dHFW82CY4-EyDtq+AF+6tHCAjKbaAjW5_7WYA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: Add cros-ec Type C port driver
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 09:31:32AM +0100, Daniel Vetter wrote:
-> On Tue, Mar 10, 2020 at 06:01:06PM +0200, Ville Syrjälä wrote:
-> > On Tue, Feb 25, 2020 at 12:35:41PM +0530, Pankaj Bharadiya wrote:
-> > > Introduce new scaling filter property to allow userspace to select
-> > > the driver's default scaling filter or Nearest-neighbor(NN) filter
-> > > for upscaling operations on crtc/plane.
-> > > 
-> > > Drivers can set up this property for a plane by calling
-> > > drm_plane_enable_scaling_filter() and for a CRTC by calling
-> > > drm_crtc_enable_scaling_filter().
-> > > 
-> > > NN filter works by filling in the missing color values in the upscaled
-> > > image with that of the coordinate-mapped nearest source pixel value.
-> > > 
-> > > NN filter for integer multiple scaling can be particularly useful for
-> > > for pixel art games that rely on sharp, blocky images to deliver their
-> > > distinctive look.
-> > > 
-> > > Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-> > > Signed-off-by: Shashank Sharma <shashank.sharma@intel.com>
-> > > Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_atomic_uapi.c |  8 +++++++
-> > >  drivers/gpu/drm/drm_crtc.c        | 16 ++++++++++++++
-> > >  drivers/gpu/drm/drm_mode_config.c | 13 ++++++++++++
-> > >  drivers/gpu/drm/drm_plane.c       | 35 +++++++++++++++++++++++++++++++
-> > >  include/drm/drm_crtc.h            | 10 +++++++++
-> > >  include/drm/drm_mode_config.h     |  6 ++++++
-> > >  include/drm/drm_plane.h           | 14 +++++++++++++
-> > >  7 files changed, 102 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
-> > > index a1e5e262bae2..4e3c1f3176e4 100644
-> > > --- a/drivers/gpu/drm/drm_atomic_uapi.c
-> > > +++ b/drivers/gpu/drm/drm_atomic_uapi.c
-> > > @@ -435,6 +435,8 @@ static int drm_atomic_crtc_set_property(struct drm_crtc *crtc,
-> > >  		return ret;
-> > >  	} else if (property == config->prop_vrr_enabled) {
-> > >  		state->vrr_enabled = val;
-> > > +	} else if (property == config->scaling_filter_property) {
-> > > +		state->scaling_filter = val;
-> > 
-> > I think we want a per-plane/per-crtc prop for this. If we start adding
-> > more filters we are surely going to need different sets for different hw
-> > blocks.
-> 
-> In the past we've only done that once we have a demonstrated need. Usually
-> the patch to move the property to a per-object location isn't a lot of
-> churn.
+Hi Prashant,
 
-Seems silly to not do it from the start when we already know there is
-hardware out there that has different capabilities per hw block.
+Missatge de Prashant Malani <pmalani@chromium.org> del dia dl., 16 de
+mar=C3=A7 2020 a les 10:02:
+>
+> Some Chrome OS devices with Embedded Controllers (EC) can read and
+> modify Type C port state.
+>
+> Add an entry in the DT Bindings documentation that lists out the logical
+> device and describes the relevant port information, to be used by the
+> corresponding driver.
+>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 
--- 
-Ville Syrjälä
-Intel
+After Rob review, it can go together with the other patches through
+the chrome-platform tree. From my side:
+
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+> ---
+>
+> Changes in v5:
+> - Updated License identifier.
+> - Updated DT example to be a full example.
+>
+> Changes in v4:
+> - Rebased on top of usb-connector.yaml, so the connector property now
+>   directly references the usb-connector DT binding.
+>
+>  .../bindings/chrome/google,cros-ec-typec.yaml | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-=
+ec-typec.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-type=
+c.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> new file mode 100644
+> index 0000000000000..6d7396ab8beec
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
+> +
+> +maintainers:
+> +  - Benson Leung <bleung@chromium.org>
+> +  - Prashant Malani <pmalani@chromium.org>
+> +
+> +description:
+> +  Chrome OS devices have an Embedded Controller(EC) which has access to
+> +  Type C port state. This node is intended to allow the host to read and
+> +  control the Type C ports. The node for this device should be under a
+> +  cros-ec node like google,cros-ec-spi.
+> +
+> +properties:
+> +  compatible:
+> +    const: google,cros-ec-typec
+> +
+> +  connector:
+> +    $ref: /schemas/connector/usb-connector.yaml#
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |+
+> +    spi0 {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      cros_ec: ec@0 {
+> +        compatible =3D "google,cros-ec-spi";
+> +        reg =3D <0>;
+> +
+> +        typec {
+> +          compatible =3D "google,cros-ec-typec";
+> +
+> +          #address-cells =3D <1>;
+> +          #size-cells =3D <0>;
+> +
+> +          connector@0 {
+> +            compatible =3D "usb-c-connector";
+> +            reg =3D <0>;
+> +            power-role =3D "dual";
+> +            data-role =3D "dual";
+> +            try-power-role =3D "source";
+> +          };
+> +        };
+> +      };
+> +    };
+> --
+> 2.25.1.481.gfbce0eb801-goog
+>
