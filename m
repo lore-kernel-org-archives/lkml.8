@@ -2,126 +2,222 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F402EC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08E1C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B709920575
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:59:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRfm9/B4"
+	by mail.kernel.org (Postfix) with ESMTP id AED8720575
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 07:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbgCPG7x (ORCPT
+        id S1729918AbgCPHAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:59:53 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35345 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729723AbgCPG7x (ORCPT
+        Mon, 16 Mar 2020 03:00:10 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:14037 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729722AbgCPHAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:59:53 -0400
-Received: by mail-pj1-f67.google.com with SMTP id mq3so8121050pjb.0;
-        Sun, 15 Mar 2020 23:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eYiMJvzhgU8cefu9p/MQZ5kiTc4aQrMez5IEQVm5JBQ=;
-        b=TRfm9/B4gRFAcCC55jE5RaVV0vmnjxrYFvjtTjkrmgerr/XbVypOdOi6wnkZhUIFd7
-         JnIjaywX0wnTUsBgsph4ZFny1zoArct+omSuqJYexPFVNNvcaA3PsHiSkvGyJzOaoE5b
-         BOtJhvlWEHMpRzz0kBK/6uR2ErJXZ4w4ekkwzQ8yXBT+a7LGnxBIh6HDLuXD7KJdDA8S
-         265wqayBZ1aRhMNOerV4XS9rX0pyFAx6nTO0NeyXePiIyIDSxJ+KkapXdq8Ymt7AP9LA
-         SE5wPIo8xkdV44XSmr8FqL25QAWUEYf1LxPoizMsBE0OmiATrjbxSC6LT4vTTbNfgHj2
-         HJEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eYiMJvzhgU8cefu9p/MQZ5kiTc4aQrMez5IEQVm5JBQ=;
-        b=gqkeu/dvJw9l/4F7UUVvVGG4bIGAuiKdfiG4vhZcr0nFkyH9tHYUJwmvNX3e08Pswl
-         zROTWLsxwnGznVCQvrrMpu7rLW8shOUnvGS6gUxrXqqgskvaFh3kN4zD0A3Yn8erQ0de
-         sPRjGd9vUu/PeatRNlGJuqXVbb9ENN196AY9QSXn3EGUYDDsAjRe+vQ+vWHm9uLP1AXg
-         KiWrdxE7y+T6jbI9wSiQVRMlqnt/3nsuOevZETaajjlouKJ7YPVv2LprAozte0alP8tS
-         Z4m7wIBTmMnISQAuRA+Aj7qD6xyxcFDzIMvL5rkrvUfxRf4L9W2Ea2BD7leMAKMQagQ+
-         UstQ==
-X-Gm-Message-State: ANhLgQ1oMuq05ATPB4frcDln2AYYhmxgp9r5LlYoIFnYQFX+gC6+felN
-        zbHgbNQAmyMrymAEGb/QuBA=
-X-Google-Smtp-Source: ADFU+vs4k0yrj7Ym3y5Tl5ybhCCG7hiX4pdR2mu8G0rZbALQoIBX9Pplw0st5yHEoVLU+nrrBSb4wA==
-X-Received: by 2002:a17:902:421:: with SMTP id 30mr3282708ple.271.1584341992275;
-        Sun, 15 Mar 2020 23:59:52 -0700 (PDT)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id x70sm54634841pgd.37.2020.03.15.23.59.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Mar 2020 23:59:51 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] drm/lease: fix potential race in fill_object_idr
-Date:   Mon, 16 Mar 2020 14:59:43 +0800
-Message-Id: <1584341983-11245-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 16 Mar 2020 03:00:10 -0400
+IronPort-SDR: V9+lcIGj8fAWHhmms8a2GKflCIdZk6RdrPSbVpQer0CkLu+pZfAAiwBaJEBgdKQBNIWI3RHqJf
+ zvLWS3H5+pE9cACVYLU5Kh2v+HeddUaUZ4qGnjNZl0jq33I4A7j1Dgsl6kse3LFTsjoz6QqkhX
+ QWW3vbpdAWmFf7KMH+nQ25NMy+nS1/x6AIIh6NDmTbAVTkmjBhbjbNn7ZuQhMjSPIROwLkRD33
+ 5EVxHTtTvmoT1q0Wewa8aoMw+odxmpBLQAU5KdOOwheXNKV8m3YBunhP+CH6syitsc4Qrt9xWt
+ bck=
+X-IronPort-AV: E=Sophos;i="5.70,559,1574150400"; 
+   d="scan'208";a="28594804"
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by labrats.qualcomm.com with ESMTP; 15 Mar 2020 23:21:04 -0700
+Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 15 Mar 2020 23:21:03 -0700
+Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
+        id 1F1AD3A61; Sun, 15 Mar 2020 23:21:03 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Subhash Jadavani <subhashj@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] scsi: ufs: Clean up ufshcd_scale_clks() and clock scaling error out path
+Date:   Sun, 15 Mar 2020 23:20:51 -0700
+Message-Id: <1584339655-20337-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1584339655-20337-1-git-send-email-cang@codeaurora.org>
+References: <1584339655-20337-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should hold idr_mutex for idr_alloc.
+From: Subhash Jadavani <subhashj@codeaurora.org>
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/gpu/drm/drm_lease.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+This change introduces a func ufshcd_set_clk_freq() to explicitly
+set clock frequency so that it can be used in reset_and_resotre path and
+in ufshcd_scale_clks(). Meanwhile, this change cleans up the clock scaling
+error out path.
 
-diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
-index b481caf..427ee21 100644
---- a/drivers/gpu/drm/drm_lease.c
-+++ b/drivers/gpu/drm/drm_lease.c
-@@ -418,6 +418,7 @@ static int fill_object_idr(struct drm_device *dev,
- 		goto out_free_objects;
+Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 2a2a63b..63aaa88f 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -855,28 +855,29 @@ static bool ufshcd_is_unipro_pa_params_tuning_req(struct ufs_hba *hba)
+ 		return false;
+ }
+ 
+-static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
++/**
++ * ufshcd_set_clk_freq - set UFS controller clock frequencies
++ * @hba: per adapter instance
++ * @scale_up: If True, set max possible frequency othewise set low frequency
++ *
++ * Returns 0 if successful
++ * Returns < 0 for any other errors
++ */
++static int ufshcd_set_clk_freq(struct ufs_hba *hba, bool scale_up)
+ {
+ 	int ret = 0;
+ 	struct ufs_clk_info *clki;
+ 	struct list_head *head = &hba->clk_list_head;
+-	ktime_t start = ktime_get();
+-	bool clk_state_changed = false;
+ 
+ 	if (list_empty(head))
+ 		goto out;
+ 
+-	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
+-	if (ret)
+-		return ret;
+-
+ 	list_for_each_entry(clki, head, list) {
+ 		if (!IS_ERR_OR_NULL(clki->clk)) {
+ 			if (scale_up && clki->max_freq) {
+ 				if (clki->curr_freq == clki->max_freq)
+ 					continue;
+ 
+-				clk_state_changed = true;
+ 				ret = clk_set_rate(clki->clk, clki->max_freq);
+ 				if (ret) {
+ 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
+@@ -895,7 +896,6 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
+ 				if (clki->curr_freq == clki->min_freq)
+ 					continue;
+ 
+-				clk_state_changed = true;
+ 				ret = clk_set_rate(clki->clk, clki->min_freq);
+ 				if (ret) {
+ 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
+@@ -914,13 +914,36 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
+ 				clki->name, clk_get_rate(clki->clk));
  	}
  
-+	mutex_lock(&dev->mode_config.idr_mutex);
- 	/* add their IDs to the lease request - taking into account
- 	   universal planes */
- 	for (o = 0; o < object_count; o++) {
-@@ -437,7 +438,7 @@ static int fill_object_idr(struct drm_device *dev,
- 		if (ret < 0) {
- 			DRM_DEBUG_LEASE("Object %d cannot be inserted into leases (%d)\n",
- 					object_id, ret);
--			goto out_free_objects;
-+			goto out_unlock;
- 		}
- 		if (obj->type == DRM_MODE_OBJECT_CRTC && !universal_planes) {
- 			struct drm_crtc *crtc = obj_to_crtc(obj);
-@@ -445,20 +446,22 @@ static int fill_object_idr(struct drm_device *dev,
- 			if (ret < 0) {
- 				DRM_DEBUG_LEASE("Object primary plane %d cannot be inserted into leases (%d)\n",
- 						object_id, ret);
--				goto out_free_objects;
-+				goto out_unlock;
- 			}
- 			if (crtc->cursor) {
- 				ret = idr_alloc(leases, &drm_lease_idr_object, crtc->cursor->base.id, crtc->cursor->base.id + 1, GFP_KERNEL);
- 				if (ret < 0) {
- 					DRM_DEBUG_LEASE("Object cursor plane %d cannot be inserted into leases (%d)\n",
- 							object_id, ret);
--					goto out_free_objects;
-+					goto out_unlock;
- 				}
- 			}
++out:
++	return ret;
++}
++
++/**
++ * ufshcd_scale_clks - scale up or scale down UFS controller clocks
++ * @hba: per adapter instance
++ * @scale_up: True if scaling up and false if scaling down
++ *
++ * Returns 0 if successful
++ * Returns < 0 for any other errors
++ */
++static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
++{
++	int ret = 0;
++
++	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
++	if (ret)
++		return ret;
++
++	ret = ufshcd_set_clk_freq(hba, scale_up);
++	if (ret)
++		return ret;
++
+ 	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
++	if (ret) {
++		ufshcd_set_clk_freq(hba, !scale_up);
++		return ret;
++	}
+ 
+-out:
+-	if (clk_state_changed)
+-		trace_ufshcd_profile_clk_scaling(dev_name(hba->dev),
+-			(scale_up ? "up" : "down"),
+-			ktime_to_us(ktime_sub(ktime_get(), start)), ret);
+ 	return ret;
+ }
+ 
+@@ -1106,35 +1129,36 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, bool scale_up)
+ 
+ 	ret = ufshcd_clock_scaling_prepare(hba);
+ 	if (ret)
+-		return ret;
++		goto out;
+ 
+ 	/* scale down the gear before scaling down clocks */
+ 	if (!scale_up) {
+ 		ret = ufshcd_scale_gear(hba, false);
+ 		if (ret)
+-			goto out;
++			goto clk_scaling_unprepare;
+ 	}
+ 
+ 	ret = ufshcd_scale_clks(hba, scale_up);
+-	if (ret) {
+-		if (!scale_up)
+-			ufshcd_scale_gear(hba, true);
+-		goto out;
+-	}
++	if (ret)
++		goto scale_up_gear;
+ 
+ 	/* scale up the gear after scaling up clocks */
+ 	if (scale_up) {
+ 		ret = ufshcd_scale_gear(hba, true);
+ 		if (ret) {
+ 			ufshcd_scale_clks(hba, false);
+-			goto out;
++			goto clk_scaling_unprepare;
  		}
  	}
  
- 	ret = 0;
-+out_unlock:
-+	mutex_unlock(&dev->mode_config.idr_mutex);
- out_free_objects:
- 	for (o = 0; o < object_count; o++) {
- 		if (objects[o])
+-	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
++	goto clk_scaling_unprepare;
+ 
+-out:
++scale_up_gear:
++	if (!scale_up)
++		ufshcd_scale_gear(hba, true);
++clk_scaling_unprepare:
+ 	ufshcd_clock_scaling_unprepare(hba);
++out:
+ 	ufshcd_release(hba);
+ 	return ret;
+ }
+@@ -6251,7 +6275,7 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 
+ 	/* scale up clocks to max frequency before full reinitialization */
+-	ufshcd_scale_clks(hba, true);
++	ufshcd_set_clk_freq(hba, true);
+ 
+ 	err = ufshcd_hba_enable(hba);
+ 	if (err)
 -- 
-1.8.3.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
