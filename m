@@ -2,155 +2,84 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3D6C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBCEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860D420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4D520679
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 06:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbgCPGtf (ORCPT
+        id S1729773AbgCPGtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 16 Mar 2020 02:49:35 -0400
-Received: from aliyun-cloud.icoremail.net ([47.90.88.91]:41135 "HELO
+Received: from aliyun-cloud.icoremail.net ([47.90.88.91]:42139 "HELO
         aliyun-sdnproxy-2.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1729709AbgCPGtf (ORCPT
+        by vger.kernel.org with SMTP id S1729319AbgCPGtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Mar 2020 02:49:35 -0400
+X-Greylist: delayed 359 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Mar 2020 02:49:33 EDT
 Received: from 137.localdomain (unknown [218.107.205.216])
-        by app1 (Coremail) with SMTP id xjNnewDn7Q1cHm9ew20FAA--.217S7;
-        Mon, 16 Mar 2020 14:36:28 +0800 (CST)
+        by app1 (Coremail) with SMTP id xjNnewDn7Q1cHm9ew20FAA--.217S2;
+        Mon, 16 Mar 2020 14:36:13 +0800 (CST)
 From:   Pengcheng Yang <yangpc@wangsu.com>
 To:     edumazet@google.com, ncardwell@google.com, davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pengcheng Yang <yangpc@wangsu.com>
-Subject: [PATCH RESEND net-next v2 5/5] tcp: fix stretch ACK bugs in Yeah
-Date:   Mon, 16 Mar 2020 14:35:11 +0800
-Message-Id: <1584340511-9870-6-git-send-email-yangpc@wangsu.com>
+Subject: [PATCH RESEND net-next v2 0/5] tcp: fix stretch ACK bugs in congestion control modules
+Date:   Mon, 16 Mar 2020 14:35:06 +0800
+Message-Id: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
-References: <1584340511-9870-1-git-send-email-yangpc@wangsu.com>
-X-CM-TRANSID: xjNnewDn7Q1cHm9ew20FAA--.217S7
-X-Coremail-Antispam: 1UD129KBjvJXoWxAw4UKw1ruw1DKw43AFW7twb_yoW5Ww1xpa
-        s3C34a9F4UXFyIgFySy398Ar17G393KFy7G3yUG3s3Aw4q9F13ZF1qq3yjyry7G3yIk34a
-        yr40vw17JF92kFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUgI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
-        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
-        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
-        F7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F4
-        0EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Gr4lOx8S6xCaFVCjc4AY6r1j6r4U
-        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF1l42
-        xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8GwCFx2IqxVCFs4IE7xkEbVWUJVW8
-        JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
-        AFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
-        A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU
-        0xZFpf9x0Jj2-eOUUUUU=
+X-CM-TRANSID: xjNnewDn7Q1cHm9ew20FAA--.217S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF1fuF1kWry8GF4rXrW3Awb_yoWDKFbEyF
+        92ga98Gr1UXFWDXayIkrn8Ar90yrWjyr1UXF4Dt3yDt347t34UGr4DtrW8urn7Xa1q9Fy8
+        WrnxtrW8Aw47JjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbO8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kI
+        II0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7
+        xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84AC
+        jcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrV
+        ACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8VW8GwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
+        F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8AwCF04
+        k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r48MxC20s026xCaFVCjc4AY6r1j6r4U
+        MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+        AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
+        cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcV
+        C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
+        nUUI43ZEXa7VU00PfPUUUUU==
 X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change Yeah to properly handle stretch ACKs in additive
-increase mode by passing in the count of ACKed packets
-to tcp_cong_avoid_ai().
+"stretch ACKs" (caused by LRO, GRO, delayed ACKs or middleboxes)
+can cause serious performance shortfalls in common congestion
+control algorithms. Neal Cardwell submitted a series of patches
+starting with commit e73ebb0881ea ("tcp: stretch ACK fixes prep")
+to handle stretch ACKs and fixed stretch ACK bugs in Reno and
+CUBIC congestion control algorithms.
 
-In addition, we re-implemented the scalable path using
-tcp_cong_avoid_ai() and removed the pkts_acked variable.
+This patch series continues to fix bic, scalable, veno and yeah
+congestion control algorithms to handle stretch ACKs.
 
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
----
- net/ipv4/tcp_yeah.c | 41 +++++++++++------------------------------
- 1 file changed, 11 insertions(+), 30 deletions(-)
+Changes in v2:
+- Provide [PATCH 0/N] to describe the modifications of this patch series
 
-diff --git a/net/ipv4/tcp_yeah.c b/net/ipv4/tcp_yeah.c
-index e00570d..3bb4487 100644
---- a/net/ipv4/tcp_yeah.c
-+++ b/net/ipv4/tcp_yeah.c
-@@ -36,8 +36,6 @@ struct yeah {
- 
- 	u32 reno_count;
- 	u32 fast_count;
--
--	u32 pkts_acked;
- };
- 
- static void tcp_yeah_init(struct sock *sk)
-@@ -57,18 +55,6 @@ static void tcp_yeah_init(struct sock *sk)
- 	tp->snd_cwnd_clamp = min_t(u32, tp->snd_cwnd_clamp, 0xffffffff/128);
- }
- 
--static void tcp_yeah_pkts_acked(struct sock *sk,
--				const struct ack_sample *sample)
--{
--	const struct inet_connection_sock *icsk = inet_csk(sk);
--	struct yeah *yeah = inet_csk_ca(sk);
--
--	if (icsk->icsk_ca_state == TCP_CA_Open)
--		yeah->pkts_acked = sample->pkts_acked;
--
--	tcp_vegas_pkts_acked(sk, sample);
--}
--
- static void tcp_yeah_cong_avoid(struct sock *sk, u32 ack, u32 acked)
- {
- 	struct tcp_sock *tp = tcp_sk(sk);
-@@ -77,24 +63,19 @@ static void tcp_yeah_cong_avoid(struct sock *sk, u32 ack, u32 acked)
- 	if (!tcp_is_cwnd_limited(sk))
- 		return;
- 
--	if (tcp_in_slow_start(tp))
--		tcp_slow_start(tp, acked);
-+	if (tcp_in_slow_start(tp)) {
-+		acked = tcp_slow_start(tp, acked);
-+		if (!acked)
-+			goto do_vegas;
-+	}
- 
--	else if (!yeah->doing_reno_now) {
-+	if (!yeah->doing_reno_now) {
- 		/* Scalable */
--
--		tp->snd_cwnd_cnt += yeah->pkts_acked;
--		if (tp->snd_cwnd_cnt > min(tp->snd_cwnd, TCP_SCALABLE_AI_CNT)) {
--			if (tp->snd_cwnd < tp->snd_cwnd_clamp)
--				tp->snd_cwnd++;
--			tp->snd_cwnd_cnt = 0;
--		}
--
--		yeah->pkts_acked = 1;
--
-+		tcp_cong_avoid_ai(tp, min(tp->snd_cwnd, TCP_SCALABLE_AI_CNT),
-+				  acked);
- 	} else {
- 		/* Reno */
--		tcp_cong_avoid_ai(tp, tp->snd_cwnd, 1);
-+		tcp_cong_avoid_ai(tp, tp->snd_cwnd, acked);
- 	}
- 
- 	/* The key players are v_vegas.beg_snd_una and v_beg_snd_nxt.
-@@ -118,7 +99,7 @@ static void tcp_yeah_cong_avoid(struct sock *sk, u32 ack, u32 acked)
- 	 * of bytes we send in an RTT is often less than our cwnd will allow.
- 	 * So we keep track of our cwnd separately, in v_beg_snd_cwnd.
- 	 */
--
-+do_vegas:
- 	if (after(ack, yeah->vegas.beg_snd_nxt)) {
- 		/* We do the Vegas calculations only if we got enough RTT
- 		 * samples that we can be reasonably sure that we got
-@@ -232,7 +213,7 @@ static u32 tcp_yeah_ssthresh(struct sock *sk)
- 	.set_state	= tcp_vegas_state,
- 	.cwnd_event	= tcp_vegas_cwnd_event,
- 	.get_info	= tcp_vegas_get_info,
--	.pkts_acked	= tcp_yeah_pkts_acked,
-+	.pkts_acked	= tcp_vegas_pkts_acked,
- 
- 	.owner		= THIS_MODULE,
- 	.name		= "yeah",
+Pengcheng Yang (5):
+  tcp: fix stretch ACK bugs in BIC
+  tcp: fix stretch ACK bugs in Scalable
+  tcp: stretch ACK fixes in Veno prep
+  tcp: fix stretch ACK bugs in Veno
+  tcp: fix stretch ACK bugs in Yeah
+
+ net/ipv4/tcp_bic.c      | 11 ++++++-----
+ net/ipv4/tcp_scalable.c | 17 +++++++++--------
+ net/ipv4/tcp_veno.c     | 47 +++++++++++++++++++++++++----------------------
+ net/ipv4/tcp_yeah.c     | 41 +++++++++++------------------------------
+ 4 files changed, 51 insertions(+), 65 deletions(-)
+
 -- 
 1.8.3.1
 
