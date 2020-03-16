@@ -2,97 +2,143 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AE0C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B7EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0198205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584362990;
-	bh=bUJOXaXHzXnx1Lwff+Tn+hDd+me/q/BeYUaYY6pwvOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0iXIghYTmrWi0kQvo0yfQ0lzxifDQLPHNJz7nx9aODqdUnTCPmvw5XypS+7pAtHjY
-	 P2lZNy5GRHCU2K7K4gAUtqaep64n9ZIaeeiP/BneF+9tRfVne8XOvCFF7oGbGr01Qr
-	 h7jgkBOcnxhF7wX3V3V8LUwmfuMMb30ib6wkBUIw=
+	by mail.kernel.org (Postfix) with ESMTP id 4F86420658
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 12:50:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIgHvYml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731099AbgCPMtt (ORCPT
+        id S1731105AbgCPMuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:49:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:47844 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730970AbgCPMts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:49:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C81D430E;
-        Mon, 16 Mar 2020 05:49:47 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B82E3F52E;
-        Mon, 16 Mar 2020 05:49:47 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 12:49:45 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        Michael Walle <michael@walle.cc>, peng.ma@nxp.com
-Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
- queue with a simple completion
-Message-ID: <20200316124945.GF5010@sirena.org.uk>
-References: <20200314224340.1544-1-olteanv@gmail.com>
- <20200314224340.1544-7-olteanv@gmail.com>
- <20200316122613.GE5010@sirena.org.uk>
- <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
+        Mon, 16 Mar 2020 08:50:12 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40053 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730970AbgCPMuM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:50:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t24so9696868pgj.7;
+        Mon, 16 Mar 2020 05:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=yQQRBR3UCe1qFAx8WTjG74chuD0+CqzV1dqAc0ruQoA=;
+        b=BIgHvYmlSE6AOKfBu9BXFcE/GbdLe5qPUTNF7It4xxB7VJ3yOfWCFmZ4EQIuqykMdX
+         Wp/wojkEkcSsF5KmMCLYoiJaSqEnQaAPxehCyF+dod/K9ulofLfsaMZHQP8TeULL/7iT
+         M51UUcMgH8TUWXrNR8mW0AlRRBluT5y0LE5zkKWJ0GKG1PVHMDjhwlBhp4DPkeFw4F3Q
+         K9x7qOMM7y6tXrXeqI/vEv/i/qmldjytstAz5zZGcIIRBfumb4S8hWcMML/MiKlPYumV
+         +nYOQnkEr3uCFFlwjy6wx60iHwnaCNG61uKXePEQ7k0Px4W9gNhEQKUWaQp1uxf7nO/G
+         U7kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=yQQRBR3UCe1qFAx8WTjG74chuD0+CqzV1dqAc0ruQoA=;
+        b=uM32O9hqR3AG61poIlpTynWWQ1sDvXt+v4c/KCW5srr7hbdL/l2Zy/9p06F8ny7vbk
+         zttSP/rrLaS4/87uJRCBWfBhxirwBg7JNymMH/yEIlmxzYEbooRwJ4yLD1VQyXhf1SEE
+         sS34fR97cFwxWkvOMf9eU29FWy3KXYf+HjtB2QlIUj/dS+pZ+oluBuscNe6SsA4TQv0K
+         L89qPMUbmxjHlik4Gkeglic0BMrOY4yodWuXY3Rp5DJMqI1NTju2fsbsS8aSHg3SP9Tb
+         PTvxorSDaTsm1WliUKLpWpWEntNPnWnV0+ou3Pi6WOEzmqDUiywj89SDsCc+rYmg6HGn
+         KDlw==
+X-Gm-Message-State: ANhLgQ0Kr0NVlzKvbkZsXpjA75ouf8ssnZtHTpAx7EaA2g6+q8jsxZ9q
+        vwt3llmLlWiBawIg46gC2i8=
+X-Google-Smtp-Source: ADFU+vtvHKaZuwCfss780zR+3XbBpQD+Epnuh5nt9MyiUc0PzY16d5ELEBghO9Cr/SzGtJzKK+CoFw==
+X-Received: by 2002:a63:2:: with SMTP id 2mr26113109pga.102.1584363011205;
+        Mon, 16 Mar 2020 05:50:11 -0700 (PDT)
+Received: from syed.domain.name ([103.201.127.108])
+        by smtp.gmail.com with ESMTPSA id x18sm55976328pfo.148.2020.03.16.05.50.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Mar 2020 05:50:10 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 18:20:06 +0530
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+To:     vilhelm.gray@gmail.com
+Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 2/3] counter: 104-quad-8: Add lock guards - differential
+ encoder
+Message-ID: <20200316125006.GA415@syed.domain.name>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="w3uUfsyyY1Pqa/ej"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
-X-Cookie: I thought YOU silenced the guard!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add lock protection from race conditions to 104-quad-8 counter driver
+for differential encoder status code changes. Mutex lock calls used for
+protection.
 
---w3uUfsyyY1Pqa/ej
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+---
+Changes in v5:
+ - Change spin lock calls to mutex lock calls.
+ - Modify the title description.
 
-On Mon, Mar 16, 2020 at 02:29:09PM +0200, Vladimir Oltean wrote:
+ drivers/counter/104-quad-8.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-> Correct, the real problem is that I forgot to add a Fixes: tag for
-> patch 5. I'll do that now.
+diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+index 9dab190..21b2e3e 100644
+--- a/drivers/counter/104-quad-8.c
++++ b/drivers/counter/104-quad-8.c
+@@ -1151,18 +1151,26 @@ static ssize_t quad8_signal_cable_fault_read(struct counter_device *counter,
+ 					     struct counter_signal *signal,
+ 					     void *private, char *buf)
+ {
+-	const struct quad8_iio *const priv = counter->priv;
++	struct quad8_iio *const priv = counter->priv;
+ 	const size_t channel_id = signal->id / 2;
+-	const bool disabled = !(priv->cable_fault_enable & BIT(channel_id));
++	bool disabled;
+ 	unsigned int status;
+ 	unsigned int fault;
+ 
+-	if (disabled)
++	mutex_lock(&priv->lock);
++
++	disabled = !(priv->cable_fault_enable & BIT(channel_id));
++
++	if (disabled) {
++		mutex_unlock(&priv->lock);
+ 		return -EINVAL;
++	}
+ 
+ 	/* Logic 0 = cable fault */
+ 	status = inb(priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+ 
++	mutex_unlock(&priv->lock);
++
+ 	/* Mask respective channel and invert logic */
+ 	fault = !(status & BIT(channel_id));
+ 
+@@ -1194,6 +1202,8 @@ static ssize_t quad8_signal_cable_fault_enable_write(
+ 	if (ret)
+ 		return ret;
+ 
++	mutex_lock(&priv->lock);
++
+ 	if (enable)
+ 		priv->cable_fault_enable |= BIT(channel_id);
+ 	else
+@@ -1204,6 +1214,8 @@ static ssize_t quad8_signal_cable_fault_enable_write(
+ 
+ 	outb(cable_fault_enable, priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+ 
++	mutex_unlock(&priv->lock);
++
+ 	return len;
+ }
+ 
+-- 
+2.7.4
 
-OK.  The series otherwise looked fine but I'll wait for testing.
-Michael, if there's issues remaining it might be good to get some
-Tested-bys for the patches prior to whatever's broken so we can get
-those fixes in (but obviously verifying that is work so only if you=20
-have time).
-
---w3uUfsyyY1Pqa/ej
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5vdekACgkQJNaLcl1U
-h9AveQf+LOqJCuZK/In2NusDJBny94rpuyf/MG3uFk4SGh94eJKbw08H9ChimU5Q
-c+Coa95XkLCJzoVX6rdw1yjTgAP0n/YfaG3R4rTr24IfwqmZ/ggVl5WVQfdGTk2+
-AZKXqBmHiNgK7zizWDT6cH+1fMWbLoJS2mAz3imnwdpiLypTai/zwvb5SH6N0oyS
-FhIshW56cRhYj8UNpxwUm7Zr5C8L41rb4Isda5R3fUzaXwT20DdJ3tpYgsaL0NtE
-FkEvdxQjg4o3ssNJ15Mdt4yRGHEXVH7cnguTLZhqOogdWLs6NXvPjwtGJt0WVH24
-vudvOfP8tvVP1BjdzkMaPg3Go3Y/Jw==
-=NXWG
------END PGP SIGNATURE-----
-
---w3uUfsyyY1Pqa/ej--
