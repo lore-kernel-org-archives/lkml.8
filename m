@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4C2C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4C9C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D17205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9957206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326356;
-	bh=kj8Aiz461xZA+wkG7vkjclbH830EtJcUQuSZSLkNXdc=;
+	s=default; t=1584326365;
+	bh=zfd67u+rmC+7o1QvaUow5GVSNreqIe3rocf3yS5pvKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aKxkc/spf+hsmU/iDdKQkGZUgD6GKne3QXA2O98lrIWzWmc7qNcwEeU4dFbCowusd
-	 OPwbXRW75Ruj5JXDc+RC6T+eRA3BPREZpMkYDQobgnT5KlCY/7LKJpJ1jaJeg4Gvxz
-	 KZBpgoOnqt738wmUpK+xoQo1+1F4lk+luZXZoJB4=
+	b=JW2Px6CI/2Si2TlMZWi0xPeolCMNt1G9xTDXP0lDYCjXHm8kVI7WsOkjWLk0x02Io
+	 PTKRvFbPBxMCXK2JmJg8dqKQiGbg37tUjE/lOvW2nwKfaNJZtL+r/rUneKy7rECFBC
+	 JncKP1nMT4JXll55c6tvAFXUCrbJqFFH/HwC/gio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbgCPCjP (ORCPT
+        id S1729866AbgCPCea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729888AbgCPCed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:33 -0400
+        id S1729818AbgCPCeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1775E20726;
-        Mon, 16 Mar 2020 02:34:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CBDD20722;
+        Mon, 16 Mar 2020 02:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326073;
-        bh=kj8Aiz461xZA+wkG7vkjclbH830EtJcUQuSZSLkNXdc=;
+        s=default; t=1584326061;
+        bh=zfd67u+rmC+7o1QvaUow5GVSNreqIe3rocf3yS5pvKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bpeOtpZW2pXTbmGBYPAibgopo2wgX4WP+GXgQetmq8hREdvDEiqLCT5b/hkI63lGr
-         G5JednNdkG5BWn1jtK580aqwdAR02f61b3b6Xd+UxMvZW4fpn/t3xv6uLkYTcKOZ34
-         ryDyYXJwiKm7flpcCOz8iA2lD09yhAl0uYjsv5sQ=
+        b=ED0q+CUfl2YqGgYt0lQgIDW7jMplZqeBmpZbZIqk4ySxgOYrihW4Z/XurFOMIr2LI
+         kzQyZkzyCcNVuNzyUg59tdUvN5mq2QF05WDrlW1Dhzpqh9b7J56znPdjceMeehWAPi
+         G+w3eOAwoWlDkYRk5cBnxrcoI1YwUns7Ee8mUodg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/35] drm/exynos: hdmi: don't leak enable HDMI_EN regulator if probe fails
-Date:   Sun, 15 Mar 2020 22:33:54 -0400
-Message-Id: <20200316023411.1263-18-sashal@kernel.org>
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 08/35] ASoC: meson: g12a: add tohdmitx reset
+Date:   Sun, 15 Mar 2020 22:33:44 -0400
+Message-Id: <20200316023411.1263-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
 References: <20200316023411.1263-1-sashal@kernel.org>
@@ -63,104 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 3b6a9b19ab652efac7ad4c392add6f1235019568 ]
+[ Upstream commit 22946f37557e27697aabc8e4f62642bfe4a17fd8 ]
 
-Move enabling and disabling HDMI_EN optional regulator to probe() function
-to keep track on the regulator status. This fixes following warning if
-probe() fails (for example when I2C DDC adapter cannot be yet gathered
-due to the missing driver). This fixes following warning observed on
-Arndale5250 board with multi_v7_defconfig:
+Reset the g12a hdmi codec glue on probe. This ensure a sane startup state.
 
-[drm] Failed to get ddc i2c adapter by node
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 214 at drivers/regulator/core.c:2051 _regulator_put+0x16c/0x184
-Modules linked in: ...
-CPU: 0 PID: 214 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200219-00040-g38af1dfafdbb #7570
-Hardware name: Samsung Exynos (Flattened Device Tree)
-[<c0312258>] (unwind_backtrace) from [<c030cc10>] (show_stack+0x10/0x14)
-[<c030cc10>] (show_stack) from [<c0f0d3a0>] (dump_stack+0xcc/0xe0)
-[<c0f0d3a0>] (dump_stack) from [<c0346a58>] (__warn+0xe0/0xf8)
-[<c0346a58>] (__warn) from [<c0346b20>] (warn_slowpath_fmt+0xb0/0xb8)
-[<c0346b20>] (warn_slowpath_fmt) from [<c0893f58>] (_regulator_put+0x16c/0x184)
-[<c0893f58>] (_regulator_put) from [<c0893f8c>] (regulator_put+0x1c/0x2c)
-[<c0893f8c>] (regulator_put) from [<c09b2664>] (release_nodes+0x17c/0x200)
-[<c09b2664>] (release_nodes) from [<c09aebe8>] (really_probe+0x10c/0x350)
-[<c09aebe8>] (really_probe) from [<c09aefa8>] (driver_probe_device+0x60/0x1a0)
-[<c09aefa8>] (driver_probe_device) from [<c09af288>] (device_driver_attach+0x58/0x60)
-[<c09af288>] (device_driver_attach) from [<c09af310>] (__driver_attach+0x80/0xbc)
-[<c09af310>] (__driver_attach) from [<c09ace34>] (bus_for_each_dev+0x68/0xb4)
-[<c09ace34>] (bus_for_each_dev) from [<c09ae00c>] (bus_add_driver+0x130/0x1e8)
-[<c09ae00c>] (bus_add_driver) from [<c09afd98>] (driver_register+0x78/0x110)
-[<c09afd98>] (driver_register) from [<bf139558>] (exynos_drm_init+0xe8/0x11c [exynosdrm])
-[<bf139558>] (exynos_drm_init [exynosdrm]) from [<c0302fa8>] (do_one_initcall+0x50/0x220)
-[<c0302fa8>] (do_one_initcall) from [<c03dc02c>] (do_init_module+0x60/0x210)
-[<c03dc02c>] (do_init_module) from [<c03daf44>] (load_module+0x1c0c/0x2310)
-[<c03daf44>] (load_module) from [<c03db85c>] (sys_finit_module+0xac/0xbc)
-[<c03db85c>] (sys_finit_module) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
-Exception stack(0xecca3fa8 to 0xecca3ff0)
-...
----[ end trace 276c91214635905c ]---
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200221121146.1498427-1-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_hdmi.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ sound/soc/meson/g12a-tohdmitx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
-index 09aa73c0f2add..0073a2b3b80a2 100644
---- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-+++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-@@ -1802,18 +1802,10 @@ static int hdmi_resources_init(struct hdmi_context *hdata)
+diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
+index 9cfbd343a00c8..8a0db28a6a406 100644
+--- a/sound/soc/meson/g12a-tohdmitx.c
++++ b/sound/soc/meson/g12a-tohdmitx.c
+@@ -8,6 +8,7 @@
+ #include <linux/module.h>
+ #include <sound/pcm_params.h>
+ #include <linux/regmap.h>
++#include <linux/reset.h>
+ #include <sound/soc.h>
+ #include <sound/soc-dai.h>
  
- 	hdata->reg_hdmi_en = devm_regulator_get_optional(dev, "hdmi-en");
- 
--	if (PTR_ERR(hdata->reg_hdmi_en) != -ENODEV) {
-+	if (PTR_ERR(hdata->reg_hdmi_en) != -ENODEV)
- 		if (IS_ERR(hdata->reg_hdmi_en))
- 			return PTR_ERR(hdata->reg_hdmi_en);
- 
--		ret = regulator_enable(hdata->reg_hdmi_en);
--		if (ret) {
--			DRM_DEV_ERROR(dev,
--				      "failed to enable hdmi-en regulator\n");
--			return ret;
--		}
--	}
--
- 	return hdmi_bridge_init(hdata);
- }
- 
-@@ -2020,6 +2012,15 @@ static int hdmi_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (!IS_ERR(hdata->reg_hdmi_en)) {
-+		ret = regulator_enable(hdata->reg_hdmi_en);
-+		if (ret) {
-+			DRM_DEV_ERROR(dev,
-+			      "failed to enable hdmi-en regulator\n");
-+			goto err_hdmiphy;
-+		}
-+	}
+@@ -378,6 +379,11 @@ static int g12a_tohdmitx_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	void __iomem *regs;
+ 	struct regmap *map;
++	int ret;
 +
- 	pm_runtime_enable(dev);
++	ret = device_reset(dev);
++	if (ret)
++		return ret;
  
- 	audio_infoframe = &hdata->audio.infoframe;
-@@ -2044,7 +2045,8 @@ static int hdmi_probe(struct platform_device *pdev)
- 
- err_rpm_disable:
- 	pm_runtime_disable(dev);
--
-+	if (!IS_ERR(hdata->reg_hdmi_en))
-+		regulator_disable(hdata->reg_hdmi_en);
- err_hdmiphy:
- 	if (hdata->hdmiphy_port)
- 		put_device(&hdata->hdmiphy_port->dev);
+ 	regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(regs))
 -- 
 2.20.1
 
