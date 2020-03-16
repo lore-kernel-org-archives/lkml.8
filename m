@@ -2,140 +2,143 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7E3C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E15C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C21206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:08:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584328082;
-	bh=Ta/7YQGMbWyIGTwkBfx9j6N2DjoHmcD3pjam5ZHomYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mEXnkqf6MfNJdftkyQnkbkcCk52Jr4TpU16zkykx444C8O4oSvuI7SUWGTaaFnE7J
-	 +vCcWtn3YDBWsv28upNcBLdpqgYK5S1S7rfLQTmlUJnkXFtAqA0tcqb6WFTrwMiMbi
-	 U68nFOyrAbqGHExQr5ghxeHjZSlgA6MIDZZoQTh0=
+	by mail.kernel.org (Postfix) with ESMTP id 798DB20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 03:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PXb2qVMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbgCPDIA (ORCPT
+        id S1729619AbgCPDKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 23:08:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51988 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 23:10:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:34271 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbgCPDIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 23:08:00 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729384AbgCPDKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 23:10:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B83B420409;
-        Mon, 16 Mar 2020 03:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584328079;
-        bh=Ta/7YQGMbWyIGTwkBfx9j6N2DjoHmcD3pjam5ZHomYo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YuPz9BDeEmfsDued5suhi+F0CzjEaeD6rv51BFRYQ1JaiZD34V1qqxHrXeYsPG8zj
-         XJXVKJ1sBrjUt3Ir53ZsoMrcqk/HSbkX4EXZp3wKxeD2iUNhqlSKLac+Dt3aXcpzLA
-         Kjjwq/qCLJvbt4xwZRgKKwRuuvh3evpEwRSh3zWY=
-Date:   Mon, 16 Mar 2020 11:07:45 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Message-ID: <20200316030744.GC17221@dragon>
-References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB4481F087AC3CDA691300710288FE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200316005219.GD17221@dragon>
- <AM0PR04MB44819E4A9E027F1555C33D0B88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ghB93YrQz9sPk;
+        Mon, 16 Mar 2020 14:10:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584328210;
+        bh=Knue5rqiLe1nXMX+fyKsUbWZ2mKqB6wfYMP000sIv20=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PXb2qVMM+akhCIquVAFaSr4kIb4zPZUKQL6a0o07ytAj19YJ/qEgE9Pp2jZm+yKFF
+         RaFDFzQqhgvnsURV63OOMs4OLErI6MVMAfM6NZzUuflXDN01s2PeBrlEjY2Xixesxe
+         LBMzFRqe9d1gioFkNbM4/wSvz98I3UToGLfmfFn/t8tzfrdh8TywEXRNkNypKQZVLS
+         tCNtJkukowZaw3pYFeZBlAOyKOAxEelqMrWAQA97DyCoeqaLmtQJnYVD5rpjvPLY1A
+         AT59uyoJ7mgBz0PoPli0bK2bjDMRziXErni/RUH62rgPWNltJqu5e3rcO2WGaxQVml
+         WTLUvMHQ2+S3A==
+Date:   Mon, 16 Mar 2020 14:10:04 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Colin Cross <ccross@android.com>,
+        Olof Johansson <olof@lixom.net>,
+        Thierry Reding <treding@nvidia.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: linux-next: build failure after merge of the usb tree
+Message-ID: <20200316141004.171649a5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB44819E4A9E027F1555C33D0B88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/j=EfkFvgnu7ybbMgR4aLewO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:51:47AM +0000, Peng Fan wrote:
-> Hi Shawn,
-> 
-> > Subject: Re: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU
-> > case
-> > 
-> > On Mon, Mar 09, 2020 at 01:40:18PM +0000, Peng Fan wrote:
-> > > > Subject: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU
-> > > > case
-> > >
-> > > I have one patch pending reviewing.
-> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatc
-> > >
-> > hwork.kernel.org%2Fpatch%2F11395247%2F&amp;data=02%7C01%7Cpeng.f
-> > an%40n
-> > >
-> > xp.com%7C995815002e2b490791e008d7c9445133%7C686ea1d3bc2b4c6fa9
-> > 2cd99c5c
-> > >
-> > 301635%7C0%7C0%7C637199167574579419&amp;sdata=RM4Mtwl8LZ3ft9
-> > 3uL3FQPcHT
-> > > 9lPHSqBOgugozkcLvag%3D&amp;reserved=0
-> > 
-> > I dropped that patch from my queue and picked patch #2 from this series as
-> > the favor.
-> 
-> I think dropping that patch might cause Linux-next build fail as previously showed,
-> because IMX_SCU_SOC depends on COMPILE_TEST. If you drop that patch,
-> also need to drop COMPILE_TEST from IMX_SCU_SOC.
-> 
->  ld: drivers/soc/imx/soc-imx-scu.o: in function `.imx_scu_soc_probe':
->  soc-imx-scu.c:(.text.imx_scu_soc_probe+0x44): undefined reference to 
-> `.imx_scu_get_handle'
->  ld: soc-imx-scu.c:(.text.imx_scu_soc_probe+0x134): undefined reference 
->  to `.imx_scu_call_rpc'
->  ld: soc-imx-scu.c:(.text.imx_scu_soc_probe+0x20c): undefined reference 
->  to `.imx_scu_call_rpc'
->  
->  Caused by commit
->  
->    68c189e3a93c ("soc: imx: increase build coverage for imx8m soc 
->  driver")
-> 
-> What do you prefer? I personally think dummy functions would be good.
+--Sig_/j=EfkFvgnu7ybbMgR4aLewO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I would rather drop COMPILE_TEST from IMX_SCU_SOC.  Could you send a
-patch for that shortly?
+Hi all,
 
-Shawn
+After merging the usb tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
+
+drivers/phy/tegra/xusb.c: In function 'tegra_xusb_setup_usb_role_switch':
+drivers/phy/tegra/xusb.c:641:10: error: initialization of 'int (*)(struct u=
+sb_role_switch *, enum usb_role)' from incompatible pointer type 'int (*)(s=
+truct device *, enum usb_role)' [-Werror=3Dincompatible-pointer-types]
+  641 |   .set =3D tegra_xusb_role_sw_set,
+      |          ^~~~~~~~~~~~~~~~~~~~~~
+drivers/phy/tegra/xusb.c:641:10: note: (near initialization for 'role_sx_de=
+sc.set')
+
+Caused by commit
+
+  bce3052f0c16 ("usb: roles: Provide the switch drivers handle to the switc=
+h in the API")
+
+interacting with commit
+
+  5a00c7c7604f ("phy: tegra: xusb: Add usb-role-switch support")
+
+from the tegra tree.
+
+I have added this merge fix patch (which may need more work):
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 16 Mar 2020 14:04:20 +1100
+Subject: [PATCH] phy: tegra: fix up for set_role API change
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/phy/tegra/xusb.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+index d907f03bf282..25223c350e66 100644
+--- a/drivers/phy/tegra/xusb.c
++++ b/drivers/phy/tegra/xusb.c
+@@ -596,11 +596,12 @@ static void tegra_xusb_usb_phy_work(struct work_struc=
+t *work)
+ 	atomic_notifier_call_chain(&port->usb_phy.notifier, 0, &port->usb_phy);
+ }
+=20
+-static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
++static int tegra_xusb_role_sw_set(struct usb_role_switch *sw,
++				  enum usb_role role)
+ {
+-	struct tegra_xusb_port *port =3D dev_get_drvdata(dev);
++	struct tegra_xusb_port *port =3D usb_role_switch_get_drvdata(sw);
+=20
+-	dev_dbg(dev, "%s(): role %s\n", __func__, usb_roles[role]);
++	dev_dbg(&port->dev, "%s(): role %s\n", __func__, usb_roles[role]);
+=20
+ 	schedule_work(&port->usb_phy_work);
+=20
+--=20
+2.25.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/j=EfkFvgnu7ybbMgR4aLewO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5u7gwACgkQAVBC80lX
+0Gzbnwf/Vpdc0s7iO1BA2KP7C4N8nNGMt2T70e+tG3Dd98koC7/AwQh39vtfB+BY
+c6RGutLRKu/43ZCJDSHVUPJeJ/oGN2ErmiffqoBGs0S8iWQ7b1bwnRoRF7iYhseC
+OducQfFHb6NYGKud6y07DArvoyrspHL5qIAGEyCvekSGkUbfgXXeAoKCEsRUaCmM
+uKjpH6M/lZf9klQz7/1FzD5XDKI3SzLk1U1/XuH5yLVW0ZlfwcJil0JL7kdYewHp
+boCYWRv8Z4Gtxy+JxsnQLQcMbvJIurFjiODQO0Sgd2GtyoPS4vht27noZyeNqfg/
+ZkzI/VrsT6CP+KRZhB2jPuqWyRmPgA==
+=0thF
+-----END PGP SIGNATURE-----
+
+--Sig_/j=EfkFvgnu7ybbMgR4aLewO--
