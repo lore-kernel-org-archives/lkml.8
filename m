@@ -2,82 +2,70 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B34C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B78C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C96206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1E9206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 21:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584394517;
+	bh=toHhrV6u5qgEDXy0LaW5D0UvCYLrvNF/F6k12esdyXM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kdkMcMx9yGG/cn5L3CSj4V/EJ3HK64Ez0TPO4ZCWXOfx2YwBfdxWhz7yrolbwda+9
+	 UOHxeE/vBkdwx8boNCmFfwLXJxk6+raYLh0Bdk+Hsexj8jOINng1xxC1XN3WVEpA/G
+	 gqdU3ZGuA+EjlataBaO/8V+gXyUPtkaLuJohhJjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732718AbgCPVcX (ORCPT
+        id S1732697AbgCPVfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:32:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42440 "EHLO mail.kernel.org"
+        Mon, 16 Mar 2020 17:35:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732672AbgCPVcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 17:32:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1732567AbgCPVfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 17:35:16 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E820020679;
-        Mon, 16 Mar 2020 21:32:20 +0000 (UTC)
-Date:   Mon, 16 Mar 2020 17:32:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>, rcu <rcu@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "kernel-team@fb.com," <kernel-team@fb.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Glexiner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH RFC tip/core/rcu 09/16] rcu-tasks: Add an RCU-tasks rude
- variant
-Message-ID: <20200316173219.1f8b7443@gandalf.local.home>
-In-Reply-To: <20200316203241.GB3199@paulmck-ThinkPad-P72>
-References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
-        <20200312181702.8443-9-paulmck@kernel.org>
-        <20200316194754.GA172196@google.com>
-        <CAEXW_YREzQ8hMP_vGiQFiNAtwxPn_C0TG6mH68QaS8cES-Jr3Q@mail.gmail.com>
-        <20200316203241.GB3199@paulmck-ThinkPad-P72>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC1DB20679;
+        Mon, 16 Mar 2020 21:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584394515;
+        bh=toHhrV6u5qgEDXy0LaW5D0UvCYLrvNF/F6k12esdyXM=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=FS8POu0BNzZBf2ebz1uVdS26A6QlFskAUKzX/uMk0fFr5+FL+2s8cCk+3JHu8CXTN
+         RAA3m61zVBfWuUnNejmh7WNUh/NZd5pOP3PLJz7Rmw+uuSdDd2KzYZL5wULOxuNI/H
+         iMEmvW7yEAmxLqbS+tR86ich/dM60rjGLwJnth5Q=
+Date:   Mon, 16 Mar 2020 22:35:12 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Tony Fischetti <tony.fischetti@gmail.com>
+cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: add ALWAYS_POLL quirk to lenovo pixart mouse
+In-Reply-To: <20200312161606.14133-1-tony.fischetti@gmail.com>
+Message-ID: <nycvar.YFH.7.76.2003162235030.19500@cbobk.fhfr.pm>
+References: <20200312161606.14133-1-tony.fischetti@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Mar 2020 13:32:41 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+On Thu, 12 Mar 2020, Tony Fischetti wrote:
 
-> > Just curious, why is the "rude" version better than SRCU? Seems the
-> > schedule_on_each_cpu() would be much slower than SRCU especially if
-> > there are 1000s of CPUs involved. Is there any reason that is a better
-> > alternative?  
-> 
-> The rude version has much faster readers, and the story I hear is that
-> there are not expected to be all that many concurrent updaters.
-> 
-> But to get more detail, why not ask Steven why he chose not to use SRCU?
-> (I know the story for the BPF guys, and it is because of SRCU's read-side
-> overhead.)
+> A lenovo pixart mouse (17ef:608d) is afflicted common the the malfunction
+> where it disconnects and reconnects every minute--each time incrementing
+> the device number. This patch adds the device id of the device and
+> specifies that it needs the HID_QUIRK_ALWAYS_POLL quirk in order to
+> work properly.
 
-Same for the function side (if not even more so). This would require adding
-a srcu_read_lock() to all functions that can be traced! That would be a huge
-kill in performance. Probably to the point no one would bother even using
-function tracer.
+Applied, thank you Tony.
 
--- Steve
+-- 
+Jiri Kosina
+SUSE Labs
+
