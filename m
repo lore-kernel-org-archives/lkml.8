@@ -2,302 +2,104 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685C4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FA1C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E9E20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:20:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t1fjiQrn"
+	by mail.kernel.org (Postfix) with ESMTP id B8D5820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730870AbgCPLUd (ORCPT
+        id S1730802AbgCPLWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:20:33 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47064 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730783AbgCPLUc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:20:32 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GBJvTe040985;
-        Mon, 16 Mar 2020 06:19:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584357597;
-        bh=gTIw0Kq1JaHQ/hJkzc67wdeMK2eHR10J/tTFD8B+hek=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=t1fjiQrnwr+ztwM0Wy+P1/ctCdE5yxSfA1Q6GEOX7wXDIHkFV6ek0UwBvdxEL8NWo
-         FcXieHdr+2A+3YqMV93eRSAPmMxb1LboHPATcJEIVAp4V6fVmO0chIgFZOZy3dO0u5
-         W60i9wHTjoWajXctHD2DHCSHvRsSPY60ewPJgv/w=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02GBJvoF017219
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Mar 2020 06:19:57 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Mar 2020 06:19:57 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Mar 2020 06:19:57 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GBJiU0049775;
-        Mon, 16 Mar 2020 06:19:54 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Alan Mikhak <alan.mikhak@sifive.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v3 3/5] misc: pci_endpoint_test: Use streaming DMA APIs for buffer allocation
-Date:   Mon, 16 Mar 2020 16:54:22 +0530
-Message-ID: <20200316112424.25295-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200316112424.25295-1-kishon@ti.com>
-References: <20200316112424.25295-1-kishon@ti.com>
+        Mon, 16 Mar 2020 07:22:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:46470 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730734AbgCPLWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 07:22:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8FC430E;
+        Mon, 16 Mar 2020 04:22:11 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8238C3F52E;
+        Mon, 16 Mar 2020 04:22:08 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 11:22:06 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
+Message-ID: <20200316112205.GE3005@mbp>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-19-vincenzo.frascino@arm.com>
+ <20200315182950.GB32205@mbp>
+ <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
+ <20200316103437.GD3005@mbp>
+ <77a2e91a-58f4-3ba3-9eef-42d6a8faf859@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77a2e91a-58f4-3ba3-9eef-42d6a8faf859@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use streaming DMA APIs (dma_map_single/dma_unmap_single) for buffers
-transmitted/received by the endpoint device instead of allocating
-a coherent memory. Also add default_data to set the alignment to
-4KB since dma_map_single might not return a 4KB aligned address.
+On Mon, Mar 16, 2020 at 10:55:00AM +0000, Vincenzo Frascino wrote:
+> On 3/16/20 10:34 AM, Catalin Marinas wrote:
+> >> I tried to fine grain the headers as much as I could in order to avoid
+> >> unneeded/unwanted inclusions:
+> >>  * TASK_SIZE_32 is used to verify ABI consistency on vdso32 (please refer to
+> >>    arch/arm64/kernel/vdso32/vgettimeofday.c).
+> > 
+> > I see. But the test is probably useless. With 4K pages, TASK_SIZE_32 is
+> > 1UL << 32, so you can't have a u32 greater than this. So I'd argue that
+> > the ABI compatibility here doesn't matter.
+> > 
+> > With 16K or 64K pages, TASK_SIZE_32 is slightly smaller but arm32 never
+> > supported it.
+> > 
+> > What's the side-effect of dropping this check altogether?
+> 
+> The main side-effect is that arm32 and arm64 compat have a different behavior,
+> that it is what we want to avoid.
+> 
+> The vdsotest [1] I am using, verifies all the side conditions with respect to
+> the ABI, which we are now compatible with. Removing those checks would break
+> this condition.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Tested-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/misc/pci_endpoint_test.c | 100 ++++++++++++++++++++++++-------
- 1 file changed, 79 insertions(+), 21 deletions(-)
+As I said above, I don't see how removing 'if ((u32)ts >= (1UL << 32))'
+makes any difference. This check was likely removed by the compiler
+already.
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index a5e317073d95..5998df1c84e9 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -341,14 +341,22 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 		goto err;
- 	}
- 
--	orig_src_addr = dma_alloc_coherent(dev, size + alignment,
--					   &orig_src_phys_addr, GFP_KERNEL);
-+	orig_src_addr = kzalloc(size + alignment, GFP_KERNEL);
- 	if (!orig_src_addr) {
- 		dev_err(dev, "Failed to allocate source buffer\n");
- 		ret = false;
- 		goto err;
- 	}
- 
-+	get_random_bytes(orig_src_addr, size + alignment);
-+	orig_src_phys_addr = dma_map_single(dev, orig_src_addr,
-+					    size + alignment, DMA_TO_DEVICE);
-+	if (dma_mapping_error(dev, orig_src_phys_addr)) {
-+		dev_err(dev, "failed to map source buffer address\n");
-+		ret = false;
-+		goto err_src_phys_addr;
-+	}
-+
- 	if (alignment && !IS_ALIGNED(orig_src_phys_addr, alignment)) {
- 		src_phys_addr = PTR_ALIGN(orig_src_phys_addr, alignment);
- 		offset = src_phys_addr - orig_src_phys_addr;
-@@ -364,15 +372,21 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_SRC_ADDR,
- 				 upper_32_bits(src_phys_addr));
- 
--	get_random_bytes(src_addr, size);
- 	src_crc32 = crc32_le(~0, src_addr, size);
- 
--	orig_dst_addr = dma_alloc_coherent(dev, size + alignment,
--					   &orig_dst_phys_addr, GFP_KERNEL);
-+	orig_dst_addr = kzalloc(size + alignment, GFP_KERNEL);
- 	if (!orig_dst_addr) {
- 		dev_err(dev, "Failed to allocate destination address\n");
- 		ret = false;
--		goto err_orig_src_addr;
-+		goto err_dst_addr;
-+	}
-+
-+	orig_dst_phys_addr = dma_map_single(dev, orig_dst_addr,
-+					    size + alignment, DMA_FROM_DEVICE);
-+	if (dma_mapping_error(dev, orig_dst_phys_addr)) {
-+		dev_err(dev, "failed to map destination buffer address\n");
-+		ret = false;
-+		goto err_dst_phys_addr;
- 	}
- 
- 	if (alignment && !IS_ALIGNED(orig_dst_phys_addr, alignment)) {
-@@ -399,16 +413,22 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 
- 	wait_for_completion(&test->irq_raised);
- 
-+	dma_unmap_single(dev, orig_dst_phys_addr, size + alignment,
-+			 DMA_FROM_DEVICE);
-+
- 	dst_crc32 = crc32_le(~0, dst_addr, size);
- 	if (dst_crc32 == src_crc32)
- 		ret = true;
- 
--	dma_free_coherent(dev, size + alignment, orig_dst_addr,
--			  orig_dst_phys_addr);
-+err_dst_phys_addr:
-+	kfree(orig_dst_addr);
- 
--err_orig_src_addr:
--	dma_free_coherent(dev, size + alignment, orig_src_addr,
--			  orig_src_phys_addr);
-+err_dst_addr:
-+	dma_unmap_single(dev, orig_src_phys_addr, size + alignment,
-+			 DMA_TO_DEVICE);
-+
-+err_src_phys_addr:
-+	kfree(orig_src_addr);
- 
- err:
- 	return ret;
-@@ -436,14 +456,23 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 		goto err;
- 	}
- 
--	orig_addr = dma_alloc_coherent(dev, size + alignment, &orig_phys_addr,
--				       GFP_KERNEL);
-+	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
- 	if (!orig_addr) {
- 		dev_err(dev, "Failed to allocate address\n");
- 		ret = false;
- 		goto err;
- 	}
- 
-+	get_random_bytes(orig_addr, size + alignment);
-+
-+	orig_phys_addr = dma_map_single(dev, orig_addr, size + alignment,
-+					DMA_TO_DEVICE);
-+	if (dma_mapping_error(dev, orig_phys_addr)) {
-+		dev_err(dev, "failed to map source buffer address\n");
-+		ret = false;
-+		goto err_phys_addr;
-+	}
-+
- 	if (alignment && !IS_ALIGNED(orig_phys_addr, alignment)) {
- 		phys_addr =  PTR_ALIGN(orig_phys_addr, alignment);
- 		offset = phys_addr - orig_phys_addr;
-@@ -453,8 +482,6 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 		addr = orig_addr;
- 	}
- 
--	get_random_bytes(addr, size);
--
- 	crc32 = crc32_le(~0, addr, size);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_CHECKSUM,
- 				 crc32);
-@@ -477,7 +504,11 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 	if (reg & STATUS_READ_SUCCESS)
- 		ret = true;
- 
--	dma_free_coherent(dev, size + alignment, orig_addr, orig_phys_addr);
-+	dma_unmap_single(dev, orig_phys_addr, size + alignment,
-+			 DMA_TO_DEVICE);
-+
-+err_phys_addr:
-+	kfree(orig_addr);
- 
- err:
- 	return ret;
-@@ -504,14 +535,21 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
- 		goto err;
- 	}
- 
--	orig_addr = dma_alloc_coherent(dev, size + alignment, &orig_phys_addr,
--				       GFP_KERNEL);
-+	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
- 	if (!orig_addr) {
- 		dev_err(dev, "Failed to allocate destination address\n");
- 		ret = false;
- 		goto err;
- 	}
- 
-+	orig_phys_addr = dma_map_single(dev, orig_addr, size + alignment,
-+					DMA_FROM_DEVICE);
-+	if (dma_mapping_error(dev, orig_phys_addr)) {
-+		dev_err(dev, "failed to map source buffer address\n");
-+		ret = false;
-+		goto err_phys_addr;
-+	}
-+
- 	if (alignment && !IS_ALIGNED(orig_phys_addr, alignment)) {
- 		phys_addr = PTR_ALIGN(orig_phys_addr, alignment);
- 		offset = phys_addr - orig_phys_addr;
-@@ -535,11 +573,15 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
- 
- 	wait_for_completion(&test->irq_raised);
- 
-+	dma_unmap_single(dev, orig_phys_addr, size + alignment,
-+			 DMA_FROM_DEVICE);
-+
- 	crc32 = crc32_le(~0, addr, size);
- 	if (crc32 == pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CHECKSUM))
- 		ret = true;
- 
--	dma_free_coherent(dev, size + alignment, orig_addr, orig_phys_addr);
-+err_phys_addr:
-+	kfree(orig_addr);
- err:
- 	return ret;
- }
-@@ -667,6 +709,12 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 	init_completion(&test->irq_raised);
- 	mutex_init(&test->mutex);
- 
-+	if ((dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48)) != 0) &&
-+	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)) != 0) {
-+		dev_err(dev, "Cannot set DMA mask\n");
-+		return -EINVAL;
-+	}
-+
- 	err = pci_enable_device(pdev);
- 	if (err) {
- 		dev_err(dev, "Cannot enable PCI device\n");
-@@ -783,6 +831,12 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
- 	pci_disable_device(pdev);
- }
- 
-+static const struct pci_endpoint_test_data default_data = {
-+	.test_reg_bar = BAR_0,
-+	.alignment = SZ_4K,
-+	.irq_type = IRQ_TYPE_MSI,
-+};
-+
- static const struct pci_endpoint_test_data am654_data = {
- 	.test_reg_bar = BAR_2,
- 	.alignment = SZ_64K,
-@@ -790,8 +844,12 @@ static const struct pci_endpoint_test_data am654_data = {
- };
- 
- static const struct pci_device_id pci_endpoint_test_tbl[] = {
--	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
--	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x),
-+	  .driver_data = (kernel_ulong_t)&default_data,
-+	},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x),
-+	  .driver_data = (kernel_ulong_t)&default_data,
-+	},
- 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
- 	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+Also, userspace doesn't have a trivial way to figure out TASK_SIZE and I
+can't see anything that tests this in the vdsotest (though I haven't
+spent that much time looking). If it's hard-coded, note that arm32
+TASK_SIZE is different from TASK_SIZE_32 on arm64.
+
+Can you tell what actually is failing in vdsotest if you remove the
+TASK_SIZE_32 checks in the arm64 compat vdso?
+
 -- 
-2.17.1
-
+Catalin
