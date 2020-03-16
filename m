@@ -2,83 +2,105 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D97C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A85C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDE9206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ItMBMGoP"
+	by mail.kernel.org (Postfix) with ESMTP id 2D1F4206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731513AbgCPOYr (ORCPT
+        id S1731508AbgCPO2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:24:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58305 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731492AbgCPOYr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:24:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584368686;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8RPanWQj7akCZRE0rKGpc838ieDndaq2JCNq0zCn4Pw=;
-        b=ItMBMGoPrTm/MxUc6fXqxs+8vT8lmAJOpjlI6GSfMOkaYQZyrA2rbXmgtVmvG80czEUTff
-        c2Daudp0SwUxoepqRA2RThbcPCJZAqpR/cU7ELm7IdgJcbW9PXesag7iZf9fmyBCUSzpc+
-        +cz//4Rlw+e9F2zS21CLmlJzDkBtfOU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-seELQGmgNhqXzPmviVCfpg-1; Mon, 16 Mar 2020 10:24:42 -0400
-X-MC-Unique: seELQGmgNhqXzPmviVCfpg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B759800D53;
-        Mon, 16 Mar 2020 14:24:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D1A910246E3;
-        Mon, 16 Mar 2020 14:24:33 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200313152102.1707-4-longman@redhat.com>
-References: <20200313152102.1707-4-longman@redhat.com> <20200313152102.1707-1-longman@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     dhowells@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Subject: Re: [PATCH v3 3/3] KEYS: Use kvmalloc() to better handle large buffer allocation
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1809106.1584368672.1@warthog.procyon.org.uk>
-Date:   Mon, 16 Mar 2020 14:24:32 +0000
-Message-ID: <1809107.1584368672@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Mon, 16 Mar 2020 10:28:08 -0400
+Received: from comms.puri.sm ([159.203.221.185]:34396 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731465AbgCPO2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 10:28:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 0B272E0422;
+        Mon, 16 Mar 2020 07:28:07 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Lv14Uuw2sJos; Mon, 16 Mar 2020 07:28:06 -0700 (PDT)
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+To:     dmitry.torokhov@gmail.com, andriy.shevchenko@linux.intel.com,
+        m.felsch@pengutronix.de, mylene.josserand@bootlin.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH] Input: edt-ft5x06 - add fw_version debugfs file to read
+Date:   Mon, 16 Mar 2020 15:27:56 +0100
+Message-Id: <20200316142756.25344-1-martin.kepplinger@puri.sm>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I wonder if it's worth merging this into patch 2.  I'm not sure it's really
-worth its own patch.  If you want to generalise kvzfree(), then that could go
-as its own patch first.
+Add simple fw_version file in debugfs to read the value from 0xa6
+which is the firmware version.
 
-David
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+---
+
+Since we got at least 2 different FT firmware version in our controller,
+we need to distinguish them.
+
+thanks,
+                              martin
+
+
+ drivers/input/touchscreen/edt-ft5x06.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index bc7fb2c005b5..efb09bba739a 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -51,6 +51,8 @@
+ #define EV_REGISTER_OFFSET_Y		0x45
+ #define EV_REGISTER_OFFSET_X		0x46
+ 
++#define REG_FW_VERSION			0xa6
++
+ #define NO_REGISTER			0xff
+ 
+ #define WORK_REGISTER_OPMODE		0x3c
+@@ -685,6 +687,22 @@ static int edt_ft5x06_debugfs_mode_set(void *data, u64 mode)
+ DEFINE_SIMPLE_ATTRIBUTE(debugfs_mode_fops, edt_ft5x06_debugfs_mode_get,
+ 			edt_ft5x06_debugfs_mode_set, "%llu\n");
+ 
++static int edt_ft5x06_debugfs_fw_version_get(void *data, u64 *version)
++{
++	struct edt_ft5x06_ts_data *tsdata = data;
++	struct i2c_client *client = tsdata->client;
++
++	*version = edt_ft5x06_register_read(tsdata, REG_FW_VERSION);
++	if (*version == 0xff || *version == 0x00)
++		dev_dbg(&client->dev, "failed to get firmware version\n");
++
++	return 0;
++};
++
++DEFINE_SIMPLE_ATTRIBUTE(debugfs_fw_version_fops,
++			edt_ft5x06_debugfs_fw_version_get,
++			NULL, "%llu\n");
++
+ static ssize_t edt_ft5x06_debugfs_raw_data_read(struct file *file,
+ 				char __user *buf, size_t count, loff_t *off)
+ {
+@@ -779,6 +797,9 @@ edt_ft5x06_ts_prepare_debugfs(struct edt_ft5x06_ts_data *tsdata,
+ 
+ 	debugfs_create_file("mode", S_IRUSR | S_IWUSR,
+ 			    tsdata->debug_dir, tsdata, &debugfs_mode_fops);
++	debugfs_create_file("fw_version", S_IRUSR,
++			    tsdata->debug_dir, tsdata,
++			    &debugfs_fw_version_fops);
+ 	debugfs_create_file("raw_data", S_IRUSR,
+ 			    tsdata->debug_dir, tsdata, &debugfs_raw_data_fops);
+ }
+-- 
+2.20.1
 
