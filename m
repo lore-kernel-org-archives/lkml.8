@@ -2,163 +2,89 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF55C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D173C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348EB20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372B620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 23:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Crfg0bOF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JgLVISRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732892AbgCPXBh (ORCPT
+        id S1732928AbgCPXCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 19:01:37 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37645 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732855AbgCPXBg (ORCPT
+        Mon, 16 Mar 2020 19:02:43 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46720 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732913AbgCPXCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 19:01:36 -0400
-Received: by mail-pj1-f66.google.com with SMTP id ca13so9481986pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 16:01:35 -0700 (PDT)
+        Mon, 16 Mar 2020 19:02:42 -0400
+Received: by mail-pl1-f195.google.com with SMTP id r3so647640pls.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 16:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fehKvZxYP/3rVzxI5Pgt4N8ta8jaYMBYM9KjLaH31Kk=;
-        b=Crfg0bOF1Oi75XEGHY0i4RiQTv2sQAJyqJvMaySiM0ECjEc2KltQ+97LRnTGrAj+jH
-         JAoTSyAnocqzYkIftQFbVyGTQUvOz2fNiqy2+6RlfK/IULqWuHJgqJ30hWzi2lwRSOAH
-         JgnB+5han/zfdEctloxnVctym+PtFnZy6bItlwMF+CRcKrzvkyW7dVBHMxzLGmffYC4U
-         hCiS1ZTFWbp/kfXqQrqIGSS9oy3d+y6kufMrteZ5CDOLc5cuoXfNTKBIEjycI2vDmROM
-         Q8j+p9opGt1y0SWoK0/q3QGWLGYyC0dDm6ow4qkGAMDZaJTO12GXNdt1CoIzcK64wI/C
-         PoHQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4aGyzT0vKIRT2g1z+Kny0oBSvm9om2Sv2iOSx84RwnM=;
+        b=JgLVISRwkHnulOTANDZvp4F1lICL1CcLM91PYaOwIdPWmMMGuKxE+VaaPF9FZGRYbk
+         1kCfWoVGMA9qfSF7M8wA4ZTwx0RoJkYjiNjp/hh8NbQk9KqNFDu+0r3e19gBnpwn14jG
+         IUkYVEpameLZHQraw5z0FnpSZFJBtEDQX5YIo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fehKvZxYP/3rVzxI5Pgt4N8ta8jaYMBYM9KjLaH31Kk=;
-        b=Rc2mwRUKGlQWUkFmhCOzCsdAcepmXN0XJou/R5H2p4/acmhBTNiu6RXFAKm5K8wY9I
-         vvz5gVXtejvgIjspjn8zw/wAXQfqEyOcBbka/woVI7bJT/wLZgLC8uoDtasBSNz5cBqn
-         MQWW+U8k5HnVoBhVMv5EGiC+XpvqGYu8lBqm6MLBa29MiZ3DVfY/4N5FuSyupXbqEXJj
-         hr3VbwY2sB2BAF7kEGJsZ6+nIXmTugRRnmq95bt0jdHQ66yxK5oqRvckCPaeSkvvjqm7
-         bj7CFWsDiCEYms5rSAE+f6tZPNxzfgsh0tHKZF6GENloFbLTrE0R6UEXiN3nmEVuoYKA
-         qyuQ==
-X-Gm-Message-State: ANhLgQ0KKuxB7WJ6xYb+crS2b2l96RU10dt070B4X8GCCXa+jsM5yNF/
-        TDFL55Yh1EySpGdcwEdpbS78qA==
-X-Google-Smtp-Source: ADFU+vvjt+1MEHUInOGAMb6G1Vup3egEpYosrf5bJPKH87idMiQ9N1Nmevh8lGHncWJmkvssY2PRZA==
-X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr1444666plo.45.1584399695133;
-        Mon, 16 Mar 2020 16:01:35 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q8sm765927pje.2.2020.03.16.16.01.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 16:01:34 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 16:01:32 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] remoteproc: clean up notification config
-Message-ID: <20200316230132.GC1135@builder>
-References: <20200316225121.29905-1-elder@linaro.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4aGyzT0vKIRT2g1z+Kny0oBSvm9om2Sv2iOSx84RwnM=;
+        b=gIuId1hb15DCotqnEt6uJ0R74Qbog4LTaEiFSPotpNZ+o1vAntCj9fCZRR+5DuAcfq
+         zsxie0i8G7mLh8nVqgA5z0IwUWjkIG6/7Cr8ld2p8x7biswYDZ+T51ACT9w4X0gPA66E
+         5jdHzSJmZUZ5KDvIqpQV3RS5yngyQNQzYyEJvgusfo8c9YBW6GIaHWuOZH1nknY3bToc
+         4Z7RGPcCXP2e0b8EJ3NQmXpUVU6Z/efpX2zEO1FpUKkhz9UuQF6Bo16+zDyVnTixFHGM
+         CzfUbnNoLnG9ciZ6WlW9wdgTjH4C1HmMd10dx89oJf7q0OL7BCw1es85MlfU7kWt9fRE
+         9BFg==
+X-Gm-Message-State: ANhLgQ1mnGLH5IroVXURRzIztnY7Y1Fl3faRk3WNqwybDBjFCHeIkZZ2
+        XT5FyefDJdiSteazR18FfGEY0g==
+X-Google-Smtp-Source: ADFU+vt33o+PyakPT1/b5Yylhsz741jk4pnatxgcie++xzQj4E+d/kcr8bZ9Kmn/9yhbZKKWdWYr+w==
+X-Received: by 2002:a17:90b:2390:: with SMTP id mr16mr1899451pjb.149.1584399760563;
+        Mon, 16 Mar 2020 16:02:40 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id y129sm877405pfb.111.2020.03.16.16.02.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2020 16:02:40 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Harish Bandi <c-hbandi@codeaurora.org>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH 0/2] Bluetooth: hci_qca: struct qca_data refactoring
+Date:   Mon, 16 Mar 2020 16:02:31 -0700
+Message-Id: <20200316230233.138696-1-mka@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316225121.29905-1-elder@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 16 Mar 15:51 PDT 2020, Alex Elder wrote:
+This series declutters 'struct qca_data' by grouping IBS and
+memdump related fields in dedicated structs.
 
-> Rearrange the config files for remoteproc and IPA to fix their
-> interdependencies.
-> 
-> First, have CONFIG_QCOM_Q6V5_MSS select QCOM_Q6V5_IPA_NOTIFY so the
-> notification code is built regardless of whether IPA needs it.
-> 
-> Next, represent QCOM_IPA as being dependent on QCOM_Q6V5_MSS rather
-> than setting its value to match QCOM_Q6V5_COMMON (which is selected
-> by QCOM_Q6V5_MSS).
-> 
-> Drop all dependencies from QCOM_Q6V5_IPA_NOTIFY.  The notification
-> code will be built whenever QCOM_Q6V5_MSS is set, and it has no other
-> dependencies.
-> 
-> Signed-off-by: Alex Elder <elder@linaro.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Matthias Kaehlcke (2):
+  WIP: Bluetooth: hci_qca: consolidate IBS fields in a struct
+  Bluetooth: hci_qca: consolidate memdump fields in a struct
 
-Regards,
-Bjorn
+ drivers/bluetooth/hci_qca.c | 467 +++++++++++++++++++-----------------
+ 1 file changed, 246 insertions(+), 221 deletions(-)
 
-> ---
-> v2: - Fix subject line
->     - Incorporate a change I thought I had already squashed
-> 
-> Dave,
->     I noticed some problems with the interaction between the IPA and
->     remoteproc configs, and after some discussion with Bjorn we came
->     up with this, which simplifies things a bit.  Both Kconfig files
->     are in net-next now, so I'm sending this to you.
-> 
->     Two other things:
->     - I will *not* be implementing the COMPILE_TEST suggestion until
->       after the next merge window.
->     - I learned of another issue that arises when ARM64 is built
->       with PAGE_SIZE > 4096.  I intend to fix that in the next day
->       or so.
-> 
->       					-Alex
-> 
->  drivers/net/ipa/Kconfig    | 2 +-
->  drivers/remoteproc/Kconfig | 4 +---
->  2 files changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ipa/Kconfig b/drivers/net/ipa/Kconfig
-> index b8cb7cadbf75..9f0d2a93379c 100644
-> --- a/drivers/net/ipa/Kconfig
-> +++ b/drivers/net/ipa/Kconfig
-> @@ -1,9 +1,9 @@
->  config QCOM_IPA
->  	tristate "Qualcomm IPA support"
->  	depends on ARCH_QCOM && 64BIT && NET
-> +	depends on QCOM_Q6V5_MSS
->  	select QCOM_QMI_HELPERS
->  	select QCOM_MDT_LOADER
-> -	default QCOM_Q6V5_COMMON
->  	help
->  	  Choose Y or M here to include support for the Qualcomm
->  	  IP Accelerator (IPA), a hardware block present in some
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 56084635dd63..ffdb5bc25d6d 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -128,6 +128,7 @@ config QCOM_Q6V5_MSS
->  	select MFD_SYSCON
->  	select QCOM_MDT_LOADER
->  	select QCOM_Q6V5_COMMON
-> +	select QCOM_Q6V5_IPA_NOTIFY
->  	select QCOM_RPROC_COMMON
->  	select QCOM_SCM
->  	help
-> @@ -169,9 +170,6 @@ config QCOM_Q6V5_WCSS
->  
->  config QCOM_Q6V5_IPA_NOTIFY
->  	tristate
-> -	depends on QCOM_IPA
-> -	depends on QCOM_Q6V5_MSS
-> -	default QCOM_IPA
->  
->  config QCOM_SYSMON
->  	tristate "Qualcomm sysmon driver"
-> -- 
-> 2.20.1
-> 
+-- 
+2.25.1.481.gfbce0eb801-goog
+
