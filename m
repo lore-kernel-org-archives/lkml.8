@@ -2,160 +2,221 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD59FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 05:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD21C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 05:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F0A2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 05:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDB02051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 05:24:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X/B0ndRl"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="LRwuu0wi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbgCPFQE (ORCPT
+        id S1729736AbgCPFYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 01:16:04 -0400
-Received: from ozlabs.org ([203.11.71.1]:55573 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729536AbgCPFQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 01:16:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48gkzN5yj7z9sPR;
-        Mon, 16 Mar 2020 16:16:00 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584335761;
-        bh=ne8widqpB0YTpGojiSmKxEjgpJNxgIxVAi0uoqIn7qI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=X/B0ndRlOgw0inc/V2enEUsgij0Rz9XPF0UULOH8dxP7HxI4Sao72hCBmM9D+y96Z
-         UjZn4hpwrkp/ip3UJur6QcudOdXTpyNeOEyhoRi1ZJ+ykkq12+3SFHlnrPA5SNK5od
-         IdZqu2Zjw1D8mTP4Dsp0qW6/qab+6v7pHLND/7MpLPc3NlG9C9rU+uuEdwauJyVzI2
-         OgwrlARhzn5PKHLmVPYskS4LR3vfXyNKO6i8ITBOb5vzDpHVDLOguxHiBs5BjlFOvW
-         q+oufKest1qGaAiRxAsBACvTDv1XWhI0bCPXHv+h6DxYhJVKBBV0lv0VF4Mi00h6+m
-         GZiaiQczZRu9Q==
-Date:   Mon, 16 Mar 2020 16:15:58 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ran Bi <ran.bi@mediatek.com>
-Subject: linux-next: build failure after merge of the rtc tree
-Message-ID: <20200316161558.438c7d8b@canb.auug.org.au>
+        Mon, 16 Mar 2020 01:24:48 -0400
+Received: from mail-dm6nam12on2086.outbound.protection.outlook.com ([40.107.243.86]:8053
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726821AbgCPFYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 01:24:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y9K/ByjRupICp3WgUTck7TMiZJ6lk7QfpfbLICZ4g0Eqo30bCHrhuIwYN8CmvGqo1qy/taXP6epr1FEiHezlV8RMun6FFaaY8V7TiCY2yfR+48zYln8hwECN5hpL3y1xD7vTgQApf++uvH2puG2Yc2sNtt0wFZBKTtflNzDPdKc5AEsM6cqiv3qaNcAOcxJrOTyQ+9/KncqBP8tvF8kxVtSf2PaCSLQYg03Kgn3Gp/Mg0v/1uOM6bESfb5c0HfBGNDSiLZNG5mjpkhF1SCdlFx7o9Opj6SD6+67IkXRRpPYd831hTDOG4RujPlYdRSalvQVlFQtv2SIrP+Pa4o9uOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TI6rKPESsqzO6vxXO1x90pvDeevKtrfjpaCwNfHEZI4=;
+ b=iCDSlfbaixFiQ1c3OjV/Coxe0lVHsSDqW8HpWb9A2x7XfwXMjg7WzWFk5FtCf7elKJThe9d1FPMA4wR7FKRlr9vLYgHun2MWgl/i9y2DK55LYr22PsZygomJ51tmHT3jWZN1DQPzAN2P3gcf+wPSB2jn4FwB1O5BUxYAfl7BfW5qn7/9sGFwm3rXx+gMFBuEjAKNu1Y2XnDU+wZHja4YpTI2qM25oiJJmpybTObsAmGuOM4Fklz60XUJ2vHklp88HJqYxCK5QgNL1+8uBd0LdnirC+L0pehDFWFiozfmaPr658GPv5sJrkXzkhSO5EDozP6WGs44Wt3xgx38IJ0Zcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TI6rKPESsqzO6vxXO1x90pvDeevKtrfjpaCwNfHEZI4=;
+ b=LRwuu0wiAcpsi2B7+O+TDNz5kEwBcq5oXvFS0vxef16HN8uWhlLFNBUD6b7NNDP3hwcmPhlFdEbwy5sZdYcPI05pgbdOL4c/aoGoYmES+FlwzSvrtreU/Bwg4M74NU+I+uGEzeb1zdRmUbhXGyDpgi3X8cwwLy4TYuk7exuWUYM=
+Received: from MN2PR02MB6336.namprd02.prod.outlook.com (2603:10b6:208:1b8::30)
+ by MN2PR02MB7086.namprd02.prod.outlook.com (2603:10b6:208:20c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.22; Mon, 16 Mar
+ 2020 05:24:41 +0000
+Received: from MN2PR02MB6336.namprd02.prod.outlook.com
+ ([fe80::b51f:8bc4:7e18:f227]) by MN2PR02MB6336.namprd02.prod.outlook.com
+ ([fe80::b51f:8bc4:7e18:f227%7]) with mapi id 15.20.2814.021; Mon, 16 Mar 2020
+ 05:24:40 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Ravikiran Gummaluri <rgummal@xilinx.com>,
+        "maz@kernel.org" <maz@kernel.org>
+Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Topic: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Index: AQHV14gyqXPkldKNt0SLTelX37u03Kgr8Z6AgAAlV5CABIIlAIAaXfLg
+Date:   Mon, 16 Mar 2020 05:24:40 +0000
+Message-ID: <MN2PR02MB633672DD246A5351DA2D0CEAA5F90@MN2PR02MB6336.namprd02.prod.outlook.com>
+References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
+ <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
+ <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bharatku@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 56e5d6cd-8a68-4d32-26c4-08d7c96a53fd
+x-ms-traffictypediagnostic: MN2PR02MB7086:|MN2PR02MB7086:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB708676170A7E92D5B072DDC8A5F90@MN2PR02MB7086.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 03449D5DD1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39850400004)(346002)(366004)(376002)(136003)(199004)(8676002)(4326008)(86362001)(81156014)(81166006)(6916009)(54906003)(7696005)(9686003)(8936002)(55016002)(5660300002)(52536014)(478600001)(66556008)(186003)(64756008)(66446008)(2906002)(6506007)(26005)(76116006)(66946007)(71200400001)(33656002)(66476007)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB7086;H:MN2PR02MB6336.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Ye2SazfC8pjJR7NrO9TIA/PjDTAdq1qjQTbV7xkbEJw5U8Fb8I1c3EvYJBYnqCtuzirlk9aDiDmvZ4yHpqguezh3ILixxLc//mRUQqMys8/XvNsBD2wgCNdHD7EA/8q4ZXYhOyWTllVcZRFnjPhNM65wgC8Mv4u/tExz2AFxvgRuBKsW5irf98SEmFCLgDEufQfPEt1LjrE/30ogwFZ947ht3Kq1o9VVA9j0+K418nYM1YhWJuu2vQntVk9N8LZyBAezwnhrW90fKqh+v+0i3OmdocXPprwIdVenVdjf5ovDfhXEOkokEfGFjxe06c9shHf/bjCQTh9EG1pL0IjCaS/5V1sg+0wtGEX3mwKsZx2+l4drjW5kjXldeGmFhIAXH2J1ga/cUkzJ7q4dVimtIQgRqF4b77RHl3dFd64KkZF3CZ4a02BM83x7QWhHBwiM
+x-ms-exchange-antispam-messagedata: dS9fM+1HZyYLI3B2WY7GW8wFPR2EZys3e5Ud9P8N3Wl7ezX7y3YROt+wjtJ3GNelDK7kD51Gsa1tSZzXrsP+WfduYiGL++XuNKABk2EvQf5h6oTitEJeluFCZn1thBKA/ippvqj5JmVj5OjkVymjlQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rm8O9DsQOe1Jpo87kaInry5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56e5d6cd-8a68-4d32-26c4-08d7c96a53fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2020 05:24:40.7521
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JhPxUg7QCMOOhXROkYgEZ4hu41jKHao70aJWNe/4NxZWoLPVUUav4CVX80O0u386Cjd00rEX0dLoPXss2uR96A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB7086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rm8O9DsQOe1Jpo87kaInry5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port dri=
+ver
+>=20
+> [+MarcZ, FHI]
+>=20
+> On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada wrote:
+>=20
+> [...]
+>=20
+> > > > +/* ECAM definitions */
+> > > > +#define ECAM_BUS_NUM_SHIFT		20
+> > > > +#define ECAM_DEV_NUM_SHIFT		12
+> > >
+> > > You don't need these ECAM_* defines, you can use pci_generic_ecam_ops=
+.
+> > Does this need separate ranges region for ECAM space ?
+> > We have ECAM and controller space in same region.
+>=20
+> You can create an ECAM window with pci_ecam_create where *cfgres
+> represent the ECAM area, I don't get what you mean by "same region".
+>=20
+> Do you mean "contiguous" ? Or something else ?
+>=20
+> > > > +
+> > > > +/**
+> > > > + * struct xilinx_cpm_pcie_port - PCIe port information
+> > > > + * @reg_base: Bridge Register Base
+> > > > + * @cpm_base: CPM System Level Control and Status Register(SLCR)
+> > > > +Base
+> > > > + * @irq: Interrupt number
+> > > > + * @root_busno: Root Bus number
+> > > > + * @dev: Device pointer
+> > > > + * @leg_domain: Legacy IRQ domain pointer
+> > > > + * @irq_misc: Legacy and error interrupt number  */ struct
+> > > > +xilinx_cpm_pcie_port {
+> > > > +	void __iomem *reg_base;
+> > > > +	void __iomem *cpm_base;
+> > > > +	u32 irq;
+> > > > +	u8 root_busno;
+> > > > +	struct device *dev;
+> > > > +	struct irq_domain *leg_domain;
+> > > > +	int irq_misc;
+> > > > +};
+> > > > +
+> > > > +static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port,
+> > > > +u32
+> > > > +reg) {
+> > > > +	return readl(port->reg_base + reg); }
+> > > > +
+> > > > +static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
+> > > > +			      u32 val, u32 reg)
+> > > > +{
+> > > > +	writel(val, port->reg_base + reg); }
+> > > > +
+> > > > +static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port
+> > > > +*port) {
+> > > > +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
+> > > > +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
+> > >
+> > > 	u32 val =3D pcie_read(port, XILINX_CPM_PCIE_REG_PSCR);
+> > >
+> > > 	return val & XILINX_CPM_PCIE_REG_PSCR_LNKUP;
+> > >
+> > > And this function call is not that informative anyway - it is used
+> > > just to print a log whose usefulness is questionable.
+> > We need this logging information customers are using this info in case
+> > of link down failure.
+>=20
+> Out of curiosity, to do what ?
+>=20
+> [...]
+>=20
+> > > > +/**
+> > > > + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and
+> > > > +mark IRQ as valid
+> > > > + * @domain: IRQ domain
+> > > > + * @irq: Virtual IRQ number
+> > > > + * @hwirq: HW interrupt number
+> > > > + *
+> > > > + * Return: Always returns 0.
+> > > > + */
+> > > > +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
+> > > > +				    unsigned int irq, irq_hw_number_t hwirq) {
+> > > > +	irq_set_chip_and_handler(irq, &dummy_irq_chip,
+> > > > +handle_simple_irq);
+> > >
+> > > INTX are level IRQs, the flow handler must be handle_level_irq.
+> > Accepted will change.
+> > >
+> > > > +	irq_set_chip_data(irq, domain->host_data);
+> > > > +	irq_set_status_flags(irq, IRQ_LEVEL);
+> > >
+> > > The way INTX are handled in this patch is wrong. You must set-up a
+> > > chained IRQ with the appropriate flow handler, current code uses an
+> > > IRQ action and that's an IRQ layer violation and it goes without sayi=
+ng that it
+> is almost certainly broken.
+> > In our controller we use same irq line for controller errors and
+> > legacy errors.  we have two cases here where error interrupts are
+> > self-consumed by controller, and legacy interrupts are flow handled.
+> > Its not INTX handling alone for this IRQ line .  So chained IRQ can be
+> > used for self consumed interrupts too ?
+>=20
+> No. In this specific case both solutions are not satisfying, we need to g=
+ive it
+> some thought, I will talk to Marc (CC'ed) to find the best option here go=
+ing
+> forward.
+>=20
+Hi Marc,
 
-Hi all,
+Can you please provide yours inputs for this case.
 
-After merging the rtc tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
-
-drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_set_alarm':
-drivers/rtc/rtc-mt2712.c:235:6: warning: unused variable 'irqen' [-Wunused-=
-variable]
-  235 |  u16 irqen;
-      |      ^~~~~
-drivers/rtc/rtc-mt2712.c: At top level:
-drivers/rtc/rtc-mt2712.c:409:1: error: expected ',' or ';' before 'static'
-  409 | static struct platform_driver mt2712_rtc_driver =3D {
-      | ^~~~~~
-In file included from drivers/rtc/rtc-mt2712.c:14:
-drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_driver_init':
-drivers/rtc/rtc-mt2712.c:418:24: error: 'mt2712_rtc_driver' undeclared (fir=
-st use in this function); did you mean 'mt2712_rtc_probe'?
-  418 | module_platform_driver(mt2712_rtc_driver);
-      |                        ^~~~~~~~~~~~~~~~~
-include/linux/platform_device.h:214:29: note: in definition of macro 'platf=
-orm_driver_register'
-  214 |  __platform_driver_register(drv, THIS_MODULE)
-      |                             ^~~
-include/linux/platform_device.h:244:2: note: in expansion of macro 'module_=
-driver'
-  244 |  module_driver(__platform_driver, platform_driver_register, \
-      |  ^~~~~~~~~~~~~
-drivers/rtc/rtc-mt2712.c:418:1: note: in expansion of macro 'module_platfor=
-m_driver'
-  418 | module_platform_driver(mt2712_rtc_driver);
-      | ^~~~~~~~~~~~~~~~~~~~~~
-drivers/rtc/rtc-mt2712.c:418:24: note: each undeclared identifier is report=
-ed only once for each function it appears in
-  418 | module_platform_driver(mt2712_rtc_driver);
-      |                        ^~~~~~~~~~~~~~~~~
-include/linux/platform_device.h:214:29: note: in definition of macro 'platf=
-orm_driver_register'
-  214 |  __platform_driver_register(drv, THIS_MODULE)
-      |                             ^~~
-include/linux/platform_device.h:244:2: note: in expansion of macro 'module_=
-driver'
-  244 |  module_driver(__platform_driver, platform_driver_register, \
-      |  ^~~~~~~~~~~~~
-drivers/rtc/rtc-mt2712.c:418:1: note: in expansion of macro 'module_platfor=
-m_driver'
-  418 | module_platform_driver(mt2712_rtc_driver);
-      | ^~~~~~~~~~~~~~~~~~~~~~
-In file included from include/linux/device.h:31,
-                 from include/linux/platform_device.h:13,
-                 from drivers/rtc/rtc-mt2712.c:14:
-drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_driver_exit':
-drivers/rtc/rtc-mt2712.c:418:24: error: 'mt2712_rtc_driver' undeclared (fir=
-st use in this function); did you mean 'mt2712_rtc_probe'?
-  418 | module_platform_driver(mt2712_rtc_driver);
-      |                        ^~~~~~~~~~~~~~~~~
-include/linux/device/driver.h:266:17: note: in definition of macro 'module_=
-driver'
-  266 |  __unregister(&(__driver) , ##__VA_ARGS__); \
-      |                 ^~~~~~~~
-drivers/rtc/rtc-mt2712.c:418:1: note: in expansion of macro 'module_platfor=
-m_driver'
-  418 | module_platform_driver(mt2712_rtc_driver);
-      | ^~~~~~~~~~~~~~~~~~~~~~
-drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_driver_init':
-drivers/rtc/rtc-mt2712.c:418:1: warning: control reaches end of non-void fu=
-nction [-Wreturn-type]
-  418 | module_platform_driver(mt2712_rtc_driver);
-      | ^~~~~~~~~~~~~~~~~~~~~~
-At top level:
-drivers/rtc/rtc-mt2712.c:312:12: warning: 'mt2712_rtc_probe' defined but no=
-t used [-Wunused-function]
-  312 | static int mt2712_rtc_probe(struct platform_device *pdev)
-      |            ^~~~~~~~~~~~~~~~
-
-Caused by commit
-
-  00c36d73171b ("rtc: add support for the MediaTek MT2712 RTC")
-
-I have used the version from next-20200313 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/rm8O9DsQOe1Jpo87kaInry5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5vC44ACgkQAVBC80lX
-0GySCAf9HVA8LQvxAlrLgmr1lybrFZAcE9YxZh0nILbgs3nDwnx1uuItaU1n+w6n
-Vw36LqVLlFdvqLtldgpq8BtrlnwOWQcAlJsfpReGuTGx8Tlp8m+aAnT9p6BhAoOo
-s1+adcdyLXXanXvyyIx9ZKS11t56glPhOazKTt4G9oHGPWkHrqdCi0iZvJJNkxYy
-Wg32sGxfdV4pOoM13X9Tgv5HgbfAbKK1Q8jh90xuwOUbrJ41LW+1g73D5VR/0lcQ
-Alv7nFJJjhPD40/AxDQw+QaExb1P8Nlndq0K//lXZVUaeZfSxDZ1drt+F0Tzbcq+
-xakVbr0uFdD21eARs1VDcAKKYI8bxg==
-=GXeH
------END PGP SIGNATURE-----
-
---Sig_/rm8O9DsQOe1Jpo87kaInry5--
+Regards,
+Bharat
