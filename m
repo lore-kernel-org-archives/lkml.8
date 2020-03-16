@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AD8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8479EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87E1206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D780206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326211;
-	bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
+	s=default; t=1584326217;
+	bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f52a2IigyCh3MTw73oz02WWS8WZkZAygqUW3X9UcIPvSf/8//FfWzGSPaaXVTookF
-	 9C/raizoF/1sURfCaV4Yn8gUh8UbSsYrj8tfoxoekOCgbd8C2rdA74skmU4ltcB9nt
-	 7YTC6dSq/srvQEstkxmWL8RY7Wnn8aPJ5C/ANhuc=
+	b=MtoWuiY2nXyHkaPNwjvj+YhxsQ6z8ziNRsdAyozyqPEJkhYaOeHhmWZRrcZepkfUr
+	 Z95x0z/Jh7/U2HcKhZKMAel1eNPZHEl4NHWmOaYPeLMrPWFtVNB7sHLdp15w9nvRCP
+	 6HHoGk1Ly9/m4Nzh/lspRK2uAX/0mfAcLEI+nX4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbgCPCgt (ORCPT
+        id S1730122AbgCPCg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:36:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40166 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730204AbgCPCff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:35:35 -0400
+        id S1730192AbgCPCfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FFCB20739;
-        Mon, 16 Mar 2020 02:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B5F6206BE;
+        Mon, 16 Mar 2020 02:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326135;
-        bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
+        s=default; t=1584326133;
+        bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vMCQnxLes1PnUEPvg9aV30xSZjnZFbmcdtbP8QRwJZPKInOrX7Eatz2ABCJWmKTrx
-         kPxOfE5sKHTt2XfJ0k/XzidgJAe5MFuwIoatTiYKBe1cmXuPWirH1lfeUEzlXEIqb7
-         xwYA7uNZDY+g7gv5gfhGq5LqO+g1vgeNTM9vNXgk=
+        b=g68u0FjcmNzVyfqgzvuf31COF9UgPJLVYaHqJmOLljGErGM6IEcQ6yVD0/Omwmomw
+         /dMmOGfmyL9Z/GhPY3/Ta9IW6nWx3DEqMIUmvPM/jmDLAT2Dkbb3wgcM3SNXlEdpZj
+         h5Ym7YMIRqq8HzFfWCoZZOyVSwhTqQfDqJbVvTxo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
-        Julien Grall <jgrall@amazon.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 4.14 13/15] xenbus: req->err should be updated before req->state
-Date:   Sun, 15 Mar 2020 22:35:17 -0400
-Message-Id: <20200316023519.2050-13-sashal@kernel.org>
+Cc:     Mike Snitzer <snitzer@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.14 11/15] dm bio record: save/restore bi_end_io and bi_integrity
+Date:   Sun, 15 Mar 2020 22:35:15 -0400
+Message-Id: <20200316023519.2050-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316023519.2050-1-sashal@kernel.org>
 References: <20200316023519.2050-1-sashal@kernel.org>
@@ -60,38 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Mike Snitzer <snitzer@redhat.com>
 
-[ Upstream commit 8130b9d5b5abf26f9927b487c15319a187775f34 ]
+[ Upstream commit 1b17159e52bb31f982f82a6278acd7fab1d3f67b ]
 
-This patch adds the barrier to guarantee that req->err is always updated
-before req->state.
+Also, save/restore __bi_remaining in case the bio was used in a
+BIO_CHAIN (e.g. due to blk_queue_split).
 
-Otherwise, read_reply() would not return ERR_PTR(req->err) but
-req->body, when process_writes()->xb_write() is failed.
-
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Link: https://lore.kernel.org/r/20200303221423.21962-2-dongli.zhang@oracle.com
-Reviewed-by: Julien Grall <jgrall@amazon.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Suggested-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_comms.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/md/dm-bio-record.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
-index 852ed161fc2a7..eb5151fc8efab 100644
---- a/drivers/xen/xenbus/xenbus_comms.c
-+++ b/drivers/xen/xenbus/xenbus_comms.c
-@@ -397,6 +397,8 @@ static int process_writes(void)
- 	if (state.req->state == xb_req_state_aborted)
- 		kfree(state.req);
- 	else {
-+		/* write err, then update state */
-+		virt_wmb();
- 		state.req->state = xb_req_state_got_reply;
- 		wake_up(&state.req->wq);
- 	}
+diff --git a/drivers/md/dm-bio-record.h b/drivers/md/dm-bio-record.h
+index c82578af56a5b..2ea0360108e1d 100644
+--- a/drivers/md/dm-bio-record.h
++++ b/drivers/md/dm-bio-record.h
+@@ -20,8 +20,13 @@
+ struct dm_bio_details {
+ 	struct gendisk *bi_disk;
+ 	u8 bi_partno;
++	int __bi_remaining;
+ 	unsigned long bi_flags;
+ 	struct bvec_iter bi_iter;
++	bio_end_io_t *bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	struct bio_integrity_payload *bi_integrity;
++#endif
+ };
+ 
+ static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
+@@ -30,6 +35,11 @@ static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
+ 	bd->bi_partno = bio->bi_partno;
+ 	bd->bi_flags = bio->bi_flags;
+ 	bd->bi_iter = bio->bi_iter;
++	bd->__bi_remaining = atomic_read(&bio->__bi_remaining);
++	bd->bi_end_io = bio->bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	bd->bi_integrity = bio_integrity(bio);
++#endif
+ }
+ 
+ static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
+@@ -38,6 +48,11 @@ static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
+ 	bio->bi_partno = bd->bi_partno;
+ 	bio->bi_flags = bd->bi_flags;
+ 	bio->bi_iter = bd->bi_iter;
++	atomic_set(&bio->__bi_remaining, bd->__bi_remaining);
++	bio->bi_end_io = bd->bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	bio->bi_integrity = bd->bi_integrity;
++#endif
+ }
+ 
+ #endif
 -- 
 2.20.1
 
