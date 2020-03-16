@@ -2,404 +2,147 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C71C0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90472C0044D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF4A20575
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584369247;
-	bh=uMF3QsbME7AEQLIGa4it4F+7gI7S9iWWCO7lcyAp5HI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=d4Cl8XS4KrwchnfnQoVzeburI9F/69CPMfOgfWYMfz+H0DIDfZ0inatIJ9ThLGaJs
-	 tWYkRxwJ8CCzJvsLQDgDprKQPeIBzXiIe0VYzxdq0Fcgc5XDEBLL5OvrcQSDeQCC8h
-	 VhtVdO6Z1lITJCpEgD1BHCrhLxZjK6GYYjb9w9w0=
+	by mail.kernel.org (Postfix) with ESMTP id 5D0D320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 14:34:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wOI5Zr/A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731610AbgCPOeG (ORCPT
+        id S1731620AbgCPOeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731572AbgCPOeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:34:05 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 413582051A;
-        Mon, 16 Mar 2020 14:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584369244;
-        bh=uMF3QsbME7AEQLIGa4it4F+7gI7S9iWWCO7lcyAp5HI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HSv8Cm2r8XV3m93SmiqNJ1nWMcnKG4gI9XG3V1wG7Uu2Y+srI21d/OIJjkZVLWEpV
-         1Xl0M+gKXvEHXXk0QqmN1mqGibRmMDE9cC8YtW+9hmABBCA+MDItqQdyAfZOevIbeH
-         SIloO7iYnJQBr/xMLhYAaCoVGd06DQFEx4VLvzA8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jDqoc-00D655-Fc; Mon, 16 Mar 2020 14:34:02 +0000
+        Mon, 16 Mar 2020 10:34:14 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42940 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731572AbgCPOeN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 10:34:13 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02GEWcIM124967;
+        Mon, 16 Mar 2020 14:33:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=EaXbpU2ZDyooHia0EQunsfL41osG5mIuhxxLo3/FsAg=;
+ b=wOI5Zr/AQdJtD7uLID9FHUU1sunIRSVTPZaEXsH5hLpkca1bGrZ4PYhJ3KwljZEBUTff
+ resHWmUlTaxvGKq/SGoJQkW+Hhx2kvJyUmJTEQ/f64FNaO7pGKoV2rAV/FPBPFCe63HD
+ mgV5tscfmZHJPATcH96kham2KexW09mBVXYVrW9dZUQL2NEkhoqd74lfSVYZOybFC7DE
+ BjK7IBbnbgNTzo1WbJgirTQBwABs519Vssr/wcGSPUsSjJurVWHtHXyiRQa8Ag17XHC2
+ up96EQ+hD++SeSdcUQpSl1jD5CVmsPB/IgfMRk88Q/PN5b1+45e7v0+Y7psaLDObiDc6 +w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yrq7kq835-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Mar 2020 14:33:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02GEWv2v191626;
+        Mon, 16 Mar 2020 14:33:50 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2ys8tpum4v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Mar 2020 14:33:50 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02GEXlnk014515;
+        Mon, 16 Mar 2020 14:33:47 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 16 Mar 2020 07:33:46 -0700
+Subject: Re: [PATCH 1/2] x86/xen: Make the boot CPU idle task reliable
+To:     Miroslav Benes <mbenes@suse.cz>, jgross@suse.com,
+        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com
+Cc:     x86@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        jslaby@suse.cz
+References: <20200312142007.11488-1-mbenes@suse.cz>
+ <20200312142007.11488-2-mbenes@suse.cz>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <1b98d601-d9d9-879c-918c-737830d80ac5@oracle.com>
+Date:   Mon, 16 Mar 2020 10:33:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200312142007.11488-2-mbenes@suse.cz>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 16 Mar 2020 14:34:02 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Mubin Usman Sayyed <mubin.usman.sayyed@xilinx.com>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, michals@xilinx.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sivadur@xilinx.com, anirudh@xilinx.com,
-        Anirudha Sarangi <anirudha.sarangi@xilinx.com>
-Subject: Re: [PATCH v4 1/3] irqchip: xilinx: Add support for multiple
- instances
-In-Reply-To: <20200316135447.30162-2-mubin.usman.sayyed@xilinx.com>
-References: <20200316135447.30162-1-mubin.usman.sayyed@xilinx.com>
- <20200316135447.30162-2-mubin.usman.sayyed@xilinx.com>
-Message-ID: <be19cec70f79e10483bd8da592b5a924@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: mubin.usman.sayyed@xilinx.com, tglx@linutronix.de, jason@lakedaemon.net, michals@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sivadur@xilinx.com, anirudh@xilinx.com, anirudha.sarangi@xilinx.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9561 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003160070
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9561 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
+ malwarescore=0 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003160070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-16 13:54, Mubin Usman Sayyed wrote:
-> From: Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
-> 
-> Added support for cascaded interrupt controllers.
-> 
-> Following cascaded configurations have been tested,
-> 
-> - peripheral->xilinx-intc->xilinx-intc->gic->Cortexa53 processor
->   on zcu102 board
-> - peripheral->xilinx-intc->xilinx-intc->microblaze processor
->   on kcu105 board
-> 
-> Signed-off-by: Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
-> Signed-off-by: Anirudha Sarangi <anirudha.sarangi@xilinx.com>
-> ---
-> Changes for v4:
-> 	- Fixed review comments from Thomas - updated commit
-> 	  message, variable declarations changed to reverse
-> 	  fir tree and cleaned up some code.
-> 
-> Changes for v3:
-> 	- Modified prototype of xintc_write/xintc_read
-> 	- Fixed review comments regarding indentation/variable
-> 	  names, used BIT
-> 	- Modified xintc_get_irq_local to return 0
-> 	  in case of failure/no pending interrupts
-> 	- Fixed return type of xintc_read
-> 	- Reverted changes related to device name and
-> 	  kept intc_dev as static
-> 
-> Changes for v2:
->         - Removed write_fn/read_fn hooks, used xintc_write/
-> 	  xintc_read directly
->         - Moved primary_intc declaration after xintc_irq_chip
-> ---
->  drivers/irqchip/irq-xilinx-intc.c | 121 ++++++++++++++++++------------
->  1 file changed, 71 insertions(+), 50 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-xilinx-intc.c
-> b/drivers/irqchip/irq-xilinx-intc.c
-> index e3043ded8973..65b77720ef2e 100644
-> --- a/drivers/irqchip/irq-xilinx-intc.c
-> +++ b/drivers/irqchip/irq-xilinx-intc.c
-> @@ -38,29 +38,32 @@ struct xintc_irq_chip {
->  	void		__iomem *base;
->  	struct		irq_domain *root_domain;
->  	u32		intr_mask;
-> +	struct		irq_chip *intc_dev;
 
-What is the need for this pointer? As far as I can see, all the 
-interrupts
-have the same callbacks, and even then, there should be no need to keep
-a pointer to that.
 
-> +	u32		nr_irq;
->  };
-> 
-> -static struct xintc_irq_chip *xintc_irqc;
-> +static struct xintc_irq_chip *primary_intc;
-> 
-> -static void xintc_write(int reg, u32 data)
-> +static void xintc_write(struct xintc_irq_chip *irqc, int reg, u32 
-> data)
->  {
->  	if (static_branch_unlikely(&xintc_is_be))
-> -		iowrite32be(data, xintc_irqc->base + reg);
-> +		iowrite32be(data, irqc->base + reg);
->  	else
-> -		iowrite32(data, xintc_irqc->base + reg);
-> +		iowrite32(data, irqc->base + reg);
->  }
-> 
-> -static unsigned int xintc_read(int reg)
-> +static u32 xintc_read(struct xintc_irq_chip *irqc, int reg)
->  {
->  	if (static_branch_unlikely(&xintc_is_be))
-> -		return ioread32be(xintc_irqc->base + reg);
-> +		return ioread32be(irqc->base + reg);
->  	else
-> -		return ioread32(xintc_irqc->base + reg);
-> +		return ioread32(irqc->base + reg);
->  }
-> 
->  static void intc_enable_or_unmask(struct irq_data *d)
->  {
-> -	unsigned long mask = 1 << d->hwirq;
-> +	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-> +	unsigned long mask = BIT(d->hwirq);
-> 
->  	pr_debug("irq-xilinx: enable_or_unmask: %ld\n", d->hwirq);
-> 
-> @@ -69,30 +72,35 @@ static void intc_enable_or_unmask(struct irq_data 
-> *d)
->  	 * acks the irq before calling the interrupt handler
->  	 */
->  	if (irqd_is_level_type(d))
-> -		xintc_write(IAR, mask);
-> +		xintc_write(irqc, IAR, mask);
-> 
-> -	xintc_write(SIE, mask);
-> +	xintc_write(irqc, SIE, mask);
->  }
-> 
->  static void intc_disable_or_mask(struct irq_data *d)
->  {
-> +	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-> +
->  	pr_debug("irq-xilinx: disable: %ld\n", d->hwirq);
-> -	xintc_write(CIE, 1 << d->hwirq);
-> +	xintc_write(irqc, CIE, BIT(d->hwirq));
->  }
-> 
->  static void intc_ack(struct irq_data *d)
->  {
-> +	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-> +
->  	pr_debug("irq-xilinx: ack: %ld\n", d->hwirq);
-> -	xintc_write(IAR, 1 << d->hwirq);
-> +	xintc_write(irqc, IAR, BIT(d->hwirq));
->  }
-> 
->  static void intc_mask_ack(struct irq_data *d)
->  {
-> -	unsigned long mask = 1 << d->hwirq;
-> +	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-> +	unsigned long mask = BIT(d->hwirq);
-> 
->  	pr_debug("irq-xilinx: disable_and_ack: %ld\n", d->hwirq);
-> -	xintc_write(CIE, mask);
-> -	xintc_write(IAR, mask);
-> +	xintc_write(irqc, CIE, mask);
-> +	xintc_write(irqc, IAR, mask);
->  }
-> 
->  static struct irq_chip intc_dev = {
-> @@ -103,13 +111,28 @@ static struct irq_chip intc_dev = {
->  	.irq_mask_ack = intc_mask_ack,
->  };
-> 
-> +static unsigned int xintc_get_irq_local(struct xintc_irq_chip *irqc)
-> +{
-> +	unsigned int irq = 0;
-> +	u32 hwirq;
-> +
-> +	hwirq = xintc_read(irqc, IVR);
-> +	if (hwirq != -1U)
-> +		irq = irq_find_mapping(irqc->root_domain, hwirq);
-> +
-> +	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
-> +
-> +	return irq;
-> +}
-> +
->  unsigned int xintc_get_irq(void)
->  {
-> -	unsigned int hwirq, irq = -1;
-> +	unsigned int irq = -1;
-> +	u32 hwirq;
-> 
-> -	hwirq = xintc_read(IVR);
-> +	hwirq = xintc_read(primary_intc, IVR);
->  	if (hwirq != -1U)
-> -		irq = irq_find_mapping(xintc_irqc->root_domain, hwirq);
-> +		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
-> 
->  	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
-> 
-> @@ -118,15 +141,18 @@ unsigned int xintc_get_irq(void)
-> 
->  static int xintc_map(struct irq_domain *d, unsigned int irq,
-> irq_hw_number_t hw)
->  {
-> -	if (xintc_irqc->intr_mask & (1 << hw)) {
-> -		irq_set_chip_and_handler_name(irq, &intc_dev,
-> -						handle_edge_irq, "edge");
-> +	struct xintc_irq_chip *irqc = d->host_data;
-> +
-> +	if (irqc->intr_mask & BIT(hw)) {
-> +		irq_set_chip_and_handler_name(irq, irqc->intc_dev,
-> +					      handle_edge_irq, "edge");
->  		irq_clear_status_flags(irq, IRQ_LEVEL);
->  	} else {
-> -		irq_set_chip_and_handler_name(irq, &intc_dev,
-> -						handle_level_irq, "level");
-> +		irq_set_chip_and_handler_name(irq, irqc->intc_dev,
-> +					      handle_level_irq, "level");
->  		irq_set_status_flags(irq, IRQ_LEVEL);
->  	}
-> +	irq_set_chip_data(irq, irqc);
->  	return 0;
->  }
-> 
-> @@ -138,12 +164,14 @@ static const struct irq_domain_ops
-> xintc_irq_domain_ops = {
->  static void xil_intc_irq_handler(struct irq_desc *desc)
->  {
->  	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct xintc_irq_chip *irqc;
->  	u32 pending;
-> 
-> +	irqc = irq_data_get_irq_handler_data(&desc->irq_data);
->  	chained_irq_enter(chip, desc);
->  	do {
-> -		pending = xintc_get_irq();
-> -		if (pending == -1U)
-> +		pending = xintc_get_irq_local(irqc);
-> +		if (pending == 0U)
+On 3/12/20 10:20 AM, Miroslav Benes wrote:
+> --- a/arch/x86/xen/xen-head.S
+> +++ b/arch/x86/xen/xen-head.S
+> @@ -35,7 +35,7 @@ SYM_CODE_START(startup_xen)
+>  	rep __ASM_SIZE(stos)
+>  
+>  	mov %_ASM_SI, xen_start_info
+> -	mov $init_thread_union+THREAD_SIZE, %_ASM_SP
+> +	mov $init_thread_union+THREAD_SIZE-SIZEOF_PTREGS, %_ASM_SP
 
-nit: I don't think we need to consider the sign of zero.
+This is initial_stack, isn't it?
 
->  			break;
->  		generic_handle_irq(pending);
->  	} while (true);
-> @@ -153,28 +181,19 @@ static void xil_intc_irq_handler(struct irq_desc 
-> *desc)
->  static int __init xilinx_intc_of_init(struct device_node *intc,
->  					     struct device_node *parent)
->  {
-> -	u32 nr_irq;
-> -	int ret, irq;
->  	struct xintc_irq_chip *irqc;
-> -
-> -	if (xintc_irqc) {
-> -		pr_err("irq-xilinx: Multiple instances aren't supported\n");
-> -		return -EINVAL;
-> -	}
-> +	int ret, irq;
-> 
->  	irqc = kzalloc(sizeof(*irqc), GFP_KERNEL);
->  	if (!irqc)
->  		return -ENOMEM;
-> -
-> -	xintc_irqc = irqc;
-> -
->  	irqc->base = of_iomap(intc, 0);
->  	BUG_ON(!irqc->base);
-> 
-> -	ret = of_property_read_u32(intc, "xlnx,num-intr-inputs", &nr_irq);
-> +	ret = of_property_read_u32(intc, "xlnx,num-intr-inputs", 
-> &irqc->nr_irq);
->  	if (ret < 0) {
->  		pr_err("irq-xilinx: unable to read xlnx,num-intr-inputs\n");
-> -		goto err_alloc;
-> +		goto error;
->  	}
-> 
->  	ret = of_property_read_u32(intc, "xlnx,kind-of-intr", 
-> &irqc->intr_mask);
-> @@ -183,34 +202,35 @@ static int __init xilinx_intc_of_init(struct
-> device_node *intc,
->  		irqc->intr_mask = 0;
->  	}
-> 
-> -	if (irqc->intr_mask >> nr_irq)
-> +	if (irqc->intr_mask >> irqc->nr_irq)
->  		pr_warn("irq-xilinx: mismatch in kind-of-intr param\n");
-> 
->  	pr_info("irq-xilinx: %pOF: num_irq=%d, edge=0x%x\n",
-> -		intc, nr_irq, irqc->intr_mask);
-> +		intc, irqc->nr_irq, irqc->intr_mask);
-> 
-> +	irqc->intc_dev = &intc_dev;
+-boris
 
-Based on the above, this should go.
-
-> 
->  	/*
->  	 * Disable all external interrupts until they are
->  	 * explicity requested.
->  	 */
-> -	xintc_write(IER, 0);
-> +	xintc_write(irqc, IER, 0);
-> 
->  	/* Acknowledge any pending interrupts just in case. */
-> -	xintc_write(IAR, 0xffffffff);
-> +	xintc_write(irqc, IAR, 0xffffffff);
-> 
->  	/* Turn on the Master Enable. */
-> -	xintc_write(MER, MER_HIE | MER_ME);
-> -	if (!(xintc_read(MER) & (MER_HIE | MER_ME))) {
-> +	xintc_write(irqc, MER, MER_HIE | MER_ME);
-> +	if (xintc_read(irqc, MER) != (MER_HIE | MER_ME)) {
->  		static_branch_enable(&xintc_is_be);
-> -		xintc_write(MER, MER_HIE | MER_ME);
-> +		xintc_write(irqc, MER, MER_HIE | MER_ME);
->  	}
-> 
-> -	irqc->root_domain = irq_domain_add_linear(intc, nr_irq,
-> +	irqc->root_domain = irq_domain_add_linear(intc, irqc->nr_irq,
->  						  &xintc_irq_domain_ops, irqc);
->  	if (!irqc->root_domain) {
->  		pr_err("irq-xilinx: Unable to create IRQ domain\n");
-> -		goto err_alloc;
-> +		goto error;
->  	}
-> 
->  	if (parent) {
-> @@ -222,16 +242,17 @@ static int __init xilinx_intc_of_init(struct
-> device_node *intc,
->  		} else {
->  			pr_err("irq-xilinx: interrupts property not in DT\n");
->  			ret = -EINVAL;
-> -			goto err_alloc;
-> +			goto error;
->  		}
->  	} else {
-> -		irq_set_default_host(irqc->root_domain);
-> +		primary_intc = irqc;
-> +		irq_set_default_host(primary_intc->root_domain);
-
-Do you still need this irq_set_default_host() horror? I thought 
-microblaze
-was fully DT-ified and didn't need this. The use of a non-legacy domain 
-tends
-to confirm this.
-
->  	}
-> 
->  	return 0;
-> 
-> -err_alloc:
-> -	xintc_irqc = NULL;
-> +error:
-> +	iounmap(irqc->base);
->  	kfree(irqc);
->  	return ret;
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
