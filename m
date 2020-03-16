@@ -2,156 +2,153 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D21C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02DBC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29DA20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326519;
-	bh=+/WGUNoF/bF3Pf95IXpvlyflqkUl1JePo02WWXc+lvk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yi9pyukaF4CCCcMSXYlXFEPrl8KJ4d5dxA0Eww/XBjue+10vA4XZiKmwWIR0890tC
-	 3xJC1TumUDuC5DU6zz+SvyupVNXGhFj40KWNLqWrfTx7u+0AyXFiEj4W/lN+/e+d6K
-	 sE7ggZltYYQSqfSe/Wu+j2cWBzRTx0rZmU94aaNA=
+	by mail.kernel.org (Postfix) with ESMTP id C1B56205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 02:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Swk32jcz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgCPCdY (ORCPT
+        id S1729574AbgCPCn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729329AbgCPCdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:33:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 15 Mar 2020 22:43:26 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60103 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729348AbgCPCn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:43:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584326604;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=v28iiu28Saw8sKC5aBz4P+t6mwipYPE0TpE/22u2Jso=;
+        b=Swk32jczUHKHvIUiAWbLSTSjAPE6dqSQy+Ieja5u/DIT7CjIJqKrR+c2RLeJhLSQtKr9C8
+        n1NKOx3K2cAUifRrm60qxKdbph3AlCjabf7rUxNEOTmhLDhFYC5vRHVMuJDMm2Ptkn3pyY
+        2toPPyRqxJldWb31gPmhTnbqT9iyz6Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-5_VELePDOU6cTJVZmd6czg-1; Sun, 15 Mar 2020 22:43:22 -0400
+X-MC-Unique: 5_VELePDOU6cTJVZmd6czg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E73920722;
-        Mon, 16 Mar 2020 02:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326001;
-        bh=+/WGUNoF/bF3Pf95IXpvlyflqkUl1JePo02WWXc+lvk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=L8wjCgeGzN6zehmhOGc7JZZhdSuqmeheTm2xt6GRDeTMUzhjMuqQ6WtDNVNN4mI+v
-         FI0ut5eUKrrpsOpJE0bbU0XKrH5lIzGAJc910NbIEB6bb36SbN4A2kPCUukRL8AjSr
-         yyUgoqXoGA1KB1TtDMPjoPYTioN15Q9P+WNHTNUE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 01/41] spi: spi-omap2-mcspi: Handle DMA size restriction on AM65x
-Date:   Sun, 15 Mar 2020 22:32:39 -0400
-Message-Id: <20200316023319.749-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 835B413EA;
+        Mon, 16 Mar 2020 02:43:21 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-121-65.rdu2.redhat.com [10.10.121.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3663793518;
+        Mon, 16 Mar 2020 02:43:20 +0000 (UTC)
+Subject: Re: [RFC PATCH v2] tick: Make tick_periodic() check for missing ticks
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Jeremy Linton <jeremy.linton@arm.com>, pbunyan@redhat.com
+References: <20200207193929.27308-1-longman@redhat.com>
+ <20200316022014.GA30856@roeck-us.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <087e8692-4bfd-6407-3aac-7689f80142de@redhat.com>
+Date:   Sun, 15 Mar 2020 22:43:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200316022014.GA30856@roeck-us.net>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh Raghavendra <vigneshr@ti.com>
+On 3/15/20 10:20 PM, Guenter Roeck wrote:
+> Hi,
+>
+> On Fri, Feb 07, 2020 at 02:39:29PM -0500, Waiman Long wrote:
+>> The tick_periodic() function is used at the beginning part of the
+>> bootup process for time keeping while the other clock sources are
+>> being initialized.
+>>
+>> The current code assumes that all the timer interrupts are handled in
+>> a timely manner with no missing ticks. That is not actually true. Some
+>> ticks are missed and there are some discrepancies between the tick tim=
+e
+>> (jiffies) and the timestamp reported in the kernel log.  Some systems,
+>> however, are more prone to missing ticks than the others.  In the extr=
+eme
+>> case, the discrepancy can actually cause a soft lockup message to be
+>> printed by the watchdog kthread. For example, on a Cavium ThunderX2
+>> Sabre arm64 system:
+>>
+>>  [   25.496379] watchdog: BUG: soft lockup - CPU#14 stuck for 22s!
+>>
+>> On that system, the missing ticks are especially prevalent during the
+>> smp_init() phase of the boot process. With an instrumented kernel,
+>> it was found that it took about 24s as reported by the timestamp for
+>> the tick to accumulate 4s of time.
+>>
+>> Investigation and bisection done by others seemed to point to the
+>> commit 73f381660959 ("arm64: Advertise mitigation of Spectre-v2, or
+>> lack thereof") as the culprit. It could also be a firmware issue as
+>> new firmware was promised that would fix the issue.
+>>
+>> To properly address this problem, we cannot assume that there will
+>> be no missing tick in tick_periodic(). This function is now modified
+>> to follow the example of tick_do_update_jiffies64() by using another
+>> reference clock to check for missing ticks. Since the watchdog timer
+>> uses running_clock(), it is used here as the reference. With this patc=
+h
+>> applied, the soft lockup problem in the arm64 system is gone and tick
+>> time tracks much more closely to the timestamp time.
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+> Since this patch is in linux-next, roughly 10% of my x86 and x86_64
+> qemu emulation boots are stalling. Typical log:
+>
+> [    0.002016] smpboot: Total of 1 processors activated (7576.40 BogoMI=
+PS)
+> [    0.002016] devtmpfs: initialized
+> [    0.002016] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xfff=
+fffff, max_idle_ns: 1911260446275000 ns
+> [    0.002016] futex hash table entries: 256 (order: 3, 32768 bytes, li=
+near)
+> [    0.002016] xor: measuring software checksum speed
+>
+> another:
+>
+> [    0.002653] Freeing SMP alternatives memory: 44K
+> [    0.002653] smpboot: CPU0: Intel Westmere E56xx/L56xx/X56xx (IBRS up=
+date) (family: 0x6, model: 0x2c, stepping: 0x1)
+> [    0.002653] Performance Events: unsupported p6 CPU model 44 no PMU d=
+river, software events only.
+> [    0.002653] rcu: Hierarchical SRCU implementation.
+> [    0.002653] smp: Bringing up secondary CPUs ...
+> [    0.002653] x86: Booting SMP configuration:
+> [    0.002653] .... node  #0, CPUs:      #1
+> [    0.000000] smpboot: CPU 1 Converting physical 0 to logical die 1
+>
+> ... and then there is silence until the test aborts.
+>
+> This is only (or at least predominantly) seen if the system running
+> the emulation is under load.
+>
+> Reverting this patch fixes the problem.
 
-[ Upstream commit e4e8276a4f652be2c7bb783a0155d4adb85f5d7d ]
+I was aware that there are some problem with this patch, but it is hard
+to reproduce it. Do you have a more consistent way to reproduce it.
+When=A0 you say under load, you mean that the host system is also busy so
+that there are a lot of vcpu preemption. Right? Could you give me the
+x86-64 .config file that you use?
 
-On AM654, McSPI can only support 4K - 1 bytes per transfer when DMA is
-enabled. Therefore populate master->max_transfer_size callback to
-inform client drivers of this restriction when DMA channels are
-available.
-
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Link: https://lore.kernel.org/r/20200204124816.16735-2-vigneshr@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/spi/spi-omap2-mcspi.c                 | 26 +++++++++++++++++++
- include/linux/platform_data/spi-omap2-mcspi.h |  1 +
- 2 files changed, 27 insertions(+)
-
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 7e2292c11d120..e9bc9cf984d60 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -130,6 +130,7 @@ struct omap2_mcspi {
- 	int			fifo_depth;
- 	bool			slave_aborted;
- 	unsigned int		pin_dir:1;
-+	size_t			max_xfer_len;
- };
- 
- struct omap2_mcspi_cs {
-@@ -1305,6 +1306,18 @@ static bool omap2_mcspi_can_dma(struct spi_master *master,
- 	return (xfer->len >= DMA_MIN_BYTES);
- }
- 
-+static size_t omap2_mcspi_max_xfer_size(struct spi_device *spi)
-+{
-+	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
-+	struct omap2_mcspi_dma *mcspi_dma =
-+		&mcspi->dma_channels[spi->chip_select];
-+
-+	if (mcspi->max_xfer_len && mcspi_dma->dma_rx)
-+		return mcspi->max_xfer_len;
-+
-+	return SIZE_MAX;
-+}
-+
- static int omap2_mcspi_controller_setup(struct omap2_mcspi *mcspi)
- {
- 	struct spi_master	*master = mcspi->master;
-@@ -1373,6 +1386,11 @@ static struct omap2_mcspi_platform_config omap4_pdata = {
- 	.regs_offset = OMAP4_MCSPI_REG_OFFSET,
- };
- 
-+static struct omap2_mcspi_platform_config am654_pdata = {
-+	.regs_offset = OMAP4_MCSPI_REG_OFFSET,
-+	.max_xfer_len = SZ_4K - 1,
-+};
-+
- static const struct of_device_id omap_mcspi_of_match[] = {
- 	{
- 		.compatible = "ti,omap2-mcspi",
-@@ -1382,6 +1400,10 @@ static const struct of_device_id omap_mcspi_of_match[] = {
- 		.compatible = "ti,omap4-mcspi",
- 		.data = &omap4_pdata,
- 	},
-+	{
-+		.compatible = "ti,am654-mcspi",
-+		.data = &am654_pdata,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, omap_mcspi_of_match);
-@@ -1439,6 +1461,10 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
- 		mcspi->pin_dir = pdata->pin_dir;
- 	}
- 	regs_offset = pdata->regs_offset;
-+	if (pdata->max_xfer_len) {
-+		mcspi->max_xfer_len = pdata->max_xfer_len;
-+		master->max_transfer_size = omap2_mcspi_max_xfer_size;
-+	}
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	mcspi->base = devm_ioremap_resource(&pdev->dev, r);
-diff --git a/include/linux/platform_data/spi-omap2-mcspi.h b/include/linux/platform_data/spi-omap2-mcspi.h
-index 0bf9fddb83064..3b400b1919a9b 100644
---- a/include/linux/platform_data/spi-omap2-mcspi.h
-+++ b/include/linux/platform_data/spi-omap2-mcspi.h
-@@ -11,6 +11,7 @@ struct omap2_mcspi_platform_config {
- 	unsigned short	num_cs;
- 	unsigned int regs_offset;
- 	unsigned int pin_dir:1;
-+	size_t max_xfer_len;
- };
- 
- struct omap2_mcspi_device_config {
--- 
-2.20.1
+Thanks,
+Longman
 
