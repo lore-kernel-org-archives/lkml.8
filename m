@@ -2,101 +2,320 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419C5C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B4CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA772071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B962051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 10:55:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UalwBSp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbgCPKyj (ORCPT
+        id S1730739AbgCPKzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:54:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:46096 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730529AbgCPKyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:54:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5497431B;
-        Mon, 16 Mar 2020 03:54:38 -0700 (PDT)
-Received: from [10.37.9.38] (unknown [10.37.9.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 240FD3F52E;
-        Mon, 16 Mar 2020 03:54:32 -0700 (PDT)
-Subject: Re: [PATCH v3 18/26] arm64: Introduce asm/vdso/processor.h
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
- <20200313154345.56760-19-vincenzo.frascino@arm.com>
- <20200315182950.GB32205@mbp> <c2c0157a-107a-debf-100f-0d97781add7c@arm.com>
- <20200316103437.GD3005@mbp>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <77a2e91a-58f4-3ba3-9eef-42d6a8faf859@arm.com>
-Date:   Mon, 16 Mar 2020 10:55:00 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200316103437.GD3005@mbp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 16 Mar 2020 06:55:22 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:44789 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730582AbgCPKzV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 06:55:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584356121; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=XG9/8fyXW6h0jvgjzfyb426lI5sSxRM/6ml/zOvDgvY=; b=UalwBSp7qJVg8iT3hDat6H77yTzTIKgt8X7X2Mkx7oVUgEXaAOOq4CjJbcWTDuqh66nM/dOv
+ 92fkZ3mEC4ARTH7U9xl3+Os+1618PDw8GyvQoyjXa2Hl/2fo18vPTT+a72oY3/c1jIVxHWVX
+ LzGpwuSUN5GTvL4ZOrLn7sZ1NJs=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6f5b0f.7fee0f0cd458-smtp-out-n01;
+ Mon, 16 Mar 2020 10:55:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 21D85C433CB; Mon, 16 Mar 2020 10:55:11 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D70ADC432C2;
+        Mon, 16 Mar 2020 10:55:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D70ADC432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 1/3] clk: qcom: gcc: Add support for a new frequency for SC7180
+Date:   Mon, 16 Mar 2020 16:24:40 +0530
+Message-Id: <1584356082-26769-2-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1584356082-26769-1-git-send-email-tdas@codeaurora.org>
+References: <1584356082-26769-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
+There is a requirement to support 51.2MHz from GPLL6 for qup clocks,
+thus update the frequency table and parent data/map to use the GPLL6
+source PLL.
 
-On 3/16/20 10:34 AM, Catalin Marinas wrote:
-[...]
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ drivers/clk/qcom/gcc-sc7180.c | 73 ++++++++++++++++++++++---------------------
+ 1 file changed, 37 insertions(+), 36 deletions(-)
 
+diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+index 7f59fb8..ad75847 100644
+--- a/drivers/clk/qcom/gcc-sc7180.c
++++ b/drivers/clk/qcom/gcc-sc7180.c
+@@ -390,6 +390,7 @@ static const struct freq_tbl ftbl_gcc_qupv3_wrap0_s0_clk_src[] = {
+ 	F(29491200, P_GPLL0_OUT_EVEN, 1, 1536, 15625),
+ 	F(32000000, P_GPLL0_OUT_EVEN, 1, 8, 75),
+ 	F(48000000, P_GPLL0_OUT_EVEN, 1, 4, 25),
++	F(51200000, P_GPLL6_OUT_MAIN, 7.5, 0, 0),
+ 	F(64000000, P_GPLL0_OUT_EVEN, 1, 16, 75),
+ 	F(75000000, P_GPLL0_OUT_EVEN, 4, 0, 0),
+ 	F(80000000, P_GPLL0_OUT_EVEN, 1, 4, 15),
+@@ -405,8 +406,8 @@ static const struct freq_tbl ftbl_gcc_qupv3_wrap0_s0_clk_src[] = {
 
->>
->> I tried to fine grain the headers as much as I could in order to avoid
->> unneeded/unwanted inclusions:
->>  * TASK_SIZE_32 is used to verify ABI consistency on vdso32 (please refer to
->>    arch/arm64/kernel/vdso32/vgettimeofday.c).
-> 
-> I see. But the test is probably useless. With 4K pages, TASK_SIZE_32 is
-> 1UL << 32, so you can't have a u32 greater than this. So I'd argue that
-> the ABI compatibility here doesn't matter.
-> 
-> With 16K or 64K pages, TASK_SIZE_32 is slightly smaller but arm32 never
-> supported it.
-> 
-> What's the side-effect of dropping this check altogether?
-> 
+ static struct clk_init_data gcc_qupv3_wrap0_s0_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap0_s0_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
 
-The main side-effect is that arm32 and arm64 compat have a different behavior,
-that it is what we want to avoid.
+@@ -414,15 +415,15 @@ static struct clk_rcg2 gcc_qupv3_wrap0_s0_clk_src = {
+ 	.cmd_rcgr = 0x17034,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap0_s0_clk_src_init,
+ };
 
-The vdsotest [1] I am using, verifies all the side conditions with respect to
-the ABI, which we are now compatible with. Removing those checks would break
-this condition.
+ static struct clk_init_data gcc_qupv3_wrap0_s1_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap0_s1_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
 
-[1] https://github.com/nlynch-mentor/vdsotest
+@@ -430,15 +431,15 @@ static struct clk_rcg2 gcc_qupv3_wrap0_s1_clk_src = {
+ 	.cmd_rcgr = 0x17164,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap0_s1_clk_src_init,
+ };
 
--- 
-Regards,
-Vincenzo
+ static struct clk_init_data gcc_qupv3_wrap0_s2_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap0_s2_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -446,15 +447,15 @@ static struct clk_rcg2 gcc_qupv3_wrap0_s2_clk_src = {
+ 	.cmd_rcgr = 0x17294,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap0_s2_clk_src_init,
+ };
+
+ static struct clk_init_data gcc_qupv3_wrap0_s3_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap0_s3_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -462,15 +463,15 @@ static struct clk_rcg2 gcc_qupv3_wrap0_s3_clk_src = {
+ 	.cmd_rcgr = 0x173c4,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap0_s3_clk_src_init,
+ };
+
+ static struct clk_init_data gcc_qupv3_wrap0_s4_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap0_s4_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -478,15 +479,15 @@ static struct clk_rcg2 gcc_qupv3_wrap0_s4_clk_src = {
+ 	.cmd_rcgr = 0x174f4,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap0_s4_clk_src_init,
+ };
+
+ static struct clk_init_data gcc_qupv3_wrap0_s5_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap0_s5_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -494,15 +495,15 @@ static struct clk_rcg2 gcc_qupv3_wrap0_s5_clk_src = {
+ 	.cmd_rcgr = 0x17624,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap0_s5_clk_src_init,
+ };
+
+ static struct clk_init_data gcc_qupv3_wrap1_s0_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap1_s0_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -510,15 +511,15 @@ static struct clk_rcg2 gcc_qupv3_wrap1_s0_clk_src = {
+ 	.cmd_rcgr = 0x18018,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap1_s0_clk_src_init,
+ };
+
+ static struct clk_init_data gcc_qupv3_wrap1_s1_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap1_s1_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -526,15 +527,15 @@ static struct clk_rcg2 gcc_qupv3_wrap1_s1_clk_src = {
+ 	.cmd_rcgr = 0x18148,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap1_s1_clk_src_init,
+ };
+
+ static struct clk_init_data gcc_qupv3_wrap1_s2_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap1_s2_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -542,15 +543,15 @@ static struct clk_rcg2 gcc_qupv3_wrap1_s2_clk_src = {
+ 	.cmd_rcgr = 0x18278,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap1_s2_clk_src_init,
+ };
+
+ static struct clk_init_data gcc_qupv3_wrap1_s3_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap1_s3_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -558,15 +559,15 @@ static struct clk_rcg2 gcc_qupv3_wrap1_s3_clk_src = {
+ 	.cmd_rcgr = 0x183a8,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap1_s3_clk_src_init,
+ };
+
+ static struct clk_init_data gcc_qupv3_wrap1_s4_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap1_s4_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -574,15 +575,15 @@ static struct clk_rcg2 gcc_qupv3_wrap1_s4_clk_src = {
+ 	.cmd_rcgr = 0x184d8,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap1_s4_clk_src_init,
+ };
+
+ static struct clk_init_data gcc_qupv3_wrap1_s5_clk_src_init = {
+ 	.name = "gcc_qupv3_wrap1_s5_clk_src",
+-	.parent_data = gcc_parent_data_0,
+-	.num_parents = 4,
++	.parent_data = gcc_parent_data_1,
++	.num_parents = 5,
+ 	.ops = &clk_rcg2_ops,
+ };
+
+@@ -590,7 +591,7 @@ static struct clk_rcg2 gcc_qupv3_wrap1_s5_clk_src = {
+ 	.cmd_rcgr = 0x18608,
+ 	.mnd_width = 16,
+ 	.hid_width = 5,
+-	.parent_map = gcc_parent_map_0,
++	.parent_map = gcc_parent_map_1,
+ 	.freq_tbl = ftbl_gcc_qupv3_wrap0_s0_clk_src,
+ 	.clkr.hw.init = &gcc_qupv3_wrap1_s5_clk_src_init,
+ };
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
