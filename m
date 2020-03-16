@@ -2,125 +2,116 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDBEC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012FAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A5020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SdlmuNY8"
+	by mail.kernel.org (Postfix) with ESMTP id D5A7C2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 15:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731781AbgCPPNq (ORCPT
+        id S1731794AbgCPPOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:13:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52986 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729964AbgCPPNq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:13:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Vl+Cf0ZuC3XZwjG76c59VMt7RhS7EZIRiTRbmqe9zmk=; b=SdlmuNY8kTO/HYkpoRHXV+09Fz
-        ognI1JqujrUhRwxTTQN8bOgapO3nu5lae7DP0HW5ZRCwPCXWywqTso62Tz4lWV1L/lQymObYvU78W
-        3XdvW7ZftBP4Rkgi8BmsiSmVAuJeBAXfDDZJmQ3XZQ4KqV70WDvNVp/aF06k5YRF/GhDwy5yh/wfi
-        v3QVIH56XZjyRAvCgmRXfn0yox6Zb03IvOsEQCL5opmy6yH0rYwUiXdpGbwiAUl3L6FMe0fEzhdUg
-        JAjbxC7nLls5BYm2fjEbriAEDpaj3JYnIED6DYqgR5ldcEkg3qvGOCycrW8WYD8j4eVrmhfBadu02
-        QgmLKdeA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jDrQz-0004GC-GF; Mon, 16 Mar 2020 15:13:41 +0000
-Subject: Re: [PATCH 1/9] Documentation: Add lock ordering and nesting
- documentation
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200313174701.148376-1-bigeasy@linutronix.de>
- <20200313174701.148376-2-bigeasy@linutronix.de>
- <2e0912cc-6780-18e9-4e4c-7cc60da6709f@infradead.org>
- <20200316103454.iodi65uzbpat4kv5@linutronix.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <de6fdc5d-690a-1130-c911-caccbb0b1a8f@infradead.org>
-Date:   Mon, 16 Mar 2020 08:13:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 16 Mar 2020 11:14:18 -0400
+Received: from mga03.intel.com ([134.134.136.65]:61876 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731631AbgCPPOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 11:14:17 -0400
+IronPort-SDR: bWdQ6Dfk4JEYn31xf3c5Xwp29evPuMvyXky3178m7/2Pq0oRDFGSRQK+u0sExH/tcGHI7HDViY
+ tcaRby6mYBmg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 08:14:16 -0700
+IronPort-SDR: SMrdSI+w47upSYJuzeWVXhH/NRV+HgwXOk6Ud/Sh2F8w0MinBcB7rAYKoAxxq9j0TzGHZ6Hr+B
+ TSJzpG6GYyYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,560,1574150400"; 
+   d="scan'208";a="262705244"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga002.jf.intel.com with SMTP; 16 Mar 2020 08:14:12 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 16 Mar 2020 17:14:12 +0200
+Date:   Mon, 16 Mar 2020 17:14:12 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        jani.nikula@linux.intel.com, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, airlied@linux.ie,
+        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+        mripard@kernel.org, mihail.atanassov@arm.com,
+        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
+Subject: Re: [RFC][PATCH 1/5] drm: Introduce scaling filter property
+Message-ID: <20200316151412.GS13686@intel.com>
+References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200225070545.4482-2-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200310160106.GH13686@intel.com>
+ <20200316083132.GC2363188@phenom.ffwll.local>
 MIME-Version: 1.0
-In-Reply-To: <20200316103454.iodi65uzbpat4kv5@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200316083132.GC2363188@phenom.ffwll.local>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/16/20 3:34 AM, Sebastian Andrzej Siewior wrote:
-> On 2020-03-14 15:57:24 [-0700], Randy Dunlap wrote:
->> Hi,
-> Hi Randy,
+On Mon, Mar 16, 2020 at 09:31:32AM +0100, Daniel Vetter wrote:
+> On Tue, Mar 10, 2020 at 06:01:06PM +0200, Ville Syrjälä wrote:
+> > On Tue, Feb 25, 2020 at 12:35:41PM +0530, Pankaj Bharadiya wrote:
+> > > Introduce new scaling filter property to allow userspace to select
+> > > the driver's default scaling filter or Nearest-neighbor(NN) filter
+> > > for upscaling operations on crtc/plane.
+> > > 
+> > > Drivers can set up this property for a plane by calling
+> > > drm_plane_enable_scaling_filter() and for a CRTC by calling
+> > > drm_crtc_enable_scaling_filter().
+> > > 
+> > > NN filter works by filling in the missing color values in the upscaled
+> > > image with that of the coordinate-mapped nearest source pixel value.
+> > > 
+> > > NN filter for integer multiple scaling can be particularly useful for
+> > > for pixel art games that rely on sharp, blocky images to deliver their
+> > > distinctive look.
+> > > 
+> > > Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+> > > Signed-off-by: Shashank Sharma <shashank.sharma@intel.com>
+> > > Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
+> > > ---
+> > >  drivers/gpu/drm/drm_atomic_uapi.c |  8 +++++++
+> > >  drivers/gpu/drm/drm_crtc.c        | 16 ++++++++++++++
+> > >  drivers/gpu/drm/drm_mode_config.c | 13 ++++++++++++
+> > >  drivers/gpu/drm/drm_plane.c       | 35 +++++++++++++++++++++++++++++++
+> > >  include/drm/drm_crtc.h            | 10 +++++++++
+> > >  include/drm/drm_mode_config.h     |  6 ++++++
+> > >  include/drm/drm_plane.h           | 14 +++++++++++++
+> > >  7 files changed, 102 insertions(+)
+> > > 
+> > > diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
+> > > index a1e5e262bae2..4e3c1f3176e4 100644
+> > > --- a/drivers/gpu/drm/drm_atomic_uapi.c
+> > > +++ b/drivers/gpu/drm/drm_atomic_uapi.c
+> > > @@ -435,6 +435,8 @@ static int drm_atomic_crtc_set_property(struct drm_crtc *crtc,
+> > >  		return ret;
+> > >  	} else if (property == config->prop_vrr_enabled) {
+> > >  		state->vrr_enabled = val;
+> > > +	} else if (property == config->scaling_filter_property) {
+> > > +		state->scaling_filter = val;
+> > 
+> > I think we want a per-plane/per-crtc prop for this. If we start adding
+> > more filters we are surely going to need different sets for different hw
+> > blocks.
 > 
->> A few comments for your consideration:
-> 
-> I merged all of you comments but two:
-> 
->> On 3/13/20 10:46 AM, Sebastian Andrzej Siewior wrote:
-> â€¦
->>> +rwlock_t and PREEMPT_RT
->>> +-----------------------
->>> +
->>> +On a PREEMPT_RT enabled kernel rwlock_t is mapped to a separate
->>> +implementation based on rt_mutex which changes the semantics:
->>> +
->>> + - Same changes as for spinlock_t
->>> +
->>> + - The implementation is not fair and can cause writer starvation under
->>> +   certain circumstances. The reason for this is that a writer cannot
->>> +   inherit its priority to multiple readers. Readers which are blocked
->>
->>       ^^^^^^^ I think this is backwards. Maybe more like so:
->>                                                          a writer cannot
->>       bequeath or grant or bestow or pass down    ...    its priority to
-> 
-> So the term "inherit" is the problem. The protocol is officially called
-> PI which is short for Priority Inheritance. Other documentation,
-> RT-mutex for instance, is also using this term when it is referring to
-> altering the priority of a task. For that reason I prefer to keep using
-> this term.
+> In the past we've only done that once we have a demonstrated need. Usually
+> the patch to move the property to a per-object location isn't a lot of
+> churn.
 
-OK, I get it.
+Seems silly to not do it from the start when we already know there is
+hardware out there that has different capabilities per hw block.
 
->>> +   on a writer fully support the priority inheritance protocol.
-> â€¦
->>> +raw_spinlock_t
->>> +--------------
->>> +
->>> +As raw_spinlock_t locking disables preemption and eventually interrupts the
->>> +code inside the critical region has to be careful to avoid calls into code
->>
->> Can I buy a comma in there somewhere, please?
->> I don't get it as is.
-> 
-> What about
-> 
-> | As raw_spinlock_t locking disables preemption, and eventually interrupts, the
-> | code inside the critical region has to be careful to avoid calls into code
-> 
-> any better?
-
-Yes.
-
-thanks.
 -- 
-~Randy
-
+Ville Syrjälä
+Intel
