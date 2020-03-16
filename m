@@ -2,258 +2,97 @@ Return-Path: <SRS0=ltrd=5B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E7AC0044D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3012CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686DF20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JiCAb93n"
+	by mail.kernel.org (Postfix) with ESMTP id 10FCE20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Mar 2020 11:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730843AbgCPLUN (ORCPT
+        id S1730852AbgCPLUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 07:20:13 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60612 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730794AbgCPLUN (ORCPT
+        Mon, 16 Mar 2020 07:20:16 -0400
+Received: from m177129.mail.qiye.163.com ([123.58.177.129]:41333 "EHLO
+        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730560AbgCPLUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 07:20:13 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GBK45I029053;
-        Mon, 16 Mar 2020 06:20:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584357604;
-        bh=S90JAhlN4faoJ5qHTsybTrVGu0IAkKpAgsGHTgZVwc8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JiCAb93nzryjm1AwrWd0qJDMxtsiR9ROMcHU08H2q8mxjLhgaEO1yR81GFoE1WE2m
-         hGSyEPq2coJWWXgS0p8JdLG6bC0FvevXVUwOFLk9+PLJR2cV8uIP5SGXSTZxHrotvh
-         lwUWC82SHQcXU5CTGf7+BdeUbiPQhmL75n12O5IE=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GBK325001761;
-        Mon, 16 Mar 2020 06:20:04 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Mar 2020 06:20:03 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Mar 2020 06:20:03 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GBJiU2049775;
-        Mon, 16 Mar 2020 06:20:00 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Alan Mikhak <alan.mikhak@sifive.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Tom Joseph <tjoseph@cadence.com>,
+        Mon, 16 Mar 2020 07:20:15 -0400
+Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
+        by m177129.mail.qiye.163.com (Hmail) with ESMTP id A7DED5C3187;
+        Mon, 16 Mar 2020 19:20:05 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AJUA5gAVCMaMlIkPsaTC0KqL.3.1584357605616.Hmail.wenhu.wang@vivo.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 5/5] misc: pci_endpoint_test: Add support to get DMA option from userspace
-Date:   Mon, 16 Mar 2020 16:54:24 +0530
-Message-ID: <20200316112424.25295-6-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200316112424.25295-1-kishon@ti.com>
-References: <20200316112424.25295-1-kishon@ti.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org, kernel@vivo.com,
+        stable <stable@vger.kernel.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2M10gcG93ZXJwYy9mc2wtODV4eDogZml4IGNvbXBpbGUgZXJyb3I=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.226
+In-Reply-To: <875zf4r613.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Mon, 16 Mar 2020 19:20:05 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Date:   Mon, 16 Mar 2020 19:20:05 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VCQktCQkJNQkNNSENCSVlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNTEpOQ0NKTE9NN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6MS46Thw6LTg2GjYXMhArCBovOEswCjdVSFVKTkNPSE5MTUtMQkJMVTMWGhIXVQweFRMOVQwa
+        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQU5IQ0o3Bg++
+X-HM-Tid: 0a70e31281416447kursa7ded5c3187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'pcitest' utility now uses '-d' option to allow the user to test DMA.
-Add support to parse option to use DMA from userspace application.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Tested-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/misc/pci_endpoint_test.c | 65 ++++++++++++++++++++++++++++++--
- 1 file changed, 62 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 5998df1c84e9..8682867ac14a 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -17,6 +17,7 @@
- #include <linux/mutex.h>
- #include <linux/random.h>
- #include <linux/slab.h>
-+#include <linux/uaccess.h>
- #include <linux/pci.h>
- #include <linux/pci_ids.h>
- 
-@@ -52,6 +53,7 @@
- #define STATUS_SRC_ADDR_INVALID			BIT(7)
- #define STATUS_DST_ADDR_INVALID			BIT(8)
- 
-+#define PCI_ENDPOINT_TEST_STATUS		0x8
- #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
- #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
- 
-@@ -64,6 +66,9 @@
- #define PCI_ENDPOINT_TEST_IRQ_TYPE		0x24
- #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
- 
-+#define PCI_ENDPOINT_TEST_FLAGS			0x2c
-+#define FLAG_USE_DMA				BIT(0)
-+
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- 
- #define is_am654_pci_dev(pdev)		\
-@@ -315,11 +320,16 @@ static bool pci_endpoint_test_msi_irq(struct pci_endpoint_test *test,
- 	return false;
- }
- 
--static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
-+static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
-+				   unsigned long arg)
- {
-+	struct pci_endpoint_test_xfer_param param;
- 	bool ret = false;
- 	void *src_addr;
- 	void *dst_addr;
-+	u32 flags = 0;
-+	bool use_dma;
-+	size_t size;
- 	dma_addr_t src_phys_addr;
- 	dma_addr_t dst_phys_addr;
- 	struct pci_dev *pdev = test->pdev;
-@@ -332,10 +342,22 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 	size_t alignment = test->alignment;
- 	u32 src_crc32;
- 	u32 dst_crc32;
-+	int err;
-+
-+	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
-+	if (err) {
-+		dev_err(dev, "Failed to get transfer param\n");
-+		return false;
-+	}
- 
-+	size = param.size;
- 	if (size > SIZE_MAX - alignment)
- 		goto err;
- 
-+	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
-+	if (use_dma)
-+		flags |= FLAG_USE_DMA;
-+
- 	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
- 		dev_err(dev, "Invalid IRQ type option\n");
- 		goto err;
-@@ -406,6 +428,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE,
- 				 size);
- 
-+	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
-@@ -434,9 +457,13 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 	return ret;
- }
- 
--static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
-+static bool pci_endpoint_test_write(struct pci_endpoint_test *test,
-+				    unsigned long arg)
- {
-+	struct pci_endpoint_test_xfer_param param;
- 	bool ret = false;
-+	u32 flags = 0;
-+	bool use_dma;
- 	u32 reg;
- 	void *addr;
- 	dma_addr_t phys_addr;
-@@ -446,11 +473,24 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 	dma_addr_t orig_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	size_t size;
- 	u32 crc32;
-+	int err;
- 
-+	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
-+	if (err != 0) {
-+		dev_err(dev, "Failed to get transfer param\n");
-+		return false;
-+	}
-+
-+	size = param.size;
- 	if (size > SIZE_MAX - alignment)
- 		goto err;
- 
-+	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
-+	if (use_dma)
-+		flags |= FLAG_USE_DMA;
-+
- 	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
- 		dev_err(dev, "Invalid IRQ type option\n");
- 		goto err;
-@@ -493,6 +533,7 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
- 
-+	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
-@@ -514,9 +555,14 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 	return ret;
- }
- 
--static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
-+static bool pci_endpoint_test_read(struct pci_endpoint_test *test,
-+				   unsigned long arg)
- {
-+	struct pci_endpoint_test_xfer_param param;
- 	bool ret = false;
-+	u32 flags = 0;
-+	bool use_dma;
-+	size_t size;
- 	void *addr;
- 	dma_addr_t phys_addr;
- 	struct pci_dev *pdev = test->pdev;
-@@ -526,10 +572,22 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
- 	size_t offset;
- 	size_t alignment = test->alignment;
- 	u32 crc32;
-+	int err;
- 
-+	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
-+	if (err) {
-+		dev_err(dev, "Failed to get transfer param\n");
-+		return false;
-+	}
-+
-+	size = param.size;
- 	if (size > SIZE_MAX - alignment)
- 		goto err;
- 
-+	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
-+	if (use_dma)
-+		flags |= FLAG_USE_DMA;
-+
- 	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
- 		dev_err(dev, "Invalid IRQ type option\n");
- 		goto err;
-@@ -566,6 +624,7 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
- 
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
- 
-+	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
--- 
-2.17.1
-
+RnJvbTogTWljaGFlbCBFbGxlcm1hbiA8bXBlQGVsbGVybWFuLmlkLmF1PgogRGF0ZTogMjAyMC0w
+My0xNiAxNzo0MToxMgpUbzpXQU5HIFdlbmh1IDx3ZW5odS53YW5nQHZpdm8uY29tPixCZW5qYW1p
+biBIZXJyZW5zY2htaWR0IDxiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc+LFBhdWwgTWFja2VycmFz
+IDxwYXVsdXNAc2FtYmEub3JnPixXQU5HIFdlbmh1IDx3ZW5odS53YW5nQHZpdm8uY29tPixBbGxp
+c29uIFJhbmRhbCA8YWxsaXNvbkBsb2h1dG9rLm5ldD4sUmljaGFyZCBGb250YW5hIDxyZm9udGFu
+YUByZWRoYXQuY29tPixHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24u
+b3JnPixUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4sbGludXhwcGMtZGV2QGxp
+c3RzLm96bGFicy5vcmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwogY2M6IHRyaXZpYWxA
+a2VybmVsLm9yZyxrZXJuZWxAdml2by5jb20sc3RhYmxlIDxzdGFibGVAdmdlci5rZXJuZWwub3Jn
+PgpTdWJqZWN0OiBSZTogW1BBVENIIHYzXSBwb3dlcnBjL2ZzbC04NXh4OiBmaXggY29tcGlsZSBl
+cnJvcj5XQU5HIFdlbmh1IDx3ZW5odS53YW5nQHZpdm8uY29tPiB3cml0ZXM6Cj4+IEluY2x1ZGUg
+ImxpbnV4L29mX2FkZHJlc3MuaCIgdG8gZml4IHRoZSBjb21waWxlIGVycm9yIGZvcgo+PiBtcGM4
+NXh4X2wyY3Rscl9vZl9wcm9iZSgpIHdoZW4gY29tcGlsaW5nIGZzbF84NXh4X2NhY2hlX3NyYW0u
+Yy4KPj4KPj4gICBDQyAgICAgIGFyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfbDJjdGxyLm8K
+Pj4gYXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xfODV4eF9sMmN0bHIuYzogSW4gZnVuY3Rpb24g4oCY
+bXBjODV4eF9sMmN0bHJfb2ZfcHJvYmXigJk6Cj4+IGFyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1
+eHhfbDJjdGxyLmM6OTA6MTE6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlv
+biDigJhvZl9pb21hcOKAmTsgZGlkIHlvdSBtZWFuIOKAmHBjaV9pb21hcOKAmT8gWy1XZXJyb3I9
+aW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb25dCj4+ICAgbDJjdGxyID0gb2ZfaW9tYXAoZGV2
+LT5kZXYub2Zfbm9kZSwgMCk7Cj4+ICAgICAgICAgICAgXn5+fn5+fn4KPj4gICAgICAgICAgICBw
+Y2lfaW9tYXAKPj4gYXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xfODV4eF9sMmN0bHIuYzo5MDo5OiBl
+cnJvcjogYXNzaWdubWVudCBtYWtlcyBwb2ludGVyIGZyb20gaW50ZWdlciB3aXRob3V0IGEgY2Fz
+dCBbLVdlcnJvcj1pbnQtY29udmVyc2lvbl0KPj4gICBsMmN0bHIgPSBvZl9pb21hcChkZXYtPmRl
+di5vZl9ub2RlLCAwKTsKPj4gICAgICAgICAgXgo+PiBjYzE6IGFsbCB3YXJuaW5ncyBiZWluZyB0
+cmVhdGVkIGFzIGVycm9ycwo+PiBzY3JpcHRzL01ha2VmaWxlLmJ1aWxkOjI2NzogcmVjaXBlIGZv
+ciB0YXJnZXQgJ2FyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfbDJjdGxyLm8nIGZhaWxlZAo+
+PiBtYWtlWzJdOiAqKiogW2FyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfbDJjdGxyLm9dIEVy
+cm9yIDEKPj4KPj4gRml4ZXM6IGNvbW1pdCA2ZGI5MmNjOWQwN2QgKCJwb3dlcnBjLzg1eHg6IGFk
+ZCBjYWNoZS1zcmFtIHN1cHBvcnQiKQo+Cj5UaGUgc3ludGF4IGlzOgo+Cj5GaXhlczogNmRiOTJj
+YzlkMDdkICgicG93ZXJwYy84NXh4OiBhZGQgY2FjaGUtc3JhbSBzdXBwb3J0IikKPgo+PiBDYzog
+c3RhYmxlIDxzdGFibGVAdmdlci5rZXJuZWwub3JnPgo+Cj5UaGUgY29tbWl0IGFib3ZlIHdlbnQg
+aW50byB2Mi42LjM3Lgo+Cj5TbyBubyBvbmUgaGFzIG5vdGljZWQgdGhpcyBidWcgc2luY2UgdGhl
+biwgaG93PyBPciBkaWQgc29tZXRoaW5nIGVsc2UKPmNoYW5nZSB0byBleHBvc2UgdGhlIHByb2Js
+ZW0/CgpBY3R1YWxseSBhIGhhcmQgcXVlc3Rpb24gdG8gYW5zd2VyIGNhdXNlIGl0IGFsc28gbGVm
+dCBtZSBzY3JhdGNoaW5nIGZvciBsb25nLgpIb3dldmVyLCBJIGNhbiBub3QgZmluZCByaWdodCBv
+ciBkZWZpbml0ZSBhbnN3ZXIuCgpBIGNvbnZpbmNpbmcgZXhwbGFuYXRpb24gaXMgdGhlIGRyaXZl
+ciBoYXMgbm90IGJlZW4gaW4gdXNlIHNpbmNlIHYyLjYuMzcsCmJ1dCBzb21laG93LCB3ZSBhcmUg
+dG8gdXNlIGl0IHJlY2VudGx5LgpBbnl3YXksIGl0J3MgYmV0dGVyIGZvciBtZSBhcyB3ZWxsIGFz
+IG5vIGhhcm0gdG8gYW55b25lIHRvIGZpeCBpdCBldmVuIHRob3VnaC4KClRoYW5rcywgV2VuaHUK
+Pgo+Y2hlZXJzCg0KDQo=
