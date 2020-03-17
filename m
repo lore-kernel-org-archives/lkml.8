@@ -2,142 +2,100 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 609B2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F91C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3710420738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:44:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tCwPcOhN"
+	by mail.kernel.org (Postfix) with ESMTP id 55FD620738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584485302;
+	bh=LGaYyzaACZxQUiveGMPC6ogAlcxLxgk2zp4wsFwphuQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=WqZsXj0MdCJM1UeEFoqsBELxHX1nYdQXi8KMDamQO3CNqN5rS5t8e1TjILLbdEnzW
+	 BkWe0ZGvbXlLqirs/Nk9CCtNwzwbQ6kbRO+vWGuYztS2y3feau+GWIpdwcFyu7t3Fe
+	 G8DwFYG4UEXnPCJajgjMdGYcKYTngMqoHYRTvDlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgCQWoR (ORCPT
+        id S1727046AbgCQWsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:44:17 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36467 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgCQWoR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:44:17 -0400
-Received: by mail-lf1-f65.google.com with SMTP id s1so18671774lfd.3;
-        Tue, 17 Mar 2020 15:44:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Fu8GVUxLvjII7VrARYhkhRDvf4FyhjWv5GYDkk8Hc2Q=;
-        b=tCwPcOhNkJfxpRz9k8ZAytkBGG4DO7ZLX/qqgCUGyrNq84/50QixpWGB4HPynpbniH
-         GZXmKLrallMFiUdR9tsxWVmnIKmwxyfcS+onBghreUU+a6dphmmaRdYzdOvJcCwDjmOc
-         ZERc3NcHfSU9rRztTHXrA0tgi8To99sRMYsKzs3C3sTJ1eghvuZlQakewWE3feAFDOch
-         RhsqBvll3sZHvzyV1qfHcsJwAyYQhrE8rLQxjzZtqUemaC7M0Nbov0Y070Kxdx2N/hDZ
-         QC5te/+1PsLAdwiTPRm+ORNzmnQBIVIziJAIhlZRYDcMof8Uit+1kJjk0vYLu6HrphYT
-         9sSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Fu8GVUxLvjII7VrARYhkhRDvf4FyhjWv5GYDkk8Hc2Q=;
-        b=t4sGR4sAkAOqzAKvvK8YyX+Pjab52zpImt1zG04tlL1wk0SrjVHCUlYTN4Uu/AjSJu
-         F7Q/KTLXlwmamHursL9nCLKAk28R6TM86NSyzk6qO8zo6K313kjxtyjIiQW2ecSiQ5w8
-         OXTOa95JvPjciZ3kvDr9b3//p/lCc+zN45aBel2HyqmjO3NAjOhaXsBrQG8l51XsvoLA
-         5jRCGqf1/jvmOTsoB9SrmGco69Z8KYPxPHeXG1YR4F1c3bSk0OYMQOuTVWmvFGwKnDqD
-         /cthdlLZhqELG4Y447fDC9rsTltVPt1o507bhnJWRsIHoR/3URhplgguszlEyze+t6bn
-         oMWA==
-X-Gm-Message-State: ANhLgQ1LJfqYnNixXb0hsqKr0PKUfeKNZkfC33z6L4Ftr66wnyAx9fJ5
-        r2IkskPeyZNROjhe537XUpA=
-X-Google-Smtp-Source: ADFU+vsn/MKcM/DMMmPpn3eyTNYWAh5rDvjAk45IPuY5FAxzXZpIr2+xJuxntCO4DHPumsAfYRs7Bw==
-X-Received: by 2002:ac2:41c2:: with SMTP id d2mr969136lfi.164.1584485054337;
-        Tue, 17 Mar 2020 15:44:14 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id z12sm3383903lfe.51.2020.03.17.15.44.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 15:44:13 -0700 (PDT)
-Subject: Re: [PATCH v7 03/48] Input: atmel_mxt_ts - only read messages in
- mxt_acquire_irq() when necessary
-To:     Jiada Wang <jiada_wang@mentor.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, rydberg@bitmath.org,
-        dmitry.torokhov@gmail.com, nick@shmanahar.org, bsz@semihalf.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200212084218.32344-1-jiada_wang@mentor.com>
- <20200212084218.32344-4-jiada_wang@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8ea1244b-f045-df34-b6b2-2b812ab6dee4@gmail.com>
-Date:   Wed, 18 Mar 2020 01:44:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 18:48:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgCQWsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:48:21 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5180B20714;
+        Tue, 17 Mar 2020 22:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584485300;
+        bh=LGaYyzaACZxQUiveGMPC6ogAlcxLxgk2zp4wsFwphuQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=e8L6cui+VZBmHflBZ9UGww44K3b07hYtCxqYr3IUV9lMHo1Aqsu3F7lzx3Vz9S17Y
+         lDz9r5QucaIzh1tlZ1vJKcYHVCAeWNXZzsBMJRn81fTjXXt4uTlDCGz1iH7RK7xJK4
+         ZgQ+lwBSFrMe4gZHNAVLiksF3E8/rAYnjr3vCDWU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 28644352272E; Tue, 17 Mar 2020 15:48:20 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 15:48:20 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Subject: Re: [PATCH v2 rcu-dev 1/3] rcuperf: Add ability to increase object
+ allocation size
+Message-ID: <20200317224820.GP3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200316163228.62068-1-joel@joelfernandes.org>
+ <20200317210822.GM3199@paulmck-ThinkPad-P72>
+ <20200317214502.GA29184@paulmck-ThinkPad-P72>
+ <CAEXW_YQxKfcGf3UgEn_8hdWHdMx09RvD90z6zo=kk-iRinYjng@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200212084218.32344-4-jiada_wang@mentor.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEXW_YQxKfcGf3UgEn_8hdWHdMx09RvD90z6zo=kk-iRinYjng@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.02.2020 11:41, Jiada Wang пишет:
-> From: Nick Dyer <nick.dyer@itdev.co.uk>
+On Tue, Mar 17, 2020 at 06:30:51PM -0400, Joel Fernandes wrote:
+> On Tue, Mar 17, 2020 at 5:45 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Tue, Mar 17, 2020 at 02:08:22PM -0700, Paul E. McKenney wrote:
+> > > On Mon, Mar 16, 2020 at 12:32:26PM -0400, Joel Fernandes (Google) wrote:
+> > > > This allows us to increase memory pressure dynamically using a new
+> > > > rcuperf boot command line parameter called 'rcumult'.
+> > > >
+> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > >
+> > > Applied for testing and review, thank you!
+> >
+> > But testing did not go far:
+> >
+> > kernel/rcu/tree.c: In function ‘kfree_rcu_shrink_count’:
+> > kernel/rcu/tree.c:3120:16: warning: unused variable ‘flags’ [-Wunused-variable]
+> >   unsigned long flags, count = 0;
 > 
-> The workaround of reading all messages until an invalid is received is a
-> way of forcing the CHG line high, which means that when using
-> edge-triggered interrupts the interrupt can be acquired.
-> 
-> With level-triggered interrupts the workaround is unnecessary.
-> 
-> Also, most recent maXTouch chips have a feature called RETRIGEN which, when
-> enabled, reasserts the interrupt line every cycle if there are messages
-> waiting. This also makes the workaround unnecessary.
-> 
-> Note: the RETRIGEN feature is only in some firmware versions/chips, it's
-> not valid simply to enable the bit.
+> I fixed the warning already but did not resend since it was just the
+> one unused variable warning. The patches are otherwise good to apply.
+> Sorry, and I can resend it soon if you are not reapplying right now.
 
-...
-> +static int mxt_check_retrigen(struct mxt_data *data)
-> +{
-> +	struct i2c_client *client = data->client;
-> +	int error;
-> +	int val;
-> +
-> +	data->use_retrigen_workaround = false;
-> +
-> +	if (irq_get_trigger_type(data->irq) & IRQF_TRIGGER_LOW)
-> +		return 0;
-> +
-> +	if (data->T18_address) {
-> +		error = __mxt_read_reg(client,
-> +				       data->T18_address + MXT_COMMS_CTRL,
-> +				       1, &val);
-> +		if (error)
-> +			return error;
-> +
-> +		if (val & MXT_COMMS_RETRIGEN)
-> +			return 0;
-> +	}
-> +
-> +	dev_warn(&client->dev, "Enabling RETRIGEN workaround\n");
-> +	data->use_retrigen_workaround = true;
-> +	return 0;
-> +}
+So remove "flags, " and all is well?
 
-Hello Jiada,
+If so, I can just as easily fix that as take a new series.  But next
+time, please give a fella a warning.  ;-)
 
-I'm seeing "Enabling RETRIGEN workaround" message with the following
-device-tree entry:
-
-touchscreen@4c {
-	compatible = "atmel,maxtouch";
-	reg = <0x4c>;
-
-	interrupt-parent = <&gpio>;
-	interrupts = <TEGRA_GPIO(V, 6) IRQ_TYPE_LEVEL_LOW>;
-
-	reset-gpios = <&gpio TEGRA_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
-};
-
-This happens because data->irq is NULL. Please fix it, thanks in advance.
+							Thanx, Paul
