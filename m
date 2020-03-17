@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AFBC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86935C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C278220724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F6C20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442644;
-	bh=Oe3hXxBsoQiN/trHS0kxJHdVpRq9GDRqGxypdn6kNRk=;
+	s=default; t=1584442649;
+	bh=8QNgdCwXUctBY9h7SVHfvgVWcql5P//dyZZpNB8w82A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OFwMm09G4xVYpH0e9NIs7ma0kSA7+Pl0dc4BoESncOIT6IoWLNGPqSivwNnYVyR7v
-	 ArM3FmaoUbtjzHPHOEfDzkea0zxQQS9ndB+ZObQ/goZjWaEAqMRzkT9K4NMgWAvH81
-	 F9cfDqI8nJGg7U1dimKZWBOy4UcIAHwaMVdYJjjU=
+	b=EWvxC2q+RG1vzmKJRTzNg/epusVeH13UxQghXeouVFG0XuQXIoZ4VYeO2tfa2tdLa
+	 P8u2yr0CQdEnETZGX2d+8i7OOkJPqGPQJQ9epwHxfpPr2yYj/LoGMkOixAxaRE2F8/
+	 Xy97/5brf5Re+hISxHqzFQnZlwXro1qXUFbc3dGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgCQK5R (ORCPT
+        id S1726207AbgCQK51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:57:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:57:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726898AbgCQK5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:57:14 -0400
+        id S1726112AbgCQK5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:57:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A6A02073E;
-        Tue, 17 Mar 2020 10:57:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E09120735;
+        Tue, 17 Mar 2020 10:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442633;
-        bh=Oe3hXxBsoQiN/trHS0kxJHdVpRq9GDRqGxypdn6kNRk=;
+        s=default; t=1584442641;
+        bh=8QNgdCwXUctBY9h7SVHfvgVWcql5P//dyZZpNB8w82A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+dornV8VtbrMI2Br7S3l33BkyB2t9glEQxgRMAh5hd0HX47oGzKaJIF4kYzNv0T3
-         Uqukv/Veg4l27XjW4GqcdnbyuJ7RO76CbPdRbLO07CeFuF1bHc+NzlENiYpwNNmY8T
-         O06KPRYPBo0GGEjNZz85oPENyLEWaSZIFT8unlLY=
+        b=oMrcdVShvcBjRy5AjO/wy0xB1Ls/Q7JDTFXIegWQ1ZV89TY+l5XPWFBJDhx5UgGHY
+         Uujx+ZCbAyDS+hLr8nk+varq9I5oS3+ymarA6KcxuclUVjZBX1qAKl4+iMJ69+qPZX
+         BtcJRa0H3Im13h3vtQjP2FT4EgpfIQAZeaw7zUd0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
         syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 04/89] gre: fix uninit-value in __iptunnel_pull_header
-Date:   Tue, 17 Mar 2020 11:54:13 +0100
-Message-Id: <20200317103300.308746795@linuxfoundation.org>
+Subject: [PATCH 4.19 07/89] ipvlan: add cond_resched_rcu() while processing muticast backlog
+Date:   Tue, 17 Mar 2020 11:54:16 +0100
+Message-Id: <20200317103300.696905106@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -60,138 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Mahesh Bandewar <maheshb@google.com>
 
-[ Upstream commit 17c25cafd4d3e74c83dce56b158843b19c40b414 ]
+[ Upstream commit e18b353f102e371580f3f01dd47567a25acc3c1d ]
 
-syzbot found an interesting case of the kernel reading
-an uninit-value [1]
+If there are substantial number of slaves created as simulated by
+Syzbot, the backlog processing could take much longer and result
+into the issue found in the Syzbot report.
 
-Problem is in the handling of ETH_P_WCCP in gre_parse_header()
-
-We look at the byte following GRE options to eventually decide
-if the options are four bytes longer.
-
-Use skb_header_pointer() to not pull bytes if we found
-that no more bytes were needed.
-
-All callers of gre_parse_header() are properly using pskb_may_pull()
-anyway before proceeding to next header.
-
-[1]
-BUG: KMSAN: uninit-value in pskb_may_pull include/linux/skbuff.h:2303 [inline]
-BUG: KMSAN: uninit-value in __iptunnel_pull_header+0x30c/0xbd0 net/ipv4/ip_tunnel_core.c:94
-CPU: 1 PID: 11784 Comm: syz-executor940 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+INFO: rcu_sched detected stalls on CPUs/tasks:
+        (detected by 1, t=10502 jiffies, g=5049, c=5048, q=752)
+All QSes seen, last rcu_sched kthread activity 10502 (4294965563-4294955061), jiffies_till_next_fqs=1, root ->qsmask 0x0
+syz-executor.1  R  running task on cpu   1  10984 11210   3866 0x30020008 179034491270
 Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- pskb_may_pull include/linux/skbuff.h:2303 [inline]
- __iptunnel_pull_header+0x30c/0xbd0 net/ipv4/ip_tunnel_core.c:94
- iptunnel_pull_header include/net/ip_tunnels.h:411 [inline]
- gre_rcv+0x15e/0x19c0 net/ipv6/ip6_gre.c:606
- ip6_protocol_deliver_rcu+0x181b/0x22c0 net/ipv6/ip6_input.c:432
- ip6_input_finish net/ipv6/ip6_input.c:473 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- ip6_input net/ipv6/ip6_input.c:482 [inline]
- ip6_mc_input+0xdf2/0x1460 net/ipv6/ip6_input.c:576
- dst_input include/net/dst.h:442 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- ipv6_rcv+0x683/0x710 net/ipv6/ip6_input.c:306
- __netif_receive_skb_one_core net/core/dev.c:5198 [inline]
- __netif_receive_skb net/core/dev.c:5312 [inline]
- netif_receive_skb_internal net/core/dev.c:5402 [inline]
- netif_receive_skb+0x66b/0xf20 net/core/dev.c:5461
- tun_rx_batched include/linux/skbuff.h:4321 [inline]
- tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1901 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __ia32_sys_write+0xdb/0x120 fs/read_write.c:620
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f62d99
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000fffedb2c EFLAGS: 00000217 ORIG_RAX: 0000000000000004
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020002580
-RDX: 0000000000000fca RSI: 0000000000000036 RDI: 0000000000000004
-RBP: 0000000000008914 R08: 0000000000000000 R09: 0000000000000000
+ <IRQ>
+ [<ffffffff81497163>] _sched_show_task kernel/sched/core.c:8063 [inline]
+ [<ffffffff81497163>] _sched_show_task.cold+0x2fd/0x392 kernel/sched/core.c:8030
+ [<ffffffff8146a91b>] sched_show_task+0xb/0x10 kernel/sched/core.c:8073
+ [<ffffffff815c931b>] print_other_cpu_stall kernel/rcu/tree.c:1577 [inline]
+ [<ffffffff815c931b>] check_cpu_stall kernel/rcu/tree.c:1695 [inline]
+ [<ffffffff815c931b>] __rcu_pending kernel/rcu/tree.c:3478 [inline]
+ [<ffffffff815c931b>] rcu_pending kernel/rcu/tree.c:3540 [inline]
+ [<ffffffff815c931b>] rcu_check_callbacks.cold+0xbb4/0xc29 kernel/rcu/tree.c:2876
+ [<ffffffff815e3962>] update_process_times+0x32/0x80 kernel/time/timer.c:1635
+ [<ffffffff816164f0>] tick_sched_handle+0xa0/0x180 kernel/time/tick-sched.c:161
+ [<ffffffff81616ae4>] tick_sched_timer+0x44/0x130 kernel/time/tick-sched.c:1193
+ [<ffffffff815e75f7>] __run_hrtimer kernel/time/hrtimer.c:1393 [inline]
+ [<ffffffff815e75f7>] __hrtimer_run_queues+0x307/0xd90 kernel/time/hrtimer.c:1455
+ [<ffffffff815e90ea>] hrtimer_interrupt+0x2ea/0x730 kernel/time/hrtimer.c:1513
+ [<ffffffff844050f4>] local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1031 [inline]
+ [<ffffffff844050f4>] smp_apic_timer_interrupt+0x144/0x5e0 arch/x86/kernel/apic/apic.c:1056
+ [<ffffffff84401cbe>] apic_timer_interrupt+0x8e/0xa0 arch/x86/entry/entry_64.S:778
+RIP: 0010:do_raw_read_lock+0x22/0x80 kernel/locking/spinlock_debug.c:153
+RSP: 0018:ffff8801dad07ab8 EFLAGS: 00000a02 ORIG_RAX: ffffffffffffff12
+RAX: 0000000000000000 RBX: ffff8801c4135680 RCX: 0000000000000000
+RDX: 1ffff10038826afe RSI: ffff88019d816bb8 RDI: ffff8801c41357f0
+RBP: ffff8801dad07ac0 R08: 0000000000004b15 R09: 0000000000310273
+R10: ffff88019d816bb8 R11: 0000000000000001 R12: ffff8801c41357e8
+R13: 0000000000000000 R14: ffff8801cfb19850 R15: ffff8801cfb198b0
+ [<ffffffff8101460e>] __raw_read_lock_bh include/linux/rwlock_api_smp.h:177 [inline]
+ [<ffffffff8101460e>] _raw_read_lock_bh+0x3e/0x50 kernel/locking/spinlock.c:240
+ [<ffffffff840d78ca>] ipv6_chk_mcast_addr+0x11a/0x6f0 net/ipv6/mcast.c:1006
+ [<ffffffff84023439>] ip6_mc_input+0x319/0x8e0 net/ipv6/ip6_input.c:482
+ [<ffffffff840211c8>] dst_input include/net/dst.h:449 [inline]
+ [<ffffffff840211c8>] ip6_rcv_finish+0x408/0x610 net/ipv6/ip6_input.c:78
+ [<ffffffff840214de>] NF_HOOK include/linux/netfilter.h:292 [inline]
+ [<ffffffff840214de>] NF_HOOK include/linux/netfilter.h:286 [inline]
+ [<ffffffff840214de>] ipv6_rcv+0x10e/0x420 net/ipv6/ip6_input.c:278
+ [<ffffffff83a29efa>] __netif_receive_skb_one_core+0x12a/0x1f0 net/core/dev.c:5303
+ [<ffffffff83a2a15c>] __netif_receive_skb+0x2c/0x1b0 net/core/dev.c:5417
+ [<ffffffff83a2f536>] process_backlog+0x216/0x6c0 net/core/dev.c:6243
+ [<ffffffff83a30d1b>] napi_poll net/core/dev.c:6680 [inline]
+ [<ffffffff83a30d1b>] net_rx_action+0x47b/0xfb0 net/core/dev.c:6748
+ [<ffffffff846002c8>] __do_softirq+0x2c8/0x99a kernel/softirq.c:317
+ [<ffffffff813e656a>] invoke_softirq kernel/softirq.c:399 [inline]
+ [<ffffffff813e656a>] irq_exit+0x16a/0x1a0 kernel/softirq.c:439
+ [<ffffffff84405115>] exiting_irq arch/x86/include/asm/apic.h:561 [inline]
+ [<ffffffff84405115>] smp_apic_timer_interrupt+0x165/0x5e0 arch/x86/kernel/apic/apic.c:1058
+ [<ffffffff84401cbe>] apic_timer_interrupt+0x8e/0xa0 arch/x86/entry/entry_64.S:778
+ </IRQ>
+RIP: 0010:__sanitizer_cov_trace_pc+0x26/0x50 kernel/kcov.c:102
+RSP: 0018:ffff880196033bd8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff12
+RAX: ffff88019d8161c0 RBX: 00000000ffffffff RCX: ffffc90003501000
+RDX: 0000000000000002 RSI: ffffffff816236d1 RDI: 0000000000000005
+RBP: ffff880196033bd8 R08: ffff88019d8161c0 R09: 0000000000000000
+R10: 1ffff10032c067f0 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000000
+ [<ffffffff816236d1>] do_futex+0x151/0x1d50 kernel/futex.c:3548
+ [<ffffffff816260f0>] C_SYSC_futex kernel/futex_compat.c:201 [inline]
+ [<ffffffff816260f0>] compat_SyS_futex+0x270/0x3b0 kernel/futex_compat.c:175
+ [<ffffffff8101da17>] do_syscall_32_irqs_on arch/x86/entry/common.c:353 [inline]
+ [<ffffffff8101da17>] do_fast_syscall_32+0x357/0xe1c arch/x86/entry/common.c:415
+ [<ffffffff84401a9b>] entry_SYSENTER_compat+0x8b/0x9d arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f23c69
+RSP: 002b:00000000f5d1f12c EFLAGS: 00000282 ORIG_RAX: 00000000000000f0
+RAX: ffffffffffffffda RBX: 000000000816af88 RCX: 0000000000000080
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000816af8c
+RBP: 00000000f5d1f228 R08: 0000000000000000 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
 R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+rcu_sched kthread starved for 10502 jiffies! g5049 c5048 f0x2 RCU_GP_WAIT_FQS(3) ->state=0x0 ->cpu=1
+rcu_sched       R  running task on cpu   1  13048     8      2 0x90000000 179099587640
+Call Trace:
+ [<ffffffff8147321f>] context_switch+0x60f/0xa60 kernel/sched/core.c:3209
+ [<ffffffff8100095a>] __schedule+0x5aa/0x1da0 kernel/sched/core.c:3934
+ [<ffffffff810021df>] schedule+0x8f/0x1b0 kernel/sched/core.c:4011
+ [<ffffffff8101116d>] schedule_timeout+0x50d/0xee0 kernel/time/timer.c:1803
+ [<ffffffff815c13f1>] rcu_gp_kthread+0xda1/0x3b50 kernel/rcu/tree.c:2327
+ [<ffffffff8144b318>] kthread+0x348/0x420 kernel/kthread.c:246
+ [<ffffffff84400266>] ret_from_fork+0x56/0x70 arch/x86/entry/entry_64.S:393
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
- slab_alloc_node mm/slub.c:2793 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1051 [inline]
- alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5766
- sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2242
- tun_alloc_skb drivers/net/tun.c:1529 [inline]
- tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1901 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __ia32_sys_write+0xdb/0x120 fs/read_write.c:620
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-
-Fixes: 95f5c64c3c13 ("gre: Move utility functions to common headers")
-Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: ba35f8588f47 (“ipvlan: Defer multicast / broadcast processing to a work-queue”)
+Signed-off-by: Mahesh Bandewar <maheshb@google.com>
 Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/gre_demux.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/ipvlan/ipvlan_core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/gre_demux.c
-+++ b/net/ipv4/gre_demux.c
-@@ -61,7 +61,9 @@ int gre_del_protocol(const struct gre_pr
- }
- EXPORT_SYMBOL_GPL(gre_del_protocol);
+--- a/drivers/net/ipvlan/ipvlan_core.c
++++ b/drivers/net/ipvlan/ipvlan_core.c
+@@ -282,6 +282,7 @@ void ipvlan_process_multicast(struct wor
+ 			}
+ 			ipvlan_count_rx(ipvlan, len, ret == NET_RX_SUCCESS, true);
+ 			local_bh_enable();
++			cond_resched_rcu();
+ 		}
+ 		rcu_read_unlock();
  
--/* Fills in tpi and returns header length to be pulled. */
-+/* Fills in tpi and returns header length to be pulled.
-+ * Note that caller must use pskb_may_pull() before pulling GRE header.
-+ */
- int gre_parse_header(struct sk_buff *skb, struct tnl_ptk_info *tpi,
- 		     bool *csum_err, __be16 proto, int nhs)
- {
-@@ -115,8 +117,14 @@ int gre_parse_header(struct sk_buff *skb
- 	 * - When dealing with WCCPv2, Skip extra 4 bytes in GRE header
- 	 */
- 	if (greh->flags == 0 && tpi->proto == htons(ETH_P_WCCP)) {
-+		u8 _val, *val;
-+
-+		val = skb_header_pointer(skb, nhs + hdr_len,
-+					 sizeof(_val), &_val);
-+		if (!val)
-+			return -EINVAL;
- 		tpi->proto = proto;
--		if ((*(u8 *)options & 0xF0) != 0x40)
-+		if ((*val & 0xF0) != 0x40)
- 			hdr_len += 4;
- 	}
- 	tpi->hdr_len = hdr_len;
 
 
