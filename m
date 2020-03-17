@@ -2,94 +2,130 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6740C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1106DC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E22320714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C5E20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jOeS0u82"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iFlBHxIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgCQRD4 (ORCPT
+        id S1726623AbgCQREg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:03:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42214 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgCQRD4 (ORCPT
+        Tue, 17 Mar 2020 13:04:36 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54702 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgCQREg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:03:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=JrfbfStkuLthDJce1M1JugDTO24hOoZE58L7iN+zG2U=; b=jOeS0u829MtADQiUjmIqAmuJKK
-        etUNM1qkA+POedoDZdTcxDQbKGA5Ltl+G3zo4zyk9vZF9F2epczpebM4r+qpE4cCDXtTbXsEqsRdC
-        vwNMTgdrUxksdy3oy99KgYgsqiZaRhcsOrVfOjATxum+k7gbgA0tJIopajlTDy02l8YxkBiQ1Oqsp
-        WZvYKipXpfKvXKt/4eEl73Rqf0Te0oYUmBL1iVqhpx1sjqeu4xwtJlkjmqD1lVEyMOCXQFsABTnbR
-        HDsNTn55SBEezIAwjDefrCoetIBT6CbDNMVV31xTZvsIqj4wOzCxWEanwQpjL1gxU+eP8GLC/1SgA
-        nJFHVyqQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEFdC-0007p4-Kj; Tue, 17 Mar 2020 17:03:55 +0000
-Subject: Re: [PATCH v6 3/3] hwmon: add Gateworks System Controller support
-To:     Tim Harvey <tharvey@gateworks.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Jones <rjones@gateworks.com>
-References: <1584464453-28200-1-git-send-email-tharvey@gateworks.com>
- <1584464453-28200-4-git-send-email-tharvey@gateworks.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f7ccbdb4-917a-2dd7-bf6b-8c82b87bc167@infradead.org>
-Date:   Tue, 17 Mar 2020 10:03:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 13:04:36 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n8so73889wmc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:04:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ObAO8lewPX3AflqGqqsEgIOkagJMImeMxzpRcMylRvI=;
+        b=iFlBHxIsRE10dkGC+K9sL69iB57t/esmERm5mei+203ZMMUaT0x21Tb1gP3p+TCaPo
+         EHJht2XolZ1tgKPe42Nw4MVY+eXyWrrD2CjYd7x8Kp7ZzwN1uDhRny127AA96XozMu8l
+         hRzgTitP+mBlas/H9SEq4t9G+7j8ELkFyoiYE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=ObAO8lewPX3AflqGqqsEgIOkagJMImeMxzpRcMylRvI=;
+        b=GpL10Q2t0mbiaUJtB47Fs914g6gLnBumFy6znUV2TMSnAxtj6eGbNLkOvSp6giiecF
+         d38AdWslGXXni/VQgbhRuKGj2YIdRT0qJ2UcvPlS0N2Iy4EoVwcxpdKJLy7NwqmG9nQz
+         UexSyMQr29aljBscDY4lVgFCYAUXqEZL9tAIARSsRHT8saNqTCPUFSr4ixf+Ar2YLQJl
+         5vEAh+q3XzvIGjpW3c16AEmXxAZUFivYQUATleT/XQFmagXqErJWRcUg9RyGC0+Zy1YB
+         sT8IUPDQCzzibTcDktB+NeBPGWUF4mWgV3ez1XTHYMhDwTH0NqeCev9/RMIXC9ZHwn4p
+         wK9A==
+X-Gm-Message-State: ANhLgQ288HyO87gj3jEZwmQNIfnsQFCWi/bw55BLrUj3OoaH6n0rgTm2
+        1nq398oe0IqnhXDr+bd5lt0GeNUdbfKWdrdu
+X-Google-Smtp-Source: ADFU+vtf8dj2MkY7sbusKtJmdk4v9PDgTuJO25WhkTpjF7YXhCbnK1FtHZvjdup433Kfub3tQ9x/yA==
+X-Received: by 2002:a1c:f707:: with SMTP id v7mr231550wmh.121.1584464673859;
+        Tue, 17 Mar 2020 10:04:33 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id r9sm28323wma.47.2020.03.17.10.04.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 10:04:33 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 18:04:31 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Igor Torrente <igormtorrente@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: Fwd: [PATCH] Staging: drm_gem: Fix a typo in a function comment
+Message-ID: <20200317170431.GS2363188@phenom.ffwll.local>
+Mail-Followup-To: Igor Torrente <igormtorrente@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200316210413.2321-1-igormtorrente@gmail.com>
+ <CAOA8r4HieupER-gW4BU9U8YYC+6eLkSzoS2z-KRrbq4XZb40Ww@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1584464453-28200-4-git-send-email-tharvey@gateworks.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOA8r4HieupER-gW4BU9U8YYC+6eLkSzoS2z-KRrbq4XZb40Ww@mail.gmail.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/20 10:00 AM, Tim Harvey wrote:
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 23dfe84..99dae13 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -494,6 +494,15 @@ config SENSORS_F75375S
->  	  This driver can also be built as a module. If so, the module
->  	  will be called f75375s.
->  
-> +config SENSORS_GSC
-> +        tristate "Gateworks System Controller ADC"
-> +        depends on MFD_GATEWORKS_GSC
-> +        help
-> +          Support for the Gateworks System Controller A/D converters.
+On Mon, Mar 16, 2020 at 06:08:30PM -0300, Igor Torrente wrote:
+> Ccing dri-devel and linux-kernel.
 
-Hi Tim,
-Those 4 lines above should be using tabs for indentation.
-+ 2 spaces on the final "Support" line.
+git apply-mbox chokes on this, can you pls resubmit?
 
-> +
-> +	  To compile this driver as a module, choose M here:
-> +	  the module will be called gsc-hwmon.
-> +
->  config SENSORS_MC13783_ADC
->          tristate "Freescale MC13783/MC13892 ADC"
->          depends on MFD_MC13XXX
+Thanks, Daniel
+
+> 
+> ---------- Forwarded message ---------
+> From: Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
+> Date: Mon, Mar 16, 2020 at 6:04 PM
+> Subject: [PATCH] Staging: drm_gem: Fix a typo in a function comment
+> To: <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+> <sean@poorly.run>, <airlied@linux.ie>, <daniel@ffwll.ch>, <
+> sumit.semwal@linaro.org>
+> Cc: Igor Matheus Andrade Torrente <igormtorrente@gmail.com>, <
+> Rodrigo.Siqueira@amd.com>, <rodrigosiqueiramelo@gmail.com>, <
+> andrealmeid@collabora.com>
+> 
+> 
+> Replace "pionter" with "pointer" in the
+> drm_gem_handle_create description.
+> 
+> Signed-off-by: Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
+> ---
+>  drivers/gpu/drm/drm_gem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+> index 6e960d57371e..c356379f5e97 100644
+> --- a/drivers/gpu/drm/drm_gem.c
+> +++ b/drivers/gpu/drm/drm_gem.c
+> @@ -432,7 +432,7 @@ drm_gem_handle_create_tail(struct drm_file *file_priv,
+>   * drm_gem_handle_create - create a gem handle for an object
+>   * @file_priv: drm file-private structure to register the handle for
+>   * @obj: object to register
+> - * @handlep: pionter to return the created handle to the caller
+> + * @handlep: pointer to return the created handle to the caller
+>   *
+>   * Create a handle for this object. This adds a handle reference to the
+> object,
+>   * which includes a regular reference count. Callers will likely want to
+> -- 
+> 2.20.1
+
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 
 -- 
-~Randy
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
