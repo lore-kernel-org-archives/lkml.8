@@ -2,87 +2,116 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C20C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4523EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434AD2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4DA20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584444285;
+	bh=GaGdl8pgY44OKNN30+xVpu/sgpjCpuysfuKAf9fBIcA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IR87G0liqAy8McufMA7IS265uQxYaAFijWaLeZkR6jPrmlEiCpKgzpjSkKvPvYyrU
+	 XQxoI5prF213bTmVonTsTDxx76qWC+gm0uodJWqyfzrWkQUwl54BpYS51llZ6SpIPt
+	 1tW8gM9SN6NWc32FtV+hfhd4+JD4yMGRtiNpy+Ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgCQLYS (ORCPT
+        id S1726721AbgCQLYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:24:18 -0400
-Received: from mga04.intel.com ([192.55.52.120]:60184 "EHLO mga04.intel.com"
+        Tue, 17 Mar 2020 07:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbgCQLYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:24:17 -0400
-IronPort-SDR: igUf7PrRvcVZYtrBcC7AldeQFQT/WF7NOy1PKKXTvLrTL5V6owCXz9ZdgRu3Zy5tjQc6gur0nm
- MAYFTrEkiuYg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 04:24:17 -0700
-IronPort-SDR: ym6w+YD+WLAOsiXsFcvr5v46k0vFcKq96Aou1QarGV9ROUv4IsFiEbJRpjHzHKHaKO5BzHhBCO
- Z1NOXwKA/GeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="244448946"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.237]) ([10.255.31.237])
-  by orsmga003.jf.intel.com with ESMTP; 17 Mar 2020 04:24:13 -0700
-Subject: Re: [PATCH] KVM: X86: correct meaningless kvm_apicv_activated() check
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linmiaohe@huawei.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <1584185480-3556-1-git-send-email-pbonzini@redhat.com>
- <878sk0n1g1.fsf@vitty.brq.redhat.com>
- <20200316152650.GD24267@linux.intel.com>
- <87zhcgl2xc.fsf@vitty.brq.redhat.com>
- <20200316155911.GE24267@linux.intel.com>
- <eb1037c8-fdb5-4f4c-4641-915c0e3d01bc@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <b2d0a1ec-d305-f03e-3063-d324bf8b1d19@intel.com>
-Date:   Tue, 17 Mar 2020 19:24:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726005AbgCQLYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:24:43 -0400
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CA72051A;
+        Tue, 17 Mar 2020 11:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584444283;
+        bh=GaGdl8pgY44OKNN30+xVpu/sgpjCpuysfuKAf9fBIcA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rzUIlzSBBTaX4YeDLXeOTa6YgyRsPvHnbJZEalAynpP5TXlqAl1HnGORO6bY4p3NX
+         cq6cTOHPm6xTkN+JyxDKkzORj+v4mg8Fvedr45/hHt/jB/2VjWA5r4o8P8nP/qvqX1
+         C3xWWl7fozzau6Yg4s/f/b/lhvGeiUqBF54DWjI0=
+Date:   Tue, 17 Mar 2020 12:24:39 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] modpost: move the namespace field in Module.symvers
+ last
+Message-ID: <20200317112439.GB6841@linux-8ccs>
+References: <20200311170120.12641-1-jeyu@kernel.org>
+ <CAK7LNAT-xdMZbK5UeVvm6S-WNimMMKO3b=jkJsU29z6ULPjs_Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <eb1037c8-fdb5-4f4c-4641-915c0e3d01bc@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAT-xdMZbK5UeVvm6S-WNimMMKO3b=jkJsU29z6ULPjs_Q@mail.gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/2020 12:39 AM, Paolo Bonzini wrote:
-> On 16/03/20 16:59, Sean Christopherson wrote:
->>>>
->>> 	if (!!old == !!new)
->>> 		return;
->>>
->>> to make it clear we're converting them to 1/0 :-)
++++ Masahiro Yamada [14/03/20 11:11 +0900]:
+>On Thu, Mar 12, 2020 at 2:02 AM Jessica Yu <jeyu@kernel.org> wrote:
 >>
->> All I can think of now is the Onion article regarding razor blades...
+>> In order to preserve backwards compatability with kmod tools, we have to
+>> move the namespace field in Module.symvers last, as the depmod -e -E
+>> option looks at the first three fields in Module.symvers to check symbol
+>> versions (and it's expected they stay in the original order of crc,
+>> symbol, module).
 >>
->> 	if (!!!!old == !!!!new)
->> 		return;
+>> In addition, update an ancient comment above read_dump() in modpost that
+>> suggested that the export type field in Module.symvers was optional. I
+>> suspect that there were historical reasons behind that comment that are
+>> no longer accurate. We have been unconditionally printing the export
+>> type since 2.6.18 (commit bd5cbcedf44), which is over a decade ago now.
 >>
-> 
-> That would be !!!!!, but seriously I'll go with two.
-> 
-> (Thanks for giving me a chuckle, it's sorely needed these days).
+>> Fix up read_dump() to treat each field as non-optional. I suspect the
+>> original read_dump() code treated the export field as optional in order
+>> to support pre <= 2.6.18 Module.symvers (which did not have the export
+>> type field). Note that although symbol namespaces are optional, the
+>> field will not be omitted from Module.symvers if a symbol does not have
+>> a namespace. In this case, the field will simply be empty and the next
+>> delimiter or end of line will follow.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
+>> Tested-by: Matthias Maennich <maennich@google.com>
+>> Reviewed-by: Matthias Maennich <maennich@google.com>
+>> Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+>> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>
+>
+>While I am not opposed to this fix,
+>I did not even notice Module.symvers was official interface.
+>
+>Kbuild invokes scripts/depmod.sh to finalize
+>the 'make modules_install', but I do not see the -E
+>option being used there.
+>
+>I do not see Module.symvers installed in
+>/lib/modules/$(uname -r)/.
 
-Take care, Paolo.
+While that's true, distros typically package Module.symvers in their
+linux-headers/kernel-devel (or equivalent) packages to support
+external module builds. The -E option is usually used to do symbol
+versioning/kabi checks with the Module.symvers file. Considering the
+options, I think it will cause the least headaches down the line to
+make this fix upstream and maintain backwards compatibility with kmod
+rather than to patch kmod and remind distros to repackage because old
+depmod versions don't work with the new Module.symvers anymore..
 
-I have been staying at home for two months in Wuhan, China, and things 
-are going better now. I believe all the world can defeat Coronavirus 
-eventually.
+Thank you!
 
-> Paolo
-> 
-
+Jessica
