@@ -2,121 +2,196 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CE7C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C94C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5624820724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32E52073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgCQRnD (ORCPT
+        id S1726721AbgCQRnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:43:03 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2571 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726066AbgCQRnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:43:02 -0400
-Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 3248716AE0BD38D47F81;
-        Tue, 17 Mar 2020 17:42:58 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 17 Mar 2020 17:42:57 +0000
-Received: from [127.0.0.1] (10.47.11.44) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 17 Mar
- 2020 17:42:56 +0000
-Subject: Re: [PATCH v2 2/7] perf jevents: Support test events folder
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <namhyung@kernel.org>, <will@kernel.org>, <ak@linux.intel.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <james.clark@arm.com>, <qiangqing.zhang@nxp.com>
-References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
- <1584442939-8911-3-git-send-email-john.garry@huawei.com>
- <20200317162052.GD759708@krava>
- <de5b58ee-980e-973a-16db-73f23c3edfef@huawei.com>
- <20200317170645.GE759708@krava>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <dcaf4aa9-213e-47c5-16e2-e7f8af259ce9@huawei.com>
-Date:   Tue, 17 Mar 2020 17:42:46 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20200317170645.GE759708@krava>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.11.44]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Tue, 17 Mar 2020 13:43:06 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:33721 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726130AbgCQRnE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 13:43:04 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tstu6Yh_1584466971;
+Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tstu6Yh_1584466971)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 18 Mar 2020 01:43:00 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     shakeelb@google.com, vbabka@suse.cz, willy@infradead.org,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v3 PATCH 1/2] mm: swap: make page_evictable() inline
+Date:   Wed, 18 Mar 2020 01:42:50 +0800
+Message-Id: <1584466971-110029-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/2020 17:06, Jiri Olsa wrote:
-> On Tue, Mar 17, 2020 at 04:25:32PM +0000, John Garry wrote:
->> On 17/03/2020 16:20, Jiri Olsa wrote:
->>> On Tue, Mar 17, 2020 at 07:02:14PM +0800, John Garry wrote:
->>>> With the goal of supporting pmu-events test case, introduce support for a
->>>> test events folder.
->>>>
->>>> These test events can be used for testing generation of pmu-event tables
->>>> and alias creation for any arch.
->>>>
->>>> When running the pmu-events test case, these test events will be used
->>>> as the platform-agnostic events, so aliases can be created per-PMU and
->>>> validated against known expected values.
->>>>
->>>> To support the test events, add a "testcpu" entry in pmu_events_map[].
->>>> The pmu-events test will be able to lookup the events map for "testcpu",
->>>> to verify the generated tables against expected values.
->>>>
->>>> The resultant generated pmu-events.c will now look like the following:
->>>
->>> can't compile this one:
->>>
->>>     HOSTCC   pmu-events/jevents.o
->>> pmu-events/jevents.c: In function ‘main’:
->>> pmu-events/jevents.c:1195:3: error: ‘ret’ undeclared (first use in this function)
->>>    1195 |   ret = 1;
->>>         |   ^~~
->>> pmu-events/jevents.c:1195:3: note: each undeclared identifier is reported only once for each function it appears in
->>> pmu-events/jevents.c:1196:3: error: label ‘out_free_mapfile’ used but not defined
->>>    1196 |   goto out_free_mapfile;
->>>         |   ^~~~
->>> mv: cannot stat 'pmu-events/.jevents.o.tmp': No such file or directory
->>> make[3]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:97: pmu-events/jevents.o] Error 1
->>> make[2]: *** [Makefile.perf:619: pmu-events/jevents-in.o] Error 2
->>> make[1]: *** [Makefile.perf:225: sub-make] Error 2
->>> make: *** [Makefile:70: all] Error 2
->>
->> Hi jirka,
->>
->> What baseline are you using? I used v5.6-rc6. The patches are here:
-> 
-> I applied your patches on Arnaldo's perf/core
+When backporting commit 9c4e6b1a7027 ("mm, mlock, vmscan: no more
+skipping pagevecs") to our 4.9 kernel, our test bench noticed around 10%
+down with a couple of vm-scalability's test cases (lru-file-readonce,
+lru-file-readtwice and lru-file-mmap-read).  I didn't see that much down
+on my VM (32c-64g-2nodes).  It might be caused by the test configuration,
+which is 32c-256g with NUMA disabled and the tests were run in root memcg,
+so the tests actually stress only one inactive and active lru.  It
+sounds not very usual in mordern production environment.
 
-My recent fix on jevents.c does not seem to be on that branch, but it is 
-on perf/urgent and also included in v5.6-rc6
+That commit did two major changes:
+1. Call page_evictable()
+2. Use smp_mb to force the PG_lru set visible
 
-Thanks,
-John
+It looks they contribute the most overhead.  The page_evictable() is a
+function which does function prologue and epilogue, and that was used by
+page reclaim path only.  However, lru add is a very hot path, so it
+sounds better to make it inline.  However, it calls page_mapping() which
+is not inlined either, but the disassemble shows it doesn't do push and
+pop operations and it sounds not very straightforward to inline it.
 
-> 
->>
->> https://github.com/hisilicon/kernel-dev/commits/private-topic-perf-5.6-pmu-events-test-upstream-v2
-> 
-> ok, will check
-> 
-> jirka
-> 
-> .
-> 
+Other than this, it sounds smp_mb() is not necessary for x86 since
+SetPageLRU is atomic which enforces memory barrier already, replace it
+with smp_mb__after_atomic() in the following patch.
+
+With the two fixes applied, the tests can get back around 5% on that
+test bench and get back normal on my VM.  Since the test bench
+configuration is not that usual and I also saw around 6% up on the
+latest upstream, so it sounds good enough IMHO.
+
+The below is test data (lru-file-readtwice throughput) against the v5.6-rc4:
+	mainline	w/ inline fix
+          150MB            154MB
+
+With this patch the throughput gets 2.67% up.  The data with using
+smp_mb__after_atomic() is showed in the following patch.
+
+Shakeel Butt did the below test:
+
+On a real machine with limiting the 'dd' on a single node and reading 100 GiB
+sparse file (less than a single node).  Just ran a single instance to not
+cause the lru lock contention. The cmdline used is
+"dd if=file-100GiB of=/dev/null bs=4k".  Ran the cmd 10 times with drop_caches
+in between and measured the time it took.
+
+Without patch: 56.64143 +- 0.672 sec
+
+With patches: 56.10 +- 0.21 sec
+
+Fixes: 9c4e6b1a7027 ("mm, mlock, vmscan: no more skipping pagevecs")
+Cc: Matthew Wilcox <willy@infradead.org>
+Reviewed-and-Tested-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+v3: * Fixed the build error reported by lkp.
+    * Added Shakeel's test result and his review-and-test signature.
+v2: * Solved the comments from Willy.
+
+ include/linux/pagemap.h |  2 +-
+ include/linux/swap.h    | 25 ++++++++++++++++++++++++-
+ mm/vmscan.c             | 23 -----------------------
+ 3 files changed, 25 insertions(+), 25 deletions(-)
+
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index ccb14b6..654ce76 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -70,7 +70,7 @@ static inline void mapping_clear_unevictable(struct address_space *mapping)
+ 	clear_bit(AS_UNEVICTABLE, &mapping->flags);
+ }
+ 
+-static inline int mapping_unevictable(struct address_space *mapping)
++static inline bool mapping_unevictable(struct address_space *mapping)
+ {
+ 	if (mapping)
+ 		return test_bit(AS_UNEVICTABLE, &mapping->flags);
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 1e99f7a..e8b8bbe 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -12,6 +12,7 @@
+ #include <linux/fs.h>
+ #include <linux/atomic.h>
+ #include <linux/page-flags.h>
++#include <linux/pagemap.h>
+ #include <asm/page.h>
+ 
+ struct notifier_block;
+@@ -374,7 +375,29 @@ extern unsigned long mem_cgroup_shrink_node(struct mem_cgroup *mem,
+ #define node_reclaim_mode 0
+ #endif
+ 
+-extern int page_evictable(struct page *page);
++/**
++ * page_evictable - test whether a page is evictable
++ * @page: the page to test
++ *
++ * Test whether page is evictable--i.e., should be placed on active/inactive
++ * lists vs unevictable list.
++ *
++ * Reasons page might not be evictable:
++ * (1) page's mapping marked unevictable
++ * (2) page is part of an mlocked VMA
++ *
++ */
++static inline bool page_evictable(struct page *page)
++{
++	bool ret;
++
++	/* Prevent address_space of inode and swap cache from being freed */
++	rcu_read_lock();
++	ret = !mapping_unevictable(page_mapping(page)) && !PageMlocked(page);
++	rcu_read_unlock();
++	return ret;
++}
++
+ extern void check_move_unevictable_pages(struct pagevec *pvec);
+ 
+ extern int kswapd_run(int nid);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 8763705..855c395 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -4277,29 +4277,6 @@ int node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned int order)
+ }
+ #endif
+ 
+-/*
+- * page_evictable - test whether a page is evictable
+- * @page: the page to test
+- *
+- * Test whether page is evictable--i.e., should be placed on active/inactive
+- * lists vs unevictable list.
+- *
+- * Reasons page might not be evictable:
+- * (1) page's mapping marked unevictable
+- * (2) page is part of an mlocked VMA
+- *
+- */
+-int page_evictable(struct page *page)
+-{
+-	int ret;
+-
+-	/* Prevent address_space of inode and swap cache from being freed */
+-	rcu_read_lock();
+-	ret = !mapping_unevictable(page_mapping(page)) && !PageMlocked(page);
+-	rcu_read_unlock();
+-	return ret;
+-}
+-
+ /**
+  * check_move_unevictable_pages - check pages for evictability and move to
+  * appropriate zone lru list
+-- 
+1.8.3.1
 
