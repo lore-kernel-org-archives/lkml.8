@@ -2,195 +2,170 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819AEC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3A9C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D1520674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000BA20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:01:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzLaNmkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgCQSAS (ORCPT
+        id S1726765AbgCQSBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:00:18 -0400
-Received: from smtp-190d.mail.infomaniak.ch ([185.125.25.13]:55119 "EHLO
-        smtp-190d.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726278AbgCQSAS (ORCPT
+        Tue, 17 Mar 2020 14:01:09 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38269 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgCQSBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:00:18 -0400
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 564B9100470DA;
-        Tue, 17 Mar 2020 18:50:10 +0100 (CET)
-Received: from ns3096276.ip-94-23-54.eu (ns3096276.ip-94-23-54.eu [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 48hgg42QGMzlt0RM;
-        Tue, 17 Mar 2020 18:50:08 +0100 (CET)
-Subject: Re: [RFC PATCH v14 00/10] Landlock LSM
-To:     Jann Horn <jannh@google.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <20200224160215.4136-1-mic@digikod.net>
- <CAG48ez21bEn0wL1bbmTiiu8j9jP5iEWtHOwz4tURUJ+ki0ydYw@mail.gmail.com>
- <873d7419-bdd9-8a52-0a9b-dddbe31df4f9@digikod.net>
- <CAG48ez0=0W5Ok-8nASqZrZ28JboXRRi3gDxV5u6mdcOtzwuRVA@mail.gmail.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <688dda0f-0907-34eb-c19e-3e9e5f613a74@digikod.net>
-Date:   Tue, 17 Mar 2020 18:50:07 +0100
-User-Agent: 
-MIME-Version: 1.0
-In-Reply-To: <CAG48ez0=0W5Ok-8nASqZrZ28JboXRRi3gDxV5u6mdcOtzwuRVA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+        Tue, 17 Mar 2020 14:01:08 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t13so278690wmi.3;
+        Tue, 17 Mar 2020 11:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=T32itqq2iG4R5xS3SgZFa5iW2a5HV4efCuB1zt7pHvc=;
+        b=lzLaNmkppxWDxmNZQ5aCmmzdE6ZG+qKLm+AhRSLlpp5qilmm1HBdRI8dHLwrCc2a7W
+         dl8Af4rsjAmG4zMHhS1/8xMtyuOAYQOP6NmYRxsV16FV+tqgshQwUge9Xhw82Kym+deb
+         uSq856n67xzcF1GRNnLoR6yHYqfSxaOUWbPnFaPCgcLuURldLm1TwChTH1dYRRjWRY11
+         TjKkghMQ/3dS1qyHwCKjpy3V4kpgg5WOy3Ez7bqq8iKa5m1ipM2U2LtPGFgXOTk9dezm
+         WovKDgMsAin2jESSMlq1FNryLUkl4FdAQlAzhQZ9V55pdHIyJVKOMW+VnAoLcNDPx0G7
+         O5SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=T32itqq2iG4R5xS3SgZFa5iW2a5HV4efCuB1zt7pHvc=;
+        b=tazGW23eQ7ldr4jhnPlH9k0yGmfd+8E9Xc/GUXYEu9HTJKXHuN7zR3q5hff7fKBv8B
+         KLSFjD6apgs1PffiWIBeYwt6nOwVdY/D80BxLTp43RCVKfM/s0EXL7ooOoToUvMgjqP1
+         zwUMnKT4RQjG4IxotMf6vL3Si8Add+iMwN0F7smoFB1NdjaebREnZZyl76Dtx7WiucMG
+         ll99ByP+sYzZ/o15Wo8a/j3guhe8McdPIl9w8ghdeN5UKdoi5Vu5Hv6Ssfz3Lqoby4JP
+         svWnEXAMSL2Mc8H1Ad0w30tYDO7p/dWrydJCS3W0wfRR4ZQWx5dnafRY1j5zm+EudNut
+         chzg==
+X-Gm-Message-State: ANhLgQ0uD4AYna2JTQF+Of5uUd86d+8ZMJdiNc5tfj4pI0n2GWvB5h7E
+        6nm3Q19KMo32CXn3d/9upyDaxhLb
+X-Google-Smtp-Source: ADFU+vt3RGoK8s2yNUjqUV+NqdyImargYWiitWSLtlUNk1uRN2/kGm+q/TY2uiVncgJvOTLctkSeTg==
+X-Received: by 2002:a05:600c:2c06:: with SMTP id q6mr246073wmg.52.1584468065931;
+        Tue, 17 Mar 2020 11:01:05 -0700 (PDT)
+Received: from 640k.localdomain.com ([93.56.174.5])
+        by smtp.gmail.com with ESMTPSA id j39sm5955220wre.11.2020.03.17.11.01.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Mar 2020 11:01:04 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com, sean.j.christopherson@intel.com
+Subject: [PATCH] KVM: nVMX: remove side effects from nested_vmx_exit_reflected
+Date:   Tue, 17 Mar 2020 19:00:59 +0100
+Message-Id: <1584468059-3585-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The name of nested_vmx_exit_reflected suggests that it's purely
+a test, but it actually marks VMCS12 pages as dirty.  Move this to
+vmx_handle_exit, observing that the initial nested_run_pending check in
+nested_vmx_exit_reflected is pointless---nested_run_pending has just
+been cleared in vmx_vcpu_run and won't be set until handle_vmlaunch
+or handle_vmresume.
 
-On 17/03/2020 17:19, Jann Horn wrote:
-> On Thu, Mar 12, 2020 at 12:38 AM Mickaël Salaün <mic@digikod.net> wrote:
->> On 10/03/2020 00:44, Jann Horn wrote:
->>> On Mon, Feb 24, 2020 at 5:03 PM Mickaël Salaün <mic@digikod.net> wrote:
+Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/vmx/nested.c | 18 ++----------------
+ arch/x86/kvm/vmx/nested.h |  1 +
+ arch/x86/kvm/vmx/vmx.c    | 19 +++++++++++++++++--
+ 3 files changed, 20 insertions(+), 18 deletions(-)
 
-[...]
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 8578513907d7..4ff859c99946 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3527,7 +3527,7 @@ static void vmcs12_save_pending_event(struct kvm_vcpu *vcpu,
+ }
+ 
+ 
+-static void nested_mark_vmcs12_pages_dirty(struct kvm_vcpu *vcpu)
++void nested_mark_vmcs12_pages_dirty(struct kvm_vcpu *vcpu)
+ {
+ 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+ 	gfn_t gfn;
+@@ -5543,8 +5543,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+ 
+-	if (vmx->nested.nested_run_pending)
+-		return false;
++	WARN_ON_ONCE(vmx->nested.nested_run_pending);
+ 
+ 	if (unlikely(vmx->fail)) {
+ 		trace_kvm_nested_vmenter_failed(
+@@ -5553,19 +5552,6 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
+ 		return true;
+ 	}
+ 
+-	/*
+-	 * The host physical addresses of some pages of guest memory
+-	 * are loaded into the vmcs02 (e.g. vmcs12's Virtual APIC
+-	 * Page). The CPU may write to these pages via their host
+-	 * physical address while L2 is running, bypassing any
+-	 * address-translation-based dirty tracking (e.g. EPT write
+-	 * protection).
+-	 *
+-	 * Mark them dirty on every exit from L2 to prevent them from
+-	 * getting out of sync with dirty tracking.
+-	 */
+-	nested_mark_vmcs12_pages_dirty(vcpu);
+-
+ 	trace_kvm_nested_vmexit(kvm_rip_read(vcpu), exit_reason,
+ 				vmcs_readl(EXIT_QUALIFICATION),
+ 				vmx->idt_vectoring_info,
+diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+index 21d36652f213..f70968b76d33 100644
+--- a/arch/x86/kvm/vmx/nested.h
++++ b/arch/x86/kvm/vmx/nested.h
+@@ -33,6 +33,7 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+ 			u32 vmx_instruction_info, bool wr, int len, gva_t *ret);
+ void nested_vmx_pmu_entry_exit_ctls_update(struct kvm_vcpu *vcpu);
++void nested_mark_vmcs12_pages_dirty(struct kvm_vcpu *vcpu);
+ bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
+ 				 int size);
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index b447d66f44e6..07299a957d4a 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5851,8 +5851,23 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+ 	if (vmx->emulation_required)
+ 		return handle_invalid_guest_state(vcpu);
+ 
+-	if (is_guest_mode(vcpu) && nested_vmx_exit_reflected(vcpu, exit_reason))
+-		return nested_vmx_reflect_vmexit(vcpu, exit_reason);
++	if (is_guest_mode(vcpu)) {
++		/*
++		 * The host physical addresses of some pages of guest memory
++		 * are loaded into the vmcs02 (e.g. vmcs12's Virtual APIC
++		 * Page). The CPU may write to these pages via their host
++		 * physical address while L2 is running, bypassing any
++		 * address-translation-based dirty tracking (e.g. EPT write
++		 * protection).
++		 *
++		 * Mark them dirty on every exit from L2 to prevent them from
++		 * getting out of sync with dirty tracking.
++		 */
++		nested_mark_vmcs12_pages_dirty(vcpu);
++
++		if (nested_vmx_exit_reflected(vcpu, exit_reason))
++			return nested_vmx_reflect_vmexit(vcpu, exit_reason);
++	}
+ 
+ 	if (exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
+ 		dump_vmcs();
+-- 
+1.8.3.1
 
->>> Aside from those things, there is also a major correctness issue where
->>> I'm not sure how to solve it properly:
->>>
->>> Let's say a process installs a filter on itself like this:
->>>
->>> struct landlock_attr_ruleset ruleset = { .handled_access_fs =
->>> ACCESS_FS_ROUGHLY_WRITE};
->>> int ruleset_fd = landlock(LANDLOCK_CMD_CREATE_RULESET,
->>> LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
->>> struct landlock_attr_path_beneath path_beneath = {
->>>   .ruleset_fd = ruleset_fd,
->>>   .allowed_access = ACCESS_FS_ROUGHLY_WRITE,
->>>   .parent_fd = open("/tmp/foobar", O_PATH),
->>> };
->>> landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
->>> sizeof(path_beneath), &path_beneath);
->>> prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
->>> struct landlock_attr_enforce attr_enforce = { .ruleset_fd = ruleset_fd };
->>> landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
->>> sizeof(attr_enforce), &attr_enforce);
->>>
->>> At this point, the process is not supposed to be able to write to
->>> anything outside /tmp/foobar, right? But what happens if the process
->>> does the following next?
->>>
->>> struct landlock_attr_ruleset ruleset = { .handled_access_fs =
->>> ACCESS_FS_ROUGHLY_WRITE};
->>> int ruleset_fd = landlock(LANDLOCK_CMD_CREATE_RULESET,
->>> LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
->>> struct landlock_attr_path_beneath path_beneath = {
->>>   .ruleset_fd = ruleset_fd,
->>>   .allowed_access = ACCESS_FS_ROUGHLY_WRITE,
->>>   .parent_fd = open("/", O_PATH),
->>> };
->>> landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
->>> sizeof(path_beneath), &path_beneath);
->>> prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
->>> struct landlock_attr_enforce attr_enforce = { .ruleset_fd = ruleset_fd };
->>> landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
->>> sizeof(attr_enforce), &attr_enforce);
->>>
->>> As far as I can tell from looking at the source, after this, you will
->>> have write access to the entire filesystem again. I think the idea is
->>> that LANDLOCK_CMD_ENFORCE_RULESET should only let you drop privileges,
->>> not increase them, right?
->>
->> There is an additionnal check in syscall.c:get_path_from_fd(): it is
->> forbidden to add a rule with a path which is not accessible (according
->> to LANDLOCK_ACCESS_FS_OPEN) thanks to a call to security_file_open(),
->> but this is definitely not perfect.
-> 
-> Ah, I missed that.
-> 
->>> I think the easy way to fix this would be to add a bitmask to each
->>> rule that says from which ruleset it originally comes, and then let
->>> check_access_path() collect these bitmasks from each rule with OR, and
->>> check at the end whether the resulting bitmask is full - if not, at
->>> least one of the rulesets did not permit the access, and it should be
->>> denied.
->>>
->>> But maybe it would make more sense to change how the API works
->>> instead, and get rid of the concept of "merging" two rulesets
->>> together? Instead, we could make the API work like this:
->>>
->>>  - LANDLOCK_CMD_CREATE_RULESET gives you a file descriptor whose
->>> ->private_data contains a pointer to the old ruleset of the process,
->>> as well as a pointer to a new empty ruleset.
->>>  - LANDLOCK_CMD_ADD_RULE fails if the specified rule would not be
->>> permitted by the old ruleset, then adds the rule to the new ruleset
->>>  - LANDLOCK_CMD_ENFORCE_RULESET fails if the old ruleset pointer in
->>> ->private_data doesn't match the current ruleset of the process, then
->>> replaces the old ruleset with the new ruleset.
->>>
->>> With this, the new ruleset is guaranteed to be a subset of the old
->>> ruleset because each of the new ruleset's rules is permitted by the
->>> old ruleset. (Unless the directory hierarchy rotates, but in that case
->>> the inaccuracy isn't much worse than what would've been possible
->>> through RCU path walk anyway AFAIK.)
->>>
->>> What do you think?
->>>
->>
->> I would prefer to add the same checks you described at first (with
->> check_access_path), but only when creating a new ruleset with
->> merge_ruleset() (which should probably be renamed). This enables not to
->> rely on a parent ruleset/domain until the enforcement, which is the case
->> anyway.
->> Unfortunately this doesn't work for some cases with bind mounts. Because
->> check_access_path() goes through one path, another (bind mounted) path
->> could be illegitimately allowed.
-> 
-> Hmm... I'm not sure what you mean. At the moment, landlock doesn't
-> allow any sandboxed process to change the mount hierarchy, right? Can
-> you give an example where this would go wrong?
-
-Indeed, a Landlocked process must no be able to change its mount
-namespace layout. However, bind mounts may already exist.
-Let's say a process sandbox itself to only access /a in a read-write
-way. Then, this process (or one of its children) add a new restriction
-on /a/b to only be able to read this hierarchy. The check at insertion
-time would allow this because this access right is a subset of the
-access right allowed with the parent directory. However, If /a/b is bind
-mounted somewhere else, let's say in /private/b, then the second
-enforcement just gave new access rights to this hierarchy too. This is
-why it seems risky to rely on a check about the legitimacy of a new
-access right when adding it to a ruleset or when enforcing it.
-
-
-> 
->> That makes the problem a bit more complicated. A solution may be to keep
->> track of the hierarchy of each rule (e.g. with a layer/depth number),
->> and only allow an access request if at least a rule of each layer allow
->> this access. In this case we also need to correctly handle the case when
->> rules from different layers are tied to the same object.
-> 
