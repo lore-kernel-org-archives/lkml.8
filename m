@@ -2,134 +2,127 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA8EC0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2E6C0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5002820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584406701;
-	bh=wXkJt0TNZyybiR6gkgYwQsL0d0G2i2XFhW+feaizHjo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VchTrl2JP6PRx5FJKCeRkJJMLdQJTzmMt9dSSJku5KQL+TpgdlOH1WgX9hkAyc9UM
-	 61TGbl2684TF2WpkNgRdvsP865sJIPTnf/PDkYUWXXmeoAJ18vuXl/6rPLoczVNat9
-	 8kUIigUUMAznJqqm4oJhLLBipVnm5tm4RV42CUUw=
+	by mail.kernel.org (Postfix) with ESMTP id 1865E2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733306AbgCQA6U (ORCPT
+        id S2387396AbgCQBAd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 20:58:20 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:63909 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733274AbgCQA6T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 20:58:19 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 02H0wA3G018076
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:58:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 02H0wA3G018076
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584406691;
-        bh=+VzaV5sFRtxKAoH7rppPTz7vYTx/ptvPFYNX1JZhr8I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GiCnmEy7O3U4VXa+yfMjIQmZAPzU4/Ct1ZwiT6pnC+/5xY3EEiJ80n63iZBpCIYPp
-         +L/hDvKxtVjfs3I6C6tuEEl0j9kWZuF7L6sqzO9A9YWhYw4aK3C6w6TWMzSY0noU/s
-         Y00VJjswqHfczNpIyce/5eQ8ryhBk1+bl1B+WdFlm20ZlT65KEW8WEUfoPHlMEzP9W
-         Hk0wfP714TUEi+SziukauXYljnwJBW5n/nt8EB2hVuQIxDUwqKkysXyNUm4/ylLN+q
-         jWExfKOYHXwzZaI2MDns3toWx/a/EpdXxk9F7mPbgB4LafM3nJrbDckREk9kKMV7Cf
-         2AKV0kFsSokNA==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id 9so6852935uav.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 17:58:11 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0tG7Sol8QnWHXQVFThAKL6TeLZK3zkYeg5eQFbUN0+ma5m9a7H
-        KBX6zLRhg5uXbn5ONDcZFC1/n3u4ovk3UvLfrvI=
-X-Google-Smtp-Source: ADFU+vuBMyABnImUl6b7dOsBe/MmCPk6aP5Z95Lob+zvXfebQ+cT0BPcRz9rBKi3g9swgrYAnym5uBEh+XpBuHhH+wc=
-X-Received: by 2002:ab0:28d8:: with SMTP id g24mr1921244uaq.121.1584406689827;
- Mon, 16 Mar 2020 17:58:09 -0700 (PDT)
+        Mon, 16 Mar 2020 21:00:33 -0400
+Received: from mail-oln040092254011.outbound.protection.outlook.com ([40.92.254.11]:14151
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1733182AbgCQBAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:00:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oDxCkPxXkwD95SQM/CD0Hh34zoFNElKSFG+fO1XHNCCxFdV6YxIg/fGzFYbIGymKwBWpiRXCyEvfb8etptJZ5Stxn30R2iSEstPshY0j74gLqrGEnHfZe8g5fmmNK8dE5LWltJ4JjPaArrzpixz0mdJfZw7nHBGf+A1vGXPymNswSaORdLdLbV/LOJPJIGQ1zOKBW0ivAbeUpiNe64dJo5ho8g6og+BNIjgNfyv46lJge/h/n6NGFIBC4mq4t0QrrqVQcGmnL9gt9O7q8F7fd31NMzG1/RFjG/2MAMCI4PAg8S+7buO6/1wRq6m5Aj7+43np1irSFeEUplrrrA7Dmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sb5AQ09JIqc9zjHIPQxR1tU8nPFrsTNOoQEqXv56ir4=;
+ b=UqLc3tK9zazXZMQmDV7Qm8Kn7J+j8QqyLyxuaDWu6nLdLz8Osk4+1QBFHHQiLxgIIez94et3QRMcCBIo9YcQBrIcWQZuOq7TelKqieViHdoWZcGkATUaFzj1Tx0/2rPHPAF+4OBzAhjM4k5txVlV8bzVgVUAN6w2L8Wj0elLwXXPYVCDpIOjtDcBvofK1gBtmTbc7lkESpulsfRl55pDrifckP3KFx3Us5xNCmwlE1Tohjvly5a+hSPfC+4lz9o2pIcXnTFeXAjw6Y6JN9/Ovmex+VpcmqHH0N3XbJO62KRRCtx36iYMhni/LxCw0HMSEbL7jY9ojx6OLfw10TetTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT007.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebe::3a) by
+ PU1APC01HT098.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebe::327)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Tue, 17 Mar
+ 2020 01:00:27 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.51) by
+ PU1APC01FT007.mail.protection.outlook.com (10.152.252.99) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13 via Frontend Transport; Tue, 17 Mar 2020 01:00:27 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 01:00:27 +0000
+Received: from nicholas-dell-linux (49.196.2.18) by ME2PR01CA0175.ausprd01.prod.outlook.com (2603:10c6:220:20::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14 via Frontend Transport; Tue, 17 Mar 2020 01:00:23 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v4 0/1] nvmem: Add support for write-only instances, and
+ clean-up
+Thread-Topic: [PATCH v4 0/1] nvmem: Add support for write-only instances, and
+ clean-up
+Thread-Index: AQHV+/dyMcnDNDQH0E+w4sM+rU8vug==
+Date:   Tue, 17 Mar 2020 01:00:26 +0000
+Message-ID: <PSXP216MB0438DB7146E07670FCDC1A7280F60@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0175.ausprd01.prod.outlook.com
+ (2603:10c6:220:20::19) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:457FDB5F0EBDAF0E42AAA9112117CB9F0F06A3E8BE67C8EB8D2EF9ABADD78849;UpperCasedChecksum:C1989CBD9715B5118852ABC0B0C872E259514A5CBD7BF6E27F201F6A5BA3665E;SizeAsReceived:7638;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [suqRVjdBTQ6O5CVDT0Jv4XNctelbau3J]
+x-microsoft-original-message-id: <20200317010016.GA3654@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: a8827cdf-0207-46a6-e66d-08d7ca0e9412
+x-ms-exchange-slblob-mailprops: wjVjg9/kRd1Ha0jL5FI4BHrnrG0JXql/75j9lvbCnKncbVUFH2NnJNvyprtmH5heKhZ0MmXkOvog1cE3WfSczPPrnqDBtr105GTab6CDCa0l8Sr4jidS89AhMpRpYMwHMGpLQpAs1ExVA92Kb7SZCfbPj86EkDtkwp3TfjRfuotlbA520nQYWLk1JF5grj8132v3VnxUFELaHGn76k5C/JJ0wIvVhGqLlMAZTvvRh4jVqCQ/ouVP60IE4ydLZxiCLX5yHbaWbs8GIWnXDO+K5vMjVeKtMEEM501ZQQxhzn80XyK22SgslW/2XGXc7ZraZ2dnm1QlLXmUziEkLPxCHExAfFVYK42QkKj136olBf1+z0vsWIbuHQI7H2Q/eTWE58JGIozDl9xZAvY2e5XZlB+WBs+PbQJXbLuW2/ESjRoB3P3ZlV+M/RpRvBKOUzQBU8sjmlvLbGW50GjySvKUXJ492nZn0D5gVudGKeEtkgL2HtpY0HKYvR67GO5gfWpyYbM83yeQGqxwdfsS/a57as122d2OknsQv33mElEqv4apu71omhT5xu+YopLzxBNWk00mOC620JGavnQUNQDVD5dYeNFyK1+qcOPeyYsfwHKn1RH69fZUibIcAi8HsB1BdVx7WUQ6f4bKZxIJrtUiMU2JZVZEd7D7cmhfZzgOk+8foy90WXjxfjahmzdbkf5ov5m4U42UMoFgKWjsHtkqX+HT3WmRkfzaV9WSIWmiMXPqL+qr4nWaLMSTQtIhYpxrKSYrP/ZV37muoVc4cCOQ5djO3yqpp2j8MmXSxLazMp6i/6cEONXKzsjDR/Ddv93oZXF6MG2RxwzNxXiou0vj6ySEn9t3gHvCKja05/ZtmUblQCaATD6XZzbLEYcPn5DOo5dyOV0+OzP6LIY2JV17hkgpgibz1l+d3w5//7+uvhwvZBS6+SEuaw==
+x-ms-traffictypediagnostic: PU1APC01HT098:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: M3nsthaExFD9K675IV5i5Ebhvekp/NBRMTglhGsWyvCZmJ4AP0SFR+tTgFSvsypLjeH9zvK1kl10G2SeWCDD4txjcabUjoM2y/LFFA5CozqoNl18nmyCHX3mdYswIbr8hEc3t4AZMQlD7+3PQuIpI51Ph6rfYvtRNi1pDDC4wEtlbMcZxTgAEckoruioswWgBJkX3zGJE/6zHP7hfxVqBCkUqQI3I5M3MKD77wzLL68=
+x-ms-exchange-antispam-messagedata: GdyPjITtWi8tKOTwTHkxiF+IKf4QQ76IslGZVVLojpjjakPidf3xI7MCCyjhXlf3UNo5SNb3Dd6bfD75cQxMT90fq10JNqdEoEW4Ed5fKaDZWQMbLcC2eR5fuoEG7WGFs5wbUQ037i9K5TPHrYyxZQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F7884A49FB05C14081783B07BE821BD6@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200311102217.25170-1-Eugeniy.Paltsev@synopsys.com>
- <CAK7LNARSNBOMK9+s9pmVsVtnzr2qqFxHNr+GhJd_BnbgNW4SSQ@mail.gmail.com> <BY5PR12MB4034829B9DC8EC77C5164439DEF90@BY5PR12MB4034.namprd12.prod.outlook.com>
-In-Reply-To: <BY5PR12MB4034829B9DC8EC77C5164439DEF90@BY5PR12MB4034.namprd12.prod.outlook.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 17 Mar 2020 09:57:33 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATj_p0PaTiuY2q3+AA-Hf87bG2YFoqfxCAfaXWqhRZA+w@mail.gmail.com>
-Message-ID: <CAK7LNATj_p0PaTiuY2q3+AA-Hf87bG2YFoqfxCAfaXWqhRZA+w@mail.gmail.com>
-Subject: Re: [PATCH] initramfs: restore default compression behaviour
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8827cdf-0207-46a6-e66d-08d7ca0e9412
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 01:00:27.1108
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 8:22 PM Eugeniy Paltsev
-<Eugeniy.Paltsev@synopsys.com> wrote:
->
-> Hi Masahiro,
->
-> >From: Masahiro Yamada <masahiroy@kernel.org>
-> >Sent: Wednesday, March 11, 2020 23:12
-> >To: Eugeniy Paltsev
-> >Cc: Linux Kernel Mailing List; arcml; Vineet Gupta; Alexey Brodkin
-> >Subject: Re: [PATCH] initramfs: restore default compression behaviour
-> >
-> >Hi Eugeniy.
-> >
-> >On Wed, Mar 11, 2020 at 7:22 PM Eugeniy Paltsev
-> ><Eugeniy.Paltsev@synopsys.com> wrote:
-> >>
-> >> Even though INITRAMFS_SOURCE kconfig option isn't set in most of
-> >> defconfigs it is used (set) extensively by various build systems.
-> >> Commit f26661e12765 ("initramfs: make initramfs compression choice
-> >> non-optional") has changed default compression mode. Previously we
-> >> compress initramfs using available compression algorithm. Now
-> >> we don't use any compression at all by default.
-> >> It significantly increases the image size in case of build system
-> >> chooses embedded initramfs. Initially I faced with this issue while
-> >> using buildroot.
-> >>
-> >> As of today it's not possible to set preferred compression mode
-> >> in target defconfig as this option depends on INITRAMFS_SOURCE
-> >> being set.
-> >> Modification of build systems doesn't look like good option in this
-> >> case as it requires to check against kernel version when setting
-> >> compression mode. The reason for this is that kconfig options
-> >> describing compression mode was renamed (in same patch series)
-> >
-> >Which commit?
-> >
-> >I do not remember the renaming of kconfig options
-> >with this regard.
->
-> Ok, I've checked it again - looks like I was confused a bit by
-> "CONFIG_INITRAMFS_COMPRESSION" option
-> as in v5.5 kernel I have in ".config":
-> CONFIG_INITRAMFS_COMPRESSION=".gz"
->
-> And for v5.6-rc1 I have in ".config":
-> CONFIG_INITRAMFS_COMPRESSION_GZIP=y
->
-> But they are different options actually...
+Hello all,
 
+Previous version: https://lkml.org/lkml/2020/3/9/731
 
-Right.
+Changed since previous version:
 
-There is no prompt for CONFIG_INITRAMFS_COMPRESSION.
-So, users have no control of it.
+- Hopefully fixed memory leak fully. I set CONFIG_DEBUG_KMEMLEAK and
+  according to the leak detector, it is no longer leaking. I believe the
+  leak was when setting the device name. I could not find out how to
+  free that in the required context. But I avoided it by moving the
+  groups above setting the name.
 
-Because this is just a matter of the file extension,
-commit 65e00e04e5aea34 moved the logic to Makefile.
+  If you believe there is still a leak, please be specific about what
+  you think it is. I have been reading up this week about the driver
+  interfaces and trying to figure it out, but I have had trouble finding
+  good reading material.
 
+- I squashed the two patches together as advised by Srinivas.
 
+- Changed from -EPERM to -EINVAL for invalid configuration.
 
+Nicholas Johnson (1):
+  nvmem: Add support for write-only instances
+
+ drivers/nvmem/core.c        |  9 ++++--
+ drivers/nvmem/nvmem-sysfs.c | 56 +++++++++++++++++++++++++++++++------
+ 2 files changed, 54 insertions(+), 11 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.25.1
+
