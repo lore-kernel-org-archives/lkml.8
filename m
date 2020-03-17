@@ -4,53 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F068C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5C6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207A12076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61EEF20752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584450670;
-	bh=QyLkGuPfEBut7lJE9QyErixhuO2mGnV+5sbTxdfHiCs=;
+	s=default; t=1584450675;
+	bh=YcuIoVrIQeXiuSD1j/Q1Lk0qQ1T1L/MGqpKL3q2kgPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vFQu9D/SgwpmOIclUFovrx/HjzO2LOW/XINmKn562GqiholFemqHh+y99t8R9hq5i
-	 tpE728xb9Fr+AW6CPYeIfIWC8Jb2FxjDaKK5GMSjKC59RSn7QGbTFSXqeBELn1j5BS
-	 T/5W8p2W0V3SjXuhh3lItVsagAtH9id9JVh8IS9U=
+	b=PZ+G1s4RxI8Ctvo0G4aDfu76qlqc7Ni9Jn0GRWBl3Cxfy8iqFpzteMjKtXRjEHUBX
+	 P/k3z0Plzd83DwIm98apEgVTj7QQpsXfexecsstK1udAENMOrO36BwZwx3XIoikUbd
+	 MSV2EydNzuypuI9VLN40k1TRIKR+NFzopHHGTi84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgCQNK5 (ORCPT
+        id S1726992AbgCQNLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37708 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 09:11:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgCQNK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726740AbgCQNK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 09:10:56 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5369820752;
+        by mail.kernel.org (Postfix) with ESMTPSA id D6C3620770;
         Tue, 17 Mar 2020 13:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584450655;
-        bh=QyLkGuPfEBut7lJE9QyErixhuO2mGnV+5sbTxdfHiCs=;
+        s=default; t=1584450656;
+        bh=YcuIoVrIQeXiuSD1j/Q1Lk0qQ1T1L/MGqpKL3q2kgPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QltzWFyx31h8qGLX0L565lDdBLjuWiGzeDvXbGN/OEFKxRJ7gpzQJeArzAatDag6m
-         dbKm6Q4yTnd1XRod03X9LmJRpscuRu6Cs/IEa7Hg9BxYM1KZ/BP4MG4zuiHoRRssp0
-         kHQwN1lbbh+fXmpZHLLuHaFO+EMNfZOTJ/VOBGzs=
+        b=IcuEk5UvdTtgQPs7Io6jULVaHJVkCLU/zHbTq0oqrBwW/D/cKjSEoWtWxd+YhhLXk
+         B/FevolAtqO81SIqhZ/F73qyB/NPiLuKpSDQYQvO3t/qwbmLe/qamZUUhl28qWmSS2
+         8K5MJOGjJDqxW7WdgLywez4tn8tuWN4jpAQhG/3M=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jEBzh-0006Rt-GG; Tue, 17 Mar 2020 14:10:53 +0100
+        id 1jEBzh-0006S5-Kz; Tue, 17 Mar 2020 14:10:53 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh@kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 02/12] MAINTAINERS: dt: update etnaviv file reference
-Date:   Tue, 17 Mar 2020 14:10:41 +0100
-Message-Id: <62bfbba8192469976129adf24783b1534b19d6e4.1584450500.git.mchehab+huawei@kernel.org>
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Ben Peled <bpeled@marvell.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH 05/12] docs: dt: fix references to ap806-system-controller.txt
+Date:   Tue, 17 Mar 2020 14:10:44 +0100
+Message-Id: <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1584450500.git.mchehab+huawei@kernel.org>
 References: <cover.1584450500.git.mchehab+huawei@kernel.org>
@@ -61,29 +73,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The etnaviv file was converted to json and renamed.
+ap806-system-controller.txt was renamed to ap80x-system-controller.txt.
 
-Update its reference accordingly.
+Update its references accordingly.
 
-Fixes: 90aeca875f8a ("dt-bindings: display: Convert etnaviv to json-schema")
+Fixes: 2537831bbc19 ("dt-bindings: ap80x: replace AP806 with AP80x")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/gpio/gpio-mvebu.txt        | 2 +-
+ Documentation/devicetree/bindings/thermal/armada-thermal.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9f3ce3f8df56..21204be0b4bf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5768,7 +5768,7 @@ L:	dri-devel@lists.freedesktop.org
- S:	Maintained
- F:	drivers/gpu/drm/etnaviv/
- F:	include/uapi/drm/etnaviv_drm.h
--F:	Documentation/devicetree/bindings/display/etnaviv/
-+F:	Documentation/devicetree/bindings/gpu/vivante,gc.yaml
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+index 2e097b57f170..0fc6700ed800 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+@@ -14,7 +14,7 @@ Required properties:
  
- DRM DRIVERS FOR ZTE ZX
- M:	Shawn Guo <shawnguo@kernel.org>
+     "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
+     SoCs (either from AP or CP), see
+-    Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
++    Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
+     for specific details about the offset property.
+ 
+ - reg: Address and length of the register set for the device. Only one
+diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+index f3b441100890..b0bee7e42038 100644
+--- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+@@ -12,7 +12,7 @@ Required properties:
+ 
+ Note: these bindings are deprecated for AP806/CP110 and should instead
+ follow the rules described in:
+-Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
++Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
+ Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
+ 
+ - reg: Device's register space.
 -- 
 2.24.1
 
