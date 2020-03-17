@@ -2,55 +2,52 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A597EC0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAD7C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C799206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA731206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584407075;
-	bh=guYRMxUJXISSab/MInoIXdlC6J6S094cAmbcHP42jeM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JszLVoR0E5IC2kuUbqqDk9ACZKpgQHR8SKN02faPZ8txClH+0CQFu2sftJfQ4scdD
-	 fpSLNHq422dlYAGHUa30FeTDuWGIATx3/u0BwDw0zFhcEJ1mdDrFYRnodjTfmUgU1v
-	 Ji3LTVfF9YS3Nz7/3Sur7pzLlSqDNLnOdMU+jvSI=
+	s=default; t=1584407086;
+	bh=Wbg6Rtk1wpx3tRDX+mqiJ9Yo99G3T/nP1fANeE8dp70=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=v4FMgGsBKcMwRJjsXmIJSoOwa87/mRKoBhD2+aSJy/FMlTUQDfjuiGqO9IkHeszCy
+	 jGVjUs5T9TNLW1eDklEcW9D6P7NUIpI41XxPtJoviW5iBiRvPOvyG6dVX5Evx++plZ
+	 IWG3yzVOG+T+hF9EC4nD0DxvE51/LW79yyBAmjzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387474AbgCQBE0 (ORCPT
+        id S2387423AbgCQBEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:04:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59914 "EHLO mail.kernel.org"
+        Mon, 16 Mar 2020 21:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387426AbgCQBEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:04:24 -0400
+        id S1733193AbgCQBEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:04:22 -0400
 Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5829620752;
-        Tue, 17 Mar 2020 01:04:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1446B2051A;
+        Tue, 17 Mar 2020 01:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584407063;
-        bh=guYRMxUJXISSab/MInoIXdlC6J6S094cAmbcHP42jeM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=plg4Qmxe7VKeQX+RadLxk2dNHJRv6j1HPP8WWQZfcwdQPB41LcT+d3U9A/h6uSo0Y
-         Tl1GXQ16IyvI5RMnoz8VV3Cq2wlIrkkSGsiV6RgtX9tOjfghMdbstXKuawuXjSveXM
-         005FtFAYANkkHyoK+skTMYzLirZE7/rZMtjidRnI=
+        s=default; t=1584407061;
+        bh=Wbg6Rtk1wpx3tRDX+mqiJ9Yo99G3T/nP1fANeE8dp70=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YlR9DmTVHpktl51bYvDFEyWMXYC/6VEgdI2H+AOnvQ2Mgbn82paCF0OEB3MOgVZw0
+         5fyescRl7tZnQCBVOtVJA7G241wu5uypm5skLLU5N/tuaItA4jcUM0vlghUxDS/6R9
+         JxWPxgPznbd7LZFX/c2vNOJz0MGPGy75v6rIBamQ=
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     shuah@kernel.org, keescook@chromium.org
 Cc:     luto@amacapital.net, wad@chromium.org,
         linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com,
         Tim.Bird@sony.com, Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH v4 4/5] kselftest: add fixture variants
-Date:   Mon, 16 Mar 2020 18:04:18 -0700
-Message-Id: <20200317010419.3268916-5-kuba@kernel.org>
+Subject: [PATCH v4 0/5] kselftest: add fixture parameters
+Date:   Mon, 16 Mar 2020 18:04:14 -0700
+Message-Id: <20200317010419.3268916-1-kuba@kernel.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200317010419.3268916-1-kuba@kernel.org>
-References: <20200317010419.3268916-1-kuba@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,327 +55,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow users to pass parameters to fixtures.
+Hi!
 
-Each fixture will be evaluated for each of its variants.
+Shuah please consider applying to the kselftest tree.
 
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
---
+This set is an attempt to make running tests for different
+sets of data easier. The direct motivation is the tls
+test which we'd like to run for TLS 1.2 and TLS 1.3,
+but currently there is no easy way to invoke the same
+tests with different parameters.
+
+Tested all users of kselftest_harness.h.
+
+v2:
+ - don't run tests by fixture
+ - don't pass params as an explicit argument
+
 v3:
- - separate variant name out with a dot;
- - count variants as "cases" in the opening print.
-v4:
- - realign and break lines after s/params/variant/
----
- Documentation/dev-tools/kselftest.rst       |   3 +-
- tools/testing/selftests/kselftest_harness.h | 148 ++++++++++++++++----
- 2 files changed, 124 insertions(+), 27 deletions(-)
+ - go back to the orginal implementation with an extra
+   parameter, and running by fixture (Kees);
+ - add LIST_APPEND helper (Kees);
+ - add a dot between fixture and param name (Kees);
+ - rename the params to variants (Tim);
 
-diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
-index 61ae13c44f91..5d1f56fcd2e7 100644
---- a/Documentation/dev-tools/kselftest.rst
-+++ b/Documentation/dev-tools/kselftest.rst
-@@ -301,7 +301,8 @@ Helpers
- 
- .. kernel-doc:: tools/testing/selftests/kselftest_harness.h
-     :functions: TH_LOG TEST TEST_SIGNAL FIXTURE FIXTURE_DATA FIXTURE_SETUP
--                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN
-+                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN FIXTURE_VARIANT
-+                FIXTURE_VARIANT_ADD
- 
- Operators
- ---------
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 36ab1b92eb35..8767d19dcc45 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -168,9 +168,15 @@
- 
- #define __TEST_IMPL(test_name, _signal) \
- 	static void test_name(struct __test_metadata *_metadata); \
-+	static inline void wrapper_##test_name( \
-+		struct __test_metadata *_metadata, \
-+		struct __fixture_variant_metadata *variant) \
-+	{ \
-+		test_name(_metadata); \
-+	} \
- 	static struct __test_metadata _##test_name##_object = \
- 		{ .name = #test_name, \
--		  .fn = &test_name, \
-+		  .fn = &wrapper_##test_name, \
- 		  .fixture = &_fixture_global, \
- 		  .termsig = _signal, \
- 		  .timeout = TEST_TIMEOUT_DEFAULT, }; \
-@@ -214,6 +220,7 @@
-  * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
-  */
- #define FIXTURE(fixture_name) \
-+	FIXTURE_VARIANT(fixture_name); \
- 	static struct __fixture_metadata _##fixture_name##_fixture_object = \
- 		{ .name =  #fixture_name, }; \
- 	static void __attribute__((constructor)) \
-@@ -245,7 +252,10 @@
- #define FIXTURE_SETUP(fixture_name) \
- 	void fixture_name##_setup( \
- 		struct __test_metadata __attribute__((unused)) *_metadata, \
--		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
-+		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
-+		const FIXTURE_VARIANT(fixture_name) \
-+			__attribute__((unused)) *variant)
-+
- /**
-  * FIXTURE_TEARDOWN(fixture_name)
-  * *_metadata* is included so that EXPECT_* and ASSERT_* work correctly.
-@@ -267,6 +277,59 @@
- 		struct __test_metadata __attribute__((unused)) *_metadata, \
- 		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
- 
-+/**
-+ * FIXTURE_VARIANT(fixture_name) - Optionally called once per fixture
-+ * to declare fixture variant
-+ *
-+ * @fixture_name: fixture name
-+ *
-+ * .. code-block:: c
-+ *
-+ *     FIXTURE_VARIANT(datatype name) {
-+ *       type property1;
-+ *       ...
-+ *     };
-+ *
-+ * Defines type of constant parameters provided to FIXTURE_SETUP() and TEST_F()
-+ * as *variant*. Variants allow the same tests to be run with different
-+ * arguments.
-+ */
-+#define FIXTURE_VARIANT(fixture_name) struct _fixture_variant_##fixture_name
-+
-+/**
-+ * FIXTURE_VARIANT_ADD(fixture_name, variant_name) - Called once per fixture
-+ * variant to setup and register the data
-+ *
-+ * @fixture_name: fixture name
-+ * @variant_name: name of the parameter set
-+ *
-+ * .. code-block:: c
-+ *
-+ *     FIXTURE_ADD(datatype name) {
-+ *       .property1 = val1;
-+ *       ...
-+ *     };
-+ *
-+ * Defines a variant of the test fixture, provided to FIXTURE_SETUP() and
-+ * TEST_F() as *variant*. Tests of each fixture will be run once for each
-+ * variant.
-+ */
-+#define FIXTURE_VARIANT_ADD(fixture_name, variant_name) \
-+	extern FIXTURE_VARIANT(fixture_name) \
-+		_##fixture_name##_##variant_name##_variant; \
-+	static struct __fixture_variant_metadata \
-+		_##fixture_name##_##variant_name##_object = \
-+		{ .name = #variant_name, \
-+		  .data = &_##fixture_name##_##variant_name##_variant}; \
-+	static void __attribute__((constructor)) \
-+		_register_##fixture_name##_##variant_name(void) \
-+	{ \
-+		__register_fixture_variant(&_##fixture_name##_fixture_object, \
-+			&_##fixture_name##_##variant_name##_object);	\
-+	} \
-+	FIXTURE_VARIANT(fixture_name) \
-+		_##fixture_name##_##variant_name##_variant =
-+
- /**
-  * TEST_F(fixture_name, test_name) - Emits test registration and helpers for
-  * fixture-based test cases
-@@ -297,18 +360,20 @@
- #define __TEST_F_IMPL(fixture_name, test_name, signal, tmout) \
- 	static void fixture_name##_##test_name( \
- 		struct __test_metadata *_metadata, \
--		FIXTURE_DATA(fixture_name) *self); \
-+		FIXTURE_DATA(fixture_name) *self, \
-+		const FIXTURE_VARIANT(fixture_name) *variant); \
- 	static inline void wrapper_##fixture_name##_##test_name( \
--		struct __test_metadata *_metadata) \
-+		struct __test_metadata *_metadata, \
-+		struct __fixture_variant_metadata *variant) \
- 	{ \
- 		/* fixture data is alloced, setup, and torn down per call. */ \
- 		FIXTURE_DATA(fixture_name) self; \
- 		memset(&self, 0, sizeof(FIXTURE_DATA(fixture_name))); \
--		fixture_name##_setup(_metadata, &self); \
-+		fixture_name##_setup(_metadata, &self, variant->data); \
- 		/* Let setup failure terminate early. */ \
- 		if (!_metadata->passed) \
- 			return; \
--		fixture_name##_##test_name(_metadata, &self); \
-+		fixture_name##_##test_name(_metadata, &self, variant->data); \
- 		fixture_name##_teardown(_metadata, &self); \
- 	} \
- 	static struct __test_metadata \
-@@ -326,7 +391,9 @@
- 	} \
- 	static void fixture_name##_##test_name( \
- 		struct __test_metadata __attribute__((unused)) *_metadata, \
--		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
-+		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
-+		const FIXTURE_VARIANT(fixture_name) \
-+			__attribute__((unused)) *variant)
- 
- /**
-  * TEST_HARNESS_MAIN - Simple wrapper to run the test harness
-@@ -661,10 +728,12 @@
- 
- /* Contains all the information about a fixture */
- struct __test_metadata;
-+struct __fixture_variant_metadata;
- 
- struct __fixture_metadata {
- 	const char *name;
- 	struct __test_metadata *tests;
-+	struct __fixture_variant_metadata *variant;
- 	struct __fixture_metadata *prev, *next;
- } _fixture_global __attribute__((unused)) = {
- 	.name = "global",
-@@ -672,7 +741,6 @@ struct __fixture_metadata {
- };
- 
- static struct __fixture_metadata *__fixture_list = &_fixture_global;
--static unsigned int __fixture_count;
- static int __constructor_order;
- 
- #define _CONSTRUCTOR_ORDER_FORWARD   1
-@@ -680,14 +748,27 @@ static int __constructor_order;
- 
- static inline void __register_fixture(struct __fixture_metadata *f)
- {
--	__fixture_count++;
- 	__LIST_APPEND(__fixture_list, f);
- }
- 
-+struct __fixture_variant_metadata {
-+	const char *name;
-+	const void *data;
-+	struct __fixture_variant_metadata *prev, *next;
-+};
-+
-+static inline void
-+__register_fixture_variant(struct __fixture_metadata *f,
-+			   struct __fixture_variant_metadata *variant)
-+{
-+	__LIST_APPEND(f->variant, variant);
-+}
-+
- /* Contains all the information for test execution and status checking. */
- struct __test_metadata {
- 	const char *name;
--	void (*fn)(struct __test_metadata *);
-+	void (*fn)(struct __test_metadata *,
-+		   struct __fixture_variant_metadata *);
- 	struct __fixture_metadata *fixture;
- 	int termsig;
- 	int passed;
-@@ -698,9 +779,6 @@ struct __test_metadata {
- 	struct __test_metadata *prev, *next;
- };
- 
--/* Storage for the (global) tests to be run. */
--static unsigned int __test_count;
--
- /*
-  * Since constructors are called in reverse order, reverse the test
-  * list so tests are run in source declaration order.
-@@ -714,7 +792,6 @@ static inline void __register_test(struct __test_metadata *t)
- {
- 	struct __fixture_metadata *f = t->fixture;
- 
--	__test_count++;
- 	__LIST_APPEND(f->tests, t);
- }
- 
-@@ -729,21 +806,27 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
- }
- 
- void __run_test(struct __fixture_metadata *f,
-+		struct __fixture_variant_metadata *variant,
- 		struct __test_metadata *t)
- {
- 	pid_t child_pid;
- 	int status;
- 
-+	/* reset test struct */
- 	t->passed = 1;
- 	t->trigger = 0;
--	printf("[ RUN      ] %s.%s\n", f->name, t->name);
-+	t->step = 0;
-+	t->no_print = 0;
-+
-+	printf("[ RUN      ] %s%s%s.%s\n",
-+	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
- 	alarm(t->timeout);
- 	child_pid = fork();
- 	if (child_pid < 0) {
- 		printf("ERROR SPAWNING TEST CHILD\n");
- 		t->passed = 0;
- 	} else if (child_pid == 0) {
--		t->fn(t);
-+		t->fn(t, variant);
- 		/* return the step that failed or 0 */
- 		_exit(t->passed ? 0 : t->step);
- 	} else {
-@@ -785,31 +868,44 @@ void __run_test(struct __fixture_metadata *f,
- 				status);
- 		}
- 	}
--	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
--	       f->name, t->name);
-+	printf("[     %4s ] %s%s%s.%s\n", (t->passed ? "OK" : "FAIL"),
-+	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
- 	alarm(0);
- }
- 
- static int test_harness_run(int __attribute__((unused)) argc,
- 			    char __attribute__((unused)) **argv)
- {
-+	struct __fixture_variant_metadata no_variant = { .name = "", };
-+	struct __fixture_variant_metadata *v;
- 	struct __fixture_metadata *f;
- 	struct __test_metadata *t;
- 	int ret = 0;
-+	unsigned int case_count = 0, test_count = 0;
- 	unsigned int count = 0;
- 	unsigned int pass_count = 0;
- 
-+	for (f = __fixture_list; f; f = f->next) {
-+		for (v = f->variant ?: &no_variant; v; v = v->next) {
-+			case_count++;
-+			for (t = f->tests; t; t = t->next)
-+				test_count++;
-+		}
-+	}
-+
- 	/* TODO(wad) add optional arguments similar to gtest. */
- 	printf("[==========] Running %u tests from %u test cases.\n",
--	       __test_count, __fixture_count + 1);
-+	       test_count, case_count);
- 	for (f = __fixture_list; f; f = f->next) {
--		for (t = f->tests; t; t = t->next) {
--			count++;
--			__run_test(f, t);
--			if (t->passed)
--				pass_count++;
--			else
--				ret = 1;
-+		for (v = f->variant ?: &no_variant; v; v = v->next) {
-+			for (t = f->tests; t; t = t->next) {
-+				count++;
-+				__run_test(f, v, t);
-+				if (t->passed)
-+					pass_count++;
-+				else
-+					ret = 1;
-+			}
- 		}
- 	}
- 	printf("[==========] %u / %u tests passed.\n", pass_count, count);
+v4:
+ - whitespace fixes.
+
+v1: https://lore.kernel.org/netdev/20200313031752.2332565-1-kuba@kernel.org/
+v2: https://lore.kernel.org/netdev/20200314005501.2446494-1-kuba@kernel.org/
+v3: https://lore.kernel.org/netdev/20200316225647.3129354-1-kuba@kernel.org/
+
+Jakub Kicinski (5):
+  kselftest: factor out list manipulation to a helper
+  kselftest: create fixture objects
+  kselftest: run tests by fixture
+  kselftest: add fixture variants
+  selftests: tls: run all tests for TLS 1.2 and TLS 1.3
+
+ Documentation/dev-tools/kselftest.rst       |   3 +-
+ tools/testing/selftests/kselftest_harness.h | 236 +++++++++++++++-----
+ tools/testing/selftests/net/tls.c           |  93 ++------
+ 3 files changed, 204 insertions(+), 128 deletions(-)
+
 -- 
 2.24.1
 
