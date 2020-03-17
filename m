@@ -2,154 +2,115 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4329CC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E92C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F7A2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B633E20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DJjbqK+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgCQPui (ORCPT
+        id S1726692AbgCQPwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:50:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:39878 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbgCQPuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:50:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3B86FEC;
-        Tue, 17 Mar 2020 08:50:36 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CECC83F7B4;
-        Tue, 17 Mar 2020 08:50:33 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 15:50:31 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-mips@vger.kernel.org, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
- vgettimeofday
-Message-ID: <20200317155031.GD632169@arrakis.emea.arm.com>
-References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
- <20200317122220.30393-19-vincenzo.frascino@arm.com>
- <20200317143834.GC632169@arrakis.emea.arm.com>
- <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
+        Tue, 17 Mar 2020 11:52:42 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:30160 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726294AbgCQPwm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:52:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584460362; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=F3ioMX8bj8P3wFuntkEmg3te9kA2v3f1KYJgn3TX8No=;
+ b=DJjbqK+MfSvWe/G94I3T9dFIYvYYtCrYtG8QLVi3CjOnmm7WAE3L0WVeTV/zahRkZzNUX1Vh
+ Oum1uZ0sQrno4vgLH9vPJDFZFDaqnnNLd4X0jvGp41MdXtdRBjp1RV9I/iBxU1rpgN5N/0IE
+ vfR2/Bkiyxt0U4B4aRKk0B2gqyI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e70f236.7f14e17cc0d8-smtp-out-n03;
+ Tue, 17 Mar 2020 15:52:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 69A8FC433BA; Tue, 17 Mar 2020 15:52:22 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBA72C433D2;
+        Tue, 17 Mar 2020 15:52:21 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 17 Mar 2020 21:22:21 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, joro@8bytes.org,
+        robin.murphy@arm.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-remoteproc@vger.kernel.org, ohad@wizery.com,
+        agross@kernel.org, dianders@chromium.org,
+        saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH v2 0/3] Request direct mapping for modem device
+In-Reply-To: <20200317150910.26053-1-sibis@codeaurora.org>
+References: <20200317150910.26053-1-sibis@codeaurora.org>
+Message-ID: <fe9bb128563bea9798573ac9eec1d214@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 03:04:01PM +0000, Vincenzo Frascino wrote:
-> On 3/17/20 2:38 PM, Catalin Marinas wrote:
-> > On Tue, Mar 17, 2020 at 12:22:12PM +0000, Vincenzo Frascino wrote:
-> >> diff --git a/arch/arm64/kernel/vdso32/vgettimeofday.c b/arch/arm64/kernel/vdso32/vgettimeofday.c
-> >> index 54fc1c2ce93f..91138077b073 100644
-> >> --- a/arch/arm64/kernel/vdso32/vgettimeofday.c
-> >> +++ b/arch/arm64/kernel/vdso32/vgettimeofday.c
-> >> @@ -8,11 +8,14 @@
-> >>  #include <linux/time.h>
-> >>  #include <linux/types.h>
-> >>  
-> >> +#define VALID_CLOCK_ID(x) \
-> >> +	((x >= 0) && (x < VDSO_BASES))
-> >> +
-> >>  int __vdso_clock_gettime(clockid_t clock,
-> >>  			 struct old_timespec32 *ts)
-> >>  {
-> >>  	/* The checks below are required for ABI consistency with arm */
-> >> -	if ((u32)ts >= TASK_SIZE_32)
-> >> +	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
-> >>  		return -EFAULT;
-> >>  
-> >>  	return __cvdso_clock_gettime32(clock, ts);
-> > 
-> > I probably miss something but I can't find the TASK_SIZE check in the
-> > arch/arm/vdso/vgettimeofday.c code. Is this done elsewhere?
+On 2020-03-17 20:39, Sibi Sankar wrote:
+> The Q6 modem sub-system has direct access to DDR through memnoc and
+> an indirect access routed through a SMMU which MSS CE (crypto engine
+> sub-component of MSS) uses during out of reset sequence. Request direct
+> mapping for the modem device since smmu is not expected to provide 
+> access
+> control/translation for these SIDs (sandboxing of the modem is achieved
+> through XPUs engaged using SMC calls). This is done on platforms which
+> don't have TrustZone (which programs the modem SIDs) to prevent the
+> following global faults seen on Cheza/Trogdor:
 > 
-> Can TASK_SIZE > UINTPTR_MAX on an arm64 system?
-
-TASK_SIZE yes on arm64 but not TASK_SIZE_32. I was asking about the
-arm32 check where TASK_SIZE < UINTPTR_MAX. How does the vdsotest return
--EFAULT on arm32? Which code path causes this in the user vdso code?
-
-My guess is that on arm32 it only fails with -EFAULT in the syscall
-fallback path since a copy_to_user() would fail the access_ok() check.
-Does it always take the fallback path if ts > TASK_SIZE?
-
-On arm64, while we have a similar access_ok() check, USER_DS is (1 <<
-VA_BITS) even for compat tasks (52-bit maximum), so it doesn't detect
-the end of the user address space for 32-bit tasks.
-
-Is this an issue for other syscalls expecting EFAULT at UINTPTR_MAX and
-instead getting a signal? The vdsotest seems to be the only one assuming
-this. I don't have a simple solution here since USER_DS currently needs
-to be a constant (used in entry.S).
-
-I could as well argue that this is not a valid ABI test, no real-world
-program relying on this behaviour ;).
-
-> >> @@ -22,7 +25,7 @@ int __vdso_clock_gettime64(clockid_t clock,
-> >>  			   struct __kernel_timespec *ts)
-> >>  {
-> >>  	/* The checks below are required for ABI consistency with arm */
-> >> -	if ((u32)ts >= TASK_SIZE_32)
-> >> +	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
-> >>  		return -EFAULT;
-> >>  
-> >>  	return __cvdso_clock_gettime(clock, ts);
-> >> @@ -38,9 +41,12 @@ int __vdso_clock_getres(clockid_t clock_id,
-> >>  			struct old_timespec32 *res)
-> >>  {
-> >>  	/* The checks below are required for ABI consistency with arm */
-> >> -	if ((u32)res >= TASK_SIZE_32)
-> >> +	if ((u32)res > UINTPTR_MAX - sizeof(res) + 1)
-> >>  		return -EFAULT;
-> >>  
-> >> +	if (!VALID_CLOCK_ID(clock_id) && res == NULL)
-> >> +		return -EINVAL;
-> > 
-> > This last check needs an explanation. If the clock_id is invalid but res
-> > is not NULL, we allow it. I don't see where the compatibility issue is,
-> > arm32 doesn't have such check.
+> Cheza:
+> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+> arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
+> 			 GFSYNR1 0x00000781, GFSYNR2 0x00000000
 > 
-> The case that you are describing has to return -EPERM per ABI spec. This case
-> has to return -EINVAL.
+> Trogdor:
+> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+> arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
+> 			 GFSYNR1 0x00000461, GFSYNR2 0x00000000
 > 
-> The first case is taken care from the generic code. But if we don't do this
-> check before on arm64 compat we end up returning the wrong error code.
+> V2:
+>  * Request direct mapping from SoC-specific corner of the SMMU
+>    driver [Robin]
+>  * Add iommu property to remoteproc modem node on Cheza
+> 
+> Depends on:
+> https://lore.kernel.org/patchwork/cover/1183528/
+> 
+> Sibi Sankar (3):
+>   dt-bindings: remoteproc: qcom: Add iommus property
+>   remoteproc: qcom_q6v5_mss: Request direct mapping for modem device
 
-I guess I have the same question as above. Where does the arm32 code
-return -EINVAL for that case? Did it work correctly before you removed
-the TASK_SIZE_32 check?
+iommu: arm-smmu-qcom: Request direct mapping for modem device
 
-Sorry, just trying to figure out where the compatibility aspect is and
-that we don't add some artificial checks only to satisfy a vdsotest case
-that may or may not have relevance to any other user program.
+sry should have been ^^ instead
+
+
+>   arm64: dts: qcom: sdm845-cheza: Add iommus property
+> 
+>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 3 +++
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi                 | 4 ++++
+>  drivers/iommu/arm-smmu-qcom.c                              | 6 ++++++
+>  3 files changed, 13 insertions(+)
 
 -- 
-Catalin
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
