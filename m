@@ -2,169 +2,93 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FD7C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C16C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E975A20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:17:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K0KXmsG9"
+	by mail.kernel.org (Postfix) with ESMTP id C7C4720663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584443855;
+	bh=dfpeeN7DSvHful1o+mzS+Yln2lqJERTsioAlBm8IlR8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zTLDaAqk+nDyVFCXab/zJLERes86sjLWRR8jHHJ6Se/D1DWvkDuya4D1YZY0c2Dox
+	 8woFNBGykGsij3mB01UzC1j8HHtKBX3jRalCU1jr8ITjfWD6bd5yqJsdQURMFdaJTh
+	 ihsFp429QyKMYRfTzTlBGPdwuos7zQeI9Z0EiXbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgCQLHH (ORCPT
+        id S1728129AbgCQLRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:07:07 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:38607 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728519AbgCQLF6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584443157;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=4nMRe0qdJ7XFd1Hd5ZLK3jwEMI8pUyqEZs72AcpBHM8=;
-        b=K0KXmsG948wXCbc4FZV7NzW6tTf5RKbcFhJ/dOWqzRrQVt+O4hagAtZ7f4mOFTrzuZgrw+
-        FoS7rcBJj+qDCkbcPa6WAQXTF3t7ZmivTMBmSD7lCdKhgG4Q/UFvzGgZFgRFo2LsR7qipc
-        17MmBf7hS9pDdniaUlaOrFp6O7vXjMY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-CRYosjjBMmud8zcb0sTWVA-1; Tue, 17 Mar 2020 07:05:55 -0400
-X-MC-Unique: CRYosjjBMmud8zcb0sTWVA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 17 Mar 2020 07:17:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728725AbgCQLHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:07:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 370C2800D4E;
-        Tue, 17 Mar 2020 11:05:53 +0000 (UTC)
-Received: from [10.36.112.136] (ovpn-112-136.ams2.redhat.com [10.36.112.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 03EDC8F37B;
-        Tue, 17 Mar 2020 11:05:50 +0000 (UTC)
-Subject: Re: [PATCH v2 8/8] mm/memory_hotplug: allow to specify a default
- online_type
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
-References: <20200317104942.11178-1-david@redhat.com>
- <20200317104942.11178-9-david@redhat.com>
- <20200317110121.GN26018@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <04ad4a95-e455-5fa4-01e0-fa2e0416adbb@redhat.com>
-Date:   Tue, 17 Mar 2020 12:05:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id DAA12206EC;
+        Tue, 17 Mar 2020 11:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584443223;
+        bh=dfpeeN7DSvHful1o+mzS+Yln2lqJERTsioAlBm8IlR8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yKdL46D1pPRpOo+qPrXtsj+9dKTDQiCv1KARl//DbATp13sOgEqyhObzc8/N6lOT0
+         OE6DzJGtUPR7UjLF1s8cdxygodyOB55qNLKq29A/SAESrJEtxlYCJewlfp5wsD/Lye
+         eqgC1DjXyurvupA52Dl4+JKtV6F/UdW72oKltvH4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 004/151] ALSA: hda/realtek - Fixed one of HP ALC671 platform Headset Mic supported
+Date:   Tue, 17 Mar 2020 11:53:34 +0100
+Message-Id: <20200317103326.839152125@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+References: <20200317103326.593639086@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200317110121.GN26018@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.03.20 12:01, Michal Hocko wrote:
-> On Tue 17-03-20 11:49:42, David Hildenbrand wrote:
->> For now, distributions implement advanced udev rules to essentially
->> - Don't online any hotplugged memory (s390x)
->> - Online all memory to ZONE_NORMAL (e.g., most virt environments like
->>   hyperv)
->> - Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
->>   care of (e.g., bare metal, special virt environments)
->>
->> In summary: All memory is usually onlined the same way, however, the
->> kernel always has to ask user space to come up with the same answer.
->> E.g., Hyper-V always waits for a memory block to get onlined before
->> continuing, otherwise it might end up adding memory faster than
->> hotplugging it, which can result in strange OOM situations. This waiting
->> slows down adding of a bigger amount of memory.
->>
->> Let's allow to specify a default online_type, not just "online" and
->> "offline". This allows distributions to configure the default online_type
->> when booting up and be done with it.
->>
->> We can now specify "offline", "online", "online_movable" and
->> "online_kernel" via
->> - "memhp_default_state=" on the kernel cmdline
->> - /sys/devices/system/memory/auto_online_blocks
->> just like we are able to specify for a single memory block via
->> /sys/devices/system/memory/memoryX/state
->>
->> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> As I've said earlier and several times already, I really dislike this
-> interface. But it is fact that this patch doesn't make it any worse.
-> Quite contrary, so feel free to add
-> Acked-by: Michal Hocko <mhocko@suse.com>
+From: Kailang Yang <kailang@realtek.com>
 
-Thanks Michal!
+[ Upstream commit f2adbae0cb20c8eaf06914b2187043ea944b0aff ]
 
+HP want to keep BIOS verb table for release platform.
+So, it need to add 0x19 pin for quirk.
+
+Fixes: 5af29028fd6d ("ALSA: hda/realtek - Add Headset Mic supported for HP cPC")
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Link: https://lore.kernel.org/r/74636ccb700a4cbda24c58a99dc430ce@realtek.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 25d0013abcb0e..835af7d2bbd4d 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -9140,6 +9140,7 @@ static const struct snd_hda_pin_quirk alc662_pin_fixup_tbl[] = {
+ 	SND_HDA_PIN_QUIRK(0x10ec0671, 0x103c, "HP cPC", ALC671_FIXUP_HP_HEADSET_MIC2,
+ 		{0x14, 0x01014010},
+ 		{0x17, 0x90170150},
++		{0x19, 0x02a11060},
+ 		{0x1b, 0x01813030},
+ 		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0671, 0x103c, "HP cPC", ALC671_FIXUP_HP_HEADSET_MIC2,
 -- 
-Thanks,
+2.20.1
 
-David / dhildenb
+
 
