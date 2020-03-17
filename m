@@ -7,50 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02C2C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4863C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5B420754
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFC520754
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584450681;
-	bh=k83KdBoXfW98aKS+hy1RJ+LlInvLpqLoXHg6DrbdTGY=;
+	s=default; t=1584450688;
+	bh=qcurY8bOcWo5+GUNbRcDNmw4qaVy7k5l/0CO6+ZkKn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v5ay3ou7ZgBPZcd8eM9tdTXpK0a/vINV+JoC0/UHkfHApfsDXHRPd/Ranezaa6CKz
-	 bRfZQOvKlS1cgsFZv12oYSGQ48FxYgV7QhS+SzWeRu61bzPh/6+ThpmL0iUfhl2+hm
-	 a1MyNuyU39wkuTtfbDSqxMjwxS7T0nyU+chbI+dw=
+	b=dxrfYcNnrPPiIBhOkzT7bdDyLTlHl1oFTss2BBkwMRi8VN9vz937WHQQI4b0iS+9d
+	 kx6UBjlDAldsQcdqiqEOccRlBdSmMufzaVq+92YFCjHKITXpwwFXTp7fsR+D8VcbV2
+	 k+QXQLEBQPK77A76G7QcBbH8s7/ifEIP+A6x4Nq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgCQNK4 (ORCPT
+        id S1727065AbgCQNL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37734 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 09:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgCQNKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:10:55 -0400
+        id S1726474AbgCQNK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:10:56 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E39120754;
+        by mail.kernel.org (Postfix) with ESMTPSA id B6AED2076E;
         Tue, 17 Mar 2020 13:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1584450655;
-        bh=k83KdBoXfW98aKS+hy1RJ+LlInvLpqLoXHg6DrbdTGY=;
+        bh=qcurY8bOcWo5+GUNbRcDNmw4qaVy7k5l/0CO6+ZkKn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCRjndv4mNqha5oCgKY81AuSZwCPUw+16Di6NWb6AzOqQAUZmgw/S2G5tcLGf4Xqw
-         wwwth0POCoDZPcma78Ja55L8DKCOLQGmVB+8D82u7P3SMeP0ru44MI90bl2NwrjDhI
-         d21u+WA2VZZRR8dyjVwhn4X23dxJXaLpMO09IU44=
+        b=jl7qcP50X5PEG7pLxCKMawz9B/YaStb/OFPHwDjzIcVY19FeS1R3yo0VxzuRD+ym9
+         S+81PAI+1NAfeNkBWgzWrPQzSLvxUth+7zhHb362HH+aM9PGwy9W2eHJ4Rp6bkFw6w
+         36hdLJzkW2dPPbezgaeHvBZdG/HPKoMhzIwPaoYU=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jEBzh-0006Rx-Hl; Tue, 17 Mar 2020 14:10:53 +0100
+        id 1jEBzh-0006S1-JQ; Tue, 17 Mar 2020 14:10:53 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Dan Murphy <dmurphy@ti.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 03/12] MAINTAINERS: drop an old reference to stm32 pwm timers doc
-Date:   Tue, 17 Mar 2020 14:10:42 +0100
-Message-Id: <46a19a2074ed772c2f4aaa95ebe06892f235188c.1584450500.git.mchehab+huawei@kernel.org>
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 04/12] docs: dt: fix references to m_can.txt file
+Date:   Tue, 17 Mar 2020 14:10:43 +0100
+Message-Id: <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1584450500.git.mchehab+huawei@kernel.org>
 References: <cover.1584450500.git.mchehab+huawei@kernel.org>
@@ -61,28 +67,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DT files for pwm were merged and converted to json.
-The new reference is already at the maintainers file, so
-just drop the obsoleted one.
+This file was converted to json and renamed. Update its
+references accordingly.
 
-Fixes: 56fb34d86e87 ("dt-bindings: mfd: Convert stm32 timers bindings to json-schema")
+Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-schema")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
+ MAINTAINERS                                            | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+index 6bdcc3f84bd3..3613c2c8f75d 100644
+--- a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
++++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+@@ -14,7 +14,7 @@ Required properties:
+                     the interrupt.
+ 	- interrupts: interrupt specification for data-ready.
+ 
+-See Documentation/devicetree/bindings/net/can/m_can.txt for additional
++See Documentation/devicetree/bindings/net/can/bosch,m_can.yaml for additional
+ required property details.
+ 
+ Optional properties:
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 21204be0b4bf..39da9ac4cc1f 100644
+index 39da9ac4cc1f..84cb39b5a23b 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -16055,7 +16055,6 @@ F:	drivers/pwm/pwm-stm32*
- F:	include/linux/*/stm32-*tim*
- F:	Documentation/ABI/testing/*timer-stm32
- F:	Documentation/devicetree/bindings/*/*stm32-*timer*
--F:	Documentation/devicetree/bindings/pwm/pwm-stm32*
- 
- STMMAC ETHERNET DRIVER
- M:	Giuseppe Cavallaro <peppe.cavallaro@st.com>
+@@ -10327,7 +10327,7 @@ M:	Dan Murphy <dmurphy@ti.com>
+ M:	Sriram Dash <sriram.dash@samsung.com>
+ L:	linux-can@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/net/can/m_can.txt
++F:	Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
+ F:	drivers/net/can/m_can/m_can.c
+ F:	drivers/net/can/m_can/m_can.h
+ F:	drivers/net/can/m_can/m_can_platform.c
 -- 
 2.24.1
 
