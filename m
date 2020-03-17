@@ -6,97 +6,78 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2399AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5E0C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063E1206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5421120752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCQNJl (ORCPT
+        id S1726832AbgCQNKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:09:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29880 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725872AbgCQNJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:09:40 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HD4bKK062147;
-        Tue, 17 Mar 2020 09:08:25 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ytuqr6w52-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Mar 2020 09:08:25 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02HD3eBe005980;
-        Tue, 17 Mar 2020 13:08:24 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 2yrpw6r7j3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Mar 2020 13:08:24 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02HD8OpJ16253868
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Mar 2020 13:08:24 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1FD40112062;
-        Tue, 17 Mar 2020 13:08:24 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08468112061;
-        Tue, 17 Mar 2020 13:08:24 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Mar 2020 13:08:23 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sachinp@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH] tpm2: Export tpm2_get_cc_attrs_tbl for ibmvtpm driver as module
-Date:   Tue, 17 Mar 2020 09:08:19 -0400
-Message-Id: <20200317130819.720318-1-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-17_04:2020-03-17,2020-03-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
- suspectscore=0 malwarescore=0 lowpriorityscore=0 bulkscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003170056
+        Tue, 17 Mar 2020 09:10:07 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:54014 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726130AbgCQNKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:10:07 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD94bzHBerosbAA--.10S2;
+        Tue, 17 Mar 2020 21:09:47 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH] MIPS: Loongson: Do not initialise statics to 0
+Date:   Tue, 17 Mar 2020 21:09:46 +0800
+Message-Id: <1584450586-27917-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxD94bzHBerosbAA--.10S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruFyUZFy5urWrXr1UArWUJwb_yoW3KwcE9F
+        47tw4DK3s5AF18u34UX3y5XFW2gas8WanruF1kJryY9w1YvFn8JF4vvwn5Krn8Xr4YyFZ5
+        Way8Jr13CanFgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbc8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW5GwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU1iihUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+Fix the following checkpatch error:
 
-This patch fixes the following problem when the ibmvtpm driver
-is built as a module:
+ERROR: do not initialise statics to 0
+#125: FILE: loongson64/numa.c:125:
++	static unsigned long num_physpages = 0;
 
-ERROR: modpost: "tpm2_get_cc_attrs_tbl" [drivers/char/tpm/tpm_ibmvtpm.ko] undefined!
-make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
-make: *** [Makefile:1298: modules] Error 2
-
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/char/tpm/tpm2-cmd.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/loongson64/numa.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-index 76f67b155bd5..eff1f12d981a 100644
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -681,6 +681,7 @@ int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
- 		rc = -ENODEV;
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(tpm2_get_cc_attrs_tbl);
+diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
+index e5b40c5..1ae072d 100644
+--- a/arch/mips/loongson64/numa.c
++++ b/arch/mips/loongson64/numa.c
+@@ -122,7 +122,7 @@ static unsigned long nid_to_addroffset(unsigned int nid)
+ static void __init szmem(unsigned int node)
+ {
+ 	u32 i, mem_type;
+-	static unsigned long num_physpages = 0;
++	static unsigned long num_physpages;
+ 	u64 node_id, node_psize, start_pfn, end_pfn, mem_start, mem_size;
  
- /**
-  * tpm2_startup - turn on the TPM
+ 	/* Parse memory information and activate */
 -- 
-2.23.0
+2.1.0
 
