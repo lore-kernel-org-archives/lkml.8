@@ -2,95 +2,132 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B015C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EF8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219F920724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:35:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="E7/PuPoj"
+	by mail.kernel.org (Postfix) with ESMTP id C57FB20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584466560;
+	bh=cISETOYNfsjjHUnzjgKsFDkt1WaLM9hca2xRLmSzytk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lZEI7PsaNNs8RCrq/wa+YT3NK0RwgTO0OX3m7mSOFrNpltOiymgTse4g+bzNqB1Rr
+	 BwT7JEwl5cRmzRpaiU3/1aCo8r+x+YecH7PNJkMTgYbFhvcMyw0xBDPAEah2Tlvi1D
+	 r/tXRNovK/fT1zt88Ndh6MdNK/xmRFCr5awPbORU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgCQRfB (ORCPT
+        id S1726651AbgCQRf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:35:01 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41020 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgCQRfA (ORCPT
+        Tue, 17 Mar 2020 13:35:59 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35488 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgCQRf7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:35:00 -0400
-Received: by mail-oi1-f195.google.com with SMTP id b17so7713947oic.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=32N5kM8wn4tDAmjs6gedFa/sANcD7GCBYoh5b7duodg=;
-        b=E7/PuPojEcN00+7o57owhlRnsJgcbwlFFc3V2M1Eqo3KTf2sDWkBQDH0Bk9/6murg/
-         EqrgV+pRniu/EmQ24cYhdtRGEwPw/o0TKpeYy0ozj5KWvBb+bv1mNYEa+MmlpmaSgmF+
-         VYUNve1/9bS/0SlC4hgHE//iIhVQ7u3a1gqJ2E5jDWFXQC90gSsu2FkmQ9iMNc+klK7b
-         SQSFqZDMXOQxMLmZnrTPaL+dZh71UgMvDuh7oO8U080ShIju1cwhDxz7T1ZMOS7R1Uhp
-         niBTyCUASpgJoW6gKXubPZ0GNOZ8hNOWnaVINp2093j0DXZFXjjhT2DKFHXxOGGNlaXT
-         7uQA==
+        Tue, 17 Mar 2020 13:35:59 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h4so6208747wru.2;
+        Tue, 17 Mar 2020 10:35:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=32N5kM8wn4tDAmjs6gedFa/sANcD7GCBYoh5b7duodg=;
-        b=KPTOjWASCeuUgcKTG0zmk6fqAq2XiYlSwuMh4UdcaRTUv7fvh++2mOyOlUJbO2Nl/F
-         zJFbPyziVoTOnkxUjOCSo+oD19wCGpPo6NeScblTJ/KGFF90SHhA9rWBigCTinTEErXL
-         Kph3rP0wOM8iVW/ygx/1Abvkq6FZV5w+2Vw4pSzBN18lr4XFvKMtxJmu5rxv96ZazYmd
-         2MiiRTdVpWuoMWxO+Vbg0QKj8OqTxhM8iD7tYPQjdtpv7onsR2elbW7gS67Wq46izodr
-         36FmjtLcea5/xmYPCZqGtRBI4D6QJiwdVgHWScfFXZO7jbv+EWnqAZ0EIRivbIw7INaY
-         99hw==
-X-Gm-Message-State: ANhLgQ3UsbqQpuYxb8xp20qyl8sb0wQ9Zj8P91NCDy+k+zURt9OSy/iy
-        RSw3MoFbdDw7hPZbK3LKk+m2O/xT1wjjO+YpeDKU/vCiI3k=
-X-Google-Smtp-Source: ADFU+vtKUOyY/n5MZWbhQpMLm27X+KBPsGUNtLxdhT2Fk9bGhFCI5PQnOf/a6tkQBL4/TXn9s+2FBVt/vHx8rUs++9M=
-X-Received: by 2002:a54:418a:: with SMTP id 10mr365540oiy.105.1584466499710;
- Tue, 17 Mar 2020 10:34:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=z1FYoq7S+h9Cgu9l0oBNg+vW7ywbgvdSrh8VbOK3SfM=;
+        b=oxAW0Nup0YR+8xX8Qb6Xa8HlTGx9A0Saxe8Ip00Qg/yqT1QSrV54/VHC1D7GNayV5s
+         HIUbwydozvc4P9qL+fnYkCDW+PY1i40QB67XA1VRt08FJUlnOAIB3Kdynosj+tPOLQ8n
+         zo7gXef6ziu4mCirKdyvuqx7ImBLXXZyGNkOb/nVP+aIduGy7lADrrwNiKokaQaDyy0k
+         u/p2y86uzL55Ra568u914P95nh9rd80n+4En4F0eFl31TIkSfgDD1n7vBNGhnNPUKMWe
+         VveZZvRvrBwqs5cDz7c5zgA87p+JUkNoXots1pQtT0pdtOr7NVJ/qz1M+C1m4B+emIg2
+         Si0g==
+X-Gm-Message-State: ANhLgQ1HVwWj4aBX189zvpNX0CDUiOv0vxv82V5MBIrUeLxWuXl27LZK
+        YHWame/q+rjc9lIzOaNW8sg=
+X-Google-Smtp-Source: ADFU+vsRnkfec8PavottvdVxNiDc4mWmBjPI9jouBKRRcnyVA5ONRdkNDrTETtUY3kl/zdcooYiSvQ==
+X-Received: by 2002:adf:a313:: with SMTP id c19mr58403wrb.411.1584466556747;
+        Tue, 17 Mar 2020 10:35:56 -0700 (PDT)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id g2sm5779960wrs.42.2020.03.17.10.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 10:35:56 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 17:35:53 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     ltykernel@gmail.com
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH 0/4] x86/Hyper-V: Unload vmbus channel in hv panic
+ callback
+Message-ID: <20200317173553.jerf6gjtaotqjbac@debian>
+References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
+ <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
 MIME-Version: 1.0
-References: <20200317061522.12685-1-rayagonda.kokatanur@broadcom.com> <20200317061522.12685-2-rayagonda.kokatanur@broadcom.com>
-In-Reply-To: <20200317061522.12685-2-rayagonda.kokatanur@broadcom.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 17 Mar 2020 10:34:48 -0700
-Message-ID: <CAPcyv4i17m6qDQtbNfPs+hVGF7CCdR59x04T5UdOwosTB5=OiQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] async_tx: return error instead of BUG_ON
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 11:16 PM Rayagonda Kokatanur
-<rayagonda.kokatanur@broadcom.com> wrote:
->
-> Return error upon failure instead of using BUG_ON().
-> BUG_ON() will crash the kernel.
->
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+On Tue, Mar 17, 2020 at 06:25:20AM -0700, ltykernel@gmail.com wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> 
+> Customer reported Hyper-V VM still responded network traffic
+> ack packets after kernel panic with kernel parameter "panic=0”.
+> This becauses vmbus driver interrupt handler still works
+> on the panic cpu after kernel panic. Panic cpu falls into
+> infinite loop of panic() with interrupt enabled at that point.
+> Vmbus driver can still handle network traffic.
+> 
+> This confuses remote service that the panic system is still
+> alive when it gets ack packets. Unload vmbus channel in hv panic
+> callback and fix it.
+> 
+> vmbus_initiate_unload() maybe double called during panic process
+> (e.g, hyperv_panic_event() and hv_crash_handler()). So check
+> and set connection state in vmbus_initiate_unload() to resolve
+> reenter issue.
+> 
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+>  drivers/hv/channel_mgmt.c |  5 +++++
+>  drivers/hv/vmbus_drv.c    | 17 +++++++++--------
+>  2 files changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> index 0370364169c4..893493f2b420 100644
+> --- a/drivers/hv/channel_mgmt.c
+> +++ b/drivers/hv/channel_mgmt.c
+> @@ -839,6 +839,9 @@ void vmbus_initiate_unload(bool crash)
+>  {
+>  	struct vmbus_channel_message_header hdr;
+>  
+> +	if (vmbus_connection.conn_state == DISCONNECTED)
+> +		return;
+> +
+>  	/* Pre-Win2012R2 hosts don't support reconnect */
+>  	if (vmbus_proto_version < VERSION_WIN8_1)
+>  		return;
+> @@ -857,6 +860,8 @@ void vmbus_initiate_unload(bool crash)
+>  		wait_for_completion(&vmbus_connection.unload_event);
+>  	else
+>  		vmbus_wait_for_unload();
+> +
+> +	vmbus_connection.conn_state = DISCONNECTED;
 
-I don't think this patch is worth it, it has 2 problems:
+This is only set at the end of the function.  I don't see how this solve
+the re-entrant issue with the check at the beginning. Do I miss anything
+here?
 
-- These conversions are buggy. Upper layers assume that the calls will
-fall back to synchronous operation internally if they return NULL.
+Maybe this function should check and set the state to
+DISCONNECTING/DISCONNECTED at the beginning of this function?
 
-- These assertions indicate a major programming error that should not
-be silently ignored. They need to be WARN_ON_ONCE() at a minimum, but
-only if the above issue is solved.
-
-These assertions are validating the raid implementation in raid5.c
-which has been correctly handling this path for several years. The
-risk of the code reorganization to "fix" this is higher than the
-benefit given zero reports of these actually triggering in production.
+Wei.
