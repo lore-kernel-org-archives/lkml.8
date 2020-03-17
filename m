@@ -2,122 +2,344 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71027C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4FFC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B43920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32BEF20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PYz7uO05"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lG/qSZRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgCQFke (ORCPT
+        id S1726187AbgCQFmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 01:40:34 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:41856 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgCQFkd (ORCPT
+        Tue, 17 Mar 2020 01:42:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38221 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgCQFmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 01:40:33 -0400
-Received: by mail-vk1-f202.google.com with SMTP id i123so8825998vkg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 22:40:33 -0700 (PDT)
+        Tue, 17 Mar 2020 01:42:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z5so11315941pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 22:42:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=el82hvu8NsarLBH+1bSM5mOhPUGbPGRaUwoQglxhFZs=;
-        b=PYz7uO05mG25NfUmMbpjZKCOZbxuF3u1CeNkjJDeW4SMOhqxfZ8/yJnrMmXdi5VeV9
-         jLeEmHj7qIs4osoWmBuCse20pEigoQMUyodNp4LVCkIFfxAmuJGBmppBctcZwXwFJswS
-         OvZOFL6C0u/qSaIFvukwFUyXBft83T5SZ5hENFMj2ZDSiVK95DInCXLMfOWVnKSZx5El
-         8gf+eV+iBgYPGi0qZWqUk+HDBB8rxlPmuysjBNfDUEerKhf6EvCQqedBOafPX0dlv4lP
-         IcCYZvNxs09Abb1wNrlU1kT9ge6uVBZGxxeopIZQYjEiRQECmydKvBsibIEdfkGryNnY
-         mPrQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=p/fpYMaq01SQsw6O0RSRHudjaY04K/YoVLbefeNYE3Q=;
+        b=lG/qSZRuYywAuiQCOHgjRQOS2tgyE/r2A8DEybUeLDEeqr/icp471T9JMl6XXEs1ul
+         ItwfU2bQEhZm9S6ByiTh7vnhzUubUCsdc/ZEByFOxKtLb8ZuTQsF2jFdy6Pen2LHnzx+
+         n+CKkGsmOgjqSsnwXqU5HYk1tQiCY9x0tkCTnpqBIciWyY0nGviS0H2BHpmq/4vSsspj
+         sfJMBxLwhr6XfyEpeoDmTdFrThqRzyfTBr1zY+y8fkLfEmiHD3BxXwfxrntueOGVBbP7
+         AfTyV7/ZN92N/ax+MvnVF+nyTMMn9g0f+JoBwtV/hCN3bNZMEDSwsOo0ZyU/hq93Hih1
+         0V/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=el82hvu8NsarLBH+1bSM5mOhPUGbPGRaUwoQglxhFZs=;
-        b=aOa0q+ASuKslNdLuRzK8g7F6tW5qvmHF/NSHV6xOc1vIeDOm+8pYYHOcgEneapl1rY
-         MScQMeZtObqPMOzGvISb8GaCBLdRII7XPsEH5vLyB4A9N2WVzAb+hyY3A2hp71z5rCvo
-         1+He2WZf5zi9aZqT05N9oO/bVqvncwXi3IqF96gF7g2v/BV+QnpSsKf1vJhzaF2Srd5R
-         WL5Ql1mUaCokw9KlqFXxaHNSJEfSgKE/jMlhKg2GI32TQ6e+J0K2PAYQc8oCzXSCJUjm
-         kIjDE5aga1csW6T8g2yTk5fpJmfz0uzf4rSYDi0OdaKQ4zFEXxlXXb8PnyczLsGXkMKL
-         bJcQ==
-X-Gm-Message-State: ANhLgQ27Rxwsg1yI+klcbg94cGGn0CPNMqgsSIisDaL+S8ZSbSHEeGCe
-        ApKhEe5cSXhqk3e3ivtgOhG9FVIFx0yoWg==
-X-Google-Smtp-Source: ADFU+vvobSt7t9RrwR/m04uzP8LCbT1bE28OruemFxbEsN4zMun2S8b74DOmhSvpXfrTSMb4P36QDEyPRn8AGw==
-X-Received: by 2002:ab0:614c:: with SMTP id w12mr2373505uan.141.1584423632602;
- Mon, 16 Mar 2020 22:40:32 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 22:40:27 -0700
-Message-Id: <20200316224023.1.I002569822232363cfbb5af1f33a293ea390c24c7@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH] Bluetooth: Do not cancel advertising when starting a scan
-From:   Manish Mandlik <mmandlik@google.com>
-To:     marcel@holtmann.org
-Cc:     Yoni Shavit <yshavit@chromium.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        linux-bluetooth@vger.kernel.org,
-        Dmitry Grinberg <dmitrygr@google.com>,
-        Manish Mandlik <mmandlik@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=p/fpYMaq01SQsw6O0RSRHudjaY04K/YoVLbefeNYE3Q=;
+        b=YUrdVkg9zxRx0euUAz9jsxE8nVACOsLTe/Uuqw70EoQGspHaSr2RjmghfmpqzwG4sJ
+         lr873BEoKSgtJbBHgyaCZBybMk4aQphH+hpwyMHeTNfKkxQDM42rHwzOgDjZUsux2E/s
+         WsqYqSmJoIlRPBEakGUUeq1Z3pJPiq9oXin1XRm5l9sWOgjGCb7qMSbgKAuIbOm9Xak4
+         zNNakp1hbw/JuYhz1GtlC6hF0CATG+QbJqSC6CrHPItajLa4G9vhQtfk8yNMyTx5HI7z
+         ePkH370otjSxqapWibvTtBaEKQceFmXOtwxuU++LZt5X+v9n/ytjU+jyrqIwzjqF/X0d
+         h9+w==
+X-Gm-Message-State: ANhLgQ1Q3tueoZY+bfU/C6Uk/polJeKAap4mN74g5QINIXgYFTNxM94U
+        0v7y2Kn9hwtfnf2kKmFye5A=
+X-Google-Smtp-Source: ADFU+vussYGAPdbucU7kn/vFEHV+QBFLl5xy6p3tD1NSCKTlvhbRLrztZv8c63FyXT8HLID8De5Www==
+X-Received: by 2002:a63:6ac1:: with SMTP id f184mr3477587pgc.212.1584423725757;
+        Mon, 16 Mar 2020 22:42:05 -0700 (PDT)
+Received: from localhost.localdomain ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id i21sm1141757pgn.5.2020.03.16.22.42.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 16 Mar 2020 22:42:05 -0700 (PDT)
+From:   js1304@gmail.com
+X-Google-Original-From: iamjoonsoo.kim@lge.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: [PATCH v3 0/9] workingset protection/detection on the anonymous LRU list
+Date:   Tue, 17 Mar 2020 14:41:48 +0900
+Message-Id: <1584423717-3440-1-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Grinberg <dmitrygr@google.com>
+From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-BlueZ cancels adv when starting a scan, but does not cancel a scan when
-starting to adv. Neither is required, so this brings both to a
-consistent state (of not affecting each other). Some very rare (I've
-never seen one) BT 4.0 chips will fail to do both at once. Even this is
-ok since the command that will fail will be the second one, and thus the
-common sense logic of first-come-first-served is preserved for BLE
-requests.
+Hello,
 
-Signed-off-by: Dmitry Grinberg <dmitrygr@google.com>
-Signed-off-by: Manish Mandlik <mmandlik@google.com>
----
+This patchset implements workingset protection and detection on
+the anonymous LRU list.
 
- net/bluetooth/hci_request.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+* Changes on v3
+- rework the patch, "mm/vmscan: protect the workingset on anonymous LRU"
+(use almost same reference tracking algorithm to the one for the file
+mapped page)
 
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index bf83179ab9d19..649e1e5ed446a 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -2727,23 +2727,6 @@ static int active_scan(struct hci_request *req, unsigned long opt)
- 
- 	BT_DBG("%s", hdev->name);
- 
--	if (hci_dev_test_flag(hdev, HCI_LE_ADV)) {
--		hci_dev_lock(hdev);
--
--		/* Don't let discovery abort an outgoing connection attempt
--		 * that's using directed advertising.
--		 */
--		if (hci_lookup_le_connect(hdev)) {
--			hci_dev_unlock(hdev);
--			return -EBUSY;
--		}
--
--		cancel_adv_timeout(hdev);
--		hci_dev_unlock(hdev);
--
--		__hci_req_disable_advertising(req);
--	}
--
- 	/* If controller is scanning, it means the background scanning is
- 	 * running. Thus, we should temporarily stop it in order to set the
- 	 * discovery scanning parameters.
+* Changes on v2
+- fix a critical bug that uses out of index lru list in
+workingset_refault()
+- fix a bug that reuses the rotate value for previous page
+
+* SUBJECT
+workingset protection
+
+* PROBLEM
+In current implementation, newly created or swap-in anonymous page is
+started on the active list. Growing the active list results in rebalancing
+active/inactive list so old pages on the active list are demoted to the
+inactive list. Hence, hot page on the active list isn't protected at all.
+
+Following is an example of this situation.
+
+Assume that 50 hot pages on active list and system can contain total
+100 pages. Numbers denote the number of pages on active/inactive
+list (active | inactive). (h) stands for hot pages and (uo) stands for
+used-once pages.
+
+1. 50 hot pages on active list
+50(h) | 0
+
+2. workload: 50 newly created (used-once) pages
+50(uo) | 50(h)
+
+3. workload: another 50 newly created (used-once) pages
+50(uo) | 50(uo), swap-out 50(h)
+
+As we can see, hot pages are swapped-out and it would cause swap-in later.
+
+* SOLUTION
+Since this is what we want to avoid, this patchset implements workingset
+protection. Like as the file LRU list, newly created or swap-in anonymous
+page is started on the inactive list. Also, like as the file LRU list,
+if enough reference happens, the page will be promoted. This simple
+modification changes the above example as following.
+
+1. 50 hot pages on active list
+50(h) | 0
+
+2. workload: 50 newly created (used-once) pages
+50(h) | 50(uo)
+
+3. workload: another 50 newly created (used-once) pages
+50(h) | 50(uo), swap-out 50(uo)
+
+hot pages remains in the active list. :)
+
+* EXPERIMENT
+I tested this scenario on my test bed and confirmed that this problem
+happens on current implementation. I also checked that it is fixed by
+this patchset.
+
+I did another test to show the performance effect of this patchset.
+
+- ebizzy (with modified random function)
+ebizzy is the test program that main thread allocates lots of memory and
+child threads access them randomly during the given times. Swap-in/out
+will happen if allocated memory is larger than the system memory.
+
+The random function that represents the zipf distribution is used to
+make hot/cold memory. Hot/cold ratio is controlled by the parameter. If
+the parameter is high, hot memory is accessed much larger than cold one.
+If the parameter is low, the number of access on each memory would be
+similar. I uses various parameters in order to show the effect of
+patchset on various hot/cold ratio workload.
+
+My test setup is a virtual machine with 8 cpus and 1024MB memory.
+
+Result format is as following.
+
+Parameter 0.1 ... 1.3
+Allocated memory size
+Throughput for base (larger is better)
+Throughput for patchset (larger is better)
+Improvement (larger is better)
+
+
+* single thread
+
+     0.1      0.3      0.5      0.7      0.9      1.1      1.3
+<512M>
+  7009.0   7372.0   7774.0   8523.0   9569.0  10724.0  11936.0
+  6973.0   7342.0   7745.0   8576.0   9441.0  10730.0  12033.0
+   -0.01     -0.0     -0.0     0.01    -0.01      0.0     0.01
+<768M>
+   915.0   1039.0   1275.0   1687.0   2328.0   3486.0   5445.0
+   920.0   1037.0   1238.0   1689.0   2384.0   3638.0   5381.0
+    0.01     -0.0    -0.03      0.0     0.02     0.04    -0.01
+<1024M>
+   425.0    471.0    539.0    753.0   1183.0   2130.0   3839.0
+   414.0    468.0    553.0    770.0   1242.0   2187.0   3932.0
+   -0.03    -0.01     0.03     0.02     0.05     0.03     0.02
+<1280M>
+   320.0    346.0    410.0    556.0    871.0   1654.0   3298.0
+   316.0    346.0    411.0    550.0    892.0   1652.0   3293.0
+   -0.01      0.0      0.0    -0.01     0.02     -0.0     -0.0
+<1536M>
+   273.0    290.0    341.0    458.0    733.0   1381.0   2925.0
+   271.0    293.0    344.0    462.0    740.0   1398.0   2969.0
+   -0.01     0.01     0.01     0.01     0.01     0.01     0.02
+<2048M>
+    77.0     79.0     95.0    147.0    276.0    690.0   1816.0
+    91.0     94.0    115.0    170.0    321.0    770.0   2018.0
+    0.18     0.19     0.21     0.16     0.16     0.12     0.11
+
+
+* multi thread (8)
+
+     0.1      0.3      0.5      0.7      0.9      1.1      1.3
+<512M>
+ 29083.0  29648.0  30145.0  31668.0  33964.0  38414.0  43707.0
+ 29238.0  29701.0  30301.0  31328.0  33809.0  37991.0  43667.0
+    0.01      0.0     0.01    -0.01     -0.0    -0.01     -0.0
+<768M>
+  3332.0   3699.0   4673.0   5830.0   8307.0  12969.0  17665.0
+  3579.0   3992.0   4432.0   6111.0   8699.0  12604.0  18061.0
+    0.07     0.08    -0.05     0.05     0.05    -0.03     0.02
+<1024M>
+  1921.0   2141.0   2484.0   3296.0   5391.0   8227.0  14574.0
+  1989.0   2155.0   2609.0   3565.0   5463.0   8170.0  15642.0
+    0.04     0.01     0.05     0.08     0.01    -0.01     0.07
+<1280M>
+  1524.0   1625.0   1931.0   2581.0   4155.0   6959.0  12443.0
+  1560.0   1707.0   2016.0   2714.0   4262.0   7518.0  13910.0
+    0.02     0.05     0.04     0.05     0.03     0.08     0.12
+<1536M>
+  1303.0   1399.0   1550.0   2137.0   3469.0   6712.0  12944.0
+  1356.0   1465.0   1701.0   2237.0   3583.0   6830.0  13580.0
+    0.04     0.05      0.1     0.05     0.03     0.02     0.05
+<2048M>
+   172.0    184.0    215.0    289.0    514.0   1318.0   4153.0
+   175.0    190.0    225.0    329.0    606.0   1585.0   5170.0
+    0.02     0.03     0.05     0.14     0.18      0.2     0.24
+
+As we can see, as allocated memory grows, patched kernel get the better
+result. Maximum improvement is 21% for the single thread test and
+24% for the multi thread test.
+
+
+* SUBJECT
+workingset detection
+
+* PROBLEM
+Later part of the patchset implements the workingset detection for
+the anonymous LRU list. There is a corner case that workingset protection
+could cause thrashing. If we can avoid thrashing by workingset detection,
+we can get the better performance.
+
+Following is an example of thrashing due to the workingset protection.
+
+1. 50 hot pages on active list
+50(h) | 0
+
+2. workload: 50 newly created (will be hot) pages
+50(h) | 50(wh)
+
+3. workload: another 50 newly created (used-once) pages
+50(h) | 50(uo), swap-out 50(wh)
+
+4. workload: 50 (will be hot) pages
+50(h) | 50(wh), swap-in 50(wh)
+
+5. workload: another 50 newly created (used-once) pages
+50(h) | 50(uo), swap-out 50(wh)
+
+6. repeat 4, 5
+
+Without workingset detection, this kind of workload cannot be promoted
+and thrashing happens forever.
+
+* SOLUTION
+Therefore, this patchset implements workingset detection.
+All the infrastructure for workingset detecion is already implemented,
+so there is not much work to do. First, extend workingset detection
+code to deal with the anonymous LRU list. Then, make swap cache handles
+the exceptional value for the shadow entry. Lastly, install/retrieve
+the shadow value into/from the swap cache and check the refault distance.
+
+* EXPERIMENT
+I made a test program to imitates above scenario and confirmed that
+problem exists. Then, I checked that this patchset fixes it.
+
+My test setup is a virtual machine with 8 cpus and 6100MB memory. But,
+the amount of the memory that the test program can use is about 280 MB.
+This is because the system uses large ram-backed swap and large ramdisk
+to capture the trace.
+
+Test scenario is like as below.
+
+1. allocate cold memory (512MB)
+2. allocate hot-1 memory (96MB)
+3. activate hot-1 memory (96MB)
+4. allocate another hot-2 memory (96MB)
+5. access cold memory (128MB)
+6. access hot-2 memory (96MB)
+7. repeat 5, 6
+
+Since hot-1 memory (96MB) is on the active list, the inactive list can
+contains roughly 190MB pages. hot-2 memory's re-access interval
+(96+128 MB) is more 190MB, so it cannot be promoted without workingset
+detection and swap-in/out happens repeatedly. With this patchset,
+workingset detection works and promotion happens. Therefore, swap-in/out
+occurs less.
+
+Here is the result. (average of 5 runs)
+
+type swap-in swap-out
+base 863240 989945
+patch 681565 809273
+
+As we can see, patched kernel do less swap-in/out.
+
+Patchset is based on v5.5.
+Patchset can also be available at
+
+https://github.com/JoonsooKim/linux/tree/improve-anonymous-lru-management-v3.00-v5.5
+
+Enjoy it.
+
+Thanks.
+
+Joonsoo Kim (9):
+  mm/vmscan: make active/inactive ratio as 1:1 for anon lru
+  mm/vmscan: protect the workingset on anonymous LRU
+  mm/workingset: extend the workingset detection for anon LRU
+  mm/swapcache: support to handle the value in swapcache
+  mm/workingset: use the node counter if memcg is the root memcg
+  mm/workingset: handle the page without memcg
+  mm/swap: implement workingset detection for anonymous LRU
+  mm/vmscan: restore active/inactive ratio for anonymous LRU
+  mm/swap: count a new anonymous page as a reclaim_state's rotate
+
+ include/linux/mmzone.h  | 14 ++++++++-----
+ include/linux/swap.h    | 18 ++++++++++++-----
+ kernel/events/uprobes.c |  2 +-
+ mm/huge_memory.c        |  6 +++---
+ mm/khugepaged.c         |  2 +-
+ mm/memcontrol.c         | 12 ++++++++----
+ mm/memory.c             | 16 +++++++++------
+ mm/migrate.c            |  2 +-
+ mm/shmem.c              |  3 ++-
+ mm/swap.c               | 42 ++++++++++++++++++++++++++++++++-------
+ mm/swap_state.c         | 52 ++++++++++++++++++++++++++++++++++++++++++-------
+ mm/swapfile.c           |  2 +-
+ mm/userfaultfd.c        |  2 +-
+ mm/vmscan.c             | 26 +++++++++++++++----------
+ mm/vmstat.c             |  6 ++++--
+ mm/workingset.c         | 47 +++++++++++++++++++++++++++++++-------------
+ 16 files changed, 183 insertions(+), 69 deletions(-)
+
 -- 
-2.25.1.481.gfbce0eb801-goog
+2.7.4
 
