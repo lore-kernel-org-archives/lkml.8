@@ -2,154 +2,98 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BD9C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE50C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1949920752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584482619;
-	bh=NRUE2ckhs8n5Ozlq9QGah87GvPHMhCBA9ESXYy5Zdtg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=h4kkKIRnnlU//pvmh1JsEHJJM/bvNshS2noacYNyj2iiwML3cB8MdraqvnO2m4Wyb
-	 KIAM2waBAF8aCEiTJDttP+VRebJDb/Yig9pK3Ab1MOg7H5fx0cyZmrp7ujOCpMl6yo
-	 svP1HwRwdAn9WhaTIM83IVP3adEhGpxfjOLRnSPE=
+	by mail.kernel.org (Postfix) with ESMTP id 40B6220724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:05:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="DgVudzFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgCQWDi (ORCPT
+        id S1726983AbgCQWFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgCQWDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:03:37 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BC4B20714;
-        Tue, 17 Mar 2020 22:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584482616;
-        bh=NRUE2ckhs8n5Ozlq9QGah87GvPHMhCBA9ESXYy5Zdtg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1QGfUU91mkGNhqaAE5qkukrE5YGD0RThABDfnFSsg6yyPBnpZ/OoVSS8JJFuWo23r
-         ThYXwUFPgcoopP7DR1QbWF1dlJInVWRqKWlMr64DZHN0CZJTsg5h3FzHB7jeKPHdn0
-         O36i7OCDqShLa3H4tFGVcqvDcEDogrn3BnfyYFBg=
-Date:   Tue, 17 Mar 2020 17:03:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Aman Sharma <amanharitsh123@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq
- correctly
-Message-ID: <20200317220334.GA230141@google.com>
+        Tue, 17 Mar 2020 18:05:00 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34898 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgCQWE7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:04:59 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k8so22156608oik.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gY+guVjbAMZU5uOESZLzfUGHTA73g3d/loWemG4Z+tE=;
+        b=DgVudzFUJBGxeDF2iH5mheVO+tEr9voArIx64eJyZEBBg7cRUGb+cj/MjOf9oq3B2R
+         QJIL+lhTJMNAQ2ngIH0YwrqRSHxOD/fXTbGSyUUiG2SG3d9V05oxPGTwun4uO4gi4IlX
+         WxNQwPnIrSGREpuL3ogprgQmp5jDmU634+TUNER/9IW612bYKA/Y0kZDlnRh7OPIc7fZ
+         N3HkePiHhMsx27VQXonJFl9bdxeB0ntQKwRhkKFQ/5Yysl6eRd32am9KSXxFsta5qcIo
+         i3a8vj0Uaqxhll7rOfD9Qno75Qopvm5OE8wtwmN62BUdRv/lvuW7wYkuuokxAAcPHEuO
+         2jHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gY+guVjbAMZU5uOESZLzfUGHTA73g3d/loWemG4Z+tE=;
+        b=rl+DQ2zYePGnqlg9QgOBwNG5/PHB57bE1QJt8xyTz1ddiIq5zHeUoOiSMfFAU/Figf
+         jqe16TixerDpjklFmawnjC6CiXBWYNwHhlB0OrCBzUclchHt3hb91jKFuR3JJip2mWAl
+         polSbWdom/JPGwv+wRIbsXVUxsHwBg7Wr+b/fKJUC/mexAlvCYDh2Df5yiZNpney1hxC
+         mTZBYCsjy/jCER55lfPd4ehAJyDlVaZjo6AyhWRmBkIvG9ESGh6KIfiIYN3eDUhDF4CP
+         LOt6gT7yIvthxPrr6z9Mu1brPvzaHI6a4oZZm/SCxs9Z+3/mdrBOJ3w7dB0ggF4Loa5V
+         5sGg==
+X-Gm-Message-State: ANhLgQ34jIdJVuuvhMiyCeogAVhc8/PSpEVglqeRCzEp/T3y3HKrpk/k
+        Gho2eIESqPZhoHBZzWAIYJbRlnvTNGC9132LL2aDRw==
+X-Google-Smtp-Source: ADFU+vsQvOL9wprxrkAHycoZPlNxRbxXsmPicT5n7p0w61/VCYW5GHZo0bAl/D1XuM3Nq16vsV01jj1nZ/5wYharha8=
+X-Received: by 2002:aca:4d8:: with SMTP id 207mr838171oie.70.1584482698821;
+ Tue, 17 Mar 2020 15:04:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313215642.GA202015@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158318762012.2216124.16408566404290491508.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <1848cdb9-8c19-d7fe-870c-175bd60bc364@amd.com>
+In-Reply-To: <1848cdb9-8c19-d7fe-870c-175bd60bc364@amd.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 17 Mar 2020 15:04:48 -0700
+Message-ID: <CAPcyv4goRP8EAfMX8oOANgzgm3Pn=wES42MCDXbP_x__-GW52g@mail.gmail.com>
+Subject: Re: [PATCH 4/5] resource: Report parent to walk_iomem_res_desc() callback
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 04:56:42PM -0500, Bjorn Helgaas wrote:
-> On Fri, Mar 13, 2020 at 10:05:58PM +0100, Thomas Gleixner wrote:
-> > Bjorn Helgaas <helgaas@kernel.org> writes:
-> > > On Thu, Mar 12, 2020 at 10:53:06AM +0100, Marc Gonzalez wrote:
-> > >> Last time around, my understanding was that, going forward,
-> > >> the best solution was:
-> > >> 
-> > >> 	virq = platform_get_irq(...)
-> > >> 	if (virq <= 0)
-> > >> 		return virq ? : -ENODEV;
-> > >> 
-> > >> i.e. map 0 to -ENODEV, pass other errors as-is, remove the dev_err
-> > >> 
-> > >> @Bjorn/Lorenzo did you have a change of heart?
-> > >
-> > > Yes.  In 10006651 (Oct 20, 2017), I thought:
-> > >
-> > >   irq = platform_get_irq(pdev, 0);
-> > >   if (irq <= 0)
-> > >     return -ENODEV;
-> > >
-> > > was fine.  In 11066455 (Aug 7, 2019), I said I thought I was wrong and
-> > > that:
-> > >
-> > >   platform_get_irq() is a generic interface and we have to be able to
-> > >   interpret return values consistently.  The overwhelming consensus
-> > >   among platform_get_irq() callers is to treat "irq < 0" as an error,
-> > >   and I think we should follow suit.
-> > >   ...
-> > >   I think the best pattern is:
-> > >
-> > >     irq = platform_get_irq(pdev, i);
-> > >     if (irq < 0)
-> > >       return irq;
-> > 
-> > Careful. 0 is not a valid interrupt.
-> 
-> Should callers of platform_get_irq() check for a 0 return value?
-> About 900 of them do not.
-> 
-> Or should platform_get_irq() return a negative error instead of 0?
-> If 0 is not a valid interrupt, I think it would be easier to use the
-> interface if we made it so platform_get_irq() could never return 0,
-> which I think would also fit the interface documentation better:
-> 
->  * Return: IRQ number on success, negative error number on failure.
+On Thu, Mar 5, 2020 at 6:42 AM Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>
+> On 3/2/20 4:20 PM, Dan Williams wrote:
+> > In support of detecting whether a resource might have been been claimed,
+> > report the parent to the walk_iomem_res_desc() callback. For example,
+> > the ACPI HMAT parser publishes "hmem" platform devices per target range.
+> > However, if the HMAT is disabled / missing a fallback driver can attach
+> > devices to the raw memory ranges as a fallback if it sees unclaimed /
+> > orphan "Soft Reserved" resources in the resource tree.
+> >
+> > Otherwise, find_next_iomem_res() returns a resource with garbage data
+> > from the stack allocation in __walk_iomem_res_desc() for the res->parent
+> > field.
+>
+> Just wondering if we shouldn't just copy the complete resource struct and
+> just override the start and end values? That way, if some code in the
+> future wants to look at sibling or child values, another change isn't needed.
+>
+> Just a thought.
 
-Trying again -- I'm not quite catching your meaning, Thomas.
-
-If platform_get_irq*() can return 0, but 0 is not a valid IRQ, I think
-it's sort of complicated to parse that return value.  Drivers that
-require an IRQ would do this:
-
-  irq = platform_get_irq(pdev, i);
-  if (irq < 0)
-    return irq;
-  if (irq == 0)
-    return -EINVAL;         # error since driver requires IRQ
-  return devm_request_irq(dev, irq, ...);
-
-Drivers that can either use an IRQ or do polling would do this:
-
-  irq = platform_get_irq(pdev, i);
-  if (irq <= 0)
-    return setup_polling();
-  return devm_request_irq(dev, irq, ...);
-
-I think those are sort of ungainly, especially the first.  If we made
-it so those functions never returned 0, drivers that need an IRQ could
-do this:
-
-  irq = platform_get_irq(pdev, i);
-  if (irq < 0)
-    return irq;
-  return devm_request_irq(dev, irq, ...);
-
-and drivers that support polling could do this:
-
-  irq = platform_get_irq(pdev, i);
-  if (irq < 0)
-    return setup_polling();
-  return devm_request_irq(dev, irq, ...);
-
-That seems a lot easier to get correct, and it matches what most of
-the callers already do.
+Thanks for taking a look. I think it's ok to come update this again if
+that need arises.
