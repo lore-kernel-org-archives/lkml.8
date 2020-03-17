@@ -2,112 +2,97 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB19C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E36C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7B620735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CBB820754
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584461429;
+	bh=TE0OALslBnAglDc0PbW0+eztUT4bhEdyvuy67q7ODsA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=G6RPEOFKbkE9Vb2SYICgP+I+TEYHkB2r2ttuMou+OCSJRaen328Lmse/eHb5ckWCV
+	 0oFnyhY2YVCIHowV3jy0v4e1Gayii0YqpXLcgXUd37nkxQuzpwyH+HOb0XKr8nNsCn
+	 Fn0O2/tHgUKDQHGhXMmTZ40r2WxCLX0aqnTBwVbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgCQQJw (ORCPT
+        id S1726780AbgCQQK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:09:52 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58740 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQQJw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:09:52 -0400
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jEEmm-0004fx-QV; Tue, 17 Mar 2020 16:09:44 +0000
-Date:   Tue, 17 Mar 2020 17:09:43 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: clone3: allow creation of time namespace with offset
-Message-ID: <20200317160943.2qquqsa4l3oc7ii2@wittgenstein>
-References: <20200317083043.226593-1-areber@redhat.com>
- <CAKgNAkh7=2Noyn0o3880xbbi4w5oiwqs9ibTYLtheqzxne3mbQ@mail.gmail.com>
- <20200317142350.ssraami3a4vnk5po@yavin>
+        Tue, 17 Mar 2020 12:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbgCQQK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:10:28 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 880D420724;
+        Tue, 17 Mar 2020 16:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584461427;
+        bh=TE0OALslBnAglDc0PbW0+eztUT4bhEdyvuy67q7ODsA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=t8O7crINsA3AtuGuMMK+pePvF5aF7Fb0BIZ1zxo4crz2S9zepUdiZ303EtOl0nAfm
+         4DZKRihRj8Xp/JbUwFFLy7LidMQ5YRnCmhfg6NdhMC2SAILL8Db8Y/bncOQIHfzaV6
+         XNTFBaPv+ie6KQcXKLng6/sY+pKK3hCkVDBZ4/10=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-clk@vger.kernel.org
+Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: [PATCHv3 0/5] clk: agilex: add clock driver
+Date:   Tue, 17 Mar 2020 11:10:17 -0500
+Message-Id: <20200317161022.11181-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200317142350.ssraami3a4vnk5po@yavin>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 01:23:50AM +1100, Aleksa Sarai wrote:
-> On 2020-03-17, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
-> > [CC += linux-api; please CC on future versions]
-> > 
-> > On Tue, 17 Mar 2020 at 09:32, Adrian Reber <areber@redhat.com> wrote:
-> > > Requiring nanoseconds as well as seconds for two clocks during clone3()
-> > > means that it would require 4 additional members to 'struct clone_args':
-> > >
-> > >         __aligned_u64 tls;
-> > >         __aligned_u64 set_tid;
-> > >         __aligned_u64 set_tid_size;
-> > > +       __aligned_u64 boottime_offset_seconds;
-> > > +       __aligned_u64 boottime_offset_nanoseconds;
-> > > +       __aligned_u64 monotonic_offset_seconds;
-> > > +       __aligned_u64 monotonic_offset_nanoseconds;
-> > >  };
-> > >
-> > > To avoid four additional members to 'struct clone_args' this patchset
-> > > uses another approach:
-> > >
-> > >         __aligned_u64 tls;
-> > >         __aligned_u64 set_tid;
-> > >         __aligned_u64 set_tid_size;
-> > > +       __aligned_u64 timens_offset;
-> > > +       __aligned_u64 timens_offset_size;
-> > >  };
-> > >
-> > > timens_offset is a pointer to an array just as previously done with
-> > > set_tid and timens_offset_size is the size of the array.
-> > >
-> > > The timens_offset array is expected to contain a struct like this:
-> > >
-> > > struct set_timens_offset {
-> > >        int clockid;
-> > >        struct timespec val;
-> > > };
-> > >
-> > > This way it is possible to pass the information of multiple clocks with
-> > > seconds and nanonseconds to clone3().
-> > >
-> > > To me this seems the better approach, but I am not totally convinced
-> > > that it is the right thing. If there are other ideas how to pass two
-> > > clock offsets with seconds and nanonseconds to clone3() I would be happy
-> > > to hear other ideas.
-> 
-> While I agree this does make the API cleaner, I am a little worried that
-> it risks killing some of the ideas we discussed for seccomp deep
-> inspection. In particular, having a pointer to variable-sized data
-> inside the struct means that now the cBPF program can't just be given a
-> copy of the struct data from userspace to check.
+Hi,
 
-I suggested two alternative approaches in a response to this. The
-easiest one would be to simple assume that the struct doesn't change
-size.
-(But haven't we crossed that bridge with the set_tid array already?)
+This is version 3 of the patchset to add a clock driver to the Agilex
+platform.
+
+This version adds 2 new patches that was a result from comments received
+in v2.
+
+Patch 2/5: clk: socfpga: remove clk_ops enable/disable methods
+Patch 3/5: clk: socfpga: add const to _ops data structures
+
+Thanks,
+Dinh
+
+
+Dinh Nguyen (5):
+  clk: socfpga: stratix10: use new parent data scheme
+  clk: socfpga: remove clk_ops enable/disable methods
+  clk: socfpga: add const to _ops data structures
+  dt-bindings: documentation: add clock bindings information for Agilex
+  clk: socfpga: agilex: add clock driver for the Agilex platform
+
+ .../bindings/clock/intel,agilex.yaml          |  36 ++
+ drivers/clk/Makefile                          |   3 +-
+ drivers/clk/socfpga/Makefile                  |   2 +
+ drivers/clk/socfpga/clk-agilex.c              | 454 ++++++++++++++++++
+ drivers/clk/socfpga/clk-gate-s10.c            |   5 +-
+ drivers/clk/socfpga/clk-periph-s10.c          |  10 +-
+ drivers/clk/socfpga/clk-pll-a10.c             |   4 +-
+ drivers/clk/socfpga/clk-pll-s10.c             |  78 ++-
+ drivers/clk/socfpga/clk-pll.c                 |   4 +-
+ drivers/clk/socfpga/clk-s10.c                 | 160 ++++--
+ drivers/clk/socfpga/stratix10-clk.h           |  10 +-
+ include/dt-bindings/clock/agilex-clock.h      |  70 +++
+ 12 files changed, 784 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+ create mode 100644 drivers/clk/socfpga/clk-agilex.c
+ create mode 100644 include/dt-bindings/clock/agilex-clock.h
+
+-- 
+2.25.1
+
