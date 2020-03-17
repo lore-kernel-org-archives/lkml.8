@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E35EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF12C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E7D20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9A1205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442902;
-	bh=Tbj5WL8SPue0E0E5qaSWqOOfcrvNZoS5dH/MKj6Acno=;
+	s=default; t=1584442906;
+	bh=HZyQ0SGrjfwxWlJr+71n793Z8r4Ih9BW1zq3GkwkgiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TlPcQLwZPi33yTwo8UQ1V4JNmHiUXLERIu779/MaFRCfy+++mC2VGILB22EBrBkEC
-	 omb4tLm5Hxb2FpJnzLKq9D57hPhkWrE0k2ZFMJvgjGohcUfGYWUs1CyJm+80Cs2mKt
-	 BqFsb/Pyl2fIH5Mmb9ZdUZP4JO1bAfUfTQ0ZL+CE=
+	b=cw2jlpimNiajJzp0OXcBIgdGDP1T1rlorRMQb4VzfS+jcXvf8ynvS8fjKM9rnaoTx
+	 r3kEON6J+ptzUZbt9mKlVwMasJbgbFZF7NjpGBTvx0rt80zSM30iQ5h2uiLdvt1dP8
+	 MRyI6omLC6/z0dRIxMaZGBkTIeKc7tIoEZcOP8ME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgCQLBl (ORCPT
+        id S1727798AbgCQLBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:01:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41076 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbgCQLBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:01:36 -0400
+        id S1727523AbgCQLBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:01:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89ACA20719;
-        Tue, 17 Mar 2020 11:01:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 546A320714;
+        Tue, 17 Mar 2020 11:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442896;
-        bh=Tbj5WL8SPue0E0E5qaSWqOOfcrvNZoS5dH/MKj6Acno=;
+        s=default; t=1584442898;
+        bh=HZyQ0SGrjfwxWlJr+71n793Z8r4Ih9BW1zq3GkwkgiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iGnSavYnjBqaSGYrGis7wI4xZu7BGfya64rj+PxwBtbjy97HzljxzOatEWirz5nwH
-         SvMF+i/kTNRpFneEHqeqFim1Yqunyh3Gxs+U+sSXuAIq8KkJ3y0HV/+7hNogP7OnOr
-         rRM3v4zK1uiXZPsYItqqO75Nc+TX78whBGftJAXc=
+        b=Bgt1Pcho08eE/xTe7/2lPbaBmLnK3B1s9M6zKhzJR15xLAG5UJNwy+4BbT8m8csAI
+         FbpdBXkEtyqmVYEN4RPg3SO+biD4yB+dWfo3LF3McWjR7IwO07HdlGQSPTD4vlfZLN
+         H/Af0wwpznBMGHicRsPsZgKRR883AvgQO86RuM9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Derek Shute <Derek.Shute@stratus.com>,
-        Edward Cree <ecree@solarflare.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 027/123] sfc: detach from cb_page in efx_copy_channel()
-Date:   Tue, 17 Mar 2020 11:54:14 +0100
-Message-Id: <20200317103310.587197342@linuxfoundation.org>
+Subject: [PATCH 5.4 028/123] slip: make slhc_compress() more robust against malicious packets
+Date:   Tue, 17 Mar 2020 11:54:15 +0100
+Message-Id: <20200317103310.702472626@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,37 +60,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Cree <ecree@solarflare.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 4b1bd9db078f7d5332c8601a2f5bd43cf0458fd4 ]
+[ Upstream commit 110a40dfb708fe940a3f3704d470e431c368d256 ]
 
-It's a resource, not a parameter, so we can't copy it into the new
- channel's TX queues, otherwise aliasing will lead to resource-
- management bugs if the channel is subsequently torn down without
- being initialised.
+Before accessing various fields in IPV4 network header
+and TCP header, make sure the packet :
 
-Before the Fixes:-tagged commit there was a similar bug with
- tsoh_page, but I'm not sure it's worth doing another fix for such
- old kernels.
+- Has IP version 4 (ip->version == 4)
+- Has not a silly network length (ip->ihl >= 5)
+- Is big enough to hold network and transport headers
+- Has not a silly TCP header size (th->doff >= sizeof(struct tcphdr) / 4)
 
-Fixes: e9117e5099ea ("sfc: Firmware-Assisted TSO version 2")
-Suggested-by: Derek Shute <Derek.Shute@stratus.com>
-Signed-off-by: Edward Cree <ecree@solarflare.com>
+syzbot reported :
+
+BUG: KMSAN: uninit-value in slhc_compress+0x5b9/0x2e60 drivers/net/slip/slhc.c:270
+CPU: 0 PID: 11728 Comm: syz-executor231 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ slhc_compress+0x5b9/0x2e60 drivers/net/slip/slhc.c:270
+ ppp_send_frame drivers/net/ppp/ppp_generic.c:1637 [inline]
+ __ppp_xmit_process+0x1902/0x2970 drivers/net/ppp/ppp_generic.c:1495
+ ppp_xmit_process+0x147/0x2f0 drivers/net/ppp/ppp_generic.c:1516
+ ppp_write+0x6bb/0x790 drivers/net/ppp/ppp_generic.c:512
+ do_loop_readv_writev fs/read_write.c:717 [inline]
+ do_iter_write+0x812/0xdc0 fs/read_write.c:1000
+ compat_writev+0x2df/0x5a0 fs/read_write.c:1351
+ do_compat_pwritev64 fs/read_write.c:1400 [inline]
+ __do_compat_sys_pwritev fs/read_write.c:1420 [inline]
+ __se_compat_sys_pwritev fs/read_write.c:1414 [inline]
+ __ia32_compat_sys_pwritev+0x349/0x3f0 fs/read_write.c:1414
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f7cd99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffdb84ac EFLAGS: 00000217 ORIG_RAX: 000000000000014e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000200001c0
+RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000040047459 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
+ slab_alloc_node mm/slub.c:2793 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1051 [inline]
+ ppp_write+0x115/0x790 drivers/net/ppp/ppp_generic.c:500
+ do_loop_readv_writev fs/read_write.c:717 [inline]
+ do_iter_write+0x812/0xdc0 fs/read_write.c:1000
+ compat_writev+0x2df/0x5a0 fs/read_write.c:1351
+ do_compat_pwritev64 fs/read_write.c:1400 [inline]
+ __do_compat_sys_pwritev fs/read_write.c:1420 [inline]
+ __se_compat_sys_pwritev fs/read_write.c:1414 [inline]
+ __ia32_compat_sys_pwritev+0x349/0x3f0 fs/read_write.c:1414
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+
+Fixes: b5451d783ade ("slip: Move the SLIP drivers")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/sfc/efx.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/slip/slhc.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/sfc/efx.c
-+++ b/drivers/net/ethernet/sfc/efx.c
-@@ -519,6 +519,7 @@ efx_copy_channel(const struct efx_channe
- 		if (tx_queue->channel)
- 			tx_queue->channel = channel;
- 		tx_queue->buffer = NULL;
-+		tx_queue->cb_page = NULL;
- 		memset(&tx_queue->txd, 0, sizeof(tx_queue->txd));
- 	}
+--- a/drivers/net/slip/slhc.c
++++ b/drivers/net/slip/slhc.c
+@@ -232,7 +232,7 @@ slhc_compress(struct slcompress *comp, u
+ 	struct cstate *cs = lcs->next;
+ 	unsigned long deltaS, deltaA;
+ 	short changes = 0;
+-	int hlen;
++	int nlen, hlen;
+ 	unsigned char new_seq[16];
+ 	unsigned char *cp = new_seq;
+ 	struct iphdr *ip;
+@@ -248,6 +248,8 @@ slhc_compress(struct slcompress *comp, u
+ 		return isize;
  
+ 	ip = (struct iphdr *) icp;
++	if (ip->version != 4 || ip->ihl < 5)
++		return isize;
+ 
+ 	/* Bail if this packet isn't TCP, or is an IP fragment */
+ 	if (ip->protocol != IPPROTO_TCP || (ntohs(ip->frag_off) & 0x3fff)) {
+@@ -258,10 +260,14 @@ slhc_compress(struct slcompress *comp, u
+ 			comp->sls_o_tcp++;
+ 		return isize;
+ 	}
+-	/* Extract TCP header */
++	nlen = ip->ihl * 4;
++	if (isize < nlen + sizeof(*th))
++		return isize;
+ 
+-	th = (struct tcphdr *)(((unsigned char *)ip) + ip->ihl*4);
+-	hlen = ip->ihl*4 + th->doff*4;
++	th = (struct tcphdr *)(icp + nlen);
++	if (th->doff < sizeof(struct tcphdr) / 4)
++		return isize;
++	hlen = nlen + th->doff * 4;
+ 
+ 	/*  Bail if the TCP packet isn't `compressible' (i.e., ACK isn't set or
+ 	 *  some other control bit is set). Also uncompressible if
 
 
