@@ -2,59 +2,248 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592C7C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC35C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CA820738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A27D20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:15:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cd6zB2re"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgCQPNv (ORCPT
+        id S1726771AbgCQPPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:13:51 -0400
-Received: from out28-220.mail.aliyun.com ([115.124.28.220]:60628 "EHLO
-        out28-220.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbgCQPNv (ORCPT
+        Tue, 17 Mar 2020 11:15:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44420 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbgCQPPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:13:51 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2034004|-1;CH=green;DM=||false|;DS=CONTINUE|ham_system_inform|0.0742784-0.00260228-0.923119;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03296;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.H0zKH5l_1584457917;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.H0zKH5l_1584457917)
-          by smtp.aliyun-inc.com(10.147.42.241);
-          Tue, 17 Mar 2020 23:13:13 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH RESEND] Add support for TCU of X1000.
-Date:   Tue, 17 Mar 2020 23:11:32 +0800
-Message-Id: <1584457893-40418-2-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584457893-40418-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1584457893-40418-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Tue, 17 Mar 2020 11:15:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=6Ine+oxODCtUbbLGDC7KuyhjrafGxZgBxDpnNryKXdM=; b=Cd6zB2rertxgUVBlgWIzX7rUmR
+        wRFeBAcnGec5STrdxeu0KiY3qs3Qxek0Yk0VwQI5GxfLIO6AhnHzmbiD45EUmzDmsvOnM5MK4KKCo
+        Xs2axkQL4IjPjYAC9dYlwUhBkYQUP+nKrQ0jxftgGDY1OoJwsFTQwn7fsOlYfY3lkwkIxYyEEg5Fn
+        nowUsrLw7QdBXAvTg8493O3IYsfrooLIhAfiD1uW40xYZzrfpFPR8oSG9mhDfr+vV/HXYCSGkSa5U
+        YCDTJLbRbTCETEmB4ZwWbhty2gIRa2xTzrf4P5V1DEEEv6hldanyJ0XszMcwnMo55e3jL9flE7tmm
+        itOYZ3CQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEDwL-0003Ob-JG; Tue, 17 Mar 2020 15:15:33 +0000
+Subject: Re: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+References: <4c0db5d0-1a61-cb80-2bcb-034f5bcd1597@infradead.org>
+ <20200312193917.GA160316@google.com>
+ <DB8PR04MB6747C1032BF126CFFB5720E084F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <e53be1bc-e84d-433a-e9a7-ea442c93f2cf@infradead.org>
+ <DB8PR04MB6747E855D3349173CE2AE9F684F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <23a2a891-4d69-34a3-4cf6-525e54738b77@infradead.org>
+Date:   Tue, 17 Mar 2020 08:15:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <DB8PR04MB6747E855D3349173CE2AE9F684F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for TCU of X1000 from Ingenic. X1000 has a different TCU,
-since X1000 OST has been independent of TCU. This patch is add TCU
-support of X1000, and prepare for later OST driver.
+On 3/17/20 3:05 AM, Z.q. Hou wrote:
+> Hi Randy,
+> 
+>> -----Original Message-----
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>> Sent: 2020年3月17日 12:59
+>> To: Z.q. Hou <zhiqiang.hou@nxp.com>; Bjorn Helgaas <helgaas@kernel.org>
+>> Cc: Stephen Rothwell <sfr@canb.auug.org.au>; Linux Next Mailing List
+>> <linux-next@vger.kernel.org>; Linux Kernel Mailing List
+>> <linux-kernel@vger.kernel.org>; linux-pci <linux-pci@vger.kernel.org>;
+>> Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+>> Subject: Re: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+>>
+>> On 3/16/20 9:31 PM, Z.q. Hou wrote:
+>>> Hi Randy and Bjorn,
+>>>
+>>>> -----Original Message-----
+>>>> From: Bjorn Helgaas <helgaas@kernel.org>
+>>>> Sent: 2020年3月13日 3:39
+>>>> To: Z.q. Hou <zhiqiang.hou@nxp.com>
+>>>> Cc: Randy Dunlap <rdunlap@infradead.org>; Stephen Rothwell
+>>>> <sfr@canb.auug.org.au>; Linux Next Mailing List
+>>>> <linux-next@vger.kernel.org>; Linux Kernel Mailing List
+>>>> <linux-kernel@vger.kernel.org>; linux-pci
+>>>> <linux-pci@vger.kernel.org>; Karthikeyan Mitran
+>>>> <m.karthikeyan@mobiveil.co.in>
+>>>> Subject: Re: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+>>>>
+>>>> On Thu, Mar 12, 2020 at 08:13:50AM -0700, Randy Dunlap wrote:
+>>>>> On 3/12/20 3:04 AM, Stephen Rothwell wrote:
+>>>>>> Hi all,
+>>>>>>
+>>>>>> Changes since 20200311:
+>>>>>>
+>>>>>
+>>>>> on i386:
+>>>>> # CONFIG_PCI_MSI is not set
+>>>>>
+>>>>> WARNING: unmet direct dependencies detected for
+>> PCIE_MOBIVEIL_HOST
+>>>>>   Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
+>>>>>   Selected by [y]:
+>>>>>   - PCIE_MOBIVEIL_PLAT [=y] && PCI [=y] && (ARCH_ZYNQMP ||
+>>>> COMPILE_TEST [=y]) && OF [=y]
+>>>>
+>>>> Thanks, Randy.
+>>>>
+>>>> I'm not sure if this is a new problem introduced by something in my
+>>>> "next" branch, or if this is an existing problem we just happened to
+>>>> hit with randconfig.
+>>>>
+>>>> Here are the commits on remotes/lorenzo/pci/mobiveil branch:
+>>>>
+>>>>   d29ad70a813b ("PCI: mobiveil: Add PCIe Gen4 RC driver for
+>>>> Layerscape
+>>>> SoCs")
+>>>>   3edeb49525bb ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4
+>>>> controller")
+>>>>   11d22cc395ca ("PCI: mobiveil: Add Header Type field check")
+>>>>   029dea3cdc67 ("PCI: mobiveil: Add 8-bit and 16-bit CSR register
+>>>> accessors")
+>>>>   52cae4c7082f ("PCI: mobiveil: Allow mobiveil_host_init() to be used
+>>>> to re-init host")
+>>>>   fc99b3311af7 ("PCI: mobiveil: Add callback function for link up check")
+>>>>   ed620e96541f ("PCI: mobiveil: Add callback function for interrupt
+>>>> initialization")
+>>>>   03bdc3884019 ("PCI: mobiveil: Modularize the Mobiveil PCIe Host
+>>>> Bridge IP
+>>>> driver")
+>>>>   39e3a03eea5b ("PCI: mobiveil: Collect the interrupt related
+>>>> operations into a function")
+>>>>   2ba24842d6b4 ("PCI: mobiveil: Move the host initialization into a
+>> function")
+>>>>   1f442218d657 ("PCI: mobiveil: Introduce a new structure
+>>>> mobiveil_root_port")
+>>>>
+>>>> I dropped that mobiveil branch for now, so Hou, can you please check
+>>>> this out and resolve it one way or the other?
+>>>
+>>> I don't reproduce this issue with i386_defconfig, can you help me to
+>> reproduce it?
+>>
+>> Sure, see below.
+>>
+>>
+>>> Thanks,
+>>> Zhiqiang
+>>>
+>>>>
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:375:15: error:
+>>>> variable ‘mobiveil_msi_domain_info’ has initializer but incomplete
+>>>> type
+>>>>>  static struct msi_domain_info mobiveil_msi_domain_info = {
+>>>>>                ^~~~~~~~~~~~~~~
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:3:
+>>>>> error: ‘struct
+>>>> msi_domain_info’ has no member named ‘flags’
+>>>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>>>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>>>    ^~~~~
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:12: error:
+>>>> ‘MSI_FLAG_USE_DEF_DOM_OPS’ undeclared here (not in a function);
+>> did
+>>>> you mean ‘SIMPLE_DEV_PM_OPS’?
+>>>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>>>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>>>             ^~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>             SIMPLE_DEV_PM_OPS
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:39: error:
+>>>> ‘MSI_FLAG_USE_DEF_CHIP_OPS’ undeclared here (not in a function); did
+>>>> you mean ‘MSI_FLAG_USE_DEF_DOM_OPS’?
+>>>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>>>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>>>
+>>>> ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>
+>>>> MSI_FLAG_USE_DEF_DOM_OPS
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:377:6: error:
+>>>> ‘MSI_FLAG_PCI_MSIX’ undeclared here (not in a function); did you mean
+>>>> ‘SS_FLAG_BITS’?
+>>>>>       MSI_FLAG_PCI_MSIX),
+>>>>>       ^~~~~~~~~~~~~~~~~
+>>>>>       SS_FLAG_BITS
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:11: warning:
+>>>> excess elements in struct initializer
+>>>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>>>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>>>            ^
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:11:
+>>>>> note: (near
+>>>> initialization for ‘mobiveil_msi_domain_info’)
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:378:3:
+>>>>> error: ‘struct
+>>>> msi_domain_info’ has no member named ‘chip’
+>>>>>   .chip = &mobiveil_msi_irq_chip,
+>>>>>    ^~~~
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:378:10: warning:
+>>>> excess elements in struct initializer
+>>>>>   .chip = &mobiveil_msi_irq_chip,
+>>>>>           ^
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:378:10:
+>>>>> note: (near
+>>>> initialization for ‘mobiveil_msi_domain_info’)
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c: In function
+>>>> ‘mobiveil_allocate_msi_domains’:
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:469:20: error:
+>>>> implicit declaration of function ‘pci_msi_create_irq_domain’; did you
+>>>> mean ‘pci_msi_get_device_domain’?
+>>>> [-Werror=implicit-function-declaration]
+>>>>>   msi->msi_domain = pci_msi_create_irq_domain(fwnode,
+>>>>>                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>                     pci_msi_get_device_domain
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:469:18: warning:
+>>>> assignment makes pointer from integer without a cast
+>>>> [-Wint-conversion]
+>>>>>   msi->msi_domain = pci_msi_create_irq_domain(fwnode,
+>>>>>                   ^
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c: At top level:
+>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:375:31: error:
+>>>> storage size of ‘mobiveil_msi_domain_info’ isn’t known
+>>>>>  static struct msi_domain_info mobiveil_msi_domain_info = {
+>>>>>                                ^~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>
+>>>>>
+>>>>>
+>>>>> Full randconfig file is attached.
+>>
+>> Use the .config file that was attached in the report.
+> 
+> One query, which default config you used to generate this .config? I cannot select
+> the PCIE_MOBIVEIL_PLAT in 'menuconfig' when use the i386_defconfig.
 
-周琰杰 (Zhou Yanjie) (1):
-  clk: Ingenic: Add support for TCU of X1000.
+Hi,
 
- drivers/clk/ingenic/tcu.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I did not use any defconfig.
+Just cp that config file into your build directory (as .config)
+
+and do something like:
+$ make ARCH=i386 oldconfig
+
 
 -- 
-2.7.4
+~Randy
 
