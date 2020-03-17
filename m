@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C440AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1513C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D9E20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80EF320736
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443419;
-	bh=XAYkwsLZI0Sg17MYyeRz/0WyS2H9AG2/pvpvFulgFAs=;
+	s=default; t=1584443422;
+	bh=DXjRntfM0yrOlD0ZVfpicGkExS7X0UTEbsHxUNOlysU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NhF7nRrK3SHD4XrK1hT83Lbum51tvtel7pAxOyuNmr8N13M4JGG+BS7H86zGgmj3+
-	 5Hhb9bNm1GzN7gc3/phaYcLAWCLQVCbMYRMv5EdbMjiGq4zzheHHoLskPuq+MbcQ4x
-	 pbWituEByYHLu6/zsOv5Tv5nD2KrWcoW1+RfZp3w=
+	b=RNbpgtFZxbzaWke4iZe2jYoqho/53tV17fZ4iYmi+hqx5YCSLiW2F7YJ1ushygSFm
+	 Xps2ipjAYVcn7mfhICay4HUyomp9ewmvvyrGuWL3oTQz7Wdy0TteNMmU6md8bBaeVy
+	 9SUzev9/1YKEUuuJIIzW7W0z35UQoSdjsRJ5wlQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgCQLKQ (ORCPT
+        id S1728895AbgCQLKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:10:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52986 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:10:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728732AbgCQLKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:10:14 -0400
+        id S1728738AbgCQLKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:10:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71C6120658;
-        Tue, 17 Mar 2020 11:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05D4220658;
+        Tue, 17 Mar 2020 11:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443413;
-        bh=XAYkwsLZI0Sg17MYyeRz/0WyS2H9AG2/pvpvFulgFAs=;
+        s=default; t=1584443417;
+        bh=DXjRntfM0yrOlD0ZVfpicGkExS7X0UTEbsHxUNOlysU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pbkeH2WEpcOMvSvOwT4wUNpXHJq/ZLzIbuGWODdbi6rd3pH1zds+cK/SzTOM2Gi+Z
-         L7XMIb6U88NF5pHcDDHv9Of+J1grXh+aT4ogFe7xh5TRplNQiS7v9HlvutNNtEV/Jc
-         UQsd2nYmm8lU37yBJok4qSqpc5L4Q10wCffhwua0=
+        b=OoRm1QPWUxz04m0womfovrnkD+4ihnqYonXgAyZRiBkPU/TpSqVHarf7pQ5w4yFkS
+         LUYB3Mb5XzMFAZ8nCt9cqSWUZsSvKr/a13K5mEzv18QNf+8y9NIfJG+A9fMnnofjCY
+         9PKc4oQ1lACuMXLkt155l0VjDji0Ex22heRvGsUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.5 075/151] netfilter: nf_tables: fix infinite loop when expr is not available
-Date:   Tue, 17 Mar 2020 11:54:45 +0100
-Message-Id: <20200317103331.815854847@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Moulding <dmoulding@me.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.5 076/151] iwlwifi: mvm: Do not require PHY_SKU NVM section for 3168 devices
+Date:   Tue, 17 Mar 2020 11:54:46 +0100
+Message-Id: <20200317103331.884254585@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,67 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Dan Moulding <dmoulding@me.com>
 
-commit 1d305ba40eb8081ff21eeb8ca6ba5c70fd920934 upstream.
+commit a9149d243f259ad8f02b1e23dfe8ba06128f15e1 upstream.
 
-nft will loop forever if the kernel doesn't support an expression:
+The logic for checking required NVM sections was recently fixed in
+commit b3f20e098293 ("iwlwifi: mvm: fix NVM check for 3168
+devices"). However, with that fixed the else is now taken for 3168
+devices and within the else clause there is a mandatory check for the
+PHY_SKU section. This causes the parsing to fail for 3168 devices.
 
-1. nft_expr_type_get() appends the family specific name to the module list.
-2. -EAGAIN is returned to nfnetlink, nfnetlink calls abort path.
-3. abort path sets ->done to true and calls request_module for the
-   expression.
-4. nfnetlink replays the batch, we end up in nft_expr_type_get() again.
-5. nft_expr_type_get attempts to append family-specific name. This
-   one already exists on the list, so we continue
-6. nft_expr_type_get adds the generic expression name to the module
-   list. -EAGAIN is returned, nfnetlink calls abort path.
-7. abort path encounters the family-specific expression which
-   has 'done' set, so it gets removed.
-8. abort path requests the generic expression name, sets done to true.
-9. batch is replayed.
+The PHY_SKU section is really only mandatory for the IWL_NVM_EXT
+layout (the phy_sku parameter of iwl_parse_nvm_data is only used when
+the NVM type is IWL_NVM_EXT). So this changes the PHY_SKU section
+check so that it's only mandatory for IWL_NVM_EXT.
 
-If the expression could not be loaded, then we will end up back at 1),
-because the family-specific name got removed and the cycle starts again.
-
-Note that userspace can SIGKILL the nft process to stop the cycle, but
-the desired behaviour is to return an error after the generic expr name
-fails to load the expression.
-
-Fixes: eb014de4fd418 ("netfilter: nf_tables: autoload modules from the abort path")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: b3f20e098293 ("iwlwifi: mvm: fix NVM check for 3168 devices")
+Signed-off-by: Dan Moulding <dmoulding@me.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_tables_api.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/nvm.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -7250,13 +7250,8 @@ static void nf_tables_module_autoload(st
- 	list_splice_init(&net->nft.module_list, &module_list);
- 	mutex_unlock(&net->nft.commit_mutex);
- 	list_for_each_entry_safe(req, next, &module_list, list) {
--		if (req->done) {
--			list_del(&req->list);
--			kfree(req);
--		} else {
--			request_module("%s", req->module);
--			req->done = true;
--		}
-+		request_module("%s", req->module);
-+		req->done = true;
- 	}
- 	mutex_lock(&net->nft.commit_mutex);
- 	list_splice(&module_list, &net->nft.module_list);
-@@ -8039,6 +8034,7 @@ static void __net_exit nf_tables_exit_ne
- 	__nft_release_tables(net);
- 	mutex_unlock(&net->nft.commit_mutex);
- 	WARN_ON_ONCE(!list_empty(&net->nft.tables));
-+	WARN_ON_ONCE(!list_empty(&net->nft.module_list));
- }
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
+@@ -308,7 +308,8 @@ iwl_parse_nvm_sections(struct iwl_mvm *m
+ 		}
  
- static struct pernet_operations nf_tables_net_ops = {
+ 		/* PHY_SKU section is mandatory in B0 */
+-		if (!mvm->nvm_sections[NVM_SECTION_TYPE_PHY_SKU].data) {
++		if (mvm->trans->cfg->nvm_type == IWL_NVM_EXT &&
++		    !mvm->nvm_sections[NVM_SECTION_TYPE_PHY_SKU].data) {
+ 			IWL_ERR(mvm,
+ 				"Can't parse phy_sku in B0, empty sections\n");
+ 			return NULL;
 
 
