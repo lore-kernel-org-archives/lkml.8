@@ -2,220 +2,114 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6A4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059D7C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9F4205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC507205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qLUq4/RN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbgCQGvW (ORCPT
+        id S1725957AbgCQGzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:51:22 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:33049 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725928AbgCQGvW (ORCPT
+        Tue, 17 Mar 2020 02:55:00 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:45681 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgCQGy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:51:22 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TsrGYXe_1584427853;
-Received: from 30.27.116.176(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TsrGYXe_1584427853)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 17 Mar 2020 14:50:54 +0800
-Subject: Re: [PATCH 7/7] X.509: support OSCCA sm2-with-sm3 certificate
- verification
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>,
-        zohar@linux.ibm.com,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-References: <20200216085928.108838-1-tianjia.zhang@linux.alibaba.com>
- <20200216085928.108838-8-tianjia.zhang@linux.alibaba.com>
- <CAOtvUMdn+92vbEZ=V=e7PSuKwP3b1K==jFKjVWopVqJdfXzZxA@mail.gmail.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <40ed775a-064c-f483-4ab6-af2215e549e3@linux.alibaba.com>
-Date:   Tue, 17 Mar 2020 14:50:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <CAOtvUMdn+92vbEZ=V=e7PSuKwP3b1K==jFKjVWopVqJdfXzZxA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Mar 2020 02:54:59 -0400
+Received: by mail-pf1-f201.google.com with SMTP id a188so681925pfa.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:54:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=cF0mn8RFp/NzGOPpgquFoVLhCbRSN6dQrHYHqFzbKxU=;
+        b=qLUq4/RNPb7PhrgnudeQu/ls8asTv9i4YDOfr3NggSvcNYi4UxSfYMit8S1WUgfRKZ
+         hZbbZQPFLrVYc4w+L0UZzkonnR+9Rm8+cgeDoLy//zUl/eEx1tyOtsRTwwk0IC1GmMk5
+         7CS7xqEvKVY1hdXlUYzYVEQFG7dy5X2lR4whv4tssypZlespqwDBYf2ykgBrHzGRsoWw
+         KSyWF/LIwFFvygdQi7hxsX3du+o+gHjUR3p65oe+tr2Bc5ohTBv5n7uD892DON5VSkoX
+         pinFPh3FrUqi+8QXt/ZEbxdi0FQwUvd8TPga7GUwJMefUnNRxfnPnWu3NX9YAlqNlHUu
+         10hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=cF0mn8RFp/NzGOPpgquFoVLhCbRSN6dQrHYHqFzbKxU=;
+        b=bO0zT3aXNtLRhVGhMEO6Gg88ikXUCCQ+DavhDvP2SH1c9nORDT11cCGVALIpm/ZvVa
+         5twzsqOqAZiS4IH1HiXXszuyAO7KxqIOtah9aavnKs0XLUhjTtpfWC67Nvw5+o9lV2g5
+         m5nFXCHKIwA+QZirlluQdqwjeM1C7tkvvN/dKToIxh0PoIXgrLWPALVvGDIBDQzXlBi6
+         FRqx3IkgMot7lOntxLtXYNiGzVK0waKTmuDwR0p5GClwVVY7D1IbDxgVqyszCZBmnKdp
+         HZVStlokzjrAD1BGE35ALZirpTdo5lmcWeUrTNfzdzqBB57TQlqfoPLHGaKNWvxp1t/W
+         uvag==
+X-Gm-Message-State: ANhLgQ2082ISvPpzS+cX18n8epQQegZ/TFUkYonJBizVcOX88y8ZCRbA
+        S/accbaVTF1J5b24SWlHuVHuPXbW7cZqGbA=
+X-Google-Smtp-Source: ADFU+vt2Zvqf1px/Dmb35lmQnUB5JpW8RvY7l95YZat6XfupQdXF2UMeOYFTa4BNyZ32vltscuYTU3kAv+PeRtc=
+X-Received: by 2002:a63:8342:: with SMTP id h63mr3660917pge.141.1584428098211;
+ Mon, 16 Mar 2020 23:54:58 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 23:54:46 -0700
+Message-Id: <20200317065452.236670-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v1 0/6] Fix device links functional breakage in 4.19.99
+From:   Saravana Kannan <saravanak@google.com>
+To:     stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As mentioned in an earlier email thread [1], 4.19.99 broke the ability
+to create stateful and stateless device links between the same set of
+devices when it pulled in a valid bug fix [2]. While the fix was valid,
+it removes a functionality that was present before the bug fix.
 
+This patch series attempts to fix that by pulling in more patches from
+upstream. I've just done compilation testing so far. But wanted to send
+out a v1 to see if this patch list was acceptable before I fixed up the
+commit text format to match what's needed for stable mailing list.
 
-On 2020/3/17 14:31, Gilad Ben-Yossef wrote:
-> Hi,
-> 
-> On Sun, Feb 16, 2020 at 11:00 AM Tianjia Zhang
-> <tianjia.zhang@linux.alibaba.com> wrote:
->>
->> The digital certificate format based on SM2 crypto algorithm as
->> specified in GM/T 0015-2012. It was published by State Encryption
->> Management Bureau, China.
->>
->> The method of generating Other User Information is defined as
->> ZA=H256(ENTLA || IDA || a || b || xG || yG || xA || yA), it also
->> specified in https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02.
->>
->> The x509 certificate supports sm2-with-sm3 type certificate
->> verification.  Because certificate verification requires ZA
->> in addition to tbs data, ZA also depends on elliptic curve
->> parameters and public key data, so you need to access tbs in sig
->> and calculate ZA. Finally calculate the digest of the
->> signature and complete the verification work. The calculation
->> process of ZA is declared in specifications GM/T 0009-2012
->> and GM/T 0003.2-2012.
->>
->> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->> ---
->>   crypto/asymmetric_keys/public_key.c      | 61 ++++++++++++++++++++++++
->>   crypto/asymmetric_keys/x509_public_key.c |  2 +
->>   include/crypto/public_key.h              |  1 +
->>   3 files changed, 64 insertions(+)
->>
->> diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
->> index d7f43d4ea925..a51b09ee484d 100644
->> --- a/crypto/asymmetric_keys/public_key.c
->> +++ b/crypto/asymmetric_keys/public_key.c
->> @@ -17,6 +17,11 @@
->>   #include <keys/asymmetric-subtype.h>
->>   #include <crypto/public_key.h>
->>   #include <crypto/akcipher.h>
-> 
-> hmmm... ifdefs like these are kind of ugly.
-> 
->> +#ifdef CONFIG_CRYPTO_SM2
->> +#include <crypto/sm3_base.h>
->> +#include <crypto/sm2.h>
->> +#include "x509_parser.h"
->> +#endif
->>
->>   MODULE_DESCRIPTION("In-software asymmetric public-key subtype");
->>   MODULE_AUTHOR("Red Hat, Inc.");
->> @@ -245,6 +250,54 @@ static int software_key_eds_op(struct kernel_pkey_params *params,
->>          return ret;
->>   }
->>
->> +#ifdef CONFIG_CRYPTO_SM2
->> +static int cert_sig_digest_update(const struct public_key_signature *sig,
->> +                               struct crypto_akcipher *tfm_pkey)
->> +{
->> +       struct x509_certificate *cert = sig->cert;
->> +       struct crypto_shash *tfm;
->> +       struct shash_desc *desc;
->> +       size_t desc_size;
->> +       unsigned char dgst[SM3_DIGEST_SIZE];
->> +       int ret;
->> +
->> +       if (!cert)
->> +               return -EINVAL;
->> +
->> +       ret = sm2_compute_z_digest(tfm_pkey, SM2_DEFAULT_USERID,
->> +                                       SM2_DEFAULT_USERID_LEN, dgst);
->> +       if (ret)
->> +               return ret;
->> +
->> +       tfm = crypto_alloc_shash(sig->hash_algo, 0, 0);
->> +       if (IS_ERR(tfm))
->> +               return PTR_ERR(tfm);
->> +
->> +       desc_size = crypto_shash_descsize(tfm) + sizeof(*desc);
->> +       desc = kzalloc(desc_size, GFP_KERNEL);
->> +       if (!desc)
->> +               goto error_free_tfm;
->> +
->> +       desc->tfm = tfm;
->> +
->> +       ret = crypto_shash_init(desc);
->> +       if (ret < 0)
->> +               goto error_free_desc;
->> +
->> +       ret = crypto_shash_update(desc, dgst, SM3_DIGEST_SIZE);
->> +       if (ret < 0)
->> +               goto error_free_desc;
->> +
->> +       ret = crypto_shash_finup(desc, cert->tbs, cert->tbs_size, sig->digest);
->> +
->> +error_free_desc:
->> +       kfree(desc);
->> +error_free_tfm:
->> +       crypto_free_shash(tfm);
->> +       return ret;
->> +}
->> +#endif
->> +
->>   /*
->>    * Verify a signature using a public key.
->>    */
->> @@ -298,6 +351,14 @@ int public_key_verify_signature(const struct public_key *pkey,
->>          if (ret)
->>                  goto error_free_key;
->>
-> 
-> OK, how about you put cert_sig_digest_update() in a separate file that
-> only gets compiled with  CONFIG_CRYPTO_SM2 and have a static inline
-> version that returns -ENOTSUPP otherwise?
-> or at least something in this spirit.
-> Done right it will allow you to drop the ifdefs and make for a much
-> cleaner code.
-> 
->> +#ifdef CONFIG_CRYPTO_SM2
->> +       if (strcmp(sig->pkey_algo, "sm2") == 0) {
->> +               ret = cert_sig_digest_update(sig, tfm);
->> +               if (ret)
->> +                       goto error_free_key;
->> +       }
->> +#endif
->> +
->>          sg_init_table(src_sg, 2);
->>          sg_set_buf(&src_sg[0], sig->s, sig->s_size);
->>          sg_set_buf(&src_sg[1], sig->digest, sig->digest_size);
->> diff --git a/crypto/asymmetric_keys/x509_public_key.c b/crypto/asymmetric_keys/x509_public_key.c
->> index d964cc82b69c..feccec08b244 100644
->> --- a/crypto/asymmetric_keys/x509_public_key.c
->> +++ b/crypto/asymmetric_keys/x509_public_key.c
->> @@ -30,6 +30,8 @@ int x509_get_sig_params(struct x509_certificate *cert)
->>
->>          pr_devel("==>%s()\n", __func__);
->>
->> +       sig->cert = cert;
->> +
->>          if (!cert->pub->pkey_algo)
->>                  cert->unsupported_key = true;
->>
->> diff --git a/include/crypto/public_key.h b/include/crypto/public_key.h
->> index 0588ef3bc6ff..27775e617e38 100644
->> --- a/include/crypto/public_key.h
->> +++ b/include/crypto/public_key.h
->> @@ -44,6 +44,7 @@ struct public_key_signature {
->>          const char *pkey_algo;
->>          const char *hash_algo;
->>          const char *encoding;
->> +       void *cert;             /* For certificate */
->>   };
->>
->>   extern void public_key_signature_free(struct public_key_signature *sig);
->> --
->> 2.17.1
->>
-> 
-> 
-
-Hi,
-
-Thanks for your suggestion, it is indeed appropriate to unify the SM2 
-implementation with the public code, I will implement it.
+Some of the patches are new functionality, but for a first pass, it was
+easier to pull these in than try and fix the conflicts. If these patches
+are okay to pull into stable, then all I need to do is fix the commit
+text.
 
 Thanks,
-Tianjia
+Saravana
+
+[1] - https://lore.kernel.org/stable/CAGETcx-0dKRWo=tTVcfJQhQUsMtX_LtL6yvDkb3CMbvzREsvOQ@mail.gmail.com/#t
+[2] - 6fdc440366f1a99f344b629ac92f350aefd77911
+
+
+Rafael J. Wysocki (5):
+  driver core: Fix adding device links to probing suppliers
+  driver core: Make driver core own stateful device links
+  driver core: Add device link flag DL_FLAG_AUTOPROBE_CONSUMER
+  driver core: Remove device link creation limitation
+  driver core: Fix creation of device links with PM-runtime flags
+
+Yong Wu (1):
+  driver core: Remove the link if there is no driver with AUTO flag
+
+ Documentation/driver-api/device_link.rst |  63 +++--
+ drivers/base/core.c                      | 293 +++++++++++++++++------
+ drivers/base/dd.c                        |   2 +-
+ drivers/base/power/runtime.c             |   4 +-
+ include/linux/device.h                   |   7 +-
+ 5 files changed, 265 insertions(+), 104 deletions(-)
+
+-- 
+2.25.1.481.gfbce0eb801-goog
+
