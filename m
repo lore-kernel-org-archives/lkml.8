@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469A7C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4C6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299B420658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93C620738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCQExZ (ORCPT
+        id S1727076AbgCQEx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:53:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34117 "EHLO mga04.intel.com"
+        Tue, 17 Mar 2020 00:53:28 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34125 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726917AbgCQExS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:53:18 -0400
-IronPort-SDR: nJ4QpDBULnp6uLtxC8C7Vo98eS280W3SToRByBcGQpFWrX3ZpXnw2nm0YwzSA8xzeOVva+l6xH
- t9QP98c79vBw==
+        id S1726962AbgCQExU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:53:20 -0400
+IronPort-SDR: f8cIjpkTqxYJvOaNe29R7gCPDAX1FYBg2FznKVIhY97vu0BFGEnp8N7mhMK7ssKF+ItyAd3lpb
+ l8VyjgQyZIhg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:18 -0700
-IronPort-SDR: UQ2vuzzuPnlQAi2xN9myxKIDVFNL+Shl7f/QwvtTiPFbhZtUug6Yfae+bs167+PjHr75dMUfq5
- ON/DLrbtqHVA==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:20 -0700
+IronPort-SDR: NgsdWDajFSbiMEjKW7iR+jaxbmJxI1YJgJhVxV9hAjFcw9Djd1ozOEnZPT0fhnYb2mjkvPanVA
+ z84MxrClWnow==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252795"
+   d="scan'208";a="355252806"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:18 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:19 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 19/32] KVM: nVMX: Move nested_get_vpid02() to vmx/nested.h
-Date:   Mon, 16 Mar 2020 21:52:25 -0700
-Message-Id: <20200317045238.30434-20-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 22/32] KVM: x86: Rename ->tlb_flush() to ->tlb_flush_all()
+Date:   Mon, 16 Mar 2020 21:52:28 -0700
+Message-Id: <20200317045238.30434-23-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
 References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
@@ -59,53 +59,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move nested_get_vpid02() to vmx/nested.h so that a future patch can
-reference it from vmx.c to implement context-specific TLB flushing.
+Rename ->tlb_flush() to ->tlb_flush_all() in preparation for adding a
+new hook to flush only the current ASID/context.
+
+Opportunstically replace the comment in vmx_flush_tlb() that explains
+why it flushes all EPTP/VPID contexts with a comment explaining why it
+unconditionally uses INVEPT when EPT is enabled.  I.e. rely on the "all"
+part of the name to clarify why it does global INVEPT/INVVPID.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 7 -------
- arch/x86/kvm/vmx/nested.h | 7 +++++++
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kvm/mmu/mmu.c          |  2 +-
+ arch/x86/kvm/svm.c              |  2 +-
+ arch/x86/kvm/vmx/vmx.c          | 16 +++++++---------
+ arch/x86/kvm/x86.c              |  6 +++---
+ 5 files changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 20c6e363f760..960ecbab5ebe 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1154,13 +1154,6 @@ static bool nested_has_guest_tlb_tag(struct kvm_vcpu *vcpu)
- 	       (nested_cpu_has_vpid(vmcs12) && to_vmx(vcpu)->nested.vpid02);
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index a5dfab4642d6..0392a9db110d 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1105,7 +1105,7 @@ struct kvm_x86_ops {
+ 	unsigned long (*get_rflags)(struct kvm_vcpu *vcpu);
+ 	void (*set_rflags)(struct kvm_vcpu *vcpu, unsigned long rflags);
+ 
+-	void (*tlb_flush)(struct kvm_vcpu *vcpu);
++	void (*tlb_flush_all)(struct kvm_vcpu *vcpu);
+ 	int  (*tlb_remote_flush)(struct kvm *kvm);
+ 	int  (*tlb_remote_flush_with_range)(struct kvm *kvm,
+ 			struct kvm_tlb_range *range);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index a87b8f9f3b1f..c357cc79f0f3 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5177,7 +5177,7 @@ int kvm_mmu_load(struct kvm_vcpu *vcpu)
+ 	if (r)
+ 		goto out;
+ 	kvm_mmu_load_pgd(vcpu);
+-	kvm_x86_ops->tlb_flush(vcpu);
++	kvm_x86_ops->tlb_flush_all(vcpu);
+ out:
+ 	return r;
+ }
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 8c3700b44eb4..10e5b8c4b515 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -7405,7 +7405,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 	.get_rflags = svm_get_rflags,
+ 	.set_rflags = svm_set_rflags,
+ 
+-	.tlb_flush = svm_flush_tlb,
++	.tlb_flush_all = svm_flush_tlb,
+ 	.tlb_flush_gva = svm_flush_tlb_gva,
+ 	.tlb_flush_guest = svm_flush_tlb,
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 2d0a8c7654d7..d6cf625b4011 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2849,18 +2849,16 @@ static void exit_lmode(struct kvm_vcpu *vcpu)
+ 
+ #endif
+ 
+-static void vmx_flush_tlb(struct kvm_vcpu *vcpu)
++static void vmx_flush_tlb_all(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 
+ 	/*
+-	 * Flush all EPTP/VPID contexts, as the TLB flush _may_ have been
+-	 * invoked via kvm_flush_remote_tlbs().  Flushing remote TLBs requires
+-	 * all contexts to be flushed, not just the active context.
+-	 *
+-	 * Note, this also ensures a deferred TLB flush with VPID enabled and
+-	 * EPT disabled invalidates the "correct" VPID, by nuking both L1 and
+-	 * L2's VPIDs.
++	 * INVEPT must be issued when EPT is enabled, irrespective of VPID, as
++	 * the CPU is not required to invalidate guest-physical mappings on
++	 * VM-Entry, even if VPID is disabled.  Guest-physical mappings are
++	 * associated with the root EPT structure and not any particular VPID
++	 * (INVVPID also isn't required to invalidate guest-physical mappings).
+ 	 */
+ 	if (enable_ept) {
+ 		ept_sync_global();
+@@ -7922,7 +7920,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	.get_rflags = vmx_get_rflags,
+ 	.set_rflags = vmx_set_rflags,
+ 
+-	.tlb_flush = vmx_flush_tlb,
++	.tlb_flush_all = vmx_flush_tlb_all,
+ 	.tlb_flush_gva = vmx_flush_tlb_gva,
+ 	.tlb_flush_guest = vmx_flush_tlb_guest,
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 84cbd7ca1e18..333968e5ef3c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2696,10 +2696,10 @@ static void kvmclock_reset(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.time = 0;
  }
  
--static u16 nested_get_vpid02(struct kvm_vcpu *vcpu)
--{
--	struct vcpu_vmx *vmx = to_vmx(vcpu);
--
--	return vmx->nested.vpid02 ? vmx->nested.vpid02 : vmx->vpid;
--}
--
- static bool is_bitwise_subset(u64 superset, u64 subset, u64 mask)
+-static void kvm_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
++static void kvm_vcpu_flush_tlb_all(struct kvm_vcpu *vcpu)
  {
- 	superset &= mask;
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index 21d36652f213..debc5eeb5757 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -60,6 +60,13 @@ static inline int vmx_has_valid_vmcs12(struct kvm_vcpu *vcpu)
- 		vmx->nested.hv_evmcs;
+ 	++vcpu->stat.tlb_flush;
+-	kvm_x86_ops->tlb_flush(vcpu);
++	kvm_x86_ops->tlb_flush_all(vcpu);
  }
  
-+static inline u16 nested_get_vpid02(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+
-+	return vmx->nested.vpid02 ? vmx->nested.vpid02 : vmx->vpid;
-+}
-+
- static inline unsigned long nested_ept_get_eptp(struct kvm_vcpu *vcpu)
- {
- 	/* return the page table to be shadowed - in our case, EPT12 */
+ static void record_steal_time(struct kvm_vcpu *vcpu)
+@@ -8223,7 +8223,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		if (kvm_check_request(KVM_REQ_LOAD_MMU_PGD, vcpu))
+ 			kvm_mmu_load_pgd(vcpu);
+ 		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
+-			kvm_vcpu_flush_tlb(vcpu);
++			kvm_vcpu_flush_tlb_all(vcpu);
+ 		if (kvm_check_request(KVM_REQ_REPORT_TPR_ACCESS, vcpu)) {
+ 			vcpu->run->exit_reason = KVM_EXIT_TPR_ACCESS;
+ 			r = 0;
 -- 
 2.24.1
 
