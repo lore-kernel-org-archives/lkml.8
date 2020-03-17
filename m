@@ -2,90 +2,119 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6F4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDD8C0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B4520679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5EA2206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584406595;
+	bh=iMkAmgNXieAuOOkhf4wwje4T8Wth45+DAToJLEuzCUs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nF8iuYBnB/yjNu9VoXFrRk2OPDN5RPUFTQukNv0s5SV8q3XigGAUEFGxX4z2UBnjf
+	 8O4X//HKrkEHCV/8U4FiS/fSTpRxB3teQO8Wi78GtVD57ZlS45g5IACfT1EJ9Owi1x
+	 DOU/QHXHFjdi4uej8ZWGnYbpCYEIoo361a8k3frU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733261AbgCQA4O (ORCPT
+        id S1733272AbgCQA4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 20:56:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53161 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733119AbgCQA4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 20:56:14 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jE0Wg-0007YB-AC; Tue, 17 Mar 2020 01:56:10 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id BA8A0101161; Tue, 17 Mar 2020 01:56:09 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH] PCI/switchtec: Fix init_completion race condition with poll_wait()
-In-Reply-To: <20200313183608.2646-1-logang@deltatee.com>
-References: <20200313183608.2646-1-logang@deltatee.com>
-Date:   Tue, 17 Mar 2020 01:56:09 +0100
-Message-ID: <87mu8fdck6.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Mon, 16 Mar 2020 20:56:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733119AbgCQA4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 20:56:33 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A7A120679;
+        Tue, 17 Mar 2020 00:56:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584406592;
+        bh=iMkAmgNXieAuOOkhf4wwje4T8Wth45+DAToJLEuzCUs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fKjYTXlV/1dxFeHGm6qtdbW/F2boTLOVlEJj9Aci5wK4DWLWT+QOJXvEPQ3YGPox5
+         rC3/f2KDJ0BUh+mKn19GmqBZl7Iq0gviINKq+7MKGNIEQpDrPgYxiMacAUBbhGVYtS
+         /lUNyw5XPf6Npm7amT58XVIE+/f9rYzyxVh1Hadk=
+Date:   Tue, 17 Mar 2020 09:56:28 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [RFC][PATCH 00/16] objtool: vmlinux.o and noinstr validation
+Message-Id: <20200317095628.4f3690afe24e059a146a4b6f@kernel.org>
+In-Reply-To: <20200312162337.GU12561@hirez.programming.kicks-ass.net>
+References: <20200312134107.700205216@infradead.org>
+        <20200312162337.GU12561@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Logan,
+On Thu, 12 Mar 2020 17:23:37 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Logan Gunthorpe <logang@deltatee.com> writes:
+> On Thu, Mar 12, 2020 at 02:41:07PM +0100, Peter Zijlstra wrote:
+> > Hi all,
+> > 
+> > These patches extend objtool to be able to run on vmlinux.o and validate
+> > Thomas's proposed noinstr annotation:
+> > 
+> >   https://lkml.kernel.org/r/20200310170951.87c29e9c1cfbddd93ccd92b3@kernel.org
+> > 
+> >  "That's why we want the sections and the annotation. If something calls
+> >   out of a noinstr section into a regular text section and the call is not
+> >   annotated at the call site, then objtool can complain and tell you. What
+> >   Peter and I came up with looks like this:
+> > 
+> >   noinstr foo()
+> > 	do_protected(); <- Safe because in the noinstr section
+> > 	instr_begin();  <- Marks the begin of a safe region, ignored
+> > 			   by objtool
+> > 	do_stuff();     <- All good
+> > 	instr_end();    <- End of the safe region. objtool starts
+> > 			   looking again
+> > 	do_other_stuff();  <- Unsafe because do_other_stuff() is
+> > 			      not protected
+> > 
+> >   and:
+> > 
+> >   noinstr do_protected()
+> > 	bar();          <- objtool will complain here
+> >   "
+> > 
+> > It should be accompanied by something like the below; which you'll find in a
+> > series by Thomas.
+> > 
+> 
+> So one of the problem i've ran into while playing with this and Thomas'
+> patches is that it is 'difficult' to deal with indirect function calls.
+> 
+> objtool basically gives up instantly.
 
-> The call to init_completion() in mrpc_queue_cmd() can theoretically
-> race with the call to poll_wait() in switchtec_dev_poll().
->
->   poll()			write()
->     switchtec_dev_poll()   	  switchtec_dev_write()
->       poll_wait(&s->comp.wait);      mrpc_queue_cmd()
-> 			               init_completion(&s->comp)
-> 				         init_waitqueue_head(&s->comp.wait)
+Can we introduce a "safe-call" wrapper function instead of indirect
+call, and if objtool found an indirect call without safe-call function,
+it can make it an error?
 
-just a nitpick. As you took the liberty to copy the description of the
-race, which was btw. disovered by me, verbatim from a changelog written
-by someone else w/o providing the courtesy of linking to that original
-analysis, allow me the liberty to add the missing link:
+static int __noinstr safe_indirect_callback(int (*fn)(...), real-args)
+{
+	if (!is_instr_text(fn))
+		return -ERANGE;
+	return fn(real-args)
+}
 
-Link: https://lore.kernel.org/lkml/20200313174701.148376-4-bigeasy@linutronix.de
+BTW, out of curiously, if BUG*() or WARN*() cases happens in the noinstr
+section, do we also need to move them (register dump, stack unwinding,
+printk, console output, etc.) all into noinstr section?
 
-> To my knowledge, no one has hit this bug, but we should fix it for
-> correctness.
+Thank you,
 
-s/,but we should fix/.Fix/ ?
-
-> Fix this by using reinit_completion() instead of init_completion() in
-> mrpc_queue_cmd().
->
-> Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
-> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-
-@Bjorn: Can you please hold off on this for a few days until we sorted
-        out the remaining issues to avoid potential merge conflicts
-        vs. the completion series?
-
-Thanks,
-
-        tglx
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
