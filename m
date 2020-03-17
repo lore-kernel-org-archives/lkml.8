@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E3BC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5471C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE9920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA7120658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443783;
-	bh=3f+xAsZglAs3nw2pTn20rB9JZ3gYLL6Fy0LGgfxbCME=;
+	s=default; t=1584443788;
+	bh=15R0WSGcRE9tfD6nYg0dsV9L2EUcdNJhoqEcUtgZF/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2F0HJVGPpCHfgRGEqdrPXUq6qHsneHcXBNdzvfNoEnWm2KP+29krlMimzL4hM2Z/d
-	 /2nnFORW3/v8ur5AVCA1fLgFC34ZVY2+2Dqcumrv40VHw7D5sdpMdWAE0ObvufpoCc
-	 hqzcEQ1EmQizqdeuR/KKxOavXAyrez0naQZwm4Ps=
+	b=ho6XF7QoO2HIefDX1d489fwXEc34Ds7ljrx/V86+ndTSSIBYrdMc11ofn+c7sRyK3
+	 psShB8EoYT62x9J/qgPaWYyFf5fZauwU2PnoFRiwgIlSSBAVmz3QC+8CfOJYWOBpQ2
+	 fonRrhMtNRUHnYWuvfc4+mJH/J1kh2UVvVdGs1rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgCQLJx (ORCPT
+        id S1728310AbgCQLQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbgCQLJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:09:50 -0400
+        id S1728291AbgCQLJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:09:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F440205ED;
-        Tue, 17 Mar 2020 11:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CCFF206EC;
+        Tue, 17 Mar 2020 11:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443389;
-        bh=3f+xAsZglAs3nw2pTn20rB9JZ3gYLL6Fy0LGgfxbCME=;
+        s=default; t=1584443378;
+        bh=15R0WSGcRE9tfD6nYg0dsV9L2EUcdNJhoqEcUtgZF/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yBXOIu4g5ri2N0aW9y9rrXFcmJ3s09ahWjfn2tgecZQAXIx+pNbEm2RIurLTqO111
-         hs14xKhkpd/83t2bCoMFj8PZiAoAi/e5QD91ohj2DWuPIKaXzPgU8oMTXzC0erCPU+
-         VUFQlz2GCLx3Bo5quLsdql6z1UU4MrP9HI9IEiGU=
+        b=v/LXmKRSPORdn7IA+RQEzjlWSqJIyEhhcnzP0vctSlWVUu9IseZ8IJg8S0/O4CSez
+         NXzwp/oBK93w3S+lEAihau7Jst+eJ7A+cPTvOUxU0wFZ0svID573TP7rZdNBVv0eX1
+         FSJIitxtA/IzoiwR0qXWeB7BQVxvLRPCbtOC5gaA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 068/151] s390/qeth: handle error when backing RX buffer
-Date:   Tue, 17 Mar 2020 11:54:38 +0100
-Message-Id: <20200317103331.335479893@linuxfoundation.org>
+Subject: [PATCH 5.5 064/151] net/ipv6: need update peer route when modify metric
+Date:   Tue, 17 Mar 2020 11:54:34 +0100
+Message-Id: <20200317103331.070700900@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,56 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 17413852804d7e86e6f0576cca32c1541817800e ]
+[ Upstream commit 617940123e0140521f3080d2befc2bf55bcda094 ]
 
-qeth_init_qdio_queues() fills the RX ring with an initial set of
-RX buffers. If qeth_init_input_buffer() fails to back one of the RX
-buffers with memory, we need to bail out and report the error.
+When we modify the route metric, the peer address's route need also
+be updated. Before the fix:
 
-Fixes: 4a71df50047f ("qeth: new qeth device driver")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
++ ip addr add dev dummy1 2001:db8::1 peer 2001:db8::2 metric 60
++ ip -6 route show dev dummy1
+2001:db8::1 proto kernel metric 60 pref medium
+2001:db8::2 proto kernel metric 60 pref medium
++ ip addr change dev dummy1 2001:db8::1 peer 2001:db8::2 metric 61
++ ip -6 route show dev dummy1
+2001:db8::1 proto kernel metric 61 pref medium
+2001:db8::2 proto kernel metric 60 pref medium
+
+After the fix:
++ ip addr change dev dummy1 2001:db8::1 peer 2001:db8::2 metric 61
++ ip -6 route show dev dummy1
+2001:db8::1 proto kernel metric 61 pref medium
+2001:db8::2 proto kernel metric 61 pref medium
+
+Fixes: 8308f3ff1753 ("net/ipv6: Add support for specifying metric of connected routes")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/s390/net/qeth_core_main.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/ipv6/addrconf.c |   20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2633,12 +2633,12 @@ static int qeth_init_input_buffer(struct
- 		buf->rx_skb = netdev_alloc_skb(card->dev,
- 					       QETH_RX_PULL_LEN + ETH_HLEN);
- 		if (!buf->rx_skb)
--			return 1;
-+			return -ENOMEM;
- 	}
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -4590,12 +4590,14 @@ inet6_rtm_deladdr(struct sk_buff *skb, s
+ }
  
- 	pool_entry = qeth_find_free_buffer_pool_entry(card);
- 	if (!pool_entry)
--		return 1;
-+		return -ENOBUFS;
+ static int modify_prefix_route(struct inet6_ifaddr *ifp,
+-			       unsigned long expires, u32 flags)
++			       unsigned long expires, u32 flags,
++			       bool modify_peer)
+ {
+ 	struct fib6_info *f6i;
+ 	u32 prio;
  
- 	/*
- 	 * since the buffer is accessed only from the input_tasklet
-@@ -2682,10 +2682,15 @@ int qeth_init_qdio_queues(struct qeth_ca
- 	/* inbound queue */
- 	qdio_reset_buffers(card->qdio.in_q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
- 	memset(&card->rx, 0, sizeof(struct qeth_rx));
+-	f6i = addrconf_get_prefix_route(&ifp->addr, ifp->prefix_len,
++	f6i = addrconf_get_prefix_route(modify_peer ? &ifp->peer_addr : &ifp->addr,
++					ifp->prefix_len,
+ 					ifp->idev->dev, 0, RTF_DEFAULT, true);
+ 	if (!f6i)
+ 		return -ENOENT;
+@@ -4606,7 +4608,8 @@ static int modify_prefix_route(struct in
+ 		ip6_del_rt(dev_net(ifp->idev->dev), f6i);
+ 
+ 		/* add new one */
+-		addrconf_prefix_route(&ifp->addr, ifp->prefix_len,
++		addrconf_prefix_route(modify_peer ? &ifp->peer_addr : &ifp->addr,
++				      ifp->prefix_len,
+ 				      ifp->rt_priority, ifp->idev->dev,
+ 				      expires, flags, GFP_KERNEL);
+ 	} else {
+@@ -4682,7 +4685,7 @@ static int inet6_addr_modify(struct inet
+ 		int rc = -ENOENT;
+ 
+ 		if (had_prefixroute)
+-			rc = modify_prefix_route(ifp, expires, flags);
++			rc = modify_prefix_route(ifp, expires, flags, false);
+ 
+ 		/* prefix route could have been deleted; if so restore it */
+ 		if (rc == -ENOENT) {
+@@ -4690,6 +4693,15 @@ static int inet6_addr_modify(struct inet
+ 					      ifp->rt_priority, ifp->idev->dev,
+ 					      expires, flags, GFP_KERNEL);
+ 		}
 +
- 	qeth_initialize_working_pool_list(card);
- 	/*give only as many buffers to hardware as we have buffer pool entries*/
--	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; ++i)
--		qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
-+	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; i++) {
-+		rc = qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
-+		if (rc)
-+			return rc;
-+	}
++		if (had_prefixroute && !ipv6_addr_any(&ifp->peer_addr))
++			rc = modify_prefix_route(ifp, expires, flags, true);
 +
- 	card->qdio.in_q->next_buf_to_init =
- 		card->qdio.in_buf_pool.buf_count - 1;
- 	rc = do_QDIO(CARD_DDEV(card), QDIO_FLAG_SYNC_INPUT, 0, 0,
++		if (rc == -ENOENT && !ipv6_addr_any(&ifp->peer_addr)) {
++			addrconf_prefix_route(&ifp->peer_addr, ifp->prefix_len,
++					      ifp->rt_priority, ifp->idev->dev,
++					      expires, flags, GFP_KERNEL);
++		}
+ 	} else if (had_prefixroute) {
+ 		enum cleanup_prefix_rt_t action;
+ 		unsigned long rt_expires;
 
 
