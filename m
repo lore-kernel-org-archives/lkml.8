@@ -2,120 +2,132 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1934C0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D45C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFD620674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F72206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733141AbgCQBPE (ORCPT
+        id S1733146AbgCQBQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:15:04 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:56976 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733025AbgCQBPE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:15:04 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R281e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TspklhC_1584407699;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TspklhC_1584407699)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 17 Mar 2020 09:15:00 +0800
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Mon, 16 Mar 2020 21:16:16 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:54966 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733017AbgCQBQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:16:15 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jE0pn-0008BY-Ie; Mon, 16 Mar 2020 19:15:56 -0600
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Subject: [RESEND PATCH] sched: avoid scale real weight down to zero
-Message-ID: <aa0db99c-a478-e978-e580-79d017e5aa93@linux.alibaba.com>
-Date:   Tue, 17 Mar 2020 09:14:35 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.2
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+References: <20200313174701.148376-1-bigeasy@linutronix.de>
+ <20200313174701.148376-4-bigeasy@linutronix.de>
+ <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com>
+ <87v9n4ccvp.fsf@nanos.tec.linutronix.de>
+ <39f2bd27-1a4a-f7ad-5d54-7fe133390cd0@deltatee.com>
+ <87sgi7deco.fsf@nanos.tec.linutronix.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <1adfff2f-86a5-d692-bac6-c87a15f24d67@deltatee.com>
+Date:   Mon, 16 Mar 2020 19:15:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <87sgi7deco.fsf@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, torvalds@linux-foundation.org, rostedt@goodmis.org, joel@joelfernandes.org, paulmck@kernel.org, will@kernel.org, mingo@kernel.org, peterz@infradead.org, linux-kernel@vger.kernel.org, bigeasy@linutronix.de, tglx@linutronix.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 3/9] pci/switchtec: Don't abuse completion wait queue for
+ poll
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During our testing, we found a case that shares no longer
-working correctly, the cgroup topology is like:
 
-  /sys/fs/cgroup/cpu/A		(shares=102400)
-  /sys/fs/cgroup/cpu/A/B	(shares=2)
-  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
 
-  /sys/fs/cgroup/cpu/D		(shares=1024)
-  /sys/fs/cgroup/cpu/D/E	(shares=1024)
-  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+On 2020-03-16 6:17 p.m., Thomas Gleixner wrote:
+> That's a good question, but that question simply arises due to the fact
+> that C does not provide proper privatizing or if you want to work around
+> that it forces you to come up with really horrible constructs.
 
-The same benchmark is running in group C & F, no other tasks are
-running, the benchmark is capable to consumed all the CPUs.
+Well, we do have the underscore convention. Though, I concede this code
+could potentially predate that. Had there been a preceding underscore, I
+definitely would have thought twice before touching it.
 
-We suppose the group C will win more CPU resources since it could
-enjoy all the shares of group A, but it's F who wins much more.
+> That's not a made up nightmare scenario. This happened in reality and
+> caused me to mop up 50+ interrupt chip implementations in order to be
+> able to make an urgently needed 10 line change to the core interrupt
+> infrastructure. Guess what, the vast majority of instances fiddling with
+> the core internals were either voodoo programming or plain bugs. There
+> were a few legitimate issues, but they had been better solved in the
+> core code upfront.  Even after that cleanup a driver got merged which
+> had #include "../../../../kernel/irg/internal.h" inside just because the
+> code which was developed out of tree before this change had be made to
+> "work".
 
-The reason is because we have group B with shares as 2, since
-A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
-so A->cfs_rq.load.weight become very small.
+I get where your coming from, and it sucks having to clean up so many
+instances in an urgent situation. But I see this kind of cleanup work as
+routine, a necessary thing that happens all the time. I've done it
+myself a couple times before in the kernel. The hard trick is to get
+developers to do more of it, before it becomes a problem like the one
+you faced.
 
-And in calc_group_shares() we calculate shares as:
+In my experience, what makes clean up work even harder is where
+developers see an interface, notice it's not a perfect fit and so open
+code the whole thing themselves. Then you have random buggy primitives
+open coded all over the place that are impossible to find. And the
+primitives themselves never improve or grow new interfaces because
+nobody knows there's a bunch of instances that require the improvement.
+That's a much bigger mess.
 
-  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-  shares = (tg_shares * load) / tg_weight;
+> I really prefer when people come along and show the problem they want to
+> solve - I'm completely fine with the POC hack which uses internals for
+> that purpose - so that this can be discussed and eventually integrated
+> into core infrastructure in one way or the other or better suitable
+> solutions can be found.
 
-Since the 'cfs_rq->load.weight' is too small, the load become 0
-after scale down, although 'tg_shares' is 102400, shares of the se
-which stand for group A on root cfs_rq become 2.
+Yes, and this code was a prototype at one point and went through review
+from a number of people in the community, and nobody complained about
+this. I've also been in the situation where I submitted a POC and
+somebody pointed out a better way (though with a few swears thrown in
+for good measure); but in that case, I was actually changing a primitive
+so it got their attention more easily.
 
-While the se of D on root cfs_rq is far more bigger than 2, so it
-wins the battle.
+It's impossible for the maintainer of a primitive to review all the use
+cases of every primitive when new code gets merged. But at least if new
+code uses/abuses the primitive they will eventually come to light and
+can be cleaned up as appropriate with a holistic view.
 
-Thus when scale_load_down() scale real weight down to 0, it's no
-longer telling the real story, the caller will have the wrong
-information and the calculation will be buggy.
+> I hope that clarifies where I'm coming from.
 
-This patch add check in scale_load_down(), so the real weight will
-be >= MIN_SHARES after scale, after applied the group C wins as
-expected.
+Yes, I understood your point. And I concede that a completion is a
+pretty trivial primitive to open code and the change is not really worth
+any further fight. If the patch gets merged (preferably with a reworked
+commit message), I will not complain.
 
-Cc: Ben Segall <bsegall@google.com>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
----
- kernel/sched/sched.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> This has nothing to do with you personally, you just triggered a few
+> sensible fuses while understandably defending your admittedly smart
+> solution.
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 2a0caf394dd4..75c283f22256 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -118,7 +118,13 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
- #ifdef CONFIG_64BIT
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
--# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
-+# define scale_load_down(w) \
-+({ \
-+	unsigned long __w = (w); \
-+	if (__w) \
-+		__w = max(MIN_SHARES, __w >> SCHED_FIXEDPOINT_SHIFT); \
-+	__w; \
-+})
- #else
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		(w)
--- 
-2.14.4.44.g2045bb6
+Thank you.
 
+Logan
