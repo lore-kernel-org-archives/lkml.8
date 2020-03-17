@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0530C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7220C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9465620719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6882051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444046;
-	bh=8tP4Wy5Mqe+StvbEWqXSmjFbusq612Fy3HwGfuIRrtI=;
+	s=default; t=1584444055;
+	bh=V4xWq3JFZKaFnCaWtFMsf0H1tB3lHuRr4tXUOBArnFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCp3FJ3/x2sG04bxn092Shq/NCGbBG6KmrirhgJ3McptbheCG2P/EnRD+k2wvGlXp
-	 +e0wPi8iB8kGqs9vfFwseBiazGSa/dPXytXCcgURsq3L8LdLftr/vCtczn4xDm4Vtb
-	 e25zr69H83tB7+5az+Hp2gliR8jPHHZPHVtIb7Z0=
+	b=yOoMjF1SciYFmWqApwNsSg6drr8gxjWw91VKk5BPmQgoVC02SO+fFG4/U1b8bRXQT
+	 CKcq/WTMIu7ee7Ulc79YBJ8c4WgVHHt11zGkjAz1f3NuEAE0zyePK2hHaNxjm8hbyX
+	 RuXmc86PYmg0f/noBBWFc7jilrJnSVOW37sPMH8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbgCQLUp (ORCPT
+        id S1727577AbgCQLUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:20:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39224 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:20:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727197AbgCQLAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:00:14 -0400
+        id S1727160AbgCQK7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:59:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93CBA20735;
-        Tue, 17 Mar 2020 11:00:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B3020714;
+        Tue, 17 Mar 2020 10:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442813;
-        bh=8tP4Wy5Mqe+StvbEWqXSmjFbusq612Fy3HwGfuIRrtI=;
+        s=default; t=1584442792;
+        bh=V4xWq3JFZKaFnCaWtFMsf0H1tB3lHuRr4tXUOBArnFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EURuTlqsBlsca5z64422TI6p86fgsbxNk4PuSz7rJWg52E2f1hhM9N/1bGDlEpOP7
-         4PndseVP2nroRtduJ9s8Gws0J1y4PxQuL4tRC+fWgrsV+pkbtL9VEv5Y38Xzq2F2tU
-         V9ylD4hoQgXuyYWKT1c3bBze7XZYozUld9bqvy+E=
+        b=ikmgOROJixUkpObLPbxSW4XD7Gkn8hGALBKWuTkmcBLUTbPwg2jbuGU0strCzLGUz
+         sK22COktQTrOf8/gXcrmcMc4RVIRPQtSfPuNC+D+33PmtryDwr7XvzX8G6KC1KtndU
+         oMOQPDXg9bwtg5kCsnqYWeWc64/mLm+tW0QkWM80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Nicolas Belin <nbelin@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.19 71/89] pinctrl: meson-gxl: fix GPIOX sdio pins
-Date:   Tue, 17 Mar 2020 11:55:20 +0100
-Message-Id: <20200317103308.124815054@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.19 84/89] i2c: acpi: put device when verifying client fails
+Date:   Tue, 17 Mar 2020 11:55:33 +0100
+Message-Id: <20200317103309.750851422@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -60,37 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Belin <nbelin@baylibre.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-commit dc7a06b0dbbafac8623c2b7657e61362f2f479a7 upstream.
+commit 8daee952b4389729358665fb91949460641659d4 upstream.
 
-In the gxl driver, the sdio cmd and clk pins are inverted. It has not caused
-any issue so far because devices using these pins always take both pins
-so the resulting configuration is OK.
+i2c_verify_client() can fail, so we need to put the device when that
+happens.
 
-Fixes: 0f15f500ff2c ("pinctrl: meson: Add GXL pinctrl definitions")
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
-Link: https://lore.kernel.org/r/1582204512-7582-1-git-send-email-nbelin@baylibre.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 525e6fabeae2 ("i2c / ACPI: add support for ACPI reconfigure notifications")
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxl.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/i2c/i2c-core-acpi.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-@@ -153,8 +153,8 @@ static const unsigned int sdio_d0_pins[]
- static const unsigned int sdio_d1_pins[]	= { GPIOX_1 };
- static const unsigned int sdio_d2_pins[]	= { GPIOX_2 };
- static const unsigned int sdio_d3_pins[]	= { GPIOX_3 };
--static const unsigned int sdio_cmd_pins[]	= { GPIOX_4 };
--static const unsigned int sdio_clk_pins[]	= { GPIOX_5 };
-+static const unsigned int sdio_clk_pins[]	= { GPIOX_4 };
-+static const unsigned int sdio_cmd_pins[]	= { GPIOX_5 };
- static const unsigned int sdio_irq_pins[]	= { GPIOX_7 };
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -352,10 +352,18 @@ static struct i2c_adapter *i2c_acpi_find
+ static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
+ {
+ 	struct device *dev;
++	struct i2c_client *client;
  
- static const unsigned int nand_ce0_pins[]	= { BOOT_8 };
+ 	dev = bus_find_device(&i2c_bus_type, NULL, adev,
+ 			      i2c_acpi_find_match_device);
+-	return dev ? i2c_verify_client(dev) : NULL;
++	if (!dev)
++		return NULL;
++
++	client = i2c_verify_client(dev);
++	if (!client)
++		put_device(dev);
++
++	return client;
+ }
+ 
+ static int i2c_acpi_notify(struct notifier_block *nb, unsigned long value,
 
 
