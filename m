@@ -2,151 +2,98 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072F0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93445C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15F820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584431537;
-	bh=ZcWHs52QytyEx27uzcGx/ocQa1qmkx3LxKIEZ+0VMds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pw4PsMNPeVFLF/cjt0ogKsG76nslsHVSH6i8Xvie9rI8tKqaI3qGw/ThORvCCWYJy
-	 pFhp+NYwUz10eadsnvrCqbag2yyxHaZ9A3yd6oWpWTJRQbQlQXzniZgyrxLHuhCjy8
-	 dxIAqcfSjaEkDoqLLXOe7ci+sfT8mLb5vSCe04ik=
+	by mail.kernel.org (Postfix) with ESMTP id 6A75220663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NTwOhRl4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgCQHwQ (ORCPT
+        id S1726370AbgCQHw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:52:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44826 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbgCQHwQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:52:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y2so8821407wrn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 00:52:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FuaQPF1ZWPKes0ddeJfIKVDXd4T44v9s14fJWIErxcE=;
-        b=P26j+LlnYmTOJWCP87P5Oc6WyLoDiFgOq6TGdOUvjakZxcrmx/bver+N+U/0235vw3
-         IIDtVhR1uKWRTFoo3Gyo333/g7NdW+R3V2Lby0b7Wk08lmV22zBnaLzKJ0TTXwIbJBb7
-         7bZvXKyYToZiRJuMXSrDpninocK5fN+Dk86Ug1VzwbcSHSkr6JweMcWPOrx5MGJKXbDq
-         b7IPlX4+qw3SiF556yN1zFAzLFn3Pg/lPenqU0wMzPDF4v3dlWCjSc9he8fVYtaI5OLi
-         ixMnHij3JDKlRaw6PIFxAHPrZb5nEpsoM2qbNsYi5IlC0MaD9sNlzxeuejwxjESMESO7
-         6HRg==
-X-Gm-Message-State: ANhLgQ0AKyvqT3+zHE4xKs/GtYmLpm/2caUD3rQU5+WaX8ME0hxdNt3/
-        aooUebuKocG3aiNElvcAwmM=
-X-Google-Smtp-Source: ADFU+vuAYroYBbemsZbZfWLaUtPDVfvJGwI/+NUsFg3a4LiTnMlH4PpyoJvKi6hxXHz8t2ZqTxqXeQ==
-X-Received: by 2002:adf:ed04:: with SMTP id a4mr4372448wro.76.1584431534404;
-        Tue, 17 Mar 2020 00:52:14 -0700 (PDT)
-Received: from localhost (ip-37-188-255-121.eurotel.cz. [37.188.255.121])
-        by smtp.gmail.com with ESMTPSA id z11sm2875547wmc.30.2020.03.17.00.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 00:52:13 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 08:52:12 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: memcg: make memory.oom.group tolerable to task
- migration
-Message-ID: <20200317075212.GC26018@dhcp22.suse.cz>
-References: <20200316223510.3176148-1-guro@fb.com>
+        Tue, 17 Mar 2020 03:52:58 -0400
+Received: from ozlabs.org ([203.11.71.1]:37745 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725871AbgCQHw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 03:52:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hQPz2Xv4z9sPF;
+        Tue, 17 Mar 2020 18:52:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584431576;
+        bh=DSwURBa8VIT0PGHZw7lwX4Ge4O+gelfo51SaBJ2swuE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NTwOhRl4EuzkD7IUdweJ5shFBxIdD9cWY+Gl11jZKlpEz72tzhSYpU6VD9v0qUtk+
+         eT4QHNYXzLvExKBrtgFYyWPGslb87rwgn/ygzg3ot/qPYoUr4jmUHUR/cOpmwmbmGF
+         zMl8KhXhFBz7qk+8frS+x0+1prN1HxinOqrEq/bCHQZmVH+1DHfVaYZVy+v+yKfI1C
+         rrSXQzgR2lpZy6k+dvd7G1Y45QUNKSb20OxkL/tGzl8MZFz3K5hrq3cUmph7sLv9D2
+         UHOpIKLXYjxNxb/LFL4KbLCOruf7fRtn5vyYCr4KwVsmWPRWMiJk0wlBaAcbap1Ctj
+         ZcpXwDVmxN69g==
+Date:   Tue, 17 Mar 2020 18:52:52 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: linux-next: build failure after merge of the pm tree
+Message-ID: <20200317185252.3cfeecde@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316223510.3176148-1-guro@fb.com>
+Content-Type: multipart/signed; boundary="Sig_/uI9yGzSnE/VILAmY_B74A.s";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 16-03-20 15:35:10, Roman Gushchin wrote:
-> If a task is getting moved out of the OOMing cgroup, it might
-> result in unexpected OOM killings if memory.oom.group is used
-> anywhere in the cgroup tree.
-> 
-> Imagine the following example:
-> 
->           A (oom.group = 1)
->          / \
->   (OOM) B   C
-> 
-> Let's say B's memory.max is exceeded and it's OOMing. The OOM killer
-> selects a task in B as a victim, but someone asynchronously moves
-> the task into C.
+--Sig_/uI9yGzSnE/VILAmY_B74A.s
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I can see Reported-by here, does that mean that the race really happened
-in real workloads? If yes, I would be really curious. Mostly because
-moving tasks outside of the oom domain is quite questionable without
-charge migration.
+Hi all,
 
-> mem_cgroup_get_oom_group() will iterate over all
-> ancestors of C up to the root cgroup. In theory it had to stop
-> at the oom_domain level - the memory cgroup which is OOMing.
-> But because B is not an ancestor of C, it's not happening.
-> Instead it chooses A (because it's oom.group is set), and kills
-> all tasks in A. This behavior is wrong because the OOM happened in B,
-> so there is no reason to kill anything outside.
-> 
-> Fix this by checking it the memory cgroup to which the task belongs
-> is a descendant of the oom_domain. If not, memory.oom.group should
-> be ignored, and the OOM killer should kill only the victim task.
+After merging the pm tree, today's linux-next build (x86_64 allnoconfig)
+failed like this:
 
-I was about to suggest storing the memcg in oom_evaluate_task but then I
-have realized that this would be both more complex and I am not yet
-sure it would be better so much better after all.
+fs/libfs.c: In function 'memory_read_from_io_buffer':
+fs/libfs.c:829:2: error: implicit declaration of function 'memcpy_fromio' [=
+-Werror=3Dimplicit-function-declaration]
+  829 |  memcpy_fromio(to, from + pos, count);
+      |  ^~~~~~~~~~~~~
 
-The thing is that killing the selected task makes a lot of sense
-because it was the largest consumer. No matter it has run away. On the
-other hand if your B was oom.group = 1 then one could expect that any
-OOM killer event in that group will result in the whole group tear
-down. This is however a gray zone because we do emit MEMCG_OOM event but
-MEMCG_OOM_KILL event will go to the victim's at-the-time memcg. So the
-observer B could think that the oom was resolved without killing while
-observer C would see a kill event without oom.
+Caused by commit
 
-That being said, please try to think about the above. I will give it
-some more time as well. Killing the selected victim is the obviously
-correct thing and your patch does that so it is correct in that regard
-but I believe that the group oom behavior in the original oom domain
-remains an open question.
+  08c07cefb304 ("ACPI: sysfs: copy ACPI data using io memory copying")
 
-Fixes: 3d8b38eb81ca ("mm, oom: introduce memory.oom.group")
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Reported-by: Dan Schatzberg <dschatzberg@fb.com>
-> ---
->  mm/memcontrol.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index daa399be4688..d8c4b7aa4e73 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1930,6 +1930,14 @@ struct mem_cgroup *mem_cgroup_get_oom_group(struct task_struct *victim,
->  	if (memcg == root_mem_cgroup)
->  		goto out;
->  
-> +	/*
-> +	 * If the victim task has been asynchronously moved to a different
-> +	 * memory cgroup, we might end up killing tasks outside oom_domain.
-> +	 * In this case it's better to ignore memory.group.oom.
-> +	 */
-> +	if (unlikely(!mem_cgroup_is_descendant(memcg, oom_domain)))
-> +		goto out;
-> +
->  	/*
->  	 * Traverse the memory cgroup hierarchy from the victim task's
->  	 * cgroup up to the OOMing cgroup (or root) to find the
-> -- 
-> 2.24.1
+Missing include of linux/io.h?
 
--- 
-Michal Hocko
-SUSE Labs
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/uI9yGzSnE/VILAmY_B74A.s
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5wgdQACgkQAVBC80lX
+0Gy2hwgAiw8PNpH6t1aX/qvZYVwXeQcVvh3qg/M/0zjpt8zM2latl9NaOetsEa82
+5JvnSwiC41FGcyea03Ur9i/5QOTipKysdZOcBoP1DKKvvzV3c+sgkykYa6bEg+qI
+/qOcDsnIzpRQ6O5o54OUyaQC3VJygqTN8apdsyyMYn/vV6iXb+mzhy4NlBmUbMd5
+Juu9y9zG1BxMenhDjQgsTpdFGc9WBw6H9Gmsi0L/zLdLBhILkzpnpWcjv3I+cmMB
+qvpKNSxGbhxLjhrS6gYQulfo+kTh/z5Opz1eCMAQiqlkxBvYIKuDYImXcqdYJpjT
+cNdBpMDJK8P7rieoNJvLuGiKF8jzOg==
+=jLTP
+-----END PGP SIGNATURE-----
+
+--Sig_/uI9yGzSnE/VILAmY_B74A.s--
