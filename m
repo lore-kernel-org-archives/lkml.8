@@ -2,136 +2,116 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EB4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFBBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5805420714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:18:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Tpr5B2vn"
+	by mail.kernel.org (Postfix) with ESMTP id 7FD8F20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgCQPS0 (ORCPT
+        id S1727154AbgCQPSg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:18:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40387 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgCQPS0 (ORCPT
+        Tue, 17 Mar 2020 11:18:36 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51101 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727127AbgCQPSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:18:26 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z12so13270621wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 08:18:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=qBXIZEzxGUqAyM9pIpBwJ4AViTVInHf7b+TVClzYuWM=;
-        b=Tpr5B2vnUsJrytN/KjvohZZDnhPLmWc3gu4a7Zk4pVGhdvmPPnlHbigO8nJnUjZLmU
-         dqYbnDaKnyVRP3t+CJcHtZdUjmNWIN8OIXh6KsPjBBY4qg0CSeaWC7Njw3goh2Q1gW62
-         6eylyApKAtGTwhaY3RuFk4B+CtUIK2dMIdAxo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=qBXIZEzxGUqAyM9pIpBwJ4AViTVInHf7b+TVClzYuWM=;
-        b=sR77mDGxNKv1htSBspUCbKN7BWA2UYalqrZpC9ZeibWXFK0E6/TEn7TxTueRDVKnQ4
-         5y5sFj8vCCcHiDMMKoQEixlotQ8j/DKFoOhEZRWAKzrwx4d0oMG975TErHmps2RjVY9X
-         uPWef0qzYs9cbiYg7min1/WCTlr9+wpkihkbY9ArzmDUi6P65oiFM+5kgJIaFyM4G4Yg
-         CjehiN710JYenHvHwIWGnf4LKulm/7y+R3H5E5bToPBpUOcM1UXwwGSVdsaN16WyjUIN
-         dEsfUZlWv3JKRqIG0BN1SQHfzPKeKj7VQYjXZ0YtZ4HJSxqsg1WBhiaRw+fY9jQSnp+U
-         nTmg==
-X-Gm-Message-State: ANhLgQ2b6pkpgB6UF0lbz/KJaxojAGDG61YpOHWgIucOpkASDDFPoKEV
-        q57gbIftsGZ092a6ZUgw4Id+8Q==
-X-Google-Smtp-Source: ADFU+vvvZ5+/lYRbIsazixQyqzZRdmk+3TtUtyYZ4FfAMpZUuapXzOiEWdXWf3/4kpMBhcOF5C9OaQ==
-X-Received: by 2002:a1c:ba42:: with SMTP id k63mr5961236wmf.71.1584458303817;
-        Tue, 17 Mar 2020 08:18:23 -0700 (PDT)
-Received: from cloudflare.com ([2a02:a310:c262:aa00:b35e:8938:2c2a:ba8b])
-        by smtp.gmail.com with ESMTPSA id w7sm5221114wrr.60.2020.03.17.08.18.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 08:18:23 -0700 (PDT)
-References: <20200310174711.7490-1-lmb@cloudflare.com> <20200310174711.7490-5-lmb@cloudflare.com>
-User-agent: mu4e 1.1.0; emacs 26.3
-From:   Jakub Sitnicki <jakub@cloudflare.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] bpf: sockmap, sockhash: return file descriptors from privileged lookup
-In-reply-to: <20200310174711.7490-5-lmb@cloudflare.com>
-Date:   Tue, 17 Mar 2020 16:18:22 +0100
-Message-ID: <87imj3xb5t.fsf@cloudflare.com>
+        Tue, 17 Mar 2020 11:18:36 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-125-0m0ADeeiPxyOkHpGz1BdgA-1; Tue, 17 Mar 2020 11:18:31 -0400
+X-MC-Unique: 0m0ADeeiPxyOkHpGz1BdgA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D568107ACC9;
+        Tue, 17 Mar 2020 15:18:30 +0000 (UTC)
+Received: from aion.usersys.redhat.com (ovpn-115-53.rdu2.redhat.com [10.10.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C47EC19C58;
+        Tue, 17 Mar 2020 15:18:29 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id 11F001A010E; Tue, 17 Mar 2020 11:18:29 -0400 (EDT)
+Date:   Tue, 17 Mar 2020 11:18:29 -0400
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "paul@paul-moore.com" <paul@paul-moore.com>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the selinux tree with the nfs tree
+Message-ID: <20200317151829.GA4442@aion.usersys.redhat.com>
+References: <20200317133117.4569cc6a@canb.auug.org.au>
+ <bb623275e936c026cc425904e6c1cee0cbe85f28.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <bb623275e936c026cc425904e6c1cee0cbe85f28.camel@hammerspace.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aion.usersys.redhat.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 06:47 PM CET, Lorenz Bauer wrote:
-> Allow callers with CAP_NET_ADMIN to retrieve file descriptors from a
-> sockmap and sockhash. O_CLOEXEC is enforced on all fds.
->
-> Without this, it's difficult to resize or otherwise rebuild existing
-> sockmap or sockhashes.
->
-> Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
->  net/core/sock_map.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> index 03e04426cd21..3228936aa31e 100644
-> --- a/net/core/sock_map.c
-> +++ b/net/core/sock_map.c
-> @@ -347,12 +347,31 @@ static void *sock_map_lookup(struct bpf_map *map, void *key)
->  static int __sock_map_copy_value(struct bpf_map *map, struct sock *sk,
->  				 void *value)
->  {
-> +	struct file *file;
-> +	int fd;
-> +
->  	switch (map->value_size) {
->  	case sizeof(u64):
->  		sock_gen_cookie(sk);
->  		*(u64 *)value = atomic64_read(&sk->sk_cookie);
->  		return 0;
->
-> +	case sizeof(u32):
-> +		if (!capable(CAP_NET_ADMIN))
-> +			return -EPERM;
-> +
-> +		fd = get_unused_fd_flags(O_CLOEXEC);
-> +		if (unlikely(fd < 0))
-> +			return fd;
-> +
-> +		read_lock_bh(&sk->sk_callback_lock);
-> +		file = get_file(sk->sk_socket->file);
+On Tue, 17 Mar 2020, Trond Myklebust wrote:
 
-I think this deserves a second look.
+> On Tue, 2020-03-17 at 13:31 +1100, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Today's linux-next merge of the selinux tree got a conflict in:
+> > 
+> >   fs/nfs/getroot.c
+> > 
+> > between commit:
+> > 
+> >   e8213ffc2aec ("NFS: Ensure security label is set for root inode")
+> > 
+> > from the nfs tree and commit:
+> > 
+> >   28d4d0e16f09 ("When using NFSv4.2, the security label for the root
+> > inode should be set via a call to nfs_setsecurity() during the mount
+> > process, otherwise the inode will appear as unlabeled for up to
+> > acdirmin seconds.  Currently the label for the root inode is
+> > allocated, retrieved, and freed entirely witin
+> > nfs4_proc_get_root().")
+> > 
+> > from the selinux tree.
+> > 
+> > These are basically the same patch with slight formatting
+> > differences.
+> > 
+> > I fixed it up (I used the latter) and can carry the fix as necessary.
+> > This is now fixed as far as linux-next is concerned, but any non
+> > trivial
+> > conflicts should be mentioned to your upstream maintainer when your
+> > tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any
+> > particularly
+> > complex conflicts.
+> > 
+> OK... Why is this being pushed through the selinux tree? Was that your
+> intention Scott?
 
-We don't lock the sock, so what if tcp_close orphans it before we enter
-this critical section? Looks like sk->sk_socket might be NULL.
+Not really... I addressed the patch to you and Anna, after all.  On the
+other hand, I didn't object when Paul picked up the patch in his tree.
+I'm guessing I should have spoken up.  Sorry about that.
 
-I'd find a test that tries to trigger the race helpful, like:
+-Scott
 
-  thread A: loop in lookup FD from map
-  thread B: loop in insert FD into map, close FD
+> Given that it didn't touch anything outside NFS and
+> had been acked by the Selinux folks, but had not been acked by the NFS
+> maintainers, I was assuming it was waiting to be applied here.
+> 
+> -- 
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+> 
+> 
 
-> +		read_unlock_bh(&sk->sk_callback_lock);
-> +
-> +		fd_install(fd, file);
-> +		*(u32 *)value = fd;
-> +		return 0;
-> +
->  	default:
->  		return -ENOSPC;
->  	}
