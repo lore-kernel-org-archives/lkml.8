@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B28EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1B3C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D30F32071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26B220719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443017;
-	bh=27sp3JF+1DsO3P0UarlbwTlhuFaECf9l/w11Uzak+ls=;
+	s=default; t=1584443024;
+	bh=bBpGPos69Thu6EJ26LCcd+T/LeCR33KtKG7HV9kYExA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fq11Dl7agcDkdLgSiCt4E478XHPn29T98CkW5JOnSSFlU4ZKSzwobKHO2pJMul7iZ
-	 fufmdRrE7KaG2dZzEkYyNMlgo/RyqZc50ONvAcPsaTchxY1gTU1d4qNob/85ochh4m
-	 PF6mN9y9Zl1+xM7aOryUi5Bp/TinTGigotN7eN/A=
+	b=HBMHxwpJTZUpP3u0dhdScHwEHKBszp9LqphXzdaUge3VPGAejgHUiOjZbjFqn7dPR
+	 wyDAvnuBSbonqZ4yGJ1FcPComZMqOsObSmXg6N0jIYfLBprPway+6RlpGNSAcPmlSJ
+	 37BWLOQ4OjpocrSdjWUjcAMwzVhCwbej71vdm69A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgCQLDg (ORCPT
+        id S1728158AbgCQLDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:03:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43584 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:03:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbgCQLDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:03:34 -0400
+        id S1727316AbgCQLDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:03:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4156320719;
-        Tue, 17 Mar 2020 11:03:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FDB120658;
+        Tue, 17 Mar 2020 11:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443013;
-        bh=27sp3JF+1DsO3P0UarlbwTlhuFaECf9l/w11Uzak+ls=;
+        s=default; t=1584443017;
+        bh=bBpGPos69Thu6EJ26LCcd+T/LeCR33KtKG7HV9kYExA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B+9KbQLUDIdLbJgkteP2Xwp7a398Y/5kkYXXkGdciy54xBmp7PO/0hVGEQEXW5QGN
-         NmW+boSnC3LPrKepTM8hbVzwAt1KThvaSwhFffDmtqTwzNCeYNj2EVxnIlV6dO3AiU
-         c09bkJord0bXbFmAwhuxCo0Uaj+npSCiokmHTTZY=
+        b=GXDNMg0gmOP6Bd22ytHbVH/zLbSzcnYkgUYWDEyXOzteaEnH+WlyFrgBJaTZwBsSZ
+         vXL5j7NvXEbjvjxh1J15rCuEDH8A6zLp4jty/QuFArxuvN2D1dOLjqZ8svwggx2zkg
+         CXttLjBqXg2fxobT3G9ZE5hD7Wf8ag8AzEmfMKig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 065/123] netfilter: synproxy: synproxy_cpu_seq_next should increase position index
-Date:   Tue, 17 Mar 2020 11:54:52 +0100
-Message-Id: <20200317103314.209953789@linuxfoundation.org>
+Subject: [PATCH 5.4 066/123] netfilter: xt_recent: recent_seq_next should increase position index
+Date:   Tue, 17 Mar 2020 11:54:53 +0100
+Message-Id: <20200317103314.304968436@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -61,11 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vasily Averin <vvs@virtuozzo.com>
 
-commit bb71f846a0002239f7058c84f1496648ff4a5c20 upstream.
+commit db25517a550926f609c63054b12ea9ad515e1a10 upstream.
 
 If .next function does not change position index,
 following .show function will repeat output related
 to current position index.
+
+Without the patch:
+ # dd if=/proc/net/xt_recent/SSH # original file outpt
+ src=127.0.0.4 ttl: 0 last_seen: 6275444819 oldest_pkt: 1 6275444819
+ src=127.0.0.2 ttl: 0 last_seen: 6275438906 oldest_pkt: 1 6275438906
+ src=127.0.0.3 ttl: 0 last_seen: 6275441953 oldest_pkt: 1 6275441953
+ 0+1 records in
+ 0+1 records out
+ 204 bytes copied, 6.1332e-05 s, 3.3 MB/s
+
+Read after lseek into middle of last line (offset 140 in example below)
+generates expected end of last line and then unexpected whole last line
+once again
+
+ # dd if=/proc/net/xt_recent/SSH bs=140 skip=1
+ dd: /proc/net/xt_recent/SSH: cannot skip to specified offset
+ 127.0.0.3 ttl: 0 last_seen: 6275441953 oldest_pkt: 1 6275441953
+ src=127.0.0.3 ttl: 0 last_seen: 6275441953 oldest_pkt: 1 6275441953
+ 0+1 records in
+ 0+1 records out
+ 132 bytes copied, 6.2487e-05 s, 2.1 MB/s
 
 Cc: stable@vger.kernel.org
 Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
@@ -75,18 +96,23 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_synproxy_core.c |    2 +-
+ net/netfilter/xt_recent.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/netfilter/nf_synproxy_core.c
-+++ b/net/netfilter/nf_synproxy_core.c
-@@ -267,7 +267,7 @@ static void *synproxy_cpu_seq_next(struc
- 		*pos = cpu + 1;
- 		return per_cpu_ptr(snet->stats, cpu);
- 	}
--
+--- a/net/netfilter/xt_recent.c
++++ b/net/netfilter/xt_recent.c
+@@ -492,12 +492,12 @@ static void *recent_seq_next(struct seq_
+ 	const struct recent_entry *e = v;
+ 	const struct list_head *head = e->list.next;
+ 
 +	(*pos)++;
- 	return NULL;
+ 	while (head == &t->iphash[st->bucket]) {
+ 		if (++st->bucket >= ip_list_hash_size)
+ 			return NULL;
+ 		head = t->iphash[st->bucket].next;
+ 	}
+-	(*pos)++;
+ 	return list_entry(head, struct recent_entry, list);
  }
  
 
