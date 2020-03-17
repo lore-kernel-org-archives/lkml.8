@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D641C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86639C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D0420658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A3820658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443051;
-	bh=GwI3gY1sXrC3gZXxwYXmVKTzAnQwUmakGOz+AjeK0GA=;
+	s=default; t=1584443053;
+	bh=87iGYbUFYnXZn/jfFHK/iZmHuyFDjhO8WQ4ifoPD9mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dLaW7yuqaRtWhfy3dGH8a6d5mnfVOTKKrZ7OEajQxMP1G0y8zwu1Q+LdxVxRWUoZt
-	 TRrRU/L7YxzZ3NWPgZ1uIPjbdi8hrci9g7UuaOcKUBwo22S8nPyg/sk1drFcN+XWQ/
-	 LI3ZIif4GDnc5UWjYwgRf4n0HKPV5Hsqv/HWZJo8=
+	b=KUSGrfCgILnYOw7u0ygx5oNU6Z8i0PcFCxmhlwwe7nz1+UsxXhicnrlr8bpv/9D4H
+	 AsvOZ0NLTBntaH+iB/irdqFAS70DsoDyfFGjwlhkau7FzdXaLJylRtxlyg+Za0yY0k
+	 xenhmFTHI64N66iO9xmtLXI8pIsHiMSlfELCFY1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgCQLEJ (ORCPT
+        id S1728240AbgCQLEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44218 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728224AbgCQLEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:06 -0400
+        id S1728232AbgCQLEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED99920714;
-        Tue, 17 Mar 2020 11:04:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 704E920658;
+        Tue, 17 Mar 2020 11:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443046;
-        bh=GwI3gY1sXrC3gZXxwYXmVKTzAnQwUmakGOz+AjeK0GA=;
+        s=default; t=1584443048;
+        bh=87iGYbUFYnXZn/jfFHK/iZmHuyFDjhO8WQ4ifoPD9mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w9pfkmKqsptCNdAzyEfbK/oeeUh7XSSzqug/FxHRlWsbHAetdYPuAhpX8Ybj5prYL
-         NhBbDyn+PrSVjEouT4YDtAhe+OugnjlAb/6spJMvcp4sqXOHc9ANqmXHcvEjc9mLEE
-         LyFlWYHHko+VUfRQ39Pn2jWg+SnChlywlDJPGs/8=
+        b=f1e3laMlXUTghUZhbmw1YYnyLSrzHOzQShmjElXQuKGEVY3SNuhcaCUXCfCfaMvhv
+         OzM0sACRmgjRlcV16YtbmFXjyccsRs1/HvZBIdQI01nBVCPhM9EoOaQA9mI43kChMk
+         PVJGAiTHcQuDvhpgxsKuJnHG1AWDcvQleQ80Azmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 040/123] nl802154: add missing attribute validation for dev_type
-Date:   Tue, 17 Mar 2020 11:54:27 +0100
-Message-Id: <20200317103311.975080702@linuxfoundation.org>
+Subject: [PATCH 5.4 031/123] bnxt_en: reinitialize IRQs when MTU is modified
+Date:   Tue, 17 Mar 2020 11:54:18 +0100
+Message-Id: <20200317103311.071012717@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,31 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit b60673c4c418bef7550d02faf53c34fbfeb366bf ]
+[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
 
-Add missing attribute type validation for IEEE802154_ATTR_DEV_TYPE
-to the netlink policy.
+MTU changes may affect the number of IRQs so we must call
+bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
+set to true.  The reason is that a larger MTU may require
+aggregation rings not needed with smaller MTU.  We may not be
+able to allocate the required number of aggregation rings and
+so we reduce the number of channels which will change the number
+of IRQs.  Without this patch, it may crash eventually in
+pci_disable_msix() when the IRQs are not properly unwound.
 
-Fixes: 90c049b2c6ae ("ieee802154: interface type to be added")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ieee802154/nl_policy.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/ieee802154/nl_policy.c
-+++ b/net/ieee802154/nl_policy.c
-@@ -27,6 +27,7 @@ const struct nla_policy ieee802154_polic
- 	[IEEE802154_ATTR_BAT_EXT] = { .type = NLA_U8, },
- 	[IEEE802154_ATTR_COORD_REALIGN] = { .type = NLA_U8, },
- 	[IEEE802154_ATTR_PAGE] = { .type = NLA_U8, },
-+	[IEEE802154_ATTR_DEV_TYPE] = { .type = NLA_U8, },
- 	[IEEE802154_ATTR_COORD_SHORT_ADDR] = { .type = NLA_U16, },
- 	[IEEE802154_ATTR_COORD_HW_ADDR] = { .type = NLA_HW_ADDR, },
- 	[IEEE802154_ATTR_COORD_PAN_ID] = { .type = NLA_U16, },
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -10891,13 +10891,13 @@ static int bnxt_change_mtu(struct net_de
+ 	struct bnxt *bp = netdev_priv(dev);
+ 
+ 	if (netif_running(dev))
+-		bnxt_close_nic(bp, false, false);
++		bnxt_close_nic(bp, true, false);
+ 
+ 	dev->mtu = new_mtu;
+ 	bnxt_set_ring_params(bp);
+ 
+ 	if (netif_running(dev))
+-		return bnxt_open_nic(bp, false, false);
++		return bnxt_open_nic(bp, true, false);
+ 
+ 	return 0;
+ }
 
 
