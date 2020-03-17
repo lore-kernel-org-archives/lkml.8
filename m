@@ -2,92 +2,99 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC30BC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55808C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA6820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443930;
-	bh=6QbLSHB+X7jttnfEC1YPIO8cco39AnpBfs8uHoD+5N4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xeX2wkKiMMl5PH5CqoM4Bw4qTXSqIidoVhhuaHoKq84zBc3cp78d+gJlzuZ09xbRU
-	 CM/AnJbBT+/augbuzn2tK+eBGym2blrlUpetP6CtCip8C43luECl+/ZecmSjyrnKoi
-	 ptgLBgYYgYk8Fdo1f0eDJkdKbmU5aqDkt0hlUcig=
+	by mail.kernel.org (Postfix) with ESMTP id 33227206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgCQLSt (ORCPT
+        id S1728386AbgCQLFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46146 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:05:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:55060 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbgCQLFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A40020658;
-        Tue, 17 Mar 2020 11:05:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443123;
-        bh=6QbLSHB+X7jttnfEC1YPIO8cco39AnpBfs8uHoD+5N4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oCPcXhXEtpQneYJS12rB/FwSPoT6KmKQq0dltDnZUoRDpXr07vhnmfFGot7jcr/2n
-         JObOYqb/h2ok+1+kl0wxwsxvGXa2QK4HnqgU0KDfqPDQSS/YJ+D7/vdjPues+7nUUE
-         2+kJnCJOp9iCg0UMt0BampcCdnuAuA3O0pUxvd1g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 103/123] pinctrl: core: Remove extra kref_get which blocks hogs being freed
-Date:   Tue, 17 Mar 2020 11:55:30 +0100
-Message-Id: <20200317103318.122729286@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
-References: <20200317103307.343627747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727440AbgCQLFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:05:09 -0400
+IronPort-SDR: oqY6EKZMyPAD8CRE5Rrgw38ZEV+/Vh7NBPw8em52bb3eqC2rjWcsEBerCG6/j5RbvnqnqioybZ
+ +XjdTC2MrGXA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 04:05:09 -0700
+IronPort-SDR: bgfHtvH1a3H3Nhd/LyCgZIcuiaeiG022Nl/oQcRTlKJ75NNSMvbr4tUmFx/gdWLdhOY2c9BbuN
+ UXBPXBfwKGxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
+   d="scan'208";a="290962544"
+Received: from dasabhi1-mobl.amr.corp.intel.com (HELO [10.255.35.148]) ([10.255.35.148])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Mar 2020 04:05:07 -0700
+Subject: Re: [PATCH 0/2] ASoC: sdm845: fix soundwire stream handling
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org
+Cc:     alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org
+References: <20200317095351.15582-1-srinivas.kandagatla@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <a442a21e-47ce-f304-5bfb-06958d078a78@linux.intel.com>
+Date:   Tue, 17 Mar 2020 06:05:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317095351.15582-1-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Hi Srinivas,
 
-commit aafd56fc79041bf36f97712d4b35208cbe07db90 upstream.
+On 3/17/20 4:53 AM, Srinivas Kandagatla wrote:
+> Recent addition of SoundWire stream state-machine checks in linux-next
+> have shown an existing issue with handling soundwire streams in codec drivers.
+> 
+> In general soundwire stream prepare/enable/disable can be called from either
+> codec/machine/controller driver. However calling it in codec driver means
+> that if multiple instances(Left/Right speakers) of the same codec is
+> connected to the same stream then it will endup calling stream
+> prepare/enable/disable more than once. This will mess up the stream
+> state-machine checks in the soundwire core.
 
-kref_init starts with the reference count at 1, which will be balanced
-by the pinctrl_put in pinctrl_unregister. The additional kref_get in
-pinctrl_claim_hogs will increase this count to 2 and cause the hogs to
-not get freed when pinctrl_unregister is called.
+That's a known issue that we've fixed on the Intel side a  month or two 
+ago. Unfortunately the review cycle is so slow that you don't benefit 
+immediately from our fixes, what can I say.
 
-Fixes: 6118714275f0 ("pinctrl: core: Fix pinctrl_register_and_init() with pinctrl_enable()")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200228154142.13860-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Moving this stream handling to machine driver would fix this issue
+> and also allow board/platform specfic power sequencing.
 
----
- drivers/pinctrl/core.c |    1 -
- 1 file changed, 1 deletion(-)
+It's fine but that's unnecessary, and if you start having multiple 
+machine drivers with the same codecs you'll duplicate the stream 
+handling code.
 
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -2025,7 +2025,6 @@ static int pinctrl_claim_hogs(struct pin
- 		return PTR_ERR(pctldev->p);
- 	}
- 
--	kref_get(&pctldev->p->users);
- 	pctldev->hog_default =
- 		pinctrl_lookup_state(pctldev->p, PINCTRL_STATE_DEFAULT);
- 	if (IS_ERR(pctldev->hog_default)) {
+All you need to ensure in a multi-codec or multi-cpu dai case is that 
+the stream is allocated once, and yes that's typically done as part of 
+the dailink .startup callback.
+
+Then it's fine to call the stream prepare or enable multiple times from 
+the individual dai level, and only do the transition for the first call.
+
+See patch "soundwire: stream: only change state if needed" that I just 
+shared. We've used it both in 'TDM' mode with two codecs hanging off of 
+the same link and in 'aggregated' mode with two codecs on separate links.
 
 
+> Srinivas Kandagatla (2):
+>    ASoC: qcom: sdm845: handle soundwire stream
+>    ASoC: codecs: wsa881x: remove soundwire stream handling
+> 
+>   sound/soc/codecs/wsa881x.c | 44 +-----------------------
+>   sound/soc/qcom/Kconfig     |  2 +-
+>   sound/soc/qcom/sdm845.c    | 69 ++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 71 insertions(+), 44 deletions(-)
+> 
