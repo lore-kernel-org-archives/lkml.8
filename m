@@ -2,92 +2,167 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07352C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405DCC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A7920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14EA020735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:16:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fnarfbargle.com header.i=@fnarfbargle.com header.b="EacHN/gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgCQQQc (ORCPT
+        id S1726820AbgCQQQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:16:32 -0400
-Received: from mga17.intel.com ([192.55.52.151]:59753 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgCQQQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:16:32 -0400
-IronPort-SDR: xJQ+Vmtlchge0JD+BcE/SzVeKT5EAt38iMN1Cd0KMF5ELMRam2wYTB8v4HXGgMz1C1tm3Funm8
- fg/Xh1+FAgPw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 09:16:31 -0700
-IronPort-SDR: TisHc35JxXWWsW++YHglStF/q1Qs5t2M3hs6ClvW8soMNHMx7VvTmnR2igC8zIgyr7R6S+2DGj
- mx/rlfdhjiLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="247871726"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 17 Mar 2020 09:16:31 -0700
-Date:   Tue, 17 Mar 2020 09:16:31 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH 01/10] KVM: nVMX: Move reflection check into
- nested_vmx_reflect_vmexit()
-Message-ID: <20200317161631.GD12526@linux.intel.com>
-References: <20200312184521.24579-1-sean.j.christopherson@intel.com>
- <20200312184521.24579-2-sean.j.christopherson@intel.com>
- <87k13opi6m.fsf@vitty.brq.redhat.com>
- <20200317053327.GR24267@linux.intel.com>
+        Tue, 17 Mar 2020 12:16:41 -0400
+Received: from ns3.fnarfbargle.com ([103.4.19.87]:49418 "EHLO
+        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbgCQQQk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:16:40 -0400
+X-Greylist: delayed 1454 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Mar 2020 12:16:38 EDT
+Received: from [10.8.0.1] (helo=srv.home ident=heh29112)
+        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <brad@fnarfbargle.com>)
+        id 1jEEVc-0000jZ-V0; Tue, 17 Mar 2020 23:52:01 +0800
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject; bh=uFJ75ZP6ogQzqlLVM5kRMZ/OeGhF72Gu5uduYLklNJo=;
+        b=EacHN/gj9+7CXrtc6+GuUamMdi3ZDXpwzXHOXXTGj8feDNWyU4VEgC9fiSJvjtlzv0UlQeF0d4VUKb1vfe4ZKC0roQLp2umjspdI+8BZqPd5F35XzJpJjMn2a6r6A1PW9kZ9JvXWargCBk9DYIWxVCO5gRsVcIVutISYFWW8cWI=;
+Subject: Re: Regression: hibernation is broken since
+ e6bc9de714972cac34daa1dc1567ee48a47a9342
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+References: <20200213172351.GA6747@dumbo> <20200213175753.GS6874@magnolia>
+ <20200213183515.GA8798@dumbo> <20200213193410.GB6868@magnolia>
+ <20200213194135.GF6870@magnolia> <20200214211523.GA32637@dumbo>
+ <20200222002319.GK9504@magnolia> <20200223190311.GA26811@dumbo>
+ <20200225202632.GE6748@magnolia>
+From:   Brad Campbell <brad@fnarfbargle.com>
+Message-ID: <f9fe045d-3613-7443-f634-f17e5630ded3@fnarfbargle.com>
+Date:   Tue, 17 Mar 2020 23:51:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317053327.GR24267@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200225202632.GE6748@magnolia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 10:33:27PM -0700, Sean Christopherson wrote:
-> On Fri, Mar 13, 2020 at 01:12:33PM +0100, Vitaly Kuznetsov wrote:
-> > Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> > 
-> > > -static inline int nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
-> > > -					    u32 exit_reason)
-> > > +static inline bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
-> > > +					     u32 exit_reason)
-> > >  {
-> > > -	u32 exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
-> > > +	u32 exit_intr_info;
-> > > +
-> > > +	if (!nested_vmx_exit_reflected(vcpu, exit_reason))
-> > > +		return false;
-> > 
-> > (unrelated to your patch)
-> > 
-> > It's probably just me but 'nested_vmx_exit_reflected()' name always
-> > makes me thinkg 'the vmexit WAS [already] reflected' and not 'the vmexit
-> > NEEDS to be reflected'. 'nested_vmx_exit_needs_reflecting()' maybe?
+On 26/2/20 4:26 am, Darrick J. Wong wrote:
+> On Sun, Feb 23, 2020 at 08:03:11PM +0100, Domenico Andreoli wrote:
+>> On Fri, Feb 21, 2020 at 04:23:19PM -0800, Darrick J. Wong wrote:
+>>>
+>>> Ok, third try.  Does the following work?  This is a little more
+>>> selective in that it only disables the write protection on the swap
+>>> device/file that uswusp is going to write to.
+>>
+>> Yes it works but also verified that once the S_SWAPFILE bit is cleared
+>> it's never restored, therefore the protecton is gone after the first
+>> hibernation.
 > 
-> Not just you.  It'd be nice if the name some how reflected (ha) that the
-> logic is mostly based on whether or not L1 expects the exit, with a few
-> exceptions.  E.g. something like
+> Ok, good.  Now can you try the third part, which ought to re-apply
+> S_SWAPFILE after a successful resume, please?  Assuming this works, I
+> think we're ready with a fixpatch.
 > 
-> 	if (!l1_expects_vmexit(...) && !is_system_vmexit(...))
-> 		return false;
 
-Doh, the system VM-Exit logic is backwards, it should be
+I just bumped up against it upgrading from 5.2 to 5.5 & a long bisection results in apparently the same point :
+# first bad commit: [dc617f29dbe5ef0c8ced65ce62c464af1daaab3d] vfs: don't allow writes to swap files
 
-	if (!l1_expects_vmexit(...) || is_system_vmexit(...))
-		return false;
+Tested-By: Brad Campbell <lists2009@fnarfbargle.com>
+
+> --D
 > 
-> The downside of that is the logic is split, which is probably a net loss?
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 1e99f7ac1d7e..add93e205850 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -458,6 +458,7 @@ extern void swap_free(swp_entry_t);
+>   extern void swapcache_free_entries(swp_entry_t *entries, int n);
+>   extern int free_swap_and_cache(swp_entry_t);
+>   extern int swap_type_of(dev_t, sector_t, struct block_device **);
+> +extern void swap_relockall(void);
+>   extern unsigned int count_swap_pages(int, int);
+>   extern sector_t map_swap_page(struct page *, struct block_device **);
+>   extern sector_t swapdev_block(int, pgoff_t);
+> diff --git a/kernel/power/user.c b/kernel/power/user.c
+> index 77438954cc2b..b11f7037ce5e 100644
+> --- a/kernel/power/user.c
+> +++ b/kernel/power/user.c
+> @@ -271,6 +271,8 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
+>   			break;
+>   		}
+>   		error = hibernation_restore(data->platform_support);
+> +		if (!error)
+> +			swap_relockall();
+>   		break;
+>   
+>   	case SNAPSHOT_FREE:
+> @@ -372,10 +374,17 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
+>   			 */
+>   			swdev = new_decode_dev(swap_area.dev);
+>   			if (swdev) {
+> +				struct block_device *bd;
+> +
+>   				offset = swap_area.offset;
+> -				data->swap = swap_type_of(swdev, offset, NULL);
+> +				data->swap = swap_type_of(swdev, offset, &bd);
+>   				if (data->swap < 0)
+>   					error = -ENODEV;
+> +
+> +				inode_lock(bd->bd_inode);
+> +				bd->bd_inode->i_flags &= ~S_SWAPFILE;
+> +				inode_unlock(bd->bd_inode);
+> +				bdput(bd);
+>   			} else {
+>   				data->swap = -1;
+>   				error = -EINVAL;
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index b2a2e45c9a36..a64dcba10db6 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1799,6 +1799,32 @@ int swap_type_of(dev_t device, sector_t offset, struct block_device **bdev_p)
+>   	return -ENODEV;
+>   }
+>   
+> +/* Re-lock swap devices after resuming from userspace suspend. */
+> +void swap_relockall(void)
+> +{
+> +	int type;
+> +
+> +	spin_lock(&swap_lock);
+> +	for (type = 0; type < nr_swapfiles; type++) {
+> +		struct swap_info_struct *sis = swap_info[type];
+> +		struct block_device *bdev = bdgrab(sis->bdev);
+> +
+> +		/*
+> +		 * uswsusp only knows how to suspend to block devices, so we
+> +		 * can skip swap files.
+> +		 */
+> +		if (!(sis->flags & SWP_WRITEOK) ||
+> +		    !(sis->flags & SWP_BLKDEV))
+> +			continue;
+> +
+> +		inode_lock(bd->bd_inode);
+> +		bd->bd_inode->i_flags |= S_SWAPFILE;
+> +		inode_unlock(bd->bd_inode);
+> +		bdput(bd);
+> +	}
+> +	spin_unlock(&swap_lock);
+> +}
+> +
+>   /*
+>    * Get the (PAGE_SIZE) block corresponding to given offset on the swapdev
+>    * corresponding to given index in swap_info (swap type).
+> 
+
