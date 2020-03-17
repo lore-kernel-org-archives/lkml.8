@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D58C8C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00376C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2852076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9562071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443033;
-	bh=ybqz6l9Pn0+Ca0VsicFx4luxj8cHQTqRwj67ijp3NkE=;
+	s=default; t=1584443035;
+	bh=lVHUSe2Las6Deqqrd+fEt8BGJ0tFzFGrDD69RV3UeJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rtg1OyhH8UgtEV3VUP5k7lOJf/u/r4oehvj1bUU9G2uUl4UtBD0Z7am2Ur/e4peL4
-	 fFMOmARwygH0Y/NDtbZJyuYK2Y9pXN4m8dpNukXOOwUDowfAjCBKhB6swgjgMnxyp9
-	 twrFvfNc21u5rTBjMUj+q+KBqZCRFbM6t6I7hQZY=
+	b=bbUmQco2c80oIQPmPiIXuznuovp0TW5V9uKPfB4J3co1WejFOyIBmMz6Ai/C22m1c
+	 qomQnFw2BMfB0wq678hK24rGit56tbNrr29Yh+K/5P86MFeVV4+UAqaXdxJDpgkY86
+	 5TcCQPcLFMvk4L/2wT6OXjW3FWrNDUOmzVvE6Uys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgCQLDw (ORCPT
+        id S1728195AbgCQLDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43876 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbgCQLDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:03:50 -0400
+        id S1728193AbgCQLDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:03:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06B252071C;
-        Tue, 17 Mar 2020 11:03:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E7FA20658;
+        Tue, 17 Mar 2020 11:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443029;
-        bh=ybqz6l9Pn0+Ca0VsicFx4luxj8cHQTqRwj67ijp3NkE=;
+        s=default; t=1584443032;
+        bh=lVHUSe2Las6Deqqrd+fEt8BGJ0tFzFGrDD69RV3UeJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VnyW16ZS/c8IqWrN6hnO1DbeVtMxGBpEVxGfMFStROYUMNu0qME/F1LU35KmTbdkT
-         cs57TjgpfMGNnXoKwjP5QPBKayDH/UHKbPpagR1tb9RiFG1FKwOGOINN9iCAOimMkH
-         h5qiTDkhWMJOaV4KtfGeJ8TOYZwAdaNfjD3E1xZc=
+        b=i6vr8w8NieYSNlIQldQij8t73iBvj7RT4VEBLE/68dgrtSjIriCfRdp0yz5F/sphM
+         vIy1LCSetljR+PvdAGLSoFVZUvcRnmp43cFlVCbNOIX2kh9HqUgOnqWMXca2QhcaRh
+         /tG2hqGVF5mAU9T/jUzYFULZjGIctlRU1XmLejWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Auld <matthew.auld@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.4 070/123] drm/i915: be more solid in checking the alignment
-Date:   Tue, 17 Mar 2020 11:54:57 +0100
-Message-Id: <20200317103314.666440211@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 035/123] net: memcg: fix lockdep splat in inet_csk_accept()
+Date:   Tue, 17 Mar 2020 11:54:22 +0100
+Message-Id: <20200317103311.496947142@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,53 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Auld <matthew.auld@intel.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 1d61c5d711a2dc0b978ae905535edee9601f9449 upstream.
+commit 06669ea346e476a5339033d77ef175566a40efbb upstream.
 
-The alignment is u64, and yet is_power_of_2() assumes unsigned long,
-which might give different results between 32b and 64b kernel.
+Locking newsk while still holding the listener lock triggered
+a lockdep splat [1]
 
-Signed-off-by: Matthew Auld <matthew.auld@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200305203534.210466-1-matthew.auld@intel.com
-Cc: stable@vger.kernel.org
-(cherry picked from commit 2920516b2f719546f55079bc39a7fe409d9e80ab)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+We can simply move the memcg code after we release the listener lock,
+as this can also help if multiple threads are sharing a common listener.
+
+Also fix a typo while reading socket sk_rmem_alloc.
+
+[1]
+WARNING: possible recursive locking detected
+5.6.0-rc3-syzkaller #0 Not tainted
+--------------------------------------------
+syz-executor598/9524 is trying to acquire lock:
+ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
+ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
+
+but task is already holding lock:
+ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
+ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(sk_lock-AF_INET6);
+  lock(sk_lock-AF_INET6);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+1 lock held by syz-executor598/9524:
+ #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
+ #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
+
+stack backtrace:
+CPU: 0 PID: 9524 Comm: syz-executor598 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_deadlock_bug kernel/locking/lockdep.c:2370 [inline]
+ check_deadlock kernel/locking/lockdep.c:2411 [inline]
+ validate_chain kernel/locking/lockdep.c:2954 [inline]
+ __lock_acquire.cold+0x114/0x288 kernel/locking/lockdep.c:3954
+ lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
+ lock_sock_nested+0xc5/0x110 net/core/sock.c:2947
+ lock_sock include/net/sock.h:1541 [inline]
+ inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
+ inet_accept+0xe9/0x7c0 net/ipv4/af_inet.c:734
+ __sys_accept4_file+0x3ac/0x5b0 net/socket.c:1758
+ __sys_accept4+0x53/0x90 net/socket.c:1809
+ __do_sys_accept4 net/socket.c:1821 [inline]
+ __se_sys_accept4 net/socket.c:1818 [inline]
+ __x64_sys_accept4+0x93/0xf0 net/socket.c:1818
+ do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4445c9
+Code: e8 0c 0d 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc35b37608 EFLAGS: 00000246 ORIG_RAX: 0000000000000120
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004445c9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000306777 R09: 0000000000306777
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00000000004053d0 R14: 0000000000000000 R15: 0000000000000000
+
+Fixes: d752a4986532 ("net: memcg: late association of sock to memcg")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c |    3 ++-
- drivers/gpu/drm/i915/i915_utils.h              |    5 +++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ net/ipv4/inet_connection_sock.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-@@ -439,7 +439,8 @@ eb_validate_vma(struct i915_execbuffer *
- 	if (unlikely(entry->flags & eb->invalid_flags))
- 		return -EINVAL;
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -483,27 +483,27 @@ struct sock *inet_csk_accept(struct sock
+ 		spin_unlock_bh(&queue->fastopenq.lock);
+ 	}
  
--	if (unlikely(entry->alignment && !is_power_of_2(entry->alignment)))
-+	if (unlikely(entry->alignment &&
-+		     !is_power_of_2_u64(entry->alignment)))
- 		return -EINVAL;
+-	if (mem_cgroup_sockets_enabled) {
++out:
++	release_sock(sk);
++	if (newsk && mem_cgroup_sockets_enabled) {
+ 		int amt;
  
- 	/*
---- a/drivers/gpu/drm/i915/i915_utils.h
-+++ b/drivers/gpu/drm/i915/i915_utils.h
-@@ -233,6 +233,11 @@ static inline u64 ptr_to_u64(const void
- 	__idx;								\
- })
+ 		/* atomically get the memory usage, set and charge the
+-		 * sk->sk_memcg.
++		 * newsk->sk_memcg.
+ 		 */
+ 		lock_sock(newsk);
  
-+static inline bool is_power_of_2_u64(u64 n)
-+{
-+	return (n != 0 && ((n & (n - 1)) == 0));
-+}
-+
- static inline void __list_del_many(struct list_head *head,
- 				   struct list_head *first)
- {
+-		/* The sk has not been accepted yet, no need to look at
+-		 * sk->sk_wmem_queued.
++		/* The socket has not been accepted yet, no need to look at
++		 * newsk->sk_wmem_queued.
+ 		 */
+ 		amt = sk_mem_pages(newsk->sk_forward_alloc +
+-				   atomic_read(&sk->sk_rmem_alloc));
++				   atomic_read(&newsk->sk_rmem_alloc));
+ 		mem_cgroup_sk_alloc(newsk);
+ 		if (newsk->sk_memcg && amt)
+ 			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
+ 
+ 		release_sock(newsk);
+ 	}
+-out:
+-	release_sock(sk);
+ 	if (req)
+ 		reqsk_put(req);
+ 	return newsk;
 
 
