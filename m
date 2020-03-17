@@ -6,130 +6,137 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A2EC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D32FC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1F52075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F67820738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dq+RSNrV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="krPP7HlJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgCQPLC (ORCPT
+        id S1726828AbgCQPMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:11:02 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:55932 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726478AbgCQPLC (ORCPT
+        Tue, 17 Mar 2020 11:12:47 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:40362 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgCQPMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:11:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584457861;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=W5HQAvbPU4U3uMqTwVbtXlufV8kjT1jXd8mJ+pSamK4=;
-        b=dq+RSNrVVfgmdkMj/1djImhaKfO4ZAaNDtbihfWo2vWDt8ZVv4ahmSxxZoXdCdN9nPyVjX
-        YXqmi/nrA9GP4Sj3+o8AH/d8YCW6ZbCZxD2DRyFrCnPrJkn6qbEsGatAsLIa++wMEcKTHn
-        lrNHMgvJgGH04G85szykRZ+WPhHboY0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-479-kEnLFVR7PCuI3hiVy5LX1g-1; Tue, 17 Mar 2020 11:11:00 -0400
-X-MC-Unique: kEnLFVR7PCuI3hiVy5LX1g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4D28107ACC4;
-        Tue, 17 Mar 2020 15:10:56 +0000 (UTC)
-Received: from krava (unknown [10.40.195.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7BE4073865;
-        Tue, 17 Mar 2020 15:10:50 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 16:10:47 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v5 09/11] perf/tools: Enhance JSON/metric infrastructure
- to handle "?"
-Message-ID: <20200317151047.GF757893@krava>
-References: <20200317062333.14555-1-kjain@linux.ibm.com>
- <20200317062333.14555-10-kjain@linux.ibm.com>
+        Tue, 17 Mar 2020 11:12:46 -0400
+Received: by mail-vs1-f68.google.com with SMTP id m25so5275140vsa.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 08:12:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TMnGNLtemyYfK63VsKtAIUfhYRVvGpYyUyZZJL3pFE8=;
+        b=krPP7HlJbr5Dn8feHiKoBw/GYprYC3TKDcwhHNekL+6MG5CG72nWF0fp/Z4WONtZmZ
+         nsaZLia3aLvc4Yasfn60ZXH0MF3i2iGNSVmiZ0TyUUkfTG9D1u2h30TH8V9R3Y/Ji6va
+         ckIB9FCfSyqIcJL+IfFmAKzRjwm+b9IPUk8eU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TMnGNLtemyYfK63VsKtAIUfhYRVvGpYyUyZZJL3pFE8=;
+        b=SCKfHRZInfcx3MeKTNYjasM4HsDKfSfRNvv59ls+cLkjXwEZU3htn7KHUTfL+0GnW6
+         qPwygwu6iTsixrCSu4qth8/l4keqC3uCJK9+gzqj7+CRNLLoIbXfZz39p35moxojnPvg
+         tYV28FpH2lc3VNPZTDfAU7+KCH9dUhZrNovYFwHab4LUJQ9fYM2p+LKwm520pjeL414A
+         Xzm9z4DV4LCVqwiSHcXs20SOe919bfYwbWi1d68aQor4uKR+TVvUUDlTng+E8DLh5d2z
+         B+QslSjcrQgm4MLTC9V3BQY/IHol72aYdIrVoPzp7RVblmG0QGr2fUEegI4NOIFHr/ss
+         qflg==
+X-Gm-Message-State: ANhLgQ38tOKd8gkfiNgNH/MwlpKdAwibzICYkPUSVgdx8zObWcZIZQPx
+        lG8oTK9WLKy/MvJQDkplqMidSAIYPnM=
+X-Google-Smtp-Source: ADFU+vtUFePAnpMfpLcNJ+f9xV7U2FpDFdZAj2g2qaCR5ccbYqwIUf2NCI9FufSXY3r2Xv9SvjOlPA==
+X-Received: by 2002:a67:b85:: with SMTP id 127mr4295527vsl.62.1584457964532;
+        Tue, 17 Mar 2020 08:12:44 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id w8sm1450835vkw.46.2020.03.17.08.12.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 08:12:43 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id x82so14076132vsc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 08:12:42 -0700 (PDT)
+X-Received: by 2002:a05:6102:7c7:: with SMTP id y7mr4207665vsg.198.1584457962249;
+ Tue, 17 Mar 2020 08:12:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317062333.14555-10-kjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200316151939.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
+ <20200317121018.GB3971@sirena.org.uk>
+In-Reply-To: <20200317121018.GB3971@sirena.org.uk>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 17 Mar 2020 08:12:30 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VAeOYAG-R6aeAAoo7TsuvDBgNnqxn3XE2Mw3hwL1H7Ew@mail.gmail.com>
+Message-ID: <CAD=FV=VAeOYAG-R6aeAAoo7TsuvDBgNnqxn3XE2Mw3hwL1H7Ew@mail.gmail.com>
+Subject: Re: [PATCH] spi: spi-geni-qcom: Speculative fix of "nobody cared"
+ about interrupt
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Alok Chauhan <alokc@codeaurora.org>,
+        Dilip Kota <dkota@codeaurora.org>, skakit@codeaurora.org,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 11:53:31AM +0530, Kajol Jain wrote:
+Hi,
 
-SBIP
+On Tue, Mar 17, 2020 at 5:10 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Mon, Mar 16, 2020 at 03:20:01PM -0700, Douglas Anderson wrote:
+>
+> > +     /*
+> > +      * We don't expect to hit this, but if we do we should try our best
+> > +      * to clear the interrupts and return so we don't just get called
+> > +      * again.
+> > +      */
+> > +     if (mas->cur_mcmd == CMD_NONE)
+> > +             goto exit;
+> > +
+>
+> Does this mean that there was an actual concrete message of type
+> CMD_NONE or does it mean that there was no message waiting?  If there
+> was no message then isn't the interrupt spurious?
 
-> +static int metricgroup__add_metric_runtime_param(struct strbuf *events,
-> +			struct list_head *group_list, struct pmu_event *pe)
-> +{
-> +	int i, count;
-> +	int ret = -EINVAL;
-> +
-> +	count = arch_get_runtimeparam();
-> +
-> +	/* This loop is added to create multiple
-> +	 * events depend on count value and add
-> +	 * those events to group_list.
-> +	 */
-> +
-> +	for (i = 0; i < count; i++) {
-> +		const char **ids;
-> +		int idnum;
-> +		struct egroup *eg;
-> +		char value[PATH_MAX];
-> +
-> +		if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum, i) < 0)
-> +			return ret;
-> +
-> +		if (events->len > 0)
-> +			strbuf_addf(events, ",");
-> +
-> +		if (metricgroup__has_constraint(pe))
-> +			metricgroup__add_metric_non_group(events, ids, idnum);
-> +		else
-> +			metricgroup__add_metric_weak_group(events, ids, idnum);
-> +
-> +		eg = malloc(sizeof(*eg));
-> +		if (!eg) {
-> +			ret = -ENOMEM;
-> +			return ret;
-> +		}
-> +
-> +		sprintf(value, "%s%c%d", pe->metric_name, '_', i);
-> +		eg->ids = ids;
-> +		eg->idnum = idnum;
-> +		eg->metric_name = strdup(value);
-> +		if (!eg->metric_name) {
-> +			ret = -ENOMEM;
-> +			return ret;
-> +		}
-> +
-> +		eg->metric_expr = pe->metric_expr;
-> +		eg->metric_unit = pe->unit;
-> +		list_add_tail(&eg->nd, group_list);
-> +		ret = 0;
-> +
-> +		if (ret != 0)
-> +			break;
+There is no message of type "CMD_NONE".  The "cur_mcmd" field is
+basically where in the software state machine we're at:
 
-again, this is part of metricgroup__add_metric_param no? why not use it?
+* CMD_NONE - Software thinks that the controller should be idle.
+* CMD_XFER - Software has started a transfer.
+* CMD_CS - Software has started a chip select change.
+* CMD_CANCEL - Software sent a "cancel".
 
-jirka
+...so certainly if we see "cur_mcmd == CMD_NONE" in the interrupt
+handler we're in an unexpected situation.  We don't expect interrupts
+while idle.  I wouldn't necessarily say it was a spurious interrupt,
+though.  To say that I'd rather look at the result of this line in the
+IRQ handler:
 
+    m_irq = readl(se->base + SE_GENI_M_IRQ_STATUS);
+
+...if that line returns 0 then I would be willing to say it is a
+spurious interrupt.
+
+
+So there is really more than one issue at hand, I guess.
+
+A) Why did we get an interrupt when we had "cur_mcmd == CMD_NONE"?
+IMO this is due to weakly ordered memory and not enough locking.
+
+B) If we do see an interrupt when "cur_mcmd == CMD_NONE" (even after
+we fix the locking), what should we do?  IMO we should still try to
+Ack it.  I can add a "pr_warn()" if it's helpful?
+
+C) Do we care to try to detect spurious interrupts (by checking
+SE_GENI_M_IRQ_STATUS) and return IRQ_NONE?  Right now a spurious
+interrupt will be harmless because all of the logic in geni_spi_isr()
+doesn't do anything if SE_GENI_M_IRQ_STATUS has no bits set.  ...but
+it will still return IRQ_HANDLED.  I can't imagine anyone ever putting
+this device on a shared interrupt, but if it's important I can detect
+this and return IRQ_NONE in this case in a v2 of this patch.
+
+-Doug
