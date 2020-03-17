@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50D9C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADF4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 834D520658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041BD20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443449;
-	bh=TZzdiRnPo1IpWNQTesJXuKMNzVAP31ydc9OdMaEiuUU=;
+	s=default; t=1584443457;
+	bh=a0myFDPreQY3Eoklm/Sp6rJ31Mo5FJA6k7BKDHfVpg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIuBDDmZVQTvLbZ0GCEb1WhOV3EQXl9EeX/4wiw5R6HTIo4vMDBkRpjZor7uzU6v8
-	 X+3A/hSYBeI0KYIrUC7Wj79sTSsAlhjEyovN/IbrROtKoajiJRPwX/tMBVeDcCcJSa
-	 oXF2QsQNiwT5PWUR5znaizqAS5rlaah3CsPmmJJk=
+	b=ZOLzDmXOmkxUPj4S8J5F+Tv60tjhed6I9Z5PBT+cYmWU5IpJxqQQzToBkLO5ne3rt
+	 LUxQWjX6KWY7SToP6NgjBSFYpqBLTNkgiPduMdUif4OFCgXCXcMBKXr4frFVs+MG2a
+	 3lxhO6Upsj3YEb230kZWAAi/odx+5nPaqZioiIt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgCQLKs (ORCPT
+        id S1728944AbgCQLKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53746 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729131AbgCQLKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:10:45 -0400
+        id S1726777AbgCQLKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:10:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAE8520658;
-        Tue, 17 Mar 2020 11:10:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58427206EC;
+        Tue, 17 Mar 2020 11:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443445;
-        bh=TZzdiRnPo1IpWNQTesJXuKMNzVAP31ydc9OdMaEiuUU=;
+        s=default; t=1584443452;
+        bh=a0myFDPreQY3Eoklm/Sp6rJ31Mo5FJA6k7BKDHfVpg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LRI3ogLj7D3V1dlSHgX4BytfO8b31DEMv106XrJW110nWwgGdhJIIjsxGmmodWnR4
-         vaCj8b8qdewPH69x3ORHpU18xEcMH+u7pNKVvDBUk7MSEwJrOE1QVI7eqR2roNFA4F
-         bUvwEQTUAM4uccA8O2/Ro8zEJfTQjFhQntOzeVpI=
+        b=t8UQV/qAZrghhGa453zqy0pKkZ0RL0W84ESqBHYcsSfXx/40+1A8V/bB//0lUxp+U
+         zwTYgAdV2UaPAp/pjH0QCJHk5jGyLnS3ipaubihEXwHDwT66+SQRd8ZdfNy0lldqO8
+         rOgRQO4c0DYfPySPQLd9F9huNsgZhUQTfNqYbP0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        nobuhiro1.iwamatsu@toshiba.co.jp
-Subject: [PATCH 5.5 084/151] drm/amd/display: remove duplicated assignment to grph_obj_type
-Date:   Tue, 17 Mar 2020 11:54:54 +0100
-Message-Id: <20200317103332.422238328@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 085/151] drm/i915: Actually emit the await_start
+Date:   Tue, 17 Mar 2020 11:54:55 +0100
+Message-Id: <20200317103332.492957036@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,34 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit d785476c608c621b345dd9396e8b21e90375cb0e upstream.
+commit c67b35d970ed3391069c21f3071a26f687399ab2 upstream.
 
-Variable grph_obj_type is being assigned twice, one of these is
-redundant so remove it.
+Fix the inverted test to emit the wait on the end of the previous
+request if we /haven't/ already.
 
-Addresses-Coverity: ("Evaluation order violation")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: <nobuhiro1.iwamatsu@toshiba.co.jp>
+Fixes: 6a79d848403d ("drm/i915: Lock signaler timeline while navigating")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Cc: <stable@vger.kernel.org> # v5.5+
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200305104210.2619967-1-chris@chris-wilson.co.uk
+(cherry picked from commit 07e9c59d63df6a1c44c1975c01827ba18b69270a)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/i915/i915_request.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-@@ -365,8 +365,7 @@ bool amdgpu_atombios_get_connector_info_
- 			router.ddc_valid = false;
- 			router.cd_valid = false;
- 			for (j = 0; j < ((le16_to_cpu(path->usSize) - 8) / 2); j++) {
--				uint8_t grph_obj_type=
--				grph_obj_type =
-+				uint8_t grph_obj_type =
- 				    (le16_to_cpu(path->usGraphicObjIds[j]) &
- 				     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
+--- a/drivers/gpu/drm/i915/i915_request.c
++++ b/drivers/gpu/drm/i915/i915_request.c
+@@ -785,7 +785,7 @@ i915_request_await_start(struct i915_req
+ 		return PTR_ERR_OR_ZERO(fence);
  
+ 	err = 0;
+-	if (intel_timeline_sync_is_later(i915_request_timeline(rq), fence))
++	if (!intel_timeline_sync_is_later(i915_request_timeline(rq), fence))
+ 		err = i915_sw_fence_await_dma_fence(&rq->submit,
+ 						    fence, 0,
+ 						    I915_FENCE_GFP);
 
 
