@@ -2,53 +2,63 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B50C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91C3C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9788220754
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3C120754
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgCQNOy (ORCPT
+        id S1726859AbgCQNPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:14:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:36657 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgCQNOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:14:53 -0400
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48hYYQ3LhHz9sSX; Wed, 18 Mar 2020 00:14:50 +1100 (AEDT)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: cc6f0e39000900e5dd1448103a9571f0eccd7d4e
-In-Reply-To: <b1177cdfc6af74a3e277bba5d9e708c4b3315ebe.1583575707.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, ndesaulniers@google.com
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/32: Fix missing NULL pmd check in virt_to_kpte()
-Message-Id: <48hYYQ3LhHz9sSX@ozlabs.org>
-Date:   Wed, 18 Mar 2020 00:14:50 +1100 (AEDT)
+        Tue, 17 Mar 2020 09:15:10 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:38307 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgCQNPK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:15:10 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 0231E10001E;
+        Tue, 17 Mar 2020 13:14:46 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 14:14:45 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] rtc: mt2712: fix build without PM_SLEEP
+Message-ID: <20200317131445.GC3448@piout.net>
+References: <20200316104701.209293-1-alexandre.belloni@bootlin.com>
+ <CAMuHMdVy6J1G5P6BQ14D65=pRu-q=+kcN3RV8mjtaZcwBooZyw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVy6J1G5P6BQ14D65=pRu-q=+kcN3RV8mjtaZcwBooZyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-03-07 at 10:09:15 UTC, Christophe Leroy wrote:
-> Commit 2efc7c085f05 ("powerpc/32: drop get_pteptr()"),
-> replaced get_pteptr() by virt_to_kpte(). But virt_to_kpte() lacks a
-> NULL pmd check and returns an invalid non NULL pointer when there
-> is no page table.
+On 17/03/2020 13:30:10+0100, Geert Uytterhoeven wrote:
+> >  static SIMPLE_DEV_PM_OPS(mt2712_pm_ops, mt2712_rtc_suspend,
+> >                          mt2712_rtc_resume);
 > 
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> Fixes: 2efc7c085f05 ("powerpc/32: drop get_pteptr()")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> That's 23 more unused pointers in your kernel image.
+> 
 
-Applied to powerpc next, thanks.
+This is true but, of the about 900 drivers setting pm callbacks, there
+are only 39 doing that conditionally depending on CONFIG_PM or
+CONFIG_PM_SLEEP. Interestingly, 9 of them are mediatek related.
 
-https://git.kernel.org/powerpc/c/cc6f0e39000900e5dd1448103a9571f0eccd7d4e
 
-cheers
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
