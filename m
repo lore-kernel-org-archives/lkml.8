@@ -2,115 +2,127 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E92C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF01C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B633E20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84DAF20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DJjbqK+M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irfrBskV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgCQPwm (ORCPT
+        id S1726765AbgCQPzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:52:42 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:30160 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726294AbgCQPwm (ORCPT
+        Tue, 17 Mar 2020 11:55:44 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:55541 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCQPzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:52:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584460362; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=F3ioMX8bj8P3wFuntkEmg3te9kA2v3f1KYJgn3TX8No=;
- b=DJjbqK+MfSvWe/G94I3T9dFIYvYYtCrYtG8QLVi3CjOnmm7WAE3L0WVeTV/zahRkZzNUX1Vh
- Oum1uZ0sQrno4vgLH9vPJDFZFDaqnnNLd4X0jvGp41MdXtdRBjp1RV9I/iBxU1rpgN5N/0IE
- vfR2/Bkiyxt0U4B4aRKk0B2gqyI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e70f236.7f14e17cc0d8-smtp-out-n03;
- Tue, 17 Mar 2020 15:52:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 69A8FC433BA; Tue, 17 Mar 2020 15:52:22 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBA72C433D2;
-        Tue, 17 Mar 2020 15:52:21 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Mar 2020 21:22:21 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, joro@8bytes.org,
-        robin.murphy@arm.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-remoteproc@vger.kernel.org, ohad@wizery.com,
-        agross@kernel.org, dianders@chromium.org,
-        saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH v2 0/3] Request direct mapping for modem device
-In-Reply-To: <20200317150910.26053-1-sibis@codeaurora.org>
-References: <20200317150910.26053-1-sibis@codeaurora.org>
-Message-ID: <fe9bb128563bea9798573ac9eec1d214@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Tue, 17 Mar 2020 11:55:44 -0400
+Received: by mail-pj1-f65.google.com with SMTP id mj6so10173736pjb.5;
+        Tue, 17 Mar 2020 08:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rIOYXa4n3W4fvDIFexK8Xd1iAbQHd2/NWX4UF2y8JPU=;
+        b=irfrBskVIzOYnt/8r4tZQkRb68wX1xdH3cibG7ArPih3W4C8DDXVzgNH550GQ96uAr
+         jqoYAlgRrigTEqn3/aSlfNxHsiqOPz8uSpuxx032eJ1yTZFg7zVtabnFhEjkdfuXwHQC
+         ZptWEZfY/eBxexy70Z6S05vR1GuZjwB8UEArvF4djW+XTlobg7LpVrFmKkUJ5IAuD9w4
+         ShHyFljj8mHxonbV1k6VGzmLVXAQVDsiD3Fv5iYzEM0Cp6vv1kPRKTZQ+q+ejfWOhSL3
+         l6ZOb71iiAsJcf3s/dNYOvvI/VIngpu4fwhYmDyFnaZorpKvJ5cNbswj6fBnOkCZh8CM
+         NyFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rIOYXa4n3W4fvDIFexK8Xd1iAbQHd2/NWX4UF2y8JPU=;
+        b=kzf0S5W4ROoCDhdY7wzm8EHP5t0ArTNqeqou1uVvNVr/LAfD8jEnD9vX84rNHyY9Ed
+         MN9Ba83VDW3FqgNf03+Hj77YKLvQbAs5V3mYQIkYQl6qd64gN3kqEutHEeE9mNtdQiLD
+         x1Bde86f8brDkn27UPfxoJQskK6hQrlI+Pedy/SJH7iqW6Vlv/tRxP2UMMgHScGuPile
+         wTP5tU0f/AJPAW7nsorPWJfsLvt5ygZ2sNm/hamD7cHsSl0PzESxJOKmUfREHuXuqch2
+         /gTIWVHBVcB6lqWHsFmHs/25TJhszxEg8hPbOq6VciyuxnMW74aTKwu7m8be50clQXrI
+         ygSw==
+X-Gm-Message-State: ANhLgQ18q5Mwu8Bm105BZuGWJ1AcQBDku7XdXDn7nkRipi3DvKtGoFfG
+        UkczOs8dvp3lqyMel87dDPQ=
+X-Google-Smtp-Source: ADFU+vsXJcKIHwYeeKLVHimqaIiwGZKzfpf0o1uTLHXjAzQQxGHWA+wfsYGrjvu6bZ6GZ6w3hOSWCg==
+X-Received: by 2002:a17:902:d712:: with SMTP id w18mr5146760ply.238.1584460542597;
+        Tue, 17 Mar 2020 08:55:42 -0700 (PDT)
+Received: from localhost ([161.117.239.120])
+        by smtp.gmail.com with ESMTPSA id s19sm3665027pfh.218.2020.03.17.08.55.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Mar 2020 08:55:41 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     marcelo.leitner@gmail.com, davem@davemloft.net
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, kuba@kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH v2] sctp: fix refcount bug in sctp_wfree
+Date:   Tue, 17 Mar 2020 23:55:36 +0800
+Message-Id: <20200317155536.10227-1-hqjagain@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-17 20:39, Sibi Sankar wrote:
-> The Q6 modem sub-system has direct access to DDR through memnoc and
-> an indirect access routed through a SMMU which MSS CE (crypto engine
-> sub-component of MSS) uses during out of reset sequence. Request direct
-> mapping for the modem device since smmu is not expected to provide 
-> access
-> control/translation for these SIDs (sandboxing of the modem is achieved
-> through XPUs engaged using SMC calls). This is done on platforms which
-> don't have TrustZone (which programs the modem SIDs) to prevent the
-> following global faults seen on Cheza/Trogdor:
-> 
-> Cheza:
-> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-> arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
-> 			 GFSYNR1 0x00000781, GFSYNR2 0x00000000
-> 
-> Trogdor:
-> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-> arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
-> 			 GFSYNR1 0x00000461, GFSYNR2 0x00000000
-> 
-> V2:
->  * Request direct mapping from SoC-specific corner of the SMMU
->    driver [Robin]
->  * Add iommu property to remoteproc modem node on Cheza
-> 
-> Depends on:
-> https://lore.kernel.org/patchwork/cover/1183528/
-> 
-> Sibi Sankar (3):
->   dt-bindings: remoteproc: qcom: Add iommus property
->   remoteproc: qcom_q6v5_mss: Request direct mapping for modem device
+Do accounting for skb's real sk.
+In some case skb->sk != asoc->base.sk:
 
-iommu: arm-smmu-qcom: Request direct mapping for modem device
+migrate routing        sctp_check_transmitted routing
+------------                    ---------------
+lock_sock_nested();
+                               mv the transmitted skb to
+                               the it's local tlist
 
-sry should have been ^^ instead
+sctp_for_each_tx_datachunk(
+sctp_clear_owner_w);
+sctp_assoc_migrate();
+sctp_for_each_tx_datachunk(
+sctp_set_owner_w);
 
+                               put the skb back to the
+                               assoc lists
+----------------------------------------------------
 
->   arm64: dts: qcom: sdm845-cheza: Add iommus property
-> 
->  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 3 +++
->  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi                 | 4 ++++
->  drivers/iommu/arm-smmu-qcom.c                              | 6 ++++++
->  3 files changed, 13 insertions(+)
+The skbs which held bysctp_check_transmitted were not changed
+to newsk. They were not dealt with by sctp_for_each_tx_datachunk
+(sctp_clear_owner_w/sctp_set_owner_w).
 
+It looks only trouble here so handling it in sctp_wfree is enough.
+
+Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ net/sctp/socket.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index 1b56fc440606..5f5c28b30e25 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -9080,7 +9080,7 @@ static void sctp_wfree(struct sk_buff *skb)
+ {
+ 	struct sctp_chunk *chunk = skb_shinfo(skb)->destructor_arg;
+ 	struct sctp_association *asoc = chunk->asoc;
+-	struct sock *sk = asoc->base.sk;
++	struct sock *sk = skb->sk;
+ 
+ 	sk_mem_uncharge(sk, skb->truesize);
+ 	sk->sk_wmem_queued -= skb->truesize + sizeof(struct sctp_chunk);
+@@ -9109,7 +9109,7 @@ static void sctp_wfree(struct sk_buff *skb)
+ 	}
+ 
+ 	sock_wfree(skb);
+-	sctp_wake_up_waiters(sk, asoc);
++	sctp_wake_up_waiters(asoc->base.sk, asoc);
+ 
+ 	sctp_association_put(asoc);
+ }
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.17.1
+
