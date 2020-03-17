@@ -7,115 +7,89 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0274C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB39C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7159220738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC1720738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584484045;
-	bh=WSXaZv4sBHYHlVj8zTa5shxvXfP6CX+7XiIDcketcUo=;
+	s=default; t=1584484110;
+	bh=fkwDszDySoCeKnopQtq7FmCT+AUuyAXm1e4W0arilAY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dr8dTg+AEkl4eSFNyrcGJ8I1kpFNAc4DgS32ptypxu8AANAYdSzO7tvrjYqMl1YZF
-	 JArsW0we6wGj4uMm9SwpkelasT5Z2D3PlM/iYGrSGQf+U19GXtFgYtNli+BB7JTKL7
-	 c6inZ/WSv492IROGqPeQNQz7w/wFP16RzawS+OyM=
+	b=bHiDyyCs++A6FjH/O1gxhTxInJevj0jts0ka9Xc0QKhDYdVJ1gS+1mCIpCFSxzk32
+	 pQQJBYUUXFhpAI/fXk8BBZtG73QQBbI4p9irQVL6ZbjRFc0XQ5FuRU3vaiSSFiHLjS
+	 +CQEY3vePjIzlMWNO2Tg7v5bam83FIH4tlua3uaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgCQW1Y (ORCPT
+        id S1727060AbgCQW23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 18:28:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgCQW1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:27:24 -0400
+        id S1726530AbgCQW23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:28:29 -0400
 Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2AE9206EC;
-        Tue, 17 Mar 2020 22:27:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E7B6206EC;
+        Tue, 17 Mar 2020 22:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584484043;
-        bh=WSXaZv4sBHYHlVj8zTa5shxvXfP6CX+7XiIDcketcUo=;
+        s=default; t=1584484109;
+        bh=fkwDszDySoCeKnopQtq7FmCT+AUuyAXm1e4W0arilAY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2CQnmxeeLHsCdzqgtAmSYikJb9AbHGeb/jxXXqzH4ZEKKagjBEK/gOiAdnVkUX/Pu
-         7fV8BVw9jfyrQVgpnp2pEZqG9Z5RJbm3HNoA5K/FJW3KwxhlmslXzqu3Cx33OpW0rA
-         NElFjXRUwEy7KPEtGrYSnZxe6FglFSIdfyAQl+Ao=
-Date:   Tue, 17 Mar 2020 22:27:18 +0000
+        b=AmaJdMHPXbhUkZXOLUarwbDBVLWG++cjrtPnJZZlBfIR3gXYn6imyhUvJNa8uYVQ6
+         Z5HFUKLXhEBB/CPfXruZq30wp7WxPtr96VHKG7f1jADYLkzrwqOWfNWljc9vancoOG
+         LnhvHZvKMD/rt1opKZUwjhz3clsoR8NmPpu/pZY4=
+Date:   Tue, 17 Mar 2020 22:28:24 +0000
 From:   Will Deacon <will@kernel.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+To:     Zheng Wei <wei.zheng@vivo.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH v2] lib/refcount: Document interaction with PID_MAX_LIMIT
-Message-ID: <20200317222717.GF20788@willie-the-truck>
-References: <20200303105427.260620-1-jannh@google.com>
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@vivo.com, wenhu.wang@vivo.com
+Subject: Re: [PATCH] arm64: add blank after 'if'
+Message-ID: <20200317222823.GG20788@willie-the-truck>
+References: <20200313145403.6395-1-wei.zheng@vivo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303105427.260620-1-jannh@google.com>
+In-Reply-To: <20200313145403.6395-1-wei.zheng@vivo.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 11:54:27AM +0100, Jann Horn wrote:
-> Document the circumstances under which refcount_t's saturation mechanism
-> works deterministically.
+On Fri, Mar 13, 2020 at 10:54:02PM +0800, Zheng Wei wrote:
+> add blank after 'if' for armv8_deprecated_init()
+> to make it comply with kernel coding style.
 > 
-> Signed-off-by: Jann Horn <jannh@google.com>
+> Signed-off-by: Zheng Wei <wei.zheng@vivo.com>
 > ---
+>  arch/arm64/kernel/armv8_deprecated.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Notes:
->     v2:
->      - write down the math (Kees)
-> 
->  include/linux/refcount.h | 23 ++++++++++++++++++-----
->  1 file changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-> index 0ac50cf62d062..0e3ee25eb156a 100644
-> --- a/include/linux/refcount.h
-> +++ b/include/linux/refcount.h
-> @@ -38,11 +38,24 @@
->   * atomic operations, then the count will continue to edge closer to 0. If it
->   * reaches a value of 1 before /any/ of the threads reset it to the saturated
->   * value, then a concurrent refcount_dec_and_test() may erroneously free the
-> - * underlying object. Given the precise timing details involved with the
-> - * round-robin scheduling of each thread manipulating the refcount and the need
-> - * to hit the race multiple times in succession, there doesn't appear to be a
-> - * practical avenue of attack even if using refcount_add() operations with
-> - * larger increments.
-> + * underlying object.
-> + * Linux limits the maximum number of tasks to PID_MAX_LIMIT, which is currently
-> + * 0x400000 (and can't easily be raised in the future beyond FUTEX_TID_MASK).
-> + * With the current PID limit, if no batched refcounting operations are used and
-> + * the attacker can't repeatedly trigger kernel oopses in the middle of refcount
-> + * operations, this makes it impossible for a saturated refcount to leave the
-> + * saturation range, even if it is possible for multiple uses of the same
-> + * refcount to nest in the context of a single task:
-> + *
-> + *     (UINT_MAX+1-REFCOUNT_SATURATED) / PID_MAX_LIMIT =
-> + *     0x40000000 / 0x400000 = 0x100 = 256
-> + *
-> + * If hundreds of references are added/removed with a single refcounting
-> + * operation, it may potentially be possible to leave the saturation range; but
-> + * given the precise timing details involved with the round-robin scheduling of
-> + * each thread manipulating the refcount and the need to hit the race multiple
-> + * times in succession, there doesn't appear to be a practical avenue of attack
-> + * even if using refcount_add() operations with larger increments.
->   *
->   * Memory ordering
->   * ===============
-> 
-> base-commit: 98d54f81e36ba3bf92172791eba5ca5bd813989b
+> diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
+> index 7832b3216370..4cc581af2d96 100644
+> --- a/arch/arm64/kernel/armv8_deprecated.c
+> +++ b/arch/arm64/kernel/armv8_deprecated.c
+> @@ -630,7 +630,7 @@ static int __init armv8_deprecated_init(void)
+>  		register_insn_emulation(&cp15_barrier_ops);
+>  
+>  	if (IS_ENABLED(CONFIG_SETEND_EMULATION)) {
+> -		if(system_supports_mixed_endian_el0())
+> +		if (system_supports_mixed_endian_el0())
+>  			register_insn_emulation(&setend_ops);
+>  		else
+>  			pr_info("setend instruction emulation is not supported on this system\n");
+
+(Catalin: I'm just acking these trivial typo/style fixes to get them out
+of my inbox; do whatever you like with them ;)
 
 Acked-by: Will Deacon <will@kernel.org>
-
-Peter -- would you be able to take this through -tip, please?
 
 Will
