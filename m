@@ -2,94 +2,112 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E565C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE82C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA98420658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584440573;
-	bh=3JhdNYW35Xr7cHItOJ5k+T6/2/lATLnR5LeNQ/kmzqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jv6mMx2cVWFymbeFI5ZKvu8k/kUkePLQDE+Rs9WlI4sxMsUuYkLxwIn/oPtuAiVaj
-	 kU7S3/IIoMl1jbnlkT3bvRwoS2nVC2aI4VAln0JT1a62zs04E5aJ4WQBZqQzvHqB6I
-	 JbmzDt+smIga8Rsb3YtFzBTJE57y40FRUWF60j9c=
+	by mail.kernel.org (Postfix) with ESMTP id 3329220714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:26:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="hN+pJN6G";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RGuS/kzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgCQKWx (ORCPT
+        id S1726130AbgCQK0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:22:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgCQKWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:22:52 -0400
+        Tue, 17 Mar 2020 06:26:10 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:36781 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725730AbgCQK0K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:26:10 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id AC5B75C0179;
+        Tue, 17 Mar 2020 06:26:08 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 17 Mar 2020 06:26:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=yKu34zzDB36bqTbEJuWtIcXkWMU
+        gLDc3YXuL+xK/EjY=; b=hN+pJN6GdLBdWREs0yAMCWimSYvPFMrroTQSXm8Vc1N
+        E91RJekkJeSxlGipTdk7filjDUcx8M1nstsZg6IYbDKQ4ndI7LRaUJYiVUqE9KX4
+        q0mRkzNdEO4tYkndUYhBI8mYUZyPZzU9f/d+2eLgE+8K+QRtqC5xhuJAIyDDxbi1
+        h12/0d2oGRz1rdK/pXNqIm0myqgyrvkbBuSTcTsjF3jVnQTnNdbJ79qqa8SGKEm5
+        6HleL7VA9TGv1mfh4ZoGTiIpghokwS/Qydv9YMoJLfiW1PBoXOF2ti8kYRo9eMvH
+        2xUHmyr4OUlL09YJVNPTlFGMYezcvEdcDmtbFg7vuow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=yKu34z
+        zDB36bqTbEJuWtIcXkWMUgLDc3YXuL+xK/EjY=; b=RGuS/kzGXJrMpP6CC1/hTZ
+        EW0jTHtyqf4Q3sDYU79kK+7utGESasZ5MsamvZo3XRj7uUnaWDkm4HhQbCu/Wr7c
+        i6MJtjOeDOX33zf2I1mOv5QyyXTGomiDrbDQuCHrs4s6sI/Fznpw32mH6xqY79CF
+        Tu3hbWp4T7C8jHce7IgP6UzCMBahLU6yh2gKuxi3JZdClzj/Tzp3D0/1RmmzhtsU
+        Qywn4d+vzq9VZ4bcF24vZ+VdgeBzI6aQo1uWDQVok4wFhsMfGOI1tskT5EHp1BEa
+        HmGQPE8S5sk0NvJy9jHe7Wnjbyd6pT0hakygVjuHD4s28MPoI3xRERJkAra/3W9A
+        ==
+X-ME-Sender: <xms:vqVwXkJyG0AHvhcZdYt3-FERQy6VFhgFSwxxxoRW1-HjSC7WDmTAWQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefhedgudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
+    vghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:vqVwXsBoESAveUvZXcfjEOfs1roBlYBUtux1w8EyAMN0Z2IPyXwDYw>
+    <xmx:vqVwXqoy9b_98nBQ0VCgisLLAYD6w-uZ1t8WCyAUzz5xTSRIwLVwGQ>
+    <xmx:vqVwXlAtt_jEPPnRVkbIluz5M-xUKNQ8PD-CHRbNK8RPyfU5XU-ILA>
+    <xmx:wKVwXgOZTwrdXZ2fhyHSbTKrbeNjq372jeE3lTGfstg3THdBF4E90Q>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B82D3205ED;
-        Tue, 17 Mar 2020 10:22:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584440572;
-        bh=3JhdNYW35Xr7cHItOJ5k+T6/2/lATLnR5LeNQ/kmzqQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZEAsPeRiKFScbRUEAjJzdfuOTDSm/yKlJrtz84TKJKzeqEsVKi5cPStIAg4wbA7wk
-         +4QEMjYV9+OpLSVA0brQzzDOLlRCuyAg5KuhBmloFa5fbvPH0mZhkWHF+gqNKMD+Mx
-         Er6BDZZ6SxNhW3g2CcE3EEpXQVBovZm0IzpGFy9E=
-Date:   Tue, 17 Mar 2020 11:22:49 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Manali K Shukla <manashuk@cisco.com>
-Cc:     bp@alien8.de, linux-edac@vger.kernel.org, mchehab@kernel.org,
-        linux-kernel@vger.kernel.org, xe-linux-external@cisco.com,
-        Borislav Petkov <bp@suse.de>,
-        Aristeu Rozanski Filho <arozansk@redhat.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Russ Anderson <rja@hpe.com>, Tony Luck <tony.luck@intel.com>
-Subject: Re: [ PATCH stable v4.19] EDAC: Drop per-memory controller buses
-Message-ID: <20200317102249.GC1130294@kroah.com>
-References: <20200312052201.49456-1-manashuk@cisco.com>
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5EEB03280067;
+        Tue, 17 Mar 2020 06:26:06 -0400 (EDT)
+Date:   Tue, 17 Mar 2020 11:26:04 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Wen Gong <wgong@codeaurora.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, ath11k@lists.infradead.org,
+        David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2] net: qrtr: fix len of skb_put_padto in
+ qrtr_node_enqueue
+Message-ID: <20200317102604.GD1130294@kroah.com>
+References: <20200103045016.12459-1-wgong@codeaurora.org>
+ <20200105.144704.221506192255563950.davem@davemloft.net>
+ <CAD=FV=WiceRwLUS1sdL_W=ELKYZ9zKE13e8vx9SO0+tRvX74QQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200312052201.49456-1-manashuk@cisco.com>
+In-Reply-To: <CAD=FV=WiceRwLUS1sdL_W=ELKYZ9zKE13e8vx9SO0+tRvX74QQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 10:22:01PM -0700, Manali K Shukla wrote:
-> From: Borislav Petkov <bp@suse.de>
+On Tue, Feb 25, 2020 at 02:52:24PM -0800, Doug Anderson wrote:
+> Hi,
 > 
-> upstream 861e6ed667c83d64a42b0db41a22d6b4de4e913f commit
 > 
-> ... and use the single edac_subsys object returned from
-> subsys_system_register(). The idea is to have a single bus
-> and multiple devices on it.
+> On Sun, Jan 5, 2020 at 2:47 PM David Miller <davem@davemloft.net> wrote:
+> >
+> > From: Wen Gong <wgong@codeaurora.org>
+> > Date: Fri,  3 Jan 2020 12:50:16 +0800
+> >
+> > > The len used for skb_put_padto is wrong, it need to add len of hdr.
+> >
+> > Thanks, applied.
 > 
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> CC: Aristeu Rozanski Filho <arozansk@redhat.com>
-> CC: Greg KH <gregkh@linuxfoundation.org>
-> CC: Justin Ernst <justin.ernst@hpe.com>
-> CC: linux-edac <linux-edac@vger.kernel.org>
-> CC: Mauro Carvalho Chehab <mchehab@kernel.org>
-> CC: Russ Anderson <rja@hpe.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Link: https://lkml.kernel.org/r/20180926152752.GG5584@zn.tnic
-> [Manali: backport to v4.19 -stable :
-> - removing per-MC bus, this enables to get rid of memory controllers
->   maximum number notion
-> - value of max number of memory controllers is 2 * MAX_NUMNODES. On two nodes system MAX_NUMNODES value is ‘1’ and
->   so value of max number of memory controller becomes ‘2’, this patch fixes this issue when there are only 2 nodes on the system
->   and number of memory controllers are more than ‘2’]
-> (cherry picked from commit 861e6ed667c83d64a42b0db41a22d6b4de4e913f)
-> Signed-off-by: Manali K Shukla <manashuk@cisco.com>
+> I noticed this patch is in mainline now as:
+> 
+> ce57785bf91b net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+> 
+> Though I'm not an expert on the code, it feels like a stable candidate
+> unless someone objects.
 
-Why is this a patch for the stable trees?  What problem does it solve?
+Stable candidate for what tree(s)?
 
 thanks,
 
-greg k-h-
+greg k-h
