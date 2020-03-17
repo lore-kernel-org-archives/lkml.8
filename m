@@ -2,100 +2,134 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDFAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6931EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65192051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:00:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="af13D/Jn"
+	by mail.kernel.org (Postfix) with ESMTP id 35AE72051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgCQVAf (ORCPT
+        id S1726912AbgCQVB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:00:35 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:53102 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726761AbgCQVAd (ORCPT
+        Tue, 17 Mar 2020 17:01:27 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50937 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbgCQVB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:00:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584478833;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=g4lv1khPzgvPepOXblNxUbTvMHk/cb3nmCWzuqrFCSw=;
-        b=af13D/JnjY2M/523sDplLK3xHIjeL+trvK1IAAhSN/R3+vginVOF0K1zYuuaGMKLOvVryY
-        iaydG0z+HAO6/SQuHdn9F/DsZaNkR3xuubjATDwLZxkaoVy6hS632zYVFQuxZOF2oKKgic
-        OLsbCE+enbYy23MEzwbl0PoIHStzXxs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-GoyOgvPJPqq27qbNUBul1Q-1; Tue, 17 Mar 2020 17:00:28 -0400
-X-MC-Unique: GoyOgvPJPqq27qbNUBul1Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8CAD8CA0AC;
-        Tue, 17 Mar 2020 21:00:12 +0000 (UTC)
-Received: from treble (unknown [10.10.110.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9755710027AB;
-        Tue, 17 Mar 2020 21:00:10 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 16:00:08 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: Re: [PATCH v2 16/19] objtool: Implement noinstr validation
-Message-ID: <20200317210008.bda4c542b5lu7juf@treble>
-References: <20200317170234.897520633@infradead.org>
- <20200317170910.730949374@infradead.org>
+        Tue, 17 Mar 2020 17:01:26 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEJKW-00039f-Bg; Tue, 17 Mar 2020 22:00:52 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEJKM-0003eU-V8; Tue, 17 Mar 2020 22:00:42 +0100
+Date:   Tue, 17 Mar 2020 22:00:42 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+Message-ID: <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
+ <20200317174043.GA1464607@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200317170910.730949374@infradead.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317174043.GA1464607@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 06:02:50PM +0100, Peter Zijlstra wrote:
-> Validate that any call out of .noinstr.text is in between
-> instr_begin() and instr_end() annotations.
-> 
-> This annotation is useful to ensure correct behaviour wrt tracing
-> sensitive code like entry/exit and idle code. When we run code in a
-> sensitive context we want a guarantee no unknown code is ran.
-> 
-> Since this validation relies on knowing the section of call
-> destination symbols, we must run it on vmlinux.o instead of on
-> individual object files.
-> 
-> Add two options:
-> 
->  -d/--duplicate "duplicate validation for vmlinux"
->  -l/--vmlinux "vmlinux.o validation"
+Hello,
 
-I'm not sure I see the point of the --vmlinux option, when it will be
-autodetected anyway?
+On Tue, Mar 17, 2020 at 06:40:43PM +0100, Thierry Reding wrote:
+> On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
+> > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
+> > Rename it to PWM_POLARITY_INVERTED.
+> 
+> It isn't misspelled. "inversed" is a synonym for "inverted". Both
+> spellings are correct.
 
-> @@ -46,5 +49,9 @@ int cmd_check(int argc, const char **arg
->  
->  	objname = argv[0];
->  
-> +	s = strstr(objname, "vmlinux.o");
-> +	if (s && !s[9])
-> +		vmlinux = true;
-> +
+Some time ago I stumbled about "inversed", too. My spell checker doesn't
+know it and I checked some dictionaries and none of them knew that word:
 
-I think this would be slightly cleaner:
+https://www.lexico.com/search?utf8=%E2%9C%93&filter=dictionary&dictionary=en&query=inversed
+https://de.pons.com/%C3%BCbersetzung/englisch-deutsch/inversed
+https://dictionary.cambridge.org/spellcheck/english-german/?q=inversed
 
-	if (!strcmp(basename(objname), "vmlinux.o"))
-		vmlinux = true;
+https://en.wiktionary.org/wiki/inverse#Verb mentions "inverse" as a verb
+having "inversed" as past participle.
+
+Having said this I think (independent of the question if "inversed"
+exists) using two similar terms for the same thing just results in
+confusion. I hit that in the past already and I like it being addressed.
+
+> And as you noted in the cover letter, there's a conflict between the
+> macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
+> in the wrong order you'll get a compile error.
+
+There are also other symbols that exist twice (GPIO_ACTIVE_HIGH was the
+first to come to my mind). I'm not aware of any problems related to
+these. What am I missing?
+ 
+> The enum was named this way on purpose to make it separate from the
+> definition for the DT bindings.
+
+Then please let's make it different by picking a different prefix or
+something like that.
+
+> Note that DT bindings are an ABI and can
+> never change, whereas the enum pwm_polarity is part of a Linux internal
+> API and doesn't have the same restrictions as an ABI.
+
+I thought only binary device trees (dtb) are supposed to be ABI.
+
+Best regards
+Uwe
 
 -- 
-Josh
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
