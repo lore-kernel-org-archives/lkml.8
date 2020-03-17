@@ -2,98 +2,98 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CE9C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932CEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 066C220754
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D47820754
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OhRXDthl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tMDFRzTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgCQNfM (ORCPT
+        id S1726839AbgCQNfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:35:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40640 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbgCQNfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:35:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=anIHw2n42gE6MXhrin5xBUs2z5QKKPkI+0ps7BpcDdY=; b=OhRXDthl1+sN8WRo7eAAByndba
-        abhPyWUTzNovC4kxG+p32sA/ZwV54N1LYR2oRgGD7LZAUPqc+g1iAGFIXm8FMVYiGNR9wIVoH+apU
-        sF10D4A7yT/Nd/Wduv+e997fzZOfzIloJMbHia1AzEcAGXFTTV1Ojuz/qHPRRAjOmceo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jECMy-0006YW-7F; Tue, 17 Mar 2020 14:34:56 +0100
-Date:   Tue, 17 Mar 2020 14:34:56 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 11/28] ARM: dts: berlin*: Fix up the SDHCI node names
-Message-ID: <20200317133456.GM24270@lunn.ch>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-12-lkundrak@v3.sk>
+        Tue, 17 Mar 2020 09:35:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57534 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgCQNft (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:35:49 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02HDZXeK024397;
+        Tue, 17 Mar 2020 08:35:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584452133;
+        bh=EYviLt1tmLkkYRzO5gGJjof15MRwO/EmxXKZpB0sQHk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=tMDFRzTMMQ1GDonZySKl3XHX+nAUbToR1HJEl8E6lVspjZJ4YWRsOW8NAbrVQ4MbF
+         +KpGYS81qKMBNN9U1mWmp0PSAgNtE+pHtRI15SeA8AUZ2t4R6r3hmDoAoHQlYaq5zV
+         k9pRbyhadAnj33LU0IIuComaQYUV4ZPFwzrp4Fvs=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02HDZXg5096136
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Mar 2020 08:35:33 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Mar 2020 08:35:33 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Mar 2020 08:35:33 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02HDZWL5047553;
+        Tue, 17 Mar 2020 08:35:32 -0500
+Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <cover.1584450500.git.mchehab+huawei@kernel.org>
+ <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
+ <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
+Date:   Tue, 17 Mar 2020 08:29:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317093922.20785-12-lkundrak@v3.sk>
+In-Reply-To: <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:39:05AM +0100, Lubomir Rintel wrote:
-> The node name preferred by mmc-controller.yaml binding spec is "mmc":
-> 
->   berlin2-sony-nsz-gs7.dt.yaml: sdhci@ab0000: $nodename:0:
->       'sdhci@ab0000' does not match '^mmc(@.*)?$'
->   berlin2-sony-nsz-gs7.dt.yaml: sdhci@ab0800: $nodename:0:
->       'sdhci@ab0800' does not match '^mmc(@.*)?$'
->   berlin2-sony-nsz-gs7.dt.yaml: sdhci@ab1000: $nodename:0:
->       'sdhci@ab1000' does not match '^mmc(@.*)?$'
->   berlin2cd-google-chromecast.dt.yaml: sdhci@ab0000: $nodename:0:
->       'sdhci@ab0000' does not match '^mmc(@.*)?$'
->   berlin2cd-valve-steamlink.dt.yaml: sdhci@ab0000: $nodename:0:
->       'sdhci@ab0000' does not match '^mmc(@.*)?$'
->   berlin2q-marvell-dmp.dt.yaml: sdhci@ab0000: $nodename:0:
->       'sdhci@ab0000' does not match '^mmc(@.*)?$'
->   berlin2q-marvell-dmp.dt.yaml: sdhci@ab0800: $nodename:0:
->       'sdhci@ab0800' does not match '^mmc(@.*)?$'
->   berlin2q-marvell-dmp.dt.yaml: sdhci@ab1000: $nodename:0:
->       'sdhci@ab1000' does not match '^mmc(@.*)?$'
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Hello
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+On 3/17/20 8:17 AM, Marc Kleine-Budde wrote:
+> On 3/17/20 2:10 PM, Mauro Carvalho Chehab wrote:
+>> This file was converted to json and renamed. Update its
+>> references accordingly.
+>>
+>> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-schema")
 
-    Andrew
+I am trying to find out where the above commit was applied
+
+I don't see it in can-next or linux-can. I need to update the tcan dt 
+binding file as it was missed.
+
+And I am not sure why the maintainers of these files were not CC'd on 
+the conversion of this binding.
+
+Dan
+
