@@ -2,122 +2,183 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30290C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602F8C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0444B205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351F120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="kqYfXL1I"
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="c2DNi1WY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgCQIaD (ORCPT
+        id S1726676AbgCQIaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:30:03 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40494 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbgCQIaC (ORCPT
+        Tue, 17 Mar 2020 04:30:10 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37429 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgCQIaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:30:02 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t24so11314326pgj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 01:30:00 -0700 (PDT)
+        Tue, 17 Mar 2020 04:30:09 -0400
+Received: by mail-io1-f68.google.com with SMTP id q9so109540iod.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 01:30:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gZuIwtZ+2hf7pTqEUWqw1JVhU89MyFlE8Sqn8Fq++lU=;
-        b=kqYfXL1Ip04HSNa8KkPDkDcYn9wmErZYNjZYbNvEgOyOvNcKeM6PnUSsd63PcWQ4cE
-         ffmMU1uEnPka286OXda1tk8F4bTmOJTGkxiSkayEbrknb1/F1jxXabXASpWuC1zXLvHk
-         lUiAfATamDJucgdSejqSv2xOcEeuROXpdQBR5g2y6Sx/xsMOoWMvt7sXCWmgFI0PncXD
-         T/XHlwOeZHYjHem5INobJ54nKD/SllrBAwAJGQTzEqz7z7SG61QQA0Yd7Mux51uw5lGO
-         6YS4qXeFVzCFAxBO89ViyIi9uXKzUbXAf3YBI4lnzPkA/2TzGG0H9IUq6Zt1Xr6XyoIB
-         TdVA==
+        d=antmicro.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jyDCPfs8KzQ6V9GNlBy3Iu/4R6G5EhS/k3t/Fwg1hEI=;
+        b=c2DNi1WYbLLOwQlnk496EBc46hHCbpcGgzkJhdPeh+6ID51gwq5Jj/tOQI2UYMpf/n
+         vnfERJoln5g5y2c0NWtui4fSc5SfruZjtXx0RN1rTF/T5KZCJVYq57TvhIk87PE+YaHO
+         N4tzhqg/VE4XzV57jM7rqCpA6vHTAaOhnG5ZU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gZuIwtZ+2hf7pTqEUWqw1JVhU89MyFlE8Sqn8Fq++lU=;
-        b=JQgKOJbnLj/K68EJi7ACHCbf0DiDaROT9QujE+1QbVmYPTp9zPabhoCpNTs93lZREu
-         sQGEBgrAZAPLZWnCs7//AMZ9WULn5jwwVjK8kZtz8kTCrQklS0iYbtnge4bgP5EnBAdV
-         9bNE6UmmJ4ngDqlWedP7EXbsfGpOPQbvfrtNq2AFFjmDv28HnXzLJYhqWcSwZnihsYM/
-         FCRePnkV161L55UbluVV5HWEU/7Z36ZMSVzQJHi643I2oPUuXeZ3uwz++lOqxafzu2Cm
-         4jn8bDwGZTCqUcyt/JRA/xZdi78L8aivV7gf88rgFwHHRbvrrokOZZ8MTczxRcqfbyal
-         S3fg==
-X-Gm-Message-State: ANhLgQ39DJPGErvIolVj175o9oEj7kKZCjZjXGDGtOaYJHQ/2kiX0Lli
-        zP9haBG5jwTa2lx4DBOSkkOyzQ==
-X-Google-Smtp-Source: ADFU+vuuKNJsNdUjh+PEtFFc4KNbme2kHZkfB9E0YtDtV8C5w+Ed+TLaDuX5RWPZPS0rV5JHuMXVIg==
-X-Received: by 2002:a63:e053:: with SMTP id n19mr4100628pgj.64.1584433799881;
-        Tue, 17 Mar 2020 01:29:59 -0700 (PDT)
-Received: from starnight.local ([150.116.255.181])
-        by smtp.googlemail.com with ESMTPSA id m68sm21095679pjb.0.2020.03.17.01.29.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 01:29:59 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Takashi Iwai <tiwai@suse.com>
-Cc:     Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH 1/2] ALSA: hda/realtek - Enable headset mic of Acer X2660G with ALC662
-Date:   Tue, 17 Mar 2020 16:28:07 +0800
-Message-Id: <20200317082806.73194-2-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317082806.73194-1-jian-hong@endlessm.com>
-References: <20200317082806.73194-1-jian-hong@endlessm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jyDCPfs8KzQ6V9GNlBy3Iu/4R6G5EhS/k3t/Fwg1hEI=;
+        b=n/Lrl2m4pmj9H9B4epinEQSEKmJf8ikxeUyiyvAPvCIi2nG7vynIQn9fE/4G8Xl2B9
+         u/pi8kwDGrR0d4tPSAGaZ7xbVAlXghx6Zr6+bKZvUEcJFKOesp8t2JMkgm6C5ZxpKfsb
+         hNO6KaTW0ZZd2jhmXVqDDXFGm1fEvIrwvyDIbSZpHKFoLybjodBG8ESTi8Jh+XvKpSOY
+         5KPRs4EZRXd1WAej63Brtdgqm5YcmCcWa84vgz89NWPXbxMtKEsQNOQIcmfsc3FPRh0w
+         XYlqJKvZBMXS/39MKqyw3XpVL7BKgPGp5X88FdAlEkV0ib+fO4MGeglC5w3SzZSd//G6
+         uUeQ==
+X-Gm-Message-State: ANhLgQ1NfzuzdlQFh4YOLscbhZyto8mPJQFM/tT+uhB4JSzi97tPSJj0
+        wrQKP+EYeyVQp+r3ypDotIytfBCTaeDGkg893mG9KQ==
+X-Google-Smtp-Source: ADFU+vsmUU61jePkqUhV9101lLple16cpG72xhffs/pv3VGzuG9vSytaE1R6wvK2rDvh0OMxsd/cWfOD7XaF60KVv4A=
+X-Received: by 2002:a02:1d44:: with SMTP id 65mr4200166jaj.6.1584433808056;
+ Tue, 17 Mar 2020 01:30:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200225094437.4170502-0-mholenko@antmicro.com>
+ <20200225094437.4170502-2-mholenko@antmicro.com> <20200225091055.ubm5r3p6r4ydchyh@gilmour.lan>
+In-Reply-To: <20200225091055.ubm5r3p6r4ydchyh@gilmour.lan>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Tue, 17 Mar 2020 09:29:56 +0100
+Message-ID: <CAPk366ReVDbWEESC0WRBs-JD0jdG3gV9st679g-cBrzxYWd1bg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: soc: document LiteX SoC Controller bindings
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Acer desktop X2660G with ALC662 can't detect the headset microphone
-until ALC662_FIXUP_ACER_X2660G_HEADSET_MODE quirk applied.
+Hi Maxime,
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
----
- sound/pci/hda/patch_realtek.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Tue, Feb 25, 2020 at 10:11 AM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi Mateusz,
+>
+> On Tue, Feb 25, 2020 at 09:46:45AM +0100, Mateusz Holenko wrote:
+> > From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> >
+> > Add documentation for LiteX SoC Controller bindings.
+> >
+> > Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> > ---
+> >
+> > Notes:
+> >     This commit has been introduced in v3 of the patchset.
+> >
+> >  .../soc/litex/litex,soc_controller.yaml       | 46 +++++++++++++++++++
+> >  MAINTAINERS                                   |  6 +++
+> >  2 files changed, 52 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml b/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
+> > new file mode 100644
+> > index 000000000000..039894265319
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
+> > @@ -0,0 +1,46 @@
+> > +PDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/soc/litex/litex,soc_controller.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: LiteX SoC Controller driver
+> > +
+> > +description: |
+> > +  This is the SoC Controller driver for the LiteX SoC Builder.
+> > +  It's purpose is to verify LiteX CSR (Control&Status Register) access
+> > +  operations and provide function for other drivers to read/write CSRs
+> > +  and to check if those accessors are ready to use.
+> > +
+> > +maintainers:
+> > +  - Karol Gugala <kgugala@antmicro.com>
+> > +  - Mateusz Holenko <mholenko@antmicro.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: litex,soc_controller
+>
+> Usually compatible will use dash as separators, not underscores.
+>
+> > +  reg:
+> > +    description: Base address and length of the register space
+>
+> This is usually removed since it's what's expected from the property
+> anyway. However, what you should really test for in the number of
+> address/size couples being set, and you can do that using maxItems: 1
+>
+> > +  status:
+> > +    description: |
+> > +      disables or enables node
+> > +
+> > +    const: "okay"
+>
+> This is added automatically by the tooling, so you can leave it out.
+>
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - status
+>
+> And in general, status is not required. Leaving status out is
+> equivalent to status = "okay"
+>
+> > +examples:
+> > +  - |
+> > +
+> > +  soc_ctrl0: soc_controller@f0000000 {
+> > +                     compatible = "litex,soc_controller";
+> > +                     reg = <0x0 0xf0000000 0x0 0xC>;
+> > +                     status = "okay";
+> > +  };
+>
+> The indentation looks weird here?
+>
+> Maxime
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 0ac06ff1a17c..bb29c25f4567 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -8610,6 +8610,7 @@ enum {
- 	ALC669_FIXUP_ACER_ASPIRE_ETHOS,
- 	ALC669_FIXUP_ACER_ASPIRE_ETHOS_HEADSET,
- 	ALC671_FIXUP_HP_HEADSET_MIC2,
-+	ALC662_FIXUP_ACER_X2660G_HEADSET_MODE,
- };
- 
- static const struct hda_fixup alc662_fixups[] = {
-@@ -8955,6 +8956,15 @@ static const struct hda_fixup alc662_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc671_fixup_hp_headset_mic2,
- 	},
-+	[ALC662_FIXUP_ACER_X2660G_HEADSET_MODE] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x1a, 0x02a1113c }, /* use as headset mic, without its own jack detect */
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC662_FIXUP_USI_FUNC
-+	},
- };
- 
- static const struct snd_pci_quirk alc662_fixup_tbl[] = {
-@@ -8966,6 +8976,7 @@ static const struct snd_pci_quirk alc662_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1025, 0x0349, "eMachines eM250", ALC662_FIXUP_INV_DMIC),
- 	SND_PCI_QUIRK(0x1025, 0x034a, "Gateway LT27", ALC662_FIXUP_INV_DMIC),
- 	SND_PCI_QUIRK(0x1025, 0x038b, "Acer Aspire 8943G", ALC662_FIXUP_ASPIRE),
-+	SND_PCI_QUIRK(0x1025, 0x124e, "Acer 2660G", ALC662_FIXUP_ACER_X2660G_HEADSET_MODE),
- 	SND_PCI_QUIRK(0x1028, 0x05d8, "Dell", ALC668_FIXUP_DELL_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1028, 0x05db, "Dell", ALC668_FIXUP_DELL_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1028, 0x05fe, "Dell XPS 15", ALC668_FIXUP_DELL_XPS13),
--- 
-2.25.1
+Thanks for all the comments!
 
+I'll fix this file and resubmit the whole patchset after addressing
+other remarks.
+
+--
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
