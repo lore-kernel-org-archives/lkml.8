@@ -2,214 +2,177 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39010C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A51C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23692073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EEB22073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ke6ursww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgCQUIh (ORCPT
+        id S1726756AbgCQUJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:08:37 -0400
-Received: from mga06.intel.com ([134.134.136.31]:63234 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgCQUIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:08:36 -0400
-IronPort-SDR: kOTc/lYvDsTyIpxRXknJp92Qeb/ZbuAmeUWbagZ1TUCataCy+EvxgcMZH5eTGFM/8SmA4wEC16
- xmC7kmZhlsNw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 13:08:36 -0700
-IronPort-SDR: RVEOrLgUhJ3/dUocWNfbBv7aNidHuztgTLCHyvaGGA71utYTO5hnxYB2s0XskZT6URSpyt/z2r
- k5tFjdUg9nVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="323943430"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 17 Mar 2020 13:08:34 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jEIVu-0001ht-73; Wed, 18 Mar 2020 04:08:34 +0800
-Date:   Wed, 18 Mar 2020 04:07:38 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:perf/core] BUILD SUCCESS
- e48667b865480d8bf0f1171a8b474ffc785b9ace
-Message-ID: <5e712e0a.moWo6pl0NMg2/W4o%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 17 Mar 2020 16:09:50 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38420 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgCQUJu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 16:09:50 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n13so16536359lfh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:09:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=o6SMg60n6dg5E5UNtnrzS3MRKvlSt5FGzxfh8BfptUY=;
+        b=ke6ursww/qGx36NPHKodMebn0EUWWsMpVusLaZnkOpVW16yVEPxURVZvdHjJW5xlxc
+         /fBVoTH4pSjtmzDRfYhTokDMC+zY+jqgErQtkwsLueAieSGDOl7pfuu+F/vGCUbbQpUe
+         rfz3iGX8H5xNjpoSTrepPgyvUczTk8vou1/inD0ok/7yJ6Z7d/QDadu+uQrvFafHAZiK
+         xpxIL7qfbmo2eGGt4T6v6HPURn64jNGobJsjjVKMnyr1+3GTdnGbmKqAu4iRGA1OifK5
+         QAcvyl/yjB7vEKsAwoD5H8ETdTH+Dqhq+BehHn6yaPUE9teBuvehF4QAs4DK/HoTL6UQ
+         rdOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=o6SMg60n6dg5E5UNtnrzS3MRKvlSt5FGzxfh8BfptUY=;
+        b=P3DRIIH/p+tAccR0CuwrF2Ow2OBnoV2Hsma/grxd6CnqyzIg9CyLubPhmL81KNa3et
+         RcMmIWgd7lGINDI2ZZ0iPgIrejt9caXvhMOe5PVA3+TJQG21aqQHnCETGEpJrj03PyoC
+         lh+sYh2CxVf4hprAiMP7K+sFWLjVcv/KJHd6GA+XfP73g1oPHr4eZYNtfl6JPz/7b9Ov
+         O9ULoYX1b085TO58HcZVNoZz1BUyWmcRwX89upYGWJ30leFy1CFCwl+em8OqvaJ9tQMh
+         kZe8tLQ+abxDvEvxP8Tq3jJqyZhXrIwglBYKn2sMRnra1O+UQ3ymu1U5bi5PQtEgmw01
+         I8xg==
+X-Gm-Message-State: ANhLgQ26CPs87EgfCFuRy8x54fMsGolv5l5S9TdGQwVqxNTgJ2WANDxJ
+        7vymtieZQx3R30cfuCYMvqkBTlUu5vko9o37VXLyIw==
+X-Google-Smtp-Source: ADFU+vv5pChAMal27PYi3RBLZVYCuM6C/nsMAuznRXnLPi7fU0rTV7p7aYC4q66wQ2a17tzJYUe9zl6GEKrM26yZajA=
+X-Received: by 2002:ac2:43a8:: with SMTP id t8mr678007lfl.82.1584475788356;
+ Tue, 17 Mar 2020 13:09:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200317103307.343627747@linuxfoundation.org>
+In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 18 Mar 2020 01:39:36 +0530
+Message-ID: <CA+G9fYvJfOc9VJMUs6yQN-3BVgHMmCM3L=fbAffwQHETYLV2EQ@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/123] 5.4.26-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/core
-branch HEAD: e48667b865480d8bf0f1171a8b474ffc785b9ace  perf/amd/uncore: Add support for Family 19h L3 PMU
+On Tue, 17 Mar 2020 at 16:32, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.26 release.
+> There are 123 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 19 Mar 2020 10:31:16 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.26-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-elapsed time: 483m
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-configs tested: 147
-configs skipped: 106
+Summary
+------------------------------------------------------------------------
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+kernel: 5.4.26-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: bd9158ff941e0efcea216f7311abc7fe13e8ae39
+git describe: v5.4.25-124-gbd9158ff941e
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.25-124-gbd9158ff941e
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-powerpc                             defconfig
-sh                          rsk7269_defconfig
-mips                      fuloong2e_defconfig
-s390                                defconfig
-ia64                             allmodconfig
-mips                             allyesconfig
-um                             i386_defconfig
-arc                                 defconfig
-parisc                           allyesconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200317
-x86_64               randconfig-a002-20200317
-x86_64               randconfig-a003-20200317
-i386                 randconfig-a001-20200317
-i386                 randconfig-a002-20200317
-i386                 randconfig-a003-20200317
-alpha                randconfig-a001-20200317
-m68k                 randconfig-a001-20200317
-mips                 randconfig-a001-20200317
-nds32                randconfig-a001-20200317
-parisc               randconfig-a001-20200317
-riscv                randconfig-a001-20200317
-csky                 randconfig-a001-20200317
-openrisc             randconfig-a001-20200317
-s390                 randconfig-a001-20200317
-sh                   randconfig-a001-20200317
-xtensa               randconfig-a001-20200317
-x86_64               randconfig-b001-20200317
-x86_64               randconfig-b002-20200317
-x86_64               randconfig-b003-20200317
-i386                 randconfig-b001-20200317
-i386                 randconfig-b002-20200317
-i386                 randconfig-b003-20200317
-x86_64               randconfig-c001-20200317
-x86_64               randconfig-c002-20200317
-x86_64               randconfig-c003-20200317
-i386                 randconfig-c001-20200317
-i386                 randconfig-c002-20200317
-i386                 randconfig-c003-20200317
-x86_64               randconfig-e001-20200317
-x86_64               randconfig-e002-20200317
-x86_64               randconfig-e003-20200317
-i386                 randconfig-e001-20200317
-i386                 randconfig-e002-20200317
-i386                 randconfig-e003-20200317
-x86_64               randconfig-f001-20200317
-x86_64               randconfig-f002-20200317
-x86_64               randconfig-f003-20200317
-i386                 randconfig-f001-20200317
-i386                 randconfig-f002-20200317
-i386                 randconfig-f003-20200317
-x86_64               randconfig-g001-20200317
-x86_64               randconfig-g002-20200317
-x86_64               randconfig-g003-20200317
-i386                 randconfig-g001-20200317
-i386                 randconfig-g002-20200317
-i386                 randconfig-g003-20200317
-x86_64               randconfig-h001-20200317
-x86_64               randconfig-h002-20200317
-x86_64               randconfig-h003-20200317
-i386                 randconfig-h001-20200317
-i386                 randconfig-h002-20200317
-i386                 randconfig-h003-20200317
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+No regressions (compared to build v5.4.25)
+
+No fixes (compared to build v5.4.25)
+
+Ran 16905 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* libgpiod
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* libhugetlbfs
+* ltp-fs-tests
+* network-basic-tests
+* kvm-unit-tests
+* ltp-containers-tests
+* ltp-cve-tests
+* spectre-meltdown-checker-test
+* ltp-open-posix-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
