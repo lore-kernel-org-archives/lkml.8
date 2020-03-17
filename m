@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DB6C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08693C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 246FB20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6022071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443519;
-	bh=y+OaqMIx5L66GMyJ/vStR04kTYrrZ6vXz6F2UkjolYU=;
+	s=default; t=1584443524;
+	bh=PjE1O1D4TXCkuEAVRYTD0lo95CU/BJbQobYhAMV1hdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fYoBQUBkzq5a7YyalBNWz1MK5bSy3HQq5Ho3d0JhwjVxZGAkT0u87r0z6afF1M0kC
-	 wKTS0vCI7tELG47HmRCkjE0wLIF0GlbmkWHUj/OZkDIPyfTihUFSLjr72amsuwPNci
-	 b4YsE0f4LJH1x9NbB+VSko72HFw+GR9yEe0DeT+s=
+	b=bIlrPf8IFV28YupVeNKWhv7Upn4I85FnVCMCOlDJGFRqTIyMYlOuVAChBIyNEE3Ak
+	 GrwHSxp72o3Goe48sKNSBRaXyLuyWP39Kp/xndrU6SGej/Ou9hb/ZB9KOY2TEnrw2s
+	 oO9iOcTOXRuIG5UdyAspO2ayb+mbZxEKyxcqXWcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgCQLL5 (ORCPT
+        id S1727431AbgCQLMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:11:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55336 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbgCQLLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:11:50 -0400
+        id S1729133AbgCQLMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E6C20735;
-        Tue, 17 Mar 2020 11:11:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5072520658;
+        Tue, 17 Mar 2020 11:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443508;
-        bh=y+OaqMIx5L66GMyJ/vStR04kTYrrZ6vXz6F2UkjolYU=;
+        s=default; t=1584443517;
+        bh=PjE1O1D4TXCkuEAVRYTD0lo95CU/BJbQobYhAMV1hdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WphW424YbA90OmkEcnrMl1mQ4AldRkrGmDcO6Z9QMwBf2bQOu/Xrz85hMsXbU2SuP
-         HklF0rX/njX/YHjgVi457loWCy1xZY8SAQVl7KU/tBGQ2ZNNhrsOdmqDannl9/AU2z
-         bR2reSjuhEDXSUvl90IQotezCi4cUCNbd8WM8Xd8=
+        b=q/imGYDpZCzRKwCgWlAfW2Kc5AIaxpe4nZ7un2qVsWA83mzqjoq376btTvRsC3cfY
+         yLcM7VjkESHsVlMFc8aw2oXq57lt6/sPepiKlYXhqeYLvMZjhPsW7v0bXMR6kUaJqS
+         ErRIkpFSgDCkivtsTdYTvDsr0QQe0PBhd4jcoiSI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Donnelly <john.p.donnelly@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Corey Minyard <cminyard@mvista.com>,
-        Patrick Vo <patrick.vo@hpe.com>
-Subject: [PATCH 5.5 106/151] ipmi_si: Avoid spurious errors for optional IRQs
-Date:   Tue, 17 Mar 2020 11:55:16 +0100
-Message-Id: <20200317103333.987948852@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 5.5 109/151] fscrypt: dont evict dirty inodes after removing key
+Date:   Tue, 17 Mar 2020 11:55:19 +0100
+Message-Id: <20200317103334.199840852@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -61,48 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 443d372d6a96cd94ad119e5c14bb4d63a536a7f6 upstream.
+commit 2b4eae95c7361e0a147b838715c8baa1380a428f upstream.
 
-Although the IRQ assignment in ipmi_si driver is optional,
-platform_get_irq() spews error messages unnecessarily:
-  ipmi_si dmi-ipmi-si.0: IRQ index 0 not found
+After FS_IOC_REMOVE_ENCRYPTION_KEY removes a key, it syncs the
+filesystem and tries to get and put all inodes that were unlocked by the
+key so that unused inodes get evicted via fscrypt_drop_inode().
+Normally, the inodes are all clean due to the sync.
 
-Fix this by switching to platform_get_irq_optional().
+However, after the filesystem is sync'ed, userspace can modify and close
+one of the files.  (Userspace is *supposed* to close the files before
+removing the key.  But it doesn't always happen, and the kernel can't
+assume it.)  This causes the inode to be dirtied and have i_count == 0.
+Then, fscrypt_drop_inode() failed to consider this case and indicated
+that the inode can be dropped, causing the write to be lost.
 
-Cc: stable@vger.kernel.org # 5.4.x
-Cc: John Donnelly <john.p.donnelly@oracle.com>
-Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
-Reported-and-tested-by: Patrick Vo <patrick.vo@hpe.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Message-Id: <20200205093146.1352-1-tiwai@suse.de>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+On f2fs, other problems such as a filesystem freeze could occur due to
+the inode being freed while still on f2fs's dirty inode list.
+
+Fix this bug by making fscrypt_drop_inode() only drop clean inodes.
+
+I've written an xfstest which detects this bug on ext4, f2fs, and ubifs.
+
+Fixes: b1c0ec3599f4 ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY ioctl")
+Cc: <stable@vger.kernel.org> # v5.4+
+Link: https://lore.kernel.org/r/20200305084138.653498-1-ebiggers@kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/ipmi/ipmi_si_platform.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/crypto/keysetup.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/char/ipmi/ipmi_si_platform.c
-+++ b/drivers/char/ipmi/ipmi_si_platform.c
-@@ -194,7 +194,7 @@ static int platform_ipmi_probe(struct pl
- 	else
- 		io.slave_addr = slave_addr;
+--- a/fs/crypto/keysetup.c
++++ b/fs/crypto/keysetup.c
+@@ -515,6 +515,15 @@ int fscrypt_drop_inode(struct inode *ino
+ 	mk = ci->ci_master_key->payload.data[0];
  
--	io.irq = platform_get_irq(pdev, 0);
-+	io.irq = platform_get_irq_optional(pdev, 0);
- 	if (io.irq > 0)
- 		io.irq_setup = ipmi_std_irq_setup;
- 	else
-@@ -378,7 +378,7 @@ static int acpi_ipmi_probe(struct platfo
- 		io.irq = tmp;
- 		io.irq_setup = acpi_gpe_irq_setup;
- 	} else {
--		int irq = platform_get_irq(pdev, 0);
-+		int irq = platform_get_irq_optional(pdev, 0);
- 
- 		if (irq > 0) {
- 			io.irq = irq;
+ 	/*
++	 * With proper, non-racy use of FS_IOC_REMOVE_ENCRYPTION_KEY, all inodes
++	 * protected by the key were cleaned by sync_filesystem().  But if
++	 * userspace is still using the files, inodes can be dirtied between
++	 * then and now.  We mustn't lose any writes, so skip dirty inodes here.
++	 */
++	if (inode->i_state & I_DIRTY_ALL)
++		return 0;
++
++	/*
+ 	 * Note: since we aren't holding ->mk_secret_sem, the result here can
+ 	 * immediately become outdated.  But there's no correctness problem with
+ 	 * unnecessarily evicting.  Nor is there a correctness problem with not
 
 
