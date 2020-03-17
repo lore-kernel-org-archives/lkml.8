@@ -2,129 +2,122 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18841C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1530C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB92A206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A057320714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgCQJ3u (ORCPT
+        id S1726066AbgCQJeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:29:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53696 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgCQJ3u (ORCPT
+        Tue, 17 Mar 2020 05:34:17 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:47804 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgCQJeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:29:50 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jE8Xg-0004vw-2R; Tue, 17 Mar 2020 10:29:44 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 57B081C224C;
-        Tue, 17 Mar 2020 10:29:43 +0100 (CET)
-Date:   Tue, 17 Mar 2020 09:29:42 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/amd_nb, char/amd64-agp: Use amd_nb_num() accessor
-Cc:     Borislav Petkov <bp@suse.de>, Michal Kubecek <mkubecek@suse.cz>,
-        Yazen Ghannam <yazen.ghannam@amd.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200316150725.925-1-bp@alien8.de>
-References: <20200316150725.925-1-bp@alien8.de>
+        Tue, 17 Mar 2020 05:34:17 -0400
+Received: by mail-io1-f71.google.com with SMTP id w21so13660061iod.14
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:34:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=8hA1xiNFfEeNh4tjPf0Sj4oPNobnSXcjqFM/N93g+x4=;
+        b=WL46Etq6AQv81hEl6tYQcRWCB/hoieROR9+Nc2n2XqS14etejsHk+1DKCnjcPSdwMg
+         KpSvOuXLerNiGkh/RHaO/QSBc78ci5GEStCLINOPQZybGmo27fnfodGY2X/W7uNe93bQ
+         Ch9FZEKgSuzIjbs7jeBTHWFhikzozH3dIXZbTfKtq0OlKdNgycXxXOLhtsBOMo0Uwrvd
+         ARYabWGwOqVOMxzcdIhmwGSjmLdFKD/U1Uze86RY95idv56Xg/2H2GnZ9PjpSUpDupYf
+         T03qmKejT7KbtaBnonwIDm4415N9f3z8xHsVS2Fhtnv6OxVirJYjMIWnBIHev7pnJcGY
+         EhWw==
+X-Gm-Message-State: ANhLgQ2haTjo+isJvrtWGk2158JFThTudOMF87lAhsr2LW5orPoHALOZ
+        AGU+pttxyqo8m7H/oNYvVrlzt/NU/wwGylu/l42/Kln3bUMt
+X-Google-Smtp-Source: ADFU+vvwgyMWDfCh3AiPKjRyG8ZlkZ8tqhlrYN4CYwCevf2XHU/VCKMvku+jVjT9gOIGJynjjnn9dHGSHsL+rLQAZcQgm2nA5lW4
 MIME-Version: 1.0
-Message-ID: <158443738293.28353.8644910767364715065.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Received: by 2002:a02:3506:: with SMTP id k6mr4450475jaa.104.1584437655618;
+ Tue, 17 Mar 2020 02:34:15 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 02:34:15 -0700
+In-Reply-To: <000000000000a4293f0598ef165e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a1c96505a109a31b@google.com>
+Subject: Re: KASAN: vmalloc-out-of-bounds Write in bitfill_aligned
+From:   syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+syzbot has found a reproducer for the following crash on:
 
-Commit-ID:     19d33357ecdf6f4d591b4c17f119bacd6ae834eb
-Gitweb:        https://git.kernel.org/tip/19d33357ecdf6f4d591b4c17f119bacd6ae834eb
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Mon, 16 Mar 2020 13:23:21 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 17 Mar 2020 10:25:58 +01:00
+HEAD commit:    fb33c651 Linux 5.6-rc6
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17dacd55e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
+dashboard link: https://syzkaller.appspot.com/bug?extid=e5fd3e65515b48c02a30
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b8ca75e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=114800e5e00000
 
-x86/amd_nb, char/amd64-agp: Use amd_nb_num() accessor
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com
 
-... to find whether there are northbridges present on the
-system. Convert the last forgotten user and therefore, unexport
-amd_nb_misc_ids[] too.
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned drivers/video/fbdev/core/sysfillrect.c:54 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned+0x34b/0x410 drivers/video/fbdev/core/sysfillrect.c:25
+Write of size 8 at addr ffffc90009621000 by task syz-executor767/9337
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Michal Kubecek <mkubecek@suse.cz>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Link: https://lkml.kernel.org/r/20200316150725.925-1-bp@alien8.de
----
- arch/x86/include/asm/amd_nb.h | 1 -
- arch/x86/kernel/amd_nb.c      | 4 +---
- drivers/char/agp/amd64-agp.c  | 2 +-
- 3 files changed, 2 insertions(+), 5 deletions(-)
+CPU: 3 PID: 9337 Comm: syz-executor767 Not tainted 5.6.0-rc6-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x315 mm/kasan/report.c:374
+ __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:641
+ bitfill_aligned drivers/video/fbdev/core/sysfillrect.c:54 [inline]
+ bitfill_aligned+0x34b/0x410 drivers/video/fbdev/core/sysfillrect.c:25
+ sys_fillrect+0x415/0x7a0 drivers/video/fbdev/core/sysfillrect.c:291
+ drm_fb_helper_sys_fillrect+0x1c/0x190 drivers/gpu/drm/drm_fb_helper.c:719
+ bit_clear_margins+0x2d5/0x4a0 drivers/video/fbdev/core/bitblit.c:232
+ fbcon_clear_margins+0x1de/0x240 drivers/video/fbdev/core/fbcon.c:1379
+ fbcon_switch+0xd1b/0x1740 drivers/video/fbdev/core/fbcon.c:2361
+ redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
+ fbcon_modechanged+0x5bd/0x780 drivers/video/fbdev/core/fbcon.c:2998
+ fbcon_update_vcs+0x3a/0x50 drivers/video/fbdev/core/fbcon.c:3045
+ fb_set_var+0xad0/0xd40 drivers/video/fbdev/core/fbmem.c:1056
+ do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1109
+ fb_ioctl+0xdd/0x130 drivers/video/fbdev/core/fbmem.c:1185
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x433d29
+Code: c4 18 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb da fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff33d61508 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000433d29
+RDX: 00000000200001c0 RSI: 0000000000004601 RDI: 0000000000000003
+RBP: 00000000006b2018 R08: 0000000000000000 R09: 00000000004002e0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401bc0
+R13: 0000000000401c50 R14: 0000000000000000 R15: 0000000000000000
 
-diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
-index 1ae4e57..c7df20e 100644
---- a/arch/x86/include/asm/amd_nb.h
-+++ b/arch/x86/include/asm/amd_nb.h
-@@ -12,7 +12,6 @@ struct amd_nb_bus_dev_range {
- 	u8 dev_limit;
- };
- 
--extern const struct pci_device_id amd_nb_misc_ids[];
- extern const struct amd_nb_bus_dev_range amd_nb_bus_dev_ranges[];
- 
- extern bool early_is_amd_nb(u32 value);
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index 69aed0e..b6b3297 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -36,10 +36,9 @@ static const struct pci_device_id amd_root_ids[] = {
- 	{}
- };
- 
--
- #define PCI_DEVICE_ID_AMD_CNB17H_F4     0x1704
- 
--const struct pci_device_id amd_nb_misc_ids[] = {
-+static const struct pci_device_id amd_nb_misc_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_K8_NB_MISC) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_10H_NB_MISC) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_15H_NB_F3) },
-@@ -56,7 +55,6 @@ const struct pci_device_id amd_nb_misc_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
- 	{}
- };
--EXPORT_SYMBOL_GPL(amd_nb_misc_ids);
- 
- static const struct pci_device_id amd_nb_link_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_15H_NB_F4) },
-diff --git a/drivers/char/agp/amd64-agp.c b/drivers/char/agp/amd64-agp.c
-index 594aee2..b40edae 100644
---- a/drivers/char/agp/amd64-agp.c
-+++ b/drivers/char/agp/amd64-agp.c
-@@ -775,7 +775,7 @@ int __init agp_amd64_init(void)
- 		}
- 
- 		/* First check that we have at least one AMD64 NB */
--		if (!pci_dev_present(amd_nb_misc_ids)) {
-+		if (!amd_nb_num()) {
- 			pci_unregister_driver(&agp_amd64_pci_driver);
- 			return -ENODEV;
- 		}
+
+Memory state around the buggy address:
+ ffffc90009620f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffc90009620f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffffc90009621000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+                   ^
+ ffffc90009621080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90009621100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+==================================================================
+
