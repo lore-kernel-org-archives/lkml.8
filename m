@@ -2,168 +2,241 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC65C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4C2C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5814D206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1CB20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="WtESIAqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbgCQGaQ (ORCPT
+        id S1726016AbgCQGcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:30:16 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:47316 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgCQGaP (ORCPT
+        Tue, 17 Mar 2020 02:32:02 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:36964 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgCQGcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:30:15 -0400
-Received: by mail-il1-f200.google.com with SMTP id a4so15951557ili.14
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:30:14 -0700 (PDT)
+        Tue, 17 Mar 2020 02:32:01 -0400
+Received: by mail-vk1-f193.google.com with SMTP id o124so5648909vkc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7D9+8roi8O3TeKz6nEq8STv16d4uRSSfD9jY/ASGWns=;
+        b=WtESIAqnRWuUMQ1cxmuRHtXxSyZndEPLV2wPdMTWA4tUxLDbl/eMBnSKflkAg/1wX7
+         2FvBn/z0hqAAo2d+/iU0Wj5HubfbnxAqUYC8SpKGJgbj3EogCvMvXBZL0K/Tbu//n29C
+         T1XHLx3BTbPwm83+NIEnhlU8Rc1XdwMfe+1udfazKTDe/iAl43YPNvNZa7n+RI1zH5dg
+         bZrvsZ8BgBsgJNuWKK2czPzv//8IdwTBD5j3jMz/HJedhhmkUlGXFxzO88Atpc+d5r88
+         U81lqqp/9IczBihQWCdqpCO0p46DgF8I23hN76LUfDc/6V0h2porFGVfe3Bik6qIAE0z
+         Buvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IBjySOjASwP1HAeGLAmKjuR6Sszw/8/rfGZg7/AIW8U=;
-        b=bIvUswonPRW6YXi1pL4Rp2NTcGR39zSasEBAs4L3md/AsJqICy3Fk1e9lvkubeQFqY
-         Op+f+dDxINW8y6G1EoaLDiAENMBpNAP/q43cxL1k7S+iihOSjqOZWx+/oLSnBI1/TbPA
-         B6GzsmHfCqEdFsJpJylsVC6pC5TaoIWY8dqosWU2oLHMqf7nfB70UBR1ZHg+hf2/sZAJ
-         mY2GRG+gVFymRWJ5VaRQVXpZGcM+bGscQk+ZP473a+1n4V1PBjT0whruTW+v7n6oivjd
-         SDy48B9H+X/YK2ff7zLSgCLq6vq0ANYGjAM10ePrgX8FHRAwglTwoXxR3FuAlNUOU+ya
-         /gkQ==
-X-Gm-Message-State: ANhLgQ2V7eWLO6uxrQPNUzQAjFF9jXAprqUgn1XKDsHZU8qzwJSmbXf9
-        JLn9WPPdNe2UjcorchTJoucIPXPMhKWzgOEfLra4oKnzLDa9
-X-Google-Smtp-Source: ADFU+vtctqJa2ci30A1tXJi8ZER7c6LMuPD2GpcAyOk3z+431izTKcqTGPW/dl7Qg/XuI9S3w673aeicvLypp6E/vOhavzYBNo+k
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7D9+8roi8O3TeKz6nEq8STv16d4uRSSfD9jY/ASGWns=;
+        b=MufaccWrSPPbXkOUKnU+v8NQtDZ7nEKjKpY/j10+5nPi7jwET/cvXdCTaw/A2ZsTnZ
+         QVMLvIm5zY+3H8ZmqCR8Glqy1aXa2vucGghRPMX3OURVvhvP02dvIJ+m7ORUUMdI/0Xw
+         yWi56Citw4GdStPARBlwjHS4ZI3Vic0K9aIdCoD9ezVhysKzMUsT/FbG9OsPmHbTUqWA
+         zS3gGsjlXrWkWRm7prDGGd8PyJrbQKGvIuxP+/Ycm6fQdNZ8oLzaCBbsAMIHBOEeoJVY
+         9gNm2NVwpZ00VSlS4t13A4hOAAzgFScgj4ckUb+juws2a3aUqBfGDpEb03fNNvs2ni6Q
+         zUcg==
+X-Gm-Message-State: ANhLgQ3RgkpSF5cvTJbHhw/u/hEhhkHkEqTzyeRJ/oT9PQalBsrK7NB1
+        /H4hDe479FY4sShVmGS3Gwi9vxpV++5T5+eCBQ89Eg==
+X-Google-Smtp-Source: ADFU+vv90lQSzb2m1ezsF8gLU4Zu6GOEknT8yK97+bEJC1+F0mE21aCtLNF+4fUEcGxTO8B1QbEX0XfNTTS8hZ6Zdko=
+X-Received: by 2002:a1f:a617:: with SMTP id p23mr2679392vke.2.1584426718347;
+ Mon, 16 Mar 2020 23:31:58 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:e70e:: with SMTP id b14mr2553817ioh.1.1584426614327;
- Mon, 16 Mar 2020 23:30:14 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 23:30:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000850ef705a10711f6@google.com>
-Subject: WARNING: locking bug in ktime_get
-From:   syzbot <syzbot+24ab7a09b640e90e9550@syzkaller.appspotmail.com>
-To:     john.stultz@linaro.org, linux-kernel@vger.kernel.org,
-        sboyd@kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
+References: <20200216085928.108838-1-tianjia.zhang@linux.alibaba.com> <20200216085928.108838-8-tianjia.zhang@linux.alibaba.com>
+In-Reply-To: <20200216085928.108838-8-tianjia.zhang@linux.alibaba.com>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Tue, 17 Mar 2020 08:31:45 +0200
+Message-ID: <CAOtvUMdn+92vbEZ=V=e7PSuKwP3b1K==jFKjVWopVqJdfXzZxA@mail.gmail.com>
+Subject: Re: [PATCH 7/7] X.509: support OSCCA sm2-with-sm3 certificate verification
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        David Miller <davem@davemloft.net>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>,
+        zohar@linux.ibm.com,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+On Sun, Feb 16, 2020 at 11:00 AM Tianjia Zhang
+<tianjia.zhang@linux.alibaba.com> wrote:
+>
+> The digital certificate format based on SM2 crypto algorithm as
+> specified in GM/T 0015-2012. It was published by State Encryption
+> Management Bureau, China.
+>
+> The method of generating Other User Information is defined as
+> ZA=3DH256(ENTLA || IDA || a || b || xG || yG || xA || yA), it also
+> specified in https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02.
+>
+> The x509 certificate supports sm2-with-sm3 type certificate
+> verification.  Because certificate verification requires ZA
+> in addition to tbs data, ZA also depends on elliptic curve
+> parameters and public key data, so you need to access tbs in sig
+> and calculate ZA. Finally calculate the digest of the
+> signature and complete the verification work. The calculation
+> process of ZA is declared in specifications GM/T 0009-2012
+> and GM/T 0003.2-2012.
+>
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+>  crypto/asymmetric_keys/public_key.c      | 61 ++++++++++++++++++++++++
+>  crypto/asymmetric_keys/x509_public_key.c |  2 +
+>  include/crypto/public_key.h              |  1 +
+>  3 files changed, 64 insertions(+)
+>
+> diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys=
+/public_key.c
+> index d7f43d4ea925..a51b09ee484d 100644
+> --- a/crypto/asymmetric_keys/public_key.c
+> +++ b/crypto/asymmetric_keys/public_key.c
+> @@ -17,6 +17,11 @@
+>  #include <keys/asymmetric-subtype.h>
+>  #include <crypto/public_key.h>
+>  #include <crypto/akcipher.h>
 
-HEAD commit:    fb33c651 Linux 5.6-rc6
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17452275e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
-dashboard link: https://syzkaller.appspot.com/bug?extid=24ab7a09b640e90e9550
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+hmmm... ifdefs like these are kind of ugly.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+> +#ifdef CONFIG_CRYPTO_SM2
+> +#include <crypto/sm3_base.h>
+> +#include <crypto/sm2.h>
+> +#include "x509_parser.h"
+> +#endif
+>
+>  MODULE_DESCRIPTION("In-software asymmetric public-key subtype");
+>  MODULE_AUTHOR("Red Hat, Inc.");
+> @@ -245,6 +250,54 @@ static int software_key_eds_op(struct kernel_pkey_pa=
+rams *params,
+>         return ret;
+>  }
+>
+> +#ifdef CONFIG_CRYPTO_SM2
+> +static int cert_sig_digest_update(const struct public_key_signature *sig=
+,
+> +                               struct crypto_akcipher *tfm_pkey)
+> +{
+> +       struct x509_certificate *cert =3D sig->cert;
+> +       struct crypto_shash *tfm;
+> +       struct shash_desc *desc;
+> +       size_t desc_size;
+> +       unsigned char dgst[SM3_DIGEST_SIZE];
+> +       int ret;
+> +
+> +       if (!cert)
+> +               return -EINVAL;
+> +
+> +       ret =3D sm2_compute_z_digest(tfm_pkey, SM2_DEFAULT_USERID,
+> +                                       SM2_DEFAULT_USERID_LEN, dgst);
+> +       if (ret)
+> +               return ret;
+> +
+> +       tfm =3D crypto_alloc_shash(sig->hash_algo, 0, 0);
+> +       if (IS_ERR(tfm))
+> +               return PTR_ERR(tfm);
+> +
+> +       desc_size =3D crypto_shash_descsize(tfm) + sizeof(*desc);
+> +       desc =3D kzalloc(desc_size, GFP_KERNEL);
+> +       if (!desc)
+> +               goto error_free_tfm;
+> +
+> +       desc->tfm =3D tfm;
+> +
+> +       ret =3D crypto_shash_init(desc);
+> +       if (ret < 0)
+> +               goto error_free_desc;
+> +
+> +       ret =3D crypto_shash_update(desc, dgst, SM3_DIGEST_SIZE);
+> +       if (ret < 0)
+> +               goto error_free_desc;
+> +
+> +       ret =3D crypto_shash_finup(desc, cert->tbs, cert->tbs_size, sig->=
+digest);
+> +
+> +error_free_desc:
+> +       kfree(desc);
+> +error_free_tfm:
+> +       crypto_free_shash(tfm);
+> +       return ret;
+> +}
+> +#endif
+> +
+>  /*
+>   * Verify a signature using a public key.
+>   */
+> @@ -298,6 +351,14 @@ int public_key_verify_signature(const struct public_=
+key *pkey,
+>         if (ret)
+>                 goto error_free_key;
+>
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+24ab7a09b640e90e9550@syzkaller.appspotmail.com
+OK, how about you put cert_sig_digest_update() in a separate file that
+only gets compiled with  CONFIG_CRYPTO_SM2 and have a static inline
+version that returns -ENOTSUPP otherwise?
+or at least something in this spirit.
+Done right it will allow you to drop the ifdefs and make for a much
+cleaner code.
 
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(1)
-WARNING: CPU: 0 PID: 16068 at kernel/locking/lockdep.c:167 hlock_class kernel/locking/lockdep.c:167 [inline]
-WARNING: CPU: 0 PID: 16068 at kernel/locking/lockdep.c:167 hlock_class kernel/locking/lockdep.c:156 [inline]
-WARNING: CPU: 0 PID: 16068 at kernel/locking/lockdep.c:167 check_deadlock kernel/locking/lockdep.c:2394 [inline]
-WARNING: CPU: 0 PID: 16068 at kernel/locking/lockdep.c:167 validate_chain kernel/locking/lockdep.c:2954 [inline]
-WARNING: CPU: 0 PID: 16068 at kernel/locking/lockdep.c:167 __lock_acquire+0x2aed/0x3ca0 kernel/locking/lockdep.c:3954
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 16068 Comm: syz-executor.5 Not tainted 5.6.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:hlock_class kernel/locking/lockdep.c:167 [inline]
-RIP: 0010:hlock_class kernel/locking/lockdep.c:156 [inline]
-RIP: 0010:check_deadlock kernel/locking/lockdep.c:2394 [inline]
-RIP: 0010:validate_chain kernel/locking/lockdep.c:2954 [inline]
-RIP: 0010:__lock_acquire+0x2aed/0x3ca0 kernel/locking/lockdep.c:3954
-Code: 08 84 d2 0f 85 db 0f 00 00 8b 05 5e 87 0d 09 85 c0 0f 85 a8 fc ff ff 48 c7 c6 e0 71 0b 88 48 c7 c7 20 72 0b 88 e8 8b b9 eb ff <0f> 0b e9 8e fc ff ff 48 c7 c0 a0 03 3e 8c 48 c1 e8 03 42 0f b6 14
-RSP: 0018:ffffc90001e2f270 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000ae3 RCX: 0000000000000000
-RDX: 0000000040000002 RSI: ffffffff815c06c1 RDI: fffff520003c5e40
-RBP: ffff88804e6ced40 R08: ffff88804e6ce480 R09: fffffbfff12f43ad
-R10: fffffbfff12f43ac R11: ffffffff897a1d63 R12: dffffc0000000000
-R13: 0000000000000001 R14: ffffffff8a6603d0 R15: ffff88804e6cede0
- lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
- seqcount_lockdep_reader_access include/linux/seqlock.h:81 [inline]
- read_seqcount_begin include/linux/seqlock.h:164 [inline]
- ktime_get kernel/time/timekeeping.c:757 [inline]
- ktime_get+0xd0/0x2f0 kernel/time/timekeeping.c:747
- __hrtimer_start_range_ns kernel/time/hrtimer.c:1094 [inline]
- hrtimer_start_range_ns+0x18b/0xc30 kernel/time/hrtimer.c:1133
- perf_swevent_start_hrtimer kernel/events/core.c:9837 [inline]
- cpu_clock_event_start+0x8e/0xb0 kernel/events/core.c:9907
- cpu_clock_event_add+0x46/0x50 kernel/events/core.c:9919
- event_sched_in kernel/events/core.c:2383 [inline]
- event_sched_in.isra.0+0x366/0xbe0 kernel/events/core.c:2347
- group_sched_in+0xda/0x3b0 kernel/events/core.c:2419
- flexible_sched_in kernel/events/core.c:3464 [inline]
- flexible_sched_in+0x610/0xa40 kernel/events/core.c:3453
- visit_groups_merge+0x2f5/0x550 kernel/events/core.c:3412
- ctx_flexible_sched_in kernel/events/core.c:3501 [inline]
- ctx_sched_in+0x2f7/0x7a0 kernel/events/core.c:3546
- perf_event_sched_in+0x69/0xa0 kernel/events/core.c:2528
- perf_event_context_sched_in kernel/events/core.c:3586 [inline]
- __perf_event_task_sched_in+0x5cb/0x7c0 kernel/events/core.c:3625
- perf_event_task_sched_in include/linux/perf_event.h:1179 [inline]
- finish_task_switch+0x2a8/0x750 kernel/sched/core.c:3217
- context_switch kernel/sched/core.c:3383 [inline]
- __schedule+0x93c/0x1f90 kernel/sched/core.c:4080
- preempt_schedule_irq+0xb0/0x150 kernel/sched/core.c:4337
- retint_kernel+0x1b/0x2b
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:759 [inline]
-RIP: 0010:lock_acquire+0x209/0x420 kernel/locking/lockdep.c:4487
-Code: 94 08 00 00 00 00 00 00 48 c1 e8 03 80 3c 10 00 0f 85 de 01 00 00 48 83 3d a3 0f 1b 08 00 0f 84 5a 01 00 00 48 8b 3c 24 57 9d <0f> 1f 44 00 00 48 83 c4 18 5b 5d 41 5c 41 5d 41 5e 41 5f c3 65 8b
-RSP: 0018:ffffc90001e2fb18 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff12e7698 RBX: ffff88804e6ce480 RCX: ffffffff8158752b
-RDX: dffffc0000000000 RSI: 1ffff920003c5f4c RDI: 0000000000000286
-RBP: ffff8880883d7928 R08: 0000000000000004 R09: fffffbfff1873821
-R10: fffffbfff1873820 R11: 0000000000000003 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- flush_workqueue+0x126/0x14c0 kernel/workqueue.c:2777
- hci_dev_open+0xdb/0x280 net/bluetooth/hci_core.c:1626
- hci_sock_bind+0x427/0x1140 net/bluetooth/hci_sock.c:1200
- __sys_bind+0x20e/0x250 net/socket.c:1662
- __do_sys_bind net/socket.c:1673 [inline]
- __se_sys_bind net/socket.c:1671 [inline]
- __x64_sys_bind+0x6f/0xb0 net/socket.c:1671
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c849
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f1a88a17c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 00007f1a88a186d4 RCX: 000000000045c849
-RDX: 0000000000000006 RSI: 0000000020000080 RDI: 0000000000000005
-RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000002c R14: 00000000004c2ce6 R15: 000000000076bf0c
-Shutting down cpus with NMI
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+> +#ifdef CONFIG_CRYPTO_SM2
+> +       if (strcmp(sig->pkey_algo, "sm2") =3D=3D 0) {
+> +               ret =3D cert_sig_digest_update(sig, tfm);
+> +               if (ret)
+> +                       goto error_free_key;
+> +       }
+> +#endif
+> +
+>         sg_init_table(src_sg, 2);
+>         sg_set_buf(&src_sg[0], sig->s, sig->s_size);
+>         sg_set_buf(&src_sg[1], sig->digest, sig->digest_size);
+> diff --git a/crypto/asymmetric_keys/x509_public_key.c b/crypto/asymmetric=
+_keys/x509_public_key.c
+> index d964cc82b69c..feccec08b244 100644
+> --- a/crypto/asymmetric_keys/x509_public_key.c
+> +++ b/crypto/asymmetric_keys/x509_public_key.c
+> @@ -30,6 +30,8 @@ int x509_get_sig_params(struct x509_certificate *cert)
+>
+>         pr_devel("=3D=3D>%s()\n", __func__);
+>
+> +       sig->cert =3D cert;
+> +
+>         if (!cert->pub->pkey_algo)
+>                 cert->unsupported_key =3D true;
+>
+> diff --git a/include/crypto/public_key.h b/include/crypto/public_key.h
+> index 0588ef3bc6ff..27775e617e38 100644
+> --- a/include/crypto/public_key.h
+> +++ b/include/crypto/public_key.h
+> @@ -44,6 +44,7 @@ struct public_key_signature {
+>         const char *pkey_algo;
+>         const char *hash_algo;
+>         const char *encoding;
+> +       void *cert;             /* For certificate */
+>  };
+>
+>  extern void public_key_signature_free(struct public_key_signature *sig);
+> --
+> 2.17.1
+>
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--=20
+Gilad Ben-Yossef
+Chief Coffee Drinker
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+values of =CE=B2 will give rise to dom!
