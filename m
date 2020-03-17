@@ -2,115 +2,99 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64ED6C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487D9C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A794206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1EF206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgCQWSG (ORCPT
+        id S1726901AbgCQWW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:18:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56032 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbgCQWSF (ORCPT
+        Tue, 17 Mar 2020 18:22:26 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:37297 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgCQWWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:18:05 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEKX7-0001Cb-AX; Tue, 17 Mar 2020 23:17:57 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F06D71C2295;
-        Tue, 17 Mar 2020 23:17:56 +0100 (CET)
-Date:   Tue, 17 Mar 2020 22:17:56 -0000
-From:   "tip-bot2 for Hans de Goede" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kdump] x86/purgatory: Disable various profiling and
- sanitizing options
-Cc:     Hans de Goede <hdegoede@redhat.com>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200317130841.290418-1-hdegoede@redhat.com>
-References: <20200317130841.290418-1-hdegoede@redhat.com>
+        Tue, 17 Mar 2020 18:22:25 -0400
+Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MGQSj-1j4C7m1XeH-00GsXo; Tue, 17 Mar 2020 23:22:23 +0100
+Received: by mail-qk1-f176.google.com with SMTP id e11so35446552qkg.9;
+        Tue, 17 Mar 2020 15:22:22 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3Z+cE2UlhegvMC+4op4TlWtons67C2+xtwMg4aYQr0b250oJE1
+        VBtYzKtmIFh8+c44kefTCn1XtjTvokgfh1YJZJA=
+X-Google-Smtp-Source: ADFU+vuxipXRJd9I8d072RV0faI/2rGMZOyH3YUhR2vlAYRex9FyUKKPvFQbFe6jrqVgUczzNOMVCwrC8sbHYMYQGws=
+X-Received: by 2002:a37:6285:: with SMTP id w127mr1193686qkb.138.1584483741962;
+ Tue, 17 Mar 2020 15:22:21 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158448347670.28353.10536465598206779588.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <cover.1584473399.git.gurus@codeaurora.org> <587f9ccae68ad7e1ce97fa8da6037292af1a5095.1584473399.git.gurus@codeaurora.org>
+In-Reply-To: <587f9ccae68ad7e1ce97fa8da6037292af1a5095.1584473399.git.gurus@codeaurora.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 17 Mar 2020 23:22:06 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2Hi_AoRC3g7qKth4e_Y1jZrbBDhWUb3YPZm10FWMu-ig@mail.gmail.com>
+Message-ID: <CAK8P3a2Hi_AoRC3g7qKth4e_Y1jZrbBDhWUb3YPZm10FWMu-ig@mail.gmail.com>
+Subject: Re: [PATCH v9 04/11] pwm: clps711x: Use 64-bit division macro
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Shiyan <shc_work@mail.ru>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Z2eQotCVF8o3msDNOL1omdrkIssexNriZavBiBKYnLbXPOlYLjS
+ yWsZ5Vg/PtxAIVZ0TZ1Acx5vB0D5fMushsdrIOPSH03HAgQlRZauJEJ+SqX1mC+KiigjAnC
+ DIv6OTPqJgU6hMaqbfkmQCTaqQX7rbr5ZSLz1t7U9iN0F2iWr6p7OpSitoJYzuIpKZiP/hq
+ nw/SvRh9cdM1Lj11CP1BA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yhdO/01Lugw=:oUbccFLRFu4gnR3zyBIUDW
+ pCej3EO2GN4QSQRMjmFzJD7JrEyhqAYVqZH3pYm3rWaMJeTjer/GrZsIxZEREA9aONIG3G9fs
+ r7ft+XXFBXKRtzIZ9VxKcmaMBjxjzihVTgQKzJFvBx2JQj/Fzn9iffD6vwix3sFvGY94EEXrA
+ ZbB1s8XwebU5zRTNGM2nvOfEqNnO5R8ZEPID5pvveGyW3MT6N/H2QXPneeaCYVqQa20SwCnsJ
+ BGlNTi0ErJvC6VL2UkYO6I5EQtsnZxfnxjXarwg0mSdTsyrpJMyBQ6qjylPpaJOcbw2I44pnr
+ lVBMdZB1FK5PNqd9lSs0qoBsELIxsONEPkFmGa2x+dwmktptQAcJlbAueQHFi3sx9w3okMBcc
+ Y4VjVA9DQNm+1AYoUcPULPBbpAX5RiLK1GNVRpbUZhAkQ9qnUZIL0pQvc3BWiZapsAX1kVJxh
+ 3Tm1qBzYmrrqF+g0jEu9MuUHL4T75gEoIQgmMvMD2xjiyb1b+5KHiRKtP3ikGgvxr4UUAKcRr
+ iIyIV3deurH0jaSLjvcOGxPGoz92BhIGmGvTtA8hXCwybhNNLrzx/eGLhArSx2Ux/F5R+C80D
+ hrn6YkT4flCjpGj/I2VtkNYmx1BrA3ygu41xXHjXxSRoUqKrH8//X4fTgKBP+OwqF3MIuHiSJ
+ FlPy7ryuPWVnDUVBPKUa7rfLCtx/6ptJ2Ev5dTl5r/LQaMpwL+0r/eFH6sp7vsifK8QeTvqmB
+ Z6j38FwrWjnSsKbdbCXL8Y7fPgTrD2MkQOJyLdDVOTET2iwjC6y8cXJtESvRLHon7SaJ9AX5N
+ v29Xf9BymEYOUHL11zuKN6W99oi1d/sa9YY52rzNTcdV7feQjI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/kdump branch of tip:
+On Tue, Mar 17, 2020 at 9:05 PM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+>
+> Since the PWM framework is switching struct pwm_args.period's datatype
+> to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
+> handle a 64-bit divisor.
+>
+> Cc: Alexander Shiyan <shc_work@mail.ru>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+>
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
+>  drivers/pwm/pwm-clps711x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+> index 924d39a..ba9500a 100644
+> --- a/drivers/pwm/pwm-clps711x.c
+> +++ b/drivers/pwm/pwm-clps711x.c
+> @@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+>  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+>  {
+>         /* Duty cycle 0..15 max */
+> -       return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> +       return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+>  }
 
-Commit-ID:     e2ac07c06058ae2d58b45bbf2a2a352771d76fcb
-Gitweb:        https://git.kernel.org/tip/e2ac07c06058ae2d58b45bbf2a2a352771d76fcb
-Author:        Hans de Goede <hdegoede@redhat.com>
-AuthorDate:    Tue, 17 Mar 2020 14:08:40 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 17 Mar 2020 15:57:19 +01:00
+Is it actually going to exceed U32_MAX? If not, a type cast may be
+more appropriate here than the expensive 64-bit division.
 
-x86/purgatory: Disable various profiling and sanitizing options
-
-Since the purgatory is a special stand-alone binary, various profiling
-and sanitizing options must be disabled. Having these options enabled
-typically will cause dependencies on various special symbols exported by
-special libs / stubs used by these frameworks. Since the purgatory is
-special, it is not linked against these stubs causing missing symbols in
-the purgatory if these options are not disabled.
-
-Sync the set of disabled profiling and sanitizing options with that from
-drivers/firmware/efi/libstub/Makefile, adding
--DDISABLE_BRANCH_PROFILING to the CFLAGS and setting:
-
-  GCOV_PROFILE                    := n
-  UBSAN_SANITIZE                  := n
-
-This fixes broken references to ftrace_likely_update() when
-CONFIG_TRACE_BRANCH_PROFILING is enabled and to __gcov_init() and
-__gcov_exit() when CONFIG_GCOV_KERNEL is enabled.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200317130841.290418-1-hdegoede@redhat.com
----
- arch/x86/purgatory/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index fb4ee54..9733d1c 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -17,7 +17,10 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
- LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
- targets += purgatory.ro
- 
-+# Sanitizer, etc. runtimes are unavailable and cannot be linked here.
-+GCOV_PROFILE	:= n
- KASAN_SANITIZE	:= n
-+UBSAN_SANITIZE	:= n
- KCOV_INSTRUMENT := n
- 
- # These are adjustments to the compiler flags used for objects that
-@@ -25,7 +28,7 @@ KCOV_INSTRUMENT := n
- 
- PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
- PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
--PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
-+PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
- 
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+       Arnd
