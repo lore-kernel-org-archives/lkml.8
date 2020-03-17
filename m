@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445A2C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3DAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1309720658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2157920658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443606;
-	bh=zphD7xWxF3vzvefnjvXiEr6n5KrtXX40M4jj2Al7Ir4=;
+	s=default; t=1584443609;
+	bh=2gNUVrFf3z0eqzjHAqn4loYBqESHZkwaMZOw7bbK8Vc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W+ZyT9q9gm9o5b+hlk8L3+awvUQkjGEGChQT1cF25zHAA2j/LTLb/PmZkUtwKdFmk
-	 lNtbTRrlhtvocu+7dLTj61oP2qezrwptmsC20/TXLcH32vXdBeQVj5ln+Y/UEZ7G5/
-	 ivAgaElvVtO06XcMQXMKjr8F5MUNw5Sb13clIUlY=
+	b=rc9c5z//cPmNqmQrKOxCEAPUN3YnNweKCIM4Zlmv5PMeV/l0jKngNAIZgLmvfBMNV
+	 e7EnBoXSA/LcYZZ3DlZZyTmQKX+ruKiEAa0sBmfKGVyk6veY6fdT5+QUzxQ56z88Rz
+	 wBvw3e7WRf8AB/3QLaWr9phfsdPeTv8toGelA5g0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbgCQLNZ (ORCPT
+        id S1729373AbgCQLN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgCQLNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:22 -0400
+        id S1729344AbgCQLNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:13:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2920F205ED;
-        Tue, 17 Mar 2020 11:13:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C322076F;
+        Tue, 17 Mar 2020 11:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443601;
-        bh=zphD7xWxF3vzvefnjvXiEr6n5KrtXX40M4jj2Al7Ir4=;
+        s=default; t=1584443604;
+        bh=2gNUVrFf3z0eqzjHAqn4loYBqESHZkwaMZOw7bbK8Vc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1OOpeAe15UEba1asdOoJVtR7Am5Nvyo2txKqyr8Aj+KVGdN4uuOHafMwIc5FxT7p0
-         0Zw7iGoGc1MSQjPHpTM3sCo0p2Q6v52LIUTyOOGWX80X737V+unn0OPGgtavaX8xAP
-         T+UmogIGKBYcCxrur6Y/3STkYabVIScv2ozwI8Hs=
+        b=sx15Wo48iPMroMJ1znYyIPU0Vx85umINqKnFLOdqd+HV6YMm2qTBy2BQ/ahXuVUz6
+         Njs0nv+mNdpzG9i3syr25fZrGRnZ+rs2QViunQ/jbrQY2ExYVOSSfvLpFgUPQWqhT9
+         q6Z5OPM8/OmC6kGkQfGIt+DMjHirHoSaUTJb2Mi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 5.5 100/151] ARC: define __ALIGN_STR and __ALIGN symbols for ARC
-Date:   Tue, 17 Mar 2020 11:55:10 +0100
-Message-Id: <20200317103333.565654257@linuxfoundation.org>
+        stable@vger.kernel.org, Kyle Sanderson <kyle.leet@gmail.com>,
+        Michael Stapelberg <michael+lkml@stapelberg.ch>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.5 101/151] fuse: fix stack use after return
+Date:   Tue, 17 Mar 2020 11:55:11 +0100
+Message-Id: <20200317103333.636383044@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,35 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 8d92e992a785f35d23f845206cf8c6cafbc264e0 upstream.
+commit 3e8cb8b2eaeb22f540f1cbc00cbb594047b7ba89 upstream.
 
-The default defintions use fill pattern 0x90 for padding which for ARC
-generates unintended "ldh_s r12,[r0,0x20]" corresponding to opcode 0x9090
+Normal, synchronous requests will have their args allocated on the stack.
+After the FR_FINISHED bit is set by receiving the reply from the userspace
+fuse server, the originating task may return and reuse the stack frame,
+resulting in an Oops if the args structure is dereferenced.
 
-So use ".align 4" which insert a "nop_s" instruction instead.
+Fix by setting a flag in the request itself upon initializing, indicating
+whether it has an asynchronous ->end() callback.
 
-Cc: stable@vger.kernel.org
-Acked-by: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Reported-by: Kyle Sanderson <kyle.leet@gmail.com>
+Reported-by: Michael Stapelberg <michael+lkml@stapelberg.ch>
+Fixes: 2b319d1f6f92 ("fuse: don't dereference req->args on finished request")
+Cc: <stable@vger.kernel.org> # v5.4
+Tested-by: Michael Stapelberg <michael+lkml@stapelberg.ch>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/include/asm/linkage.h |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/fuse/dev.c    |    6 +++---
+ fs/fuse/fuse_i.h |    2 ++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
---- a/arch/arc/include/asm/linkage.h
-+++ b/arch/arc/include/asm/linkage.h
-@@ -29,6 +29,8 @@
- .endm
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -276,12 +276,10 @@ static void flush_bg_queue(struct fuse_c
+ void fuse_request_end(struct fuse_conn *fc, struct fuse_req *req)
+ {
+ 	struct fuse_iqueue *fiq = &fc->iq;
+-	bool async;
  
- #define ASM_NL		 `	/* use '`' to mark new line in macro */
-+#define __ALIGN		.align 4
-+#define __ALIGN_STR	__stringify(__ALIGN)
+ 	if (test_and_set_bit(FR_FINISHED, &req->flags))
+ 		goto put_request;
  
- /* annotation for data we want in DCCM - if enabled in .config */
- .macro ARCFP_DATA nm
+-	async = req->args->end;
+ 	/*
+ 	 * test_and_set_bit() implies smp_mb() between bit
+ 	 * changing and below intr_entry check. Pairs with
+@@ -324,7 +322,7 @@ void fuse_request_end(struct fuse_conn *
+ 		wake_up(&req->waitq);
+ 	}
+ 
+-	if (async)
++	if (test_bit(FR_ASYNC, &req->flags))
+ 		req->args->end(fc, req->args, req->out.h.error);
+ put_request:
+ 	fuse_put_request(fc, req);
+@@ -471,6 +469,8 @@ static void fuse_args_to_req(struct fuse
+ 	req->in.h.opcode = args->opcode;
+ 	req->in.h.nodeid = args->nodeid;
+ 	req->args = args;
++	if (args->end)
++		__set_bit(FR_ASYNC, &req->flags);
+ }
+ 
+ ssize_t fuse_simple_request(struct fuse_conn *fc, struct fuse_args *args)
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -301,6 +301,7 @@ struct fuse_io_priv {
+  * FR_SENT:		request is in userspace, waiting for an answer
+  * FR_FINISHED:		request is finished
+  * FR_PRIVATE:		request is on private list
++ * FR_ASYNC:		request is asynchronous
+  */
+ enum fuse_req_flag {
+ 	FR_ISREPLY,
+@@ -314,6 +315,7 @@ enum fuse_req_flag {
+ 	FR_SENT,
+ 	FR_FINISHED,
+ 	FR_PRIVATE,
++	FR_ASYNC,
+ };
+ 
+ /**
 
 
