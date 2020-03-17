@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8558CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C697C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2C620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB9C205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443582;
-	bh=03xzoa24LTQ6z0+jZrl/hZ4inFdHU56AHL9eX4wVlTM=;
+	s=default; t=1584443588;
+	bh=7AeRdUFqB8nXUpeMqPPG48ncKguSxkwesFV4prQw9Ak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14Pruo0gFyAo7jg5fCw4SMUxV9hObT9JOdsctBtZRk51/t9+gFnC1uMLLuzg7kWJ9
-	 faDele+s8O04n9ROc6t6yp6WIZn6zecw4Fuui6ECC2OLDzVqj30h7HkeVZvkiMuXNv
-	 jIjt5xf3/8/n6jt9k/D682ZqdYnUIp3HPNx3/bKs=
+	b=KxIVspWqY1srjRUo9Uoc0z1YihbFGX+uVTiiCthRKTC4E9xdiUHzlkagn2AMLrYvp
+	 RujV7G0DwQLEzlM8lLJBtdIJMKhl71kNc5/As8uxIT0sYY2BrJq8Imwo0uxqJX8vlH
+	 QSlG4uJShauhpSd1RgFq3RLeJF3jzVSA1Gfe9jE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbgCQLNB (ORCPT
+        id S1729162AbgCQLNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:13:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729483AbgCQLMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:55 -0400
+        id S1728963AbgCQLNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:13:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A07D820736;
-        Tue, 17 Mar 2020 11:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD6D9205ED;
+        Tue, 17 Mar 2020 11:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443575;
-        bh=03xzoa24LTQ6z0+jZrl/hZ4inFdHU56AHL9eX4wVlTM=;
+        s=default; t=1584443582;
+        bh=7AeRdUFqB8nXUpeMqPPG48ncKguSxkwesFV4prQw9Ak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QpldZkCKexbgqKELEGUg7Zs6lRaLKaE53STDpQC83lMI5CDURfPvgHBvZlry0Vzmn
-         ihnk2jRldU2rxHKuGI++8L2VrAyDlcqApqHGVA8u10U6xL1rL1zKavEUSXBcaWdiC5
-         xwRAXNp+zejNidLAzuGxijead974BG9QsUKdNRn8=
+        b=G/t3RQIJrRQUedfCpFp6tMgbag+6HNok5oZo1LdbQaD/wAwLVIH7XD0Ux1TGqrF2+
+         R7IgxMS3g4yZBFq2eKjE10WwksRF6cWs9iqZ8B++bblMKT5HX1HUZiYxagzWxYOG/k
+         tJGEQcw0RqosLw5a3JQNJgXsJctuVOR1ybw3ibp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.5 127/151] pinctrl: imx: scu: Align imx sc msg structs to 4
-Date:   Tue, 17 Mar 2020 11:55:37 +0100
-Message-Id: <20200317103335.462943963@linuxfoundation.org>
+        stable@vger.kernel.org, Tina Zhang <tina.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 130/151] drm/i915/gvt: Fix dma-buf display blur issue on CFL
+Date:   Tue, 17 Mar 2020 11:55:40 +0100
+Message-Id: <20200317103335.675435099@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,43 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Tina Zhang <tina.zhang@intel.com>
 
-commit 4c48e549f39f8ed10cf8a0b6cb96f5eddf0391ce upstream.
+commit 259170cb4c84f4165a36c0b05811eb74c495412c upstream.
 
-The imx SC api strongly assumes that messages are composed out of
-4-bytes words but some of our message structs have odd sizeofs.
+Commit c3b5a8430daad ("drm/i915/gvt: Enable gfx virtualiztion for CFL")
+added the support on CFL. The vgpu emulation hotplug support on CFL was
+supposed to be included in that patch. Without the vgpu emulation
+hotplug support, the dma-buf based display gives us a blur face.
 
-This produces many oopses with CONFIG_KASAN=y.
+So fix this issue by adding the vgpu emulation hotplug support on CFL.
 
-Fix by marking with __aligned(4).
-
-Fixes: b96eea718bf6 ("pinctrl: fsl: add scu based pinctrl support")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Link: https://lore.kernel.org/r/bd7ad5fd755739a6d8d5f4f65e03b3ca4f457bd2.1582216144.git.leonard.crestez@nxp.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: c3b5a8430daad ("drm/i915/gvt: Enable gfx virtualiztion for CFL")
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200227010041.32248-1-tina.zhang@intel.com
+(cherry picked from commit 135dde8853c7e00f6002e710f7e4787ed8585c0e)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/freescale/pinctrl-scu.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/gvt/display.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/pinctrl/freescale/pinctrl-scu.c
-+++ b/drivers/pinctrl/freescale/pinctrl-scu.c
-@@ -23,12 +23,12 @@ struct imx_sc_msg_req_pad_set {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 val;
- 	u16 pad;
--} __packed;
-+} __packed __aligned(4);
+--- a/drivers/gpu/drm/i915/gvt/display.c
++++ b/drivers/gpu/drm/i915/gvt/display.c
+@@ -457,7 +457,8 @@ void intel_vgpu_emulate_hotplug(struct i
+ 	struct drm_i915_private *dev_priv = vgpu->gvt->dev_priv;
  
- struct imx_sc_msg_req_pad_get {
- 	struct imx_sc_rpc_msg hdr;
- 	u16 pad;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_resp_pad_get {
- 	struct imx_sc_rpc_msg hdr;
+ 	/* TODO: add more platforms support */
+-	if (IS_SKYLAKE(dev_priv) || IS_KABYLAKE(dev_priv)) {
++	if (IS_SKYLAKE(dev_priv) || IS_KABYLAKE(dev_priv) ||
++		IS_COFFEELAKE(dev_priv)) {
+ 		if (connected) {
+ 			vgpu_vreg_t(vgpu, SFUSE_STRAP) |=
+ 				SFUSE_STRAP_DDID_DETECTED;
 
 
