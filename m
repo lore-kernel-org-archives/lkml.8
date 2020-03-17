@@ -2,86 +2,96 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90061C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD56C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DBE2073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:09:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TUVADCLr"
+	by mail.kernel.org (Postfix) with ESMTP id E010C20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584447022;
+	bh=65/fM+J2X8INN2iOJ0b87ii6F5d/TjeoaQqIweJDJ80=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ra9eC89sOdAMwBVc1y6TBJRm8HqFMl2HHlOhJLXTXgAqIR79gs8Ac0IWa29xU10qH
+	 mqYvWKwRv+K+d7xXhp2xstqnkJgVDQsDX13RlmfRdB6HV6Mc2fXD0RBIwIRL34x6wW
+	 ulJoTQ/S2O494T+drQmmhd42IG3MwCZQovFeU/Hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgCQMJi (ORCPT
+        id S1726858AbgCQMKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 08:09:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49024 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbgCQMJi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 08:09:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=q/GK4+6m5lw1qmSosNNukTctCn2OhFMDvaxhnUz5s/E=; b=TUVADCLrKEE8VyknwEYEQ0UYdT
-        u9A/5XJjJrnMqqk+qjL1RIZthjoUtX+eBU+A7CfInYWhqGjFymvbMciO2wZSoVjMxQAdUD8OH4THK
-        0AkBL1KPEfz+2CzB8rMplaOk9iP8TFZ2VpEfCJiFY7ybjLpoza7xNmXcvXuPeibzE+BHKF4y8K4mN
-        ZF1fUAxQPe49+lYj1MZm/5nsJPwZkmcHV4niOD1KJk12OyykwGR1CmTbgTBNfOv2wpeHpPwSA8j/Z
-        IGScVWlfuQlVUMJbxVwvZJ3NRR93X8yz0NBQqDmLmTCRKYUrcS3MfMPt/tAZe1K7oOI3cnVDZf0Yu
-        zdbk9eVw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEB2I-0000M8-F7; Tue, 17 Mar 2020 12:09:30 +0000
-Date:   Tue, 17 Mar 2020 05:09:30 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv7 2/3] mm/gup: fix omission of check on FOLL_LONGTERM in
- gup fast path
-Message-ID: <20200317120930.GA435@infradead.org>
-References: <1584333244-10480-3-git-send-email-kernelfans@gmail.com>
- <1584445652-30064-1-git-send-email-kernelfans@gmail.com>
+        Tue, 17 Mar 2020 08:10:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:36308 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgCQMKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 08:10:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22C4B30E;
+        Tue, 17 Mar 2020 05:10:20 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A1C53F534;
+        Tue, 17 Mar 2020 05:10:19 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 12:10:18 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Alok Chauhan <alokc@codeaurora.org>,
+        Dilip Kota <dkota@codeaurora.org>, skakit@codeaurora.org,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH] spi: spi-geni-qcom: Speculative fix of "nobody cared"
+ about interrupt
+Message-ID: <20200317121018.GB3971@sirena.org.uk>
+References: <20200316151939.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="24zk1gE8NUlDmwG9"
 Content-Disposition: inline
-In-Reply-To: <1584445652-30064-1-git-send-email-kernelfans@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200316151939.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
+X-Cookie: There's only one everything.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 07:47:32PM +0800, Pingfan Liu wrote:
-> FOLL_LONGTERM is a special case of FOLL_PIN. It suggests a pin which is
-> going to be given to hardware and can't move. It would truncate CMA
-> permanently and should be excluded.
-> 
-> In gup slow path, slow path, where
-> __gup_longterm_locked->check_and_migrate_cma_pages() handles FOLL_LONGTERM,
-> but in fast path, there lacks such a check, which means a possible leak of
-> CMA page to longterm pinned.
-> 
-> Place a check in try_grab_compound_head() in the fast path to fix the leak,
-> and if FOLL_LONGTERM happens on CMA, it will fall back to slow path to
-> migrate the page.
-> 
-> Some note about the check:
-> Huge page's subpages have the same migrate type due to either
-> allocation from a free_list[] or alloc_contig_range() with param
-> MIGRATE_MOVABLE. So it is enough to check on a single subpage
-> by is_migrate_cma_page(subpage)
 
-Looks good,
+--24zk1gE8NUlDmwG9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+On Mon, Mar 16, 2020 at 03:20:01PM -0700, Douglas Anderson wrote:
+
+> +	/*
+> +	 * We don't expect to hit this, but if we do we should try our best
+> +	 * to clear the interrupts and return so we don't just get called
+> +	 * again.
+> +	 */
+> +	if (mas->cur_mcmd == CMD_NONE)
+> +		goto exit;
+> +
+
+Does this mean that there was an actual concrete message of type
+CMD_NONE or does it mean that there was no message waiting?  If there
+was no message then isn't the interrupt spurious?
+
+--24zk1gE8NUlDmwG9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5wvikACgkQJNaLcl1U
+h9CCWAf+NrJf9Q2fJM35MGcoGUs8HYyVUL+NopJOwpbgEbzsTaDN+rMUwFyy9/3t
+EKFyp3Im6x70GXrpQHs5emVrYuNt8oDcn0CDY29pXq8qGuCkAFnlMufGj4dfrQA6
+/XQD0gIuvduh6qKndbhRVeVUFdiTyKKeqiCim4eAld/CTfIyyulDPo6KEVVHYt4X
+kJG/dz10WQ8oyRBckFTD1HtTPsA7TJT34V2ll71CvJcmCWZRAwLzmD9MbZRTdrv+
+J3IHwcyJp9XSTIaSBJhxizMzdz4BH4fhLSR/yQDBruEFZIzbTBskk2QOJ77qZG8k
+w0I9PWvjgN5EGCRPLk4M+HgIHbJTfw==
+=eX8I
+-----END PGP SIGNATURE-----
+
+--24zk1gE8NUlDmwG9--
