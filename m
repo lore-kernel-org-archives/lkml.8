@@ -2,98 +2,179 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06726C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD8AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C598120724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBAB20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584460740;
-	bh=hhu6XAm/T/wDV6UsKrflTER0XbhUy8RqHGJSqyjTnNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QUamchtSXq4CzY1oVE3TWpJX8KAIzpVIzNY4vonIKQ6hHsGOjYTmwcHUD8QovG1Q+
-	 +YhDJRt5OoNbayZw2/hnVQ44fzNA1/fWDr0nEIjuj7tHkLoh4716Cd3t2OSIYrhB8E
-	 8DJgmT5vf4OQ6hxhfE+qlG0eT6YqI9fHJUmG99KM=
+	s=default; t=1584460769;
+	bh=QKH9gO8a+divkhjn6vVthIrkDYpvb66V0Iq362aPVWc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=X/TxVfpd4XxprR9D7qSUQ0lPQCO3CmtZ79t2DBivRSMk46aW6ysTsmyId47evw8ys
+	 vXkAZ1HSHm50RPsgN2s2Ry6ygAiMA9fK25WQ0/qN4dbbl0cpoz7DvcOG301kh2y1Ua
+	 KbE/QXIVvKkGLOkRJw248unRqV48Q7nPpkH7yEQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgCQP67 (ORCPT
+        id S1726757AbgCQP71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:58:59 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:51771 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgCQP67 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:58:59 -0400
-Received: by mail-wm1-f53.google.com with SMTP id a132so22045665wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 08:58:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FYhH5q4WEl1FEeszV9WnzdrzRhQsi77Q0fjkKyiS8K8=;
-        b=s/Uaqd36AjVrV8nBsVkpbGsBDfXcdWzFUojhtrw1D7euEE1mO9n2yoRC7CnQNJlmfd
-         pb69r8M/E8qGTF4FEm/VWEk6ysxlNTFL0ZdMo6tMSbshc69mbDN0zGlfYy2vSdDyOwVk
-         piGN59Dqm80KyJurDTs8d8FcJlUyutJANScB5m9RJpP61uS6UuREhVjNNskJQJ1GSWuO
-         wUwJG/ks7f4SOAR9hIKVkXpeVj0XOjQO2vHWeq1m2fEg0iiMfUYVVRK0M1B3WZZX7ZcW
-         4HGy9qsAAV9X3Oyx+jtipXTBdsJt59jaHvIGecAmTNt+KHe1g4v2RQmsHcsDGiPSWuyn
-         2DiA==
-X-Gm-Message-State: ANhLgQ0ceDfex/NPjlrcD0L+QiFzkc4+CvAZU/dPRD3s9PbzT1rwC3Uk
-        z+6NFK82Y1eRdG3sENx1snA=
-X-Google-Smtp-Source: ADFU+vtXMrtZwl2B9c9BXLxh92KX3GuxYzjcrVUmZMxyVywjJwgO8Q2gOZ17aY6Ccxd+xD91MfQb7w==
-X-Received: by 2002:a05:600c:2250:: with SMTP id a16mr5756585wmm.57.1584460737542;
-        Tue, 17 Mar 2020 08:58:57 -0700 (PDT)
-Received: from localhost (ip-37-188-255-121.eurotel.cz. [37.188.255.121])
-        by smtp.gmail.com with ESMTPSA id w7sm5368320wrr.60.2020.03.17.08.58.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 08:58:56 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 16:58:55 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-Message-ID: <20200317155855.GS26018@dhcp22.suse.cz>
-References: <20200312082248.GS23944@dhcp22.suse.cz>
- <20200312201602.GA68817@google.com>
- <20200312204155.GE23944@dhcp22.suse.cz>
- <20200313020851.GD68817@google.com>
- <20200313080546.GA21007@dhcp22.suse.cz>
- <20200313205941.GA78185@google.com>
- <20200316092052.GD11482@dhcp22.suse.cz>
- <20200317014340.GA73302@google.com>
- <20200317071239.GB26018@dhcp22.suse.cz>
- <20200317150055.GC73302@google.com>
+        Tue, 17 Mar 2020 11:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbgCQP71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:59:27 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8CDA20724;
+        Tue, 17 Mar 2020 15:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584460766;
+        bh=QKH9gO8a+divkhjn6vVthIrkDYpvb66V0Iq362aPVWc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=hVli641ctEManFaCzq3O11jVi1IXvi7M3f7R10/wM/B7rETW+kCfvBRioAEXQS1bT
+         wUFrGuCkRGcWwHwaM+QxaArLG9Y0yu59tTDP+zag8cFE/GMWWDdyF/g8AQViXz78X5
+         ju/FAEeNcULe7UYCq+cjr8yLTXDFv2Y+a/Q7Lb/k=
+Message-ID: <46d2c16f48f1fd4ad28a85099c59ae95a9997740.camel@kernel.org>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+From:   Jeff Layton <jlayton@kernel.org>
+To:     NeilBrown <neilb@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     yangerkun <yangerkun@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Tue, 17 Mar 2020 11:59:24 -0400
+In-Reply-To: <87k13jsyum.fsf@notabene.neil.brown.name>
+References: <20200308140314.GQ5972@shao2-debian>
+         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
+         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
+         <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
+         <878sk7vs8q.fsf@notabene.neil.brown.name>
+         <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+         <875zfbvrbm.fsf@notabene.neil.brown.name>
+         <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+         <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
+         <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
+         <87v9nattul.fsf@notabene.neil.brown.name>
+         <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
+         <87o8t2tc9s.fsf@notabene.neil.brown.name>
+         <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
+         <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
+         <877dznu0pk.fsf@notabene.neil.brown.name>
+         <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
+         <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
+         <87pndcsxc6.fsf@notabene.neil.brown.name>
+         <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
+         <87k13jsyum.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317150055.GC73302@google.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17-03-20 08:00:55, Minchan Kim wrote:
-> On Tue, Mar 17, 2020 at 08:12:39AM +0100, Michal Hocko wrote:
-[...]
-> > Just to make it clear, are you really suggesting to special case
-> > page_check_references for madvise path?
-> > 
+On Tue, 2020-03-17 at 09:45 +1100, NeilBrown wrote:
+> > +
+> > +	/*
+> > +	 * Tell the world we're done with it - see comment at top
+> > +	 * of this function
 > 
-> No, (page_mapcount() >  1) checks *effectively* fixes the performance
-> bug as well as vulnerability issue.
+> This comment might be misleading.  The world doesn't care.
+> Only this thread cares where ->fl_blocker is NULL.  We need the release
+> semantics when some *other* thread sets fl_blocker to NULL, not when
+> this thread does.
+> I don't think we need to spell that out and I'm not against using
+> store_release here, but locks_delete_block cannot race with itself, so
+> referring to the comment at the top of this function is misleading.
+> 
+> So:
+>   Reviewed-by: NeilBrown <neilb@suse.de>
+> 
+> but I'm not totally happy with the comments.
+> 
+> 
 
-Ahh, ok then we are on the same page. You were replying to the part
-where I have pointed out that you can control aging by these calls
-and your response suggested that this is somehow undesirable behavior or
-even a bug.
+Thanks Neil. We can clean up the comments before merge. How about this
+revision to the earlier patch? I took the liberty of poaching your your
+proposed verbiage:
 
+------------------8<---------------------
+
+From c9fbfae0ab615e20de0bdf1ae7b27591d602f577 Mon Sep 17 00:00:00 2001
+From: Jeff Layton <jlayton@kernel.org>
+Date: Mon, 16 Mar 2020 18:57:47 -0400
+Subject: [PATCH] SQUASH: update with Neil's comments
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/locks.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
+
+diff --git a/fs/locks.c b/fs/locks.c
+index eaf754ecdaa8..e74075b0e8ec 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -741,8 +741,9 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+ 			wake_up(&waiter->fl_wait);
+ 
+ 		/*
+-		 * Tell the world we're done with it - see comment at
+-		 * top of locks_delete_block().
++		 * The setting of fl_blocker to NULL marks the official "done"
++		 * point in deleting a block. Paired with acquire at the top
++		 * of locks_delete_block().
+ 		 */
+ 		smp_store_release(&waiter->fl_blocker, NULL);
+ 	}
+@@ -761,11 +762,23 @@ int locks_delete_block(struct file_lock *waiter)
+ 	/*
+ 	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
+ 	 * the lock and is the only one that might try to claim the lock.
+-	 * Because fl_blocker is explicitly set last during a delete, it's
+-	 * safe to locklessly test to see if it's NULL. If it is, then we know
+-	 * that no new locks can be inserted into its fl_blocked_requests list,
+-	 * and we can therefore avoid doing anything further as long as that
+-	 * list is empty.
++	 *
++	 * We use acquire/release to manage fl_blocker so that we can
++	 * optimize away taking the blocked_lock_lock in many cases.
++	 *
++	 * The smp_load_acquire guarantees two things:
++	 *
++	 * 1/ that fl_blocked_requests can be tested locklessly. If something
++	 * was recently added to that list it must have been in a locked region
++	 * *before* the locked region when fl_blocker was set to NULL.
++	 *
++	 * 2/ that no other thread is accessing 'waiter', so it is safe to free
++	 * it.  __locks_wake_up_blocks is careful not to touch waiter after
++	 * fl_blocker is released.
++	 *
++	 * If a lockless check of fl_blocker shows it to be NULL, we know that
++	 * no new locks can be inserted into its fl_blocked_requests list, and
++	 * can avoid doing anything further if the list is empty.
+ 	 */
+ 	if (!smp_load_acquire(&waiter->fl_blocker) &&
+ 	    list_empty(&waiter->fl_blocked_requests))
+@@ -778,8 +791,8 @@ int locks_delete_block(struct file_lock *waiter)
+ 	__locks_delete_block(waiter);
+ 
+ 	/*
+-	 * Tell the world we're done with it - see comment at top
+-	 * of this function
++	 * The setting of fl_blocker to NULL marks the official "done" point in
++	 * deleting a block. Paired with acquire at the top of this function.
+ 	 */
+ 	smp_store_release(&waiter->fl_blocker, NULL);
+ 	spin_unlock(&blocked_lock_lock);
 -- 
-Michal Hocko
-SUSE Labs
+2.24.1
+
