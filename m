@@ -2,132 +2,117 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432EEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA7FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC7320714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F18A20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e0QELHa5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nKcZkd0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgCQRKM (ORCPT
+        id S1726506AbgCQRMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:10:12 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52654 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgCQRKL (ORCPT
+        Tue, 17 Mar 2020 13:12:01 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45002 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgCQRMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:10:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HH8rSW103617;
-        Tue, 17 Mar 2020 17:09:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=MUKPIBA0PDdbrvWj4pjo/RZXdu0E5DptRou2F8z9uCo=;
- b=e0QELHa5F5vIaddPdvy3zHozX4NFti7jKHgwf+w1aIL9JfSl6xUwcLanY87VwkB/WleD
- Q8kC42HPY0CRHittaWie/sal6gpWmUyFDJtKHIgNEFd8W/Yp1lTrSNC3FEMD5nxeKr+D
- K68XEpL2Vn4o52d9MrSIS1kfqEjHJxVLLP1T+HL7LDxMaoKJr6g+wWaedI8DWeCHdzIf
- +ciogrQc8nAkfa3/FotzsSWwCm96RtqUybrEii87q7TR9O7fMEtINtsNcanK4xofl10l
- Py08khscEwk8Xp2EFitV+TjdsdpBlF1SpD8vSRjhLxDEm1Eu43Ou69SwH1ny4T3IlLw4 Mg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2yrppr68ct-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Mar 2020 17:09:52 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HGofcR015199;
-        Tue, 17 Mar 2020 17:07:51 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2ys8rf9ew4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Mar 2020 17:07:51 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02HH7ocw005107;
-        Tue, 17 Mar 2020 17:07:50 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 17 Mar 2020 10:07:50 -0700
-Subject: Re: [PATCH] mm/hugetlb: Fix build failure with HUGETLB_PAGE but not
- HUGEBTLBFS
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Baoquan He <bhe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Nishanth Aravamudan <nacc@us.ibm.com>,
-        Nick Piggin <npiggin@suse.de>, Adam Litke <agl@us.ibm.com>,
-        Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org
-References: <7e8c3a3c9a587b9cd8a2f146df32a421b961f3a2.1584432148.git.christophe.leroy@c-s.fr>
- <20200317082550.GA3375@MiWiFi-R3L-srv>
- <60117fd7-46ff-326b-34f1-0c7087111ca7@c-s.fr>
- <a31c86c9-2f86-4f40-a367-5953037ee137@oracle.com>
- <ff480af2-d376-3b99-ba9e-36397ecde232@c-s.fr>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <dae98f9c-9233-a5b8-a824-1a26c7ad9e48@oracle.com>
-Date:   Tue, 17 Mar 2020 10:07:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 13:12:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=9woxsqJ1lSAxBBYxAWoNw9eOK3fEd3UsJ8ybAO4SbwM=; b=nKcZkd0cLfLdAReC5kmaJn3sVy
+        HjgQ9VBmhhXTsqsChmM8wF4rODE8SW7yGs9O/QKZpZfovzqrzSzETn/hx4Ygi+EuT3ziI2ParCuDy
+        o7gIMqMpOFHrmXo1nOMIOECyhniSsqlKKhg4Pb6ANmqDVJF7lC9cQmkoBKHSevoIlMhYQuIs4ioUm
+        TovAYco8+UAa+kN2ORHHJUlhVyvtAey9ApBmidKTsFjjpKIDTK10vo8H2TJirU1RBTG5kaXmShpgz
+        o2mQMiM2vYf/r4GkzClUKaPPvr51g5xykKAZ8dSm3BU0CQNPbZwvVKo0BSxFEJKVI41bwfhkyOP/7
+        DzCERWXw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEFky-0003id-2v; Tue, 17 Mar 2020 17:11:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D25F2304C2C;
+        Tue, 17 Mar 2020 18:11:54 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id BC75A20B16496; Tue, 17 Mar 2020 18:11:54 +0100 (CET)
+Message-Id: <20200317170909.880891990@infradead.org>
+User-Agent: quilt/0.65
+Date:   Tue, 17 Mar 2020 18:02:36 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     tglx@linutronix.de, jpoimboe@redhat.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
+        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
+Subject: [PATCH v2 02/19] objtool: Rename func_for_each_insn()
+References: <20200317170234.897520633@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <ff480af2-d376-3b99-ba9e-36397ecde232@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9563 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003170068
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9563 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1015
- impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003170068
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/20 9:47 AM, Christophe Leroy wrote:
-> 
-> 
-> Le 17/03/2020 à 17:40, Mike Kravetz a écrit :
->> On 3/17/20 1:43 AM, Christophe Leroy wrote:
->>>
->>>
->>> Le 17/03/2020 à 09:25, Baoquan He a écrit :
->>>> On 03/17/20 at 08:04am, Christophe Leroy wrote:
->>>>> When CONFIG_HUGETLB_PAGE is set but not CONFIG_HUGETLBFS, the
->>>>> following build failure is encoutered:
->>>>
->>>>   From the definition of HUGETLB_PAGE, isn't it relying on HUGETLBFS?
->>>> I could misunderstand the def_bool, please correct me if I am wrong.
->>>
->>> AFAIU, it means that HUGETLBFS rely on HUGETLB_PAGE, by default HUGETLB_PAGE is not selected when HUGETLBFS is not. But it is still possible for an arch to select HUGETLB_PAGE without selecting HUGETLBFS when it uses huge pages for other purpose than hugetlb file system.
->>>
->>
->> Hi Christophe,
->>
->> Do you actually have a use case/example of using hugetlb pages without
->> hugetlbfs?  I can understand that there are some use cases which never
->> use the filesystem interface.  However, hugetlb support is so intertwined
->> with hugetlbfs, I am thinking there would be issues trying to use them
->> separately.  I will look into this further.
->>
-> 
-> Hi Mike,
-> 
-> Series https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=164620
-> 
-> And especially patch 39 to 41.
-> 
+There is func_for_each_insn() and func_for_each_insn_all(), the both
+iterate the instructions, but the first uses symbol offset/length
+while the second uses insn->func.
 
-Ah, ok.  You are simply using a few interfaces in the hugetlb header files.
-The huge pages created in your mappings are not PageHuge() pages.
+Rename func_for_each_insn() to sym_for_eac_insn() because it iterates
+on symbol information.
 
--- 
-Mike Kravetz
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ tools/objtool/check.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -77,17 +77,17 @@ static struct instruction *next_insn_sam
+ 	     insn;							\
+ 	     insn = next_insn_same_func(file, insn))
+ 
+-#define func_for_each_insn(file, func, insn)				\
+-	for (insn = find_insn(file, func->sec, func->offset);		\
++#define sym_for_each_insn(file, sym, insn)				\
++	for (insn = find_insn(file, sym->sec, sym->offset);		\
+ 	     insn && &insn->list != &file->insn_list &&			\
+-		insn->sec == func->sec &&				\
+-		insn->offset < func->offset + func->len;		\
++		insn->sec == sym->sec &&				\
++		insn->offset < sym->offset + sym->len;			\
+ 	     insn = list_next_entry(insn, list))
+ 
+-#define func_for_each_insn_continue_reverse(file, func, insn)		\
++#define sym_for_each_insn_continue_reverse(file, sym, insn)		\
+ 	for (insn = list_prev_entry(insn, list);			\
+ 	     &insn->list != &file->insn_list &&				\
+-		insn->sec == func->sec && insn->offset >= func->offset;	\
++		insn->sec == sym->sec && insn->offset >= sym->offset;	\
+ 	     insn = list_prev_entry(insn, list))
+ 
+ #define sec_for_each_insn_from(file, insn)				\
+@@ -281,7 +281,7 @@ static int decode_instructions(struct ob
+ 				return -1;
+ 			}
+ 
+-			func_for_each_insn(file, func, insn)
++			sym_for_each_insn(file, func, insn)
+ 				insn->func = func;
+ 		}
+ 	}
+@@ -2024,7 +2024,7 @@ static int validate_branch(struct objtoo
+ 
+ 				i = insn;
+ 				save_insn = NULL;
+-				func_for_each_insn_continue_reverse(file, func, i) {
++				sym_for_each_insn_continue_reverse(file, func, i) {
+ 					if (i->save) {
+ 						save_insn = i;
+ 						break;
+
+
