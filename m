@@ -2,155 +2,86 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84276C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3A9C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0218E20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:09:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="fwtdJ1kP"
+	by mail.kernel.org (Postfix) with ESMTP id 6541C20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgCQHJJ (ORCPT
+        id S1726148AbgCQHJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:09:09 -0400
-Received: from ma-dnext03.denso.co.jp ([133.192.181.78]:57688 "EHLO
-        ma-dnext03.denso.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbgCQHJI (ORCPT
+        Tue, 17 Mar 2020 03:09:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56520 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgCQHJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:09:08 -0400
-Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
-        by ma-dnext03.denso.co.jp (Postfix) with ESMTP id A34455D0221;
-        Tue, 17 Mar 2020 16:09:06 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=adit-jv.com;
-        s=jpadit-jvmail2011; t=1584428946;
-        bh=fbV8PnCNUOl3ThU4RMmM5jY8kW9AbSxPVD8Ots0XE4g=;
-        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-         MIME-Version:Content-Type;
-        b=fwtdJ1kPnegt/LOczzaYIfxQLf0rIEi+eCufbknIReUIw2afdlSYSlt7M5H75flaO
-         hqUyspkbAQDE96ioD+/7lEh0YOnFrydS24RP8W5BQ9l2+1Ix2OGUlM5lJEV55J65/I
-         aeRYIwJ6hF91cNI/PSDNF9Kkao4ijRCJoVYJQUx5Cp37egQeOyat5TexoJAFuhWpyO
-         q85MO3HJaTUhGCmG9doqtxfKoo6wUZbcjwZjeFTWqX7RdveqXXVyojLD2PBOE2PwLG
-         xpRmWIJbwDcmHL2rKcxEhMdLF7QPCLPpp5U02l+TyrGX499emn7fC1EKC05yVbc5av
-         2RU+WmbKTIn4A==
-Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
-        id A06C7C05D64; Tue, 17 Mar 2020 16:09:06 +0900 (JST)
-Received: from smtp1.denso.co.jp [133.192.24.88] 
-         by grdma01h. with ESMTP id SAA22465;
-         Tue, 17 Mar 2020 16:09:06 +0900
-Received: from ky0exch01.adit-jv.com ([10.71.113.8])
-        by smtp01.denso.co.jp (MOS 4.4.7-GA)
-        with ESMTP id FLB29427;
-        Tue, 17 Mar 2020 16:09:05 +0900
-Received: from jp-u0004.adit-jv.com (10.71.112.120) by ky0exch01.adit-jv.com
- (10.71.113.8) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 17 Mar
- 2020 16:09:05 +0900
-From:   Suresh Udipi <sudipi@jp.adit-jv.com>
-To:     <niklas.soderlund@ragnatech.se>
-CC:     <akiyama@nds-osk.co.jp>, <efriedrich@de.adit-jv.com>,
-        <erosca@de.adit-jv.com>, <hverkuil-cisco@xs4all.nl>,
-        <jacopo+renesas@jmondi.org>, <laurent.pinchart@ideasonboard.com>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <mrodin@de.adit-jv.com>,
-        <securitycheck@denso.co.jp>, <sudipi@jp.adit-jv.com>
-Subject: [PATCH v2] [RFC] rcar-vin: rcar-csi2: Correct the selection of hsfreqrange
-Date:   Tue, 17 Mar 2020 16:08:25 +0900
-Message-ID: <1584428905-21560-1-git-send-email-sudipi@jp.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20200316130247.GA2258968@oden.dyn.berto.se>
-References: <20200316130247.GA2258968@oden.dyn.berto.se>
+        Tue, 17 Mar 2020 03:09:54 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 2B300290EF2
+Subject: Re: [PATCH] platform/chrome: wilco_ec: Provide correct output format
+ to 'h1_gpio' file
+To:     Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Daniel Campello <campello@chromium.org>,
+        linux-kernel@vger.kernel.org
+References: <20200313232720.22364-1-bernardo.perez.priego@intel.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <f1635547-2c18-b9d6-0fb2-2f69dcfd124e@collabora.com>
+Date:   Tue, 17 Mar 2020 08:09:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.71.112.120]
+In-Reply-To: <20200313232720.22364-1-bernardo.perez.priego@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hsfreqrange should be chosen based on the calculated mbps which
-is closer to the default bit rate  and within the range as per
-table[1]. But current calculation always selects first value which
-is greater than or equal to the calculated mbps which may lead
-to chosing a wrong range in some cases.
+Hi,
 
-For example for 360 mbps for H3/M3N
-Existing logic selects
-Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
+On 14/3/20 0:27, Bernardo Perez Priego wrote:
+> Function 'h1_gpio_get' is receiving 'val' parameter of type u64,
+> this is being passed to 'send_ec_cmd' as type u8, thus, result
+> is stored in least significant byte. Due to output format,
+> the whole 'val' value was being displayed when any of the most
+> significant bytes are different than zero.
+> 
+> This fix will make sure only least significant byte is displayed
+> regardless of remaining bytes value.
+> 
+> Signed-off-by: Bernardo Perez Priego <bernardo.perez.priego@intel.com>
 
-This hsfreqrange is out of range.
+Daniel, could you give a try and give you Tested-by tag if you're fine with it?
 
-The logic is changed to get the default value which is closest to the
-calculated value [1]
+Thanks,
+ Enric
 
-Calculated value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
-
-[1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
-
-There is one exectpion value 227Mbps, which may cause out of
-range.
-
-Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
-
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
----
-Changes in v2:
-  - Added the boundary check for the maximum bit rate.
-  
-  - Simplified the logic by remmoving range check 
-    as only the closest default value covers most 
-    of the use cases.
-
-  - Aligning the commit message based on the above change
-
- drivers/media/platform/rcar-vin/rcar-csi2.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-index faa9fb2..6573625 100644
---- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -199,6 +199,7 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
- /* PHY Frequency Control */
- #define PHYPLL_REG			0x68
- #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
-+#define PHYPLL_HSFREQRANGE_MAX		1500
- 
- static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
- 	{ .mbps =   80, .reg = 0x00 },
-@@ -431,16 +432,23 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
- static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
- {
- 	const struct rcsi2_mbps_reg *hsfreq;
-+	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
- 
--	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
--		if (hsfreq->mbps >= mbps)
--			break;
--
--	if (!hsfreq->mbps) {
-+	if (mbps > PHYPLL_HSFREQRANGE_MAX) {
- 		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
- 		return -ERANGE;
- 	}
- 
-+	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
-+		if (hsfreq->mbps >= mbps)
-+			break;
-+		hsfreq_prev = hsfreq;
-+	}
-+
-+	if (hsfreq_prev &&
-+	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
-+		hsfreq = hsfreq_prev;
-+
- 	rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
- 
- 	return 0;
--- 
-2.7.4
-
+> ---
+>  drivers/platform/chrome/wilco_ec/debugfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
+> index df5a5f6c3ec6..c775b7d58c6d 100644
+> --- a/drivers/platform/chrome/wilco_ec/debugfs.c
+> +++ b/drivers/platform/chrome/wilco_ec/debugfs.c
+> @@ -211,7 +211,7 @@ static int h1_gpio_get(void *arg, u64 *val)
+>  	return send_ec_cmd(arg, SUB_CMD_H1_GPIO, (u8 *)val);
+>  }
+>  
+> -DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02llx\n");
+> +DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02hhx\n");
+>  
+>  /**
+>   * test_event_set() - Sends command to EC to cause an EC test event.
+> 
