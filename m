@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C077FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66453C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B2A205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F529205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443329;
-	bh=oVLC6nicO1Mx/Ruatmvva9vASIoywhS7oEje7p4u2Pk=;
+	s=default; t=1584443337;
+	bh=tU1sCskEZyRGbiY69yQ86F1d2qmqMz4UIRtAJdbj7Bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ss69rx57oZjz0pfbpavy/sZzqLiTUyKpQ83K22iPyGOCQx4hg8dP4dC1C0fryCvpU
-	 lZT7bpaVVU17bDXg13mYQQZX1RFJixN93WQXGaYQRmPfWxKfBDE+RgBf4AQxKS65ny
-	 bpyegHva123h4z/rC5yrkiB/Ccok9OmphDoGGzwc=
+	b=aeb9FpyJrPvH/OtUSJR1RGjnVCHPTqq+RJa4VOovgpN6QL+WrDl56Ng/tR3H8IGjf
+	 thzTbhfXeIbVLaTaGGvJtCJW8HuhZI5j5F98c0l3exPqRoNtuXrrs9psFR2Qz5TKmn
+	 25eo+bj4JmDna11ts09DQmfcQUZLBCZ8vN5GJmNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgCQLIs (ORCPT
+        id S1728907AbgCQLIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:08:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50744 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:08:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727564AbgCQLIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:08:47 -0400
+        id S1728896AbgCQLIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:08:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D5E7206EC;
-        Tue, 17 Mar 2020 11:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E13206EC;
+        Tue, 17 Mar 2020 11:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443326;
-        bh=oVLC6nicO1Mx/Ruatmvva9vASIoywhS7oEje7p4u2Pk=;
+        s=default; t=1584443332;
+        bh=tU1sCskEZyRGbiY69yQ86F1d2qmqMz4UIRtAJdbj7Bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWA60Wa1M2pCc+wIoutw3/GpYUm+KSoDku6RlsJwJjaYGR3XdnLDymsT6g3qm1ydX
-         qF1erqJ0CiaC1PpxIwpU2/5QBMikEkmaviuqGxnsj5mgn7Vgr5n65SHqxf+Gvb1Ogw
-         aa/6E26oP4HaX0lkPTlJqeL3px2xtlKWLubjoZKI=
+        b=0olLsS+6tfOxXP/cuvWha9S0KEtKRlDkY071/y30jzxIm/bTsZNusao9YRmSsKcSM
+         vIF5dYsSkyoNtxXxqTI7UGFfIErJ9bb+vrFQpT2lA6j56LcevSqHB2fnVkzv1oxw1M
+         rA2QIyDk4tRI/VyDdDNA4K9532dYayzLxHbxstuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 046/151] devlink: validate length of param values
-Date:   Tue, 17 Mar 2020 11:54:16 +0100
-Message-Id: <20200317103329.874149004@linuxfoundation.org>
+Subject: [PATCH 5.5 048/151] fib: add missing attribute validation for tun_id
+Date:   Tue, 17 Mar 2020 11:54:18 +0100
+Message-Id: <20200317103330.007902514@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -62,76 +62,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 8750939b6ad86abc3f53ec8a9683a1cded4a5654 ]
+[ Upstream commit 4c16d64ea04056f1b1b324ab6916019f6a064114 ]
 
-DEVLINK_ATTR_PARAM_VALUE_DATA may have different types
-so it's not checked by the normal netlink policy. Make
-sure the attribute length is what we expect.
+Add missing netlink policy entry for FRA_TUN_ID.
 
-Fixes: e3b7ca18ad7b ("devlink: Add param set command")
+Fixes: e7030878fc84 ("fib: Add fib rule match on tunnel id")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/devlink.c |   31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ include/net/fib_rules.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -3352,34 +3352,41 @@ devlink_param_value_get_from_info(const
- 				  struct genl_info *info,
- 				  union devlink_param_value *value)
- {
-+	struct nlattr *param_data;
- 	int len;
- 
--	if (param->type != DEVLINK_PARAM_TYPE_BOOL &&
--	    !info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA])
-+	param_data = info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA];
-+
-+	if (param->type != DEVLINK_PARAM_TYPE_BOOL && !param_data)
- 		return -EINVAL;
- 
- 	switch (param->type) {
- 	case DEVLINK_PARAM_TYPE_U8:
--		value->vu8 = nla_get_u8(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]);
-+		if (nla_len(param_data) != sizeof(u8))
-+			return -EINVAL;
-+		value->vu8 = nla_get_u8(param_data);
- 		break;
- 	case DEVLINK_PARAM_TYPE_U16:
--		value->vu16 = nla_get_u16(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]);
-+		if (nla_len(param_data) != sizeof(u16))
-+			return -EINVAL;
-+		value->vu16 = nla_get_u16(param_data);
- 		break;
- 	case DEVLINK_PARAM_TYPE_U32:
--		value->vu32 = nla_get_u32(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]);
-+		if (nla_len(param_data) != sizeof(u32))
-+			return -EINVAL;
-+		value->vu32 = nla_get_u32(param_data);
- 		break;
- 	case DEVLINK_PARAM_TYPE_STRING:
--		len = strnlen(nla_data(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]),
--			      nla_len(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]));
--		if (len == nla_len(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]) ||
-+		len = strnlen(nla_data(param_data), nla_len(param_data));
-+		if (len == nla_len(param_data) ||
- 		    len >= __DEVLINK_PARAM_MAX_STRING_VALUE)
- 			return -EINVAL;
--		strcpy(value->vstr,
--		       nla_data(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]));
-+		strcpy(value->vstr, nla_data(param_data));
- 		break;
- 	case DEVLINK_PARAM_TYPE_BOOL:
--		value->vbool = info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA] ?
--			       true : false;
-+		if (param_data && nla_len(param_data))
-+			return -EINVAL;
-+		value->vbool = nla_get_flag(param_data);
- 		break;
- 	}
- 	return 0;
+--- a/include/net/fib_rules.h
++++ b/include/net/fib_rules.h
+@@ -108,6 +108,7 @@ struct fib_rule_notifier_info {
+ 	[FRA_OIFNAME]	= { .type = NLA_STRING, .len = IFNAMSIZ - 1 }, \
+ 	[FRA_PRIORITY]	= { .type = NLA_U32 }, \
+ 	[FRA_FWMARK]	= { .type = NLA_U32 }, \
++	[FRA_TUN_ID]	= { .type = NLA_U64 }, \
+ 	[FRA_FWMASK]	= { .type = NLA_U32 }, \
+ 	[FRA_TABLE]     = { .type = NLA_U32 }, \
+ 	[FRA_SUPPRESS_PREFIXLEN] = { .type = NLA_U32 }, \
 
 
