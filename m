@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A82C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB5AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A7820769
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E24D20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgCQExL (ORCPT
+        id S1726885AbgCQExQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:53:11 -0400
+        Tue, 17 Mar 2020 00:53:16 -0400
 Received: from mga04.intel.com ([192.55.52.120]:34097 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbgCQExJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:53:09 -0400
-IronPort-SDR: 9srsuqLzq/C/FrDOlIBzBrwPWhMNNsZXK19aReCgmeIMPXAJKUwoB6sYh9rQ8dpnpGk5rTUgnI
- 1V++kReEsPoA==
+        id S1726769AbgCQExL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:53:11 -0400
+IronPort-SDR: KNuHTwO4vLm5jl6GXt+dIoqJK3bDU8xvHMXjEHyULPdBreNSXhh11HvyulUS0s0Om7/1/PxMXj
+ HZpbtmJKuHaQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:09 -0700
-IronPort-SDR: 4DUYEdUSKfeA49dlutWOLnwfCIrqTNcO7T5ZFwMo8tK8/cVfRpXpvUAsx/OElJZh50RppwXuoc
- JC1AA4fnkyiw==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:11 -0700
+IronPort-SDR: ECYl6RZ3ePBvj0NEcp3pQ1asOj/7yUM1ka/xZYqmGMmjWz9ieIdfcwB8Ti1WmiuoHoBdvg1u4V
+ 5CS48Qf+QALw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252727"
+   d="scan'208";a="355252748"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:08 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:10 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 01/32] KVM: VMX: Flush all EPTP/VPID contexts on remote TLB flush
-Date:   Mon, 16 Mar 2020 21:52:07 -0700
-Message-Id: <20200317045238.30434-2-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 05/32] KVM: x86: Export kvm_propagate_fault() (as kvm_inject_emulated_page_fault)
+Date:   Mon, 16 Mar 2020 21:52:11 -0700
+Message-Id: <20200317045238.30434-6-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
 References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
@@ -59,116 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Flush all EPTP/VPID contexts if a TLB flush _may_ have been triggered by
-a remote or deferred TLB flush, i.e. by KVM_REQ_TLB_FLUSH.  Remote TLB
-flushes require all contexts to be invalidated, not just the active
-contexts, e.g. all mappings in all contexts for a given HVA need to be
-invalidated on a mmu_notifier invalidation.  Similarly, the instigator
-of the deferred TLB flush may be expecting all contexts to be flushed,
-e.g. vmx_vcpu_load_vmcs().
+Export the page fault propagation helper so that VMX can use it to
+correctly emulate TLB invalidation on page faults in an upcoming patch.
 
-Without nested VMX, flushing only the current EPTP/VPID context isn't
-problematic because KVM uses a constant VPID for each vCPU, and
-mmu_alloc_direct_roots() all but guarantees KVM will use a single EPTP
-for L1.  In the rare case where a different EPTP is created or reused,
-KVM (currently) unconditionally flushes the new EPTP context prior to
-entering the guest.
+In the (hopefully) not-too-distant future, SGX virtualization will also
+want access to the helper for injecting page faults to the correct level
+(L1 vs. L2) when emulating ENCLS instructions.
 
-With nested VMX, KVM conditionally uses a different VPID for L2, and
-unconditionally uses a different EPTP for L2.  Because KVM doesn't
-_intentionally_ guarantee L2's EPTP/VPID context is flushed on nested
-VM-Enter, it'd be possible for a malicious L1 to attack the host and/or
-different VMs by exploiting the lack of flushing for L2.
+Rename the function to kvm_inject_emulated_page_fault() to clarify that
+it is (a) injecting a fault and (b) only for page faults.  WARN if it's
+invoked with an exception other than PF_VECTOR.
 
-  1) Launch nested guest from malicious L1.
-
-  2) Nested VM-Enter to L2.
-
-  3) Access target GPA 'g'.  CPU inserts TLB entry tagged with L2's ASID
-     mapping 'g' to host PFN 'x'.
-
-  2) Nested VM-Exit to L1.
-
-  3) L1 triggers kernel same-page merging (ksm) by duplicating/zeroing
-     the page for PFN 'x'.
-
-  4) Host kernel merges PFN 'x' with PFN 'y', i.e. unmaps PFN 'x' and
-     remaps the page to PFN 'y'.  mmu_notifier sends invalidate command,
-     KVM flushes TLB only for L1's ASID.
-
-  4) Host kernel reallocates PFN 'x' to some other task/guest.
-
-  5) Nested VM-Enter to L2.  KVM does not invalidate L2's EPTP or VPID.
-
-  6) L2 accesses GPA 'g' and gains read/write access to PFN 'x' via its
-     stale TLB entry.
-
-However, current KVM unconditionally flushes L1's EPTP/VPID context on
-nested VM-Exit.  But, that behavior is mostly unintentional, KVM doesn't
-go out of its way to flush EPTP/VPID on nested VM-Enter/VM-Exit, rather
-a TLB flush is guaranteed to occur prior to re-entering L1 due to
-__kvm_mmu_new_cr3() always being called with skip_tlb_flush=false.  On
-nested VM-Enter, this happens via kvm_init_shadow_ept_mmu() (nested EPT
-enabled) or in nested_vmx_load_cr3() (nested EPT disabled).  On nested
-VM-Exit it occurs via nested_vmx_load_cr3().
-
-This also fixes a bug where a deferred TLB flush in the context of L2,
-with EPT disabled, would flush L1's VPID instead of L2's VPID, as
-vmx_flush_tlb() flushes L1's VPID regardless of is_guest_mode().
-
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Ben Gardon <bgardon@google.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Junaid Shahid <junaids@google.com>
-Cc: Liran Alon <liran.alon@oracle.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: John Haxby <john.haxby@oracle.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Fixes: efebf0aaec3d ("KVM: nVMX: Do not flush TLB on L1<->L2 transitions if L1 uses VPID and EPT")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.h | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h | 2 ++
+ arch/x86/kvm/x86.c              | 8 ++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index be93d597306c..d6d67b816ebe 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -518,7 +518,33 @@ static inline void __vmx_flush_tlb(struct kvm_vcpu *vcpu, int vpid,
- 
- static inline void vmx_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
- {
--	__vmx_flush_tlb(vcpu, to_vmx(vcpu)->vpid, invalidate_gpa);
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+
-+	/*
-+	 * Flush all EPTP/VPID contexts if the TLB flush _may_ have been
-+	 * invoked via kvm_flush_remote_tlbs(), which always passes %true for
-+	 * @invalidate_gpa.  Flushing remote TLBs requires all contexts to be
-+	 * flushed, not just the active context.
-+	 *
-+	 * Note, this also ensures a deferred TLB flush with VPID enabled and
-+	 * EPT disabled invalidates the "correct" VPID, by nuking both L1 and
-+	 * L2's VPIDs.
-+	 */
-+	if (invalidate_gpa) {
-+		if (enable_ept) {
-+			ept_sync_global();
-+		} else if (enable_vpid) {
-+			if (cpu_has_vmx_invvpid_global()) {
-+				vpid_sync_vcpu_global();
-+			} else {
-+				WARN_ON_ONCE(!cpu_has_vmx_invvpid_single());
-+				vpid_sync_vcpu_single(vmx->vpid);
-+				vpid_sync_vcpu_single(vmx->nested.vpid02);
-+			}
-+		}
-+	} else {
-+		__vmx_flush_tlb(vcpu, vmx->vpid, false);
-+	}
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 9a183e9d4cb1..328b1765ff76 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1447,6 +1447,8 @@ void kvm_queue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
+ void kvm_requeue_exception(struct kvm_vcpu *vcpu, unsigned nr);
+ void kvm_requeue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
+ void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault);
++bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
++				    struct x86_exception *fault);
+ int kvm_read_guest_page_mmu(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+ 			    gfn_t gfn, void *data, int offset, int len,
+ 			    u32 access);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index e54c6ad628a8..64ed6e6e2b56 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -611,8 +611,11 @@ void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault)
  }
+ EXPORT_SYMBOL_GPL(kvm_inject_page_fault);
  
- static inline void decache_tsc_multiplier(struct vcpu_vmx *vmx)
+-static bool kvm_propagate_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault)
++bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
++				    struct x86_exception *fault)
+ {
++	WARN_ON_ONCE(fault->vector != PF_VECTOR);
++
+ 	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
+ 		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
+ 	else
+@@ -620,6 +623,7 @@ static bool kvm_propagate_fault(struct kvm_vcpu *vcpu, struct x86_exception *fau
+ 
+ 	return fault->nested_page_fault;
+ }
++EXPORT_SYMBOL_GPL(kvm_inject_emulated_page_fault);
+ 
+ void kvm_inject_nmi(struct kvm_vcpu *vcpu)
+ {
+@@ -6373,7 +6377,7 @@ static bool inject_emulated_exception(struct kvm_vcpu *vcpu)
+ {
+ 	struct x86_emulate_ctxt *ctxt = vcpu->arch.emulate_ctxt;
+ 	if (ctxt->exception.vector == PF_VECTOR)
+-		return kvm_propagate_fault(vcpu, &ctxt->exception);
++		return kvm_inject_emulated_page_fault(vcpu, &ctxt->exception);
+ 
+ 	if (ctxt->exception.error_code_valid)
+ 		kvm_queue_exception_e(vcpu, ctxt->exception.vector,
 -- 
 2.24.1
 
