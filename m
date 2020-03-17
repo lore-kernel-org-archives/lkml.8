@@ -2,135 +2,94 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE5EC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3410C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3E320738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C939F20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:58:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="GrvBiO89"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m9wr7XFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgCQQ5f (ORCPT
+        id S1726619AbgCQQ6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:57:35 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36079 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQQ5e (ORCPT
+        Tue, 17 Mar 2020 12:58:16 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43254 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQQ6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:57:34 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s5so26709998wrg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wrfChOUz/lAaBXiE3qY2UNw2+SxM9+DHELQmHfgnM64=;
-        b=GrvBiO890g/VncbMjDzgbmrlwtosSNomp7QQc4Q1ksYopcgnqyo199zvFrfrAyBL8y
-         JUc/9D6ixg8Mh8PdAhK0nJ0ZEsyrJDYwvgCb9RDAQELwMd/TDSJ128ls95P6HlVi90Vc
-         yKMOhcftgm7t6pyG+4H2D/ggA2v6HONmXEgPA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=wrfChOUz/lAaBXiE3qY2UNw2+SxM9+DHELQmHfgnM64=;
-        b=g1mx1vLszMtgOGj2+U+sIIRBasWzjojvDhFHIh5T4OwsEa9zio+zFRXuw7rq10BvG2
-         u/69OGJ+4/wwST+wpJC47REzhPA9FudYDoPiogWa/zgrs3hSMAGDwwh0luCLmyJ0m4yV
-         cSrCB0WqsegOQ/zhUnVqiFXiB6bp9WYDmUFi81X0++EBKqi8BXQyHsvVPbsLf1fOKrk4
-         08OHuoIqJrf2WipEfvXVeJBS+SLf8VbVMqtx1bhptKHzK3c4OCEhAbphkdDyOxQVWPZj
-         9sAcpb0OIOzO56bff11YFGeRGvADHBdkWC7gx/eQGfYjX9FPlz+77y6kMZk/49vWSvNp
-         G6Og==
-X-Gm-Message-State: ANhLgQ1M1HH4FQrEsXe0GISSsSZlNSw4iBxYRZRkJL07J5MMkrPutKKw
-        V3CzyzRWMbSP55I2LYLgwQXi/A==
-X-Google-Smtp-Source: ADFU+vspECOtqtMTvLpFlQUwdK8IeDVk+/wKnuMtgt4gmzOuA3KijQEyjlIBgw/c5JZcSajTRdOe7Q==
-X-Received: by 2002:a05:6000:41:: with SMTP id k1mr7434833wrx.53.1584464251820;
-        Tue, 17 Mar 2020 09:57:31 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id c5sm508387wma.3.2020.03.17.09.57.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 09:57:31 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 17:57:29 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/lease: fix WARNING in idr_destroy
-Message-ID: <20200317165729.GQ2363188@phenom.ffwll.local>
-Mail-Followup-To: Qiujun Huang <hqjagain@gmail.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <1584329768-16119-1-git-send-email-hqjagain@gmail.com>
+        Tue, 17 Mar 2020 12:58:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QX9iF8ezG+inOhuE0PgT2EHQt0lHzo+JEnimIMMxeG8=; b=m9wr7XFiz9mM1t6wrJrro4AUQs
+        OeZB2pfThQIACijyB6Gtt4K94gXlO2HpdSxFuBvO6B5oA/K8xQ0t4HKvhW2UlHrmWhQcxpWIhWKGo
+        TrrfX7p66FtF3jBBtIODD8itOjd1w6roMSrsPZZIzqOmzAktJ84BXI68OAiSl0XXv4AEPyoGe9DGu
+        ldahZ1Z6imJilwye8elj2fX/PEq/Q2W+m8ijy/SjGNv5vQdmpOYeSGoKFQNdKqUhNmk2Hp5/r5lwK
+        3/Z3giKIi38wu3GjnKVajdN1A1YeBeQdr5YlM2NAQSceBQoJlTfSopn16JIBEQA+mTtPXR7Pigg3I
+        oHp6LwFw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEFXc-0003Sv-NW; Tue, 17 Mar 2020 16:58:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9405B304D2C;
+        Tue, 17 Mar 2020 17:58:05 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 849D823D7668A; Tue, 17 Mar 2020 17:58:05 +0100 (CET)
+Date:   Tue, 17 Mar 2020 17:58:05 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 04/17] kernel: futex.c: get rid of a docs build warning
+Message-ID: <20200317165805.GA20713@hirez.programming.kicks-ass.net>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org>
+ <aab1052263e340a3eada5522f32be318890314a1.1584456635.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584329768-16119-1-git-send-email-hqjagain@gmail.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <aab1052263e340a3eada5522f32be318890314a1.1584456635.git.mchehab+huawei@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 11:36:08AM +0800, Qiujun Huang wrote:
-> leases has been destroyed:
-> drm_master_put
->     ->drm_master_destroy
->             ->idr_destroy
+On Tue, Mar 17, 2020 at 03:54:13PM +0100, Mauro Carvalho Chehab wrote:
+> Adjust whitespaces and blank lines in order to get rid of this:
 > 
-> so the "out_lessee" needn't to call idr_destroy again.
+> 	./kernel/futex.c:491: WARNING: Definition list ends without a blank line; unexpected unindent.
 > 
-> Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  drivers/gpu/drm/drm_lease.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  kernel/futex.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
-> index b481caf..54506c2 100644
-> --- a/drivers/gpu/drm/drm_lease.c
-> +++ b/drivers/gpu/drm/drm_lease.c
-> @@ -577,11 +577,14 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
->  
->  out_lessee:
->  	drm_master_put(&lessee);
-> +	goto err_exit;
+> diff --git a/kernel/futex.c b/kernel/futex.c
+> index 67f004133061..dda6ddbc2e7d 100644
+> --- a/kernel/futex.c
+> +++ b/kernel/futex.c
+> @@ -486,7 +486,8 @@ static u64 get_inode_sequence_number(struct inode *inode)
+>   * The key words are stored in @key on success.
+>   *
+>   * For shared mappings (when @fshared), the key is:
+> - *   ( inode->i_sequence, page->index, offset_within_page )
+> + * ( inode->i_sequence, page->index, offset_within_page )
+> + *
 
-I think this is correct, but also confusioning and inconsistent with the
-existing style. Most error cases before drm_lease_create explicit destroy
-the idr, except the one for drm_lease_create.
+WTH, that's less readable.
 
-Instead of your patch I'd
-- remove the idr_destry from the error unrolling here
-- add it the to drm_lease_create error case
-- add a comment above the call to drm_lease_crete that it takes ownership
-  of the lease idr
-
-Can you pls respin and retest to make sure that patch is still correct?
-
-Thanks, Daniel
-
->  
->  out_leases:
-> -	put_unused_fd(fd);
->  	idr_destroy(&leases);
->  
-> +err_exit:
-> +	put_unused_fd(fd);
-> +
->  	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
->  	return ret;
->  }
+>   * [ also see get_inode_sequence_number() ]
+>   *
+>   * For private mappings (or when !@fshared), the key is:
 > -- 
-> 1.8.3.1
+> 2.24.1
 > 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
