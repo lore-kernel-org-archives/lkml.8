@@ -2,67 +2,176 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC82C0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DB4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F9120575
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04EA020674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgCQCmi (ORCPT
+        id S1726735AbgCQCpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 22:42:38 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40922 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbgCQCmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 22:42:37 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2DA151A0CF2;
-        Tue, 17 Mar 2020 03:42:36 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5F8951A0CEA;
-        Tue, 17 Mar 2020 03:42:31 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4F6A0402D0;
-        Tue, 17 Mar 2020 10:42:25 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] clocksource: imx-tpm: Remove unused includes
-Date:   Tue, 17 Mar 2020 10:35:49 +0800
-Message-Id: <1584412549-18354-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 16 Mar 2020 22:45:41 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:54178 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbgCQCpk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 22:45:40 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 02H2jR4H015573, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 02H2jR4H015573
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 10:45:27 +0800
+Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 17 Mar 2020 10:45:27 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 17 Mar 2020 10:45:27 +0800
+Received: from RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f]) by
+ RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f%6]) with mapi id
+ 15.01.1779.005; Tue, 17 Mar 2020 10:45:27 +0800
+From:   =?utf-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: RE: [PATCH] mmc: rtsx: Fixed TX/RX register and optimized TX parameter
+Thread-Topic: [PATCH] mmc: rtsx: Fixed TX/RX register and optimized TX
+ parameter
+Thread-Index: AQHV+z30nU3JcV+G+EOJUvxdmVETS6hKvoSAgAFTfeA=
+Date:   Tue, 17 Mar 2020 02:45:26 +0000
+Message-ID: <6196929373bb43c8b8fbc550ad41e1fc@realtek.com>
+References: <20200316025232.1167-1-ricky_wu@realtek.com>
+ <CAPDyKFrWedEmZ=0trPEG8Z-11nyFX6_OB3cx7+SAdB5VW_vzgQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFrWedEmZ=0trPEG8Z-11nyFX6_OB3cx7+SAdB5VW_vzgQ@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.88.99]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is nothing in use from of_address.h/of_irq.h, remove them.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/clocksource/timer-imx-tpm.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/clocksource/timer-imx-tpm.c b/drivers/clocksource/timer-imx-tpm.c
-index c1d52d5..6334a35 100644
---- a/drivers/clocksource/timer-imx-tpm.c
-+++ b/drivers/clocksource/timer-imx-tpm.c
-@@ -8,8 +8,6 @@
- #include <linux/clocksource.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
--#include <linux/of_address.h>
--#include <linux/of_irq.h>
- #include <linux/sched_clock.h>
- 
- #include "timer-of.h"
--- 
-2.7.4
-
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFVsZiBIYW5zc29uIFttYWls
+dG86dWxmLmhhbnNzb25AbGluYXJvLm9yZ10NCj4gU2VudDogTW9uZGF5LCBNYXJjaCAxNiwgMjAy
+MCAxMDoxNyBQTQ0KPiBUbzog5ZCz5piK5r6EIFJpY2t5DQo+IENjOiBsaW51eC1tbWNAdmdlci5r
+ZXJuZWwub3JnOyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0OyBBcm5kIEJlcmdtYW5uOyBHcmVn
+DQo+IEtyb2FoLUhhcnRtYW4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gbW1jOiBydHN4OiBGaXhl
+ZCBUWC9SWCByZWdpc3RlciBhbmQgb3B0aW1pemVkIFRYDQo+IHBhcmFtZXRlcg0KPiANCj4gT24g
+TW9uLCAxNiBNYXIgMjAyMCBhdCAwMzo1MiwgPHJpY2t5X3d1QHJlYWx0ZWsuY29tPiB3cm90ZToN
+Cj4gPg0KPiA+IEZyb206IFJpY2t5IFd1IDxyaWNreV93dUByZWFsdGVrLmNvbT4NCj4gPg0KPiA+
+IEZpeGVkIHNkX2NoYW5nZV9waGFzZSBUWC9SWCByZWdpc3Rlcg0KPiA+IE9wdGltaXplZCBydHM1
+MjJhIHJ0czUyNGEgcnRzNTI1YSBydHM1MjYwIHJ0czUyNjEgVFggaW5pdGlhbCBwYXJhbWV0ZXIN
+Cj4gDQo+IEkgZG9uJ3QgdW5kZXJzdGFuZCB3aGF0IHRoaXMgYWN0dWFsbHkgZml4ZXMuIENhbiB5
+b3UgdHJ5IHRvIGVsYWJvcmF0ZQ0KPiBhIGJpdCBvbiB0aGlzLCBwbGVhc2U/DQo+IA0KPiBEbyB5
+b3UgdGhpbmsgdGhpcyBpcyBuZWVkZWQgZm9yIHN0YWJsZSwgdGhlbiB3aHk/DQoNClllcywgSSB0
+aGluayBpdCBuZWVkIHBhdGNoIHRvIHN0YWJsZQ0KDQpJbiBmdW5jdGlvbiBzZF9jaGFuZ2VfcGhh
+c2UoKSB3aGV0aGVyIGl0IGlzIFRYIG9yIFJYIGFsd2F5cyB3cml0ZSB0aGUgc2FtZSByZWdpc3Rl
+cihUWCksIHNvIHBhdGNoIHRoaXMgZnVuY3Rpb24gbWFrZSBSWCBhbmQgVFggY2FuIGNoYW5nZSB3
+ZWxsLg0KQXQgbW1jIHN0YWNrIG1lY2hhbmlzbSBkbyBub3QgdHVuaW5nIFRYIHBoYXNlLCBzbyBu
+ZWVkIGdpdmUgYSBzdGFibGUgcGFyYW1ldGVyIGZvciBUWCBwaGFzZShzZHIxMDQgc2RyNTAgZGRy
+NTApIGF0IGluaXRpYWwuIA0KDQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0KPiANCj4gPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IFJpY2t5IFd1IDxyaWNreV93dUByZWFsdGVrLmNvbT4NCj4gPiAt
+LS0NCj4gPiAgZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTIyNy5jIHwgIDIgKy0NCj4gPiAg
+ZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI0OS5jIHwgIDIgKysNCj4gPiAgZHJpdmVycy9t
+aXNjL2NhcmRyZWFkZXIvcnRzNTI2MC5jIHwgIDIgKy0NCj4gPiAgZHJpdmVycy9taXNjL2NhcmRy
+ZWFkZXIvcnRzNTI2MS5jIHwgIDIgKy0NCj4gPiAgZHJpdmVycy9tbWMvaG9zdC9ydHN4X3BjaV9z
+ZG1tYy5jIHwgMTMgKysrKysrKystLS0tLQ0KPiA+ICA1IGZpbGVzIGNoYW5nZWQsIDEzIGluc2Vy
+dGlvbnMoKyksIDggZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
+aXNjL2NhcmRyZWFkZXIvcnRzNTIyNy5jDQo+IGIvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRz
+NTIyNy5jDQo+ID4gaW5kZXggNGZlZWQyOTZhMzI3Li40MjNmZWNjMTlmYzQgMTAwNjQ0DQo+ID4g
+LS0tIGEvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTIyNy5jDQo+ID4gKysrIGIvZHJpdmVy
+cy9taXNjL2NhcmRyZWFkZXIvcnRzNTIyNy5jDQo+ID4gQEAgLTM5NCw3ICszOTQsNyBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IHBjcl9vcHMgcnRzNTIyYV9wY3Jfb3BzID0gew0KPiA+ICB2b2lkIHJ0
+czUyMmFfaW5pdF9wYXJhbXMoc3RydWN0IHJ0c3hfcGNyICpwY3IpDQo+ID4gIHsNCj4gPiAgICAg
+ICAgIHJ0czUyMjdfaW5pdF9wYXJhbXMocGNyKTsNCj4gPiAtDQo+ID4gKyAgICAgICBwY3ItPnR4
+X2luaXRpYWxfcGhhc2UgPSBTRVRfQ0xPQ0tfUEhBU0UoMjAsIDIwLCAxMSk7DQo+ID4gICAgICAg
+ICBwY3ItPnJlZ19wbV9jdHJsMyA9IFJUUzUyMkFfUE1fQ1RSTDM7DQo+ID4NCj4gPiAgICAgICAg
+IHBjci0+b3B0aW9uLm9jcF9lbiA9IDE7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9j
+YXJkcmVhZGVyL3J0czUyNDkuYw0KPiBiL2RyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0czUyNDku
+Yw0KPiA+IGluZGV4IGRiOTM2ZTRkNmU1Ni4uMWE4MWNkYTk0OGMxIDEwMDY0NA0KPiA+IC0tLSBh
+L2RyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0czUyNDkuYw0KPiA+ICsrKyBiL2RyaXZlcnMvbWlz
+Yy9jYXJkcmVhZGVyL3J0czUyNDkuYw0KPiA+IEBAIC02MTgsNiArNjE4LDcgQEAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBwY3Jfb3BzIHJ0czUyNGFfcGNyX29wcyA9IHsNCj4gPiAgdm9pZCBydHM1MjRh
+X2luaXRfcGFyYW1zKHN0cnVjdCBydHN4X3BjciAqcGNyKQ0KPiA+ICB7DQo+ID4gICAgICAgICBy
+dHM1MjQ5X2luaXRfcGFyYW1zKHBjcik7DQo+ID4gKyAgICAgICBwY3ItPnR4X2luaXRpYWxfcGhh
+c2UgPSBTRVRfQ0xPQ0tfUEhBU0UoMjcsIDI5LCAxMSk7DQo+ID4gICAgICAgICBwY3ItPm9wdGlv
+bi5sdHJfbDFvZmZfc3Nwd3JnYXRlID0NCj4gTFRSX0wxT0ZGX1NTUFdSR0FURV81MjUwX0RFRjsN
+Cj4gPiAgICAgICAgIHBjci0+b3B0aW9uLmx0cl9sMW9mZl9zbm9vemVfc3Nwd3JnYXRlID0NCj4g
+PiAgICAgICAgICAgICAgICAgTFRSX0wxT0ZGX1NOT09aRV9TU1BXUkdBVEVfNTI1MF9ERUY7DQo+
+ID4gQEAgLTczMyw2ICs3MzQsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjcl9vcHMgcnRzNTI1
+YV9wY3Jfb3BzID0gew0KPiA+ICB2b2lkIHJ0czUyNWFfaW5pdF9wYXJhbXMoc3RydWN0IHJ0c3hf
+cGNyICpwY3IpDQo+ID4gIHsNCj4gPiAgICAgICAgIHJ0czUyNDlfaW5pdF9wYXJhbXMocGNyKTsN
+Cj4gPiArICAgICAgIHBjci0+dHhfaW5pdGlhbF9waGFzZSA9IFNFVF9DTE9DS19QSEFTRSgyNSwg
+MjksIDExKTsNCj4gPiAgICAgICAgIHBjci0+b3B0aW9uLmx0cl9sMW9mZl9zc3B3cmdhdGUgPQ0K
+PiBMVFJfTDFPRkZfU1NQV1JHQVRFXzUyNTBfREVGOw0KPiA+ICAgICAgICAgcGNyLT5vcHRpb24u
+bHRyX2wxb2ZmX3Nub296ZV9zc3B3cmdhdGUgPQ0KPiA+ICAgICAgICAgICAgICAgICBMVFJfTDFP
+RkZfU05PT1pFX1NTUFdSR0FURV81MjUwX0RFRjsNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
+aXNjL2NhcmRyZWFkZXIvcnRzNTI2MC5jDQo+IGIvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRz
+NTI2MC5jDQo+ID4gaW5kZXggNDIxNGYwMmExN2ZkLi43MTEwNTRlYmFkNzQgMTAwNjQ0DQo+ID4g
+LS0tIGEvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MC5jDQo+ID4gKysrIGIvZHJpdmVy
+cy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MC5jDQo+ID4gQEAgLTY2Miw3ICs2NjIsNyBAQCB2b2lk
+IHJ0czUyNjBfaW5pdF9wYXJhbXMoc3RydWN0IHJ0c3hfcGNyICpwY3IpDQo+ID4gICAgICAgICBw
+Y3ItPnNkMzBfZHJpdmVfc2VsXzF2OCA9IENGR19EUklWRVJfVFlQRV9COw0KPiA+ICAgICAgICAg
+cGNyLT5zZDMwX2RyaXZlX3NlbF8zdjMgPSBDRkdfRFJJVkVSX1RZUEVfQjsNCj4gPiAgICAgICAg
+IHBjci0+YXNwbV9lbiA9IEFTUE1fTDFfRU47DQo+ID4gLSAgICAgICBwY3ItPnR4X2luaXRpYWxf
+cGhhc2UgPSBTRVRfQ0xPQ0tfUEhBU0UoMSwgMjksIDE2KTsNCj4gPiArICAgICAgIHBjci0+dHhf
+aW5pdGlhbF9waGFzZSA9IFNFVF9DTE9DS19QSEFTRSgyNywgMjksIDExKTsNCj4gPiAgICAgICAg
+IHBjci0+cnhfaW5pdGlhbF9waGFzZSA9IFNFVF9DTE9DS19QSEFTRSgyNCwgNiwgNSk7DQo+ID4N
+Cj4gPiAgICAgICAgIHBjci0+aWNfdmVyc2lvbiA9IHJ0czUyNjBfZ2V0X2ljX3ZlcnNpb24ocGNy
+KTsNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MS5jDQo+
+IGIvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MS5jDQo+ID4gaW5kZXggYmM0OTY3YTZl
+ZmExLi43OGMzYjFkNDI0YzMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9taXNjL2NhcmRyZWFk
+ZXIvcnRzNTI2MS5jDQo+ID4gKysrIGIvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MS5j
+DQo+ID4gQEAgLTc2NCw3ICs3NjQsNyBAQCB2b2lkIHJ0czUyNjFfaW5pdF9wYXJhbXMoc3RydWN0
+IHJ0c3hfcGNyICpwY3IpDQo+ID4gICAgICAgICBwY3ItPnNkMzBfZHJpdmVfc2VsXzF2OCA9IENG
+R19EUklWRVJfVFlQRV9COw0KPiA+ICAgICAgICAgcGNyLT5zZDMwX2RyaXZlX3NlbF8zdjMgPSBD
+RkdfRFJJVkVSX1RZUEVfQjsNCj4gPiAgICAgICAgIHBjci0+YXNwbV9lbiA9IEFTUE1fTDFfRU47
+DQo+ID4gLSAgICAgICBwY3ItPnR4X2luaXRpYWxfcGhhc2UgPSBTRVRfQ0xPQ0tfUEhBU0UoMjAs
+IDI3LCAxNik7DQo+ID4gKyAgICAgICBwY3ItPnR4X2luaXRpYWxfcGhhc2UgPSBTRVRfQ0xPQ0tf
+UEhBU0UoMjcsIDI3LCAxMSk7DQo+ID4gICAgICAgICBwY3ItPnJ4X2luaXRpYWxfcGhhc2UgPSBT
+RVRfQ0xPQ0tfUEhBU0UoMjQsIDYsIDUpOw0KPiA+DQo+ID4gICAgICAgICBwY3ItPmljX3ZlcnNp
+b24gPSBydHM1MjYxX2dldF9pY192ZXJzaW9uKHBjcik7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvbW1jL2hvc3QvcnRzeF9wY2lfc2RtbWMuYw0KPiBiL2RyaXZlcnMvbW1jL2hvc3QvcnRzeF9w
+Y2lfc2RtbWMuYw0KPiA+IGluZGV4IGJkNTA5MzVkYzM3ZC4uMTEwODc5NzZhYjE5IDEwMDY0NA0K
+PiA+IC0tLSBhL2RyaXZlcnMvbW1jL2hvc3QvcnRzeF9wY2lfc2RtbWMuYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvbW1jL2hvc3QvcnRzeF9wY2lfc2RtbWMuYw0KPiA+IEBAIC02MDYsMTkgKzYwNiwyMiBA
+QCBzdGF0aWMgaW50IHNkX2NoYW5nZV9waGFzZShzdHJ1Y3QNCj4gcmVhbHRla19wY2lfc2RtbWMg
+Kmhvc3QsDQo+ID4gICAgICAgICAgICAgICAgIHU4IHNhbXBsZV9wb2ludCwgYm9vbCByeCkNCj4g
+PiAgew0KPiA+ICAgICAgICAgc3RydWN0IHJ0c3hfcGNyICpwY3IgPSBob3N0LT5wY3I7DQo+ID4g
+LQ0KPiA+ICsgICAgICAgdTE2IFNEX1ZQX0NUTCA9IDA7DQo+ID4gICAgICAgICBkZXZfZGJnKHNk
+bW1jX2Rldihob3N0KSwgIiVzKCVzKTogc2FtcGxlX3BvaW50ID0gJWRcbiIsDQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgX19mdW5jX18sIHJ4ID8gIlJYIiA6ICJUWCIsIHNhbXBsZV9wb2lu
+dCk7DQo+ID4NCj4gPiAgICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lzdGVyKHBjciwgQ0xLX0NU
+TCwgQ0hBTkdFX0NMSywgQ0hBTkdFX0NMSyk7DQo+ID4gLSAgICAgICBpZiAocngpDQo+ID4gKyAg
+ICAgICBpZiAocngpIHsNCj4gPiArICAgICAgICAgICAgICAgU0RfVlBfQ1RMID0gU0RfVlBSWF9D
+VEw7DQo+ID4gICAgICAgICAgICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lzdGVyKHBjciwgU0Rf
+VlBSWF9DVEwsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgUEhBU0VfU0VMRUNUX01BU0ss
+IHNhbXBsZV9wb2ludCk7DQo+ID4gLSAgICAgICBlbHNlDQo+ID4gKyAgICAgICB9IGVsc2Ugew0K
+PiA+ICsgICAgICAgICAgICAgICBTRF9WUF9DVEwgPSBTRF9WUFRYX0NUTDsNCj4gPiAgICAgICAg
+ICAgICAgICAgcnRzeF9wY2lfd3JpdGVfcmVnaXN0ZXIocGNyLCBTRF9WUFRYX0NUTCwNCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgICBQSEFTRV9TRUxFQ1RfTUFTSywgc2FtcGxlX3BvaW50KTsN
+Cj4gPiAtICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lzdGVyKHBjciwgU0RfVlBDTEswX0NUTCwg
+UEhBU0VfTk9UX1JFU0VULCAwKTsNCj4gPiAtICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lzdGVy
+KHBjciwgU0RfVlBDTEswX0NUTCwgUEhBU0VfTk9UX1JFU0VULA0KPiA+ICsgICAgICAgfQ0KPiA+
+ICsgICAgICAgcnRzeF9wY2lfd3JpdGVfcmVnaXN0ZXIocGNyLCBTRF9WUF9DVEwsIFBIQVNFX05P
+VF9SRVNFVCwgMCk7DQo+ID4gKyAgICAgICBydHN4X3BjaV93cml0ZV9yZWdpc3RlcihwY3IsIFNE
+X1ZQX0NUTCwgUEhBU0VfTk9UX1JFU0VULA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgUEhBU0VfTk9UX1JFU0VUKTsNCj4gPiAgICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lz
+dGVyKHBjciwgQ0xLX0NUTCwgQ0hBTkdFX0NMSywgMCk7DQo+ID4gICAgICAgICBydHN4X3BjaV93
+cml0ZV9yZWdpc3RlcihwY3IsIFNEX0NGRzEsIFNEX0FTWU5DX0ZJRk9fTk9UX1JTVCwNCj4gMCk7
+DQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRo
+ZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
