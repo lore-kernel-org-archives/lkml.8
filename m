@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78FBC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84576C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6E320738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E1420738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgCQExa (ORCPT
+        id S1727065AbgCQEx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:53:30 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34127 "EHLO mga04.intel.com"
+        Tue, 17 Mar 2020 00:53:26 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34106 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbgCQExX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:53:23 -0400
-IronPort-SDR: 4S1QgyQNoxvgkEDWKXgbpL0Cu/BF81ynclIdunEt3rjIOsl3v71nAQIZI7MqYjSqs8/3TPxyhx
- Yp9kLhPaJrqA==
+        id S1726916AbgCQExT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:53:19 -0400
+IronPort-SDR: KreRwomM7VJGpCBfE/borSampHbVfiQcTCtQOonbkZwtstv+/9zeSqFeukFnKKw9Rfz2sOY03C
+ 1MMA9C7vKf3g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:22 -0700
-IronPort-SDR: OoVw0F+1w+mMxqupFNoOWLQqbXu94VN7KU50wOWphTxPS4LAAtBdk4CYjI8i4zSMXeG06LeG+P
- wKlF9YSFojsg==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:17 -0700
+IronPort-SDR: jQD7X+ULGfM6v79c19ndhGBd76QGW88CrUMnM5XdULPlsG7KpwoMM58s4AkfCY3rU6xh8BFo0n
+ Pja434OCZO9g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252820"
+   d="scan'208";a="355252789"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:21 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:17 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 26/32] KVM: nVMX: Selectively use TLB_FLUSH_CURRENT for nested VM-Enter/VM-Exit
-Date:   Mon, 16 Mar 2020 21:52:32 -0700
-Message-Id: <20200317045238.30434-27-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 17/32] KVM: SVM: Wire up ->tlb_flush_guest() directly to svm_flush_tlb()
+Date:   Mon, 16 Mar 2020 21:52:23 -0700
+Message-Id: <20200317045238.30434-18-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
 References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
@@ -59,47 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Flush only the current context, as opposed to all contexts, when
-requesting a TLB flush to handle the scenario where a L1 does not expect
-a TLB flush, but one is required because L1 and L2 shared an ASID.  This
-occurs if EPT is disabled (no per-EPTP tag), VPID is enabled (hardware
-doesn't flush unconditionally) and vmcs02 does not have its own VPID due
-to exhaustion of available VPIDs.
+Use svm_flush_tlb() directly for kvm_x86_ops->tlb_flush_guest() now that
+the @invalidate_gpa param to ->tlb_flush() is gone, i.e. the wrapper for
+->tlb_flush_guest() is no longer necessary.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/x86/kvm/svm.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 19600d4b3344..04cdf7ded1d3 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1167,16 +1167,19 @@ static void nested_vmx_transition_tlb_flush(struct kvm_vcpu *vcpu,
- 	 *
- 	 * If VPID is enabled and used by vmc12, but L2 does not have a unique
- 	 * TLB tag (ASID), i.e. EPT is disabled and KVM was unable to allocate
--	 * a VPID for L2, flush the TLB as the effective ASID is common to both
--	 * L1 and L2.
-+	 * a VPID for L2, flush the current context as the effective ASID is
-+	 * common to both L1 and L2.
- 	 *
- 	 * Defer the flush so that it runs after vmcs02.EPTP has been set by
- 	 * KVM_REQ_LOAD_MMU_PGD (if nested EPT is enabled) and to avoid
- 	 * redundant flushes further down the nested pipeline.
- 	 */
--	if (enable_vpid &&
--	    (!nested_cpu_has_vpid(vmcs12) || !nested_has_guest_tlb_tag(vcpu)))
--		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
-+	if (enable_vpid) {
-+		if (!nested_cpu_has_vpid(vmcs12))
-+			kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
-+		else if (!nested_has_guest_tlb_tag(vcpu))
-+			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-+	}
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 62fa45dcb6a4..dfa3b53f8437 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5643,11 +5643,6 @@ static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
+ 	invlpga(gva, svm->vmcb->control.asid);
  }
  
- static bool is_bitwise_subset(u64 superset, u64 subset, u64 mask)
+-static void svm_flush_tlb_guest(struct kvm_vcpu *vcpu)
+-{
+-	svm_flush_tlb(vcpu);
+-}
+-
+ static void svm_prepare_guest_switch(struct kvm_vcpu *vcpu)
+ {
+ }
+@@ -7405,7 +7400,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 
+ 	.tlb_flush = svm_flush_tlb,
+ 	.tlb_flush_gva = svm_flush_tlb_gva,
+-	.tlb_flush_guest = svm_flush_tlb_guest,
++	.tlb_flush_guest = svm_flush_tlb,
+ 
+ 	.run = svm_vcpu_run,
+ 	.handle_exit = handle_exit,
 -- 
 2.24.1
 
