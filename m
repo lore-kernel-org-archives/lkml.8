@@ -2,36 +2,36 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F43C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB98C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C7620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFDF20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgCQExJ (ORCPT
+        id S1726833AbgCQExM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:53:09 -0400
+        Tue, 17 Mar 2020 00:53:12 -0400
 Received: from mga04.intel.com ([192.55.52.120]:34097 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbgCQExJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:53:09 -0400
-IronPort-SDR: 3yMsGf9fnBLKMNiJZMyP47GgCyn6MAoSw/UWZu/xMiC3mNUecYCZwn5Y45T0dXkr+nPD3Omnb8
- uhypt6e7pMiw==
+        id S1726760AbgCQExK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:53:10 -0400
+IronPort-SDR: TCtRZB72X1IDjSPrhNXJZJkg/ux8pkpsb+crq7RVgSwksg4fhbp2uovycvXEPjvic+xOpS5iu5
+ eI5asXDuG9wQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:08 -0700
-IronPort-SDR: 3d28gK09PMBZ/J6yoSLgUKx3BNuzPShPJW+mwrgsT39SAcjuYY+Tl3QNShLTXf+TVPN7TXI5f3
- Ihjjsqj0XpqA==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:09 -0700
+IronPort-SDR: mtrT54hH5lEWRi46NEIhK6lytmJiP5A47NNxRISpQL6ut1L9KH4JBB9ANk+aE+J8iChIb44THU
+ bye3m1R2AacQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252721"
+   d="scan'208";a="355252734"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:08 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:09 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,10 +46,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 00/32] KVM: x86: TLB flushing fixes and enhancements
-Date:   Mon, 16 Mar 2020 21:52:06 -0700
-Message-Id: <20200317045238.30434-1-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 02/32] KVM: nVMX: Validate the EPTP when emulating INVEPT(EXTENT_CONTEXT)
+Date:   Mon, 16 Mar 2020 21:52:08 -0700
+Message-Id: <20200317045238.30434-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
+References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,92 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is "v2" of the VMX TLB flushing cleanup series, but over 70% of the
-patches are new in v2.  The new growth stems from two related revelations:
+Signal VM-Fail for the single-context variant of INVEPT if the specified
+EPTP is invalid.  Per the INEVPT pseudocode in Intel's SDM, it's subject
+to the standard EPT checks:
 
-  1) Nested VMX doesn't properly flush all ASIDs/contexts on system events,
-     e.g. on mmu_notifier invalidate all contexts for L1 *and* L2 need to
-     be invalidated, but KVM generally only flushes L1 or L2 (or just L1).
+  If VM entry with the "enable EPT" VM execution control set to 1 would
+  fail due to the EPTP value then VMfail(Invalid operand to INVEPT/INVVPID);
 
-  2) #1 is largely benign because nested VMX always flushes the new
-     context on nested VM-Entry/VM-Exit.
+Fixes: bfd0a56b90005 ("nEPT: Nested INVEPT")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/nested.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-High level overview:
-
-  a) Fix the main TLB flushing bug with a big hammer.
-
-  b) Fix a few other flushing related bugs.
-
-  c) Clean up vmx_tlb_flush(), i.e. what was v1 of this series.
-
-  d) Reintroduce current-ASID/context flushing to regain some of the
-     precision that got blasted away by the big hammer in #1.
-
-  e) Fix random code paths that unnecessarily trigger TLB flushes on
-     nested VMX transitions.
-
-  f) Stop flushing on every nested VMX transition.
-
-
-v2:
-  - Basically a new series.
-
-v1:
-  - https://patchwork.kernel.org/cover/11394987/
-
-Junaid Shahid (2):
-  KVM: nVMX: Invalidate all L2 roots when emulating INVVPID without EPT
-  KVM: x86: Sync SPTEs when injecting page/EPT fault into L1
-
-Sean Christopherson (30):
-  KVM: VMX: Flush all EPTP/VPID contexts on remote TLB flush
-  KVM: nVMX: Validate the EPTP when emulating INVEPT(EXTENT_CONTEXT)
-  KVM: nVMX: Invalidate all EPTP contexts when emulating INVEPT for L1
-  KVM: x86: Export kvm_propagate_fault() (as
-    kvm_inject_emulated_page_fault)
-  KVM: x86: Consolidate logic for injecting page faults to L1
-  KVM: VMX: Skip global INVVPID fallback if vpid==0 in
-    vpid_sync_context()
-  KVM: VMX: Use vpid_sync_context() directly when possible
-  KVM: VMX: Move vpid_sync_vcpu_addr() down a few lines
-  KVM: VMX: Handle INVVPID fallback logic in vpid_sync_vcpu_addr()
-  KVM: VMX: Drop redundant capability checks in low level INVVPID
-    helpers
-  KVM: nVMX: Use vpid_sync_vcpu_addr() to emulate INVVPID with address
-  KVM: x86: Move "flush guest's TLB" logic to separate kvm_x86_ops hook
-  KVM: VMX: Clean up vmx_flush_tlb_gva()
-  KVM: x86: Drop @invalidate_gpa param from kvm_x86_ops' tlb_flush()
-  KVM: SVM: Wire up ->tlb_flush_guest() directly to svm_flush_tlb()
-  KVM: VMX: Move vmx_flush_tlb() to vmx.c
-  KVM: nVMX: Move nested_get_vpid02() to vmx/nested.h
-  KVM: VMX: Introduce vmx_flush_tlb_current()
-  KVM: SVM: Document the ASID logic in svm_flush_tlb()
-  KVM: x86: Rename ->tlb_flush() to ->tlb_flush_all()
-  KVM: nVMX: Add helper to handle TLB flushes on nested VM-Enter/VM-Exit
-  KVM: x86: Introduce KVM_REQ_TLB_FLUSH_CURRENT to flush current ASID
-  KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes
-  KVM: nVMX: Selectively use TLB_FLUSH_CURRENT for nested
-    VM-Enter/VM-Exit
-  KVM: nVMX: Reload APIC access page on nested VM-Exit only if necessary
-  KVM: VMX: Retrieve APIC access page HPA only when necessary
-  KVM: VMX: Don't reload APIC access page if its control is disabled
-  KVM: x86/mmu: Add module param to force TLB flush on root reuse
-  KVM: nVMX: Don't flush TLB on nested VM transition with EPT enabled
-  KVM: nVMX: Free only the affected contexts when emulating INVEPT
-
- arch/x86/include/asm/kvm_host.h |  16 ++-
- arch/x86/kvm/mmu/mmu.c          |  26 ++--
- arch/x86/kvm/mmu/paging_tmpl.h  |   2 +-
- arch/x86/kvm/svm.c              |  19 ++-
- arch/x86/kvm/vmx/nested.c       | 202 ++++++++++++++++++++------------
- arch/x86/kvm/vmx/nested.h       |   7 ++
- arch/x86/kvm/vmx/ops.h          |  32 +++--
- arch/x86/kvm/vmx/vmx.c          | 110 ++++++++++++++---
- arch/x86/kvm/vmx/vmx.h          |  19 +--
- arch/x86/kvm/x86.c              |  65 ++++++----
- arch/x86/kvm/x86.h              |   6 +
- 11 files changed, 334 insertions(+), 170 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 8578513907d7..f3774cef4fd4 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5156,8 +5156,12 @@ static int handle_invept(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	switch (type) {
+-	case VMX_EPT_EXTENT_GLOBAL:
+ 	case VMX_EPT_EXTENT_CONTEXT:
++		if (!nested_vmx_check_eptp(vcpu, operand.eptp))
++			return nested_vmx_failValid(vcpu,
++				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
++		fallthrough;
++	case VMX_EPT_EXTENT_GLOBAL:
+ 	/*
+ 	 * TODO: Sync the necessary shadow EPT roots here, rather than
+ 	 * at the next emulated VM-entry.
 -- 
 2.24.1
 
