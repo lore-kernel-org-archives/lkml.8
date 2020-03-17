@@ -2,104 +2,131 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62E5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5631C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB25420714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B521120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="sIqg0Vzx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XsUqRKq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgCQRHS (ORCPT
+        id S1726864AbgCQRHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:07:18 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39138 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgCQRHR (ORCPT
+        Tue, 17 Mar 2020 13:07:50 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:51784 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726555AbgCQRHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:07:17 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r2so7014217otn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VudPPbgid+IOVvMAP116P9IN7W1PK4r6e92xmQ1xmVM=;
-        b=sIqg0VzxFQwfl+NWdXDi591J6crh9n/XZpMU6biUNq1ohIi87AXY3udpx2XqMHkG9G
-         AmFbSuaTV0n71kWgl2dwunxBA3bdTceAz5Tv6B7qbX+ChY+tJ8rO4aySoZwGR8ugZwWe
-         JletsY23VuybykQ/pY2k6o4WLc9+SMC9quU/Z035kTOMLlD3FORwXXL7orXMI9gJ6bpO
-         13TIqF+0JAf8hKTlpUgovjbiqHvCPNDR5K49lKbQ3IXF6Pr8vp0reLw6qA3Wz6J39zec
-         we0h7fcwjRIXljWqhkCLie48zTmUzg17Vg16TPXJmn75bDntjrDD60Ilz7aU34a84sKu
-         cUog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VudPPbgid+IOVvMAP116P9IN7W1PK4r6e92xmQ1xmVM=;
-        b=fF4ZjdA9vo5vnRwtqd9SJ3A0ARg3wPMrwReQTd31KXmIdL5FGyv+EC10akHF4nwROH
-         aA2NIuJ2LxLZQXALn3fs5UJrm4fkaDUlEiYkjWA0eYdqLJO/8wRwpoyjzjzUDO2Lu1lu
-         oJbkriTmyEzt0QM3YsmlP6CTZX9YjRFg3UwA7h4oxY0MFaZdu5Pp4PXgSBZ9Uins6xSc
-         U70shUdGigG6k9Hqcy3y7Z43uy/04RwVEizRV8oH8XVrq6ws33wp8uaOibHLRI3x+Kkt
-         EiC6antKV6lG/cg3DA/0KUI8i3Imu56mzTxgXukk8V76ze+2KSivaTzSOpMVIqg3Td3B
-         giDA==
-X-Gm-Message-State: ANhLgQ0CwB3XXpuZ1iPG8KXaEVOoG+EChrfKJNkFgRJhwb4L9LxwBWwp
-        17rBboQxrll5VK6DAPzfLXhciLktRNrCk5c+pUhsiw==
-X-Google-Smtp-Source: ADFU+vu5W+BZZpY/VMpqNkUZ9RU5okoO9lMPTYpCARTmV5yjADrHMwmK0PiXPRTBtmoi8/X9ZZHucwoULMi4fh6GVLk=
-X-Received: by 2002:a9d:63d2:: with SMTP id e18mr158576otl.277.1584464835611;
- Tue, 17 Mar 2020 10:07:15 -0700 (PDT)
+        Tue, 17 Mar 2020 13:07:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584464868;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=235z/MOLkXrAk+mk0JLd/fAPRBIFknZ2NM/cgF1h1dY=;
+        b=XsUqRKq9qrRZ6yPce+H7WngAVGqN1QJuFwQ+aO3lY6ng+3FfRHivci8MrdvPn31qCixK1A
+        T7RXHTfvXgf16edkxaj8xGWnG+iP3v4DVvm2scyMGcviemE0lNPIo6u0v+mt28tGVGdzxB
+        wIWVb2aiE29zgwJu8mK0wLqDH9kFHIs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-189-s5_3Ly7mM_mM1-ngEQI53w-1; Tue, 17 Mar 2020 13:07:44 -0400
+X-MC-Unique: s5_3Ly7mM_mM1-ngEQI53w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3155ADBAD;
+        Tue, 17 Mar 2020 17:07:39 +0000 (UTC)
+Received: from krava (unknown [10.40.195.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 456DF108F847;
+        Tue, 17 Mar 2020 17:07:33 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 18:07:30 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, will@kernel.org, ak@linux.intel.com,
+        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
+        james.clark@arm.com, qiangqing.zhang@nxp.com
+Subject: Re: [PATCH v2 7/7] perf test: Test pmu-events aliases
+Message-ID: <20200317170730.GF759708@krava>
+References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
+ <1584442939-8911-8-git-send-email-john.garry@huawei.com>
+ <20200317162043.GC759708@krava>
+ <01dd565b-931c-e853-a721-aa995f87469c@huawei.com>
 MIME-Version: 1.0
-References: <1584464453-28200-1-git-send-email-tharvey@gateworks.com>
- <1584464453-28200-4-git-send-email-tharvey@gateworks.com> <f7ccbdb4-917a-2dd7-bf6b-8c82b87bc167@infradead.org>
-In-Reply-To: <f7ccbdb4-917a-2dd7-bf6b-8c82b87bc167@infradead.org>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Tue, 17 Mar 2020 10:07:04 -0700
-Message-ID: <CAJ+vNU3Bgn5W7E6RQbfygz=pGsDLLZ9tkQ0J4EPGn1COk9XLSw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] hwmon: add Gateworks System Controller support
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Robert Jones <rjones@gateworks.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01dd565b-931c-e853-a721-aa995f87469c@huawei.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:03 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 3/17/20 10:00 AM, Tim Harvey wrote:
-> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> > index 23dfe84..99dae13 100644
-> > --- a/drivers/hwmon/Kconfig
-> > +++ b/drivers/hwmon/Kconfig
-> > @@ -494,6 +494,15 @@ config SENSORS_F75375S
-> >         This driver can also be built as a module. If so, the module
-> >         will be called f75375s.
-> >
-> > +config SENSORS_GSC
-> > +        tristate "Gateworks System Controller ADC"
-> > +        depends on MFD_GATEWORKS_GSC
-> > +        help
-> > +          Support for the Gateworks System Controller A/D converters.
->
-> Hi Tim,
-> Those 4 lines above should be using tabs for indentation.
-> + 2 spaces on the final "Support" line.
+On Tue, Mar 17, 2020 at 04:41:04PM +0000, John Garry wrote:
+> On 17/03/2020 16:20, Jiri Olsa wrote:
+> > On Tue, Mar 17, 2020 at 07:02:19PM +0800, John Garry wrote:
+> > 
+> > SNIP
+> > 
+> > >   struct perf_pmu_test_event {
+> > >   	struct pmu_event event;
+> > > +
+> > > +	/* extra events for aliases */
+> > > +	const char *alias_str;
+> > > +
+> > > +	/*
+> > > +	 * Note: For when PublicDescription does not exist in the JSON, we
+> > > +	 * will have no long_desc in pmu_event.long_desc, but long_desc may
+> > > +	 * be set in the alias.
+> > > +	 */
+> > > +	const char *alias_long_desc;
+> > >   };
+> > > +
+> > >   static struct perf_pmu_test_event test_cpu_events[] = {
+> > >   	{
+> > >   		.event = {
+> > > @@ -20,6 +31,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+> > >   			.desc = "L1 BTB Correction",
+> > >   			.topic = "branch",
+> > >   		},
+> > > +		.alias_str = "event=0x8a",
+> > > +		.alias_long_desc = "L1 BTB Correction",
+> > >   	},
+> > >   	{
+> > >   		.event = {
+> > > @@ -28,6 +41,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+> > >   			.desc = "L2 BTB Correction",
+> > >   			.topic = "branch",
+> > >   		},
+> > > +		.alias_str = "event=0x8b",
+> > > +		.alias_long_desc = "L2 BTB Correction",
+> > >   	},
+> > >   	{
+> > >   		.event = {
+> > > @@ -36,6 +51,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+> > >   			.desc = "Number of segment register loads",
+> > >   			.topic = "other",
+> > >   		},
+> > > +		.alias_str = "umask=0x80,(null)=0x30d40,event=0x6",
+> > 
+> > ah so we are using other pmus because of the format definitions
+> > 
+> 
+> Hi jirka,
+> 
+> > why is there the '(null)' in there?
+> > 
+> 
+> Well this is just coming from the generated alias string in the pmu code,
+> and it does not seem to be handling "period" argument properly. It needs to
+> be checked.
 
-Randy,
+nice, it found first issue already ;-)
 
-Thanks - can't believe I didn't see that. Checkpatch didn't catch it either.
+jirka
 
-I'll fix for v7.
-
-
-Tim
