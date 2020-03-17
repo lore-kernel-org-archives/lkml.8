@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEA6C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD40FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486AB20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC09420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443824;
-	bh=JIdyo+37I2+6TGmwXEWLR/ub0pIGz6sZ9Z5rPS9o31I=;
+	s=default; t=1584443828;
+	bh=3xBdOzr4+H+1PBNXwFAzf4gCH6mpp14Stgcb/fDACJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u/TbKkRX8X1lM1EZAnO/nX/yT5YVIXmz414TgPX3ZDiBZpkPuHT/zQ4QU3hffXyvW
-	 ogUURd/thj4TUCp+gY46C8VuKuBJiZNssrFMYQfyKN9zRAAddtlH06fbfqx+oW+jsr
-	 RxhJIqO5kIWSX+lRW8DSB7ffCWSyZ7+4OczBMEU0=
+	b=BwmtlYOB/8k4xaCsdXZU0026K/q11SFBy/Qv3lnbshZuriIU90ljXE6oUsGOKZzLs
+	 vRODPLn/uxJcmtgMNBz8N2kBi7PFBuI0d7zwTktqBKQtKuRKEMXJBonoUE83tKhIN6
+	 ofNhmeMV331tsoga3CjFCmvi7ERchW+cVXELiMog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbgCQLIT (ORCPT
+        id S1729119AbgCQLRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:08:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50062 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:17:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728816AbgCQLIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:08:13 -0400
+        id S1728465AbgCQLH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:07:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DEC620735;
-        Tue, 17 Mar 2020 11:08:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2EF02076E;
+        Tue, 17 Mar 2020 11:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443292;
-        bh=JIdyo+37I2+6TGmwXEWLR/ub0pIGz6sZ9Z5rPS9o31I=;
+        s=default; t=1584443277;
+        bh=3xBdOzr4+H+1PBNXwFAzf4gCH6mpp14Stgcb/fDACJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SA67FONQ1QmLeVrdZKaPN4QoDYg5A/dsDNTd7WfNhRgKUoqR8QprbS9//ADTne6Ib
-         0Pb/8aZG8I+VGPVVDCIrKdiLQSotMviNOVM1L0z2+tem8n9ZR6YSVlfo+BuMvVGrZI
-         QHSQMnUi5aLm4/Vo3C71bewcSifXSx+OHmrSClkE=
+        b=HEBIKqJPDQK2ptgVyxZgYk27dC24YMNBKN0Km6UBYE3RM9yjLDa1t5IJ2CAw6JBs1
+         a4iKJfD7LMKl0+S2dV8mOYOENJS+et564hJb8gil7xV/+Xx9m5QzMVRoz6KzgSZZxX
+         9JZbeVs4lPo3/aVopCsLCTjSwWJRLCVpYkN/vUWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 037/151] net: memcg: late association of sock to memcg
-Date:   Tue, 17 Mar 2020 11:54:07 +0100
-Message-Id: <20200317103329.274213369@linuxfoundation.org>
+Subject: [PATCH 5.5 015/151] net: dsa: fix phylink_start()/phylink_stop() calls
+Date:   Tue, 17 Mar 2020 11:53:45 +0100
+Message-Id: <20200317103327.514158862@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,99 +60,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit d752a4986532cb6305dfd5290a614cde8072769d ]
+[ Upstream commit 8640f8dc6d657ebfb4e67c202ad32c5457858a13 ]
 
-If a TCP socket is allocated in IRQ context or cloned from unassociated
-(i.e. not associated to a memcg) in IRQ context then it will remain
-unassociated for its whole life. Almost half of the TCPs created on the
-system are created in IRQ context, so, memory used by such sockets will
-not be accounted by the memcg.
+Place phylink_start()/phylink_stop() inside dsa_port_enable() and
+dsa_port_disable(), which ensures that we call phylink_stop() before
+tearing down phylink - which is a documented requirement.  Failure
+to do so can cause use-after-free bugs.
 
-This issue is more widespread in cgroup v1 where network memory
-accounting is opt-in but it can happen in cgroup v2 if the source socket
-for the cloning was created in root memcg.
-
-To fix the issue, just do the association of the sockets at the accept()
-time in the process context and then force charge the memory buffer
-already used and reserved by the socket.
-
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Fixes: 0e27921816ad ("net: dsa: Use PHYLINK for the CPU/DSA ports")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/memcontrol.c                 |   14 --------------
- net/core/sock.c                 |    5 ++++-
- net/ipv4/inet_connection_sock.c |   20 ++++++++++++++++++++
- 3 files changed, 24 insertions(+), 15 deletions(-)
+ net/dsa/dsa_priv.h |    2 ++
+ net/dsa/port.c     |   32 ++++++++++++++++++++++++++------
+ net/dsa/slave.c    |    8 ++------
+ 3 files changed, 30 insertions(+), 12 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6683,20 +6683,6 @@ void mem_cgroup_sk_alloc(struct sock *sk
- 	if (!mem_cgroup_sockets_enabled)
- 		return;
+--- a/net/dsa/dsa_priv.h
++++ b/net/dsa/dsa_priv.h
+@@ -117,7 +117,9 @@ static inline struct net_device *dsa_mas
+ /* port.c */
+ int dsa_port_set_state(struct dsa_port *dp, u8 state,
+ 		       struct switchdev_trans *trans);
++int dsa_port_enable_rt(struct dsa_port *dp, struct phy_device *phy);
+ int dsa_port_enable(struct dsa_port *dp, struct phy_device *phy);
++void dsa_port_disable_rt(struct dsa_port *dp);
+ void dsa_port_disable(struct dsa_port *dp);
+ int dsa_port_bridge_join(struct dsa_port *dp, struct net_device *br);
+ void dsa_port_bridge_leave(struct dsa_port *dp, struct net_device *br);
+--- a/net/dsa/port.c
++++ b/net/dsa/port.c
+@@ -63,7 +63,7 @@ static void dsa_port_set_state_now(struc
+ 		pr_err("DSA: failed to set STP state %u (%d)\n", state, err);
+ }
  
--	/*
--	 * Socket cloning can throw us here with sk_memcg already
--	 * filled. It won't however, necessarily happen from
--	 * process context. So the test for root memcg given
--	 * the current task's memcg won't help us in this case.
--	 *
--	 * Respecting the original socket's memcg is a better
--	 * decision in this case.
--	 */
--	if (sk->sk_memcg) {
--		css_get(&sk->sk_memcg->css);
--		return;
--	}
--
- 	/* Do not associate the sock with unrelated interrupted task's memcg. */
- 	if (in_interrupt())
- 		return;
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1830,7 +1830,10 @@ struct sock *sk_clone_lock(const struct
- 		atomic_set(&newsk->sk_zckey, 0);
+-int dsa_port_enable(struct dsa_port *dp, struct phy_device *phy)
++int dsa_port_enable_rt(struct dsa_port *dp, struct phy_device *phy)
+ {
+ 	struct dsa_switch *ds = dp->ds;
+ 	int port = dp->index;
+@@ -78,14 +78,31 @@ int dsa_port_enable(struct dsa_port *dp,
+ 	if (!dp->bridge_dev)
+ 		dsa_port_set_state_now(dp, BR_STATE_FORWARDING);
  
- 		sock_reset_flag(newsk, SOCK_DONE);
--		mem_cgroup_sk_alloc(newsk);
++	if (dp->pl)
++		phylink_start(dp->pl);
 +
-+		/* sk->sk_memcg will be populated at accept() time */
-+		newsk->sk_memcg = NULL;
-+
- 		cgroup_sk_alloc(&newsk->sk_cgrp_data);
+ 	return 0;
+ }
  
- 		rcu_read_lock();
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -482,6 +482,26 @@ struct sock *inet_csk_accept(struct sock
- 		}
- 		spin_unlock_bh(&queue->fastopenq.lock);
+-void dsa_port_disable(struct dsa_port *dp)
++int dsa_port_enable(struct dsa_port *dp, struct phy_device *phy)
++{
++	int err;
++
++	rtnl_lock();
++	err = dsa_port_enable_rt(dp, phy);
++	rtnl_unlock();
++
++	return err;
++}
++
++void dsa_port_disable_rt(struct dsa_port *dp)
+ {
+ 	struct dsa_switch *ds = dp->ds;
+ 	int port = dp->index;
+ 
++	if (dp->pl)
++		phylink_stop(dp->pl);
++
+ 	if (!dp->bridge_dev)
+ 		dsa_port_set_state_now(dp, BR_STATE_DISABLED);
+ 
+@@ -93,6 +110,13 @@ void dsa_port_disable(struct dsa_port *d
+ 		ds->ops->port_disable(ds, port);
+ }
+ 
++void dsa_port_disable(struct dsa_port *dp)
++{
++	rtnl_lock();
++	dsa_port_disable_rt(dp);
++	rtnl_unlock();
++}
++
+ int dsa_port_bridge_join(struct dsa_port *dp, struct net_device *br)
+ {
+ 	struct dsa_notifier_bridge_info info = {
+@@ -619,10 +643,6 @@ static int dsa_port_phylink_register(str
+ 		goto err_phy_connect;
  	}
-+
-+	if (mem_cgroup_sockets_enabled) {
-+		int amt;
-+
-+		/* atomically get the memory usage, set and charge the
-+		 * sk->sk_memcg.
-+		 */
-+		lock_sock(newsk);
-+
-+		/* The sk has not been accepted yet, no need to look at
-+		 * sk->sk_wmem_queued.
-+		 */
-+		amt = sk_mem_pages(newsk->sk_forward_alloc +
-+				   atomic_read(&sk->sk_rmem_alloc));
-+		mem_cgroup_sk_alloc(newsk);
-+		if (newsk->sk_memcg && amt)
-+			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
-+
-+		release_sock(newsk);
-+	}
- out:
- 	release_sock(sk);
- 	if (req)
+ 
+-	rtnl_lock();
+-	phylink_start(dp->pl);
+-	rtnl_unlock();
+-
+ 	return 0;
+ 
+ err_phy_connect:
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -90,12 +90,10 @@ static int dsa_slave_open(struct net_dev
+ 			goto clear_allmulti;
+ 	}
+ 
+-	err = dsa_port_enable(dp, dev->phydev);
++	err = dsa_port_enable_rt(dp, dev->phydev);
+ 	if (err)
+ 		goto clear_promisc;
+ 
+-	phylink_start(dp->pl);
+-
+ 	return 0;
+ 
+ clear_promisc:
+@@ -119,9 +117,7 @@ static int dsa_slave_close(struct net_de
+ 	cancel_work_sync(&dp->xmit_work);
+ 	skb_queue_purge(&dp->xmit_queue);
+ 
+-	phylink_stop(dp->pl);
+-
+-	dsa_port_disable(dp);
++	dsa_port_disable_rt(dp);
+ 
+ 	dev_mc_unsync(master, dev);
+ 	dev_uc_unsync(master, dev);
 
 
