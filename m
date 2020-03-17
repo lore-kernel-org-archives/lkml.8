@@ -2,89 +2,134 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECB1C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C07C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E635206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759FF20735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="US6nfTBu"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="qqWQiotn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgCQOcV (ORCPT
+        id S1726682AbgCQOdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:32:21 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:20280 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgCQOcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:32:21 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48hbGp2Myqz9twyk;
-        Tue, 17 Mar 2020 15:32:18 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=US6nfTBu; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id c1UWuinpgQZT; Tue, 17 Mar 2020 15:32:18 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48hbGp1KpQz9twyh;
-        Tue, 17 Mar 2020 15:32:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584455538; bh=bX1yuayzkqQCh7QXBiCahWrCtVLSJrNkqvO8rDQsSl0=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=US6nfTBuSRELLFhdu4NSwzzs3rYkHQ1yEkdecUxO1JwarfvNlrNHF1o4xKJdS+dyT
-         YBRwJFt75bbnykm1FsOCrmYff5sbZHF10MaV8z4xMAqrf1bx+d1OpxZIBmzufDlDDM
-         FCOGs5p8GG7qqhS8aCtYK+zt44O2xAfu44dlgjn0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7DC778B7B7;
-        Tue, 17 Mar 2020 15:32:19 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id wV8daE2ZbZ1O; Tue, 17 Mar 2020 15:32:19 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 421538B7BB;
-        Tue, 17 Mar 2020 15:32:18 +0100 (CET)
-Subject: Re: [PATCH v1 46/46] powerpc/32s: Implement dedicated
- kasan_init_region()
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <cover.1584360343.git.christophe.leroy@c-s.fr>
- <165be4c0f0ba674846a244edf9e1116b832d3bfb.1584360344.git.christophe.leroy@c-s.fr>
-Message-ID: <c5baf3ce-1c0e-d779-acff-56767b72248a@c-s.fr>
-Date:   Tue, 17 Mar 2020 15:32:04 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 10:33:08 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46681 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgCQOdH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:33:07 -0400
+Received: by mail-il1-f193.google.com with SMTP id e8so20248239ilc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 07:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=A16GKmGMQWpRq+C/pSuTHqsjWsmIXgAuO5lJtoXiC5Q=;
+        b=qqWQiotn5sHUFeq/EZSUci/cJTumNXaJzM+4NCGpIavzOOC1vtdduNrHZQ+2KeCHq+
+         zGqz4TZIsNxUBA3xm5dNyOaQYibvZDrs8+bHQW8N/1nzErK42Fnt+6fwdjTX4mUoly9l
+         Mz094tkzcLMYSTKpNWZ8GP68mMOaVy2upg0/U5i/JV1XHS6ovhtOh3ssme9nIogkfqnJ
+         ea72EXipKtu9cFfzXEX3+1gMV6+yit68H0JAzCDxfcguSxOFBkdwPeRp+Ka0c83tfDYV
+         DNzjB1nf3J/0vWH00IP7IfPjng/AbnUAh3gMVCpdhge4xQYnNYSxjJ9RVB1c/9c3p3mT
+         08rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=A16GKmGMQWpRq+C/pSuTHqsjWsmIXgAuO5lJtoXiC5Q=;
+        b=t+zcxBRjH33etGgsK04fd7X/zR8wwCYTnnolFNckf2ROX4kX2diC0HwqHwh0rgYT3b
+         lIfDIzm3zBKHzN3YW5+TAnoiQkt+1TQcIhHT2//XllU8YAz7YM/Zoi+TQb1hh6X8k35N
+         DUlYpZO0KSZjMUuZv0DN6HDyGSOYwr4AxUNEH9bHcvSoR8xASBfWOXFDhlwH4DNOeGKJ
+         oPbhusQRY2pSIKnGaSz4JDSvsZMaCq+OGqBql26kx2EN1YHvfVIUU7m66idcqt6nyRiW
+         knyxknZFirj6fY/cHoeUbWSu5XmMk6QPXalJ9Pnmr9yhcK/G/NtfGw45eKBztmpElfOg
+         oRqA==
+X-Gm-Message-State: ANhLgQ1L+fjghBt4g5C9TcWut5fQnwW2uLZnPnhV2tWsZC9Ibe8mEumt
+        rZ+9McIv/k36AsjUpXWUb90gCyYv86nv1gN2QIjC6g==
+X-Google-Smtp-Source: ADFU+vvv1qz1/uhOnuPtILwnBcDhqFuA505eK/TJanPszXasPoyHEc3ARvpOkyEZKK15hx8d4UYnuqqX03viV7vQ01U=
+X-Received: by 2002:a92:d78c:: with SMTP id d12mr5529078iln.287.1584455586881;
+ Tue, 17 Mar 2020 07:33:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <165be4c0f0ba674846a244edf9e1116b832d3bfb.1584360344.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20200317151409.7940926c@endymion>
+In-Reply-To: <20200317151409.7940926c@endymion>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 17 Mar 2020 15:32:56 +0100
+Message-ID: <CAMRc=Mdoh5Sk3iS_CO4+++SG2jJOy1qrG4q2zOzbeYYMdJR0VA@mail.gmail.com>
+Subject: Re: VAIO EEPROM support in at24
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+wt., 17 mar 2020 o 15:14 Jean Delvare <jdelvare@suse.de> napisa=C5=82(a):
+>
+> Hi all,
+>
+> As the legacy eeprom driver is being phased out, I am reviewing all its
+> use cases to ensure that the at24 driver will be a suitable replacement.
+>
+> One issue I have found is the handling of specific EEPROMs found on the
+> SMBus of some Sony VAIO laptops. The legacy eeprom driver would expose
+> them to user-space, read-only for all users. It would also recognize
+> them as VAIO EEPROMs and would hide some bytes from non-root users
+> because these bytes contain the BIOS password in a lightly encoded form.
+>
+> In order to keep the same level of functionality, we would have to offer
+> the same with the at24 driver. At this time, the user has to
+> instantiate a "24c02" device manually from user-space. By default this
+> device has permissions 600, which is insufficient for users, and
+> dangerous for root, so a quick chmod 444 is needed.
+>
+> Without the password issue, I would just document the procedure and
+> live with it. However in order to protect the password from being read
+> by random users, the driver itself needs to know that it is dealing
+> with a specific type of EEPROM. It seems that we need to introduce a
+> new device flavor to the at24 driver for this purpose.
+>
+> I see that we already have a number of specific flags (AT24_FLAG_SERIAL
+> and AT24_FLAG_MAC) so I suppose we could add something similar for
+> these VAIO EEPROMs. Something like:
+>
+> /* Some Sony VAIO laptops have a 24c02 at 0x57 with product info */
+> AT24_CHIP_DATA(at24_data_sony_vaio, 2048 / 8,
+>         AT24_FLAG_READONLY | AT24_FLAG_IRUGO | AT24_FLAG_SONY_VAIO);
+>
+> Then I suppose it's only a matter of conditionally zeroing a selected
+> range in at24_read() before it returns, to hide the password from
+> non-root users.
+>
+> Before I start implementing the idea above, I would like to know if
+> anyone objects to it, or has a better idea?
+>
 
+Sounds good to me in general but isn't it something we could
+generalize a bit more?
 
-Le 16/03/2020 à 13:36, Christophe Leroy a écrit :
-> Implement a kasan_init_region() dedicated to book3s/32 that
-> allocates KASAN regions using BATs.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+For instance we could make at24_chip_data struct look something like this:
 
-Note that the sparse warning on pmac32_defconfig is definitely a false 
-positive. See details patch 16/46 ("powerpc/mm: Allocate static page 
-tables for fixmap")
+struct at24_chip_data {
+    u32 byte_len;
+    u8 flags;
+    struct resource masked;
+};
 
-Christophe
+And we could introduce a new macro called AT24_CHIP_DATA_MASKED that
+would automacially set the AT24_FLAG_MASKED_RANGE flag and take
+another argument that would contain the address and size of the masked
+register range (we'd put it into the "masked" resource)?
+
+Other ideas are welcome too. I just think that making it
+SONY_VAIO-specific may be a bit limiting in the future.
+
+Best regards,
+Bartosz Golaszewski
