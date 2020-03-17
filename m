@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0ABC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7761C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6A220674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34AB206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kjl1yOeB"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OvQoNrsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgCQH2x (ORCPT
+        id S1726762AbgCQH3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:28:53 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44094 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbgCQH2v (ORCPT
+        Tue, 17 Mar 2020 03:29:09 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44852 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbgCQH3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:28:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02H7SkHi106247;
-        Tue, 17 Mar 2020 02:28:46 -0500
+        Tue, 17 Mar 2020 03:29:08 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02H7T0ob062649;
+        Tue, 17 Mar 2020 02:29:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584430126;
-        bh=TlYK0/QnPc6+wYd+1RhUkQESkHbuAQhUymrxi4oE+N8=;
+        s=ti-com-17Q1; t=1584430140;
+        bh=7kAZPkW2zkK8WQa0s6tWSn3wI6eYVbYeeQFroc6aG9s=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=kjl1yOeBJtP5CG4odHNva5NejX2+NhoEK8dzql5c6lfMja5OwtwpIrfYilI7Oezlj
-         IQBlynBqnnIezx7cPAWdJTAgzJqgYZoW3f5AV1AUh+zm4HS8dANl9/XcY547qNnbro
-         Peg7gJbd6tos2KKNePw4fd3iHLVFkntKjM3SMV+k=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7Sk7w070590;
-        Tue, 17 Mar 2020 02:28:46 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+        b=OvQoNrsWpyVT+CbmznQAURtuuC59aG1xR6iCt9yZ2ZMUxfErMyjXwMn7XG/9M9G76
+         NODDqzuKEyOBqtpjR2L/h/a+nfvO+1ov/dDVZqmp3hejlvlRzd8bcwObV0RethZVtG
+         xYAe9kI9fJ9BjqNkgUGx3qoCK5TbFQJCO90A+1Tw=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02H7T0Fu028053
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Mar 2020 02:29:00 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 02:28:45 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 02:29:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 02:28:46 -0500
+ Frontend Transport; Tue, 17 Mar 2020 02:29:00 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7Si7n125004;
-        Tue, 17 Mar 2020 02:28:45 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7SxqM069866;
+        Tue, 17 Mar 2020 02:28:59 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -61,9 +62,9 @@ CC:     Murali Karicheri <m-karicheri2@ti.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v4 08/11] arm64: dts: k3-am654-base-board: add mcu cpsw nuss pinmux and phy defs
-Date:   Tue, 17 Mar 2020 09:27:36 +0200
-Message-ID: <20200317072739.23950-9-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v4 10/11] arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux and phy defs
+Date:   Tue, 17 Mar 2020 09:27:38 +0200
+Message-ID: <20200317072739.23950-11-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200317072739.23950-1-grygorii.strashko@ti.com>
 References: <20200317072739.23950-1-grygorii.strashko@ti.com>
@@ -75,62 +76,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AM654 EVM base board has TI DP83867 PHY connected to external CPSW NUSS
-Port 1 in rgmii-rxid mode.
+The TI J721E EVM base board has TI DP83867 PHY connected to external CPSW
+NUSS Port 1 in rgmii-rxid mode.
 
-Hence, add pinmux and Ethernet PHY configuration for TI am654 SoC Gigabit
-Ethernet two ports Switch subsystem (CPSW NUSS).
+Hence, add pinmux and Ethernet PHY configuration for TI j721e SoC MCU
+Gigabit Ethernet two ports Switch subsystem (CPSW NUSS).
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- .../arm64/boot/dts/ti/k3-am654-base-board.dts | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ .../dts/ti/k3-j721e-common-proc-board.dts     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index 1700996800eb..2f3d3316a1cf 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -7,6 +7,7 @@
- 
- #include "k3-am654.dtsi"
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+index 7a5c3d4adadd..98e5e17e3ff7 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -8,6 +8,7 @@
+ #include "k3-j721e-som-p0.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
  #include <dt-bindings/input/input.h>
 +#include <dt-bindings/net/ti-dp83867.h>
  
  / {
- 	compatible =  "ti,am654-evm", "ti,am654";
-@@ -95,7 +96,30 @@
- 	wkup_pca554_default: wkup_pca554_default {
- 		pinctrl-single,pins = <
- 			AM65X_WKUP_IOPAD(0x0034, PIN_INPUT, 7) /* (T1) MCU_OSPI1_CLK.WKUP_GPIO0_25 */
-+		>;
-+	};
+ 	chosen {
+@@ -128,6 +129,30 @@
+ 			J721E_WKUP_IOPAD(0x38, PIN_INPUT, 0) /* (A23) MCU_OSPI1_LBCLKO */
+ 		>;
+ 	};
 +
 +	mcu_cpsw_pins_default: mcu_cpsw_pins_default {
 +		pinctrl-single,pins = <
-+			AM65X_WKUP_IOPAD(0x0058, PIN_OUTPUT, 0) /* (N4) MCU_RGMII1_TX_CTL */
-+			AM65X_WKUP_IOPAD(0x005c, PIN_INPUT, 0) /* (N5) MCU_RGMII1_RX_CTL */
-+			AM65X_WKUP_IOPAD(0x0060, PIN_OUTPUT, 0) /* (M2) MCU_RGMII1_TD3 */
-+			AM65X_WKUP_IOPAD(0x0064, PIN_OUTPUT, 0) /* (M3) MCU_RGMII1_TD2 */
-+			AM65X_WKUP_IOPAD(0x0068, PIN_OUTPUT, 0) /* (M4) MCU_RGMII1_TD1 */
-+			AM65X_WKUP_IOPAD(0x006c, PIN_OUTPUT, 0) /* (M5) MCU_RGMII1_TD0 */
-+			AM65X_WKUP_IOPAD(0x0078, PIN_INPUT, 0) /* (L2) MCU_RGMII1_RD3 */
-+			AM65X_WKUP_IOPAD(0x007c, PIN_INPUT, 0) /* (L5) MCU_RGMII1_RD2 */
-+			AM65X_WKUP_IOPAD(0x0080, PIN_INPUT, 0) /* (M6) MCU_RGMII1_RD1 */
-+			AM65X_WKUP_IOPAD(0x0084, PIN_INPUT, 0) /* (L6) MCU_RGMII1_RD0 */
-+			AM65X_WKUP_IOPAD(0x0070, PIN_INPUT, 0) /* (N1) MCU_RGMII1_TXC */
-+			AM65X_WKUP_IOPAD(0x0074, PIN_INPUT, 0) /* (M1) MCU_RGMII1_RXC */
++			J721E_WKUP_IOPAD(0x0058, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
++			J721E_WKUP_IOPAD(0x005c, PIN_INPUT, 0) /* MCU_RGMII1_RX_CTL */
++			J721E_WKUP_IOPAD(0x0060, PIN_OUTPUT, 0) /* MCU_RGMII1_TD3 */
++			J721E_WKUP_IOPAD(0x0064, PIN_OUTPUT, 0) /* MCU_RGMII1_TD2 */
++			J721E_WKUP_IOPAD(0x0068, PIN_OUTPUT, 0) /* MCU_RGMII1_TD1 */
++			J721E_WKUP_IOPAD(0x006c, PIN_OUTPUT, 0) /* MCU_RGMII1_TD0 */
++			J721E_WKUP_IOPAD(0x0078, PIN_INPUT, 0) /* MCU_RGMII1_RD3 */
++			J721E_WKUP_IOPAD(0x007c, PIN_INPUT, 0) /* MCU_RGMII1_RD2 */
++			J721E_WKUP_IOPAD(0x0080, PIN_INPUT, 0) /* MCU_RGMII1_RD1 */
++			J721E_WKUP_IOPAD(0x0084, PIN_INPUT, 0) /* MCU_RGMII1_RD0 */
++			J721E_WKUP_IOPAD(0x0070, PIN_INPUT, 0) /* MCU_RGMII1_TXC */
++			J721E_WKUP_IOPAD(0x0074, PIN_INPUT, 0) /* MCU_RGMII1_RXC */
 +		>;
 +	};
- 
++
 +	mcu_mdio_pins_default: mcu_mdio1_pins_default {
 +		pinctrl-single,pins = <
-+			AM65X_WKUP_IOPAD(0x008c, PIN_OUTPUT, 0) /* (L1) MCU_MDIO0_MDC */
-+			AM65X_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* (L4) MCU_MDIO0_MDIO */
- 		>;
- 	};
++			J721E_WKUP_IOPAD(0x008c, PIN_OUTPUT, 0) /* MCU_MDIO0_MDC */
++			J721E_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* MCU_MDIO0_MDIO */
++		>;
++	};
  };
-@@ -419,3 +443,21 @@
- 		data-lanes = <1 2>;
+ 
+ &wkup_uart0 {
+@@ -429,3 +454,21 @@
+ 		#gpio-cells = <2>;
  	};
  };
 +
