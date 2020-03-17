@@ -2,132 +2,104 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29126C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB4EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022AB2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72972076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:25:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="X7ZelAWQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iG0Wk+45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgCQNWF (ORCPT
+        id S1726559AbgCQNZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:22:05 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35789 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgCQNWF (ORCPT
+        Tue, 17 Mar 2020 09:25:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39844 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgCQNZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:22:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d8so32331244qka.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:22:04 -0700 (PDT)
+        Tue, 17 Mar 2020 09:25:30 -0400
+Received: by mail-pg1-f194.google.com with SMTP id b22so5748972pgb.6;
+        Tue, 17 Mar 2020 06:25:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BooTS55gW36ai8J66FC6mGTgbiGzFCkI2TXTYLHqnGc=;
-        b=X7ZelAWQ7nwxsy3GpfF6lmDBp6gFzEiRnpdbJeR5mX4XlZoTsXc6NA+BAlwT+LQbHS
-         v18rFiFdYOYZArh7/h+1Ep/e9Uiw/i+uJbx7cQiv5K/+Li7B2vXeJ8qO0bP+N/AisdJ4
-         6Rzzq3kigFAVb4f6HrCuoEo4o7bCcJn4cl2Fy9h9ie58oR29vnGLqwHeaXrm0mZumdq9
-         ZWFTgEB2UOopuQRtzfywlfwXrsRTiur8omjm8TkteWXFSr2czztQ0kDyBZdXQdZ7IdHz
-         NlvkTGz8ObmjeUdBT5RscuificYkpq4keZx5YLC1xFfrdX0W8ZDqNFeqOftZjIX6GcJJ
-         kUfA==
+        bh=agG+dITcuAm3KPc+VwzNwpsgr+i8A6gZOBf/aTNCeRE=;
+        b=iG0Wk+45lpTMF6Qs9ptAuWGLvyCn/OdTa5ZWDJ7CrFZLWBOV7vQsaN+wETj/Ypzo8/
+         5+g1gwgRhqIIDY7bAGP+7sSPXhCqYE4CGiDNG4stIeOKHgHdZ0QP1OGU7Mbs40zcsfbd
+         meweTxGdlZ5pVXW01Jm7BAPxgUXoZJmWOUBe6phYUM+5z3aMhyT+o4bxug8EPSi+boGg
+         UrnhKwlf+VofnjUMkhdoGkZP8+AcA5ISstIsrVYoxsmwqBcOswUUdDyH0noKSLa+fHHa
+         h38JHOEbcLeP4ZLetyy9xB9qAR2zNOWSgw/ioSS9FLWRk31/bFWmMB3rtKU8226evWBI
+         cNTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BooTS55gW36ai8J66FC6mGTgbiGzFCkI2TXTYLHqnGc=;
-        b=ZHGuQjUJvNy+fvlgT7ve1iN9EFsXWDTTlre/WF3hRKf+qmaicPwmGfSHY2vz6Wpp6Z
-         smdHd+k48rgARwQu/nr+/X2/fdJmYlpbSfM0SQGs2nx8CBLkOuibqK8gQxn0JO8h1TK4
-         hfsD4pNKAlqxUOEwZmn5ayNbuGZGUL+7cv9aP6vthVS7LXTUN0CttK+CK/N9x54KrKX3
-         jmgbPioWGk+DCjaY+BUAG7WQ2KArFI3UiejgekjZZ0iiXmI4N7vbI//0zPHccjGcQ2g7
-         Dko5PxEFmM/Wd+eNM1uHvwkSmVWC7ZKL1LwHfrkX9tqC8dGhYTKh7xrcX0rQrrUuEknU
-         i/mA==
-X-Gm-Message-State: ANhLgQ1cfEdXbmrv1a80swcHe8ntplHkf46YIH3gaiixWjBhTPEIgWtl
-        aQ9KEd+XB6nuwEI//HXb04dkOA==
-X-Google-Smtp-Source: ADFU+vuoeqGw++ekYdgJ3cqO5Fw6bRoSYhCb6wK/ilXVoC2TYGulSobvHJm1dWdUV+euKh4JCX8JPg==
-X-Received: by 2002:a05:620a:21ce:: with SMTP id h14mr4469320qka.363.1584451324432;
-        Tue, 17 Mar 2020 06:22:04 -0700 (PDT)
-Received: from ovpn-66-200.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d13sm2093752qto.33.2020.03.17.06.22.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Mar 2020 06:22:03 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, catalin.marinas@arm.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/kmemleak: annotate a data race in checksum
-Date:   Tue, 17 Mar 2020 09:21:57 -0400
-Message-Id: <20200317132157.1272-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        bh=agG+dITcuAm3KPc+VwzNwpsgr+i8A6gZOBf/aTNCeRE=;
+        b=UNsKLiyqkroO8ZcDUx/WQWZXdVXvl8KeuuN+WY7UjCm77zGPDcHgZcoFr53nduiqOI
+         GgZ2r9bgIhW9cMcAspiLOL4Jlu6XGVEW65EFiNoz4wXC5j71WEdpnrC11jfsybhoVm5z
+         iIKe7YC8kqLY1LxBAJ2u10T5L+GGSLv51KGoRqIWqiFsfUe9p+ECm55y0UPumLCrZT2x
+         M0T2+G9OvwvZ6OV24bGOKuAxPIOG3Agy6YZvLQyxfQQ+Wy+VIcgufXEARvzKmFuWZkn3
+         WzTKZf3kdTe68uSotX/v0DADzjD2Fh0Hr29yROgjqsmPooUNNCANzoGRhSFsmt77nsLN
+         wzfQ==
+X-Gm-Message-State: ANhLgQ3FYdyO5vrKfhuZZNoK/P9WZ5b7Y/Iu1VpES0Da3qrTWsU6T7I6
+        TjNAR86RJhN9IoJDrv4QZSQ=
+X-Google-Smtp-Source: ADFU+vsLRcmJ2YKpbw2In4/U3k6OYkKkfv94ONyzhv0jHQQnV+sSmfb3hOtExDusuMk9QBCfjQ4QnA==
+X-Received: by 2002:a63:348b:: with SMTP id b133mr5272049pga.372.1584451529546;
+        Tue, 17 Mar 2020 06:25:29 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.2.210])
+        by smtp.googlemail.com with ESMTPSA id e30sm2910902pga.6.2020.03.17.06.25.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Mar 2020 06:25:28 -0700 (PDT)
+From:   ltykernel@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: [PATCH 0/4] x86/Hyper-V: Panic code path fixes
+Date:   Tue, 17 Mar 2020 06:25:19 -0700
+Message-Id: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even if KCSAN is disabled for kmemleak, update_checksum() could still
-call crc32() (which is outside of kmemleak.c) to dereference
-object->pointer. Thus, the value of object->pointer could be accessed
-concurrently as noticed by KCSAN,
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
- BUG: KCSAN: data-race in crc32_le_base / do_raw_spin_lock
+This patchset fixes some issues in the Hyper-V panic code path.
+Patch 1 resolves issue that panic system still responses network
+packets.
+Patch 2-3 resolves crash enlightenment issues.
+Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
+VM in order to report crash data or kmsg to host before running
+kdump kernel.
 
- write to 0xffffb0ea683a7d50 of 4 bytes by task 23575 on cpu 12:
-  do_raw_spin_lock+0x114/0x200
-  debug_spin_lock_after at kernel/locking/spinlock_debug.c:91
-  (inlined by) do_raw_spin_lock at kernel/locking/spinlock_debug.c:115
-  _raw_spin_lock+0x40/0x50
-  __handle_mm_fault+0xa9e/0xd00
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+Tianyu Lan (4):
+  x86/Hyper-V: Unload vmbus channel in hv panic callback
+  x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+  x86/Hyper-V: Trigger crash enlightenment only once during  system
+    crash.
+  x86/Hyper-V: Report crash register data or ksmg before running crash
+    kernel
 
- read to 0xffffb0ea683a7d50 of 4 bytes by task 839 on cpu 60:
-  crc32_le_base+0x67/0x350
-  crc32_le_base+0x67/0x350:
-  crc32_body at lib/crc32.c:106
-  (inlined by) crc32_le_generic at lib/crc32.c:179
-  (inlined by) crc32_le at lib/crc32.c:197
-  kmemleak_scan+0x528/0xd90
-  update_checksum at mm/kmemleak.c:1172
-  (inlined by) kmemleak_scan at mm/kmemleak.c:1497
-  kmemleak_scan_thread+0xcc/0xfa
-  kthread+0x1e0/0x200
-  ret_from_fork+0x27/0x50
+ arch/x86/kernel/cpu/mshyperv.c | 10 ++++++++++
+ drivers/hv/channel_mgmt.c      |  5 +++++
+ drivers/hv/vmbus_drv.c         | 35 +++++++++++++++++++++++++----------
+ 3 files changed, 40 insertions(+), 10 deletions(-)
 
-If a shattered value was returned due to a data race, it will be
-corrected in the next scan. Thus, annotate it as an intentional data
-race using the data_race() macro.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/kmemleak.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index e362dc3d2028..d3327756c3a4 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1169,7 +1169,12 @@ static bool update_checksum(struct kmemleak_object *object)
- 	u32 old_csum = object->checksum;
- 
- 	kasan_disable_current();
--	object->checksum = crc32(0, (void *)object->pointer, object->size);
-+	/*
-+	 * crc32() will dereference object->pointer. If an unstable value was
-+	 * returned due to a data race, it will be corrected in the next scan.
-+	 */
-+	object->checksum = data_race(crc32(0, (void *)object->pointer,
-+					   object->size));
- 	kasan_enable_current();
- 
- 	return object->checksum != old_csum;
 -- 
-2.21.0 (Apple Git-122.2)
+2.14.5
 
