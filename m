@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB5AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20311C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E24D20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A4520658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgCQExQ (ORCPT
+        id S1726954AbgCQExT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:53:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34097 "EHLO mga04.intel.com"
+        Tue, 17 Mar 2020 00:53:19 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34106 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbgCQExL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:53:11 -0400
-IronPort-SDR: KNuHTwO4vLm5jl6GXt+dIoqJK3bDU8xvHMXjEHyULPdBreNSXhh11HvyulUS0s0Om7/1/PxMXj
- HZpbtmJKuHaQ==
+        id S1726851AbgCQExO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:53:14 -0400
+IronPort-SDR: 5WrDfbI6Du9Zep2f3XKn1YdgmzXcYpFkwy24G4JW/lpy1ypug0QAHBGdEyuia/z7ypp0IpPPq+
+ 7HSxSklDOEWA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:11 -0700
-IronPort-SDR: ECYl6RZ3ePBvj0NEcp3pQ1asOj/7yUM1ka/xZYqmGMmjWz9ieIdfcwB8Ti1WmiuoHoBdvg1u4V
- 5CS48Qf+QALw==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:14 -0700
+IronPort-SDR: RPpGg3ym74bdXXhnwoPipDbjkkMG+CoHyovkvRRhq8WujEgKQTohxv5NSyq7dt1B6yug/WKyTU
+ ooS8P4TYlqjQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252748"
+   d="scan'208";a="355252764"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:10 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:13 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 05/32] KVM: x86: Export kvm_propagate_fault() (as kvm_inject_emulated_page_fault)
-Date:   Mon, 16 Mar 2020 21:52:11 -0700
-Message-Id: <20200317045238.30434-6-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 10/32] KVM: VMX: Move vpid_sync_vcpu_addr() down a few lines
+Date:   Mon, 16 Mar 2020 21:52:16 -0700
+Message-Id: <20200317045238.30434-11-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
 References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
@@ -59,70 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export the page fault propagation helper so that VMX can use it to
-correctly emulate TLB invalidation on page faults in an upcoming patch.
+Move vpid_sync_vcpu_addr() below vpid_sync_context() so that it can be
+refactored in a future patch to call vpid_sync_context() directly when
+the "individual address" INVVPID variant isn't supported.
 
-In the (hopefully) not-too-distant future, SGX virtualization will also
-want access to the helper for injecting page faults to the correct level
-(L1 vs. L2) when emulating ENCLS instructions.
+No functional change intended.
 
-Rename the function to kvm_inject_emulated_page_fault() to clarify that
-it is (a) injecting a fault and (b) only for page faults.  WARN if it's
-invoked with an exception other than PF_VECTOR.
-
+Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 2 ++
- arch/x86/kvm/x86.c              | 8 ++++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/ops.h | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 9a183e9d4cb1..328b1765ff76 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1447,6 +1447,8 @@ void kvm_queue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
- void kvm_requeue_exception(struct kvm_vcpu *vcpu, unsigned nr);
- void kvm_requeue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
- void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault);
-+bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
-+				    struct x86_exception *fault);
- int kvm_read_guest_page_mmu(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
- 			    gfn_t gfn, void *data, int offset, int len,
- 			    u32 access);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index e54c6ad628a8..64ed6e6e2b56 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -611,8 +611,11 @@ void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault)
+diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
+index 33645a8e5463..dd7ab61bfcc1 100644
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -253,19 +253,6 @@ static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
+ 	vmx_asm2(invept, "r"(ext), "m"(operand), ext, eptp, gpa);
  }
- EXPORT_SYMBOL_GPL(kvm_inject_page_fault);
  
--static bool kvm_propagate_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault)
-+bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
-+				    struct x86_exception *fault)
+-static inline bool vpid_sync_vcpu_addr(int vpid, gva_t addr)
+-{
+-	if (vpid == 0)
+-		return true;
+-
+-	if (cpu_has_vmx_invvpid_individual_addr()) {
+-		__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR, vpid, addr);
+-		return true;
+-	}
+-
+-	return false;
+-}
+-
+ static inline void vpid_sync_vcpu_single(int vpid)
  {
-+	WARN_ON_ONCE(fault->vector != PF_VECTOR);
+ 	if (vpid == 0)
+@@ -289,6 +276,19 @@ static inline void vpid_sync_context(int vpid)
+ 		vpid_sync_vcpu_global();
+ }
+ 
++static inline bool vpid_sync_vcpu_addr(int vpid, gva_t addr)
++{
++	if (vpid == 0)
++		return true;
 +
- 	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
- 		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
- 	else
-@@ -620,6 +623,7 @@ static bool kvm_propagate_fault(struct kvm_vcpu *vcpu, struct x86_exception *fau
- 
- 	return fault->nested_page_fault;
- }
-+EXPORT_SYMBOL_GPL(kvm_inject_emulated_page_fault);
- 
- void kvm_inject_nmi(struct kvm_vcpu *vcpu)
++	if (cpu_has_vmx_invvpid_individual_addr()) {
++		__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR, vpid, addr);
++		return true;
++	}
++
++	return false;
++}
++
+ static inline void ept_sync_global(void)
  {
-@@ -6373,7 +6377,7 @@ static bool inject_emulated_exception(struct kvm_vcpu *vcpu)
- {
- 	struct x86_emulate_ctxt *ctxt = vcpu->arch.emulate_ctxt;
- 	if (ctxt->exception.vector == PF_VECTOR)
--		return kvm_propagate_fault(vcpu, &ctxt->exception);
-+		return kvm_inject_emulated_page_fault(vcpu, &ctxt->exception);
- 
- 	if (ctxt->exception.error_code_valid)
- 		kvm_queue_exception_e(vcpu, ctxt->exception.vector,
+ 	__invept(VMX_EPT_EXTENT_GLOBAL, 0, 0);
 -- 
 2.24.1
 
