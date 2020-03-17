@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7288CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15012C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4750220658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D8E20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442602;
-	bh=cLhHEqSIyWxV+Jb22yA3iTeUrema/kKlQP9EcX7r64E=;
+	s=default; t=1584442604;
+	bh=6X+dE0s3Uhj3MWvT0gqsoucge8B0jrRWkk1cMybRikE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KJNqnDo3EZxYW71GIe07u4uSztbKQ8g52MjFxUhsfEqnFjtpDSmiAV47VIyJEAx8r
-	 P23LfQCxlgIt9N/ZktsFnL4binYW/e5BmWmNolKbHuoJ6co2+MJVoSFe5/Kb7a7GWY
-	 yq69Hx8ZtcsFcG5zXQ8PJEQoPDl+Q5VJLqhL83t8=
+	b=CDgdc4/89/Vx2mIOGfY8T5jqKNEIlfKWuSnSW2/rmZT5tU5hgRa8E1ZWGg/j0Xt8y
+	 qvZkO5g9jZ2Z+ZWXB5NdKhpzxd1Wq3VZnHqFH+qWeM+rwdSz4PJRfSIn3QgM8OEH7/
+	 UoYpJse+HofDrLztnDgGgL66ugf9H3a1zrFzoz0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgCQK4l (ORCPT
+        id S1726730AbgCQK4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbgCQK4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:56:39 -0400
+        id S1726717AbgCQK4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:56:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C04E20714;
-        Tue, 17 Mar 2020 10:56:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2EE020714;
+        Tue, 17 Mar 2020 10:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442598;
-        bh=cLhHEqSIyWxV+Jb22yA3iTeUrema/kKlQP9EcX7r64E=;
+        s=default; t=1584442601;
+        bh=6X+dE0s3Uhj3MWvT0gqsoucge8B0jrRWkk1cMybRikE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2kl7V3T+xnMo93IsvaqMZT5nCSuQkMvUz83UHMLFZSU87FcIIiJEw1Ai4/eUXFW+d
-         oOJbuw/cEyXUu6SUSMwDqZlAoogsgiOmb+f5Uph4v9NRvWdU+KvLXw6TDJCoZtxkox
-         yTnUt0saGQHd9XZbFsF37Eaxxj3gLq+xozO4sOig=
+        b=yDu5s3I00T5S3+VBx84dBupZzkMYWWiuU0rXWSo46tD6tmP6hpjDpcfAi2pKzsKRf
+         STW/Szc3nvdrGraglM0Q2olbYf7JILsaWMqC02x2JgzFgz2an3WQ15XUGv2WKk6tTI
+         ngkh+MgeBgrqTXim+A7xcF26p8lenywOslm08DpQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, You-Sheng Yang <vicamo.yang@canonical.com>,
+        stable@vger.kernel.org, Derek Shute <Derek.Shute@stratus.com>,
+        Edward Cree <ecree@solarflare.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 18/89] r8152: check disconnect status after long sleep
-Date:   Tue, 17 Mar 2020 11:54:27 +0100
-Message-Id: <20200317103302.102954540@linuxfoundation.org>
+Subject: [PATCH 4.19 19/89] sfc: detach from cb_page in efx_copy_channel()
+Date:   Tue, 17 Mar 2020 11:54:28 +0100
+Message-Id: <20200317103302.233148840@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -59,124 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: You-Sheng Yang <vicamo.yang@canonical.com>
+From: Edward Cree <ecree@solarflare.com>
 
-[ Upstream commit d64c7a08034b32c285e576208ae44fc3ba3fa7df ]
+[ Upstream commit 4b1bd9db078f7d5332c8601a2f5bd43cf0458fd4 ]
 
-Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
+It's a resource, not a parameter, so we can't copy it into the new
+ channel's TX queues, otherwise aliasing will lead to resource-
+ management bugs if the channel is subsequently torn down without
+ being initialised.
 
-  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
-      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
-              Driver=r8152, 5000M
+Before the Fixes:-tagged commit there was a similar bug with
+ tsoh_page, but I'm not sure it's worth doing another fix for such
+ old kernels.
 
-where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
-
-When hotplugging such dock with additional usb devices already attached on
-it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
-device is also reset. However, during r8152 device init there are several
-for-loops that, when it's unable to retrieve hardware registers due to
-being disconnected from USB, may take up to 14 seconds each in practice,
-and that has to be completed before USB may re-enumerate devices on the
-bus. As a result, devices attached to the dock will only be available
-after nearly 1 minute after the dock was plugged in:
-
-  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
-  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
-  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
-  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
-  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
-
-This happens in, for example, r8153_init:
-
-  static int generic_ocp_read(struct r8152 *tp, u16 index, u16 size,
-			    void *data, u16 type)
-  {
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return -ENODEV;
-    ...
-  }
-
-  static u16 ocp_read_word(struct r8152 *tp, u16 type, u16 index)
-  {
-    u32 data;
-    ...
-    generic_ocp_read(tp, index, sizeof(tmp), &tmp, type | byen);
-
-    data = __le32_to_cpu(tmp);
-    ...
-    return (u16)data;
-  }
-
-  static void r8153_init(struct r8152 *tp)
-  {
-    ...
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return;
-
-    for (i = 0; i < 500; i++) {
-      if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
-          AUTOLOAD_DONE)
-        break;
-      msleep(20);
-    }
-    ...
-  }
-
-Since ocp_read_word() doesn't check the return status of
-generic_ocp_read(), and the only exit condition for the loop is to have
-a match in the returned value, such loops will only ends after exceeding
-its maximum runs when the device has been marked as disconnected, which
-takes 500 * 20ms = 10 seconds in theory, 14 in practice.
-
-To solve this long latency another test to RTL8152_UNPLUG flag should be
-added after those 20ms sleep to skip unnecessary loops, so that the device
-probe can complete early and proceed to parent port reset/reprobe process.
-
-This can be reproduced on all kernel versions up to latest v5.6-rc2, but
-after v5.5-rc7 the reproduce rate is dramatically lowered to 1/30 or less
-while it was around 1/2.
-
-Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+Fixes: e9117e5099ea ("sfc: Firmware-Assisted TSO version 2")
+Suggested-by: Derek Shute <Derek.Shute@stratus.com>
+Signed-off-by: Edward Cree <ecree@solarflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/r8152.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/sfc/efx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -2701,6 +2701,8 @@ static u16 r8153_phy_status(struct r8152
- 		}
- 
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
+--- a/drivers/net/ethernet/sfc/efx.c
++++ b/drivers/net/ethernet/sfc/efx.c
+@@ -522,6 +522,7 @@ efx_copy_channel(const struct efx_channe
+ 		if (tx_queue->channel)
+ 			tx_queue->channel = channel;
+ 		tx_queue->buffer = NULL;
++		tx_queue->cb_page = NULL;
+ 		memset(&tx_queue->txd, 0, sizeof(tx_queue->txd));
  	}
  
- 	return data;
-@@ -4062,7 +4064,10 @@ static void r8153_init(struct r8152 *tp)
- 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
- 		    AUTOLOAD_DONE)
- 			break;
-+
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	data = r8153_phy_status(tp, 0);
-@@ -4180,7 +4185,10 @@ static void r8153b_init(struct r8152 *tp
- 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
- 		    AUTOLOAD_DONE)
- 			break;
-+
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	data = r8153_phy_status(tp, 0);
 
 
