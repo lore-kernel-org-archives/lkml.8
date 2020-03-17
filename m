@@ -2,218 +2,191 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7257C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B3E2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950D320658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444012;
-	bh=gwOOFIba/Xe2ZhVi9dCWmL00lqjTQhUYPSCVHThL0QA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z89M+JNWctJ82HlwFNwxj0lP1uR5FXNX1SYzsMJR+v8dcAglS2vqmpc9oQHIsd54r
-	 ap4mqjp5nMbh/jCoGGvSydgKR5zq0Hvmu2M3f9ySYnJLsgHXD8Gq6NB9tLPX7+x1Em
-	 hwVf4lfoOzxOJ4XLwLmdFbY7nOD1BSzJkzBwEg+w=
+	s=default; t=1584444018;
+	bh=GwYHFgtS8fdMCt3xPE/4RJNZjIMihwbVof2Pazn4IQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0cMvN6dojhUKY4wq4F04INSqra3f+l8HLivLx4Hkl61G2XTqT3fuMoTDtDP+y0688
+	 VozTxkJZobk0wFff2SM+x72IIuR2r6uJZKDHe9bsTSvExO029nXzGnQjW6utj/zJhS
+	 kjyVzK+k1XfVNPxqxusANukJA/6rQ3VrXa5hwqLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgCQLB6 (ORCPT
+        id S1727144AbgCQLBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbgCQLBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:01:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 468CF205ED;
-        Tue, 17 Mar 2020 11:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442907;
-        bh=gwOOFIba/Xe2ZhVi9dCWmL00lqjTQhUYPSCVHThL0QA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=efjMsxxKyROUkTiQi2XDdhigXuE+F1NHoZ7GTREOgxnMGiLropczNA0KKqC7WLAzp
-         pXcxgsMCi5KUBSwVGR7Q/I81JjecLjMOpvi0+cYTiVZHXSslGDHdKtsnrBsCdCKU6u
-         py/01Emuj86GrSJ4m+tg7r26qxbOE5qLM/3CiTAM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 030/123] bonding/alb: make sure arp header is pulled before accessing it
-Date:   Tue, 17 Mar 2020 11:54:17 +0100
-Message-Id: <20200317103310.952894459@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
-References: <20200317103307.343627747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 17 Mar 2020 07:01:30 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56170 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727744AbgCQLB1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:01:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 6so20924639wmi.5;
+        Tue, 17 Mar 2020 04:01:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6EipgQFVgo/huvY/O4SRrQWe8XDQ0DAlFK59sTbjBUo=;
+        b=UMgwvZOK6Yhf7MtEGLksGmsJ/NVy2HBt7vJOxZmwF+R42WeysBU1X7iAstYnkO+gNp
+         vXmUtVgvGDY4ejXNwL3JuYhDrxw56FHDP6b02uGpbMa6MPh7DHPUAK4ZrRWAwesHERjr
+         UjgT3MUddEg9+PeZboCl2tl/Heau008Q7KZF89m7fMCApbNNUA8pciNNSjATKOTCwD45
+         89Izqo95G/uYs1BffI130Ky1qMqnXti56VAEXh/l9ha+83KLBuC9uhu/EBlFh3BJZwz/
+         mQf6tSKDTw14i14oKGJwzdwaIvfPUDLhJcxLUUv/88rKy6GFKEXaV1eLOdJaJNot34g+
+         d0qg==
+X-Gm-Message-State: ANhLgQ0bOgjQZh1hQSyrN4tYvWrQ4Vx3zmHjDuQdU4NcvYslG5tPJS2E
+        afJONlc6MCvWiZF8UCL20fU=
+X-Google-Smtp-Source: ADFU+vsC8Dzy9TGXCGl36ggWufL9wQJFd8vsUJbzPnDHv7C0memWXP80yZxYnWH2b4rw1DPH/xRZdA==
+X-Received: by 2002:a1c:23d5:: with SMTP id j204mr4961015wmj.59.1584442884527;
+        Tue, 17 Mar 2020 04:01:24 -0700 (PDT)
+Received: from localhost (ip-37-188-255-121.eurotel.cz. [37.188.255.121])
+        by smtp.gmail.com with ESMTPSA id k3sm3879311wro.59.2020.03.17.04.01.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 04:01:23 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 12:01:21 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2 8/8] mm/memory_hotplug: allow to specify a default
+ online_type
+Message-ID: <20200317110121.GN26018@dhcp22.suse.cz>
+References: <20200317104942.11178-1-david@redhat.com>
+ <20200317104942.11178-9-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317104942.11178-9-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+On Tue 17-03-20 11:49:42, David Hildenbrand wrote:
+> For now, distributions implement advanced udev rules to essentially
+> - Don't online any hotplugged memory (s390x)
+> - Online all memory to ZONE_NORMAL (e.g., most virt environments like
+>   hyperv)
+> - Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
+>   care of (e.g., bare metal, special virt environments)
+> 
+> In summary: All memory is usually onlined the same way, however, the
+> kernel always has to ask user space to come up with the same answer.
+> E.g., Hyper-V always waits for a memory block to get onlined before
+> continuing, otherwise it might end up adding memory faster than
+> hotplugging it, which can result in strange OOM situations. This waiting
+> slows down adding of a bigger amount of memory.
+> 
+> Let's allow to specify a default online_type, not just "online" and
+> "offline". This allows distributions to configure the default online_type
+> when booting up and be done with it.
+> 
+> We can now specify "offline", "online", "online_movable" and
+> "online_kernel" via
+> - "memhp_default_state=" on the kernel cmdline
+> - /sys/devices/system/memory/auto_online_blocks
+> just like we are able to specify for a single memory block via
+> /sys/devices/system/memory/memoryX/state
+> 
+> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-commit b7469e83d2add567e4e0b063963db185f3167cea upstream.
+As I've said earlier and several times already, I really dislike this
+interface. But it is fact that this patch doesn't make it any worse.
+Quite contrary, so feel free to add
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Similar to commit 38f88c454042 ("bonding/alb: properly access headers
-in bond_alb_xmit()"), we need to make sure arp header was pulled
-in skb->head before blindly accessing it in rlb_arp_xmit().
+> ---
+>  drivers/base/memory.c          | 11 +++++------
+>  include/linux/memory_hotplug.h |  2 ++
+>  mm/memory_hotplug.c            |  8 ++++----
+>  3 files changed, 11 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 8d3e16dab69f..2b09b68b9f78 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -35,7 +35,7 @@ static const char *const online_type_to_str[] = {
+>  	[MMOP_ONLINE_MOVABLE] = "online_movable",
+>  };
+>  
+> -static int memhp_online_type_from_str(const char *str)
+> +int memhp_online_type_from_str(const char *str)
+>  {
+>  	int i;
+>  
+> @@ -394,13 +394,12 @@ static ssize_t auto_online_blocks_store(struct device *dev,
+>  					struct device_attribute *attr,
+>  					const char *buf, size_t count)
+>  {
+> -	if (sysfs_streq(buf, "online"))
+> -		memhp_default_online_type = MMOP_ONLINE;
+> -	else if (sysfs_streq(buf, "offline"))
+> -		memhp_default_online_type = MMOP_OFFLINE;
+> -	else
+> +	const int online_type = memhp_online_type_from_str(buf);
+> +
+> +	if (online_type < 0)
+>  		return -EINVAL;
+>  
+> +	memhp_default_online_type = online_type;
+>  	return count;
+>  }
+>  
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index c6e090b34c4b..ef55115320fb 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -117,6 +117,8 @@ extern int arch_add_memory(int nid, u64 start, u64 size,
+>  			struct mhp_restrictions *restrictions);
+>  extern u64 max_mem_size;
+>  
+> +extern int memhp_online_type_from_str(const char *str);
+> +
+>  /* Default online_type (MMOP_*) when new memory blocks are added. */
+>  extern int memhp_default_online_type;
+>  /* If movable_node boot option specified */
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 1975a2b99a2b..9916977b6ee1 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -74,10 +74,10 @@ int memhp_default_online_type = MMOP_ONLINE;
+>  
+>  static int __init setup_memhp_default_state(char *str)
+>  {
+> -	if (!strcmp(str, "online"))
+> -		memhp_default_online_type = MMOP_ONLINE;
+> -	else if (!strcmp(str, "offline"))
+> -		memhp_default_online_type = MMOP_OFFLINE;
+> +	const int online_type = memhp_online_type_from_str(str);
+> +
+> +	if (online_type >= 0)
+> +		memhp_default_online_type = online_type;
+>  
+>  	return 1;
+>  }
+> -- 
+> 2.24.1
 
-Remove arp_pkt() private helper, since it is more readable/obvious
-to have the following construct back to back :
-
-	if (!pskb_network_may_pull(skb, sizeof(*arp)))
-		return NULL;
-	arp = (struct arp_pkt *)skb_network_header(skb);
-
-syzbot reported :
-
-BUG: KMSAN: uninit-value in bond_slave_has_mac_rx include/net/bonding.h:704 [inline]
-BUG: KMSAN: uninit-value in rlb_arp_xmit drivers/net/bonding/bond_alb.c:662 [inline]
-BUG: KMSAN: uninit-value in bond_alb_xmit+0x575/0x25e0 drivers/net/bonding/bond_alb.c:1477
-CPU: 0 PID: 12743 Comm: syz-executor.4 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- bond_slave_has_mac_rx include/net/bonding.h:704 [inline]
- rlb_arp_xmit drivers/net/bonding/bond_alb.c:662 [inline]
- bond_alb_xmit+0x575/0x25e0 drivers/net/bonding/bond_alb.c:1477
- __bond_start_xmit drivers/net/bonding/bond_main.c:4257 [inline]
- bond_start_xmit+0x85d/0x2f70 drivers/net/bonding/bond_main.c:4282
- __netdev_start_xmit include/linux/netdevice.h:4524 [inline]
- netdev_start_xmit include/linux/netdevice.h:4538 [inline]
- xmit_one net/core/dev.c:3470 [inline]
- dev_hard_start_xmit+0x531/0xab0 net/core/dev.c:3486
- __dev_queue_xmit+0x37de/0x4220 net/core/dev.c:4063
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4096
- packet_snd net/packet/af_packet.c:2967 [inline]
- packet_sendmsg+0x8347/0x93b0 net/packet/af_packet.c:2992
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- __sys_sendto+0xc1b/0xc50 net/socket.c:1998
- __do_sys_sendto net/socket.c:2010 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:2006
- __x64_sys_sendto+0x6e/0x90 net/socket.c:2006
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc77ffbbc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00007fc77ffbc6d4 RCX: 000000000045c479
-RDX: 000000000000000e RSI: 00000000200004c0 RDI: 0000000000000003
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a04 R14: 00000000004cc7b0 R15: 000000000076bf2c
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
- slab_alloc_node mm/slub.c:2793 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1051 [inline]
- alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5766
- sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2242
- packet_alloc_skb net/packet/af_packet.c:2815 [inline]
- packet_snd net/packet/af_packet.c:2910 [inline]
- packet_sendmsg+0x66a0/0x93b0 net/packet/af_packet.c:2992
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- __sys_sendto+0xc1b/0xc50 net/socket.c:1998
- __do_sys_sendto net/socket.c:2010 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:2006
- __x64_sys_sendto+0x6e/0x90 net/socket.c:2006
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Cc: Veaceslav Falico <vfalico@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/bonding/bond_alb.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
---- a/drivers/net/bonding/bond_alb.c
-+++ b/drivers/net/bonding/bond_alb.c
-@@ -50,11 +50,6 @@ struct arp_pkt {
- };
- #pragma pack()
- 
--static inline struct arp_pkt *arp_pkt(const struct sk_buff *skb)
--{
--	return (struct arp_pkt *)skb_network_header(skb);
--}
--
- /* Forward declaration */
- static void alb_send_learning_packets(struct slave *slave, u8 mac_addr[],
- 				      bool strict_match);
-@@ -553,10 +548,11 @@ static void rlb_req_update_subnet_client
- 	spin_unlock(&bond->mode_lock);
- }
- 
--static struct slave *rlb_choose_channel(struct sk_buff *skb, struct bonding *bond)
-+static struct slave *rlb_choose_channel(struct sk_buff *skb,
-+					struct bonding *bond,
-+					const struct arp_pkt *arp)
- {
- 	struct alb_bond_info *bond_info = &(BOND_ALB_INFO(bond));
--	struct arp_pkt *arp = arp_pkt(skb);
- 	struct slave *assigned_slave, *curr_active_slave;
- 	struct rlb_client_info *client_info;
- 	u32 hash_index = 0;
-@@ -653,8 +649,12 @@ static struct slave *rlb_choose_channel(
-  */
- static struct slave *rlb_arp_xmit(struct sk_buff *skb, struct bonding *bond)
- {
--	struct arp_pkt *arp = arp_pkt(skb);
- 	struct slave *tx_slave = NULL;
-+	struct arp_pkt *arp;
-+
-+	if (!pskb_network_may_pull(skb, sizeof(*arp)))
-+		return NULL;
-+	arp = (struct arp_pkt *)skb_network_header(skb);
- 
- 	/* Don't modify or load balance ARPs that do not originate locally
- 	 * (e.g.,arrive via a bridge).
-@@ -664,7 +664,7 @@ static struct slave *rlb_arp_xmit(struct
- 
- 	if (arp->op_code == htons(ARPOP_REPLY)) {
- 		/* the arp must be sent on the selected rx channel */
--		tx_slave = rlb_choose_channel(skb, bond);
-+		tx_slave = rlb_choose_channel(skb, bond, arp);
- 		if (tx_slave)
- 			bond_hw_addr_copy(arp->mac_src, tx_slave->dev->dev_addr,
- 					  tx_slave->dev->addr_len);
-@@ -676,7 +676,7 @@ static struct slave *rlb_arp_xmit(struct
- 		 * When the arp reply is received the entry will be updated
- 		 * with the correct unicast address of the client.
- 		 */
--		tx_slave = rlb_choose_channel(skb, bond);
-+		tx_slave = rlb_choose_channel(skb, bond, arp);
- 
- 		/* The ARP reply packets must be delayed so that
- 		 * they can cancel out the influence of the ARP request.
-
-
+-- 
+Michal Hocko
+SUSE Labs
