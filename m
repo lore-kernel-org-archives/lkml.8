@@ -2,104 +2,113 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259A4C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAD1C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5D1206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A88F206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:08:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NiSPe29F"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Of7bWqEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCQXBY (ORCPT
+        id S1727024AbgCQXI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 19:01:24 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:59474 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbgCQXBW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 19:01:22 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8D3DEF9;
-        Wed, 18 Mar 2020 00:01:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584486080;
-        bh=RsBGOOoR16+F81LqfrqNie4IC7gzYPXK9gaCVKUf158=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NiSPe29FZnt7WxFSA9LrSrh6GqL5oJ2QeexNyTYle+MnyTE2TDYPZTgtIX6TayNHd
-         Oy2r2WeZnwzfnJb/8gDdQ5SIrrUovWs3Blg3I8ARdKRpOtLMp1OCCLnHNEZ4DZW0nS
-         lnSBNdZxNJhyk94zqQv6HZvh6EOa2aKyr7OxqS+k=
-Date:   Wed, 18 Mar 2020 01:01:15 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 4/7] dt-bindings: pwm: add description of PWM polarity
-Message-ID: <20200317230115.GM2527@pendragon.ideasonboard.com>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-5-oleksandr.suvorov@toradex.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Tue, 17 Mar 2020 19:08:57 -0400
+Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:7335
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726564AbgCQXI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 19:08:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AHHLOxgTZ9osNtl13qHdM5Z9KckCIUmyZRIo7RfDJwkiJ7bfaQQ7LKoo4ctz+XrfOoBVY3LCNDT/SlQuPtfQ46DM5mkZbveWP8ecwqu8tiOfGdwwdCvIqGg4PpWWb/JkJmMhh7iP+8s8upskm3YSAuB3zVEpHCQMAHXX5ro/MuW4BjOJaxAMdS2/fy+fdbDdtQm/NuqRKjDPXtt6R+7WCKRCBLRy70n7qUlpNnE+QFBQEwyPOVlePxjgzplvexinUuXCKegsfoNYxdJrrdWJkTkm62Gh0lLXIhilB/dbhl7UXxZkU+UXJzCpUoz5uMUhEVIxIX4ryOuCvdvZTSroIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/kIQOG/Nvz7fSiNMeqDevp9eAESKDUfoimHXRWkvmTE=;
+ b=Up5mu2MCFEBJ57dAvBohlCc5Kybe7DuQjzHenjnOztmVkZC6/61on8lmT384K8/4DRbMwCseMzFbMwRhfofSHpX/0OE1S4O7kWyFknDimUwGot4dQHsJXqRkG5UITOqkmnzcPbGVA6neNX+xPdpCPhoGZQCnGLKI+1wNUyHRahzrtRi9s4TSwYUYwv5dHS7UMNCxDM7VQ5e+T1vtvj+sosy98p3FSGH0BWxiuZwEfoa0Mi0BYzZQ/W5XK6g2aVQv8CMCB06lLdGfbjMSRfPlbTkIPz8uuoEZWR4TK0Y6KzRwe7aJ1nqbwJppiUv2e2ndiZity2WhkoJdkckYfuaJkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/kIQOG/Nvz7fSiNMeqDevp9eAESKDUfoimHXRWkvmTE=;
+ b=Of7bWqEY0/oQim1ykK0IJpxAhvWpVwhTNqIOkjCOqszL2XycAOswMwgWuR6TEOw+FhocLyE5EyPGOg+/1Ljy47XFefOvedMpTnoev1tf39Qzf2y54yZ4IAYnphH0rWdCmuY0zBd6kkl28Vu33gUDDaToDp4wJ2yErttMwwrNB9U=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB6286.eurprd05.prod.outlook.com (20.179.24.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.19; Tue, 17 Mar 2020 23:08:50 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 23:08:50 +0000
+Date:   Tue, 17 Mar 2020 20:08:47 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: Fixes tag needs some work in the hmm tree
+Message-ID: <20200317230847.GB13183@mellanox.com>
+References: <20200318075033.4d06b1be@canb.auug.org.au>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200317123231.2843297-5-oleksandr.suvorov@toradex.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200318075033.4d06b1be@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR19CA0015.namprd19.prod.outlook.com
+ (2603:10b6:208:178::28) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR19CA0015.namprd19.prod.outlook.com (2603:10b6:208:178::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.19 via Frontend Transport; Tue, 17 Mar 2020 23:08:50 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jELKJ-0007sv-6j; Tue, 17 Mar 2020 20:08:47 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 122d8ce8-f9fb-47ce-fe87-08d7cac8279a
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6286:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB62868A124DA4D3EDFDA3268BCFF60@VI1PR05MB6286.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:335;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(366004)(39860400002)(136003)(396003)(199004)(478600001)(2616005)(6916009)(86362001)(36756003)(1076003)(8676002)(81166006)(186003)(4744005)(81156014)(2906002)(33656002)(26005)(66946007)(66556008)(8936002)(54906003)(5660300002)(52116002)(9786002)(9746002)(4326008)(316002)(66476007)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6286;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nT0aGwSPrHfJ62QgFPm3Yd3MeFDdE+gRcsIaqDaTaD+Ntuprne7qUERVGsOd1f0+cM7pIEw/kQGnYTG8ON5oH6QL3HmwwIzOfFKY8e7qh+GFZfc/9hGgwgWh40bQpoyjOrWuVCZbFSqhzOMpapICbvgFMLmqWnL+76GReBo43gCSQ5TSrfF4eLRQDiKcRlM4gfW5V8uqC3i30vIJS1m5zK0gssf4AiGwsaHDjIijWcFN9KFBHHSCjg1WL5m7Dh0NGlgnQkYoJWgrBmoIzHGKkBE7FHaFyn6QOeXAyFbqN82q1uqV3+4Dajacu9k978EULg+zNcZJkzmqGKyyPwuo9SkmXVY5n4GUIoCBXqnrovf6f+MPIIBAU8pGD3RUIoUgotSV4ewNSUv3IlfZi5ewlNLnAziQbsQx/tVjNbsiFHhXPBynk8rQnuO+T6Rj25ZsXfqhJ4e6nxf0xWhVxdjO2IRNfkjbrgzBHcJZYSPhDQERHvvi2NVSrY6JGHpcZugU
+X-MS-Exchange-AntiSpam-MessageData: p00qTaYFJuhwn1XcaziPu/2+FR+zh/5YhINEGfqf+uuXqNHUlt+wGwBKlaK+G5sp8XT+ZjkdD0GYz7Y3BN+HYKy5KYSPTrY3pKpBj0x/ru+CHeQ0KGlTAXXmvNPIpsHYxy3iAyYt6KKYxP7bmKVSfw==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 122d8ce8-f9fb-47ce-fe87-08d7cac8279a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 23:08:50.4932
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7MCR9yjUe9NooJUOXGD3T79RaeQDUH8erMz4UnEruvgMl5UY2KyJERKqhp+L8UIC9UBI8svuKNyKdHNAw9YpCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6286
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksandr,
-
-Thank you for the patch.
-
-On Tue, Mar 17, 2020 at 02:32:28PM +0200, Oleksandr Suvorov wrote:
-> Move the description of the PWM signal polarity from
-> <linux/pwm.h>, prepare for removing the polarity
-> definition from <linux/pwm.h>.
+On Wed, Mar 18, 2020 at 07:50:33AM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> ---
+> In commit
 > 
->  include/dt-bindings/pwm/pwm.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>   ee37d9e6e474 ("mm/hmm: don't handle the non-fault case in hmm_vma_walk_hole_()")
 > 
-> diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pwm.h
-> index 6b58caa6385e..c07da2088a61 100644
-> --- a/include/dt-bindings/pwm/pwm.h
-> +++ b/include/dt-bindings/pwm/pwm.h
-> @@ -10,7 +10,16 @@
->  #ifndef _DT_BINDINGS_PWM_PWM_H
->  #define _DT_BINDINGS_PWM_PWM_H
->  
-> +/**
-> + * a high signal for the duration of the duty-cycle, followed by a low signal
-> + * for the remainder of the pulse period.
-> + */
+> Fixes tag
+> 
+>   Fixes: 2aee09d ("mm/hmm: change hmm_vma_fault() to allow write fault on page basis")
 
-Last time I checked, kernedoc didn't support documenting macros (enums
-are supported).
+Fixed, and really confused how it happened :\
 
->  #define PWM_POLARITY_NORMAL			0
-> +
-> +/**
-> + * a low signal for the duration of the duty-cycle, followed by a high signal
-> + * for the remainder of the pulse period.
-> + */
->  #define PWM_POLARITY_INVERTED			(1 << 0)
->  
->  #endif
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Jason
