@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53465C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32AAC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDD9205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F687205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443729;
-	bh=0dvnIHjIvrMzVSv9CLZhGvjeFyWFTtD1oWPl5DeL6NA=;
+	s=default; t=1584443731;
+	bh=z4bfa8hZ8/4gypOjATA/W96jKijPpT9z5KWSPWrzcXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yOnYp5nGmbgrA7yWC629CvDuqrAD7xm+t7/qM8HDJXvotNPB0NymOCc9pWtlgQks/
-	 e5KW0f/Lb9N+VhAa9TWVp70yBeQYJvTPuhPG2kSKxm8dKaUfpWFqaAD7D0uftJHPeL
-	 VQRCE49KejHBz7dPgN7gePdH8FMU6hHoRdQVozCA=
+	b=mRoWdIOm+JIJocNRSNQvZe8nqvpvzG+DDRp33uJK7XwoP1akbmPvTUpcS3n4U3pX/
+	 F2HM/HtCgnH/w47zBL2NtiF9QxNPvLprdvnPiMykYI1hbS+9Ev/KYQb/xHwnaSV+4r
+	 JKpZAuRU4HFQ4kj62ounL3vI3cv5m6Uk/UdfKgu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgCQLP2 (ORCPT
+        id S1729382AbgCQLML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55926 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728807AbgCQLMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:18 -0400
+        id S1728415AbgCQLMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 560B720735;
-        Tue, 17 Mar 2020 11:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 463D92071C;
+        Tue, 17 Mar 2020 11:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443537;
-        bh=0dvnIHjIvrMzVSv9CLZhGvjeFyWFTtD1oWPl5DeL6NA=;
+        s=default; t=1584443525;
+        bh=z4bfa8hZ8/4gypOjATA/W96jKijPpT9z5KWSPWrzcXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kEo7dTG8o+UEHznaKKYJ/O1qpgiEyFRIUQHXBBIwiGapdXRCXgtQ1Jf83uv6T6TNy
-         uCQVBQ/oWxBGxchBNct6znyVTXIX80eBh2IjavYEoRlrMvEODrc1Epv3qMrMqNEWqP
-         VAAKhQvEnMfWiwRZ+7Re2BpPuJrISigFoa1lEQy0=
+        b=ccQ55FvJzvqSZVIkbfbFajLjN4c97XPfIDrbyoW39KMOcAL3PvvUZN9Yd3Uf11lTQ
+         S5qY5akw5rXjb+JBLZoEOdNXwNM8twHVeTDReaqhFpr38QWCrhhO47YrpO/qVbFMtd
+         0rXlYM25F6oLM+Q8YKsv8DfEpw77MPDmTtKX7UrY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.5 115/151] i2c: designware-pci: Fix BUG_ON during device removal
-Date:   Tue, 17 Mar 2020 11:55:25 +0100
-Message-Id: <20200317103334.644943599@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        Borislav Petkov <bp@suse.de>, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.5 112/151] x86/ioremap: Map EFI runtime services data as encrypted for SEV
+Date:   Tue, 17 Mar 2020 11:55:22 +0100
+Message-Id: <20200317103334.414287301@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -61,39 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-commit 9be8bc4dd6177cf992b93b0bd014c4f611283896 upstream.
+commit 985e537a4082b4635754a57f4f95430790afee6a upstream.
 
-Function i2c_dw_pci_remove() -> pci_free_irq_vectors() ->
-pci_disable_msi() -> free_msi_irqs() will throw a BUG_ON() for MSI
-enabled device since the driver has not released the requested IRQ before
-calling the pci_free_irq_vectors().
+The dmidecode program fails to properly decode the SMBIOS data supplied
+by OVMF/UEFI when running in an SEV guest. The SMBIOS area, under SEV, is
+encrypted and resides in reserved memory that is marked as EFI runtime
+services data.
 
-Here driver requests an IRQ using devm_request_irq() but automatic
-release happens only after remove callback. Fix this by explicitly
-freeing the IRQ before calling pci_free_irq_vectors().
+As a result, when memremap() is attempted for the SMBIOS data, it
+can't be mapped as regular RAM (through try_ram_remap()) and, since
+the address isn't part of the iomem resources list, it isn't mapped
+encrypted through the fallback ioremap().
 
-Fixes: 21aa3983d619 ("i2c: designware-pci: Switch over to MSI interrupts")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Add a new __ioremap_check_other() to deal with memory types like
+EFI_RUNTIME_SERVICES_DATA which are not covered by the resource ranges.
+
+This allows any runtime services data which has been created encrypted,
+to be mapped encrypted too.
+
+ [ bp: Move functionality to a separate function. ]
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Joerg Roedel <jroedel@suse.de>
+Tested-by: Joerg Roedel <jroedel@suse.de>
+Cc: <stable@vger.kernel.org> # 5.3
+Link: https://lkml.kernel.org/r/2d9e16eb5b53dc82665c95c6764b7407719df7a0.1582645327.git.thomas.lendacky@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-designware-pcidrv.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/mm/ioremap.c |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/drivers/i2c/busses/i2c-designware-pcidrv.c
-+++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
-@@ -313,6 +313,7 @@ static void i2c_dw_pci_remove(struct pci
- 	pm_runtime_get_noresume(&pdev->dev);
- 
- 	i2c_del_adapter(&dev->adapter);
-+	devm_free_irq(&pdev->dev, dev->irq, dev);
- 	pci_free_irq_vectors(pdev);
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -106,6 +106,19 @@ static unsigned int __ioremap_check_encr
+ 	return 0;
  }
  
++/*
++ * The EFI runtime services data area is not covered by walk_mem_res(), but must
++ * be mapped encrypted when SEV is active.
++ */
++static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *desc)
++{
++	if (!sev_active())
++		return;
++
++	if (efi_mem_type(addr) == EFI_RUNTIME_SERVICES_DATA)
++		desc->flags |= IORES_MAP_ENCRYPTED;
++}
++
+ static int __ioremap_collect_map_flags(struct resource *res, void *arg)
+ {
+ 	struct ioremap_desc *desc = arg;
+@@ -124,6 +137,9 @@ static int __ioremap_collect_map_flags(s
+  * To avoid multiple resource walks, this function walks resources marked as
+  * IORESOURCE_MEM and IORESOURCE_BUSY and looking for system RAM and/or a
+  * resource described not as IORES_DESC_NONE (e.g. IORES_DESC_ACPI_TABLES).
++ *
++ * After that, deal with misc other ranges in __ioremap_check_other() which do
++ * not fall into the above category.
+  */
+ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
+ 				struct ioremap_desc *desc)
+@@ -135,6 +151,8 @@ static void __ioremap_check_mem(resource
+ 	memset(desc, 0, sizeof(struct ioremap_desc));
+ 
+ 	walk_mem_res(start, end, desc, __ioremap_collect_map_flags);
++
++	__ioremap_check_other(addr, desc);
+ }
+ 
+ /*
 
 
