@@ -2,160 +2,257 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5852EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380CFC0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3033420674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:02:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxAw1x5u"
+	by mail.kernel.org (Postfix) with ESMTP id 0FD4920674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgCQCCT (ORCPT
+        id S1726769AbgCQCCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 22:02:19 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46615 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgCQCCS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 22:02:18 -0400
-Received: by mail-qk1-f195.google.com with SMTP id f28so29966849qkk.13;
-        Mon, 16 Mar 2020 19:02:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GfwiC+344U8psPjXqa0wm09HURQ3uUDHZEYcEibliGw=;
-        b=IxAw1x5u4ehF5o0WeS17DGZ7kb7j9nMi2Xm1UqyutqGICGpvViUsiFRLaWVBHIhKoR
-         3qTn8R8TfUTFe4TZDtRCnSnm87KSStORtK7JrqpO8anmsG7qKdBonpQXhpjOMNvkYJ0F
-         XFTRn4t+e75LWMBYxSjJ8afc36eKQ/Jjmc1dcA/avO/4qcQ3VC/KG/HrplY4OKG7L5kE
-         8tHZfCKMEgnGqX0Xc7LKZy8nOlFGUU8NwzZUvO+Cc+4yyw4/pP1+iUEMuC4qj+aNeyTN
-         L4vidOkH/oOf+Ifnu6CBGU6zO0XafcysjMLAdEBSPbQT2Sww2dS57J+GCd4yKhkBLJr/
-         R+kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GfwiC+344U8psPjXqa0wm09HURQ3uUDHZEYcEibliGw=;
-        b=qn/jOsLY7UyxPiaC98MeFsc6UPV7uFiEYqv+Km+Pz+PRdUzc9ZXjZJNxve5mRmxELI
-         /4zFDujJSbLCMQebUz3yAZlnxfuCVO0u87Ty2tr7aisDwGbz74IvP1MumxmI5+uRKl46
-         Pg4fQ1ttL9w3BME6i/+emMrI8nUI1ZrQJmo6ZDykVCjnl/1F8sTzlhuSp07ws/dh84wE
-         kSV/ttiv8QxBlEbemSv5DhQPYs/kiNDzNG03Po8XLmxTdYG7SJWWqpuhhSEjBwwPhQW4
-         rlmXop+j5MnvAX7uAgvNVkJwZRB0IXDU0Tg33O/Xr7ku8AejMJypprybvwBUDO3p877D
-         DBOQ==
-X-Gm-Message-State: ANhLgQ2u1HqNZWKHYuqXs/8Ka+RkIGpejDDhp8L6oQVC3qgTEApRdIrl
-        DZZ+o8GZa2cVTvUuvOa3wDvCf0joO+cEp6PEnhPUZZ6j
-X-Google-Smtp-Source: ADFU+vtpREl3Ph/YdBPhjq8xSZ78Hx8l94PN5EyvsxWf+Tot+Bmq/hpMD0ffX6sgsW2OsWdG33mFavYXIeggbdPnxNc=
-X-Received: by 2002:a05:620a:539:: with SMTP id h25mr2652050qkh.395.1584410537015;
- Mon, 16 Mar 2020 19:02:17 -0700 (PDT)
+        Mon, 16 Mar 2020 22:02:40 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11653 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726729AbgCQCCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 22:02:39 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 23FA33684FC3E1E40F3F;
+        Tue, 17 Mar 2020 10:02:35 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 17 Mar 2020
+ 10:02:14 +0800
+Subject: Re: [PATCH v5 09/23] irqchip/gic-v4.1: Add initial SGI configuration
+To:     Auger Eric <eric.auger@redhat.com>, Marc Zyngier <maz@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        James Morse <james.morse@arm.com>,
+        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-10-maz@kernel.org>
+ <4ccc36c5-1e0a-b4f6-b014-8691fdb50c84@redhat.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <aed58073-0494-ee38-4d2f-287888ed8840@huawei.com>
+Date:   Tue, 17 Mar 2020 10:02:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <cover.1583307441.git.baolin.wang7@gmail.com> <b6c0c003d887bf7c272c493212f4f89d28097ad4.1583307441.git.baolin.wang7@gmail.com>
- <CAPDyKFoKzBPNFkG=4OenZ_7ZVgqfhhEDRxsSbu6cJOSgCPPL1Q@mail.gmail.com>
-In-Reply-To: <CAPDyKFoKzBPNFkG=4OenZ_7ZVgqfhhEDRxsSbu6cJOSgCPPL1Q@mail.gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 17 Mar 2020 10:02:05 +0800
-Message-ID: <CADBw62qMMBf8P0j-ya-Qz9WNhAMPrzE6h8P=_VLko3_yJ0cwAw@mail.gmail.com>
-Subject: Re: [RESEND PATCH 2/3] mmc: host: sdhci-sprd: Implement the
- request_atomic() API
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4ccc36c5-1e0a-b4f6-b014-8691fdb50c84@redhat.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 7:47 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Wed, 4 Mar 2020 at 08:42, Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >
-> > Implement the request_atomic() API for nonremovable cards, that means
-> > we can submit next request in the irq hard handler context to reduce
-> > latency.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > ---
-> >  drivers/mmc/host/sdhci-sprd.c | 28 ++++++++++++++++++++++++++--
-> >  1 file changed, 26 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-> > index 2ab42c5..bddf0f3 100644
-> > --- a/drivers/mmc/host/sdhci-sprd.c
-> > +++ b/drivers/mmc/host/sdhci-sprd.c
-> > @@ -426,6 +426,27 @@ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> >         sdhci_request(mmc, mrq);
-> >  }
-> >
-> > +static void sdhci_sprd_request_atomic(struct mmc_host *mmc,
-> > +                                     struct mmc_request *mrq)
-> > +{
-> > +       struct sdhci_host *host = mmc_priv(mmc);
-> > +       struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
-> > +
-> > +       host->flags |= sprd_host->flags & SDHCI_AUTO_CMD23;
-> > +
-> > +       /*
-> > +        * From version 4.10 onward, ARGUMENT2 register is also as 32-bit
-> > +        * block count register which doesn't support stuff bits of
-> > +        * CMD23 argument on Spreadtrum's sd host controller.
-> > +        */
-> > +       if (host->version >= SDHCI_SPEC_410 &&
-> > +           mrq->sbc && (mrq->sbc->arg & SDHCI_SPRD_ARG2_STUFF) &&
-> > +           (host->flags & SDHCI_AUTO_CMD23))
-> > +               host->flags &= ~SDHCI_AUTO_CMD23;
->
-> Looks like the above code is a copy of what is done in
-> sdhci_sprd_request(). Perhaps add a helper function that deals with
-> this to avoid open coding?
+Hi Eric,
 
-Sure. Will do in next version. Thanks.
+On 2020/3/17 1:53, Auger Eric wrote:
+> Hi Marc,
+> 
+> On 3/4/20 9:33 PM, Marc Zyngier wrote:
+>> The GICv4.1 ITS has yet another new command (VSGI) which allows
+>> a VPE-targeted SGI to be configured (or have its pending state
+>> cleared). Add support for this command and plumb it into the
+>> activate irqdomain callback so that it is ready to be used.
+>>
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+>> ---
+>>   drivers/irqchip/irq-gic-v3-its.c   | 79 +++++++++++++++++++++++++++++-
+>>   include/linux/irqchip/arm-gic-v3.h |  3 +-
+>>   2 files changed, 80 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+>> index 112b452fcb40..e0db3f906f87 100644
+>> --- a/drivers/irqchip/irq-gic-v3-its.c
+>> +++ b/drivers/irqchip/irq-gic-v3-its.c
+>> @@ -380,6 +380,15 @@ struct its_cmd_desc {
+>>   		struct {
+>>   			struct its_vpe *vpe;
+>>   		} its_invdb_cmd;
+>> +
+>> +		struct {
+>> +			struct its_vpe *vpe;
+>> +			u8 sgi;
+>> +			u8 priority;
+>> +			bool enable;
+>> +			bool group;
+>> +			bool clear;
+>> +		} its_vsgi_cmd;
+>>   	};
+>>   };
+>>   
+>> @@ -528,6 +537,31 @@ static void its_encode_db(struct its_cmd_block *cmd, bool db)
+>>   	its_mask_encode(&cmd->raw_cmd[2], db, 63, 63);
+>>   }
+>>   
+>> +static void its_encode_sgi_intid(struct its_cmd_block *cmd, u8 sgi)
+>> +{
+>> +	its_mask_encode(&cmd->raw_cmd[0], sgi, 35, 32);
+>> +}
+>> +
+>> +static void its_encode_sgi_priority(struct its_cmd_block *cmd, u8 prio)
+>> +{
+>> +	its_mask_encode(&cmd->raw_cmd[0], prio >> 4, 23, 20);
+>> +}
+>> +
+>> +static void its_encode_sgi_group(struct its_cmd_block *cmd, bool grp)
+>> +{
+>> +	its_mask_encode(&cmd->raw_cmd[0], grp, 10, 10);
+>> +}
+>> +
+>> +static void its_encode_sgi_clear(struct its_cmd_block *cmd, bool clr)
+>> +{
+>> +	its_mask_encode(&cmd->raw_cmd[0], clr, 9, 9);
+>> +}
+>> +
+>> +static void its_encode_sgi_enable(struct its_cmd_block *cmd, bool en)
+>> +{
+>> +	its_mask_encode(&cmd->raw_cmd[0], en, 8, 8);
+>> +}
+>> +
+>>   static inline void its_fixup_cmd(struct its_cmd_block *cmd)
+>>   {
+>>   	/* Let's fixup BE commands */
+>> @@ -893,6 +927,26 @@ static struct its_vpe *its_build_invdb_cmd(struct its_node *its,
+>>   	return valid_vpe(its, desc->its_invdb_cmd.vpe);
+>>   }
+>>   
+>> +static struct its_vpe *its_build_vsgi_cmd(struct its_node *its,
+>> +					  struct its_cmd_block *cmd,
+>> +					  struct its_cmd_desc *desc)
+>> +{
+>> +	if (WARN_ON(!is_v4_1(its)))
+>> +		return NULL;
+>> +
+>> +	its_encode_cmd(cmd, GITS_CMD_VSGI);
+>> +	its_encode_vpeid(cmd, desc->its_vsgi_cmd.vpe->vpe_id);
+>> +	its_encode_sgi_intid(cmd, desc->its_vsgi_cmd.sgi);
+>> +	its_encode_sgi_priority(cmd, desc->its_vsgi_cmd.priority);
+>> +	its_encode_sgi_group(cmd, desc->its_vsgi_cmd.group);
+>> +	its_encode_sgi_clear(cmd, desc->its_vsgi_cmd.clear);
+>> +	its_encode_sgi_enable(cmd, desc->its_vsgi_cmd.enable);
+>> +
+>> +	its_fixup_cmd(cmd);
+>> +
+>> +	return valid_vpe(its, desc->its_vsgi_cmd.vpe);
+>> +}
+>> +
+>>   static u64 its_cmd_ptr_to_offset(struct its_node *its,
+>>   				 struct its_cmd_block *ptr)
+>>   {
+>> @@ -3870,6 +3924,21 @@ static struct irq_chip its_vpe_4_1_irq_chip = {
+>>   	.irq_set_vcpu_affinity	= its_vpe_4_1_set_vcpu_affinity,
+>>   };
+>>   
+>> +static void its_configure_sgi(struct irq_data *d, bool clear)
+>> +{
+>> +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+>> +	struct its_cmd_desc desc;
+>> +
+>> +	desc.its_vsgi_cmd.vpe = vpe;
+>> +	desc.its_vsgi_cmd.sgi = d->hwirq;
+>> +	desc.its_vsgi_cmd.priority = vpe->sgi_config[d->hwirq].priority;
+>> +	desc.its_vsgi_cmd.enable = vpe->sgi_config[d->hwirq].enabled;
+>> +	desc.its_vsgi_cmd.group = vpe->sgi_config[d->hwirq].group;
+>> +	desc.its_vsgi_cmd.clear = clear;
+>> +
+>> +	its_send_single_vcommand(find_4_1_its(), its_build_vsgi_cmd, &desc);
+> I see we pick up the first 4.1 ITS with find_4_1_its(). Can it happen
+> that not all of them have a mapping for that vPEID and if so we should
+> rather use one that has this mapping?
 
->
-> > +
-> > +       sdhci_request_atomic(mmc, mrq);
-> > +}
-> > +
-> >  static int sdhci_sprd_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
-> >  {
-> >         struct sdhci_host *host = mmc_priv(mmc);
-> > @@ -561,6 +582,11 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
-> >         if (ret)
-> >                 goto pltfm_free;
-> >
-> > +       if (!mmc_card_is_removable(host->mmc))
-> > +               host->mmc_host_ops.request_atomic = sdhci_sprd_request_atomic;
-> > +       else
-> > +               host->always_defer_done = true;
-> > +
-> >         sprd_host = TO_SPRD_HOST(host);
-> >         sdhci_sprd_phy_param_parse(sprd_host, pdev->dev.of_node);
-> >
-> > @@ -654,8 +680,6 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
-> >         if (ret)
-> >                 goto err_cleanup_host;
-> >
-> > -       host->always_defer_done = true;
-> > -
-> >         ret = __sdhci_add_host(host);
-> >         if (ret)
-> >                 goto err_cleanup_host;
-> > --
-> > 1.9.1
-> >
->
-> Kind regards
-> Uffe
+It can't happen in GICv4.1, and you may find the answer in patch #16
+("Eagerly vmap vPEs").  I also failed to follow this logic the first
+time looking at it [*], so I think it may worth adding some comments
+on top of find_4_1_its()?
+
+[*] 
+https://lore.kernel.org/lkml/c94061be-d029-69c8-d34f-4d21081d5aba@huawei.com/
+
+> 
+> The spec says:
+> The ITS controls must only be used on an ITS that has a mapping for that
+> vPEID.
+> Where multiple ITSs have a mapping for the vPEID, any ITS with a mapping
+> may be used.
+> 
+>> +}
+>> +
+>>   static int its_sgi_set_affinity(struct irq_data *d,
+>>   				const struct cpumask *mask_val,
+>>   				bool force)
+>> @@ -3915,13 +3984,21 @@ static void its_sgi_irq_domain_free(struct irq_domain *domain,
+>>   static int its_sgi_irq_domain_activate(struct irq_domain *domain,
+>>   				       struct irq_data *d, bool reserve)
+>>   {
+>> +	/* Write out the initial SGI configuration */
+>> +	its_configure_sgi(d, false);
+>>   	return 0;
+>>   }
+>>   
+>>   static void its_sgi_irq_domain_deactivate(struct irq_domain *domain,
+>>   					  struct irq_data *d)
+>>   {
+>> -	/* Nothing to do */
+>> +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+>> +
+>> +	/* First disable the SGI */
+>> +	vpe->sgi_config[d->hwirq].enabled = false;
+>> +	its_configure_sgi(d, false);
+>> +	/* Now clear the potential pending bit (yes, this is clunky) */
+> nit: Without carefuly reading the VSGI cmd notes, it is difficult to
+> understand why those 2 steps are needed: maybe replace this comment by
+> something like:
+> to change the config, clear must be set to false. Then clear is set and
+> this leaves the config unchanged. Both steps cannot be done concurrently.
+> 
+> "
+
+I think it makes sense.
 
 
+Thanks,
+Zenghui
 
--- 
-Baolin Wang
+>> +	its_configure_sgi(d, true);
+>>   }
+>>   
+>>   static struct irq_domain_ops its_sgi_domain_ops = {
+>> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+>> index b28acfa71f82..fd3be49ac9a5 100644
+>> --- a/include/linux/irqchip/arm-gic-v3.h
+>> +++ b/include/linux/irqchip/arm-gic-v3.h
+>> @@ -502,8 +502,9 @@
+>>   #define GITS_CMD_VMAPTI			GITS_CMD_GICv4(GITS_CMD_MAPTI)
+>>   #define GITS_CMD_VMOVI			GITS_CMD_GICv4(GITS_CMD_MOVI)
+>>   #define GITS_CMD_VSYNC			GITS_CMD_GICv4(GITS_CMD_SYNC)
+>> -/* VMOVP and INVDB are the odd ones, as they dont have a physical counterpart */
+>> +/* VMOVP, VSGI and INVDB are the odd ones, as they dont have a physical counterpart */
+>>   #define GITS_CMD_VMOVP			GITS_CMD_GICv4(2)
+>> +#define GITS_CMD_VSGI			GITS_CMD_GICv4(3)
+>>   #define GITS_CMD_INVDB			GITS_CMD_GICv4(0xe)
+>>   
+>>   /*
+>>
+> Thanks
+> 
+> Eric
+> 
+> 
+> .
+> 
+
