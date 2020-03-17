@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEF9C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99CBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BF720658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86862071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443042;
-	bh=De0LadD2WRqVJkPE0M+fU9od+pLryn7IlaEhwppLaHw=;
+	s=default; t=1584443044;
+	bh=tU1sCskEZyRGbiY69yQ86F1d2qmqMz4UIRtAJdbj7Bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COhH96Q7K91CFCWyaP/5/J+JI652fAiqEQgSlmMKlqcJ5TJqW8zuUJT6VQut6pSZx
-	 IyHnEREIFbGoM23zAUWI2PG4+AptDMuH5lJnGRxPUkpsY4f9GqDpMxnIpzcCM9gLz9
-	 g+tzHWiu+BO7vVagL+2rtqTkTjtEqU8XsXy93jpQ=
+	b=2V3mOyOp/45tXzA+7r/wnku/fX2rkbSYBpeKJy44j1U7M0wkZ6vFbr0xNmtkNVlDu
+	 Ppq3ayqu8Y8PoVBvb011m1M6y5dmqZRWNl1lvuNH70A5xHsUW/LDXU74huqjXRkCLZ
+	 18YYxDz585eL0d/BnPPpJSzgnJLV5AngtXIIovCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgCQLEA (ORCPT
+        id S1727834AbgCQLED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44032 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728201AbgCQLD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:03:57 -0400
+        id S1727564AbgCQLEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1132720658;
-        Tue, 17 Mar 2020 11:03:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905DA2071C;
+        Tue, 17 Mar 2020 11:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443037;
-        bh=De0LadD2WRqVJkPE0M+fU9od+pLryn7IlaEhwppLaHw=;
+        s=default; t=1584443040;
+        bh=tU1sCskEZyRGbiY69yQ86F1d2qmqMz4UIRtAJdbj7Bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GYaG+2cjUOqb48txUwv9nSgDVrpqb9p6zSVkb4dE4AJRoPEttkvu5jCP6AUJ/E7I/
-         67wxdEYpcQkVMOOefPUaf420kmlZN+ZIWcnkjBsItcVv5UiLdIFOP77+NeAmicNVBA
-         abQ3+7Jmw/STS1e06FZnJn/ljwWz7AVF6X6KOBho=
+        b=P75Hh8v8ShYPLsQhTfCo7vfh6bX+UN2rwoYAhrp6f/8cL6N8mwtkqaODYrq6gso11
+         KFTn9x8qCk6BT2GgPVaKCFNbdMSeLSJZxf099LD8HNlv1X/N/SEzLVSXpFCIo5Zi69
+         PUFakC9LUeGuppWhq5and0p1Y8rTmdKijT5d9/Ko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 037/123] devlink: validate length of region addr/len
-Date:   Tue, 17 Mar 2020 11:54:24 +0100
-Message-Id: <20200317103311.693229382@linuxfoundation.org>
+Subject: [PATCH 5.4 038/123] fib: add missing attribute validation for tun_id
+Date:   Tue, 17 Mar 2020 11:54:25 +0100
+Message-Id: <20200317103311.793996925@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -62,31 +62,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit ff3b63b8c299b73ac599b120653b47e275407656 ]
+[ Upstream commit 4c16d64ea04056f1b1b324ab6916019f6a064114 ]
 
-DEVLINK_ATTR_REGION_CHUNK_ADDR and DEVLINK_ATTR_REGION_CHUNK_LEN
-lack entries in the netlink policy. Corresponding nla_get_u64()s
-may read beyond the end of the message.
+Add missing netlink policy entry for FRA_TUN_ID.
 
-Fixes: 4e54795a27f5 ("devlink: Add support for region snapshot read command")
+Fixes: e7030878fc84 ("fib: Add fib rule match on tunnel id")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/devlink.c |    2 ++
- 1 file changed, 2 insertions(+)
+ include/net/fib_rules.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -5804,6 +5804,8 @@ static const struct nla_policy devlink_n
- 	[DEVLINK_ATTR_PARAM_VALUE_CMODE] = { .type = NLA_U8 },
- 	[DEVLINK_ATTR_REGION_NAME] = { .type = NLA_NUL_STRING },
- 	[DEVLINK_ATTR_REGION_SNAPSHOT_ID] = { .type = NLA_U32 },
-+	[DEVLINK_ATTR_REGION_CHUNK_ADDR] = { .type = NLA_U64 },
-+	[DEVLINK_ATTR_REGION_CHUNK_LEN] = { .type = NLA_U64 },
- 	[DEVLINK_ATTR_HEALTH_REPORTER_NAME] = { .type = NLA_NUL_STRING },
- 	[DEVLINK_ATTR_HEALTH_REPORTER_GRACEFUL_PERIOD] = { .type = NLA_U64 },
- 	[DEVLINK_ATTR_HEALTH_REPORTER_AUTO_RECOVER] = { .type = NLA_U8 },
+--- a/include/net/fib_rules.h
++++ b/include/net/fib_rules.h
+@@ -108,6 +108,7 @@ struct fib_rule_notifier_info {
+ 	[FRA_OIFNAME]	= { .type = NLA_STRING, .len = IFNAMSIZ - 1 }, \
+ 	[FRA_PRIORITY]	= { .type = NLA_U32 }, \
+ 	[FRA_FWMARK]	= { .type = NLA_U32 }, \
++	[FRA_TUN_ID]	= { .type = NLA_U64 }, \
+ 	[FRA_FWMASK]	= { .type = NLA_U32 }, \
+ 	[FRA_TABLE]     = { .type = NLA_U32 }, \
+ 	[FRA_SUPPRESS_PREFIXLEN] = { .type = NLA_U32 }, \
 
 
