@@ -2,473 +2,124 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B86C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCC0C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67055205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C30820719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:05:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="hsHzKaLO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgCQKED (ORCPT
+        id S1726388AbgCQKFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:04:03 -0400
-Received: from mga12.intel.com ([192.55.52.136]:5266 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgCQKEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:04:02 -0400
-IronPort-SDR: iQA0apz8K/nClCKQ2kVju4BtkXsGUE89tzkj7x7U4YyeZCRWkeDhXMICgcDCJqRfwZrOVC/saK
- 9Qifev3Oc2Ww==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 03:04:01 -0700
-IronPort-SDR: WKZvkw3gliFD7d9xSYhUiHEuWtET+YXZML7qNTSamfPTCqA6nYJkLCdGkW3JFSOzcFwsXLQtui
- AgJBraXw/g3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="445443078"
-Received: from yhuang-dev.sh.intel.com ([10.239.159.23])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Mar 2020 03:03:55 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: [PATCH -V3] mm: Code cleanup for MADV_FREE
-Date:   Tue, 17 Mar 2020 18:03:42 +0800
-Message-Id: <20200317100342.2730705-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 17 Mar 2020 06:05:07 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40683 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgCQKFG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:05:06 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 19so22030639ljj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 03:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n09seZt9zQSEmn7PnJzgCcHPTYjmqdsKfcWkGxOyoSw=;
+        b=hsHzKaLO8KEYIAs97rD1AMV6mMcqn8KvHqg4ovsIqvIqJsmunKOt1qYqCT5n50NIxg
+         5W5zLGTss9f2hdJk1xumbMBaQMEDyvjcEyPZ3jrVx+WFRbtYyH8TPSgzOsF/O0ZDV+R+
+         YjoSBTZStIUKJShmEh3hEBHRdVxm1SY6SdsdZnyJxUDVSUVZF76uON1MxQVFXMBzq7je
+         dlg8JkAxS2yIyOnnmUE/68pzDOxpbgCvnSFoZcOm6vs6rcpTxYbjby1S67f7NF/Fv36c
+         IE9PiIrFyxQp03l/Q0rCM6x04ylSD3FBrTKVotFLkqpNP2woyYPVF4wSIq4KiiZs1osm
+         q5YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n09seZt9zQSEmn7PnJzgCcHPTYjmqdsKfcWkGxOyoSw=;
+        b=XrZuyK7Un/+84O/iokNPJgZntHITbuq26y4LIc3y55VUwtXEwHk3gHKaOcm1j+2joy
+         tGKMkG9oYUq/WNk08w2lE35KEPbFP/QXAKQMSJpOcOLeEBVLwoelaB6JbVUFVJdyaPLu
+         fAr2afCFqNIaPk5jL0iCVlR0h+iCy64Fe0jNL1eQk67nVzK2YJ0svSxGitW132pFz5jM
+         WTL+TCScX6aNyN+94xqA/s8ZCgw2vfjOK/3aUc23RkPls7N3qvbTHcmWmvALwYAkzNAb
+         2+w1tdNZI3v2Eo4NvCZnMIewmy3+7uO/i4nrH9/jU0zS5DLc89pS21DbhNFrGNaD3/Xc
+         Bovg==
+X-Gm-Message-State: ANhLgQ2jpStdfV1lN1rPf3NHXSRB+/bRYjxGYYFGeeWGquwOf6sNBdxD
+        X1cV4Ox9LURs9UZbDUFgjPv5Tg==
+X-Google-Smtp-Source: ADFU+vvDFgn0Sv1qdBbtE4XeAKrxupkPbSjYz/5IJ9Z1M/fD+IB/2XXNoyEDPpVkBc5aUWJYf1e6nA==
+X-Received: by 2002:a2e:8119:: with SMTP id d25mr2329766ljg.39.1584439502560;
+        Tue, 17 Mar 2020 03:05:02 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:48ef:94a3:a481:5e62:4324:124b? ([2a00:1fa0:48ef:94a3:a481:5e62:4324:124b])
+        by smtp.gmail.com with ESMTPSA id r7sm1932099ljc.3.2020.03.17.03.05.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 03:05:01 -0700 (PDT)
+Subject: Re: [PATCH 17/28] dt-bindings: mmc: Fix up clk-phase-sd-hs in an
+ example
+To:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-18-lkundrak@v3.sk>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <d7ccf5c1-4bfa-2fd2-b32d-a520e96bdd1e@cogentembedded.com>
+Date:   Tue, 17 Mar 2020 13:04:55 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317093922.20785-18-lkundrak@v3.sk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+Hello!
 
-Some comments for MADV_FREE is revised and added to help people understand the
-MADV_FREE code, especially the page flag, PG_swapbacked.  This makes
-page_is_file_cache() isn't consistent with its comments.  So the function is
-renamed to page_is_file_lru() to make them consistent again.  All these are put
-in one patch as one logical change.
+On 17.03.2020 12:39, Lubomir Rintel wrote:
 
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Suggested-by: David Hildenbrand <david@redhat.com>
-Suggested-and-acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Suggested-and-acked-by: David Rientjes <rientjes@google.com>
-Acked-by: Michal Hocko <mhocko@kernel.org>
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Rik van Riel <riel@surriel.com>
----
-Changelog:
+> This way the validator can know that the two cells constitute a singlej
 
-v3:
+    Single?
 
-- Revised comments of page_is_file_lru(), Thanks Vlastimil!
+> pair of clock phase degrees value, not separate items Otherwise it is
 
-v2:
+    Forgot a period after "items"?
 
-- Revised comments of PG_swapbacked, Thanks Michal!
+> unhappy:
+> 
+>    mmc-controller.example.dt.yaml: mmc@ab000000: clk-phase-sd-hs:0:
+>        [63] is too short
+>    mmc-controller.example.dt.yaml: mmc@ab000000: clk-phase-sd-hs:1:
+>        [72] is too short
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+[...]
 
----
- include/linux/mm_inline.h     | 15 ++++++++-------
- include/linux/page-flags.h    |  5 +++++
- include/trace/events/vmscan.h |  2 +-
- mm/compaction.c               |  2 +-
- mm/gup.c                      |  2 +-
- mm/khugepaged.c               |  4 ++--
- mm/memory-failure.c           |  2 +-
- mm/memory_hotplug.c           |  2 +-
- mm/mempolicy.c                |  2 +-
- mm/migrate.c                  | 16 ++++++++--------
- mm/mprotect.c                 |  2 +-
- mm/swap.c                     | 16 ++++++++--------
- mm/vmscan.c                   | 12 ++++++------
- 13 files changed, 44 insertions(+), 38 deletions(-)
-
-diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
-index 6f2fef7b0784..219bef41d87c 100644
---- a/include/linux/mm_inline.h
-+++ b/include/linux/mm_inline.h
-@@ -6,19 +6,20 @@
- #include <linux/swap.h>
- 
- /**
-- * page_is_file_cache - should the page be on a file LRU or anon LRU?
-+ * page_is_file_lru - should the page be on a file LRU or anon LRU?
-  * @page: the page to test
-  *
-- * Returns 1 if @page is page cache page backed by a regular filesystem,
-- * or 0 if @page is anonymous, tmpfs or otherwise ram or swap backed.
-- * Used by functions that manipulate the LRU lists, to sort a page
-- * onto the right LRU list.
-+ * Returns 1 if @page is a regular filesystem backed page cache page or a lazily
-+ * freed anonymous page (e.g. via MADV_FREE).  Returns 0 if @page is a normal
-+ * anonymous page, a tmpfs page or otherwise ram or swap backed page.  Used by
-+ * functions that manipulate the LRU lists, to sort a page onto the right LRU
-+ * list.
-  *
-  * We would like to get this info without a page flag, but the state
-  * needs to survive until the page is last deleted from the LRU, which
-  * could be as far down as __page_cache_release.
-  */
--static inline int page_is_file_cache(struct page *page)
-+static inline int page_is_file_lru(struct page *page)
- {
- 	return !PageSwapBacked(page);
- }
-@@ -75,7 +76,7 @@ static __always_inline void del_page_from_lru_list(struct page *page,
-  */
- static inline enum lru_list page_lru_base_type(struct page *page)
- {
--	if (page_is_file_cache(page))
-+	if (page_is_file_lru(page))
- 		return LRU_INACTIVE_FILE;
- 	return LRU_INACTIVE_ANON;
- }
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index d4771b1a1232..222f6f7b2bb3 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -63,6 +63,11 @@
-  * page_waitqueue(page) is a wait queue of all tasks waiting for the page
-  * to become unlocked.
-  *
-+ * PG_swapbacked is set when a page uses swap as a backing storage.  This are
-+ * usually PageAnon or shmem pages but please note that even anonymous pages
-+ * might lose their PG_swapbacked flag when they simply can be dropped (e.g. as
-+ * a result of MADV_FREE).
-+ *
-  * PG_uptodate tells whether the page's contents is valid.  When a read
-  * completes, the page becomes uptodate, unless a disk I/O error happened.
-  *
-diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index a5ab2973e8dc..74bb594ccb25 100644
---- a/include/trace/events/vmscan.h
-+++ b/include/trace/events/vmscan.h
-@@ -323,7 +323,7 @@ TRACE_EVENT(mm_vmscan_writepage,
- 	TP_fast_assign(
- 		__entry->pfn = page_to_pfn(page);
- 		__entry->reclaim_flags = trace_reclaim_flags(
--						page_is_file_cache(page));
-+						page_is_file_lru(page));
- 	),
- 
- 	TP_printk("page=%p pfn=%lu flags=%s",
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 827d8a2b3164..e8c84c6d4267 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -990,7 +990,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 		/* Successfully isolated */
- 		del_page_from_lru_list(page, lruvec, page_lru(page));
- 		mod_node_page_state(page_pgdat(page),
--				NR_ISOLATED_ANON + page_is_file_cache(page),
-+				NR_ISOLATED_ANON + page_is_file_lru(page),
- 				hpage_nr_pages(page));
- 
- isolate_success:
-diff --git a/mm/gup.c b/mm/gup.c
-index e8aaa40c35ea..411cb09b4be3 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1691,7 +1691,7 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
- 					list_add_tail(&head->lru, &cma_page_list);
- 					mod_node_page_state(page_pgdat(head),
- 							    NR_ISOLATED_ANON +
--							    page_is_file_cache(head),
-+							    page_is_file_lru(head),
- 							    hpage_nr_pages(head));
- 				}
- 			}
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index d0ce22fb58d2..e8709e19beea 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -514,7 +514,7 @@ void __khugepaged_exit(struct mm_struct *mm)
- 
- static void release_pte_page(struct page *page)
- {
--	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
-+	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_lru(page));
- 	unlock_page(page);
- 	putback_lru_page(page);
- }
-@@ -614,7 +614,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
- 			goto out;
- 		}
- 		inc_node_page_state(page,
--				NR_ISOLATED_ANON + page_is_file_cache(page));
-+				NR_ISOLATED_ANON + page_is_file_lru(page));
- 		VM_BUG_ON_PAGE(!PageLocked(page), page);
- 		VM_BUG_ON_PAGE(PageLRU(page), page);
- 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 1c961cd26c0b..a96364be8ab4 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1810,7 +1810,7 @@ static int __soft_offline_page(struct page *page, int flags)
- 		 */
- 		if (!__PageMovable(page))
- 			inc_node_page_state(page, NR_ISOLATED_ANON +
--						page_is_file_cache(page));
-+						page_is_file_lru(page));
- 		list_add(&page->lru, &pagelist);
- 		ret = migrate_pages(&pagelist, new_page, NULL, MPOL_MF_MOVE_ALL,
- 					MIGRATE_SYNC, MR_MEMORY_FAILURE);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 8bdf484241de..e3b2074ef30c 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1324,7 +1324,7 @@ do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 			list_add_tail(&page->lru, &source);
- 			if (!__PageMovable(page))
- 				inc_node_page_state(page, NR_ISOLATED_ANON +
--						    page_is_file_cache(page));
-+						    page_is_file_lru(page));
- 
- 		} else {
- 			pr_warn("failed to isolate pfn %lx\n", pfn);
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 0c6fbee1ea5a..2c41923892f7 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1048,7 +1048,7 @@ static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 		if (!isolate_lru_page(head)) {
- 			list_add_tail(&head->lru, pagelist);
- 			mod_node_page_state(page_pgdat(head),
--				NR_ISOLATED_ANON + page_is_file_cache(head),
-+				NR_ISOLATED_ANON + page_is_file_lru(head),
- 				hpage_nr_pages(head));
- 		} else if (flags & MPOL_MF_STRICT) {
- 			/*
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 8f62089126ad..de23507f5c68 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -193,7 +193,7 @@ void putback_movable_pages(struct list_head *l)
- 			put_page(page);
- 		} else {
- 			mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON +
--					page_is_file_cache(page), -hpage_nr_pages(page));
-+					page_is_file_lru(page), -hpage_nr_pages(page));
- 			putback_lru_page(page);
- 		}
- 	}
-@@ -1223,7 +1223,7 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
- 		 */
- 		if (likely(!__PageMovable(page)))
- 			mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON +
--					page_is_file_cache(page), -hpage_nr_pages(page));
-+					page_is_file_lru(page), -hpage_nr_pages(page));
- 	}
- 
- 	/*
-@@ -1595,7 +1595,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
- 		err = 1;
- 		list_add_tail(&head->lru, pagelist);
- 		mod_node_page_state(page_pgdat(head),
--			NR_ISOLATED_ANON + page_is_file_cache(head),
-+			NR_ISOLATED_ANON + page_is_file_lru(head),
- 			hpage_nr_pages(head));
- 	}
- out_putpage:
-@@ -1958,7 +1958,7 @@ static int numamigrate_isolate_page(pg_data_t *pgdat, struct page *page)
- 		return 0;
- 	}
- 
--	page_lru = page_is_file_cache(page);
-+	page_lru = page_is_file_lru(page);
- 	mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON + page_lru,
- 				hpage_nr_pages(page));
- 
-@@ -1994,7 +1994,7 @@ int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
- 	 * Don't migrate file pages that are mapped in multiple processes
- 	 * with execute permissions as they are probably shared libraries.
- 	 */
--	if (page_mapcount(page) != 1 && page_is_file_cache(page) &&
-+	if (page_mapcount(page) != 1 && page_is_file_lru(page) &&
- 	    (vma->vm_flags & VM_EXEC))
- 		goto out;
- 
-@@ -2002,7 +2002,7 @@ int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
- 	 * Also do not migrate dirty pages as not all filesystems can move
- 	 * dirty pages in MIGRATE_ASYNC mode which is a waste of cycles.
- 	 */
--	if (page_is_file_cache(page) && PageDirty(page))
-+	if (page_is_file_lru(page) && PageDirty(page))
- 		goto out;
- 
- 	isolated = numamigrate_isolate_page(pgdat, page);
-@@ -2017,7 +2017,7 @@ int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
- 		if (!list_empty(&migratepages)) {
- 			list_del(&page->lru);
- 			dec_node_page_state(page, NR_ISOLATED_ANON +
--					page_is_file_cache(page));
-+					page_is_file_lru(page));
- 			putback_lru_page(page);
- 		}
- 		isolated = 0;
-@@ -2047,7 +2047,7 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
- 	pg_data_t *pgdat = NODE_DATA(node);
- 	int isolated = 0;
- 	struct page *new_page = NULL;
--	int page_lru = page_is_file_cache(page);
-+	int page_lru = page_is_file_lru(page);
- 	unsigned long start = address & HPAGE_PMD_MASK;
- 
- 	new_page = alloc_pages_node(node,
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 4d30c4b549e1..494192ca954b 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -102,7 +102,7 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 				 * it cannot move them all from MIGRATE_ASYNC
- 				 * context.
- 				 */
--				if (page_is_file_cache(page) && PageDirty(page))
-+				if (page_is_file_lru(page) && PageDirty(page))
- 					continue;
- 
- 				/*
-diff --git a/mm/swap.c b/mm/swap.c
-index 6a8be910b14d..f70e8b0b7319 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -276,7 +276,7 @@ static void __activate_page(struct page *page, struct lruvec *lruvec,
- 			    void *arg)
- {
- 	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
--		int file = page_is_file_cache(page);
-+		int file = page_is_file_lru(page);
- 		int lru = page_lru_base_type(page);
- 
- 		del_page_from_lru_list(page, lruvec, lru);
-@@ -394,7 +394,7 @@ void mark_page_accessed(struct page *page)
- 		else
- 			__lru_cache_activate_page(page);
- 		ClearPageReferenced(page);
--		if (page_is_file_cache(page))
-+		if (page_is_file_lru(page))
- 			workingset_activation(page);
- 	}
- 	if (page_is_idle(page))
-@@ -515,7 +515,7 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
- 		return;
- 
- 	active = PageActive(page);
--	file = page_is_file_cache(page);
-+	file = page_is_file_lru(page);
- 	lru = page_lru_base_type(page);
- 
- 	del_page_from_lru_list(page, lruvec, lru + active);
-@@ -548,7 +548,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
- 			    void *arg)
- {
- 	if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
--		int file = page_is_file_cache(page);
-+		int file = page_is_file_lru(page);
- 		int lru = page_lru_base_type(page);
- 
- 		del_page_from_lru_list(page, lruvec, lru + LRU_ACTIVE);
-@@ -573,9 +573,9 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
- 		ClearPageActive(page);
- 		ClearPageReferenced(page);
- 		/*
--		 * lazyfree pages are clean anonymous pages. They have
--		 * SwapBacked flag cleared to distinguish normal anonymous
--		 * pages
-+		 * Lazyfree pages are clean anonymous pages.  They have
-+		 * PG_swapbacked flag cleared, to distinguish them from normal
-+		 * anonymous pages
- 		 */
- 		ClearPageSwapBacked(page);
- 		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
-@@ -963,7 +963,7 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
- 
- 	if (page_evictable(page)) {
- 		lru = page_lru(page);
--		update_page_reclaim_stat(lruvec, page_is_file_cache(page),
-+		update_page_reclaim_stat(lruvec, page_is_file_lru(page),
- 					 PageActive(page));
- 		if (was_unevictable)
- 			count_vm_event(UNEVICTABLE_PGRESCUED);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index d9fb680884b8..d290a268dd68 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -919,7 +919,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
- 		 * exceptional entries and shadow exceptional entries in the
- 		 * same address_space.
- 		 */
--		if (reclaimed && page_is_file_cache(page) &&
-+		if (reclaimed && page_is_file_lru(page) &&
- 		    !mapping_exiting(mapping) && !dax_mapping(mapping))
- 			shadow = workingset_eviction(page, target_memcg);
- 		__delete_from_page_cache(page, shadow);
-@@ -1043,7 +1043,7 @@ static void page_check_dirty_writeback(struct page *page,
- 	 * Anonymous pages are not handled by flushers and must be written
- 	 * from reclaim context. Do not stall reclaim based on them
- 	 */
--	if (!page_is_file_cache(page) ||
-+	if (!page_is_file_lru(page) ||
- 	    (PageAnon(page) && !PageSwapBacked(page))) {
- 		*dirty = false;
- 		*writeback = false;
-@@ -1316,7 +1316,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			 * the rest of the LRU for clean pages and see
- 			 * the same dirty pages again (PageReclaim).
- 			 */
--			if (page_is_file_cache(page) &&
-+			if (page_is_file_lru(page) &&
- 			    (!current_is_kswapd() || !PageReclaim(page) ||
- 			     !test_bit(PGDAT_DIRTY, &pgdat->flags))) {
- 				/*
-@@ -1460,7 +1460,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			try_to_free_swap(page);
- 		VM_BUG_ON_PAGE(PageActive(page), page);
- 		if (!PageMlocked(page)) {
--			int type = page_is_file_cache(page);
-+			int type = page_is_file_lru(page);
- 			SetPageActive(page);
- 			stat->nr_activate[type] += nr_pages;
- 			count_memcg_page_event(page, PGACTIVATE);
-@@ -1498,7 +1498,7 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
- 	LIST_HEAD(clean_pages);
- 
- 	list_for_each_entry_safe(page, next, page_list, lru) {
--		if (page_is_file_cache(page) && !PageDirty(page) &&
-+		if (page_is_file_lru(page) && !PageDirty(page) &&
- 		    !__PageMovable(page) && !PageUnevictable(page)) {
- 			ClearPageActive(page);
- 			list_move(&page->lru, &clean_pages);
-@@ -2054,7 +2054,7 @@ static void shrink_active_list(unsigned long nr_to_scan,
- 			 * IO, plus JVM can create lots of anon VM_EXEC pages,
- 			 * so we ignore them here.
- 			 */
--			if ((vm_flags & VM_EXEC) && page_is_file_cache(page)) {
-+			if ((vm_flags & VM_EXEC) && page_is_file_lru(page)) {
- 				list_add(&page->lru, &l_active);
- 				continue;
- 			}
--- 
-2.25.0
-
+MBR, Sergei
