@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBE9C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36466C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3CA206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0417E20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443739;
-	bh=jKQaUfpQcMm0yosTefLi57T/N5a+Oc6PT7XK/yITYZg=;
+	s=default; t=1584443747;
+	bh=jKoh/0gWTpU8pqmtazb46og6tWbqPSg17eo+ScGHD0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3YLJvzBkqop0bytCbgFH8ij5fQkUY6j9RaGjhv+EbeQm5pkati1y70OA53YmpxMX
-	 r76tpnplwGy/qajhSlO3dLBb4/Jq9HpWy+hlptbI2H0KRXsFOdK+VSN/f4dNidt0Dp
-	 aUzcUf+k5tUWOrLFtn6qhUB/RlLrySnRKU2eTNLo=
+	b=UVqBJEucHia3iW9LRfOxEQZENlEwsgQTe69xFAlfEtx4YqExBuMYbLRzAIJ6tmAC9
+	 ybu1JKmn2lusuEe1kahjH/zAeBForljbUgLfvtWqy2qU7vGPnVRBrorIEZ3NjOJGJd
+	 Tjn7lY4yYKWGgjQcj2NzJ8rHK8PlsmendpFJ5CME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgCQLMB (ORCPT
+        id S1729298AbgCQLLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:12:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55454 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbgCQLL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:11:57 -0400
+        id S1727262AbgCQLLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:11:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5C272071C;
-        Tue, 17 Mar 2020 11:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4796B205ED;
+        Tue, 17 Mar 2020 11:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443515;
-        bh=jKQaUfpQcMm0yosTefLi57T/N5a+Oc6PT7XK/yITYZg=;
+        s=default; t=1584443488;
+        bh=jKoh/0gWTpU8pqmtazb46og6tWbqPSg17eo+ScGHD0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rqxij8gEKWKcXbJiHBgHrIiP3pq4BRUS4Fn9mYNOJA4wTGYIsyKmN1cwxopdxU73p
-         T/9svPICuJhhLVW/uW/fz/5QXby9QeDXvZGEpF1uYY8LviR2Eh0CsmfINmL7t4fldc
-         LPyOCCr/Qh8YytgS4/ClAmUbA9O6vGwxtGZhhyFc=
+        b=O+7aKeOXEEThV7okSuNZ4fhYvOir/lY+wQvtQhvnx+qCKDk61Q4jLBjj+1J/my8hA
+         um4wIYm/1u/eB1BC1IJP8044hY86O+mnjKydxceRUMc8BreaZ9+7J67LADRuq3djW6
+         iQDT6ioxRwtQwM3XheLqW1iTf1qe0mRy8YW3Y3As=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.5 108/151] blk-iocost: fix incorrect vtime comparison in iocg_is_idle()
-Date:   Tue, 17 Mar 2020 11:55:18 +0100
-Message-Id: <20200317103334.129839379@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Walle <michael@walle.cc>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 062/151] net: phy: avoid clearing PHY interrupts twice in irq handler
+Date:   Tue, 17 Mar 2020 11:54:32 +0100
+Message-Id: <20200317103330.937760725@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,37 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit dcd6589b11d3b1e71f516a87a7b9646ed356b4c0 upstream.
+[ Upstream commit 249bc9744e165abe74ae326f43e9d70bad54c3b7 ]
 
-vtimes may wrap and time_before/after64() should be used to determine
-whether a given vtime is before or after another. iocg_is_idle() was
-incorrectly using plain "<" comparison do determine whether done_vtime
-is before vtime. Here, the only thing we're interested in is whether
-done_vtime matches vtime which indicates that there's nothing in
-flight. Let's test for inequality instead.
+On all PHY drivers that implement did_interrupt() reading the interrupt
+status bits clears them. This means we may loose an interrupt that
+is triggered between calling did_interrupt() and phy_clear_interrupt().
+As part of the fix make it a requirement that did_interrupt() clears
+the interrupt.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The Fixes tag refers to the first commit where the patch applies
+cleanly.
+
+Fixes: 49644e68f472 ("net: phy: add callback for custom interrupt handler to struct phy_driver")
+Reported-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- block/blk-iocost.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phy.c |    3 ++-
+ include/linux/phy.h   |    1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1318,7 +1318,7 @@ static bool iocg_is_idle(struct ioc_gq *
- 		return false;
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -702,7 +702,8 @@ static irqreturn_t phy_interrupt(int irq
+ 		phy_trigger_machine(phydev);
+ 	}
  
- 	/* is something in flight? */
--	if (atomic64_read(&iocg->done_vtime) < atomic64_read(&iocg->vtime))
-+	if (atomic64_read(&iocg->done_vtime) != atomic64_read(&iocg->vtime))
- 		return false;
+-	if (phy_clear_interrupt(phydev))
++	/* did_interrupt() may have cleared the interrupt already */
++	if (!phydev->drv->did_interrupt && phy_clear_interrupt(phydev))
+ 		goto phy_err;
+ 	return IRQ_HANDLED;
  
- 	return true;
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -531,6 +531,7 @@ struct phy_driver {
+ 	/*
+ 	 * Checks if the PHY generated an interrupt.
+ 	 * For multi-PHY devices with shared PHY interrupt pin
++	 * Set interrupt bits have to be cleared.
+ 	 */
+ 	int (*did_interrupt)(struct phy_device *phydev);
+ 
 
 
