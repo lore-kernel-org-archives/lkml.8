@@ -2,77 +2,103 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A275DC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E207C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8350D20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D9D420735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CKs3MyoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgCQSKZ (ORCPT
+        id S1726762AbgCQSKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:10:25 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:42580 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgCQSKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:10:25 -0400
-Received: from sf (tunnel547699-pt.tunnel.tserv1.lon2.ipv6.he.net [IPv6:2001:470:1f1c:3e6::2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 17 Mar 2020 14:10:30 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:43312 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726735AbgCQSK3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 14:10:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584468628;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jC00Z6qh/Tdo08cJHrlqWaLr117ZyFvx6URUV4dogZI=;
+        b=CKs3MyoNKOAcbNLUB3mFISrtZNeL8ZVhA8uNue0e2bQgdUkcMEwDN0yyHdmLBbL4l4nhgv
+        5EDwxfX2jRPtmfPFZ280kjY6X3q9yGw7sXoXEe6YL5QIvqIG0ECBOWyDgxq77nkiq7NWeg
+        3dq0OT/xJYpcQS9w+Q4q3zWAEKd+H34=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-KdywSIv7MtWkzjLf9Kj5ng-1; Tue, 17 Mar 2020 14:10:26 -0400
+X-MC-Unique: KdywSIv7MtWkzjLf9Kj5ng-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: slyfox)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 913C434F0C3;
-        Tue, 17 Mar 2020 18:10:22 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 18:10:16 +0000
-From:   Sergei Trofimovich <slyfox@gentoo.org>
-To:     Jakub Jelinek <jakub@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
-Message-ID: <20200317181016.0b39bf91@sf>
-In-Reply-To: <20200317114605.GG2156@tucnak>
-References: <20200314164451.346497-1-slyfox@gentoo.org>
-        <20200316130414.GC12561@hirez.programming.kicks-ass.net>
-        <20200316132648.GM2156@tucnak>
-        <20200316221251.7b4f5801@sf>
-        <20200317114605.GG2156@tucnak>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 988C9189F762;
+        Tue, 17 Mar 2020 18:10:24 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-115-15.rdu2.redhat.com [10.10.115.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5649390808;
+        Tue, 17 Mar 2020 18:10:23 +0000 (UTC)
+Subject: Re: [PATCH v3 1/3] KEYS: Don't write out to userspace while holding
+ key semaphore
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+References: <20200315212706.GE224162@linux.intel.com>
+ <20200313152102.1707-1-longman@redhat.com>
+ <20200313152102.1707-2-longman@redhat.com>
+ <20200315192104.GD224162@linux.intel.com>
+ <1793253.1584357764@warthog.procyon.org.uk>
+ <c1138c83619553d018970a4b2d95f38fccebc99c.camel@linux.intel.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <f07dee42-58e2-1e7a-8644-b55fae6ce8b0@redhat.com>
+Date:   Tue, 17 Mar 2020 14:10:22 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <c1138c83619553d018970a4b2d95f38fccebc99c.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020 12:46:05 +0100
-Jakub Jelinek <jakub@redhat.com> wrote:
+On 3/16/20 9:53 AM, Jarkko Sakkinen wrote:
+> On Mon, 2020-03-16 at 11:22 +0000, David Howells wrote:
+>> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+>>
+>>> I guess we cannot sanely define fixes tag for this one, can we?
+>> Use:
+>>
+>> 	Fixes: ^1da177e4c3f4 ("Linux-2.6.12-rc2")
+>>
+>> David
+> Longmao, please include this to the next version.
+>
+> /Jarkko
+>
+Sure, will do.
 
-> So, a few comments.
-> 
-> One thing I've noticed in the command line is that
-> --param=allow-store-data-races=0
-> got dropped.  That is fine, the parameter is gone, but it has been replaced
-> in https://gcc.gnu.org/PR92046 by the
-> -fno-allow-store-data-races
-> option.  Like the param which defaulted to 0 and has been enabled only with
-> -Ofast this option is also -fno-allow-store-data-races by default unless
-> -Ofast, but if kernel wanted to be explicit or make sure not to introduce
-> them even with -Ofast, I'd say it should:
->  # Tell gcc to never replace conditional load with a non-conditional one
->  KBUILD_CFLAGS   += $(call cc-option,--param=allow-store-data-races=0)
-> +KBUILD_CFLAGS   += $(call cc-option,-fno-allow-store-data-races)
-> in the toplevel Makefile.
+Cheers,
+Longman
 
-Yeah, I noticed it yesterday as well and sent out exactly the same change:
-    https://lkml.org/lkml/2020/3/16/1012
-I also checked that flag does not change code generation on -O2 for smpboot.c
-
--- 
-
-  Sergei
