@@ -2,277 +2,155 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995BFC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84276C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2E120719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0218E20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="fwtdJ1kP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgCQHFk (ORCPT
+        id S1726287AbgCQHJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:05:40 -0400
-Received: from mga18.intel.com ([134.134.136.126]:42571 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbgCQHFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:05:39 -0400
-IronPort-SDR: Mv9MpfyTfRs6FZ2SPKaZiGHW29pVkVXPkKCrDFRW90Qi3a+OdcbS9DvfUNgLQzc9CrGYgMQ5VI
- 13CbB7DhuuFw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 00:05:37 -0700
-IronPort-SDR: NeCZHbGg09fk4kwj2JMY5fY2mF4KoaDIw4W25G0ulQx8YSZHchYi455WpuSIIUua8r4R77Ipsi
- syLg6ZAhrFMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="267867364"
-Received: from allen-box.sh.intel.com ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Mar 2020 00:05:28 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        Liu Yi L <yi.l.liu@intel.com>, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 5/5] iommu/vt-d: Add page request draining support
-Date:   Tue, 17 Mar 2020 15:02:29 +0800
-Message-Id: <20200317070229.21131-6-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200317070229.21131-1-baolu.lu@linux.intel.com>
-References: <20200317070229.21131-1-baolu.lu@linux.intel.com>
+        Tue, 17 Mar 2020 03:09:09 -0400
+Received: from ma-dnext03.denso.co.jp ([133.192.181.78]:57688 "EHLO
+        ma-dnext03.denso.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbgCQHJI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 03:09:08 -0400
+Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
+        by ma-dnext03.denso.co.jp (Postfix) with ESMTP id A34455D0221;
+        Tue, 17 Mar 2020 16:09:06 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=adit-jv.com;
+        s=jpadit-jvmail2011; t=1584428946;
+        bh=fbV8PnCNUOl3ThU4RMmM5jY8kW9AbSxPVD8Ots0XE4g=;
+        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+         MIME-Version:Content-Type;
+        b=fwtdJ1kPnegt/LOczzaYIfxQLf0rIEi+eCufbknIReUIw2afdlSYSlt7M5H75flaO
+         hqUyspkbAQDE96ioD+/7lEh0YOnFrydS24RP8W5BQ9l2+1Ix2OGUlM5lJEV55J65/I
+         aeRYIwJ6hF91cNI/PSDNF9Kkao4ijRCJoVYJQUx5Cp37egQeOyat5TexoJAFuhWpyO
+         q85MO3HJaTUhGCmG9doqtxfKoo6wUZbcjwZjeFTWqX7RdveqXXVyojLD2PBOE2PwLG
+         xpRmWIJbwDcmHL2rKcxEhMdLF7QPCLPpp5U02l+TyrGX499emn7fC1EKC05yVbc5av
+         2RU+WmbKTIn4A==
+Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
+        id A06C7C05D64; Tue, 17 Mar 2020 16:09:06 +0900 (JST)
+Received: from smtp1.denso.co.jp [133.192.24.88] 
+         by grdma01h. with ESMTP id SAA22465;
+         Tue, 17 Mar 2020 16:09:06 +0900
+Received: from ky0exch01.adit-jv.com ([10.71.113.8])
+        by smtp01.denso.co.jp (MOS 4.4.7-GA)
+        with ESMTP id FLB29427;
+        Tue, 17 Mar 2020 16:09:05 +0900
+Received: from jp-u0004.adit-jv.com (10.71.112.120) by ky0exch01.adit-jv.com
+ (10.71.113.8) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 17 Mar
+ 2020 16:09:05 +0900
+From:   Suresh Udipi <sudipi@jp.adit-jv.com>
+To:     <niklas.soderlund@ragnatech.se>
+CC:     <akiyama@nds-osk.co.jp>, <efriedrich@de.adit-jv.com>,
+        <erosca@de.adit-jv.com>, <hverkuil-cisco@xs4all.nl>,
+        <jacopo+renesas@jmondi.org>, <laurent.pinchart@ideasonboard.com>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <mrodin@de.adit-jv.com>,
+        <securitycheck@denso.co.jp>, <sudipi@jp.adit-jv.com>
+Subject: [PATCH v2] [RFC] rcar-vin: rcar-csi2: Correct the selection of hsfreqrange
+Date:   Tue, 17 Mar 2020 16:08:25 +0900
+Message-ID: <1584428905-21560-1-git-send-email-sudipi@jp.adit-jv.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20200316130247.GA2258968@oden.dyn.berto.se>
+References: <20200316130247.GA2258968@oden.dyn.berto.se>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.71.112.120]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+hsfreqrange should be chosen based on the calculated mbps which
+is closer to the default bit rate  and within the range as per
+table[1]. But current calculation always selects first value which
+is greater than or equal to the calculated mbps which may lead
+to chosing a wrong range in some cases.
 
-When a PASID is stopped or terminated, there can be pending
-PRQs (requests that haven't received responses) in remapping
-hardware. This adds the interface to drain page requests and
-call it when a PASID is terminated.
+For example for 360 mbps for H3/M3N
+Existing logic selects
+Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+This hsfreqrange is out of range.
+
+The logic is changed to get the default value which is closest to the
+calculated value [1]
+
+Calculated value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
+
+[1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
+
+There is one exectpion value 227Mbps, which may cause out of
+range.
+
+Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
+
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
 ---
- drivers/iommu/intel-svm.c   | 156 +++++++++++++++++++++++++++++++++++-
- include/linux/intel-iommu.h |   1 +
- 2 files changed, 155 insertions(+), 2 deletions(-)
+Changes in v2:
+  - Added the boundary check for the maximum bit rate.
+  
+  - Simplified the logic by remmoving range check 
+    as only the closest default value covers most 
+    of the use cases.
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 6ce96dd541a6..ab13e33bc6ff 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -22,9 +22,14 @@
+  - Aligning the commit message based on the above change
+
+ drivers/media/platform/rcar-vin/rcar-csi2.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+index faa9fb2..6573625 100644
+--- a/drivers/media/platform/rcar-vin/rcar-csi2.c
++++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+@@ -199,6 +199,7 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+ /* PHY Frequency Control */
+ #define PHYPLL_REG			0x68
+ #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
++#define PHYPLL_HSFREQRANGE_MAX		1500
  
- #include "intel-pasid.h"
- 
-+static int intel_svm_process_prq(struct intel_iommu *iommu,
-+				 struct page_req_dsc *prq,
-+				 int head, int tail);
-+static void intel_svm_drain_prq(struct device *dev, int pasid);
- static irqreturn_t prq_event_thread(int irq, void *d);
- 
--#define PRQ_ORDER 0
-+#define PRQ_ORDER	0
-+#define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
- 
- int intel_svm_enable_prq(struct intel_iommu *iommu)
+ static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
+ 	{ .mbps =   80, .reg = 0x00 },
+@@ -431,16 +432,23 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
+ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
  {
-@@ -208,6 +213,7 @@ static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(sdev, &svm->devs, list) {
- 		intel_pasid_tear_down_entry(svm->iommu, sdev->dev, svm->pasid);
-+		intel_svm_drain_prq(sdev->dev, svm->pasid);
- 		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
+ 	const struct rcsi2_mbps_reg *hsfreq;
++	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
+ 
+-	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
+-		if (hsfreq->mbps >= mbps)
+-			break;
+-
+-	if (!hsfreq->mbps) {
++	if (mbps > PHYPLL_HSFREQRANGE_MAX) {
+ 		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+ 		return -ERANGE;
  	}
- 	rcu_read_unlock();
-@@ -226,6 +232,152 @@ static LIST_HEAD(global_svm_list);
- 	list_for_each_entry((sdev), &(svm)->devs, list)	\
- 		if ((d) != (sdev)->dev) {} else
  
-+/*
-+ * When a PASID is stopped or terminated, there can be pending PRQs
-+ * (requests have not received responses) in remapping hardware.
-+ *
-+ * There are at least below scenarios that PRQ drains are required:
-+ * - unbind a PASID;
-+ * - resume phase of the PASID suspend/resume cycle.
-+ *
-+ * Steps to be performed:
-+ * - Disable PR interrupt;
-+ * - Take a snapshot of the page request queue, record current head
-+ *   and tail, and mark PRQ entries with PASID to be dropped;
-+ * - Mark queue empty, a.k.a. Head = Tail;
-+ * - PRQ draining as described in 7.11 of the spec. Unnecessary to
-+ *   check queue full since queue was empty at the point of drain;
-+ * - Tail could have been moved due to new PRQ written by HW;
-+ * - Process snapshot copy of PR queue;
-+ * - Process hardware PR queue, enable interrupt again.
-+ *
-+ * For an example, consider the following timeline going downward.
-+ *    VT-d HW            VT-d Driver          User(KMD, guest)
-+ * --------------------------------------------------------
-+ *   [PR1.2.3]
-+ *   [PR1.1.3] <tail>
-+ *   [PR1.2.2]
-+ *   [PR1.2.1]
-+ *   [PR1.1.2]
-+ *   [PR1.1.1] <head>
-+ *   [IRQ] ->
-+ *
-+ *
-+ *                                          <-  [unbind PASID 1]
-+ *                       [delete pending PR]
-+ *                       [drain PRQs]
-+ *
-+ * Decoder:
-+ * - PR.PASID.GroupID.Index, e.g. PR.1.2.3 indicates the Page request
-+ *   with PASID = 1, GroupID = 2, 3rd request in the group.
-+ * - LPIG: last page in group
-+ * - PDP: private data present
-+ * - KMD: kernel mode driver for native SVA
-+ *
-+ * Note:
-+ * - Caller of unbind/suspend/resume PASID APIs must ensure no pending
-+ *   DMA activities prior to call.
-+ */
-+static void intel_svm_drain_prq(struct device *dev, int pasid)
-+{
-+	struct device_domain_info *info;
-+	struct qi_desc desc[3] = { 0 };
-+	struct dmar_domain *domain;
-+	struct intel_iommu *iommu;
-+	struct intel_svm *svm;
-+	struct pci_dev *pdev;
-+	unsigned long flags;
-+	int head, tail;
-+	u16 sid, did;
-+	void *prqq;
-+	int qdep;
-+
-+	info = get_domain_info(dev);
-+	if (WARN_ON(!info || !dev_is_pci(dev)))
-+		return;
-+
-+	iommu = info->iommu;
-+	domain = info->domain;
-+	pdev = to_pci_dev(dev);
-+
-+	rcu_read_lock();
-+	svm = ioasid_find(NULL, pasid, NULL);
-+	if (WARN_ON(!svm)) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+	rcu_read_unlock();
-+
-+	spin_lock_irqsave(&iommu->lock, flags);
-+	tail = dmar_readq(iommu->reg + DMAR_PQT_REG) & PRQ_RING_MASK;
-+	head = dmar_readq(iommu->reg + DMAR_PQH_REG) & PRQ_RING_MASK;
-+
-+	/*
-+	 * Make a copy of the PR queue then process it offline without
-+	 * blocking PRQ interrupts.
-+	 */
-+	prqq = kmemdup(iommu->prq, PAGE_SIZE ^ PRQ_ORDER, GFP_ATOMIC);
-+	if (!prqq) {
-+		spin_unlock_irqrestore(&iommu->lock, flags);
-+		return;
-+	}
-+	/*
-+	 * Make queue empty to allow further events and avoid the queue
-+	 * full condition while we drain the queue.
-+	 */
-+	dmar_writeq(iommu->reg + DMAR_PQH_REG, tail);
-+	spin_unlock_irqrestore(&iommu->lock, flags);
-+
-+	/*
-+	 * Process the copy of PRQ, drained PASID already marked to be
-+	 * dropped.
-+	 */
-+	if (intel_svm_process_prq(iommu, prqq, head, tail)) {
-+		kfree(prqq);
-+		return;
++	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
++		if (hsfreq->mbps >= mbps)
++			break;
++		hsfreq_prev = hsfreq;
 +	}
 +
-+	/*
-+	 * Perform steps prescribed in VT-d spec CH7.11 to drain page
-+	 * request and responses.
-+	 */
-+	sid = PCI_DEVID(info->bus, info->devfn);
-+	did = domain->iommu_did[iommu->seq_id];
-+	qdep = pci_ats_queue_depth(pdev);
++	if (hsfreq_prev &&
++	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
++		hsfreq = hsfreq_prev;
 +
-+	desc[0].qw0 = QI_IWD_STATUS_DATA(QI_DONE) |
-+			QI_IWD_FENCE |
-+			QI_IWD_TYPE;
-+	desc[1].qw0 = QI_EIOTLB_PASID(pasid) |
-+			QI_EIOTLB_DID(did) |
-+			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
-+			QI_EIOTLB_TYPE;
-+	desc[2].qw0 = QI_DEV_EIOTLB_PASID(pasid) |
-+			QI_DEV_EIOTLB_SID(sid) |
-+			QI_DEV_EIOTLB_QDEP(qdep) |
-+			QI_DEIOTLB_TYPE |
-+			QI_DEV_IOTLB_PFSID(info->pfsid);
-+
-+	qi_submit_sync(iommu, desc, 3, QI_OPT_WAIT_DRAIN);
-+
-+	/*
-+	 * If new requests come in while we processing the copy, we should
-+	 * process it now, otherwise the new request may be stuck until the
-+	 * next IRQ.
-+	 */
-+	if (dmar_readq(iommu->reg + DMAR_PRS_REG) & DMA_PRS_PPR) {
-+		tail = dmar_readq(iommu->reg + DMAR_PQT_REG) & PRQ_RING_MASK;
-+		head = dmar_readq(iommu->reg + DMAR_PQH_REG) & PRQ_RING_MASK;
-+		intel_svm_process_prq(iommu, iommu->prq, head, tail);
-+	}
-+
-+	/* Allow new pending PRQ to generate interrupts. */
-+	writel(DMA_PRS_PPR, iommu->reg + DMAR_PRS_REG);
-+
-+	kfree(prqq);
-+	return;
-+}
-+
- /* Caller must hold pasid_mutex, mm reference */
- static int intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
- 		      struct mm_struct *mm, struct intel_svm_dev **sd)
-@@ -439,6 +591,7 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
- 			 * large and has to be physically contiguous. So it's
- 			 * hard to be as defensive as we might like. */
- 			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
-+			intel_svm_drain_prq(dev, svm->pasid);
- 			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
- 			kfree_rcu(sdev, rcu);
+ 	rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
  
-@@ -491,7 +644,6 @@ struct page_req_dsc {
- 	u64 priv_data[2];
- };
- 
--#define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
- 
- static bool access_error(struct vm_area_struct *vma, struct page_req_dsc *req)
- {
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 255b23f59a78..fcbc40d3ce18 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -324,6 +324,7 @@ enum {
- 
- #define QI_IWD_STATUS_DATA(d)	(((u64)d) << 32)
- #define QI_IWD_STATUS_WRITE	(((u64)1) << 5)
-+#define QI_IWD_FENCE		(((u64)1) << 6)
- #define QI_IWD_PRQ_DRAIN	(((u64)1) << 7)
- 
- #define QI_IOTLB_DID(did) 	(((u64)did) << 16)
+ 	return 0;
 -- 
-2.17.1
+2.7.4
 
