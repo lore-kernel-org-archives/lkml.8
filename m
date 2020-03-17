@@ -2,229 +2,115 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7414C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C93C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAFE20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:09:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LBJ9w5xw"
+	by mail.kernel.org (Postfix) with ESMTP id 53CF420714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgCQWJA (ORCPT
+        id S1727006AbgCQWKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:09:00 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:46392 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgCQWJA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:09:00 -0400
-Received: by mail-vs1-f66.google.com with SMTP id z125so15072234vsb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:08:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3Xufgn0OKnMLWDPNBQrBmijk0THuIRKUCGVKI3TWem0=;
-        b=LBJ9w5xwNE+aBUpx4MuIBjJU02sMVrYW95UIgpl6Hn+EPqaaAypPL66XKyS0+i0eJj
-         jq7EupSJOtI6HbkN/hpEtWRmRVwoDi97USDSDIz1xe4nHt+IF1BNqHKZr/k9bsECGllG
-         7OtjEB1LbjxCMdtwAHoPDkhA912qlFRmbtT7U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3Xufgn0OKnMLWDPNBQrBmijk0THuIRKUCGVKI3TWem0=;
-        b=BLi1Au+3bslB5ww/6Q2hVGFeApoknM+kaxvqnnkwUS7l27I1XtM/x09MXNNAsRYexI
-         6oSEVGFpdhVnZinNCvFF7OpENVcc7aXmlqPhxI9lLyf4Td03uWm4FBXzJFNOEa17snWH
-         qyssafsqR0ivpM7RVU33DIvM6haDz3ghB5GfxFo+Rl1pzC7CHVPtv1Rk5mJijgBCMSov
-         4JKH5MIkrYwzCQ8nd2e8+SRafrHv9kAKOoV74fRzmpyXUJmTOtEgDHcEg05BH8N02SMI
-         Yi0HkhDgXnlL9TahhrY9jS6fEpJRKqTa6+M7G7JANfnyMNhwU/ZpR4kMpDpiJJBEtrZF
-         PgPA==
-X-Gm-Message-State: ANhLgQ2+j6dZjw+GEapBTPHKKznFZ9LY6kXQbaTLbnAnG2js8qaHsuHu
-        rXwahSH+YkZHU1qUnL3/jFyegWpU4hM=
-X-Google-Smtp-Source: ADFU+vvYqzIain5eAie+Mq4CBGYfwEGTgArC+rb9jdDXQc31uK974wYoVr+OQVwMVOeMMmEylSn2eQ==
-X-Received: by 2002:a67:646:: with SMTP id 67mr930132vsg.34.1584482938382;
-        Tue, 17 Mar 2020 15:08:58 -0700 (PDT)
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
-        by smtp.gmail.com with ESMTPSA id e21sm2100198uan.1.2020.03.17.15.08.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 15:08:57 -0700 (PDT)
-Received: by mail-vk1-f182.google.com with SMTP id t3so6487561vkm.10
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:08:57 -0700 (PDT)
-X-Received: by 2002:ac5:c7b6:: with SMTP id d22mr1237683vkn.75.1584482936521;
- Tue, 17 Mar 2020 15:08:56 -0700 (PDT)
+        Tue, 17 Mar 2020 18:10:03 -0400
+Received: from mga14.intel.com ([192.55.52.115]:34823 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726549AbgCQWKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:10:03 -0400
+IronPort-SDR: TMVEEKVUfsYj4L/QHQMvtWwb/yR1raTHFvohlANzTYh7Etv8Qgy9Pkmhjuy7yXt/wUnQn4/ZUv
+ bQrRE8165AVw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 15:09:49 -0700
+IronPort-SDR: NP0szG/2mGRotf576QdlCabAdaPmVU+IN+qaFxzumpyTXaqcEelFsaQNdPsUXWjFJvyH1nZolv
+ JO1XRxtbQBNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
+   d="scan'208";a="355504118"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Mar 2020 15:09:48 -0700
+Date:   Tue, 17 Mar 2020 15:09:48 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200317220948.GB14566@linux.intel.com>
+References: <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
+ <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
+ <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
+ <20200316225322.GJ24267@linux.intel.com>
+ <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
+ <20200316235934.GM24267@linux.intel.com>
+ <ca2c9ac0-b717-ee96-c7df-4e39f03a9193@intel.com>
+ <CAOASepN7n1XUGPQHwk2Vcu-dyyBJ7dwhM_mF_RcJa71PcNiLmA@mail.gmail.com>
+ <afec507a-48cd-a730-586a-b9135cc66315@intel.com>
 MIME-Version: 1.0
-References: <20200317133653.v2.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
- <158448096503.88485.8894151453752608519@swboyd.mtv.corp.google.com>
-In-Reply-To: <158448096503.88485.8894151453752608519@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 17 Mar 2020 15:08:45 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U+c4GZU1p3xYT3t=0Q2cLFxoiM=vqc8SsxOKehxbZPXw@mail.gmail.com>
-Message-ID: <CAD=FV=U+c4GZU1p3xYT3t=0Q2cLFxoiM=vqc8SsxOKehxbZPXw@mail.gmail.com>
-Subject: Re: [PATCH v2] spi: spi-geni-qcom: Speculative fix of "nobody cared"
- about interrupt
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afec507a-48cd-a730-586a-b9135cc66315@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Mar 17, 2020 at 02:40:34PM -0700, Xing, Cedric wrote:
+> Hi Nathaniel,
+> 
+> I reread your email today and thought I might have misunderstood your email
+> earlier. What changes are you asking for exactly? Is that just passing @leaf
+> in %ecx rather than in %eax? If so, I wouldn't have any problem. I agree
+> with you that the resulted API would then be callable from C, even though it
+> wouldn't be able to return back to C due to tampered %rbx. But I think the
+> vDSO API can preserve %rbx too, given it is used by both EENTER and EEXIT
+> (so is unavailable for parameter passing anyway). Alternatively, the C
+> caller can setjmp() to be longjmp()'d back from within the exit handler.
 
-On Tue, Mar 17, 2020 at 2:36 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> > Patch is marked "speculative" because I have no way to reproduce this
-> > problem, so I'm just hoping this fixes it.  Weakly ordered memory
-> > makes my brain hurt.
->
-> It could be that. It could also be the poor design of geni_se_init() and
-> how it enables many interrupts that this driver doesn't look to handle?
-> Why do we allow the wrapper to enable all those bits in
-> M_COMMON_GENI_M_IRQ_EN and S_COMMON_GENI_S_IRQ_EN if nobody is going to
-> handle them?
+Yep, exactly.  The other proposed change that is fairly straightforward is
+to make the save/restore of %rsp across the exit handler call relative
+instead of absolute, i.e. allow the exit handler to modify %rsp.  I don't
+think this would conflict with the Intel SDK usage model?
 
-It is possible it's related to an interrupt that we don't handle.  However:
+diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+index 94a8e5f99961..05d54f79b557 100644
+--- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
++++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+@@ -139,8 +139,9 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+        /* Pass the untrusted RSP (at exit) to the callback via %rcx. */
+        mov     %rsp, %rcx
 
-* IMO having the locking in place is safer anyway.  At some point I
-read that advice that trying to reason about weakly ordered memory was
-simply too hard for the average person (even the average kernel
-developer).  In 99% of the cases you could just use a lock so it's
-super clear and the performance difference is near zero.
+-       /* Save the untrusted RSP in %rbx (non-volatile register). */
++       /* Save the untrusted RSP offset in %rbx (non-volatile register). */
+        mov     %rsp, %rbx
++       and     $0xf, %rbx
 
-* Most of the cases I saw of the "nobody cared" for geni-spi was on a
-mostly idle system (presumably still doing periodic SPI transactions
-to the EC, though).  It seems weird that one of these other interrupts
-would suddenly fire.  It seems more likely that we just happened to
-win a race of some sort.
+        /*
+         * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
+@@ -161,8 +162,8 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+        mov     0x20(%rbp), %rax
+        call    .Lretpoline
 
-If nothing else it will suddenly become very obvious after my patch
-lands because I'll print out the status.
-
-
-That all being said if someone wants to submit a patch to clean up
-which interrupts are enabled I'd support it.
-
-
-> > @@ -151,16 +151,19 @@ static void spi_geni_set_cs(struct spi_device *slv, bool set_flag)
-> >         struct geni_se *se = &mas->se;
-> >         unsigned long time_left;
-> >
-> > -       reinit_completion(&mas->xfer_done);
-> >         pm_runtime_get_sync(mas->dev);
-> >         if (!(slv->mode & SPI_CS_HIGH))
-> >                 set_flag = !set_flag;
-> >
-> > +       spin_lock_irq(&mas->lock);
->
-> Why is this spin_lock_irq() vs. spin_lock_irqsave()? This isn't possible
-> to be called from somewhere that hasn't changed irq flags?
-
-See below.
-
-
-> > +       reinit_completion(&mas->xfer_done);
-> > +
-> >         mas->cur_mcmd = CMD_CS;
-> >         if (set_flag)
-> >                 geni_se_setup_m_cmd(se, SPI_CS_ASSERT, 0);
-> >         else
-> >                 geni_se_setup_m_cmd(se, SPI_CS_DEASSERT, 0);
-> > +       spin_unlock_irq(&mas->lock);
->
-> This will force on interrupts if they were masked.
-
-I'll change it if you want, but in this function there is already a
-call to "wait_for_completion_timeout".  That's not gonna be too happy
-if this function is ever called with interrupts already masked.  Also
-in this function is pm_runtime_get_sync() which in many cases will
-sleep (I think we'll end up in geni_se_clks_on() which calls
-clk_bulk_prepare_enable()).
-
-In cases where you know for sure that interrupts aren't masked,
-spin_lock_irq() and spin_unlock_irq() are fine and that's what they're
-for, no?
-
-
-> >         time_left = wait_for_completion_timeout(&mas->xfer_done, HZ);
-> >         if (!time_left)
-> > @@ -307,6 +310,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
-> >         u32 spi_tx_cfg, len;
-> >         struct geni_se *se = &mas->se;
-> >
-> > +       spin_lock_irq(&mas->lock);
-
-...and just to answer the same question for here: setup_fifo_xfer() is
-called from spi_geni_transfer_one() which is our "transfer_one"
-function.  We don't happen to block anywhere in these functions, but
-I'm nearly certain you are allowed to block in them.  We actually
-return a positive number to indicate to the SPI core that we're not
-doing the blocking ourselves but since the SPI core can't know we were
-going to do that it has to assume we might block.
-
-
-> > @@ -478,13 +485,29 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
-> >         struct geni_se *se = &mas->se;
-> >         u32 m_irq;
-> >         unsigned long flags;
-> > -
-> > -       if (mas->cur_mcmd == CMD_NONE)
-> > -               return IRQ_NONE;
-> > +       irqreturn_t ret = IRQ_HANDLED;
-> >
-> >         spin_lock_irqsave(&mas->lock, flags);
-
-Ironically the above could probably just be "spin_lock" since this is
-our interrupt handler.  ;-)  I'll just leave it alone though since
-what's there now doesn't hurt.
-
-
-> >         m_irq = readl(se->base + SE_GENI_M_IRQ_STATUS);
->
-> Does this read need to be inside the lock?
-
-Probably not.  Discussion below.
-
-
-> > +       /* Check for spurious interrupt */
-> > +       if (!m_irq) {
-> > +               ret = IRQ_NONE;
-> > +               goto exit;
->
-> I ask because it could be simplified by reading the status and then
-> immediately returning IRQ_NONE if no bits are set without having to do
-> the lock/unlock dance. And does writing 0 to the irq clear register do
-> anything?
-
-Sure.  I'll move it if you want.  It felt nicer to just keep the whole
-thing under lock so I didn't have to think about whether it mattered.
-...and anyone else looking at it didn't need to think about if it
-mattered, too.  It it is very easy to say that it doesn't _hurt_ to
-have it under lock other than having one extra memory read under lock.
-...and presumably the case where the optimization matters is
-incredibly rare (a spurious interrupt) and we just spent a whole lot
-of cycles calling the interrupt handler to begin with for this
-spurious interrupt.
-
-I would have a hard time believing that a write of 0 to a "write 1 to
-clear" register would have any impact.  It would be a pretty bad
-hardware design...
-
-
-So I guess in summary, I'm not planning to spin for any of these
-things unless you really insist or you say I'm wrong about something
-above or someone else says my opinions are the wrong opinions.
-
--Doug
+-       /* Restore %rsp to its post-exit value. */
+-       mov     %rbx, %rsp
++       /* Undo the post-exit %rsp adjustment. */
++       lea     0x20(%rsp,%rbx), %rsp
