@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6175CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ED4C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0F7206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21A0206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443064;
-	bh=jKQaUfpQcMm0yosTefLi57T/N5a+Oc6PT7XK/yITYZg=;
+	s=default; t=1584443065;
+	bh=y+OaqMIx5L66GMyJ/vStR04kTYrrZ6vXz6F2UkjolYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eWFTKGNQcGPIJ4oDpGJCKKHGoumE6bovx8tasgoCRC6dDbZJqLCUpa/j7X8ogUj/1
-	 LEjU+4Sv4Eb72oeofAE0DRqF0oyH9tN1hYtDViBQjtAfixZXMWfRcbkTcuxDRYwJ2q
-	 SfXxd3r5Fsz1gHU3PKFqJ7Y7SJ7W4/kWOYVVDZp4=
+	b=2aRMlbdvsAkxq4qyPIaoup/OZE3PTmU4dUZCCMWTm1EQ4OGu/LxOFVs7Ud4GtUOas
+	 c4/8VgVT3iWlBjR0q8SxNgdrQpFIOc6MM2VJH0Pt4ohTa2SyIoptIh/xb/7v/tq9xe
+	 3qoLrY1v7SaZ/a7CnyOYd+kTjx6pJkS9DZdUFlfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgCQLEX (ORCPT
+        id S1728265AbgCQLEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44512 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbgCQLEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:20 -0400
+        id S1728262AbgCQLER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79726206EC;
-        Tue, 17 Mar 2020 11:04:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F03FB20658;
+        Tue, 17 Mar 2020 11:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443059;
-        bh=jKQaUfpQcMm0yosTefLi57T/N5a+Oc6PT7XK/yITYZg=;
+        s=default; t=1584443057;
+        bh=y+OaqMIx5L66GMyJ/vStR04kTYrrZ6vXz6F2UkjolYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s8QbhetYwgdPJavJa7gWIE/T5L66MFnU5yS0NYczireB/Iu7AYMguPt1ptrz7UtF6
-         bF67+3tTKEUFegdZ+cwt+aJOlxSwOU1Yr5eRs5R3xUQK91+peNsoGNSr4snM5EMXEj
-         OUxj/cDLcjALMWXgZBaR71+s7A0UrLB0u5yQzANw=
+        b=eB6zL8EOsCg1XIdbbYIsXxuCu2v3Mne/eO0LLJX81Tv3/5v3py7R3HrIa1S60/e6a
+         wOy/E+XGUhNJSX7c3QEUxXxYIyk3m1q1ZmGTB/dEQ5Yk6pWnPBP8XZEdzSaLn0SbfT
+         iG8I0lsdy2aKzSPYafqyyLilj0d6yEM5G0Dj1KZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 083/123] blk-iocost: fix incorrect vtime comparison in iocg_is_idle()
-Date:   Tue, 17 Mar 2020 11:55:10 +0100
-Message-Id: <20200317103316.366842551@linuxfoundation.org>
+        stable@vger.kernel.org, John Donnelly <john.p.donnelly@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Corey Minyard <cminyard@mvista.com>,
+        Patrick Vo <patrick.vo@hpe.com>
+Subject: [PATCH 5.4 082/123] ipmi_si: Avoid spurious errors for optional IRQs
+Date:   Tue, 17 Mar 2020 11:55:09 +0100
+Message-Id: <20200317103316.271137860@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,37 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit dcd6589b11d3b1e71f516a87a7b9646ed356b4c0 upstream.
+commit 443d372d6a96cd94ad119e5c14bb4d63a536a7f6 upstream.
 
-vtimes may wrap and time_before/after64() should be used to determine
-whether a given vtime is before or after another. iocg_is_idle() was
-incorrectly using plain "<" comparison do determine whether done_vtime
-is before vtime. Here, the only thing we're interested in is whether
-done_vtime matches vtime which indicates that there's nothing in
-flight. Let's test for inequality instead.
+Although the IRQ assignment in ipmi_si driver is optional,
+platform_get_irq() spews error messages unnecessarily:
+  ipmi_si dmi-ipmi-si.0: IRQ index 0 not found
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fix this by switching to platform_get_irq_optional().
+
+Cc: stable@vger.kernel.org # 5.4.x
+Cc: John Donnelly <john.p.donnelly@oracle.com>
+Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
+Reported-and-tested-by: Patrick Vo <patrick.vo@hpe.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Message-Id: <20200205093146.1352-1-tiwai@suse.de>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-iocost.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/ipmi/ipmi_si_platform.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1318,7 +1318,7 @@ static bool iocg_is_idle(struct ioc_gq *
- 		return false;
+--- a/drivers/char/ipmi/ipmi_si_platform.c
++++ b/drivers/char/ipmi/ipmi_si_platform.c
+@@ -194,7 +194,7 @@ static int platform_ipmi_probe(struct pl
+ 	else
+ 		io.slave_addr = slave_addr;
  
- 	/* is something in flight? */
--	if (atomic64_read(&iocg->done_vtime) < atomic64_read(&iocg->vtime))
-+	if (atomic64_read(&iocg->done_vtime) != atomic64_read(&iocg->vtime))
- 		return false;
+-	io.irq = platform_get_irq(pdev, 0);
++	io.irq = platform_get_irq_optional(pdev, 0);
+ 	if (io.irq > 0)
+ 		io.irq_setup = ipmi_std_irq_setup;
+ 	else
+@@ -378,7 +378,7 @@ static int acpi_ipmi_probe(struct platfo
+ 		io.irq = tmp;
+ 		io.irq_setup = acpi_gpe_irq_setup;
+ 	} else {
+-		int irq = platform_get_irq(pdev, 0);
++		int irq = platform_get_irq_optional(pdev, 0);
  
- 	return true;
+ 		if (irq > 0) {
+ 			io.irq = irq;
 
 
