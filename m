@@ -2,158 +2,197 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B54C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57793C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD6F20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2020A20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:29:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="b5Uaan6I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V6DmMXKn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgCQQ05 (ORCPT
+        id S1726550AbgCQQ3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:26:57 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:34458 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQQ04 (ORCPT
+        Tue, 17 Mar 2020 12:29:17 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:26678 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726016AbgCQQ3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:26:56 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: hiZgdZ5wt/s+H4xus3clYlfc8H3Oq+kIGETbH0Vmd1tCk+1PeKx6wDgeGGKGGEBhNzSGIdgNSG
- vP5XXb6SsLhYakhhXl/cHRj9L+ed0wQQe/9DqTGxjx6GGoefl+QLHXp1fQjp7M2o59K0MMjM5N
- 7I/EBXuUNPxtgBIkV/PGGCo4R+8uyojo/0sPpG3cmZfIWkGryIUZP55CsiXAPsX3NieX175ejF
- R/ErTnG095oMB9vPF44NN7II+WesfyYp+gC2rHqioOAmMsi3MUcH8Ar53x2IQDXnztyMRKPBtL
- pBE=
-X-IronPort-AV: E=Sophos;i="5.70,565,1574146800"; 
-   d="scan'208";a="5953021"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Mar 2020 09:26:53 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 17 Mar 2020 09:26:53 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 17 Mar 2020 09:26:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KlEFxC+IfhHDXhsVgPEoqQcELVi/QrCc+hvIMCDhmw96PZgqgRpuxM7NVYxB++C12paY48UZfJw5y9uf76yRbT0DgtgQGexKG2+hzpio08DneFotLXDR3oSwcCgSfRryeCdCpb3pCsNGU18O7GJzmfxPueR27nSqWLr0w8EiRhIqllPLwstoSAKt7dNKe6KUI9UFJw5X0dWG/1zd8ludmrsTDHd9LtfiQkw0cHZumhhVEHtArz/qdnI2hMvril1r8iuv98eR6THaBw6Do3Zb6FLP1Iyxx5MaA3k2eKxH4a16NRj59Mb2qVthqEpPyxIAeYuUeWvnUXSUp2SMgrJnug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EIzOciiFpPp1sQzpGEUBr6eHXjX2bEc2vxNCrPI5zN4=;
- b=HN+SCIe79XvpnJf/w0UsIQJZgCFdrWHo8wOyY3QiY/3V7wJ8kr1JuvQkD5xtt9d4YH6bh+eqofoGvV2cmqI6EzQU9PZgifTD+OkqoPT4gib4Zub4qcUAUaCbjo4LkNlDEHBwq24KapBEXuQNAgr2QQ7yqNqPGH/G1AQRt6qSk9h0rR640ZnN96GlMCgccBcpTXxVnzgC+qMTS7m0zxf9JVd/YfnYDwzfVdZaaVyRn3h+T23vvF6HN5J/2iRAbi7OiwsMYT7p7U7Tp2awzNvd8uR5F5+PZIPWIerhXjrQbOnC/MuOj8Blz2AnaXfQJf/nO0+hLWKc1UDuEMNRebm0lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EIzOciiFpPp1sQzpGEUBr6eHXjX2bEc2vxNCrPI5zN4=;
- b=b5Uaan6Ik2ujIYO18GUWOiuu/64lzJSiEGQlSr80Ssd9Vzxfh54A9rRsUbn9saMg2Tc5KRnz9zrG5W1sAQ1DQelNwbU2KcGhHdk+kHvBNxc6SqQ2UGDusxS93JTHYofFcOuv1jrrZeSXvIo9LeW3Sy27fh9Bhc7AZN+N/3gbgdM=
-Received: from DM6PR11MB3225.namprd11.prod.outlook.com (2603:10b6:5:5b::32) by
- DM6PR11MB2603.namprd11.prod.outlook.com (2603:10b6:5:c6::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.13; Tue, 17 Mar 2020 16:26:50 +0000
-Received: from DM6PR11MB3225.namprd11.prod.outlook.com
- ([fe80::dc6b:1191:3a76:8b6a]) by DM6PR11MB3225.namprd11.prod.outlook.com
- ([fe80::dc6b:1191:3a76:8b6a%7]) with mapi id 15.20.2793.023; Tue, 17 Mar 2020
- 16:26:50 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <oleksandr.suvorov@toradex.com>, <devicetree@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-CC:     <pbarker@konsulko.com>, <u.kleine-koenig@pengutronix.de>,
-        <laurent.pinchart@ideasonboard.com>, <marcel.ziswiler@toradex.com>,
-        <igor.opaniuk@toradex.com>, <philippe.schenker@toradex.com>,
-        <alexandre.belloni@bootlin.com>, <wens@csie.org>,
-        <festevam@gmail.com>, <f.fainelli@gmail.com>, <heiko@sntech.de>,
-        <khilman@baylibre.com>, <Ludovic.Desroches@microchip.com>,
-        <mripard@kernel.org>, <linux-imx@nxp.com>,
-        <Nicolas.Ferre@microchip.com>, <palmer@dabbelt.com>,
-        <paul@crapouillou.net>, <paul.walmsley@sifive.com>,
-        <kernel@pengutronix.de>, <rjui@broadcom.com>,
-        <s.hauer@pengutronix.de>, <sbranden@broadcom.com>,
-        <shawnguo@kernel.org>, <thierry.reding@gmail.com>,
-        <linux@prisktech.co.nz>, <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>
-Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-Thread-Topic: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-Thread-Index: AQHV/Hjcr8D0wJ1/KU6yOYf2aNcyvA==
-Date:   Tue, 17 Mar 2020 16:26:50 +0000
-Message-ID: <f281a6a0-a150-514d-ef02-4e51192031d7@microchip.com>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
-In-Reply-To: <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [86.126.9.245]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ce6ecb69-76b3-43f3-fb04-08d7ca8fff34
-x-ms-traffictypediagnostic: DM6PR11MB2603:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB2603160B4E2BA59142F59D8A87F60@DM6PR11MB2603.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:218;
-x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(136003)(39860400002)(376002)(199004)(31696002)(4326008)(31686004)(2906002)(91956017)(76116006)(71200400001)(6486002)(66446008)(81166006)(86362001)(66946007)(7416002)(64756008)(66556008)(7406005)(66476007)(110136005)(81156014)(186003)(54906003)(478600001)(8676002)(26005)(8936002)(2616005)(6512007)(5660300002)(53546011)(4744005)(36756003)(6506007)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB2603;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IHpw69mXXcfgiHzurM7j01zyT8PYjuTWrFBX/Z+gK4W2ArC6phY+due3PiwxkDWUKv/aNKTQhFbBtghnhHYeBL5PubIL31sYMPlaJR0E9mplKTQoCIY2SeuJ7Ghi3QLD9FEfW9i4EVjWTK5b3ZnhqWZmtVMRxKY/exnutU1ZGu3R41Obz5uraoM8L1Co9dHcRUprgyJKwujk318niv5n6yapwJDmtw3d7+KPEah5uAkKugV5tuvQSf1a/4q5SpChMBmVksNQYKVwt852WaA0QXFJnLFoGt2/hzO7nvYV6qlL8foEirpb2w6aajECFP4jJM7Y5Wcv+xdOvaB1ANPGwMmtsbQu+1+3bP1boerYTjirIZX+gaeGrgL0m7lgWI7IjDWLj4iwLhp6IColBaaWVP1rTCGJ7H9WcHk89yiFI25c920UA9dAIZZ5Y3qoPKXf
-x-ms-exchange-antispam-messagedata: kVDFYKtTgbeYS4/dP8kT/ISXT3ss3Uh/024uKSW7TRN49m9cQG7UYpys52grIkIpPfeeaRiBY+rVggypZOr9Co1NuNWfPkthVNm35X2Ufv1xkSZ5+GtjTlgfbdYjWY/U1cRDlCzXSUKU09pZS+YTPw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5888E88EB76E8649A10DB864BB54BC2E@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 17 Mar 2020 12:29:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584462554;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cesc6+PAoo0uOh9jUHSiNLjLdnEyU/La4E7O0BZjTS4=;
+        b=V6DmMXKnR+jhvacimh1OawBti7Jxgtkp/heyxV86pi/vo/XwAzK9xCuHG5LooD1n73ETnD
+        VArcc7hDTVqnSODS3jHp7Ksz61xuKFNnN9XlaCFktTn3rik05sOSkKB+2neIHKEFo2Trnl
+        GPCBMaRJEmCHAO8J20H7BDLAD23h0vM=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-64-ph2AUW_JN4-CzoYQG2Ai0g-1; Tue, 17 Mar 2020 12:29:13 -0400
+X-MC-Unique: ph2AUW_JN4-CzoYQG2Ai0g-1
+Received: by mail-io1-f72.google.com with SMTP id q22so6211065ioj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:29:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Cesc6+PAoo0uOh9jUHSiNLjLdnEyU/La4E7O0BZjTS4=;
+        b=YpQbi1fYC8ERLy3M6iGbgLVqsJPXSOInaMCf+mXmxV7P8OqBwUipsZDs6bQmDGTr9D
+         FJLykuWqP9vNo2bt3DbOKl2ULs70JOzdJQ3xGFZQ6TZ9AcntpS1QdcM10vrAJ+wAdAsg
+         3UU/KB/kTV+ASyiqeg6FCjb/hdqUcD8lYnQoe/rzUGDkVgar0o/QxhxLfOEI8KIbIjtm
+         NxFCeXLtiDfK2w04CPt+nY6+86mQ+tIMK1A3sGKWCmYFEquKCqZgEQ1QyfcKrTtBFCMY
+         Aq1jCJXnrgfeZ/2gF2bOYtzg9u7am/+6uQTxn+JVSrqd/zZgd/ZuEw/CeYQvJUM2GQpb
+         XBzQ==
+X-Gm-Message-State: ANhLgQ0DGmNpu13Rpi4RI/S1l6vKC2NyQtIotw6NV3e30AAHnCum6huQ
+        mpM4F4O1M0o5hqj31zdw2XpuelhPJl+YhV48OmS+6a8PnbR48SOySDeeMyBRvzyCWVCse7XplJw
+        rSb3R6vXy0Fbbyb+3ut86ofUENwaN/Pb705gQfCZQ
+X-Received: by 2002:a05:6602:2434:: with SMTP id g20mr4550522iob.97.1584462550257;
+        Tue, 17 Mar 2020 09:29:10 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtjCSQ2lftFJ7EV4bG+5w/GyTA3TbeduLtFqWgxZnR0k8L1ugrfDp90ieq7fWwElhXk2LCyoJxo0AKmX+JtRa0=
+X-Received: by 2002:a05:6602:2434:: with SMTP id g20mr4550458iob.97.1584462549594;
+ Tue, 17 Mar 2020 09:29:09 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce6ecb69-76b3-43f3-fb04-08d7ca8fff34
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 16:26:50.4921
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oNuGH8X6o35HIT2auDm4AePv5WhlN/Nxi9h7VsR/67IG1IIPszVehpt5idm0n1GLnIy3StHKTYF9jnzRxgboUWfeMkSaUoF+2w+zrflDOhI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2603
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <20200315012523.GC208715@linux.intel.com> <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
+ <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
+ <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com> <20200316225322.GJ24267@linux.intel.com>
+In-Reply-To: <20200316225322.GJ24267@linux.intel.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Tue, 17 Mar 2020 12:28:58 -0400
+Message-ID: <CAOASepNbvproKLFLUvH=+m1xXFeDCWup6O7Pi1py6ENFdarMKg@mail.gmail.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDE3LjAzLjIwMjAgMTQ6MzIsIE9sZWtzYW5kciBTdXZvcm92IHdyb3RlOg0KPiBAQCAt
-MTg3LDcgKzE4Nyw3IEBAIHN0YXRpYyBzc2l6ZV90IHBvbGFyaXR5X3N0b3JlKHN0cnVjdCBkZXZp
-Y2UgKmNoaWxkLA0KPiAgICAgICAgIGlmIChzeXNmc19zdHJlcShidWYsICJub3JtYWwiKSkNCj4g
-ICAgICAgICAgICAgICAgIHBvbGFyaXR5ID0gUFdNX1BPTEFSSVRZX05PUk1BTDsNCj4gICAgICAg
-ICBlbHNlIGlmIChzeXNmc19zdHJlcShidWYsICJpbnZlcnNlZCIpKQ0KDQpZb3UgbWF5IGFsc28g
-Y29uc2lkZXIgdGhpcyBzdHJpbmcgICAgIF4NCg0KPiAtICAgICAgICAgICAgICAgcG9sYXJpdHkg
-PSBQV01fUE9MQVJJVFlfSU5WRVJTRUQ7DQo+ICsgICAgICAgICAgICAgICBwb2xhcml0eSA9IFBX
-TV9QT0xBUklUWV9JTlZFUlRFRDs=
+On Mon, Mar 16, 2020 at 6:53 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Mon, Mar 16, 2020 at 11:38:24PM +0200, Jarkko Sakkinen wrote:
+> > On Mon, 2020-03-16 at 10:01 -0400, Nathaniel McCallum wrote:
+> > > On Mon, Mar 16, 2020 at 9:56 AM Jarkko Sakkinen
+> > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > > On Sun, 2020-03-15 at 13:53 -0400, Nathaniel McCallum wrote:
+> > > > > On Sat, Mar 14, 2020 at 9:25 PM Jarkko Sakkinen
+> > > > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > > > > On Wed, Mar 11, 2020 at 01:30:07PM -0400, Nathaniel McCallum wrote:
+> > > > > > > Currently, the selftest has a wrapper around
+> > > > > > > __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
+> > > > > > > registers (CSRs), though it uses none of them. Then it calls this
+> > > > > > > function which uses %rbx but preserves none of the CSRs. Then it jumps
+> > > > > > > into an enclave which zeroes all these registers before returning.
+> > > > > > > Thus:
+> > > > > > >
+> > > > > > >   1. wrapper saves all CSRs
+> > > > > > >   2. wrapper repositions stack arguments
+> > > > > > >   3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
+> > > > > > >   4. selftest zeros all CSRs
+> > > > > > >   5. wrapper loads all CSRs
+> > > > > > >
+> > > > > > > I'd like to propose instead that the enclave be responsible for saving
+> > > > > > > and restoring CSRs. So instead of the above we have:
+> > > > > > >   1. __vdso_sgx_enter_enclave() saves %rbx
+> > > > > > >   2. enclave saves CSRs
+> > > > > > >   3. enclave loads CSRs
+> > > > > > >   4. __vdso_sgx_enter_enclave() loads %rbx
+> > > > > > >
+> > > > > > > I know that lots of other stuff happens during enclave transitions,
+> > > > > > > but at the very least we could reduce the number of instructions
+> > > > > > > through this critical path.
+> > > > > >
+> > > > > > What Jethro said and also that it is a good general principle to cut
+> > > > > > down the semantics of any vdso as minimal as possible.
+> > > > > >
+> > > > > > I.e. even if saving RBX would make somehow sense it *can* be left
+> > > > > > out without loss in terms of what can be done with the vDSO.
+> > > > >
+> > > > > Please read the rest of the thread. Sean and I have hammered out some
+> > > > > sensible and effective changes.
+> > > >
+> > > > Have skimmed through that discussion but it comes down how much you get
+> > > > by obviously degrading some of the robustness. Complexity of the calling
+> > > > pattern is not something that should be emphasized as that is something
+> > > > that is anyway hidden inside the runtime.
+> > >
+> > > My suggestions explicitly maintained robustness, and in fact increased
+> > > it. If you think we've lost capability, please speak with specificity
+> > > rather than in vague generalities. Under my suggestions we can:
+> > > 1. call the vDSO from C
+> > > 2. pass context to the handler
+> > > 3. have additional stack manipulation options in the handler
+> > >
+> > > The cost for this is a net 2 additional instructions. No existing
+> > > capability is lost.
+> >
+> > My vague generality in this case is just that the whole design
+> > approach so far has been to minimize the amount of wrapping to
+> > EENTER.
+>
+> Yes and no.   If we wanted to minimize the amount of wrapping around the
+> vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
+> first place.  The whole process has been about balancing the wants of each
+> use case against the overall quality of the API and code.
+>
+> > And since this has been kind of agreed by most of the
+> > stakeholders doing something against the chosen strategy is
+> > something I do hold some resistance.
+>
+> Up until Nathaniel joined the party, the only stakeholder in terms of the
+> exit handler was the Intel SDK.
+
+I would hope that having additional stakeholders would ease the path
+to adoption.
+
+> There was a general consensus to pass
+> registers as-is when there isn't a strong reason to do otherwise.  Note
+> that Nathaniel has also expressed approval of that approach.
+
+I still approve that approach.
+
+> So I think the question that needs to be answered is whether the benefits
+> of using %rcx instead of %rax to pass @leaf justify the "pass registers
+> as-is" guideline.  We've effectively already given this waiver for %rbx,
+> as the whole reason why the TCS is passed in on the stack instead of via
+> %rbx is so that it can be passed to the exit handler.  E.g. the vDSO
+> could take the TCS in %rbx and save it on the stack, but we're throwing
+> the baby out with the bathwater at that point.
+>
+> The major benefits being that the vDSO would be callable from C and that
+> the kernel could define a legitimate prototype instead of a frankenstein
+> prototype that's half assembly and half C.  For me, those are significant
+> benefits and well worth the extra MOV, PUSH and POP.  For some use cases
+> it would eliminate the need for an assembly wrapper.  For runtimes that
+> need an assembly wrapper for whatever reason, it's probably still a win as
+> a well designed runtime can avoid register shuffling in the wrapper.  And
+> if there is a runtime that isn't covered by the above, it's at worst an
+> extra MOV.
+>
+
