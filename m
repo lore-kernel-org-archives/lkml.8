@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899A6C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D6DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D68A20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99CBC206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZDRgS4B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFZQuTgf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgCQKUS (ORCPT
+        id S1726530AbgCQKUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:20:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36745 "EHLO
+        Tue, 17 Mar 2020 06:20:17 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37474 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgCQKUQ (ORCPT
+        with ESMTP id S1725906AbgCQKUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:20:16 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g12so22149101ljj.3;
-        Tue, 17 Mar 2020 03:20:14 -0700 (PDT)
+        Tue, 17 Mar 2020 06:20:12 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r24so22171847ljd.4;
+        Tue, 17 Mar 2020 03:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2bvQoM7fTBjp0klcuiM54Wdtln7AcxQr31yym9z34dg=;
-        b=MZDRgS4BaT0SU4IYSBvCwUz5CUebXUPcrF+pOqrlQ1nhj3L6353fbCQP8jVC8mCPoM
-         If2LSZ8A1bUp6I1JalHYrMfCENCwipMZawDM3C9DxuEvV2bOreSnHD4oq5016l48hXvd
-         YBEq1jmeL7JcsMdn1Aiel7r7H6xkrbU4IoBKDGPRfUcNbWF5dpCJXyge6KD889Qvzcog
-         feNv988Lw6Fj7ZZ1AqjZQ/hRPBcmFU+WvZ+OiyVIdU8yYLhyCE8KAsp8KJSBdZL0JiZ4
-         gNwDURP5LVtLbziVRCqlTW+LOJPwTJVmDHi++ePSEnUbwOEOdMbJtFOa/h7wiAXm41Ux
-         GeHw==
+        bh=TGItJuz5W+h2gk6C+B6NIbPkvJZ2cZOlOG/P+lQP9D0=;
+        b=JFZQuTgf0ix5GURciyxJzWH0sf14opuwqmkI7yvs/F5Adnfkifh53/Erfv3MQTmy9/
+         9GQY7KikuoGDq/yCVcBDkdMFy3/kh7ZhPUiHw2lGonWtoSOaIFA2KhsqhfzSlN2rPWfG
+         IlXWiOriBmkqXsDsZNrFxijHgX2FRmzOEdxtc1ijrDL2F2M2s4ulfcWlt2AN0AC3diI1
+         s5rjK2JxOg8XUC9PJybzYaqxvBKFukvPzQH/pjfB1j83zku/E8mskdc33c8vCKAr4aW3
+         inpShlE9qeQPQIWCfAZmUMCh8N/1dztWnZmGKEvsohgeY2GjsUB/kdzujVEVzcqlx22+
+         fqug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=2bvQoM7fTBjp0klcuiM54Wdtln7AcxQr31yym9z34dg=;
-        b=oqz9q7TsVX8ClG9rVUO6zjnMQFEx68OcULKohhUgaHsSzLBLIULQmIJdzLvA0989zW
-         uZJcmclAwTJUjehQNm8AGYZ49GPMKPGHTqKd9Mf2rjzD1MDu7kQobzdaBzOJ+BvS5wTp
-         J0ehO30DDq2Eyzz1H6tl4FFMJIOJOKgRCi2toLDlVF0Axrr13ptCmrMng/WgEv+KZuau
-         aObzfRHsgbOLZBfAGDrA8d9LHDrHK2R79gR3tn7Oduf5CKPwu/rMBtulrrwyBB9E7RN6
-         fZclOY0O/Jo3V2fHYN5d7kD2PmVvD0zf7V3SCTpf3fc4225wbW8W0ue09pvTyt735grP
-         lJsw==
-X-Gm-Message-State: ANhLgQ1RQ1GieUyHt0PopgEYvldXXklcc5EIoLQgRllkJMxahkDl6FcO
-        50SHwU4taBXuqJ9QFRqp51s=
-X-Google-Smtp-Source: ADFU+vvszzeoWJVd3TcHDvI8WAFElfYnQkMXm+roHZR329HPbNexz7N9xlKt3WDG1FhhpHxuuB7jgA==
-X-Received: by 2002:a2e:5844:: with SMTP id x4mr2279916ljd.40.1584440413435;
-        Tue, 17 Mar 2020 03:20:13 -0700 (PDT)
+        bh=TGItJuz5W+h2gk6C+B6NIbPkvJZ2cZOlOG/P+lQP9D0=;
+        b=pRlI8iDs6zOLA37RwfCzEUFVOvcgD1In9nz7Rf3fQtQZjO4/Q5Kr8PYk8TzE6ww234
+         ZJaQA+8hSShRH4Ejb3qaGLDpaJX58OcnCeQQgMRkrL9wilG/LBMcEHkfzVt+Ck62HkcS
+         GQbnMAel5TS+9lVZ8Be/d99i7n2j+7oaUgk5P8dyVN5kkfyxLSNxyiHa3e1keka8KN28
+         xfjpC7yKhDcmnPvAPM6vcYfDkGaAivzJknt++Q8ShPjZ6l4t8QP9bAZeaUfm6nAc3t48
+         aze5etRThvTCa3MDfxkhf5aEaIIrKC6grNazHakYg8tnHekL9PvNfbAVqWwRkeYZx5Su
+         fTvg==
+X-Gm-Message-State: ANhLgQ25ArdZoLW8dgd1snQ7Gdt7PE8fOIiMoDC6ixSEdqmaDQ4HtWTF
+        G9iDw8uDT26sPSRGJhNuMYk=
+X-Google-Smtp-Source: ADFU+vslGfTWII4zYbs4+SWZVmzcm1asQXYP0xCVtUNvJ3fqgQvjprHgGlIsriWG0xbiU7Nx1gBO4A==
+X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr2423894ljm.248.1584440410561;
+        Tue, 17 Mar 2020 03:20:10 -0700 (PDT)
 Received: from localhost (host-176-37-176-139.la.net.ua. [176.37.176.139])
-        by smtp.gmail.com with ESMTPSA id c20sm2189438lfb.60.2020.03.17.03.20.12
+        by smtp.gmail.com with ESMTPSA id m18sm1956945ljj.52.2020.03.17.03.20.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 03:20:12 -0700 (PDT)
+        Tue, 17 Mar 2020 03:20:10 -0700 (PDT)
 From:   Igor Opaniuk <igor.opaniuk@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
@@ -65,11 +65,12 @@ Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 5/5] input: Dual license file adding MIT
-Date:   Tue, 17 Mar 2020 12:19:47 +0200
-Message-Id: <20200317101947.27250-5-igor.opaniuk@gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 3/5] dt-bindings: gpio: Dual license file adding MIT
+Date:   Tue, 17 Mar 2020 12:19:45 +0200
+Message-Id: <20200317101947.27250-3-igor.opaniuk@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200317101947.27250-1-igor.opaniuk@gmail.com>
 References: <20200317101947.27250-1-igor.opaniuk@gmail.com>
@@ -80,25 +81,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Igor Opaniuk <igor.opaniuk@toradex.com>
 
-Dual license file adding MIT license, which will permit to re-use
-bindings and dependent device tree sources (that include this file
-directly or indirectly via dt-bindings) in other non-GPL OSS projects.
+Dual license files adding MIT license, which will permit to re-use
+bindings and dependent device tree sources in other non-GPL OSS projects.
 
 Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
 ---
 
- include/uapi/linux/input-event-codes.h | 2 +-
+ include/dt-bindings/gpio/gpio.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index 0f1db1cccc3f..2f86c4554721 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
+diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
+index c029467e828b..01c528708208 100644
+--- a/include/dt-bindings/gpio/gpio.h
++++ b/include/dt-bindings/gpio/gpio.h
 @@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note OR MIT */
+-/* SPDX-License-Identifier: GPL-2.0 */
++/* SPDX-License-Identifier: GPL-2.0 OR MIT */
  /*
-  * Input event codes
+  * This header provides constants for most GPIO bindings.
   *
 -- 
 2.17.1
