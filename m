@@ -2,104 +2,102 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A85C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370DDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D627820752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F71C20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rs3av+te"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MWWbI+n7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgCQNE1 (ORCPT
+        id S1726555AbgCQNF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:04:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50220 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQNE1 (ORCPT
+        Tue, 17 Mar 2020 09:05:56 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46199 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726485AbgCQNFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:04:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z13so5302922wml.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:04:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CBpRlvxbCNLYQBl3LHSl0nng0Xdghb8tGGZtN/n8eEA=;
-        b=rs3av+teL5zRUCvHPgx0S8WLpLFXi/rQjT3qB12O1odsCNVyHCow3jyqCTVPz/axhJ
-         eTsPQ2FFB3XvyuO18IXsMrg1ZOKShEWYZ2sfwrkKe1/rEBeGMZlvmRmzO00qhR4zj6Lt
-         CxVsedfjrja6Vj3mpnk+WzAJqZuf8eCOW5m1bsFBkjmhqYzQ8zcyPdu/0ntu6Gny4Y3b
-         vkOYP9nfl+GvFLhGlF6PcTf9LLl3ttKODvTDp0s0Tq2/RtxVr1iM/veBe4d3iehiiz+/
-         j3x4gbNocMZa2mhfNmKBJA6UuF+j0Yfg5Udrl7kPcL90VORPO9nqpXNuC3dYaSeQHR3e
-         NdUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CBpRlvxbCNLYQBl3LHSl0nng0Xdghb8tGGZtN/n8eEA=;
-        b=rMb6h1gLnBy2P3dERxX6N7rvHwIa9Cw0+wzzk2VIXc60Bz+Pndw1G2HkUh+tUCvfXP
-         1Hbr4sqUO+0o6gdqvgknmKPQ1HloIJab7+TznI65z07HRWfIxripz3OsQHJ00O4yZmbB
-         Km8kWv6ySsQ31YW7sVSDIp1IjOUMpSC/FjBYp1bZQ8TQ+BT5RE8Ut+XtP1IdiQulNsyY
-         n1Q3Opup141Ac8aCfYBdiau1p/QP9/VWsls5ENcFigs3vd1TMj6h/L77IkzBXwBF2Jnj
-         HQZKvO9eRY0RCX7IopJ0MNOfzP9DyewaZvHkH7oO3YkcnpBg5XdfyR895tozDsHS0kO0
-         vU6A==
-X-Gm-Message-State: ANhLgQ1c6EYgEV8jooGxZQHwjM2ZyfozApKE9sVrK/vsk7Cly9hMc6ls
-        AwPzE3v+MrdMD6a2Lkpo5pi4Zg==
-X-Google-Smtp-Source: ADFU+vvoAkMzfYgPtp1cZbiMZaoUYcRqXKDAwxi7Sx36tQoZJ/ASy2GDlCOByqHGITcuN6yxlu3RcQ==
-X-Received: by 2002:a1c:6a08:: with SMTP id f8mr5170207wmc.53.1584450264035;
-        Tue, 17 Mar 2020 06:04:24 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id a13sm4566335wrh.80.2020.03.17.06.04.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Mar 2020 06:04:18 -0700 (PDT)
-Subject: Re: [PATCH] soundwire: stream: only change state if needed
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
- <6bc8412a-f6d9-64d1-2218-ca98cfdb31c0@linaro.org>
- <27a73cbd-9418-4488-5cb2-fb21f9fc9110@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <c1e5dc89-a069-a427-4912-89d90ecc0334@linaro.org>
-Date:   Tue, 17 Mar 2020 13:04:17 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 17 Mar 2020 09:05:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584450355; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ZTED8PjW1HwvOigSt/VzJRJKGdN0cV9OXysHgYPS88c=; b=MWWbI+n71j+1qNHdWcto0KIv71U8TrdOR9WK/FUcEx/naSCiwXF1Fva1NX3F2A5ZrM0lP9Py
+ WdQWBDzEJ5LwZPDWmr9zH1dDTsEQF2weBQbfrzhI2qiA88l5gjkpGG+mZUPA7BzRDFOA9rJk
+ +ex3HxLaOzAsP0qGqoVsW92j5KU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e70cb26.7f4eca5d7650-smtp-out-n04;
+ Tue, 17 Mar 2020 13:05:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C4B25C4478F; Tue, 17 Mar 2020 13:05:40 +0000 (UTC)
+Received: from [192.168.0.8] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A2CA6C433CB;
+        Tue, 17 Mar 2020 13:05:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A2CA6C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH 1/2] tty: serial: qcom_geni_serial: No need to stop tx/rx
+ on UART shutdown
+To:     Douglas Anderson <dianders@chromium.org>,
+        gregkh@linuxfoundation.org
+Cc:     mka@chromium.org, swboyd@chromium.org, ryandcase@chromium.org,
+        bjorn.andersson@linaro.org, skakit@codeaurora.org,
+        rojay@codeaurora.org, mgautam@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Doug Anderson <dianders@google.com>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+References: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <ce79643c-e854-a48f-2faf-f405c310a8a7@codeaurora.org>
+Date:   Tue, 17 Mar 2020 18:35:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <27a73cbd-9418-4488-5cb2-fb21f9fc9110@linux.intel.com>
+In-Reply-To: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 3/14/2020 2:16 AM, Douglas Anderson wrote:
+> On a board using qcom_geni_serial I found that I could no longer
+> interact with kdb if I got a crash after the "agetty" running on the
+> same serial port was killed.  This meant that various classes of
+> crashes that happened at reboot time were undebuggable.
+>
+> Reading through the code, I couldn't figure out why qcom_geni_serial
+> felt the need to run so much code at port shutdown time.  All we need
+> to do is disable the interrupt.
+>
+> After I make this change then a hardcoded kgdb_breakpoint in some late
+> shutdown code now allows me to interact with the debugger.  I also
+> could freely close / re-open the port without problems.
+>
+> Fixes: c4f528795d1a ("tty: serial: msm_geni_serial: Add serial driver support for GENI based QUP")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-On 17/03/2020 12:22, Pierre-Louis Bossart wrote:
-> 
-> The change below would be an error case for Intel, so it's probably 
-> better if we go with your suggestion. You have a very specific state 
-> handling due to your power amps and it's probably better to keep it 
-> platform-specific.
+Looks good to me.
 
-Just trying to understand, why would it be error for Intel case?
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
 
-IMO, If stream state is SDW_STREAM_ENABLED that also implicit that its 
-prepared too. Similar thing with SDW_STREAM_DEPREPARED.
-Isn't it?
-
---srini
-
-
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
