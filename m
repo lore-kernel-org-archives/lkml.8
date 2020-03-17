@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098A9C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5541C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41CB20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F41820658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443212;
-	bh=45DlirFLo8yU3lS5UJYsNG3lGxAjB4moTmSJ1ayArYc=;
+	s=default; t=1584443215;
+	bh=TxtH6v93lCviriMgATKOd/9gkT51bsKELkLVIpHu/HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SkREWOiw09TapYOHhXWzwb6UKKm8MMbjFZnk6SDlPzXSI/nZyCdtO0OF7mQpcuoli
-	 UhHWxv3wL2qpy1z1h8yH8hnyPk/iWFAGEY+JqClWdeY0Yd+oDEB0UmpvRXd/TdWHz8
-	 2E516djEc/67nr00/X5QwRulL3xg8UXY/n9RHBxc=
+	b=LP16DZRQOsPGKnRypTgjji/Z5zBG/A271DunISa/WAaDBLW3Jy91B2kpYyYIdg8a0
+	 tFhQfRC9XwPsjpG32fUEbIWmA6wdBCrInnpTCaCboBPxYDNYuW+P9jYL1R4/jsBk7F
+	 RxmJlgWsSxZF+vqznA2i8iZx+0tLrvYrm8Qtjzdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgCQLGv (ORCPT
+        id S1728222AbgCQLGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:06:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48072 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbgCQLGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:06:41 -0400
+        id S1727521AbgCQLGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BE4320719;
-        Tue, 17 Mar 2020 11:06:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ED7A20719;
+        Tue, 17 Mar 2020 11:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443199;
-        bh=45DlirFLo8yU3lS5UJYsNG3lGxAjB4moTmSJ1ayArYc=;
+        s=default; t=1584443203;
+        bh=TxtH6v93lCviriMgATKOd/9gkT51bsKELkLVIpHu/HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wjdF5Mr+Aao/KDyUVMTrg15zUEdXw+cDTLx+1rNvgrGiXBhODEGW89poOT/txo8iV
-         Er/kNJ0wiiyTK7tan+ImVvzDudfUGARviPmCQHsK3R+yZOQhH5i6VRKPt/XS6X467M
-         ciN1rTzFsUgh3kZeXt7v2UhosQm/MJ7/vf8Pwpjw=
+        b=ntNfSunRwXZ8uWS4oaI0YA6K69RmptN3+99r11c2diru/vtLBQvZG90hkA2uA/5C7
+         Gg9d8YropWvuMR7Q2qD7UinhC1kIBPEMdRPoCvz2SrzNrIBk9/HZOwYN2OIqGf9Bfb
+         dnNUtUKee7uOkIZ3MWj9oDCF2ku9kLGS0WaHcNjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.4 120/123] iommu/amd: Fix IOMMU AVIC not properly update the is_run bit in IRTE
-Date:   Tue, 17 Mar 2020 11:55:47 +0100
-Message-Id: <20200317103319.548056967@linuxfoundation.org>
+        stable@vger.kernel.org, Tommi Rantala <tommi.t.rantala@nokia.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.4 111/123] perf bench futex-wake: Restore thread count default to online CPU count
+Date:   Tue, 17 Mar 2020 11:55:38 +0100
+Message-Id: <20200317103318.804053407@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,50 +67,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Tommi Rantala <tommi.t.rantala@nokia.com>
 
-commit 730ad0ede130015a773229573559e97ba0943065 upstream.
+commit f649bd9dd5d5004543bbc3c50b829577b49f5d75 upstream.
 
-Commit b9c6ff94e43a ("iommu/amd: Re-factor guest virtual APIC
-(de-)activation code") accidentally left out the ir_data pointer when
-calling modity_irte_ga(), which causes the function amd_iommu_update_ga()
-to return prematurely due to struct amd_ir_data.ref is NULL and
-the "is_run" bit of IRTE does not get updated properly.
+Since commit 3b2323c2c1c4 ("perf bench futex: Use cpumaps") the default
+number of threads the benchmark uses got changed from number of online
+CPUs to zero:
 
-This results in bad I/O performance since IOMMU AVIC always generate GA Log
-entry and notify IOMMU driver and KVM when it receives interrupt from the
-PCI pass-through device instead of directly inject interrupt to the vCPU.
+  $ perf bench futex wake
+  # Running 'futex/wake' benchmark:
+  Run summary [PID 15930]: blocking on 0 threads (at [private] futex 0x558b8ee4bfac), waking up 1 at a time.
+  [Run 1]: Wokeup 0 of 0 threads in 0.0000 ms
+  [...]
+  [Run 10]: Wokeup 0 of 0 threads in 0.0000 ms
+  Wokeup 0 of 0 threads in 0.0004 ms (+-40.82%)
 
-Fixes by passing ir_data when calling modify_irte_ga() as done previously.
+Restore the old behavior by grabbing the number of online CPUs via
+cpu->nr:
 
-Fixes: b9c6ff94e43a ("iommu/amd: Re-factor guest virtual APIC (de-)activation code")
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+  $ perf bench futex wake
+  # Running 'futex/wake' benchmark:
+  Run summary [PID 18356]: blocking on 8 threads (at [private] futex 0xb3e62c), waking up 1 at a time.
+  [Run 1]: Wokeup 8 of 8 threads in 0.0260 ms
+  [...]
+  [Run 10]: Wokeup 8 of 8 threads in 0.0270 ms
+  Wokeup 8 of 8 threads in 0.0419 ms (+-24.35%)
+
+Fixes: 3b2323c2c1c4 ("perf bench futex: Use cpumaps")
+Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/20200305083714.9381-3-tommi.t.rantala@nokia.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/amd_iommu.c |    4 ++--
+ tools/perf/bench/futex-wake.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -4421,7 +4421,7 @@ int amd_iommu_activate_guest_mode(void *
- 	entry->lo.fields_vapic.ga_tag      = ir_data->ga_tag;
+--- a/tools/perf/bench/futex-wake.c
++++ b/tools/perf/bench/futex-wake.c
+@@ -43,7 +43,7 @@ static bool done = false, silent = false
+ static pthread_mutex_t thread_lock;
+ static pthread_cond_t thread_parent, thread_worker;
+ static struct stats waketime_stats, wakeup_stats;
+-static unsigned int ncpus, threads_starting, nthreads = 0;
++static unsigned int threads_starting, nthreads = 0;
+ static int futex_flag = 0;
  
- 	return modify_irte_ga(ir_data->irq_2_irte.devid,
--			      ir_data->irq_2_irte.index, entry, NULL);
-+			      ir_data->irq_2_irte.index, entry, ir_data);
- }
- EXPORT_SYMBOL(amd_iommu_activate_guest_mode);
+ static const struct option options[] = {
+@@ -141,7 +141,7 @@ int bench_futex_wake(int argc, const cha
+ 	sigaction(SIGINT, &act, NULL);
  
-@@ -4447,7 +4447,7 @@ int amd_iommu_deactivate_guest_mode(void
- 				APICID_TO_IRTE_DEST_HI(cfg->dest_apicid);
+ 	if (!nthreads)
+-		nthreads = ncpus;
++		nthreads = cpu->nr;
  
- 	return modify_irte_ga(ir_data->irq_2_irte.devid,
--			      ir_data->irq_2_irte.index, entry, NULL);
-+			      ir_data->irq_2_irte.index, entry, ir_data);
- }
- EXPORT_SYMBOL(amd_iommu_deactivate_guest_mode);
- 
+ 	worker = calloc(nthreads, sizeof(*worker));
+ 	if (!worker)
 
 
