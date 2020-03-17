@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61ECC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9154DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6A620738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2FE20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UEcdXctH"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QQaAIi6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgCQOny (ORCPT
+        id S1727137AbgCQOo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:43:54 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:45921 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgCQOnu (ORCPT
+        Tue, 17 Mar 2020 10:44:29 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:40359 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbgCQOnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:43:50 -0400
+        Tue, 17 Mar 2020 10:43:53 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200317144348euoutp011cf8ecdc71ecb9673c3a4851eee76c48~9HoubDW-Z2336923369euoutp01E
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 14:43:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200317144348euoutp011cf8ecdc71ecb9673c3a4851eee76c48~9HoubDW-Z2336923369euoutp01E
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200317144352euoutp02bf7bff6703edfc5510f0249772bd8df2~9HoxYp4Wa1583015830euoutp02G
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 14:43:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200317144352euoutp02bf7bff6703edfc5510f0249772bd8df2~9HoxYp4Wa1583015830euoutp02G
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584456228;
-        bh=Zt5dZyRSh0h2WkEyTuKME9bSUAZq7YPuiOv8QeN7Rww=;
+        s=mail20170921; t=1584456232;
+        bh=xWD0eKXRUt8GfRBQc6yizp5EATCbxvvTFgPTowSCZeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UEcdXctHO16DPt9b/rTuyXR+tzCfZuxtgGoGCjlR6vrlaDMp0tgoMkV7VPWJEncVq
-         4R55Zo5uSsYaxgPvg4QJ9QJxFNv12yGM71i7Z9KxMWZsNZlBpRebz7pKHTmL+rl3m7
-         9sqTwuriHl/2I9fpFXTqBCgsJOwBs6iPhGSwMBiQ=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200317144348eucas1p2994982b7ae142e337a8de1157ea699bb~9HouJxOjX2984729847eucas1p22;
-        Tue, 17 Mar 2020 14:43:48 +0000 (GMT)
+        b=QQaAIi6Ixg9XCAOn5xUoe2e4Ky0dPVa/L/5oE7lAOfOQpKB+Rda8BOBw8nuZ4SQ1A
+         XzhcCfzc05FzjgUJmzb4yAtYZQCeWDEcReSR6Gyz005Qcc8aCkyf44Wd6v32yn01kq
+         xzyLKQe6cY0W3/NwjnOvpO/Q/7gSopBbhbVPaBy8=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200317144351eucas1p1544f0b649b717b9b34c61942c369f699~9HoxCoKs-1084010840eucas1p1b;
+        Tue, 17 Mar 2020 14:43:51 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id E3.E9.60698.422E07E5; Tue, 17
-        Mar 2020 14:43:48 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B4.E3.61286.722E07E5; Tue, 17
+        Mar 2020 14:43:51 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200317144348eucas1p14ad861316b19edaf885a52f9beb5dd2a~9Hotr6VuJ1084410844eucas1p1V;
-        Tue, 17 Mar 2020 14:43:48 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200317144348eusmtrp286d31294178a2c49772d9e087e286d29~9HotrVeVN0146401464eusmtrp2P;
-        Tue, 17 Mar 2020 14:43:48 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-ed-5e70e224ffd4
+        20200317144351eucas1p1d8d18236e6729d0bf21737a4296f56d7~9How1UvhC1085710857eucas1p1L;
+        Tue, 17 Mar 2020 14:43:51 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200317144351eusmtrp17a10275e6375f96d5b310ae74f37d793~9How0sfnl0867908679eusmtrp1u;
+        Tue, 17 Mar 2020 14:43:51 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-3c-5e70e2276f99
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3C.23.07950.322E07E5; Tue, 17
-        Mar 2020 14:43:48 +0000 (GMT)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 53.E4.08375.722E07E5; Tue, 17
+        Mar 2020 14:43:51 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200317144347eusmtip1c29e405f20cf87b0b2eee65e5b1357b4~9HotNaOaA0962809628eusmtip1P;
-        Tue, 17 Mar 2020 14:43:47 +0000 (GMT)
+        20200317144350eusmtip19edc1c274a340eef9ab91ed5db7a5b09~9HowWesoS0453304533eusmtip1j;
+        Tue, 17 Mar 2020 14:43:50 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Michael Schmitz <schmitzmic@gmail.com>,
@@ -64,84 +64,232 @@ Cc:     Michael Schmitz <schmitzmic@gmail.com>,
         Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
         linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
         b.zolnierkie@samsung.com
-Subject: [PATCH v4 14/27] ata: let compiler optimize out
- ata_dev_config_ncq() on non-SATA hosts
-Date:   Tue, 17 Mar 2020 15:43:20 +0100
-Message-Id: <20200317144333.2904-15-b.zolnierkie@samsung.com>
+Subject: [PATCH v4 21/27] ata: move ata_qc_complete_multiple() to
+ libata-sata.c
+Date:   Tue, 17 Mar 2020 15:43:27 +0100
+Message-Id: <20200317144333.2904-22-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317144333.2904-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djP87oqjwriDGbNkLFYfbefzWLjjPWs
-        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
-        eOy+2cDm0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBlv7nayFXxkr9h3yLaBcR5bFyMnh4SA
-        icSGN+tYuhi5OIQEVjBKHL67mB3C+cIosbjtHyuE85lRYv2mBUBlHGAt/Q8MIeLLGSVmX7jM
-        CNdxYvlzJpC5bAJWEhPbVzGC2CICChI9v1eygRQxC7xnlFgxaS8LSEJYIFFi246JYEUsAqoS
-        Dy4vZAaxeQVsJaYceQZ1oLzE1m+fWEFsTqD4tcP/2CBqBCVOznwCNocZqKZ562xmkAUSAovY
-        JXpPbmeCaHaReHpwPjuELSzx6vgWKFtG4v/O+UwQDesYJf52vIDq3s4osXzyP6jV1hJ3zv1i
-        A3maWUBTYv0ufYiwo8SNQ6/YIWHBJ3HjrSDEEXwSk7ZNZ4YI80p0tAlBVKtJbFi2gQ1mbdfO
-        lcwQtofE99cfWCcwKs5C8s4sJO/MQti7gJF5FaN4amlxbnpqsXFearlecWJucWleul5yfu4m
-        RmAiOv3v+NcdjPv+JB1iFOBgVOLhTdhUECfEmlhWXJl7iFGCg1lJhHdxYX6cEG9KYmVValF+
-        fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NTC1KLYLJMHJxSDYz8UauU3u9dV/tZcvmLox+M
-        vwe/CLjcXVjEvOl1l1robUvNh48CJi9terSh8OIcPoFfZzbd5jhyb17IoWd34/82XZ0/76//
-        1fy6I2tzcuo/OU9NrjKueqNvN3tqs0lnn8cR4QN67ut3J/8oXcJ0bu+lYyfYxBh92OLcVl5r
-        6pu7iSF8nskRYZ/9SizFGYmGWsxFxYkArAwXikADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsVy+t/xu7oqjwriDBb1MFmsvtvPZrFxxnpW
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djP87rqjwriDFqeq1msvtvPZrFxxnpW
         i2e39jJZrFx9lMni2I5HTBaXd81hs1j+ZC2zxdzW6ewOHB47Z91l97h8ttTj0OEORo+Trd9Y
-        PHbfbGDz6NuyitHj8ya5APYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9
-        O5uU1JzMstQifbsEvYw3dzvZCj6yV+w7ZNvAOI+ti5GDQ0LARKL/gWEXIxeHkMBSRontj25C
-        xWUkjq8v62LkBDKFJf5c62KDqPnEKNF4eBorSIJNwEpiYvsqRhBbREBBouf3SrAiZoGvjBJL
-        J3UzgySEBeIlLrf/ZwGxWQRUJR5cXggW5xWwlZhy5BkbxAZ5ia3fPoEN5QSKXzv8DywuJGAj
-        8eLNfyaIekGJkzOfgM1hBqpv3jqbeQKjwCwkqVlIUgsYmVYxiqSWFuem5xYb6RUn5haX5qXr
-        JefnbmIERsu2Yz+37GDsehd8iFGAg1GJh5djQ0GcEGtiWXFl7iFGCQ5mJRHexYX5cUK8KYmV
-        ValF+fFFpTmpxYcYTYGemMgsJZqcD4zkvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZ
-        qakFqUUwfUwcnFINjFq5k3TWM904tsxcpqTiSaUAu5nPz71T/swoYIoNPbuG2Z0n2X39vp/W
-        E60mbTCKS1E1l9bsPFcWsXVeTyJzYdSRZ+9nBT1oi1ygnVK+eM5z13vOXffcMxVFEkz+uc2f
-        sF8o+NTVwi/pjXO/BpW+/2kcefzE8mXHjySF9pQ+kpINuF668KB9vxJLcUaioRZzUXEiAHii
-        HfGsAgAA
-X-CMS-MailID: 20200317144348eucas1p14ad861316b19edaf885a52f9beb5dd2a
+        PHbfbGDz6NuyitHj8ya5APYoLpuU1JzMstQifbsErow53ZOYCqbrVzw5dI6lgXGKWhcjJ4eE
+        gIlEd/sqli5GLg4hgRWMEjO3zGKCcL4AOXd/sEM4nxklpm1awAzTsvDdJFaIxHJGieMzjjHD
+        tWxv+AxWxSZgJTGxfRUjiC0ioCDR83slG0gRs8B7RokVk/aygCSEBQIldm1dADSKg4NFQFXi
+        0S0wk1fAVmL2ljqIZfISW799YgWxOYHC1w7/YwOxeQUEJU7OfAI2hRmopnnrbLAbJATWsUt8
+        2z2bDaLZReLJ5x4mCFtY4tXxLewQtozE6ck9LFANjBJ/O15AdW9nlFg++R9Ut7XEnXO/2EAu
+        YhbQlFi/Sx8i7CjRdnERWFhCgE/ixltBiCP4JCZtm84MEeaV6GgTgqhWk9iwbAMbzNqunSuh
+        geghsbt3I/sERsVZSN6ZheSdWQh7FzAyr2IUTy0tzk1PLTbMSy3XK07MLS7NS9dLzs/dxAhM
+        RKf/Hf+0g/HrpaRDjAIcjEo8vBwbCuKEWBPLiitzDzFKcDArifAuLsyPE+JNSaysSi3Kjy8q
+        zUktPsQozcGiJM5rvOhlrJBAemJJanZqakFqEUyWiYNTqoHRQk3YNj7Fy6mFc7Mtw7Z9WnEc
+        l/yO8/4V5Jge+cwrfNflly1LWAsWyP/+9HYnl+9brUo71e5zHxvNov4t4jt1vexztOcEB7Ft
+        V4+e/XhKLF3U/9LPSztDCn+bFLK4dssu+mClEc1ZIKGzN8+3MJ5pV0D67sD85X0OXVvmirh8
+        Kv0YpPDdWlWJpTgj0VCLuag4EQDKjhPEQAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsVy+t/xu7rqjwriDK7PE7NYfbefzWLjjPWs
+        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
+        eOy+2cDm0bdlFaPH501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6
+        djYpqTmZZalF+nYJehlzuicxFUzXr3hy6BxLA+MUtS5GTg4JAROJhe8msXYxcnEICSxllDi3
+        YT9TFyMHUEJG4vj6MogaYYk/17rYIGo+MUpcbb7JApJgE7CSmNi+ihHEFhFQkOj5vRKsiFng
+        K6PE0kndzCAJYQF/iRUfbzODDGURUJV4dIsVxOQVsJWYvaUOYr68xNZvn1hBbE6g8LXD/9hA
+        bCEBG4kXb/4zgdi8AoISJ2c+AVvLDFTfvHU28wRGgVlIUrOQpBYwMq1iFEktLc5Nzy021CtO
+        zC0uzUvXS87P3cQIjJZtx35u3sF4aWPwIUYBDkYlHl6ODQVxQqyJZcWVuYcYJTiYlUR4Fxfm
+        xwnxpiRWVqUW5ccXleakFh9iNAV6YSKzlGhyPjCS80riDU0NzS0sDc2NzY3NLJTEeTsEDsYI
+        CaQnlqRmp6YWpBbB9DFxcEo1MMbYP326oSyidXVs3U9epqUNB/ce3+F9oHvrMfXvnw09udpv
+        v4qQvHit7Mt9zpjIPskrH90KZ5yN++G0bw0HW3r2k9+tN11eRkziPfd1twub7YnmuVlHDfvf
+        bdWZ1LD8Z/PZ0y1b9badmTW9VL05zZrXyX9uU8Ht+IsT+C9vUJdYEBkisWfpZX0lluKMREMt
+        5qLiRABtLb6hrAIAAA==
+X-CMS-MailID: 20200317144351eucas1p1d8d18236e6729d0bf21737a4296f56d7
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200317144348eucas1p14ad861316b19edaf885a52f9beb5dd2a
+X-RootMTR: 20200317144351eucas1p1d8d18236e6729d0bf21737a4296f56d7
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200317144348eucas1p14ad861316b19edaf885a52f9beb5dd2a
+X-CMS-RootMailID: 20200317144351eucas1p1d8d18236e6729d0bf21737a4296f56d7
 References: <20200317144333.2904-1-b.zolnierkie@samsung.com>
-        <CGME20200317144348eucas1p14ad861316b19edaf885a52f9beb5dd2a@eucas1p1.samsung.com>
+        <CGME20200317144351eucas1p1d8d18236e6729d0bf21737a4296f56d7@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add !IS_ENABLED(CONFIG_SATA_HOST) to ata_dev_config_ncq() to allow
-compiler to optimize out the function for non-SATA configs.
+* move ata_qc_complete_multiple() to libata-sata.c
 
 Code size savings on m68k arch using (modified) atari_defconfig:
 
    text    data     bss     dec     hex filename
 before:
-  37582     572      40   38194    9532 drivers/ata/libata-core.o
+  32559     572      40   33171    8193 drivers/ata/libata-core.o
 after:
-  36462     572      40   37074    90d2 drivers/ata/libata-core.o
+  32162     572      40   32774    8006 drivers/ata/libata-core.o
 
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/ata/libata-core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/ata/libata-core.c | 59 ---------------------------------------
+ drivers/ata/libata-sata.c | 59 +++++++++++++++++++++++++++++++++++++++
+ include/linux/libata.h    |  2 +-
+ 3 files changed, 60 insertions(+), 60 deletions(-)
 
 diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index f88fa4db2cab..fa1fd0735321 100644
+index 1879072419fe..d246bc1e08c9 100644
 --- a/drivers/ata/libata-core.c
 +++ b/drivers/ata/libata-core.c
-@@ -2301,6 +2301,8 @@ static int ata_dev_config_ncq(struct ata_device *dev,
- 		desc[0] = '\0';
- 		return 0;
- 	}
-+	if (!IS_ENABLED(CONFIG_SATA_HOST))
-+		return 0;
- 	if (dev->horkage & ATA_HORKAGE_NONCQ) {
- 		snprintf(desc, desc_sz, "NCQ (not used)");
- 		return 0;
+@@ -4757,65 +4757,6 @@ u64 ata_qc_get_active(struct ata_port *ap)
+ }
+ EXPORT_SYMBOL_GPL(ata_qc_get_active);
+ 
+-/**
+- *	ata_qc_complete_multiple - Complete multiple qcs successfully
+- *	@ap: port in question
+- *	@qc_active: new qc_active mask
+- *
+- *	Complete in-flight commands.  This functions is meant to be
+- *	called from low-level driver's interrupt routine to complete
+- *	requests normally.  ap->qc_active and @qc_active is compared
+- *	and commands are completed accordingly.
+- *
+- *	Always use this function when completing multiple NCQ commands
+- *	from IRQ handlers instead of calling ata_qc_complete()
+- *	multiple times to keep IRQ expect status properly in sync.
+- *
+- *	LOCKING:
+- *	spin_lock_irqsave(host lock)
+- *
+- *	RETURNS:
+- *	Number of completed commands on success, -errno otherwise.
+- */
+-int ata_qc_complete_multiple(struct ata_port *ap, u64 qc_active)
+-{
+-	u64 done_mask, ap_qc_active = ap->qc_active;
+-	int nr_done = 0;
+-
+-	/*
+-	 * If the internal tag is set on ap->qc_active, then we care about
+-	 * bit0 on the passed in qc_active mask. Move that bit up to match
+-	 * the internal tag.
+-	 */
+-	if (ap_qc_active & (1ULL << ATA_TAG_INTERNAL)) {
+-		qc_active |= (qc_active & 0x01) << ATA_TAG_INTERNAL;
+-		qc_active ^= qc_active & 0x01;
+-	}
+-
+-	done_mask = ap_qc_active ^ qc_active;
+-
+-	if (unlikely(done_mask & qc_active)) {
+-		ata_port_err(ap, "illegal qc_active transition (%08llx->%08llx)\n",
+-			     ap->qc_active, qc_active);
+-		return -EINVAL;
+-	}
+-
+-	while (done_mask) {
+-		struct ata_queued_cmd *qc;
+-		unsigned int tag = __ffs64(done_mask);
+-
+-		qc = ata_qc_from_tag(ap, tag);
+-		if (qc) {
+-			ata_qc_complete(qc);
+-			nr_done++;
+-		}
+-		done_mask &= ~(1ULL << tag);
+-	}
+-
+-	return nr_done;
+-}
+-EXPORT_SYMBOL_GPL(ata_qc_complete_multiple);
+-
+ /**
+  *	ata_qc_issue - issue taskfile to device
+  *	@qc: command to issue to device
+diff --git a/drivers/ata/libata-sata.c b/drivers/ata/libata-sata.c
+index ccd60f71ca31..57344f87b4e0 100644
+--- a/drivers/ata/libata-sata.c
++++ b/drivers/ata/libata-sata.c
+@@ -600,6 +600,65 @@ int sata_link_hardreset(struct ata_link *link, const unsigned long *timing,
+ }
+ EXPORT_SYMBOL_GPL(sata_link_hardreset);
+ 
++/**
++ *	ata_qc_complete_multiple - Complete multiple qcs successfully
++ *	@ap: port in question
++ *	@qc_active: new qc_active mask
++ *
++ *	Complete in-flight commands.  This functions is meant to be
++ *	called from low-level driver's interrupt routine to complete
++ *	requests normally.  ap->qc_active and @qc_active is compared
++ *	and commands are completed accordingly.
++ *
++ *	Always use this function when completing multiple NCQ commands
++ *	from IRQ handlers instead of calling ata_qc_complete()
++ *	multiple times to keep IRQ expect status properly in sync.
++ *
++ *	LOCKING:
++ *	spin_lock_irqsave(host lock)
++ *
++ *	RETURNS:
++ *	Number of completed commands on success, -errno otherwise.
++ */
++int ata_qc_complete_multiple(struct ata_port *ap, u64 qc_active)
++{
++	u64 done_mask, ap_qc_active = ap->qc_active;
++	int nr_done = 0;
++
++	/*
++	 * If the internal tag is set on ap->qc_active, then we care about
++	 * bit0 on the passed in qc_active mask. Move that bit up to match
++	 * the internal tag.
++	 */
++	if (ap_qc_active & (1ULL << ATA_TAG_INTERNAL)) {
++		qc_active |= (qc_active & 0x01) << ATA_TAG_INTERNAL;
++		qc_active ^= qc_active & 0x01;
++	}
++
++	done_mask = ap_qc_active ^ qc_active;
++
++	if (unlikely(done_mask & qc_active)) {
++		ata_port_err(ap, "illegal qc_active transition (%08llx->%08llx)\n",
++			     ap->qc_active, qc_active);
++		return -EINVAL;
++	}
++
++	while (done_mask) {
++		struct ata_queued_cmd *qc;
++		unsigned int tag = __ffs64(done_mask);
++
++		qc = ata_qc_from_tag(ap, tag);
++		if (qc) {
++			ata_qc_complete(qc);
++			nr_done++;
++		}
++		done_mask &= ~(1ULL << tag);
++	}
++
++	return nr_done;
++}
++EXPORT_SYMBOL_GPL(ata_qc_complete_multiple);
++
+ /**
+  *	ata_slave_link_init - initialize slave link
+  *	@ap: port to initialize slave link for
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index ecee9544fb86..d9cb7768fb64 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1157,7 +1157,6 @@ extern void ata_id_c_string(const u16 *id, unsigned char *s,
+ extern unsigned int ata_do_dev_read_id(struct ata_device *dev,
+ 					struct ata_taskfile *tf, u16 *id);
+ extern void ata_qc_complete(struct ata_queued_cmd *qc);
+-extern int ata_qc_complete_multiple(struct ata_port *ap, u64 qc_active);
+ extern u64 ata_qc_get_active(struct ata_port *ap);
+ extern void ata_scsi_simulate(struct ata_device *dev, struct scsi_cmnd *cmd);
+ extern int ata_std_bios_param(struct scsi_device *sdev,
+@@ -1234,6 +1233,7 @@ extern int ata_slave_link_init(struct ata_port *ap);
+ extern void ata_tf_to_fis(const struct ata_taskfile *tf,
+                          u8 pmp, int is_cmd, u8 *fis);
+ extern void ata_tf_from_fis(const u8 *fis, struct ata_taskfile *tf);
++extern int ata_qc_complete_multiple(struct ata_port *ap, u64 qc_active);
+ extern bool sata_lpm_ignore_phy_events(struct ata_link *link);
+ 
+ extern int ata_cable_40wire(struct ata_port *ap);
 -- 
 2.24.1
 
