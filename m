@@ -2,244 +2,89 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6DBC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECB1C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446AF206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E635206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="US6nfTBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgCQOa6 (ORCPT
+        id S1726616AbgCQOcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:30:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:39004 "EHLO foss.arm.com"
+        Tue, 17 Mar 2020 10:32:21 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:20280 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgCQOa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:30:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 430DA30E;
-        Tue, 17 Mar 2020 07:30:57 -0700 (PDT)
-Received: from e105550-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC5F23F534;
-        Tue, 17 Mar 2020 07:30:55 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 14:30:53 +0000
-From:   Morten Rasmussen <morten.rasmussen@arm.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
-Message-ID: <20200317143053.GF10914@e105550-lin.cambridge.arm.com>
-References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
- <CAKfTPtAqeHhVCeSgE1DsaGGkM6nY-9oAvGw_6zWvv1bKyE85JQ@mail.gmail.com>
- <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
- <20200317075607.GE10914@e105550-lin.cambridge.arm.com>
- <3520b762-08f5-0db8-30cb-372709188bb9@linaro.org>
+        id S1726112AbgCQOcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:32:21 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48hbGp2Myqz9twyk;
+        Tue, 17 Mar 2020 15:32:18 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=US6nfTBu; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id c1UWuinpgQZT; Tue, 17 Mar 2020 15:32:18 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48hbGp1KpQz9twyh;
+        Tue, 17 Mar 2020 15:32:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1584455538; bh=bX1yuayzkqQCh7QXBiCahWrCtVLSJrNkqvO8rDQsSl0=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=US6nfTBuSRELLFhdu4NSwzzs3rYkHQ1yEkdecUxO1JwarfvNlrNHF1o4xKJdS+dyT
+         YBRwJFt75bbnykm1FsOCrmYff5sbZHF10MaV8z4xMAqrf1bx+d1OpxZIBmzufDlDDM
+         FCOGs5p8GG7qqhS8aCtYK+zt44O2xAfu44dlgjn0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7DC778B7B7;
+        Tue, 17 Mar 2020 15:32:19 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id wV8daE2ZbZ1O; Tue, 17 Mar 2020 15:32:19 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 421538B7BB;
+        Tue, 17 Mar 2020 15:32:18 +0100 (CET)
+Subject: Re: [PATCH v1 46/46] powerpc/32s: Implement dedicated
+ kasan_init_region()
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <cover.1584360343.git.christophe.leroy@c-s.fr>
+ <165be4c0f0ba674846a244edf9e1116b832d3bfb.1584360344.git.christophe.leroy@c-s.fr>
+Message-ID: <c5baf3ce-1c0e-d779-acff-56767b72248a@c-s.fr>
+Date:   Tue, 17 Mar 2020 15:32:04 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3520b762-08f5-0db8-30cb-372709188bb9@linaro.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <165be4c0f0ba674846a244edf9e1116b832d3bfb.1584360344.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 02:48:51PM +0100, Daniel Lezcano wrote:
-> 
-> Hi Morten,
-> 
-> On 17/03/2020 08:56, Morten Rasmussen wrote:
-> > Hi Daniel,
-> > 
-> > First, I think letting the scheduler know about desired minimum idle
-> > times is an interesting optimization if the overhead can be kept at a
-> > minimum. I do have a few comments about the patch though.
-> > 
-> > On Thu, Mar 12, 2020 at 11:04:19AM +0100, Daniel Lezcano wrote:
-> >> On 12/03/2020 09:36, Vincent Guittot wrote:
-> >>> Hi Daniel,
-> >>>
-> >>> On Wed, 11 Mar 2020 at 21:28, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
-> >>>>
-> >>>> In the idle CPU selection process occuring in the slow path via the
-> >>>> find_idlest_group_cpu() function, we pick up in priority an idle CPU
-> >>>> with the shallowest idle state otherwise we fall back to the least
-> >>>> loaded CPU.
-> >>>
-> >>> The idea makes sense but this path is only used by fork and exec so
-> >>> I'm not sure about the real impact
-> >>
-> >> I agree the fork / exec path is called much less often than the wake
-> >> path but it makes more sense for the decision.
-> > 
-> > Looking at the flow in find_idlest_cpu(), AFAICT,
-> > find_idlest_group_cpu() is not actually making the final choice of CPU,
-> > so going through a lot of trouble there looking at idle states is
-> > pointless. Is there something I don't see?
-> > 
-> > We fellow sd->child until groups == CPUs which which means that
-> > find_idlest_group() actually makes the final choice as the final group
-> > passed to find_idlest_group_cpu() is single-CPU group. The flow has been
-> > like that for years. Even before you added the initial idle-state
-> > awareness.
-> > 
-> > I agree with Vincent, if this should really make a difference it should
-> > include wake-ups existing tasks too. Although I'm aware it would be a
-> > more invasive change. As said from the beginning, the idea is fine, but
-> > the current implementation should not make any measurable difference?
-> 
-> I'm seeing the wake-ups path so sensitive, I'm not comfortable to do any
-> changes in it. That is the reason why the patch only changes the slow path.
 
-Right. I'm not against being cautious at all. It would be interesting to
-evaluate how bad it really is. The extra time-stamping business cost is
-the same, so it really down how much we dare to use the information in
-the fast-path and change the CPU selection policy. And of course, how
-much can be gained by the change.
 
+Le 16/03/2020 à 13:36, Christophe Leroy a écrit :
+> Implement a kasan_init_region() dedicated to book3s/32 that
+> allocates KASAN regions using BATs.
 > 
-> >>>> In order to be more energy efficient but without impacting the
-> >>>> performances, let's use another criteria: the break even deadline.
-> >>>>
-> >>>> At idle time, when we store the idle state the CPU is entering in, we
-> >>>> compute the next deadline where the CPU could be woken up without
-> >>>> spending more energy to sleep.
-> > 
-> > I don't follow the argument that sleeping longer should improve energy
-> > consumption. 
-> 
-> May be it is not explained correctly.
-> 
-> The patch is about selecting a CPU with the smallest break even deadline
-> value. In a group of idle CPUs in the same idle state, we will pick the
-> one with the smallest break even dead line which is the one with the
-> highest probability it already reached its target residency.
-> 
-> It is best effort.
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Indeed. I get what the patch does, I just don't see how the patch
-improves energy efficiency.
+Note that the sparse warning on pmac32_defconfig is definitely a false 
+positive. See details patch 16/46 ("powerpc/mm: Allocate static page 
+tables for fixmap")
 
-> 
-> > The patch doesn't affect the number of idle state
-> > enter/exit cycles, so you spend the amount of energy on those
-> > transitions. The main change is that idle time get spread out, so CPUs
-> > are less likely to be in the process of entering an idle state when they
-> > are asked to wake back up again.
-> > 
-> > Isn't it fair to say that we expect the total number of wake-ups remains
-> > unchanged? Total busy and idle times across all CPUs should remain the
-> > same too? Unless chosen idle-state is changed, which I don't think we
-> > expect either, there should be no net effect on energy? The main benefit
-> > is reduced wake-up latency I think.
-> > 
-> > Regarding chosen idle state, I'm wondering how this patch affects the
-> > cpuidle governor's idle state selection. Could the spreading of wake-ups
-> > trick governor to pick a shallower idle-state for some idle CPUs because
-> > we actively spread wake-ups rather than consolidating them? Just a
-> > thought.
-> 
-> May be I missed the point, why are we spreading the tasks?
-
-Picking the CPU with the smallest break-even time-stamp means you pick
-the CPU that has been idle longest in the shallowest idle-state. If you
-periodically one-shot spawn tasks at a rate which is long enough that
-the shallowest state is the same for several CPUs, you would end up
-picking the least recently used CPU each time effectively spreading the
-wake-ups across all the CPUs in the same state.
-
-Thinking more about it, it might not be a real problem as if one of the
-CPUs suddenly choose a shallower idle-state, it would become the target
-all new tasks from that point onwards.
-
-> We are taking the decision on the same sched domain, no?
-
-I'm not sure I get the relation to the sched_domain?
-
-> 
-> >>>> At the selection process, we use the shallowest CPU but in addition we
-> >>>> choose the one with the minimal break even deadline instead of relying
-> >>>> on the idle_timestamp. When the CPU is idle, the timestamp has less
-> >>>> meaning because the CPU could have wake up and sleep again several times
-> >>>> without exiting the idle loop. In this case the break even deadline is
-> >>>> more relevant as it increases the probability of choosing a CPU which
-> >>>> reached its break even.
-> > 
-> > I guess you could improve the idle time stamping without adding the
-> > break-even time, they don't have to go together?
-> 
-> Yes, we can add the idle start time when entering idle in the
-> cpuidle_enter function which is different from the idle_timestamp which
-> gives the idle task scheduling. I sent a RFC for that [1].
-> 
-> However, each time we would like to inspect the deadline, we will have
-> to compute it, so IMO it makes more sense to pre-compute it when
-> entering idle in addition to the idle start.
-> 
-> [1] https://lkml.org/lkml/2020/3/16/902
-
-Yes, I saw that patch too. Seems to make sense :-)
-
-> 
-> >>>> Tested on:
-> >>>>  - a synquacer 24 cores, 6 sched domains
-> >>>>  - a hikey960 HMP 8 cores, 2 sched domains, with the EAS and energy probe
-> >>>>
-> >>>> sched/perf and messaging does not show a performance regression. Ran
-> >>>> 50 times schbench, adrestia and forkbench.
-> >>>>
-> >>>> The tools described at https://lwn.net/Articles/724935/
-> >>>>
-> >>>>  --------------------------------------------------------------
-> >>>> | Synquacer             | With break even | Without break even |
-> >>>>  --------------------------------------------------------------
-> >>>> | schbench *99.0th      |      14844.8    |         15017.6    |
-> >>>> | adrestia / periodic   |        57.95    |              57    |
-> >>>> | adrestia / single     |         49.3    |            55.4    |
-> >>>>  --------------------------------------------------------------
-> >>>
-> >>> Have you got some figures or cpuidle statistics for the syncquacer ?
-> >>
-> >> No, and we just noticed the syncquacer has a bug in the firmware and
-> >> does not actually go to the idle states.
-> > 
-> > I would also like some statistics to help understanding what actually
-> > changes.
-> > 
-> > I did some measurements on TX2, which only has one idle-state. I don't
-> > see the same trends as you do. adrestia single seems to be most affected
-> > by the patch, but _increases_ with the break_even patch rather than
-> > decrease. I don't trust adrestia too much though as the time resolution
-> > is low on TX2.
-> > 
-> > TX2			tip		break_even
-> > ----------------------------------------------------
-> > adrestia / single	5.21		5.51
-> > adrestia / periodic	5.75		5.67
-> > schbench 99.0th		45465.6		45376.0
-> > hackbench		27.9851		27.9775
-> > 
-> > Notes:
-> > adrestia: Avg of 100 runs: adrestia -l 25000
-> > schbench: Avg of 10 runs: schbench -m16 -t64
-> > hackbench: Avg of 10 runs: hackbench -g 20 -T 256 -l 100000
-> 
-> Thanks for testing. Is that a Jetson TX2 from Nvidia? If that is the
-> case, IIRC, it has some kind of switcher for the CPUs in the firmware, I
-> don't know how that can interact with the testing.
-
-Sorry, I should have been clearer. It is a ThunderX2. 2x 32-core (128
-threads) = 256 HW threads.
-
-Morten
+Christophe
