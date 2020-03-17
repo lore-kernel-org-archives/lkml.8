@@ -2,127 +2,110 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5691EC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9852AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6A420735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584456877;
-	bh=Z2Tr7SHgyJAdHR4e50WA2Y+RgbHkio00wtYGgYjmrXI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QHOke7gBUdKddithjoTY6gWnwNjR0swqJXLCueKkVIDbeq8J4B2fETOZOOOt3Oh11
-	 olXYp1Zc5k2cjFpMgf0OKs+78n/pzLEqcRQDYrqTntltB39uG50rMkWnf9uZlKmV0z
-	 Ql7GSlaPV4lDB2ZneOlyttiT0ilyXBXpGszRE4+w=
+	by mail.kernel.org (Postfix) with ESMTP id 6E80420724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:54:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rb7245Ra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgCQOyd (ORCPT
+        id S1727081AbgCQOyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:54:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgCQOyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:54:31 -0400
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70FA920753;
-        Tue, 17 Mar 2020 14:54:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584456870;
-        bh=Z2Tr7SHgyJAdHR4e50WA2Y+RgbHkio00wtYGgYjmrXI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lh1s79RO7iVtKUEU3KT+kuvlzhdKwwMTsrXtoJSF7HN+ww5IcRzuO757zhsPXQveC
-         Nc3wSDtZzQQN7Umg16gnk4EBFPgbxMQHQR/kTsNY/n7ws8iqjyG1dIeZPxuZ7Hpu2R
-         KEyqc9e+Rjcos+chlF7JUPKIB0s+QJhdJGKtcWtI=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jEDbw-000AMk-KY; Tue, 17 Mar 2020 15:54:28 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 08/17] lib: bitmap.c: get rid of some doc warnings
-Date:   Tue, 17 Mar 2020 15:54:17 +0100
-Message-Id: <ac57e12e0b75cb723597db61296950ce2d6d8577.1584456635.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1584456635.git.mchehab+huawei@kernel.org>
-References: <cover.1584456635.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 17 Mar 2020 10:54:39 -0400
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:52597 "EHLO
+        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbgCQOyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:54:37 -0400
+Received: by mail-wm1-f73.google.com with SMTP id z16so1932252wmi.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 07:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=YnO147Q8BfuYNBKiEQsszIXKG8E9VejO4ffbcq8Gn6s=;
+        b=rb7245Ras6C7y9qgw0zRxUstsDae6mXfHrz3F0GCcwWusok6lOSl/FLtbSXIBAlfAG
+         pU/Gc01TdHjEAD4RfQa/mEescGcs/dwrVlhAnEPTrur54OVdeD9V/IPqXQltBDrIQcAq
+         w5v2wYv0hqb6T+pGK/4MoPsHM2iKQUTFPPDlAjc58y6ffDaiF7ZLFM2RsEHZUuf6TV3y
+         v/cxYLxN3MhtmcqrOWqQIdPF0F4Ryn42SoLljX47Z474bt+Zub1SNNH/dbIRzaEAJTAS
+         clot3+jzM4JYF2HrHvCZTpgXRO97oyhUoguzWKDL/nbP8jQFTPsEnjANlJYJBmR8SHF/
+         1v6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=YnO147Q8BfuYNBKiEQsszIXKG8E9VejO4ffbcq8Gn6s=;
+        b=gT6Uouk2o30BcfZ5B3qSSL7iBTXZcgNorjKOHEJunYi2nv1VmYTIUbjatQzHNkbJ9g
+         Q8e9kuKNSiT5Jd73q00fAj00Mwpq2r/Kb+Axlm2IAWT3KC2x5Q7wWpcl8UdFBL6h66P/
+         n1vDn3mzF8nRD1uD88WwYAFNaS7FXp9ADVwucejsS0HZJBSYa0MGttlgELpSjr+Md6dt
+         d2ChCW43a/PdkaOghD3KJLgc84kMJM+z3KW3s06utjNUPAx+VFpu/112gufURBe8ItkF
+         T0J+tY7KOyJJErc8HoSNlAmKbdGbiX6jmaWjOsuyP2+f1HRJDaMQKk9b4RJVp9afnbv2
+         Ub0A==
+X-Gm-Message-State: ANhLgQ0fkd1IQ4L5GpvF7Qn9xC27v2yrVFD6rusrHdsRTeF25rL+pyxS
+        ez5h+5C7QtIhv09VUdSdM/Ly/w4MY3sFvkXj
+X-Google-Smtp-Source: ADFU+vuk+Yi3YFMcAI8MRlwoyHn7t0KCazaq6gRywdKYSzsiW1YSWh93dqA033BnLe0hih5cIW9z1npcTigPA9W1
+X-Received: by 2002:a05:6000:12c5:: with SMTP id l5mr6163103wrx.134.1584456876192;
+ Tue, 17 Mar 2020 07:54:36 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 15:54:31 +0100
+Message-Id: <6206b80b3810f95bfe1d452de45596609a07b6ea.1584456779.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH USB] usb: raw_gadget: fix compilation warnings in uapi headers
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two ascii art drawings there. Use a block markup tag there
-in order to get rid of those warnings:
+Mark usb_raw_io_flags_valid() and usb_raw_io_flags_zero() as inline to
+fix the following warnings:
 
-	./lib/bitmap.c:189: WARNING: Unexpected indentation.
-	./lib/bitmap.c:190: WARNING: Block quote ends without a blank line; unexpected unindent.
-	./lib/bitmap.c:190: WARNING: Unexpected indentation.
-	./lib/bitmap.c:191: WARNING: Line block ends without a blank line.
+./usr/include/linux/usb/raw_gadget.h:69:12: warning: unused function 'usb_raw_io_flags_valid' [-Wunused-function]
+./usr/include/linux/usb/raw_gadget.h:74:12: warning: unused function 'usb_raw_io_flags_zero' [-Wunused-function]
 
-It should be noticed that there's actually a syntax violation
-right now, as something like:
-
-	/**
-	 ...
-	 @src:
-
-will be handled as a definition for @src parameter, and not as
-part of a diagram. So, we need to add something before it, in
-order for this to be processed the way it should.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- lib/bitmap.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ include/uapi/linux/usb/raw_gadget.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 89260aa342d6..21a7640c5eed 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -182,21 +182,22 @@ EXPORT_SYMBOL(__bitmap_shift_left);
-  *
-  * In pictures, example for a big-endian 32-bit architecture:
-  *
-- * @src:
-- * 31                                   63
-- * |                                    |
-- * 10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
-- *                 |  |              |                                    |
-- *                16  14             0                                   32
-+ * The @src bitmap is::
-  *
-- * if @cut is 3, and @first is 14, bits 14-16 in @src are cut and @dst is:
-+ *   31                                   63
-+ *   |                                    |
-+ *   10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
-+ *                   |  |              |                                    |
-+ *                  16  14             0                                   32
-  *
-- * 31                                   63
-- * |                                    |
-- * 10110000 00011000 00110010 00010101  00010000 00011000 00101110 01000010
-- *                    |              |                                    |
-- *                    14 (bit 17     0                                   32
-- *                        from @src)
-+ * if @cut is 3, and @first is 14, bits 14-16 in @src are cut and @dst is::
-+ *
-+ *   31                                   63
-+ *   |                                    |
-+ *   10110000 00011000 00110010 00010101  00010000 00011000 00101110 01000010
-+ *                      |              |                                    |
-+ *                      14 (bit 17     0                                   32
-+ *                          from @src)
-  *
-  * Note that @dst and @src might overlap partially or entirely.
-  *
+diff --git a/include/uapi/linux/usb/raw_gadget.h b/include/uapi/linux/usb/raw_gadget.h
+index 00cbded71061..ea375082b3ac 100644
+--- a/include/uapi/linux/usb/raw_gadget.h
++++ b/include/uapi/linux/usb/raw_gadget.h
+@@ -66,12 +66,12 @@ struct usb_raw_event {
+ #define USB_RAW_IO_FLAGS_ZERO	0x0001
+ #define USB_RAW_IO_FLAGS_MASK	0x0001
+ 
+-static int usb_raw_io_flags_valid(__u16 flags)
++static inline int usb_raw_io_flags_valid(__u16 flags)
+ {
+ 	return (flags & ~USB_RAW_IO_FLAGS_MASK) == 0;
+ }
+ 
+-static int usb_raw_io_flags_zero(__u16 flags)
++static inline int usb_raw_io_flags_zero(__u16 flags)
+ {
+ 	return (flags & USB_RAW_IO_FLAGS_ZERO);
+ }
 -- 
-2.24.1
+2.25.1.481.gfbce0eb801-goog
 
