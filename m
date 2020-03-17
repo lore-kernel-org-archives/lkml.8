@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077B8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40E2C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D14A2205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88844205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442956;
-	bh=3GaHAKnJBZCHWV2I6s6SSlgOTDoK5byZ2gupCczSb/s=;
+	s=default; t=1584442959;
+	bh=aOI3kToA5wIagAX34AwDpXjvrcob4bMDHwZGfFJ9VXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CjwErUYTIY0PVBHePAX0pQDLH9ZfDIQ/gEN3i+a+r2udOojavufhsCswD70bFTu2z
-	 YQwTCj8uLgfGbgx6AwWKapFj4UcJliLLsWTXXTblBlpOYzvdW4RydAF6xgN9m1TwMW
-	 d6Ra9Ya/wkwhbx7I890bKIwSHI/cSaMgfDcxj1p0=
+	b=KPZw4YMFN6VhmD4Wf0i2mPC+J+DMidCHxE+FJynXn/YKxSkrDR9kamc17P9YuofYi
+	 /b9QHQbT17vLoVbKLDH4hLwEqDEEE/MKoLRMhc9IAh/UROFLuCmEFg088+kstszpqF
+	 /oU6mswigdk8xDwGj7OhLpfEiBfTF07CXhaBP1Pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbgCQLCf (ORCPT
+        id S1727974AbgCQLCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:02:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727601AbgCQLC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:02:28 -0400
+        id S1727963AbgCQLCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:02:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3759720658;
-        Tue, 17 Mar 2020 11:02:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0780B205ED;
+        Tue, 17 Mar 2020 11:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442947;
-        bh=3GaHAKnJBZCHWV2I6s6SSlgOTDoK5byZ2gupCczSb/s=;
+        s=default; t=1584442954;
+        bh=aOI3kToA5wIagAX34AwDpXjvrcob4bMDHwZGfFJ9VXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jnPcUXcR0ywhtIUAQXrL2DeSly9PTfv9HkrxqUvsbk/n5qr9NRl28aevhrpDRMnof
-         wbn0ZengZErt73izn+ZpPz8lfdQlFG7cCLMfSR/xajHTX6AZa+Nsarg8eK9XRe4YkH
-         n1otNfZpQxqS/cwYt9ack5+I5YqY7cILwxunvlpw=
+        b=dsEh6s4F3M6ybvojw0AIcYLx/XCmkpmaEK0cq0Rk2d+hcU57s+Me5MmrVMu/1rj16
+         DrdLPCiDPuMjCsvHeWQeSDAtoP/L5ZupK36TYfZyhUeY3UzVusmP8tYIjIwqGw2MPG
+         xeZvkjSpJ7kHuhbupC/XwItQFUabchuWf4PQp1vo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 045/123] team: add missing attribute validation for port ifindex
-Date:   Tue, 17 Mar 2020 11:54:32 +0100
-Message-Id: <20200317103312.401466063@linuxfoundation.org>
+Subject: [PATCH 5.4 047/123] tipc: add missing attribute validation for MTU property
+Date:   Tue, 17 Mar 2020 11:54:34 +0100
+Message-Id: <20200317103312.576687018@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -62,29 +61,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit dd25cb272ccce4db67dc8509278229099e4f5e99 ]
+[ Upstream commit 213320a67962ff6e7b83b704d55cbebc341426db ]
 
-Add missing attribute validation for TEAM_ATTR_OPTION_PORT_IFINDEX
+Add missing attribute validation for TIPC_NLA_PROP_MTU
 to the netlink policy.
 
-Fixes: 80f7c6683fe0 ("team: add support for per-port options")
+Fixes: 901271e0403a ("tipc: implement configuration of UDP media MTU")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/team/team.c |    1 +
+ net/tipc/netlink.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -2240,6 +2240,7 @@ team_nl_option_policy[TEAM_ATTR_OPTION_M
- 	[TEAM_ATTR_OPTION_CHANGED]		= { .type = NLA_FLAG },
- 	[TEAM_ATTR_OPTION_TYPE]			= { .type = NLA_U8 },
- 	[TEAM_ATTR_OPTION_DATA]			= { .type = NLA_BINARY },
-+	[TEAM_ATTR_OPTION_PORT_IFINDEX]		= { .type = NLA_U32 },
+--- a/net/tipc/netlink.c
++++ b/net/tipc/netlink.c
+@@ -111,6 +111,7 @@ const struct nla_policy tipc_nl_prop_pol
+ 	[TIPC_NLA_PROP_PRIO]		= { .type = NLA_U32 },
+ 	[TIPC_NLA_PROP_TOL]		= { .type = NLA_U32 },
+ 	[TIPC_NLA_PROP_WIN]		= { .type = NLA_U32 },
++	[TIPC_NLA_PROP_MTU]		= { .type = NLA_U32 },
+ 	[TIPC_NLA_PROP_BROADCAST]	= { .type = NLA_U32 },
+ 	[TIPC_NLA_PROP_BROADCAST_RATIO]	= { .type = NLA_U32 }
  };
- 
- static int team_nl_cmd_noop(struct sk_buff *skb, struct genl_info *info)
 
 
