@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FB1C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215C0C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8837920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E425F20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443225;
-	bh=M+Tm6S1nNVAZLoVlTn3WAcu/dg1eJFOwCy6wVFTDmco=;
+	s=default; t=1584443232;
+	bh=Lh4BxuQ7K6cIEQ/7yvgksfX22SmWU44NFAT21/scgfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KyLuoxGNkIR76N+hfBYokoAdgmcafNMzphsL3gp94D6wlqv8I5/kjl0MWu+YcNnSP
-	 cFx4uqKy+YFsIMEMnZSLHe4K8FghFnhi4yDG63NiyMxKVeWHJnxWonBc93oycosMfv
-	 PO+dTbyt9rRe5Tk2sXbyX4vGTrwwJunjCxbopxGQ=
+	b=Xf5M64J5Uy49bqivvDOlC06Jp6X7BxzCel4QFc9taKKwxnPjiSczX239WlIRs7tZ6
+	 lnrccFllQQp8dQ0QlNv87dtj0IA2fLysaVZnJpHEI2vpqV6mVGjw5r90ESsRBlWFuf
+	 /FbfuipqkLVIeI60A7VbGSmLHGkwdBtP20Tx06fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgCQLHE (ORCPT
+        id S1728521AbgCQLHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:07:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46886 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:07:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728525AbgCQLF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:57 -0400
+        id S1728732AbgCQLHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:07:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B5F9206EC;
-        Tue, 17 Mar 2020 11:05:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FF5520658;
+        Tue, 17 Mar 2020 11:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443156;
-        bh=M+Tm6S1nNVAZLoVlTn3WAcu/dg1eJFOwCy6wVFTDmco=;
+        s=default; t=1584443225;
+        bh=Lh4BxuQ7K6cIEQ/7yvgksfX22SmWU44NFAT21/scgfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4ld6THYFRe7XTJv1PG/MfkTsI3y2S3h/zZjL01kBNxcqUi/9j1UiGaaVKlqciH2V
-         YhJizecHtf3jXI/B5Yg867ng7F8DcKqsBhK8nY6RSSBnqWqETK8e6L352zidJUXPyz
-         PLHrj44D3guXwPrqC09WtErPhxfiufgP14RUVg1E=
+        b=2ttDpw/htWfCjGpvS4iSR3w7+6TG0Lh68acIDkp/jLcvt72GUBCXqm/x5nZ6TSMmX
+         o1Zb7aCFvL0rjv3lz8gtO5Yd9ylbBasLNn3E7keuuphEEpHwn1O66uMuXcCzq5zKlg
+         gXwRAhdk05aATm0ukl2lJN0CKqfeWCMx5OExFYU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 078/123] KVM: nVMX: avoid NULL pointer dereference with incorrect EVMCS GPAs
-Date:   Tue, 17 Mar 2020 11:55:05 +0100
-Message-Id: <20200317103315.446037688@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Yakunin <zeil@yandex-team.ru>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 005/151] cgroup, netclassid: periodically release file_lock on classid updating
+Date:   Tue, 17 Mar 2020 11:53:35 +0100
+Message-Id: <20200317103326.893199977@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
-References: <20200317103307.343627747@linuxfoundation.org>
+In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+References: <20200317103326.593639086@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,62 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Dmitry Yakunin <zeil@yandex-team.ru>
 
-commit 95fa10103dabc38be5de8efdfced5e67576ed896 upstream.
+[ Upstream commit 018d26fcd12a75fb9b5fe233762aa3f2f0854b88 ]
 
-When an EVMCS enabled L1 guest on KVM will tries doing enlightened VMEnter
-with EVMCS GPA = 0 the host crashes because the
+In our production environment we have faced with problem that updating
+classid in cgroup with heavy tasks cause long freeze of the file tables
+in this tasks. By heavy tasks we understand tasks with many threads and
+opened sockets (e.g. balancers). This freeze leads to an increase number
+of client timeouts.
 
-evmcs_gpa != vmx->nested.hv_evmcs_vmptr
+This patch implements following logic to fix this issue:
+аfter iterating 1000 file descriptors file table lock will be released
+thus providing a time gap for socket creation/deletion.
 
-condition in nested_vmx_handle_enlightened_vmptrld() will evaluate to
-false (as nested.hv_evmcs_vmptr is zeroed after init). The crash will
-happen on vmx->nested.hv_evmcs pointer dereference.
+Now update is non atomic and socket may be skipped using calls:
 
-Another problematic EVMCS ptr value is '-1' but it only causes host crash
-after nested_release_evmcs() invocation. The problem is exactly the same as
-with '0', we mistakenly think that the EVMCS pointer hasn't changed and
-thus nested.hv_evmcs_vmptr is valid.
+dup2(oldfd, newfd);
+close(oldfd);
 
-Resolve the issue by adding an additional !vmx->nested.hv_evmcs
-check to nested_vmx_handle_enlightened_vmptrld(), this way we will
-always be trying kvm_vcpu_map() when nested.hv_evmcs is NULL
-and this is supposed to catch all invalid EVMCS GPAs.
+But this case is not typical. Moreover before this patch skip is possible
+too by hiding socket fd in unix socket buffer.
 
-Also, initialize hv_evmcs_vmptr to '0' in nested_release_evmcs()
-to be consistent with initialization where we don't currently
-set hv_evmcs_vmptr to '-1'.
+New sockets will be allocated with updated classid because cgroup state
+is updated before start of the file descriptors iteration.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+So in common cases this patch has no side effects.
+
+Signed-off-by: Dmitry Yakunin <zeil@yandex-team.ru>
+Reviewed-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/kvm/vmx/nested.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/core/netclassid_cgroup.c |   47 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 10 deletions(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -223,7 +223,7 @@ static inline void nested_release_evmcs(
- 		return;
- 
- 	kvm_vcpu_unmap(vcpu, &vmx->nested.hv_evmcs_map, true);
--	vmx->nested.hv_evmcs_vmptr = -1ull;
-+	vmx->nested.hv_evmcs_vmptr = 0;
- 	vmx->nested.hv_evmcs = NULL;
+--- a/net/core/netclassid_cgroup.c
++++ b/net/core/netclassid_cgroup.c
+@@ -53,30 +53,60 @@ static void cgrp_css_free(struct cgroup_
+ 	kfree(css_cls_state(css));
  }
  
-@@ -1828,7 +1828,8 @@ static int nested_vmx_handle_enlightened
- 	if (!nested_enlightened_vmentry(vcpu, &evmcs_gpa))
- 		return 1;
++/*
++ * To avoid freezing of sockets creation for tasks with big number of threads
++ * and opened sockets lets release file_lock every 1000 iterated descriptors.
++ * New sockets will already have been created with new classid.
++ */
++
++struct update_classid_context {
++	u32 classid;
++	unsigned int batch;
++};
++
++#define UPDATE_CLASSID_BATCH 1000
++
+ static int update_classid_sock(const void *v, struct file *file, unsigned n)
+ {
+ 	int err;
++	struct update_classid_context *ctx = (void *)v;
+ 	struct socket *sock = sock_from_file(file, &err);
  
--	if (unlikely(evmcs_gpa != vmx->nested.hv_evmcs_vmptr)) {
-+	if (unlikely(!vmx->nested.hv_evmcs ||
-+		     evmcs_gpa != vmx->nested.hv_evmcs_vmptr)) {
- 		if (!vmx->nested.hv_evmcs)
- 			vmx->nested.current_vmptr = -1ull;
+ 	if (sock) {
+ 		spin_lock(&cgroup_sk_update_lock);
+-		sock_cgroup_set_classid(&sock->sk->sk_cgrp_data,
+-					(unsigned long)v);
++		sock_cgroup_set_classid(&sock->sk->sk_cgrp_data, ctx->classid);
+ 		spin_unlock(&cgroup_sk_update_lock);
+ 	}
++	if (--ctx->batch == 0) {
++		ctx->batch = UPDATE_CLASSID_BATCH;
++		return n + 1;
++	}
+ 	return 0;
+ }
  
++static void update_classid_task(struct task_struct *p, u32 classid)
++{
++	struct update_classid_context ctx = {
++		.classid = classid,
++		.batch = UPDATE_CLASSID_BATCH
++	};
++	unsigned int fd = 0;
++
++	do {
++		task_lock(p);
++		fd = iterate_fd(p->files, fd, update_classid_sock, &ctx);
++		task_unlock(p);
++		cond_resched();
++	} while (fd);
++}
++
+ static void cgrp_attach(struct cgroup_taskset *tset)
+ {
+ 	struct cgroup_subsys_state *css;
+ 	struct task_struct *p;
+ 
+ 	cgroup_taskset_for_each(p, css, tset) {
+-		task_lock(p);
+-		iterate_fd(p->files, 0, update_classid_sock,
+-			   (void *)(unsigned long)css_cls_state(css)->classid);
+-		task_unlock(p);
++		update_classid_task(p, css_cls_state(css)->classid);
+ 	}
+ }
+ 
+@@ -98,10 +128,7 @@ static int write_classid(struct cgroup_s
+ 
+ 	css_task_iter_start(css, 0, &it);
+ 	while ((p = css_task_iter_next(&it))) {
+-		task_lock(p);
+-		iterate_fd(p->files, 0, update_classid_sock,
+-			   (void *)(unsigned long)cs->classid);
+-		task_unlock(p);
++		update_classid_task(p, cs->classid);
+ 		cond_resched();
+ 	}
+ 	css_task_iter_end(&it);
 
 
