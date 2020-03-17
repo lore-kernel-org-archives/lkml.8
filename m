@@ -2,118 +2,145 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A22BC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2909EC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429A220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CE3206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:17:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Y0+ClKkA"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ltYysL5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgCQKQk (ORCPT
+        id S1726352AbgCQKRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:16:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:43087 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgCQKQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:16:39 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48hTbn465tz9txmZ;
-        Tue, 17 Mar 2020 11:16:37 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Y0+ClKkA; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Aklas_zFK9XK; Tue, 17 Mar 2020 11:16:37 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48hTbn2wrlz9txmY;
-        Tue, 17 Mar 2020 11:16:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584440197; bh=gHfeGuNMX9DiSTA3t8ffi2E0nIxwRTV7SW2fZ5cXtlo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Y0+ClKkAHkAbXdn90tqR12mVHVp0XeMaovQfiDBqjooBwzvtHjR0rMk0mG+IzuOS0
-         8bPRYV+6KK9qTLUHnyCKT+YERwRt3+TfAVBqEXOnsHFb7IIPuczSnCxRxINs9o51s9
-         o/u94T8qb60NVbDyIXCJigBoqFkPXg06UqIDHD+E=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 48BD48B787;
-        Tue, 17 Mar 2020 11:16:38 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Ui0mrgBY-Bua; Tue, 17 Mar 2020 11:16:38 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7F50A8B785;
-        Tue, 17 Mar 2020 11:16:36 +0100 (CET)
-Subject: Re: [PATCH 02/15] powerpc/watchpoint: Add SPRN macros for second DAWR
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
-        mikey@neuling.org
-Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
- <20200309085806.155823-3-ravi.bangoria@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <0a45786d-f44b-8717-3aed-dfcfcb1856bb@c-s.fr>
-Date:   Tue, 17 Mar 2020 11:16:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 06:17:52 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36447 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgCQKRu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:17:50 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 39so5614855otu.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 03:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oDa8VM8GdllhFAvMRWp4hpupCPaz/QUO5MsZDtEiqs0=;
+        b=ltYysL5WIC7dpKo4GMaDU8Ml3B6mi7mjaGVG65T2DEiDiGYOgzRyMLCrxrRWChP5HS
+         yTQFrSduvcsM0xNp1YBTAIiflKZ/sMN8pGWZae/ArhXNCikTtXesCEck8fUXUCEp/w/C
+         Iw+LoUythKxvdhc9mhmIz2zs2mGoFetgsadTo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oDa8VM8GdllhFAvMRWp4hpupCPaz/QUO5MsZDtEiqs0=;
+        b=dI25JgDjW0KEd4oFROKG4WW/WkBB2HAlrYDECtF0fpT4NdyP4JINuU5lbZxDbo5dM8
+         3QBN1s4IM6SVv/lYrjXYS4qsOV9uBnBHeoUFSQ6JO+emGg9ja4A/K8b1m9R/80iLSzmk
+         klyqbvnMb+txSUOK2uLghjCZD/jNxBw14M1n4xRbXD7yGlDkOKwyWjqLPEaDq3iPsBKF
+         LLKTGVSm2dzzhH66lldTukGvN6K6v7Sr24MyT/8rxJHs7Jh6j7UvkD8MyCUAh/GlYtMm
+         OV5RjTTjqkiKPR4Ps+Sm3MQ8zGhX7pTYeIdeJnj46lgm3bmaKm8RLeOiY/J3KM3T0Q0a
+         q73w==
+X-Gm-Message-State: ANhLgQ2n7W/NX9yg61DHihQF24zWk1U+fYt0ic8ByyPkvSI3OoA7rckv
+        KPcl/Y3r3hPYsDXMow5+QBXIFFtuZ6ISQyWenFZC0g==
+X-Google-Smtp-Source: ADFU+vuLKvREZqrIEBvOy9oEphIEL8EarmOXVsUtthjxfzzfXXP7vVtCLR/q+kK0AHEL4R5JJBkITw0OWnska0E6pcA=
+X-Received: by 2002:a9d:30c7:: with SMTP id r7mr2911068otg.289.1584440268438;
+ Tue, 17 Mar 2020 03:17:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200309085806.155823-3-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20200310174711.7490-1-lmb@cloudflare.com> <20200310174711.7490-5-lmb@cloudflare.com>
+ <5e6973ed90f8d_20552ab9153405b4ca@john-XPS-13-9370.notmuch>
+In-Reply-To: <5e6973ed90f8d_20552ab9153405b4ca@john-XPS-13-9370.notmuch>
+From:   Lorenz Bauer <lmb@cloudflare.com>
+Date:   Tue, 17 Mar 2020 10:17:37 +0000
+Message-ID: <CACAyw9_4wvOdE+enxxJPPTMXbfFmWfMo8qcaRtu6j0y4W=E9HQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] bpf: sockmap, sockhash: return file descriptors from
+ privileged lookup
+To:     John Fastabend <john.fastabend@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 11 Mar 2020 at 23:27, John Fastabend <john.fastabend@gmail.com> wrote:
+>
+> Lorenz Bauer wrote:
+> > Allow callers with CAP_NET_ADMIN to retrieve file descriptors from a
+> > sockmap and sockhash. O_CLOEXEC is enforced on all fds.
+> >
+> > Without this, it's difficult to resize or otherwise rebuild existing
+> > sockmap or sockhashes.
+> >
+> > Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+> > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> > ---
+> >  net/core/sock_map.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >
+> > diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> > index 03e04426cd21..3228936aa31e 100644
+> > --- a/net/core/sock_map.c
+> > +++ b/net/core/sock_map.c
+> > @@ -347,12 +347,31 @@ static void *sock_map_lookup(struct bpf_map *map, void *key)
+> >  static int __sock_map_copy_value(struct bpf_map *map, struct sock *sk,
+> >                                void *value)
+> >  {
+> > +     struct file *file;
+> > +     int fd;
+> > +
+> >       switch (map->value_size) {
+> >       case sizeof(u64):
+> >               sock_gen_cookie(sk);
+> >               *(u64 *)value = atomic64_read(&sk->sk_cookie);
+> >               return 0;
+> >
+> > +     case sizeof(u32):
+> > +             if (!capable(CAP_NET_ADMIN))
+> > +                     return -EPERM;
+> > +
+> > +             fd = get_unused_fd_flags(O_CLOEXEC);
+> > +             if (unlikely(fd < 0))
+> > +                     return fd;
+> > +
+> > +             read_lock_bh(&sk->sk_callback_lock);
+> > +             file = get_file(sk->sk_socket->file);
+> > +             read_unlock_bh(&sk->sk_callback_lock);
+> > +
+> > +             fd_install(fd, file);
+> > +             *(u32 *)value = fd;
+> > +             return 0;
+> > +
+>
+> Hi Lorenz, Can you say something about what happens if the sk
+> is deleted from the map or the sock is closed/unhashed ideally
+> in the commit message so we have it for later reference. I guess
+> because we are in an rcu block here the sk will be OK and psock
+> reference will exist until after the rcu block at least because
+> of call_rcu(). If the psock is destroyed from another path then
+> the fd will still point at the sock. correct?
 
+This is how I understand it:
+* sk is protected by rcu_read_lock (as you point out)
+* sk->sk_callback_lock protects against sk->sk_socket being
+  modified by sock_orphan, sock_graft, etc. via sk_set_socket
+* get_file increments the refcount on the file
 
-Le 09/03/2020 à 09:57, Ravi Bangoria a écrit :
-> Future Power architecture is introducing second DAWR. Add SPRN_ macros
-> for the same.
+I'm not sure how the psock figures into this, maybe you can
+elaborate a little?
 
-I'm not sure this is called 'macros'. For me a macro is something more 
-complex.
+-- 
+Lorenz Bauer  |  Systems Engineer
+6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
 
-For me those are 'constants'.
-
-Christophe
-
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->   arch/powerpc/include/asm/reg.h | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-> index 156ee89fa9be..062e74cf41fd 100644
-> --- a/arch/powerpc/include/asm/reg.h
-> +++ b/arch/powerpc/include/asm/reg.h
-> @@ -284,6 +284,7 @@
->   #define   CTRL_TE	0x00c00000	/* thread enable */
->   #define   CTRL_RUNLATCH	0x1
->   #define SPRN_DAWR0	0xB4
-> +#define SPRN_DAWR1	0xB5
->   #define SPRN_RPR	0xBA	/* Relative Priority Register */
->   #define SPRN_CIABR	0xBB
->   #define   CIABR_PRIV		0x3
-> @@ -291,6 +292,7 @@
->   #define   CIABR_PRIV_SUPER	2
->   #define   CIABR_PRIV_HYPER	3
->   #define SPRN_DAWRX0	0xBC
-> +#define SPRN_DAWRX1	0xBD
->   #define   DAWRX_USER	__MASK(0)
->   #define   DAWRX_KERNEL	__MASK(1)
->   #define   DAWRX_HYP	__MASK(2)
-> 
+www.cloudflare.com
