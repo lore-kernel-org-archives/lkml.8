@@ -2,105 +2,96 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B4EC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CA4C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B6520738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C475E2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584484211;
-	bh=o8ZNCMkXZjVnIlo9/wMZey1YXi3Jg07cUnvtiDRqlOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F0/K8xRaiouYsDwbJiht+bQf4P/xAIUNwaPubesVYfh7qcM2GsVeWMDW/BrUydLqS
-	 j7cK2504s7ugm0nzkGORhmi7bYwnD3G9P1cQX1G8RN2SooNNcN7cnbnt6osBqT4gZD
-	 PSIeksiuo6oEtz4UOTOSBZfkYW6rArCRPh3xpr8Q=
+	s=default; t=1584484223;
+	bh=T6IgJfak24WeMQqJA8JyeD/uhgR6SJO+VwL4E9jC7nE=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=nCv9kgF+a8M40Afj+rjfD1Msv88EaoKTxP4SpDu1hjcDMqBhDb4sl+SpLK1MPwmgo
+	 wNuOtdrNxqwg4ZK89I81dpprz0XyNTsEyX36i+V/xu58WyNCs//Ukh+21xdbrHVqjk
+	 yGXjvFSagTQSRt1HkVYeJOGvjqrc39czEJCabHyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgCQWaJ (ORCPT
+        id S1727100AbgCQWaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:30:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38444 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 18:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgCQWaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:30:09 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1726530AbgCQWaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:30:22 -0400
+Received: from localhost (unknown [137.135.114.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 342BF20409;
-        Tue, 17 Mar 2020 22:30:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7720620409;
+        Tue, 17 Mar 2020 22:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584484209;
-        bh=o8ZNCMkXZjVnIlo9/wMZey1YXi3Jg07cUnvtiDRqlOI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N0uISv0MXfN6mCvtsByqJuSFHOxfBHEz2Ww6PSCrBJNmgm0VsEilxLpEjyFfgtj+K
-         ptyPhLFLzZsBdWn6S2UTAn72S/WbdqB3YLIjGp5jij2oVW12Z/PNOM8cZjCbC6Rgkr
-         ABD173ZaoHIBhzzUF4NDmMo4s5PF4fDIBnwku7Ys=
-Date:   Tue, 17 Mar 2020 22:30:05 +0000
-From:   Will Deacon <will@kernel.org>
-To:     =?iso-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>
-Cc:     catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: clean up trampoline vector loads
-Message-ID: <20200317223004.GJ20788@willie-the-truck>
-References: <20200316124046.103844-1-remi@remlab.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200316124046.103844-1-remi@remlab.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1584484221;
+        bh=T6IgJfak24WeMQqJA8JyeD/uhgR6SJO+VwL4E9jC7nE=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=DWm9iKKyiFoMsb+ZnmHNn32Y4uhJ7VUVRV/LsT+/tpcelbhhKU+cfdcHRoDf8MFLw
+         dnsNeuNApOZghEofs4Adsq4GkMa1rpCLKcFtgvhLIftxXSqwGdpFjEit7SAl33px3g
+         Gk1wFUNFjVZa9DDG/NHOltAIqFOx9k/gXVS/5RNk=
+Date:   Tue, 17 Mar 2020 22:30:20 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [GIT PULL 6/6] intel_th: pci: Add Elkhart Lake CPU support
+In-Reply-To: <20200317062215.15598-7-alexander.shishkin@linux.intel.com>
+References: <20200317062215.15598-7-alexander.shishkin@linux.intel.com>
+Message-Id: <20200317223021.7720620409@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:40:44PM +0200, Rémi Denis-Courmont wrote:
-> From: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
-> 
-> This switches from custom instruction patterns to the regular large
-> memory model sequence with ADRP and LDR. In doing so, the ADD
-> instruction can be eliminated in the SDEI handler, and the code no
-> longer assumes that the trampoline vectors and the vectors address both
-> start on a page boundary.
-> 
-> Signed-off-by: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
-> ---
->  arch/arm64/kernel/entry.S | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> index e5d4e30ee242..24f828739696 100644
-> --- a/arch/arm64/kernel/entry.S
-> +++ b/arch/arm64/kernel/entry.S
-> @@ -805,9 +805,9 @@ alternative_else_nop_endif
->  2:
->  	tramp_map_kernel	x30
->  #ifdef CONFIG_RANDOMIZE_BASE
-> -	adr	x30, tramp_vectors + PAGE_SIZE
-> +	adrp	x30, tramp_vectors + PAGE_SIZE
->  alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
-> -	ldr	x30, [x30]
-> +	ldr	x30, [x30, #:lo12:__entry_tramp_data_start]
->  #else
->  	ldr	x30, =vectors
->  #endif
-> @@ -953,9 +953,8 @@ SYM_CODE_START(__sdei_asm_entry_trampoline)
->  1:	str	x4, [x1, #(SDEI_EVENT_INTREGS + S_ORIG_ADDR_LIMIT)]
->  
->  #ifdef CONFIG_RANDOMIZE_BASE
-> -	adr	x4, tramp_vectors + PAGE_SIZE
-> -	add	x4, x4, #:lo12:__sdei_asm_trampoline_next_handler
-> -	ldr	x4, [x4]
-> +	adrp	x4, tramp_vectors + PAGE_SIZE
-> +	ldr	x4, [x4, #:lo12:__sdei_asm_trampoline_next_handler]
->  #else
->  	ldr	x4, =__sdei_asm_handler
->  #endif
+Hi
 
-Acked-by: Will Deacon <will@kernel.org>
+[This is an automated email]
 
-Will
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
+
+The bot has tested the following trees: v5.5.9, v5.4.25, v4.19.109, v4.14.173, v4.9.216, v4.4.216.
+
+v5.5.9: Build OK!
+v5.4.25: Build OK!
+v4.19.109: Build OK!
+v4.14.173: Build OK!
+v4.9.216: Failed to apply! Possible dependencies:
+    4aa5aed2b6f2 ("intel_th: pci: Add Ice Lake NNPI support")
+    59d08d00d43c ("intel_th: pci: Add Ice Lake PCH support")
+    88385866bab8 ("intel_th: pci: Add Elkhart Lake SOC support")
+    920ce7c33db2 ("intel_th: pci: Add Cedar Fork PCH support")
+    9c78255fdde4 ("intel_th: pci: Add Tiger Lake support")
+    9d55499d8da4 ("intel_th: pci: Add Jasper Lake PCH support")
+    e60e9a4b231a ("intel_th: pci: Add Comet Lake support")
+
+v4.4.216: Failed to apply! Possible dependencies:
+    4aa5aed2b6f2 ("intel_th: pci: Add Ice Lake NNPI support")
+    59d08d00d43c ("intel_th: pci: Add Ice Lake PCH support")
+    88385866bab8 ("intel_th: pci: Add Elkhart Lake SOC support")
+    920ce7c33db2 ("intel_th: pci: Add Cedar Fork PCH support")
+    9c78255fdde4 ("intel_th: pci: Add Tiger Lake support")
+    9d55499d8da4 ("intel_th: pci: Add Jasper Lake PCH support")
+    e60e9a4b231a ("intel_th: pci: Add Comet Lake support")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
