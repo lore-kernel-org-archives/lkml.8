@@ -2,107 +2,101 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315F8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49D9C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA9F20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E8D20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="cXtuVafn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgCQNRx (ORCPT
+        id S1726747AbgCQNSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:17:53 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36373 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgCQNRw (ORCPT
+        Tue, 17 Mar 2020 09:18:50 -0400
+Received: from www381.your-server.de ([78.46.137.84]:55068 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgCQNSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:17:52 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Tue, 17 Mar 2020 09:18:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=eN2Wu6o1UiMKWTGkQd5anfq7zWnQt0CAvZvW7q0xWyo=; b=cXtuVafnOJe4cdXcD1VpKuJtNo
+        yYUGyEqfqsi1uueyrq1AH3laOPn/yjR43rRiN7xgnmiv3fkuq5tUTR0a7c+KnagpLcEvYffLmoc+J
+        V/WJdl4ijD+WNZUSJvlXq/BamFJUu5IKpI8tCY27ENuSP5blfhUapFcbeZx9JmpHUkVdo49UYmdZi
+        owgndlQ3czmiDMd/G/SYuGj6KjxLNnheJJj7c3Mt3qweifEQBI8DrcLojzneCRHJQuAcMfWQcVcrl
+        C0/9Nbob+8FRNvq65hNXm1mEbek6k9/4Jtu7zkZoC3U+yj1V6IAG3z4z37xG8yz6/yvD/UxrI+GS8
+        GhESMhSw==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jEC7I-0002oS-3N; Tue, 17 Mar 2020 14:18:44 +0100
+Received: from [93.104.105.202] (helo=[192.168.178.20])
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1jEC6I-0005di-VB; Tue, 17 Mar 2020 14:17:43 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:124:7ee3:e89c:2c00] (unknown [IPv6:2a03:f580:87bc:d400:124:7ee3:e89c:2c00])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 77CDA4CF749;
-        Tue, 17 Mar 2020 13:17:38 +0000 (UTC)
-Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Dan Murphy <dmurphy@ti.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <cover.1584450500.git.mchehab+huawei@kernel.org>
- <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
-Date:   Tue, 17 Mar 2020 14:17:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        (envelope-from <lars@metafoo.de>)
+        id 1jEC7H-000KWB-Rh; Tue, 17 Mar 2020 14:18:43 +0100
+Subject: Re: [PATCH] iio: buffer: re-introduce bitmap_zalloc() for trialmask
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+Cc:     "jic23@kernel.org" <jic23@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+References: <20200317123621.27722-1-alexandru.ardelean@analog.com>
+ <20200317125223.GC1922688@smile.fi.intel.com>
+ <cb09b6f882a786a74919eda8812f27d502363150.camel@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <46516126-d22f-4bf8-a711-8218277d69f1@metafoo.de>
+Date:   Tue, 17 Mar 2020 14:18:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+In-Reply-To: <cb09b6f882a786a74919eda8812f27d502363150.camel@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25753/Mon Mar 16 14:05:55 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/20 2:10 PM, Mauro Carvalho Chehab wrote:
-> This file was converted to json and renamed. Update its
-> references accordingly.
+On 3/17/20 1:53 PM, Ardelean, Alexandru wrote:
+> On Tue, 2020-03-17 at 14:52 +0200, Andy Shevchenko wrote:
+>> [External]
+>>
+>> On Tue, Mar 17, 2020 at 02:36:21PM +0200, Alexandru Ardelean wrote:
+>>> Commit 3862828a903d3 ("iio: buffer: Switch to bitmap_zalloc()") introduced
+>>> bitmap_alloc(), but commit 20ea39ef9f2f9 ("iio: Fix scan mask selection")
+>>> reverted it.
+>>>
+>>> This change adds it back. The only difference is that it's adding
+>>> bitmap_zalloc(). There might be some changes later that would require
+>>> initializing it to zero. In any case, now it's already zero-ing the
+>>> trialmask.
+>>
+>> FWIW,
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-schema")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Thanks.
+> And sorry for the hiccup back there.
 
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+It looks like a merge conflict. Both patches are in parallel sub-trees. 
+I guess one went through fixes and the other through the normal tree and 
+then when they were merged, the issue was not resolved properly.
 
-regards,
-Marc
-
--- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+2019-04-21 Greg Kroah-Hartman   M─┐ Merge 5.1-rc6 into staging-next
+2019-02-20 Lars-Peter Clausen   │ o iio: Fix scan mask selection
+2019-03-04 Andy Shevchenko      o │ iio: buffer: Switch to bitmap_zalloc
+2018-02-20 Greg Kroah-Hartman   M─┤ Merge tag 'iio-fixes-for-4.16a
