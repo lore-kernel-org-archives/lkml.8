@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C06BC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775A4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273B020719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D0C020714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443088;
-	bh=9NoQVqoZS1Vz2ny1kBlQ6fnhup0i0q5dtmWUnuZaFbA=;
+	s=default; t=1584443090;
+	bh=YeOkMtyWLIEoF9MWDXRDRMp7xN/CAzz3pEq7S4IaUVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NoDuKSk7EstvjBcUkfje4mszn0+XQ0y7jVgVnj+fI5wlhKKt/x0xAL9Jq/zPC6+YX
-	 arFbBZJ46+d8RQq4wijqfoOugOUChJ/m9WjHT0ZgixHvjkhVx3vs4P5jM9kQJE4CP9
-	 ee5thRw9hot32zz94Oe8skQ8NCMZVSIvbfr5tvnw=
+	b=KlgmOl4fofr3qbCL1APEPAKSsZ9b8mnSnKhLuQtO7G/0k8Cr5AdJ0JVNTKFa73FDK
+	 Cm4vDKCA/w1ODQodc/q0DrJSCbfoSh6ky/vtCMt/UpTMZ+XziNm/uIwmnIK9OklCfh
+	 /TpCjzkNgc8b00XdjOMemM8p9eqORJOmXFxNDE88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgCQLEq (ORCPT
+        id S1727206AbgCQLEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45038 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgCQLEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:40 -0400
+        id S1726760AbgCQLEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A80EA20736;
-        Tue, 17 Mar 2020 11:04:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54FDF20719;
+        Tue, 17 Mar 2020 11:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443080;
-        bh=9NoQVqoZS1Vz2ny1kBlQ6fnhup0i0q5dtmWUnuZaFbA=;
+        s=default; t=1584443083;
+        bh=YeOkMtyWLIEoF9MWDXRDRMp7xN/CAzz3pEq7S4IaUVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lCCrKGMhOhLx20RIRGgpmWrYklPvqe7IBPLda/hSWfr51VBpqT8GhGfSZk5VmKT/v
-         52jX1lBYSVsZ924s1B/8Bqf4K/H2iz7ip5WBcX4UpCMZELuA6wsYGiGKP3SZy2TdnU
-         CDHYzGICrMfxAf0o7YyRkGENMZ+Cep5SQw3CJNcA=
+        b=HP8wc9g5nRItd3oVufnpRc6YC8vh1I7Om6b5IivCTDozNGvN3Dj2woVHVF72zp6dG
+         AXeNFGapbsUkiJJHKkV+xpZ6V6wKqdQJX1UVpxtdCF+YlTYNG2jl9zFAsHnkkrWOup
+         LVClKV04y+FJqMnPVUvcFReAHLqi6O7/Mx2K5Z2w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 090/123] mt76: fix array overflow on receiving too many fragments for a packet
-Date:   Tue, 17 Mar 2020 11:55:17 +0100
-Message-Id: <20200317103316.934745037@linuxfoundation.org>
+        stable@vger.kernel.org, Mathias Kresin <dev@kresin.me>,
+        Thomas Langer <thomas.langer@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.4 073/123] pinctrl: falcon: fix syntax error
+Date:   Tue, 17 Mar 2020 11:55:00 +0100
+Message-Id: <20200317103314.963790552@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,42 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Mathias Kresin <dev@kresin.me>
 
-commit b102f0c522cf668c8382c56a4f771b37d011cda2 upstream.
+commit d62e7fbea4951c124a24176da0c7bf3003ec53d4 upstream.
 
-If the hardware receives an oversized packet with too many rx fragments,
-skb_shinfo(skb)->frags can overflow and corrupt memory of adjacent pages.
-This becomes especially visible if it corrupts the freelist pointer of
-a slab page.
+Add the missing semicolon after of_node_put to get the file compiled.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: f17d2f54d36d ("pinctrl: falcon: Add of_node_put() before return")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Mathias Kresin <dev@kresin.me>
+Link: https://lore.kernel.org/r/20200305182245.9636-1-dev@kresin.me
+Acked-by: Thomas Langer <thomas.langer@intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mediatek/mt76/dma.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-falcon.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/mediatek/mt76/dma.c
-+++ b/drivers/net/wireless/mediatek/mt76/dma.c
-@@ -448,10 +448,13 @@ mt76_add_fragment(struct mt76_dev *dev,
- 	struct page *page = virt_to_head_page(data);
- 	int offset = data - page_address(page);
- 	struct sk_buff *skb = q->rx_head;
-+	struct skb_shared_info *shinfo = skb_shinfo(skb);
- 
--	offset += q->buf_offset;
--	skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, page, offset, len,
--			q->buf_size);
-+	if (shinfo->nr_frags < ARRAY_SIZE(shinfo->frags)) {
-+		offset += q->buf_offset;
-+		skb_add_rx_frag(skb, shinfo->nr_frags, page, offset, len,
-+				q->buf_size);
-+	}
- 
- 	if (more)
- 		return;
+--- a/drivers/pinctrl/pinctrl-falcon.c
++++ b/drivers/pinctrl/pinctrl-falcon.c
+@@ -451,7 +451,7 @@ static int pinctrl_falcon_probe(struct p
+ 		falcon_info.clk[*bank] = clk_get(&ppdev->dev, NULL);
+ 		if (IS_ERR(falcon_info.clk[*bank])) {
+ 			dev_err(&ppdev->dev, "failed to get clock\n");
+-			of_node_put(np)
++			of_node_put(np);
+ 			return PTR_ERR(falcon_info.clk[*bank]);
+ 		}
+ 		falcon_info.membase[*bank] = devm_ioremap_resource(&pdev->dev,
 
 
