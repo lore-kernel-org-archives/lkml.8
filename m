@@ -2,150 +2,426 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26726C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC72C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE0C20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5BE2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dYo3YFbL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgCQUfO (ORCPT
+        id S1726793AbgCQUgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:35:14 -0400
-Received: from mga17.intel.com ([192.55.52.151]:17562 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgCQUfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:35:14 -0400
-IronPort-SDR: 5Wl964iVNXgMWWoZ6tUZ9b2p+r+9Xl1+XfIgK2geAMcZpPHKaiWMRp+swJIuFElYFPunXmCBuc
- o6Fk9pK56/Ig==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 13:35:13 -0700
-IronPort-SDR: xSlZJbVgHc2AKONDJ/Sljm9V3xwLfDRMe6qHvlFckW78s/QGMK4b8Va7m/tazkGak9vdmxo6Ef
- Jr0yudYeMmHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="247949524"
-Received: from dslea-mobl.amr.corp.intel.com (HELO [10.251.3.73]) ([10.251.3.73])
-  by orsmga006.jf.intel.com with ESMTP; 17 Mar 2020 13:35:12 -0700
-Subject: Re: [PATCH] treewide: Rename "unencrypted" to "decrypted"
-To:     Borislav Petkov <bp@suse.de>, lkml <linux-kernel@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>
-References: <20200317111822.GA15609@zn.tnic>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <2cb4a8ae-3b13-67bd-c021-aee47fdf58c5@intel.com>
-Date:   Tue, 17 Mar 2020 13:35:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 17 Mar 2020 16:36:45 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39337 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgCQUgp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 16:36:45 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m1so1928792pll.6
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ib4SwHPhEWfJb/uM7SZdOGzb1C9ZMwqW8KhF+YMLT3M=;
+        b=dYo3YFbLQ3sdflQTmyvLyS4EkAkzpXmfCXPFn/r3mL7/ofYBawg+1sMIb53TSIod48
+         ZAsSb0PVHK8YmDLVaWLK64XknHAQKwgmN5kZC5vdqhTLAQQPA6NOhOBKFNsWSazmQFo4
+         bgj7ZMb1T+os0t2EOSHfGNcHiX61oSH/+I2jk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ib4SwHPhEWfJb/uM7SZdOGzb1C9ZMwqW8KhF+YMLT3M=;
+        b=E69RGruH9xCN5VEGvUpFv5xLnMTzGtcPmPF1x0WSKQ4q1MK3aX5q6XK42u/GMOfcMX
+         48UHQMuGWRri7sFlryVjJT1CbaVbsrhAAlGpefh2x+5wel32YHwfjiL9/8rIdJfzf3o5
+         pACqJ8FHHHNsJCS3o7grRidLtpeVv0q4TVJOA9pIEBftaO5/ZEDX+qzv4p7FKcFle4wN
+         iIp9vlPhpQ4iOmepIOMRdI+/Wb85SIYFzNCa+B9X09AC8beuaiFvfBE8hzycsO6vxHHM
+         U8XBrki/MSnAvGHYW9iQMRwwNYAEZ/IlNnZ9Rx2puww6A+RzDZSFQipfNbXX0P6iD2Sf
+         8MLQ==
+X-Gm-Message-State: ANhLgQ0bPOk0R+F56yHf9+vtkLZeZW56Qpi6XV19yvG1dfZ1bpOeKL52
+        E4IDzcbcGtmUDm8dMGkP+AJ2Eezt32s=
+X-Google-Smtp-Source: ADFU+vtywVKdA3PLHVrwUfLlI+Te1WxZLBOBQRoXC+vTAGy5lQ5ckL9RCHaEDGa2W5XtgG2S7iRKcQ==
+X-Received: by 2002:a17:90a:ab0a:: with SMTP id m10mr1046373pjq.105.1584477402819;
+        Tue, 17 Mar 2020 13:36:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d14sm3071222pfq.29.2020.03.17.13.36.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 13:36:41 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 13:36:40 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, Tim.Bird@sony.com
+Subject: Re: [PATCH v3 5/6] kselftest: add fixture parameters
+Message-ID: <202003171326.0EB9CC2@keescook>
+References: <20200316225647.3129354-1-kuba@kernel.org>
+ <20200316225647.3129354-6-kuba@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200317111822.GA15609@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316225647.3129354-6-kuba@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/20 4:18 AM, Borislav Petkov wrote:
-> Back then when the whole SME machinery started getting mainlined, it
-> was agreed that for simplicity, clarity and sanity's sake, the terms
-> denoting encrypted and not-encrypted memory should be "encrypted" and
-> "decrypted". And the majority of the code sticks to that convention
-> except those two. So rename them.
+On Mon, Mar 16, 2020 at 03:56:45PM -0700, Jakub Kicinski wrote:
+> Allow users to pass parameters to fixtures.
+> 
+> Each fixture will be evaluated for each of its parameter
+> sets.
 
-Don't "unencrypted" and "decrypted" mean different things?
+This commit log (and subject) needs to be reworded/expanded slightly.
+Perhaps:
 
-Unencrypted to me means "encryption was never used for this data".
 
-Decrypted means "this was/is encrypted but here is a plaintext copy".
+Subject: kselftest: add fixture variants
 
-This, for instance:
+Allow users to build parameterized variants of fixtures.
 
-> +++ b/kernel/dma/direct.c
-> @@ -26,7 +26,7 @@ unsigned int zone_dma_bits __ro_after_init = 24;
->  static inline dma_addr_t phys_to_dma_direct(struct device *dev,
->  		phys_addr_t phys)
+If fixtures want variants, they call FIXTURE_VARIANT() to declare the
+structure to fill for each variant. Each fixture will be re-run for each
+of the variants defined by calling FIXTURE_VARIANT_ADD() with the
+differing parameters initializing the structure.
+
+Since tests are being re-run, additional initialization (steps,
+no_print) is also added.
+
+
+
+
+> 
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> --
+> v3:
+>  - separate variant name out with a dot.
+> ---
+>  Documentation/dev-tools/kselftest.rst       |   3 +-
+>  tools/testing/selftests/kselftest_harness.h | 145 ++++++++++++++++----
+>  2 files changed, 121 insertions(+), 27 deletions(-)
+> 
+> diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
+> index 61ae13c44f91..5d1f56fcd2e7 100644
+> --- a/Documentation/dev-tools/kselftest.rst
+> +++ b/Documentation/dev-tools/kselftest.rst
+> @@ -301,7 +301,8 @@ Helpers
+>  
+>  .. kernel-doc:: tools/testing/selftests/kselftest_harness.h
+>      :functions: TH_LOG TEST TEST_SIGNAL FIXTURE FIXTURE_DATA FIXTURE_SETUP
+> -                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN
+> +                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN FIXTURE_VARIANT
+> +                FIXTURE_VARIANT_ADD
+>  
+>  Operators
+>  ---------
+> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+> index 36ab1b92eb35..1a079afa2d01 100644
+> --- a/tools/testing/selftests/kselftest_harness.h
+> +++ b/tools/testing/selftests/kselftest_harness.h
+> @@ -168,9 +168,15 @@
+>  
+>  #define __TEST_IMPL(test_name, _signal) \
+>  	static void test_name(struct __test_metadata *_metadata); \
+> +	static inline void wrapper_##test_name( \
+> +		struct __test_metadata *_metadata, \
+> +		struct __fixture_variant_metadata *variant) \
+> +	{ \
+> +		test_name(_metadata); \
+> +	} \
+>  	static struct __test_metadata _##test_name##_object = \
+>  		{ .name = #test_name, \
+> -		  .fn = &test_name, \
+> +		  .fn = &wrapper_##test_name, \
+>  		  .fixture = &_fixture_global, \
+>  		  .termsig = _signal, \
+>  		  .timeout = TEST_TIMEOUT_DEFAULT, }; \
+> @@ -214,6 +220,7 @@
+>   * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
+>   */
+>  #define FIXTURE(fixture_name) \
+> +	FIXTURE_VARIANT(fixture_name); \
+>  	static struct __fixture_metadata _##fixture_name##_fixture_object = \
+>  		{ .name =  #fixture_name, }; \
+>  	static void __attribute__((constructor)) \
+> @@ -245,7 +252,9 @@
+>  #define FIXTURE_SETUP(fixture_name) \
+>  	void fixture_name##_setup( \
+>  		struct __test_metadata __attribute__((unused)) *_metadata, \
+> -		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
+> +		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
+> +		const FIXTURE_VARIANT(fixture_name) __attribute__((unused)) *variant)
+> +
+>  /**
+>   * FIXTURE_TEARDOWN(fixture_name)
+>   * *_metadata* is included so that EXPECT_* and ASSERT_* work correctly.
+> @@ -267,6 +276,58 @@
+>  		struct __test_metadata __attribute__((unused)) *_metadata, \
+>  		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
+>  
+> +/**
+> + * FIXTURE_VARIANT(fixture_name) - Optionally called once per fixture
+> + * to declare fixture variant
+> + *
+> + * @fixture_name: fixture name
+> + *
+> + * .. code-block:: c
+> + *
+> + *     FIXTURE_VARIANT(datatype name) {
+> + *       type property1;
+> + *       ...
+> + *     };
+> + *
+> + * Defines type of constant parameters provided to FIXTURE_SETUP() and TEST_F()
+> + * as *variant*. Variants allow the same tests to be run with different
+> + * arguments.
+> + */
+> +#define FIXTURE_VARIANT(fixture_name) struct _fixture_variant_##fixture_name
+> +
+> +/**
+> + * FIXTURE_VARIANT_ADD(fixture_name, variant_name) - Called once per fixture
+> + * variant to setup and register the data
+> + *
+> + * @fixture_name: fixture name
+> + * @variant_name: name of the parameter set
+> + *
+> + * .. code-block:: c
+> + *
+> + *     FIXTURE_ADD(datatype name) {
+> + *       .property1 = val1;
+> + *       ...
+> + *     };
+> + *
+> + * Defines a variant of the test fixture, provided to FIXTURE_SETUP() and
+> + * TEST_F() as *variant*. Tests of each fixture will be run once for each
+> + * variant.
+> + */
+> +#define FIXTURE_VARIANT_ADD(fixture_name, variant_name) \
+> +	extern FIXTURE_VARIANT(fixture_name) \
+> +		_##fixture_name##_##variant_name##_variant; \
+> +	static struct __fixture_variant_metadata \
+> +		_##fixture_name##_##variant_name##_object = \
+> +		{ .name = #variant_name, \
+> +		  .data = &_##fixture_name##_##variant_name##_variant}; \
+> +	static void __attribute__((constructor)) \
+> +		_register_##fixture_name##_##variant_name(void) \
+> +	{ \
+> +		__register_fixture_variant(&_##fixture_name##_fixture_object, \
+> +			&_##fixture_name##_##variant_name##_object);	\
+> +	} \
+> +	FIXTURE_VARIANT(fixture_name) _##fixture_name##_##variant_name##_variant =
+> +
+>  /**
+>   * TEST_F(fixture_name, test_name) - Emits test registration and helpers for
+>   * fixture-based test cases
+> @@ -297,18 +358,20 @@
+>  #define __TEST_F_IMPL(fixture_name, test_name, signal, tmout) \
+>  	static void fixture_name##_##test_name( \
+>  		struct __test_metadata *_metadata, \
+> -		FIXTURE_DATA(fixture_name) *self); \
+> +		FIXTURE_DATA(fixture_name) *self, \
+> +		const FIXTURE_VARIANT(fixture_name) *variant); \
+>  	static inline void wrapper_##fixture_name##_##test_name( \
+> -		struct __test_metadata *_metadata) \
+> +		struct __test_metadata *_metadata, \
+> +		struct __fixture_variant_metadata *variant) \
+>  	{ \
+>  		/* fixture data is alloced, setup, and torn down per call. */ \
+>  		FIXTURE_DATA(fixture_name) self; \
+>  		memset(&self, 0, sizeof(FIXTURE_DATA(fixture_name))); \
+> -		fixture_name##_setup(_metadata, &self); \
+> +		fixture_name##_setup(_metadata, &self, variant->data); \
+>  		/* Let setup failure terminate early. */ \
+>  		if (!_metadata->passed) \
+>  			return; \
+> -		fixture_name##_##test_name(_metadata, &self); \
+> +		fixture_name##_##test_name(_metadata, &self, variant->data); \
+>  		fixture_name##_teardown(_metadata, &self); \
+>  	} \
+>  	static struct __test_metadata \
+> @@ -326,7 +389,8 @@
+>  	} \
+>  	static void fixture_name##_##test_name( \
+>  		struct __test_metadata __attribute__((unused)) *_metadata, \
+> -		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
+> +		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
+> +		const FIXTURE_VARIANT(fixture_name) __attribute__((unused)) *variant)
+>  
+>  /**
+>   * TEST_HARNESS_MAIN - Simple wrapper to run the test harness
+> @@ -661,10 +725,12 @@
+>  
+>  /* Contains all the information about a fixture */
+>  struct __test_metadata;
+> +struct __fixture_variant_metadata;
+>  
+>  struct __fixture_metadata {
+>  	const char *name;
+>  	struct __test_metadata *tests;
+> +	struct __fixture_variant_metadata *variant;
+>  	struct __fixture_metadata *prev, *next;
+>  } _fixture_global __attribute__((unused)) = {
+>  	.name = "global",
+> @@ -672,7 +738,6 @@ struct __fixture_metadata {
+>  };
+>  
+>  static struct __fixture_metadata *__fixture_list = &_fixture_global;
+> -static unsigned int __fixture_count;
+>  static int __constructor_order;
+>  
+>  #define _CONSTRUCTOR_ORDER_FORWARD   1
+> @@ -680,14 +745,27 @@ static int __constructor_order;
+>  
+>  static inline void __register_fixture(struct __fixture_metadata *f)
 >  {
-> -	if (force_dma_unencrypted(dev))
-> +	if (force_dma_decrypted(dev))
->  		return __phys_to_dma(dev, phys);
+> -	__fixture_count++;
+>  	__LIST_APPEND(__fixture_list, f);
+>  }
+>  
+> +struct __fixture_variant_metadata {
+> +	const char *name;
+> +	const void *data;
+> +	struct __fixture_variant_metadata *prev, *next;
+> +};
+> +
+> +static inline void
+> +__register_fixture_variant(struct __fixture_metadata *f,
+> +			  struct __fixture_variant_metadata *variant)
+> +{
+> +	__LIST_APPEND(f->variant, variant);
+> +}
+> +
+>  /* Contains all the information for test execution and status checking. */
+>  struct __test_metadata {
+>  	const char *name;
+> -	void (*fn)(struct __test_metadata *);
+> +	void (*fn)(struct __test_metadata *,
+> +		   struct __fixture_variant_metadata *);
+>  	struct __fixture_metadata *fixture;
+>  	int termsig;
+>  	int passed;
+> @@ -698,9 +776,6 @@ struct __test_metadata {
+>  	struct __test_metadata *prev, *next;
+>  };
+>  
+> -/* Storage for the (global) tests to be run. */
+> -static unsigned int __test_count;
+> -
+>  /*
+>   * Since constructors are called in reverse order, reverse the test
+>   * list so tests are run in source declaration order.
+> @@ -714,7 +789,6 @@ static inline void __register_test(struct __test_metadata *t)
+>  {
+>  	struct __fixture_metadata *f = t->fixture;
+>  
+> -	__test_count++;
+>  	__LIST_APPEND(f->tests, t);
+>  }
+>  
+> @@ -729,21 +803,27 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
+>  }
+>  
+>  void __run_test(struct __fixture_metadata *f,
+> +		struct __fixture_variant_metadata *variant,
+>  		struct __test_metadata *t)
+>  {
+>  	pid_t child_pid;
+>  	int status;
+>  
+> +	/* reset test struct */
+>  	t->passed = 1;
+>  	t->trigger = 0;
+> -	printf("[ RUN      ] %s.%s\n", f->name, t->name);
+> +	t->step = 0;
+> +	t->no_print = 0;
 
-is referring to DMA that is not and never was encrypted.  It's skipping
-the encryption altogether.  There's no act of "decryption" anywhere.
+I called this out in the commit log. This will need some merge attention
+when my series for timeouts is merged too (since the new "timed_out"
+will need to be initialized here too), but you don't have to worry about
+that yet.
 
-This, on the other hand, seems named wrong to me:
+> +
+> +	printf("[ RUN      ] %s%s%s.%s\n",
+> +	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
+>  	alarm(t->timeout);
+>  	child_pid = fork();
+>  	if (child_pid < 0) {
+>  		printf("ERROR SPAWNING TEST CHILD\n");
+>  		t->passed = 0;
+>  	} else if (child_pid == 0) {
+> -		t->fn(t);
+> +		t->fn(t, variant);
+>  		/* return the step that failed or 0 */
+>  		_exit(t->passed ? 0 : t->step);
+>  	} else {
+> @@ -785,31 +865,44 @@ void __run_test(struct __fixture_metadata *f,
+>  				status);
+>  		}
+>  	}
+> -	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
+> -	       f->name, t->name);
+> +	printf("[     %4s ] %s%s%s.%s\n", (t->passed ? "OK" : "FAIL"),
+> +	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
+>  	alarm(0);
+>  }
+>  
+>  static int test_harness_run(int __attribute__((unused)) argc,
+>  			    char __attribute__((unused)) **argv)
+>  {
+> +	struct __fixture_variant_metadata no_variant = { .name = "", };
+> +	struct __fixture_variant_metadata *v;
+>  	struct __fixture_metadata *f;
+>  	struct __test_metadata *t;
+>  	int ret = 0;
+> +	unsigned int case_count = 0, test_count = 0;
+>  	unsigned int count = 0;
+>  	unsigned int pass_count = 0;
+>  
+> +	for (f = __fixture_list; f; f = f->next) {
+> +		for (v = f->variant ?: &no_variant; v; v = v->next) {
+> +			case_count++;
+> +			for (t = f->tests; t; t = t->next)
+> +				test_count++;
+> +		}
+> +	}
+> +
+>  	/* TODO(wad) add optional arguments similar to gtest. */
+>  	printf("[==========] Running %u tests from %u test cases.\n",
+> -	       __test_count, __fixture_count + 1);
+> +	       test_count, case_count);
+>  	for (f = __fixture_list; f; f = f->next) {
+> -		for (t = f->tests; t; t = t->next) {
+> -			count++;
+> -			__run_test(f, t);
+> -			if (t->passed)
+> -				pass_count++;
+> -			else
+> -				ret = 1;
+> +		for (v = f->variant ?: &no_variant; v; v = v->next) {
+> +			for (t = f->tests; t; t = t->next) {
+> +				count++;
+> +				__run_test(f, v, t);
+> +				if (t->passed)
+> +					pass_count++;
+> +				else
+> +					ret = 1;
+> +			}
+>  		}
+>  	}
+>  	printf("[==========] %u / %u tests passed.\n", pass_count, count);
+> -- 
+> 2.24.1
+> 
 
-> /*
->  * Macros to add or remove encryption attribute
->  */
-> #define pgprot_encrypted(prot)  __pgprot(__sme_set(pgprot_val(prot)))
-> #define pgprot_decrypted(prot)  __pgprot(__sme_clr(pgprot_val(prot)))
+Otherwise, with those things fixed, yes:
 
-This seems like it would be better named pgprot_unencrypted().
+Acked-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
