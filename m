@@ -2,139 +2,148 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB52BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D507BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2DD7206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A588E206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Fs497W/R"
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="k5Hee8so"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbgCQI0H (ORCPT
+        id S1726157AbgCQI0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:26:07 -0400
-Received: from mail-eopbgr1400123.outbound.protection.outlook.com ([40.107.140.123]:26816
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725536AbgCQI0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:26:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZKlyewpyvE9GtjntPtFDSAmOg9Dt7R857VqxRBkVf1WHk3pAhDb9M6C0IbYxE3cMJ1VDUvePk09EXAJURBRYNU6KIaowqx5GIWvx4E3y/wwX9OQgisSFAoy8Ryzr8QMA7OWkh8GCF1pI3GTmqaJSpbgBI1OCb+j0WzJL/Eza5TDtn7l/wmITpnSqwAqUaSj8DqMCT6uTG0N9ihg1sceTjefrkEShhnMzflxKcBQatLRBdtIymLKgWLZBMIx//I/sbBZ/+Q1PFfjlZdNnyLIjy3v6byuUs77R8dpljd50YSJk4QG8rlua7DGpazX0QOncyoHTizsDlMWgm9pi6FEuEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BPmcOlrb+yKUg/weZuB9bCyL075WJYW3h6SzJ8jlSIk=;
- b=WGlJ8ZmwsbLq5axrJwKgbOagtPeVXEDrR76XfvKHT+mXUL5mKnfMAiEdNDuCpMp4vDHXiLxfbKL4w86fCcMX2Z9PXZLQaq8rB3AKVSizwhWWi6yqOZZ4u19V7MXGfWf42eS8G9bY6PyPU19gFVhC7ylzfuiox46CsfoTeNJP48nl8zkzOQbRX1FUQEmHIZJ3B65n6Tfaapr5IV63m/JlBL9sLnvBEm+VkhyGUBQyR+UsLPaalVMzDlsbr33DyKh3mLYtFwV11JjYI04CAGEXq24id9Me2BIGNtXn5OsuL/p6MYktbn+Si40hMdvsxtpftAaIj0DvFP2T/0rKXUmk/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Tue, 17 Mar 2020 04:26:54 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44970 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgCQI0x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 04:26:53 -0400
+Received: by mail-il1-f196.google.com with SMTP id j69so19235578ila.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 01:26:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BPmcOlrb+yKUg/weZuB9bCyL075WJYW3h6SzJ8jlSIk=;
- b=Fs497W/R9O9rc8yQL1NiWI/xDXB1fCqswlATrATmnG+lJlq0Lj9UiFXEYeXblDV6h4c5DF/rotAY6/rOTQVyqeeM7bY5PSyIj0wcUsATtTiwYRjim34LrpT3/zLo6RMDsaAqIq6BJ14GdfBmk6+Lwj85VpAL1fUx18+eJW7ZNfM=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB3213.jpnprd01.prod.outlook.com (20.177.104.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.16; Tue, 17 Mar 2020 08:26:03 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 08:26:03 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-CC:     Andrew Murray <andrew.murray@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: RE: [PATCH v5 5/7] dt-bindings: PCI: rcar: Add bindings for R-Car
- PCIe endpoint controller
-Thread-Topic: [PATCH v5 5/7] dt-bindings: PCI: rcar: Add bindings for R-Car
- PCIe endpoint controller
-Thread-Index: AQHV7k2mHX0IeWzmbUuqL/cidPXc16hMjZhw
-Date:   Tue, 17 Mar 2020 08:26:03 +0000
-Message-ID: <TYAPR01MB454466B8451E3115D8A7DFB7D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200228154122.14164-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200228154122.14164-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 40f9e958-e883-4431-5168-08d7ca4cd4d2
-x-ms-traffictypediagnostic: TYAPR01MB3213:|TYAPR01MB3213:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB3213D0CB519558870D56BF0FD8F60@TYAPR01MB3213.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(136003)(346002)(376002)(199004)(33656002)(52536014)(8936002)(55016002)(5660300002)(4326008)(64756008)(9686003)(26005)(186003)(86362001)(2906002)(8676002)(66476007)(76116006)(66946007)(81156014)(66556008)(81166006)(66446008)(478600001)(7416002)(558084003)(6916009)(54906003)(7696005)(71200400001)(6506007)(55236004)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3213;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sUP2WRCSrmCT6B1OnBLOt5bGDTtxR/U5eJQcpyk8Pbwc1Fn4SEXwO/mXY0itdaDSRG5a+e+rBEp2rza2Auce5Vks63f1rew4j54hRB2PhTUhjPlMNh9btDY6jfWFwWWwjIGo4x9Wg6S7A/FECW2emIETwPqo/R3O7+43IixeHuv6JSj41hdkBz1e83b8sv/fVqtVqOodnHpXaH2DdOl2QziUF7t/PVZaH/dDoXvFTu3FkNFXAiB+i2+XhZS4nVh7yROYMeQ+IBhqxReFPTqqXjwSR2x6kkcxzaJbhA0+PbQQR8LOCHDqn+LuzvjZtXumjG3Qng0s7KtfDVlF5hPcIii4hbizIzw6VknTxdO6cQf7CmEBtR3YJ5UykwSbeL9PtldiBAabUD7RPZGYmmjewUxjuiGITfMOGzhMifgT45Df87HLrcnvy9fkGGpcQcaG
-x-ms-exchange-antispam-messagedata: nPz+KD4K74cmcwqaO3a0XU8r0gIQNhMLKks3YAtYZellB3K/NocEQobWkDJrmcN0fAMlGqDfDeWD3q5E19hYP9gmwhLVVT/+qsgfFBoXa3GWDD3Qelygo3oH0NfIEJXbsF+4TH8izMyDVyJ1QPQraA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=antmicro.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8aOuyJoCrMzyvXHSlDSwNMADBZRpY3b4ROkMfslZB48=;
+        b=k5Hee8soUFcdVO+I6avboQHDvGJamIlUdtAa9jEGpo/uilBwzwba3lZorbRHrpeJs+
+         mzKIQfYEFlUJV0c+PS9u9SAKiPnnQHcx/GKTSsS+/FvQ7KD99ukdr+RAXLPE10oyBPMR
+         lKCeNAO5CTAV9TWFxlRb+ob9I6bGndxQbo7FQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8aOuyJoCrMzyvXHSlDSwNMADBZRpY3b4ROkMfslZB48=;
+        b=JVtbY9X/+5XpZ2z+hXi1ZhghXqoEEXhxoPUzeh0Jas2Qtz73vTbeXCD8zZa9CuCTkD
+         3stOMV1fxQZMBLzUlyknEYe3L/bj1+4DuCIov8xvzcFCJK8oQWbmMRoBiCcqO9Bdzpwh
+         eB3mOFIyuaczYL88M0+2F5Rcj0uW1Wpc69iN3lhrHW4yvT6QCKtX7Gtt4AYZJbRhOhA8
+         ji5ivR9ofFz7pc6AltbLSG/HhfV6KGiiVTGVvI/g7hWHimJ36Ggl4j+PbgBEpoAbgoZV
+         x9b2h6Cwwm1ISu2aJ1ECAxeI5TF6+pMom7MDNDqYCkdLT0SGV8jiXeyUmVq1jj+M+cKn
+         PuiQ==
+X-Gm-Message-State: ANhLgQ2ZxizEYl7f7PSXZgYMINRfnExr+KwQMarEmZE0BgI0KAjT60eT
+        3epB5m8GHmHll2JFsDEpx6S0madUMDOiiLBXdrBn5g==
+X-Google-Smtp-Source: ADFU+vuurAtCAkyqCIHFcLdznh3heTGQ3XHwTYG5aY0816GZbUgWE2P5XFfJ3rW0Pu1UJql5n8z5r8atIwDae7WWeqs=
+X-Received: by 2002:a92:778e:: with SMTP id s136mr4076428ilc.256.1584433612716;
+ Tue, 17 Mar 2020 01:26:52 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40f9e958-e883-4431-5168-08d7ca4cd4d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 08:26:03.0654
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AEKg5toFkrBKfz+kdF84oWoV3nR1G6DMm4T5UFA66MhY9gKq4bjo6/Gv0D9zoUlNxci9CL0CYvkulni7TSOBvAeWUGQGx6hTQ3RQ0rHzcCnNr1OH1GHsjze3578YHReO
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3213
+References: <20200225094437.4170502-0-mholenko@antmicro.com>
+ <20200225094437.4170502-3-mholenko@antmicro.com> <291b0a18-2b50-515e-d6f8-31f766dbe567@infradead.org>
+In-Reply-To: <291b0a18-2b50-515e-d6f8-31f766dbe567@infradead.org>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Tue, 17 Mar 2020 09:26:41 +0100
+Message-ID: <CAPk366T03OT9TxsR27X4cPU5jew2TB32u3URnTy8b9r6MmpTeQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] drivers/soc/litex: add LiteX SoC Controller driver
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar-san,
+On Tue, Feb 25, 2020 at 5:16 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 2/25/20 12:46 AM, Mateusz Holenko wrote:
+> > diff --git a/drivers/soc/litex/Kconfig b/drivers/soc/litex/Kconfig
+> > new file mode 100644
+> > index 000000000000..22c78cda0b83
+> > --- /dev/null
+> > +++ b/drivers/soc/litex/Kconfig
+> > @@ -0,0 +1,14 @@
+> > +# SPDX-License_Identifier: GPL-2.0
+> > +
+> > +menu "Enable LiteX SoC Builder specific drivers"
+> > +
+> > +config LITEX_SOC_CONTROLLER
+> > +     tristate "Enable LiteX SoC Controller driver"
+> > +     help
+> > +     This option enables the SoC Controller Driver which verifies
+> > +     LiteX CSR access and provides common litex_get_reg/litex_set_reg
+> > +     accessors.
+> > +     All drivers that use functions from litex.h must depend on
+> > +     LITEX_SOC_CONTROLLER
+>
+> Hi,
+> Please indent the help text with 2 additional spaces, as explained in the
+> coding-style.rst file:
+>
+> 10) Kconfig configuration files
+> -------------------------------
+>
+> For all of the Kconfig* configuration files throughout the source tree,
+> the indentation is somewhat different.  Lines under a ``config`` definition
+> are indented with one tab, while help text is indented an additional two
+> spaces.  Example::
+>
+>   config AUDIT
+>         bool "Auditing support"
+>         depends on NET
+>         help
+>           Enable auditing infrastructure that can be used with another
+>           kernel subsystem, such as SELinux (which requires this for
+>           logging of avc messages output).  Does not do system-call
+>           auditing without CONFIG_AUDITSYSCALL.
+>
+> > +
+> > +endmenu
+>
+> and then end the last line of the help text with a period ('.').
+>
+> thanks.
+>
+> --
+> ~Randy
+>
 
-Thank you for the patch!
+Thanks for the comments!
 
-> From: Lad Prabhakar, Sent: Saturday, February 29, 2020 12:41 AM
->=20
-> This patch adds the bindings for the R-Car PCIe endpoint driver.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+I'll fix the documentation and resubmit the patch after addressing all
+other remarks.
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Best regards,
-Yoshihiro Shimoda
-
+-- 
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
