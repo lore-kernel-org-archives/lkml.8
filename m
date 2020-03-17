@@ -2,232 +2,83 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F37C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB87C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6925E20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2D720738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:21:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZwHWmDoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgCQNVS (ORCPT
+        id S1726943AbgCQNVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:21:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45312 "EHLO mx2.suse.de"
+        Tue, 17 Mar 2020 09:21:34 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40366 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726598AbgCQNVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:21:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4BE94AACA;
-        Tue, 17 Mar 2020 13:21:14 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [RFC] kernel/sysctl: support setting sysctl parameters from kernel command line
-Date:   Tue, 17 Mar 2020 14:21:05 +0100
-Message-Id: <20200317132105.24555-1-vbabka@suse.cz>
-X-Mailer: git-send-email 2.25.1
+        id S1726491AbgCQNVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:21:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=GG0k4EuHqxTbDjuYKYidwWd+wII+WrKwmSBFT6vI+hc=; b=ZwHWmDoaB07G+wUp4czf/vPV3F
+        +zEYFu59JHSbBciL29yqDkZ0qPsB51BljVMUFbVVoDWwA21faSqTgxAlEpcVsN2Gq2D4reBwVJglZ
+        X5rM3xCQURaybduQ0EXIEQcQR6daJBRj3RaQudMeoLsop6noXkphS19iQaAaw7wlheL4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jEC9m-0006QD-35; Tue, 17 Mar 2020 14:21:18 +0100
+Date:   Tue, 17 Mar 2020 14:21:18 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 03/28] ARM: dts: pxa168: Add missing address/size cells
+ to i2c nodes
+Message-ID: <20200317132118.GD24270@lunn.ch>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-4-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317093922.20785-4-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recently proposed patch to add vm_swappiness command line parameter in
-addition to existing sysctl [1] made me wonder why we don't have a general
-support for passing sysctl parameters via command line. Googling found only
-somebody else wondering the same [2], but I haven't found any prior discussion
-with reasons why not to do this.
+On Tue, Mar 17, 2020 at 10:38:57AM +0100, Lubomir Rintel wrote:
+> This makes the nodes compatible with the generic i2c binding without the
+> board DTS files having to supply the necessary properties themselves.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Settings the vm_swappiness issue aside (the underlying issue might be solved in
-a different way), quick search of kernel-parameters.txt shows there are already
-some that exist as both sysctl and kernel parameter - hung_task_panic,
-nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
-would remove the need to add more of those one-offs and might be handy in
-situations where configuration by e.g. /etc/sysctl.d/ is impractical.
-Also after 61a47c1ad3a4 ("sysctl: Remove the sysctl system call") the only way
-to set sysctl is via procfs, so this would eventually allow small systems to be
-built without CONFIG_PROC_SYSCTL and still be able to change sysctl parameters.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Hence, this patch adds a new parse_args() pass that looks for parameters
-prefixed by 'sysctl.' and searches for them in the sysctl ctl_tables. When
-found, the respective proc handler is invoked. The search is just a naive
-linear one, to avoid using the whole procfs layer. It should be acceptable,
-as the cost depends on number of sysctl. parameters passed.
-
-The main limitation of avoiding the procfs layer is however that sysctls
-dynamically registered by register_sysctl_table() or register_sysctl_paths()
-cannot be set by this method.
-
-The processing is hooked right before the init process is loaded, as some
-handlers might be more complicated than simple setters and might need some
-subsystems to be initialized. At the moment the init process can be started and
-eventually execute a process writing to /proc/sys/ then it should be also fine
-to do that from the kernel.
-
-[1] https://lore.kernel.org/linux-doc/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com/
-[2] https://unix.stackexchange.com/questions/558802/how-to-set-sysctl-using-kernel-command-line-parameter
-
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
-Hi,
-
-this is an early RFC so I can get feedback whether to pursue this idea further,
-before trying the more complicated stuff with dynamically registered sysctls.
-For those I have some unanswered questions:
-- Support them at all?
-- Do so by an internal procfs mount again, that was removed by 61a47c1ad3a4 ?
-  Or try to keep it simple.
-- If sysctls are dynamically registered at module load, process the command
-  line sysctl arguments again? - this would be rather complicated I guess.
-
-Vlastimil
-
- include/linux/sysctl.h |  1 +
- init/main.c            | 21 ++++++++++++++
- kernel/sysctl.c        | 66 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 88 insertions(+)
-
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 02fa84493f23..62ae963a5c0c 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -206,6 +206,7 @@ struct ctl_table_header *register_sysctl_paths(const struct ctl_path *path,
- void unregister_sysctl_table(struct ctl_table_header * table);
- 
- extern int sysctl_init(void);
-+int process_sysctl_arg(char *param, char *val, const char *unused, void *arg);
- 
- extern struct ctl_table sysctl_mount_point[];
- 
-diff --git a/init/main.c b/init/main.c
-index ee4947af823f..74a094c6b8b9 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1345,6 +1345,25 @@ void __weak free_initmem(void)
- 	free_initmem_default(POISON_FREE_INITMEM);
- }
- 
-+static void do_sysctl_args(void)
-+{
-+#ifdef CONFIG_SYSCTL
-+	size_t len = strlen(saved_command_line) + 1;
-+	char *command_line;
-+
-+	command_line = kzalloc(len, GFP_KERNEL);
-+	if (!command_line)
-+		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
-+
-+	strcpy(command_line, saved_command_line);
-+
-+	parse_args("Setting sysctl args", command_line,
-+		   NULL, 0, -1, -1, NULL, process_sysctl_arg);
-+
-+	kfree(command_line);
-+#endif
-+}
-+
- static int __ref kernel_init(void *unused)
- {
- 	int ret;
-@@ -1367,6 +1386,8 @@ static int __ref kernel_init(void *unused)
- 
- 	rcu_end_inkernel_boot();
- 
-+	do_sysctl_args();
-+
- 	if (ramdisk_execute_command) {
- 		ret = run_init_process(ramdisk_execute_command);
- 		if (!ret)
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index ad5b88a53c5a..0444656c259d 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1980,6 +1980,72 @@ int __init sysctl_init(void)
- 	return 0;
- }
- 
-+/* Set sysctl value passed on kernel command line. */
-+int process_sysctl_arg(char *param, char *val,
-+			       const char *unused, void *arg)
-+{
-+	size_t count;
-+	char *tmp;
-+	int err;
-+	loff_t ppos = 0;
-+	struct ctl_table *base, *child = NULL, *found = NULL;
-+
-+	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
-+		return 0;
-+
-+	param += (sizeof("sysctl.") - 1);
-+
-+	tmp = strchr(param, '.');
-+	if (!tmp) {
-+		pr_warn("Invalid sysctl param '%s' on command line", param);
-+		return 0;
-+	}
-+
-+	*tmp = '\0';
-+
-+	for (base = &sysctl_base_table[0]; base->procname != 0; base++) {
-+		if (strcmp(param, base->procname) == 0) {
-+			child = base->child;
-+			break;
-+		}
-+	}
-+
-+	if (!child) {
-+		pr_warn("Unknown sysctl prefix '%s' on command line", param);
-+		return 0;
-+	}
-+
-+	tmp++;
-+
-+	for (; child->procname != 0; child++) {
-+		if (strcmp(tmp, child->procname) == 0) {
-+			found = child;
-+			break;
-+		}
-+	}
-+
-+	if (!found) {
-+		pr_warn("Unknown sysctl param '%s.%s' on command line", param, tmp);
-+		return 0;
-+	}
-+
-+	if (!(found->mode & 0200)) {
-+		pr_warn("Cannot set sysctl '%s.%s=%s' from command line - not writable",
-+			param, tmp, val);
-+		return 0;
-+	}
-+
-+
-+	count = strlen(val);
-+	err = found->proc_handler(found, 1, val, &count, &ppos);
-+
-+	if (err)
-+		pr_warn("Error %d setting sysctl '%s.%s=%s' from command line",
-+			err, param, tmp, val);
-+
-+	return 0;
-+}
-+
- #endif /* CONFIG_SYSCTL */
- 
- /*
--- 
-2.25.1
-
+    Andrew
