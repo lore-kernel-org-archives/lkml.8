@@ -2,127 +2,98 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF01C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06726C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DAF20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:55:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irfrBskV"
+	by mail.kernel.org (Postfix) with ESMTP id C598120724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:59:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584460740;
+	bh=hhu6XAm/T/wDV6UsKrflTER0XbhUy8RqHGJSqyjTnNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QUamchtSXq4CzY1oVE3TWpJX8KAIzpVIzNY4vonIKQ6hHsGOjYTmwcHUD8QovG1Q+
+	 +YhDJRt5OoNbayZw2/hnVQ44fzNA1/fWDr0nEIjuj7tHkLoh4716Cd3t2OSIYrhB8E
+	 8DJgmT5vf4OQ6hxhfE+qlG0eT6YqI9fHJUmG99KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgCQPzo (ORCPT
+        id S1726680AbgCQP67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:55:44 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55541 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCQPzo (ORCPT
+        Tue, 17 Mar 2020 11:58:59 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:51771 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgCQP67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:55:44 -0400
-Received: by mail-pj1-f65.google.com with SMTP id mj6so10173736pjb.5;
-        Tue, 17 Mar 2020 08:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rIOYXa4n3W4fvDIFexK8Xd1iAbQHd2/NWX4UF2y8JPU=;
-        b=irfrBskVIzOYnt/8r4tZQkRb68wX1xdH3cibG7ArPih3W4C8DDXVzgNH550GQ96uAr
-         jqoYAlgRrigTEqn3/aSlfNxHsiqOPz8uSpuxx032eJ1yTZFg7zVtabnFhEjkdfuXwHQC
-         ZptWEZfY/eBxexy70Z6S05vR1GuZjwB8UEArvF4djW+XTlobg7LpVrFmKkUJ5IAuD9w4
-         ShHyFljj8mHxonbV1k6VGzmLVXAQVDsiD3Fv5iYzEM0Cp6vv1kPRKTZQ+q+ejfWOhSL3
-         l6ZOb71iiAsJcf3s/dNYOvvI/VIngpu4fwhYmDyFnaZorpKvJ5cNbswj6fBnOkCZh8CM
-         NyFw==
+        Tue, 17 Mar 2020 11:58:59 -0400
+Received: by mail-wm1-f53.google.com with SMTP id a132so22045665wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 08:58:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rIOYXa4n3W4fvDIFexK8Xd1iAbQHd2/NWX4UF2y8JPU=;
-        b=kzf0S5W4ROoCDhdY7wzm8EHP5t0ArTNqeqou1uVvNVr/LAfD8jEnD9vX84rNHyY9Ed
-         MN9Ba83VDW3FqgNf03+Hj77YKLvQbAs5V3mYQIkYQl6qd64gN3kqEutHEeE9mNtdQiLD
-         x1Bde86f8brDkn27UPfxoJQskK6hQrlI+Pedy/SJH7iqW6Vlv/tRxP2UMMgHScGuPile
-         wTP5tU0f/AJPAW7nsorPWJfsLvt5ygZ2sNm/hamD7cHsSl0PzESxJOKmUfREHuXuqch2
-         /gTIWVHBVcB6lqWHsFmHs/25TJhszxEg8hPbOq6VciyuxnMW74aTKwu7m8be50clQXrI
-         ygSw==
-X-Gm-Message-State: ANhLgQ18q5Mwu8Bm105BZuGWJ1AcQBDku7XdXDn7nkRipi3DvKtGoFfG
-        UkczOs8dvp3lqyMel87dDPQ=
-X-Google-Smtp-Source: ADFU+vsXJcKIHwYeeKLVHimqaIiwGZKzfpf0o1uTLHXjAzQQxGHWA+wfsYGrjvu6bZ6GZ6w3hOSWCg==
-X-Received: by 2002:a17:902:d712:: with SMTP id w18mr5146760ply.238.1584460542597;
-        Tue, 17 Mar 2020 08:55:42 -0700 (PDT)
-Received: from localhost ([161.117.239.120])
-        by smtp.gmail.com with ESMTPSA id s19sm3665027pfh.218.2020.03.17.08.55.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 08:55:41 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     marcelo.leitner@gmail.com, davem@davemloft.net
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, kuba@kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH v2] sctp: fix refcount bug in sctp_wfree
-Date:   Tue, 17 Mar 2020 23:55:36 +0800
-Message-Id: <20200317155536.10227-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FYhH5q4WEl1FEeszV9WnzdrzRhQsi77Q0fjkKyiS8K8=;
+        b=s/Uaqd36AjVrV8nBsVkpbGsBDfXcdWzFUojhtrw1D7euEE1mO9n2yoRC7CnQNJlmfd
+         pb69r8M/E8qGTF4FEm/VWEk6ysxlNTFL0ZdMo6tMSbshc69mbDN0zGlfYy2vSdDyOwVk
+         piGN59Dqm80KyJurDTs8d8FcJlUyutJANScB5m9RJpP61uS6UuREhVjNNskJQJ1GSWuO
+         wUwJG/ks7f4SOAR9hIKVkXpeVj0XOjQO2vHWeq1m2fEg0iiMfUYVVRK0M1B3WZZX7ZcW
+         4HGy9qsAAV9X3Oyx+jtipXTBdsJt59jaHvIGecAmTNt+KHe1g4v2RQmsHcsDGiPSWuyn
+         2DiA==
+X-Gm-Message-State: ANhLgQ0ceDfex/NPjlrcD0L+QiFzkc4+CvAZU/dPRD3s9PbzT1rwC3Uk
+        z+6NFK82Y1eRdG3sENx1snA=
+X-Google-Smtp-Source: ADFU+vtXMrtZwl2B9c9BXLxh92KX3GuxYzjcrVUmZMxyVywjJwgO8Q2gOZ17aY6Ccxd+xD91MfQb7w==
+X-Received: by 2002:a05:600c:2250:: with SMTP id a16mr5756585wmm.57.1584460737542;
+        Tue, 17 Mar 2020 08:58:57 -0700 (PDT)
+Received: from localhost (ip-37-188-255-121.eurotel.cz. [37.188.255.121])
+        by smtp.gmail.com with ESMTPSA id w7sm5368320wrr.60.2020.03.17.08.58.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 08:58:56 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 16:58:55 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+Message-ID: <20200317155855.GS26018@dhcp22.suse.cz>
+References: <20200312082248.GS23944@dhcp22.suse.cz>
+ <20200312201602.GA68817@google.com>
+ <20200312204155.GE23944@dhcp22.suse.cz>
+ <20200313020851.GD68817@google.com>
+ <20200313080546.GA21007@dhcp22.suse.cz>
+ <20200313205941.GA78185@google.com>
+ <20200316092052.GD11482@dhcp22.suse.cz>
+ <20200317014340.GA73302@google.com>
+ <20200317071239.GB26018@dhcp22.suse.cz>
+ <20200317150055.GC73302@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317150055.GC73302@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do accounting for skb's real sk.
-In some case skb->sk != asoc->base.sk:
+On Tue 17-03-20 08:00:55, Minchan Kim wrote:
+> On Tue, Mar 17, 2020 at 08:12:39AM +0100, Michal Hocko wrote:
+[...]
+> > Just to make it clear, are you really suggesting to special case
+> > page_check_references for madvise path?
+> > 
+> 
+> No, (page_mapcount() >  1) checks *effectively* fixes the performance
+> bug as well as vulnerability issue.
 
-migrate routing        sctp_check_transmitted routing
-------------                    ---------------
-lock_sock_nested();
-                               mv the transmitted skb to
-                               the it's local tlist
+Ahh, ok then we are on the same page. You were replying to the part
+where I have pointed out that you can control aging by these calls
+and your response suggested that this is somehow undesirable behavior or
+even a bug.
 
-sctp_for_each_tx_datachunk(
-sctp_clear_owner_w);
-sctp_assoc_migrate();
-sctp_for_each_tx_datachunk(
-sctp_set_owner_w);
-
-                               put the skb back to the
-                               assoc lists
-----------------------------------------------------
-
-The skbs which held bysctp_check_transmitted were not changed
-to newsk. They were not dealt with by sctp_for_each_tx_datachunk
-(sctp_clear_owner_w/sctp_set_owner_w).
-
-It looks only trouble here so handling it in sctp_wfree is enough.
-
-Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- net/sctp/socket.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index 1b56fc440606..5f5c28b30e25 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -9080,7 +9080,7 @@ static void sctp_wfree(struct sk_buff *skb)
- {
- 	struct sctp_chunk *chunk = skb_shinfo(skb)->destructor_arg;
- 	struct sctp_association *asoc = chunk->asoc;
--	struct sock *sk = asoc->base.sk;
-+	struct sock *sk = skb->sk;
- 
- 	sk_mem_uncharge(sk, skb->truesize);
- 	sk->sk_wmem_queued -= skb->truesize + sizeof(struct sctp_chunk);
-@@ -9109,7 +9109,7 @@ static void sctp_wfree(struct sk_buff *skb)
- 	}
- 
- 	sock_wfree(skb);
--	sctp_wake_up_waiters(sk, asoc);
-+	sctp_wake_up_waiters(asoc->base.sk, asoc);
- 
- 	sctp_association_put(asoc);
- }
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
