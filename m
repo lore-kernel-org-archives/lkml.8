@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2D7C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414A0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EFBF205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BAF7206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443548;
-	bh=/u62k7k4XbFRbH1vWPs3YBXWUG0u2KF4TDGcXKapG9g=;
+	s=default; t=1584443550;
+	bh=Jrq8GnAH/sFA0KIqg2gX0t78NK+wSKSmi/KkF5Q9Dbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E6hfFeMmTZrXH7MWf9NQPT2OYPaXtQLWs7hUdCtz2EodjWlcL829Pj2jSV1XyCI3r
-	 EUVUH6Z96jyrEXbHEH4I4uaNuy6r7X+RSdPPXyxzLXLiRnneKZy6QGaxgH2StnYJSc
-	 GgtCqvcJY0dELk+oGmhUBVg7CsW2nPxFObMUGzj8=
+	b=e9CfjiZvj92iPropy7+mAOjCXGqFP9sGJ5/oZn6WIkAyGIi6CiCWXOr2IKB+tolxS
+	 qOLfKm9tAcJHHOQooOs6CqJqmxIdY1gNl+lH+M37uIhpzEZwL3VpfMXUBe62VnGNm+
+	 Ym3nx9sllWwYTl9lLMUx6rjE2HyRuTjp5mZXss9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgCQLM0 (ORCPT
+        id S1729241AbgCQLM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56036 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbgCQLMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:24 -0400
+        id S1729417AbgCQLM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6123205ED;
-        Tue, 17 Mar 2020 11:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67B7620719;
+        Tue, 17 Mar 2020 11:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443543;
-        bh=/u62k7k4XbFRbH1vWPs3YBXWUG0u2KF4TDGcXKapG9g=;
+        s=default; t=1584443545;
+        bh=Jrq8GnAH/sFA0KIqg2gX0t78NK+wSKSmi/KkF5Q9Dbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSE3GJ9pJaooz1G0YSoS6s/DFEyhvJCXlZWccOEI3qVPWQ+EbtyihyxdvyElSwuix
-         ME7XKCnxVnXj+G25wHhECK0x3xAjgfwVNL4Msyxf5AxuZAQMf7WVLP183kVTvlOzKn
-         GOIX4p7IkfgjpRYHZRa+FQbCq47lVtdek7Zu3/IU=
+        b=Ws1QBIojnFf1c1ZF9Mzk/lyKmm1NpOBmiVEeqApNDrA12UCq0U80vXE3PFon12kRv
+         WngW7nYqo82uYlEndoEpNjLDkWN1xro8njn7tzYX0pYT58dNfY3/QdSHEsXcGb5T5z
+         yRj6gZ/xqoVhzn2a/T4OsRn3Fmcd4GIw8RCXecxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 5.5 117/151] perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
-Date:   Tue, 17 Mar 2020 11:55:27 +0100
-Message-Id: <20200317103334.785564361@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.5 118/151] x86/mce: Fix logic and comments around MSR_PPIN_CTL
+Date:   Tue, 17 Mar 2020 11:55:28 +0100
+Message-Id: <20200317103334.854857043@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,80 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Tony Luck <tony.luck@intel.com>
 
-commit f967140dfb7442e2db0868b03b961f9c59418a1b upstream.
+commit 59b5809655bdafb0767d3fd00a3e41711aab07e6 upstream.
 
-Enable the sampling check in kernel/events/core.c::perf_event_open(),
-which returns the more appropriate -EOPNOTSUPP.
+There are two implemented bits in the PPIN_CTL MSR:
 
-BEFORE:
+Bit 0: LockOut (R/WO)
+      Set 1 to prevent further writes to MSR_PPIN_CTL.
 
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
-  /bin/dmesg | grep -i perf may provide additional information.
+Bit 1: Enable_PPIN (R/W)
+       If 1, enables MSR_PPIN to be accessible using RDMSR.
+       If 0, an attempt to read MSR_PPIN will cause #GP.
 
-With nothing relevant in dmesg.
+So there are four defined values:
+	0: PPIN is disabled, PPIN_CTL may be updated
+	1: PPIN is disabled. PPIN_CTL is locked against updates
+	2: PPIN is enabled. PPIN_CTL may be updated
+	3: PPIN is enabled. PPIN_CTL is locked against updates
 
-AFTER:
+Code would only enable the X86_FEATURE_INTEL_PPIN feature for case "2".
+When it should have done so for both case "2" and case "3".
 
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+Fix the final test to just check for the enable bit. Also fix some of
+the other comments in this function.
 
-Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Fixes: 3f5a7896a509 ("x86/mce: Include the PPIN in MCE records when available")
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200311191323.13124-1-kim.phillips@amd.com
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200226011737.9958-1-tony.luck@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/amd/uncore.c |   17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ arch/x86/kernel/cpu/mce/intel.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -190,15 +190,12 @@ static int amd_uncore_event_init(struct
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -492,17 +492,18 @@ static void intel_ppin_init(struct cpuin
+ 			return;
  
- 	/*
- 	 * NB and Last level cache counters (MSRs) are shared across all cores
--	 * that share the same NB / Last level cache. Interrupts can be directed
--	 * to a single target core, however, event counts generated by processes
--	 * running on other cores cannot be masked out. So we do not support
--	 * sampling and per-thread events.
-+	 * that share the same NB / Last level cache.  On family 16h and below,
-+	 * Interrupts can be directed to a single target core, however, event
-+	 * counts generated by processes running on other cores cannot be masked
-+	 * out. So we do not support sampling and per-thread events via
-+	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
- 	 */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	/* and we do not enable counter overflow interrupts */
- 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
- 	hwc->idx = -1;
+ 		if ((val & 3UL) == 1UL) {
+-			/* PPIN available but disabled: */
++			/* PPIN locked in disabled mode */
+ 			return;
+ 		}
  
-@@ -306,7 +303,7 @@ static struct pmu amd_nb_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
--	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-+	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
- };
+-		/* If PPIN is disabled, but not locked, try to enable: */
+-		if (!(val & 3UL)) {
++		/* If PPIN is disabled, try to enable */
++		if (!(val & 2UL)) {
+ 			wrmsrl_safe(MSR_PPIN_CTL,  val | 2UL);
+ 			rdmsrl_safe(MSR_PPIN_CTL, &val);
+ 		}
  
- static struct pmu amd_llc_pmu = {
-@@ -317,7 +314,7 @@ static struct pmu amd_llc_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
--	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-+	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
- };
- 
- static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
+-		if ((val & 3UL) == 2UL)
++		/* Is the enable bit set? */
++		if (val & 2UL)
+ 			set_cpu_cap(c, X86_FEATURE_INTEL_PPIN);
+ 	}
+ }
 
 
