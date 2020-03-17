@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5D5C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9E8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE3420714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EC420719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443302;
-	bh=lVHUSe2Las6Deqqrd+fEt8BGJ0tFzFGrDD69RV3UeJk=;
+	s=default; t=1584443307;
+	bh=aFW0ZbN8LhF57I0UxiivOuQpSk/Y2Uw7EMZM89iBWLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bLZULDo0OAX4HZZOAFYWcm+m1Gy6w41rRdhCjEHjJUMHvkkpVhgCFneM6rZTwfbYB
-	 seNbc70glagEBoyTTjI8AjNupn27e8j8ebKrPbnSOFItj/1QRKOlx2OKL1yXaAtGfM
-	 7MEfUn/NeBvimkx7iI7PDl9G83a2+1P0837UTupA=
+	b=OS0Aka4tBJfpeoG5HTxt4n5W16rqAd7zm7tR5NDVoa6plVh092hW9nDckdOsoMNcE
+	 AQHo7FpFyJMxXVif/O32LLfBw8e5GWpxD6oZCpos16/8e2S/ryHdvZztZ0WR4kdcen
+	 0/vEZlMxpBCimc3ag9NwPof4vh6fmVCCN1hzXhgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgCQLIU (ORCPT
+        id S1728644AbgCQLIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:08:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50128 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbgCQLIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:08:17 -0400
+        id S1727239AbgCQLIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:08:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45DD92071C;
-        Tue, 17 Mar 2020 11:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C257120719;
+        Tue, 17 Mar 2020 11:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443296;
-        bh=lVHUSe2Las6Deqqrd+fEt8BGJ0tFzFGrDD69RV3UeJk=;
+        s=default; t=1584443299;
+        bh=aFW0ZbN8LhF57I0UxiivOuQpSk/Y2Uw7EMZM89iBWLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W9HIi6uBRuYySzPyd4Udl4DDSsaF6ZZQ7kzbM+LMrTvNIwKjAwtrlWAzHRbbV56eY
-         p1aE9H+z7J2lp8fLeqLOzMQajxr+orHf2WD1nAtMoS5ALwGiqbc0ASdu9xpP9ExgcT
-         EhYEjnSjKFBN0FMPLo4SCwrw4bXCgoh+quNmjx0Y=
+        b=Ed9swW28qQiyjGMRpZpYSKiKOrdllTkrJkf3XA5UrKNhL/2IEjF0QhUbV3jHnNa8D
+         PJvI1Y7vxbTQ2l5yYi3TDZmwDdOgSNLY1JZB6vx+j6UY/n75rDJV6Q9T08vKaJywDI
+         oiCZ4GXaNkwcml7QZm9CxTU2V/sQv18b9ZxRwmVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 038/151] net: memcg: fix lockdep splat in inet_csk_accept()
-Date:   Tue, 17 Mar 2020 11:54:08 +0100
-Message-Id: <20200317103329.339083513@linuxfoundation.org>
+Subject: [PATCH 5.5 039/151] dt-bindings: net: FMan erratum A050385
+Date:   Tue, 17 Mar 2020 11:54:09 +0100
+Message-Id: <20200317103329.403963855@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -61,123 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-commit 06669ea346e476a5339033d77ef175566a40efbb upstream.
+commit 26d5bb9e4c4b541c475751e015072eb2cbf70d15 upstream.
 
-Locking newsk while still holding the listener lock triggered
-a lockdep splat [1]
+FMAN DMA read or writes under heavy traffic load may cause FMAN
+internal resource leak; thus stopping further packet processing.
 
-We can simply move the memcg code after we release the listener lock,
-as this can also help if multiple threads are sharing a common listener.
+The FMAN internal queue can overflow when FMAN splits single
+read or write transactions into multiple smaller transactions
+such that more than 17 AXI transactions are in flight from FMAN
+to interconnect. When the FMAN internal queue overflows, it can
+stall further packet processing. The issue can occur with any one
+of the following three conditions:
 
-Also fix a typo while reading socket sk_rmem_alloc.
+  1. FMAN AXI transaction crosses 4K address boundary (Errata
+     A010022)
+  2. FMAN DMA address for an AXI transaction is not 16 byte
+     aligned, i.e. the last 4 bits of an address are non-zero
+  3. Scatter Gather (SG) frames have more than one SG buffer in
+     the SG list and any one of the buffers, except the last
+     buffer in the SG list has data size that is not a multiple
+     of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
 
-[1]
-WARNING: possible recursive locking detected
-5.6.0-rc3-syzkaller #0 Not tainted
---------------------------------------------
-syz-executor598/9524 is trying to acquire lock:
-ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
-ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
+With any one of the above three conditions present, there is
+likelihood of stalled FMAN packet processing, especially under
+stress with multiple ports injecting line-rate traffic.
 
-but task is already holding lock:
-ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
-ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
+To avoid situations that stall FMAN packet processing, all of the
+above three conditions must be avoided; therefore, configure the
+system with the following rules:
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
+  1. Frame buffers must not span a 4KB address boundary, unless
+     the frame start address is 256 byte aligned
+  2. All FMAN DMA start addresses (for example, BMAN buffer
+     address, FD[address] + FD[offset]) are 16B aligned
+  3. SG table and buffer addresses are 16B aligned and the size
+     of SG buffers are multiple of 16 bytes, except for the last
+     SG buffer that can be of any size.
 
-       CPU0
-       ----
-  lock(sk_lock-AF_INET6);
-  lock(sk_lock-AF_INET6);
+Additional workaround notes:
+- Address alignment of 64 bytes is recommended for maximally
+efficient system bus transactions (although 16 byte alignment is
+sufficient to avoid the stall condition)
+- To support frame sizes that are larger than 4K bytes, there are
+two options:
+  1. Large single buffer frames that span a 4KB page boundary can
+     be converted into SG frames to avoid transaction splits at
+     the 4KB boundary,
+  2. Align the large single buffer to 256B address boundaries,
+     ensure that the frame address plus offset is 256B aligned.
+- If software generated SG frames have buffers that are unaligned
+and with random non-multiple of 16 byte lengths, before
+transmitting such frames via FMAN, frames will need to be copied
+into a new single buffer or multiple buffer SG frame that is
+compliant with the three rules listed above.
 
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-1 lock held by syz-executor598/9524:
- #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
- #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
-
-stack backtrace:
-CPU: 0 PID: 9524 Comm: syz-executor598 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_deadlock_bug kernel/locking/lockdep.c:2370 [inline]
- check_deadlock kernel/locking/lockdep.c:2411 [inline]
- validate_chain kernel/locking/lockdep.c:2954 [inline]
- __lock_acquire.cold+0x114/0x288 kernel/locking/lockdep.c:3954
- lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
- lock_sock_nested+0xc5/0x110 net/core/sock.c:2947
- lock_sock include/net/sock.h:1541 [inline]
- inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
- inet_accept+0xe9/0x7c0 net/ipv4/af_inet.c:734
- __sys_accept4_file+0x3ac/0x5b0 net/socket.c:1758
- __sys_accept4+0x53/0x90 net/socket.c:1809
- __do_sys_accept4 net/socket.c:1821 [inline]
- __se_sys_accept4 net/socket.c:1818 [inline]
- __x64_sys_accept4+0x93/0xf0 net/socket.c:1818
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4445c9
-Code: e8 0c 0d 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc35b37608 EFLAGS: 00000246 ORIG_RAX: 0000000000000120
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004445c9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000306777 R09: 0000000000306777
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00000000004053d0 R14: 0000000000000000 R15: 0000000000000000
-
-Fixes: d752a4986532 ("net: memcg: late association of sock to memcg")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/inet_connection_sock.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/net/fsl-fman.txt |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -483,27 +483,27 @@ struct sock *inet_csk_accept(struct sock
- 		spin_unlock_bh(&queue->fastopenq.lock);
- 	}
+--- a/Documentation/devicetree/bindings/net/fsl-fman.txt
++++ b/Documentation/devicetree/bindings/net/fsl-fman.txt
+@@ -110,6 +110,13 @@ PROPERTIES
+ 		Usage: required
+ 		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
  
--	if (mem_cgroup_sockets_enabled) {
-+out:
-+	release_sock(sk);
-+	if (newsk && mem_cgroup_sockets_enabled) {
- 		int amt;
++- fsl,erratum-a050385
++		Usage: optional
++		Value type: boolean
++		Definition: A boolean property. Indicates the presence of the
++		erratum A050385 which indicates that DMA transactions that are
++		split can result in a FMan lock.
++
+ =============================================================================
+ FMan MURAM Node
  
- 		/* atomically get the memory usage, set and charge the
--		 * sk->sk_memcg.
-+		 * newsk->sk_memcg.
- 		 */
- 		lock_sock(newsk);
- 
--		/* The sk has not been accepted yet, no need to look at
--		 * sk->sk_wmem_queued.
-+		/* The socket has not been accepted yet, no need to look at
-+		 * newsk->sk_wmem_queued.
- 		 */
- 		amt = sk_mem_pages(newsk->sk_forward_alloc +
--				   atomic_read(&sk->sk_rmem_alloc));
-+				   atomic_read(&newsk->sk_rmem_alloc));
- 		mem_cgroup_sk_alloc(newsk);
- 		if (newsk->sk_memcg && amt)
- 			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
- 
- 		release_sock(newsk);
- 	}
--out:
--	release_sock(sk);
- 	if (req)
- 		reqsk_put(req);
- 	return newsk;
 
 
