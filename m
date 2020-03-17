@@ -2,156 +2,109 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0039C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B8CC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBC120714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53EB120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgs0mmBO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BEu7t7wr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgCQSfk (ORCPT
+        id S1726726AbgCQShA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:35:40 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40110 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgCQSfk (ORCPT
+        Tue, 17 Mar 2020 14:37:00 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:50277 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726506AbgCQShA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:35:40 -0400
-Received: by mail-il1-f194.google.com with SMTP id p12so6460588ilm.7
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 11:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/Hm84WZCLyHsOQceLRbgNnTau/dWrz89P8V4rFeTZYo=;
-        b=kgs0mmBON9uHzrIYlpWlO9EGDqt3g+tszYPLPUADzO5ceUxosowT8bIV1Ar9NJivXP
-         xI49g2ZeXZOZadeLhbKUbYQNhkGmBti/8HH65jiKemyrAxQtwp59CjQYUyhmQvFF6r2r
-         Z+V3MxNXpcYQ760AjnvMWYYvNkeqg53OGyTJd/6CBpFDaZ8A3NFTVUPEz1Xc64NxeS/0
-         vPjYey7Nc+JSWfKI/Fq8Gq85Hsz3fONiSjFupdN0wi+9BKkY1Gu+HTHSMK5fnwg5miwn
-         VBiEarvswxrjkkCMmcVmpvgfmKdFkICOr+qjy1Ycv8NON14I/oQWoj1KT1KeksMpy2Ap
-         PklA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/Hm84WZCLyHsOQceLRbgNnTau/dWrz89P8V4rFeTZYo=;
-        b=SJuGdBLDPew1qbrRNcLGTJmi7WdB5AK6mcMxMXFYUKbkn8RxIyXcq721d/1UPPk/PX
-         mG5n4iD7an4MCmfBoGUMWLChfXkbXvfKbRyWvYd8vi/s6SiBBwRjYUbXD+WISQ5ZrKjf
-         reZ6d/2Gvm+G5iNkRMyQxM4PDDYU/1hQCAlSRNw8nhEwhkvzRXNo0xKcCivRXBFCPYhf
-         T2y6Q6swozRubJuitgy+hHtDFv+PLaYIFXz0ojBJvIeIgLjstBcMJ5gS5dfEoIEdjx6f
-         B8vxwuuo6hApItcx3ZwgF6XGhdlDWWI1PYYvwDPKMEpmijyr6UObRQ8fHkH8Zi8ZGRFx
-         J5Dg==
-X-Gm-Message-State: ANhLgQ1gOOx+xhoJCcVE9xhg3UmL0Cdn5aC8D4KmQwtCywsMEEzydWz9
-        o1CBWZMUeDLjBSF3l7oqiFzuuW+H5GO/hdZqTI02ZQ==
-X-Google-Smtp-Source: ADFU+vtNR3aMrlREDO911uzRAGBSb5QNq7A/SraieLmBZvfJGT6bbBDAAmsuWPFzrOt5m2wWCYMHo70u1WJzcFUpFVg=
-X-Received: by 2002:a92:3d8c:: with SMTP id k12mr184090ilf.7.1584470139307;
- Tue, 17 Mar 2020 11:35:39 -0700 (PDT)
+        Tue, 17 Mar 2020 14:37:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584470219;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gwrf4J2FnOgQssJONp9zFLVSRMiMPIXEXh9xD+q8AIo=;
+        b=BEu7t7wrUHu99pDvTQu/xXNo1vKB0z6aHn0gpCpHOd5ekri4eSxQZ2xNoGZzk9ts615qB/
+        Ms1g4Kkg6xAtMqELR/j4m7gvbSmPB83dIZLwixTz6Cp31uxZyNGwas/3Ep+0BQnIUWblpC
+        MeJOA9H73ECiI/SSkz9OPitrv4NdIjM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-DopgLM-EMf20XOl6Py1l5w-1; Tue, 17 Mar 2020 14:36:55 -0400
+X-MC-Unique: DopgLM-EMf20XOl6Py1l5w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A0B31405;
+        Tue, 17 Mar 2020 18:36:53 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-115-15.rdu2.redhat.com [10.10.115.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 76BFE6E3EE;
+        Tue, 17 Mar 2020 18:36:51 +0000 (UTC)
+Subject: Re: [PATCH v3 2/3] KEYS: Avoid false positive ENOMEM error on key
+ read
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+References: <20200313152102.1707-1-longman@redhat.com>
+ <20200313152102.1707-3-longman@redhat.com>
+ <20200315213245.GF224162@linux.intel.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <98feb3ff-835a-e4cf-40a9-284d21e16993@redhat.com>
+Date:   Tue, 17 Mar 2020 14:36:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200317133614.23152-1-linux@roeck-us.net>
-In-Reply-To: <20200317133614.23152-1-linux@roeck-us.net>
-From:   Konstantin Khlebnikov <koct9i@gmail.com>
-Date:   Tue, 17 Mar 2020 21:35:28 +0300
-Message-ID: <CALYGNiMTyBWmUWiVsf9=w5bv4CVzvPinpPn3s+aUdrdRS-RGgw@mail.gmail.com>
-Subject: Re: [PATCH] lib/test_lockup: Rename disable_irq to fix build error
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200315213245.GF224162@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 4:37 PM Guenter Roeck <linux@roeck-us.net> wrote:
+On 3/15/20 5:32 PM, Jarkko Sakkinen wrote:
+> On Fri, Mar 13, 2020 at 11:21:01AM -0400, Waiman Long wrote:
+>> -		 * Read methods will just return the required length
+>> -		 * without any copying if the provided length isn't big
+>> -		 * enough.
+>> +		 * We don't want an erronous -ENOMEM error due to an
+>> +		 * arbitrary large user-supplied buflen. So if buflen
+>> +		 * exceeds a threshold (1024 bytes in this case), we call
+>> +		 * the read method twice. The first time to get the buffer
+>> +		 * length and the second time to read out the key data.
+>> +		 *
+>> +		 * N.B. All the read methods will return the required
+>> +		 *      buffer length with a NULL input buffer or when
+>> +		 *      the input buffer length isn't large enough.
+>>  		 */
+>> +		if (buflen <= 0x400) {
+> 1. The overwhelmingly long comment. Will be destined to rotten.
+> 2. Magic number.
+> 3. The cap must be updated both in comment and code, and not only
+>    that, but the numbers use a different base (dec and hex).
 >
-> mips:allmodconfig fails to build.
+> /Jarkko
 >
-> lib/test_lockup.c:87:13: error:
->         'disable_irq' redeclared as different kind of symbol
->    87 | static bool disable_irq;
->       |             ^~~~~~~~~~~
-> In file included from arch/mips/include/asm/highmem.h:24,
->                  from arch/mips/include/asm/pgtable-32.h:22,
->                  from arch/mips/include/asm/pgtable.h:14,
->                  from include/linux/mm.h:95,
->                  from lib/test_lockup.c:15:
-> include/linux/interrupt.h:237:13: note:
->         previous declaration of 'disable_irq' was here
->   237 | extern void disable_irq(unsigned int irq);
->
-> Rename the variable to fix the problem.
+Thank for the comment. I will make the necessary change.
 
-Looks good. Thank you.
+Cheers,
+Longman
 
->
-> Fixes: 0e86238873f3 ("lib/test_lockup: test module to generate lockups")
-> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  lib/test_lockup.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/lib/test_lockup.c b/lib/test_lockup.c
-> index b45afd3ad7cb..83683ec1f429 100644
-> --- a/lib/test_lockup.c
-> +++ b/lib/test_lockup.c
-> @@ -84,8 +84,8 @@ static unsigned long lock_wait_threshold = ULONG_MAX;
->  module_param(lock_wait_threshold, ulong, 0400);
->  MODULE_PARM_DESC(lock_wait_threshold, "print lock wait time longer than this in nanoseconds, default off");
->
-> -static bool disable_irq;
-> -module_param(disable_irq, bool, 0400);
-> +static bool test_disable_irq;
-> +module_param_named(disable_irq, test_disable_irq, bool, 0400);
->  MODULE_PARM_DESC(disable_irq, "disable interrupts: generate hard-lockups");
->
->  static bool disable_softirq;
-> @@ -179,7 +179,7 @@ static void test_lock(bool master, bool verbose)
->                         down_write(&main_task->mm->mmap_sem);
->         }
->
-> -       if (disable_irq)
-> +       if (test_disable_irq)
->                 local_irq_disable();
->
->         if (disable_softirq)
-> @@ -252,7 +252,7 @@ static void test_unlock(bool master, bool verbose)
->         if (disable_softirq)
->                 local_bh_enable();
->
-> -       if (disable_irq)
-> +       if (test_disable_irq)
->                 local_irq_enable();
->
->         if (lock_mmap_sem && master) {
-> @@ -479,8 +479,8 @@ static int __init test_lockup_init(void)
->         if ((wait_state != TASK_RUNNING ||
->              (call_cond_resched && !reacquire_locks) ||
->              (alloc_pages_nr && gfpflags_allow_blocking(alloc_pages_gfp))) &&
-> -           (disable_irq || disable_softirq || disable_preempt || lock_rcu ||
-> -            lock_spinlock_ptr || lock_rwlock_ptr)) {
-> +           (test_disable_irq || disable_softirq || disable_preempt ||
-> +            lock_rcu || lock_spinlock_ptr || lock_rwlock_ptr)) {
->                 pr_err("refuse to sleep in atomic context\n");
->                 return -EINVAL;
->         }
-> @@ -495,7 +495,7 @@ static int __init test_lockup_init(void)
->                   cooldown_secs, cooldown_nsecs, iterations, state,
->                   all_cpus ? "all_cpus " : "",
->                   iowait ? "iowait " : "",
-> -                 disable_irq ? "disable_irq " : "",
-> +                 test_disable_irq ? "disable_irq " : "",
->                   disable_softirq ? "disable_softirq " : "",
->                   disable_preempt ? "disable_preempt " : "",
->                   lock_rcu ? "lock_rcu " : "",
-> --
-> 2.17.1
->
