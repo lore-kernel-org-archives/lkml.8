@@ -2,121 +2,142 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBB6C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609B2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A5120738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3710420738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tCwPcOhN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgCQWhA (ORCPT
+        id S1726984AbgCQWoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:37:00 -0400
-Received: from mga03.intel.com ([134.134.136.65]:1851 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgCQWhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:37:00 -0400
-IronPort-SDR: vJYtLLSTG6N+ivPZqmh/JHzPNJs2FZxaXs+zqN1hFZC3yCRNktOG/HiK3eNCDRgqdd3eXJ5XQm
- Tp+OYKYMvf4Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 15:36:59 -0700
-IronPort-SDR: UpuZx7UVRRjax5q9nR18EPLOuIhxVzSSS01CWlg8oVG2ugwGMJD/F3XfICMuTDZn5F3Z2iUJ9t
- X7SayYdHD3yQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="445649386"
-Received: from bxing-mobl.amr.corp.intel.com (HELO [10.135.41.245]) ([10.135.41.245])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Mar 2020 15:36:57 -0700
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-References: <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
- <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
- <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
- <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
- <20200316225322.GJ24267@linux.intel.com>
- <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
- <20200316235934.GM24267@linux.intel.com>
- <ca2c9ac0-b717-ee96-c7df-4e39f03a9193@intel.com>
- <CAOASepN7n1XUGPQHwk2Vcu-dyyBJ7dwhM_mF_RcJa71PcNiLmA@mail.gmail.com>
- <afec507a-48cd-a730-586a-b9135cc66315@intel.com>
- <20200317220948.GB14566@linux.intel.com>
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-Message-ID: <acf660c0-7b8e-911c-8640-75fe43e5c384@intel.com>
-Date:   Tue, 17 Mar 2020 15:36:57 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 17 Mar 2020 18:44:17 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36467 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgCQWoR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:44:17 -0400
+Received: by mail-lf1-f65.google.com with SMTP id s1so18671774lfd.3;
+        Tue, 17 Mar 2020 15:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Fu8GVUxLvjII7VrARYhkhRDvf4FyhjWv5GYDkk8Hc2Q=;
+        b=tCwPcOhNkJfxpRz9k8ZAytkBGG4DO7ZLX/qqgCUGyrNq84/50QixpWGB4HPynpbniH
+         GZXmKLrallMFiUdR9tsxWVmnIKmwxyfcS+onBghreUU+a6dphmmaRdYzdOvJcCwDjmOc
+         ZERc3NcHfSU9rRztTHXrA0tgi8To99sRMYsKzs3C3sTJ1eghvuZlQakewWE3feAFDOch
+         RhsqBvll3sZHvzyV1qfHcsJwAyYQhrE8rLQxjzZtqUemaC7M0Nbov0Y070Kxdx2N/hDZ
+         QC5te/+1PsLAdwiTPRm+ORNzmnQBIVIziJAIhlZRYDcMof8Uit+1kJjk0vYLu6HrphYT
+         9sSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fu8GVUxLvjII7VrARYhkhRDvf4FyhjWv5GYDkk8Hc2Q=;
+        b=t4sGR4sAkAOqzAKvvK8YyX+Pjab52zpImt1zG04tlL1wk0SrjVHCUlYTN4Uu/AjSJu
+         F7Q/KTLXlwmamHursL9nCLKAk28R6TM86NSyzk6qO8zo6K313kjxtyjIiQW2ecSiQ5w8
+         OXTOa95JvPjciZ3kvDr9b3//p/lCc+zN45aBel2HyqmjO3NAjOhaXsBrQG8l51XsvoLA
+         5jRCGqf1/jvmOTsoB9SrmGco69Z8KYPxPHeXG1YR4F1c3bSk0OYMQOuTVWmvFGwKnDqD
+         /cthdlLZhqELG4Y447fDC9rsTltVPt1o507bhnJWRsIHoR/3URhplgguszlEyze+t6bn
+         oMWA==
+X-Gm-Message-State: ANhLgQ1LJfqYnNixXb0hsqKr0PKUfeKNZkfC33z6L4Ftr66wnyAx9fJ5
+        r2IkskPeyZNROjhe537XUpA=
+X-Google-Smtp-Source: ADFU+vsn/MKcM/DMMmPpn3eyTNYWAh5rDvjAk45IPuY5FAxzXZpIr2+xJuxntCO4DHPumsAfYRs7Bw==
+X-Received: by 2002:ac2:41c2:: with SMTP id d2mr969136lfi.164.1584485054337;
+        Tue, 17 Mar 2020 15:44:14 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id z12sm3383903lfe.51.2020.03.17.15.44.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 15:44:13 -0700 (PDT)
+Subject: Re: [PATCH v7 03/48] Input: atmel_mxt_ts - only read messages in
+ mxt_acquire_irq() when necessary
+To:     Jiada Wang <jiada_wang@mentor.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, rydberg@bitmath.org,
+        dmitry.torokhov@gmail.com, nick@shmanahar.org, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200212084218.32344-1-jiada_wang@mentor.com>
+ <20200212084218.32344-4-jiada_wang@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8ea1244b-f045-df34-b6b2-2b812ab6dee4@gmail.com>
+Date:   Wed, 18 Mar 2020 01:44:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200317220948.GB14566@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200212084218.32344-4-jiada_wang@mentor.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/2020 3:09 PM, Sean Christopherson wrote:
-> On Tue, Mar 17, 2020 at 02:40:34PM -0700, Xing, Cedric wrote:
->> Hi Nathaniel,
->>
->> I reread your email today and thought I might have misunderstood your email
->> earlier. What changes are you asking for exactly? Is that just passing @leaf
->> in %ecx rather than in %eax? If so, I wouldn't have any problem. I agree
->> with you that the resulted API would then be callable from C, even though it
->> wouldn't be able to return back to C due to tampered %rbx. But I think the
->> vDSO API can preserve %rbx too, given it is used by both EENTER and EEXIT
->> (so is unavailable for parameter passing anyway). Alternatively, the C
->> caller can setjmp() to be longjmp()'d back from within the exit handler.
+12.02.2020 11:41, Jiada Wang пишет:
+> From: Nick Dyer <nick.dyer@itdev.co.uk>
 > 
-> Yep, exactly.  The other proposed change that is fairly straightforward is
-> to make the save/restore of %rsp across the exit handler call relative
-> instead of absolute, i.e. allow the exit handler to modify %rsp.  I don't
-> think this would conflict with the Intel SDK usage model?
+> The workaround of reading all messages until an invalid is received is a
+> way of forcing the CHG line high, which means that when using
+> edge-triggered interrupts the interrupt can be acquired.
 > 
-> diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> index 94a8e5f99961..05d54f79b557 100644
-> --- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> @@ -139,8 +139,9 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
->          /* Pass the untrusted RSP (at exit) to the callback via %rcx. */
->          mov     %rsp, %rcx
+> With level-triggered interrupts the workaround is unnecessary.
 > 
-> -       /* Save the untrusted RSP in %rbx (non-volatile register). */
-> +       /* Save the untrusted RSP offset in %rbx (non-volatile register). */
->          mov     %rsp, %rbx
-> +       and     $0xf, %rbx
+> Also, most recent maXTouch chips have a feature called RETRIGEN which, when
+> enabled, reasserts the interrupt line every cycle if there are messages
+> waiting. This also makes the workaround unnecessary.
 > 
->          /*
->           * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
-> @@ -161,8 +162,8 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
->          mov     0x20(%rbp), %rax
->          call    .Lretpoline
-> 
-> -       /* Restore %rsp to its post-exit value. */
-> -       mov     %rbx, %rsp
-> +       /* Undo the post-exit %rsp adjustment. */
-> +       lea     0x20(%rsp,%rbx), %rsp
-> 
-Yep. Though it looks a bit uncommon, I do think it will work.
+> Note: the RETRIGEN feature is only in some firmware versions/chips, it's
+> not valid simply to enable the bit.
+
+...
+> +static int mxt_check_retrigen(struct mxt_data *data)
+> +{
+> +	struct i2c_client *client = data->client;
+> +	int error;
+> +	int val;
+> +
+> +	data->use_retrigen_workaround = false;
+> +
+> +	if (irq_get_trigger_type(data->irq) & IRQF_TRIGGER_LOW)
+> +		return 0;
+> +
+> +	if (data->T18_address) {
+> +		error = __mxt_read_reg(client,
+> +				       data->T18_address + MXT_COMMS_CTRL,
+> +				       1, &val);
+> +		if (error)
+> +			return error;
+> +
+> +		if (val & MXT_COMMS_RETRIGEN)
+> +			return 0;
+> +	}
+> +
+> +	dev_warn(&client->dev, "Enabling RETRIGEN workaround\n");
+> +	data->use_retrigen_workaround = true;
+> +	return 0;
+> +}
+
+Hello Jiada,
+
+I'm seeing "Enabling RETRIGEN workaround" message with the following
+device-tree entry:
+
+touchscreen@4c {
+	compatible = "atmel,maxtouch";
+	reg = <0x4c>;
+
+	interrupt-parent = <&gpio>;
+	interrupts = <TEGRA_GPIO(V, 6) IRQ_TYPE_LEVEL_LOW>;
+
+	reset-gpios = <&gpio TEGRA_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
+};
+
+This happens because data->irq is NULL. Please fix it, thanks in advance.
