@@ -2,191 +2,191 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC0FC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950D320658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0E420658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444018;
-	bh=GwYHFgtS8fdMCt3xPE/4RJNZjIMihwbVof2Pazn4IQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0cMvN6dojhUKY4wq4F04INSqra3f+l8HLivLx4Hkl61G2XTqT3fuMoTDtDP+y0688
-	 VozTxkJZobk0wFff2SM+x72IIuR2r6uJZKDHe9bsTSvExO029nXzGnQjW6utj/zJhS
-	 kjyVzK+k1XfVNPxqxusANukJA/6rQ3VrXa5hwqLE=
+	s=default; t=1584444026;
+	bh=HRRrl/gxVhH1ZfxEt4j/7UewEaU43uaSVp+a8r/n95c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=etSwazgtDpNFVbFZzWj/VxAkEZKe4vDxGr+BYFdr3P/tFzgj0f9nBeJTIsdQP4xI2
+	 Yhksp/lvIpVSk/Xx6L9KIxfX4apnvOnGYgpJoKBWn5aL3+b4RPBHAwbveV8OPlqKyD
+	 1/KLBgwByI6Uqx6R9CHL41E5g5i1loBoeKNAJRpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgCQLBa (ORCPT
+        id S1727680AbgCQLAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:01:30 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:56170 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727744AbgCQLB1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:01:27 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 6so20924639wmi.5;
-        Tue, 17 Mar 2020 04:01:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6EipgQFVgo/huvY/O4SRrQWe8XDQ0DAlFK59sTbjBUo=;
-        b=UMgwvZOK6Yhf7MtEGLksGmsJ/NVy2HBt7vJOxZmwF+R42WeysBU1X7iAstYnkO+gNp
-         vXmUtVgvGDY4ejXNwL3JuYhDrxw56FHDP6b02uGpbMa6MPh7DHPUAK4ZrRWAwesHERjr
-         UjgT3MUddEg9+PeZboCl2tl/Heau008Q7KZF89m7fMCApbNNUA8pciNNSjATKOTCwD45
-         89Izqo95G/uYs1BffI130Ky1qMqnXti56VAEXh/l9ha+83KLBuC9uhu/EBlFh3BJZwz/
-         mQf6tSKDTw14i14oKGJwzdwaIvfPUDLhJcxLUUv/88rKy6GFKEXaV1eLOdJaJNot34g+
-         d0qg==
-X-Gm-Message-State: ANhLgQ0bOgjQZh1hQSyrN4tYvWrQ4Vx3zmHjDuQdU4NcvYslG5tPJS2E
-        afJONlc6MCvWiZF8UCL20fU=
-X-Google-Smtp-Source: ADFU+vsC8Dzy9TGXCGl36ggWufL9wQJFd8vsUJbzPnDHv7C0memWXP80yZxYnWH2b4rw1DPH/xRZdA==
-X-Received: by 2002:a1c:23d5:: with SMTP id j204mr4961015wmj.59.1584442884527;
-        Tue, 17 Mar 2020 04:01:24 -0700 (PDT)
-Received: from localhost (ip-37-188-255-121.eurotel.cz. [37.188.255.121])
-        by smtp.gmail.com with ESMTPSA id k3sm3879311wro.59.2020.03.17.04.01.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 04:01:23 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 12:01:21 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2 8/8] mm/memory_hotplug: allow to specify a default
- online_type
-Message-ID: <20200317110121.GN26018@dhcp22.suse.cz>
-References: <20200317104942.11178-1-david@redhat.com>
- <20200317104942.11178-9-david@redhat.com>
+        Tue, 17 Mar 2020 07:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727673AbgCQLAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:00:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B43420735;
+        Tue, 17 Mar 2020 11:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584442851;
+        bh=HRRrl/gxVhH1ZfxEt4j/7UewEaU43uaSVp+a8r/n95c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E8k91v7gmMkfeAbp4w422WHUekeGAaH4TB8IbdNR6rKwMtWoLd+9816+lxTnLg6kh
+         yOKfiuRdi7ORsu9KazhLGH5ANv3c4FMIkbqgxg+gw+rbPNk+TykAkWe8dZUlDZniX5
+         jRTmKgKlF4eZR5usZyi/uUNLezMmI6PWXXnBq3zw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 014/123] net: dsa: fix phylink_start()/phylink_stop() calls
+Date:   Tue, 17 Mar 2020 11:54:01 +0100
+Message-Id: <20200317103309.165012071@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
+References: <20200317103307.343627747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317104942.11178-9-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17-03-20 11:49:42, David Hildenbrand wrote:
-> For now, distributions implement advanced udev rules to essentially
-> - Don't online any hotplugged memory (s390x)
-> - Online all memory to ZONE_NORMAL (e.g., most virt environments like
->   hyperv)
-> - Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
->   care of (e.g., bare metal, special virt environments)
-> 
-> In summary: All memory is usually onlined the same way, however, the
-> kernel always has to ask user space to come up with the same answer.
-> E.g., Hyper-V always waits for a memory block to get onlined before
-> continuing, otherwise it might end up adding memory faster than
-> hotplugging it, which can result in strange OOM situations. This waiting
-> slows down adding of a bigger amount of memory.
-> 
-> Let's allow to specify a default online_type, not just "online" and
-> "offline". This allows distributions to configure the default online_type
-> when booting up and be done with it.
-> 
-> We can now specify "offline", "online", "online_movable" and
-> "online_kernel" via
-> - "memhp_default_state=" on the kernel cmdline
-> - /sys/devices/system/memory/auto_online_blocks
-> just like we are able to specify for a single memory block via
-> /sys/devices/system/memory/memoryX/state
-> 
-> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-As I've said earlier and several times already, I really dislike this
-interface. But it is fact that this patch doesn't make it any worse.
-Quite contrary, so feel free to add
-Acked-by: Michal Hocko <mhocko@suse.com>
+[ Upstream commit 8640f8dc6d657ebfb4e67c202ad32c5457858a13 ]
 
-> ---
->  drivers/base/memory.c          | 11 +++++------
->  include/linux/memory_hotplug.h |  2 ++
->  mm/memory_hotplug.c            |  8 ++++----
->  3 files changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 8d3e16dab69f..2b09b68b9f78 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -35,7 +35,7 @@ static const char *const online_type_to_str[] = {
->  	[MMOP_ONLINE_MOVABLE] = "online_movable",
->  };
->  
-> -static int memhp_online_type_from_str(const char *str)
-> +int memhp_online_type_from_str(const char *str)
->  {
->  	int i;
->  
-> @@ -394,13 +394,12 @@ static ssize_t auto_online_blocks_store(struct device *dev,
->  					struct device_attribute *attr,
->  					const char *buf, size_t count)
->  {
-> -	if (sysfs_streq(buf, "online"))
-> -		memhp_default_online_type = MMOP_ONLINE;
-> -	else if (sysfs_streq(buf, "offline"))
-> -		memhp_default_online_type = MMOP_OFFLINE;
-> -	else
-> +	const int online_type = memhp_online_type_from_str(buf);
-> +
-> +	if (online_type < 0)
->  		return -EINVAL;
->  
-> +	memhp_default_online_type = online_type;
->  	return count;
->  }
->  
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index c6e090b34c4b..ef55115320fb 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -117,6 +117,8 @@ extern int arch_add_memory(int nid, u64 start, u64 size,
->  			struct mhp_restrictions *restrictions);
->  extern u64 max_mem_size;
->  
-> +extern int memhp_online_type_from_str(const char *str);
-> +
->  /* Default online_type (MMOP_*) when new memory blocks are added. */
->  extern int memhp_default_online_type;
->  /* If movable_node boot option specified */
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 1975a2b99a2b..9916977b6ee1 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -74,10 +74,10 @@ int memhp_default_online_type = MMOP_ONLINE;
->  
->  static int __init setup_memhp_default_state(char *str)
->  {
-> -	if (!strcmp(str, "online"))
-> -		memhp_default_online_type = MMOP_ONLINE;
-> -	else if (!strcmp(str, "offline"))
-> -		memhp_default_online_type = MMOP_OFFLINE;
-> +	const int online_type = memhp_online_type_from_str(str);
-> +
-> +	if (online_type >= 0)
-> +		memhp_default_online_type = online_type;
->  
->  	return 1;
->  }
-> -- 
-> 2.24.1
+Place phylink_start()/phylink_stop() inside dsa_port_enable() and
+dsa_port_disable(), which ensures that we call phylink_stop() before
+tearing down phylink - which is a documented requirement.  Failure
+to do so can cause use-after-free bugs.
 
--- 
-Michal Hocko
-SUSE Labs
+Fixes: 0e27921816ad ("net: dsa: Use PHYLINK for the CPU/DSA ports")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/dsa/dsa_priv.h |    2 ++
+ net/dsa/port.c     |   32 ++++++++++++++++++++++++++------
+ net/dsa/slave.c    |    8 ++------
+ 3 files changed, 30 insertions(+), 12 deletions(-)
+
+--- a/net/dsa/dsa_priv.h
++++ b/net/dsa/dsa_priv.h
+@@ -128,7 +128,9 @@ static inline struct net_device *dsa_mas
+ /* port.c */
+ int dsa_port_set_state(struct dsa_port *dp, u8 state,
+ 		       struct switchdev_trans *trans);
++int dsa_port_enable_rt(struct dsa_port *dp, struct phy_device *phy);
+ int dsa_port_enable(struct dsa_port *dp, struct phy_device *phy);
++void dsa_port_disable_rt(struct dsa_port *dp);
+ void dsa_port_disable(struct dsa_port *dp);
+ int dsa_port_bridge_join(struct dsa_port *dp, struct net_device *br);
+ void dsa_port_bridge_leave(struct dsa_port *dp, struct net_device *br);
+--- a/net/dsa/port.c
++++ b/net/dsa/port.c
+@@ -63,7 +63,7 @@ static void dsa_port_set_state_now(struc
+ 		pr_err("DSA: failed to set STP state %u (%d)\n", state, err);
+ }
+ 
+-int dsa_port_enable(struct dsa_port *dp, struct phy_device *phy)
++int dsa_port_enable_rt(struct dsa_port *dp, struct phy_device *phy)
+ {
+ 	struct dsa_switch *ds = dp->ds;
+ 	int port = dp->index;
+@@ -78,14 +78,31 @@ int dsa_port_enable(struct dsa_port *dp,
+ 	if (!dp->bridge_dev)
+ 		dsa_port_set_state_now(dp, BR_STATE_FORWARDING);
+ 
++	if (dp->pl)
++		phylink_start(dp->pl);
++
+ 	return 0;
+ }
+ 
+-void dsa_port_disable(struct dsa_port *dp)
++int dsa_port_enable(struct dsa_port *dp, struct phy_device *phy)
++{
++	int err;
++
++	rtnl_lock();
++	err = dsa_port_enable_rt(dp, phy);
++	rtnl_unlock();
++
++	return err;
++}
++
++void dsa_port_disable_rt(struct dsa_port *dp)
+ {
+ 	struct dsa_switch *ds = dp->ds;
+ 	int port = dp->index;
+ 
++	if (dp->pl)
++		phylink_stop(dp->pl);
++
+ 	if (!dp->bridge_dev)
+ 		dsa_port_set_state_now(dp, BR_STATE_DISABLED);
+ 
+@@ -93,6 +110,13 @@ void dsa_port_disable(struct dsa_port *d
+ 		ds->ops->port_disable(ds, port);
+ }
+ 
++void dsa_port_disable(struct dsa_port *dp)
++{
++	rtnl_lock();
++	dsa_port_disable_rt(dp);
++	rtnl_unlock();
++}
++
+ int dsa_port_bridge_join(struct dsa_port *dp, struct net_device *br)
+ {
+ 	struct dsa_notifier_bridge_info info = {
+@@ -615,10 +639,6 @@ static int dsa_port_phylink_register(str
+ 		goto err_phy_connect;
+ 	}
+ 
+-	rtnl_lock();
+-	phylink_start(dp->pl);
+-	rtnl_unlock();
+-
+ 	return 0;
+ 
+ err_phy_connect:
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -90,12 +90,10 @@ static int dsa_slave_open(struct net_dev
+ 			goto clear_allmulti;
+ 	}
+ 
+-	err = dsa_port_enable(dp, dev->phydev);
++	err = dsa_port_enable_rt(dp, dev->phydev);
+ 	if (err)
+ 		goto clear_promisc;
+ 
+-	phylink_start(dp->pl);
+-
+ 	return 0;
+ 
+ clear_promisc:
+@@ -119,9 +117,7 @@ static int dsa_slave_close(struct net_de
+ 	cancel_work_sync(&dp->xmit_work);
+ 	skb_queue_purge(&dp->xmit_queue);
+ 
+-	phylink_stop(dp->pl);
+-
+-	dsa_port_disable(dp);
++	dsa_port_disable_rt(dp);
+ 
+ 	dev_mc_unsync(master, dev);
+ 	dev_uc_unsync(master, dev);
+
+
