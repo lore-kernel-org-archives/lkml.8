@@ -2,108 +2,160 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AF7C0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5852EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDAB620674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3033420674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:02:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuyWjXf7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxAw1x5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgCQCBu (ORCPT
+        id S1726754AbgCQCCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 22:01:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42889 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgCQCBu (ORCPT
+        Mon, 16 Mar 2020 22:02:19 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46615 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgCQCCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 22:01:50 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t3so8877542plz.9
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 19:01:48 -0700 (PDT)
+        Mon, 16 Mar 2020 22:02:18 -0400
+Received: by mail-qk1-f195.google.com with SMTP id f28so29966849qkk.13;
+        Mon, 16 Mar 2020 19:02:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LKP/nhYw4uugvnnRsKDRbjjHYrWkREfbKj6MAzU7nnE=;
-        b=LuyWjXf7whSRVDAtg/cdhXwUfWsoCCF1aoBEdVZX5CwBN2eiNyXPfdvtacMhI1jghk
-         vq6LvmLqkTJLW6e78XmE+NxLJTZpgmwBW//0jj+iMnxRvHR+LKahhEOMulVx1bSJkfAG
-         4qVikYJrq0Bxtv2lBFVuPi6JqWZ46vYPWu88baNCfhzO25Hm/huLPpTv4EGe1YmbtE/z
-         c4Czlvu2p3mCXkp6DqdX18gUW8c6UhvYYAzq8PvYYnSnbMUzl7cIwjHn0dl4KvrWV7oK
-         tNLDawISj+N10nWO6kColCRCZhLxB4UEiQctag0/uBrMLidZqa9pgRXym3T8u4N7UM0O
-         x2GQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GfwiC+344U8psPjXqa0wm09HURQ3uUDHZEYcEibliGw=;
+        b=IxAw1x5u4ehF5o0WeS17DGZ7kb7j9nMi2Xm1UqyutqGICGpvViUsiFRLaWVBHIhKoR
+         3qTn8R8TfUTFe4TZDtRCnSnm87KSStORtK7JrqpO8anmsG7qKdBonpQXhpjOMNvkYJ0F
+         XFTRn4t+e75LWMBYxSjJ8afc36eKQ/Jjmc1dcA/avO/4qcQ3VC/KG/HrplY4OKG7L5kE
+         8tHZfCKMEgnGqX0Xc7LKZy8nOlFGUU8NwzZUvO+Cc+4yyw4/pP1+iUEMuC4qj+aNeyTN
+         L4vidOkH/oOf+Ifnu6CBGU6zO0XafcysjMLAdEBSPbQT2Sww2dS57J+GCd4yKhkBLJr/
+         R+kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LKP/nhYw4uugvnnRsKDRbjjHYrWkREfbKj6MAzU7nnE=;
-        b=ae+jKzKGUrukL/YWJhTJUK+ornfmSsi3e9l1iaqqu1YNMVKRb4Uds9yiVjHuTAWpU9
-         bkgIRf0QT4KrfN8K90tx5e9SwlGckKIYkoSJCdOiqFPMNVRYRqsrDPO5xqMpCLZbyddT
-         UOsNtfeGp3Pvggp3i+Gq7Sy8NG7aKc/r9IBDowYmTjFN0MJcFWwVC3nC+gtVYYnBFiIc
-         NG5FpG6W7yeH782iB2HXMkORzg0IDz6iYVwPCjzgWC4XIPXG1ONIgIjfc1bWdbja3y8w
-         gRwjZvZurZEtpAoRR35/Q9vZhxDBw/BOb24GHKhW0oNuHMiG4Wk9Xtmk45ocDCj6CT47
-         5Cfw==
-X-Gm-Message-State: ANhLgQ1/8DOucJJnxlOGVFQ9m+0FwyMjaND3RHkj4KqEgpY+q0jXrVK7
-        h6u1qYOqhbmCgJqsuOBjVWE=
-X-Google-Smtp-Source: ADFU+vtxSJWPCxuN0Fmp7tC3u8qVmTnsUs3UTNHhzNkan3XAjCELg45zfyz3bm6cteKI2tVb8vQ0HA==
-X-Received: by 2002:a17:90a:c08f:: with SMTP id o15mr2608257pjs.155.1584410507537;
-        Mon, 16 Mar 2020 19:01:47 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id g4sm1064519pfb.169.2020.03.16.19.01.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 19:01:46 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 11:01:44 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Shreyas Joshi <Shreyas.Joshi@biamp.com>,
-        "pmladek@suse.com" <pmladek@suse.com>,
-        "sergey.senozhatsky@gmail.com" <sergey.senozhatsky@gmail.com>,
-        "shreyasjoshi15@gmail.com" <shreyasjoshi15@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] printk: handle blank console arguments passed in.
-Message-ID: <20200317020144.GB219881@google.com>
-References: <20200309052915.858-1-shreyas.joshi@biamp.com>
- <MN2PR17MB31979437E605257461AC003DFCF60@MN2PR17MB3197.namprd17.prod.outlook.com>
- <20200316213900.6b1eb594@oasis.local.home>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GfwiC+344U8psPjXqa0wm09HURQ3uUDHZEYcEibliGw=;
+        b=qn/jOsLY7UyxPiaC98MeFsc6UPV7uFiEYqv+Km+Pz+PRdUzc9ZXjZJNxve5mRmxELI
+         /4zFDujJSbLCMQebUz3yAZlnxfuCVO0u87Ty2tr7aisDwGbz74IvP1MumxmI5+uRKl46
+         Pg4fQ1ttL9w3BME6i/+emMrI8nUI1ZrQJmo6ZDykVCjnl/1F8sTzlhuSp07ws/dh84wE
+         kSV/ttiv8QxBlEbemSv5DhQPYs/kiNDzNG03Po8XLmxTdYG7SJWWqpuhhSEjBwwPhQW4
+         rlmXop+j5MnvAX7uAgvNVkJwZRB0IXDU0Tg33O/Xr7ku8AejMJypprybvwBUDO3p877D
+         DBOQ==
+X-Gm-Message-State: ANhLgQ2u1HqNZWKHYuqXs/8Ka+RkIGpejDDhp8L6oQVC3qgTEApRdIrl
+        DZZ+o8GZa2cVTvUuvOa3wDvCf0joO+cEp6PEnhPUZZ6j
+X-Google-Smtp-Source: ADFU+vtpREl3Ph/YdBPhjq8xSZ78Hx8l94PN5EyvsxWf+Tot+Bmq/hpMD0ffX6sgsW2OsWdG33mFavYXIeggbdPnxNc=
+X-Received: by 2002:a05:620a:539:: with SMTP id h25mr2652050qkh.395.1584410537015;
+ Mon, 16 Mar 2020 19:02:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316213900.6b1eb594@oasis.local.home>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <cover.1583307441.git.baolin.wang7@gmail.com> <b6c0c003d887bf7c272c493212f4f89d28097ad4.1583307441.git.baolin.wang7@gmail.com>
+ <CAPDyKFoKzBPNFkG=4OenZ_7ZVgqfhhEDRxsSbu6cJOSgCPPL1Q@mail.gmail.com>
+In-Reply-To: <CAPDyKFoKzBPNFkG=4OenZ_7ZVgqfhhEDRxsSbu6cJOSgCPPL1Q@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Tue, 17 Mar 2020 10:02:05 +0800
+Message-ID: <CADBw62qMMBf8P0j-ya-Qz9WNhAMPrzE6h8P=_VLko3_yJ0cwAw@mail.gmail.com>
+Subject: Re: [RESEND PATCH 2/3] mmc: host: sdhci-sprd: Implement the
+ request_atomic() API
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/16 21:39), Steven Rostedt wrote:
-[..]
-> > 
-> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c index ad4606234545..e9ad730991e0 100644
-> > --- a/kernel/printk/printk.c
-> > +++ b/kernel/printk/printk.c
-> > @@ -2165,7 +2165,10 @@ static int __init console_setup(char *str)
-> >  	char buf[sizeof(console_cmdline[0].name) + 4]; /* 4 for "ttyS" */
-> >  	char *s, *options, *brl_options = NULL;
-> >  	int idx;
+On Mon, Mar 16, 2020 at 7:47 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Wed, 4 Mar 2020 at 08:42, Baolin Wang <baolin.wang7@gmail.com> wrote:
+> >
+> > Implement the request_atomic() API for nonremovable cards, that means
+> > we can submit next request in the irq hard handler context to reduce
+> > latency.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > ---
+> >  drivers/mmc/host/sdhci-sprd.c | 28 ++++++++++++++++++++++++++--
+> >  1 file changed, 26 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> > index 2ab42c5..bddf0f3 100644
+> > --- a/drivers/mmc/host/sdhci-sprd.c
+> > +++ b/drivers/mmc/host/sdhci-sprd.c
+> > @@ -426,6 +426,27 @@ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
+> >         sdhci_request(mmc, mrq);
+> >  }
+> >
+> > +static void sdhci_sprd_request_atomic(struct mmc_host *mmc,
+> > +                                     struct mmc_request *mrq)
+> > +{
+> > +       struct sdhci_host *host = mmc_priv(mmc);
+> > +       struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
+> > +
+> > +       host->flags |= sprd_host->flags & SDHCI_AUTO_CMD23;
+> > +
+> > +       /*
+> > +        * From version 4.10 onward, ARGUMENT2 register is also as 32-bit
+> > +        * block count register which doesn't support stuff bits of
+> > +        * CMD23 argument on Spreadtrum's sd host controller.
+> > +        */
+> > +       if (host->version >= SDHCI_SPEC_410 &&
+> > +           mrq->sbc && (mrq->sbc->arg & SDHCI_SPRD_ARG2_STUFF) &&
+> > +           (host->flags & SDHCI_AUTO_CMD23))
+> > +               host->flags &= ~SDHCI_AUTO_CMD23;
+>
+> Looks like the above code is a copy of what is done in
+> sdhci_sprd_request(). Perhaps add a helper function that deals with
+> this to avoid open coding?
+
+Sure. Will do in next version. Thanks.
+
+>
+> > +
+> > +       sdhci_request_atomic(mmc, mrq);
+> > +}
+> > +
+> >  static int sdhci_sprd_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
+> >  {
+> >         struct sdhci_host *host = mmc_priv(mmc);
+> > @@ -561,6 +582,11 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+> >         if (ret)
+> >                 goto pltfm_free;
+> >
+> > +       if (!mmc_card_is_removable(host->mmc))
+> > +               host->mmc_host_ops.request_atomic = sdhci_sprd_request_atomic;
+> > +       else
+> > +               host->always_defer_done = true;
+> > +
+> >         sprd_host = TO_SPRD_HOST(host);
+> >         sdhci_sprd_phy_param_parse(sprd_host, pdev->dev.of_node);
+> >
+> > @@ -654,8 +680,6 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+> >         if (ret)
+> >                 goto err_cleanup_host;
+> >
+> > -       host->always_defer_done = true;
 > > -
-> > +	if (str[0] == 0) {
-> > +		console_loglevel = 0;
-> > +		return 1;
-> 
-> Hmm, I wonder if this should produce a warning :-/
+> >         ret = __sdhci_add_host(host);
+> >         if (ret)
+> >                 goto err_cleanup_host;
+> > --
+> > 1.9.1
+> >
+>
+> Kind regards
+> Uffe
 
-Hmm. Maybe the warning can seat in __setup() handling?
-There are 300+ places that theoretically can receive blank boot param
 
-	$ git grep "__setup(\".*=\"" | wc -l
-	307
 
-I'd assume that not all of those can handle blank params. At the same
-time, do we have cases when passing blank boot params is OK? E.g.
-"... root=/dev/sda1 foo= bar= ..."
-
-	-ss
+-- 
+Baolin Wang
