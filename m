@@ -2,139 +2,132 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D9EC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96698C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6CE20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC9720735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VqAW07Ht"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zAOgX/YW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgCQSFK (ORCPT
+        id S1726769AbgCQSFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:05:10 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40982 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgCQSFJ (ORCPT
+        Tue, 17 Mar 2020 14:05:34 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34789 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgCQSFd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:05:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02HI52nK050812;
-        Tue, 17 Mar 2020 13:05:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584468302;
-        bh=YofixRqwe1BNBkGZC9BZ90T1HPwUITfs1WErunM/8Lk=;
-        h=From:To:CC:Subject:Date;
-        b=VqAW07HtTKnr7z/tQjQ7aguu/D9U7LHk3wbhAG151N2y6+FZnStU4yzMYoWFKfM85
-         6Gp+WMtQBeldpMkmRRvWgTnBGKg3IKyAHY3xRv78TEp7yi0uKyTShevvJgk1ZuRqh+
-         hGNdTlvcDtM1XQ1YMVqmJmgjjELW/fl3/1nFdxWM=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02HI52Sb033236;
-        Tue, 17 Mar 2020 13:05:02 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 13:05:02 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 13:05:02 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02HI51k9027444;
-        Tue, 17 Mar 2020 13:05:02 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-CC:     netdev <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] net: phy: dp83867: w/a for fld detect threshold bootstrapping issue
-Date:   Tue, 17 Mar 2020 20:04:54 +0200
-Message-ID: <20200317180454.22393-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Mar 2020 14:05:33 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t3so12158045pgn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 11:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZpBI1BoqE+w5cxYT1XTfEOOzyE5/sXCLbJVrVnxa0bU=;
+        b=zAOgX/YW1JHp0BQ3g1QZOFrbUaFOok3bRVGL2Az4K2WsvGKX2Mnj9QAeyD/z9z8B4d
+         2Sfd0+6dpprpH3SayPdbEBXyo2AXQ+X3Y39ejRGCTC9QtYFNzJaYWypBzaKpv5s+tPRa
+         FCE/pJ7aqyhonBT+3b/WWWVuaYt9nN5/Oz4K4gAWl75u6VN2GfbzE+SLqOqMPonAw91Z
+         ckCTOicVgUBRcWje7Ck4n9OGHOixomSAE0d+gsFTveVYDdwIwnmQWAcapwn9pbKGxawL
+         xyutL+Qo+FV3++LGd1GwKNeJBwudPCISmNcTz9oVO0Eujt79A0YAODgCi8cJdwtOIspk
+         V8gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZpBI1BoqE+w5cxYT1XTfEOOzyE5/sXCLbJVrVnxa0bU=;
+        b=YcN90RMkf3LphzjnHCi+xddx8iwtS4B086wUQQaqVR/0NamlucQmA7ClDyXZKSHMgf
+         Kq6jD6gUGZRU37vx7+Wsmd1Xn8B5gJyU3PWsPUZ8QKWFZxY2ljalBjXixXwhRMfPZJs1
+         MFyiuJVoxELaWxp+DBeDEHMKySYz/rkcKDo36lzQvhk097gyB9DIKuHrd6Vu+uLSxaGC
+         oS6DhHgRyaplSJHrfBpozOACMG+x/9162xWgWJkI0BQeINolytmsuV3Y49h8fmQ1b0PW
+         Get8e8ggue8ukUSy89iUxjTJo+x40bM6t4H4dSrmPXe/ThS3iSBpu+gYdcJTX725d3Ue
+         5DFw==
+X-Gm-Message-State: ANhLgQ0SS2DGroQmBpG+2jMyQneItz7PyrRn2RHT5pF98YaNfQNNo5RJ
+        iZrU3hkmltsrjpIq81NejTii9w==
+X-Google-Smtp-Source: ADFU+vts51DA0nU7yp+NqHXSRCSYWq8QTGf4keWNP2Ft8q88HfpgSeuOgtMPOWXDeaGAsy9WYUq6jA==
+X-Received: by 2002:a63:3142:: with SMTP id x63mr458054pgx.138.1584468332497;
+        Tue, 17 Mar 2020 11:05:32 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 136sm3335134pgh.26.2020.03.17.11.05.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 11:05:31 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 12:05:30 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] remoteproc: Fix and restore the parenting hierarchy
+ for vdev
+Message-ID: <20200317180530.GA1801@xps15>
+References: <20200305224108.21351-1-s-anna@ti.com>
+ <20200305224108.21351-3-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305224108.21351-3-s-anna@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the DP83867 PHY is strapped to enable Fast Link Drop (FLD) feature
-STRAP_STS2.STRAP_ FLD (reg 0x006F bit 10), the Energy Lost Threshold for
-FLD Energy Lost Mode FLD_THR_CFG.ENERGY_LOST_FLD_THR (reg 0x002e bits 2:0)
-will be defaulted to 0x2. This may cause the phy link to be unstable. The
-new DP83867 DM recommends to always restore ENERGY_LOST_FLD_THR to 0x1.
+Hi Suman,
 
-Hence, restore default value of FLD_THR_CFG.ENERGY_LOST_FLD_THR to 0x1 when
-FLD is enabled by bootstrapping as recommended by DM.
+On Thu, Mar 05, 2020 at 04:41:08PM -0600, Suman Anna wrote:
+> The commit 086d08725d34 ("remoteproc: create vdev subdevice with specific
+> dma memory pool") has introduced a new vdev subdevice for each vdev
+> declared in the firmware resource table and made it as the parent for the
+> created virtio rpmsg devices instead of the previous remoteproc device.
+> This changed the overall parenting hierarchy for the rpmsg devices, which
+> were children of virtio devices, and does not allow the corresponding
+> rpmsg drivers to retrieve the parent rproc device through the
+> rproc_get_by_child() API.
+> 
+> Fix this by restoring the remoteproc device as the parent. The new vdev
+> subdevice can continue to inherit the DMA attributes from the remoteproc's
+> parent device (actual platform device).
+> 
+> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>  drivers/remoteproc/remoteproc_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 097f33e4f1f3..ba18f32bd0c4 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -510,7 +510,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
+>  
+>  	/* Initialise vdev subdevice */
+>  	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
+> -	rvdev->dev.parent = rproc->dev.parent;
+> +	rvdev->dev.parent = &rproc->dev;
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/phy/dp83867.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+I can see how it would not be possible to retrieve the parent rproc device since
+rvdev->dev.parent was set to be platform device...
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 13f7f2d5a2ea..b55e3c0403ed 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -30,7 +30,8 @@
- #define DP83867_CTRL		0x1f
- 
- /* Extended Registers */
--#define DP83867_CFG4            0x0031
-+#define DP83867_FLD_THR_CFG	0x002e
-+#define DP83867_CFG4		0x0031
- #define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
- #define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
- #define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
-@@ -93,6 +94,7 @@
- #define DP83867_STRAP_STS2_CLK_SKEW_RX_MASK	GENMASK(2, 0)
- #define DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT	0
- #define DP83867_STRAP_STS2_CLK_SKEW_NONE	BIT(2)
-+#define DP83867_STRAP_STS2_STRAP_FLD		BIT(10)
- 
- /* PHY CTRL bits */
- #define DP83867_PHYCR_TX_FIFO_DEPTH_SHIFT	14
-@@ -145,6 +147,9 @@
- /* CFG4 bits */
- #define DP83867_CFG4_PORT_MIRROR_EN              BIT(0)
- 
-+/* FLD_THR_CFG */
-+#define DP83867_FLD_THR_CFG_ENERGY_LOST_THR_MASK	0x7
-+
- enum {
- 	DP83867_PORT_MIRROING_KEEP,
- 	DP83867_PORT_MIRROING_EN,
-@@ -622,6 +627,20 @@ static int dp83867_config_init(struct phy_device *phydev)
- 		phy_clear_bits_mmd(phydev, DP83867_DEVADDR, DP83867_CFG4,
- 				   BIT(7));
- 
-+	bs = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_STRAP_STS2);
-+	if (bs & DP83867_STRAP_STS2_STRAP_FLD) {
-+		/* When using strap to enable FLD, the ENERGY_LOST_FLD_THR will
-+		 * be set to 0x2. This may causes the PHY link to be unstable -
-+		 * the default value 0x1 need to be restored.
-+		 */
-+		ret = phy_modify_mmd(phydev, DP83867_DEVADDR,
-+				     DP83867_FLD_THR_CFG,
-+				     DP83867_FLD_THR_CFG_ENERGY_LOST_THR_MASK,
-+				     0x1);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (phy_interface_is_rgmii(phydev) ||
- 	    phydev->interface == PHY_INTERFACE_MODE_SGMII) {
- 		val = phy_read(phydev, MII_DP83867_PHYCTRL);
--- 
-2.17.1
+I wonder how the original change didn't blow up sysmon_probe() and potentially
+other out-of-tree users of rproc_get_by_child().  It would be nice to have
+someone from the QCOM team test your patch.
 
+>  	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
+>  	rvdev->dev.release = rproc_rvdev_release;
+>  	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
+
+Be mindful there might be fallouts from applying this patch since it does change
+the location of the vdev under /sys/device/platform/ .
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+> -- 
+> 2.23.0
+> 
