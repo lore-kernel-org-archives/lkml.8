@@ -2,115 +2,92 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA11C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A04C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F77C20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D93D20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VuWpoTNi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jtBzA5OS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgCQPJd (ORCPT
+        id S1727005AbgCQPJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:09:33 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:33065 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726781AbgCQPJd (ORCPT
+        Tue, 17 Mar 2020 11:09:38 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:11552 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726908AbgCQPJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:09:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584457772;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ta0KhgepEfUwCGXHHAmHDiK6AEcY63fhQKakFvy+9pQ=;
-        b=VuWpoTNi9KHnSb+2MvzLw9Dd3fX20rxvRkKFwlizT//BCIytg7egBD494nS0PKxqPF2MVB
-        HyBCKTr1pSNdhj3ftKmt0dKqhxsgb4RP67TT03NfYBAaXNcng8ml/0a14mF4Mp2Ta83VNV
-        NhZBXye3k49TveaYI8bBQVkIpk+H4fk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-enRAUM7-PJ6go4nbvKaw4A-1; Tue, 17 Mar 2020 11:09:28 -0400
-X-MC-Unique: enRAUM7-PJ6go4nbvKaw4A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 17 Mar 2020 11:09:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584457776; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=2oIoln8Sc314htSSDOzTFV2z2V9e1oBBZQTPh8927tw=; b=jtBzA5OS/dqJi7MnlutUGus0TK7bdBOUIe+cK1faQSIKO5l9DSGU1csiNGc950F6uJx35cJV
+ ecBKmHq7OVZ+F4ZrBx+vgPBmksf6ExoQB4A9e+7ErywrxqNjicu45mKgWwaWeFMb3bLLoNts
+ gzBUGHoUmTqe8QFaxlMD6/qmj14=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e70e828.7f08818cfc38-smtp-out-n02;
+ Tue, 17 Mar 2020 15:09:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6356FC43636; Tue, 17 Mar 2020 15:09:28 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CE536107B7F0;
-        Tue, 17 Mar 2020 15:09:10 +0000 (UTC)
-Received: from krava (unknown [10.40.195.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 437EE19756;
-        Tue, 17 Mar 2020 15:09:04 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 16:07:03 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v5 09/11] perf/tools: Enhance JSON/metric infrastructure
- to handle "?"
-Message-ID: <20200317150703.GB757893@krava>
-References: <20200317062333.14555-1-kjain@linux.ibm.com>
- <20200317062333.14555-10-kjain@linux.ibm.com>
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 13C6BC4478C;
+        Tue, 17 Mar 2020 15:09:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 13C6BC4478C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, joro@8bytes.org,
+        robin.murphy@arm.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-remoteproc@vger.kernel.org, ohad@wizery.com,
+        agross@kernel.org, dianders@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 1/3] dt-bindings: remoteproc: qcom: Add iommus property
+Date:   Tue, 17 Mar 2020 20:39:08 +0530
+Message-Id: <20200317150910.26053-2-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200317150910.26053-1-sibis@codeaurora.org>
+References: <20200317150910.26053-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317062333.14555-10-kjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 11:53:31AM +0530, Kajol Jain wrote:
+Add iommus property to allow Q6 modem to boot on platforms which do
+not have trustZone.
 
-SNIP
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-> index 3b4cdfc5efd6..dcc3c6ab2e67 100644
-> --- a/tools/perf/arch/powerpc/util/header.c
-> +++ b/tools/perf/arch/powerpc/util/header.c
-> @@ -7,6 +7,8 @@
->  #include <string.h>
->  #include <linux/stringify.h>
->  #include "header.h"
-> +#include "metricgroup.h"
-> +#include <api/fs/fs.h>
->  
->  #define mfspr(rn)       ({unsigned long rval; \
->  			 asm volatile("mfspr %0," __stringify(rn) \
-> @@ -16,6 +18,8 @@
->  #define PVR_VER(pvr)    (((pvr) >>  16) & 0xFFFF) /* Version field */
->  #define PVR_REV(pvr)    (((pvr) >>   0) & 0xFFFF) /* Revison field */
->  
-> +#define SOCKETS_INFO_FILE_PATH "/devices/hv_24x7/interface/sockets"
-> +
->  int
->  get_cpuid(char *buffer, size_t sz)
->  {
-> @@ -44,3 +48,9 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
->  
->  	return bufp;
->  }
-> +
-> +int arch_get_runtimeparam(void)
-> +{
-> +	int count;
-> +	return sysfs__read_int(SOCKETS_INFO_FILE_PATH, &count) < 0 ? 1 : count;
-
-is that SOCKETS_INFO_FILE_PATH define used later? if not please
-put the path directly as an argument to sysfs__read_int
-
-jirka
-
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+index 88dfa3fc15f78..130e50aab7419 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+@@ -184,6 +184,9 @@ For the compatible strings below the following phandle references are required:
+ 		    followed by the offset within syscon for conn_box_spare0
+ 		    register.
+ 
++The Hexagon node must contain iommus property as described in ../iommu/iommu.txt
++on platforms which do not have TrustZone.
++
+ = SUBNODES:
+ The Hexagon node must contain two subnodes, named "mba" and "mpss" representing
+ the memory regions used by the Hexagon firmware. Each sub-node must contain:
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
