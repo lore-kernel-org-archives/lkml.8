@@ -6,62 +6,76 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC84C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7ADC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B1820757
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33C02076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BBO2buZO"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QSiI3s0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgCQNuo (ORCPT
+        id S1726779AbgCQNus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:50:44 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46279 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgCQNun (ORCPT
+        Tue, 17 Mar 2020 09:50:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36415 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbgCQNur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:50:43 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a28so5414119lfr.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:50:40 -0700 (PDT)
+        Tue, 17 Mar 2020 09:50:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g62so22089773wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=bl6Wl8W1k8+UQXRdrCsPqiuDGnxac/zO2yeYWcwH/eY=;
-        b=BBO2buZOeTxK0pTFcnu2vsX80POcqQJc4xww2aupjp3CUcUyRERCJVPxOku6Aa1UD+
-         TdQ3ulqZrG+z4FycBEAhYazQKCR56uL3u+gjU2zBF1yApArsbKhWr+mIlMaeU6RJnIkH
-         3mha3ioQs0YGEaIJZyKWvb16kby/lPx/VM9v6RZ+7Vn/V3CzxmV9M/m4xaFBEmEAPnj1
-         at+zXtyuHqSvx6FIl1EDBhs4TosAgYqCTcjUKCE6hL9aWmjBjuD1ck604axr8kvBZp/X
-         2aIO/omD5oUHySZmd1whOdSQk6M2cGFoKZmq43572olq0U2X2dWCj6fWpArT4t+R2Ubo
-         LrEQ==
+        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
+        b=QSiI3s0YoV7n7/tnYog9oUBP3Cc6GxHGUCwCh0UhqjNIkn6pKoWxwDwIc7ZHfuKyt1
+         kEdvFCQ6j7+Noa9+D0kVSXd1O/Rq0h4ff0AABiKfQ0W9cNhse4SjTXrrb27FQeHJRpqX
+         rIA1fPNgK6D/F/8d3tqP2UVTDNrxXWhDA5E8X6jidyynaIZ0Cy+aY7WG7NpXiQONb4V8
+         LujVukcDZrWz+C7PF5bEhVfs5Bz/2BHH9zTE0HxRpIGKa2vvxtylEPZVlwnF7tZUgTXY
+         0rCI7jvUsKgzmx+R0sfFe10N4oWZb67+facmOeYl3vGzjeHlueh6TX64XNpmNRTf9oox
+         +L4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bl6Wl8W1k8+UQXRdrCsPqiuDGnxac/zO2yeYWcwH/eY=;
-        b=DFpQd0lC6fvk7xnqR78UWOHIgFVfu7LSVVBfPhhRnBH1LeznQZpaXZxkS5Vp+j/Atz
-         JbNfr79hfCcBpMcwJjzJwyiiY10MTCojIOGGJHLX/yGMcaQtLESjGxDV3+dolwdk7ErI
-         em+bmNuIv862swgZ778LDyI6mXi7Mc+7JgH3fqGbHAmGvbUS1sypsYp/i6irtgs4XYPN
-         YSZq5tgik+r2Zs4a6R4mYcSQVtczZzdBSVYCn2sW897bvbUBCTaDnhiRZlEDtyNXOwtQ
-         s2GFrT/xxNfNo9NpsW0PAejgDTvJZUHQUuvC7tTcg0eplHGJgCjyMFSW1HPcMoLtRtMn
-         MMbw==
-X-Gm-Message-State: ANhLgQ2pz+mxuR671WxdKiskBE5CQcKkvki97/WpxaLatowTRvGo6VuX
-        1w485hfx9sLCbD3Jq5DNXXypm1n6xEo4gSdJoaMSRPA6
-X-Google-Smtp-Source: ADFU+vs1OKaCfhYsk3ZLqgceZIr7uOgl5r7AdLgYUcjxlwtwPMRQ6uDNBO6ughO/XEUAqjxZzkDuEiXPj5zd5bOvAHc=
-X-Received: by 2002:adf:bb06:: with SMTP id r6mr6318759wrg.324.1584453039735;
- Tue, 17 Mar 2020 06:50:39 -0700 (PDT)
+        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
+        b=C+r3rg1zrpqUV5mDlMku7c+OwpUBgOWLCF4gY/1riD3aIcjvEACAD6cdcNQwmrkWfy
+         yNA6mcg8dj163WQaoCmWwsllQlWiXANKPquTcKDqjnag9dCJZUDQYQzdQq4Kg6emNBvM
+         4jzvW4KxomHm1xgvlcJgYFvCItmSBtC3w7i9UTXt2BQqU/nErpESW2ND41aVwufT9/bj
+         n2z7dSvx3Bqv4Iq1hBSOtEm9EcN5TrH1IKISSdzx03od2fCTolnHAdDi1vOBNmORaJTQ
+         1dGUJV1wTfY8iUjVPVzjeB+FnHIpQHR/gBj1P2E12muihvqGIL8xnK0DMndCifCovUUT
+         TJ7A==
+X-Gm-Message-State: ANhLgQ1l8lGhDuNHvdbDZ2zyxhRusbSld2ZG2Q5FidKWv/eypMqK2wmJ
+        yhkwyqRX+3yLZDqYheqJXI1iVsoqDfNEUvaNqbk8SA==
+X-Google-Smtp-Source: ADFU+vusa/y0ClrKHxHtyBDmZj1O+rMx8uu0qjHobSSS5JQecz+zDpUKEEddBu5XlbGpEmdbaIvM2nWs+JrNOWL77kQ=
+X-Received: by 2002:a05:600c:21d1:: with SMTP id x17mr5249108wmj.3.1584453043184;
+ Tue, 17 Mar 2020 06:50:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200316195048.2592199-1-gabravier@gmail.com>
-In-Reply-To: <20200316195048.2592199-1-gabravier@gmail.com>
+References: <cover.1584450500.git.mchehab+huawei@kernel.org> <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 17 Mar 2020 14:50:03 +0100
-Message-ID: <CAMpxmJXHQPDBsuJ_tBhys0wtp1xcsi3irC7uexqW3iXxq=5JAA@mail.gmail.com>
-Subject: Re: [PATCH] gpio-hammer: Apply scripts/Lindent and retain good changes
-To:     Gabriel Ravier <gabravier@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 17 Mar 2020 14:50:32 +0100
+Message-ID: <CAMpxmJUPA2qDwDu-LUh-RtXt66NhQUdjnPOCSaaBZ9xEm0C5LQ@mail.gmail.com>
+Subject: Re: [PATCH 05/12] docs: dt: fix references to ap806-system-controller.txt
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Ben Peled <bpeled@marvell.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        linux-pm <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,37 +83,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 16 mar 2020 o 20:50 Gabriel Ravier <gabravier@gmail.com> napisa=C5=82=
-(a):
+wt., 17 mar 2020 o 14:10 Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> napisa=C5=82(a):
 >
-> "retain good changes" means that I left the help string split up instead
-> of having this weird thing where it tries to merge together the last thre=
-e
-> lines and it looks **really** bad
+> ap806-system-controller.txt was renamed to ap80x-system-controller.txt.
 >
-> Signed-off-by: Gabriel Ravier <gabravier@gmail.com>
+> Update its references accordingly.
+>
+> Fixes: 2537831bbc19 ("dt-bindings: ap80x: replace AP806 with AP80x")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  tools/gpio/gpio-hammer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt        | 2 +-
+>  Documentation/devicetree/bindings/thermal/armada-thermal.txt | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
-> index 0e0060a6eb34..51a65f8149ea 100644
-> --- a/tools/gpio/gpio-hammer.c
-> +++ b/tools/gpio/gpio-hammer.c
-> @@ -77,7 +77,7 @@ int hammer_device(const char *device_name, unsigned int=
- *lines, int nlines,
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Docu=
+mentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> index 2e097b57f170..0fc6700ed800 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> @@ -14,7 +14,7 @@ Required properties:
 >
->                 fprintf(stdout, "[%c] ", swirr[j]);
->                 j++;
-> -               if (j =3D=3D sizeof(swirr)-1)
-> +               if (j =3D=3D sizeof(swirr) - 1)
->                         j =3D 0;
+>      "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
+>      SoCs (either from AP or CP), see
+> -    Documentation/devicetree/bindings/arm/marvell/ap806-system-controlle=
+r.txt
+> +    Documentation/devicetree/bindings/arm/marvell/ap80x-system-controlle=
+r.txt
+>      for specific details about the offset property.
 >
->                 fprintf(stdout, "[");
+>  - reg: Address and length of the register set for the device. Only one
+> diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt=
+ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+> index f3b441100890..b0bee7e42038 100644
+> --- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+> @@ -12,7 +12,7 @@ Required properties:
+>
+>  Note: these bindings are deprecated for AP806/CP110 and should instead
+>  follow the rules described in:
+> -Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.tx=
+t
+> +Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.tx=
+t
+>  Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.tx=
+t
+>
+>  - reg: Device's register space.
 > --
 > 2.24.1
 >
 
-Patch applied, thanks!
+For GPIO:
 
-Bartosz
+Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
