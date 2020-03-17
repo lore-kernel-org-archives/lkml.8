@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3DAC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF29C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2157920658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2239120658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443609;
-	bh=2gNUVrFf3z0eqzjHAqn4loYBqESHZkwaMZOw7bbK8Vc=;
+	s=default; t=1584443613;
+	bh=MhqLiY0QoUHrYeGdqaf0sjCR6NM6YcsSusNH+uq3Vq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rc9c5z//cPmNqmQrKOxCEAPUN3YnNweKCIM4Zlmv5PMeV/l0jKngNAIZgLmvfBMNV
-	 e7EnBoXSA/LcYZZ3DlZZyTmQKX+ruKiEAa0sBmfKGVyk6veY6fdT5+QUzxQ56z88Rz
-	 wBvw3e7WRf8AB/3QLaWr9phfsdPeTv8toGelA5g0=
+	b=YTrdll3AU+h0/Q4qrpw4A4kzDjGcdbyp/edBtxVPWG0JS3Lnc1dtqnzbz6HIYYEjS
+	 I/3+vtunbmrWb2q6lmo7ZPKIFFi+fNRgI+Dca3v2c8WQGtElHZhmAzZIZOc+s67qy3
+	 BdBi+ec0mMEzH7WRy+A68N5uAudFfoIDXF4PqE4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgCQLN2 (ORCPT
+        id S1728538AbgCQLNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:13:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57304 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729344AbgCQLNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:24 -0400
+        id S1729377AbgCQLN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:13:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2C322076F;
-        Tue, 17 Mar 2020 11:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57466205ED;
+        Tue, 17 Mar 2020 11:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443604;
-        bh=2gNUVrFf3z0eqzjHAqn4loYBqESHZkwaMZOw7bbK8Vc=;
+        s=default; t=1584443607;
+        bh=MhqLiY0QoUHrYeGdqaf0sjCR6NM6YcsSusNH+uq3Vq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sx15Wo48iPMroMJ1znYyIPU0Vx85umINqKnFLOdqd+HV6YMm2qTBy2BQ/ahXuVUz6
-         Njs0nv+mNdpzG9i3syr25fZrGRnZ+rs2QViunQ/jbrQY2ExYVOSSfvLpFgUPQWqhT9
-         q6Z5OPM8/OmC6kGkQfGIt+DMjHirHoSaUTJb2Mi0=
+        b=A2gkGV9rSI8GObXJwj6lZ6fIs0PXRSvtY6GFgB3bdKvGH2K38XeHo+fDDOn0x7YKX
+         SkMust4JtJh62pfczPM1Rycp7wp3xmEP3n57PpVDkM232dd7uXdRsAo4JpaVud+gfx
+         SxlDud82JOIXkvYlpqpyaielVuMZtF5T7xnAlHFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Sanderson <kyle.leet@gmail.com>,
-        Michael Stapelberg <michael+lkml@stapelberg.ch>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.5 101/151] fuse: fix stack use after return
-Date:   Tue, 17 Mar 2020 11:55:11 +0100
-Message-Id: <20200317103333.636383044@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 5.5 102/151] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Date:   Tue, 17 Mar 2020 11:55:12 +0100
+Message-Id: <20200317103333.707278222@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,81 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-commit 3e8cb8b2eaeb22f540f1cbc00cbb594047b7ba89 upstream.
+commit e8d87a0b822d4b3d9a94a5da915f93aa1b674c93 upstream.
 
-Normal, synchronous requests will have their args allocated on the stack.
-After the FR_FINISHED bit is set by receiving the reply from the userspace
-fuse server, the originating task may return and reuse the stack frame,
-resulting in an Oops if the args structure is dereferenced.
+There is a ACT8600 on the CI20 board and the bindings of the
+ACT8865 driver have changed without updating the CI20 device
+tree. Therefore the PMU can not be probed successfully and
+is running in power-on reset state.
 
-Fix by setting a flag in the request itself upon initializing, indicating
-whether it has an asynchronous ->end() callback.
+Fix DT to match the latest act8865-regulator bindings.
 
-Reported-by: Kyle Sanderson <kyle.leet@gmail.com>
-Reported-by: Michael Stapelberg <michael+lkml@stapelberg.ch>
-Fixes: 2b319d1f6f92 ("fuse: don't dereference req->args on finished request")
-Cc: <stable@vger.kernel.org> # v5.4
-Tested-by: Michael Stapelberg <michael+lkml@stapelberg.ch>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+Cc: stable@vger.kernel.org
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/dev.c    |    6 +++---
- fs/fuse/fuse_i.h |    2 ++
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ arch/mips/boot/dts/ingenic/ci20.dts |   39 ++++++++++++++++++++++--------------
+ 1 file changed, 24 insertions(+), 15 deletions(-)
 
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -276,12 +276,10 @@ static void flush_bg_queue(struct fuse_c
- void fuse_request_end(struct fuse_conn *fc, struct fuse_req *req)
- {
- 	struct fuse_iqueue *fiq = &fc->iq;
--	bool async;
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -4,6 +4,7 @@
+ #include "jz4780.dtsi"
+ #include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/regulator/active-semi,8865-regulator.h>
  
- 	if (test_and_set_bit(FR_FINISHED, &req->flags))
- 		goto put_request;
+ / {
+ 	compatible = "img,ci20", "ingenic,jz4780";
+@@ -163,63 +164,71 @@
  
--	async = req->args->end;
- 	/*
- 	 * test_and_set_bit() implies smp_mb() between bit
- 	 * changing and below intr_entry check. Pairs with
-@@ -324,7 +322,7 @@ void fuse_request_end(struct fuse_conn *
- 		wake_up(&req->waitq);
- 	}
- 
--	if (async)
-+	if (test_bit(FR_ASYNC, &req->flags))
- 		req->args->end(fc, req->args, req->out.h.error);
- put_request:
- 	fuse_put_request(fc, req);
-@@ -471,6 +469,8 @@ static void fuse_args_to_req(struct fuse
- 	req->in.h.opcode = args->opcode;
- 	req->in.h.nodeid = args->nodeid;
- 	req->args = args;
-+	if (args->end)
-+		__set_bit(FR_ASYNC, &req->flags);
- }
- 
- ssize_t fuse_simple_request(struct fuse_conn *fc, struct fuse_args *args)
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -301,6 +301,7 @@ struct fuse_io_priv {
-  * FR_SENT:		request is in userspace, waiting for an answer
-  * FR_FINISHED:		request is finished
-  * FR_PRIVATE:		request is on private list
-+ * FR_ASYNC:		request is asynchronous
-  */
- enum fuse_req_flag {
- 	FR_ISREPLY,
-@@ -314,6 +315,7 @@ enum fuse_req_flag {
- 	FR_SENT,
- 	FR_FINISHED,
- 	FR_PRIVATE,
-+	FR_ASYNC,
- };
- 
- /**
+ 		regulators {
+ 			vddcore: SUDCDC1 {
+-				regulator-name = "VDDCORE";
++				regulator-name = "DCDC_REG1";
+ 				regulator-min-microvolt = <1100000>;
+ 				regulator-max-microvolt = <1100000>;
+ 				regulator-always-on;
+ 			};
+ 			vddmem: SUDCDC2 {
+-				regulator-name = "VDDMEM";
++				regulator-name = "DCDC_REG2";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_33: SUDCDC3 {
+-				regulator-name = "VCC33";
++				regulator-name = "DCDC_REG3";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_50: SUDCDC4 {
+-				regulator-name = "VCC50";
++				regulator-name = "SUDCDC_REG4";
+ 				regulator-min-microvolt = <5000000>;
+ 				regulator-max-microvolt = <5000000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_25: LDO_REG5 {
+-				regulator-name = "VCC25";
++				regulator-name = "LDO_REG5";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			wifi_io: LDO_REG6 {
+-				regulator-name = "WIFIIO";
++				regulator-name = "LDO_REG6";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_28: LDO_REG7 {
+-				regulator-name = "VCC28";
++				regulator-name = "LDO_REG7";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_15: LDO_REG8 {
+-				regulator-name = "VCC15";
++				regulator-name = "LDO_REG8";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+-			vcc_18: LDO_REG9 {
+-				regulator-name = "VCC18";
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
++			vrtc_18: LDO_REG9 {
++				regulator-name = "LDO_REG9";
++				/* Despite the datasheet stating 3.3V
++				 * for REG9 and the driver expecting that,
++				 * REG9 outputs 1.8V.
++				 * Likely the CI20 uses a proprietary
++				 * factory programmed chip variant.
++				 * Since this is a simple on/off LDO the
++				 * exact values do not matter.
++				 */
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_11: LDO_REG10 {
+-				regulator-name = "VCC11";
+-				regulator-min-microvolt = <1100000>;
+-				regulator-max-microvolt = <1100000>;
++				regulator-name = "LDO_REG10";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
+ 				regulator-always-on;
+ 			};
+ 		};
 
 
