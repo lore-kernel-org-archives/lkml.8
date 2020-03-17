@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA87C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E49C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E282071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6042E20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443186;
-	bh=PqdHORoBu8IQMRinRk+mOGPyeYvUa3JSAPiknsC39X0=;
+	s=default; t=1584443188;
+	bh=BzV1Hk4+TCda+cm8PDvDZzplYkCHdjRvG+dQ6nC0zuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JkxFB6fF29Afgt0b7vgIdlPoOAwB4rqxmRLLrvleunQqbm5wFzIOgjNycsFjdUtWu
-	 5NM1qpiFDaGYcZvJkEo3+MJqDh8RtHUCNDZ8+DEukNcD/aSJqfTDtnjMNx1BHBRVy5
-	 Vizx8zbollSuA+Qf7oylFwmhQav609tkMpKZuUMU=
+	b=1w98yoZ6THsgZTPZwpbUxkpQwJTTVgZ9cdG+piOkChTEGImZ25ApJAoVbTqvkDFji
+	 9sNauq1r3dj/oIJUh0tMelFKjS0BmU4GwJ0sgfkTmZbc0sUqynyfD0iFxFEEokbRXJ
+	 T/QUyph3jy5Yb9eF6hky71eU/v6zHA/OhWn1yY7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgCQLGY (ORCPT
+        id S1728603AbgCQLG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:06:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47350 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:06:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727620AbgCQLGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:06:17 -0400
+        id S1726596AbgCQLGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A8320658;
-        Tue, 17 Mar 2020 11:06:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E22F20658;
+        Tue, 17 Mar 2020 11:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443176;
-        bh=PqdHORoBu8IQMRinRk+mOGPyeYvUa3JSAPiknsC39X0=;
+        s=default; t=1584443183;
+        bh=BzV1Hk4+TCda+cm8PDvDZzplYkCHdjRvG+dQ6nC0zuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hwZogs9NbZ64arm9xoJW3HgfzLCBYKLWfaSEuitNVZl9dOsvR/K+xjjS/0CIf7Mdr
-         b+K+kc0Hsu+1ZMayox5Tfle2YVulR8JZMwcyErrBLZ7+w9gkoInJ2hd7IdoSkv1YiO
-         Ipl3pnfZSMjXEl/6zCMo/utyMmGeovLQopdRl66s=
+        b=LTyg5dePoqw+wSopZY+zyAKNZES0khASQgsOFcLXc4nkyUCyGwYc/5nqjN2orC/ps
+         ogNNJeSFNWadZGhEysZTjzdZEKqMRb5Hw59E5a0xLiwHuZLO7ZlIWoLYvYZK5FFvcB
+         eHxagrxLifTrHOQScy0tF23rLm8GuTEjmzqRwjx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 123/123] net/smc: cancel event worker during device removal
-Date:   Tue, 17 Mar 2020 11:55:50 +0100
-Message-Id: <20200317103319.793659199@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 114/123] netfilter: nft_tunnel: add missing attribute validation for tunnels
+Date:   Tue, 17 Mar 2020 11:55:41 +0100
+Message-Id: <20200317103319.059454481@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -63,34 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit ece0d7bd74615773268475b6b64d6f1ebbd4b4c6 upstream.
+commit 88a637719a1570705c02cacb3297af164b1714e7 upstream.
 
-During IB device removal, cancel the event worker before the device
-structure is freed.
+Add missing attribute validation for tunnel source and
+destination ports to the netlink policy.
 
-Fixes: a4cf0443c414 ("smc: introduce SMC as an IB-client")
-Reported-by: syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/smc/smc_ib.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/nft_tunnel.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/smc/smc_ib.c
-+++ b/net/smc/smc_ib.c
-@@ -568,6 +568,7 @@ static void smc_ib_remove_dev(struct ib_
- 	spin_unlock(&smc_ib_devices.lock);
- 	smc_ib_cleanup_per_ibdev(smcibdev);
- 	ib_unregister_event_handler(&smcibdev->event_handler);
-+	cancel_work_sync(&smcibdev->port_event_work);
- 	kfree(smcibdev);
- }
+--- a/net/netfilter/nft_tunnel.c
++++ b/net/netfilter/nft_tunnel.c
+@@ -339,6 +339,8 @@ static const struct nla_policy nft_tunne
+ 	[NFTA_TUNNEL_KEY_FLAGS]	= { .type = NLA_U32, },
+ 	[NFTA_TUNNEL_KEY_TOS]	= { .type = NLA_U8, },
+ 	[NFTA_TUNNEL_KEY_TTL]	= { .type = NLA_U8, },
++	[NFTA_TUNNEL_KEY_SPORT]	= { .type = NLA_U16, },
++	[NFTA_TUNNEL_KEY_DPORT]	= { .type = NLA_U16, },
+ 	[NFTA_TUNNEL_KEY_OPTS]	= { .type = NLA_NESTED, },
+ };
  
 
 
