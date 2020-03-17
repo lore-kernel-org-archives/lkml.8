@@ -6,101 +6,179 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B842C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52422C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46AB820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C83920724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgCQWBu (ORCPT
+        id S1726988AbgCQWCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:01:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56009 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgCQWBu (ORCPT
+        Tue, 17 Mar 2020 18:02:09 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36178 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgCQWCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:01:50 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jEKGu-0000tj-1m; Tue, 17 Mar 2020 23:01:12 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 71BBA101161; Tue, 17 Mar 2020 23:01:11 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>
-Cc:     Borislav Petkov <bp@suse.de>, lkml <linux-kernel@vger.kernel.org>,
-        "Schofield\, Alison" <alison.schofield@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Shutemov\, Kirill" <kirill.shutemov@intel.com>
-Subject: Re: [PATCH] treewide: Rename "unencrypted" to "decrypted"
-In-Reply-To: <20200317210602.GG15609@zn.tnic>
-References: <20200317111822.GA15609@zn.tnic> <2cb4a8ae-3b13-67bd-c021-aee47fdf58c5@intel.com> <20200317210602.GG15609@zn.tnic>
-Date:   Tue, 17 Mar 2020 23:01:11 +0100
-Message-ID: <87fte6bpzs.fsf@nanos.tec.linutronix.de>
+        Tue, 17 Mar 2020 18:02:08 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k18so23591457oib.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:02:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ya5i9h9BDB0gF/4044yCkDpgVppUSZpZ2zck8bl6SA0=;
+        b=QmYjnUPcDxvYRxj7vbmJYt+oc+xLi7TnR/p0KC8LlCCkCnfuyhVWDhk/Mo2NwJTruP
+         jNzl5AEDGmzJsHMDYZPemHTbaK2j39iCb7SHL0Ml28F8mDSXyYZp66EU6ZH3x9vlCYFn
+         uQGXaA3gDTvJ3i+CFQ3AisbS22uGBZAx7cch9HwdGyi05P/DnEEfQGVIgfjgXFHj1SuK
+         diEbnbcVwok0HbVxSxwLgMVc+GMMoEiilDqK2vUv4ZVfBlNTzfxLlbb7DjmqiGgCu17s
+         IazAwZbiRmcexFwbjL2rF9T8ar5neXg0+DpAq6Wwpm9D7jVSQK9vNdxQi0GqtL1E0uXX
+         XIHQ==
+X-Gm-Message-State: ANhLgQ17d0GgtILGytfVEOQOACPa2V2aRD7B9/QOUiKzLYS37oO3ydLz
+        5XgSXnmLjOg5OCBFbkX5mOd8/awm
+X-Google-Smtp-Source: ADFU+vsxDuTqjMCAsEYDHcrPvTvo4S/sp9twj6Q2+i3ThotxWouvuSLvxrjc39AH3M4l7/DnDm0vig==
+X-Received: by 2002:a54:4e13:: with SMTP id a19mr868065oiy.108.1584482527353;
+        Tue, 17 Mar 2020 15:02:07 -0700 (PDT)
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com. [209.85.210.45])
+        by smtp.gmail.com with ESMTPSA id a73sm1450422oib.16.2020.03.17.15.02.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 15:02:07 -0700 (PDT)
+Received: by mail-ot1-f45.google.com with SMTP id e19so2361035otj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:02:07 -0700 (PDT)
+X-Received: by 2002:a9d:7607:: with SMTP id k7mr1220783otl.205.1584482526826;
+ Tue, 17 Mar 2020 15:02:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200312222827.17409-1-leoyang.li@nxp.com> <20200312222827.17409-7-leoyang.li@nxp.com>
+ <b9c5a514-18c1-e36c-1595-2b86c9bfcff1@rasmusvillemoes.dk>
+In-Reply-To: <b9c5a514-18c1-e36c-1595-2b86c9bfcff1@rasmusvillemoes.dk>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Tue, 17 Mar 2020 17:01:55 -0500
+X-Gmail-Original-Message-ID: <CADRPPNT2vRNU6uddqhqUcmyNVOpFbEUz+F5giCSfm9q5ZdYH5A@mail.gmail.com>
+Message-ID: <CADRPPNT2vRNU6uddqhqUcmyNVOpFbEUz+F5giCSfm9q5ZdYH5A@mail.gmail.com>
+Subject: Re: [PATCH 6/6] soc: fsl: qe: fix sparse warnings for ucc_slow.c
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Timur Tabi <timur@kernel.org>, Zhao Qiang <qiang.zhao@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Borislav Petkov <bp@alien8.de> writes:
-
-> On Tue, Mar 17, 2020 at 01:35:12PM -0700, Dave Hansen wrote:
->> On 3/17/20 4:18 AM, Borislav Petkov wrote:
->> > Back then when the whole SME machinery started getting mainlined, it
->> > was agreed that for simplicity, clarity and sanity's sake, the terms
->> > denoting encrypted and not-encrypted memory should be "encrypted" and
->> > "decrypted". And the majority of the code sticks to that convention
->> > except those two. So rename them.
->> 
->> Don't "unencrypted" and "decrypted" mean different things?
->> 
->> Unencrypted to me means "encryption was never used for this data".
->> 
->> Decrypted means "this was/is encrypted but here is a plaintext copy".
+On Mon, Mar 16, 2020 at 4:08 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
 >
-> Maybe but linguistical semantics is not the point here.
+> On 12/03/2020 23.28, Li Yang wrote:
+> > Fixes the following sparse warnings:
+> >
+> [snip]
+> >
+> > Also removed the unneccessary clearing for kzalloc'ed structure.
 >
-> The idea is to represent a "binary" concept of memory being encrypted
-> or memory being not encrypted. And at the time we decided to use
-> "encrypted" and "decrypted" for those two things.
+> Please don't mix that in the same patch, do it in a preparatory patch.
+> That makes reviewing much easier.
+
+Thanks for the review.
+
+One of the few lines removed are actually causing sparse warning,
+that's why I changed this together with the sparse fixes.  I can add
+all the lines removed in the log for better record.
+
 >
-> Do you see the need to differentiate a third "state", so to speak, of
-> memory which was never encrypted?
+> >
+> >       /* Get PRAM base */
+> >       uccs->us_pram_offset =
+> > @@ -231,24 +224,24 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+> >               /* clear bd buffer */
+> >               qe_iowrite32be(0, &bd->buf);
+> >               /* set bd status and length */
+> > -             qe_iowrite32be(0, (u32 *)bd);
+> > +             qe_iowrite32be(0, (u32 __iomem *)bd);
+>
+> It's cleaner to do two qe_iowrite16be to &bd->status and &bd->length,
+> that avoids the casting altogether.
 
-I think so.
+It probably is cleaner, but also slower for the bd manipulation that
+can be in the hot path.  The QE code has been using this way to
+access/update the bd status and length together for a long time.  And
+I remembered that it could help to prevent synchronization issues for
+accessing status and length separately.
 
-encrypted data is something you can't use without having the key
+It is probably cleaner to change the data structure to use union for
+accessing status and length together.  But that will need a big change
+to update all the current users of the structure which I don't have
+the time to do right now.
 
-decrypted data is the plaintext copy of something encrypted, so
-it might be of sensible nature.
+>
+> >               bd++;
+> >       }
+> >       /* for last BD set Wrap bit */
+> >       qe_iowrite32be(0, &bd->buf);
+> > -     qe_iowrite32be(cpu_to_be32(T_W), (u32 *)bd);
+> > +     qe_iowrite32be(T_W, (u32 __iomem *)bd);
+>
+> Yeah, and this is why. Who can actually keep track of where that bit
+> ends up being set with that casting going on. Please use
+> qe_iowrite16be() with an appropriately modified constant to the
+> appropriate field instead of these games.
+>
+> And if the hardware doesn't support 16 bit writes, the definition of
+> struct qe_bd is wrong and should have a single __be32 status_length
+> field, with appropriate accessors defined.
 
-unencrypted data can still be sensible, but nothing ever bothered to
-encrypt it in the first place.
+Same comment as above.
 
-So having this distinction is useful in terms of setting the context
-straight.
+>
+> >       /* Init Rx bds */
+> >       bd = uccs->rx_bd = qe_muram_addr(uccs->rx_base_offset);
+> >       for (i = 0; i < us_info->rx_bd_ring_len - 1; i++) {
+> >               /* set bd status and length */
+> > -             qe_iowrite32be(0, (u32 *)bd);
+> > +             qe_iowrite32be(0, (u32 __iomem *)bd);
+>
+> Same.
+>
+> >               /* clear bd buffer */
+> >               qe_iowrite32be(0, &bd->buf);
+> >               bd++;
+> >       }
+> >       /* for last BD set Wrap bit */
+> > -     qe_iowrite32be(cpu_to_be32(R_W), (u32 *)bd);
+> > +     qe_iowrite32be(R_W, (u32 __iomem *)bd);
+>
+> Same.
+>
+> >       qe_iowrite32be(0, &bd->buf);
+> >
+> >       /* Set GUMR (For more details see the hardware spec.). */
+> > @@ -273,8 +266,8 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+> >       qe_iowrite32be(gumr, &us_regs->gumr_h);
+> >
+> >       /* gumr_l */
+> > -     gumr = us_info->tdcr | us_info->rdcr | us_info->tenc | us_info->renc |
+> > -             us_info->diag | us_info->mode;
+> > +     gumr = (u32)us_info->tdcr | (u32)us_info->rdcr | (u32)us_info->tenc |
+> > +            (u32)us_info->renc | (u32)us_info->diag | (u32)us_info->mode;
+>
+> Are the tdcr, rdcr, tenc, renc fields actually set anywhere (the same
+> for the diag and mode, but word-grepping for those give way too many
+> false positives)? They seem to be a somewhat pointless split out of the
+> bitfields of gumr_l, and not populated anywhere?. That's not directly
+> related to this patch, of course, but getting rid of them first (if they
+> are indeed completely unused) might make the sparse cleanup a little
+> simpler.
 
-Thanks,
+I would agree with you that is not neccessary to create different enum
+types for these bits in the same register in the first place.  But I
+would like to prevent aggressive cleanups of this driver for old
+hardware that is becoming harder and harder to be thoroughly tested
+right now.  These fields are probably not used by the in tree ucc_uart
+driver right now.  But as a generic library for QE, I think it is
+harmless to keep these simple code there for potentially customized
+version of the uart driver or other ucc slow drivers.
 
-        tglx
+Regards,
+Leo
