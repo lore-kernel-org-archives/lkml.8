@@ -2,65 +2,77 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7935C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C49C0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94162206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D6320674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733133AbgCQAal convert rfc822-to-8bit (ORCPT
+        id S1733129AbgCQAdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 20:30:41 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:51722 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732903AbgCQAal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 20:30:41 -0400
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jE07x-0004Qg-Lf; Tue, 17 Mar 2020 01:30:37 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: remove #address-cells and #size-cells from i2s nodes
-Date:   Tue, 17 Mar 2020 01:30:36 +0100
-Message-ID: <17804728.xSKf3K9Wuf@phil>
-In-Reply-To: <20200311162524.19748-2-jbx6244@gmail.com>
-References: <20200311162524.19748-1-jbx6244@gmail.com> <20200311162524.19748-2-jbx6244@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+        Mon, 16 Mar 2020 20:33:31 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:50242 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733031AbgCQAdb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 20:33:31 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C8CF1157967E5;
+        Mon, 16 Mar 2020 17:33:30 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 17:33:30 -0700 (PDT)
+Message-Id: <20200316.173330.2197524619383790235.davem@davemloft.net>
+To:     kuba@kernel.org
+Cc:     luobin9@huawei.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, aviad.krawczyk@huawei.com,
+        luoxianjun@huawei.com, cloud.wangxiaoyun@huawei.com,
+        yin.yinshi@huawei.com
+Subject: Re: [PATCH net 1/6] hinic: fix process of long length skb without
+ frags
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200316144408.00797c6f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <20200316005630.9817-1-luobin9@huawei.com>
+        <20200316005630.9817-2-luobin9@huawei.com>
+        <20200316144408.00797c6f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Mar 2020 17:33:31 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 11. März 2020, 17:25:24 CET schrieb Johan Jonker:
-> An experimental test with the command below gives
-> for example this error:
-> 
-> arch/arm/boot/dts/rk3036-evb.dt.yaml: i2s@10220000:
-> '#address-cells', '#size-cells'
-> do not match any of the regexes: 'pinctrl-[0-9]+'
-> 
-> '#address-cells' and '#size-cells' are not a valid property
-> for i2s nodes, so remove them.
-> 
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+From: Jakub Kicinski <kuba@kernel.org>
+Date: Mon, 16 Mar 2020 14:44:08 -0700
 
-applied for 5.7
+> On Mon, 16 Mar 2020 00:56:25 +0000 Luo bin wrote:
+>> -#define MIN_SKB_LEN                     17
+>> +#define MIN_SKB_LEN			17
+>> +#define HINIC_GSO_MAX_SIZE		65536
+> 
+>> +	if (unlikely(skb->len > HINIC_GSO_MAX_SIZE && nr_sges == 1)) {
+>> +		txq->txq_stats.frag_len_overflow++;
+>> +		goto skb_error;
+>> +	}
+> 
+> I don't think drivers should have to check this condition.
+> 
+> We have netdev->gso_max_size which should be initialized to 
+> 
+> include/linux/netdevice.h:#define GSO_MAX_SIZE          65536
+> 
+> in
+> 
+> net/core/dev.c: dev->gso_max_size = GSO_MAX_SIZE;
+> 
+> Please send a patch to pktgen to uphold the normal stack guarantees.
 
-Thanks
-Heiko
-
-
+Agreed, the driver should not have to validate this.
