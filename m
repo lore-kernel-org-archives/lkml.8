@@ -2,137 +2,123 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FE5C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707EDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE5F20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443073;
-	bh=z4bfa8hZ8/4gypOjATA/W96jKijPpT9z5KWSPWrzcXU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NE0SAGYijX2To7uUO3r3FYOwKDS1MW74pdWRJIVzwFtjdQGjlXTa2Qw/yCrTV+kvN
-	 Oj1KoIbcVgbPuDBTU7SFj6cbGxVO9g9Vas+d18rkr60TNfeCdpQ6cqawN6kyPBK4G9
-	 O30VXD/Ev7wS431NBbjZcjSUE01sRmXM4374/8uE=
+	by mail.kernel.org (Postfix) with ESMTP id 496D8206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ImQaqZfK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgCQLEc (ORCPT
+        id S1728308AbgCQLEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 17 Mar 2020 07:04:36 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:20757 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728295AbgCQLEc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 07:04:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728288AbgCQLEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584443071;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EzG/M8Z6pKqu/VY432HtCP1l4TbOCW1/V3h7h2TGD8o=;
+        b=ImQaqZfK99SgWnOubRYHV7SvUD22AwA5gygVxhAa1w7fM8+44k4mjmt7Nn1sBGLmr7Fb9l
+        RjiWLW3d+FtW29EgfumYhtf1PAqQapTicMs6byTNbEzgocHxbI+MTJVHHUzl+2mb/AppIM
+        xFmD/q3m5fB7T5tLd8YPnM60MTDmmxs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-189-6WXanJS8PgmMPO53GH65Hg-1; Tue, 17 Mar 2020 07:04:29 -0400
+X-MC-Unique: 6WXanJS8PgmMPO53GH65Hg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC2FE20658;
-        Tue, 17 Mar 2020 11:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443070;
-        bh=z4bfa8hZ8/4gypOjATA/W96jKijPpT9z5KWSPWrzcXU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X9e59p/VQqeNKpDjaLeBturIuSDhl2f/KumGRKVS/DF9GZ65HwyQSZd/TzctxcNvP
-         VM5DKFWNU/hTA7Ifyk1dA/ihmSqU0vtf2KhB2rWrzEszNGHwyUb//8fGPTCblK1HHa
-         X3/edfealCmx6Z2M2oRIHpAZeZrGBt5yh+YFPBtQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.4 086/123] x86/ioremap: Map EFI runtime services data as encrypted for SEV
-Date:   Tue, 17 Mar 2020 11:55:13 +0100
-Message-Id: <20200317103316.596315932@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
-References: <20200317103307.343627747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3503B8018A2;
+        Tue, 17 Mar 2020 11:04:27 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EA6CB8F37B;
+        Tue, 17 Mar 2020 11:04:23 +0000 (UTC)
+Subject: Re: [PATCH v5 17/23] KVM: arm64: GICv4.1: Let doorbells be
+ auto-enabled
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-18-maz@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <43848b89-29fe-eb34-b6d9-f9723f40a8f1@redhat.com>
+Date:   Tue, 17 Mar 2020 12:04:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304203330.4967-18-maz@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+Hi Marc,
 
-commit 985e537a4082b4635754a57f4f95430790afee6a upstream.
+On 3/4/20 9:33 PM, Marc Zyngier wrote:
+> As GICv4.1 understands the life cycle of doorbells (instead of
+> just randomly firing them at the most inconvenient time), just
+> enable them at irq_request time, and be done with it.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-The dmidecode program fails to properly decode the SMBIOS data supplied
-by OVMF/UEFI when running in an SEV guest. The SMBIOS area, under SEV, is
-encrypted and resides in reserved memory that is marked as EFI runtime
-services data.
+Eric
 
-As a result, when memremap() is attempted for the SMBIOS data, it
-can't be mapped as regular RAM (through try_ram_remap()) and, since
-the address isn't part of the iomem resources list, it isn't mapped
-encrypted through the fallback ioremap().
-
-Add a new __ioremap_check_other() to deal with memory types like
-EFI_RUNTIME_SERVICES_DATA which are not covered by the resource ranges.
-
-This allows any runtime services data which has been created encrypted,
-to be mapped encrypted too.
-
- [ bp: Move functionality to a separate function. ]
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Joerg Roedel <jroedel@suse.de>
-Tested-by: Joerg Roedel <jroedel@suse.de>
-Cc: <stable@vger.kernel.org> # 5.3
-Link: https://lkml.kernel.org/r/2d9e16eb5b53dc82665c95c6764b7407719df7a0.1582645327.git.thomas.lendacky@amd.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/mm/ioremap.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -106,6 +106,19 @@ static unsigned int __ioremap_check_encr
- 	return 0;
- }
- 
-+/*
-+ * The EFI runtime services data area is not covered by walk_mem_res(), but must
-+ * be mapped encrypted when SEV is active.
-+ */
-+static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *desc)
-+{
-+	if (!sev_active())
-+		return;
-+
-+	if (efi_mem_type(addr) == EFI_RUNTIME_SERVICES_DATA)
-+		desc->flags |= IORES_MAP_ENCRYPTED;
-+}
-+
- static int __ioremap_collect_map_flags(struct resource *res, void *arg)
- {
- 	struct ioremap_desc *desc = arg;
-@@ -124,6 +137,9 @@ static int __ioremap_collect_map_flags(s
-  * To avoid multiple resource walks, this function walks resources marked as
-  * IORESOURCE_MEM and IORESOURCE_BUSY and looking for system RAM and/or a
-  * resource described not as IORES_DESC_NONE (e.g. IORES_DESC_ACPI_TABLES).
-+ *
-+ * After that, deal with misc other ranges in __ioremap_check_other() which do
-+ * not fall into the above category.
-  */
- static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
- 				struct ioremap_desc *desc)
-@@ -135,6 +151,8 @@ static void __ioremap_check_mem(resource
- 	memset(desc, 0, sizeof(struct ioremap_desc));
- 
- 	walk_mem_res(start, end, desc, __ioremap_collect_map_flags);
-+
-+	__ioremap_check_other(addr, desc);
- }
- 
- /*
-
+> ---
+>  virt/kvm/arm/vgic/vgic-v4.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+> index 1eb0f8c76219..c2fcde104ea2 100644
+> --- a/virt/kvm/arm/vgic/vgic-v4.c
+> +++ b/virt/kvm/arm/vgic/vgic-v4.c
+> @@ -141,6 +141,7 @@ int vgic_v4_init(struct kvm *kvm)
+>  
+>  	kvm_for_each_vcpu(i, vcpu, kvm) {
+>  		int irq = dist->its_vm.vpes[i]->irq;
+> +		unsigned long irq_flags = DB_IRQ_FLAGS;
+>  
+>  		/*
+>  		 * Don't automatically enable the doorbell, as we're
+> @@ -148,8 +149,14 @@ int vgic_v4_init(struct kvm *kvm)
+>  		 * blocked. Also disable the lazy disabling, as the
+>  		 * doorbell could kick us out of the guest too
+>  		 * early...
+> +		 *
+> +		 * On GICv4.1, the doorbell is managed in HW and must
+> +		 * be left enabled.
+>  		 */
+> -		irq_set_status_flags(irq, DB_IRQ_FLAGS);
+> +		if (kvm_vgic_global_state.has_gicv4_1)
+> +			irq_flags &= ~IRQ_NOAUTOEN;
+> +		irq_set_status_flags(irq, irq_flags);
+> +
+>  		ret = request_irq(irq, vgic_v4_doorbell_handler,
+>  				  0, "vcpu", vcpu);
+>  		if (ret) {
+> 
 
