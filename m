@@ -2,84 +2,109 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DBAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE84DC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A258820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F9A20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hjLlpwZm"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LtZPNzC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgCQUxr (ORCPT
+        id S1726793AbgCQU4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:53:47 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:14828 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726801AbgCQUxp (ORCPT
+        Tue, 17 Mar 2020 16:56:52 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54571 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgCQU4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:53:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584478425; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=0FuWCaiIeZ+dC3cNZQsIBNBHz1QAlcLwuEg7g1HMh0o=; b=hjLlpwZmNFBa6bkfCdPk8V3tGtTER20fqxi9j40oO55uLKEGvw+cb0Iw7CA2wk+FgIOdWuH0
- rKD36c1zn529X1kFi4EqcSxNd84j+Y+YdzyuBEv5QWc2RqN+58VC9lieeO++qzVl/JXqQ8nf
- dyw+DUvJ7A80BFxKoIp9iRKRp7M=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7138d2.7f859b99af80-smtp-out-n02;
- Tue, 17 Mar 2020 20:53:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 39C36C44788; Tue, 17 Mar 2020 20:53:38 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51595C433D2;
-        Tue, 17 Mar 2020 20:53:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51595C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v2 0/2] Enable SS/HS USB support on SM8150
-Date:   Tue, 17 Mar 2020 13:53:30 -0700
-Message-Id: <1584478412-7798-1-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 17 Mar 2020 16:56:52 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n8so824336wmc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:56:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E11XKxa+99XAxvsaAYOAf6rfWCpejdmI/dGXHU0ftc4=;
+        b=LtZPNzC6b/uYz7/iUpiw4siGA1/q7YWPE+zfz3twoBvPQpx87qtHSALZBiZeL12ZLB
+         Imh6HbyxUGSl9PaF8mzSd8TqKqBVGmyAsUnwY4seGnW1QDV+7QM1PLV4RnQPyIevWQms
+         vOdKcRPlc295M1IIdcx2FS6vWg5JFGnE5Ynt0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E11XKxa+99XAxvsaAYOAf6rfWCpejdmI/dGXHU0ftc4=;
+        b=HZ+UCIvwqJmjLDo+DtC69f6pVCXil+itepSFGvqoFufyJlIJzpYYPVVUNdIL+OELue
+         SA8QanPA/gKOiO9voTqXNBjalDj4OS1TlgWavu/foWdi1ddkpsa93VRve6cNlZqlPFuQ
+         kgDP0KG84wGmop05Ib/TVUzy7Q3isX3Fvugx0N+kDlZoqtmxxpX+e2DjhBFWQ95ArWRl
+         ugne3EZDPs3/jWIjrSF6198vknt+5xvChBWMTOxgTF84COmT4UwZ1DGAhwWLeYlHW2Ya
+         CR3zgS2Nam3RUMzYRMqY2Nq5TFKYjz7OfrZHVKmtQcp60UEu7766sfPbedSvuLIK/vsP
+         g0Wg==
+X-Gm-Message-State: ANhLgQ0T5lyQ2qSTVmB6Jfz3fl0277vCaY4bLAJCjP2NtpVwNuRXVdCv
+        fduzYODAswmB9mbwZaLSNKRuUtU5BdOfQOHB
+X-Google-Smtp-Source: ADFU+vuxLqsX9OOC+HCC5UGSBRT3kQGp9W/anxdsF8DdeGYqstJOLR7/CQB+Sbpa2yhBPeKJsCDERA==
+X-Received: by 2002:a05:600c:14d5:: with SMTP id i21mr894439wmh.82.1584478609782;
+        Tue, 17 Mar 2020 13:56:49 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id a73sm703837wme.47.2020.03.17.13.56.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 13:56:48 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, Joe Perches <joe@perches.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH] MAINTAINERS: Better regex for dma_buf|fence|resv
+Date:   Tue, 17 Mar 2020 21:56:43 +0100
+Message-Id: <20200317205643.1028398-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add required device tree nodes to enable the USB SS and HS
-paths on the primary USB controller on SM8150.  In addition,
-implement missing resources from the SM8150 GCC driver, which
-includes the USB GDSC and the USB PIPE clocks.
+We're getting some random other stuff that we're not really interested
+in, so match only word boundaries. Also avoid the capture group while
+at it.
 
-Changes in v2:
- - Combine GDSC and USB PIPE clock changes.
- - Re-order DTS nodes based on address
+Suggested by Joe Perches.
 
-Jack Pham (1):
-  arm64: dts: qcom: sm8150: Add USB and PHY device nodes
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: Joe Perches <joe@perches.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+---
+v2: No single quotes in MAINTAINERS (Joe)
+v3: Fix typo in commit message (Sam)
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Wesley Cheng (1):
-  clk: qcom: gcc: Add USB3 PIPE clock and GDSC for SM8150
-
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts     | 17 ++++++
- arch/arm64/boot/dts/qcom/sm8150.dtsi        | 92 +++++++++++++++++++++++++++++
- drivers/clk/qcom/gcc-sm8150.c               | 52 ++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-sm8150.h |  4 ++
- 4 files changed, 165 insertions(+)
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3005be638c2c..ed6088a01bfe 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5025,7 +5025,7 @@ F:	include/linux/dma-buf*
+ F:	include/linux/reservation.h
+ F:	include/linux/*fence.h
+ F:	Documentation/driver-api/dma-buf.rst
+-K:	dma_(buf|fence|resv)
++K:	\bdma_(?:buf|fence|resv)\b
+ T:	git git://anongit.freedesktop.org/drm/drm-misc
+ 
+ DMA-BUF HEAPS FRAMEWORK
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.25.1
+
