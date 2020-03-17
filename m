@@ -6,140 +6,74 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9653C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167E6C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE52D206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD139206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:28:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgCQG0Q (ORCPT
+        id S1726039AbgCQG26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:26:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33732 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725785AbgCQG0Q (ORCPT
+        Tue, 17 Mar 2020 02:28:58 -0400
+Received: from aclms3.advantech.com.tw ([125.252.70.86]:25134 "EHLO
+        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgCQG26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:26:16 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02H6KOQa046563
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:26:14 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ytb210r00-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:26:14 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
-        Tue, 17 Mar 2020 06:26:12 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Mar 2020 06:26:06 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02H6Q5nl51773510
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Mar 2020 06:26:05 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30CCA11C05E;
-        Tue, 17 Mar 2020 06:26:05 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF5E811C04A;
-        Tue, 17 Mar 2020 06:25:54 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.63.85])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Mar 2020 06:25:54 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
-        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
-        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
-        kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de, kjain@linux.ibm.com
-Subject: [PATCH v5 11/11] perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric events
-Date:   Tue, 17 Mar 2020 11:53:33 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200317062333.14555-1-kjain@linux.ibm.com>
-References: <20200317062333.14555-1-kjain@linux.ibm.com>
+        Tue, 17 Mar 2020 02:28:58 -0400
+Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Tddf54e8336ac1401c8808@ACLMS3.advantech.com.tw>;
+ Tue, 17 Mar 2020 14:28:55 +0800
+Received: from ADVANTECH.CORP (172.17.10.74) by taipei08.ADVANTECH.CORP
+ (172.20.0.235) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 17 Mar
+ 2020 14:28:54 +0800
+From:   <Amy.Shih@advantech.com.tw>
+To:     <she90122@gmail.com>
+CC:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>
+Subject: [v1,1/1] EDAC: (pnd2) Fix the log level for message "Failed to register device with error %d"
+Date:   Tue, 17 Mar 2020 06:28:28 +0000
+Message-ID: <20200317062828.18807-1-Amy.Shih@advantech.com.tw>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031706-0012-0000-0000-000003925EC7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031706-0013-0000-0000-000021CF3C7D
-Message-Id: <20200317062333.14555-12-kjain@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-17_01:2020-03-12,2020-03-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 lowpriorityscore=0
- spamscore=0 mlxlogscore=539 phishscore=0 impostorscore=0 bulkscore=0
- clxscore=1015 malwarescore=0 priorityscore=1501 suspectscore=0
- adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003170024
+Content-Type: text/plain
+X-Originating-IP: [172.17.10.74]
+X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
+ taipei08.ADVANTECH.CORP (172.20.0.235)
+X-StopIT: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
-facility to continuously collect large numbers of hardware performance
-metrics efficiently and accurately.
-This patch adds hv_24x7  metric file for different Socket/chip
-resources.
+From: Amy Shih <amy.shih@advantech.com.tw>
 
-Result:
+Fix the log level from "KERN_ERR" to "KERN_INFO" for message "Failed to
+register device with error %d", since it is not the error message but
+the information to notice the user.
 
-power9 platform:
-
-command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0 -I 1000
-
-     1.000096188                      0.9                      0.3
-     2.000285720                      0.5                      0.1
-     3.000424990                      0.4                      0.1
-
-command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
-
-     1.000097981                        2.3                        2.3
-     2.000291713                        2.3                        2.3
-     3.000421719                        2.3                        2.3
-     4.000550912                        2.3                        2.3
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Signed-off-by: Amy Shih <amy.shih@advantech.com.tw>
 ---
- .../arch/powerpc/power9/nest_metrics.json     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+ drivers/edac/pnd2_edac.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-new file mode 100644
-index 000000000000..ac38f5540ac6
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -0,0 +1,19 @@
-+[
-+    {
-+        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+        "MetricName": "Memory_RD_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
-+        "MetricName": "Memory_WR_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-+        "MetricName": "PowerBUS_Frequency",
-+        "ScaleUnit": "2.5e-7GHz"
-+    }
-+]
+diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
+index 933f772..f15d3b4 100644
+--- a/drivers/edac/pnd2_edac.c
++++ b/drivers/edac/pnd2_edac.c
+@@ -1572,7 +1572,8 @@ static int __init pnd2_init(void)
+ 
+ 	rc = pnd2_probe();
+ 	if (rc < 0) {
+-		pnd2_printk(KERN_ERR, "Failed to register device with error %d.\n", rc);
++		pnd2_printk(KERN_INFO,
++			    "Failed to register device with error %d.\n", rc);
+ 		return rc;
+ 	}
+ 
 -- 
-2.18.1
+1.8.3.1
 
