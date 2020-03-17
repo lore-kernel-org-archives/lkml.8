@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90944C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A9EC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63113205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC2320663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443945;
-	bh=VSkvZ2CSeMDWA3EVHHRCuGOMnRRxMVLwPUGFuYsELMQ=;
+	s=default; t=1584443950;
+	bh=/u62k7k4XbFRbH1vWPs3YBXWUG0u2KF4TDGcXKapG9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6fvrbnbwpFiE9a/0cZTKCXsaEUN5Ozr9pqVGdaIsXOKbmoJo4ym6teWi183QCv9o
-	 KBK4/TVjzIK4+ziNIsb+AyBxA6trKnzVezQ1SNlhQULS3FgynvBv99c50pfPAqLARg
-	 eVkV455FsMtWqMuly7QJHQUieNFf+y11HOSI8jww=
+	b=DVNJGPsQQ9sUdd3LyEKO8H6dmbsbSY82IZADvAMJ31V2AHU9NkVn9U2iNVvwghV6p
+	 6WPtoMEiDkap1HxL3OLhHRHSqzew7A2UEpWq4AqK2bM1/aPtUE9WdMIxHdFDx9wuDr
+	 GIdkJdBp2IQ+rqU4KJ59m0PwUAlQxD9qboNqxK/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgCQLTE (ORCPT
+        id S1728513AbgCQLTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:19:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45452 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:19:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728326AbgCQLEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:55 -0400
+        id S1726863AbgCQLEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E171A2071C;
-        Tue, 17 Mar 2020 11:04:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6E9220736;
+        Tue, 17 Mar 2020 11:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443094;
-        bh=VSkvZ2CSeMDWA3EVHHRCuGOMnRRxMVLwPUGFuYsELMQ=;
+        s=default; t=1584443086;
+        bh=/u62k7k4XbFRbH1vWPs3YBXWUG0u2KF4TDGcXKapG9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvh60/hbQbbaq1C8bHIcC30JFVPdAs7DzPDVufOGawBRkGfvWxAnjEVRNUnDGYloC
-         iBOmtuGT3BT56aBf0j4E/kQ+QUW2Ag/4yoQPjQ09Hb3vLn/oHwhSYbn8GwGUhClbD2
-         eokLDTDsOO5QTwGh5vCE3vshYj78qWeFeo0GoX+Q=
+        b=YA5Jfn+KZDwdnaVuKioAZaxl74CQw/dgdCNKbVsO9oQ1sN/DgcaNQnOXWfHxb+TDM
+         Y+/ODLF/AmwNfrKNyTQiXPIxZX9/s8feTRiPf3jiEck56jdHFGF4DKLYO7y3I3LZEQ
+         qa+Xhy3K4m4oy/56s88nJgZkNvn0wXTJXueEoBnk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 5.4 094/123] iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_taint
-Date:   Tue, 17 Mar 2020 11:55:21 +0100
-Message-Id: <20200317103317.419424556@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 5.4 091/123] perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
+Date:   Tue, 17 Mar 2020 11:55:18 +0100
+Message-Id: <20200317103317.014033256@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,100 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 59833696442c674acbbd297772ba89e7ad8c753d upstream.
+commit f967140dfb7442e2db0868b03b961f9c59418a1b upstream.
 
-Quoting from the comment describing the WARN functions in
-include/asm-generic/bug.h:
+Enable the sampling check in kernel/events/core.c::perf_event_open(),
+which returns the more appropriate -EOPNOTSUPP.
 
- * WARN(), WARN_ON(), WARN_ON_ONCE, and so on can be used to report
- * significant kernel issues that need prompt attention if they should ever
- * appear at runtime.
- *
- * Do not use these macros when checking for invalid external inputs
+BEFORE:
 
-The (buggy) firmware tables which the dmar code was calling WARN_TAINT
-for really are invalid external inputs. They are not under the kernel's
-control and the issues in them cannot be fixed by a kernel update.
-So logging a backtrace, which invites bug reports to be filed about this,
-is not helpful.
+  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
+  /bin/dmesg | grep -i perf may provide additional information.
 
-Some distros, e.g. Fedora, have tools watching for the kernel backtraces
-logged by the WARN macros and offer the user an option to file a bug for
-this when these are encountered. The WARN_TAINT in warn_invalid_dmar()
-+ another iommu WARN_TAINT, addressed in another patch, have lead to over
-a 100 bugs being filed this way.
+With nothing relevant in dmesg.
 
-This commit replaces the WARN_TAINT("...") calls, with
-pr_warn(FW_BUG "...") + add_taint(TAINT_FIRMWARE_WORKAROUND, ...) calls
-avoiding the backtrace and thus also avoiding bug-reports being filed
-about this against the kernel.
+AFTER:
 
-Fixes: fd0c8894893c ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
-Fixes: e625b4a95d50 ("iommu/vt-d: Parse ANDD records")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+  Error:
+  l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+
+Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200309140138.3753-2-hdegoede@redhat.com
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1564895
+Link: https://lkml.kernel.org/r/20200311191323.13124-1-kim.phillips@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/dmar.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/x86/events/amd/uncore.c |   17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -440,12 +440,13 @@ static int __init dmar_parse_one_andd(st
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -190,15 +190,12 @@ static int amd_uncore_event_init(struct
  
- 	/* Check for NUL termination within the designated length */
- 	if (strnlen(andd->device_name, header->length - 8) == header->length - 8) {
--		WARN_TAINT(1, TAINT_FIRMWARE_WORKAROUND,
-+		pr_warn(FW_BUG
- 			   "Your BIOS is broken; ANDD object name is not NUL-terminated\n"
- 			   "BIOS vendor: %s; Ver: %s; Product Version: %s\n",
- 			   dmi_get_system_info(DMI_BIOS_VENDOR),
- 			   dmi_get_system_info(DMI_BIOS_VERSION),
- 			   dmi_get_system_info(DMI_PRODUCT_VERSION));
-+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
- 		return -EINVAL;
- 	}
- 	pr_info("ANDD device: %x name: %s\n", andd->device_number,
-@@ -471,14 +472,14 @@ static int dmar_parse_one_rhsa(struct ac
- 			return 0;
- 		}
- 	}
--	WARN_TAINT(
--		1, TAINT_FIRMWARE_WORKAROUND,
-+	pr_warn(FW_BUG
- 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
- 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
- 		drhd->reg_base_addr,
- 		dmi_get_system_info(DMI_BIOS_VENDOR),
- 		dmi_get_system_info(DMI_BIOS_VERSION),
- 		dmi_get_system_info(DMI_PRODUCT_VERSION));
-+	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+ 	/*
+ 	 * NB and Last level cache counters (MSRs) are shared across all cores
+-	 * that share the same NB / Last level cache. Interrupts can be directed
+-	 * to a single target core, however, event counts generated by processes
+-	 * running on other cores cannot be masked out. So we do not support
+-	 * sampling and per-thread events.
++	 * that share the same NB / Last level cache.  On family 16h and below,
++	 * Interrupts can be directed to a single target core, however, event
++	 * counts generated by processes running on other cores cannot be masked
++	 * out. So we do not support sampling and per-thread events via
++	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
+ 	 */
+-	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+-		return -EINVAL;
+-
+-	/* and we do not enable counter overflow interrupts */
+ 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
+ 	hwc->idx = -1;
  
- 	return 0;
- }
-@@ -827,14 +828,14 @@ int __init dmar_table_init(void)
+@@ -306,7 +303,7 @@ static struct pmu amd_nb_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
+-	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
++	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
+ };
  
- static void warn_invalid_dmar(u64 addr, const char *message)
- {
--	WARN_TAINT_ONCE(
--		1, TAINT_FIRMWARE_WORKAROUND,
-+	pr_warn_once(FW_BUG
- 		"Your BIOS is broken; DMAR reported at address %llx%s!\n"
- 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
- 		addr, message,
- 		dmi_get_system_info(DMI_BIOS_VENDOR),
- 		dmi_get_system_info(DMI_BIOS_VERSION),
- 		dmi_get_system_info(DMI_PRODUCT_VERSION));
-+	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
- }
+ static struct pmu amd_llc_pmu = {
+@@ -317,7 +314,7 @@ static struct pmu amd_llc_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
+-	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
++	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
+ };
  
- static int __ref
+ static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
 
 
