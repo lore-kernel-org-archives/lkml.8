@@ -2,121 +2,70 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F6FC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC89FC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670F720753
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:20:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584472855;
-	bh=HfdeKzKf8iAj9re4wGORdBPF20jUw2IniTJ4HTwrkXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LYrv8WAdNYjzBFaXHqy2U5LHKCjuF658rb4pGKR4quXJYRO3mnGjzrVXntaK1uPEm
-	 AOtVpLJAMwsQAE2ZFKqFH3TpOAWSV+Q4PqW9zutb1K6Kuvj5P9CMrxm3AVUJTeGdnZ
-	 Uksod+2EvG3PHc6BqyKc6u3CEpMuHOJ+gS/PxwJY=
+	by mail.kernel.org (Postfix) with ESMTP id AB4B920752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:21:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JN0AzelZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgCQTUy (ORCPT
+        id S1726761AbgCQTVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:20:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgCQTUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:20:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AAB220752;
-        Tue, 17 Mar 2020 19:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584472853;
-        bh=HfdeKzKf8iAj9re4wGORdBPF20jUw2IniTJ4HTwrkXQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r93DEXPj2+/m+a6jGwOn7QaEgc3tXMtLN4BQlH9nrlxvrhGRuNx+hsg5vKg9hktQO
-         stvemR/K5xKmcBI2D87B/wRxICdZoBCpYUZjy/o5NoDDbTDwidnDuZ5oTkDC+MlFum
-         mOsb47DTJU0VYZELICenHBmwz767Uuqq1ZjGm9rg=
-Date:   Tue, 17 Mar 2020 20:20:51 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     rafael@kernel.org, hminas@synopsys.com, mathias.nyman@intel.com,
-        bgolaszewski@baylibre.com, arnd@arndb.de,
-        jeffrey.t.kirsher@intel.com, hdegoede@redhat.com,
-        treding@nvidia.com, tglx@linutronix.de, tomas.winkler@intel.com,
-        suzuki.poulose@arm.com, sergei.shtylyov@cogentembedded.com,
-        geert@linux-m68k.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] drivers: provide
- devm_platform_get_and_ioremap_resource()
-Message-ID: <20200317192051.GA1520272@kroah.com>
-References: <20200315140525.21780-1-zhengdejin5@gmail.com>
- <20200315140525.21780-2-zhengdejin5@gmail.com>
+        Tue, 17 Mar 2020 15:21:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59428 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgCQTVk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 15:21:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=b+zfqjJJKArO89lYc5D7AoeuSHTXzYgw70bPUpJTsPA=; b=JN0AzelZ51FBfzVAgwUsuP0RuO
+        JHEtx+lrODYkdbaJgKRBPlYgliQHrWV/uMbpTw/a7gcdMuwz0V0R9ZLhGunPdDyUQieNMr5uxbx2k
+        ocUyqSx2lnGiqE8Y9t9+32FkEAg/GopV3py2OLShAO1qrg+pHyo4E3lk2cxDa5bCLZaDdCmEx9fZZ
+        LJnP/S00kDdTEr56TbnUT7BMsexZA8BCP/jUroVV3syxIHzHU22eQtX0CDssQMJgd+3J4fHMRBNfW
+        sZ0QvGZ6ab1Y5lAO6ISCvuHWSh1kInAU8cICaTnYfhJHSBclSu+mgSSLQF83KGfSc1OzcEG0V84/Z
+        lJOGNf8Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEHmS-0000x1-9o; Tue, 17 Mar 2020 19:21:36 +0000
+Date:   Tue, 17 Mar 2020 12:21:36 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     shakeelb@google.com, vbabka@suse.cz, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v3 PATCH 1/2] mm: swap: make page_evictable() inline
+Message-ID: <20200317192136.GE22433@bombadil.infradead.org>
+References: <1584466971-110029-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200315140525.21780-2-zhengdejin5@gmail.com>
+In-Reply-To: <1584466971-110029-1-git-send-email-yang.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 10:05:21PM +0800, Dejin Zheng wrote:
-> Since commit "drivers: provide devm_platform_ioremap_resource()",
-> it was wrap platform_get_resource() and devm_ioremap_resource() as
-> single helper devm_platform_ioremap_resource(). but now, many drivers
-> still used platform_get_resource() and devm_ioremap_resource()
-> together in the kernel tree. The reason can not be replaced is they
-> still need use the resource variables obtained by platform_get_resource().
-> so provide this helper.
-> 
-> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Suggested-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
-> v2 -> v3:
-> 	- rename the function to
-> 	  devm_platform_get_and_ioremap_resource() by Sergei's suggestion.
-> 	- make the last parameter res as optional by Geert's suggestion.
-> 
-> v1 -> v2:
-> 	- No change.
-> 
->  drivers/base/platform.c         | 22 ++++++++++++++++++++++
->  include/linux/platform_device.h |  3 +++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 7fa654f1288b..9f6a78f79235 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -62,6 +62,28 @@ struct resource *platform_get_resource(struct platform_device *dev,
->  EXPORT_SYMBOL_GPL(platform_get_resource);
->  
->  #ifdef CONFIG_HAS_IOMEM
-> +/**
-> + * devm_platform_get_and_ioremap_resource - call devm_ioremap_resource() for a
-> + *					    platform device and get resource
-> + *
-> + * @pdev: platform device to use both for memory resource lookup as well as
-> + *        resource management
-> + * @index: resource index
-> + * @res: get the resource
-> + */
-> +void __iomem *
-> +devm_platform_get_and_ioremap_resource(struct platform_device *pdev,
-> +				unsigned int index, struct resource **res)
-> +{
-> +	struct resource *r;
-> +
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, index);
-> +	if (res)
-> +		*res = r;
+On Wed, Mar 18, 2020 at 01:42:50AM +0800, Yang Shi wrote:
+> -static inline int mapping_unevictable(struct address_space *mapping)
+> +static inline bool mapping_unevictable(struct address_space *mapping)
+>  {
+>  	if (mapping)
+>  		return test_bit(AS_UNEVICTABLE, &mapping->flags);
 
-What happens if that call fails?  Shouldn't that be checked?
+Shouldn't this be:
 
-thanks,
+-static inline int mapping_unevictable(struct address_space *mapping)
++static inline bool mapping_unevictable(struct address_space *mapping)
+ {
+-       if (mapping)
+-               return test_bit(AS_UNEVICTABLE, &mapping->flags);
+-       return !!mapping;
++       return mapping && test_bit(AS_UNEVICTABLE, &mapping->flags);
+ }
 
-greg k-h
