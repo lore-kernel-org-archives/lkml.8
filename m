@@ -2,89 +2,125 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197BDC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BAEC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABC92051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444143;
-	bh=X2e/lvBOOe65WYirmqSixR1W7xvyvNrvziM4TprWNck=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SjgDVg/0jjwHukonzX5ReVCafcJHQSp67TNBNcYCN9mYBIL8dfhjbuWK0Vkqs8bVK
-	 EQNtUmAu934PZGJE+S9wh4YDk+hguAaAZwOIIyBwbeSVl1CVGraruztHmMHDci+yfL
-	 FC4J0R9PURxifKsVllAd+kB31SanktIq5LvYybfs=
+	by mail.kernel.org (Postfix) with ESMTP id 075C02051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="R3suC07y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgCQLWV (ORCPT
+        id S1727425AbgCQLWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:22:20 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49131 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbgCQK4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:56:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726713AbgCQLWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:22:18 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C646020724;
-        Tue, 17 Mar 2020 10:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442595;
-        bh=X2e/lvBOOe65WYirmqSixR1W7xvyvNrvziM4TprWNck=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lPCtBpsJNzSlqF0vplyTFSqcOSZWQL5zOomucxdOK37ALyo3yt3UJo9+iiZfg6f3H
-         lHKZZVYPupREfzslsfl4smOERKh/AgLPyzQj4YZwnLd1gnPykjIn+KYZNGfKMyQ+xe
-         wxQCvqU8wX2XWhompdVD4KFv0ufhZ+NYemWqBP1o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 17/89] net: systemport: fix index check to avoid an array out of bounds access
-Date:   Tue, 17 Mar 2020 11:54:26 +0100
-Message-Id: <20200317103301.952446186@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
-References: <20200317103259.744774526@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hW3W3wNXzB3t3;
+        Tue, 17 Mar 2020 22:22:14 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1584444136;
+        bh=7m6xTV6ORC9fimP591QotV0DExi6ArwAslaYAD6a8gE=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=R3suC07yLLownGnMiQtBzYlWQBjC2Y2Mr1fjgaMhi7I03Tw6ufjZw4WoaZXiqoW7X
+         9w7zSb2LsfkCq8qcUn9o6JDfZtIASBH4sFz8ntWfjzvCQz05fGey3e+m483q7aENNl
+         WTjER2R9FHM0pwErCXzPUaOlqszJZ/dyxvLAY/7h0QKpfmECwhSvG1su6e0j9+Ibat
+         SXe0q3bo4rMn5DbePzxlsRagSr8oOu986j8OGuQrkaCUhpM00HGe9unpetpD+aO/eV
+         wcdxLe1dn62eA00W63BAXp3KDbgrdVnAh5ByL/QW192YlMk3FeRuzPn7et6TB3Nz1X
+         57yXL6Iyl5JEg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     =?utf-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org, kernel@vivo.com,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v3] powerpc/fsl-85xx: fix compile error
+In-Reply-To: <AJUA5gAVCMaMlIkPsaTC0KqL.3.1584357605616.Hmail.wenhu.wang@vivo.com>
+References: <AJUA5gAVCMaMlIkPsaTC0KqL.3.1584357605616.Hmail.wenhu.wang@vivo.com>
+Date:   Tue, 17 Mar 2020 22:22:13 +1100
+Message-ID: <878sjzfcpm.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+=E7=8E=8B=E6=96=87=E8=99=8E <wenhu.wang@vivo.com> writes:
+> From: Michael Ellerman <mpe@ellerman.id.au>
+>  Date: 2020-03-16 17:41:12
+> To:WANG Wenhu <wenhu.wang@vivo.com>,Benjamin Herrenschmidt <benh@kernel.c=
+rashing.org>,Paul Mackerras <paulus@samba.org>,WANG Wenhu <wenhu.wang@vivo.=
+com>,Allison Randal <allison@lohutok.net>,Richard Fontana <rfontana@redhat.=
+com>,Greg Kroah-Hartman <gregkh@linuxfoundation.org>,Thomas Gleixner <tglx@=
+linutronix.de>,linuxppc-dev@lists.ozlabs.org,linux-kernel@vger.kernel.org
+>  cc: trivial@kernel.org,kernel@vivo.com,stable <stable@vger.kernel.org>
+> Subject: Re: [PATCH v3] powerpc/fsl-85xx: fix compile error>WANG Wenhu <w=
+enhu.wang@vivo.com> writes:
+>>> Include "linux/of_address.h" to fix the compile error for
+>>> mpc85xx_l2ctlr_of_probe() when compiling fsl_85xx_cache_sram.c.
+>>>
+>>>   CC      arch/powerpc/sysdev/fsl_85xx_l2ctlr.o
+>>> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c: In function =E2=80=98mpc85xx_l2c=
+tlr_of_probe=E2=80=99:
+>>> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:11: error: implicit declaratio=
+n of function =E2=80=98of_iomap=E2=80=99; did you mean =E2=80=98pci_iomap=
+=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+>>>   l2ctlr =3D of_iomap(dev->dev.of_node, 0);
+>>>            ^~~~~~~~
+>>>            pci_iomap
+>>> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:9: error: assignment makes poi=
+nter from integer without a cast [-Werror=3Dint-conversion]
+>>>   l2ctlr =3D of_iomap(dev->dev.of_node, 0);
+>>>          ^
+>>> cc1: all warnings being treated as errors
+>>> scripts/Makefile.build:267: recipe for target 'arch/powerpc/sysdev/fsl_=
+85xx_l2ctlr.o' failed
+>>> make[2]: *** [arch/powerpc/sysdev/fsl_85xx_l2ctlr.o] Error 1
+>>>
+>>> Fixes: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+>>
+>>The syntax is:
+>>
+>>Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+>>
+>>> Cc: stable <stable@vger.kernel.org>
+>>
+>>The commit above went into v2.6.37.
+>>
+>>So no one has noticed this bug since then, how? Or did something else
+>>change to expose the problem?
+>
+> Actually a hard question to answer cause it also left me scratching for l=
+ong.
+> However, I can not find right or definite answer.
 
-[ Upstream commit c0368595c1639947839c0db8294ee96aca0b3b86 ]
+Oh, actually it's fairly straight forward, the code can't be built at
+all in upstream because CONFIG_FSL_85XX_CACHE_SRAM is not selectable or
+selected by anything.
 
-Currently the bounds check on index is off by one and can lead to
-an out of bounds access on array priv->filters_loc when index is
-RXCHK_BRCM_TAG_MAX.
+You sent a patch previously to make it selectable, which Scott thought
+was a bad idea.
 
-Fixes: bb9051a2b230 ("net: systemport: Add support for WAKE_FILTER")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bcmsysport.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So this whole file is dead code as far as I'm concerned, so patches for
+it definitely do not need to go to stable.
 
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -2168,7 +2168,7 @@ static int bcm_sysport_rule_set(struct b
- 		return -ENOSPC;
- 
- 	index = find_first_zero_bit(priv->filters, RXCHK_BRCM_TAG_MAX);
--	if (index > RXCHK_BRCM_TAG_MAX)
-+	if (index >= RXCHK_BRCM_TAG_MAX)
- 		return -ENOSPC;
- 
- 	/* Location is the classification ID, and index is the position
+If you want to add a user for it then please send a series doing that,
+and this commit can be the first.
 
-
+cheers
