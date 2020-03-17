@@ -2,98 +2,152 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE50C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B351FC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B6220724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8897E20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="DgVudzFU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+26uggo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgCQWFA (ORCPT
+        id S1727033AbgCQWFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:05:00 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34898 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgCQWE7 (ORCPT
+        Tue, 17 Mar 2020 18:05:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37490 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgCQWFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:04:59 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k8so22156608oik.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:04:59 -0700 (PDT)
+        Tue, 17 Mar 2020 18:05:00 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 6so27761803wre.4;
+        Tue, 17 Mar 2020 15:04:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gY+guVjbAMZU5uOESZLzfUGHTA73g3d/loWemG4Z+tE=;
-        b=DgVudzFUJBGxeDF2iH5mheVO+tEr9voArIx64eJyZEBBg7cRUGb+cj/MjOf9oq3B2R
-         QJIL+lhTJMNAQ2ngIH0YwrqRSHxOD/fXTbGSyUUiG2SG3d9V05oxPGTwun4uO4gi4IlX
-         WxNQwPnIrSGREpuL3ogprgQmp5jDmU634+TUNER/9IW612bYKA/Y0kZDlnRh7OPIc7fZ
-         N3HkePiHhMsx27VQXonJFl9bdxeB0ntQKwRhkKFQ/5Yysl6eRd32am9KSXxFsta5qcIo
-         i3a8vj0Uaqxhll7rOfD9Qno75Qopvm5OE8wtwmN62BUdRv/lvuW7wYkuuokxAAcPHEuO
-         2jHw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Qiz8SPGjq8UjHt5B7MxSwjAG4ELELv3CtLSiX/rkTdo=;
+        b=s+26uggoLggNmytLFNkdi5ReaP1mQqXWgjWy8h5Gs+gJsYAbnX71plLhfx3iTGckQJ
+         3mf1zQUAz7jDZ3g6nApgpqoGosK8gPPrhlFBHDcDoL9v2pE/eeoF4r27DSIx7JfTM6dW
+         cT7v5UZFhkEwJMZWl3oh3WfUmJyG6O6uDQsG2jFaNB45EGA5y6eZYi6qOyotGpQ/P2rs
+         MDaqKFpT2V/jik4ZT0LcexOjipeNHS2V86cxJJVDbdppigFG8Fbga86Mi/2PSd/wU7W3
+         35TKgLQF83iGAQp3rLZ1losEJcw8tKxBUQho2gmDuh0jeWLS80cLVtMh4PCzeXxBTvrZ
+         v66Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gY+guVjbAMZU5uOESZLzfUGHTA73g3d/loWemG4Z+tE=;
-        b=rl+DQ2zYePGnqlg9QgOBwNG5/PHB57bE1QJt8xyTz1ddiIq5zHeUoOiSMfFAU/Figf
-         jqe16TixerDpjklFmawnjC6CiXBWYNwHhlB0OrCBzUclchHt3hb91jKFuR3JJip2mWAl
-         polSbWdom/JPGwv+wRIbsXVUxsHwBg7Wr+b/fKJUC/mexAlvCYDh2Df5yiZNpney1hxC
-         mTZBYCsjy/jCER55lfPd4ehAJyDlVaZjo6AyhWRmBkIvG9ESGh6KIfiIYN3eDUhDF4CP
-         LOt6gT7yIvthxPrr6z9Mu1brPvzaHI6a4oZZm/SCxs9Z+3/mdrBOJ3w7dB0ggF4Loa5V
-         5sGg==
-X-Gm-Message-State: ANhLgQ34jIdJVuuvhMiyCeogAVhc8/PSpEVglqeRCzEp/T3y3HKrpk/k
-        Gho2eIESqPZhoHBZzWAIYJbRlnvTNGC9132LL2aDRw==
-X-Google-Smtp-Source: ADFU+vsQvOL9wprxrkAHycoZPlNxRbxXsmPicT5n7p0w61/VCYW5GHZo0bAl/D1XuM3Nq16vsV01jj1nZ/5wYharha8=
-X-Received: by 2002:aca:4d8:: with SMTP id 207mr838171oie.70.1584482698821;
- Tue, 17 Mar 2020 15:04:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qiz8SPGjq8UjHt5B7MxSwjAG4ELELv3CtLSiX/rkTdo=;
+        b=LBbGfRtiwmayShvpy2ak03+WQrSdTCpvpqZ0rB4fTkrRkurJ32r0hBP28XbjJfbRqM
+         utS3sV2Zgxd7kRWb49zIrJwRO1x6tPx1dHFAUPQYyKuldUt93MnN5y3ddX+tJTsakyh9
+         Vd1GCwEnJUc+D1abGPJxEfR0nTkktNjYweyhsjF859sTtOiHOWhOGiQ7sA6ZVP+42FK9
+         pfWqQu02CS885qwOvh0czHWX/UHkNiz+cQDFmb+TLAa7T4jjOZIYh6rDSB9q25r3jTyO
+         KMWyA+jR6WTbfd8QUHoWhfN+npUZEyOEPhhfS7BA9kNOSLiPR/Zpvkt1y+6V0DauXnRM
+         /ojw==
+X-Gm-Message-State: ANhLgQ0GWyE6ONZGrXYZii+vxA/MQB/3i7dGwP0Iz5xG9hqcYFddPtju
+        VbFIIS7/Zup9XqveNRKTinA=
+X-Google-Smtp-Source: ADFU+vvUbJs7CjVtSah/hWS9CT/exY7FEYlJgzu0BJZSQqsLIr7AAJOzF8YKAtYskOQ1IKl756J0tA==
+X-Received: by 2002:adf:ef12:: with SMTP id e18mr1155345wro.108.1584482697768;
+        Tue, 17 Mar 2020 15:04:57 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id y200sm1059104wmc.20.2020.03.17.15.04.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Mar 2020 15:04:57 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 22:04:56 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v2 4/8] powernv/memtrace: always online added memory
+ blocks
+Message-ID: <20200317220456.wczzkgtqwgxjw5c6@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200317104942.11178-1-david@redhat.com>
+ <20200317104942.11178-5-david@redhat.com>
 MIME-Version: 1.0
-References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158318762012.2216124.16408566404290491508.stgit@dwillia2-desk3.amr.corp.intel.com>
- <1848cdb9-8c19-d7fe-870c-175bd60bc364@amd.com>
-In-Reply-To: <1848cdb9-8c19-d7fe-870c-175bd60bc364@amd.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 17 Mar 2020 15:04:48 -0700
-Message-ID: <CAPcyv4goRP8EAfMX8oOANgzgm3Pn=wES42MCDXbP_x__-GW52g@mail.gmail.com>
-Subject: Re: [PATCH 4/5] resource: Report parent to walk_iomem_res_desc() callback
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317104942.11178-5-david@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 6:42 AM Tom Lendacky <thomas.lendacky@amd.com> wrote:
+On Tue, Mar 17, 2020 at 11:49:38AM +0100, David Hildenbrand wrote:
+>Let's always try to online the re-added memory blocks. In case add_memory()
+>already onlined the added memory blocks, the first device_online() call
+>will fail and stop processing the remaining memory blocks.
 >
-> On 3/2/20 4:20 PM, Dan Williams wrote:
-> > In support of detecting whether a resource might have been been claimed,
-> > report the parent to the walk_iomem_res_desc() callback. For example,
-> > the ACPI HMAT parser publishes "hmem" platform devices per target range.
-> > However, if the HMAT is disabled / missing a fallback driver can attach
-> > devices to the raw memory ranges as a fallback if it sees unclaimed /
-> > orphan "Soft Reserved" resources in the resource tree.
-> >
-> > Otherwise, find_next_iomem_res() returns a resource with garbage data
-> > from the stack allocation in __walk_iomem_res_desc() for the res->parent
-> > field.
+>This avoids manually having to check memhp_auto_online.
 >
-> Just wondering if we shouldn't just copy the complete resource struct and
-> just override the start and end values? That way, if some code in the
-> future wants to look at sibling or child values, another change isn't needed.
+>Note: PPC always onlines all hotplugged memory directly from the kernel
+>as well - something that is handled by user space on other
+>architectures.
 >
-> Just a thought.
+>Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>Cc: Paul Mackerras <paulus@samba.org>
+>Cc: Michael Ellerman <mpe@ellerman.id.au>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Cc: Michal Hocko <mhocko@kernel.org>
+>Cc: Oscar Salvador <osalvador@suse.de>
+>Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>Cc: Baoquan He <bhe@redhat.com>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Cc: linuxppc-dev@lists.ozlabs.org
+>Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Thanks for taking a look. I think it's ok to come update this again if
-that need arises.
+Looks good.
+
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+
+>---
+> arch/powerpc/platforms/powernv/memtrace.c | 14 ++++----------
+> 1 file changed, 4 insertions(+), 10 deletions(-)
+>
+>diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
+>index d6d64f8718e6..13b369d2cc45 100644
+>--- a/arch/powerpc/platforms/powernv/memtrace.c
+>+++ b/arch/powerpc/platforms/powernv/memtrace.c
+>@@ -231,16 +231,10 @@ static int memtrace_online(void)
+> 			continue;
+> 		}
+> 
+>-		/*
+>-		 * If kernel isn't compiled with the auto online option
+>-		 * we need to online the memory ourselves.
+>-		 */
+>-		if (!memhp_auto_online) {
+>-			lock_device_hotplug();
+>-			walk_memory_blocks(ent->start, ent->size, NULL,
+>-					   online_mem_block);
+>-			unlock_device_hotplug();
+>-		}
+>+		lock_device_hotplug();
+>+		walk_memory_blocks(ent->start, ent->size, NULL,
+>+				   online_mem_block);
+>+		unlock_device_hotplug();
+> 
+> 		/*
+> 		 * Memory was added successfully so clean up references to it
+>-- 
+>2.24.1
+
+-- 
+Wei Yang
+Help you, Help me
