@@ -2,95 +2,100 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBCDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974CEC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C718E2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B987206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:53:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aGfwBsRG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgCQJwb (ORCPT
+        id S1726407AbgCQJxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:52:31 -0400
-Received: from mga03.intel.com ([134.134.136.65]:11234 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgCQJwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:52:31 -0400
-IronPort-SDR: 3gFeyB/sMtAXH5KgvDK4vJqCTYN2ML2o1fV2Hbt2t69CrfzhYhAfwC9f/98fVEMCgeaOFpXYV1
- SvgJzUEcUjtA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 02:52:30 -0700
-IronPort-SDR: +azI8A9fKBjRQ58L4+ha8WqErnfAG+LfoivYULQdO/g/GXyyXzucTRi5GuxYPJzGwecRN6XO9x
- S0F1069bxh+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="443697708"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Mar 2020 02:52:27 -0700
-Subject: Re: [PATCH v1 3/3] mmc: tegra: Enable host capability
- MMC_CAP2_LONG_WAIT_HW_BUSY
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        ulf.hansson@linaro.org, baolin.wang@linaro.org,
-        kstewart@linuxfoundation.org, tglx@linutronix.de,
-        bradleybolen@gmail.com, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc:     anrao@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-References: <1583799205-8442-1-git-send-email-skomatineni@nvidia.com>
- <1583799205-8442-3-git-send-email-skomatineni@nvidia.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <c46fef86-ac9c-a921-1464-dbca58bc3169@intel.com>
-Date:   Tue, 17 Mar 2020 11:51:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 05:53:35 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38280 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgCQJxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:53:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id w1so22054183ljh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ahtq2mQzZ/hKQzTlMcOpLhf6uob8xhN3CPDjeFKWyEM=;
+        b=aGfwBsRGZVXeDImvcp1rxaXVNVG6sI22MgbooYe+Fj1c8fxvBgW1JJUhESsKVK12dh
+         YGCH6QRWdfHOjrZGqWX5n5US/FhYIpo3wJovZ2G868vnRoVPGYgf1htRfNqFhBuToyPu
+         DABPhm4gTU6Rekp3tY5L5NbchKoy0A+oaLQu4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ahtq2mQzZ/hKQzTlMcOpLhf6uob8xhN3CPDjeFKWyEM=;
+        b=FwR8p0eObnYEDupr6nxdTiDfL/fUa9T7yxWCEn/Hc5uQyhL2m82anxfZkg/wq51vYG
+         rFsxMFrPde4WinfmtaF3BPvW7l5IQsvYUJoKagezFhUnA8BKeoFVggy5wLscN9ouPmJ8
+         nRpxfbhIhpY7Ed+XB6CiRlQAaGeNeUNss3EntqWYo/0uhFy9NhJvPFxVo20U0D6ejJ53
+         xK2VopVBekCHToCnmpO6rpMw7RboaGP7uaKy23z1+tijosZOKb1oyfDh+RYcR1rLe+da
+         DLNKITJ2ApwlRD+IXEhNE+dRHXl6bfAdat9vwcS8o1T+07ClXfEgbTobc2xX5VEduxJz
+         78fA==
+X-Gm-Message-State: ANhLgQ3Vfo9LuSr+47b2kZqVPHLTQpHJyoAvWy6hxZdPsg1oZFgpdAU3
+        XXHB7I40OAZqIg+1f53CVI264Bi541usgxvQx7fwscjp
+X-Google-Smtp-Source: ADFU+vvxuOLt1IwGKsrImxS13GFlvtmnCJR669U9slmviidnh+ZhPft+usarUg8t0soUz8b6zMNszgIWOKrVO9BWE+A=
+X-Received: by 2002:a2e:9214:: with SMTP id k20mr2344374ljg.157.1584438812259;
+ Tue, 17 Mar 2020 02:53:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1583799205-8442-3-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200317040742.12143-1-rayagonda.kokatanur@broadcom.com> <e94bbb2c-6f36-61bb-d26a-2ce3e1a139e0@cogentembedded.com>
+In-Reply-To: <e94bbb2c-6f36-61bb-d26a-2ce3e1a139e0@cogentembedded.com>
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Date:   Tue, 17 Mar 2020 15:23:20 +0530
+Message-ID: <CAHO=5PEiPK=uF_rEJ+ujaP=oq2fPR1VHvczjZ1JQAqDdjTsMHQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] firmware: tee_bnxt: remove unused variable init
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/03/20 2:13 am, Sowjanya Komatineni wrote:
-> Some mmc operations take longer than maximum HW busy detection and
-> mmc core driver converts R1B type to R1 type response for these
-> operations based on host max busy timeout and command operation time
-> and uses SW poll for busy.
-> 
-> Tegra host support long HW busy detection where host waits forever
-> till the card is busy.
-> 
-> This patch enables MMC_CAP2_LONG_WAIT_HW_BUSY capability for Tegra
-> host.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci-tegra.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index 40a221d..9d0f371 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -1583,6 +1583,7 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->  	if (tegra_host->soc_data->nvquirks & NVQUIRK_ENABLE_DDR50)
->  		host->mmc->caps |= MMC_CAP_1_8V_DDR;
->  
-> +	host->mmc->caps2 |= MMC_CAP2_LONG_WAIT_HW_BUSY;
->  	tegra_sdhci_parse_dt(host);
->  
->  	tegra_host->power_gpio = devm_gpiod_get_optional(&pdev->dev, "power",
-> 
-
+On Tue, Mar 17, 2020 at 2:39 PM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>
+> Hello!
+>
+> On 17.03.2020 7:07, Rayagonda Kokatanur wrote:
+>
+> > Remove unused variable initialization.
+>
+>     I think it's not an initialization, it's an assignment. :-)
+Thanks  will fix it and send v2.
+>
+> > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > ---
+> >   drivers/firmware/broadcom/tee_bnxt_fw.c | 2 --
+> >   1 file changed, 2 deletions(-)
+> >
+> > diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
+> > index ed10da5313e8..6fd62657e35f 100644
+> > --- a/drivers/firmware/broadcom/tee_bnxt_fw.c
+> > +++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
+> > @@ -143,8 +143,6 @@ int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size)
+> >       prepare_args(TA_CMD_BNXT_COPY_COREDUMP, &arg, param);
+> >
+> >       while (rbytes)  {
+> > -             nbytes = rbytes;
+> > -
+> >               nbytes = min_t(u32, rbytes, param[0].u.memref.size);
+> >
+> >               /* Fill additional invoke cmd params */
+>
+> MBR, Sergei
