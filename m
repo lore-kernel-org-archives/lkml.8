@@ -2,93 +2,103 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BB9C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F249C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 677B920754
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:22:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CXjlKsP5"
+	by mail.kernel.org (Postfix) with ESMTP id 7E1E920753
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgCQPWH (ORCPT
+        id S1726895AbgCQPWQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:22:07 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42595 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbgCQPWH (ORCPT
+        Tue, 17 Mar 2020 11:22:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64408 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726680AbgCQPWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:22:07 -0400
-Received: by mail-ed1-f66.google.com with SMTP id b21so16636248edy.9
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 08:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FN6nZxGnOaw3deJgrYU1nB+eySU41aqfgMOvG0B3T1g=;
-        b=CXjlKsP5/eG3tZJGw8EPbB69nbC3nO4ZZQfYtvvX5o2sdeR2vVbOAPJd8ufv4NCETI
-         02I170hMx6kVh1sjzn69urnNbgExvQeSlkitbDxdyl/uvNwpdojqNN32J5e8ycULPU4L
-         s1HVoS9+wzcMbmrKjBXEtZ2cHoqkq7dRot6Mf/ehXoxd28r12XO9VcMG2gMJCDc5tw1h
-         gBLJlU/Ptq2it9/Xlo5utCg0XqxXmvkPr+n+vcJg1ARiA9tCg2Mex3p5UBXkQb8pCrgt
-         BLAzadrLVthZNCuciVdMd848fwy0bpmh3KryGSNikiM31ny7IGOyUM1ebjPETz6xnQ9d
-         IK/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FN6nZxGnOaw3deJgrYU1nB+eySU41aqfgMOvG0B3T1g=;
-        b=Tkq/Sx0sQixNvFx1yP/YEdon7iYxG3FFJhG5bWl7VdENQ/UN/cOwA8zYhBvkCYCwRS
-         l8W4nF2bZ/3g2VAZp7hFJt9hIlX6xx7MOgwiWgcgWiPuyL0h6LUW/i0OXe1XmFakdIiu
-         xzWtTfpZRd2IEWNIOmJejdO3wuC77J6dmLzFrduv7p0ScFnBwX1bSGKGraznoxySj726
-         A5eNhn+TqRYQqifRtQ+Im3ZVDp/vgRmz58WGuaQJ0IOHMV++tR75uRwolJKsQfeYcqm0
-         peC9bhkiGyh7n3rVixFnBoAYCkZQamQVTkOKVJrAZ61HrlQ1fP/6OPL01ZGiSHxU/1RX
-         qSSA==
-X-Gm-Message-State: ANhLgQ3McobpwWAmvWtwNycIaz11bTTqvZcvg9FN8/rLtpGdJfJKJert
-        bDWB/a8zNkL3Mc5WMXiA4FNJXA==
-X-Google-Smtp-Source: ADFU+vsI46bucXrS6vRC98i/tyZ5FW2KRCRZlYWtRXZUfYzkhSt7l9XxjzONQxNkkNmWOvcZUFuTfA==
-X-Received: by 2002:a05:6402:180e:: with SMTP id g14mr6060137edy.66.1584458524977;
-        Tue, 17 Mar 2020 08:22:04 -0700 (PDT)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id bc23sm227198edb.31.2020.03.17.08.22.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 08:22:04 -0700 (PDT)
-Subject: Re: [PATCH 7/7] usb: dwc3: qcom: Enable gpio-usb-conn based
- role-switching
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jackp@codeaurora.org,
-        robh@kernel.org, Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-References: <20200311191501.8165-1-bryan.odonoghue@linaro.org>
- <20200311191501.8165-8-bryan.odonoghue@linaro.org>
- <20200317063101.GA2778164@ripper>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <ec573486-155d-c6f9-7645-496e85721a69@linaro.org>
-Date:   Tue, 17 Mar 2020 15:22:22 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200317063101.GA2778164@ripper>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Mar 2020 11:22:16 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HFLkLV193080
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 11:22:15 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yrt356w5y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 11:22:14 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sachinp@linux.vnet.ibm.com>;
+        Tue, 17 Mar 2020 15:22:11 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 17 Mar 2020 15:22:07 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02HFM6cq58523826
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 15:22:06 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 924EEAE064;
+        Tue, 17 Mar 2020 15:22:06 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D933EAE051;
+        Tue, 17 Mar 2020 15:22:04 +0000 (GMT)
+Received: from [9.199.40.234] (unknown [9.199.40.234])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Mar 2020 15:22:04 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] tpm2: Export tpm2_get_cc_attrs_tbl for ibmvtpm driver as
+ module
+From:   Sachin Sant <sachinp@linux.vnet.ibm.com>
+In-Reply-To: <20200317130819.720318-1-stefanb@linux.vnet.ibm.com>
+Date:   Tue, 17 Mar 2020 20:52:03 +0530
+Cc:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        Stefan Berger <stefanb@linux.ibm.com>
+Content-Transfer-Encoding: 8BIT
+References: <20200317130819.720318-1-stefanb@linux.vnet.ibm.com>
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-TM-AS-GCONF: 00
+x-cbid: 20031715-4275-0000-0000-000003ADDF12
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031715-4276-0000-0000-000038C30858
+Message-Id: <03C24A2B-643D-4CDB-99FA-F5321684EEE4@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_05:2020-03-17,2020-03-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 spamscore=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 suspectscore=0 clxscore=1015 impostorscore=0
+ malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003170062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/2020 06:31, Bjorn Andersson wrote:
-> I don't yet have a sane suggestion on how to redesign the dependency
-> between the two drivers in order to avoid this, but it's at least not
-> possible to access the child's state data from dwc3_qcom_probe().
 
-yep, this should be modeled as the dwc3 registering with the parent 
-role-switch, like gpio-usb-conn does with dwc3.
+> On 17-Mar-2020, at 6:38 PM, Stefan Berger <stefanb@linux.vnet.ibm.com> wrote:
+> 
+> From: Stefan Berger <stefanb@linux.ibm.com>
+> 
+> This patch fixes the following problem when the ibmvtpm driver
+> is built as a module:
+> 
+> ERROR: modpost: "tpm2_get_cc_attrs_tbl" [drivers/char/tpm/tpm_ibmvtpm.ko] undefined!
+> make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
+> make: *** [Makefile:1298: modules] Error 2
+> 
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
 
-I have an idea for a patch, I'll v2 this.
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+
+Thanks
+-Sachin
+
