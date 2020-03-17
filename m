@@ -2,114 +2,131 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF22C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA76C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB47820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444525;
-	bh=ejZrq+F/lKEfO3Yj3IeUxgVu9TpeCSHvgQhm0SrXQNU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wAyoOLCGAtHx58k69D/C9fRWhX/cPvMxFOsy8lG0y42l+wVo3kLlQYs37H0Eg1Akq
-	 pdVBE867YkVKW1mfpgTCxdVkOO2DdFX4PUFTzHzz2MBaA68l+wqvFwiL/RyGNUQQp3
-	 w6b+S+XEZLuGI3OGGLc6yEbm2AjBG142zWttoBqs=
+	by mail.kernel.org (Postfix) with ESMTP id 0452120658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgCQL2o (ORCPT
+        id S1726598AbgCQLcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgCQL2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:28:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CCC220658;
-        Tue, 17 Mar 2020 11:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584444521;
-        bh=ejZrq+F/lKEfO3Yj3IeUxgVu9TpeCSHvgQhm0SrXQNU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DGCcj+MF1Wyxc28slHUPFTccGeRP4pffXEJ3SLQxXrCOZirsNXBhjUEeHb66S7Ssg
-         JoYauMqKCAdyhTxC76V9Usx40hrya+OOPH7lkaEPY+OEWMXx/7pJD+gx5mZHAaTnLK
-         asNZXtvCJupOzk0aZYmiVcj24b8ARQtPTPiCfKfI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.5 129/151] x86/mce/therm_throt: Undo thermal polling properly on CPU offline
-Date:   Tue, 17 Mar 2020 11:55:39 +0100
-Message-Id: <20200317103335.605735505@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
-References: <20200317103326.593639086@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 17 Mar 2020 07:32:46 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42291 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgCQLcq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:32:46 -0400
+Received: by mail-ot1-f66.google.com with SMTP id a2so362818otq.9;
+        Tue, 17 Mar 2020 04:32:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yETyFwQ9Htl1KGbLhFFP34JxwM+8all8kt5P2BYv2cs=;
+        b=fFmWaGRP50iLWykmVJMdnEKnpISzEjo9Sn0f1FwWkcW/b+/a2QQhFmVdPlvbFS3WaH
+         yGlVd6Qj9wfuOK4rAOCEqjh345Vk63nTpOHsyckuJO4luM5x8giHWlbjhe45f3pY62xy
+         hE5+fUPtfuuRv3TNobMIeVOCgAVVMmDf6oDKmbj6vZtdC7iF+sv7+aluMJgBjD9+q9zy
+         E2ij2P3iO73fiIUpJk8y9ENCsA+MR8qOFAbZ3L40pIW57E+irTeiA0QwDHjPYiwyxtbS
+         Ha10zX+5EJ7qoJZBnEqlR2enM9jM7VbUkflNLtZKooC95MJeh27URlNMY10VnvJbVKRS
+         thmA==
+X-Gm-Message-State: ANhLgQ0xU5/AaCkxHNeIDFuPw7wxuPKBc6+R4U3TlZha5Rn1fTePRvk1
+        mXCElEIonS1sEGkrUdElq6jKMgOkmfG9QyTH3VE=
+X-Google-Smtp-Source: ADFU+vvQTAgcQxsOpqflnHCgzX47yo6RoUnPbT1ipGmHWNBjNYcXjsyzilFOOHau23AhLSA/+Thi1PZ5zI/u0X1X+7w=
+X-Received: by 2002:a9d:1708:: with SMTP id i8mr3337224ota.250.1584444762958;
+ Tue, 17 Mar 2020 04:32:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200218151812.7816-1-geert+renesas@glider.be> <20200218151812.7816-4-geert+renesas@glider.be>
+In-Reply-To: <20200218151812.7816-4-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 17 Mar 2020 12:32:31 +0100
+Message-ID: <CAMuHMdWXJKdD7j6QiRb4fL+fFsyDKpc7aGK-nER=CZd7bxGyPg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] gpio: Add GPIO Aggregator
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Tue, Feb 18, 2020 at 4:18 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> GPIO controllers are exported to userspace using /dev/gpiochip*
+> character devices.  Access control to these devices is provided by
+> standard UNIX file system permissions, on an all-or-nothing basis:
+> either a GPIO controller is accessible for a user, or it is not.
+> Currently no mechanism exists to control access to individual GPIOs.
+>
+> Hence add a GPIO driver to aggregate existing GPIOs, and expose them as
+> a new gpiochip.
+>
+> This supports the following use cases:
+>   - Aggregating GPIOs using Sysfs
+>     This is useful for implementing access control, and assigning a set
+>     of GPIOs to a specific user or virtual machine.
+>   - Generic GPIO Driver
+>     This is useful for industrial control, where it can provide
+>     userspace access to a simple GPIO-operated device described in DT,
+>     cfr. e.g. spidev for SPI-operated devices.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit d364847eed890211444ad74496bb549f838c6018 upstream.
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-aggregator.c
 
-Chris Wilson reported splats from running the thermal throttling
-workqueue callback on offlined CPUs. The problem is that that callback
-should not even run on offlined CPUs but it happens nevertheless because
-the offlining callback thermal_throttle_offline() does not symmetrically
-undo the setup work done in its onlining counterpart. IOW,
+> +static int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
+> +                              unsigned long config)
+> +{
+> +       struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
+> +
+> +       chip = fwd->descs[offset]->gdev->chip;
+> +       if (chip->set_config)
 
- 1. The thermal interrupt vector should be masked out before ...
+-       chip = fwd->descs[offset]->gdev->chip;
+-       if (chip->set_config)
++       chip = gpiod_to_chip(fwd->descs[offset]);
++       if (chip && chip->set_config)
 
- 2. ... cancelling any pending work synchronously so that no new work is
- enqueued anymore.
+> +               return chip->set_config(chip, offset, config);
 
-Do those things and fix the issue properly.
+This is not correct: offset should be translated, too, i.e.
 
- [ bp: Write commit message. ]
+    offset = gpio_chip_hwgpio(fwd->descs[offset]);
 
-Fixes: f6656208f04e ("x86/mce/therm_throt: Optimize notifications of thermal throttle")
-Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
-Tested-by: Pandruvada, Srinivas <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/158120068234.18291.7938335950259651295@skylake-alporthouse-com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Which adds a new dependency on "gpiolib.h"...
 
----
- arch/x86/kernel/cpu/mce/therm_throt.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Is there a better alternative, than providing a public gpiod_set_config()
+helper?
+Thanks!
 
---- a/arch/x86/kernel/cpu/mce/therm_throt.c
-+++ b/arch/x86/kernel/cpu/mce/therm_throt.c
-@@ -486,9 +486,14 @@ static int thermal_throttle_offline(unsi
- {
- 	struct thermal_state *state = &per_cpu(thermal_state, cpu);
- 	struct device *dev = get_cpu_device(cpu);
-+	u32 l;
- 
--	cancel_delayed_work(&state->package_throttle.therm_work);
--	cancel_delayed_work(&state->core_throttle.therm_work);
-+	/* Mask the thermal vector before draining evtl. pending work */
-+	l = apic_read(APIC_LVTTHMR);
-+	apic_write(APIC_LVTTHMR, l | APIC_LVT_MASKED);
-+
-+	cancel_delayed_work_sync(&state->package_throttle.therm_work);
-+	cancel_delayed_work_sync(&state->core_throttle.therm_work);
- 
- 	state->package_throttle.rate_control_active = false;
- 	state->core_throttle.rate_control_active = false;
+Gr{oetje,eeting}s,
 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
