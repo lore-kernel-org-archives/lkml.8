@@ -2,134 +2,163 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C07C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8112C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759FF20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF99206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="qqWQiotn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSk7/+xs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCQOdI (ORCPT
+        id S1726754AbgCQOdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:33:08 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:46681 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgCQOdH (ORCPT
+        Tue, 17 Mar 2020 10:33:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35849 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgCQOdx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:33:07 -0400
-Received: by mail-il1-f193.google.com with SMTP id e8so20248239ilc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 07:33:07 -0700 (PDT)
+        Tue, 17 Mar 2020 10:33:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g62so22276413wme.1;
+        Tue, 17 Mar 2020 07:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=A16GKmGMQWpRq+C/pSuTHqsjWsmIXgAuO5lJtoXiC5Q=;
-        b=qqWQiotn5sHUFeq/EZSUci/cJTumNXaJzM+4NCGpIavzOOC1vtdduNrHZQ+2KeCHq+
-         zGqz4TZIsNxUBA3xm5dNyOaQYibvZDrs8+bHQW8N/1nzErK42Fnt+6fwdjTX4mUoly9l
-         Mz094tkzcLMYSTKpNWZ8GP68mMOaVy2upg0/U5i/JV1XHS6ovhtOh3ssme9nIogkfqnJ
-         ea72EXipKtu9cFfzXEX3+1gMV6+yit68H0JAzCDxfcguSxOFBkdwPeRp+Ka0c83tfDYV
-         DNzjB1nf3J/0vWH00IP7IfPjng/AbnUAh3gMVCpdhge4xQYnNYSxjJ9RVB1c/9c3p3mT
-         08rQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jZ8Gm8Lwi8byvGS1SsuSP8qCStoOok0sm61es2Y5ir4=;
+        b=hSk7/+xsXC/WfuENBr96PLYaxU0PpHPsN5sAhzFiP9H6KnFTxGMMZN3C0Pubg+5Jke
+         xAwv1ZtO1smLsXcMUPATjf3gJSeVd4RqEVhpgHMWRJuGlW6LqmqChyvWkxRCbOnwRwsG
+         Mg3n6+HIUBsIQij3ZAFqArBG+FA5oP4NTepoflFByKl8so39Ks3W6eeJOnTHw3vYiFW3
+         6LImETVVJjHX245SVb1xwyk9j62CEJ77dWRMj36TENKSbRhe7ht8L+1ygxtcTGTpDW8F
+         U2GcE4sI4o5x7q+sqV0dbzvlOqYmc7+ieF0W5n9HYdTJ7uBIFRGB2n3DemxLio86reig
+         iH8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A16GKmGMQWpRq+C/pSuTHqsjWsmIXgAuO5lJtoXiC5Q=;
-        b=t+zcxBRjH33etGgsK04fd7X/zR8wwCYTnnolFNckf2ROX4kX2diC0HwqHwh0rgYT3b
-         lIfDIzm3zBKHzN3YW5+TAnoiQkt+1TQcIhHT2//XllU8YAz7YM/Zoi+TQb1hh6X8k35N
-         DUlYpZO0KSZjMUuZv0DN6HDyGSOYwr4AxUNEH9bHcvSoR8xASBfWOXFDhlwH4DNOeGKJ
-         oPbhusQRY2pSIKnGaSz4JDSvsZMaCq+OGqBql26kx2EN1YHvfVIUU7m66idcqt6nyRiW
-         knyxknZFirj6fY/cHoeUbWSu5XmMk6QPXalJ9Pnmr9yhcK/G/NtfGw45eKBztmpElfOg
-         oRqA==
-X-Gm-Message-State: ANhLgQ1L+fjghBt4g5C9TcWut5fQnwW2uLZnPnhV2tWsZC9Ibe8mEumt
-        rZ+9McIv/k36AsjUpXWUb90gCyYv86nv1gN2QIjC6g==
-X-Google-Smtp-Source: ADFU+vvv1qz1/uhOnuPtILwnBcDhqFuA505eK/TJanPszXasPoyHEc3ARvpOkyEZKK15hx8d4UYnuqqX03viV7vQ01U=
-X-Received: by 2002:a92:d78c:: with SMTP id d12mr5529078iln.287.1584455586881;
- Tue, 17 Mar 2020 07:33:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jZ8Gm8Lwi8byvGS1SsuSP8qCStoOok0sm61es2Y5ir4=;
+        b=Dd9/HRIdnlchUfYCDqYBSJmMiBqow3trRTMovP7zkRBWyaNFl0w8X7apDvpIghvMG7
+         Kgbk1V9AaqWXpdWUOaN1jhsNfKiCqcpd0htAXk5qzCnEv9kVBWtjPEdN7KJzNJLNAE/l
+         O8szHQrlkUtXjepSw1e5RGy+vOxeVpGmbxcU1h8pD3Hpwi6ClvwvAYzMUacnW+2lzr7w
+         1hGroLlSAj7uaVUkgl+oJfWXBJLtBI+vHVZ5bIQ5dvKnHHw7trTJrAahFD6V2nR15mGG
+         PeWHsa5S7IAWP/5yZbx1caydZuPFNU7f7sLYlLVe4ps8rGxDhlF/CMIWSkV5yq8TjVXo
+         QVGg==
+X-Gm-Message-State: ANhLgQ1DsPIeNVeR6w9pl5/Abem8Y0uvVVWqlEsyN4JJpYQxARWA5mrf
+        5us4+FIY+yfkqmRPZCyQWkpIu/US
+X-Google-Smtp-Source: ADFU+vshVDPkf7SmSY3NZWRuIGe4XEiEAmaSVFIKHvwfsIohNCyLaQZ0vMEbVAooJUSHvhQKM7yh0g==
+X-Received: by 2002:a7b:c019:: with SMTP id c25mr5758986wmb.126.1584455630733;
+        Tue, 17 Mar 2020 07:33:50 -0700 (PDT)
+Received: from saturn.lan ([188.26.73.247])
+        by smtp.gmail.com with ESMTPSA id t81sm3937420wmb.15.2020.03.17.07.33.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 07:33:50 -0700 (PDT)
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+X-Google-Original-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        jic23@kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Michael Hennerich <michael.hennerich@analog.com>
+Subject: [PATCH] MAINTAINERS: remove Stefan Popa's email
+Date:   Tue, 17 Mar 2020 16:33:36 +0200
+Message-Id: <20200317143336.6098-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200317151409.7940926c@endymion>
-In-Reply-To: <20200317151409.7940926c@endymion>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 17 Mar 2020 15:32:56 +0100
-Message-ID: <CAMRc=Mdoh5Sk3iS_CO4+++SG2jJOy1qrG4q2zOzbeYYMdJR0VA@mail.gmail.com>
-Subject: Re: VAIO EEPROM support in at24
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 17 mar 2020 o 15:14 Jean Delvare <jdelvare@suse.de> napisa=C5=82(a):
->
-> Hi all,
->
-> As the legacy eeprom driver is being phased out, I am reviewing all its
-> use cases to ensure that the at24 driver will be a suitable replacement.
->
-> One issue I have found is the handling of specific EEPROMs found on the
-> SMBus of some Sony VAIO laptops. The legacy eeprom driver would expose
-> them to user-space, read-only for all users. It would also recognize
-> them as VAIO EEPROMs and would hide some bytes from non-root users
-> because these bytes contain the BIOS password in a lightly encoded form.
->
-> In order to keep the same level of functionality, we would have to offer
-> the same with the at24 driver. At this time, the user has to
-> instantiate a "24c02" device manually from user-space. By default this
-> device has permissions 600, which is insufficient for users, and
-> dangerous for root, so a quick chmod 444 is needed.
->
-> Without the password issue, I would just document the procedure and
-> live with it. However in order to protect the password from being read
-> by random users, the driver itself needs to know that it is dealing
-> with a specific type of EEPROM. It seems that we need to introduce a
-> new device flavor to the at24 driver for this purpose.
->
-> I see that we already have a number of specific flags (AT24_FLAG_SERIAL
-> and AT24_FLAG_MAC) so I suppose we could add something similar for
-> these VAIO EEPROMs. Something like:
->
-> /* Some Sony VAIO laptops have a 24c02 at 0x57 with product info */
-> AT24_CHIP_DATA(at24_data_sony_vaio, 2048 / 8,
->         AT24_FLAG_READONLY | AT24_FLAG_IRUGO | AT24_FLAG_SONY_VAIO);
->
-> Then I suppose it's only a matter of conditionally zeroing a selected
-> range in at24_read() before it returns, to hide the password from
-> non-root users.
->
-> Before I start implementing the idea above, I would like to know if
-> anyone objects to it, or has a better idea?
->
+The email is no longer active. This change removes Stefan's email from the
+MAINTAINERS list and replaces it with Michael Hennerich's.
 
-Sounds good to me in general but isn't it something we could
-generalize a bit more?
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ MAINTAINERS | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-For instance we could make at24_chip_data struct look something like this:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8fa40c3eb72a..72e8960c4f4f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -552,7 +552,7 @@ F:	drivers/input/misc/adxl34x.c
+ F:	Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+ 
+ ADXL372 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
+-M:	Stefan Popa <stefan.popa@analog.com>
++M:	Michael Hennerich <michael.hennerich@analog.com>
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/accel/adxl372.c
+@@ -900,7 +900,7 @@ F:	drivers/net/ethernet/amd/xgbe/
+ F:	arch/arm64/boot/dts/amd/amd-seattle-xgbe*.dtsi
+ 
+ ANALOG DEVICES INC AD5686 DRIVER
+-M:	Stefan Popa <stefan.popa@analog.com>
++M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ L:	linux-pm@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+@@ -908,7 +908,7 @@ F:	drivers/iio/dac/ad5686*
+ F:	drivers/iio/dac/ad5696*
+ 
+ ANALOG DEVICES INC AD5758 DRIVER
+-M:	Stefan Popa <stefan.popa@analog.com>
++M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+@@ -924,7 +924,7 @@ F:	drivers/iio/adc/ad7091r5.c
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
+ 
+ ANALOG DEVICES INC AD7124 DRIVER
+-M:	Stefan Popa <stefan.popa@analog.com>
++M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+@@ -948,7 +948,7 @@ F:	drivers/iio/adc/ad7292.c
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+ 
+ ANALOG DEVICES INC AD7606 DRIVER
+-M:	Stefan Popa <stefan.popa@analog.com>
++M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ M:	Beniamin Bia <beniamin.bia@analog.com>
+ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+@@ -957,7 +957,7 @@ F:	drivers/iio/adc/ad7606.c
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+ 
+ ANALOG DEVICES INC AD7768-1 DRIVER
+-M:	Stefan Popa <stefan.popa@analog.com>
++M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+@@ -1018,7 +1018,7 @@ F:	drivers/hwmon/adm1177.c
+ F:	Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
+ 
+ ANALOG DEVICES INC ADP5061 DRIVER
+-M:	Stefan Popa <stefan.popa@analog.com>
++M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ L:	linux-pm@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+@@ -1078,7 +1078,6 @@ F:	drivers/dma/dma-axi-dmac.c
+ ANALOG DEVICES INC IIO DRIVERS
+ M:	Lars-Peter Clausen <lars@metafoo.de>
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
+-M:	Stefan Popa <stefan.popa@analog.com>
+ W:	http://wiki.analog.com/
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+-- 
+2.20.1
 
-struct at24_chip_data {
-    u32 byte_len;
-    u8 flags;
-    struct resource masked;
-};
-
-And we could introduce a new macro called AT24_CHIP_DATA_MASKED that
-would automacially set the AT24_FLAG_MASKED_RANGE flag and take
-another argument that would contain the address and size of the masked
-register range (we'd put it into the "masked" resource)?
-
-Other ideas are welcome too. I just think that making it
-SONY_VAIO-specific may be a bit limiting in the future.
-
-Best regards,
-Bartosz Golaszewski
