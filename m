@@ -2,68 +2,82 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAF3C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC1FC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B74220738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD29620735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgCQQfo (ORCPT
+        id S1726121AbgCQQfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:35:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42914 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbgCQQfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:35:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B3C8EAF84;
-        Tue, 17 Mar 2020 16:35:42 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 09:34:43 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     akpm@linux-foundation.org, rpenyaev@suse.de,
-        linux-kernel@vger.kernel.org, normalperson@yhbt.net,
-        viro@zeniv.linux.org.uk
-Subject: Re: [PATCH v2] fs/epoll: make nesting accounting safe for -rt kernel
-Message-ID: <20200317163443.o5ffdpkp5t6axsl3@linux-p48b>
-References: <20200224163835.08ab964483519052d7c2e39b@linux-foundation.org>
- <1582739816-13167-1-git-send-email-jbaron@akamai.com>
+        Tue, 17 Mar 2020 12:35:47 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54419 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726586AbgCQQfq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:35:46 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-54-wpgio0jsNKOxoSgWOfZ68Q-1; Tue, 17 Mar 2020 16:35:43 +0000
+X-MC-Unique: wpgio0jsNKOxoSgWOfZ68Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 17 Mar 2020 16:35:42 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 17 Mar 2020 16:35:42 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Borislav Petkov' <bp@alien8.de>, Jakub Jelinek <jakub@redhat.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Michael Matz <matz@suse.de>
+Subject: RE: [PATCH] x86: fix early boot crash on gcc-10
+Thread-Topic: [PATCH] x86: fix early boot crash on gcc-10
+Thread-Index: AQHV/GtMWfiMKj6940mmYKYHLC3u9KhM+y6w
+Date:   Tue, 17 Mar 2020 16:35:42 +0000
+Message-ID: <e5df172c76dd4bb4aeb45e4baef0eff3@AcuMS.aculab.com>
+References: <20200314164451.346497-1-slyfox@gentoo.org>
+ <20200316130414.GC12561@hirez.programming.kicks-ass.net>
+ <20200316132648.GM2156@tucnak>
+ <20200316134234.GE12561@hirez.programming.kicks-ass.net>
+ <20200316175450.GO26126@zn.tnic> <20200316180303.GR2156@tucnak>
+ <20200317143602.GC15609@zn.tnic> <20200317143914.GI2156@tucnak>
+ <20200317144942.GE15609@zn.tnic>
+In-Reply-To: <20200317144942.GE15609@zn.tnic>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1582739816-13167-1-git-send-email-jbaron@akamai.com>
-User-Agent: NeoMutt/20180716
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020, Jason Baron wrote:
+RnJvbTogQm9yaXNsYXYgUGV0a292DQo+IFNlbnQ6IDE3IE1hcmNoIDIwMjAgMTQ6NTANCj4gT24g
+VHVlLCBNYXIgMTcsIDIwMjAgYXQgMDM6Mzk6MTRQTSArMDEwMCwgSmFrdWIgSmVsaW5layB3cm90
+ZToNCj4gPiBUaGF0IGlzIGJlY2F1c2UgdGhlIG9wdGlvbiBpcyBjYWxsZWQgLWZuby1zdGFjay1w
+cm90ZWN0b3IsIHNvIG9uZSBuZWVkcyB0bw0KPiA+IHVzZSBfX2F0dHJpYnV0ZV9fKChvcHRpbWl6
+ZSgibm8tc3RhY2stcHJvdGVjdG9yIikpKQ0KPiANCj4gSGEsIHRoYXQgd29ya3MgZXZlbiEgOi0p
+DQo+IA0KPiBBbmQgbXkgZ3Vlc3QgYm9vdHMuDQo+IA0KPiBJIGd1ZXNzIHdlIGNhbiBkbyB0aGF0
+IHRoZW4uIExvb2tzIGxpa2UgdGhlIG9wdGltYWwgc29sdXRpb24gdG8gbWUuDQo+IA0KPiBBbHNv
+LCBJJ20gYXNzdW1pbmcgb2xkZXIgZ2NjcyB3aWxsIHNpbXBseSBpZ25vcmUgdW5rbm93biBvcHRp
+bWl6ZQ0KPiBvcHRpb25zPw0KDQoNClVubGlrZWx5IHNpbmNlIGl0IHJlamVjdGVkIHRoZSBtaXNz
+cGVsdCBvbmUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJy
+YW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lz
+dHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
->Davidlohr Bueso pointed out that when CONFIG_DEBUG_LOCK_ALLOC is set
->ep_poll_safewake() can take several non-raw spinlocks after disabling
->interrupts. Since a spinlock can block in the -rt kernel, we can't take a
->spinlock after disabling interrupts. So let's re-work how we determine
->the nesting level such that it plays nicely with the -rt kernel.
->
->Let's introduce a 'nests' field in struct eventpoll that records the
->current nesting level during ep_poll_callback(). Then, if we nest again we
->can find the previous struct eventpoll that we were called from and
->increase our count by 1. The 'nests' field is protected by
->ep->poll_wait.lock.
->
->I've also moved the visited field to reduce the size of struct eventpoll
->from 184 bytes to 176 bytes on x86_64 for !CONFIG_DEBUG_LOCK_ALLOC,
->which is typical for a production config.
->
->Reported-by: Davidlohr Bueso <dbueso@suse.de>
->Signed-off-by: Jason Baron <jbaron@akamai.com>
-
-Sorry for the tardy reply. This looks good to me:
-
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
