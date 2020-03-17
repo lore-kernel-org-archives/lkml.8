@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98EDC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2713CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A5520719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03D620736
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443406;
-	bh=Yfg8VFTpWdJwPbLcR6+malbbWAsQhtfHj2Prwv67Ce0=;
+	s=default; t=1584443410;
+	bh=vbM1ab9MOzUQ7RvdFb1lG1mzaZA/Gi5HLNjFhLPiMrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NjoVSm/YtrhbNpRCkMCzh0oA8Od33EQ+DTivDtKptBhRg4I1m91B4GSlJH7CxGg7t
-	 1RxwKT9dXLOyGP/YfxdsgeywMtg/5kTLHfQkvfCICnfZ0nTmfMJrtkz1kJ2fRuBuko
-	 rq0ouii5fx4ecLr1jIVNdU95m4XTJx8geYq+n05Y=
+	b=glddvaRk6qDlmpjSPXb29QcxBGyL/sN8Bm4XgrOKZv+XszH//xXUpWylLw7g1P7F8
+	 Vg1nlK5h8sRdEyYge8Kf2jCjAOUG6zYVOOM1vgQXLqQiHcjxFtJxrO7JwJ0lna9D5p
+	 pY1yzKFjQ0gQTU/lVXYBLn4eRkAsZjD2s8ulbT+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgCQLKF (ORCPT
+        id S1729056AbgCQLKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52732 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729035AbgCQLKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:10:03 -0400
+        id S1727766AbgCQLKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:10:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B7D8205ED;
-        Tue, 17 Mar 2020 11:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D33A6205ED;
+        Tue, 17 Mar 2020 11:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443402;
-        bh=Yfg8VFTpWdJwPbLcR6+malbbWAsQhtfHj2Prwv67Ce0=;
+        s=default; t=1584443405;
+        bh=vbM1ab9MOzUQ7RvdFb1lG1mzaZA/Gi5HLNjFhLPiMrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OqgmpUzpMW4L+EfJFPnhfcuaEpbaTgFLxcvpMaX0MBQJ/cAnFCkRblK67lxDO6f+y
-         Tb1U243Dh7vTCbHZ5FP3bEacbWczsm5IM1IG5kO7XSsNC64TO1QjSG7Vc8MYqot/Uk
-         wjfEwh8x5zufU4zsSId44AxDDFt1WreGP/sDVKnw=
+        b=AtfMoOMJMizxU/p/WQI20Z7eX/a8sc+4udYFBGYdLX8tfOwJ5UXLCRLUaDIfUoHJK
+         mC56e0ZR1+xICMk4VSqJLTLJyINSV4bRMmq6QhBKafk1MDumk3W6vWnimFt1vQ4iGu
+         wZVj1hqi6RW8ifmS2TWyl7rA2l/Vf7pNf+/VIo+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 5.5 072/151] cgroup: fix psi_show() crash on 32bit ino archs
-Date:   Tue, 17 Mar 2020 11:54:42 +0100
-Message-Id: <20200317103331.602367219@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 5.5 073/151] cgroup: cgroup_procs_next should increase position index
+Date:   Tue, 17 Mar 2020 11:54:43 +0100
+Message-Id: <20200317103331.670890249@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,63 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 190ecb190a9cd8c0599d8499b901e3c32e87966a upstream.
+commit 2d4ecb030dcc90fb725ecbfc82ce5d6c37906e0e upstream.
 
-Similar to the commit d7495343228f ("cgroup: fix incorrect
-WARN_ON_ONCE() in cgroup_setup_root()"), cgroup_id(root_cgrp) does not
-equal to 1 on 32bit ino archs which triggers all sorts of issues with
-psi_show() on s390x. For example,
+If seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output:
 
- BUG: KASAN: slab-out-of-bounds in collect_percpu_times+0x2d0/
- Read of size 4 at addr 000000001e0ce000 by task read_all/3667
- collect_percpu_times+0x2d0/0x798
- psi_show+0x7c/0x2a8
- seq_read+0x2ac/0x830
- vfs_read+0x92/0x150
- ksys_read+0xe2/0x188
- system_call+0xd8/0x2b4
+1) dd bs=1 skip output of each 2nd elements
+$ dd if=/sys/fs/cgroup/cgroup.procs bs=8 count=1
+2
+3
+4
+5
+1+0 records in
+1+0 records out
+8 bytes copied, 0,000267297 s, 29,9 kB/s
+[test@localhost ~]$ dd if=/sys/fs/cgroup/cgroup.procs bs=1 count=8
+2
+4 <<< NB! 3 was skipped
+6 <<<    ... and 5 too
+8 <<<    ... and 7
+8+0 records in
+8+0 records out
+8 bytes copied, 5,2123e-05 s, 153 kB/s
 
-Fix it by using cgroup_ino().
+ This happen because __cgroup_procs_start() makes an extra
+ extra cgroup_procs_next() call
 
-Fixes: 743210386c03 ("cgroup: use cgrp->kn->id as the cgroup ID")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+2) read after lseek beyond end of file generates whole last line.
+3) read after lseek into middle of last line generates
+expected rest of last line and unexpected whole line once again.
+
+Additionally patch removes an extra position index changes in
+__cgroup_procs_start()
+
+Cc: stable@vger.kernel.org
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: stable@vger.kernel.org # v5.5
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cgroup/cgroup.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/cgroup/cgroup.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 --- a/kernel/cgroup/cgroup.c
 +++ b/kernel/cgroup/cgroup.c
-@@ -3547,21 +3547,21 @@ static int cpu_stat_show(struct seq_file
- static int cgroup_io_pressure_show(struct seq_file *seq, void *v)
- {
- 	struct cgroup *cgrp = seq_css(seq)->cgroup;
--	struct psi_group *psi = cgroup_id(cgrp) == 1 ? &psi_system : &cgrp->psi;
-+	struct psi_group *psi = cgroup_ino(cgrp) == 1 ? &psi_system : &cgrp->psi;
+@@ -4600,6 +4600,9 @@ static void *cgroup_procs_next(struct se
+ 	struct kernfs_open_file *of = s->private;
+ 	struct css_task_iter *it = of->priv;
  
- 	return psi_show(seq, psi, PSI_IO);
++	if (pos)
++		(*pos)++;
++
+ 	return css_task_iter_next(it);
  }
- static int cgroup_memory_pressure_show(struct seq_file *seq, void *v)
- {
- 	struct cgroup *cgrp = seq_css(seq)->cgroup;
--	struct psi_group *psi = cgroup_id(cgrp) == 1 ? &psi_system : &cgrp->psi;
-+	struct psi_group *psi = cgroup_ino(cgrp) == 1 ? &psi_system : &cgrp->psi;
  
- 	return psi_show(seq, psi, PSI_MEM);
- }
- static int cgroup_cpu_pressure_show(struct seq_file *seq, void *v)
- {
- 	struct cgroup *cgrp = seq_css(seq)->cgroup;
--	struct psi_group *psi = cgroup_id(cgrp) == 1 ? &psi_system : &cgrp->psi;
-+	struct psi_group *psi = cgroup_ino(cgrp) == 1 ? &psi_system : &cgrp->psi;
+@@ -4615,7 +4618,7 @@ static void *__cgroup_procs_start(struct
+ 	 * from position 0, so we can simply keep iterating on !0 *pos.
+ 	 */
+ 	if (!it) {
+-		if (WARN_ON_ONCE((*pos)++))
++		if (WARN_ON_ONCE((*pos)))
+ 			return ERR_PTR(-EINVAL);
  
- 	return psi_show(seq, psi, PSI_CPU);
+ 		it = kzalloc(sizeof(*it), GFP_KERNEL);
+@@ -4623,10 +4626,11 @@ static void *__cgroup_procs_start(struct
+ 			return ERR_PTR(-ENOMEM);
+ 		of->priv = it;
+ 		css_task_iter_start(&cgrp->self, iter_flags, it);
+-	} else if (!(*pos)++) {
++	} else if (!(*pos)) {
+ 		css_task_iter_end(it);
+ 		css_task_iter_start(&cgrp->self, iter_flags, it);
+-	}
++	} else
++		return it->cur_task;
+ 
+ 	return cgroup_procs_next(s, NULL, NULL);
  }
 
 
