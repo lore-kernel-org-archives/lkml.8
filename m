@@ -2,101 +2,184 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D46EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5350DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E372051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2854E2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cDuzR/o5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w+O5kauc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgCQUVA (ORCPT
+        id S1726781AbgCQUWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:21:00 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40687 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgCQUU7 (ORCPT
+        Tue, 17 Mar 2020 16:22:13 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43287 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgCQUWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:20:59 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h11so10107156plk.7
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:20:57 -0700 (PDT)
+        Tue, 17 Mar 2020 16:22:12 -0400
+Received: by mail-lf1-f68.google.com with SMTP id n20so15039566lfl.10
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:22:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9OK68t7TUQtw3LyqGzDkiyJ3oB07lydjnI/8ZCLVjiA=;
-        b=cDuzR/o52T2Hh4/O479e/RTlekL5mxBre7cYIj0XZoI4PyYPkn7+0PhzuplUknZKGj
-         M8Pb5DqcQracDAOHvDrkuyEyb1WzfghxMRd7jeJs2zroVt62lYa4rOJqOi9DxXscZseg
-         JYWvdXoeVPI+hKqRqvZcRz6WDkZiwSXGq5hrk=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EdMXPbO8zSOEulSWNJSHIe0WVwdpQxRK/F6PIs8+nw4=;
+        b=w+O5kaucR7+KHOXBI6Ds3VVyyKM8T5i60xPnhOxsr2pi+JOOa73Vkx9rbjKOQnWTRq
+         T9peWdJ4zYvNGbmwHnwoVLyWzXXpsdzihZUMOd3TzSA4U4IZDXS0e3mCNyz7li6j05kt
+         Tc/UVQz7CpAvnQVzef9+df3s8hdPGWDIjWr8yLA+dyxzgkpW43QnOflFkBN7mP5vsB/T
+         SUWCrhGNht6Fjge/l7utK+OzCO138piQ548D10V5DKkunAxpcXixe1NfHg0utSnsZabx
+         pnPybtKnrpF8XICO3CW4ux1orTK10CncX+ccjpzweOX5n+7Tv/VyIU+ArnhA8YIoapM4
+         f4mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9OK68t7TUQtw3LyqGzDkiyJ3oB07lydjnI/8ZCLVjiA=;
-        b=SRbADd6V+0yzowHlRibUnWyDOAk0fZ+3TojiJWMzDT9s1bZQLRyVeLe2Ef49+H//AW
-         7Lj3KdxegJh+Pmz5hWs44FibKJsdhqZTgTieeVJmGnRpdBNAOjDohAf2KCmQsOz0fCN0
-         3FzmX2Cv9fL+o/+uGqzAz8CFEtlDKmkLgM3FgdBJagO8uNzbCb9XbO5/oqp/ad8hZK9U
-         kDcboTnPAlsAmiz1meIBwKAJs7FejN/viunJAWa9CxQqGOx6CHkqQ0WB9yd15Q9aL5RX
-         eZXGJfedgNdih5JMkvyH7g1WBo+5FISSVpHvB8ihApp7ZBGx2PmWYCDTR76z+Q5GMeQ/
-         ASUw==
-X-Gm-Message-State: ANhLgQ1lxdzxTeFzRoY7wMr3rzJwa40AF2OSpCmj+x9rHbOukGs4KyU7
-        jqGLzsdpPaA6z0Ncl/M6iA4iuQ==
-X-Google-Smtp-Source: ADFU+vvYV0kEPv1VNXIa+fmKBL/iOs6miQA9gPwamG4IvHuKcJ03IQ/1U+4O/NAmOlwwzniOHlF9ew==
-X-Received: by 2002:a17:902:e981:: with SMTP id f1mr416010plb.103.1584476456804;
-        Tue, 17 Mar 2020 13:20:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x18sm4033833pfo.148.2020.03.17.13.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 13:20:55 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 13:20:54 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Anton Protopopov <a.s.protopopov@gmail.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH] seccomp: allow BPF_MOD ALU instructions
-Message-ID: <202003171314.387F3F187D@keescook>
-References: <20200316163646.2465-1-a.s.protopopov@gmail.com>
- <202003161423.B51FDA8083@keescook>
- <CAGn_itw594Q_-4gC8=3jjRGF-wx90GeXMWBAz54X-UEer9pbtA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EdMXPbO8zSOEulSWNJSHIe0WVwdpQxRK/F6PIs8+nw4=;
+        b=KN1aGIhsG6P/DJR3hyUtXJvOXmgE4hyp65OvTnl77ur32jhWWXA0I3KO3nCPhKIDsl
+         yD694TMTDGcnJQxZu1DnEv5gj1P39RySxBRquADhy+mKi7V87XDArmeEDjDmv6H2tA7Y
+         ZOlQbNDsveq1yTUZdlNXTYKCh+Xj4+Ej/evUd7yMD6VkaemuoKLN1Ga+CMHltr5GyCKf
+         A8Hzm5u4XU7Z1cRkbzAOz9vC02KFhCn2YJfoytiUJZZDavLOGG5QvPmQ/uaUkGbu5+p0
+         oshs+29I2zWP2VQrIINsmkUBf9csOEQr3WdBuSyI7gBT4zqpI+84ULY+lh2hAaD/eRiZ
+         sadA==
+X-Gm-Message-State: ANhLgQ34ztvSEhkTAa1eV1XSEB84zP1oJX6DZSzGCdRO7fQTjA6jnUAH
+        IMPUqEElKKCi4dK2rYkBMwB41hy4o05ohzKNd9aeh72FaDXJlg==
+X-Google-Smtp-Source: ADFU+vsqrqY5XaH1UaQ1opW1FSoMww78T+n7siei0d8Rc5gl3j9VqaydmtiCg45O3uYL9SVwbipWuXT+CCxhGzYVyDA=
+X-Received: by 2002:a05:6512:511:: with SMTP id o17mr664988lfb.74.1584476528137;
+ Tue, 17 Mar 2020 13:22:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGn_itw594Q_-4gC8=3jjRGF-wx90GeXMWBAz54X-UEer9pbtA@mail.gmail.com>
+References: <20200317103326.593639086@linuxfoundation.org>
+In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 18 Mar 2020 01:51:56 +0530
+Message-ID: <CA+G9fYsNxuHUFmPwOn9JmJN+-NM1TF-io8SnSs+XehCB+vrTEw@mail.gmail.com>
+Subject: Re: [PATCH 5.5 000/151] 5.5.10-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 06:17:34PM -0400, Anton Protopopov wrote:
-> and in every case to walk only a corresponding factor-list. In my case
-> I had a list of ~40 syscall numbers and after this change filter
-> executed in 17.25 instructions on average per syscall vs. 45
-> instructions for the linear filter (so this removes about 30
-> instructions penalty per every syscall). To replace "mod #4" I
-> actually used "and #3", but this obviously doesn't work for
-> non-power-of-two divisors. If I would use "mod 5", then it would give
-> me about 15.5 instructions on average.
+On Tue, 17 Mar 2020 at 16:37, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.5.10 release.
+> There are 151 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 19 Mar 2020 10:31:16 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.5.10-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.5.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Gotcha. My real concern is with breaking the ABI here -- using BPF_MOD
-would mean a process couldn't run on older kernels without some tricks
-on the seccomp side.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Since the syscall list is static for a given filter, why not arrange it
-as a binary search? That should get even better average instructions
-as O(log n) instead of O(n).
+Summary
+------------------------------------------------------------------------
 
-Though frankly I've also been considering an ABI version bump for adding
-a syscall bitmap feature: the vast majority of seccomp filters are just
-binary yes/no across a list of syscalls. Only the special cases need
-special handling (arg inspection, fd notification, etc). Then these
-kinds of filters could run as O(1).
+kernel: 5.5.10-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.5.y
+git commit: 97969bd1700945fbc9ef82238f6a2d5a390e5b4d
+git describe: v5.5.9-152-g97969bd17009
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
+ld/v5.5.9-152-g97969bd17009
 
--- 
-Kees Cook
+No regressions (compared to build v5.5.9)
+
+No fixes (compared to build v5.5.9)
+
+Ran 25803 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-dio-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* perf
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-commands-kasan-tests
+* ltp-containers-kasan-tests
+* ltp-cve-kasan-tests
+* ltp-fs-kasan-tests
+* ltp-ipc-kasan-tests
+* ltp-math-kasan-tests
+* ltp-sched-kasan-tests
+* ltp-syscalls-kasan-tests
+* kvm-unit-tests
+* ltp-crypto-tests
+* ltp-open-posix-tests
+* network-basic-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
