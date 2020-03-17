@@ -2,165 +2,174 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889C2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F4CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6100320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C379F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gCt6PuOl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GxBhbvkm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgCQJ4R (ORCPT
+        id S1726277AbgCQJ5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:56:17 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38698 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgCQJ4P (ORCPT
+        Tue, 17 Mar 2020 05:57:34 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:45794 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgCQJ5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:56:15 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s1so3029811wrv.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=To+ZBrVO7etOV/SjBRId9Z6wmLhx8Z2t4f3TOlZx1jE=;
-        b=gCt6PuOl3Pf14jrW7CShNKEAx6VEl4w9WHMOpbcHEdj/DxcqNOt+RVOr88DIpYWcr6
-         9bJIRUNGJR6UTaaO1Vq3bhpbZsuyOv1BUC7BjHYVy2ZQxde6qyfto63LQS04JHoL6kXt
-         XaSZc/N/8FyY69mcZVR+I7+e9MDH3734h6R3KvFTW3nZUqATwcdTYabXrjav+t0JWSYO
-         sT7QWzSkvbiFcTKKp4RKzisUQfD+pD0/EFQh9mbpN5cVx/11NceyTxdH4RS83pM2NZdz
-         7Ii5CcbF7f8v9KZau6JUjSh2e3Mj+CBwUbn4gGyBeuKZ9MboeEL19XfudGnGM9vj4KxU
-         1oKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=To+ZBrVO7etOV/SjBRId9Z6wmLhx8Z2t4f3TOlZx1jE=;
-        b=e5o9okH9D1q51VeZePIBB+8Xh2BvNtobTfvFtZpGLuF3dPKrQguq9FRzOzacm3ZNEZ
-         bPiiPHnlsbe7XqKmUpi4pay1ikqwoqYw8jd/VLWkHpWMsYS0M4x8N23ELsvmYZZUiUDI
-         Dx4ja3nc2lT1yXB18qSx8Wo7n+kc3DU1HX2YNNY6suCsU4iO1cCay++JP8/7FumlBjYK
-         eQvQ3yRw35nzpsQX0ufyHm2BwlMZKRGGtRTGGbheL+jIy/lJ1VdmoLyUcatUtq8T0RPE
-         9iaQR2J/3XugX3hzyoEVd12Puz8+25o7pkqucrgPi5fmFFBfRA67xj43cP+ABxfDT8lM
-         c18w==
-X-Gm-Message-State: ANhLgQ1Wx6peZ9EpxSGnFa94ncHAcopIAkyrAK/SQDhj4TjIz6Ukcic9
-        qAs7xPKXz+c8fQR1hbAiQBMC4Q==
-X-Google-Smtp-Source: ADFU+vvSmH4BQWYSEJ6orhlFnlf4qay25LVcbKQQgE5YeEkhjFWKQMiRb2awtyD7VI4kEaQAeIoH5w==
-X-Received: by 2002:a5d:528e:: with SMTP id c14mr5246370wrv.308.1584438973380;
-        Tue, 17 Mar 2020 02:56:13 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id a184sm3394970wmf.29.2020.03.17.02.56.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 02:56:12 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        linux-kernel@vger.kernel.org, pierre-louis.bossart@linux.intel.com,
-        vkoul@kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/2] ASoC: codecs: wsa881x: remove soundwire stream handling
-Date:   Tue, 17 Mar 2020 09:53:51 +0000
-Message-Id: <20200317095351.15582-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200317095351.15582-1-srinivas.kandagatla@linaro.org>
-References: <20200317095351.15582-1-srinivas.kandagatla@linaro.org>
+        Tue, 17 Mar 2020 05:57:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02H9vPUX102623;
+        Tue, 17 Mar 2020 04:57:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584439045;
+        bh=6DPCQb5gnHUagCHjkwvxLKMIM/+htnKM5PjHBAvyfes=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=GxBhbvkmrHZzf5YgL+hwLkN2ISuz4NI4ARYucNHNRz8ZXeMeUN+wVt92uCtX9WxGA
+         wGVRa9GcWzXAICNOClokKsBdFEKVSof4+ijAgwwDpH5VTAgqO6n+u4nJyGXqsQoZXS
+         LFqSSUnWI2Yt9WLVenujueHJ6KbMbq8JdUv/VQpM=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02H9vPN5039826
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Mar 2020 04:57:25 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Mar 2020 04:57:24 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Mar 2020 04:57:24 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H9vIKS095155;
+        Tue, 17 Mar 2020 04:57:22 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v2 1/5] misc: pci_endpoint_test: Avoid using module parameter to determine irqtype
+Date:   Tue, 17 Mar 2020 15:31:54 +0530
+Message-ID: <20200317100158.4692-2-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200317100158.4692-1-kishon@ti.com>
+References: <20200317100158.4692-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There could be multiple instances of this codec on any platform,
-so handling stream directly in this codec driver can lead to
-multiple calls to prepare/enable/disable on the same SoundWire stream.
-Move this stream handling to machine driver to fix this issue.
+commit e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
+uses module parameter 'irqtype' in pci_endpoint_test_set_irq()
+to check if irq vectors of a particular type (MSI or MSI-X or
+LEGACY) is already allocated. However with multi-function devices,
+'irqtype' will not correctly reflect the irq type of the PCI device.
+Fix it here by adding 'irqtype' for each PCI device to show the
+irq type of a particular PCI device.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Fixes: e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- sound/soc/codecs/wsa881x.c | 44 +-------------------------------------
- 1 file changed, 1 insertion(+), 43 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/wsa881x.c b/sound/soc/codecs/wsa881x.c
-index 1810e0775efe..d39d479e2378 100644
---- a/sound/soc/codecs/wsa881x.c
-+++ b/sound/soc/codecs/wsa881x.c
-@@ -680,7 +680,6 @@ struct wsa881x_priv {
- 	int active_ports;
- 	bool port_prepared[WSA881X_MAX_SWR_PORTS];
- 	bool port_enable[WSA881X_MAX_SWR_PORTS];
--	bool stream_prepared;
- };
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 8682867ac14a..ca680635d7a9 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -103,6 +103,7 @@ struct pci_endpoint_test {
+ 	struct completion irq_raised;
+ 	int		last_irq;
+ 	int		num_irqs;
++	int		irq_type;
+ 	/* mutex to protect the ioctls */
+ 	struct mutex	mutex;
+ 	struct miscdevice miscdev;
+@@ -162,6 +163,7 @@ static void pci_endpoint_test_free_irq_vectors(struct pci_endpoint_test *test)
+ 	struct pci_dev *pdev = test->pdev;
  
- static void wsa881x_init(struct wsa881x_priv *wsa881x)
-@@ -958,41 +957,6 @@ static const struct snd_soc_dapm_widget wsa881x_dapm_widgets[] = {
- 	SND_SOC_DAPM_OUTPUT("SPKR"),
- };
- 
--static int wsa881x_prepare(struct snd_pcm_substream *substream,
--			   struct snd_soc_dai *dai)
--{
--	struct wsa881x_priv *wsa881x = dev_get_drvdata(dai->dev);
--	int ret;
--
--	if (wsa881x->stream_prepared) {
--		sdw_disable_stream(wsa881x->sruntime);
--		sdw_deprepare_stream(wsa881x->sruntime);
--		wsa881x->stream_prepared = false;
--	}
--
--
--	ret = sdw_prepare_stream(wsa881x->sruntime);
--	if (ret)
--		return ret;
--
--	/**
--	 * NOTE: there is a strict hw requirement about the ordering of port
--	 * enables and actual PA enable. PA enable should only happen after
--	 * soundwire ports are enabled if not DC on the line is accumulated
--	 * resulting in Click/Pop Noise
--	 * PA enable/mute are handled as part of DAPM and digital mute.
--	 */
--
--	ret = sdw_enable_stream(wsa881x->sruntime);
--	if (ret) {
--		sdw_deprepare_stream(wsa881x->sruntime);
--		return ret;
--	}
--	wsa881x->stream_prepared = true;
--
--	return ret;
--}
--
- static int wsa881x_hw_params(struct snd_pcm_substream *substream,
- 			     struct snd_pcm_hw_params *params,
- 			     struct snd_soc_dai *dai)
-@@ -1020,12 +984,7 @@ static int wsa881x_hw_free(struct snd_pcm_substream *substream,
- {
- 	struct wsa881x_priv *wsa881x = dev_get_drvdata(dai->dev);
- 
--	if (wsa881x->stream_prepared) {
--		sdw_disable_stream(wsa881x->sruntime);
--		sdw_deprepare_stream(wsa881x->sruntime);
--		sdw_stream_remove_slave(wsa881x->slave, wsa881x->sruntime);
--		wsa881x->stream_prepared = false;
--	}
-+	sdw_stream_remove_slave(wsa881x->slave, wsa881x->sruntime);
- 
- 	return 0;
+ 	pci_free_irq_vectors(pdev);
++	test->irq_type = IRQ_TYPE_UNDEFINED;
  }
-@@ -1056,7 +1015,6 @@ static int wsa881x_digital_mute(struct snd_soc_dai *dai, int mute, int stream)
  
- static struct snd_soc_dai_ops wsa881x_dai_ops = {
- 	.hw_params = wsa881x_hw_params,
--	.prepare = wsa881x_prepare,
- 	.hw_free = wsa881x_hw_free,
- 	.mute_stream = wsa881x_digital_mute,
- 	.set_sdw_stream = wsa881x_set_sdw_stream,
+ static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
+@@ -196,6 +198,8 @@ static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
+ 		irq = 0;
+ 		res = false;
+ 	}
++
++	test->irq_type = type;
+ 	test->num_irqs = irq;
+ 
+ 	return res;
+@@ -340,6 +344,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+ 	dma_addr_t orig_dst_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
++	int irq_type = test->irq_type;
+ 	u32 src_crc32;
+ 	u32 dst_crc32;
+ 	int err;
+@@ -473,6 +478,7 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test,
+ 	dma_addr_t orig_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
++	int irq_type = test->irq_type;
+ 	size_t size;
+ 	u32 crc32;
+ 	int err;
+@@ -571,6 +577,7 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test,
+ 	dma_addr_t orig_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
++	int irq_type = test->irq_type;
+ 	u32 crc32;
+ 	int err;
+ 
+@@ -656,7 +663,7 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+ 		return false;
+ 	}
+ 
+-	if (irq_type == req_irq_type)
++	if (test->irq_type == req_irq_type)
+ 		return true;
+ 
+ 	pci_endpoint_test_release_irq(test);
+@@ -668,12 +675,10 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+ 	if (!pci_endpoint_test_request_irq(test))
+ 		goto err;
+ 
+-	irq_type = req_irq_type;
+ 	return true;
+ 
+ err:
+ 	pci_endpoint_test_free_irq_vectors(test);
+-	irq_type = IRQ_TYPE_UNDEFINED;
+ 	return false;
+ }
+ 
+@@ -753,6 +758,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+ 	test->test_reg_bar = 0;
+ 	test->alignment = 0;
+ 	test->pdev = pdev;
++	test->irq_type = IRQ_TYPE_UNDEFINED;
+ 
+ 	if (no_msi)
+ 		irq_type = IRQ_TYPE_LEGACY;
 -- 
-2.21.0
+2.17.1
 
