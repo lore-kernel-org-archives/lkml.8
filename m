@@ -2,142 +2,156 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B65C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB2EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E359C20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6C920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:55:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="XVkIrOVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgCQHzr (ORCPT
+        id S1726345AbgCQHzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:55:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:45769 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgCQHzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:55:47 -0400
-IronPort-SDR: /Hm/qcicNixH3kqTxbs+O+3dJLb4Jt6PP3Cqu3/GtmgKSjRYdUGXW/qy7Le92p0+wMapf+6AW1
- VtgoPra1XLBw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 00:55:47 -0700
-IronPort-SDR: eOFSdfZVZQknN6RXM/9BeO2Nd2xpz2d7sQp4msxwVTTZseODz8LEN/z76AcPAdzF9Scm4iCM4c
- 1r3hOkOnq9mg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="279314858"
-Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Mar 2020 00:55:44 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Eric Hankland <ehankland@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
-Subject: [PATCH] kvm/x86: Reduce counter period change overhead and delay the effective time
-Date:   Tue, 17 Mar 2020 15:53:15 +0800
-Message-Id: <20200317075315.70933-1-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.1
+        Tue, 17 Mar 2020 03:55:49 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:37848 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgCQHzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 03:55:48 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 989095C0103;
+        Tue, 17 Mar 2020 08:55:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1584431745;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p3KVNi+Ory+PQWNhNehyp69k/05vP43IyXekB0qsnHY=;
+        b=XVkIrOVEZKLTLr/TEn5jiDgZkGpH+kf+fDq2LuXJxf4Wu19ollYOy7FNTptWdotjlo0Bnl
+        9J7hiQ/PzatQP9rX1qfsxfaj24Enfe708N68CAl5Z0v3QhE8gGgVWQSvqbUvbnoUdzUAQe
+        jCrsMwbWP3q2cGDo9rYIUlzWfPEFsqU=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 17 Mar 2020 08:55:45 +0100
+From:   Stefan Agner <stefan@agner.ch>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        Jian Cai <jiancai@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] ARM: warn if pre-UAL assembler syntax is used
+In-Reply-To: <CAKwvOdneF5nXgx3Rh6=NhPK+q93VRhs7mDCcK2eGY0e2rOqqnQ@mail.gmail.com>
+References: <cd74f11eaee5d8fe3599280eb1e3812ce577c835.1582849064.git.stefan@agner.ch>
+ <CAKwvOdneF5nXgx3Rh6=NhPK+q93VRhs7mDCcK2eGY0e2rOqqnQ@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.1
+Message-ID: <dc6a2492b5d7726ccda09ae69543f62f@agner.ch>
+X-Sender: stefan@agner.ch
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cost of perf_event_period() is unstable, and when the guest samples
-multiple events, the overhead increases dramatically (5378 ns on E5-2699).
+On 2020-03-17 01:00, Nick Desaulniers wrote:
+> Revert "ARM: 8846/1: warn if divided syntax assembler is used"On Thu,
+> Feb 27, 2020 at 4:19 PM Stefan Agner <stefan@agner.ch> wrote:
+>>
+>> Remove the -mno-warn-deprecated assembler flag for GCC versions newer
+>> than 5.1 to make sure the GNU assembler warns in case non-unified
+>> syntax is used.
+> 
+> Hi Stefan, sorry for the late reply from me; digging out my backlog.
+> Do you happen to have a godbolt link perhaps that demonstrates this?
+> It sounds like GCC itself is emitting pre-UAL?
 
-For a non-running counter, the effective time of the new period is when
-its corresponding enable bit is enabled. Calling perf_event_period()
-in advance is superfluous. For a running counter, it's safe to delay the
-effective time until the KVM_REQ_PMU event is handled. If there are
-multiple perf_event_period() calls before handling KVM_REQ_PMU,
-it helps to reduce the total cost.
+Yes, that is what Russell observed and caused the revert:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b752bb405a13
 
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
+I do not have a godbolt link at hand, I just built the complete kernel
+using some GCC toolchains I had locally available and noticed that the
+problem persists up to and including GCC 5.0. I did not track down what
+exactly is causing GCC to emit pre-UAL.
 
----
- arch/x86/kvm/pmu.c           | 11 -----------
- arch/x86/kvm/pmu.h           | 11 +++++++++++
- arch/x86/kvm/vmx/pmu_intel.c | 10 ++++------
- 3 files changed, 15 insertions(+), 17 deletions(-)
+> 
+>>
+>> This also prevents a warning when building with Clang and enabling
+>> its integrated assembler:
+>> clang-10: error: unsupported argument '-mno-warn-deprecated' to option 'Wa,'
+>>
+>> This is a second attempt of commit e8c24bbda7d5 ("ARM: 8846/1: warn if
+>> divided syntax assembler is used").
+> 
+> Would it be helpful to also make note of
+> commit b752bb405a13 ("Revert "ARM: 8846/1: warn if divided syntax
+> assembler is used"")?
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index d1f8ca57d354..527a8bb85080 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -437,17 +437,6 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
- 	kvm_pmu_refresh(vcpu);
- }
- 
--static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
--{
--	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
--
--	if (pmc_is_fixed(pmc))
--		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
--			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
--
--	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
--}
--
- /* Release perf_events for vPMCs that have been unused for a full time slice.  */
- void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
- {
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index d7da2b9e0755..cd112e825d2c 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -138,6 +138,17 @@ static inline u64 get_sample_period(struct kvm_pmc *pmc, u64 counter_value)
- 	return sample_period;
- }
- 
-+static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
-+{
-+	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
-+
-+	if (pmc_is_fixed(pmc))
-+		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
-+			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
-+
-+	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
-+}
-+
- void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
- void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
- void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 7c857737b438..4e689273eb05 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -263,15 +263,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			if (!msr_info->host_initiated)
- 				data = (s64)(s32)data;
- 			pmc->counter += data - pmc_read_counter(pmc);
--			if (pmc->perf_event)
--				perf_event_period(pmc->perf_event,
--						  get_sample_period(pmc, data));
-+			if (pmc_speculative_in_use(pmc)) {
-+				kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
- 			return 0;
- 		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
- 			pmc->counter += data - pmc_read_counter(pmc);
--			if (pmc->perf_event)
--				perf_event_period(pmc->perf_event,
--						  get_sample_period(pmc, data));
-+			if (pmc_speculative_in_use(pmc)) {
-+				kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
- 			return 0;
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
- 			if (data == pmc->eventsel)
--- 
-2.21.1
+Sure, I can do that.
 
+> 
+> 
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>  arch/arm/Makefile | 14 +++++++++-----
+>>  1 file changed, 9 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+>> index db857d07114f..a6c8c9f39185 100644
+>> --- a/arch/arm/Makefile
+>> +++ b/arch/arm/Makefile
+>> @@ -119,21 +119,25 @@ ifeq ($(CONFIG_CC_IS_CLANG),y)
+>>  CFLAGS_ABI     += -meabi gnu
+>>  endif
+>>
+>> -# Accept old syntax despite ".syntax unified"
+>> -AFLAGS_NOWARN  :=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
+> 
+> This existing code is quite bad for Clang, which doesn't support
+> `-Wa,-mno-warn-deprecated`, so this falls back to `-Wa,-W`, which
+> disables all warnings from the assembler, which we definitely do not
+> want.  That alone is worth putting in the GCC guard.  But I would like
+> more info about GCC above before signing off.
+
+FWIW, I submitted this to the patch tracker already, but I don't think
+it got merged already.
+
+--
+Stefan
+
+> 
+>> -
+>>  ifeq ($(CONFIG_THUMB2_KERNEL),y)
+>> -CFLAGS_ISA     :=-mthumb -Wa,-mimplicit-it=always $(AFLAGS_NOWARN)
+>> +CFLAGS_ISA     :=-mthumb -Wa,-mimplicit-it=always
+>>  AFLAGS_ISA     :=$(CFLAGS_ISA) -Wa$(comma)-mthumb
+>>  # Work around buggy relocation from gas if requested:
+>>  ifeq ($(CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11),y)
+>>  KBUILD_CFLAGS_MODULE   +=-fno-optimize-sibling-calls
+>>  endif
+>>  else
+>> -CFLAGS_ISA     :=$(call cc-option,-marm,) $(AFLAGS_NOWARN)
+>> +CFLAGS_ISA     :=$(call cc-option,-marm,)
+>>  AFLAGS_ISA     :=$(CFLAGS_ISA)
+>>  endif
+>>
+>> +ifeq ($(CONFIG_CC_IS_GCC),y)
+>> +ifeq ($(call cc-ifversion, -lt, 0501, y), y)
+>> +# GCC <5.1 emits pre-UAL code and causes assembler warnings, suppress them
+>> +CFLAGS_ISA     +=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
+>> +endif
+>> +endif
+>> +
+>>  # Need -Uarm for gcc < 3.x
+>>  KBUILD_CFLAGS  +=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
+>>  KBUILD_AFLAGS  +=$(CFLAGS_ABI) $(AFLAGS_ISA) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
+>> --
