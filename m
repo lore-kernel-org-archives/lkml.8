@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9B8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3D2C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31CE820719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26E520735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443363;
-	bh=WNNeA3JITfKxApQy3OEVpUyCpZiwFtvxWUGcE/gSiJA=;
+	s=default; t=1584443367;
+	bh=EpCqJ8YLCozqm4hfYxQdwHbZfUkCD49KEscoo9saBiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGK4UsjiM+d4dfV76Z7gyPLfvh4u1KBRdqHUkIsMBPwm3NXBFBDqHptf3+WroRo3I
-	 QKmCw1HV+fwzMQ+NeriU7Zzb2dQS6l6h4NC4asjStkgWB+7x5QpmqLFu9FZ6OAdD/Q
-	 beAAQpOdKVwRhQn/YJ/20ooJyqfs63iH6iHeW2mY=
+	b=ZzUMcUPEuY4x1aDzvBsqvNaBrjD1I0gFKsY5Jw+66rK7nUFG+NJW9RIS2Car6C4LM
+	 wpjBhoD+va3WfEaEgZxpf+PvCjgmzmVDpZ+oZr7xXdt9XsDWypXJK5OhWTNQOQM83e
+	 D5SFEZVdwcV8z3wwVVI+TkpBi+KGE59AijvG5vHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgCQLJV (ORCPT
+        id S1727026AbgCQLJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:09:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728940AbgCQLJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:09:19 -0400
+        id S1728485AbgCQLJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:09:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6B0720714;
-        Tue, 17 Mar 2020 11:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C5F820658;
+        Tue, 17 Mar 2020 11:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443359;
-        bh=WNNeA3JITfKxApQy3OEVpUyCpZiwFtvxWUGcE/gSiJA=;
+        s=default; t=1584443363;
+        bh=EpCqJ8YLCozqm4hfYxQdwHbZfUkCD49KEscoo9saBiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y7v9ypkHKgFoNacOl5ZKsDKd9QI9HNjEX2+lkgWsfqWc9f5pMwklVftCvjctFAoeW
-         Vl39bFmnyvCfL88DhksgbKzW60NnZ5VgVZZd5bh6DTipKVKdVkO6XpwrN4lfrXJQ/C
-         nyKxlgwvx8QssKZqjmIzK9k0xZu4Zkcg8LUjrKQM=
+        b=U+mT6kYRgSFI8Z8JqyOn/J4JtwsqhrAV7ctmHMU5+uZRPWpqb60DLqZ+s37dTI4mS
+         aAeu+prHm45KSGqHYjZGag+EIHz/p8vUgTUp04E+3t82VUEmWfYBy1cGSgQ5A1sBmS
+         LPQl+UO1Vwmniy1x9nHo+roMx8xx6h82OorPnbJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 019/151] net/ipv6: use configured metric when add peer route
-Date:   Tue, 17 Mar 2020 11:53:49 +0100
-Message-Id: <20200317103328.206419095@linuxfoundation.org>
+Subject: [PATCH 5.5 020/151] netlink: Use netlink header as base to calculate bad attribute offset
+Date:   Tue, 17 Mar 2020 11:53:50 +0100
+Message-Id: <20200317103328.261317927@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -61,47 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 07758eb9ff52794fba15d03aa88d92dbd1b7d125 ]
+[ Upstream commit 84b3268027641401bb8ad4427a90a3cce2eb86f5 ]
 
-When we add peer address with metric configured, IPv4 could set the dest
-metric correctly, but IPv6 do not. e.g.
+Userspace might send a batch that is composed of several netlink
+messages. The netlink_ack() function must use the pointer to the netlink
+header as base to calculate the bad attribute offset.
 
-]# ip addr add 192.0.2.1 peer 192.0.2.2/32 dev eth1 metric 20
-]# ip route show dev eth1
-192.0.2.2 proto kernel scope link src 192.0.2.1 metric 20
-]# ip addr add 2001:db8::1 peer 2001:db8::2/128 dev eth1 metric 20
-]# ip -6 route show dev eth1
-2001:db8::1 proto kernel metric 20 pref medium
-2001:db8::2 proto kernel metric 256 pref medium
-
-Fix this by using configured metric instead of default one.
-
-Reported-by: Jianlin Shi <jishi@redhat.com>
-Fixes: 8308f3ff1753 ("net/ipv6: Add support for specifying metric of connected routes")
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Fixes: 2d4bc93368f5 ("netlink: extended ACK reporting")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/addrconf.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netlink/af_netlink.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -5987,9 +5987,9 @@ static void __ipv6_ifa_notify(int event,
- 		if (ifp->idev->cnf.forwarding)
- 			addrconf_join_anycast(ifp);
- 		if (!ipv6_addr_any(&ifp->peer_addr))
--			addrconf_prefix_route(&ifp->peer_addr, 128, 0,
--					      ifp->idev->dev, 0, 0,
--					      GFP_ATOMIC);
-+			addrconf_prefix_route(&ifp->peer_addr, 128,
-+					      ifp->rt_priority, ifp->idev->dev,
-+					      0, 0, GFP_ATOMIC);
- 		break;
- 	case RTM_DELADDR:
- 		if (ifp->idev->cnf.forwarding)
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -2434,7 +2434,7 @@ void netlink_ack(struct sk_buff *in_skb,
+ 							       in_skb->len))
+ 				WARN_ON(nla_put_u32(skb, NLMSGERR_ATTR_OFFS,
+ 						    (u8 *)extack->bad_attr -
+-						    in_skb->data));
++						    (u8 *)nlh));
+ 		} else {
+ 			if (extack->cookie_len)
+ 				WARN_ON(nla_put(skb, NLMSGERR_ATTR_COOKIE,
 
 
