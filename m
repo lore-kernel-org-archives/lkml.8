@@ -2,106 +2,155 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95393C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7623C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AA720735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9EBB20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OcS5SJSk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YEGcuymm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgCQRkp (ORCPT
+        id S1726713AbgCQRkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:40:45 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:36582 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726130AbgCQRko (ORCPT
+        Tue, 17 Mar 2020 13:40:49 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35236 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCQRkt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:40:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584466843;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3YlvCm1lBNLjiNpS/n2yOjJThq/QHDMua9Olu9Cwy6g=;
-        b=OcS5SJSkUIKWxtsFEL/OIcElz8KLEB4/bS3qcffss86Q5hB2yQqKya8nCUtH9k0cv0Cwr1
-        Mm0TpPmMvqIkFwOFqeG4shbw7D8yk61jWfJwOFsQOxwIZLNiMcK9iyrjX4H9ZYftAkZP2b
-        aWy65svJE1RoFfBhzxdsCwOSg0GKmzI=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-83-stm4TEUkPEq7AxQjkzI8rA-1; Tue, 17 Mar 2020 13:40:41 -0400
-X-MC-Unique: stm4TEUkPEq7AxQjkzI8rA-1
-Received: by mail-wm1-f71.google.com with SMTP id 20so64375wmk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:40:41 -0700 (PDT)
+        Tue, 17 Mar 2020 13:40:49 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h4so6227557wru.2;
+        Tue, 17 Mar 2020 10:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rc0VhOzC+cfi+lRAZOsev4h8V+6Va+aJEr9E8LvZgKM=;
+        b=YEGcuymmdA1koXtAzKhxXyAqsGbSjuSF9Gf/r5/tFJpfpAJtl554f4SPyWu4D9aPdV
+         U1eo6YunSh38qtdiE2pmwVXCk7x/6E+LUHBUXpj/6NzaBoI3mk9tVxADAX71vbvYYtX7
+         66RIYKj036o3dm0SH6DosZE7PZ/n2S2Y8m0QKysF21GALcCvi0vOh0Pf2hIoWCfXWwTb
+         2Pik0pZnRjaB8asBt5THZVPIeBbuefcq/q9BC7MrSE4pI7jjJirG6cV4mUfz0eAXK2zr
+         PLD9ZOrib1yfSqRJly+eqUh6JGh4Jo7XpIUo0HDdZNjOuWqMXbIYxkDmssiKhtFNCm9E
+         dPEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3YlvCm1lBNLjiNpS/n2yOjJThq/QHDMua9Olu9Cwy6g=;
-        b=UlLMMc7/2QlcY83ckvy37zrCeqpCFl7SAAVFGIvWZnCisNGnER6Swgk59jT5a1qCDI
-         Nj/LH+RIqQuQH2SbSum3Wz/0qGHzxlIMFfCR3LcoS5oWcL7aYwUC+DhmbvfenTT8bU/8
-         ULdhT+73y2pwVpu4cmIqV/Z4UoqJ1EMT3BazbhhEE/v6hTvy19SIvPI6DSCjJESHvFIT
-         Md35JTWiwjPRp35Ofg8UqYUb1hTC3P+5tE851k/HVivWLyUYDQPtiDgfNRyl8Q8UTtlM
-         aO5Vggf+VuuLKlnJvlqK5TGgYEobxRd7BlsLqWuOOG6WzIj5MZ/CCPgbzvRJJOn3E4Q5
-         wReg==
-X-Gm-Message-State: ANhLgQ0Z6JF31rrdaUwPuE1qx0fNZjwAAoeej/gMaMDe3UyLzQR3Qs2M
-        rMVRM/kmh2xJENY6v5QWNl8DyHxzn5lrPn+VSHQgcVhsaiiODe0it5WJaEu0AZmAOLxGx0JanAk
-        /IVqXsRDUtqsGOIat60YpbEpr
-X-Received: by 2002:a1c:1b4c:: with SMTP id b73mr140312wmb.17.1584466840408;
-        Tue, 17 Mar 2020 10:40:40 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vs92iD8sXBzTaC2wszHXrLF6Lp91CBQvFML4Ry1JpAZwSbj6GU/EyKGYKgxJ+6i26ac5kJdBQ==
-X-Received: by 2002:a1c:1b4c:: with SMTP id b73mr140298wmb.17.1584466840157;
-        Tue, 17 Mar 2020 10:40:40 -0700 (PDT)
-Received: from [192.168.178.58] ([151.21.15.227])
-        by smtp.gmail.com with ESMTPSA id d21sm5274133wrb.51.2020.03.17.10.40.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 10:40:39 -0700 (PDT)
-Subject: Re: [PATCH 06/10] KVM: nVMX: Convert local exit_reason to u16 in
- ...enter_non_root_mode()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200312184521.24579-1-sean.j.christopherson@intel.com>
- <20200312184521.24579-7-sean.j.christopherson@intel.com>
- <87pndgnyud.fsf@vitty.brq.redhat.com>
- <20200317052922.GQ24267@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <a6ad902e-f2ce-2df6-5f48-c9eb6e5c75d8@redhat.com>
-Date:   Tue, 17 Mar 2020 18:40:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rc0VhOzC+cfi+lRAZOsev4h8V+6Va+aJEr9E8LvZgKM=;
+        b=BoxjY3N0BLFnavaN1YTRxI+CeEhsvjrLwczr8Ac1bMPb31ztaWedE1G/YU1YP2v9Xo
+         5bM4Er6Gp0y0H2Cq3BYlQztgWyw3wind+IF7ZbVtucFmhjjpL0EAHshzu8dyH8OW8Vit
+         7jvUsY3NRNdajOoOyZcOL+k5HWXCOQj6Rkc3Kkhq7lM3QaDf8oz3mP1SDwy85Zfao3Eu
+         Duomjioze/DouXk0U/YrM4cUYuevo/IaLF44jcqd1sjKTff9ggMicJn6sJQsxt5xG2LT
+         k1nyQVXoykTUgHetRhZroe21HspwxQ+bWVHC8jBKj2jRizZncdxnKB4DjyTUq6HtaU1J
+         cccQ==
+X-Gm-Message-State: ANhLgQ0Up5wmCOAd/lor72ytx4j468Nt3dIUntKDmFwhhwJsSbn2nR66
+        h6G56xlggBrSlywscWI+P9KDCeUn
+X-Google-Smtp-Source: ADFU+vvJMLEildc7nNypq9mzxdWXUau/bFgKNV+o6iv6Bg9xgKaVE/V2kZVdo5OKLUcxi2q+rfgi8g==
+X-Received: by 2002:a5d:69cc:: with SMTP id s12mr161953wrw.20.1584466845960;
+        Tue, 17 Mar 2020 10:40:45 -0700 (PDT)
+Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
+        by smtp.gmail.com with ESMTPSA id o4sm5467990wrp.84.2020.03.17.10.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 10:40:44 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 18:40:43 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+Message-ID: <20200317174043.GA1464607@ulmo>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
 MIME-Version: 1.0
-In-Reply-To: <20200317052922.GQ24267@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Content-Disposition: inline
+In-Reply-To: <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/20 06:29, Sean Christopherson wrote:
->>>  
->>>  	load_vmcs12_host_state(vcpu, vmcs12);
->>> -	vmcs12->vm_exit_reason = exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY;
->>> +	vmcs12->vm_exit_reason = VMX_EXIT_REASONS_FAILED_VMENTRY | exit_reason;
->> My personal preference would be to do
->>  (u32)exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY 
->> instead but maybe I'm just not in love with implicit type convertion in C.
-> Either way works for me.  Paolo?
-> 
 
-Flip a coin? :)  I think your version is fine.
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Paolo
+On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
+> The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
+> Rename it to PWM_POLARITY_INVERTED.
 
+It isn't misspelled. "inversed" is a synonym for "inverted". Both
+spellings are correct.
+
+And as you noted in the cover letter, there's a conflict between the
+macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
+in the wrong order you'll get a compile error.
+
+The enum was named this way on purpose to make it separate from the
+definition for the DT bindings. Note that DT bindings are an ABI and can
+never change, whereas the enum pwm_polarity is part of a Linux internal
+API and doesn't have the same restrictions as an ABI.
+
+As far as I'm concerned this is completely unnecessary churn that's
+potentially going to come back and bite us, so I see no reason to accept
+this.
+
+Thierry
+
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5xC5cACgkQ3SOs138+
+s6Fzrg//W6eAtrfA02CGekiB6CchW1v901SEIXd0i/BUbGhUbBXgNAk0CdFr1oZF
+oWh3FArEd2Ugq3qvpgf4UqWlO/2IptBucOUVSwQ5Imuc+eS/JKxC3lriUcpyI519
+b5+MI+QPztSa8Nae3cVvDVd1zs+s5QE1J9TOJTINsayE0yxs2QDk7px+T2hP6S5y
+fZmxD7DxmhzzTjY9pUb7B8Km/c+g3iLZ2dOrjizHPQ0D6gjni2sAljxJXKBkExBG
+nSSO7pOuxA1Koi0/lKAQGtxKl1QbfH5aerdiSj8wi74C4DXTG/yHIU0x4YKpbu1d
+C0nSwCafh3P/dIz0ja7iv+8y02HB43gdu9tyA6dlVzIs7UAS/upZfwtLCI49zdOL
+Qq28oqgpytPujRWyFSdT7EisrlmqA4TlG6jvndwdhKiurjM98oNob5FiUYz/QebP
+cX0mZQFNM8UJjzhu51wkfu3NwtdIBXMWv+EhD8Kh7Ash60aI7LE2HltEC5Y/KqiW
+uprdNVNa09YyyZLgE0W1rDU4rsdPw+yxp/XR/vzPWR4eivXlrbPtkBxcZcZfHAmj
+Yg13OeYRbxUgR1Jx4vGYyRgV2wSNSyDcwqZ0vU0Z8C4C3qLFNqQPllTPonTSdcnX
+gQU9NZOlpo00W4TwrlO7I+3Ww9qNIvnHhMwcaOQGIca6+ZVYyfQ=
+=EuQk
+-----END PGP SIGNATURE-----
+
+--sdtB3X0nJg68CQEu--
