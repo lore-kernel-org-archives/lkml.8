@@ -2,135 +2,195 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E489BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819AEC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CE72073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:00:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ofQMSxU/"
+	by mail.kernel.org (Postfix) with ESMTP id 58D1520674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgCQSAE (ORCPT
+        id S1726697AbgCQSAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:00:04 -0400
-Received: from mail-eopbgr130087.outbound.protection.outlook.com ([40.107.13.87]:22244
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726189AbgCQSAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:00:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lm82Sdyz08yKSH7aweA/tfk0URzncasemay/w2XB+oBLTT8578m/KHFHO7hzF1R2C8LDzvpwmbqTnnSfjpbeMfdd14JLfhGBlnhk4SdYAYkkHkLLWoErpPmsqEwsWfqgsfYE1XuI19a398GR4ux2CK+NyMKq2tIsJAZUWKbGv4iWOdROWjnZ0W176TP49MbHw36oDishQkiRFBCQ3eHLcLwNIq9GEz+CqLUzVg0eu7bgmVNbmiDimfVm7gIi7d+sO4dqxuK05aZZCkKiryCRZk7ktjV5/UvAxqXXEpn6Tf79x0MuxNQCdL3RXVAHkmSz88aAm7BuEbUQSrLWEOK5fQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aTMe45VDREcnKLzoEYUYLXtPyyecLT47F4c8s2ZoP5E=;
- b=aRB2QdaqJjWRcqYhNPdNrjWqR492KDzeWAPQyDYSNTRfbSlZJ/dopFix7p/duwETpayJDI3sjraVM7e2od5gSnZAKSOAG5QOqPpNP7ntEJB5cGxaAPfTAB83TqKXap1B7yIZseV3RFohRqx4kzBgz0wwYfi/7TlkICu6xkk8CvpOti+8fGj4VfHMYE2A33wf2Yau4dVFYXCLaEoRBvDJjmDKV0mwjZGg3Mpdk2XFrBzbHwNEV1iS0WFJwJdAe8jzf7hRiZX8cPj9DMDO+TRGYdHMF1FwJoXxBuzb6Jd+EF98zcHA+7VqhEublvXqlsEkBI4k+0WDhOIiEoKRC5QCSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aTMe45VDREcnKLzoEYUYLXtPyyecLT47F4c8s2ZoP5E=;
- b=ofQMSxU/SzQFFt99RY0jiyyKBwwUdbOf3K5ciD9eTAkld931s7fAjavqnEzbwFOiYdjrNHbMEYhytKctKWLLJFYheEiRLCw37oa17XEaqk3I+BDcViYmOSS3s/3yjEMLbm85iMz/Uc4xEfSOdw6IzD5YcSqiZYCXYyx1zrR8luU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3389.eurprd04.prod.outlook.com (52.134.5.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.16; Tue, 17 Mar 2020 17:59:57 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 17:59:56 +0000
-Subject: Re: [PATCH v8 7/8] crypto: caam - enable prediction resistance in
- HRWNG
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Cc:     Andrei Botila <andrei.botila@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-References: <20200316150047.30828-1-andrew.smirnov@gmail.com>
- <20200316150047.30828-8-andrew.smirnov@gmail.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <3b4178a7-f410-b5fd-d154-9682f1acb29e@nxp.com>
-Date:   Tue, 17 Mar 2020 19:59:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200316150047.30828-8-andrew.smirnov@gmail.com>
+        Tue, 17 Mar 2020 14:00:18 -0400
+Received: from smtp-190d.mail.infomaniak.ch ([185.125.25.13]:55119 "EHLO
+        smtp-190d.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726278AbgCQSAS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 14:00:18 -0400
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 564B9100470DA;
+        Tue, 17 Mar 2020 18:50:10 +0100 (CET)
+Received: from ns3096276.ip-94-23-54.eu (ns3096276.ip-94-23-54.eu [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 48hgg42QGMzlt0RM;
+        Tue, 17 Mar 2020 18:50:08 +0100 (CET)
+Subject: Re: [RFC PATCH v14 00/10] Landlock LSM
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+References: <20200224160215.4136-1-mic@digikod.net>
+ <CAG48ez21bEn0wL1bbmTiiu8j9jP5iEWtHOwz4tURUJ+ki0ydYw@mail.gmail.com>
+ <873d7419-bdd9-8a52-0a9b-dddbe31df4f9@digikod.net>
+ <CAG48ez0=0W5Ok-8nASqZrZ28JboXRRi3gDxV5u6mdcOtzwuRVA@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <688dda0f-0907-34eb-c19e-3e9e5f613a74@digikod.net>
+Date:   Tue, 17 Mar 2020 18:50:07 +0100
+User-Agent: 
+MIME-Version: 1.0
+In-Reply-To: <CAG48ez0=0W5Ok-8nASqZrZ28JboXRRi3gDxV5u6mdcOtzwuRVA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM3PR07CA0083.eurprd07.prod.outlook.com
- (2603:10a6:207:6::17) To VI1PR0402MB3485.eurprd04.prod.outlook.com
- (2603:10a6:803:7::25)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM3PR07CA0083.eurprd07.prod.outlook.com (2603:10a6:207:6::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.10 via Frontend Transport; Tue, 17 Mar 2020 17:59:55 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 88184432-9f5c-4058-da4a-08d7ca9d00a6
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3389:|VI1PR0402MB3389:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB338973C496F20120B520546498F60@VI1PR0402MB3389.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
-X-Forefront-PRVS: 0345CFD558
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(199004)(36756003)(4326008)(2616005)(478600001)(2906002)(956004)(86362001)(31686004)(31696002)(66946007)(66556008)(66476007)(8936002)(81166006)(81156014)(4744005)(8676002)(53546011)(186003)(16526019)(6486002)(110136005)(26005)(5660300002)(16576012)(316002)(52116002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3389;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HQ0PDDfUAwJrYs4gmSKEzMd7YQu6FuUD4HMloIRn/tw99DIVUfV0i239jG86GcM6z9mBOhyUzMVzY/DlI1J8+DyPNpDseekamKR7G5PQrA8ZZUsdRZBrg5F8GXDJLPM2C/ze3qbUY88dmjUgJiueaJd0KjSk+m1ZyyYDYJLk3yCgZ5ddEWUpV0khPFdHnwAsR1Zz5vUVHYDwMMQHPmbrBQeOsXCFDz3h02RM5HE6qDXaiEj0vnrfXLQU596QqRrzKkzyKlQ1uSFNlYzLAHqjieZzeCno+9QGasaehJk7k9Fn23ABT2pj54ResepVWJxf7ZUpyGEEct5q0wtmKAGMbh2m66B0lp3Fo5EueBUU9D6mdR8RHqTNLrC7dhKovuMDdE44LAbqr1sanLkbZ6OBlhicYMYTFR1VP+/0UgTh4vcWqYdvpmZYdlDEp0Jd8KbD
-X-MS-Exchange-AntiSpam-MessageData: BrTohAq/oot5bApf0ujQotStiGflCmu3hHMEEz1HNUpz4v6fPja/4gT8SqSMBLfOh6jTyl/IWf9cbn0wnPp0JgenztXeh2bdoHAH2gcTxcGnbhUXH1s6Vo66YuzND511oG4F5Id3yAAhYzp16KuthQ==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88184432-9f5c-4058-da4a-08d7ca9d00a6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 17:59:56.8514
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zqUE9myPVriBybdVZO0V+y5MZF+Vke5u7bmSv3nOrjUSvszJ/DxPGEiBwAVr0zU+O6BWNCG0yxb67fn0SwKsSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3389
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/16/2020 5:01 PM, Andrey Smirnov wrote:
-> @@ -564,6 +579,26 @@ static void caam_remove_debugfs(void *root)
->  }
->  #endif
->  
-> +#ifdef CONFIG_FSL_MC_BUS
-> +static bool check_version(struct fsl_mc_version *mc_version, u32 major,
-> +			  u32 minor, u32 revision)
-> +{
-> +	if (mc_version->major > major)
-> +		return true;
-> +
-> +	if (mc_version->major == major) {
-> +		if (mc_version->minor > minor)
-> +			return true;
-> +
-> +		if (mc_version->minor == minor && mc_version->revision > 0)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +#endif
-> +
-> +
-Nitpick - checkpatch complains here:
-CHECK: Please don't use multiple blank lines
 
-Horia
+On 17/03/2020 17:19, Jann Horn wrote:
+> On Thu, Mar 12, 2020 at 12:38 AM Mickaël Salaün <mic@digikod.net> wrote:
+>> On 10/03/2020 00:44, Jann Horn wrote:
+>>> On Mon, Feb 24, 2020 at 5:03 PM Mickaël Salaün <mic@digikod.net> wrote:
+
+[...]
+
+>>> Aside from those things, there is also a major correctness issue where
+>>> I'm not sure how to solve it properly:
+>>>
+>>> Let's say a process installs a filter on itself like this:
+>>>
+>>> struct landlock_attr_ruleset ruleset = { .handled_access_fs =
+>>> ACCESS_FS_ROUGHLY_WRITE};
+>>> int ruleset_fd = landlock(LANDLOCK_CMD_CREATE_RULESET,
+>>> LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
+>>> struct landlock_attr_path_beneath path_beneath = {
+>>>   .ruleset_fd = ruleset_fd,
+>>>   .allowed_access = ACCESS_FS_ROUGHLY_WRITE,
+>>>   .parent_fd = open("/tmp/foobar", O_PATH),
+>>> };
+>>> landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
+>>> sizeof(path_beneath), &path_beneath);
+>>> prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+>>> struct landlock_attr_enforce attr_enforce = { .ruleset_fd = ruleset_fd };
+>>> landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
+>>> sizeof(attr_enforce), &attr_enforce);
+>>>
+>>> At this point, the process is not supposed to be able to write to
+>>> anything outside /tmp/foobar, right? But what happens if the process
+>>> does the following next?
+>>>
+>>> struct landlock_attr_ruleset ruleset = { .handled_access_fs =
+>>> ACCESS_FS_ROUGHLY_WRITE};
+>>> int ruleset_fd = landlock(LANDLOCK_CMD_CREATE_RULESET,
+>>> LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
+>>> struct landlock_attr_path_beneath path_beneath = {
+>>>   .ruleset_fd = ruleset_fd,
+>>>   .allowed_access = ACCESS_FS_ROUGHLY_WRITE,
+>>>   .parent_fd = open("/", O_PATH),
+>>> };
+>>> landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
+>>> sizeof(path_beneath), &path_beneath);
+>>> prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+>>> struct landlock_attr_enforce attr_enforce = { .ruleset_fd = ruleset_fd };
+>>> landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
+>>> sizeof(attr_enforce), &attr_enforce);
+>>>
+>>> As far as I can tell from looking at the source, after this, you will
+>>> have write access to the entire filesystem again. I think the idea is
+>>> that LANDLOCK_CMD_ENFORCE_RULESET should only let you drop privileges,
+>>> not increase them, right?
+>>
+>> There is an additionnal check in syscall.c:get_path_from_fd(): it is
+>> forbidden to add a rule with a path which is not accessible (according
+>> to LANDLOCK_ACCESS_FS_OPEN) thanks to a call to security_file_open(),
+>> but this is definitely not perfect.
+> 
+> Ah, I missed that.
+> 
+>>> I think the easy way to fix this would be to add a bitmask to each
+>>> rule that says from which ruleset it originally comes, and then let
+>>> check_access_path() collect these bitmasks from each rule with OR, and
+>>> check at the end whether the resulting bitmask is full - if not, at
+>>> least one of the rulesets did not permit the access, and it should be
+>>> denied.
+>>>
+>>> But maybe it would make more sense to change how the API works
+>>> instead, and get rid of the concept of "merging" two rulesets
+>>> together? Instead, we could make the API work like this:
+>>>
+>>>  - LANDLOCK_CMD_CREATE_RULESET gives you a file descriptor whose
+>>> ->private_data contains a pointer to the old ruleset of the process,
+>>> as well as a pointer to a new empty ruleset.
+>>>  - LANDLOCK_CMD_ADD_RULE fails if the specified rule would not be
+>>> permitted by the old ruleset, then adds the rule to the new ruleset
+>>>  - LANDLOCK_CMD_ENFORCE_RULESET fails if the old ruleset pointer in
+>>> ->private_data doesn't match the current ruleset of the process, then
+>>> replaces the old ruleset with the new ruleset.
+>>>
+>>> With this, the new ruleset is guaranteed to be a subset of the old
+>>> ruleset because each of the new ruleset's rules is permitted by the
+>>> old ruleset. (Unless the directory hierarchy rotates, but in that case
+>>> the inaccuracy isn't much worse than what would've been possible
+>>> through RCU path walk anyway AFAIK.)
+>>>
+>>> What do you think?
+>>>
+>>
+>> I would prefer to add the same checks you described at first (with
+>> check_access_path), but only when creating a new ruleset with
+>> merge_ruleset() (which should probably be renamed). This enables not to
+>> rely on a parent ruleset/domain until the enforcement, which is the case
+>> anyway.
+>> Unfortunately this doesn't work for some cases with bind mounts. Because
+>> check_access_path() goes through one path, another (bind mounted) path
+>> could be illegitimately allowed.
+> 
+> Hmm... I'm not sure what you mean. At the moment, landlock doesn't
+> allow any sandboxed process to change the mount hierarchy, right? Can
+> you give an example where this would go wrong?
+
+Indeed, a Landlocked process must no be able to change its mount
+namespace layout. However, bind mounts may already exist.
+Let's say a process sandbox itself to only access /a in a read-write
+way. Then, this process (or one of its children) add a new restriction
+on /a/b to only be able to read this hierarchy. The check at insertion
+time would allow this because this access right is a subset of the
+access right allowed with the parent directory. However, If /a/b is bind
+mounted somewhere else, let's say in /private/b, then the second
+enforcement just gave new access rights to this hierarchy too. This is
+why it seems risky to rely on a check about the legitimacy of a new
+access right when adding it to a ruleset or when enforcing it.
+
+
+> 
+>> That makes the problem a bit more complicated. A solution may be to keep
+>> track of the hierarchy of each rule (e.g. with a layer/depth number),
+>> and only allow an access request if at least a rule of each layer allow
+>> this access. In this case we also need to correctly handle the case when
+>> rules from different layers are tied to the same object.
+> 
