@@ -2,95 +2,115 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C51C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6185C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF8720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:31:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LjpQr+Gl"
+	by mail.kernel.org (Postfix) with ESMTP id 7CAF020754
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgCQVbK (ORCPT
+        id S1726968AbgCQVbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:31:10 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40906 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbgCQVbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:31:09 -0400
-Received: from zn.tnic (p200300EC2F0C960029779DE4AAC583E4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:9600:2977:9de4:aac5:83e4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 58AE31EC0C68;
-        Tue, 17 Mar 2020 22:31:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584480668;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=RMKAealFBjjSPHlKH7zxedK6Vy5tkttV34MQFS3HmiQ=;
-        b=LjpQr+GlX3iH9rEkBWb84N4Q1ycXhEIq9TvynjyGe4TTrcJjq+Fn4WVqy1q6xvjSVFjVR5
-        QLXkqznZ/G8JHEBkbIojedr2YcdSwmzZdn/FjtptrhJZyyAdnmnnK/8ZMln+7fi4kGNysY
-        VZaz4YQQKq3EP6FINuFyeolQaLrbBug=
-Date:   Tue, 17 Mar 2020 22:31:14 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>
-Subject: Re: [PATCH] treewide: Rename "unencrypted" to "decrypted"
-Message-ID: <20200317213100.GH15609@zn.tnic>
-References: <20200317111822.GA15609@zn.tnic>
- <2cb4a8ae-3b13-67bd-c021-aee47fdf58c5@intel.com>
- <20200317210602.GG15609@zn.tnic>
- <f3e520c6-f455-9c82-abfc-d014ca63eeb5@intel.com>
+        Tue, 17 Mar 2020 17:31:12 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51551 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgCQVbL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:31:11 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEJnd-0005vE-6Z; Tue, 17 Mar 2020 22:30:57 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEJnc-0004oR-3H; Tue, 17 Mar 2020 22:30:56 +0100
+Date:   Tue, 17 Mar 2020 22:30:56 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
+Message-ID: <20200317213056.futfiwn4qgr2njye@pengutronix.de>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
+ <20200317174344.GB1464607@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <f3e520c6-f455-9c82-abfc-d014ca63eeb5@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317174344.GB1464607@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 02:24:59PM -0700, Dave Hansen wrote:
-> No, there are just two states.  I just think the "!encrypted" case
-> should not be called "decrypted".
+Hello Thierry,
 
-Yeah, we suck at naming - news at 11! :-)
+On Tue, Mar 17, 2020 at 06:43:44PM +0100, Thierry Reding wrote:
+> On Tue, Mar 17, 2020 at 02:32:26PM +0200, Oleksandr Suvorov wrote:
+> > Add the description of PWM_POLARITY_NORMAL flag.
+> > 
+> > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> > ---
+> > 
+> >  Documentation/devicetree/bindings/pwm/pwm.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > index 084886bd721e..440c6b9a6a4e 100644
+> > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > @@ -46,6 +46,7 @@ period in nanoseconds.
+> >  Optionally, the pwm-specifier can encode a number of flags (defined in
+> >  <dt-bindings/pwm/pwm.h>) in a third cell:
+> >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> > +- PWM_POLARITY_NORMAL: don't invert the PWM signal polarity
+> 
+> This doesn't make sense. PWM_POLARITY_NORMAL is not part of the DT ABI.
 
-I believe we even considered things like "encrypted" vs "clear" but
-that sucked too. ;-\
+"is not part of the DT ABI" is hardly a good reason. If it's sensible to
+be used, it is sensible to define it.
 
-In any case, that ship has sailed now and having two as differently as
-possible looking words to denote the two "states" should be good enough
-for our purposes...
+(And as far as I understand it, the term PWM_POLARITY_INVERTED isn't
+part of the DT ABI either. Only the value 1 has a meaning (for some PWM
+controlers).)
 
-Oh well.
+> The third cell of the specifier is a bitmask of flags.
+> 
+> PWM_POLARITY_NORMAL is an enumeration value that evaluates to 0, so it
+> makes absolutely no sense as a flag.
+
+Using 0 or PWM_POLARITY_NORMAL doesn't have an effect on the compiled
+device tree, that's true. But having the term PWM_POLARITY_NORMAL (in
+contrast to a plain 0) in a dts file is useful in my eyes for human
+readers.
+
+> PWM signals are considered to be "normal" by default, so no flag is
+> necessary to specify that.
+
+GPIOs are considered to be active high by default, still there is
+GPIO_ACTIVE_HIGH (which also evaluates to 0). Also there is
+IRQ_TYPE_NONE.
+
+Best regards
+Uwe
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
