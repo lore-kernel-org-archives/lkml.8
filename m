@@ -2,143 +2,201 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5664C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D480C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A073920724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE49020738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgCQVZB (ORCPT
+        id S1726839AbgCQV1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:25:01 -0400
-Received: from mga14.intel.com ([192.55.52.115]:31477 "EHLO mga14.intel.com"
+        Tue, 17 Mar 2020 17:27:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54610 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgCQVZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:25:01 -0400
-IronPort-SDR: RyGixqkKC6p8sV4oxza+7SFkPfj6EJauN0LFkzIsIJNAwf+RRnH5yh1KDEXEum2EZ/Ig5EZfto
- wRM5qBKB1M8Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 14:25:00 -0700
-IronPort-SDR: E/XxKLvzbd76Edz4DBiEjgXjvB5DhmPwJNrjXVgFuhT1EfqbjKYf8TfObqf7cJrznNaIvQPf0J
- AwSPLn0zck3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="247961428"
-Received: from dslea-mobl.amr.corp.intel.com (HELO [10.251.3.73]) ([10.251.3.73])
-  by orsmga006.jf.intel.com with ESMTP; 17 Mar 2020 14:24:59 -0700
-Subject: Re: [PATCH] treewide: Rename "unencrypted" to "decrypted"
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Borislav Petkov <bp@suse.de>, lkml <linux-kernel@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>
-References: <20200317111822.GA15609@zn.tnic>
- <2cb4a8ae-3b13-67bd-c021-aee47fdf58c5@intel.com>
- <20200317210602.GG15609@zn.tnic>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <f3e520c6-f455-9c82-abfc-d014ca63eeb5@intel.com>
-Date:   Tue, 17 Mar 2020 14:24:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726388AbgCQV1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:27:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BDAFFABDC;
+        Tue, 17 Mar 2020 21:27:48 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Jeff Layton <jlayton@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 18 Mar 2020 08:27:40 +1100
+Cc:     yangerkun <yangerkun@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
+In-Reply-To: <46d2c16f48f1fd4ad28a85099c59ae95a9997740.camel@kernel.org>
+References: <20200308140314.GQ5972@shao2-debian>
+ <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
+ <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
+ <878sk7vs8q.fsf@notabene.neil.brown.name>
+ <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+ <875zfbvrbm.fsf@notabene.neil.brown.name>
+ <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+ <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
+ <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
+ <87v9nattul.fsf@notabene.neil.brown.name>
+ <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
+ <87o8t2tc9s.fsf@notabene.neil.brown.name>
+ <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
+ <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
+ <877dznu0pk.fsf@notabene.neil.brown.name>
+ <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
+ <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
+ <87pndcsxc6.fsf@notabene.neil.brown.name>
+ <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
+ <87k13jsyum.fsf@notabene.neil.brown.name>
+ <46d2c16f48f1fd4ad28a85099c59ae95a9997740.camel@kernel.org>
+Message-ID: <878sjysmcz.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <20200317210602.GG15609@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/20 2:06 PM, Borislav Petkov wrote:
-> On Tue, Mar 17, 2020 at 01:35:12PM -0700, Dave Hansen wrote:
->> On 3/17/20 4:18 AM, Borislav Petkov wrote:
->>> Back then when the whole SME machinery started getting mainlined, it
->>> was agreed that for simplicity, clarity and sanity's sake, the terms
->>> denoting encrypted and not-encrypted memory should be "encrypted" and
->>> "decrypted". And the majority of the code sticks to that convention
->>> except those two. So rename them.
->> Don't "unencrypted" and "decrypted" mean different things?
->>
->> Unencrypted to me means "encryption was never used for this data".
->>
->> Decrypted means "this was/is encrypted but here is a plaintext copy".
-> Maybe but linguistical semantics is not the point here.
-> 
-> The idea is to represent a "binary" concept of memory being encrypted
-> or memory being not encrypted. And at the time we decided to use
-> "encrypted" and "decrypted" for those two things.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, agreed.  We're basically trying to name "!encrypted".
+On Tue, Mar 17 2020, Jeff Layton wrote:
 
-> Do you see the need to differentiate a third "state", so to speak, of
-> memory which was never encrypted?
+> On Tue, 2020-03-17 at 09:45 +1100, NeilBrown wrote:
+>> > +
+>> > +	/*
+>> > +	 * Tell the world we're done with it - see comment at top
+>> > +	 * of this function
+>>=20
+>> This comment might be misleading.  The world doesn't care.
+>> Only this thread cares where ->fl_blocker is NULL.  We need the release
+>> semantics when some *other* thread sets fl_blocker to NULL, not when
+>> this thread does.
+>> I don't think we need to spell that out and I'm not against using
+>> store_release here, but locks_delete_block cannot race with itself, so
+>> referring to the comment at the top of this function is misleading.
+>>=20
+>> So:
+>>   Reviewed-by: NeilBrown <neilb@suse.de>
+>>=20
+>> but I'm not totally happy with the comments.
+>>=20
+>>=20
+>
+> Thanks Neil. We can clean up the comments before merge. How about this
+> revision to the earlier patch? I took the liberty of poaching your your
+> proposed verbiage:
 
-No, there are just two states.  I just think the "!encrypted" case
-should not be called "decrypted".
+Thanks.  I'm happy with that.
+
+(Well.... actually I hate the use of the word "official" unless there is
+a well defined office holder being blamed.  But the word has come to
+mean something vaguer in common usage and there is probably no point
+fighting it.  In this case "formal" is close but less personally
+annoying, but I'm not sure the word is needed at all).
+
+Thanks,
+NeilBrown
+
+
+>
+> ------------------8<---------------------
+>
+> From c9fbfae0ab615e20de0bdf1ae7b27591d602f577 Mon Sep 17 00:00:00 2001
+> From: Jeff Layton <jlayton@kernel.org>
+> Date: Mon, 16 Mar 2020 18:57:47 -0400
+> Subject: [PATCH] SQUASH: update with Neil's comments
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/locks.c | 31 ++++++++++++++++++++++---------
+>  1 file changed, 22 insertions(+), 9 deletions(-)
+>
+> diff --git a/fs/locks.c b/fs/locks.c
+> index eaf754ecdaa8..e74075b0e8ec 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -741,8 +741,9 @@ static void __locks_wake_up_blocks(struct file_lock *=
+blocker)
+>  			wake_up(&waiter->fl_wait);
+>=20=20
+>  		/*
+> -		 * Tell the world we're done with it - see comment at
+> -		 * top of locks_delete_block().
+> +		 * The setting of fl_blocker to NULL marks the official "done"
+> +		 * point in deleting a block. Paired with acquire at the top
+> +		 * of locks_delete_block().
+>  		 */
+>  		smp_store_release(&waiter->fl_blocker, NULL);
+>  	}
+> @@ -761,11 +762,23 @@ int locks_delete_block(struct file_lock *waiter)
+>  	/*
+>  	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
+>  	 * the lock and is the only one that might try to claim the lock.
+> -	 * Because fl_blocker is explicitly set last during a delete, it's
+> -	 * safe to locklessly test to see if it's NULL. If it is, then we know
+> -	 * that no new locks can be inserted into its fl_blocked_requests list,
+> -	 * and we can therefore avoid doing anything further as long as that
+> -	 * list is empty.
+> +	 *
+> +	 * We use acquire/release to manage fl_blocker so that we can
+> +	 * optimize away taking the blocked_lock_lock in many cases.
+> +	 *
+> +	 * The smp_load_acquire guarantees two things:
+> +	 *
+> +	 * 1/ that fl_blocked_requests can be tested locklessly. If something
+> +	 * was recently added to that list it must have been in a locked region
+> +	 * *before* the locked region when fl_blocker was set to NULL.
+> +	 *
+> +	 * 2/ that no other thread is accessing 'waiter', so it is safe to free
+> +	 * it.  __locks_wake_up_blocks is careful not to touch waiter after
+> +	 * fl_blocker is released.
+> +	 *
+> +	 * If a lockless check of fl_blocker shows it to be NULL, we know that
+> +	 * no new locks can be inserted into its fl_blocked_requests list, and
+> +	 * can avoid doing anything further if the list is empty.
+>  	 */
+>  	if (!smp_load_acquire(&waiter->fl_blocker) &&
+>  	    list_empty(&waiter->fl_blocked_requests))
+> @@ -778,8 +791,8 @@ int locks_delete_block(struct file_lock *waiter)
+>  	__locks_delete_block(waiter);
+>=20=20
+>  	/*
+> -	 * Tell the world we're done with it - see comment at top
+> -	 * of this function
+> +	 * The setting of fl_blocker to NULL marks the official "done" point in
+> +	 * deleting a block. Paired with acquire at the top of this function.
+>  	 */
+>  	smp_store_release(&waiter->fl_blocker, NULL);
+>  	spin_unlock(&blocked_lock_lock);
+> --=20
+> 2.24.1
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5xQMwACgkQOeye3VZi
+gbklyw//bFtCx3NOaCI22l1xQpaKvtLBY11zvLLiSEMvif1qva2O0KTDctzIcpi9
+XibamKD1YmDaOi0k7Y267NwqAdMjyFSKt/d7pSUELUBfdr+x+d48tvF/x+QT+Hq0
+xt+Pp6W2P+azUswhhj4EWEGhhtIegGHfv1c6GfBC8NargPtaea3Ul9uokr/boYa1
+d0OiEOxaE0rAp04YQeMYidtEghuSgB2g6SRVl6+eVhLYyNa+vsk5TxSSZ2E5Pf2P
+FuSsH/JRYQucmi2rfkZ2ru2kWvbQIKgjVaLDZkrUh3SAnR+vY6S+bHDr9qeR3bls
+15EMzsJibnEJHxV2Xw7nAbRKAcD6w5HNJ6xtDXUwlo8LdP1Y5DGlu6vW76sTLYjm
+0oFWKv+8hl3h2NCjcK+FaohwD4C3uX0ZlV0QW1t+STDj4kmIpbvNVxdps8FkTgAg
+iu5qUf1qoYS9XItegCp9ADaKTul4EPs0cjevqGrDHfCSiujbw0xWYIVWVTHdoTgA
+FR3BZmtE4XE44wkD5N2z0RP351ynP6mJquzcCOV6/nzulgm//NEP64pfZjWyMiAb
+TgSBPPCYgYGOwOVeCxj3uiJf/+QMo9LJXAOsWi5BMrkzADirD70tu+QmlACz/Q1x
+CBhVEwi0V+aBLni0unbx0PDBPqjiLpiDxDAp1Y4QxKSWZpmgbq8=
+=VCS6
+-----END PGP SIGNATURE-----
+--=-=-=--
