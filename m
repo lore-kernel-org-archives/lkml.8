@@ -2,167 +2,99 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051B4C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EDBC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD4D20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="au03j/eH"
+	by mail.kernel.org (Postfix) with ESMTP id D6BF720674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgCQSQ2 (ORCPT
+        id S1726638AbgCQSSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:16:28 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33814 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbgCQSQ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:16:28 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 23so12413064pfj.1;
-        Tue, 17 Mar 2020 11:16:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=GPligt8SZ4vmyiqPXrOfMISNtA3jKedmIN0OJu/cq/k=;
-        b=au03j/eHp4oDf86PBtb0jkX/mGTVoyM379kX+93nx3wKMkf+la9MBZCaQsFD54cBCA
-         aCV55pzqQ+X0/Ci8qp7nIqhkrn+TRb1G0t63II+SEcabyPgZWJllk7LkdwHk08f3QNpk
-         zKEHpCr5jQ0fwm5kwnqBJJrNWUEnqnH9rVnL4eVnVV+YnVynHZtE8aychr1mRpcR89fo
-         n9b8BtyC743GyKu0TwZY+DA3KT8L9EOJm06FjmPMDjhdc0Egqsvvp8TphMYm/lXw1FOf
-         ZM7/hsxq4kl2H5MfhS+sun8PifDdwzRL/kVv0N+qXUWucLCC92J3hfsHv3ajaTjnZPGY
-         Nj5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=GPligt8SZ4vmyiqPXrOfMISNtA3jKedmIN0OJu/cq/k=;
-        b=oPvp06daiJL6e4KChmo9J5Nn3xp6+MXxugdjOoYgsBjfNZdC2aI3qSvuGOWi2iJG2T
-         2VpBIjjKz35o//pmoO48Ua2KSi/XfI91BSrU9nw4lTrmYeTdbneQiAm8/albCi127Car
-         UVEUD63lSryP/00UMg56O8oiYGQDSrjTKOXZ4IUWKwXjzAaTnYJ8JvCIx05iNkcHzrLw
-         XJhhTeQszuFuI+MOn3R/3lsiXt7D/IO9sPy5T/CCABjGvaMGCkapry+YLqcAb16DOGLk
-         dMxK7Gq9teGJjjMVIpUIAdNS+Mqxhom/GebuzkV+iHz6g+tchZObfHsQrl6aKxysRnrQ
-         yX0Q==
-X-Gm-Message-State: ANhLgQ3kLTpPt3ZsMbJyInmOeDHtaIelqs7Xn+qFxUYdITfzz15E5+iQ
-        yldgQJY+TDwHUM1UvYWWKwY=
-X-Google-Smtp-Source: ADFU+vtgIxIuv8CicRbTAz6PU9jTobQMQhzhVZ+qBAMcxLxoh5KdzoKvJN8QgYG1CkUPo0oSY57d1A==
-X-Received: by 2002:a63:4c5d:: with SMTP id m29mr480393pgl.376.1584468986648;
-        Tue, 17 Mar 2020 11:16:26 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id x66sm3510220pgb.9.2020.03.17.11.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 11:16:25 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 11:16:17 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Jakub Sitnicki <jakub@cloudflare.com>,
-        Lorenz Bauer <lmb@cloudflare.com>
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <5e7113f16e7c6_278b2b1b264c65b445@john-XPS-13-9370.notmuch>
-In-Reply-To: <87imj3xb5t.fsf@cloudflare.com>
-References: <20200310174711.7490-1-lmb@cloudflare.com>
- <20200310174711.7490-5-lmb@cloudflare.com>
- <87imj3xb5t.fsf@cloudflare.com>
-Subject: Re: [PATCH 4/5] bpf: sockmap, sockhash: return file descriptors from
- privileged lookup
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Mar 2020 14:18:33 -0400
+Received: from mga06.intel.com ([134.134.136.31]:55252 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbgCQSSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 14:18:33 -0400
+IronPort-SDR: VfFCcCbyDSjbbKAqvkq2yMPbiWlKg/8+wVqXTeSHSpfhbvz5IOj81Ghr1ubLDsq+zlbSaT4HFs
+ iY6G46qBAePw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 11:18:32 -0700
+IronPort-SDR: wyGlBpC71Kj1H0w9Yo5zB1GzVujxVGo8vK+dKfMkzHCDtUIwZF/5ultogDejaJhWStEkOANpGj
+ vjGIS0YQT9Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
+   d="scan'208";a="391152982"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga004.jf.intel.com with ESMTP; 17 Mar 2020 11:18:32 -0700
+Date:   Tue, 17 Mar 2020 11:18:32 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH v2 23/32] KVM: nVMX: Add helper to handle TLB flushes on
+ nested VM-Enter/VM-Exit
+Message-ID: <20200317181832.GC12959@linux.intel.com>
+References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
+ <20200317045238.30434-24-sean.j.christopherson@intel.com>
+ <0975d43f-42b6-74db-f916-b0995115d726@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0975d43f-42b6-74db-f916-b0995115d726@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jakub Sitnicki wrote:
-> On Tue, Mar 10, 2020 at 06:47 PM CET, Lorenz Bauer wrote:
-> > Allow callers with CAP_NET_ADMIN to retrieve file descriptors from a
-> > sockmap and sockhash. O_CLOEXEC is enforced on all fds.
-> >
-> > Without this, it's difficult to resize or otherwise rebuild existing
-> > sockmap or sockhashes.
-> >
-> > Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
-> > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> > ---
-> >  net/core/sock_map.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> > index 03e04426cd21..3228936aa31e 100644
-> > --- a/net/core/sock_map.c
-> > +++ b/net/core/sock_map.c
-> > @@ -347,12 +347,31 @@ static void *sock_map_lookup(struct bpf_map *map, void *key)
-> >  static int __sock_map_copy_value(struct bpf_map *map, struct sock *sk,
-> >  				 void *value)
-> >  {
-> > +	struct file *file;
-> > +	int fd;
+On Tue, Mar 17, 2020 at 06:17:59PM +0100, Paolo Bonzini wrote:
+> On 17/03/20 05:52, Sean Christopherson wrote:
+> > +	nested_vmx_transition_tlb_flush(vcpu, vmcs12);
 > > +
-> >  	switch (map->value_size) {
-> >  	case sizeof(u64):
-> >  		sock_gen_cookie(sk);
-> >  		*(u64 *)value = atomic64_read(&sk->sk_cookie);
-> >  		return 0;
-> >
-> > +	case sizeof(u32):
-> > +		if (!capable(CAP_NET_ADMIN))
-> > +			return -EPERM;
-> > +
-> > +		fd = get_unused_fd_flags(O_CLOEXEC);
-> > +		if (unlikely(fd < 0))
-> > +			return fd;
-> > +
-> > +		read_lock_bh(&sk->sk_callback_lock);
-> > +		file = get_file(sk->sk_socket->file);
-> 
-> I think this deserves a second look.
-> 
-> We don't lock the sock, so what if tcp_close orphans it before we enter
-> this critical section? Looks like sk->sk_socket might be NULL.
-> 
-> I'd find a test that tries to trigger the race helpful, like:
-> 
->   thread A: loop in lookup FD from map
->   thread B: loop in insert FD into map, close FD
-
-Agreed, this was essentially my question above as well.
-
-When the psock is created we call sock_hold() and will only do a sock_put()
-after an rcu grace period when its removed. So at least if you have the
-sock here it should have a sk_refcnt. (Note the user data is set to NULL
-so if you do reference psock you need to check its non-null.)
-
-Is that enough to ensure sk_socket? Seems not to me, tcp_close for example
-will still happen and call sock_orphan(sk) based on my admittddly quick
-look.
-
-Further, even if you do check sk->sk_socket is non-null what does it mean
-to return a file with a socket that is closed, deleted from the sock_map
-and psock removed? At this point is it just a dangling reference?
-
-Still a bit confused as well what would or should happen when the sock is closed
-after you have the file reference? I could probably dig up what exactly
-would happen but I think we need it in the commiit message so we understand
-it. I also didn't dig up the details here but if the receiver of the
-fd crashes or otherwise disappears this hopefully all get cleaned up?
-
-> 
-> > +		read_unlock_bh(&sk->sk_callback_lock);
-> > +
-> > +		fd_install(fd, file);
-> > +		*(u32 *)value = fd;
-> > +		return 0;
-> > +
-> >  	default:
-> >  		return -ENOSPC;
+> > +	/*
+> > +	 * There is no direct mapping between vpid02 and vpid12, vpid02 is
+> > +	 * per-vCPU and reused for all nested vCPUs.  If vpid12 is changing
+> > +	 * then the new "virtual" VPID will reuse the same "real" VPID,
+> > +	 * vpid02, and so needs to be sync'd.  Skip the sync if a TLB flush
+> > +	 * has already been requested, but always update the last used VPID.
+> > +	 */
+> > +	if (nested_cpu_has_vpid(vmcs12) && nested_has_guest_tlb_tag(vcpu) &&
+> > +	    vmcs12->virtual_processor_id != vmx->nested.last_vpid) {
+> > +		vmx->nested.last_vpid = vmcs12->virtual_processor_id;
+> > +		if (!kvm_test_request(KVM_REQ_TLB_FLUSH, vcpu))
+> > +			vpid_sync_context(nested_get_vpid02(vcpu));
 > >  	}
+> 
+> Would it make sense to move nested_vmx_transition_tlb_flush into an
+> "else" branch?
+
+Maybe?  I tried that at one point, but didn't like making the call to
+nested_vmx_transition_tlb_flush() conditional.  My intent is to have
+the ...tlb_flush() call be standalone, i.e. logic that is common to all
+nested transitions, so that someone can look at the code can easily
+(relatively speaking) understand the basic rules for TLB flushing on
+nested transitions.
+
+I also tried the oppositie, i.e. putting the above code in an else-branch,
+with nested_vmx_transition_tlb_flush() returning true if it requested a
+flush.  But that required updating vmx->nested.last_vpid in a separate
+flow, which was quite awkward.
+
+> And should this also test that KVM_REQ_TLB_FLUSH_CURRENT is not set?
+
+Doh, yes.
