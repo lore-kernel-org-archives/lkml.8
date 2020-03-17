@@ -2,100 +2,101 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C848C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7EFC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D12420409
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:31:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="P43FjTKd"
+	by mail.kernel.org (Postfix) with ESMTP id DEACD20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584484340;
+	bh=pZTJ/8UKR7bf2a0aOzgxZOTLFw+VBYwUntAVVeJQlh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rjKd5CfiW91mNi361dFzzLYDlemFrI76zJ1JKuwBH7iBJYiRlXU4j4j0yqhxoKNAf
+	 8dkrjvKRAojUnkhMTpeLp9L+2Px0RRrHP0CmrammleAhqASBUJGQZYNhYwjYZaKG/W
+	 ZhVbpJ5j3PF1jvVqGgMsjT0zT8J+3ahJVd4VXwfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbgCQWbF (ORCPT
+        id S1727059AbgCQWcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:31:05 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33180 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgCQWbF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:31:05 -0400
-Received: by mail-il1-f194.google.com with SMTP id k29so21806315ilg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:31:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cy9EBkEXP8mKrE1tWYDArUinNkiiQlqPyNhgotiBbRw=;
-        b=P43FjTKd0T5/YQKdtaWgVoXEy18bxKaNnuX61RCQVAyMX08mal/nWxiOX2rnGI6+2E
-         ifMLGV9Oksz8dDkoimFarqdH3u8NJ+kAxWi+Q78yMyMdBe9XZmcoHxlPBLbrUI+qubCa
-         7qAFN3+PC1lrCarn3nDKpSq7KaXkpKMx17E/s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cy9EBkEXP8mKrE1tWYDArUinNkiiQlqPyNhgotiBbRw=;
-        b=nqQMoAMOphA+O2nS3+snJMQfqqRdpAbU1/F0ZVbQJP7nKg0ZNjaqULu8WmmBmLXyQ2
-         hlkqk3erbs6fYwh7xtmHc+9ltfWMv3i+UQVWXWuXxHIBhgLgpnhDayYv42Ni4bhVxfDT
-         fy/k50Eo5c6BYvNoj3oYz3eGSbVaVAcVvYROOb6VrhiuGT3tvfSXJ80axqmjE5+2lh9c
-         F3V39p/cBEAD6f6zi6r7IMAYSI9JS44+ioD8Bpjz0R+qFTRmtfDZ69svPpDMx4buqO4V
-         IJTncuijlUpAiQ174QUQLZOkpMDQmzpdD87e+fhJFycJCCFC4MWCwD5r9hO8992mzFZx
-         o0Ww==
-X-Gm-Message-State: ANhLgQ0EZckXg97OgPMm/7ODinNkvFJh0oqhpYILj5MCBEdsSUip0l9b
-        Ta6RG/cChaYFBFtGkugUPId1c8qHymJtc8oti1mvCA==
-X-Google-Smtp-Source: ADFU+vsmPWAvveep930fw52ooTIuIXySJT8RDOWRG06Ck9aFoHf6+/7B/JRHemPQPS76anrITG9rAdvoDIUnoN5PR+Y=
-X-Received: by 2002:a92:8f53:: with SMTP id j80mr1106826ild.171.1584484262823;
- Tue, 17 Mar 2020 15:31:02 -0700 (PDT)
+        Tue, 17 Mar 2020 18:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgCQWcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:32:19 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6E7720409;
+        Tue, 17 Mar 2020 22:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584484338;
+        bh=pZTJ/8UKR7bf2a0aOzgxZOTLFw+VBYwUntAVVeJQlh0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m3Spbdfdq+dp39kywq8qbf1OKNQQfGGu6sD69qgCgIFfNjYeeG0d2iCOpwidhDSH+
+         7PCV8eRewGVknqlhQKeqaBJzWeF2MRwdSspUJ0DLT70dtDz2jLej+SVGMQb1f10xZs
+         jVnX5ynoYN8q4wQ5ymnUEOAziw0G8bX+TQFKMv3k=
+Date:   Tue, 17 Mar 2020 22:32:14 +0000
+From:   Will Deacon <will@kernel.org>
+To:     =?iso-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>
+Cc:     catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] arm64/sdei: gather trampolines' .rodata
+Message-ID: <20200317223214.GK20788@willie-the-truck>
+References: <20200316124046.103844-2-remi@remlab.net>
 MIME-Version: 1.0
-References: <20200316163228.62068-1-joel@joelfernandes.org>
- <20200317210822.GM3199@paulmck-ThinkPad-P72> <20200317214502.GA29184@paulmck-ThinkPad-P72>
-In-Reply-To: <20200317214502.GA29184@paulmck-ThinkPad-P72>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 17 Mar 2020 18:30:51 -0400
-Message-ID: <CAEXW_YQxKfcGf3UgEn_8hdWHdMx09RvD90z6zo=kk-iRinYjng@mail.gmail.com>
-Subject: Re: [PATCH v2 rcu-dev 1/3] rcuperf: Add ability to increase object
- allocation size
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200316124046.103844-2-remi@remlab.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 5:45 PM Paul E. McKenney <paulmck@kernel.org> wrote=
-:
->
-> On Tue, Mar 17, 2020 at 02:08:22PM -0700, Paul E. McKenney wrote:
-> > On Mon, Mar 16, 2020 at 12:32:26PM -0400, Joel Fernandes (Google) wrote=
-:
-> > > This allows us to increase memory pressure dynamically using a new
-> > > rcuperf boot command line parameter called 'rcumult'.
-> > >
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >
-> > Applied for testing and review, thank you!
->
-> But testing did not go far:
->
-> kernel/rcu/tree.c: In function =E2=80=98kfree_rcu_shrink_count=E2=80=99:
-> kernel/rcu/tree.c:3120:16: warning: unused variable =E2=80=98flags=E2=80=
-=99 [-Wunused-variable]
->   unsigned long flags, count =3D 0;
+On Mon, Mar 16, 2020 at 02:40:45PM +0200, Rémi Denis-Courmont wrote:
+> From: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
+> 
+> This gathers the two bits of data together for clarity.
+> 
+> Signed-off-by: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
+> ---
+>  arch/arm64/kernel/entry.S | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+> index 24f828739696..af17fcb4aaea 100644
+> --- a/arch/arm64/kernel/entry.S
+> +++ b/arch/arm64/kernel/entry.S
+> @@ -859,6 +859,11 @@ SYM_CODE_END(tramp_exit_compat)
+>  #ifdef CONFIG_RANDOMIZE_BASE
+>  	.pushsection ".rodata", "a"
+>  	.align PAGE_SHIFT
+> +#ifdef CONFIG_ARM_SDE_INTERFACE
+> +SYM_DATA_START(__sdei_asm_trampoline_next_handler)
+> +	.quad	__sdei_asm_handler
+> +SYM_DATA_END(__sdei_asm_trampoline_next_handler)
+> +#endif
+>  SYM_DATA_START(__entry_tramp_data_start)
+>  	.quad	vectors
+>  SYM_DATA_END(__entry_tramp_data_start)
+> @@ -980,13 +985,6 @@ SYM_CODE_END(__sdei_asm_exit_trampoline)
+>  NOKPROBE(__sdei_asm_exit_trampoline)
+>  	.ltorg
+>  .popsection		// .entry.tramp.text
+> -#ifdef CONFIG_RANDOMIZE_BASE
+> -.pushsection ".rodata", "a"
+> -SYM_DATA_START(__sdei_asm_trampoline_next_handler)
+> -	.quad	__sdei_asm_handler
+> -SYM_DATA_END(__sdei_asm_trampoline_next_handler)
+> -.popsection		// .rodata
+> -#endif /* CONFIG_RANDOMIZE_BASE */
+>  #endif /* CONFIG_UNMAP_KERNEL_AT_EL0 */
 
-I fixed the warning already but did not resend since it was just the
-one unused variable warning. The patches are otherwise good to apply.
-Sorry, and I can resend it soon if you are not reapplying right now.
+Acked-by: Will Deacon <will@kernel.org>
 
-thanks,
-
- - Joel
+Will
