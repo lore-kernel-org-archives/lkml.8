@@ -2,188 +2,154 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B45C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372BFC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAA820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDEDD2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hBipPsTg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=biamp.com header.i=@biamp.com header.b="SMVjoAKJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgCQCSP (ORCPT
+        id S1726566AbgCQCSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 22:18:15 -0400
-Received: from mail-db8eur05on2062.outbound.protection.outlook.com ([40.107.20.62]:43968
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726250AbgCQCSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 22:18:15 -0400
+        Mon, 16 Mar 2020 22:18:21 -0400
+Received: from outbound-ip13a.ess.barracuda.com ([209.222.82.180]:42726 "EHLO
+        outbound-ip13a.ess.barracuda.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726082AbgCQCSV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 22:18:21 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2106.outbound.protection.outlook.com [104.47.55.106]) by mx13.us-east-2a.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Tue, 17 Mar 2020 02:17:49 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MkAMG0feb/BmKLoE78JMVJcbVyWN7psqt064J9R7nBVmTOO4rF1ttd+BlCGzwhWJiCwgA8uegSFC+DLMWYFv26CAowJcHIioc7j9au1MS/pZgfbN/qG6bwc0v/Le3+Fzw0GdPpA/w0dJCsj6XInXOlzxAXvcVraxBGWVI9nX92shcT0EgOwlbh0KMZS1760ymuaOo8NHX4KvwpeaCiDI4sgvfhXSc7AXQez/tyn5ySUGtslBZjtBT9U5OqKPjpVoQfQ6NVml5XRR4mHDUbgK0JxlOsmuGM1oNX995bFOjSDqNgu3sIpREtXzI/rg0mZXXC6n43AOXtXtcrIpcG06Cw==
+ b=oRjbshJjl/dcMDqbq6sG6DfCh2e0egAKS2PUCugYZVl0w2N0E/9vNAn1UY2U7QRuD+mERh3roVr5N9nOcjNWzEtTajVD+dekXK8iWqXMHIEVcj1UJB1zkVxxJ667v7TUmh/sG7w17GUK5PwgNXnDUoey5+TWBGut98Oq+T+H7dbxKFxwSz0rnU08QFWny4QZvijBxMYEFHRobmd9FAN+61zTmD8y7DSBCyPETXo0CzT1RvP7YjKsLbNUoR/SSlHs6PwQztcS4SQ+LJhzbh4ucq8jnJem2+iFTTTvzQ51Use3t+KChaTEaJ89vstIsljtr35XSNa4A6pZ24jSuFxq9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7K14LEJ6sd10QVJzaWfYp9Yj8Dk7ko9sl+emhNLGwIU=;
- b=e8egMXqW7KMGCa5jxufohTJcBdXj31A/J2Y5DL4y65GGvXHPhlTkdUfBPCQUW4h3pytNbGJKKnGV7NammU04hCeME0bBxl1r1JLKGOUVuf2dMTaKRG43yYvZ7h4zCAffJGmchL39L4iSeVDVOI/9BfmeEZ6dwSgrlQErarbdbyTAEgXgfTsE2vZFyX0jv/0D5Hj9DSyF3KmzD4Jn433wIOrEmet+AB7V/FRIxxLdoRc5DiI8I9LTIbShXAMu/ewHjT5/oPZPipwkP9EoHa0FbZWenv4o+AcFUQaieFJVwwwsnwLEHJRdRJmt5XwJ1maqyg6NlhPRb46XZzuq/iU/Xw==
+ bh=oQBuRqhmMKIKxn5QRROq9qN9dT7ei6DZY/MCiYQ1Y/o=;
+ b=FgeK7S0OuQOW+/pQvAtFxZWweTKLuw++eIdRJ4Xkx5ng6LorALDye6AKBTrRCflXHeG2v4ER2jVJiGGj3pZ/8nMABIIuFjV7wbd+SVzYgbK3dehRtKydK3PcNgDdA/LQvnqNZcYo5qoQ9Z0PP8UF/HVZoZ4q+fp51epU+JlNyqvM1pQJwS9mcjXSdsxWC/+h8WkdIvUrOD12uOo6U61/C1TE5Ss/rUHoYw0o0nshZPG806kRA8SU1T4ro2yBhZyTP9pgYG736COk+Axkho4uG9g8DTSb1YOwp5xgM9Ed4SAUlqZKfMdQQ0rZ0GBLfQmteInLQ8B2WaBaVSCh42bggQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=biamp.com; dmarc=pass action=none header.from=biamp.com;
+ dkim=pass header.d=biamp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=biamp.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7K14LEJ6sd10QVJzaWfYp9Yj8Dk7ko9sl+emhNLGwIU=;
- b=hBipPsTgsB30NtJxC6tsxW9cBpiVUpmtiofMH/WOAZyTglyhhnT2l+qHP8cxRTuWlMQA00rYxkXgfN4dDU3yX7ce6bwsdv/8klvwy+KyNoTq9z5DOBuNKJ6UBhRaHPzq+ZPRZbzy4wRhHktS2mEWGf9+ptAiz7gVR/wR+8HyiTg=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4145.eurprd04.prod.outlook.com (52.134.90.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.16; Tue, 17 Mar 2020 02:18:07 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 02:18:07 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Shawn Guo <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Thread-Topic: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Thread-Index: AQHV9av6lP0y7UryDUCSkdoJ2q6AXKhARRTAgAop3wCAACC+IIAABReAgAACi8CAAAUEAIAAS0uAgAAKPgCAAADnAIAABKyAgAACPICAAAHmgIAABwkAgAEV3aA=
-Date:   Tue, 17 Mar 2020 02:18:07 +0000
-Message-ID: <AM0PR04MB4481A54C639FD1D45098302088F60@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20200316005219.GD17221@dragon>
- <AM0PR04MB44819E4A9E027F1555C33D0B88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200316030744.GC17221@dragon>
- <AM0PR04MB44817A48746601EADA4E06BC88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200316033447.GE17221@dragon>
- <DB3PR0402MB3916DA9F0F175B9D2E9E684FF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20200316084056.GG4518@piout.net>
- <DB3PR0402MB391663DB37A8D241092AD708F5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20200316090053.GH4518@piout.net>
- <DB3PR0402MB391683A05820920158DFDA77F5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20200316091541.GI4518@piout.net>
- <DB3PR0402MB39169528B3FF39E23C7A90FCF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39169528B3FF39E23C7A90FCF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f90fa381-0cf1-4ba6-c8b0-08d7ca196ea2
-x-ms-traffictypediagnostic: AM0PR04MB4145:|AM0PR04MB4145:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB41452060FEBA42D7B81D5A7088F60@AM0PR04MB4145.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(366004)(376002)(199004)(71200400001)(9686003)(4326008)(186003)(53546011)(316002)(7416002)(54906003)(2906002)(52536014)(110136005)(33656002)(55016002)(8936002)(26005)(64756008)(86362001)(7696005)(81156014)(478600001)(66446008)(76116006)(66476007)(6506007)(66946007)(5660300002)(8676002)(44832011)(81166006)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4145;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QZ1xC6g20MSfhMOzyShfMophmcDi6cdnHqyw9x4BbScXs+uip/HYdIVsdq5BYBlWHqCHro9uT/okZvn2KPZ1fbRK3JCao0XrW2CqYa08bUKdoiB+2MP+EbYxGop0lPKAOja31hAqjacmmcH5oqveFFsPQXVnL+Dqf1U/xc1lXfdpHFInL3YWC86QW5Xo9ZD1KBooSd160z2xylj6weCO2MCF+Qc2DKAZjttwMEyHKjCXDbDF2Kq4s2+PThS+xR3u62otN60+k7JF+Uh6WwhRhHLacFxbBsGMra2/9W35TN/llZgt38EAGEb/1iFWXAhRa9NL7RAfjB2lOsrHdUuNtxPFOucCxwLcHnluzPgYE29oEP82vOVqwrWxG2ZUHJya3ZNhM1AKcBzRbE/2+gqwbQN74izHJ/7dawUdSGbOVCHCIX0x0qtEk+Qw3JwCDngX
-x-ms-exchange-antispam-messagedata: 2FmPbQCGFsO2PfoE21lXKsoi2HUZNuT+0RnkmcKmRu2Bs+4CgLeiMUnij/JyTSfmsxcxZFNjKev4wV41ena9UVotI2B4IcTKIXowbMiFhqeSE+jLDImueKjVGE8lKx3IhH30F48HiB0WDfMJQBpyQA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ bh=oQBuRqhmMKIKxn5QRROq9qN9dT7ei6DZY/MCiYQ1Y/o=;
+ b=SMVjoAKJIb5uX8rZDQpmNjJd3DxgVHpV2P2H9esSBampqiswpLyxVWmVCtNC06QA88b3rZYX65/vkGg3tcO9eGKniDNUBnZ3nBecoRLd36UhcMd8HJdx5Ip4Wyf71gkz9O4L6hbQzJKQaDwrFiZ2rGDWwhLUM0+dtaFRcKE68Qs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Shreyas.Joshi@biamp.com; 
+Received: from MN2PR17MB3197.namprd17.prod.outlook.com (2603:10b6:208:136::33)
+ by MN2PR17MB3567.namprd17.prod.outlook.com (2603:10b6:208:192::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.22; Tue, 17 Mar
+ 2020 02:17:46 +0000
+Received: from MN2PR17MB3197.namprd17.prod.outlook.com
+ ([fe80::31e3:fa7c:d1c0:ce24]) by MN2PR17MB3197.namprd17.prod.outlook.com
+ ([fe80::31e3:fa7c:d1c0:ce24%3]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 02:17:46 +0000
+Date:   Mon, 16 Mar 2020 19:17:36 -0700
+From:   Shreyas Joshi <shreyas.joshi@biamp.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        "pmladek@suse.com" <pmladek@suse.com>,
+        "sergey.senozhatsky@gmail.com" <sergey.senozhatsky@gmail.com>,
+        "shreyasjoshi15@gmail.com" <shreyasjoshi15@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] printk: handle blank console arguments passed in.
+Message-ID: <20200317021736.syreot6rs5rtqsh3@shreyas_biamp.biamp.com>
+References: <20200309052915.858-1-shreyas.joshi@biamp.com>
+ <MN2PR17MB31979437E605257461AC003DFCF60@MN2PR17MB3197.namprd17.prod.outlook.com>
+ <20200316213900.6b1eb594@oasis.local.home>
+ <20200317020144.GB219881@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200317020144.GB219881@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: ME3P282CA0008.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:220:80::18) To MN2PR17MB3197.namprd17.prod.outlook.com
+ (2603:10b6:208:136::33)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f90fa381-0cf1-4ba6-c8b0-08d7ca196ea2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 02:18:07.4290
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from shreyas_biamp.biamp.com (203.54.172.54) by ME3P282CA0008.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:80::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14 via Frontend Transport; Tue, 17 Mar 2020 02:17:44 +0000
+X-Originating-IP: [203.54.172.54]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a5ba5f7c-85dc-4559-73f8-08d7ca196216
+X-MS-TrafficTypeDiagnostic: MN2PR17MB3567:
+X-Microsoft-Antispam-PRVS: <MN2PR17MB3567441FA3E049DCFF36DF1DFCF60@MN2PR17MB3567.namprd17.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:256;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(39850400004)(366004)(376002)(199004)(52116002)(7696005)(16526019)(8676002)(26005)(86362001)(66556008)(186003)(6916009)(66946007)(66476007)(81166006)(478600001)(6666004)(55016002)(81156014)(8936002)(54906003)(2906002)(316002)(44832011)(956004)(1076003)(5660300002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR17MB3567;H:MN2PR17MB3197.namprd17.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: biamp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jIJigYVNTH1UAb1OL6sQhllcrY4o1wDoInHCxg0XseXVly45ATNr1hiw5+70EMUyKNn3QToNMbN+qy0ARN5a7p4s+/XgEG5dC420KTX5Bh4bzfNfB7DLMJqL6tot2PoksWVvuyngqJjkfZ0ziH0raGD3juZLSCU07HZumsPfH692D+zTlXzbi9MxR+fGFgfEgKrcoifsfR0gJEBO6pxv3Mach/vQHkml6JzRDvjSpUxXoZEpUkWoFdRLrZ7178Jbi1/g90Os7mzv/rTsEkCSJnBF7eafH74lCTHAvT7YIhFvFLVE14Hv5BIYKb+6P191FLxOxlFc23mMFSOgTu8ZoR6pX0JIhcdeIuT1TRn9dqeqbhBw1F+3AMoYZ3pDL5MFDzBi0sF3m4L0dPU2Svh8+FJSK0TRF6pMDoBDA2Dp5ZGal0i1efb8U+Si/UjP3NDK
+X-MS-Exchange-AntiSpam-MessageData: zmAmK244+AKs2rQgZ9AsFqoMq3N1UMzOZqDSw1mhf+3y4CxsHMksVeg2zR7Gm8dnBFdEWHdrEf4n9enHIu060UvUF8YoMsnjGEseXmf5eqncllGkVdjbQKAu6m/cgZ9l2PMdHzNgZCWi/qx2EaORgA==
+X-OriginatorOrg: biamp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5ba5f7c-85dc-4559-73f8-08d7ca196216
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 02:17:46.6245
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3Wsz9E0LiKuSMWQ9kT2QfbJpBuzhE2FVy9BktSTTs83Syi/QEmcO3QyDGNV/cjc2RYYvX8oBryrEt8/pk3dHtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4145
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 341ac572-066c-46f6-bf06-b2d0c7ddf1be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VIGbBRqODRQrqa/XoUMyf9U+eAGXMtBwqG9uxIhy6ABelgkv+m4tpYfBxc3u1va1y13YzE1DyNhAHcMHpGcYhg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR17MB3567
+X-BESS-ID: 1584411468-893024-22912-8243-1
+X-BESS-VER: 2019.1_20200316.2111
+X-BESS-Apparent-Source-IP: 104.47.55.106
+X-BESS-Outbound-Spam-Score: 1.50
+X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.222890 [from 
+        cloudscan13-5.us-east-2a.ess.aws.cudaops.com]
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------
+        0.00 MSGID_FROM_MTA_HEADER  META: Message-Id was added by a relay 
+        0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
+        1.50 MSGID_FROM_MTA_HEADER_2 META: Message-Id was added by a relay 
+X-BESS-Outbound-Spam-Status: SCORE=1.50 using account:ESS74049 scores of KILL_LEVEL=7.0 tests=MSGID_FROM_MTA_HEADER, BSF_BESS_OUTBOUND, MSGID_FROM_MTA_HEADER_2
+X-BESS-BRTS-Status: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSRTogW1BBVENIIFYzIDEvN10gZmlybXdhcmU6IGlteDogQWRkIHN0dWJzIGZv
-ciAhQ09ORklHX0lNWF9TQ1UNCj4gY2FzZQ0KPiANCj4gSGksIEFsZXhhbmRyZQ0KPiANCj4gPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IEFsZXhhbmRyZSBCZWxsb25pIDxh
-bGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbT4NCj4gPiBTZW50OiBNb25kYXksIE1hcmNoIDE2
-LCAyMDIwIDU6MTYgUE0NCj4gPiBUbzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+
-DQo+ID4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFBlbmcgRmFuIDxwZW5n
-LmZhbkBueHAuY29tPjsNCj4gPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0
-cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gPiBkbWl0cnkudG9yb2tob3ZAZ21haWwu
-Y29tOyBhLnp1bW1vQHRvd2VydGVjaC5pdDsNCj4gcnVpLnpoYW5nQGludGVsLmNvbTsNCj4gPiBk
-YW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnOyBhbWl0Lmt1Y2hlcmlhQHZlcmR1cmVudC5jb207IHdp
-bUBsaW51eC0NCj4gPiB3YXRjaGRvZy5vcmc7IGxpbnV4QHJvZWNrLXVzLm5ldDsgRGFuaWVsIEJh
-bHV0YQ0KPiA+IDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZzsNCj4gPiBsaW51eEByZW1wZWwtcHJpdmF0LmRlOyB0Z2x4QGxpbnV0cm9uaXguZGU7IG0u
-ZmVsc2NoQHBlbmd1dHJvbml4LmRlOw0KPiA+IGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVs
-LmNvbTsNCj4gPiBhcm5kQGFybmRiLmRlOyByb25hbGRAaW5ub3ZhdGlvbi5jaDsga3J6a0BrZXJu
-ZWwub3JnOyByb2JoQGtlcm5lbC5vcmc7DQo+ID4gTGVvbmFyZCBDcmVzdGV6IDxsZW9uYXJkLmNy
-ZXN0ZXpAbnhwLmNvbT47IEFpc2hlbmcgRG9uZw0KPiA+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+ID4ga2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4g
-PiBydGNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0K
-PiA+IHdhdGNoZG9nQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhw
-LmNvbT4NCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDEvN10gZmlybXdhcmU6IGlteDogQWRk
-IHN0dWJzIGZvcg0KPiA+ICFDT05GSUdfSU1YX1NDVSBjYXNlDQo+ID4NCj4gPiBPbiAxNi8wMy8y
-MDIwIDA5OjA4OjUzKzAwMDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+ID4gPiBXaHkgZG8geW91
-IGFic29sdXRlbHkgbmVlZCB0byBjb21waWxlIHRoZW0gaW5kZXBlbmRlbnRseT8gRnJvbSBhDQo+
-ID4gPiA+IGNvZGUgY292ZXJhZ2UgcG9pbnQgb2YgdmlldywgaGF2aW5nOg0KPiA+ID4gPg0KPiA+
-ID4gPiBDT01QSUxFX1RFU1Q9eQ0KPiA+ID4gPiBDT05GSUdfSU1YX1NDVT15DQo+ID4gPiA+DQo+
-ID4gPiA+IGlzIGVub3VnaCB0byBzZWxlY3QgYW5kIGNvbXBpbGUgdGhlIHJlbWFpbmluZyBkcml2
-ZXJzLg0KPiA+ID4NCj4gPiA+IFdoYXQgSSBtZWFudCBpcyBmb3IgYmVsb3cgY2FzZSwgbGlrZSB1
-c2luZyBvdGhlciBhcmNoIGNvbmZpZyB3aGljaA0KPiA+ID4gZG9lcyBOT1QgaGF2ZSBDT05GSUdf
-SU1YX1NDVSBzZWxlY3RlZCwgT05MWSB3aXRoIENPTVBJTEVfVEVTVA0KPiA+ID4gc2VsZWN0ZWQs
-IGFkZGluZyBzdHVicyBmb3IgSU1YX1NDVSBBUElzIGNhbiBmaXggc3VjaCBzY2VuYXJpby4NCj4g
-PiA+DQo+ID4gPiBDT01QSUxFX1RFU1Q9eQ0KPiA+ID4gQ09ORklHX0lNWF9TQ1U9bg0KPiA+ID4N
-Cj4gPg0KPiA+IFdoeSBpcyB0aGF0IGFuIGlzc3VlPyBJZiB0aGV5IGRvbid0IGhhdmUgSU1YX1ND
-VSBzZWxlY3RlZCwgdGhlbiB0aGUNCj4gPiBvdGhlciBTQ1UgZHJpdmVyIGFyZSBub3Qgc2VsZWN0
-ZWQgZWl0aGVyLCBoYXZpbmcgc3R1YnMgZG9lc24ndCBjaGFuZ2UNCj4gPiB0aGF0IHlvdSB3aWxs
-IGhhdmUgdG8gc2VsZWN0IGF0IGxlYXN0IG9uZSBvcHRpb24uIFBsZWFzZSBleHBsYWluIHdoYXQN
-Cj4gPiBpcyB0aGUgaXNzdWUgdGhhdCBpcyBub3Qgc29sdmVkIGhlcmUuDQo+IA0KPiBPSywgd2hh
-dCBJIHRob3VnaHQgaXMgZXZlbiB3aXRob3V0IElNWF9TQ1Ugc2VsZWN0ZWQsIG90aGVyIFNDVSBk
-cml2ZXJzIHN0aWxsDQo+IGNhbiBiZSBzZWxlY3RlZCBmb3IgYnVpbGQgdGVzdCBhZnRlciBhZGRp
-bmcgIkNPTVBJTEVfVEVTVCIgdG8gdGhlIGtjb25maWcsDQo+IGxpa2UgYmVsb3csIGlmIHdpdGhv
-dXQgSU1YX1NDVSBBUEkgc3R1YnMsIHRoZSAiQ09NUElMRV9URVNUIiBjYW4gTk9UIGJlDQo+IGFk
-ZGVkIHRvIFNDVSBkcml2ZXJzIHRvIGVuYWJsZSBidWlsZCB0ZXN0LCBzbyBJIHRoaW5rIHRoZSBJ
-TVhfU0NVIEFQSSBzdHVicw0KPiBzaG91bGQgYmUgYWRkZWQ/DQoNCkZvcmdvdCB0byBtZW50aW9u
-LCB3aXRob3V0IHN0dWIgYXBpLCBmb3IgZHJpdmVycyB3aXRoDQoiICNpbmNsdWRlIDxsaW51eC9m
-aXJtd2FyZS9pbXgvc2NpLmg+ICIgd2lsbCBtZXQgY29tcGlsZSBlcnJvciB3aXRob3V0DQorI2lm
-ZGVmIENPTkZJR19JTVhfU0NVDQorI2VuZGlmDQoNClNvIHdlIGhhdmUgdG8gdXNlIGlmZGVmIENP
-TkZJR19JTVhfU0NVIHRvIGd1YXJkIHRoZSBpbmNsdWRlLg0KDQpSZWdhcmRzLA0KUGVuZy4NCg0K
-PiANCj4gY29uZmlnIEtFWUJPQVJEX0lNWF9TQ19LRVkNCj4gICAgIHRyaXN0YXRlICJJTVggU0NV
-IEtleSBEcml2ZXIiDQo+ICAgICBkZXBlbmRzIG9uIElNWF9TQ1UgfHwgQ09NUElMRV9URVNUDQo+
-IA0KPiB0aGFua3MsDQo+IEFuc29uDQo=
+Thanks! I thought If we put a warning there then it won=E2=80=99t print any=
+thing.
+Please advise. I will send a new patch with the line wrapping to at most 75=
+  once
+I know if I need to change anything more.=20
+
+On Tue, Mar 17, 2020 at 11:01:44AM +0900, Sergey Senozhatsky wrote:
+> On (20/03/16 21:39), Steven Rostedt wrote:
+> [..]
+> > >=20
+> > > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c index ad=
+4606234545..e9ad730991e0 100644
+> > > --- a/kernel/printk/printk.c
+> > > +++ b/kernel/printk/printk.c
+> > > @@ -2165,7 +2165,10 @@ static int __init console_setup(char *str)
+> > >  	char buf[sizeof(console_cmdline[0].name) + 4]; /* 4 for "ttyS" */
+> > >  	char *s, *options, *brl_options =3D NULL;
+> > >  	int idx;
+> > > -
+> > > +	if (str[0] =3D=3D 0) {
+> > > +		console_loglevel =3D 0;
+> > > +		return 1;
+> >=20
+> > Hmm, I wonder if this should produce a warning :-/
+>=20
+> Hmm. Maybe the warning can seat in __setup() handling?
+> There are 300+ places that theoretically can receive blank boot param
+>=20
+> 	$ git grep "__setup(\".*=3D\"" | wc -l
+> 	307
+>=20
+> I'd assume that not all of those can handle blank params. At the same
+> time, do we have cases when passing blank boot params is OK? E.g.
+> "... root=3D/dev/sda1 foo=3D bar=3D ..."
+>=20
+> 	-ss
