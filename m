@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A53C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A64C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D4220736
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFBE2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443136;
-	bh=2Es2x8F4ndjoVOQ0H+k7WmfpKbG/6r8wz6oEvR92m5I=;
+	s=default; t=1584443138;
+	bh=CRAiRsPj69C9ETgEGNxuhbb4Z/h1iywmuW62uuQ1YmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oPrvLsH5/SJmX/D8Eqg3b9l/k2lQj01jWR0GwQHR4kvoYYhnzneLkh5MTaVtsDrYX
-	 DCHFWkDBv9KlCiqxKiZAQUGE0swmNnFNjJM06SjcM+Pwmmpd/tCLW1JLxdP5Odt7KV
-	 MRGnz+TN7iE1HpR0P7MQWi0GCcSPffnI6rsl9JTc=
+	b=xRtLUCtzbTrHrCRt8urZRhTj0x7gcgvOP67RpPe8KW2A8otgFJ/B0s8vsu5O9qRXg
+	 3W/ViXuyJusG6hTuVHuD1BfNxYhe4vbr0JMZ1wfyzNa0P7xHs9w1p4nfjN+p3o7RXZ
+	 FHetrVWCTs5bEqZUAmRgfyBx7iCAQQ9wOxsfBIgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgCQLFf (ORCPT
+        id S1728435AbgCQLFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46390 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:05:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbgCQLFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:33 -0400
+        id S1726947AbgCQLFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:05:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D9D120714;
-        Tue, 17 Mar 2020 11:05:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4BB520719;
+        Tue, 17 Mar 2020 11:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443132;
-        bh=2Es2x8F4ndjoVOQ0H+k7WmfpKbG/6r8wz6oEvR92m5I=;
+        s=default; t=1584443130;
+        bh=CRAiRsPj69C9ETgEGNxuhbb4Z/h1iywmuW62uuQ1YmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=whxvImbOu7KUeZHeePnaqPzjwPLo+lgd+UqU3qiuL+J0dSVPW7oePyNvvtHkz/3G4
-         le7IQrn9FvqaSY4dM0QGnmU2sUdTBYuvNz1wP3r008StyXcHyz6ZfveBiXXlvICJjG
-         2jj7HyqPVBxkLBjblL36xfYFc+XxFI9fzURmmTsg=
+        b=IJZId0tjesQMR5VZNQefo8lrDS7qXutk05m4oCor70322EeRnHatE2hC9aJCEBSG/
+         QHKJ3sTPtsa5yOoaNapR36MT17NdYKjPra0oO0j0DdWSddEYMCm6YJr1MioBAH80Ru
+         etG+5U2dCZhN2kZOksdddid0ibnDzAzCx4uPH7fg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.4 106/123] iommu/vt-d: Fix RCU-list bugs in intel_iommu_init()
-Date:   Tue, 17 Mar 2020 11:55:33 +0100
-Message-Id: <20200317103318.386788238@linuxfoundation.org>
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Artem S . Tashkinov" <aros@gmx.com>
+Subject: [PATCH 5.4 105/123] driver code: clarify and fix platform device DMA mask allocation
+Date:   Tue, 17 Mar 2020 11:55:32 +0100
+Message-Id: <20200317103318.293514324@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,77 +61,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Christoph Hellwig <hch@lst.de>
 
-commit 2d48ea0efb8887ebba3e3720bb5b738aced4e574 upstream.
+commit e3a36eb6dfaeea8175c05d5915dcf0b939be6dab upstream.
 
-There are several places traverse RCU-list without holding any lock in
-intel_iommu_init(). Fix them by acquiring dmar_global_lock.
+This does three inter-related things to clarify the usage of the
+platform device dma_mask field. In the process, fix the bug introduced
+by cdfee5623290 ("driver core: initialize a default DMA mask for
+platform device") that caused Artem Tashkinov's laptop to not boot with
+newer Fedora kernels.
 
- WARNING: suspicious RCU usage
- -----------------------------
- drivers/iommu/intel-iommu.c:5216 RCU-list traversed in non-reader section!!
+This does:
 
- other info that might help us debug this:
+ - First off, rename the field to "platform_dma_mask" to make it
+   greppable.
 
- rcu_scheduler_active = 2, debug_locks = 1
- no locks held by swapper/0/1.
+   We have way too many different random fields called "dma_mask" in
+   various data structures, where some of them are actual masks, and
+   some of them are just pointers to the mask. And the structures all
+   have pointers to each other, or embed each other inside themselves,
+   and "pdev" sometimes means "platform device" and sometimes it means
+   "PCI device".
 
- Call Trace:
-  dump_stack+0xa0/0xea
-  lockdep_rcu_suspicious+0x102/0x10b
-  intel_iommu_init+0x947/0xb13
-  pci_iommu_init+0x26/0x62
-  do_one_initcall+0xfe/0x500
-  kernel_init_freeable+0x45a/0x4f8
-  kernel_init+0x11/0x139
-  ret_from_fork+0x3a/0x50
- DMAR: Intel(R) Virtualization Technology for Directed I/O
+   So to make it clear in the code when you actually use this new field,
+   give it a unique name (it really should be something even more unique
+   like "platform_device_dma_mask", since it's per platform device, not
+   per platform, but that gets old really fast, and this is unique
+   enough in context).
 
-Fixes: d8190dc63886 ("iommu/vt-d: Enable DMA remapping after rmrr mapped")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+   To further clarify when the field gets used, initialize it when we
+   actually start using it with the default value.
+
+ - Then, use this field instead of the random one-off allocation in
+   platform_device_register_full() that is now unnecessary since we now
+   already have a perfectly fine allocation for it in the platform
+   device structure.
+
+ - The above then allows us to fix the actual bug, where the error path
+   of platform_device_register_full() would unconditionally free the
+   platform device DMA allocation with 'kfree()'.
+
+   That kfree() was dont regardless of whether the allocation had been
+   done earlier with the (now removed) kmalloc, or whether
+   setup_pdev_dma_masks() had already been used and the dma_mask pointer
+   pointed to the mask that was part of the platform device.
+
+It seems most people never triggered the error path, or only triggered
+it from a call chain that set an explicit pdevinfo->dma_mask value (and
+thus caused the unnecessary allocation that was "cleaned up" in the
+error path) before calling platform_device_register_full().
+
+Robin Murphy points out that in Artem's case the wdat_wdt driver failed
+in platform_device_add(), and that was the one that had called
+platform_device_register_full() with pdevinfo.dma_mask = 0, and would
+have caused that kfree() of pdev.dma_mask corrupting the heap.
+
+A later unrelated kmalloc() then oopsed due to the heap corruption.
+
+Fixes: cdfee5623290 ("driver core: initialize a default DMA mask for platform device")
+Reported-bisected-and-tested-by:  Artem S. Tashkinov <aros@gmx.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/intel-iommu.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/base/platform.c         |   25 ++++++-------------------
+ include/linux/platform_device.h |    2 +-
+ 2 files changed, 7 insertions(+), 20 deletions(-)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5024,6 +5024,7 @@ int __init intel_iommu_init(void)
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -335,10 +335,10 @@ static void setup_pdev_dma_masks(struct
+ {
+ 	if (!pdev->dev.coherent_dma_mask)
+ 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+-	if (!pdev->dma_mask)
+-		pdev->dma_mask = DMA_BIT_MASK(32);
+-	if (!pdev->dev.dma_mask)
+-		pdev->dev.dma_mask = &pdev->dma_mask;
++	if (!pdev->dev.dma_mask) {
++		pdev->platform_dma_mask = DMA_BIT_MASK(32);
++		pdev->dev.dma_mask = &pdev->platform_dma_mask;
++	}
+ };
  
- 	init_iommu_pm_ops();
+ /**
+@@ -634,20 +634,8 @@ struct platform_device *platform_device_
+ 	pdev->dev.of_node_reused = pdevinfo->of_node_reused;
  
-+	down_read(&dmar_global_lock);
- 	for_each_active_iommu(iommu, drhd) {
- 		iommu_device_sysfs_add(&iommu->iommu, NULL,
- 				       intel_iommu_groups,
-@@ -5031,6 +5032,7 @@ int __init intel_iommu_init(void)
- 		iommu_device_set_ops(&iommu->iommu, &intel_iommu_ops);
- 		iommu_device_register(&iommu->iommu);
+ 	if (pdevinfo->dma_mask) {
+-		/*
+-		 * This memory isn't freed when the device is put,
+-		 * I don't have a nice idea for that though.  Conceptually
+-		 * dma_mask in struct device should not be a pointer.
+-		 * See http://thread.gmane.org/gmane.linux.kernel.pci/9081
+-		 */
+-		pdev->dev.dma_mask =
+-			kmalloc(sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
+-		if (!pdev->dev.dma_mask)
+-			goto err;
+-
+-		kmemleak_ignore(pdev->dev.dma_mask);
+-
+-		*pdev->dev.dma_mask = pdevinfo->dma_mask;
++		pdev->platform_dma_mask = pdevinfo->dma_mask;
++		pdev->dev.dma_mask = &pdev->platform_dma_mask;
+ 		pdev->dev.coherent_dma_mask = pdevinfo->dma_mask;
  	}
-+	up_read(&dmar_global_lock);
  
- 	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
- 	if (si_domain && !hw_pass_through)
-@@ -5041,7 +5043,6 @@ int __init intel_iommu_init(void)
- 	down_read(&dmar_global_lock);
- 	if (probe_acpi_namespace_devices())
- 		pr_warn("ACPI name space devices didn't probe correctly\n");
--	up_read(&dmar_global_lock);
- 
- 	/* Finally, we enable the DMA remapping hardware. */
- 	for_each_iommu(iommu, drhd) {
-@@ -5050,6 +5051,8 @@ int __init intel_iommu_init(void)
- 
- 		iommu_disable_protect_mem_regions(iommu);
+@@ -672,7 +660,6 @@ struct platform_device *platform_device_
+ 	if (ret) {
+ err:
+ 		ACPI_COMPANION_SET(&pdev->dev, NULL);
+-		kfree(pdev->dev.dma_mask);
+ 		platform_device_put(pdev);
+ 		return ERR_PTR(ret);
  	}
-+	up_read(&dmar_global_lock);
-+
- 	pr_info("Intel(R) Virtualization Technology for Directed I/O\n");
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -24,7 +24,7 @@ struct platform_device {
+ 	int		id;
+ 	bool		id_auto;
+ 	struct device	dev;
+-	u64		dma_mask;
++	u64		platform_dma_mask;
+ 	u32		num_resources;
+ 	struct resource	*resource;
  
- 	intel_iommu_enabled = 1;
 
 
