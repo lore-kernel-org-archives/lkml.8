@@ -2,346 +2,295 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA40C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764A4C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9F2205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:47:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D9WtalTF"
+	by mail.kernel.org (Postfix) with ESMTP id 32024205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbgCQGrc (ORCPT
+        id S1725906AbgCQGut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:47:32 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:47500 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725785AbgCQGrc (ORCPT
+        Tue, 17 Mar 2020 02:50:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15952 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725536AbgCQGus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:47:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584427650; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=9qIAZKh2GUdzPYkV6USYz1gjhSnW7AIrgJcI3X3Ylcc=; b=D9WtalTFPNgJbUhjmWzXSJJqSi/4O8UWjD2Q5sUMxAPD0mYr/HFKQ+Yf8CtPT7TnCTFFZEMn
- 1ErxyDx91ELByBhcjX81I7ZCK2XbmJrcQYIJP4s7eZnsIu6Tu2O5LBYMrMUVjawwtCpbzDgM
- o7gh1wQKzUgGuaGwdXE2ZsVbVGg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e707282.7fa830ad8ca8-smtp-out-n02;
- Tue, 17 Mar 2020 06:47:30 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E363FC433CB; Tue, 17 Mar 2020 06:47:29 +0000 (UTC)
-Received: from [192.168.1.2] (unknown [183.83.137.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5515BC433D2;
-        Tue, 17 Mar 2020 06:47:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5515BC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [RFC v2] irqchip: qcom: pdc: Introduce irq_set_wake call
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
-        maz@kernel.org, jason@lakedaemon.net, dianders@chromium.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1584019379-12085-1-git-send-email-mkshah@codeaurora.org>
- <1584019379-12085-2-git-send-email-mkshah@codeaurora.org>
- <158441069917.88485.95270915247150166@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <bc2f75bc-1223-68b5-3c64-8ea17ee677cf@codeaurora.org>
-Date:   Tue, 17 Mar 2020 12:17:21 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 17 Mar 2020 02:50:48 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02H6Z5Lr029838
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:50:46 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ytb4u0rkk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:50:46 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <maddy@linux.ibm.com>;
+        Tue, 17 Mar 2020 06:50:44 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 17 Mar 2020 06:50:39 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02H6ocFu58261578
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 06:50:38 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9C675AE051;
+        Tue, 17 Mar 2020 06:50:38 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12600AE045;
+        Tue, 17 Mar 2020 06:50:31 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.82.238])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Mar 2020 06:50:30 +0000 (GMT)
+Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
+ information
+To:     Kim Phillips <kim.phillips@amd.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>
+References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
+ <20200302101332.GS18400@hirez.programming.kicks-ass.net>
+ <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
+ <df966d6e-8898-029f-e697-8496500a1663@amd.com>
+ <2550ec4d-a015-4625-ca24-ff10632dbe2e@linux.ibm.com>
+ <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
+ <8a4d966c-acc9-b2b7-8ab7-027aefab201c@linux.ibm.com>
+ <f226f4c5-6310-fd6b-ee76-aebd938ec212@amd.com>
+From:   maddy <maddy@linux.ibm.com>
+Date:   Tue, 17 Mar 2020 12:20:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <158441069917.88485.95270915247150166@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+In-Reply-To: <f226f4c5-6310-fd6b-ee76-aebd938ec212@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20031706-0008-0000-0000-0000035E89A2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031706-0009-0000-0000-00004A7FDF2B
+Message-Id: <0c5e94a3-e86e-f7cb-d668-d542b3a8ae29@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_01:2020-03-12,2020-03-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 clxscore=1015 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003170026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 3/17/2020 7:34 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-03-12 06:22:59)
->> Change the way interrupts get enabled at wakeup capable PDC irq chip.
->>
->> Introduce irq_set_wake call which lets interrupts enabled at PDC with
->> enable_irq_wake and disabled with disable_irq_wake with certain
->> conditions.
->>
->> Interrupt will get enabled in HW at PDC and its parent GIC if they are
->> either enabled is SW or marked as wake up capable.
-> Shouldn't we only enable in PDC and GIC if it's marked wakeup capable
-> and we're entering suspend? Otherwise we should let the hardware enable
-> state follow the software irq enable state?
-Not only during "sleep" but PDC (and GIC) have a role during "active" time as well.
-so we can not just enabled at PDC and GIC when entering to suspend, interrupt need
-to keep interrupt enabled at PDC and GIC HW when out of suspend as well.
->
->> interrupt will get disabled in HW at PDC and its parent GIC only if its
->> disabled in SW and also marked as non-wake up capable.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>  drivers/irqchip/qcom-pdc.c | 124 ++++++++++++++++++++++++++++++++++++++++++---
->>  1 file changed, 117 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->> index 6ae9e1f..d698cec 100644
->> --- a/drivers/irqchip/qcom-pdc.c
->> +++ b/drivers/irqchip/qcom-pdc.c
->> @@ -1,6 +1,6 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  /*
->> - * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
->> + * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
->>   */
->>  
->>  #include <linux/err.h>
->> @@ -30,6 +30,9 @@
->>  
->>  #define PDC_NO_PARENT_IRQ      ~0UL
->>  
->> +DECLARE_BITMAP(pdc_wake_irqs, PDC_MAX_IRQS);
->> +DECLARE_BITMAP(pdc_enabled_irqs, PDC_MAX_IRQS);
-> Please add static on both of these.
-Sure.
->
->> +
->>  struct pdc_pin_region {
->>         u32 pin_base;
->>         u32 parent_base;
->> @@ -80,20 +83,32 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
->>         index = pin_out / 32;
->>         mask = pin_out % 32;
->>  
->> -       raw_spin_lock(&pdc_lock);
->>         enable = pdc_reg_read(IRQ_ENABLE_BANK, index);
->>         enable = on ? ENABLE_INTR(enable, mask) : CLEAR_INTR(enable, mask);
->>         pdc_reg_write(IRQ_ENABLE_BANK, index, enable);
->> -       raw_spin_unlock(&pdc_lock);
->>  }
->>  
->>  static void qcom_pdc_gic_disable(struct irq_data *d)
->>  {
->> +       bool wake_status;
-> This name is not good. Why not 'wakeup_enabled'?
-I will rename to 'wakeup_enabled'
->
->> +
->>         if (d->hwirq == GPIO_NO_WAKE_IRQ)
->>                 return;
->>  
->> -       pdc_enable_intr(d, false);
->> -       irq_chip_disable_parent(d);
->> +       raw_spin_lock(&pdc_lock);
->> +
->> +       clear_bit(d->hwirq, pdc_enabled_irqs);
-> clear_bit() is atomic, so why inside the lock?
-I will move it out of lock.
->
->> +       wake_status = test_bit(d->hwirq, pdc_wake_irqs);
->> +
->> +       /* Disable at PDC HW if wake_status also says same */
->> +       if (!wake_status)
-> Should read as "if not wakeup_enabled".
-I will update comment.
->
->> +               pdc_enable_intr(d, false);
->> +
->> +       raw_spin_unlock(&pdc_lock);
->> +
->> +       /* Disable at GIC HW if wake_status also says same */
->> +       if (!wake_status)
-> This happens outside the lock, so I'm confused why any locking is needed
-> in this function.
-Okay, since test_bit() is also atomic so i will keep locking inside pc_enable_intr() as it is.
->
->> +               irq_chip_disable_parent(d);
->>  }
->>  
->>  static void qcom_pdc_gic_enable(struct irq_data *d)
->> @@ -101,7 +116,16 @@ static void qcom_pdc_gic_enable(struct irq_data *d)
->>         if (d->hwirq == GPIO_NO_WAKE_IRQ)
->>                 return;
->>  
->> +       raw_spin_lock(&pdc_lock);
->> +
->> +       set_bit(d->hwirq, pdc_enabled_irqs);
->> +
->> +       /* We can blindly enable at PDC HW as we are already in enable path */
->>         pdc_enable_intr(d, true);
->> +
->> +       raw_spin_unlock(&pdc_lock);
->> +
->> +       /* We can blindly enable at GIC HW as we are already in enable path */
->>         irq_chip_enable_parent(d);
->>  }
->>  
->> @@ -121,6 +145,92 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
->>         irq_chip_unmask_parent(d);
->>  }
->>  
->> +/**
->> + * qcom_pdc_gic_set_wake: Enables/Disables interrupt at PDC and parent GIC
->> + *
->> + * @d: the interrupt data
->> + * @on: enable or disable wakeup capability
->> + *
->> + * The SW expects that an irq that's disabled with disable_irq()
->> + * can still wake the system from sleep states such as "suspend to RAM",
->> + * if it has been marked for wakeup.
->> + *
->> + * While the SW may choose to differ status for "wake" and "enabled"
->> + * interrupts, its not the case with HW. There is no dedicated
->> + * configuration in HW to differ "wake" and "enabled". Same is
->> + * case for PDC's parent irq_chip (ARM GIC) which has only GICD_ISENABLER
->> + * to indicate "enabled" or "disabled" status and also there is no .irq_set_wake
->> + * implemented in parent GIC irq_chip.
->> + *
->> + * So, the HW ONLY understands either "enabled" or "disabled".
->> + *
->> + * This function is introduced to handle cases where drivers may invoke
->> + * below during suspend in SW on their irq, and expect to wake up from this
->> + * interrupt.
->> + *
->> + * 1. enable_irq_wake()
->> + * 2. disable_irq()
->> + *
->> + * and below during resume
->> + *
->> + * 3. disable_irq_wake()
->> + * 4. enable_irq()
->> + *
->> + * if (2) is invoked in end and just before suspend, it currently leaves
-> We shouldn't document the currently broken state of the code. Please
-> reword this.
-Okay.
->
->> + * interrupt "disabled" at HW and hence not leading to resume.
->> + *
->> + * Note that the order of invoking (1) & (2) may interchange and similarly
->> + * it can interchange for (3) & (4) as per driver's wish.
->> + *
->> + * if the driver call .irq_set_wake first it will enable at HW but later
-> s/if/If/
-I will address.
->
->> + * call with .irq_disable will disable at HW. so final result is again
-> s/so/So/
-I will address.
->
->> + * "disabled" at HW whereas the HW expectection is to keep it "enabled"
-> s/expectection/expectation/
-I will address.
->
->> + * since it understands only "enabled" or "disabled".
->> + *
->> + * Hence .irq_set_wake can not just go ahead and  "enable" or "disable"
->> + * at HW blindly, it needs to take in account status of currently "enable"
-> s/in/into/
-I will address.
->
->> + * or "disable" as well.
-> "status of currently enable or disable as well" doesn't make any sense
-> to me. Is this "take into account if the interrupt is enabled or
-> disableed"?
-I will address.
->
->> + *
->> + * Introduce .irq_set_wake in PDC irq_chip to handle above issue.
->> + * The final status in HW should be an "OR" of "enable" and "wake" calls.
->> + * (i.e. same as below table)
->> + * -------------------------------------------------|
->> + * ENABLE in SW | WAKE in SW | PDC & GIC HW Status  |
-> Presumably 'PDC & GIC HW status' means enabled in PDC and GIC hardware?
-True.
->
->> + *      0       |     0      |     0               |
->> + *      0      |     1      |     1                |
->> + *     1       |     0      |     1                |
->> + *     1       |     1      |     1                |
->> + *--------------------------------------------------|
-> Are there tabs in here? Probably better to just use spaces everywhere or
-> drop the OR table because it's literally just two variables.
->
->  irq enable | irq wake == PDC & GIC hardware irq enabled
-Okay, i will remove table and keep above.
->
->> + */
->> +
->> +static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
->> +{
->> +       bool enabled_status;
->> +
->> +       if (d->hwirq == GPIO_NO_WAKE_IRQ)
->> +               return 0;
->> +
->> +       raw_spin_lock(&pdc_lock);
->> +       enabled_status = test_bit(d->hwirq, pdc_enabled_irqs);
->> +       if (on) {
->> +               set_bit(d->hwirq, pdc_wake_irqs);
->> +               pdc_enable_intr(d, true);
->> +       } else {
->> +               clear_bit(d->hwirq, pdc_wake_irqs);
->> +               pdc_enable_intr(d, enabled_status);
->> +       }
->> +
->> +       raw_spin_unlock(&pdc_lock);
->> +
->> +       /* Either "wake" or "enabled" need same status at parent as well */
->> +       if (on || enabled_status)
->> +               irq_chip_enable_parent(d);
->> +       else
->> +               irq_chip_disable_parent(d);
-> What happens if irq is "disabled" in software, because this is the first
-> function called on the irq, and we aren't in suspend yet. Then we get
-> the irq. Won't we be interrupting the CPU because we've enabled in PDC
-> and GIC hardware? Why doesn't this function update the wake bit and then
-> leave the force on irq logic to suspend entry? Will we miss an interrupt
-> while entering suspend because of that?
-As PDC (and GIC) have a role during "active" time as well, interrupt should be
-enabled in PDC and GIC HW.
->
-> Otherwise, I wonder why the code can't be:
->
-> 	if (on)
-> 		set_bit(d->hwirq, pdc_wake_irqs);
-> 	else
-> 		clear_bit(d->hwirq, pdc_wake_irqs);
-> 	
-> 	pdc_enable_intr(d, on);
->
-> Then we can leave the lock inside the pdc_enable_intr() function 
-okay, since set_bit(), clear_bit(), test_bit() are atomic, i will address this to keep
-locking inside pdc_enable_intr() only.
-> and
-> test for both bitmasks there and or in whatever software is asking for?
-> It would be nice to simplify the callers and make the code that actually
-> writes the hardware do a small bit test and set operation.
-.irq_set_wake is testing both "enabled" and "wake" bitmask and then invoking respective parent API.
-IMO, This is simpler to keep PDC functionality separate in pdc_enable_intr() and not mix it with invoking parent APIs.
->
->> +
->> +       return irq_chip_set_wake_parent(d, on);
->> +}
->> +
->>  /*
->>   * GIC does not handle falling edge or active low. To allow falling edge and
->>   * active low interrupts to be handled at GIC, PDC has an inverter that inverts
-Thanks,
-Maulik
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+On 3/13/20 4:08 AM, Kim Phillips wrote:
+> On 3/11/20 11:00 AM, Ravi Bangoria wrote:
+>> Hi Kim,
+> Hi Ravi,
+>
+>> On 3/6/20 3:36 AM, Kim Phillips wrote:
+>>>> On 3/3/20 3:55 AM, Kim Phillips wrote:
+>>>>> On 3/2/20 2:21 PM, Stephane Eranian wrote:
+>>>>>> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>>>>>>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
+>>>>>>>> Modern processors export such hazard data in Performance
+>>>>>>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
+>>>>>>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
+>>>>>>>> AMD[3] provides similar information.
+>>>>>>>>
+>>>>>>>> Implementation detail:
+>>>>>>>>
+>>>>>>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
+>>>>>>>> If it's set, kernel converts arch specific hazard information
+>>>>>>>> into generic format:
+>>>>>>>>
+>>>>>>>>      struct perf_pipeline_haz_data {
+>>>>>>>>             /* Instruction/Opcode type: Load, Store, Branch .... */
+>>>>>>>>             __u8    itype;
+>>>>>>>>             /* Instruction Cache source */
+>>>>>>>>             __u8    icache;
+>>>>>>>>             /* Instruction suffered hazard in pipeline stage */
+>>>>>>>>             __u8    hazard_stage;
+>>>>>>>>             /* Hazard reason */
+>>>>>>>>             __u8    hazard_reason;
+>>>>>>>>             /* Instruction suffered stall in pipeline stage */
+>>>>>>>>             __u8    stall_stage;
+>>>>>>>>             /* Stall reason */
+>>>>>>>>             __u8    stall_reason;
+>>>>>>>>             __u16   pad;
+>>>>>>>>      };
+>>>>>>> Kim, does this format indeed work for AMD IBS?
+>>>>> It's not really 1:1, we don't have these separations of stages
+>>>>> and reasons, for example: we have missed in L2 cache, for example.
+>>>>> So IBS output is flatter, with more cycle latency figures than
+>>>>> IBM's AFAICT.
+>>>> AMD IBS captures pipeline latency data incase Fetch sampling like the
+>>>> Fetch latency, tag to retire latency, completion to retire latency and
+>>>> so on. Yes, Ops sampling do provide more data on load/store centric
+>>>> information. But it also captures more detailed data for Branch instructions.
+>>>> And we also looked at ARM SPE, which also captures more details pipeline
+>>>> data and latency information.
+>>>>
+>>>>>> Personally, I don't like the term hazard. This is too IBM Power
+>>>>>> specific. We need to find a better term, maybe stall or penalty.
+>>>>> Right, IBS doesn't have a filter to only count stalled or otherwise
+>>>>> bad events.  IBS' PPR descriptions has one occurrence of the
+>>>>> word stall, and no penalty.  The way I read IBS is it's just
+>>>>> reporting more sample data than just the precise IP: things like
+>>>>> hits, misses, cycle latencies, addresses, types, etc., so words
+>>>>> like 'extended', or the 'auxiliary' already used today even
+>>>>> are more appropriate for IBS, although I'm the last person to
+>>>>> bikeshed.
+>>>> We are thinking of using "pipeline" word instead of Hazard.
+>>> Hm, the word 'pipeline' occurs 0 times in IBS documentation.
+>> NP. We thought pipeline is generic hw term so we proposed "pipeline"
+>> word. We are open to term which can be generic enough.
+>>
+>>> I realize there are a couple of core pipeline-specific pieces
+>>> of information coming out of it, but the vast majority
+>>> are addresses, latencies of various components in the memory
+>>> hierarchy, and various component hit/miss bits.
+>> Yes. we should capture core pipeline specific details. For example,
+>> IBS generates Branch unit information(IbsOpData1) and Icahce related
+>> data(IbsFetchCtl) which is something that shouldn't be extended as
+>> part of perf-mem, IMO.
+> Sure, IBS Op-side output is more 'perf mem' friendly, and so it
+> should populate perf_mem_data_src fields, just like POWER9 can:
+>
+> union perf_mem_data_src {
+> ...
+>                  __u64   mem_rsvd:24,
+>                          mem_snoopx:2,   /* snoop mode, ext */
+>                          mem_remote:1,   /* remote */
+>                          mem_lvl_num:4,  /* memory hierarchy level number */
+>                          mem_dtlb:7,     /* tlb access */
+>                          mem_lock:2,     /* lock instr */
+>                          mem_snoop:5,    /* snoop mode */
+>                          mem_lvl:14,     /* memory hierarchy level */
+>                          mem_op:5;       /* type of opcode */
+>
+>
+> E.g., SIER[LDST] SIER[A_XLATE_SRC] can be used to populate
+> mem_lvl[_num], SIER_TYPE can be used to populate 'mem_op',
+> 'mem_lock', and the Reload Bus Source Encoding bits can
+> be used to populate mem_snoop, right?
+Hi Kim,
+
+Yes. We do expose these data as part of perf-mem for POWER.
+
+
+> For IBS, I see PERF_SAMPLE_ADDR and PERF_SAMPLE_PHYS_ADDR can be
+> used for the ld/st target addresses, too.
+>
+>>> What's needed here is a vendor-specific extended
+>>> sample information that all these technologies gather,
+>>> of which things like e.g., 'L1 TLB cycle latency' we
+>>> all should have in common.
+>> Yes. We will include fields to capture the latency cycles (like Issue
+>> latency, Instruction completion latency etc..) along with other pipeline
+>> details in the proposed structure.
+> Latency figures are just an example, and from what I
+> can tell, struct perf_sample_data already has a 'weight' member,
+> used with PERF_SAMPLE_WEIGHT, that is used by intel-pt to
+> transfer memory access latency figures.  Granted, that's
+> a bad name given all other vendors don't call latency
+> 'weight'.
+>
+> I didn't see any latency figures coming out of POWER9,
+> and do not expect this patchseries to implement those
+> of other vendors, e.g., AMD's IBS; leave each vendor
+> to amend perf to suit their own h/w output please.
+
+Reference structure proposed in this patchset did not have members
+to capture latency info for that exact reason. But idea here is to
+abstract  as vendor specific as possible. So if we include u16 array,
+then this format can also capture data from IBS since it provides
+few latency details.
+
+
+>
+> My main point there, however, was that each vendor should
+> use streamlined record-level code to just copy the data
+> in the proprietary format that their hardware produces,
+> and then then perf tooling can synthesize the events
+> from the raw data at report/script/etc. time.
+>
+>>> I'm not sure why a new PERF_SAMPLE_PIPELINE_HAZ is needed
+>>> either.  Can we use PERF_SAMPLE_AUX instead?
+>> We took a look at PERF_SAMPLE_AUX. IIUC, PERF_SAMPLE_AUX is intended when
+>> large volume of data needs to be captured as part of perf.data without
+>> frequent PMIs. But proposed type is to address the capture of pipeline
+> SAMPLE_AUX shouldn't care whether the volume is large, or how frequent
+> PMIs are, even though it may be used in those environments.
+>
+>> information on each sample using PMI at periodic intervals. Hence proposing
+>> PERF_SAMPLE_PIPELINE_HAZ.
+> And that's fine for any extra bits that POWER9 has to convey
+> to its users beyond things already represented by other sample
+> types like PERF_SAMPLE_DATA_SRC, but the capturing of both POWER9
+> and other vendor e.g., AMD IBS data can be made vendor-independent
+> at record time by using SAMPLE_AUX, or SAMPLE_RAW even, which is
+> what IBS currently uses.
+
+My bad. Not sure what you mean by this. We are trying to abstract
+as much vendor specific data as possible with this (like perf-mem).
+
+
+Maddy
+>
+>>>   Take a look at
+>>> commit 98dcf14d7f9c "perf tools: Add kernel AUX area sampling
+>>> definitions".  The sample identifier can be used to determine
+>>> which vendor's sampling IP's data is in it, and events can
+>>> be recorded just by copying the content of the SIER, etc.
+>>> registers, and then events get synthesized from the aux
+>>> sample at report/inject/annotate etc. time.  This allows
+>>> for less sample recording overhead, and moves all the vendor
+>>> specific decoding and common event conversions for userspace
+>>> to figure out.
+>> When AUX buffer data is structured, tool side changes added to present the
+>> pipeline data can be re-used.
+> Not sure I understand: AUX data would be structured on
+> each vendor's raw h/w register formats.
+>
+> Thanks,
+>
+> Kim
+>
+>>>>>> Also worth considering is the support of ARM SPE (Statistical
+>>>>>> Profiling Extension) which is their version of IBS.
+>>>>>> Whatever gets added need to cover all three with no limitations.
+>>>>> I thought Intel's various LBR, PEBS, and PT supported providing
+>>>>> similar sample data in perf already, like with perf mem/c2c?
+>>>> perf-mem is more of data centric in my opinion. It is more towards
+>>>> memory profiling. So proposal here is to expose pipeline related
+>>>> details like stalls and latencies.
+>>> Like I said, I don't see it that way, I see it as "any particular
+>>> vendor's event's extended details', and these pipeline details
+>>> have overlap with existing infrastructure within perf, e.g., L2
+>>> cache misses.
+>>>
+>>> Kim
+>>>
+
