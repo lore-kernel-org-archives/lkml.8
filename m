@@ -2,177 +2,229 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777FBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7414C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8622073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584482822;
-	bh=ZzzF4IInyWhfmdGwjTELReIaxVNrOMVNvqgepjegWQc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=BY6p4QSDQyv3DWY5Carls/8y19UxyH0HxInQgLg2Gp/2nuQZ4Ddc69aoEUSvYb6dl
-	 ZSCgmaij4fBxvADfutumkIgaQ69gxV8+nQHA3E2QdDd+rIh2bItb6uZiNxohCAQKoN
-	 qyFzQ12dp5aan5NHntSZ7nUxZLRrMLkwxziWLKLM=
+	by mail.kernel.org (Postfix) with ESMTP id 8CAFE20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LBJ9w5xw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgCQWHB (ORCPT
+        id S1726987AbgCQWJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbgCQWHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:07:01 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F80120714;
-        Tue, 17 Mar 2020 22:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584482819;
-        bh=ZzzF4IInyWhfmdGwjTELReIaxVNrOMVNvqgepjegWQc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OdOXnXj9LlSGcDZMNHeRsmlw4R57pKj6EiC8MD4IYlG/mH6hlAw1YPB+y5D4DjfZD
-         0zada6GEQGuQT5DVcQQeHaxTHzpG2F8q++JeNEKmjHf0n/Po+lSz0W7aIMBRa1I2tr
-         JGxkHo7hbyhZrrtrcku9dvGGSuDndoVzh2h0ClDQ=
-Date:   Tue, 17 Mar 2020 17:06:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 03/17] docs: pci: boot-interrupts.rst: improve html output
-Message-ID: <20200317220657.GA234515@google.com>
+        Tue, 17 Mar 2020 18:09:00 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46392 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgCQWJA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:09:00 -0400
+Received: by mail-vs1-f66.google.com with SMTP id z125so15072234vsb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Xufgn0OKnMLWDPNBQrBmijk0THuIRKUCGVKI3TWem0=;
+        b=LBJ9w5xwNE+aBUpx4MuIBjJU02sMVrYW95UIgpl6Hn+EPqaaAypPL66XKyS0+i0eJj
+         jq7EupSJOtI6HbkN/hpEtWRmRVwoDi97USDSDIz1xe4nHt+IF1BNqHKZr/k9bsECGllG
+         7OtjEB1LbjxCMdtwAHoPDkhA912qlFRmbtT7U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Xufgn0OKnMLWDPNBQrBmijk0THuIRKUCGVKI3TWem0=;
+        b=BLi1Au+3bslB5ww/6Q2hVGFeApoknM+kaxvqnnkwUS7l27I1XtM/x09MXNNAsRYexI
+         6oSEVGFpdhVnZinNCvFF7OpENVcc7aXmlqPhxI9lLyf4Td03uWm4FBXzJFNOEa17snWH
+         qyssafsqR0ivpM7RVU33DIvM6haDz3ghB5GfxFo+Rl1pzC7CHVPtv1Rk5mJijgBCMSov
+         4JKH5MIkrYwzCQ8nd2e8+SRafrHv9kAKOoV74fRzmpyXUJmTOtEgDHcEg05BH8N02SMI
+         Yi0HkhDgXnlL9TahhrY9jS6fEpJRKqTa6+M7G7JANfnyMNhwU/ZpR4kMpDpiJJBEtrZF
+         PgPA==
+X-Gm-Message-State: ANhLgQ2+j6dZjw+GEapBTPHKKznFZ9LY6kXQbaTLbnAnG2js8qaHsuHu
+        rXwahSH+YkZHU1qUnL3/jFyegWpU4hM=
+X-Google-Smtp-Source: ADFU+vvYqzIain5eAie+Mq4CBGYfwEGTgArC+rb9jdDXQc31uK974wYoVr+OQVwMVOeMMmEylSn2eQ==
+X-Received: by 2002:a67:646:: with SMTP id 67mr930132vsg.34.1584482938382;
+        Tue, 17 Mar 2020 15:08:58 -0700 (PDT)
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
+        by smtp.gmail.com with ESMTPSA id e21sm2100198uan.1.2020.03.17.15.08.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 15:08:57 -0700 (PDT)
+Received: by mail-vk1-f182.google.com with SMTP id t3so6487561vkm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:08:57 -0700 (PDT)
+X-Received: by 2002:ac5:c7b6:: with SMTP id d22mr1237683vkn.75.1584482936521;
+ Tue, 17 Mar 2020 15:08:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2e7eea224a8bb76ef2c02bd3c830156baeb35d0f.1584456635.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200317133653.v2.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
+ <158448096503.88485.8894151453752608519@swboyd.mtv.corp.google.com>
+In-Reply-To: <158448096503.88485.8894151453752608519@swboyd.mtv.corp.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 17 Mar 2020 15:08:45 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U+c4GZU1p3xYT3t=0Q2cLFxoiM=vqc8SsxOKehxbZPXw@mail.gmail.com>
+Message-ID: <CAD=FV=U+c4GZU1p3xYT3t=0Q2cLFxoiM=vqc8SsxOKehxbZPXw@mail.gmail.com>
+Subject: Re: [PATCH v2] spi: spi-geni-qcom: Speculative fix of "nobody cared"
+ about interrupt
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 03:54:12PM +0100, Mauro Carvalho Chehab wrote:
-> There are some warnings with this file:
-> 
->     /Documentation/PCI/boot-interrupts.rst:42: WARNING: Unexpected indentation.
->     /Documentation/PCI/boot-interrupts.rst:52: WARNING: Block quote ends without a blank line; unexpected unindent.
->     /Documentation/PCI/boot-interrupts.rst:92: WARNING: Unexpected indentation.
->     /Documentation/PCI/boot-interrupts.rst:98: WARNING: Unexpected indentation.
->     /Documentation/PCI/boot-interrupts.rst:136: WARNING: Unexpected indentation.
-> 
-> It turns that this file conversion to ReST could be improved,
-> in order to remove the warnings and provide a better output.
-> 
-> So, fix the warnings by adjusting blank lines, add a table and
-> some list markups. Also, mark endnodes as such.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Hi,
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Mar 17, 2020 at 2:36 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> > Patch is marked "speculative" because I have no way to reproduce this
+> > problem, so I'm just hoping this fixes it.  Weakly ordered memory
+> > makes my brain hurt.
+>
+> It could be that. It could also be the poor design of geni_se_init() and
+> how it enables many interrupts that this driver doesn't look to handle?
+> Why do we allow the wrapper to enable all those bits in
+> M_COMMON_GENI_M_IRQ_EN and S_COMMON_GENI_S_IRQ_EN if nobody is going to
+> handle them?
 
-> ---
->  Documentation/PCI/boot-interrupts.rst | 34 +++++++++++++++------------
->  1 file changed, 19 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/PCI/boot-interrupts.rst b/Documentation/PCI/boot-interrupts.rst
-> index d078ef3eb192..2ec70121bfca 100644
-> --- a/Documentation/PCI/boot-interrupts.rst
-> +++ b/Documentation/PCI/boot-interrupts.rst
-> @@ -32,12 +32,13 @@ interrupt goes unhandled over time, they are tracked by the Linux kernel as
->  Spurious Interrupts. The IRQ will be disabled by the Linux kernel after it
->  reaches a specific count with the error "nobody cared". This disabled IRQ
->  now prevents valid usage by an existing interrupt which may happen to share
-> -the IRQ line.
-> +the IRQ line::
->  
->    irq 19: nobody cared (try booting with the "irqpoll" option)
->    CPU: 0 PID: 2988 Comm: irq/34-nipalk Tainted: 4.14.87-rt49-02410-g4a640ec-dirty #1
->    Hardware name: National Instruments NI PXIe-8880/NI PXIe-8880, BIOS 2.1.5f1 01/09/2020
->    Call Trace:
-> +
->    <IRQ>
->     ? dump_stack+0x46/0x5e
->     ? __report_bad_irq+0x2e/0xb0
-> @@ -85,15 +86,18 @@ Mitigations
->  The mitigations take the form of PCI quirks. The preference has been to
->  first identify and make use of a means to disable the routing to the PCH.
->  In such a case a quirk to disable boot interrupt generation can be
-> -added.[1]
-> +added. [1]_
->  
-> -  Intel® 6300ESB I/O Controller Hub
-> +Intel® 6300ESB I/O Controller Hub
->    Alternate Base Address Register:
->     BIE: Boot Interrupt Enable
-> -	  0 = Boot interrupt is enabled.
-> -	  1 = Boot interrupt is disabled.
->  
-> -  Intel® Sandy Bridge through Sky Lake based Xeon servers:
-> +	  ==  ===========================
-> +	  0   Boot interrupt is enabled.
-> +	  1   Boot interrupt is disabled.
-> +	  ==  ===========================
-> +
-> +Intel® Sandy Bridge through Sky Lake based Xeon servers:
->    Coherent Interface Protocol Interrupt Control
->     dis_intx_route2pch/dis_intx_route2ich/dis_intx_route2dmi2:
->  	  When this bit is set. Local INTx messages received from the
-> @@ -109,12 +113,12 @@ line by default.  Therefore, on chipsets where this INTx routing cannot be
->  disabled, the Linux kernel will reroute the valid interrupt to its legacy
->  interrupt. This redirection of the handler will prevent the occurrence of
->  the spurious interrupt detection which would ordinarily disable the IRQ
-> -line due to excessive unhandled counts.[2]
-> +line due to excessive unhandled counts. [2]_
->  
->  The config option X86_REROUTE_FOR_BROKEN_BOOT_IRQS exists to enable (or
->  disable) the redirection of the interrupt handler to the PCH interrupt
->  line. The option can be overridden by either pci=ioapicreroute or
-> -pci=noioapicreroute.[3]
-> +pci=noioapicreroute. [3]_
->  
->  
->  More Documentation
-> @@ -127,19 +131,19 @@ into the evolution of its handling with chipsets.
->  Example of disabling of the boot interrupt
->  ------------------------------------------
->  
-> -Intel® 6300ESB I/O Controller Hub (Document # 300641-004US)
-> +      - Intel® 6300ESB I/O Controller Hub (Document # 300641-004US)
->  	5.7.3 Boot Interrupt
->  	https://www.intel.com/content/dam/doc/datasheet/6300esb-io-controller-hub-datasheet.pdf
->  
-> -Intel® Xeon® Processor E5-1600/2400/2600/4600 v3 Product Families
-> -Datasheet - Volume 2: Registers (Document # 330784-003)
-> +      - Intel® Xeon® Processor E5-1600/2400/2600/4600 v3 Product Families
-> +	Datasheet - Volume 2: Registers (Document # 330784-003)
->  	6.6.41 cipintrc Coherent Interface Protocol Interrupt Control
->  	https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e5-v3-datasheet-vol-2.pdf
->  
->  Example of handler rerouting
->  ----------------------------
->  
-> -Intel® 6700PXH 64-bit PCI Hub (Document # 302628)
-> +      - Intel® 6700PXH 64-bit PCI Hub (Document # 302628)
->  	2.15.2 PCI Express Legacy INTx Support and Boot Interrupt
->  	https://www.intel.com/content/dam/doc/datasheet/6700pxh-64-bit-pci-hub-datasheet.pdf
->  
-> @@ -150,6 +154,6 @@ Cheers,
->      Sean V Kelley
->      sean.v.kelley@linux.intel.com
->  
-> -[1] https://lore.kernel.org/r/12131949181903-git-send-email-sassmann@suse.de/
-> -[2] https://lore.kernel.org/r/12131949182094-git-send-email-sassmann@suse.de/
-> -[3] https://lore.kernel.org/r/487C8EA7.6020205@suse.de/
-> +.. [1] https://lore.kernel.org/r/12131949181903-git-send-email-sassmann@suse.de/
-> +.. [2] https://lore.kernel.org/r/12131949182094-git-send-email-sassmann@suse.de/
-> +.. [3] https://lore.kernel.org/r/487C8EA7.6020205@suse.de/
-> -- 
-> 2.24.1
-> 
+It is possible it's related to an interrupt that we don't handle.  However:
+
+* IMO having the locking in place is safer anyway.  At some point I
+read that advice that trying to reason about weakly ordered memory was
+simply too hard for the average person (even the average kernel
+developer).  In 99% of the cases you could just use a lock so it's
+super clear and the performance difference is near zero.
+
+* Most of the cases I saw of the "nobody cared" for geni-spi was on a
+mostly idle system (presumably still doing periodic SPI transactions
+to the EC, though).  It seems weird that one of these other interrupts
+would suddenly fire.  It seems more likely that we just happened to
+win a race of some sort.
+
+If nothing else it will suddenly become very obvious after my patch
+lands because I'll print out the status.
+
+
+That all being said if someone wants to submit a patch to clean up
+which interrupts are enabled I'd support it.
+
+
+> > @@ -151,16 +151,19 @@ static void spi_geni_set_cs(struct spi_device *slv, bool set_flag)
+> >         struct geni_se *se = &mas->se;
+> >         unsigned long time_left;
+> >
+> > -       reinit_completion(&mas->xfer_done);
+> >         pm_runtime_get_sync(mas->dev);
+> >         if (!(slv->mode & SPI_CS_HIGH))
+> >                 set_flag = !set_flag;
+> >
+> > +       spin_lock_irq(&mas->lock);
+>
+> Why is this spin_lock_irq() vs. spin_lock_irqsave()? This isn't possible
+> to be called from somewhere that hasn't changed irq flags?
+
+See below.
+
+
+> > +       reinit_completion(&mas->xfer_done);
+> > +
+> >         mas->cur_mcmd = CMD_CS;
+> >         if (set_flag)
+> >                 geni_se_setup_m_cmd(se, SPI_CS_ASSERT, 0);
+> >         else
+> >                 geni_se_setup_m_cmd(se, SPI_CS_DEASSERT, 0);
+> > +       spin_unlock_irq(&mas->lock);
+>
+> This will force on interrupts if they were masked.
+
+I'll change it if you want, but in this function there is already a
+call to "wait_for_completion_timeout".  That's not gonna be too happy
+if this function is ever called with interrupts already masked.  Also
+in this function is pm_runtime_get_sync() which in many cases will
+sleep (I think we'll end up in geni_se_clks_on() which calls
+clk_bulk_prepare_enable()).
+
+In cases where you know for sure that interrupts aren't masked,
+spin_lock_irq() and spin_unlock_irq() are fine and that's what they're
+for, no?
+
+
+> >         time_left = wait_for_completion_timeout(&mas->xfer_done, HZ);
+> >         if (!time_left)
+> > @@ -307,6 +310,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
+> >         u32 spi_tx_cfg, len;
+> >         struct geni_se *se = &mas->se;
+> >
+> > +       spin_lock_irq(&mas->lock);
+
+...and just to answer the same question for here: setup_fifo_xfer() is
+called from spi_geni_transfer_one() which is our "transfer_one"
+function.  We don't happen to block anywhere in these functions, but
+I'm nearly certain you are allowed to block in them.  We actually
+return a positive number to indicate to the SPI core that we're not
+doing the blocking ourselves but since the SPI core can't know we were
+going to do that it has to assume we might block.
+
+
+> > @@ -478,13 +485,29 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
+> >         struct geni_se *se = &mas->se;
+> >         u32 m_irq;
+> >         unsigned long flags;
+> > -
+> > -       if (mas->cur_mcmd == CMD_NONE)
+> > -               return IRQ_NONE;
+> > +       irqreturn_t ret = IRQ_HANDLED;
+> >
+> >         spin_lock_irqsave(&mas->lock, flags);
+
+Ironically the above could probably just be "spin_lock" since this is
+our interrupt handler.  ;-)  I'll just leave it alone though since
+what's there now doesn't hurt.
+
+
+> >         m_irq = readl(se->base + SE_GENI_M_IRQ_STATUS);
+>
+> Does this read need to be inside the lock?
+
+Probably not.  Discussion below.
+
+
+> > +       /* Check for spurious interrupt */
+> > +       if (!m_irq) {
+> > +               ret = IRQ_NONE;
+> > +               goto exit;
+>
+> I ask because it could be simplified by reading the status and then
+> immediately returning IRQ_NONE if no bits are set without having to do
+> the lock/unlock dance. And does writing 0 to the irq clear register do
+> anything?
+
+Sure.  I'll move it if you want.  It felt nicer to just keep the whole
+thing under lock so I didn't have to think about whether it mattered.
+...and anyone else looking at it didn't need to think about if it
+mattered, too.  It it is very easy to say that it doesn't _hurt_ to
+have it under lock other than having one extra memory read under lock.
+...and presumably the case where the optimization matters is
+incredibly rare (a spurious interrupt) and we just spent a whole lot
+of cycles calling the interrupt handler to begin with for this
+spurious interrupt.
+
+I would have a hard time believing that a write of 0 to a "write 1 to
+clear" register would have any impact.  It would be a pretty bad
+hardware design...
+
+
+So I guess in summary, I'm not planning to spin for any of these
+things unless you really insist or you say I'm wrong about something
+above or someone else says my opinions are the wrong opinions.
+
+-Doug
