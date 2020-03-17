@@ -2,158 +2,143 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391FAC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93F7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCC320409
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A073820409
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="up5ayR0p"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Sg4kmayy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgCQUlU (ORCPT
+        id S1726832AbgCQUnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:41:20 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:34484 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgCQUlT (ORCPT
+        Tue, 17 Mar 2020 16:43:18 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23081 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726735AbgCQUnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:41:19 -0400
-Received: by mail-qv1-f68.google.com with SMTP id o18so11672388qvf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:41:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=p7n64HFEEFD1bxFrQS335VRgtrxyON8bbgS0WDdlslE=;
-        b=up5ayR0p8zH39veN7UqJNt0jdqt8l3r16i1ksu6T2anaYpPn4LVaakMwjxoBdyACN+
-         cJ264U44HGDzUD+hadlCx7rG6VAhFDqxWGAjJL12v4bmUYgjcYZA5uSlztOUCxq8t+fD
-         KxSiPjBLnHSPUmVILrWXIP0WlxocEqMeNmOiP0SN3ZS6i2IYwNFt2H1bWb0bCQAlQuHS
-         1uO3GudsOSvLtDPMzFxhY3/YqwiGww0CsvhLFm6kRxIKz4V+yyZ36XClHSLiv5ngtgjW
-         JG6mujPI/oP0QnSNM2g3tLe4YacUocpKaarUqCUaawrOlV3HMUtDAFj2zfe9YXp355Dz
-         05Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=p7n64HFEEFD1bxFrQS335VRgtrxyON8bbgS0WDdlslE=;
-        b=PNpfGW8IS28362siuysPJBvLgQFIsUwylbIIOrg3iRoGpz7rwn/fpYfVlQtlRh+1dG
-         WjddaVoGQAyvplQfMPJwu2YerYSWLc2+b+DvNgp0dzv1OxDD8zDSmavGUtwJQnr51BAq
-         Nc5rjiGwJGQSkNgajjGIHhv/lTrjBDrdEPdmo64ex8rM2xFNJCNOQ8gQiTvqyJOyPhwQ
-         oJV5VMpBzOELH1zxueQNR1frWwnKjvn+p1hti9W4JuJ7dr+yoarI2hnzVDb7grMBDONR
-         RyQij+ah3xzJRM1EiREFcOlpLJ4AaZtp3nvG0T2/u2nm6qjJkMZ+tg1CVzZwTtrOHHER
-         FGaQ==
-X-Gm-Message-State: ANhLgQ15Es3DzZ9s58Qpi32T6TJS9bW4EPvWf8jI90JqeNpB1BBOKiVN
-        j9rvTgd8LPRyioUNGDNOoeM=
-X-Google-Smtp-Source: ADFU+vsdIWNhPCxdordz3SLRqEvuM+XT3++eIJX0J5W8tPVDMxDLoEg1WFVGTriylzbNx/qaGx8r/g==
-X-Received: by 2002:a0c:ffd3:: with SMTP id h19mr1057949qvv.166.1584477678727;
-        Tue, 17 Mar 2020 13:41:18 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id 82sm2715647qkd.62.2020.03.17.13.41.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 13:41:17 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CF6CD404E4; Tue, 17 Mar 2020 17:41:15 -0300 (-03)
-Date:   Tue, 17 Mar 2020 17:41:15 -0300
-To:     John Garry <john.garry@huawei.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        will@kernel.org, ak@linux.intel.com, linuxarm@huawei.com,
-        linux-kernel@vger.kernel.org, james.clark@arm.com,
-        qiangqing.zhang@nxp.com
-Subject: Re: [PATCH v2 2/7] perf jevents: Support test events folder
-Message-ID: <20200317204115.GA11531@kernel.org>
-References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
- <1584442939-8911-3-git-send-email-john.garry@huawei.com>
- <20200317162052.GD759708@krava>
- <de5b58ee-980e-973a-16db-73f23c3edfef@huawei.com>
- <20200317170645.GE759708@krava>
- <dcaf4aa9-213e-47c5-16e2-e7f8af259ce9@huawei.com>
+        Tue, 17 Mar 2020 16:43:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584477797; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=5Sknz7KDOw1qdge5xizFs8Eb5sj7/j6Seo1ppF3kntM=;
+ b=Sg4kmayy2Nns/c6Ef3QKTqMsa3mEEEcKankXFwneRrcKfQtIhfR1Soq5bcKetjDYuM/uIoPI
+ CX8nQfpO9binfu2bWd22zDh9Zx98vfI3clUaNiupfyp0P5rYLAjBb44NIz7OyvGvBINbwxxO
+ 3Dm6E8ihkZGAPu78ElNRA/8pPnk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e713664.7f7a1a189ed8-smtp-out-n03;
+ Tue, 17 Mar 2020 20:43:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 278F1C43637; Tue, 17 Mar 2020 20:43:16 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E54BC433CB;
+        Tue, 17 Mar 2020 20:43:15 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dcaf4aa9-213e-47c5-16e2-e7f8af259ce9@huawei.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Mar 2020 02:13:15 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com
+Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+In-Reply-To: <20200127200350.24465-1-sibis@codeaurora.org>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+Message-ID: <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 17, 2020 at 05:42:46PM +0000, John Garry escreveu:
-> On 17/03/2020 17:06, Jiri Olsa wrote:
-> > On Tue, Mar 17, 2020 at 04:25:32PM +0000, John Garry wrote:
-> > > On 17/03/2020 16:20, Jiri Olsa wrote:
-> > > > On Tue, Mar 17, 2020 at 07:02:14PM +0800, John Garry wrote:
-> > > > > With the goal of supporting pmu-events test case, introduce support for a
-> > > > > test events folder.
-> > > > > 
-> > > > > These test events can be used for testing generation of pmu-event tables
-> > > > > and alias creation for any arch.
-> > > > > 
-> > > > > When running the pmu-events test case, these test events will be used
-> > > > > as the platform-agnostic events, so aliases can be created per-PMU and
-> > > > > validated against known expected values.
-> > > > > 
-> > > > > To support the test events, add a "testcpu" entry in pmu_events_map[].
-> > > > > The pmu-events test will be able to lookup the events map for "testcpu",
-> > > > > to verify the generated tables against expected values.
-> > > > > 
-> > > > > The resultant generated pmu-events.c will now look like the following:
-> > > > 
-> > > > can't compile this one:
-> > > > 
-> > > >     HOSTCC   pmu-events/jevents.o
-> > > > pmu-events/jevents.c: In function ‘main’:
-> > > > pmu-events/jevents.c:1195:3: error: ‘ret’ undeclared (first use in this function)
-> > > >    1195 |   ret = 1;
-> > > >         |   ^~~
-> > > > pmu-events/jevents.c:1195:3: note: each undeclared identifier is reported only once for each function it appears in
-> > > > pmu-events/jevents.c:1196:3: error: label ‘out_free_mapfile’ used but not defined
-> > > >    1196 |   goto out_free_mapfile;
-> > > >         |   ^~~~
-> > > > mv: cannot stat 'pmu-events/.jevents.o.tmp': No such file or directory
-> > > > make[3]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:97: pmu-events/jevents.o] Error 1
-> > > > make[2]: *** [Makefile.perf:619: pmu-events/jevents-in.o] Error 2
-> > > > make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> > > > make: *** [Makefile:70: all] Error 2
-> > > 
-> > > Hi jirka,
-> > > 
-> > > What baseline are you using? I used v5.6-rc6. The patches are here:
-> > 
-> > I applied your patches on Arnaldo's perf/core
+On 2020-01-28 01:33, Sibi Sankar wrote:
+> This RFC series aims to extend cpu based scaling support to L3/DDR on
+> SDM845 and SC7180 SoCs.
 > 
-> My recent fix on jevents.c does not seem to be on that branch, but it is on
-> perf/urgent and also included in v5.6-rc6
 
-I'll merge perf/urgent into perf/core soon,
+Hey Viresh/Saravana,
 
-- Arnaldo
- 
-> Thanks,
-> John
+Ping! Can you take a stab at reviewing
+the series, it has been on the list for
+a while now.
+
+> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+> Patches [5-7] - Hack in a way to add/remove multiple opp tables to
+>                 a single device. I am yet to fix the debugfs to
+> 		support multiple opp_tables per device but wanted to
+> 		send what was working upstream to get an idea if multiple
+> 		opp tables per device is a feature that will be useful
+> 		upstream.
+> Patches [9-10] - Add the cpu/cpu-ddr/cpu-l3 opp tables for SDM845
+>                  and SC7180 SoCs.
 > 
-> > 
-> > > 
-> > > https://github.com/hisilicon/kernel-dev/commits/private-topic-perf-5.6-pmu-events-test-upstream-v2
-> > 
-> > ok, will check
-> > 
-> > jirka
-> > 
-> > .
-> > 
+> v3:
+>  * Migrated to using Saravana's opp-kBps bindings [1]
+>  * Fixed some misc comments from Rajendra
+>  * Added support for SC7180
 > 
+> v2:
+>  * Incorporated Viresh's comments from:
+>  
+> https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+>  
+> https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+>  * Dropped cpufreq-map passive governor
+> 
+> Git-branch: https://github.com/QuinAsura/linux/tree/lnext-012420
+> 
+> Some alternate ways of hosting the opp-tables:
+> https://github.com/QuinAsura/linux/commit/50b92bfaadc8f9a0d1e12249646e018bd6d1a9d3
+> https://github.com/QuinAsura/linux/commit/3d23d1eefd16ae6d9e3ef91e93e78749d8844e98
+> Viresh didn't really like ^^ bindings and they dont really scale well. 
+> Just
+> including them here for completeness.
+> 
+> Depends on the following series:
+> [1] https://patchwork.kernel.org/cover/11277199/
+> [2] https://patchwork.kernel.org/cover/11055499/
+> [3] https://patchwork.kernel.org/cover/11326381/
+> 
+> Sibi Sankar (10):
+>   arm64: dts: qcom: sdm845: Add SoC compatible to MTP
+>   cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+>   cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+>   OPP: Add and export helper to update voltage
+>   opp: of: export _opp_of_get_opp_desc_node
+>   opp: Allow multiple opp_tables to be mapped to a single device
+>   opp: Remove multiple attached opp tables from a device
+>   cpufreq: qcom: Update the bandwidth levels on frequency change
+>   arm64: dts: qcom: sdm845: Add cpu OPP tables
+>   arm64: dts: qcom: sc7180: Add cpu OPP tables
+> 
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 287 +++++++++++++++
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |   2 +-
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 453 ++++++++++++++++++++++++
+>  drivers/cpufreq/cpufreq-dt-platdev.c    |   2 +
+>  drivers/cpufreq/qcom-cpufreq-hw.c       | 246 +++++++++++--
+>  drivers/opp/core.c                      | 111 +++++-
+>  drivers/opp/of.c                        |   3 +-
+>  drivers/opp/opp.h                       |   2 +
+>  include/linux/pm_opp.h                  |  10 +
+>  9 files changed, 1083 insertions(+), 33 deletions(-)
 
 -- 
-
-- Arnaldo
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
