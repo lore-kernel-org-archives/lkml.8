@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B181C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5D5C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9FE20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CE3420714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443295;
-	bh=k85qS1dz7D1Gw/J97r3Cx0mgyliBrQmg5UUEfHmj71c=;
+	s=default; t=1584443302;
+	bh=lVHUSe2Las6Deqqrd+fEt8BGJ0tFzFGrDD69RV3UeJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JIVjVm2kF/h+Pn+fozi+8QdKU6JsBnvbJV68SYOw6xYMV+CESw3XoLowOJzllyeeQ
-	 u7KBSCh3cXhlxQzogXJdmz1cwZNIpIPY2pzLCFLUOvpy16y0pH0AW60BZNBapDqbis
-	 2t0cTqfHI8givhmYtxJouAx2kbuto7fYtD/ypOxA=
+	b=bLZULDo0OAX4HZZOAFYWcm+m1Gy6w41rRdhCjEHjJUMHvkkpVhgCFneM6rZTwfbYB
+	 seNbc70glagEBoyTTjI8AjNupn27e8j8ebKrPbnSOFItj/1QRKOlx2OKL1yXaAtGfM
+	 7MEfUn/NeBvimkx7iI7PDl9G83a2+1P0837UTupA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgCQLIO (ORCPT
+        id S1728832AbgCQLIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50008 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:08:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727655AbgCQLIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:08:11 -0400
+        id S1725868AbgCQLIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:08:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D4A20719;
-        Tue, 17 Mar 2020 11:08:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45DD92071C;
+        Tue, 17 Mar 2020 11:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443290;
-        bh=k85qS1dz7D1Gw/J97r3Cx0mgyliBrQmg5UUEfHmj71c=;
+        s=default; t=1584443296;
+        bh=lVHUSe2Las6Deqqrd+fEt8BGJ0tFzFGrDD69RV3UeJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kn5DCiYbtw0R14BXgzb1zOX/iDm0MuV8vaqkgrr0RI3s4/37uXgXg+2NvFhi2M+P9
-         Q4wB1wIxG9n5yMSGc5ywMbJk3oNplEd5ZzvjMaWl64NmSitWsm2ttNmtYUi79PTvrw
-         TzuHMa+nB5dShPWdwHOy57AVig8jAzAwouh7vLcU=
+        b=W9HIi6uBRuYySzPyd4Udl4DDSsaF6ZZQ7kzbM+LMrTvNIwKjAwtrlWAzHRbbV56eY
+         p1aE9H+z7J2lp8fLeqLOzMQajxr+orHf2WD1nAtMoS5ALwGiqbc0ASdu9xpP9ExgcT
+         EhYEjnSjKFBN0FMPLo4SCwrw4bXCgoh+quNmjx0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 036/151] cgroup: memcg: net: do not associate sock with unrelated cgroup
-Date:   Tue, 17 Mar 2020 11:54:06 +0100
-Message-Id: <20200317103329.209194152@linuxfoundation.org>
+Subject: [PATCH 5.5 038/151] net: memcg: fix lockdep splat in inet_csk_accept()
+Date:   Tue, 17 Mar 2020 11:54:08 +0100
+Message-Id: <20200317103329.339083513@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,124 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e876ecc67db80dfdb8e237f71e5b43bb88ae549c ]
+commit 06669ea346e476a5339033d77ef175566a40efbb upstream.
 
-We are testing network memory accounting in our setup and noticed
-inconsistent network memory usage and often unrelated cgroups network
-usage correlates with testing workload. On further inspection, it
-seems like mem_cgroup_sk_alloc() and cgroup_sk_alloc() are broken in
-irq context specially for cgroup v1.
+Locking newsk while still holding the listener lock triggered
+a lockdep splat [1]
 
-mem_cgroup_sk_alloc() and cgroup_sk_alloc() can be called in irq context
-and kind of assumes that this can only happen from sk_clone_lock()
-and the source sock object has already associated cgroup. However in
-cgroup v1, where network memory accounting is opt-in, the source sock
-can be unassociated with any cgroup and the new cloned sock can get
-associated with unrelated interrupted cgroup.
+We can simply move the memcg code after we release the listener lock,
+as this can also help if multiple threads are sharing a common listener.
 
-Cgroup v2 can also suffer if the source sock object was created by
-process in the root cgroup or if sk_alloc() is called in irq context.
-The fix is to just do nothing in interrupt.
+Also fix a typo while reading socket sk_rmem_alloc.
 
-WARNING: Please note that about half of the TCP sockets are allocated
-from the IRQ context, so, memory used by such sockets will not be
-accouted by the memcg.
+[1]
+WARNING: possible recursive locking detected
+5.6.0-rc3-syzkaller #0 Not tainted
+--------------------------------------------
+syz-executor598/9524 is trying to acquire lock:
+ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
+ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
 
-The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
+but task is already holding lock:
+ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
+ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
 
-CPU: 70 PID: 12720 Comm: ssh Tainted:  5.6.0-smp-DEV #1
-Hardware name: ...
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(sk_lock-AF_INET6);
+  lock(sk_lock-AF_INET6);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+1 lock held by syz-executor598/9524:
+ #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
+ #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
+
+stack backtrace:
+CPU: 0 PID: 9524 Comm: syz-executor598 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
- <IRQ>
- dump_stack+0x57/0x75
- mem_cgroup_sk_alloc+0xe9/0xf0
- sk_clone_lock+0x2a7/0x420
- inet_csk_clone_lock+0x1b/0x110
- tcp_create_openreq_child+0x23/0x3b0
- tcp_v6_syn_recv_sock+0x88/0x730
- tcp_check_req+0x429/0x560
- tcp_v6_rcv+0x72d/0xa40
- ip6_protocol_deliver_rcu+0xc9/0x400
- ip6_input+0x44/0xd0
- ? ip6_protocol_deliver_rcu+0x400/0x400
- ip6_rcv_finish+0x71/0x80
- ipv6_rcv+0x5b/0xe0
- ? ip6_sublist_rcv+0x2e0/0x2e0
- process_backlog+0x108/0x1e0
- net_rx_action+0x26b/0x460
- __do_softirq+0x104/0x2a6
- do_softirq_own_stack+0x2a/0x40
- </IRQ>
- do_softirq.part.19+0x40/0x50
- __local_bh_enable_ip+0x51/0x60
- ip6_finish_output2+0x23d/0x520
- ? ip6table_mangle_hook+0x55/0x160
- __ip6_finish_output+0xa1/0x100
- ip6_finish_output+0x30/0xd0
- ip6_output+0x73/0x120
- ? __ip6_finish_output+0x100/0x100
- ip6_xmit+0x2e3/0x600
- ? ipv6_anycast_cleanup+0x50/0x50
- ? inet6_csk_route_socket+0x136/0x1e0
- ? skb_free_head+0x1e/0x30
- inet6_csk_xmit+0x95/0xf0
- __tcp_transmit_skb+0x5b4/0xb20
- __tcp_send_ack.part.60+0xa3/0x110
- tcp_send_ack+0x1d/0x20
- tcp_rcv_state_process+0xe64/0xe80
- ? tcp_v6_connect+0x5d1/0x5f0
- tcp_v6_do_rcv+0x1b1/0x3f0
- ? tcp_v6_do_rcv+0x1b1/0x3f0
- __release_sock+0x7f/0xd0
- release_sock+0x30/0xa0
- __inet_stream_connect+0x1c3/0x3b0
- ? prepare_to_wait+0xb0/0xb0
- inet_stream_connect+0x3b/0x60
- __sys_connect+0x101/0x120
- ? __sys_getsockopt+0x11b/0x140
- __x64_sys_connect+0x1a/0x20
- do_syscall_64+0x51/0x200
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_deadlock_bug kernel/locking/lockdep.c:2370 [inline]
+ check_deadlock kernel/locking/lockdep.c:2411 [inline]
+ validate_chain kernel/locking/lockdep.c:2954 [inline]
+ __lock_acquire.cold+0x114/0x288 kernel/locking/lockdep.c:3954
+ lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
+ lock_sock_nested+0xc5/0x110 net/core/sock.c:2947
+ lock_sock include/net/sock.h:1541 [inline]
+ inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
+ inet_accept+0xe9/0x7c0 net/ipv4/af_inet.c:734
+ __sys_accept4_file+0x3ac/0x5b0 net/socket.c:1758
+ __sys_accept4+0x53/0x90 net/socket.c:1809
+ __do_sys_accept4 net/socket.c:1821 [inline]
+ __se_sys_accept4 net/socket.c:1818 [inline]
+ __x64_sys_accept4+0x93/0xf0 net/socket.c:1818
+ do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4445c9
+Code: e8 0c 0d 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc35b37608 EFLAGS: 00000246 ORIG_RAX: 0000000000000120
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004445c9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000306777 R09: 0000000000306777
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00000000004053d0 R14: 0000000000000000 R15: 0000000000000000
 
-The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
-Fixes: 2d7580738345 ("mm: memcontrol: consolidate cgroup socket tracking")
-Fixes: d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Roman Gushchin <guro@fb.com>
+Fixes: d752a4986532 ("net: memcg: late association of sock to memcg")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/cgroup/cgroup.c |    4 ++++
- mm/memcontrol.c        |    4 ++++
- 2 files changed, 8 insertions(+)
+ net/ipv4/inet_connection_sock.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -6263,6 +6263,10 @@ void cgroup_sk_alloc(struct sock_cgroup_
- 		return;
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -483,27 +483,27 @@ struct sock *inet_csk_accept(struct sock
+ 		spin_unlock_bh(&queue->fastopenq.lock);
  	}
  
-+	/* Don't associate the sock with unrelated interrupted task's cgroup. */
-+	if (in_interrupt())
-+		return;
-+
- 	rcu_read_lock();
+-	if (mem_cgroup_sockets_enabled) {
++out:
++	release_sock(sk);
++	if (newsk && mem_cgroup_sockets_enabled) {
+ 		int amt;
  
- 	while (true) {
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6697,6 +6697,10 @@ void mem_cgroup_sk_alloc(struct sock *sk
- 		return;
+ 		/* atomically get the memory usage, set and charge the
+-		 * sk->sk_memcg.
++		 * newsk->sk_memcg.
+ 		 */
+ 		lock_sock(newsk);
+ 
+-		/* The sk has not been accepted yet, no need to look at
+-		 * sk->sk_wmem_queued.
++		/* The socket has not been accepted yet, no need to look at
++		 * newsk->sk_wmem_queued.
+ 		 */
+ 		amt = sk_mem_pages(newsk->sk_forward_alloc +
+-				   atomic_read(&sk->sk_rmem_alloc));
++				   atomic_read(&newsk->sk_rmem_alloc));
+ 		mem_cgroup_sk_alloc(newsk);
+ 		if (newsk->sk_memcg && amt)
+ 			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
+ 
+ 		release_sock(newsk);
  	}
- 
-+	/* Do not associate the sock with unrelated interrupted task's memcg. */
-+	if (in_interrupt())
-+		return;
-+
- 	rcu_read_lock();
- 	memcg = mem_cgroup_from_task(current);
- 	if (memcg == root_mem_cgroup)
+-out:
+-	release_sock(sk);
+ 	if (req)
+ 		reqsk_put(req);
+ 	return newsk;
 
 
