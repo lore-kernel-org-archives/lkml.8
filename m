@@ -2,88 +2,141 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F1BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA3BC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607D620753
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XPHD3K7E"
+	by mail.kernel.org (Postfix) with ESMTP id 9D72A20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgCQTck (ORCPT
+        id S1726564AbgCQTfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:32:40 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40110 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgCQTcX (ORCPT
+        Tue, 17 Mar 2020 15:35:30 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39881 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgCQTfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:32:23 -0400
-Received: from MININT-65B7IF6 (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 783E120B9C02;
-        Tue, 17 Mar 2020 12:32:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 783E120B9C02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1584473542;
-        bh=3tZiwgRbA7qaKAe36493vOXQ/2f0fxvWfm7urZH36NM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XPHD3K7EWZ+mS0qZXH0ge72ggRiwWX6nRvHt72ANWaqbC8OmVn2LjKqixY8ag2Fjw
-         EGRdhxjY69j/YNfezP7P+zIRC4gUZ1UBG02IcB0knYCwcdLuv8i+oDMwne0Cx4MI5p
-         FSMYYKhKFszKonv59NhC+kZLStRNzXYLyGiDugv0=
-Date:   Tue, 17 Mar 2020 14:32:20 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Subject: Re: [PATCH v2 1/1] firmware: tee_bnxt: remove unused variable
- assignment
-Message-ID: <20200317193220.GB708@MININT-65B7IF6>
-References: <20200317095037.22313-1-rayagonda.kokatanur@broadcom.com>
+        Tue, 17 Mar 2020 15:35:30 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r2so7558454otn.6;
+        Tue, 17 Mar 2020 12:35:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0OwDkuCyaDPj4qBgiFSCBZ9Jnd8fSLCfC5Lfyemz1Lw=;
+        b=PFiXdktFE0mUgj95i+1zrko+S1kur3PPvz0kBc+soci2QKY3K/OeouCO/92YoAMVtJ
+         MbDmgmFeKE7kYwbXc9cR2ieU19GJNvCn3zLUk8NN7/fOYQbCnbvMSPamLMkGeR3VjSrQ
+         4rZlh8wCVXU8sIMXh3fIaCv7skjc6y0XwGb2zgdQlruWmbbbmxVx0qLdtUaEKa0VqBh+
+         cWWLHyDLZqStKZ4R/fTcx44kNpMEdi8cQKjaZi99DTrvo4agdolhSPlKsM1KTB6Ff5Ev
+         iLb0PYxHPVb7feSbj+huBbK4oC9RjOPETfd7n/EuKJn0MT69AaIHwGv9hLm9zsXFdoIj
+         zqaA==
+X-Gm-Message-State: ANhLgQ2SykB0Aquzx+wBpBed8rfMx3hq01hv7f2NeMEUeUX2BSY2ooxE
+        oVMWfE9Yqr16+MSYRfD3Xcfj+GYRxuBlSpNqLDY=
+X-Google-Smtp-Source: ADFU+vveQh0hjmPLfqNeMrif7aOhs4Y/DBS2xMfAkRSxNp6usTED9mrvCwcYGr0Znv4OgUXxXOKdLSR4tAKH2lY4oVA=
+X-Received: by 2002:a9d:1708:: with SMTP id i8mr792014ota.250.1584473728102;
+ Tue, 17 Mar 2020 12:35:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317095037.22313-1-rayagonda.kokatanur@broadcom.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200315140525.21780-1-zhengdejin5@gmail.com> <20200315140525.21780-2-zhengdejin5@gmail.com>
+ <20200317192051.GA1520272@kroah.com>
+In-Reply-To: <20200317192051.GA1520272@kroah.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 17 Mar 2020 20:35:16 +0100
+Message-ID: <CAMuHMdVK0Gpw6A=CfF+5nw4hHz9UCtSoXwF9_UThAK4E+mQBWg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] drivers: provide devm_platform_get_and_ioremap_resource()
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Winkler, Tomas" <tomas.winkler@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-17 15:20:37, Rayagonda Kokatanur wrote:
-> Remove unused variable assignment.
-> 
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Hi Greg,
 
-Reviewed-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+On Tue, Mar 17, 2020 at 8:20 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Sun, Mar 15, 2020 at 10:05:21PM +0800, Dejin Zheng wrote:
+> > Since commit "drivers: provide devm_platform_ioremap_resource()",
+> > it was wrap platform_get_resource() and devm_ioremap_resource() as
+> > single helper devm_platform_ioremap_resource(). but now, many drivers
+> > still used platform_get_resource() and devm_ioremap_resource()
+> > together in the kernel tree. The reason can not be replaced is they
+> > still need use the resource variables obtained by platform_get_resource().
+> > so provide this helper.
+> >
+> > Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Suggested-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > ---
+> > v2 -> v3:
+> >       - rename the function to
+> >         devm_platform_get_and_ioremap_resource() by Sergei's suggestion.
+> >       - make the last parameter res as optional by Geert's suggestion.
+> >
+> > v1 -> v2:
+> >       - No change.
+> >
+> >  drivers/base/platform.c         | 22 ++++++++++++++++++++++
+> >  include/linux/platform_device.h |  3 +++
+> >  2 files changed, 25 insertions(+)
+> >
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 7fa654f1288b..9f6a78f79235 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -62,6 +62,28 @@ struct resource *platform_get_resource(struct platform_device *dev,
+> >  EXPORT_SYMBOL_GPL(platform_get_resource);
+> >
+> >  #ifdef CONFIG_HAS_IOMEM
+> > +/**
+> > + * devm_platform_get_and_ioremap_resource - call devm_ioremap_resource() for a
+> > + *                                       platform device and get resource
+> > + *
+> > + * @pdev: platform device to use both for memory resource lookup as well as
+> > + *        resource management
+> > + * @index: resource index
+> > + * @res: get the resource
+> > + */
+> > +void __iomem *
+> > +devm_platform_get_and_ioremap_resource(struct platform_device *pdev,
+> > +                             unsigned int index, struct resource **res)
+> > +{
+> > +     struct resource *r;
+> > +
+> > +     r = platform_get_resource(pdev, IORESOURCE_MEM, index);
+> > +     if (res)
+> > +             *res = r;
+>
+> What happens if that call fails?  Shouldn't that be checked?
 
-Tyler
+Then devm_ioremap_resource() will print an error message, and return
+an error.
+It's designed to be pipelined that way, so you have to check for an error
+only once.
 
-> ---
-> Changes from v1:
-> - Address code review comment from Sergei Shtylyov,
->   Correct the commit message.
-> 
->  drivers/firmware/broadcom/tee_bnxt_fw.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
-> index ed10da5313e8..6fd62657e35f 100644
-> --- a/drivers/firmware/broadcom/tee_bnxt_fw.c
-> +++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
-> @@ -143,8 +143,6 @@ int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size)
->  	prepare_args(TA_CMD_BNXT_COPY_COREDUMP, &arg, param);
->  
->  	while (rbytes)  {
-> -		nbytes = rbytes;
-> -
->  		nbytes = min_t(u32, rbytes, param[0].u.memref.size);
->  
->  		/* Fill additional invoke cmd params */
-> -- 
-> 2.17.1
-> 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
