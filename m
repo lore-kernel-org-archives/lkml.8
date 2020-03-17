@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C84C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBE9C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163AA20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3CA206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443734;
-	bh=lW/xQPDNx9Rchc5aT/oz1voqUYIyuWyVlYk7rkwx3L0=;
+	s=default; t=1584443739;
+	bh=jKQaUfpQcMm0yosTefLi57T/N5a+Oc6PT7XK/yITYZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vnERUX4vXLzH2zLc7o0Ozug/qCPSBqbgzNIaKpwDoaOomI8ydHlnFWuqS5gRfNyXp
-	 g0r7J6HWYj6UvIxvc5CSix5zzy5k/6svRfX1xUgG3ZhTnOnu6Lx0eqgLPq4r88Htkn
-	 zYs7AuDyuY1GyYPDoZO6VhZZiqrlcW1VU5QyFynk=
+	b=p3YLJvzBkqop0bytCbgFH8ij5fQkUY6j9RaGjhv+EbeQm5pkati1y70OA53YmpxMX
+	 r76tpnplwGy/qajhSlO3dLBb4/Jq9HpWy+hlptbI2H0KRXsFOdK+VSN/f4dNidt0Dp
+	 aUzcUf+k5tUWOrLFtn6qhUB/RlLrySnRKU2eTNLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgCQLMI (ORCPT
+        id S1729350AbgCQLMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbgCQLMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:03 -0400
+        id S1729118AbgCQLL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:11:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC2620658;
-        Tue, 17 Mar 2020 11:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5C272071C;
+        Tue, 17 Mar 2020 11:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443523;
-        bh=lW/xQPDNx9Rchc5aT/oz1voqUYIyuWyVlYk7rkwx3L0=;
+        s=default; t=1584443515;
+        bh=jKQaUfpQcMm0yosTefLi57T/N5a+Oc6PT7XK/yITYZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cA+EuLj4ZqRxgprvQ+a4pXe2JwJEFGm7QsSw1JhWANPP6xeotMF7s10oCRgtdFZXw
-         NQLZTsmKVi+a61nnqjxpGaMsPvHyXnk3lit7Ct57ysc1aBeQAeWUwvH1SoqLcqPR4A
-         aFMDWSKYtHB4b/130GG5yQgLD9RG4FGvhhaShR4w=
+        b=rqxij8gEKWKcXbJiHBgHrIiP3pq4BRUS4Fn9mYNOJA4wTGYIsyKmN1cwxopdxU73p
+         T/9svPICuJhhLVW/uW/fz/5QXby9QeDXvZGEpF1uYY8LviR2Eh0CsmfINmL7t4fldc
+         LPyOCCr/Qh8YytgS4/ClAmUbA9O6vGwxtGZhhyFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Michael Ellerman <mpe@ellerman.id.au>, stable@kernel.org
-Subject: [PATCH 5.5 111/151] macintosh: windfarm: fix MODINFO regression
-Date:   Tue, 17 Mar 2020 11:55:21 +0100
-Message-Id: <20200317103334.343358605@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.5 108/151] blk-iocost: fix incorrect vtime comparison in iocg_is_idle()
+Date:   Tue, 17 Mar 2020 11:55:18 +0100
+Message-Id: <20200317103334.129839379@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,173 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa@the-dreams.de>
+From: Tejun Heo <tj@kernel.org>
 
-commit bcf3588d8ed3517e6ffaf083f034812aee9dc8e2 upstream.
+commit dcd6589b11d3b1e71f516a87a7b9646ed356b4c0 upstream.
 
-Commit af503716ac14 made sure OF devices get an OF style modalias with
-I2C events. It assumed all in-tree users were converted, yet it missed
-some Macintosh drivers.
+vtimes may wrap and time_before/after64() should be used to determine
+whether a given vtime is before or after another. iocg_is_idle() was
+incorrectly using plain "<" comparison do determine whether done_vtime
+is before vtime. Here, the only thing we're interested in is whether
+done_vtime matches vtime which indicates that there's nothing in
+flight. Let's test for inequality instead.
 
-Add an OF module device table for all windfarm drivers to make them
-automatically load again.
-
-Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=199471
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Tested-by: Erhard Furtner <erhard_f@mailbox.org>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org # v4.17+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/macintosh/windfarm_ad7417_sensor.c  |    7 +++++++
- drivers/macintosh/windfarm_fcu_controls.c   |    7 +++++++
- drivers/macintosh/windfarm_lm75_sensor.c    |   16 +++++++++++++++-
- drivers/macintosh/windfarm_lm87_sensor.c    |    7 +++++++
- drivers/macintosh/windfarm_max6690_sensor.c |    7 +++++++
- drivers/macintosh/windfarm_smu_sat.c        |    7 +++++++
- 6 files changed, 50 insertions(+), 1 deletion(-)
+ block/blk-iocost.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/macintosh/windfarm_ad7417_sensor.c
-+++ b/drivers/macintosh/windfarm_ad7417_sensor.c
-@@ -312,9 +312,16 @@ static const struct i2c_device_id wf_ad7
- };
- MODULE_DEVICE_TABLE(i2c, wf_ad7417_id);
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1318,7 +1318,7 @@ static bool iocg_is_idle(struct ioc_gq *
+ 		return false;
  
-+static const struct of_device_id wf_ad7417_of_id[] = {
-+	{ .compatible = "ad7417", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, wf_ad7417_of_id);
-+
- static struct i2c_driver wf_ad7417_driver = {
- 	.driver = {
- 		.name	= "wf_ad7417",
-+		.of_match_table = wf_ad7417_of_id,
- 	},
- 	.probe		= wf_ad7417_probe,
- 	.remove		= wf_ad7417_remove,
---- a/drivers/macintosh/windfarm_fcu_controls.c
-+++ b/drivers/macintosh/windfarm_fcu_controls.c
-@@ -580,9 +580,16 @@ static const struct i2c_device_id wf_fcu
- };
- MODULE_DEVICE_TABLE(i2c, wf_fcu_id);
+ 	/* is something in flight? */
+-	if (atomic64_read(&iocg->done_vtime) < atomic64_read(&iocg->vtime))
++	if (atomic64_read(&iocg->done_vtime) != atomic64_read(&iocg->vtime))
+ 		return false;
  
-+static const struct of_device_id wf_fcu_of_id[] = {
-+	{ .compatible = "fcu", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, wf_fcu_of_id);
-+
- static struct i2c_driver wf_fcu_driver = {
- 	.driver = {
- 		.name	= "wf_fcu",
-+		.of_match_table = wf_fcu_of_id,
- 	},
- 	.probe		= wf_fcu_probe,
- 	.remove		= wf_fcu_remove,
---- a/drivers/macintosh/windfarm_lm75_sensor.c
-+++ b/drivers/macintosh/windfarm_lm75_sensor.c
-@@ -14,6 +14,7 @@
- #include <linux/init.h>
- #include <linux/wait.h>
- #include <linux/i2c.h>
-+#include <linux/of_device.h>
- #include <asm/prom.h>
- #include <asm/machdep.h>
- #include <asm/io.h>
-@@ -91,9 +92,14 @@ static int wf_lm75_probe(struct i2c_clie
- 			 const struct i2c_device_id *id)
- {	
- 	struct wf_lm75_sensor *lm;
--	int rc, ds1775 = id->driver_data;
-+	int rc, ds1775;
- 	const char *name, *loc;
- 
-+	if (id)
-+		ds1775 = id->driver_data;
-+	else
-+		ds1775 = !!of_device_get_match_data(&client->dev);
-+
- 	DBG("wf_lm75: creating  %s device at address 0x%02x\n",
- 	    ds1775 ? "ds1775" : "lm75", client->addr);
- 
-@@ -164,9 +170,17 @@ static const struct i2c_device_id wf_lm7
- };
- MODULE_DEVICE_TABLE(i2c, wf_lm75_id);
- 
-+static const struct of_device_id wf_lm75_of_id[] = {
-+	{ .compatible = "lm75", .data = (void *)0},
-+	{ .compatible = "ds1775", .data = (void *)1 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, wf_lm75_of_id);
-+
- static struct i2c_driver wf_lm75_driver = {
- 	.driver = {
- 		.name	= "wf_lm75",
-+		.of_match_table = wf_lm75_of_id,
- 	},
- 	.probe		= wf_lm75_probe,
- 	.remove		= wf_lm75_remove,
---- a/drivers/macintosh/windfarm_lm87_sensor.c
-+++ b/drivers/macintosh/windfarm_lm87_sensor.c
-@@ -166,9 +166,16 @@ static const struct i2c_device_id wf_lm8
- };
- MODULE_DEVICE_TABLE(i2c, wf_lm87_id);
- 
-+static const struct of_device_id wf_lm87_of_id[] = {
-+	{ .compatible = "lm87cimt", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, wf_lm87_of_id);
-+
- static struct i2c_driver wf_lm87_driver = {
- 	.driver = {
- 		.name	= "wf_lm87",
-+		.of_match_table = wf_lm87_of_id,
- 	},
- 	.probe		= wf_lm87_probe,
- 	.remove		= wf_lm87_remove,
---- a/drivers/macintosh/windfarm_max6690_sensor.c
-+++ b/drivers/macintosh/windfarm_max6690_sensor.c
-@@ -120,9 +120,16 @@ static const struct i2c_device_id wf_max
- };
- MODULE_DEVICE_TABLE(i2c, wf_max6690_id);
- 
-+static const struct of_device_id wf_max6690_of_id[] = {
-+	{ .compatible = "max6690", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, wf_max6690_of_id);
-+
- static struct i2c_driver wf_max6690_driver = {
- 	.driver = {
- 		.name		= "wf_max6690",
-+		.of_match_table = wf_max6690_of_id,
- 	},
- 	.probe		= wf_max6690_probe,
- 	.remove		= wf_max6690_remove,
---- a/drivers/macintosh/windfarm_smu_sat.c
-+++ b/drivers/macintosh/windfarm_smu_sat.c
-@@ -341,9 +341,16 @@ static const struct i2c_device_id wf_sat
- };
- MODULE_DEVICE_TABLE(i2c, wf_sat_id);
- 
-+static const struct of_device_id wf_sat_of_id[] = {
-+	{ .compatible = "smu-sat", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, wf_sat_of_id);
-+
- static struct i2c_driver wf_sat_driver = {
- 	.driver = {
- 		.name		= "wf_smu_sat",
-+		.of_match_table = wf_sat_of_id,
- 	},
- 	.probe		= wf_sat_probe,
- 	.remove		= wf_sat_remove,
+ 	return true;
 
 
