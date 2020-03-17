@@ -2,129 +2,101 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2C6C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB4AC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D7720724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0320520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="R6oowquv"
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="INqxU/it"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgCQQtq (ORCPT
+        id S1726797AbgCQQuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:49:46 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55256 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQQtq (ORCPT
+        Tue, 17 Mar 2020 12:50:10 -0400
+Received: from mail-ed1-f99.google.com ([209.85.208.99]:37671 "EHLO
+        mail-ed1-f99.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQQuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:49:46 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n8so14755wmc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:49:45 -0700 (PDT)
+        Tue, 17 Mar 2020 12:50:09 -0400
+Received: by mail-ed1-f99.google.com with SMTP id b23so27428442edx.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mMiEl9L2S4tlLAiIN1V5kcZjzOStOhhL2zNGzs+Vouc=;
-        b=R6oowquvlxrvUCOrWAkR8nSqdDRskytPZj1t+oqMPZIXIdEaqaxrZausO30q5v2cij
-         Ta9XPGU0jQaKg5rNB49TK7FEHpqSy2S5b/6hMjglyIwqWn6CM31M2MK33qUQn6/uT7et
-         S8yBm+Y4yH5ujfReYwesuo5IRj0cN9DkeDzDg=
+        d=flowbird.group; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=D2p+tmnpAxsy04BS6InK3bZXXFxrltr4nq4SPRoOSF4=;
+        b=INqxU/itvBmin99Rj6KEqZ/X8AtKSU3G+2rGaRak44NC5/bHPkCBc8Jvg4DivEOE3C
+         VQH4pX4kbRPBILDYU5BXrbbVJSXUEYBNa4HTgkYKXw0PRb658dWDk0eCZI4B97gmOJih
+         FuFjwdLpOOn9OhZdRmoZ7cwUnJpeW2bxNCpO+Ww61J8ENGJR6+cdvqud5DIqFvMK8tca
+         DfNWReen02YVLLK0iHXoGf16s9cJlWkhvdggdQB7tNWZv/hZttz/JJyHeLPuVSB+g1Pu
+         pvtHRIcifiIvCQxB1I7+ZltErdvRcpo6KRbUmP+vrdyr91bHXVpkaYtrgQ1SK43Cokgf
+         3Dfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=mMiEl9L2S4tlLAiIN1V5kcZjzOStOhhL2zNGzs+Vouc=;
-        b=R4/Ggd+4SBqHtdMMQOj82GwguR7KQmJl7vjgNMI3SRU+Q4OkfEacIR2hZT3Y2BXSm+
-         GeKhhKhddVhL5pgiLO3GzVI8NVxrQT/M/TzLGuW5mCoGTWju+0Zmadt4fe7VZ5uoebbc
-         xQLgcotVAXpfKDS0Ze3arqqhSZ+BIlgwApzUBBgzlgUcQABaOYgJ1GwhO+v5v4FY2ZYa
-         TxVWw5B+rOijh3/rI8se4xECTbcLYd7IG3pM35aFJfIQoWnAzs5raZNk0Ft/UVtZSMAl
-         8MN4ULc1q/1XXQKznePSuQ+cSxPcm4KrQlbPW68CADAjyuMlLdau6elh0bvEPE8qZiyb
-         ikYg==
-X-Gm-Message-State: ANhLgQ3eRl/D0XdXi87HRCBcHf/jOND+1Fhkqof2FcUYGrjbfdJiKufw
-        EFOHBvI2+PUC4Dpp0wAwyVRRRQ==
-X-Google-Smtp-Source: ADFU+vt8dNlSMJCThKrf5v17M3aD/fp8xVTQ3Zc/gPBrkJ6TA++okOS+dztloBcqbCNdk++CpJkLog==
-X-Received: by 2002:a1c:5684:: with SMTP id k126mr163852wmb.181.1584463784547;
-        Tue, 17 Mar 2020 09:49:44 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id n10sm5554069wro.14.2020.03.17.09.49.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 09:49:43 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 17:49:41 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, marmarek@invisiblethingslab.com,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] drm/bochs: downgrade pci_request_region failure from
- error to warning
-Message-ID: <20200317164941.GP2363188@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, marmarek@invisiblethingslab.com,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200313084152.2734-1-kraxel@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200313084152.2734-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=D2p+tmnpAxsy04BS6InK3bZXXFxrltr4nq4SPRoOSF4=;
+        b=eOFvyh1onUYU+Bdh7ZRq7AesjJcMEQx674tVKUSO+vMG7cZsSATaa8E7xQCVuKDfQJ
+         JywW73YmgDt3N0N53NOdIBZ32aP5f1GqeXsi8t3fV+/kSUkRzoP2zziZ4t6zh1NWVawb
+         zbNscajviA19cfFfYAA038IMRH+7WANbUPJI9sJk4acsLLUwmx1lM88deoH27xkgZ60G
+         uRN7X7LDlnOEXyty+kkT8AxP9UWRREoanREKme28n133xNej2joJp3wfKaqTAZLtWYpF
+         EkIWo20DfgAdVhym7KdmXVdsveNPSuTB2pDCHaM6p74BjdluC3I/+FQEuePcVmQ7VQCS
+         FCiA==
+X-Gm-Message-State: ANhLgQ22aqmLh1ZN+MnuZvPBQeP2Uf4yzvHz52a1Qt2G+cONS7otcJUr
+        KrWn1xTY02iV2wf6kOZWwauTmUlMJioxApBCLl1OCPGJFji0
+X-Google-Smtp-Source: ADFU+vsH++F48qz43Kylez6m+ksNtUfaUpU0Qyx44y/anLT6Irk7uPbLPAjYnlSWIV0TO+mu0FUtJkNX2EDU
+X-Received: by 2002:a17:906:2f15:: with SMTP id v21mr4901393eji.329.1584463807981;
+        Tue, 17 Mar 2020 09:50:07 -0700 (PDT)
+Received: from mail.besancon.parkeon.com ([185.149.63.251])
+        by smtp-relay.gmail.com with ESMTPS id d17sm14462ejw.45.2020.03.17.09.50.07
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Tue, 17 Mar 2020 09:50:07 -0700 (PDT)
+X-Relaying-Domain: flowbird.group
+Received: from [172.16.13.134] (port=56876 helo=PC12445-BES.dynamic.besancon.parkeon.com)
+        by mail.besancon.parkeon.com with esmtp (Exim 4.71)
+        (envelope-from <martin.fuzzey@flowbird.group>)
+        id 1jEFPr-0000dJ-HT; Tue, 17 Mar 2020 17:50:07 +0100
+From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
+To:     Fugang Duan <fugang.duan@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 0/4] Fix Wake on lan with FEC on i.MX6
+Date:   Tue, 17 Mar 2020 17:50:02 +0100
+Message-Id: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 09:41:52AM +0100, Gerd Hoffmann wrote:
-> Shutdown of firmware framebuffer has a bunch of problems.  Because
-> of this the framebuffer region might still be reserved even after
-> drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
+This series fixes WoL support with the FEC on i.MX6
+The support was already in mainline but seems to have bitrotted
+somewhat.
 
-Is that still the fbdev lifetime fun where the cleanup might be delayed if
-the char device node is still open?
--Daniel
+Only tested with i.MX6DL
 
-> 
-> Don't consider pci_request_region() failure for the framebuffer
-> region as fatal error to workaround this issue.
-> 
-> Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
-> index 952199cc0462..dce4672e3fc8 100644
-> --- a/drivers/gpu/drm/bochs/bochs_hw.c
-> +++ b/drivers/gpu/drm/bochs/bochs_hw.c
-> @@ -157,10 +157,8 @@ int bochs_hw_init(struct drm_device *dev)
->  		size = min(size, mem);
->  	}
->  
-> -	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
-> -		DRM_ERROR("Cannot request framebuffer\n");
-> -		return -EBUSY;
-> -	}
-> +	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
-> +		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
->  
->  	bochs->fb_map = ioremap(addr, size);
->  	if (bochs->fb_map == NULL) {
-> -- 
-> 2.18.2
-> 
+
+Martin Fuzzey (4):
+  net: fec: set GPR bit on suspend by DT connfiguration.
+  ARM: dts: imx6: Use gpc for FEC interrupt controller to fix wake on
+    LAN.
+  dt-bindings: fec: document the new fsl,stop-mode property
+  ARM: dts: imx6: add fsl,stop-mode property.
+
+ Documentation/devicetree/bindings/net/fsl-fec.txt |  5 ++
+ arch/arm/boot/dts/imx6qdl.dtsi                    |  6 +-
+ drivers/net/ethernet/freescale/fec.h              |  7 +++
+ drivers/net/ethernet/freescale/fec_main.c         | 72 ++++++++++++++++++++---
+ 4 files changed, 80 insertions(+), 10 deletions(-)
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+1.9.1
+
