@@ -2,114 +2,162 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42822C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6337BC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23170206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC23206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:39:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NGasMkjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgCQOik (ORCPT
+        id S1726752AbgCQOjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:38:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:39076 "EHLO foss.arm.com"
+        Tue, 17 Mar 2020 10:39:05 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:47741 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgCQOij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:38:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19D3630E;
-        Tue, 17 Mar 2020 07:38:39 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 241AA3F534;
-        Tue, 17 Mar 2020 07:38:36 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 14:38:34 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-mips@vger.kernel.org, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
- vgettimeofday
-Message-ID: <20200317143834.GC632169@arrakis.emea.arm.com>
-References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
- <20200317122220.30393-19-vincenzo.frascino@arm.com>
+        id S1726498AbgCQOjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:39:04 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48hbQY2Pzdz9txJr;
+        Tue, 17 Mar 2020 15:39:01 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=NGasMkjV; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id jy1vh3gr2NYn; Tue, 17 Mar 2020 15:39:01 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48hbQY1B2Lz9txJP;
+        Tue, 17 Mar 2020 15:39:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1584455941; bh=3aB3sKo4axTmyvq66pIQTh9FsqX/8+Pv5FpPFzBfBtE=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=NGasMkjVrfGKMNcqn7ZWm4o8AloBrVIUTxZ+xl/7ZrrIMIHTwfhml5pVfzHvW41NT
+         jT920tTUmPvzOA3iNZ7VmxiDhhtrt/hdAoAtAU/nBAfmCj6kmMebRt/W1EFKfDmWOE
+         +CUxGE2C+bGZkeT4TiJ6wfbqxWuBnRczQWcHTLaY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8C2FF8B7BA;
+        Tue, 17 Mar 2020 15:39:02 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id QqoWzBYd6i2c; Tue, 17 Mar 2020 15:39:02 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DB4CF8B7B7;
+        Tue, 17 Mar 2020 15:39:00 +0100 (CET)
+Subject: Re: [PATCH v1 16/46] powerpc/mm: Allocate static page tables for
+ fixmap
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <cover.1584360343.git.christophe.leroy@c-s.fr>
+ <d4bd46fe0103f8a8cb7e5affb2a7fcc3185be24e.1584360344.git.christophe.leroy@c-s.fr>
+Message-ID: <b9c92137-f757-1e6a-bca9-5c522e1083c5@c-s.fr>
+Date:   Tue, 17 Mar 2020 15:38:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317122220.30393-19-vincenzo.frascino@arm.com>
+In-Reply-To: <d4bd46fe0103f8a8cb7e5affb2a7fcc3185be24e.1584360344.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 12:22:12PM +0000, Vincenzo Frascino wrote:
-> diff --git a/arch/arm64/kernel/vdso32/vgettimeofday.c b/arch/arm64/kernel/vdso32/vgettimeofday.c
-> index 54fc1c2ce93f..91138077b073 100644
-> --- a/arch/arm64/kernel/vdso32/vgettimeofday.c
-> +++ b/arch/arm64/kernel/vdso32/vgettimeofday.c
-> @@ -8,11 +8,14 @@
->  #include <linux/time.h>
->  #include <linux/types.h>
->  
-> +#define VALID_CLOCK_ID(x) \
-> +	((x >= 0) && (x < VDSO_BASES))
+
+
+Le 16/03/2020 à 13:36, Christophe Leroy a écrit :
+> Allocate static page tables for the fixmap area. This allows
+> setting mappings through page tables before memblock is ready.
+> That's needed to use early_ioremap() early and to use standard
+> page mappings with fixmap.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>   arch/powerpc/include/asm/fixmap.h |  4 ++++
+>   arch/powerpc/kernel/setup_32.c    |  2 +-
+>   arch/powerpc/mm/pgtable_32.c      | 16 ++++++++++++++++
+>   3 files changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
+> index 2ef155a3c821..ccbe2e83c950 100644
+> --- a/arch/powerpc/include/asm/fixmap.h
+> +++ b/arch/powerpc/include/asm/fixmap.h
+> @@ -86,6 +86,10 @@ enum fixed_addresses {
+>   #define __FIXADDR_SIZE	(__end_of_fixed_addresses << PAGE_SHIFT)
+>   #define FIXADDR_START		(FIXADDR_TOP - __FIXADDR_SIZE)
+>   
+> +#define FIXMAP_ALIGNED_SIZE	(ALIGN(FIXADDR_TOP, PGDIR_SIZE) - \
+> +				 ALIGN_DOWN(FIXADDR_START, PGDIR_SIZE))
+> +#define FIXMAP_PTE_SIZE	(FIXMAP_ALIGNED_SIZE / PGDIR_SIZE * PTE_TABLE_SIZE)
 > +
->  int __vdso_clock_gettime(clockid_t clock,
->  			 struct old_timespec32 *ts)
->  {
->  	/* The checks below are required for ABI consistency with arm */
-> -	if ((u32)ts >= TASK_SIZE_32)
-> +	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
->  		return -EFAULT;
->  
->  	return __cvdso_clock_gettime32(clock, ts);
+>   #define FIXMAP_PAGE_NOCACHE PAGE_KERNEL_NCG
+>   #define FIXMAP_PAGE_IO	PAGE_KERNEL_NCG
+>   
+> diff --git a/arch/powerpc/kernel/setup_32.c b/arch/powerpc/kernel/setup_32.c
+> index 5b49b26eb154..3f1e1c0b328a 100644
+> --- a/arch/powerpc/kernel/setup_32.c
+> +++ b/arch/powerpc/kernel/setup_32.c
+> @@ -81,7 +81,7 @@ notrace void __init machine_init(u64 dt_ptr)
+>   	/* Configure static keys first, now that we're relocated. */
+>   	setup_feature_keys();
+>   
+> -	early_ioremap_setup();
+> +	early_ioremap_init();
+>   
+>   	/* Enable early debugging if any specified (see udbg.h) */
+>   	udbg_early_init();
+> diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
+> index f62de06e3d07..9934659cb871 100644
+> --- a/arch/powerpc/mm/pgtable_32.c
+> +++ b/arch/powerpc/mm/pgtable_32.c
+> @@ -29,11 +29,27 @@
+>   #include <asm/fixmap.h>
+>   #include <asm/setup.h>
+>   #include <asm/sections.h>
+> +#include <asm/early_ioremap.h>
+>   
+>   #include <mm/mmu_decl.h>
+>   
+>   extern char etext[], _stext[], _sinittext[], _einittext[];
+>   
+> +static u8 early_fixmap_pagetable[FIXMAP_PTE_SIZE] __page_aligned_data;
 
-I probably miss something but I can't find the TASK_SIZE check in the
-arch/arm/vdso/vgettimeofday.c code. Is this done elsewhere?
+Sparse reports this as a variable size array. This is definitely not. 
+Gcc properly sees it is an 8k table (2 pages).
 
-> @@ -22,7 +25,7 @@ int __vdso_clock_gettime64(clockid_t clock,
->  			   struct __kernel_timespec *ts)
->  {
->  	/* The checks below are required for ABI consistency with arm */
-> -	if ((u32)ts >= TASK_SIZE_32)
-> +	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
->  		return -EFAULT;
->  
->  	return __cvdso_clock_gettime(clock, ts);
-> @@ -38,9 +41,12 @@ int __vdso_clock_getres(clockid_t clock_id,
->  			struct old_timespec32 *res)
->  {
->  	/* The checks below are required for ABI consistency with arm */
-> -	if ((u32)res >= TASK_SIZE_32)
-> +	if ((u32)res > UINTPTR_MAX - sizeof(res) + 1)
->  		return -EFAULT;
->  
-> +	if (!VALID_CLOCK_ID(clock_id) && res == NULL)
-> +		return -EINVAL;
+Christophe
 
-This last check needs an explanation. If the clock_id is invalid but res
-is not NULL, we allow it. I don't see where the compatibility issue is,
-arm32 doesn't have such check.
 
--- 
-Catalin
+> +
+> +notrace void __init early_ioremap_init(void)
+> +{
+> +	unsigned long addr = ALIGN_DOWN(FIXADDR_START, PGDIR_SIZE);
+> +	pte_t *ptep = (pte_t *)early_fixmap_pagetable;
+> +	pmd_t *pmdp = pmd_ptr_k(addr);
+> +
+> +	for (; (s32)(FIXADDR_TOP - addr) > 0;
+> +	     addr += PGDIR_SIZE, ptep += PTRS_PER_PTE, pmdp++)
+> +		pmd_populate_kernel(&init_mm, pmdp, ptep);
+> +
+> +	early_ioremap_setup();
+> +}
+> +
+>   static void __init *early_alloc_pgtable(unsigned long size)
+>   {
+>   	void *ptr = memblock_alloc(size, size);
+> 
+
+Christophe
