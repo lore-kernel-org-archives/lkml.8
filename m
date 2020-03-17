@@ -2,115 +2,136 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90344C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C10C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3914D20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:03:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="l254W5RQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2467D20735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgCQPDi (ORCPT
+        id S1726922AbgCQPDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:03:38 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34127 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgCQPDi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:03:38 -0400
-Received: by mail-qk1-f194.google.com with SMTP id f3so32972425qkh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 08:03:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HqOBm7bQCludye1SGv0KdSFELKwpbPDMXnv2Sugq1V4=;
-        b=l254W5RQNfFLpxh3XTCQBj64u0gip2PXizITExpY6lAOsWn1MUvIebu1an3ADb11ac
-         liTXMm06RwsmMDI7Qxiw9AwtmT5Pq9dzz7YOo1yY/xONZZxMl1/9GUt/YT/Do+pTSGdB
-         LbzJPXVYWH5ymK7O98yRz+R6EsdJ99oOZtKTikglOEznI557wq65BJDifgceaq5MjBtM
-         MD2ztt6vDgt+RFxsqrUaKeQAXdaibVSfiqFDy2rYCj+/W/jcbmIRuSoa7Bwg0O0V5Q0Q
-         gUkz99+eQIieLq631DL+LXAbdAOqEbiyoIYUQDsB+lgYPHYbAecWPCKStQ6zNYLvYJeX
-         UiDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HqOBm7bQCludye1SGv0KdSFELKwpbPDMXnv2Sugq1V4=;
-        b=N/tG6mku+W/RR0MgGWvE2S5RIxXRHYSnAbUAperB/jOapNswYzhs0EPTl0EzCD59km
-         3ijCJimx+Hc8GKKwQUQdOxJeOSW7etBOB3oeLkgRbXrl6h7A4BiqaGfS8u3aorWc5/K5
-         w/AZUvNNr7meHHtrAjO0nEVMsDVV/DNswDzKlYHCetiuDYrZuuLJ5x92P88RyoOeUkCM
-         IOt7wOtzDyxbz99xUQiDlMeuKshk9oDFWXHzd33xqXWXYKkVJ6a2L2tb6vaVnZ1ln6xv
-         gkluAYP+DRqVBgZj+dh8z5rha5tQG7SAV0gPze+Fuo15rjQGTWL2151ToDWxyFd13F4q
-         JoUw==
-X-Gm-Message-State: ANhLgQ1DwfonQSlGtfqjT6wvLEvw/SWs61xVATVIfIh1i4yU5cZjomYF
-        tsGH/b+osUJSm5uOjCBbLbj/Ey9G5dddVw==
-X-Google-Smtp-Source: ADFU+vt5wqdAcnNu9Z6Fsgi+m9R2A9sC6GlSijeQ7cGL3zxioALaVGP0oa2V6N9J1JQpQHnNsM1vEQ==
-X-Received: by 2002:a37:5b82:: with SMTP id p124mr5447016qkb.130.1584457415620;
-        Tue, 17 Mar 2020 08:03:35 -0700 (PDT)
-Received: from ovpn-66-200.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id n74sm2037090qke.125.2020.03.17.08.03.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Mar 2020 08:03:34 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     jroedel@suse.de
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] iommu/vt-d: silence a RCU-list debugging warning
-Date:   Tue, 17 Mar 2020 11:03:26 -0400
-Message-Id: <20200317150326.1659-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Tue, 17 Mar 2020 11:03:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:39424 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbgCQPDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:03:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4C3030E;
+        Tue, 17 Mar 2020 08:03:38 -0700 (PDT)
+Received: from [10.37.12.228] (unknown [10.37.12.228])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80D4E3F52E;
+        Tue, 17 Mar 2020 08:03:33 -0700 (PDT)
+Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
+ vgettimeofday
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
+ <20200317122220.30393-19-vincenzo.frascino@arm.com>
+ <20200317143834.GC632169@arrakis.emea.arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
+Date:   Tue, 17 Mar 2020 15:04:01 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317143834.GC632169@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dmar_find_atsr() calls list_for_each_entry_rcu() outside of an RCU read
-side critical section but with dmar_global_lock held. Silence this
-false positive.
+Hi Catalin,
 
- drivers/iommu/intel-iommu.c:4504 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
- #0: ffffffff9755bee8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1a6/0xe19
+On 3/17/20 2:38 PM, Catalin Marinas wrote:
+> On Tue, Mar 17, 2020 at 12:22:12PM +0000, Vincenzo Frascino wrote:
+>> diff --git a/arch/arm64/kernel/vdso32/vgettimeofday.c b/arch/arm64/kernel/vdso32/vgettimeofday.c
+>> index 54fc1c2ce93f..91138077b073 100644
+>> --- a/arch/arm64/kernel/vdso32/vgettimeofday.c
+>> +++ b/arch/arm64/kernel/vdso32/vgettimeofday.c
+>> @@ -8,11 +8,14 @@
+>>  #include <linux/time.h>
+>>  #include <linux/types.h>
+>>  
+>> +#define VALID_CLOCK_ID(x) \
+>> +	((x >= 0) && (x < VDSO_BASES))
+>> +
+>>  int __vdso_clock_gettime(clockid_t clock,
+>>  			 struct old_timespec32 *ts)
+>>  {
+>>  	/* The checks below are required for ABI consistency with arm */
+>> -	if ((u32)ts >= TASK_SIZE_32)
+>> +	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
+>>  		return -EFAULT;
+>>  
+>>  	return __cvdso_clock_gettime32(clock, ts);
+> 
+> I probably miss something but I can't find the TASK_SIZE check in the
+> arch/arm/vdso/vgettimeofday.c code. Is this done elsewhere?
 
- Call Trace:
-  dump_stack+0xa4/0xfe
-  lockdep_rcu_suspicious+0xeb/0xf5
-  dmar_find_atsr+0x1ab/0x1c0
-  dmar_parse_one_atsr+0x64/0x220
-  dmar_walk_remapping_entries+0x130/0x380
-  dmar_table_init+0x166/0x243
-  intel_iommu_init+0x1ab/0xe19
-  pci_iommu_init+0x1a/0x44
-  do_one_initcall+0xae/0x4d0
-  kernel_init_freeable+0x412/0x4c5
-  kernel_init+0x19/0x193
+Can TASK_SIZE > UINTPTR_MAX on an arm64 system?
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/iommu/intel-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+>> @@ -22,7 +25,7 @@ int __vdso_clock_gettime64(clockid_t clock,
+>>  			   struct __kernel_timespec *ts)
+>>  {
+>>  	/* The checks below are required for ABI consistency with arm */
+>> -	if ((u32)ts >= TASK_SIZE_32)
+>> +	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
+>>  		return -EFAULT;
+>>  
+>>  	return __cvdso_clock_gettime(clock, ts);
+>> @@ -38,9 +41,12 @@ int __vdso_clock_getres(clockid_t clock_id,
+>>  			struct old_timespec32 *res)
+>>  {
+>>  	/* The checks below are required for ABI consistency with arm */
+>> -	if ((u32)res >= TASK_SIZE_32)
+>> +	if ((u32)res > UINTPTR_MAX - sizeof(res) + 1)
+>>  		return -EFAULT;
+>>  
+>> +	if (!VALID_CLOCK_ID(clock_id) && res == NULL)
+>> +		return -EINVAL;
+> 
+> This last check needs an explanation. If the clock_id is invalid but res
+> is not NULL, we allow it. I don't see where the compatibility issue is,
+> arm32 doesn't have such check.
+> 
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 4be549478691..ef0a5246700e 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4501,7 +4501,8 @@ static struct dmar_atsr_unit *dmar_find_atsr(struct acpi_dmar_atsr *atsr)
- 	struct dmar_atsr_unit *atsru;
- 	struct acpi_dmar_atsr *tmp;
- 
--	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list) {
-+	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list,
-+				dmar_rcu_check()) {
- 		tmp = (struct acpi_dmar_atsr *)atsru->hdr;
- 		if (atsr->segment != tmp->segment)
- 			continue;
+The case that you are describing has to return -EPERM per ABI spec. This case
+has to return -EINVAL.
+
+The first case is taken care from the generic code. But if we don't do this
+check before on arm64 compat we end up returning the wrong error code.
+
+For the non compat case the same is taken care from the syscall fallback [1].
+
+[1] lib/vdso/gettimeofday.c
+
 -- 
-2.21.0 (Apple Git-122.2)
-
+Regards,
+Vincenzo
