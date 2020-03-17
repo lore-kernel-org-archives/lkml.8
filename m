@@ -2,60 +2,56 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E2EC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1093C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9CD20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B971420658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443887;
-	bh=xU/j/wGwogZjo5LYbbtyz+qMZblb7nSHObMck9dJxPI=;
+	s=default; t=1584443889;
+	bh=wlMkzyEOUABkf65+CeNdXrakb3PvnKqftn9wSDK3LjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0WB2zKfq2Ghv5kjzlJu44LxbRMLJZVYlR4ZZ0T+ObmSUHv9lMvZdrxjXn+BduZs4Z
-	 nWUANrjarmeoOstm3xB8y8339Er3UShdbkttiYkqjPv/4oliAloNyNqvrailIcPYd+
-	 Ys9xQ2UlYipNQQhUauYLW2ju9EK7ukTryh0M03bM=
+	b=vpudX9NV7cLs4sTLPVI9ZIfuX6jbwtGR3B2kmryToeta7862/Bh+8RdpiZr1NcW0l
+	 l+EKEQyQFPfrYhMi0KYuGyWW0fzyToLhGRbzW2AgAlZFisqYHhETEISFIE+QLwJkxs
+	 fBjhknxqBzLBHM9iHa9KVvBKYeIjN3nakZhPrbfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbgCQLSG (ORCPT
+        id S1728669AbgCQLGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:18:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48230 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:06:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728674AbgCQLGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:06:46 -0400
+        id S1728005AbgCQLGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 132D520658;
-        Tue, 17 Mar 2020 11:06:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D44620714;
+        Tue, 17 Mar 2020 11:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443205;
-        bh=xU/j/wGwogZjo5LYbbtyz+qMZblb7nSHObMck9dJxPI=;
+        s=default; t=1584443194;
+        bh=wlMkzyEOUABkf65+CeNdXrakb3PvnKqftn9wSDK3LjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W7JYHekqa+nSjxQ4R0XMI7Ih320JqQOpImLL7nKXJv1GhNBEcr7mFXPgEzu4p5BbI
-         aV1J7/wlAqnpk8LlvV0Sh04sRX06ut86/AnKphDH3d5w7BZRHSduN0FHaqznU2T5cw
-         N5ogsIlxxbOFkll+M73PzCp/Lx/MVOeEWRz2nXyI=
+        b=FQYQSy7RSLYfP7NtVMD7ErVbLFcf5zJ7AH1MQcQSTTSBAzYnhlkmVF7UPdof+FaWh
+         vQl8gIUW2Emh9KkDt03M51qJ1X7EuiQ2JPaVuj6qXF9s66qOTc168P6j0L7mBvf7UL
+         Dzbd7cDKS26XbvaDPGiOZuwSNRiHgTq7z8YuJf3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 001/151] virtio_balloon: Adjust label in virtballoon_probe
-Date:   Tue, 17 Mar 2020 11:53:31 +0100
-Message-Id: <20200317103326.679618576@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.4 118/123] iommu/vt-d: Ignore devices with out-of-spec domain number
+Date:   Tue, 17 Mar 2020 11:55:45 +0100
+Message-Id: <20200317103319.382152411@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
-References: <20200317103326.593639086@linuxfoundation.org>
+In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
+References: <20200317103307.343627747@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,48 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Daniel Drake <drake@endlessm.com>
 
-[ Upstream commit 6ae4edab2fbf86ec92fbf0a8f0c60b857d90d50f ]
+commit da72a379b2ec0bad3eb265787f7008bead0b040c upstream.
 
-Clang warns when CONFIG_BALLOON_COMPACTION is unset:
+VMD subdevices are created with a PCI domain ID of 0x10000 or
+higher.
 
-../drivers/virtio/virtio_balloon.c:963:1: warning: unused label
-'out_del_vqs' [-Wunused-label]
-out_del_vqs:
-^~~~~~~~~~~~
-1 warning generated.
+These subdevices are also handled like all other PCI devices by
+dmar_pci_bus_notifier().
 
-Move the label within the preprocessor block since it is only used when
-CONFIG_BALLOON_COMPACTION is set.
+However, when dmar_alloc_pci_notify_info() take records of such devices,
+it will truncate the domain ID to a u16 value (in info->seg).
+The device at (e.g.) 10000:00:02.0 is then treated by the DMAR code as if
+it is 0000:00:02.0.
 
-Fixes: 1ad6f58ea936 ("virtio_balloon: Fix memory leaks on errors in virtballoon_probe()")
-Link: https://github.com/ClangBuiltLinux/linux/issues/886
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://lore.kernel.org/r/20200216004039.23464-1-natechancellor@gmail.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In the unlucky event that a real device also exists at 0000:00:02.0 and
+also has a device-specific entry in the DMAR table,
+dmar_insert_dev_scope() will crash on:
+   BUG_ON(i >= devices_cnt);
+
+That's basically a sanity check that only one PCI device matches a
+single DMAR entry; in this case we seem to have two matching devices.
+
+Fix this by ignoring devices that have a domain number higher than
+what can be looked up in the DMAR table.
+
+This problem was carefully diagnosed by Jian-Hong Pan.
+
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Fixes: 59ce0515cdaf3 ("iommu/vt-d: Update DRHD/RMRR/ATSR device scope caches when PCI hotplug happens")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/virtio/virtio_balloon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/dmar.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 7bfe365d93720..341458fd95ca4 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -959,8 +959,8 @@ out_iput:
- 	iput(vb->vb_dev_info.inode);
- out_kern_unmount:
- 	kern_unmount(balloon_mnt);
--#endif
- out_del_vqs:
-+#endif
- 	vdev->config->del_vqs(vdev);
- out_free_vb:
- 	kfree(vb);
--- 
-2.20.1
-
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -28,6 +28,7 @@
+ #include <linux/slab.h>
+ #include <linux/iommu.h>
+ #include <linux/numa.h>
++#include <linux/limits.h>
+ #include <asm/irq_remapping.h>
+ #include <asm/iommu_table.h>
+ 
+@@ -128,6 +129,13 @@ dmar_alloc_pci_notify_info(struct pci_de
+ 
+ 	BUG_ON(dev->is_virtfn);
+ 
++	/*
++	 * Ignore devices that have a domain number higher than what can
++	 * be looked up in DMAR, e.g. VMD subdevices with domain 0x10000
++	 */
++	if (pci_domain_nr(dev->bus) > U16_MAX)
++		return NULL;
++
+ 	/* Only generate path[] for device addition event */
+ 	if (event == BUS_NOTIFY_ADD_DEVICE)
+ 		for (tmp = dev; tmp; tmp = tmp->bus->self)
 
 
