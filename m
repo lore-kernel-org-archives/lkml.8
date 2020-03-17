@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83CAC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C01C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C4620736
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EA220736
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:54:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgCQExz (ORCPT
+        id S1727176AbgCQEyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:53:55 -0400
+        Tue, 17 Mar 2020 00:54:01 -0400
 Received: from mga04.intel.com ([192.55.52.120]:34131 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727026AbgCQExX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726856AbgCQExX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 00:53:23 -0400
-IronPort-SDR: MHYBoN4vHnsEx22GNkr7Erp4NU/68NEpzKMsatHEQS53hO9PUi9i1UN0BLbL6E22E4WXVU0eOu
- 4VHII5TA0Rfw==
+IronPort-SDR: J7KwXQuNX1i7CyoIJjn8C6cblkqFc7z6nv06lomxshIep7WmqDP7Wzod1MV7mBdSX9h71FF7z9
+ n9/zSo1FHW2A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:23 -0700
-IronPort-SDR: i5ieWGSyHvcJNxu4jL7DiJMsGZTgrxQJKH3AWff+68oxaCuYkRNAY/XqiWtbhm9vYLp8V2xjxi
- K8ImlLWTptsA==
+IronPort-SDR: u4AFV9Cqf18yXYxQJt2Dy7WaRjIVYMJQi+x1+NT+M56lEwK5DJk9RNmRMDyWq88ZJpDELFlbiN
+ EyQ+taD0xhBQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252831"
+   d="scan'208";a="355252828"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:23 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:22 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 29/32] KVM: VMX: Don't reload APIC access page if its control is disabled
-Date:   Mon, 16 Mar 2020 21:52:35 -0700
-Message-Id: <20200317045238.30434-30-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 28/32] KVM: VMX: Retrieve APIC access page HPA only when necessary
+Date:   Mon, 16 Mar 2020 21:52:34 -0700
+Message-Id: <20200317045238.30434-29-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
 References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
@@ -59,51 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't reload the APIC access page if its control is disabled, e.g. if
-the guest is running with x2APIC (likely) or with the local APIC
-disabled (unlikely), to avoid unnecessary TLB flushes and VMWRITEs.
-Unconditionally reload the APIC access page and flush the TLB when
-the guest's virtual APIC transitions to "xAPIC enabled", as any
-changes to the APIC access page's mapping will not be recorded while
-the guest's virtual APIC is disabled.
+Move the retrieval of the HPA associated with L1's APIC access page into
+VMX code to avoid unnecessarily calling gfn_to_page(), e.g. when the
+vCPU is in guest mode (L2).  Alternatively, the optimization logic in
+VMX could be mirrored into the common x86 code, but that will get ugly
+fast when further optimizations are introduced.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kvm/vmx/vmx.c          | 16 ++++++++++++++--
+ arch/x86/kvm/x86.c              | 13 +------------
+ 3 files changed, 16 insertions(+), 15 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 26fa52450569..31aa93088bf9 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1154,7 +1154,7 @@ struct kvm_x86_ops {
+ 	bool (*guest_apic_has_interrupt)(struct kvm_vcpu *vcpu);
+ 	void (*load_eoi_exitmap)(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap);
+ 	void (*set_virtual_apic_mode)(struct kvm_vcpu *vcpu);
+-	void (*set_apic_access_page_addr)(struct kvm_vcpu *vcpu, hpa_t hpa);
++	void (*set_apic_access_page_addr)(struct kvm_vcpu *vcpu);
+ 	int (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
+ 	int (*sync_pir_to_irr)(struct kvm_vcpu *vcpu);
+ 	int (*set_tss_addr)(struct kvm *kvm, unsigned int addr);
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e8d409b50afd..d49d2a1ddf03 100644
+index 3155329bf844..e8d409b50afd 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6122,7 +6122,15 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
- 		if (flexpriority_enabled) {
- 			sec_exec_control |=
- 				SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
--			vmx_flush_tlb_current(vcpu);
-+			kvm_make_request(KVM_REQ_APIC_PAGE_RELOAD, vcpu);
+@@ -6136,16 +6136,28 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
+ 	vmx_update_msr_bitmap(vcpu);
+ }
+ 
+-static void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu, hpa_t hpa)
++static void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu)
+ {
++	struct page *page;
 +
-+			/*
-+			 * Flush the TLB, reloading the APIC access page will
-+			 * only do so if its physical address has changed, but
-+			 * the guest may have inserted a non-APIC mapping into
-+			 * the TLB while the APIC access page was disabled.
-+			 */
-+			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
- 		}
- 		break;
- 	case LAPIC_MODE_X2APIC:
-@@ -6146,6 +6154,10 @@ static void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu)
+ 	/* Defer reload until vmcs01 is the current VMCS. */
+ 	if (is_guest_mode(vcpu)) {
+ 		to_vmx(vcpu)->nested.reload_vmcs01_apic_access_page = true;
  		return;
  	}
  
-+	if (!(secondary_exec_controls_get(to_vmx(vcpu)) &
-+	    SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES))
+-	vmcs_write64(APIC_ACCESS_ADDR, hpa);
++	page = gfn_to_page(vcpu->kvm, APIC_DEFAULT_PHYS_BASE >> PAGE_SHIFT);
++	if (is_error_page(page))
 +		return;
 +
- 	page = gfn_to_page(vcpu->kvm, APIC_DEFAULT_PHYS_BASE >> PAGE_SHIFT);
- 	if (is_error_page(page))
++	vmcs_write64(APIC_ACCESS_ADDR, page_to_phys(page));
+ 	vmx_flush_tlb_current(vcpu);
++
++	/*
++	 * Do not pin apic access page in memory, the MMU notifier
++	 * will call us again if it is migrated or swapped out.
++	 */
++	put_page(page);
+ }
+ 
+ static void vmx_hwapic_isr_update(struct kvm_vcpu *vcpu, int max_isr)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index cccfcf612008..26c24af87cca 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8157,24 +8157,13 @@ int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+ 
+ void kvm_vcpu_reload_apic_access_page(struct kvm_vcpu *vcpu)
+ {
+-	struct page *page = NULL;
+-
+ 	if (!lapic_in_kernel(vcpu))
  		return;
+ 
+ 	if (!kvm_x86_ops->set_apic_access_page_addr)
+ 		return;
+ 
+-	page = gfn_to_page(vcpu->kvm, APIC_DEFAULT_PHYS_BASE >> PAGE_SHIFT);
+-	if (is_error_page(page))
+-		return;
+-	kvm_x86_ops->set_apic_access_page_addr(vcpu, page_to_phys(page));
+-
+-	/*
+-	 * Do not pin apic access page in memory, the MMU notifier
+-	 * will call us again if it is migrated or swapped out.
+-	 */
+-	put_page(page);
++	kvm_x86_ops->set_apic_access_page_addr(vcpu);
+ }
+ 
+ void __kvm_request_immediate_exit(struct kvm_vcpu *vcpu)
 -- 
 2.24.1
 
