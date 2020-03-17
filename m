@@ -2,206 +2,390 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B927AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79872C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E6D205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4854D205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hY4715Py"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gsYJJ620"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgCQJRh (ORCPT
+        id S1726476AbgCQJTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:17:37 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44185 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgCQJRh (ORCPT
+        Tue, 17 Mar 2020 05:19:13 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:48642 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725957AbgCQJTL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:17:37 -0400
-Received: by mail-qk1-f195.google.com with SMTP id j4so14646570qkc.11;
-        Tue, 17 Mar 2020 02:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JxwfgSOGHypAS3R1BbLW4z9bLpsckg8eAQy++ZdyVho=;
-        b=hY4715PyB7C+ViqAVN3GXwFpli9VZ7Sv1gFD3fFm0l/YQB4kzb+QrJmL24y2LzpOAS
-         OIgNLfiio9yk5ewmwgHwwbusjzOEQYLPxqaHZkv6AV4vqQeUarTNqoU6kc0SRfx7DJ3k
-         50YLOZ1uVjR8mGofC12QxQTqRGSjtBE+DnBS2psDRodhCv6QywMQr6HYrcOacFSELzHn
-         D99wh62pebTw5JAuXrec25GG5tvT72eJR4el6pMrH2OQCw/oS1oeoqhGDU1lv3vbSuE/
-         UNZdKI9op5+QOUbc84GDunkdSNKjvpZPrCKllqbb6W2hAq4Okynsfrv+d/GuIhQwUAwX
-         7lVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JxwfgSOGHypAS3R1BbLW4z9bLpsckg8eAQy++ZdyVho=;
-        b=Dbsq7qcJsvt4tX6KFlnBt3z/93bjyQlcM3Vu3KRssfK17FZHNi7glD5869u2hhLbex
-         uS+ZXZIS1deIc+QF/Vh5qpVZOZl1CPDbQGIYKFX072DUPMfnKG0Yl8KezJWizZBkrXTn
-         39qfcOlIwN+fR/Q+I94uCAj9L+tHv9LBghKzLX1UlkN3p3JLh4mLjJyNZyEl0+Bo/zpV
-         HZy04VA/0I64VHO65VadJC/twaXGY3NS/XbORaWy+gd8ofJ3trXQRou2BLHQGPcNHuJ+
-         5J4p0elkwRbyK2ttJ5G/cUCeDiPlNHV/0KME+14l33yOB+Csss/TR58Qc709eHK5t8Mk
-         0peg==
-X-Gm-Message-State: ANhLgQ1fhQzgBUcVDKJ4bX2hTblIXmOQzE7jrcTkJgZrH9hgbxOBcZK+
-        VPSWSyhp2i4IkJZWq+iHWC1onXRDrSks5Ost7hs=
-X-Google-Smtp-Source: ADFU+vvF1DDXNjDJYo5wU8kxADBIVCRfGTwnrTR6r2t8QcHB80KCEYO+gWK60KCNIcslradmUPM7cHOORp3y6fbeIIc=
-X-Received: by 2002:a05:620a:10ae:: with SMTP id h14mr3793460qkk.170.1584436653751;
- Tue, 17 Mar 2020 02:17:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1583307441.git.baolin.wang7@gmail.com> <ace53bca354e2846f19684bd33a9c0f3c2ee2c44.1583307441.git.baolin.wang7@gmail.com>
- <dd44e606-3eb5-f7fc-5995-021705a9b5d9@intel.com> <CADBw62ojVB7nvwE9OM8-A_HfVBBXz7tuaxfqDCmQ39b1YiDBag@mail.gmail.com>
- <ea70f7a4-78cb-25b4-4363-c6493d885795@intel.com>
-In-Reply-To: <ea70f7a4-78cb-25b4-4363-c6493d885795@intel.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 17 Mar 2020 17:17:21 +0800
-Message-ID: <CADBw62oK299N+M+59RxgFeie6DJPb005+7kAbxzzkMF0QRchaQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH 1/3] mmc: host: Introduce the request_atomic() for
- the host
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 17 Mar 2020 05:19:11 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CD86240216;
+        Tue, 17 Mar 2020 09:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1584436750; bh=Du0EVgLnk2N+x8KKI9BRY6gwpsCtPCw91bTQ+xoRIBQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=gsYJJ6208idrSghOO4/asihHHkdL4I+PxzJYnMsrEGUzvMuVAQrvNklVCCy923agP
+         WIKGpvRDbU3D42Y9vB6aRbQQPbyNNkWt9a2PH7fW1zTGpR3vzlP4mo8QqxyGNghEFB
+         4KsPei/vlcS1Bim5ylx4IVfcgwuV8jK/qCWwuBcfjI8l08gu4Jeiidw72OnPaej8n/
+         zZxCy3CAQJwwVP/ZJ26qcqNFowxVXx8sSoISr2cYEcVphOQ6Ps6+XyHQdGlCAiG9eU
+         VDqvQ1vStW1/Bmp5PIN58wue4rFCsMsEt1apHi1cSGx0rRspJ/4uQkNlSGXVaFGPa5
+         RGo1mVes3GgEQ==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 4E91CA0068;
+        Tue, 17 Mar 2020 09:19:08 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH net-next 3/4] net: stmmac: Add support for Enterprise MAC version
+Date:   Tue, 17 Mar 2020 10:18:52 +0100
+Message-Id: <e5f2bad98becf9fcc8dc0904de11c591a568dca1.1584436401.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1584436401.git.Jose.Abreu@synopsys.com>
+References: <cover.1584436401.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1584436401.git.Jose.Abreu@synopsys.com>
+References: <cover.1584436401.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 3:32 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 17/03/20 5:36 am, Baolin Wang wrote:
-> > On Mon, Mar 16, 2020 at 9:09 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>
-> >> On 4/03/20 9:42 am, Baolin Wang wrote:
-> >>> The SD host controller can process one request in the atomic context if
-> >>> the card is nonremovable, which means we can submit next request in the
-> >>> irq hard handler when using the MMC software queue to reduce the latency.
-> >>> Thus this patch adds a new API request_atomic() for the host controller
-> >>> and implement it for the SD host controller.
-> >>>
-> >>> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> >>> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> >>> ---
-> >>>  drivers/mmc/host/sdhci.c | 27 +++++++++++++++++++--------
-> >>>  drivers/mmc/host/sdhci.h |  1 +
-> >>>  include/linux/mmc/host.h |  3 +++
-> >>>  3 files changed, 23 insertions(+), 8 deletions(-)
-> >>>
-> >>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> >>> index 9c37451..4febbcb 100644
-> >>> --- a/drivers/mmc/host/sdhci.c
-> >>> +++ b/drivers/mmc/host/sdhci.c
-> >>> @@ -2016,17 +2016,12 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
-> >>>   *                                                                           *
-> >>>  \*****************************************************************************/
-> >>>
-> >>> -void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> >>> +static void sdhci_start_request(struct mmc_host *mmc, struct mmc_request *mrq,
-> >>> +                             int present)
-> >>>  {
-> >>> -     struct sdhci_host *host;
-> >>> -     int present;
-> >>> +     struct sdhci_host *host = mmc_priv(mmc);
-> >>>       unsigned long flags;
-> >>>
-> >>> -     host = mmc_priv(mmc);
-> >>> -
-> >>> -     /* Firstly check card presence */
-> >>> -     present = mmc->ops->get_cd(mmc);
-> >>> -
-> >>>       spin_lock_irqsave(&host->lock, flags);
-> >>>
-> >>>       sdhci_led_activate(host);
-> >>> @@ -2043,6 +2038,22 @@ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> >>>
-> >>>       spin_unlock_irqrestore(&host->lock, flags);
-> >>>  }
-> >>> +
-> >>> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq)
-> >>> +{
-> >>> +     sdhci_start_request(mmc, mrq, 1);
-> >>> +}
-> >>> +EXPORT_SYMBOL_GPL(sdhci_request_atomic);
-> >>> +
-> >>> +void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> >>> +{
-> >>> +     int present;
-> >>> +
-> >>> +     /* Firstly check card presence */
-> >>> +     present = mmc->ops->get_cd(mmc);
-> >>> +
-> >>> +     sdhci_start_request(mmc, mrq, present);
-> >>> +}
-> >>>  EXPORT_SYMBOL_GPL(sdhci_request);
-> >>>
-> >>>  void sdhci_set_bus_width(struct sdhci_host *host, int width)
-> >>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> >>> index cac2d97..5507a73 100644
-> >>> --- a/drivers/mmc/host/sdhci.h
-> >>> +++ b/drivers/mmc/host/sdhci.h
-> >>> @@ -775,6 +775,7 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
-> >>>  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
-> >>>                          unsigned short vdd);
-> >>>  void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
-> >>> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
-> >>>  void sdhci_set_bus_width(struct sdhci_host *host, int width);
-> >>>  void sdhci_reset(struct sdhci_host *host, u8 mask);
-> >>>  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
-> >>> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> >>> index 562ed06..db5e59c 100644
-> >>> --- a/include/linux/mmc/host.h
-> >>> +++ b/include/linux/mmc/host.h
-> >>> @@ -92,6 +92,9 @@ struct mmc_host_ops {
-> >>>                           int err);
-> >>>       void    (*pre_req)(struct mmc_host *host, struct mmc_request *req);
-> >>>       void    (*request)(struct mmc_host *host, struct mmc_request *req);
-> >>> +     /* Submit one request to host in atomic context. */
-> >>> +     void    (*request_atomic)(struct mmc_host *host,
-> >>> +                               struct mmc_request *req);
-> >>
-> >> This doesn't have the flexibility to return "busy".  For example,
-> >> sdhci_send_command() will potentially wait quite some time if the inhibit
-> >> bits are set.  That is not good in interrupt context.  It would be better to
-> >> return immediately in that case and have the caller fall back to a
-> >> non-atomic context.  Thoughts?
-> >
-> > Yes, I unserstood your concern. But the sdhci_send_command() is
-> > already under the spin_lock_irqsave() protection, which will also
-> > disable the interrupt for some time if the inhibit bits are set. That
-> > is same with moving it in interrupt context.
->
-> It is, but I would like to fix that too.
+Adds the support for Enterprise MAC IP version which is very similar to
+XGMAC. It's so similar that we just need to check the device id and add
+new speeds definitions and some minor callbacks.
 
-OK. Like you suggested, cause we've aleady decided how to complete a
-request by sdhci_defer_done(), I need think about how to change to a
-non-atomic context for this unusual case.
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-And since the original sdhci_send_command() has the same problem as I
-said, I perfer to create another patch set to fix this issue.
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ drivers/net/ethernet/stmicro/stmmac/common.h       |  7 ++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 99 ++++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxlgmac2.h    | 22 +++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.c         | 45 +++++++++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  1 +
+ 5 files changed, 173 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxlgmac2.h
 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 7fd073144bac..386663208c23 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -34,6 +34,11 @@
+ #define DWMAC_CORE_5_00		0x50
+ #define DWMAC_CORE_5_10		0x51
+ #define DWXGMAC_CORE_2_10	0x21
++#define DWXLGMAC_CORE_2_00	0x20
++
++/* Device ID */
++#define DWXGMAC_ID		0x76
++#define DWXLGMAC_ID		0x27
+ 
+ #define STMMAC_CHAN0	0	/* Always supported and default for all chips */
+ 
+@@ -465,6 +470,7 @@ struct mac_device_info {
+ 	unsigned int pcs;
+ 	unsigned int pmt;
+ 	unsigned int ps;
++	unsigned int xlgmac;
+ };
+ 
+ struct stmmac_rx_routing {
+@@ -476,6 +482,7 @@ int dwmac100_setup(struct stmmac_priv *priv);
+ int dwmac1000_setup(struct stmmac_priv *priv);
+ int dwmac4_setup(struct stmmac_priv *priv);
+ int dwxgmac2_setup(struct stmmac_priv *priv);
++int dwxlgmac2_setup(struct stmmac_priv *priv);
+ 
+ void stmmac_set_mac_addr(void __iomem *ioaddr, u8 addr[6],
+ 			 unsigned int high, unsigned int low);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 67b754a56288..0e4575f7bedb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -9,6 +9,7 @@
+ #include <linux/iopoll.h>
+ #include "stmmac.h"
+ #include "stmmac_ptp.h"
++#include "dwxlgmac2.h"
+ #include "dwxgmac2.h"
+ 
+ static void dwxgmac2_core_init(struct mac_device_info *hw,
+@@ -1485,6 +1486,67 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.fpe_configure = dwxgmac3_fpe_configure,
+ };
+ 
++static void dwxlgmac2_rx_queue_enable(struct mac_device_info *hw, u8 mode,
++				      u32 queue)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
++
++	value = readl(ioaddr + XLGMAC_RXQ_ENABLE_CTRL0) & ~XGMAC_RXQEN(queue);
++	if (mode == MTL_QUEUE_AVB)
++		value |= 0x1 << XGMAC_RXQEN_SHIFT(queue);
++	else if (mode == MTL_QUEUE_DCB)
++		value |= 0x2 << XGMAC_RXQEN_SHIFT(queue);
++	writel(value, ioaddr + XLGMAC_RXQ_ENABLE_CTRL0);
++}
++
++const struct stmmac_ops dwxlgmac2_ops = {
++	.core_init = dwxgmac2_core_init,
++	.set_mac = dwxgmac2_set_mac,
++	.rx_ipc = dwxgmac2_rx_ipc,
++	.rx_queue_enable = dwxlgmac2_rx_queue_enable,
++	.rx_queue_prio = dwxgmac2_rx_queue_prio,
++	.tx_queue_prio = dwxgmac2_tx_queue_prio,
++	.rx_queue_routing = NULL,
++	.prog_mtl_rx_algorithms = dwxgmac2_prog_mtl_rx_algorithms,
++	.prog_mtl_tx_algorithms = dwxgmac2_prog_mtl_tx_algorithms,
++	.set_mtl_tx_queue_weight = dwxgmac2_set_mtl_tx_queue_weight,
++	.map_mtl_to_dma = dwxgmac2_map_mtl_to_dma,
++	.config_cbs = dwxgmac2_config_cbs,
++	.dump_regs = dwxgmac2_dump_regs,
++	.host_irq_status = dwxgmac2_host_irq_status,
++	.host_mtl_irq_status = dwxgmac2_host_mtl_irq_status,
++	.flow_ctrl = dwxgmac2_flow_ctrl,
++	.pmt = dwxgmac2_pmt,
++	.set_umac_addr = dwxgmac2_set_umac_addr,
++	.get_umac_addr = dwxgmac2_get_umac_addr,
++	.set_eee_mode = dwxgmac2_set_eee_mode,
++	.reset_eee_mode = dwxgmac2_reset_eee_mode,
++	.set_eee_timer = dwxgmac2_set_eee_timer,
++	.set_eee_pls = dwxgmac2_set_eee_pls,
++	.pcs_ctrl_ane = NULL,
++	.pcs_rane = NULL,
++	.pcs_get_adv_lp = NULL,
++	.debug = NULL,
++	.set_filter = dwxgmac2_set_filter,
++	.safety_feat_config = dwxgmac3_safety_feat_config,
++	.safety_feat_irq_status = dwxgmac3_safety_feat_irq_status,
++	.safety_feat_dump = dwxgmac3_safety_feat_dump,
++	.set_mac_loopback = dwxgmac2_set_mac_loopback,
++	.rss_configure = dwxgmac2_rss_configure,
++	.update_vlan_hash = dwxgmac2_update_vlan_hash,
++	.rxp_config = dwxgmac3_rxp_config,
++	.get_mac_tx_timestamp = dwxgmac2_get_mac_tx_timestamp,
++	.flex_pps_config = dwxgmac2_flex_pps_config,
++	.sarc_configure = dwxgmac2_sarc_configure,
++	.enable_vlan = dwxgmac2_enable_vlan,
++	.config_l3_filter = dwxgmac2_config_l3_filter,
++	.config_l4_filter = dwxgmac2_config_l4_filter,
++	.set_arp_offload = dwxgmac2_set_arp_offload,
++	.est_configure = dwxgmac3_est_configure,
++	.fpe_configure = dwxgmac3_fpe_configure,
++};
++
+ int dwxgmac2_setup(struct stmmac_priv *priv)
+ {
+ 	struct mac_device_info *mac = priv->hw;
+@@ -1521,3 +1583,40 @@ int dwxgmac2_setup(struct stmmac_priv *priv)
+ 
+ 	return 0;
+ }
++
++int dwxlgmac2_setup(struct stmmac_priv *priv)
++{
++	struct mac_device_info *mac = priv->hw;
++
++	dev_info(priv->device, "\tXLGMAC\n");
++
++	priv->dev->priv_flags |= IFF_UNICAST_FLT;
++	mac->pcsr = priv->ioaddr;
++	mac->multicast_filter_bins = priv->plat->multicast_filter_bins;
++	mac->unicast_filter_entries = priv->plat->unicast_filter_entries;
++	mac->mcast_bits_log2 = 0;
++
++	if (mac->multicast_filter_bins)
++		mac->mcast_bits_log2 = ilog2(mac->multicast_filter_bins);
++
++	mac->link.duplex = 0;
++	mac->link.speed1000 = XLGMAC_CONFIG_SS_1000;
++	mac->link.speed2500 = XLGMAC_CONFIG_SS_2500;
++	mac->link.xgmii.speed10000 = XLGMAC_CONFIG_SS_10G;
++	mac->link.xlgmii.speed25000 = XLGMAC_CONFIG_SS_25G;
++	mac->link.xlgmii.speed40000 = XLGMAC_CONFIG_SS_40G;
++	mac->link.xlgmii.speed50000 = XLGMAC_CONFIG_SS_50G;
++	mac->link.xlgmii.speed100000 = XLGMAC_CONFIG_SS_100G;
++	mac->link.speed_mask = XLGMAC_CONFIG_SS;
++
++	mac->mii.addr = XGMAC_MDIO_ADDR;
++	mac->mii.data = XGMAC_MDIO_DATA;
++	mac->mii.addr_shift = 16;
++	mac->mii.addr_mask = GENMASK(20, 16);
++	mac->mii.reg_shift = 0;
++	mac->mii.reg_mask = GENMASK(15, 0);
++	mac->mii.clk_csr_shift = 19;
++	mac->mii.clk_csr_mask = GENMASK(21, 19);
++
++	return 0;
++}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxlgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxlgmac2.h
+new file mode 100644
+index 000000000000..726090d49221
+--- /dev/null
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxlgmac2.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2020 Synopsys, Inc. and/or its affiliates.
++ * Synopsys DesignWare XLGMAC definitions.
++ */
++
++#ifndef __STMMAC_DWXLGMAC2_H__
++#define __STMMAC_DWXLGMAC2_H__
++
++/* MAC Registers */
++#define XLGMAC_CONFIG_SS		GENMASK(30, 28)
++#define XLGMAC_CONFIG_SS_SHIFT		28
++#define XLGMAC_CONFIG_SS_40G		(0x0 << XLGMAC_CONFIG_SS_SHIFT)
++#define XLGMAC_CONFIG_SS_25G		(0x1 << XLGMAC_CONFIG_SS_SHIFT)
++#define XLGMAC_CONFIG_SS_50G		(0x2 << XLGMAC_CONFIG_SS_SHIFT)
++#define XLGMAC_CONFIG_SS_100G		(0x3 << XLGMAC_CONFIG_SS_SHIFT)
++#define XLGMAC_CONFIG_SS_10G		(0x4 << XLGMAC_CONFIG_SS_SHIFT)
++#define XLGMAC_CONFIG_SS_2500		(0x6 << XLGMAC_CONFIG_SS_SHIFT)
++#define XLGMAC_CONFIG_SS_1000		(0x7 << XLGMAC_CONFIG_SS_SHIFT)
++#define XLGMAC_RXQ_ENABLE_CTRL0		0x00000140
++
++#endif /* __STMMAC_DWXLGMAC2_H__ */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+index 3af2e5015245..bb7114f970f8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+@@ -23,6 +23,18 @@ static u32 stmmac_get_id(struct stmmac_priv *priv, u32 id_reg)
+ 	return reg & GENMASK(7, 0);
+ }
+ 
++static u32 stmmac_get_dev_id(struct stmmac_priv *priv, u32 id_reg)
++{
++	u32 reg = readl(priv->ioaddr + id_reg);
++
++	if (!reg) {
++		dev_info(priv->device, "Version ID not available\n");
++		return 0x0;
++	}
++
++	return (reg & GENMASK(15, 8)) >> 8;
++}
++
+ static void stmmac_dwmac_mode_quirk(struct stmmac_priv *priv)
+ {
+ 	struct mac_device_info *mac = priv->hw;
+@@ -69,11 +81,18 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 	return 0;
+ }
+ 
++static int stmmac_dwxlgmac_quirks(struct stmmac_priv *priv)
++{
++	priv->hw->xlgmac = true;
++	return 0;
++}
++
+ static const struct stmmac_hwif_entry {
+ 	bool gmac;
+ 	bool gmac4;
+ 	bool xgmac;
+ 	u32 min_id;
++	u32 dev_id;
+ 	const struct stmmac_regs_off regs;
+ 	const void *desc;
+ 	const void *dma;
+@@ -199,6 +218,7 @@ static const struct stmmac_hwif_entry {
+ 		.gmac4 = false,
+ 		.xgmac = true,
+ 		.min_id = DWXGMAC_CORE_2_10,
++		.dev_id = DWXGMAC_ID,
+ 		.regs = {
+ 			.ptp_off = PTP_XGMAC_OFFSET,
+ 			.mmc_off = MMC_XGMAC_OFFSET,
+@@ -212,6 +232,25 @@ static const struct stmmac_hwif_entry {
+ 		.mmc = &dwxgmac_mmc_ops,
+ 		.setup = dwxgmac2_setup,
+ 		.quirks = NULL,
++	}, {
++		.gmac = false,
++		.gmac4 = false,
++		.xgmac = true,
++		.min_id = DWXLGMAC_CORE_2_00,
++		.dev_id = DWXLGMAC_ID,
++		.regs = {
++			.ptp_off = PTP_XGMAC_OFFSET,
++			.mmc_off = MMC_XGMAC_OFFSET,
++		},
++		.desc = &dwxgmac210_desc_ops,
++		.dma = &dwxgmac210_dma_ops,
++		.mac = &dwxlgmac2_ops,
++		.hwtimestamp = &stmmac_ptp,
++		.mode = NULL,
++		.tc = &dwmac510_tc_ops,
++		.mmc = &dwxgmac_mmc_ops,
++		.setup = dwxlgmac2_setup,
++		.quirks = stmmac_dwxlgmac_quirks,
+ 	},
+ };
+ 
+@@ -223,13 +262,15 @@ int stmmac_hwif_init(struct stmmac_priv *priv)
+ 	const struct stmmac_hwif_entry *entry;
+ 	struct mac_device_info *mac;
+ 	bool needs_setup = true;
++	u32 id, dev_id = 0;
+ 	int i, ret;
+-	u32 id;
+ 
+ 	if (needs_gmac) {
+ 		id = stmmac_get_id(priv, GMAC_VERSION);
+ 	} else if (needs_gmac4 || needs_xgmac) {
+ 		id = stmmac_get_id(priv, GMAC4_VERSION);
++		if (needs_xgmac)
++			dev_id = stmmac_get_dev_id(priv, GMAC4_VERSION);
+ 	} else {
+ 		id = 0;
+ 	}
+@@ -267,6 +308,8 @@ int stmmac_hwif_init(struct stmmac_priv *priv)
+ 		/* Use synopsys_id var because some setups can override this */
+ 		if (priv->synopsys_id < entry->min_id)
+ 			continue;
++		if (needs_xgmac && (dev_id ^ entry->dev_id))
++			continue;
+ 
+ 		/* Only use generic HW helpers if needed */
+ 		mac->desc = mac->desc ? : entry->desc;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index c71dd99c8abf..fc350149ba34 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -605,6 +605,7 @@ extern const struct stmmac_dma_ops dwmac410_dma_ops;
+ extern const struct stmmac_ops dwmac510_ops;
+ extern const struct stmmac_tc_ops dwmac510_tc_ops;
+ extern const struct stmmac_ops dwxgmac210_ops;
++extern const struct stmmac_ops dwxlgmac2_ops;
+ extern const struct stmmac_dma_ops dwxgmac210_dma_ops;
+ extern const struct stmmac_desc_ops dwxgmac210_desc_ops;
+ extern const struct stmmac_mmc_ops dwmac_mmc_ops;
+-- 
+2.7.4
 
-> > Moreover, if the previous command complete interrupt and transfer
-> > complete interrupt are normal, we should not meet this issue of
-> > polling inhibit bits (I have not met this issue on my platform). So I
-> > think we can remove the polling here? If the inhibit bits are set, I
-> > think the command complete interrupt or the transfer complete
-> > interrupt have been abnormal, so we can just return the error here.
-> > What do you think? Thanks.
-> >
->
-> I suspect the inhibit polling might be needed for some host controllers in
-> some situations.  ie. taking it out would likely break things.
-
-Make sense.
-
-
---
-Baolin Wang
