@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF29C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AC3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2239120658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9762B2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443613;
-	bh=MhqLiY0QoUHrYeGdqaf0sjCR6NM6YcsSusNH+uq3Vq8=;
+	s=default; t=1584443616;
+	bh=zEk5EsMyM/P5rjclWB9KLkBKcIJ17aHR4IY1NTv7k0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTrdll3AU+h0/Q4qrpw4A4kzDjGcdbyp/edBtxVPWG0JS3Lnc1dtqnzbz6HIYYEjS
-	 I/3+vtunbmrWb2q6lmo7ZPKIFFi+fNRgI+Dca3v2c8WQGtElHZhmAzZIZOc+s67qy3
-	 BdBi+ec0mMEzH7WRy+A68N5uAudFfoIDXF4PqE4M=
+	b=XV5zxw15h4OiTq2VJWGlZbRq71Fm8ZnchevYEWVeRn0JMi+SJbBkwHJiwet5HsZim
+	 0gbTJIYpLX74IzAXvRAos0sq72JvkrZn9pUZtPqgpaEli70g9XExN9BwkCYREVNOE4
+	 y+QfQkXlhgpIC6ZC/h+lFOANnlaNEnSetcdSQpVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgCQLNc (ORCPT
+        id S1729503AbgCQLNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57356 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:13:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729377AbgCQLN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:28 -0400
+        id S1729478AbgCQLNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:13:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57466205ED;
-        Tue, 17 Mar 2020 11:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F35082071C;
+        Tue, 17 Mar 2020 11:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443607;
-        bh=MhqLiY0QoUHrYeGdqaf0sjCR6NM6YcsSusNH+uq3Vq8=;
+        s=default; t=1584443610;
+        bh=zEk5EsMyM/P5rjclWB9KLkBKcIJ17aHR4IY1NTv7k0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A2gkGV9rSI8GObXJwj6lZ6fIs0PXRSvtY6GFgB3bdKvGH2K38XeHo+fDDOn0x7YKX
-         SkMust4JtJh62pfczPM1Rycp7wp3xmEP3n57PpVDkM232dd7uXdRsAo4JpaVud+gfx
-         SxlDud82JOIXkvYlpqpyaielVuMZtF5T7xnAlHFQ=
+        b=wltW4OzlPKUXvew/lY+yQCxVX4snBaHGxU+37HrMQC4zDvuyhaS9xClcTpVoAWn8J
+         mBCWhptKcR4lXgJqXEia1pvgjmFOfnm9GlYtVcJhcRWB/FNQCQS4GFNyS1kUS3VopR
+         A1lsQWEpez2Prfike6WTf7aEbVV+4x4oCGJrWqjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 5.5 102/151] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-Date:   Tue, 17 Mar 2020 11:55:12 +0100
-Message-Id: <20200317103333.707278222@linuxfoundation.org>
+        stable@vger.kernel.org, David Heidelberg <david@ixit.cz>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.5 093/151] pinctrl: qcom: Assign irq_eoi conditionally
+Date:   Tue, 17 Mar 2020 11:55:03 +0100
+Message-Id: <20200317103333.056214806@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,124 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit e8d87a0b822d4b3d9a94a5da915f93aa1b674c93 upstream.
+commit 1cada2f307665e208a486d7ac2294ed9a6f74a6f upstream.
 
-There is a ACT8600 on the CI20 board and the bindings of the
-ACT8865 driver have changed without updating the CI20 device
-tree. Therefore the PMU can not be probed successfully and
-is running in power-on reset state.
+The hierarchical parts of MSM pinctrl/GPIO is only
+used when the device tree has a "wakeup-parent" as
+a phandle, but the .irq_eoi is anyway assigned leading
+to semantic problems on elder Qualcomm chipsets.
 
-Fix DT to match the latest act8865-regulator bindings.
+When the drivers/mfd/qcom-pm8xxx.c driver calls
+chained_irq_exit() that call will in turn call chip->irq_eoi()
+which is set to irq_chip_eoi_parent() by default on a
+hierachical IRQ chip, and the parent is pinctrl-msm.c
+so that will in turn unconditionally call
+irq_chip_eoi_parent() again, but its parent is invalid
+so we get the following crash:
 
-Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+ Unnable to handle kernel NULL pointer dereference at
+ virtual address 00000010
+ pgd = (ptrval)
+ [00000010] *pgd=00000000
+ Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+ (...)
+ PC is at irq_chip_eoi_parent+0x4/0x10
+ LR is at pm8xxx_irq_handler+0x1b4/0x2d8
+
+If we solve this crash by avoiding to call up to
+irq_chip_eoi_parent(), the machine will hang and get
+reset by the watchdog, because of semantic issues,
+probably inside irq_chip.
+
+As a solution, just assign the .irq_eoi conditionally if
+we are actually using a wakeup parent.
+
+Cc: David Heidelberg <david@ixit.cz>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+Link: https://lore.kernel.org/r/20200306121221.1231296-1-linus.walleij@linaro.org
+Link: https://lore.kernel.org/r/20200309125207.571840-1-linus.walleij@linaro.org
+Link: https://lore.kernel.org/r/20200309152604.585112-1-linus.walleij@linaro.org
+Tested-by: David Heidelberg <david@ixit.cz>
+Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/boot/dts/ingenic/ci20.dts |   39 ++++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-msm.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -4,6 +4,7 @@
- #include "jz4780.dtsi"
- #include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/regulator/active-semi,8865-regulator.h>
- 
- / {
- 	compatible = "img,ci20", "ingenic,jz4780";
-@@ -163,63 +164,71 @@
- 
- 		regulators {
- 			vddcore: SUDCDC1 {
--				regulator-name = "VDDCORE";
-+				regulator-name = "DCDC_REG1";
- 				regulator-min-microvolt = <1100000>;
- 				regulator-max-microvolt = <1100000>;
- 				regulator-always-on;
- 			};
- 			vddmem: SUDCDC2 {
--				regulator-name = "VDDMEM";
-+				regulator-name = "DCDC_REG2";
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
- 			vcc_33: SUDCDC3 {
--				regulator-name = "VCC33";
-+				regulator-name = "DCDC_REG3";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 			vcc_50: SUDCDC4 {
--				regulator-name = "VCC50";
-+				regulator-name = "SUDCDC_REG4";
- 				regulator-min-microvolt = <5000000>;
- 				regulator-max-microvolt = <5000000>;
- 				regulator-always-on;
- 			};
- 			vcc_25: LDO_REG5 {
--				regulator-name = "VCC25";
-+				regulator-name = "LDO_REG5";
- 				regulator-min-microvolt = <2500000>;
- 				regulator-max-microvolt = <2500000>;
- 				regulator-always-on;
- 			};
- 			wifi_io: LDO_REG6 {
--				regulator-name = "WIFIIO";
-+				regulator-name = "LDO_REG6";
- 				regulator-min-microvolt = <2500000>;
- 				regulator-max-microvolt = <2500000>;
- 				regulator-always-on;
- 			};
- 			vcc_28: LDO_REG7 {
--				regulator-name = "VCC28";
-+				regulator-name = "LDO_REG7";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
- 				regulator-always-on;
- 			};
- 			vcc_15: LDO_REG8 {
--				regulator-name = "VCC15";
-+				regulator-name = "LDO_REG8";
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
--			vcc_18: LDO_REG9 {
--				regulator-name = "VCC18";
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
-+			vrtc_18: LDO_REG9 {
-+				regulator-name = "LDO_REG9";
-+				/* Despite the datasheet stating 3.3V
-+				 * for REG9 and the driver expecting that,
-+				 * REG9 outputs 1.8V.
-+				 * Likely the CI20 uses a proprietary
-+				 * factory programmed chip variant.
-+				 * Since this is a simple on/off LDO the
-+				 * exact values do not matter.
-+				 */
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 			vcc_11: LDO_REG10 {
--				regulator-name = "VCC11";
--				regulator-min-microvolt = <1100000>;
--				regulator-max-microvolt = <1100000>;
-+				regulator-name = "LDO_REG10";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
- 				regulator-always-on;
- 			};
- 		};
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1104,7 +1104,6 @@ static int msm_gpio_init(struct msm_pinc
+ 	pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
+ 	pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
+ 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
+-	pctrl->irq_chip.irq_eoi = irq_chip_eoi_parent;
+ 	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
+ 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
+ 	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
+@@ -1118,7 +1117,7 @@ static int msm_gpio_init(struct msm_pinc
+ 		if (!chip->irq.parent_domain)
+ 			return -EPROBE_DEFER;
+ 		chip->irq.child_to_parent_hwirq = msm_gpio_wakeirq;
+-
++		pctrl->irq_chip.irq_eoi = irq_chip_eoi_parent;
+ 		/*
+ 		 * Let's skip handling the GPIOs, if the parent irqchip
+ 		 * is handling the direct connect IRQ of the GPIO.
 
 
