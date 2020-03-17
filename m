@@ -2,150 +2,230 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87055C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F94C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCD620724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA49020738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgCQRcS (ORCPT
+        id S1726735AbgCQRcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:32:18 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39087 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgCQRcS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:32:18 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEG4Y-0008Oe-4d; Tue, 17 Mar 2020 18:32:10 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEG4W-0005Tl-OS; Tue, 17 Mar 2020 18:32:08 +0100
-Date:   Tue, 17 Mar 2020 18:32:08 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
-Message-ID: <20200317173208.t5s63pfz3byxsgzi@pengutronix.de>
-References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
- <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
- <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
- <20200316072613.37lnjfloac4npudf@pengutronix.de>
+        Tue, 17 Mar 2020 13:32:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:43076 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726278AbgCQRcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 13:32:51 -0400
+IronPort-SDR: 0lfK68NKIYabB4w9C3fFf2qxZHjLb8UkO4Pv11u0CKMwbNAQ8rGodU9y+VznGxREl5zNjNgGD/
+ aXlBLrSIWPuQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 10:32:50 -0700
+IronPort-SDR: cD/UfX8GadIYf6a5JI1xv26zZNls1QJbM2X+1uGnLwInKMpEeZ3iqIzIi5udLfe9vMkveL9g27
+ 5oecximvuOBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
+   d="scan'208";a="445568911"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Mar 2020 10:32:49 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jEG5A-000DVF-Qt; Wed, 18 Mar 2020 01:32:48 +0800
+Date:   Wed, 18 Mar 2020 01:32:10 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ 19d33357ecdf6f4d591b4c17f119bacd6ae834eb
+Message-ID: <5e71099a.eoMAYc/yM7F1jAXd%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200316072613.37lnjfloac4npudf@pengutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Pascal,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
+branch HEAD: 19d33357ecdf6f4d591b4c17f119bacd6ae834eb  x86/amd_nb, char/amd64-agp: Use amd_nb_num() accessor
 
-On Mon, Mar 16, 2020 at 08:26:13AM +0100, Uwe Kleine-König wrote:
-> On Thu, Mar 12, 2020 at 04:06:07PM +0100, Pascal Roeleven wrote:
-> > On 2020-03-12 14:29, Uwe Kleine-König wrote:
-> > > On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
-> > > > Hi all,
-> > > > 
-> > > > I am working on adding an old A10 device to mainline and noticed an
-> > > > issue
-> > > > when testing on 5.5.8 vs master.
-> > > > 
-> > > > Since 5.6-rc1, I can't control the brightness of my LCD backlight
-> > > > anymore.
-> > > > The backlight stays on full brightness instead. I am controlling the
-> > > > brightness value via sysfs for testing.
-> > > > 
-> > > > I am not sure if this is a general pwm-sun4i issue or if it is
-> > > > related to
-> > > > the backlight. However I narrowed it down to one commit for pwm-sun4i:
-> > > > 
-> > > > fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
-> > > > 
-> > > > If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
-> > > > master, the backlight works fine. Unfortunately, due to my lack of
-> > > > kernel
-> > > > experience, I can't see how the commit above broke it.
-> > > 
-> > > Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
-> > > this. Looking at the output of
-> > > 
-> > > 	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
-> > > 
-> > > (i.e. ignoring whitespace changes) I don't see how the behaviour you're
-> > > reporting can be explained.
-> > > 
-> > > Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
-> > > commit?
-> > > 
-> > > Can you install a tool to inspect register values and check how the
-> > > affected registers change if you switch kernel versions and/or pwm
-> > > settings?
-> > > 
-> > > (e.g.
-> > > 	memtool md 0x1c20e00+0xc
-> > > )
-> > > 
-> > > Best regards
-> > > Uwe
-> > 
-> > Thanks for your response.
-> > 
-> > Yes I am sure that is the commit. If I am on master, and replace pwm-sun4i.c
-> > with the one from 5b090b43, everything works. If I then apply fa4d8178, it
-> > stops working.
-> > 
-> > And strangely the output of the registers is exactly the same before and
-> > after fa4d8178:
-> > 
-> > 01c20e00: 00000050 00130014 00000000 (full brightness)
-> > 01c20e00: 00000050 00130006 00000000 (min brightness)
-> > 
-> > Even when I'm on 5b090b43 and cherry-pick fa4d8178 can I reproduce the
-> > issue.
-> 
-> Very strange. I'm out of sensible ideas. The remaining ones are:
-> 
-> - enable tracing in the kernel and boot with
-> 
-> 	trace_event=pwm
-> 
->   And then check after the problem occurred in
->   /sys/kernel/debug/tracing/trace if something sticks out.
-> 
-> - Try modifying the registers using memtool. E.g.
-> 
-> 	memtool mw 0x01c20e04 0x00130012
-> 
-> - Do you have equipment to check the actual output of the PWM hardware?
->   If so, what do you see?
+elapsed time: 483m
 
-I assume the sun4i-series you sent earlier today resolves the problems
-you reported here?
+configs tested: 163
+configs skipped: 0
 
-Best regards
-Uwe
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+h8300                       h8s-sim_defconfig
+nds32                             allnoconfig
+arc                                 defconfig
+microblaze                    nommu_defconfig
+m68k                           sun3_defconfig
+riscv                          rv32_defconfig
+powerpc                             defconfig
+sh                          rsk7269_defconfig
+mips                      fuloong2e_defconfig
+s390                                defconfig
+ia64                             allmodconfig
+mips                              allnoconfig
+ia64                             allyesconfig
+mips                             allyesconfig
+um                             i386_defconfig
+parisc                           allyesconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                              allnoconfig
+ia64                                defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+microblaze                      mmu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200317
+x86_64               randconfig-a002-20200317
+x86_64               randconfig-a003-20200317
+i386                 randconfig-a001-20200317
+i386                 randconfig-a002-20200317
+i386                 randconfig-a003-20200317
+alpha                randconfig-a001-20200317
+m68k                 randconfig-a001-20200317
+mips                 randconfig-a001-20200317
+nds32                randconfig-a001-20200317
+parisc               randconfig-a001-20200317
+c6x                  randconfig-a001-20200317
+h8300                randconfig-a001-20200317
+microblaze           randconfig-a001-20200317
+nios2                randconfig-a001-20200317
+sparc64              randconfig-a001-20200317
+csky                 randconfig-a001-20200317
+openrisc             randconfig-a001-20200317
+s390                 randconfig-a001-20200317
+sh                   randconfig-a001-20200317
+xtensa               randconfig-a001-20200317
+x86_64               randconfig-b001-20200317
+x86_64               randconfig-b002-20200317
+x86_64               randconfig-b003-20200317
+i386                 randconfig-b001-20200317
+i386                 randconfig-b002-20200317
+i386                 randconfig-b003-20200317
+x86_64               randconfig-c001-20200317
+x86_64               randconfig-c002-20200317
+x86_64               randconfig-c003-20200317
+i386                 randconfig-c001-20200317
+i386                 randconfig-c002-20200317
+i386                 randconfig-c003-20200317
+x86_64               randconfig-d001-20200317
+x86_64               randconfig-d002-20200317
+x86_64               randconfig-d003-20200317
+i386                 randconfig-d001-20200317
+i386                 randconfig-d002-20200317
+i386                 randconfig-d003-20200317
+x86_64               randconfig-e001-20200317
+x86_64               randconfig-e002-20200317
+x86_64               randconfig-e003-20200317
+i386                 randconfig-e001-20200317
+i386                 randconfig-e002-20200317
+i386                 randconfig-e003-20200317
+x86_64               randconfig-f001-20200317
+x86_64               randconfig-f002-20200317
+x86_64               randconfig-f003-20200317
+i386                 randconfig-f001-20200317
+i386                 randconfig-f002-20200317
+i386                 randconfig-f003-20200317
+x86_64               randconfig-g001-20200317
+x86_64               randconfig-g002-20200317
+x86_64               randconfig-g003-20200317
+i386                 randconfig-g001-20200317
+i386                 randconfig-g002-20200317
+i386                 randconfig-g003-20200317
+x86_64               randconfig-h001-20200317
+x86_64               randconfig-h002-20200317
+x86_64               randconfig-h003-20200317
+i386                 randconfig-h001-20200317
+i386                 randconfig-h002-20200317
+i386                 randconfig-h003-20200317
+arc                  randconfig-a001-20200317
+arm                  randconfig-a001-20200317
+arm64                randconfig-a001-20200317
+ia64                 randconfig-a001-20200317
+powerpc              randconfig-a001-20200317
+sparc                randconfig-a001-20200317
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                  defconfig
+um                           x86_64_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
