@@ -2,211 +2,122 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A860C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F248BC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039AB20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D152F20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mf1Rjvoj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ia3p2hdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgCQSZk (ORCPT
+        id S1726651AbgCQS0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:25:40 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:36872 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgCQSZj (ORCPT
+        Tue, 17 Mar 2020 14:26:05 -0400
+Received: from mail-io1-f45.google.com ([209.85.166.45]:45247 "EHLO
+        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgCQS0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:25:39 -0400
-Received: by mail-qv1-f65.google.com with SMTP id n1so7655643qvz.4
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 11:25:39 -0700 (PDT)
+        Tue, 17 Mar 2020 14:26:05 -0400
+Received: by mail-io1-f45.google.com with SMTP id w7so6740202ioj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 11:26:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:cc:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+AAQtfeIKBe0J7G95dlHW6pF6+WjC1g407eOME3dVmQ=;
-        b=Mf1Rjvoj1Hz4uD1TS8jI5XGcSfMC0Sb41aJWgC7Hdp1LTHxwnJwMhRaIKMbTF2Z8SK
-         TZf5jcidxHYMwYfVVbHhWxmkNJkSLXpYPXQDdKaMT23GgPWgwIi6xoBgddC06mi0ox72
-         W8LcTn5aLUqp6YmsWCtORXmjFOP4IgHs+8mzCS7w2fmLYNGQCQrgbipqbkTI1GA9Yca5
-         m8R769UcY/PZDbdM9P7RM/B/n72F0MrEgM4jyl2WoSDLaAqHZzLNZAtLftQMq1ZNLtZn
-         fCmda3y9u7PlpsXz/T8EsHlveXypVhtXkeda95FZkFeBLVOfujT1yQ655aqdoe0xnnl/
-         cxOg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fyw/0w4c822Iz8zK/btqki5MNWC2a7i6nqG8rTs3u5M=;
+        b=ia3p2hdK/bH2uAcKuAtM7Vy5dqhj2+AYw5LfWCnQvi47yfSN8Qq3N/LJzxzq8efZxv
+         oRY/Z4WABXRwFzLP6QndyyhvjUrECiBJ+th+ofyqm4dmeY1BgAKvEzPaomlU/rpTYXOA
+         PIVq2rBnbG2V+SM3t9G6g+8gzOR6bVGb5NN/A/xgCc7pobdG/3YCo8Uz2Dp+ApzQk6bU
+         Fh5Cg31ZeMUosMb2tbzeEYZNDWEeLyK/9cdFHSRGavB6zEuo+dhz3Ung5ZBCOe6UuqfC
+         FPwtBcZdKoUG/BPDU//j5wUSVKVUS9nv0X+LjlILaMAcV9IjGeFxFe0A93ciOBGGL5FR
+         KCeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:cc:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+AAQtfeIKBe0J7G95dlHW6pF6+WjC1g407eOME3dVmQ=;
-        b=HhJH8GrkYQH8DC3gAOpRu9FaZZYjX34VUFHaEoPxTRP/5z2UK5fkIvrB9rqzk5ZRuw
-         Es4lP+Ne1rNlu91fCeOSKOtY42aJ9KHu3SSgSficJ8Ok76ZnIMyoMCLLx5Wdb+0M/Qiz
-         I9hzou4a9cMEc4rsdjFEcM7L6CVZ8ua3V6YqEri7n3Hu3xlzbHt5C1C9p/iDAnYoQS/N
-         MIwXONwhGMXkQU7SDLN1UTNnaAR97WgjYBv8Z3VzFDJwV1z9Lq7VisO++BJA6TrbOohz
-         +J+R/iJIhjV00AltnOs9SkFwGYhBRtyIBUrudlnIqDoyaWrOJgsPdrFcwIzl8MpVyIeB
-         IHsg==
-X-Gm-Message-State: ANhLgQ3wGdH0dQPExoHumY3YD5KkVnjzH8U+bNfOTfxsbHB9whltZu2d
-        Sef9zpCXwrfbNyKxKXTlAHA=
-X-Google-Smtp-Source: ADFU+vuU60GOS1xr2J0Mk1zFtlfxGhEDCOoNN64m+qEW9JiEemWjJy7kaMnD+fNXCIW9DoS4Gu/bAA==
-X-Received: by 2002:a0c:f786:: with SMTP id s6mr479455qvn.224.1584469538665;
-        Tue, 17 Mar 2020 11:25:38 -0700 (PDT)
-Received: from [172.16.13.2] ([68.202.211.176])
-        by smtp.gmail.com with ESMTPSA id f13sm2449947qka.83.2020.03.17.11.25.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 11:25:38 -0700 (PDT)
-Subject: Re: [PATCH 87/89] drm/vc4: hdmi: Support the BCM2711 HDMI controllers
-To:     dri-devel@lists.freedesktop.org, maxime@cerno.tech
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <35ec1082e5597a1c6d48d2ebfa0964a7ae1e335c.1582533919.git-series.maxime@cerno.tech>
-From:   Daniel Rodriguez <danielcrodriguez2012@gmail.com>
-Cc:     tim.gover@raspberrypi.com, dave.stevenson@raspberrypi.com,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, phil@raspberrypi.com,
-        linux-arm-kernel@lists.infradead.org, eric@anholt.net,
-        nsaenzjulienne@suse.de
-Message-ID: <a70fc5c5-b4a9-5f91-ceb3-f6cbdca417b1@gmail.com>
-Date:   Tue, 17 Mar 2020 14:25:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fyw/0w4c822Iz8zK/btqki5MNWC2a7i6nqG8rTs3u5M=;
+        b=lS1Bkf1oiozA/DzEgg9MTVLx/6Zt6vyVpeSF9SiYhjtv4kyHJaNZvPJV9KCzX/KfRV
+         daUFYZKUtf5ZLqjCAmi3mLQPy2A2dRjmA7wCsezKg3i54Bnvl1ZgwuWi4LqQdh6IfL8J
+         wGEP75uE+seG6RgnprDBunKSnPX0edC7tq45NBkFFAmhoDYV2MnxQrzEsiz28LBBCnQ+
+         aj/h5jUE/3WwqHYehJCgpMpZRpWtGamqFNskaD0c22X6mjgKQAJfBkq0bufYLCPosFdJ
+         K2VDRebVXQUM0xFlr19IoLt1PE20WwcIm0VLUPhdeuJcSB4uNyLBQePGO9eUad87jeSO
+         uKkg==
+X-Gm-Message-State: ANhLgQ27EoHlArO2yNIvZ9rpnMjLBJ79NxL6ePZncrnP4qC/PsC9Qnj9
+        RQi3fsodAfRDEPvFZUVgDSTABt0AFxO6VNcOKLmL
+X-Google-Smtp-Source: ADFU+vu9BJTFp0PT0YUtvfkYoLZmrBS0vRz8OFdOnp46l9u7QhhVKzeQUd/fcRn/1DqCeyMgp7eVPGDcZMKvCpW0fGI=
+X-Received: by 2002:a02:304a:: with SMTP id q71mr607149jaq.123.1584469563999;
+ Tue, 17 Mar 2020 11:26:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <35ec1082e5597a1c6d48d2ebfa0964a7ae1e335c.1582533919.git-series.maxime@cerno.tech>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <alpine.DEB.2.21.2003101454580.142656@chino.kir.corp.google.com>
+ <20200310221938.GF8447@dhcp22.suse.cz> <alpine.DEB.2.21.2003101547090.177273@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.21.2003101547090.177273@chino.kir.corp.google.com>
+From:   Robert Kolchmeyer <rkolchmeyer@google.com>
+Date:   Tue, 17 Mar 2020 11:25:52 -0700
+Message-ID: <CAJc0_fwDAKUTcYd_rga+jjDEE2BT7Tp=ViWdtiUeswVLUqC9CQ@mail.gmail.com>
+Subject: Re: [patch] mm, oom: make a last minute check to prevent unnecessary
+ memcg oom kills
+To:     David Rientjes <rientjes@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Ami Fischman <fischman@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 4:07 AM, Maxime Ripard wrote:
+On Tue, Mar 10, 2020 at 3:54 PM David Rientjes <rientjes@google.com> wrote:
+>
+> Robert, could you elaborate on the user-visible effects of this issue that
+> caused it to initially get reported?
+>
 
->   static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
->   {
->   	struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
-> @@ -1314,6 +1438,92 @@ static int vc4_hdmi_init_resources(struct vc4_hdmi *vc4_hdmi)
->   	return 0;
->   }
->   
-This function fails on my Raspberry Pi 4 running patched 5.6-rc6. The 
-errors printed to syslog are as follows:
+Ami (now cc'ed) knows more, but here is my understanding. The use case
+involves a Docker container running multiple processes. The container
+has a memory limit set. The container contains two long-lived,
+important processes p1 and p2, and some arbitrary, dynamic number of
+usually ephemeral processes p3,...,pn. These processes are structured
+in a hierarchy that looks like p1->p2->[p3,...,pn]; p1 is a parent of
+p2, and p2 is the parent for all of the ephemeral processes p3,...,pn.
 
-[   15.167559] vc4-drm gpu: [drm] *ERROR* fbdev: Failed to setup generic 
-emulation (ret=-22)
+Since p1 and p2 are long-lived and important, the user does not want
+p1 and p2 to be oom-killed. However, p3,...,pn are expected to use a
+lot of memory, and it's ok for those processes to be oom-killed.
 
-[   46.116273] WARNING: CPU: 2 PID: 1057 at 
-drivers/gpu/drm/vc4/vc4_hdmi_phy.c:414 vc5_hdmi_phy_init+0x7b4/0x2078 [vc4]
+If the user sets oom_score_adj on p1 and p2 to make them very unlikely
+to be oom-killed, p3,...,pn will inherit the oom_score_adj value,
+which is bad. Additionally, setting oom_score_adj on p3,...,pn is
+tricky, since processes in the Docker container (specifically p1 and
+p2) don't have permissions to set oom_score_adj on p3,...,pn. The
+ephemeral nature of p3,...,pn also makes setting oom_score_adj on them
+tricky after they launch.
 
+So, the user hopes that when one of p3,...,pn triggers an oom
+condition in the Docker container, the oom killer will almost always
+kill processes from p3,...,pn (and not kill p1 or p2, which are both
+important and unlikely to trigger an oom condition). The issue of more
+processes being killed than are strictly necessary is resulting in p1
+or p2 being killed much more frequently when one of p3,...,pn triggers
+an oom condition, and p1 or p2 being killed is very disruptive for the
+user (my understanding is that p1 or p2 going down with high frequency
+results in significant unhealthiness in the user's service).
 
-[   47.127798] Timeout waiting for VC4_HDMI_SCHEDULER_CONTROL_HDMI_ACTIVE
+The change proposed here has not been run in a production system, and
+so I don't think anyone has data that conclusively demonstrates that
+this change will solve the user's problem. But, from observations made
+in their production system, the user is confident that addressing this
+aggressive oom killing will solve their problem, and we have data that
+shows this change does considerably reduce the frequency of aggressive
+oom killing (from 61/100 oom killing events down to 0/100 with this
+change).
 
-[   47.127865] WARNING: CPU: 1 PID: 1057 at 
-drivers/gpu/drm/vc4/vc4_hdmi.c:652 vc4_hdmi_encoder_enable+0x1518/0x1e10 
-[vc4]
+Hope this gives a bit more context.
 
-[   47.128353] WARNING: CPU: 1 PID: 1057 at 
-drivers/gpu/drm/vc4/vc4_hdmi.c:671 vc4_hdmi_encoder_enable+0x18c8/0x1e10 
-[vc4]
-
-
------------------------------------------------------------------
-
-Backtrace:
-
-[   46.116373] pc : vc5_hdmi_phy_init+0x7b4/0x2078 [vc4]
-
-[   46.116386] lr : vc4_hdmi_encoder_enable+0x1cc/0x1e10 [vc4]
-
-[   46.116440]  vc5_hdmi_phy_init+0x7b4/0x2078 [vc4]
-
-[   46.116451]  vc4_hdmi_encoder_enable+0x1cc/0x1e10 [vc4]
-
-[   46.116497]  vc4_atomic_complete_commit+0x3f0/0x530 [vc4]
-
-[   46.116508]  vc4_atomic_commit+0x1d8/0x1f8 [vc4]
-
-The specific offending conditional (before the warning on line 652) 
-under vc4_hdmi_encoder_enable() in drm/vc4/vc4_hdmi.c:
-
-645  if (vc4_encoder->hdmi_monitor) {
-
-646          HDMI_WRITE(HDMI_SCHEDULER_CONTROL,
-
-647                     HDMI_READ(HDMI_SCHEDULER_CONTROL) |
-
-648                     VC4_HDMI_SCHEDULER_CONTROL_MODE_HDMI);
-
-
-649
-650          ret = wait_for(HDMI_READ(HDMI_SCHEDULER_CONTROL) &
-
-651                     VC4_HDMI_SCHEDULER_CONTROL_HDMI_ACTIVE, 1000);
-
-652          WARN_ONCE(ret, "Timeout waiting for "
-
-653                 "VC4_HDMI_SCHEDULER_CONTROL_HDMI_ACTIVE\n");
-
-Which causes vc4_hdmi_encoder_enable() to fail.
-
-The failure of vc5_hdmi_phy_init() earlier left the phy inactive, 
-causing the encoder enabling function above to fail.
-
-The offending code around line 414 in vc4_hdmi_phy.c, under 
-vc5_hdmi_phy_init() reads
-
-411     HDMI_WRITE(HDMI_TX_PHY_TMDS_CLK_WORD_SEL, word_sel);
-
-
-412
-413     HDMI_WRITE(HDMI_TX_PHY_CTL_3,
-
-414                VC4_SET_FIELD(phy_get_cp_current(vco_freq),
-
-415                              VC4_HDMI_TX_PHY_CTL_3_ICP) |
-
-416                VC4_SET_FIELD(1, VC4_HDMI_TX_PHY_CTL_3_CP) |
-
-417                VC4_SET_FIELD(1, VC4_HDMI_TX_PHY_CTL_3_CP1) |
-
-418                VC4_SET_FIELD(3, VC4_HDMI_TX_PHY_CTL_3_CZ) |
-
-419                VC4_SET_FIELD(4, VC4_HDMI_TX_PHY_CTL_3_RP) |
-
-420                VC4_SET_FIELD(6, VC4_HDMI_TX_PHY_CTL_3_RZ));
-
-
-
-As the hdmi-related timeout occurs 30 seconds after the drm failure, I'm 
-bound to believe that the timeout occurs due to the drm setup failure 
-leaving nothing for the phy functions to act on.
-
-Earlier in the syslog an error potentially related to the 
-VC4_SET_FIELD(phy_get_cp_current(vco_freq) failure:
-
-[    3.729745] raspberrypi-clk raspberrypi-clk: Missing firmware node
-
-[    3.743915] raspberrypi-clk: probe of raspberrypi-clk failed with 
-error -2
-
-
-I thought the patch series added the firmware node? Perhaps the bcm2835 
-clock stub in the bcm2835 common dts is not being imported in the 
-bcm2711 devicetree?
-
-The result is a connected hdmi monitor has signal from the simple 
-framebuffer until the failed modeswitch, upon which it loses signal.
-
-I'm looking around for these possibilities in the kernel tree, though I 
-thought the code worked as it was?
-
-I did have to disable CONFIG_DRM_VC4_HDMI_CEC in Kconfig to get the 
-patches to compile as another user in linux-arm-kernel discovered the 
-CEC code relied on removed functions (Jian-Hong Pan).
-
-I still hope these patches can be cleaned up/fixed to make the 5.7 merge 
-window.
-
-Daniel Rodriguez
+Thanks,
+-Robert
