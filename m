@@ -2,91 +2,220 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45D1C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FFCC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E0620714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29DD620714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:46:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q3qy06sa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PwN9et7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCQUpr (ORCPT
+        id S1726877AbgCQUqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:45:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40809 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCQUpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:45:47 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hlYg2tFYz9sPF;
-        Wed, 18 Mar 2020 07:45:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584477944;
-        bh=GNAt3ZfIq2TFTOzUID+8ZKmeZT9A33+B2tTcGL9o4v0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Q3qy06saYDBmbJOPbNk6lFJiv3lUz8coi6Db+onbUwrAv4Z+zXaXRMw//gt7/hFAa
-         R6mqPDd4Z7/ptLgdw0YNR8fmjEaKgqktK5BHiJAh9dNvtklPOF2nYufvVgFWAon0Kd
-         0KCtPKtYW5UTWlJpfuLJRZl3TomboXyN+ShrxmOqpVJHF7/JeLERfMBWol/xTkQIzR
-         EjXzYXOJnvavIVkS83n5ZOdO1iCS93KGcnhOAZ1lVs5TjpdzHrNDpiuKR7vXsW8qNQ
-         TOS7WbXrdvUQlk1q+kjJzfhoyfeXjWhOc8mUCXQGd+r+0SxbQwB5VN3Zq04tUn6yq3
-         OLSrbxBf/MmSQ==
-Date:   Wed, 18 Mar 2020 07:45:36 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Benson Leung <bleung@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the chrome-platform
- tree
-Message-ID: <20200318074536.3121af53@canb.auug.org.au>
+        Tue, 17 Mar 2020 16:46:12 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38985 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgCQUqL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 16:46:11 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d25so4588115pfn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mPDz0BzN1ITiZwsAROIyJH10tNV4hhAAcNsJOYU4Snk=;
+        b=PwN9et7O2fLi7u0joL99yoHPbLTkSsukKHRDcM4FRtxUIGqcSBdDCqQTyWgK/ED110
+         kgUl8ZZh2yGIVqwqRpRmaxo/yohkb3CttZLd7czElBRN3Kmwog6PyaVGyIQ+TZuxSi4F
+         +m5GvrXMwapSDS/DykcHny70rWW8JuySXNxjo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mPDz0BzN1ITiZwsAROIyJH10tNV4hhAAcNsJOYU4Snk=;
+        b=Y8gpXiiGyG10mDCqs3gz0rXZhZtEuJL2dekPwcDlJZise1B1QYC1rrBLLyvTbxcvbl
+         KZGW3Kcr8CeXqSgp7n2+i/BUYxujx1wdZoSRbeS/ITYCeLtjO97qMfrJUXx97zQn4NsI
+         EFP9e0+V20+x78hQyBJ+UAkOs9a9oB0bqhFau8GGyLDwB8bhMADmgHSO5OpoV/z1lVCK
+         AAISHa0JcaNGe4dKj1a0te4UEHUkR4A8idZ33/Jd1sF6swFUYIWtR4RDwvy//lRPh52n
+         SdXqWkJU2Vyp5xGFiqbz4fT/IVz4R8+FcQ4EmlCXrAAvnTPld6u9gvge9u3cBMIQKRKb
+         LePQ==
+X-Gm-Message-State: ANhLgQ0folNt6R6zbDxbitmry96035i2mMHM8rJUrusB4C0Tgzlx97bq
+        w7KPhdvxR4zR8XpI5v4ibNjSNQ==
+X-Google-Smtp-Source: ADFU+vtum99lFjhO4NcdtK3u57Y5a6tjGbDRM03nRyftMHg7s1Dd+puqGoWf8Oqn30D0O0mk3zM33Q==
+X-Received: by 2002:a62:e803:: with SMTP id c3mr629425pfi.31.1584477969009;
+        Tue, 17 Mar 2020 13:46:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w15sm1629028pfj.28.2020.03.17.13.46.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 13:46:08 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 13:46:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, Tim.Bird@sony.com
+Subject: Re: [PATCH v3 6/6] selftests: tls: run all tests for TLS 1.2 and TLS
+ 1.3
+Message-ID: <202003171345.CA27652B@keescook>
+References: <20200316225647.3129354-1-kuba@kernel.org>
+ <20200316225647.3129354-8-kuba@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lP=C7q9jzz//g.p/pMd+2lR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316225647.3129354-8-kuba@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lP=C7q9jzz//g.p/pMd+2lR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Mar 16, 2020 at 03:56:47PM -0700, Jakub Kicinski wrote:
+> TLS 1.2 and TLS 1.3 differ in the implementation.
+> Use fixture parameters to run all tests for both
+> versions, and remove the one-off TLS 1.2 test.
+> 
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+>  tools/testing/selftests/net/tls.c | 93 ++++++-------------------------
+>  1 file changed, 17 insertions(+), 76 deletions(-)
 
-Hi all,
+The diffstat alone justifies the variants feature! :) Thanks for this!
 
-Commit
+Acked-by: Kees Cook <keescook@chromium.org>
 
-  6314450ece4c ("platform/chrome: cros_usbpd_notify: Fix cros-usbpd-notify =
-notifier")
+-Kees
 
-is missing a Signed-off-by from its committer.
+> 
+> diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
+> index 0ea44d975b6c..c5282e62df75 100644
+> --- a/tools/testing/selftests/net/tls.c
+> +++ b/tools/testing/selftests/net/tls.c
+> @@ -101,6 +101,21 @@ FIXTURE(tls)
+>  	bool notls;
+>  };
+>  
+> +FIXTURE_VARIANT(tls)
+> +{
+> +	unsigned int tls_version;
+> +};
+> +
+> +FIXTURE_VARIANT_ADD(tls, 12)
+> +{
+> +	.tls_version = TLS_1_2_VERSION,
+> +};
+> +
+> +FIXTURE_VARIANT_ADD(tls, 13)
+> +{
+> +	.tls_version = TLS_1_3_VERSION,
+> +};
+> +
+>  FIXTURE_SETUP(tls)
+>  {
+>  	struct tls12_crypto_info_aes_gcm_128 tls12;
+> @@ -112,7 +127,7 @@ FIXTURE_SETUP(tls)
+>  	len = sizeof(addr);
+>  
+>  	memset(&tls12, 0, sizeof(tls12));
+> -	tls12.info.version = TLS_1_3_VERSION;
+> +	tls12.info.version = variant->tls_version;
+>  	tls12.info.cipher_type = TLS_CIPHER_AES_GCM_128;
+>  
+>  	addr.sin_family = AF_INET;
+> @@ -733,7 +748,7 @@ TEST_F(tls, bidir)
+>  		struct tls12_crypto_info_aes_gcm_128 tls12;
+>  
+>  		memset(&tls12, 0, sizeof(tls12));
+> -		tls12.info.version = TLS_1_3_VERSION;
+> +		tls12.info.version = variant->tls_version;
+>  		tls12.info.cipher_type = TLS_CIPHER_AES_GCM_128;
+>  
+>  		ret = setsockopt(self->fd, SOL_TLS, TLS_RX, &tls12,
+> @@ -1258,78 +1273,4 @@ TEST(keysizes) {
+>  	close(cfd);
+>  }
+>  
+> -TEST(tls12) {
+> -	int fd, cfd;
+> -	bool notls;
+> -
+> -	struct tls12_crypto_info_aes_gcm_128 tls12;
+> -	struct sockaddr_in addr;
+> -	socklen_t len;
+> -	int sfd, ret;
+> -
+> -	notls = false;
+> -	len = sizeof(addr);
+> -
+> -	memset(&tls12, 0, sizeof(tls12));
+> -	tls12.info.version = TLS_1_2_VERSION;
+> -	tls12.info.cipher_type = TLS_CIPHER_AES_GCM_128;
+> -
+> -	addr.sin_family = AF_INET;
+> -	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+> -	addr.sin_port = 0;
+> -
+> -	fd = socket(AF_INET, SOCK_STREAM, 0);
+> -	sfd = socket(AF_INET, SOCK_STREAM, 0);
+> -
+> -	ret = bind(sfd, &addr, sizeof(addr));
+> -	ASSERT_EQ(ret, 0);
+> -	ret = listen(sfd, 10);
+> -	ASSERT_EQ(ret, 0);
+> -
+> -	ret = getsockname(sfd, &addr, &len);
+> -	ASSERT_EQ(ret, 0);
+> -
+> -	ret = connect(fd, &addr, sizeof(addr));
+> -	ASSERT_EQ(ret, 0);
+> -
+> -	ret = setsockopt(fd, IPPROTO_TCP, TCP_ULP, "tls", sizeof("tls"));
+> -	if (ret != 0) {
+> -		notls = true;
+> -		printf("Failure setting TCP_ULP, testing without tls\n");
+> -	}
+> -
+> -	if (!notls) {
+> -		ret = setsockopt(fd, SOL_TLS, TLS_TX, &tls12,
+> -				 sizeof(tls12));
+> -		ASSERT_EQ(ret, 0);
+> -	}
+> -
+> -	cfd = accept(sfd, &addr, &len);
+> -	ASSERT_GE(cfd, 0);
+> -
+> -	if (!notls) {
+> -		ret = setsockopt(cfd, IPPROTO_TCP, TCP_ULP, "tls",
+> -				 sizeof("tls"));
+> -		ASSERT_EQ(ret, 0);
+> -
+> -		ret = setsockopt(cfd, SOL_TLS, TLS_RX, &tls12,
+> -				 sizeof(tls12));
+> -		ASSERT_EQ(ret, 0);
+> -	}
+> -
+> -	close(sfd);
+> -
+> -	char const *test_str = "test_read";
+> -	int send_len = 10;
+> -	char buf[10];
+> -
+> -	send_len = strlen(test_str) + 1;
+> -	EXPECT_EQ(send(fd, test_str, send_len, 0), send_len);
+> -	EXPECT_NE(recv(cfd, buf, send_len, 0), -1);
+> -	EXPECT_EQ(memcmp(buf, test_str, send_len), 0);
+> -
+> -	close(fd);
+> -	close(cfd);
+> -}
+> -
+>  TEST_HARNESS_MAIN
+> -- 
+> 2.24.1
+> 
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/lP=C7q9jzz//g.p/pMd+2lR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5xNvAACgkQAVBC80lX
-0Gw3qgf/WYuPDnuoGpGOdHW5QzN4aOzwq3lRZ5R1/i5qZBFhXezXC/BTvpN5/3Sg
-r/jT6GFRf3pmCISngogfvdZMGCjwN9IzhR0VnCpi887smYz7kfV75JukUs2d/Eg/
-I2IdRdDts7hRrR7Sl9dMXdppm/td2L2EkrpCDpwUfHxGEzwqbxAIuDp+PI32tjWf
-PvSNSzvWJJ0oTwlPb96UlUg8RPz9EjywfppwqxntU9BoqkjhxD47N/xHqCcXy+Hn
-c01KfVKeoTHxfqZEy2cF+l7+JtxXn3rZCPuWS5AOtNYN6jGmymlnwrfkXakilZZ+
-MFguus94W0MbY0wdy+8KVCQVUT0Jxg==
-=/Eos
------END PGP SIGNATURE-----
-
---Sig_/lP=C7q9jzz//g.p/pMd+2lR--
+-- 
+Kees Cook
