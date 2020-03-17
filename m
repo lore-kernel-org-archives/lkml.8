@@ -2,109 +2,131 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBFFC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778A9C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F98720738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:04:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tGznDHFI"
+	by mail.kernel.org (Postfix) with ESMTP id 52F2B205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgCQOEi (ORCPT
+        id S1726596AbgCQOF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:04:38 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40840 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgCQOEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:04:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ULONFoFy52YeIq0i+dbx5LG9OZ6+gxXYBBy7AX4SKfw=; b=tGznDHFIeW8VhzIHSfbLqJ1+wr
-        j2UUnERSAtKsQ4z8PekGZm1l89ill9A6WnaQUchaxwOhvzjLQWojgtb7kBcTm0JiZYHGnqBcu9hju
-        k00Pg7Am1r5+MhG/nB9MazCvE2TrOadbXhR+F54Bj52E3WDPRBhs3fmS8YxuuSj2rgQU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jECpW-0006lI-Pw; Tue, 17 Mar 2020 15:04:26 +0100
-Date:   Tue, 17 Mar 2020 15:04:26 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>, linux.cj@gmail.com,
-        Jon Nettleton <jon@solid-run.com>, linux@armlinux.org.uk,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        cristian.sovaiala@nxp.com, laurentiu.tudor@nxp.com,
-        ioana.ciornei@nxp.com, V.Sethi@nxp.com, pankaj.bansal@nxp.com,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 1/7] mdio_bus: Introduce fwnode MDIO helpers
-Message-ID: <20200317140426.GR24270@lunn.ch>
-References: <20200131153440.20870-1-calvin.johnson@nxp.com>
- <20200131153440.20870-2-calvin.johnson@nxp.com>
- <20200317113650.GA6016@lsv03152.swis.in-blr01.nxp.com>
+        Tue, 17 Mar 2020 10:05:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43644 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726016AbgCQOF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:05:27 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 16EDA231494C2953428D;
+        Tue, 17 Mar 2020 22:05:15 +0800 (CST)
+Received: from [127.0.0.1] (10.133.210.141) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 17 Mar 2020
+ 22:05:10 +0800
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+From:   yangerkun <yangerkun@huawei.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Layton <jlayton@kernel.org>
+CC:     NeilBrown <neilb@suse.de>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, <lkp@lists.01.org>,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <20200308140314.GQ5972@shao2-debian>
+ <875zfbvrbm.fsf@notabene.neil.brown.name>
+ <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+ <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
+ <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
+ <87v9nattul.fsf@notabene.neil.brown.name>
+ <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
+ <87o8t2tc9s.fsf@notabene.neil.brown.name>
+ <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
+ <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
+ <877dznu0pk.fsf@notabene.neil.brown.name>
+ <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
+ <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
+ <87pndcsxc6.fsf@notabene.neil.brown.name>
+ <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
+ <CAHk-=whnqDS0NJtAaArVeYQz3hcU=4Ja3auB1Jvs42eADfUgMQ@mail.gmail.com>
+ <7c8d3752-6573-ab83-d0af-f3dd4fc373f5@huawei.com>
+Message-ID: <6df79609-90eb-2f59-7e86-3532ac309a7a@huawei.com>
+Date:   Tue, 17 Mar 2020 22:05:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317113650.GA6016@lsv03152.swis.in-blr01.nxp.com>
+In-Reply-To: <7c8d3752-6573-ab83-d0af-f3dd4fc373f5@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.210.141]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 05:06:50PM +0530, Calvin Johnson wrote:
-> Hi,
-> 
-> On Fri, Jan 31, 2020 at 09:04:34PM +0530, Calvin Johnson wrote:
-> 
-> <snip>
-> 
-> > +/**
-> > + * fwnode_mdiobus_child_is_phy - Return true if the child is a PHY node.
-> > + * It must either:
-> > + * o Compatible string of "ethernet-phy-ieee802.3-c45"
-> > + * o Compatible string of "ethernet-phy-ieee802.3-c22"
-> > + * Checking "compatible" property is done, in order to follow the DT binding.
-> > + */
-> > +static bool fwnode_mdiobus_child_is_phy(struct fwnode_handle *child)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = fwnode_property_match_string(child, "compatible",
-> > +					   "ethernet-phy-ieee802.3-c45");
-> > +	if (!ret)
-> > +		return true;
-> > +
-> > +	ret = fwnode_property_match_string(child, "compatible",
-> > +					   "ethernet-phy-ieee802.3-c22");
-> > +	if (!ret)
-> > +		return true;
-> > +
-> > +	if (!fwnode_property_present(child, "compatible"))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> 
-> Can we use _CID in ACPI to get the compatible string? Is there any other method
-> to handle this kind of situation where we would like to pass C45 or C22 info to
-> the mdiobus driver?
 
-Hi Calvin
 
-Is there any defacto standardised way to stuff this device tree
-property into ACPI? It is one of the key properties, so either there
-is one standard way, or lots of variants because nobody can be
-bothered to go to the ACPI standardisation body and get it formalised.
+On 2020/3/17 9:41, yangerkun wrote:
+> 
+> 
+> On 2020/3/17 1:26, Linus Torvalds wrote:
+>> On Mon, Mar 16, 2020 at 4:07 AM Jeff Layton <jlayton@kernel.org> wrote:
+>>>
+>>>
+>>> +       /*
+>>> +        * If fl_blocker is NULL, it won't be set again as this 
+>>> thread "owns"
+>>> +        * the lock and is the only one that might try to claim the 
+>>> lock.
+>>> +        * Because fl_blocker is explicitly set last during a delete, 
+>>> it's
+>>> +        * safe to locklessly test to see if it's NULL. If it is, 
+>>> then we know
+>>> +        * that no new locks can be inserted into its 
+>>> fl_blocked_requests list,
+>>> +        * and we can therefore avoid doing anything further as long 
+>>> as that
+>>> +        * list is empty.
+>>> +        */
+>>> +       if (!smp_load_acquire(&waiter->fl_blocker) &&
+>>> +           list_empty(&waiter->fl_blocked_requests))
+>>> +               return status;
+>>
+>> Ack. This looks sane to me now.
+>>
+>> yangerkun - how did you find the original problem?\
+> 
+> While try to fix CVE-2019-19769, add some log in __locks_wake_up_blocks 
+> help me to rebuild the problem soon. This help me to discern the problem 
+> soon.
+> 
+>>
+>> Would you mind using whatever stress test that caused commit
+>> 6d390e4b5d48 ("locks: fix a potential use-after-free problem when
+>> wakeup a waiter") with this patch? And if you did it analytically,
+>> you're a champ and should look at this patch too!
+> 
+> I will try to understand this patch, and if it's looks good to me, will 
+> do the performance test!
 
-     Andrew
+This patch looks good to me, with this patch, the bug '6d390e4b5d48 
+("locks: fix a potential use-after-free problem when wakeup a waiter")' 
+describes won't happen again. Actually, I find that syzkaller has report 
+this bug before[1], and the log of it can help us to reproduce it with 
+some latency in __locks_wake_up_blocks!
+
+Also, some ltp testcases describes in [2] pass too with the patch!
+
+For performance test, I have try to understand will-it-scale/lkp, but it 
+seem a little complex to me, and may need some more time. So, Rong Chen, 
+can you help to do this? Or the results may come a little later...
+
+Thanks,
+----
+[1] https://syzkaller.appspot.com/bug?extid=922689db06e57b69c240
+[2] https://lkml.org/lkml/2020/3/11/578
+
