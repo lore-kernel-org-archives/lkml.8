@@ -2,130 +2,254 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC97C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D62C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F29020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E360020674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WyoCIWVg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eTqnZyuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgCQS2Y (ORCPT
+        id S1726754AbgCQS24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:28:24 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42319 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgCQS2X (ORCPT
+        Tue, 17 Mar 2020 14:28:56 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:22805 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726692AbgCQS2z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:28:23 -0400
-Received: by mail-qt1-f193.google.com with SMTP id g16so18337279qtp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 11:28:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hic4Hk8KyLZidH+GoF3MjbGLcDx23I/TP9F0S2+w6Wc=;
-        b=WyoCIWVgihmFEbpoAgJ0WOO8oI2JXlFHp2g+7dQHXnojVh7fS+YwY+6QVnnR0YaZpK
-         irURzTYescZQIVkCKA05cIYm6GESnmt0XILsrZVkmZVvGnX2cdTTsDwsrKo2SEzmu0cE
-         dyOFKVIMw70DXi9B7cieoIbQn5poYi7juqZY0+My61lLrCKIq7rmYdQhNo6pvcOpsw0P
-         HT0WaCmESLj3vdY1p/CXF4boWQRVTCN9SQPi2t/jPc8ki/zF8cFwxE7UJUdxQ6tngCpX
-         9rYk1zQPJZW4iMUue1j+HwTks9H7+VyBdYrhJG4Eh7C6zmSDa9VpUG93FFcu299Jh/Ky
-         2PVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hic4Hk8KyLZidH+GoF3MjbGLcDx23I/TP9F0S2+w6Wc=;
-        b=QZGI2cGLHhGZZKk8yEb5wl3nVH2zIG0bWwggQgCjr+eKWxZSvrIW1zy0vzNUruXtN7
-         adeDI1ye0oYyuU4i/l0nZsn5bC1Vqpw9MJqjXj7UsD85MCBPjtvcjFK8QJLYEEHmdhbT
-         jJE4wVhoJu+9TRMAS2PUnDur81HioqesGqiumRLfPWj+XWrSUNhFLzw3wiRiRmuT3R2u
-         7BfS3eCMNryYJVpgwek8+rsHCL+9++PLO4LbjkPAZpgo88ioLLvA1/O+3kxiWMh+Cy2A
-         XVqtV4NHLSkY0UDgNS2+ZmtaykSHpsn29gfH/+kWfwcO3IaZ3KipdXgLhNx7jM5FM2zO
-         Vdnw==
-X-Gm-Message-State: ANhLgQ3X+81et5VmvL0vCMyiHPbYakrbu0ctQrYYV106umos7MJbTzIL
-        E+YGRcWCy0lh41qjzNwgBVeBeQ==
-X-Google-Smtp-Source: ADFU+vvkq0L39IFs6mQeUAHEO/asf3qOHGHQfRIGOzJtvereIwNA8+94oLkLBlAGiQtnpndj8tREXA==
-X-Received: by 2002:ac8:4784:: with SMTP id k4mr534088qtq.78.1584469701723;
-        Tue, 17 Mar 2020 11:28:21 -0700 (PDT)
-Received: from ovpn-66-200.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l60sm2781281qtd.35.2020.03.17.11.28.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Mar 2020 11:28:21 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, catalin.marinas@arm.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/kmemleak: silence KCSAN splats in checksum
-Date:   Tue, 17 Mar 2020 14:27:54 -0400
-Message-Id: <20200317182754.2180-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Tue, 17 Mar 2020 14:28:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584469734;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=K+IwNfCaU/P1ux5HKJF3z1NkFX7txjGZvGBam0p510E=;
+        b=eTqnZyuGttuLlwqatpUrLdFnAanCa7vMCj9/ecVvnTMu2nprrmxSFwK47NwSW6/NNVrLkF
+        aulW674PGQjcPaEAgLhbPesWP+ucSVAg+SJPjgvSiZmDklJeRHakXtI1FXD/zHB3wEfUjo
+        Ytnp4R5vMr92SHFMNQd7yyOLdIyeb5E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-5pYTBthUM_qAjZ1-ibWyTw-1; Tue, 17 Mar 2020 14:28:51 -0400
+X-MC-Unique: 5pYTBthUM_qAjZ1-ibWyTw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 054BF1857BE9;
+        Tue, 17 Mar 2020 18:28:49 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.36.110.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D19B36E3EE;
+        Tue, 17 Mar 2020 18:28:33 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 14:28:29 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
+Message-ID: <20200317182828.t4ewyw2l5epy2s6n@madcap2.tricolour.ca>
+References: <cover.1577736799.git.rgb@redhat.com>
+ <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com>
+ <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
+ <20200130192753.n7jjrshbhrczjzoe@madcap2.tricolour.ca>
+ <CAHC9VhSVN3mNb5enhLR1hY+ekiAyiYWbehrwd_zN7kz13dF=1w@mail.gmail.com>
+ <20200205235056.e5365xtgz7rbese2@madcap2.tricolour.ca>
+ <CAHC9VhTM6MDHLcBfwJ_9DCroG0VA-meO770ihjn1sVy6=0JrHw@mail.gmail.com>
+ <20200312205147.plxs4czjeuu4davj@madcap2.tricolour.ca>
+ <CAHC9VhTqWdXMsbSbsWJzRRvVbSaaFBmnFFsVutM7XSx5NT_FJA@mail.gmail.com>
+ <20200314224203.ncyx3rgwwe6zet4e@madcap2.tricolour.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200314224203.ncyx3rgwwe6zet4e@madcap2.tricolour.ca>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even if KCSAN is disabled for kmemleak, update_checksum() could still
-call crc32() (which is outside of kmemleak.c) to dereference
-object->pointer. Thus, the value of object->pointer could be accessed
-concurrently as noticed by KCSAN,
+On 2020-03-14 18:42, Richard Guy Briggs wrote:
+> On 2020-03-13 12:47, Paul Moore wrote:
+> > On Thu, Mar 12, 2020 at 4:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2020-02-13 16:49, Paul Moore wrote:
+> > > > On Wed, Feb 5, 2020 at 6:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > On 2020-02-05 18:05, Paul Moore wrote:
+> > > > > > On Thu, Jan 30, 2020 at 2:28 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > > > On 2020-01-22 16:29, Paul Moore wrote:
+> > > > > > > > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Track the parent container of a container to be able to filter and
+> > > > > > > > > report nesting.
+> > > > > > > > >
+> > > > > > > > > Now that we have a way to track and check the parent container of a
+> > > > > > > > > container, modify the contid field format to be able to report that
+> > > > > > > > > nesting using a carrat ("^") separator to indicate nesting.  The
+> > > > > > > > > original field format was "contid=<contid>" for task-associated records
+> > > > > > > > > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
+> > > > > > > > > records.  The new field format is
+> > > > > > > > > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
+> > > > > > > >
+> > > > > > > > Let's make sure we always use a comma as a separator, even when
+> > > > > > > > recording the parent information, for example:
+> > > > > > > > "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
+> > > > > > >
+> > > > > > > The intent here is to clearly indicate and separate nesting from
+> > > > > > > parallel use of several containers by one netns.  If we do away with
+> > > > > > > that distinction, then we lose that inheritance accountability and
+> > > > > > > should really run the list through a "uniq" function to remove the
+> > > > > > > produced redundancies.  This clear inheritance is something Steve was
+> > > > > > > looking for since tracking down individual events/records to show that
+> > > > > > > inheritance was not aways feasible due to rolled logs or search effort.
+> > > > > >
+> > > > > > Perhaps my example wasn't clear.  I'm not opposed to the little
+> > > > > > carat/hat character indicating a container's parent, I just think it
+> > > > > > would be good to also include a comma *in*addition* to the carat/hat.
+> > > > >
+> > > > > Ah, ok.  Well, I'd offer that it would be slightly shorter, slightly
+> > > > > less cluttered and having already written the parser in userspace, I
+> > > > > think the parser would be slightly simpler.
+> > > > >
+> > > > > I must admit, I was a bit puzzled by your snippet of code that was used
+> > > > > as a prefix to the next item rather than as a postfix to the given item.
+> > > > >
+> > > > > Can you say why you prefer the comma in addition?
+> > > >
+> > > > Generally speaking, I believe that a single delimiter is both easier
+> > > > for the eyes to parse, and easier/safer for machines to parse as well.
+> > > > In this particular case I think of the comma as a delimiter and the
+> > > > carat as a modifier, reusing the carat as a delimiter seems like a bad
+> > > > idea to me.
+> > >
+> > > I'm not crazy about this idea, but I'll have a look at how much work it
+> > > is to recode the userspace search tools.  It also adds extra characters
+> > > and noise into the string format that seems counterproductive.
+> > 
+> > If anything the parser should be *easier* (although both parsers
+> > should fall into the "trivial" category).  The comma is the one and
+> > only delimiter, and if the ACID starts with a carat then it is a
+> > parent of the preceding ACID.
+> 
+> Ok, after a day of staring at the code and getting nowhere due to
+> multiple distractions, I was able to rework this code fairly easily and
+> it turned out simpler which should not surprise you.  Both kernel and
+> userspace code are now in the format you recommended.
+> 
+> > > > > > > > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > > > > > > > index ef8e07524c46..68be59d1a89b 100644
+> > > > > > > > > --- a/kernel/audit.c
+> > > > > > > > > +++ b/kernel/audit.c
+> > > > > > > >
+> > > > > > > > > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
+> > > > > > > > >                 audit_netns_contid_add(new->net_ns, contid);
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
+> > > > > > > >
+> > > > > > > > If we need a forward declaration, might as well just move it up near
+> > > > > > > > the top of the file with the rest of the declarations.
+> > > > > > >
+> > > > > > > Ok.
+> > > > > > >
+> > > > > > > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
+> > > > > > > > > +{
+> > > > > > > > > +       struct audit_contobj *cont = NULL, *prcont = NULL;
+> > > > > > > > > +       int h;
+> > > > > > > >
+> > > > > > > > It seems safer to pass the audit container ID object and not the u64.
+> > > > > > >
+> > > > > > > It would also be faster, but in some places it isn't available such as
+> > > > > > > for ptrace and signal targets.  This also links back to the drop record
+> > > > > > > refcounts to hold onto the contobj until process exit, or signal
+> > > > > > > delivery.
+> > > > > > >
+> > > > > > > What we could do is to supply two potential parameters, a contobj and/or
+> > > > > > > a contid, and have it use the contobj if it is valid, otherwise, use the
+> > > > > > > contid, as is done for names and paths supplied to audit_log_name().
+> > > > > >
+> > > > > > Let's not do multiple parameters, that begs for misuse, let's take the
+> > > > > > wrapper function route:
+> > > > > >
+> > > > > >  func a(int id) {
+> > > > > >    // important stuff
+> > > > > >  }
+> > > > > >
+> > > > > >  func ao(struct obj) {
+> > > > > >    a(obj.id);
+> > > > > >  }
+> > > > > >
+> > > > > > ... and we can add a comment that you *really* should be using the
+> > > > > > variant that passes an object.
+> > > > >
+> > > > > I was already doing that where it available, and dereferencing the id
+> > > > > for the call.  But I see an advantage to having both parameters supplied
+> > > > > to the function, since it saves us the trouble of dereferencing it,
+> > > > > searching for the id in the hash list and re-locating the object if the
+> > > > > object is already available.
+> > > >
+> > > > I strongly prefer we not do multiple parameters for the same "thing";
+> > >
+> > > So do I, ideally.  However...
+> > >
+> > > > I would much rather do the wrapper approach as described above.  I
+> > > > would also like to see us use the audit container ID object as much as
+> > > > possible, using a bare integer should be a last resort.
+> > >
+> > > It is not clear to me that you understood what I wrote above.  I can't
+> > > use the object pointer where preferable because there are a few cases
+> > > where only the ID is available.  If only the ID is available, I would
+> > > have to make a best effort to look up the object pointer and am not
+> > > guaranteed to find it (invalid, stale, signal info...).  If I am forced
+> > > to use only one, it becomes the ID that is used, and I no longer have
+> > > the benefit of already having the object pointer for certainty and
+> > > saving work.  For all cases where I have the object pointer, which is
+> > > most cases, and most frequently used cases, I will have to dereference
+> > > the object pointer to an ID, then go through the work again to re-locate
+> > > the object pointer.  This is less certain, and more work.  Reluctantly,
+> > > the only practical solution I see here is to supply both, favouring the
+> > > object pointer if it is valid, then falling back on the ID from the next
+> > > parameter.
+> > 
+> > It has been a while since I last looked at the patchset, but my
+> > concern over the prefered use of the ACID number vs the ACID object is
+> > that the number offers no reuse protection where the object does.  I
+> > really would like us to use the object everywhere it is possible.
+> 
+> Ok, so I take it from this that I go ahead with the dual format since
+> the wrapper funciton to convert from object to ID strips away object
+> information negating any benefit of favouring the object pointer.  I'll
+> look at the remaining calls that use a contid (rather than contobj) and
+> convert all that I can over to storing an object using the dual counters
+> that track process exits versus signal2 and trace references.
 
- BUG: KCSAN: data-race in crc32_le_base / do_raw_spin_lock
+After reworking all the signal code to use the contobj and open coding
+unnested single contid appearances, I was able to stick with just
+passing a contobj to audit_contiainer_id() and audit_log_contid(), so
+the dual format conundrum went away.
 
- write to 0xffffb0ea683a7d50 of 4 bytes by task 23575 on cpu 12:
-  do_raw_spin_lock+0x114/0x200
-  debug_spin_lock_after at kernel/locking/spinlock_debug.c:91
-  (inlined by) do_raw_spin_lock at kernel/locking/spinlock_debug.c:115
-  _raw_spin_lock+0x40/0x50
-  __handle_mm_fault+0xa9e/0xd00
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+It issues the death certificate on process exit, and will issue an error
+indicating the contid is dead and can't be reused yet until it is reaped
+by a sig2 call.
 
- read to 0xffffb0ea683a7d50 of 4 bytes by task 839 on cpu 60:
-  crc32_le_base+0x67/0x350
-  crc32_le_base+0x67/0x350:
-  crc32_body at lib/crc32.c:106
-  (inlined by) crc32_le_generic at lib/crc32.c:179
-  (inlined by) crc32_le at lib/crc32.c:197
-  kmemleak_scan+0x528/0xd90
-  update_checksum at mm/kmemleak.c:1172
-  (inlined by) kmemleak_scan at mm/kmemleak.c:1497
-  kmemleak_scan_thread+0xcc/0xfa
-  kthread+0x1e0/0x200
-  ret_from_fork+0x27/0x50
+> > paul moore
+> 
+> - RGB
 
-If a shattered value was returned due to a data race, it will be
-corrected in the next scan. Thus, let KCSAN ignore all reads in the
-region to silence KCSAN in case the write side is non-atomic.
+- RGB
 
-Suggested-by: Marco Elver <elver@google.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/kmemleak.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index e362dc3d2028..5e252d91eb14 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1169,8 +1169,10 @@ static bool update_checksum(struct kmemleak_object *object)
- 	u32 old_csum = object->checksum;
- 
- 	kasan_disable_current();
-+	kcsan_disable_current();
- 	object->checksum = crc32(0, (void *)object->pointer, object->size);
- 	kasan_enable_current();
-+	kcsan_enable_current();
- 
- 	return object->checksum != old_csum;
- }
--- 
-2.21.0 (Apple Git-122.2)
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
