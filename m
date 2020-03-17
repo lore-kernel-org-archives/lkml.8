@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A90C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D86C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27D820738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE39520714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442879;
-	bh=na4maC1Eusg9jEfUvsLwWZAvsVcB5cwOBTMj2XdFbP4=;
+	s=default; t=1584442882;
+	bh=DLZr9X0dUzjdBDR77VJICOcHsghNExY8GdcrmKIiK/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hWp3y54GZSpHJ1e/9Uxf/A6dlIorG4d3XT8xV99YKQc+/D0azFljfgcw00lTNtO+L
-	 k1XJ/pSY6+Y4xwd/FOgcnXXsysXst9XO0oqd3BJPeKksHYEaHEavoi1kbCLaQr8QOj
-	 n5qIizJQtOX5WGw7mH1TyyVUjxiNrwAvcNvLf8nk=
+	b=A355fqNZDT5btqevyIcewy0/RUL5izC7Hx9Nkzsh6al/yiKahYzoQ0Qvv32P2IToR
+	 /HMiyJhgZJetHmQe0g90R3RdygREUOgTfLWKLEcqp+gzA0Ld70IP5EwOZgQv0OPwXy
+	 MPx/eFd9IGOW4lhuyKVBaqzVC+4n+Z3YTrEk9vE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbgCQLBR (ORCPT
+        id S1727736AbgCQLBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:01:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:01:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgCQLBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:01:15 -0400
+        id S1726819AbgCQLBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:01:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46F872071C;
-        Tue, 17 Mar 2020 11:01:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BEAA20714;
+        Tue, 17 Mar 2020 11:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442873;
-        bh=na4maC1Eusg9jEfUvsLwWZAvsVcB5cwOBTMj2XdFbP4=;
+        s=default; t=1584442878;
+        bh=DLZr9X0dUzjdBDR77VJICOcHsghNExY8GdcrmKIiK/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2V2KOSPrrzG/3QKQ/rhUn7PfB4vp0F5I8hsVRbiG5fHlJ1Vm426UisZlHmx9DffMz
-         dmdMY4OZB/mdLzShquXzx2AvsbghkWEKoo0sdmdc6z7tfCSHa+xMasdbWrtN9x0X3R
-         mJjiVtUEspwyD3eW/HK7sUg58jYei+HLYmYttaUs=
+        b=cBBQZH4sodVkrYoQuLksRS9HjpqLIm/1N3ZoI3wcq7EVrWd1bnn625RohMAFyQhID
+         srIB6rpowjceTrKNgzzw7Y2BsESkddV4vOZ6SVmwa/F3PTPladLw2QstgxtAROJds6
+         CEU8+pnO6UjUAV5ZpwpGHyAAW9wwfLE9TzX7GnGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Bogdanov <dbogdanov@marvell.com>,
-        Mark Starovoytov <mstarovoitov@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 020/123] net: macsec: update SCI upon MAC address change.
-Date:   Tue, 17 Mar 2020 11:54:07 +0100
-Message-Id: <20200317103309.829399364@linuxfoundation.org>
+Subject: [PATCH 5.4 021/123] net: nfc: fix bounds checking bugs on "pipe"
+Date:   Tue, 17 Mar 2020 11:54:08 +0100
+Message-Id: <20200317103309.934897194@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -61,55 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Bogdanov <dbogdanov@marvell.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 6fc498bc82929ee23aa2f35a828c6178dfd3f823 ]
+[ Upstream commit a3aefbfe45751bf7b338c181b97608e276b5bb73 ]
 
-SCI should be updated, because it contains MAC in its first 6 octets.
+This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
+corruption when handling SHDLC I-Frame commands") and commit d7ee81ad09f0
+("NFC: nci: Add some bounds checking in nci_hci_cmd_received()") which
+added range checks on "pipe".
 
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+The "pipe" variable comes skb->data[0] in nfc_hci_msg_rx_work().
+It's in the 0-255 range.  We're using it as the array index into the
+hdev->pipes[] array which has NFC_HCI_MAX_PIPES (128) members.
+
+Fixes: 118278f20aa8 ("NFC: hci: Add pipes table to reference them with a tuple {gate, host}")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/macsec.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/nfc/hci/core.c |   19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -2882,6 +2882,11 @@ static void macsec_dev_set_rx_mode(struc
- 	dev_uc_sync(real_dev, dev);
- }
+--- a/net/nfc/hci/core.c
++++ b/net/nfc/hci/core.c
+@@ -181,13 +181,20 @@ exit:
+ void nfc_hci_cmd_received(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
+ 			  struct sk_buff *skb)
+ {
+-	u8 gate = hdev->pipes[pipe].gate;
+ 	u8 status = NFC_HCI_ANY_OK;
+ 	struct hci_create_pipe_resp *create_info;
+ 	struct hci_delete_pipe_noti *delete_info;
+ 	struct hci_all_pipe_cleared_noti *cleared_info;
++	u8 gate;
  
-+static sci_t dev_to_sci(struct net_device *dev, __be16 port)
-+{
-+	return make_sci(dev->dev_addr, port);
-+}
+-	pr_debug("from gate %x pipe %x cmd %x\n", gate, pipe, cmd);
++	pr_debug("from pipe %x cmd %x\n", pipe, cmd);
 +
- static int macsec_set_mac_address(struct net_device *dev, void *p)
++	if (pipe >= NFC_HCI_MAX_PIPES) {
++		status = NFC_HCI_ANY_E_NOK;
++		goto exit;
++	}
++
++	gate = hdev->pipes[pipe].gate;
+ 
+ 	switch (cmd) {
+ 	case NFC_HCI_ADM_NOTIFY_PIPE_CREATED:
+@@ -375,8 +382,14 @@ void nfc_hci_event_received(struct nfc_h
+ 			    struct sk_buff *skb)
  {
- 	struct macsec_dev *macsec = macsec_priv(dev);
-@@ -2903,6 +2908,7 @@ static int macsec_set_mac_address(struct
+ 	int r = 0;
+-	u8 gate = hdev->pipes[pipe].gate;
++	u8 gate;
++
++	if (pipe >= NFC_HCI_MAX_PIPES) {
++		pr_err("Discarded event %x to invalid pipe %x\n", event, pipe);
++		goto exit;
++	}
  
- out:
- 	ether_addr_copy(dev->dev_addr, addr->sa_data);
-+	macsec->secy.sci = dev_to_sci(dev, MACSEC_PORT_ES);
- 	return 0;
- }
- 
-@@ -3176,11 +3182,6 @@ static bool sci_exists(struct net_device
- 	return false;
- }
- 
--static sci_t dev_to_sci(struct net_device *dev, __be16 port)
--{
--	return make_sci(dev->dev_addr, port);
--}
--
- static int macsec_add_dev(struct net_device *dev, sci_t sci, u8 icv_len)
- {
- 	struct macsec_dev *macsec = macsec_priv(dev);
++	gate = hdev->pipes[pipe].gate;
+ 	if (gate == NFC_HCI_INVALID_GATE) {
+ 		pr_err("Discarded event %x to unopened pipe %x\n", event, pipe);
+ 		goto exit;
 
 
