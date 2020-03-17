@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEED7C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761A1C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BF520738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB0720738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:51:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="TzqZJOfX"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="RmRSryiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbgCQUvJ (ORCPT
+        id S1727217AbgCQUvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:51:09 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:59981 "EHLO
+        Tue, 17 Mar 2020 16:51:25 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:58263 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgCQUu7 (ORCPT
+        with ESMTP id S1727050AbgCQUvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:50:59 -0400
+        Tue, 17 Mar 2020 16:51:01 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B066723EBA;
-        Tue, 17 Mar 2020 21:50:56 +0100 (CET)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id D3EC623EC0;
+        Tue, 17 Mar 2020 21:50:58 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584478257;
+        t=1584478259;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xUrOba6StDm3aBi/b0DHSFTYlxtTMjAy6r5a+2We48s=;
-        b=TzqZJOfXt0BB6yw47KewAKoyuni3WRkjG5pKFlgZeS2uCZOxoq5HxKMtCcDnG010uoGA3i
-        CvGNKsZ/6+K4pcXHBdUi5hMlbWCdcPxdrVvshiemLF0ep6eergWwbMisE1Q0qyzFhyrY1b
-        5KoG7DNelj/Z23WK66myrtQ/XB7Nsao=
+        bh=NUw0gx6+My8N/12AqVTkfCdlDH/GWGQWdSq0OF6q+Z4=;
+        b=RmRSryiD7nyUD8UE2wAKcFtIWF5WUpVw4WFwcZflNUSJFGu8RliszA0kcspDjBcJAoyYV3
+        yBSD/Y0nrG4L1i+PHAHy/fIEOxtY6+kq+RJTQRTroJqw1v6r0KIFCBejV1acMU2Xl1QysL
+        /d5nAGhfW0fZrM+yCEQigBnbwgLFTkg=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -58,9 +58,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>, Michael Walle <michael@walle.cc>
-Subject: [PATCH 13/18] dt-bindings: hwmon: Add bindings for sl28cpld hardware monitoring
-Date:   Tue, 17 Mar 2020 21:50:12 +0100
-Message-Id: <20200317205017.28280-14-michael@walle.cc>
+Subject: [PATCH 16/18] arm64: dts: freescale: sl28: map GPIOs to input events
+Date:   Tue, 17 Mar 2020 21:50:15 +0100
+Message-Id: <20200317205017.28280-17-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200317205017.28280-1-michael@walle.cc>
 References: <20200317205017.28280-1-michael@walle.cc>
@@ -68,7 +68,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
 X-Rspamd-Server: web
-X-Rspamd-Queue-Id: B066723EBA
+X-Rspamd-Queue-Id: D3EC623EC0
 X-Spamd-Result: default: False [6.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -78,7 +78,7 @@ X-Spamd-Result: default: False [6.40 / 15.00];
          MIME_GOOD(-0.10)[text/plain];
          BROKEN_CONTENT_TYPE(1.50)[];
          TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.603];
+         NEURAL_SPAM(0.00)[0.541];
          DKIM_SIGNED(0.00)[];
          RCPT_COUNT_TWELVE(0.00)[22];
          MID_CONTAINS_FROM(1.00)[];
@@ -94,50 +94,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds device tree bindings for the hardware monitoring controller of
-the sl28cpld board management controller. At the moment there is only
-one flavor, namely the fan supervisor.
+Now that we have support for GPIO lines of the SMARC connector, map the
+sleep, power and lid switch signals to the corresponding keys using the
+gpio-keys and gpio-keys-polled drivers. The power and sleep signals have
+dedicated interrupts, thus we use these ones. The lid switch is just
+mapped to a GPIO input and needs polling.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- .../hwmon/kontron,sl28cpld-hwmon.yaml         | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+ .../freescale/fsl-ls1028a-kontron-sl28.dts    | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
-new file mode 100644
-index 000000000000..b3f90d51e2e5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
-@@ -0,0 +1,28 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/kontron,sl28cpld-hwmon.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+index b74d9ac0c388..f92a2b1b6628 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+@@ -9,6 +9,8 @@
+ /dts-v1/;
+ #include "fsl-ls1028a.dtsi"
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	model = "Kontron SMARC-sAL28";
+@@ -22,6 +24,36 @@
+ 		spi1 = &dspi2;
+ 	};
+ 
++	buttons0 {
++		compatible = "gpio-keys";
 +
-+title: Hardware monitoring driver for the sl28cpld board management controller
++		power-button {
++			interrupts-extended = <&sl28cpld
++					       4 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_POWER>;
++			label = "Power";
++		};
 +
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
++		sleep-button {
++			interrupts-extended = <&sl28cpld
++					       5 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_SLEEP>;
++			label = "Sleep";
++		};
++	};
 +
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
++	buttons1 {
++		compatible = "gpio-keys-polled";
++		poll-interval = <200>;
 +
-+properties:
-+  compatible:
-+    enum:
-+      - kontron,sl28cpld-fan
++		lid-switch {
++			linux,input-type = <EV_SW>;
++			linux,code = <SW_LID>;
++			gpios = <&cpld_gpi 4 GPIO_ACTIVE_LOW>;
++			label = "Lid";
++		};
++	};
 +
-+  reg:
-+    maxItems: 1
-+    description: Instance number of the monitoring controller
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
 -- 
 2.20.1
 
