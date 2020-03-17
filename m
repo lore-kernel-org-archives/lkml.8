@@ -2,179 +2,119 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7B7C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05BCC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBCC20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:50:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HGaqh0MB"
+	by mail.kernel.org (Postfix) with ESMTP id 89AD4206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgCQKuh (ORCPT
+        id S1726248AbgCQKvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:50:37 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:37462 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726676AbgCQKuf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:50:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584442233;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9Xl1YbByyYFiK6yfX6MmnHGP4uzRrFgfV39buVPYxCU=;
-        b=HGaqh0MBKRh249HTC/7BHv6fkaI7UimBOnpNIYbg899CqSXrv5zoNDLXdtdao5+lUGOlpr
-        tBoG+MTRbyUu1jMLe6kN+UN6K6KJ4GraoAak15uz+BzOhT6TVpK+7p3W1FGRMFVMwz6eC5
-        bTeQlr3GJJUtSSt6cTNqwaK29R4TgOU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-rOenjaorNYCyOoJ8e97dKw-1; Tue, 17 Mar 2020 06:50:30 -0400
-X-MC-Unique: rOenjaorNYCyOoJ8e97dKw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E8B8800D53;
-        Tue, 17 Mar 2020 10:50:28 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-112-136.ams2.redhat.com [10.36.112.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 44EFB93531;
-        Tue, 17 Mar 2020 10:50:23 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 8/8] mm/memory_hotplug: allow to specify a default online_type
-Date:   Tue, 17 Mar 2020 11:49:42 +0100
-Message-Id: <20200317104942.11178-9-david@redhat.com>
-In-Reply-To: <20200317104942.11178-1-david@redhat.com>
-References: <20200317104942.11178-1-david@redhat.com>
+        Tue, 17 Mar 2020 06:51:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:24457 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbgCQKvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:51:47 -0400
+IronPort-SDR: 9D9ya5ShjIs1mkOzTOAI+Wa7HVMrRc29UYKuAfXInqAZ9kgz8E2bl8/Sg6Sn9oJJ+IshE9/iSM
+ Q478jX9WzbhQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 03:51:46 -0700
+IronPort-SDR: KZ6MXAW7Wed2SNzKcd2mam6OirO0eshuzYwmIoVa3c3D4x/dkjUTfFVzfIM4PbIvTgvxq46orL
+ 4gYl46xoHlhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
+   d="scan'208";a="236295330"
+Received: from dasabhi1-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.35.148])
+  by fmsmga007.fm.intel.com with ESMTP; 17 Mar 2020 03:51:44 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH] soundwire: stream: only change state if needed
+Date:   Tue, 17 Mar 2020 05:51:42 -0500
+Message-Id: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For now, distributions implement advanced udev rules to essentially
-- Don't online any hotplugged memory (s390x)
-- Online all memory to ZONE_NORMAL (e.g., most virt environments like
-  hyperv)
-- Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
-  care of (e.g., bare metal, special virt environments)
+In a multi-cpu DAI context, the stream routines may be called from
+multiple DAI callbacks. Make sure the stream state only changes for
+the first call, and don't return error messages if the target state is
+already reached.
 
-In summary: All memory is usually onlined the same way, however, the
-kernel always has to ask user space to come up with the same answer.
-E.g., Hyper-V always waits for a memory block to get onlined before
-continuing, otherwise it might end up adding memory faster than
-hotplugging it, which can result in strange OOM situations. This waiting
-slows down adding of a bigger amount of memory.
-
-Let's allow to specify a default online_type, not just "online" and
-"offline". This allows distributions to configure the default online_type
-when booting up and be done with it.
-
-We can now specify "offline", "online", "online_movable" and
-"online_kernel" via
-- "memhp_default_state=3D" on the kernel cmdline
-- /sys/devices/system/memory/auto_online_blocks
-just like we are able to specify for a single memory block via
-/sys/devices/system/memory/memoryX/state
-
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/base/memory.c          | 11 +++++------
- include/linux/memory_hotplug.h |  2 ++
- mm/memory_hotplug.c            |  8 ++++----
- 3 files changed, 11 insertions(+), 10 deletions(-)
+ drivers/soundwire/stream.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 8d3e16dab69f..2b09b68b9f78 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -35,7 +35,7 @@ static const char *const online_type_to_str[] =3D {
- 	[MMOP_ONLINE_MOVABLE] =3D "online_movable",
- };
-=20
--static int memhp_online_type_from_str(const char *str)
-+int memhp_online_type_from_str(const char *str)
- {
- 	int i;
-=20
-@@ -394,13 +394,12 @@ static ssize_t auto_online_blocks_store(struct devi=
-ce *dev,
- 					struct device_attribute *attr,
- 					const char *buf, size_t count)
- {
--	if (sysfs_streq(buf, "online"))
--		memhp_default_online_type =3D MMOP_ONLINE;
--	else if (sysfs_streq(buf, "offline"))
--		memhp_default_online_type =3D MMOP_OFFLINE;
--	else
-+	const int online_type =3D memhp_online_type_from_str(buf);
+diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+index 1b43d03c79ea..3319121cd706 100644
+--- a/drivers/soundwire/stream.c
++++ b/drivers/soundwire/stream.c
+@@ -1572,6 +1572,7 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream)
+ 	sdw_acquire_bus_lock(stream);
+ 
+ 	if (stream->state == SDW_STREAM_PREPARED) {
++		/* nothing to do */
+ 		ret = 0;
+ 		goto state_err;
+ 	}
+@@ -1661,6 +1662,12 @@ int sdw_enable_stream(struct sdw_stream_runtime *stream)
+ 
+ 	sdw_acquire_bus_lock(stream);
+ 
++	if (stream->state == SDW_STREAM_ENABLED) {
++		/* nothing to do */
++		ret = 0;
++		goto state_err;
++	}
 +
-+	if (online_type < 0)
- 		return -EINVAL;
-=20
-+	memhp_default_online_type =3D online_type;
- 	return count;
- }
-=20
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
-g.h
-index c6e090b34c4b..ef55115320fb 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -117,6 +117,8 @@ extern int arch_add_memory(int nid, u64 start, u64 si=
-ze,
- 			struct mhp_restrictions *restrictions);
- extern u64 max_mem_size;
-=20
-+extern int memhp_online_type_from_str(const char *str);
+ 	if (stream->state != SDW_STREAM_PREPARED &&
+ 	    stream->state != SDW_STREAM_DISABLED) {
+ 		pr_err("%s: %s: inconsistent state state %d\n",
+@@ -1744,6 +1751,12 @@ int sdw_disable_stream(struct sdw_stream_runtime *stream)
+ 
+ 	sdw_acquire_bus_lock(stream);
+ 
++	if (stream->state == SDW_STREAM_DISABLED) {
++		/* nothing to do */
++		ret = 0;
++		goto state_err;
++	}
 +
- /* Default online_type (MMOP_*) when new memory blocks are added. */
- extern int memhp_default_online_type;
- /* If movable_node boot option specified */
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 1975a2b99a2b..9916977b6ee1 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -74,10 +74,10 @@ int memhp_default_online_type =3D MMOP_ONLINE;
-=20
- static int __init setup_memhp_default_state(char *str)
- {
--	if (!strcmp(str, "online"))
--		memhp_default_online_type =3D MMOP_ONLINE;
--	else if (!strcmp(str, "offline"))
--		memhp_default_online_type =3D MMOP_OFFLINE;
-+	const int online_type =3D memhp_online_type_from_str(str);
+ 	if (stream->state != SDW_STREAM_ENABLED) {
+ 		pr_err("%s: %s: inconsistent state state %d\n",
+ 		       __func__, stream->name, stream->state);
+@@ -1809,6 +1822,12 @@ int sdw_deprepare_stream(struct sdw_stream_runtime *stream)
+ 
+ 	sdw_acquire_bus_lock(stream);
+ 
++	if (stream->state == SDW_STREAM_DEPREPARED) {
++		/* nothing to do */
++		ret = 0;
++		goto state_err;
++	}
 +
-+	if (online_type >=3D 0)
-+		memhp_default_online_type =3D online_type;
-=20
- 	return 1;
- }
---=20
-2.24.1
+ 	if (stream->state != SDW_STREAM_PREPARED &&
+ 	    stream->state != SDW_STREAM_DISABLED) {
+ 		pr_err("%s: %s: inconsistent state state %d\n",
+-- 
+2.20.1
 
