@@ -2,76 +2,128 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E3BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ADEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871C720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD6720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:37:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BYGRtL9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgCQXaG (ORCPT
+        id S1727090AbgCQXhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 19:30:06 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:48641 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727150AbgCQXaG (ORCPT
+        Tue, 17 Mar 2020 19:37:53 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43991 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgCQXhw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 19:30:06 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 17 Mar 2020 16:30:05 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 17 Mar 2020 16:30:05 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id ABB1E4BA2; Tue, 17 Mar 2020 16:30:05 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 16:30:05 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Shiyan <shc_work@mail.ru>
-Subject: Re: [PATCH v9 04/11] pwm: clps711x: Use 64-bit division macro
-Message-ID: <20200317233003.GA11350@codeaurora.org>
-References: <cover.1584473399.git.gurus@codeaurora.org>
- <587f9ccae68ad7e1ce97fa8da6037292af1a5095.1584473399.git.gurus@codeaurora.org>
- <CAK8P3a2Hi_AoRC3g7qKth4e_Y1jZrbBDhWUb3YPZm10FWMu-ig@mail.gmail.com>
+        Tue, 17 Mar 2020 19:37:52 -0400
+Received: by mail-qk1-f196.google.com with SMTP id x18so15639251qki.10
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 16:37:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=efrxms/lgbeWU/ht4DbMjddPv2cvhd4eDWsLcCs+9wc=;
+        b=BYGRtL9Z+xSirwpOnTcId3wsbFsePUgk+T7mkVWtaSfj4elbtwT0ILDhi5PQO4szlq
+         k8h7p5onIMGS+cPCN9VnvOOfau9ry5bjm8q25NIu3h+8PvxGxtVsHrDdsy+vvjc0vDn6
+         x4YaUbReAs0qbfN2AyOjIjkQak9HDAC7MA1e4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=efrxms/lgbeWU/ht4DbMjddPv2cvhd4eDWsLcCs+9wc=;
+        b=X9OqYFgwsq+T1GkRdniPtPRgjTYWu4LiTyhj10MbjTDQUWNRR0mwY6hpXsatEZgX0S
+         oQCDxdLulU3+c4okOQslue7UxM5CgxlA0rNgfpDz5x+VjphK0PuMaASwNcl53oHtugxz
+         rUj/2cGtdnIQnMCuzva2tC/87PKihO8W01zSfRofgeWUZrR2MNNQD8QVDiiJ5FDJA7y3
+         bBJu/6/LxZP/UTy2x02HK2GO958xcRJr/1NwZRY7PqVgQevEhTPEUU02E9sWi8oHMA9G
+         6Srv2qcOUKmwJSfvRRGYQA4quxY1HsbrLjURA1OALiz15EyeXYhiBfkFBOSRHMMwHjU6
+         uOkA==
+X-Gm-Message-State: ANhLgQ05z1vYIEJvKgRZD+xGCnL/TEVLTvZk0RSFeXJLMkkW6jqNO/O8
+        zB+EmPcUnriTJa+wlVTxcF5cPw==
+X-Google-Smtp-Source: ADFU+vviYYwduyWwVBJyzF/cegtNFQa17R/O+unpT8Wumt19sZAp593zp8ZCDjYlIXJEujhG73n8wQ==
+X-Received: by 2002:ae9:e897:: with SMTP id a145mr1421172qkg.458.1584488270357;
+        Tue, 17 Mar 2020 16:37:50 -0700 (PDT)
+Received: from ?IPv6:2600:1003:b859:47ef:4eab:4a1f:4139:85b7? ([2600:1003:b859:47ef:4eab:4a1f:4139:85b7])
+        by smtp.gmail.com with ESMTPSA id k11sm3193034qti.68.2020.03.17.16.37.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 16:37:49 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 19:37:47 -0400
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200317224820.GP3199@paulmck-ThinkPad-P72>
+References: <20200316163228.62068-1-joel@joelfernandes.org> <20200317210822.GM3199@paulmck-ThinkPad-P72> <20200317214502.GA29184@paulmck-ThinkPad-P72> <CAEXW_YQxKfcGf3UgEn_8hdWHdMx09RvD90z6zo=kk-iRinYjng@mail.gmail.com> <20200317224820.GP3199@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2Hi_AoRC3g7qKth4e_Y1jZrbBDhWUb3YPZm10FWMu-ig@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 rcu-dev 1/3] rcuperf: Add ability to increase object allocation size
+To:     paulmck@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+From:   joel@joelfernandes.org
+Message-ID: <A6C6D60E-9E01-40FC-8396-9F2FF2803E2E@joelfernandes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 11:22:06PM +0100, Arnd Bergmann wrote:
-> > diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-> > index 924d39a..ba9500a 100644
-> > --- a/drivers/pwm/pwm-clps711x.c
-> > +++ b/drivers/pwm/pwm-clps711x.c
-> > @@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
-> >  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
-> >  {
-> >         /* Duty cycle 0..15 max */
-> > -       return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-> > +       return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-> >  }
-> 
-> Is it actually going to exceed U32_MAX? If not, a type cast may be
-> more appropriate here than the expensive 64-bit division.
 
-With the final change in this patch series, the framework will support
-periods that exceed U32_MAX. My concern is that using a typecast would
-mean that in those cases, this driver will not support > U32_MAX values.
-Using DIV64_U64_ROUND_CLOSEST makes the driver future proof and able to
-handle > U32_MAX values correctly. What do you think?
 
-Thank you.
+On March 17, 2020 6:48:20 PM EDT, "Paul E=2E McKenney" <paulmck@kernel=2Eo=
+rg> wrote:
+>On Tue, Mar 17, 2020 at 06:30:51PM -0400, Joel Fernandes wrote:
+>> On Tue, Mar 17, 2020 at 5:45 PM Paul E=2E McKenney <paulmck@kernel=2Eor=
+g>
+>wrote:
+>> >
+>> > On Tue, Mar 17, 2020 at 02:08:22PM -0700, Paul E=2E McKenney wrote:
+>> > > On Mon, Mar 16, 2020 at 12:32:26PM -0400, Joel Fernandes (Google)
+>wrote:
+>> > > > This allows us to increase memory pressure dynamically using a
+>new
+>> > > > rcuperf boot command line parameter called 'rcumult'=2E
+>> > > >
+>> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes=2Eorg>
+>> > >
+>> > > Applied for testing and review, thank you!
+>> >
+>> > But testing did not go far:
+>> >
+>> > kernel/rcu/tree=2Ec: In function =E2=80=98kfree_rcu_shrink_count=E2=
+=80=99:
+>> > kernel/rcu/tree=2Ec:3120:16: warning: unused variable =E2=80=98flags=
+=E2=80=99
+>[-Wunused-variable]
+>> >   unsigned long flags, count =3D 0;
+>>=20
+>> I fixed the warning already but did not resend since it was just the
+>> one unused variable warning=2E The patches are otherwise good to apply=
+=2E
+>> Sorry, and I can resend it soon if you are not reapplying right now=2E
+>
+>So remove "flags, " and all is well?
 
-Guru Das.
+Yes, that's right=2E I dropped the lock but forgot to remove it=2E
+
+>If so, I can just as easily fix that as take a new series=2E  But next
+>time, please give a fella a warning=2E  ;-)
+
+Will do, my bad=2E Thank you ;-)
+
+- Joel
+
+>
+>							Thanx, Paul
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
