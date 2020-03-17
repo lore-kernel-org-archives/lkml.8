@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A64C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D637DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFBE2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A283D206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443138;
-	bh=CRAiRsPj69C9ETgEGNxuhbb4Z/h1iywmuW62uuQ1YmU=;
+	s=default; t=1584443142;
+	bh=OZ4tA3swY5p/fXXjR+dJe6w7K3IHPibdXnOGpcN37IQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xRtLUCtzbTrHrCRt8urZRhTj0x7gcgvOP67RpPe8KW2A8otgFJ/B0s8vsu5O9qRXg
-	 3W/ViXuyJusG6hTuVHuD1BfNxYhe4vbr0JMZ1wfyzNa0P7xHs9w1p4nfjN+p3o7RXZ
-	 FHetrVWCTs5bEqZUAmRgfyBx7iCAQQ9wOxsfBIgw=
+	b=MR4EK2Wj7PVm12OLt2GEt63DSxBLMbCDvct+/Mq3dXn9c2C0+jgoBsjiWKsDuBodY
+	 HBKUG0wHmA5GfzlkPccVoal/WdYh9w8lVYSnoj9PViAMhdSuwt/j3f6mbCEqpRez5V
+	 cll5CzpahRE6pQYJwYmEy0MCQz5qGfc02un2vewM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgCQLFc (ORCPT
+        id S1727408AbgCQLFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46362 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:05:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbgCQLFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:30 -0400
+        id S1727846AbgCQLFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:05:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4BB520719;
-        Tue, 17 Mar 2020 11:05:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB90520719;
+        Tue, 17 Mar 2020 11:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443130;
-        bh=CRAiRsPj69C9ETgEGNxuhbb4Z/h1iywmuW62uuQ1YmU=;
+        s=default; t=1584443138;
+        bh=OZ4tA3swY5p/fXXjR+dJe6w7K3IHPibdXnOGpcN37IQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IJZId0tjesQMR5VZNQefo8lrDS7qXutk05m4oCor70322EeRnHatE2hC9aJCEBSG/
-         QHKJ3sTPtsa5yOoaNapR36MT17NdYKjPra0oO0j0DdWSddEYMCm6YJr1MioBAH80Ru
-         etG+5U2dCZhN2kZOksdddid0ibnDzAzCx4uPH7fg=
+        b=ifyJ/VBZui0n5La0BAg0vWenCoiaxVX+EF7cScix96m5c9N8VQWZSBViITtVsn/tU
+         dwA+XTw4g1+u/v4pq7ocDDWiO9hlDqzOYA7vdHyOGIeLHRVguX0w4iMw17SLet0l/8
+         e1qopyUFc7L4vp88eVIJkjHpvBn7HA5ahcWs/IYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Artem S . Tashkinov" <aros@gmx.com>
-Subject: [PATCH 5.4 105/123] driver code: clarify and fix platform device DMA mask allocation
-Date:   Tue, 17 Mar 2020 11:55:32 +0100
-Message-Id: <20200317103318.293514324@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.4 108/123] nl80211: add missing attribute validation for critical protocol indication
+Date:   Tue, 17 Mar 2020 11:55:35 +0100
+Message-Id: <20200317103318.545701467@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -61,134 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit e3a36eb6dfaeea8175c05d5915dcf0b939be6dab upstream.
+commit 0e1a1d853ecedc99da9d27f9f5c376935547a0e2 upstream.
 
-This does three inter-related things to clarify the usage of the
-platform device dma_mask field. In the process, fix the bug introduced
-by cdfee5623290 ("driver core: initialize a default DMA mask for
-platform device") that caused Artem Tashkinov's laptop to not boot with
-newer Fedora kernels.
+Add missing attribute validation for critical protocol fields
+to the netlink policy.
 
-This does:
-
- - First off, rename the field to "platform_dma_mask" to make it
-   greppable.
-
-   We have way too many different random fields called "dma_mask" in
-   various data structures, where some of them are actual masks, and
-   some of them are just pointers to the mask. And the structures all
-   have pointers to each other, or embed each other inside themselves,
-   and "pdev" sometimes means "platform device" and sometimes it means
-   "PCI device".
-
-   So to make it clear in the code when you actually use this new field,
-   give it a unique name (it really should be something even more unique
-   like "platform_device_dma_mask", since it's per platform device, not
-   per platform, but that gets old really fast, and this is unique
-   enough in context).
-
-   To further clarify when the field gets used, initialize it when we
-   actually start using it with the default value.
-
- - Then, use this field instead of the random one-off allocation in
-   platform_device_register_full() that is now unnecessary since we now
-   already have a perfectly fine allocation for it in the platform
-   device structure.
-
- - The above then allows us to fix the actual bug, where the error path
-   of platform_device_register_full() would unconditionally free the
-   platform device DMA allocation with 'kfree()'.
-
-   That kfree() was dont regardless of whether the allocation had been
-   done earlier with the (now removed) kmalloc, or whether
-   setup_pdev_dma_masks() had already been used and the dma_mask pointer
-   pointed to the mask that was part of the platform device.
-
-It seems most people never triggered the error path, or only triggered
-it from a call chain that set an explicit pdevinfo->dma_mask value (and
-thus caused the unnecessary allocation that was "cleaned up" in the
-error path) before calling platform_device_register_full().
-
-Robin Murphy points out that in Artem's case the wdat_wdt driver failed
-in platform_device_add(), and that was the one that had called
-platform_device_register_full() with pdevinfo.dma_mask = 0, and would
-have caused that kfree() of pdev.dma_mask corrupting the heap.
-
-A later unrelated kmalloc() then oopsed due to the heap corruption.
-
-Fixes: cdfee5623290 ("driver core: initialize a default DMA mask for platform device")
-Reported-bisected-and-tested-by:  Artem S. Tashkinov <aros@gmx.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 5de17984898c ("cfg80211: introduce critical protocol indication from user-space")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Link: https://lore.kernel.org/r/20200303051058.4089398-2-kuba@kernel.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/platform.c         |   25 ++++++-------------------
- include/linux/platform_device.h |    2 +-
- 2 files changed, 7 insertions(+), 20 deletions(-)
+ net/wireless/nl80211.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -335,10 +335,10 @@ static void setup_pdev_dma_masks(struct
- {
- 	if (!pdev->dev.coherent_dma_mask)
- 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
--	if (!pdev->dma_mask)
--		pdev->dma_mask = DMA_BIT_MASK(32);
--	if (!pdev->dev.dma_mask)
--		pdev->dev.dma_mask = &pdev->dma_mask;
-+	if (!pdev->dev.dma_mask) {
-+		pdev->platform_dma_mask = DMA_BIT_MASK(32);
-+		pdev->dev.dma_mask = &pdev->platform_dma_mask;
-+	}
- };
- 
- /**
-@@ -634,20 +634,8 @@ struct platform_device *platform_device_
- 	pdev->dev.of_node_reused = pdevinfo->of_node_reused;
- 
- 	if (pdevinfo->dma_mask) {
--		/*
--		 * This memory isn't freed when the device is put,
--		 * I don't have a nice idea for that though.  Conceptually
--		 * dma_mask in struct device should not be a pointer.
--		 * See http://thread.gmane.org/gmane.linux.kernel.pci/9081
--		 */
--		pdev->dev.dma_mask =
--			kmalloc(sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
--		if (!pdev->dev.dma_mask)
--			goto err;
--
--		kmemleak_ignore(pdev->dev.dma_mask);
--
--		*pdev->dev.dma_mask = pdevinfo->dma_mask;
-+		pdev->platform_dma_mask = pdevinfo->dma_mask;
-+		pdev->dev.dma_mask = &pdev->platform_dma_mask;
- 		pdev->dev.coherent_dma_mask = pdevinfo->dma_mask;
- 	}
- 
-@@ -672,7 +660,6 @@ struct platform_device *platform_device_
- 	if (ret) {
- err:
- 		ACPI_COMPANION_SET(&pdev->dev, NULL);
--		kfree(pdev->dev.dma_mask);
- 		platform_device_put(pdev);
- 		return ERR_PTR(ret);
- 	}
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -24,7 +24,7 @@ struct platform_device {
- 	int		id;
- 	bool		id_auto;
- 	struct device	dev;
--	u64		dma_mask;
-+	u64		platform_dma_mask;
- 	u32		num_resources;
- 	struct resource	*resource;
- 
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -530,6 +530,8 @@ const struct nla_policy nl80211_policy[N
+ 	[NL80211_ATTR_MDID] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_IE_RIC] = { .type = NLA_BINARY,
+ 				  .len = IEEE80211_MAX_DATA_LEN },
++	[NL80211_ATTR_CRIT_PROT_ID] = { .type = NLA_U16 },
++	[NL80211_ATTR_MAX_CRIT_PROT_DURATION] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_PEER_AID] =
+ 		NLA_POLICY_RANGE(NLA_U16, 1, IEEE80211_MAX_AID),
+ 	[NL80211_ATTR_CH_SWITCH_COUNT] = { .type = NLA_U32 },
 
 
