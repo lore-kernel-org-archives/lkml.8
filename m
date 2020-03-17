@@ -2,84 +2,155 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F651C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ED0C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422CF2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9AE20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584444111;
+	bh=wIKrjDsv/V0PV3E06w+tebiW4Y2CZAqF2DUudpdvii4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QRryE8VI6W70GOMe+5CYJYt8gnMnxzOdKqk3u7RptUc0FXaMCR8UOX8AikCW1yRKv
+	 7IAWF+A926YJmRpCz0/PPIMPeqSqV3dwpQMTDmkbSAt3jRTzHbdtzURgQYjdn9Tq+8
+	 GF0XG38Tp2ImwihFRhu7sS+6RMc1YVMJYAn3GT/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgCQLVs (ORCPT
+        id S1727737AbgCQLVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:21:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:35960 "EHLO foss.arm.com"
+        Tue, 17 Mar 2020 07:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgCQLVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:21:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE7D71FB;
-        Tue, 17 Mar 2020 04:21:45 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF9CC3F534;
-        Tue, 17 Mar 2020 04:21:43 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 11:21:41 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/15] arm64: hibernate.c: Create a new function to
- handle cpu_up(sleep_cpu)
-Message-ID: <20200317112141.GB632169@arrakis.emea.arm.com>
-References: <20200223192942.18420-1-qais.yousef@arm.com>
- <20200223192942.18420-7-qais.yousef@arm.com>
+        id S1727138AbgCQK6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:58:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA1F120658;
+        Tue, 17 Mar 2020 10:58:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584442682;
+        bh=wIKrjDsv/V0PV3E06w+tebiW4Y2CZAqF2DUudpdvii4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hvAJBIYKVcaAYwypbMZ7i9QiQC2CoFaUph055tP4qsaPs7xGRpP8EPNLveG4hv3Ut
+         o4dvyfzOwffMRwrhkKUizOS6ryxOl3D/bRYYY6mu/RgI4jwtMlRQp44l1BfJAZ2stG
+         VSzuw3VhDi9O/XsvJlQJipyS5XT8wNlhhbc/nHfo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Suren Baghdasaryan <surenb@google.com>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.19 47/89] cgroup: Iterate tasks that did not finish do_exit()
+Date:   Tue, 17 Mar 2020 11:54:56 +0100
+Message-Id: <20200317103305.365142889@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
+References: <20200317103259.744774526@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223192942.18420-7-qais.yousef@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 07:29:33PM +0000, Qais Yousef wrote:
-> In preparation to make cpu_up/down private - move the user in arm64
-> hibernate.c to use a new generic function that provides what arm64
-> needs.
-> 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> CC: Catalin Marinas <catalin.marinas@arm.com>
-> CC: Will Deacon <will@kernel.org>
-> CC: Steve Capper <steve.capper@arm.com>
-> CC: Richard Fontana <rfontana@redhat.com>
-> CC: James Morse <james.morse@arm.com>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: Josh Poimboeuf <jpoimboe@redhat.com>
-> CC: Ingo Molnar <mingo@kernel.org>
-> CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> CC: Nicholas Piggin <npiggin@gmail.com>
-> CC: Daniel Lezcano <daniel.lezcano@linaro.org>
-> CC: Jiri Kosina <jkosina@suse.cz>
-> CC: Pavankumar Kondeti <pkondeti@codeaurora.org>
-> CC: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> CC: linux-arm-kernel@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
+From: Michal Koutný <mkoutny@suse.com>
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+commit 9c974c77246460fa6a92c18554c3311c8c83c160 upstream.
+
+PF_EXITING is set earlier than actual removal from css_set when a task
+is exitting. This can confuse cgroup.procs readers who see no PF_EXITING
+tasks, however, rmdir is checking against css_set membership so it can
+transitionally fail with EBUSY.
+
+Fix this by listing tasks that weren't unlinked from css_set active
+lists.
+It may happen that other users of the task iterator (without
+CSS_TASK_ITER_PROCS) spot a PF_EXITING task before cgroup_exit(). This
+is equal to the state before commit c03cd7738a83 ("cgroup: Include dying
+leaders with live threads in PROCS iterations") but it may be reviewed
+later.
+
+Reported-by: Suren Baghdasaryan <surenb@google.com>
+Fixes: c03cd7738a83 ("cgroup: Include dying leaders with live threads in PROCS iterations")
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/linux/cgroup.h |    1 +
+ kernel/cgroup/cgroup.c |   23 ++++++++++++++++-------
+ 2 files changed, 17 insertions(+), 7 deletions(-)
+
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -62,6 +62,7 @@ struct css_task_iter {
+ 	struct list_head		*mg_tasks_head;
+ 	struct list_head		*dying_tasks_head;
+ 
++	struct list_head		*cur_tasks_head;
+ 	struct css_set			*cur_cset;
+ 	struct css_set			*cur_dcset;
+ 	struct task_struct		*cur_task;
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4157,12 +4157,16 @@ static void css_task_iter_advance_css_se
+ 		}
+ 	} while (!css_set_populated(cset) && list_empty(&cset->dying_tasks));
+ 
+-	if (!list_empty(&cset->tasks))
++	if (!list_empty(&cset->tasks)) {
+ 		it->task_pos = cset->tasks.next;
+-	else if (!list_empty(&cset->mg_tasks))
++		it->cur_tasks_head = &cset->tasks;
++	} else if (!list_empty(&cset->mg_tasks)) {
+ 		it->task_pos = cset->mg_tasks.next;
+-	else
++		it->cur_tasks_head = &cset->mg_tasks;
++	} else {
+ 		it->task_pos = cset->dying_tasks.next;
++		it->cur_tasks_head = &cset->dying_tasks;
++	}
+ 
+ 	it->tasks_head = &cset->tasks;
+ 	it->mg_tasks_head = &cset->mg_tasks;
+@@ -4220,10 +4224,14 @@ repeat:
+ 		else
+ 			it->task_pos = it->task_pos->next;
+ 
+-		if (it->task_pos == it->tasks_head)
++		if (it->task_pos == it->tasks_head) {
+ 			it->task_pos = it->mg_tasks_head->next;
+-		if (it->task_pos == it->mg_tasks_head)
++			it->cur_tasks_head = it->mg_tasks_head;
++		}
++		if (it->task_pos == it->mg_tasks_head) {
+ 			it->task_pos = it->dying_tasks_head->next;
++			it->cur_tasks_head = it->dying_tasks_head;
++		}
+ 		if (it->task_pos == it->dying_tasks_head)
+ 			css_task_iter_advance_css_set(it);
+ 	} else {
+@@ -4242,11 +4250,12 @@ repeat:
+ 			goto repeat;
+ 
+ 		/* and dying leaders w/o live member threads */
+-		if (!atomic_read(&task->signal->live))
++		if (it->cur_tasks_head == it->dying_tasks_head &&
++		    !atomic_read(&task->signal->live))
+ 			goto repeat;
+ 	} else {
+ 		/* skip all dying ones */
+-		if (task->flags & PF_EXITING)
++		if (it->cur_tasks_head == it->dying_tasks_head)
+ 			goto repeat;
+ 	}
+ }
+
+
