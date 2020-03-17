@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135E7C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D0EC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D792F2076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F32A20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442804;
-	bh=/o/dZP92oihZTAVHX60MsC00JKR8vTFghzVWUhOiMig=;
+	s=default; t=1584442808;
+	bh=NtVO8LRWjvuQqw8jJnihBjciJWVRxF+cJQoyoevWB6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OsUXfm0RL8hnBSX8CDJzn4yz2gd0L/w7VSBn0tL6iNlzi6A1Are1KSa4Uz4BFuqsp
-	 WbtPxtZqotkDFWPMMq40BX3G0jDIs7fqwA6xqh3Oe62Mqwjy+eA3Cs/DvmkESWMzd3
-	 E5ZC0ITFu/LDEfKk9LevWGoWy+tsKmxzjaXOQG54=
+	b=Dnj3YQoklphPOo3+l1A38NeKU1oe/GBl700kYcWJOCsDt1US0QqFKQjzpGKbmQ00O
+	 uakzb8Y2kniA6U6A6lEBzCRQ+xqmPaYpVypMLaHC75W6CV0wmpPu9whSKM3e8wQDyK
+	 5eXzwCgZBcMqtyq+l71Rt8jBIRmQUo8MqW99jErg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgCQLAE (ORCPT
+        id S1727553AbgCQLAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:00:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38820 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727194AbgCQLAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:00:01 -0400
+        id S1727527AbgCQK74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:59:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8858620719;
-        Tue, 17 Mar 2020 11:00:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67AF620736;
+        Tue, 17 Mar 2020 10:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442801;
-        bh=/o/dZP92oihZTAVHX60MsC00JKR8vTFghzVWUhOiMig=;
+        s=default; t=1584442794;
+        bh=NtVO8LRWjvuQqw8jJnihBjciJWVRxF+cJQoyoevWB6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mOiWT1+WlWg9yWCvC+tRjyWhFkk95tfI94/lvYZopS+e/hOeG3kP8rXychJs4KRRu
-         DF0PZPi/CHsWbkUdUSvaJBahA+lPvsi0V2I5gVVni0b/cQ97dPJH8Tqe+sdmGh8f4Y
-         s6i/46TaWZ4gDG5WN7O7RoAs2D4Q0Ua4F9n9Ql7I=
+        b=TqQyC2KxJdtaGtDjYJKpodCwDkoClWy6sHvYoLJPsIVENsfjkaYNqDQNVDhUHlwYO
+         QV2fr2uYyf12Q0FRmQll8H77YRkF8HcDHx/Tv878jw5Rbc4OJWsIUaPVtLnqG5jZJN
+         NqmUMSG/PQkLYGOZnzQ+3ua3tlchAxuEolAt9V08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 87/89] net/smc: cancel event worker during device removal
-Date:   Tue, 17 Mar 2020 11:55:36 +0100
-Message-Id: <20200317103310.078791449@linuxfoundation.org>
+Subject: [PATCH 4.19 85/89] ipv6: restrict IPV6_ADDRFORM operation
+Date:   Tue, 17 Mar 2020 11:55:34 +0100
+Message-Id: <20200317103309.858616882@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -63,34 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit ece0d7bd74615773268475b6b64d6f1ebbd4b4c6 upstream.
+commit b6f6118901d1e867ac9177bbff3b00b185bd4fdc upstream.
 
-During IB device removal, cancel the event worker before the device
-structure is freed.
+IPV6_ADDRFORM is able to transform IPv6 socket to IPv4 one.
+While this operation sounds illogical, we have to support it.
 
-Fixes: a4cf0443c414 ("smc: introduce SMC as an IB-client")
-Reported-by: syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+One of the things it does for TCP socket is to switch sk->sk_prot
+to tcp_prot.
+
+We now have other layers playing with sk->sk_prot, so we should make
+sure to not interfere with them.
+
+This patch makes sure sk_prot is the default pointer for TCP IPv6 socket.
+
+syzbot reported :
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+PGD a0113067 P4D a0113067 PUD a8771067 PMD 0
+Oops: 0010 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 10686 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
+RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
+RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
+R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
+R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
+FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ inet_release+0x165/0x1c0 net/ipv4/af_inet.c:427
+ __sock_release net/socket.c:605 [inline]
+ sock_close+0xe1/0x260 net/socket.c:1283
+ __fput+0x2e4/0x740 fs/file_table.c:280
+ ____fput+0x15/0x20 fs/file_table.c:313
+ task_work_run+0x176/0x1b0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
+ prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
+ syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
+ do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c429
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f2ae75dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: 0000000000000000 RBX: 00007f2ae75db6d4 RCX: 000000000045c429
+RDX: 0000000000000001 RSI: 000000000000011a RDI: 0000000000000004
+RBP: 000000000076bf20 R08: 0000000000000038 R09: 0000000000000000
+R10: 0000000020000180 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a9d R14: 00000000004ccfb4 R15: 000000000076bf2c
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 82567b5207e87bae ]---
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
+RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
+RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
+R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
+R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
+FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com
+Cc: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/smc/smc_ib.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/ipv6/ipv6_sockglue.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/net/smc/smc_ib.c
-+++ b/net/smc/smc_ib.c
-@@ -561,6 +561,7 @@ static void smc_ib_remove_dev(struct ib_
- 	smc_pnet_remove_by_ibdev(smcibdev);
- 	smc_ib_cleanup_per_ibdev(smcibdev);
- 	ib_unregister_event_handler(&smcibdev->event_handler);
-+	cancel_work_sync(&smcibdev->port_event_work);
- 	kfree(smcibdev);
- }
- 
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -185,9 +185,15 @@ static int do_ipv6_setsockopt(struct soc
+ 					retv = -EBUSY;
+ 					break;
+ 				}
+-			} else if (sk->sk_protocol != IPPROTO_TCP)
++			} else if (sk->sk_protocol == IPPROTO_TCP) {
++				if (sk->sk_prot != &tcpv6_prot) {
++					retv = -EBUSY;
++					break;
++				}
++				break;
++			} else {
+ 				break;
+-
++			}
+ 			if (sk->sk_state != TCP_ESTABLISHED) {
+ 				retv = -ENOTCONN;
+ 				break;
 
 
