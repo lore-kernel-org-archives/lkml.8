@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1903C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B181C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34C820735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9FE20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443291;
-	bh=3r3g4qrAd8skEnz6CZ/AHL7eW1CrI+0E4YH5nwkZL80=;
+	s=default; t=1584443295;
+	bh=k85qS1dz7D1Gw/J97r3Cx0mgyliBrQmg5UUEfHmj71c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ewpEYROAwXLfZKJF8ZetfZA2sMUv0Tsc5qz6HqBlfpQ+8pbzBVpcygzZtouXL/9IJ
-	 Ym7uaieecRlRxzfXnd8buYTKJoexsUFTYAFZnS5q+LIYDEuAhz+zJivxc87XiUpPvo
-	 h/s1yELYvLgI4Gk7sSdsgkIBomU4Q2lLC9egRfJs=
+	b=JIVjVm2kF/h+Pn+fozi+8QdKU6JsBnvbJV68SYOw6xYMV+CESw3XoLowOJzllyeeQ
+	 u7KBSCh3cXhlxQzogXJdmz1cwZNIpIPY2pzLCFLUOvpy16y0pH0AW60BZNBapDqbis
+	 2t0cTqfHI8givhmYtxJouAx2kbuto7fYtD/ypOxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgCQLIK (ORCPT
+        id S1728822AbgCQLIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:08:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49922 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727655AbgCQLIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:08:07 -0400
+        id S1727655AbgCQLIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:08:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5879F20735;
-        Tue, 17 Mar 2020 11:08:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5D4A20719;
+        Tue, 17 Mar 2020 11:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443285;
-        bh=3r3g4qrAd8skEnz6CZ/AHL7eW1CrI+0E4YH5nwkZL80=;
+        s=default; t=1584443290;
+        bh=k85qS1dz7D1Gw/J97r3Cx0mgyliBrQmg5UUEfHmj71c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h0LcYoZO8JBhF92LswWK2MBB2rEcn7CiCAwrHBcRYrbXZHYAiU3SJRHqNyuLhS1RU
-         QZMWvHt8kcTEnuvjMMXrLGh7Qq/HiKYaSj0rzpdgXah4OuEiRxJl2k6qEoqcOeRfI/
-         iV/fl5ksfjDUwR1gPikC6Cs/g7xZJ1xF/eQZ9uPI=
+        b=kn5DCiYbtw0R14BXgzb1zOX/iDm0MuV8vaqkgrr0RI3s4/37uXgXg+2NvFhi2M+P9
+         Q4wB1wIxG9n5yMSGc5ywMbJk3oNplEd5ZzvjMaWl64NmSitWsm2ttNmtYUi79PTvrw
+         TzuHMa+nB5dShPWdwHOy57AVig8jAzAwouh7vLcU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edwin Peer <edwin.peer@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 035/151] bnxt_en: fix error handling when flashing from file
-Date:   Tue, 17 Mar 2020 11:54:05 +0100
-Message-Id: <20200317103329.143842913@linuxfoundation.org>
+Subject: [PATCH 5.5 036/151] cgroup: memcg: net: do not associate sock with unrelated cgroup
+Date:   Tue, 17 Mar 2020 11:54:06 +0100
+Message-Id: <20200317103329.209194152@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,93 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edwin Peer <edwin.peer@broadcom.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-[ Upstream commit 22630e28f9c2b55abd217869cc0696def89f2284 ]
+[ Upstream commit e876ecc67db80dfdb8e237f71e5b43bb88ae549c ]
 
-After bnxt_hwrm_do_send_message() was updated to return standard error
-codes in a recent commit, a regression in bnxt_flash_package_from_file()
-was introduced.  The return value does not properly reflect all
-possible firmware errors when calling firmware to flash the package.
+We are testing network memory accounting in our setup and noticed
+inconsistent network memory usage and often unrelated cgroups network
+usage correlates with testing workload. On further inspection, it
+seems like mem_cgroup_sk_alloc() and cgroup_sk_alloc() are broken in
+irq context specially for cgroup v1.
 
-Fix it by consolidating all errors in one local variable rc instead
-of having 2 variables for different errors.
+mem_cgroup_sk_alloc() and cgroup_sk_alloc() can be called in irq context
+and kind of assumes that this can only happen from sk_clone_lock()
+and the source sock object has already associated cgroup. However in
+cgroup v1, where network memory accounting is opt-in, the source sock
+can be unassociated with any cgroup and the new cloned sock can get
+associated with unrelated interrupted cgroup.
 
-Fixes: d4f1420d3656 ("bnxt_en: Convert error code in firmware message response to standard code.")
-Signed-off-by: Edwin Peer <edwin.peer@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Cgroup v2 can also suffer if the source sock object was created by
+process in the root cgroup or if sk_alloc() is called in irq context.
+The fix is to just do nothing in interrupt.
+
+WARNING: Please note that about half of the TCP sockets are allocated
+from the IRQ context, so, memory used by such sockets will not be
+accouted by the memcg.
+
+The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
+
+CPU: 70 PID: 12720 Comm: ssh Tainted:  5.6.0-smp-DEV #1
+Hardware name: ...
+Call Trace:
+ <IRQ>
+ dump_stack+0x57/0x75
+ mem_cgroup_sk_alloc+0xe9/0xf0
+ sk_clone_lock+0x2a7/0x420
+ inet_csk_clone_lock+0x1b/0x110
+ tcp_create_openreq_child+0x23/0x3b0
+ tcp_v6_syn_recv_sock+0x88/0x730
+ tcp_check_req+0x429/0x560
+ tcp_v6_rcv+0x72d/0xa40
+ ip6_protocol_deliver_rcu+0xc9/0x400
+ ip6_input+0x44/0xd0
+ ? ip6_protocol_deliver_rcu+0x400/0x400
+ ip6_rcv_finish+0x71/0x80
+ ipv6_rcv+0x5b/0xe0
+ ? ip6_sublist_rcv+0x2e0/0x2e0
+ process_backlog+0x108/0x1e0
+ net_rx_action+0x26b/0x460
+ __do_softirq+0x104/0x2a6
+ do_softirq_own_stack+0x2a/0x40
+ </IRQ>
+ do_softirq.part.19+0x40/0x50
+ __local_bh_enable_ip+0x51/0x60
+ ip6_finish_output2+0x23d/0x520
+ ? ip6table_mangle_hook+0x55/0x160
+ __ip6_finish_output+0xa1/0x100
+ ip6_finish_output+0x30/0xd0
+ ip6_output+0x73/0x120
+ ? __ip6_finish_output+0x100/0x100
+ ip6_xmit+0x2e3/0x600
+ ? ipv6_anycast_cleanup+0x50/0x50
+ ? inet6_csk_route_socket+0x136/0x1e0
+ ? skb_free_head+0x1e/0x30
+ inet6_csk_xmit+0x95/0xf0
+ __tcp_transmit_skb+0x5b4/0xb20
+ __tcp_send_ack.part.60+0xa3/0x110
+ tcp_send_ack+0x1d/0x20
+ tcp_rcv_state_process+0xe64/0xe80
+ ? tcp_v6_connect+0x5d1/0x5f0
+ tcp_v6_do_rcv+0x1b1/0x3f0
+ ? tcp_v6_do_rcv+0x1b1/0x3f0
+ __release_sock+0x7f/0xd0
+ release_sock+0x30/0xa0
+ __inet_stream_connect+0x1c3/0x3b0
+ ? prepare_to_wait+0xb0/0xb0
+ inet_stream_connect+0x3b/0x60
+ __sys_connect+0x101/0x120
+ ? __sys_getsockopt+0x11b/0x140
+ __x64_sys_connect+0x1a/0x20
+ do_syscall_64+0x51/0x200
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
+Fixes: 2d7580738345 ("mm: memcontrol: consolidate cgroup socket tracking")
+Fixes: d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c |   24 ++++++++++------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ kernel/cgroup/cgroup.c |    4 ++++
+ mm/memcontrol.c        |    4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -2007,8 +2007,8 @@ int bnxt_flash_package_from_file(struct
- 	struct hwrm_nvm_install_update_output *resp = bp->hwrm_cmd_resp_addr;
- 	struct hwrm_nvm_install_update_input install = {0};
- 	const struct firmware *fw;
--	int rc, hwrm_err = 0;
- 	u32 item_len;
-+	int rc = 0;
- 	u16 index;
- 
- 	bnxt_hwrm_fw_set_time(bp);
-@@ -2052,15 +2052,14 @@ int bnxt_flash_package_from_file(struct
- 			memcpy(kmem, fw->data, fw->size);
- 			modify.host_src_addr = cpu_to_le64(dma_handle);
- 
--			hwrm_err = hwrm_send_message(bp, &modify,
--						     sizeof(modify),
--						     FLASH_PACKAGE_TIMEOUT);
-+			rc = hwrm_send_message(bp, &modify, sizeof(modify),
-+					       FLASH_PACKAGE_TIMEOUT);
- 			dma_free_coherent(&bp->pdev->dev, fw->size, kmem,
- 					  dma_handle);
- 		}
- 	}
- 	release_firmware(fw);
--	if (rc || hwrm_err)
-+	if (rc)
- 		goto err_exit;
- 
- 	if ((install_type & 0xffff) == 0)
-@@ -2069,20 +2068,19 @@ int bnxt_flash_package_from_file(struct
- 	install.install_type = cpu_to_le32(install_type);
- 
- 	mutex_lock(&bp->hwrm_cmd_lock);
--	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
--				      INSTALL_PACKAGE_TIMEOUT);
--	if (hwrm_err) {
-+	rc = _hwrm_send_message(bp, &install, sizeof(install),
-+				INSTALL_PACKAGE_TIMEOUT);
-+	if (rc) {
- 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
- 
- 		if (resp->error_code && error_code ==
- 		    NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
- 			install.flags |= cpu_to_le16(
- 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
--			hwrm_err = _hwrm_send_message(bp, &install,
--						      sizeof(install),
--						      INSTALL_PACKAGE_TIMEOUT);
-+			rc = _hwrm_send_message(bp, &install, sizeof(install),
-+						INSTALL_PACKAGE_TIMEOUT);
- 		}
--		if (hwrm_err)
-+		if (rc)
- 			goto flash_pkg_exit;
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -6263,6 +6263,10 @@ void cgroup_sk_alloc(struct sock_cgroup_
+ 		return;
  	}
  
-@@ -2094,7 +2092,7 @@ int bnxt_flash_package_from_file(struct
- flash_pkg_exit:
- 	mutex_unlock(&bp->hwrm_cmd_lock);
- err_exit:
--	if (hwrm_err == -EACCES)
-+	if (rc == -EACCES)
- 		bnxt_print_admin_err(bp);
- 	return rc;
- }
++	/* Don't associate the sock with unrelated interrupted task's cgroup. */
++	if (in_interrupt())
++		return;
++
+ 	rcu_read_lock();
+ 
+ 	while (true) {
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6697,6 +6697,10 @@ void mem_cgroup_sk_alloc(struct sock *sk
+ 		return;
+ 	}
+ 
++	/* Do not associate the sock with unrelated interrupted task's memcg. */
++	if (in_interrupt())
++		return;
++
+ 	rcu_read_lock();
+ 	memcg = mem_cgroup_from_task(current);
+ 	if (memcg == root_mem_cgroup)
 
 
