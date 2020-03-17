@@ -2,176 +2,192 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DB4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF288C0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04EA020674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC2120674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgCQCpl (ORCPT
+        id S1726759AbgCQCte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 22:45:41 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:54178 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgCQCpk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 22:45:40 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 02H2jR4H015573, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 02H2jR4H015573
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Mar 2020 10:45:27 +0800
-Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 17 Mar 2020 10:45:27 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 17 Mar 2020 10:45:27 +0800
-Received: from RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f]) by
- RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f%6]) with mapi id
- 15.01.1779.005; Tue, 17 Mar 2020 10:45:27 +0800
-From:   =?utf-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH] mmc: rtsx: Fixed TX/RX register and optimized TX parameter
-Thread-Topic: [PATCH] mmc: rtsx: Fixed TX/RX register and optimized TX
- parameter
-Thread-Index: AQHV+z30nU3JcV+G+EOJUvxdmVETS6hKvoSAgAFTfeA=
-Date:   Tue, 17 Mar 2020 02:45:26 +0000
-Message-ID: <6196929373bb43c8b8fbc550ad41e1fc@realtek.com>
-References: <20200316025232.1167-1-ricky_wu@realtek.com>
- <CAPDyKFrWedEmZ=0trPEG8Z-11nyFX6_OB3cx7+SAdB5VW_vzgQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFrWedEmZ=0trPEG8Z-11nyFX6_OB3cx7+SAdB5VW_vzgQ@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.88.99]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 16 Mar 2020 22:49:34 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52714 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726343AbgCQCte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 22:49:34 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id AC9D0E0409BF2661E9C8;
+        Tue, 17 Mar 2020 10:49:28 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 17 Mar 2020
+ 10:49:20 +0800
+Subject: Re: [PATCH v5 16/23] irqchip/gic-v4.1: Eagerly vmap vPEs
+To:     Marc Zyngier <maz@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-17-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <2817cb89-4cc2-549f-6e40-91d941aa8a5f@huawei.com>
+Date:   Tue, 17 Mar 2020 10:49:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
+In-Reply-To: <20200304203330.4967-17-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFVsZiBIYW5zc29uIFttYWls
-dG86dWxmLmhhbnNzb25AbGluYXJvLm9yZ10NCj4gU2VudDogTW9uZGF5LCBNYXJjaCAxNiwgMjAy
-MCAxMDoxNyBQTQ0KPiBUbzog5ZCz5piK5r6EIFJpY2t5DQo+IENjOiBsaW51eC1tbWNAdmdlci5r
-ZXJuZWwub3JnOyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0OyBBcm5kIEJlcmdtYW5uOyBHcmVn
-DQo+IEtyb2FoLUhhcnRtYW4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gbW1jOiBydHN4OiBGaXhl
-ZCBUWC9SWCByZWdpc3RlciBhbmQgb3B0aW1pemVkIFRYDQo+IHBhcmFtZXRlcg0KPiANCj4gT24g
-TW9uLCAxNiBNYXIgMjAyMCBhdCAwMzo1MiwgPHJpY2t5X3d1QHJlYWx0ZWsuY29tPiB3cm90ZToN
-Cj4gPg0KPiA+IEZyb206IFJpY2t5IFd1IDxyaWNreV93dUByZWFsdGVrLmNvbT4NCj4gPg0KPiA+
-IEZpeGVkIHNkX2NoYW5nZV9waGFzZSBUWC9SWCByZWdpc3Rlcg0KPiA+IE9wdGltaXplZCBydHM1
-MjJhIHJ0czUyNGEgcnRzNTI1YSBydHM1MjYwIHJ0czUyNjEgVFggaW5pdGlhbCBwYXJhbWV0ZXIN
-Cj4gDQo+IEkgZG9uJ3QgdW5kZXJzdGFuZCB3aGF0IHRoaXMgYWN0dWFsbHkgZml4ZXMuIENhbiB5
-b3UgdHJ5IHRvIGVsYWJvcmF0ZQ0KPiBhIGJpdCBvbiB0aGlzLCBwbGVhc2U/DQo+IA0KPiBEbyB5
-b3UgdGhpbmsgdGhpcyBpcyBuZWVkZWQgZm9yIHN0YWJsZSwgdGhlbiB3aHk/DQoNClllcywgSSB0
-aGluayBpdCBuZWVkIHBhdGNoIHRvIHN0YWJsZQ0KDQpJbiBmdW5jdGlvbiBzZF9jaGFuZ2VfcGhh
-c2UoKSB3aGV0aGVyIGl0IGlzIFRYIG9yIFJYIGFsd2F5cyB3cml0ZSB0aGUgc2FtZSByZWdpc3Rl
-cihUWCksIHNvIHBhdGNoIHRoaXMgZnVuY3Rpb24gbWFrZSBSWCBhbmQgVFggY2FuIGNoYW5nZSB3
-ZWxsLg0KQXQgbW1jIHN0YWNrIG1lY2hhbmlzbSBkbyBub3QgdHVuaW5nIFRYIHBoYXNlLCBzbyBu
-ZWVkIGdpdmUgYSBzdGFibGUgcGFyYW1ldGVyIGZvciBUWCBwaGFzZShzZHIxMDQgc2RyNTAgZGRy
-NTApIGF0IGluaXRpYWwuIA0KDQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0KPiANCj4gPg0K
-PiA+IFNpZ25lZC1vZmYtYnk6IFJpY2t5IFd1IDxyaWNreV93dUByZWFsdGVrLmNvbT4NCj4gPiAt
-LS0NCj4gPiAgZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTIyNy5jIHwgIDIgKy0NCj4gPiAg
-ZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI0OS5jIHwgIDIgKysNCj4gPiAgZHJpdmVycy9t
-aXNjL2NhcmRyZWFkZXIvcnRzNTI2MC5jIHwgIDIgKy0NCj4gPiAgZHJpdmVycy9taXNjL2NhcmRy
-ZWFkZXIvcnRzNTI2MS5jIHwgIDIgKy0NCj4gPiAgZHJpdmVycy9tbWMvaG9zdC9ydHN4X3BjaV9z
-ZG1tYy5jIHwgMTMgKysrKysrKystLS0tLQ0KPiA+ICA1IGZpbGVzIGNoYW5nZWQsIDEzIGluc2Vy
-dGlvbnMoKyksIDggZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
-aXNjL2NhcmRyZWFkZXIvcnRzNTIyNy5jDQo+IGIvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRz
-NTIyNy5jDQo+ID4gaW5kZXggNGZlZWQyOTZhMzI3Li40MjNmZWNjMTlmYzQgMTAwNjQ0DQo+ID4g
-LS0tIGEvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTIyNy5jDQo+ID4gKysrIGIvZHJpdmVy
-cy9taXNjL2NhcmRyZWFkZXIvcnRzNTIyNy5jDQo+ID4gQEAgLTM5NCw3ICszOTQsNyBAQCBzdGF0
-aWMgY29uc3Qgc3RydWN0IHBjcl9vcHMgcnRzNTIyYV9wY3Jfb3BzID0gew0KPiA+ICB2b2lkIHJ0
-czUyMmFfaW5pdF9wYXJhbXMoc3RydWN0IHJ0c3hfcGNyICpwY3IpDQo+ID4gIHsNCj4gPiAgICAg
-ICAgIHJ0czUyMjdfaW5pdF9wYXJhbXMocGNyKTsNCj4gPiAtDQo+ID4gKyAgICAgICBwY3ItPnR4
-X2luaXRpYWxfcGhhc2UgPSBTRVRfQ0xPQ0tfUEhBU0UoMjAsIDIwLCAxMSk7DQo+ID4gICAgICAg
-ICBwY3ItPnJlZ19wbV9jdHJsMyA9IFJUUzUyMkFfUE1fQ1RSTDM7DQo+ID4NCj4gPiAgICAgICAg
-IHBjci0+b3B0aW9uLm9jcF9lbiA9IDE7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9j
-YXJkcmVhZGVyL3J0czUyNDkuYw0KPiBiL2RyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0czUyNDku
-Yw0KPiA+IGluZGV4IGRiOTM2ZTRkNmU1Ni4uMWE4MWNkYTk0OGMxIDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0czUyNDkuYw0KPiA+ICsrKyBiL2RyaXZlcnMvbWlz
-Yy9jYXJkcmVhZGVyL3J0czUyNDkuYw0KPiA+IEBAIC02MTgsNiArNjE4LDcgQEAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBwY3Jfb3BzIHJ0czUyNGFfcGNyX29wcyA9IHsNCj4gPiAgdm9pZCBydHM1MjRh
-X2luaXRfcGFyYW1zKHN0cnVjdCBydHN4X3BjciAqcGNyKQ0KPiA+ICB7DQo+ID4gICAgICAgICBy
-dHM1MjQ5X2luaXRfcGFyYW1zKHBjcik7DQo+ID4gKyAgICAgICBwY3ItPnR4X2luaXRpYWxfcGhh
-c2UgPSBTRVRfQ0xPQ0tfUEhBU0UoMjcsIDI5LCAxMSk7DQo+ID4gICAgICAgICBwY3ItPm9wdGlv
-bi5sdHJfbDFvZmZfc3Nwd3JnYXRlID0NCj4gTFRSX0wxT0ZGX1NTUFdSR0FURV81MjUwX0RFRjsN
-Cj4gPiAgICAgICAgIHBjci0+b3B0aW9uLmx0cl9sMW9mZl9zbm9vemVfc3Nwd3JnYXRlID0NCj4g
-PiAgICAgICAgICAgICAgICAgTFRSX0wxT0ZGX1NOT09aRV9TU1BXUkdBVEVfNTI1MF9ERUY7DQo+
-ID4gQEAgLTczMyw2ICs3MzQsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjcl9vcHMgcnRzNTI1
-YV9wY3Jfb3BzID0gew0KPiA+ICB2b2lkIHJ0czUyNWFfaW5pdF9wYXJhbXMoc3RydWN0IHJ0c3hf
-cGNyICpwY3IpDQo+ID4gIHsNCj4gPiAgICAgICAgIHJ0czUyNDlfaW5pdF9wYXJhbXMocGNyKTsN
-Cj4gPiArICAgICAgIHBjci0+dHhfaW5pdGlhbF9waGFzZSA9IFNFVF9DTE9DS19QSEFTRSgyNSwg
-MjksIDExKTsNCj4gPiAgICAgICAgIHBjci0+b3B0aW9uLmx0cl9sMW9mZl9zc3B3cmdhdGUgPQ0K
-PiBMVFJfTDFPRkZfU1NQV1JHQVRFXzUyNTBfREVGOw0KPiA+ICAgICAgICAgcGNyLT5vcHRpb24u
-bHRyX2wxb2ZmX3Nub296ZV9zc3B3cmdhdGUgPQ0KPiA+ICAgICAgICAgICAgICAgICBMVFJfTDFP
-RkZfU05PT1pFX1NTUFdSR0FURV81MjUwX0RFRjsNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
-aXNjL2NhcmRyZWFkZXIvcnRzNTI2MC5jDQo+IGIvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRz
-NTI2MC5jDQo+ID4gaW5kZXggNDIxNGYwMmExN2ZkLi43MTEwNTRlYmFkNzQgMTAwNjQ0DQo+ID4g
-LS0tIGEvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MC5jDQo+ID4gKysrIGIvZHJpdmVy
-cy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MC5jDQo+ID4gQEAgLTY2Miw3ICs2NjIsNyBAQCB2b2lk
-IHJ0czUyNjBfaW5pdF9wYXJhbXMoc3RydWN0IHJ0c3hfcGNyICpwY3IpDQo+ID4gICAgICAgICBw
-Y3ItPnNkMzBfZHJpdmVfc2VsXzF2OCA9IENGR19EUklWRVJfVFlQRV9COw0KPiA+ICAgICAgICAg
-cGNyLT5zZDMwX2RyaXZlX3NlbF8zdjMgPSBDRkdfRFJJVkVSX1RZUEVfQjsNCj4gPiAgICAgICAg
-IHBjci0+YXNwbV9lbiA9IEFTUE1fTDFfRU47DQo+ID4gLSAgICAgICBwY3ItPnR4X2luaXRpYWxf
-cGhhc2UgPSBTRVRfQ0xPQ0tfUEhBU0UoMSwgMjksIDE2KTsNCj4gPiArICAgICAgIHBjci0+dHhf
-aW5pdGlhbF9waGFzZSA9IFNFVF9DTE9DS19QSEFTRSgyNywgMjksIDExKTsNCj4gPiAgICAgICAg
-IHBjci0+cnhfaW5pdGlhbF9waGFzZSA9IFNFVF9DTE9DS19QSEFTRSgyNCwgNiwgNSk7DQo+ID4N
-Cj4gPiAgICAgICAgIHBjci0+aWNfdmVyc2lvbiA9IHJ0czUyNjBfZ2V0X2ljX3ZlcnNpb24ocGNy
-KTsNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MS5jDQo+
-IGIvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MS5jDQo+ID4gaW5kZXggYmM0OTY3YTZl
-ZmExLi43OGMzYjFkNDI0YzMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9taXNjL2NhcmRyZWFk
-ZXIvcnRzNTI2MS5jDQo+ID4gKysrIGIvZHJpdmVycy9taXNjL2NhcmRyZWFkZXIvcnRzNTI2MS5j
-DQo+ID4gQEAgLTc2NCw3ICs3NjQsNyBAQCB2b2lkIHJ0czUyNjFfaW5pdF9wYXJhbXMoc3RydWN0
-IHJ0c3hfcGNyICpwY3IpDQo+ID4gICAgICAgICBwY3ItPnNkMzBfZHJpdmVfc2VsXzF2OCA9IENG
-R19EUklWRVJfVFlQRV9COw0KPiA+ICAgICAgICAgcGNyLT5zZDMwX2RyaXZlX3NlbF8zdjMgPSBD
-RkdfRFJJVkVSX1RZUEVfQjsNCj4gPiAgICAgICAgIHBjci0+YXNwbV9lbiA9IEFTUE1fTDFfRU47
-DQo+ID4gLSAgICAgICBwY3ItPnR4X2luaXRpYWxfcGhhc2UgPSBTRVRfQ0xPQ0tfUEhBU0UoMjAs
-IDI3LCAxNik7DQo+ID4gKyAgICAgICBwY3ItPnR4X2luaXRpYWxfcGhhc2UgPSBTRVRfQ0xPQ0tf
-UEhBU0UoMjcsIDI3LCAxMSk7DQo+ID4gICAgICAgICBwY3ItPnJ4X2luaXRpYWxfcGhhc2UgPSBT
-RVRfQ0xPQ0tfUEhBU0UoMjQsIDYsIDUpOw0KPiA+DQo+ID4gICAgICAgICBwY3ItPmljX3ZlcnNp
-b24gPSBydHM1MjYxX2dldF9pY192ZXJzaW9uKHBjcik7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvbW1jL2hvc3QvcnRzeF9wY2lfc2RtbWMuYw0KPiBiL2RyaXZlcnMvbW1jL2hvc3QvcnRzeF9w
-Y2lfc2RtbWMuYw0KPiA+IGluZGV4IGJkNTA5MzVkYzM3ZC4uMTEwODc5NzZhYjE5IDEwMDY0NA0K
-PiA+IC0tLSBhL2RyaXZlcnMvbW1jL2hvc3QvcnRzeF9wY2lfc2RtbWMuYw0KPiA+ICsrKyBiL2Ry
-aXZlcnMvbW1jL2hvc3QvcnRzeF9wY2lfc2RtbWMuYw0KPiA+IEBAIC02MDYsMTkgKzYwNiwyMiBA
-QCBzdGF0aWMgaW50IHNkX2NoYW5nZV9waGFzZShzdHJ1Y3QNCj4gcmVhbHRla19wY2lfc2RtbWMg
-Kmhvc3QsDQo+ID4gICAgICAgICAgICAgICAgIHU4IHNhbXBsZV9wb2ludCwgYm9vbCByeCkNCj4g
-PiAgew0KPiA+ICAgICAgICAgc3RydWN0IHJ0c3hfcGNyICpwY3IgPSBob3N0LT5wY3I7DQo+ID4g
-LQ0KPiA+ICsgICAgICAgdTE2IFNEX1ZQX0NUTCA9IDA7DQo+ID4gICAgICAgICBkZXZfZGJnKHNk
-bW1jX2Rldihob3N0KSwgIiVzKCVzKTogc2FtcGxlX3BvaW50ID0gJWRcbiIsDQo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgX19mdW5jX18sIHJ4ID8gIlJYIiA6ICJUWCIsIHNhbXBsZV9wb2lu
-dCk7DQo+ID4NCj4gPiAgICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lzdGVyKHBjciwgQ0xLX0NU
-TCwgQ0hBTkdFX0NMSywgQ0hBTkdFX0NMSyk7DQo+ID4gLSAgICAgICBpZiAocngpDQo+ID4gKyAg
-ICAgICBpZiAocngpIHsNCj4gPiArICAgICAgICAgICAgICAgU0RfVlBfQ1RMID0gU0RfVlBSWF9D
-VEw7DQo+ID4gICAgICAgICAgICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lzdGVyKHBjciwgU0Rf
-VlBSWF9DVEwsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgUEhBU0VfU0VMRUNUX01BU0ss
-IHNhbXBsZV9wb2ludCk7DQo+ID4gLSAgICAgICBlbHNlDQo+ID4gKyAgICAgICB9IGVsc2Ugew0K
-PiA+ICsgICAgICAgICAgICAgICBTRF9WUF9DVEwgPSBTRF9WUFRYX0NUTDsNCj4gPiAgICAgICAg
-ICAgICAgICAgcnRzeF9wY2lfd3JpdGVfcmVnaXN0ZXIocGNyLCBTRF9WUFRYX0NUTCwNCj4gPiAg
-ICAgICAgICAgICAgICAgICAgICAgICBQSEFTRV9TRUxFQ1RfTUFTSywgc2FtcGxlX3BvaW50KTsN
-Cj4gPiAtICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lzdGVyKHBjciwgU0RfVlBDTEswX0NUTCwg
-UEhBU0VfTk9UX1JFU0VULCAwKTsNCj4gPiAtICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lzdGVy
-KHBjciwgU0RfVlBDTEswX0NUTCwgUEhBU0VfTk9UX1JFU0VULA0KPiA+ICsgICAgICAgfQ0KPiA+
-ICsgICAgICAgcnRzeF9wY2lfd3JpdGVfcmVnaXN0ZXIocGNyLCBTRF9WUF9DVEwsIFBIQVNFX05P
-VF9SRVNFVCwgMCk7DQo+ID4gKyAgICAgICBydHN4X3BjaV93cml0ZV9yZWdpc3RlcihwY3IsIFNE
-X1ZQX0NUTCwgUEhBU0VfTk9UX1JFU0VULA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgUEhBU0VfTk9UX1JFU0VUKTsNCj4gPiAgICAgICAgIHJ0c3hfcGNpX3dyaXRlX3JlZ2lz
-dGVyKHBjciwgQ0xLX0NUTCwgQ0hBTkdFX0NMSywgMCk7DQo+ID4gICAgICAgICBydHN4X3BjaV93
-cml0ZV9yZWdpc3RlcihwY3IsIFNEX0NGRzEsIFNEX0FTWU5DX0ZJRk9fTk9UX1JTVCwNCj4gMCk7
-DQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRo
-ZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
+Hi Marc,
+
+On 2020/3/5 4:33, Marc Zyngier wrote:
+> Now that we have HW-accelerated SGIs being delivered to VPEs, it
+> becomes required to map the VPEs on all ITSs instead of relying
+> on the lazy approach that we would use when using the ITS-list
+> mechanism.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+
+Before GICv4.1, we use vlpi_count to evaluate whether the vPE has been
+mapped on the specified ITS, and use this refcount to only issue VMOVP
+to those involved ITSes. It's broken after this patch.
+
+We may need to re-evaluate "whether the vPE is mapped" now that we're at
+GICv4.1, otherwise *no* VMOVP will be issued on the v4.1 capable machine
+(I mean those without single VMOVP support).
+
+What I'm saying is something like below (only an idea, it even can't
+compile), any thoughts?
+
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+b/drivers/irqchip/irq-gic-v3-its.c
+index 2e12bc52e3a2..3450b5e847ca 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -198,7 +198,8 @@ static u16 get_its_list(struct its_vm *vm)
+  		if (!is_v4(its))
+  			continue;
+
+-		if (vm->vlpi_count[its->list_nr])
++		if (vm->vlpi_count[its->list_nr] ||
++		    gic_requires_eager_mapping())
+  			__set_bit(its->list_nr, &its_list);
+  	}
+
+@@ -1295,7 +1296,8 @@ static void its_send_vmovp(struct its_vpe *vpe)
+  		if (!is_v4(its))
+  			continue;
+
+-		if (!vpe->its_vm->vlpi_count[its->list_nr])
++		if (!vpe->its_vm->vlpi_count[its->list_nr] &&
++		    !gic_requires_eager_mapping())
+  			continue;
+
+  		desc.its_vmovp_cmd.col = &its->collections[col_id];
+
+
+Thanks,
+Zenghui
+
+> ---
+>   drivers/irqchip/irq-gic-v3-its.c | 39 +++++++++++++++++++++++++-------
+>   1 file changed, 31 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index b65fba67bd85..6277b3e3731f 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -1586,12 +1586,31 @@ static int its_irq_set_irqchip_state(struct irq_data *d,
+>   	return 0;
+>   }
+>   
+> +/*
+> + * Two favourable cases:
+> + *
+> + * (a) Either we have a GICv4.1, and all vPEs have to be mapped at all times
+> + *     for vSGI delivery
+> + *
+> + * (b) Or the ITSs do not use a list map, meaning that VMOVP is cheap enough
+> + *     and we're better off mapping all VPEs always
+> + *
+> + * If neither (a) nor (b) is true, then we map vPEs on demand.
+> + *
+> + */
+> +static bool gic_requires_eager_mapping(void)
+> +{
+> +	if (!its_list_map || gic_rdists->has_rvpeid)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>   static void its_map_vm(struct its_node *its, struct its_vm *vm)
+>   {
+>   	unsigned long flags;
+>   
+> -	/* Not using the ITS list? Everything is always mapped. */
+> -	if (!its_list_map)
+> +	if (gic_requires_eager_mapping())
+>   		return;
+>   
+>   	raw_spin_lock_irqsave(&vmovp_lock, flags);
+> @@ -1625,7 +1644,7 @@ static void its_unmap_vm(struct its_node *its, struct its_vm *vm)
+>   	unsigned long flags;
+>   
+>   	/* Not using the ITS list? Everything is always mapped. */
+> -	if (!its_list_map)
+> +	if (gic_requires_eager_mapping())
+>   		return;
+>   
+>   	raw_spin_lock_irqsave(&vmovp_lock, flags);
+> @@ -4260,8 +4279,12 @@ static int its_vpe_irq_domain_activate(struct irq_domain *domain,
+>   	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+>   	struct its_node *its;
+>   
+> -	/* If we use the list map, we issue VMAPP on demand... */
+> -	if (its_list_map)
+> +	/*
+> +	 * If we use the list map, we issue VMAPP on demand... Unless
+> +	 * we're on a GICv4.1 and we eagerly map the VPE on all ITSs
+> +	 * so that VSGIs can work.
+> +	 */
+> +	if (!gic_requires_eager_mapping())
+>   		return 0;
+>   
+>   	/* Map the VPE to the first possible CPU */
+> @@ -4287,10 +4310,10 @@ static void its_vpe_irq_domain_deactivate(struct irq_domain *domain,
+>   	struct its_node *its;
+>   
+>   	/*
+> -	 * If we use the list map, we unmap the VPE once no VLPIs are
+> -	 * associated with the VM.
+> +	 * If we use the list map on GICv4.0, we unmap the VPE once no
+> +	 * VLPIs are associated with the VM.
+>   	 */
+> -	if (its_list_map)
+> +	if (!gic_requires_eager_mapping())
+>   		return;
+>   
+>   	list_for_each_entry(its, &its_nodes, entry) {
+> 
+
