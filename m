@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BB2C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD2AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A939220658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A55520658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442685;
-	bh=1gX4O/L3WbZgkcCLkjDlA5gGibw+XJYIraZw8YLJn8U=;
+	s=default; t=1584442689;
+	bh=pSEs/hEnsGS9DdFtBvKtx6cusZIGkWIBMY4c2zhPwDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGoruQfaK586YbHVEXGV1PiwRnkIkvSnxDjCP6XiuxMMgpn+j0nFh5sCS3M8CTnhi
-	 bzc7S1UeAmZqtGdubwt2y1Mz5KDnZN0H6eVzT10r1XSPQj1nL/ZbF4+HbMF/4Ri4lY
-	 28GP0xc8ErNO0hGoAkkQ5XYAbiat6NwTVM7JRCy0=
+	b=GKTyIuVkc38tFkqtr23ckjDbqWd+cqq+uerdhRpr1qWr0DMcTRHxmOLduK/3pbSPt
+	 9wZ8N8IUjezns6aM/T6HPoU/jL8LtDnFniHY5E0P4kl/PwrEvjj4lPFJq4T1pfU+ZK
+	 0sbAjbHHDn9p3/VJVJCCNsTZIT6GTm12TTFdq+ZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgCQK6E (ORCPT
+        id S1727174AbgCQK6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36022 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:58:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgCQK6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:58:00 -0400
+        id S1727140AbgCQK6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:58:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F63120714;
-        Tue, 17 Mar 2020 10:57:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACF4F20714;
+        Tue, 17 Mar 2020 10:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442679;
-        bh=1gX4O/L3WbZgkcCLkjDlA5gGibw+XJYIraZw8YLJn8U=;
+        s=default; t=1584442686;
+        bh=pSEs/hEnsGS9DdFtBvKtx6cusZIGkWIBMY4c2zhPwDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VEhGLTCE3LRCpBSd/eE0VET3C1+/++NJUD9/EH0LWhRGBiCEgP0BCUO0DGTLGy5Bj
-         hSGxuZ5R6HM/wiJ1+sRtEprftNFhKMckaZe/R2doQgAw5ApMUToaBIJAymG/GspXkZ
-         2jtjjQqmAVVISRqmOcz5265bGOFqz4GHqYhcGojQ=
+        b=BfRfA1i1yCgKxyDhjbWUBTF2GL++757CyIPFsjU0raI+zrfHrM7bFSrLT+XdLvUMD
+         l2KlfcP+O2dQ2HeJtE/WPdkgW7h0L2exEG4R12dyYXF2a5fj5ufhBDCvAhNzM6s5xx
+         ARh7vnnmD5teUjNBpumvJqeLOLZh6yKTLa8qvxG4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.19 46/89] cgroup: cgroup_procs_next should increase position index
-Date:   Tue, 17 Mar 2020 11:54:55 +0100
-Message-Id: <20200317103305.250175275@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 30/89] net: fq: add missing attribute validation for orphan mask
+Date:   Tue, 17 Mar 2020 11:54:39 +0100
+Message-Id: <20200317103303.358565638@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -59,85 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit 2d4ecb030dcc90fb725ecbfc82ce5d6c37906e0e upstream.
+[ Upstream commit 7e6dc03eeb023e18427a373522f1d247b916a641 ]
 
-If seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output:
+Add missing attribute validation for TCA_FQ_ORPHAN_MASK
+to the netlink policy.
 
-1) dd bs=1 skip output of each 2nd elements
-$ dd if=/sys/fs/cgroup/cgroup.procs bs=8 count=1
-2
-3
-4
-5
-1+0 records in
-1+0 records out
-8 bytes copied, 0,000267297 s, 29,9 kB/s
-[test@localhost ~]$ dd if=/sys/fs/cgroup/cgroup.procs bs=1 count=8
-2
-4 <<< NB! 3 was skipped
-6 <<<    ... and 5 too
-8 <<<    ... and 7
-8+0 records in
-8+0 records out
-8 bytes copied, 5,2123e-05 s, 153 kB/s
-
- This happen because __cgroup_procs_start() makes an extra
- extra cgroup_procs_next() call
-
-2) read after lseek beyond end of file generates whole last line.
-3) read after lseek into middle of last line generates
-expected rest of last line and unexpected whole line once again.
-
-Additionally patch removes an extra position index changes in
-__cgroup_procs_start()
-
-Cc: stable@vger.kernel.org
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 06eb395fa985 ("pkt_sched: fq: better control of DDOS traffic")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/cgroup/cgroup.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/sched/sch_fq.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4355,6 +4355,9 @@ static void *cgroup_procs_next(struct se
- 	struct kernfs_open_file *of = s->private;
- 	struct css_task_iter *it = of->priv;
+--- a/net/sched/sch_fq.c
++++ b/net/sched/sch_fq.c
+@@ -695,6 +695,7 @@ static const struct nla_policy fq_policy
+ 	[TCA_FQ_FLOW_MAX_RATE]		= { .type = NLA_U32 },
+ 	[TCA_FQ_BUCKETS_LOG]		= { .type = NLA_U32 },
+ 	[TCA_FQ_FLOW_REFILL_DELAY]	= { .type = NLA_U32 },
++	[TCA_FQ_ORPHAN_MASK]		= { .type = NLA_U32 },
+ 	[TCA_FQ_LOW_RATE_THRESHOLD]	= { .type = NLA_U32 },
+ };
  
-+	if (pos)
-+		(*pos)++;
-+
- 	return css_task_iter_next(it);
- }
- 
-@@ -4370,7 +4373,7 @@ static void *__cgroup_procs_start(struct
- 	 * from position 0, so we can simply keep iterating on !0 *pos.
- 	 */
- 	if (!it) {
--		if (WARN_ON_ONCE((*pos)++))
-+		if (WARN_ON_ONCE((*pos)))
- 			return ERR_PTR(-EINVAL);
- 
- 		it = kzalloc(sizeof(*it), GFP_KERNEL);
-@@ -4378,10 +4381,11 @@ static void *__cgroup_procs_start(struct
- 			return ERR_PTR(-ENOMEM);
- 		of->priv = it;
- 		css_task_iter_start(&cgrp->self, iter_flags, it);
--	} else if (!(*pos)++) {
-+	} else if (!(*pos)) {
- 		css_task_iter_end(it);
- 		css_task_iter_start(&cgrp->self, iter_flags, it);
--	}
-+	} else
-+		return it->cur_task;
- 
- 	return cgroup_procs_next(s, NULL, NULL);
- }
 
 
