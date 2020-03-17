@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86639C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BF1C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A3820658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5766E20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443053;
-	bh=87iGYbUFYnXZn/jfFHK/iZmHuyFDjhO8WQ4ifoPD9mk=;
+	s=default; t=1584443056;
+	bh=eFg44DtLtx240mxrbqaeZnXCo/psQRsqmlQBJ5JYo0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KUSGrfCgILnYOw7u0ygx5oNU6Z8i0PcFCxmhlwwe7nz1+UsxXhicnrlr8bpv/9D4H
-	 AsvOZ0NLTBntaH+iB/irdqFAS70DsoDyfFGjwlhkau7FzdXaLJylRtxlyg+Za0yY0k
-	 xenhmFTHI64N66iO9xmtLXI8pIsHiMSlfELCFY1g=
+	b=GsrN1ma0emvpcLXRKmq0lYkBSfrDwf4zMt7pFMP9Hu0It/VfmPHokurXittqCId/q
+	 dQQkJniKDNHu8rrnciLSwFB54Ao1aIo9uEAOo8hZk3VX7iRO4FLQDGGQFlGUhsXucw
+	 uOL5zcRtVXYGcGxCl6jBXEP4jhoc/CuLRaRMmkLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgCQLEM (ORCPT
+        id S1728255AbgCQLEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44244 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728232AbgCQLEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:09 -0400
+        id S1728239AbgCQLEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 704E920658;
-        Tue, 17 Mar 2020 11:04:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D5DE2071C;
+        Tue, 17 Mar 2020 11:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443048;
-        bh=87iGYbUFYnXZn/jfFHK/iZmHuyFDjhO8WQ4ifoPD9mk=;
+        s=default; t=1584443051;
+        bh=eFg44DtLtx240mxrbqaeZnXCo/psQRsqmlQBJ5JYo0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1e3laMlXUTghUZhbmw1YYnyLSrzHOzQShmjElXQuKGEVY3SNuhcaCUXCfCfaMvhv
-         OzM0sACRmgjRlcV16YtbmFXjyccsRs1/HvZBIdQI01nBVCPhM9EoOaQA9mI43kChMk
-         PVJGAiTHcQuDvhpgxsKuJnHG1AWDcvQleQ80Azmo=
+        b=b4cCgf+ML4bguZIMMa2/WvRNSWWK4yXYoWkZ1WI75o3LCKY4my/ZDLYSTu0u4G1Fk
+         ZLKr5dArFxwMrwFFrLs49Lch8cd8L8mMDcd4BG2aZN2sVf8iRcpSrhuij5DfH6Cf7p
+         xMmRjKly+9fciFBz3VhZfW0n5GofMezaAnDT2mK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 031/123] bnxt_en: reinitialize IRQs when MTU is modified
-Date:   Tue, 17 Mar 2020 11:54:18 +0100
-Message-Id: <20200317103311.071012717@linuxfoundation.org>
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 072/123] mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x
+Date:   Tue, 17 Mar 2020 11:54:59 +0100
+Message-Id: <20200317103314.868379683@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -61,45 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
+commit 31e43f31890ca6e909b27dcb539252b46aa465da upstream.
 
-MTU changes may affect the number of IRQs so we must call
-bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
-set to true.  The reason is that a larger MTU may require
-aggregation rings not needed with smaller MTU.  We may not be
-able to allocate the required number of aggregation rings and
-so we reduce the number of channels which will change the number
-of IRQs.  Without this patch, it may crash eventually in
-pci_disable_msix() when the IRQs are not properly unwound.
+Enable MSI interrupt for GL9750/GL9755. Some platforms
+do not support PCI INTx and devices can not work without
+interrupt. Like messages below:
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[    4.487132] sdhci-pci 0000:01:00.0: SDHCI controller found [17a0:9755] (rev 0)
+[    4.487198] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.PBR2._PRT.APS2], AE_NOT_FOUND (20190816/psargs-330)
+[    4.487397] ACPI Error: Aborting method \_SB.PCI0.PBR2._PRT due to previous error (AE_NOT_FOUND) (20190816/psparse-529)
+[    4.487707] pcieport 0000:00:01.3: can't derive routing for PCI INT A
+[    4.487709] sdhci-pci 0000:01:00.0: PCI INT A: no GSI
+
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Tested-by: Raul E Rangel <rrangel@chromium.org>
+Fixes: e51df6ce668a ("mmc: host: sdhci-pci: Add Genesys Logic GL975x support")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200219092900.9151-1-benchuanggli@gmail.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -10891,13 +10891,13 @@ static int bnxt_change_mtu(struct net_de
- 	struct bnxt *bp = netdev_priv(dev);
- 
- 	if (netif_running(dev))
--		bnxt_close_nic(bp, false, false);
-+		bnxt_close_nic(bp, true, false);
- 
- 	dev->mtu = new_mtu;
- 	bnxt_set_ring_params(bp);
- 
- 	if (netif_running(dev))
--		return bnxt_open_nic(bp, false, false);
-+		return bnxt_open_nic(bp, true, false);
- 
+---
+ drivers/mmc/host/sdhci-pci-gli.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+--- a/drivers/mmc/host/sdhci-pci-gli.c
++++ b/drivers/mmc/host/sdhci-pci-gli.c
+@@ -262,10 +262,26 @@ static int gl9750_execute_tuning(struct
  	return 0;
  }
+ 
++static void gli_pcie_enable_msi(struct sdhci_pci_slot *slot)
++{
++	int ret;
++
++	ret = pci_alloc_irq_vectors(slot->chip->pdev, 1, 1,
++				    PCI_IRQ_MSI | PCI_IRQ_MSIX);
++	if (ret < 0) {
++		pr_warn("%s: enable PCI MSI failed, error=%d\n",
++		       mmc_hostname(slot->host->mmc), ret);
++		return;
++	}
++
++	slot->host->irq = pci_irq_vector(slot->chip->pdev, 0);
++}
++
+ static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
+ {
+ 	struct sdhci_host *host = slot->host;
+ 
++	gli_pcie_enable_msi(slot);
+ 	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
+ 	sdhci_enable_v4_mode(host);
+ 
+@@ -276,6 +292,7 @@ static int gli_probe_slot_gl9755(struct
+ {
+ 	struct sdhci_host *host = slot->host;
+ 
++	gli_pcie_enable_msi(slot);
+ 	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
+ 	sdhci_enable_v4_mode(host);
+ 
 
 
