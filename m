@@ -2,145 +2,179 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2909EC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193A1C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01CE3206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29C820735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:18:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ltYysL5W"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="iFm4sddO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgCQKRw (ORCPT
+        id S1726388AbgCQKSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:17:52 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36447 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgCQKRu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:17:50 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 39so5614855otu.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 03:17:48 -0700 (PDT)
+        Tue, 17 Mar 2020 06:18:14 -0400
+Received: from mail-eopbgr1410134.outbound.protection.outlook.com ([40.107.141.134]:49888
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725730AbgCQKSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:18:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mGON62+el/kSiCRvx5caojw7l4aCLJTGGpOCy52PteJbIW1j59lOJOzHjiv2z/2XFkGovh1qWZ0kXLxWhEsVYt34mIwUBikJwMJ2A6fCK3CTFqDZPc9xS9usP6G5u3LC2ic649Msv8LNDJW+GIDHSZ9KwefeOmFwLV9/ssqK3OUi7oK3C+44HrrjqW9LgAId42GBDwxp+EzwTR0tWmZcY0lqhltQD+sDV1EoXU2g1NQGXoXJ2PsZCs+YVa2ZfKgyj7EcbVNSXxKbgZjdB0FgP/M7ZnUWK/Hq3+9vupQ2mW7n8r39PEqntTVGUK9xQwx+hZ7ZFpUVVtDlE0/sMDkvcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AwUntoL11ukJsITrpHrU6ydIPM8tizbPDa4EU0vKSgE=;
+ b=b/rMG2kcwKJJC0HnPq+KX1BtGbP+MqX5AgNhzhRG/jo1wmSK9k8y3nL/l5D/qXtgGunKwSFTqvQ0wiMnhNLIe3AHMXtF7J0/jEppnAjlQT/H0PkWp0IcnuboEWRYaAN9pRlyisHIwRhIgbRxMZq8QB2JYpHasIbbbSjWSIJy8F6jcbO42qpqTwejdw8dEBswPM5n7bTSTT6Rq0A+JWBdngK9+plCfQv1o6+X8z275+DE4ue50RVHBps+xtjKtxMxpsYxjL+D/5JSjOAr/+mPC+B37b9+EEg+i2YALOzAuX43sYktBarstj8oJWTHanQgwWdtP1IIQv7V3220Q+iffg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oDa8VM8GdllhFAvMRWp4hpupCPaz/QUO5MsZDtEiqs0=;
-        b=ltYysL5WIC7dpKo4GMaDU8Ml3B6mi7mjaGVG65T2DEiDiGYOgzRyMLCrxrRWChP5HS
-         yTQFrSduvcsM0xNp1YBTAIiflKZ/sMN8pGWZae/ArhXNCikTtXesCEck8fUXUCEp/w/C
-         Iw+LoUythKxvdhc9mhmIz2zs2mGoFetgsadTo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oDa8VM8GdllhFAvMRWp4hpupCPaz/QUO5MsZDtEiqs0=;
-        b=dI25JgDjW0KEd4oFROKG4WW/WkBB2HAlrYDECtF0fpT4NdyP4JINuU5lbZxDbo5dM8
-         3QBN1s4IM6SVv/lYrjXYS4qsOV9uBnBHeoUFSQ6JO+emGg9ja4A/K8b1m9R/80iLSzmk
-         klyqbvnMb+txSUOK2uLghjCZD/jNxBw14M1n4xRbXD7yGlDkOKwyWjqLPEaDq3iPsBKF
-         LLKTGVSm2dzzhH66lldTukGvN6K6v7Sr24MyT/8rxJHs7Jh6j7UvkD8MyCUAh/GlYtMm
-         OV5RjTTjqkiKPR4Ps+Sm3MQ8zGhX7pTYeIdeJnj46lgm3bmaKm8RLeOiY/J3KM3T0Q0a
-         q73w==
-X-Gm-Message-State: ANhLgQ2n7W/NX9yg61DHihQF24zWk1U+fYt0ic8ByyPkvSI3OoA7rckv
-        KPcl/Y3r3hPYsDXMow5+QBXIFFtuZ6ISQyWenFZC0g==
-X-Google-Smtp-Source: ADFU+vuLKvREZqrIEBvOy9oEphIEL8EarmOXVsUtthjxfzzfXXP7vVtCLR/q+kK0AHEL4R5JJBkITw0OWnska0E6pcA=
-X-Received: by 2002:a9d:30c7:: with SMTP id r7mr2911068otg.289.1584440268438;
- Tue, 17 Mar 2020 03:17:48 -0700 (PDT)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AwUntoL11ukJsITrpHrU6ydIPM8tizbPDa4EU0vKSgE=;
+ b=iFm4sddOXZawW4q3B9Vc0ojmwp7oKWaKxh54r4ECjy3fTW1JW2uwXwnCcEUzhv+J5Y8YgS9XpwmBfKXdXnfpXXUqA/f5sUvCXw3Vjwj++4els3kUQa33x8IAzaBIfCHwl2ZDx6ky2AK+AQBRyWYMgpE3HOqwQDy0JKIkvs4MrDQ=
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
+ OSBPR01MB2454.jpnprd01.prod.outlook.com (52.134.253.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.22; Tue, 17 Mar 2020 10:18:10 +0000
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::490:aa83:2d09:3a0b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::490:aa83:2d09:3a0b%5]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 10:18:10 +0000
+From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+CC:     Andrew Murray <andrew.murray@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: RE: [PATCH v5 5/7] dt-bindings: PCI: rcar: Add bindings for R-Car
+ PCIe endpoint controller
+Thread-Topic: [PATCH v5 5/7] dt-bindings: PCI: rcar: Add bindings for R-Car
+ PCIe endpoint controller
+Thread-Index: AQHV7k2mb/v0bc2DvUS+HUsmhvWhMqhMjsmAgAAea9A=
+Date:   Tue, 17 Mar 2020 10:18:10 +0000
+Message-ID: <OSBPR01MB3590F13134F6E9BD106EC506AAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200228154122.14164-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TYAPR01MB454466B8451E3115D8A7DFB7D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB454466B8451E3115D8A7DFB7D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7e099edf-b43f-43ee-8065-08d7ca5c7e92
+x-ms-traffictypediagnostic: OSBPR01MB2454:|OSBPR01MB2454:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <OSBPR01MB2454C261CB16645A0158108EAAF60@OSBPR01MB2454.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 0345CFD558
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(376002)(39860400002)(346002)(366004)(199004)(316002)(110136005)(54906003)(2906002)(76116006)(4326008)(5660300002)(52536014)(33656002)(7416002)(66946007)(66476007)(64756008)(66446008)(8676002)(86362001)(7696005)(26005)(66556008)(186003)(71200400001)(8936002)(53546011)(81156014)(6506007)(478600001)(9686003)(81166006)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB2454;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QUAO5tMnOTmqzudeSh4ZLSAGLD1cQ3tvJiwtrEQLbijr/MVLPR1/muSO3DzkvzIaNZA/OBpBr5CHp0SYi2+3iyW3WMzhXV5ZRVw/3qEos+gCSc1NyXCFU/EMnURjqVX6oSxOC7HhkHBMUk+eUwaneJbCzvYcG4YJOd4qCPjP91/XXdeu1mxs4obCl2ooG9qc+tGsQb5DHG8ENOnXtEmaM+qOiICzlRlgWKQwSSCgAfK7dlvrFy5HHFr+csILHPdZkrv2nthjqCQO9rvWJ1yLEH67g6RKcm45NTDYTrCV7f7IMvXi580ZZ2Aci32Vxpr9DjXMBA62sbnQof1xkDDguWEwgUhz+g0SS7MOi3kt2lfa6/Tse1Pn2Hasyd7CDvkPv8DTWrdxG6suvLXit1FJ2sc7/dyPNQktnNDUmU4WYLh75bmh7Dw8hPmYK6Pn+qvE
+x-ms-exchange-antispam-messagedata: w0zgGx/VgV4KExD9yJ8pV7WikUiHfRwYt9btPpF9nPg0jhmlfU6pgaWuSgcEphmgpCkG0+4Fp6IAmbXjncFg3K6p4/1RfLSIdZOY1E4EWni44SUpq4s/pTIz5Y7PqJjE8yPBpFwbLvHVZL6aeTp77g==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200310174711.7490-1-lmb@cloudflare.com> <20200310174711.7490-5-lmb@cloudflare.com>
- <5e6973ed90f8d_20552ab9153405b4ca@john-XPS-13-9370.notmuch>
-In-Reply-To: <5e6973ed90f8d_20552ab9153405b4ca@john-XPS-13-9370.notmuch>
-From:   Lorenz Bauer <lmb@cloudflare.com>
-Date:   Tue, 17 Mar 2020 10:17:37 +0000
-Message-ID: <CACAyw9_4wvOdE+enxxJPPTMXbfFmWfMo8qcaRtu6j0y4W=E9HQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] bpf: sockmap, sockhash: return file descriptors from
- privileged lookup
-To:     John Fastabend <john.fastabend@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e099edf-b43f-43ee-8065-08d7ca5c7e92
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 10:18:10.3458
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LbQJmjNJSX6JMv9MLQ20FG9AW2lwXWMHHysf1RCtDtTHekw0/zVDyIuwrY3cNRHHKL86hSqXgcLbiQDQ4iIt3c1vddDL6l7Gl5yzt6HQSAl5yJeUEUo1gvL3kIHOP3Zs
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2454
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 at 23:27, John Fastabend <john.fastabend@gmail.com> wrote:
+Hi Yoshihiro-san,
+
+> -----Original Message-----
+> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Sent: 17 March 2020 08:26
+> To: Lad Prabhakar <prabhakar.csengg@gmail.com>
+> Cc: Andrew Murray <andrew.murray@arm.com>; linux-pci@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; linux-renesas-soc@vger.kernel.org;
+> linux-rockchip@lists.infradead.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; Prabhakar Mahadev Lad <prabhakar.mahadev-
+> lad.rj@bp.renesas.com>; Rob Herring <robh@kernel.org>; Bjorn Helgaas
+> <bhelgaas@google.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Catalin Marinas <catalin.marinas@arm.com>; Will
+> Deacon <will@kernel.org>; Kishon Vijay Abraham I <kishon@ti.com>;
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>; Arnd Bergmann
+> <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>;
+> Jingoo Han <jingoohan1@gmail.com>; Gustavo Pimentel
+> <gustavo.pimentel@synopsys.com>; Marek Vasut
+> <marek.vasut+renesas@gmail.com>; Shawn Lin <shawn.lin@rock-
+> chips.com>; Heiko Stuebner <heiko@sntech.de>
+> Subject: RE: [PATCH v5 5/7] dt-bindings: PCI: rcar: Add bindings for R-Ca=
+r PCIe
+> endpoint controller
 >
-> Lorenz Bauer wrote:
-> > Allow callers with CAP_NET_ADMIN to retrieve file descriptors from a
-> > sockmap and sockhash. O_CLOEXEC is enforced on all fds.
-> >
-> > Without this, it's difficult to resize or otherwise rebuild existing
-> > sockmap or sockhashes.
-> >
-> > Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
-> > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> > ---
-> >  net/core/sock_map.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> > index 03e04426cd21..3228936aa31e 100644
-> > --- a/net/core/sock_map.c
-> > +++ b/net/core/sock_map.c
-> > @@ -347,12 +347,31 @@ static void *sock_map_lookup(struct bpf_map *map, void *key)
-> >  static int __sock_map_copy_value(struct bpf_map *map, struct sock *sk,
-> >                                void *value)
-> >  {
-> > +     struct file *file;
-> > +     int fd;
-> > +
-> >       switch (map->value_size) {
-> >       case sizeof(u64):
-> >               sock_gen_cookie(sk);
-> >               *(u64 *)value = atomic64_read(&sk->sk_cookie);
-> >               return 0;
-> >
-> > +     case sizeof(u32):
-> > +             if (!capable(CAP_NET_ADMIN))
-> > +                     return -EPERM;
-> > +
-> > +             fd = get_unused_fd_flags(O_CLOEXEC);
-> > +             if (unlikely(fd < 0))
-> > +                     return fd;
-> > +
-> > +             read_lock_bh(&sk->sk_callback_lock);
-> > +             file = get_file(sk->sk_socket->file);
-> > +             read_unlock_bh(&sk->sk_callback_lock);
-> > +
-> > +             fd_install(fd, file);
-> > +             *(u32 *)value = fd;
-> > +             return 0;
-> > +
+> Hi Prabhakar-san,
 >
-> Hi Lorenz, Can you say something about what happens if the sk
-> is deleted from the map or the sock is closed/unhashed ideally
-> in the commit message so we have it for later reference. I guess
-> because we are in an rcu block here the sk will be OK and psock
-> reference will exist until after the rcu block at least because
-> of call_rcu(). If the psock is destroyed from another path then
-> the fd will still point at the sock. correct?
+> Thank you for the patch!
+>
+> > From: Lad Prabhakar, Sent: Saturday, February 29, 2020 12:41 AM
+> >
+> > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
+> lad.rj@bp.renesas.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>
+Thank you for the review. Shall I add this file under "PCI DRIVER FOR RENES=
+AS R-CAR"
+In MAINTAINERS file as a separate patch ?
 
-This is how I understand it:
-* sk is protected by rcu_read_lock (as you point out)
-* sk->sk_callback_lock protects against sk->sk_socket being
-  modified by sock_orphan, sock_graft, etc. via sk_set_socket
-* get_file increments the refcount on the file
+Cheers,
+--Prabhakar
 
-I'm not sure how the psock figures into this, maybe you can
-elaborate a little?
+> Best regards,
+> Yoshihiro Shimoda
 
--- 
-Lorenz Bauer  |  Systems Engineer
-6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
 
-www.cloudflare.com
+
+Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch=
+, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, =
+40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldor=
+f, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WE=
+EE reg. no.: DE 14978647
