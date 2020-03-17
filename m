@@ -2,130 +2,146 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD80C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E90C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB382071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996CF2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:37:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="obg1DBEb"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="XONFGi7l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgCQLdB (ORCPT
+        id S1726559AbgCQLhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:33:01 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:1753 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgCQLdA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:33:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1584444780; x=1615980780;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=izxcm8ptiZiwrpRrcuuDqsQprWd3tUq31X/9MftT3K4=;
-  b=obg1DBEb6VCQDkbsKhmUvKGoYki7wImSSCIYnlXKPi6CfgTZEaIH1Sh8
-   0xqmeFIY8+K/CNIXPPGay6adRb5R0D3CXIfFS0V236rQJsc6607HlQcxb
-   0DZndjQQeIsr3EAbfj5jvYjmrq7SeuG5+FHFom/z9yvOaRXC7JGHutHub
-   c=;
-IronPort-SDR: Y9SGIQ/bR4v2R4R5Sdk5N2uvzxJZQN0lgJyP1r3JPDm5T0n49s+tVsfwcvSOK4uvwD/BS6enOQ
- e1BxFaHR4dZA==
-X-IronPort-AV: E=Sophos;i="5.70,564,1574121600"; 
-   d="scan'208";a="21384006"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 17 Mar 2020 11:32:48 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id CCB70A05F9;
-        Tue, 17 Mar 2020 11:32:38 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Tue, 17 Mar 2020 11:32:38 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.167) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 17 Mar 2020 11:32:24 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     SeongJae Park <sj38.park@gmail.com>
-CC:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.de>, <aarcange@redhat.com>,
-        <yang.shi@linux.alibaba.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shuah@kernel.org>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: Re: [PATCH v6 02/14] mm/damon: Implement region based sampling
-Date:   Tue, 17 Mar 2020 12:32:05 +0100
-Message-ID: <20200317113205.3617-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313201649.26646-1-sj38.park@gmail.com> (raw)
+        Tue, 17 Mar 2020 07:37:08 -0400
+Received: from mail-vi1eur05on2089.outbound.protection.outlook.com ([40.107.21.89]:43744
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725794AbgCQLhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:37:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XnCnIkMRl3E7z0eTDUxrJsKjo3V1aiBHX0UWxDz1NxGosum1xyruWOX3fwSRJga7XiDOexl9z6yOc8G5D6Edbq3sK5qqZGwBzdxdLiztyxsKm7F0B+ufJcSPXGC21flhk4/nrI8wno9eHIq7asuhCvbPGR2kQ0vCBA/f+RMUUBJq31TDfVnSqdOk63ckXVHcXJc2luRkmj+GUx7eHC4QWPbh7xnjgwX8m6dkobZbG3l53i/ac0P/kAl0s1ePnCTNZxe/+7uNe8YVwp0GxpNuboCZt0T43kGG9ua4mg8KQoRi+b8XFDsFQrh8c1hJH8yHalkrI8G86t/j36FGLCuStA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zQQJmgoDYJbWuBxC9YO0ZQG5YzULXKJ0XyD9y0sVRVU=;
+ b=hMxuwYNgjTov2hISfgskotussrnNwXV+TWptSPslwQvU3Vu/2jV3BNVzplsybQH8zXnx37ol1GGwu66zsjImSRwSvCjC7Y9waJ4XmG3+MteFAM5Dqv5vJ2R09UOl/e/RMmrC5w2Z5P4trVUELGCE8M/Zfe1OKh2Xf7+xOzjLUrLYcoEp8TuHP+OW5QgfW8uQ4IZn4ty6cwyr8xT5fHWlSx+s7VzHHD9j7qjI0tYA91bIkOdZab6DRs8gk0tX4/Ho/WejJ0XYHDabJJMa7cv27ZvfgOjl5vIGnelIEgaJD/AVF3gGIJ0i1yaIxc9fIYbF16qWg91n8AJ8rzptmc7c/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zQQJmgoDYJbWuBxC9YO0ZQG5YzULXKJ0XyD9y0sVRVU=;
+ b=XONFGi7lU465OsxyURNJYVKi0WBJPuqnTUoOJQOOG6Ozkjog+2s+ieoyehSQu7FisOtaOrm+cHwovQB2Ngdhp4csNUebYKeiC/Hn4FPJAZbimyhlPSIZuamjfLBNwk90uni9O8HeqtJYts5O7cE0+fyr4R5PEOoQ03dw0AB3CnI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=calvin.johnson@oss.nxp.com; 
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (20.178.202.86) by
+ AM0PR04MB7153.eurprd04.prod.outlook.com (10.186.131.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14; Tue, 17 Mar 2020 11:37:02 +0000
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::1b4:31d2:1485:6e07]) by AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::1b4:31d2:1485:6e07%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 11:37:02 +0000
+Date:   Tue, 17 Mar 2020 17:06:50 +0530
+From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     linux.cj@gmail.com, Jon Nettleton <jon@solid-run.com>,
+        linux@armlinux.org.uk, Makarand Pawagi <makarand.pawagi@nxp.com>,
+        cristian.sovaiala@nxp.com, laurentiu.tudor@nxp.com,
+        ioana.ciornei@nxp.com, V.Sethi@nxp.com, pankaj.bansal@nxp.com,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Marcin Wojtas <mw@semihalf.com>, Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 1/7] mdio_bus: Introduce fwnode MDIO helpers
+Message-ID: <20200317113650.GA6016@lsv03152.swis.in-blr01.nxp.com>
+References: <20200131153440.20870-1-calvin.johnson@nxp.com>
+ <20200131153440.20870-2-calvin.johnson@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131153440.20870-2-calvin.johnson@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SG2PR06CA0189.apcprd06.prod.outlook.com (2603:1096:4:1::21)
+ To AM0PR04MB5636.eurprd04.prod.outlook.com (2603:10a6:208:130::22)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.167]
-X-ClientProxiedBy: EX13D31UWC004.ant.amazon.com (10.43.162.27) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR06CA0189.apcprd06.prod.outlook.com (2603:1096:4:1::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Tue, 17 Mar 2020 11:36:57 +0000
+X-Originating-IP: [14.142.151.118]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 06da80fb-3b50-4769-bd85-08d7ca6782d6
+X-MS-TrafficTypeDiagnostic: AM0PR04MB7153:|AM0PR04MB7153:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB715309A3175C5F3108D8304DD2F60@AM0PR04MB7153.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(396003)(39860400002)(346002)(199004)(186003)(16526019)(5660300002)(316002)(44832011)(86362001)(54906003)(956004)(66946007)(66556008)(66476007)(478600001)(33656002)(4326008)(1076003)(8676002)(9686003)(81156014)(81166006)(8936002)(55016002)(6666004)(1006002)(7696005)(52116002)(6506007)(2906002)(7416002)(6916009)(26005)(55236004)(110426005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB7153;H:AM0PR04MB5636.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Agx+6WwlUZMvMwY5+xvkIOeHOd/QHNIWUm+eoeWxHNsmNmSwjCLVOmG3PUsv0F8XkMaRe7CtERUUBC9OPi1sCv6+zFFtD/midMlERCSSjySuAHHF09le2QUSLxNM0UWOcEcEbY5jhlMYVX1aKZeuIoO1oV4G3K8IrSZ2CQ5jxDjCpUfdPpyE6rSvQ7SI61N0L4vGP+9DYQQDfxUkOf9uuJQPOR1k2ZgqOlyj4nWt98MA4RUXQNwCyCzi2cqOD/aFTjhI61B4QrBDtKF4Py+zWh2gz5TetW8WclWgR99DQt/VAR1jANCPjpWHUsBd+4472BFZdjRbH8gq2o4fTsKvwHNsYy5XlHw5tkNi3T4QL0AKyzRS6fJogEHZDv+wp8tPdlvCXELkIscUc8e7mAYzLjpITGMPH6EdQ1+P1MPtF8fYBmfcy7U/4CZ4lhyZBbQ8LS0AQtyVHGwjdNwS1XEKzkVrYfHhBIyK8Zm6gI+ityPMH0+z9Z00uZo0rALv9djd
+X-MS-Exchange-AntiSpam-MessageData: 3rfCOvF5xfeRXsvW2FnBpwFnosPqguOSzFU2zW8bBpdIEJ2/d1ZnA9IJIBUICQPyFGdsR9KC1cluct24VpLwx8EHcBUfsKsapC+w2+n04Pzm2T+RyZWWDrEzmIr9o4ISnz9bRlppuR58tMyEA+xA1g==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06da80fb-3b50-4769-bd85-08d7ca6782d6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 11:37:02.6285
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WqnHT2gOro7JKPiaWFCyl9vhpJB1JR82GWkXCLX5eDnn5DyBo/ihJu5i2pcePJ7fSHpNYFjAhXWZSux+GkebXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020 21:16:49 +0100 SeongJae Park <sj38.park@gmail.com> wrote:
+Hi,
 
-> On Fri, 13 Mar 2020 17:29:54 +0000 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> > On Mon, 24 Feb 2020 13:30:35 +0100
-> > SeongJae Park <sjpark@amazon.com> wrote:
-> > 
-> > > From: SeongJae Park <sjpark@amazon.de>
-> > > 
-> > > This commit implements DAMON's basic access check and region based
-> > > sampling mechanisms.  This change would seems make no sense, mainly
-> > > because it is only a part of the DAMON's logics.  Following two commits
-> > > will make more sense.
-> > > 
-> [...]
-> > 
-> > Came across a minor issue inline.  kthread_run calls kthread_create.
-> > That gives a potential sleep while atomic issue given the spin lock.
-> > 
-> > Can probably be fixed by preallocating the thread then starting it later.
-> > 
-> > Jonathan
-> [...]
-> > > +/*
-> > > + * Start or stop the kdamond
-> > > + *
-> > > + * Returns 0 if success, negative error code otherwise.
-> > > + */
-> > > +static int damon_turn_kdamond(struct damon_ctx *ctx, bool on)
-> > > +{
-> > > +	spin_lock(&ctx->kdamond_lock);
-> > > +	ctx->kdamond_stop = !on;
-> > > +	if (!ctx->kdamond && on) {
-> > > +		ctx->kdamond = kthread_run(kdamond_fn, ctx, "kdamond");
-> > 
-> > Can't do this under a spin lock.
-> 
-> Good catch!  And, agree to your suggestion.  I will fix this in that way!
+On Fri, Jan 31, 2020 at 09:04:34PM +0530, Calvin Johnson wrote:
 
-I changed my mind.  I would like to simply use mutex instead of spinlock, as
-khugepaged also does.  If you have different opinion, please let me know.
+<snip>
 
+> +/**
+> + * fwnode_mdiobus_child_is_phy - Return true if the child is a PHY node.
+> + * It must either:
+> + * o Compatible string of "ethernet-phy-ieee802.3-c45"
+> + * o Compatible string of "ethernet-phy-ieee802.3-c22"
+> + * Checking "compatible" property is done, in order to follow the DT binding.
+> + */
+> +static bool fwnode_mdiobus_child_is_phy(struct fwnode_handle *child)
+> +{
+> +	int ret;
+> +
+> +	ret = fwnode_property_match_string(child, "compatible",
+> +					   "ethernet-phy-ieee802.3-c45");
+> +	if (!ret)
+> +		return true;
+> +
+> +	ret = fwnode_property_match_string(child, "compatible",
+> +					   "ethernet-phy-ieee802.3-c22");
+> +	if (!ret)
+> +		return true;
+> +
+> +	if (!fwnode_property_present(child, "compatible"))
+> +		return true;
+> +
+> +	return false;
+> +}
 
-Thanks,
-SeongJae Park
+Can we use _CID in ACPI to get the compatible string? Is there any other method
+to handle this kind of situation where we would like to pass C45 or C22 info to
+the mdiobus driver?
 
-> 
-> 
-> Thanks,
-> SeongJae Park
+Thanks
+Calvin
