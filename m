@@ -2,68 +2,78 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DB6C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD6C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA63C20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7633520735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584457559;
+	bh=OwU2LE2IoKg+lQxkLtb4DQDIXWAPOFBX7/UD8iAQLuE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SNV/bfMwYSnALaQOVMiYTqgsTRZCeHEo1qanzaapfnFdCura+NA07/pSjwzBY0rlt
+	 Ben++gHrVFcwKNIEMxawkskqb+OJUy+T16Te6vMjzuH4bxWzMgpCHvjhbsuI6Ecw4F
+	 OKhlv8a83f8LyOvOxQGFB3vUrVnZScell+SXoDHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgCQPFv (ORCPT
+        id S1726990AbgCQPF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:05:51 -0400
-Received: from mga09.intel.com ([134.134.136.24]:17995 "EHLO mga09.intel.com"
+        Tue, 17 Mar 2020 11:05:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbgCQPFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:05:51 -0400
-IronPort-SDR: 6MWYJfiA39TX4EP9OS0UZ8ntF3TYmOtfBWLIyUonFqXx6vFdsN8BCEQ7416HhgC5YLvfNUu60h
- YTnXfokI4vDg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 08:05:50 -0700
-IronPort-SDR: 0F5yhZVfHuxH8qv7v2hDlYxJr70DDvhMGxEx+bqv8nsVpxLed09Nt2atEZuDVhjob+wkOmfzzH
- tw5vTvZmdcSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="247848301"
-Received: from mnagar-mobl.amr.corp.intel.com (HELO [10.254.66.68]) ([10.254.66.68])
-  by orsmga006.jf.intel.com with ESMTP; 17 Mar 2020 08:05:50 -0700
-Subject: Re: [PATCH v17 06/12] Documentation: PCI: Remove reset_link
- references
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <a46938d227f6a11c010943800450a10aac39b7d3.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20200317144203.GE23471@infradead.org>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <ebb79d02-53f5-cc23-0b38-72a351a05097@linux.intel.com>
-Date:   Tue, 17 Mar 2020 08:05:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726388AbgCQPF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:05:58 -0400
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B69F20714;
+        Tue, 17 Mar 2020 15:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584457557;
+        bh=OwU2LE2IoKg+lQxkLtb4DQDIXWAPOFBX7/UD8iAQLuE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TY5dXTUF30PZED5B2tekjznH/47LJBKMu3UYOQvJ6y9LH/t1q+B9wQAgIs8pJFzeD
+         jOAKDfKMaN5mdCSrRptFDJmNjIiH1TizYi6bByP5sF5hgXSTzfRfkPOvb6Ywr/7Sss
+         gxGsStTVt0uXRovp3n3GxWMfRaq7I5UQeLrhazZA=
+Date:   Tue, 17 Mar 2020 16:05:49 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-i2c@vger.kernel.org
+Subject: Re: [PATCH 13/17] i2c: include/linux/i2c.h: fix a doc warning
+Message-ID: <20200317160549.3c23bbda@coco.lan>
+In-Reply-To: <20200317150322.GB1134@ninjato>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org>
+        <24cbf9166b21531186e5b6d37a3f9201f957abef.1584456635.git.mchehab+huawei@kernel.org>
+        <20200317150322.GB1134@ninjato>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200317144203.GE23471@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Tue, 17 Mar 2020 16:03:22 +0100
+Wolfram Sang <wsa@the-dreams.de> escreveu:
 
+> On Tue, Mar 17, 2020 at 03:54:22PM +0100, Mauro Carvalho Chehab wrote:
+> > Don't let non-letters inside a literal block without escaping it, as
+> > the toolchain would mis-interpret it:
+> > 
+> > ./include/linux/i2c.h:518: WARNING: Inline strong start-string without end-string.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> 
+> Shall I take this via I2C?
 
-On 3/17/20 7:42 AM, Christoph Hellwig wrote:
-> On Tue, Mar 03, 2020 at 06:36:29PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
-> 
-> This should be folded into the patch removing the method.
-This is also folded in the mentioned patch.
-https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=review/edr&id=7a18dc6506f108db3dc40f5cd779bc15270c4183
-> 
+Yeah, feel free to pick it. The patches on this series are pretty
+much independent from the others.
+
+Thanks,
+Mauro
