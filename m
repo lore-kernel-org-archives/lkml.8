@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3D2C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A03EC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F26E520735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC890206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443367;
-	bh=EpCqJ8YLCozqm4hfYxQdwHbZfUkCD49KEscoo9saBiQ=;
+	s=default; t=1584443371;
+	bh=toUJospFKHCDBgdJcP24mpKKTFxNDIZmUVwYJxmwMRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZzUMcUPEuY4x1aDzvBsqvNaBrjD1I0gFKsY5Jw+66rK7nUFG+NJW9RIS2Car6C4LM
-	 wpjBhoD+va3WfEaEgZxpf+PvCjgmzmVDpZ+oZr7xXdt9XsDWypXJK5OhWTNQOQM83e
-	 D5SFEZVdwcV8z3wwVVI+TkpBi+KGE59AijvG5vHA=
+	b=h2IIoIbZSznUxXP5TBwDLrjgvwYhoGM+3W3lGlHIMhtU5wq5HpRr8XdJXn9mL+woe
+	 cm29tIWiMHgZzFBUm7T/POa0nm6zPa5tP3YzZLLj9wjIzwJ7NrYNvdDgv6TrQd2bXS
+	 xQkN+UG/xgDoTBPSk5a1Pd6VUhcLMr0bP3I2EXNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCQLJZ (ORCPT
+        id S1728791AbgCQLJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:09:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51670 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728485AbgCQLJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:09:23 -0400
+        id S1728485AbgCQLJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:09:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C5F820658;
-        Tue, 17 Mar 2020 11:09:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 935D420719;
+        Tue, 17 Mar 2020 11:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443363;
-        bh=EpCqJ8YLCozqm4hfYxQdwHbZfUkCD49KEscoo9saBiQ=;
+        s=default; t=1584443366;
+        bh=toUJospFKHCDBgdJcP24mpKKTFxNDIZmUVwYJxmwMRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+mT6kYRgSFI8Z8JqyOn/J4JtwsqhrAV7ctmHMU5+uZRPWpqb60DLqZ+s37dTI4mS
-         aAeu+prHm45KSGqHYjZGag+EIHz/p8vUgTUp04E+3t82VUEmWfYBy1cGSgQ5A1sBmS
-         LPQl+UO1Vwmniy1x9nHo+roMx8xx6h82OorPnbJA=
+        b=yifPcVDtYPJwvtORcdFtX6A8RTJpFFEMHLhx0LHcg3gXhdS23raLDtKLAVztTNVHn
+         pCFdJvAk3MOAWNpTglS5bmqvPE61mfQbcfFb7P4X0HdyKNd37SWslPcP+eyDkqmWGp
+         wTcJgk0gHZ2qk4ESTYlHZrJuJVaMP54K6B2q4lrE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Dmitry Bogdanov <dbogdanov@marvell.com>,
+        Mark Starovoytov <mstarovoitov@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 020/151] netlink: Use netlink header as base to calculate bad attribute offset
-Date:   Tue, 17 Mar 2020 11:53:50 +0100
-Message-Id: <20200317103328.261317927@linuxfoundation.org>
+Subject: [PATCH 5.5 021/151] net: macsec: update SCI upon MAC address change.
+Date:   Tue, 17 Mar 2020 11:53:51 +0100
+Message-Id: <20200317103328.314813629@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,32 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Dmitry Bogdanov <dbogdanov@marvell.com>
 
-[ Upstream commit 84b3268027641401bb8ad4427a90a3cce2eb86f5 ]
+[ Upstream commit 6fc498bc82929ee23aa2f35a828c6178dfd3f823 ]
 
-Userspace might send a batch that is composed of several netlink
-messages. The netlink_ack() function must use the pointer to the netlink
-header as base to calculate the bad attribute offset.
+SCI should be updated, because it contains MAC in its first 6 octets.
 
-Fixes: 2d4bc93368f5 ("netlink: extended ACK reporting")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netlink/af_netlink.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/macsec.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -2434,7 +2434,7 @@ void netlink_ack(struct sk_buff *in_skb,
- 							       in_skb->len))
- 				WARN_ON(nla_put_u32(skb, NLMSGERR_ATTR_OFFS,
- 						    (u8 *)extack->bad_attr -
--						    in_skb->data));
-+						    (u8 *)nlh));
- 		} else {
- 			if (extack->cookie_len)
- 				WARN_ON(nla_put(skb, NLMSGERR_ATTR_COOKIE,
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -532,6 +532,11 @@ static struct macsec_eth_header *macsec_
+ 	return (struct macsec_eth_header *)skb_mac_header(skb);
+ }
+ 
++static sci_t dev_to_sci(struct net_device *dev, __be16 port)
++{
++	return make_sci(dev->dev_addr, port);
++}
++
+ static u32 tx_sa_update_pn(struct macsec_tx_sa *tx_sa, struct macsec_secy *secy)
+ {
+ 	u32 pn;
+@@ -2903,6 +2908,7 @@ static int macsec_set_mac_address(struct
+ 
+ out:
+ 	ether_addr_copy(dev->dev_addr, addr->sa_data);
++	macsec->secy.sci = dev_to_sci(dev, MACSEC_PORT_ES);
+ 	return 0;
+ }
+ 
+@@ -3176,11 +3182,6 @@ static bool sci_exists(struct net_device
+ 	return false;
+ }
+ 
+-static sci_t dev_to_sci(struct net_device *dev, __be16 port)
+-{
+-	return make_sci(dev->dev_addr, port);
+-}
+-
+ static int macsec_add_dev(struct net_device *dev, sci_t sci, u8 icv_len)
+ {
+ 	struct macsec_dev *macsec = macsec_priv(dev);
 
 
