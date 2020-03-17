@@ -2,79 +2,162 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E975FC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09019C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60AE20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE15420735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:53:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="qr4URIDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgCQRwd (ORCPT
+        id S1726814AbgCQRw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:52:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:41096 "EHLO foss.arm.com"
+        Tue, 17 Mar 2020 13:52:59 -0400
+Received: from web0081.zxcs.nl ([185.104.29.10]:36948 "EHLO web0081.zxcs.nl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgCQRwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:52:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6A8831B;
-        Tue, 17 Mar 2020 10:52:32 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C112E3F67D;
-        Tue, 17 Mar 2020 10:52:29 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 17:52:27 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-mips@vger.kernel.org, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 19/26] arm64: Introduce asm/vdso/processor.h
-Message-ID: <20200317175227.GF632169@arrakis.emea.arm.com>
-References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
- <20200317122220.30393-20-vincenzo.frascino@arm.com>
+        id S1726386AbgCQRw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 13:52:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=pascalroeleven.nl; s=x; h=Message-ID:References:In-Reply-To:Subject:Cc:To:
+        From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To
+        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=kYE0yHNNN9LAxleq7P2y1gIFBIIP2Wmb0USpvPZmwSM=; b=qr4URIDH2cQk45mFHknGWBzW2M
+        bQwg7rAVDWTrTlb+Z7P+knyEsBmvdVuw715UOGwMdlsgnc0J+GP2h7kE1SRvVF2db1VaaD+lk6ZYB
+        GjTvXOPCjHahkS4pxBwaNS1Q/1FtkUg4N2zkbVL1KZVx8EMGPArFgZqfRNArCEwg2c6XDh11B3ibz
+        ShxBPIbEE7Sd12Pqk75icoOHKKHX/8iFLszEoR2pNpYJ2bd0yB7OXCgMmYQeDPICfmdaYI7TNuLZh
+        mqni9XKg0dFLx2iNrechiSS9sn3CYPDYRD1Hya2ZZUKFH3GAOUrftrUfhPS7EhoKlkwSatcGJbQ+2
+        zUL7BQSA==;
+Received: from spamrelay.zxcs.nl ([185.104.28.12]:41856 helo=mail-slave01.zxcs.nl)
+        by web0081.zxcs.nl with esmtp (Exim 4.92.3)
+        (envelope-from <dev@pascalroeleven.nl>)
+        id 1jEGOY-003b4c-Dm; Tue, 17 Mar 2020 18:52:50 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317122220.30393-20-vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 17 Mar 2020 18:52:50 +0100
+From:   Pascal Roeleven <dev@pascalroeleven.nl>
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
+In-Reply-To: <20200317173208.t5s63pfz3byxsgzi@pengutronix.de>
+References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
+ <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
+ <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
+ <20200316072613.37lnjfloac4npudf@pengutronix.de>
+ <20200317173208.t5s63pfz3byxsgzi@pengutronix.de>
+User-Agent: Roundcube Webmail/1.4.2
+Message-ID: <ddd9b9c5b3d28a30c888fdcfc1ac6d64@pascalroeleven.nl>
+X-Sender: dev@pascalroeleven.nl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 12:22:13PM +0000, Vincenzo Frascino wrote:
-> The vDSO library should only include the necessary headers required for
-> a userspace library (UAPI and a minimal set of kernel headers). To make
-> this possible it is necessary to isolate from the kernel headers the
-> common parts that are strictly necessary to build the library.
+On 2020-03-17 18:32, Uwe Kleine-König wrote:
+> Hello Pascal,
 > 
-> Introduce asm/vdso/processor.h to contain all the arm64 specific
-> functions that are suitable for vDSO inclusion.
+> On Mon, Mar 16, 2020 at 08:26:13AM +0100, Uwe Kleine-König wrote:
+>> On Thu, Mar 12, 2020 at 04:06:07PM +0100, Pascal Roeleven wrote:
+>> > On 2020-03-12 14:29, Uwe Kleine-König wrote:
+>> > > On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
+>> > > > Hi all,
+>> > > >
+>> > > > I am working on adding an old A10 device to mainline and noticed an
+>> > > > issue
+>> > > > when testing on 5.5.8 vs master.
+>> > > >
+>> > > > Since 5.6-rc1, I can't control the brightness of my LCD backlight
+>> > > > anymore.
+>> > > > The backlight stays on full brightness instead. I am controlling the
+>> > > > brightness value via sysfs for testing.
+>> > > >
+>> > > > I am not sure if this is a general pwm-sun4i issue or if it is
+>> > > > related to
+>> > > > the backlight. However I narrowed it down to one commit for pwm-sun4i:
+>> > > >
+>> > > > fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+>> > > >
+>> > > > If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
+>> > > > master, the backlight works fine. Unfortunately, due to my lack of
+>> > > > kernel
+>> > > > experience, I can't see how the commit above broke it.
+>> > >
+>> > > Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
+>> > > this. Looking at the output of
+>> > >
+>> > > 	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+>> > >
+>> > > (i.e. ignoring whitespace changes) I don't see how the behaviour you're
+>> > > reporting can be explained.
+>> > >
+>> > > Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
+>> > > commit?
+>> > >
+>> > > Can you install a tool to inspect register values and check how the
+>> > > affected registers change if you switch kernel versions and/or pwm
+>> > > settings?
+>> > >
+>> > > (e.g.
+>> > > 	memtool md 0x1c20e00+0xc
+>> > > )
+>> > >
+>> > > Best regards
+>> > > Uwe
+>> >
+>> > Thanks for your response.
+>> >
+>> > Yes I am sure that is the commit. If I am on master, and replace pwm-sun4i.c
+>> > with the one from 5b090b43, everything works. If I then apply fa4d8178, it
+>> > stops working.
+>> >
+>> > And strangely the output of the registers is exactly the same before and
+>> > after fa4d8178:
+>> >
+>> > 01c20e00: 00000050 00130014 00000000 (full brightness)
+>> > 01c20e00: 00000050 00130006 00000000 (min brightness)
+>> >
+>> > Even when I'm on 5b090b43 and cherry-pick fa4d8178 can I reproduce the
+>> > issue.
+>> 
+>> Very strange. I'm out of sensible ideas. The remaining ones are:
+>> 
+>> - enable tracing in the kernel and boot with
+>> 
+>> 	trace_event=pwm
+>> 
+>>   And then check after the problem occurred in
+>>   /sys/kernel/debug/tracing/trace if something sticks out.
+>> 
+>> - Try modifying the registers using memtool. E.g.
+>> 
+>> 	memtool mw 0x01c20e04 0x00130012
+>> 
+>> - Do you have equipment to check the actual output of the PWM 
+>> hardware?
+>>   If so, what do you see?
 > 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> I assume the sun4i-series you sent earlier today resolves the problems
+> you reported here?
+> 
+> Best regards
+> Uwe
 
-This patch looks fine, though it depends on the previous discussion on
-compat ABI compatibility.
+Hi Uwe,
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Yes it does, but as Emil mentioned it's probably not complete. It's just 
+an RFC for now to make sure it doesn't cause a regression. Turns out the 
+Allwinner PWM controller is even more pickier than I thought.
+
+Again, thank you for your help.
