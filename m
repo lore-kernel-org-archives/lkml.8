@@ -2,73 +2,203 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184A5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD43C5ACC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB1232073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994DE20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nab2iMTk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgCQGzH (ORCPT
+        id S1726556AbgCQGzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:55:07 -0400
-Received: from mga14.intel.com ([192.55.52.115]:25817 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgCQGzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:55:05 -0400
-IronPort-SDR: 9URtp7CndDTfHErMEtxwd6mIexQMGiaZub9bvI7xpo62rRn3SrBAeLdJgXZaJvkNmOSFlIMzlV
- r8RsRuZ7xuyg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 23:55:05 -0700
-IronPort-SDR: Ks2lyFR4oQi+/qPyHNM8E+gog2qCtpLm5wZsCX9HHOT8ta1lsCwXUxodY71dHg89zhK5itHWIN
- FBE4ui/9eucg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="233412448"
-Received: from debian-skl.sh.intel.com ([10.239.160.44])
-  by orsmga007.jf.intel.com with ESMTP; 16 Mar 2020 23:55:03 -0700
-From:   Zhenyu Wang <zhenyuw@linux.intel.com>
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Zhong, Yang" <yang.zhong@intel.com>
-Subject: [PATCH] KVM: x86: Expose AVX512 VP2INTERSECT in cpuid for TGL
-Date:   Tue, 17 Mar 2020 14:55:53 +0800
-Message-Id: <20200317065553.64790-1-zhenyuw@linux.intel.com>
-X-Mailer: git-send-email 2.25.0.rc2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 17 Mar 2020 02:55:17 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:35279 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbgCQGzO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 02:55:14 -0400
+Received: by mail-qk1-f202.google.com with SMTP id m6so20689640qkm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=7ngORi0qjHGKSTPYP6jqwB2CTxTKHni0v/JyFS4TsJY=;
+        b=Nab2iMTktoEDgr02ucqDK9isAmOo4ipKNIJmcdWX9C+9c6ibZ0ACWVVDLKrmvFK2Nv
+         +n/CdhwFe7D0fcDDF+KueDiskyTSirfZzgH7ApN17BUlo33WGiDWYQxSdr+88om+U7ug
+         yLoYp18sCc0bH6o010hAp7CyOux2D4YkIDi5T36j6CpG9ul39ZcoEkPKPhqNjdZI5Hbq
+         126yvaty609YLDursNVsFv1zTmvhwtCRCM5ONcqGkUz4vJt9r3XlTRWSa/0fb+rJO1Jk
+         ZCqKS5PHRoyv6IVk7cQ1Tmnu4uXf0ZkfZkTpEZsAsodLYoQolYkSZVpKlgOncY4D208G
+         e0aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=7ngORi0qjHGKSTPYP6jqwB2CTxTKHni0v/JyFS4TsJY=;
+        b=NOKQJbMvStHGa9wG6/k3WiGz/yCUp9Etnklx07KMWwHcEKKnYz1nNiQVGxqR2NkdSq
+         OO7QAKdO8X9WpCytTn+C1zj4/75vWpwEnW1V9U86uInl5+UttlSBRTyof5q34Z8/snb1
+         RxU18h0B0OS3i1Htu6Qlm6YhrtdKSoZWWkZMYYaRYJLOMB+jKwAp424JHOtRBrs2+8F4
+         WNoJa+K+YKSBUWgVG3QOA2tKd2ay4ojnEZp+5wMHk/Ul6bu8Mjqmt04voOk9bVEoDe1w
+         cZYpPmvMJZ2AitodLHWpV4CMHPYGc9V6rVnQu51xz+uT9gFLdTGZe7vn6tCo6y5beZHA
+         /b1w==
+X-Gm-Message-State: ANhLgQ2Tgy6pwhQCO36QdRyElQKn1s/rUO6ikLGZdt2KR9A6DeyRa1Zo
+        Ient5yt2dYTQVWuIRv3empbvx9p+qQnGAAQ=
+X-Google-Smtp-Source: ADFU+vu6Q/y175df99s4giYR9vMy2KQkhva5yiVcjNt6xji0hnXCikbzl84Cs4t7LJdeoDn8q4XTKNSqQvCeU0w=
+X-Received: by 2002:ac8:3003:: with SMTP id f3mr3817009qte.293.1584428111301;
+ Mon, 16 Mar 2020 23:55:11 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 23:54:50 -0700
+In-Reply-To: <20200317065452.236670-1-saravanak@google.com>
+Message-Id: <20200317065452.236670-5-saravanak@google.com>
+Mime-Version: 1.0
+References: <20200317065452.236670-1-saravanak@google.com>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v1 4/6] driver core: Add device link flag DL_FLAG_AUTOPROBE_CONSUMER
+From:   Saravana Kannan <saravanak@google.com>
+To:     stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, kernel-team@android.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tigerlake new AVX512 VP2INTERSECT feature is available.
-This would expose it for KVM supported cpuid.
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Cc: "Zhong, Yang" <yang.zhong@intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Add a new device link flag, DL_FLAG_AUTOPROBE_CONSUMER, to request the
+driver core to probe for a consumer driver automatically after binding
+a driver to the supplier device on a persistent managed device link.
+
+As unbinding the supplier driver on a managed device link causes the
+consumer driver to be detached from its device automatically, this
+flag provides a complementary mechanism which is needed to address
+some "composite device" use cases.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+(cherry picked from commit e7dd40105aac9ba051e44ad711123bc53a5e4c71)
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- arch/x86/kvm/cpuid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/driver-api/device_link.rst |  9 +++++++++
+ drivers/base/core.c                      | 16 +++++++++++++++-
+ drivers/base/dd.c                        |  2 +-
+ include/linux/device.h                   |  3 +++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index b1c469446b07..b4e25ff6ab0a 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -374,7 +374,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
- 	const u32 kvm_cpuid_7_0_edx_x86_features =
- 		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
- 		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
--		F(MD_CLEAR);
-+		F(MD_CLEAR) | F(AVX512_VP2INTERSECT);
+diff --git a/Documentation/driver-api/device_link.rst b/Documentation/driver-api/device_link.rst
+index e249e074a8d2..c764755121c7 100644
+--- a/Documentation/driver-api/device_link.rst
++++ b/Documentation/driver-api/device_link.rst
+@@ -94,6 +94,15 @@ Similarly, when the device link is added from supplier's ``->probe`` callback,
+ ``DL_FLAG_AUTOREMOVE_SUPPLIER`` causes the device link to be automatically
+ purged when the supplier fails to probe or later unbinds.
  
- 	/* cpuid 7.1.eax */
- 	const u32 kvm_cpuid_7_1_eax_x86_features =
++If neither ``DL_FLAG_AUTOREMOVE_CONSUMER`` nor ``DL_FLAG_AUTOREMOVE_SUPPLIER``
++is set, ``DL_FLAG_AUTOPROBE_CONSUMER`` can be used to request the driver core
++to probe for a driver for the consumer driver on the link automatically after
++a driver has been bound to the supplier device.
++
++Note, however, that any combinations of ``DL_FLAG_AUTOREMOVE_CONSUMER``,
++``DL_FLAG_AUTOREMOVE_SUPPLIER`` or ``DL_FLAG_AUTOPROBE_CONSUMER`` with
++``DL_FLAG_STATELESS`` are invalid and cannot be used.
++
+ Limitations
+ ===========
+ 
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index d8273792950b..3495da13b18a 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -195,6 +195,12 @@ void device_pm_move_to_tail(struct device *dev)
+  * the link will be maintained until one of the devices pointed to by it (either
+  * the consumer or the supplier) is unregistered.
+  *
++ * Also, if DL_FLAG_STATELESS, DL_FLAG_AUTOREMOVE_CONSUMER and
++ * DL_FLAG_AUTOREMOVE_SUPPLIER are not set in @flags (that is, a persistent
++ * managed device link is being added), the DL_FLAG_AUTOPROBE_CONSUMER flag can
++ * be used to request the driver core to automaticall probe for a consmer
++ * driver after successfully binding a driver to the supplier device.
++ *
+  * The combination of DL_FLAG_STATELESS and either DL_FLAG_AUTOREMOVE_CONSUMER
+  * or DL_FLAG_AUTOREMOVE_SUPPLIER set in @flags at the same time is invalid and
+  * will cause NULL to be returned upfront.
+@@ -215,7 +221,12 @@ struct device_link *device_link_add(struct device *consumer,
+ 
+ 	if (!consumer || !supplier ||
+ 	    (flags & DL_FLAG_STATELESS &&
+-	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER | DL_FLAG_AUTOREMOVE_SUPPLIER)))
++	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
++		      DL_FLAG_AUTOREMOVE_SUPPLIER |
++		      DL_FLAG_AUTOPROBE_CONSUMER)) ||
++	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
++	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
++		      DL_FLAG_AUTOREMOVE_SUPPLIER)))
+ 		return NULL;
+ 
+ 	if (flags & DL_FLAG_PM_RUNTIME && flags & DL_FLAG_RPM_ACTIVE) {
+@@ -576,6 +587,9 @@ void device_links_driver_bound(struct device *dev)
+ 
+ 		WARN_ON(link->status != DL_STATE_DORMANT);
+ 		WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
++
++		if (link->flags & DL_FLAG_AUTOPROBE_CONSUMER)
++			driver_deferred_probe_add(link->consumer);
+ 	}
+ 
+ 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 5f6416e6ba96..caaeb7910a04 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -116,7 +116,7 @@ static void deferred_probe_work_func(struct work_struct *work)
+ }
+ static DECLARE_WORK(deferred_probe_work, deferred_probe_work_func);
+ 
+-static void driver_deferred_probe_add(struct device *dev)
++void driver_deferred_probe_add(struct device *dev)
+ {
+ 	mutex_lock(&deferred_probe_mutex);
+ 	if (list_empty(&dev->p->deferred_probe)) {
+diff --git a/include/linux/device.h b/include/linux/device.h
+index c74ce473589a..7569cff2f4dc 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -339,6 +339,7 @@ struct device *driver_find_device(struct device_driver *drv,
+ 				  struct device *start, void *data,
+ 				  int (*match)(struct device *dev, void *data));
+ 
++void driver_deferred_probe_add(struct device *dev);
+ int driver_deferred_probe_check_state(struct device *dev);
+ 
+ /**
+@@ -824,12 +825,14 @@ enum device_link_state {
+  * PM_RUNTIME: If set, the runtime PM framework will use this link.
+  * RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link creation.
+  * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
++ * AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
+  */
+ #define DL_FLAG_STATELESS		BIT(0)
+ #define DL_FLAG_AUTOREMOVE_CONSUMER	BIT(1)
+ #define DL_FLAG_PM_RUNTIME		BIT(2)
+ #define DL_FLAG_RPM_ACTIVE		BIT(3)
+ #define DL_FLAG_AUTOREMOVE_SUPPLIER	BIT(4)
++#define DL_FLAG_AUTOPROBE_CONSUMER	BIT(5)
+ 
+ /**
+  * struct device_link - Device link representation.
 -- 
-2.25.0.rc2
+2.25.1.481.gfbce0eb801-goog
 
