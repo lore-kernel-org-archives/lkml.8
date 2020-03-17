@@ -2,102 +2,68 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD3FC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA572C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A2D20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF958206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fmVRythI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JmdSFI1+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgCQJ25 (ORCPT
+        id S1726352AbgCQJ3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:28:57 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:43246 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725730AbgCQJ24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:28:56 -0400
-X-UUID: 4e2a6919cd614f4b911b5e93c50896c1-20200317
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=caBY5KaLBvbbFihcSr1PWRfxvxROOG5oXS91E6JZO7o=;
-        b=fmVRythI/bDR5VQc/ca29cvuySrkeEeuriLbKZxgqgx8kvdCOcJSOioufGDXm7O5J6S0QhgAH4dF2RfAGOMucnzOyWG69EoJAhB/8E9TLc5k/AjYVqPVPa0X3eIsQoNAmgyh0bELQpexrAI3n8sjUwKe3h4tSEcrK1q1doCUOPw=;
-X-UUID: 4e2a6919cd614f4b911b5e93c50896c1-20200317
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1665547931; Tue, 17 Mar 2020 17:28:52 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 17 Mar 2020 17:26:28 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 17 Mar 2020 17:28:02 +0800
-Message-ID: <1584437324.12211.10.camel@mtkswgap22>
-Subject: Re: [PATCH v4 2/2] pinctrl: make MediaTek MT6765 pinctrl ready for
- buidling loadable module
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     Sean Wang <sean.wang@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>
-Date:   Tue, 17 Mar 2020 17:28:44 +0800
-In-Reply-To: <CAGp9Lzo-HkmiitBBJF9Mybbrdgy-Kphfyi2wf0SwMGXTeuWGVA@mail.gmail.com>
-References: <1583825986-8189-1-git-send-email-light.hsieh@mediatek.com>
-         <1583825986-8189-3-git-send-email-light.hsieh@mediatek.com>
-         <CAGp9Lzo-HkmiitBBJF9Mybbrdgy-Kphfyi2wf0SwMGXTeuWGVA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 17 Mar 2020 05:29:32 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39876 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgCQJ3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:29:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=z+AyaK3ogFbvbt1mFffv+w8jqt6bs51tBylNS+LBlz0=; b=JmdSFI1+VkJio2tDPA/rdC72rd
+        PfGp4Xt1rRCIRyCUzSd44ADg9K381tvFsW6iC4Vo3CQzEhLdpj2Lrm7Hystwkl8WanmwRd/F+U1Bb
+        EW3/r166RNdnUKtW1n61MHGJXcQERgI4+P8sIG5TWNLYPWjwushK6JTxUyBwQphvV2iM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jE8XH-00057V-Lw; Tue, 17 Mar 2020 10:29:19 +0100
+Date:   Tue, 17 Mar 2020 10:29:19 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>, davem@davemloft.net,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] net: phy: mdio-mux-bcm-iproc: check
+ clk_prepare_enable() return value
+Message-ID: <20200317092919.GA19323@lunn.ch>
+References: <20200317045435.29975-1-rayagonda.kokatanur@broadcom.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317045435.29975-1-rayagonda.kokatanur@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU3VuLCAyMDIwLTAzLTE1IGF0IDE0OjE1IC0wNzAwLCBTZWFuIFdhbmcgd3JvdGU6DQo+IEhp
-LCBMaWdodA0KPiANCj4gT24gVHVlLCBNYXIgMTAsIDIwMjAgYXQgMTI6MzkgQU0gPGxpZ2h0Lmhz
-aWVoQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBMaWdodCBIc2llaCA8bGln
-aHQuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBtYWtlIHBpbmN0cmwt
-bXQ2NzY1IHJlYWR5IGZvciBidWlsZGluZyBhcyBsb2FkYWJsZSBtb2R1bGUuDQo+IHMvYnVpbGRp
-bmcvYnVpbGRpbmcvDQo+IA0KPiBJIGdvdCBidWlsZCBlcnJvciBhZnRlciB3aGVuIHRob3NlIHR3
-byBwYXRjaGVzIGFyZSBiZWluZyBhcHBsaWVkDQo+IC4uL2RyaXZlcnMvcGluY3RybC9tZWRpYXRl
-ay9waW5jdHJsLW10ay1jb21tb24tdjIuYzo1Mjk6MTogZXJyb3I6DQo+ICdtdGtfcGluY29uZl9i
-aWFzX3NldF9nZXYxJyB1bmRlY2xhcmVkIGhlcmUgKG5vdCBpbiBhIGZ1bmN0aW9uKQ0KPiANCg0K
-T0suIEkgd2lsbCBmaXggaXQuDQoNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExpZ2h0IEhzaWVo
-IDxsaWdodC5oc2llaEBtZWRpYXRlay5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IE1hdHRoaWFzIEJy
-dWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGlu
-Y3RybC9tZWRpYXRlay9LY29uZmlnICAgICAgICAgIHwgMiArLQ0KPiA+ICBkcml2ZXJzL3BpbmN0
-cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NjUuYyB8IDQgKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5n
-ZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnIGIvZHJpdmVycy9waW5jdHJsL21lZGlh
-dGVrL0tjb25maWcNCj4gPiBpbmRleCA0Y2QxMTA5Li5jNjQ1ZmRiIDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9waW5j
-dHJsL21lZGlhdGVrL0tjb25maWcNCj4gPiBAQCAtODksNyArODksNyBAQCBjb25maWcgUElOQ1RS
-TF9NVDI3MTINCj4gPiAgICAgICAgIHNlbGVjdCBQSU5DVFJMX01USw0KPiA+DQo+ID4gIGNvbmZp
-ZyBQSU5DVFJMX01UNjc2NQ0KPiA+IC0gICAgICAgYm9vbCAiTWVkaWF0ZWsgTVQ2NzY1IHBpbiBj
-b250cm9sIg0KPiA+ICsgICAgICAgdHJpc3RhdGUgIk1lZGlhdGVrIE1UNjc2NSBwaW4gY29udHJv
-bCINCj4gPiAgICAgICAgIGRlcGVuZHMgb24gT0YNCj4gPiAgICAgICAgIGRlcGVuZHMgb24gQVJN
-NjQgfHwgQ09NUElMRV9URVNUDQo+ID4gICAgICAgICBkZWZhdWx0IEFSTTY0ICYmIEFSQ0hfTUVE
-SUFURUsNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwt
-bXQ2NzY1LmMgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NjUuYw0KPiA+
-IGluZGV4IDkwNWRhZThjLi4yYzU5ZDM5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGluY3Ry
-bC9tZWRpYXRlay9waW5jdHJsLW10Njc2NS5jDQo+ID4gKysrIGIvZHJpdmVycy9waW5jdHJsL21l
-ZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMNCj4gPiBAQCAtNiw2ICs2LDcgQEANCj4gPiAgICoNCj4g
-PiAgICovDQo+ID4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ICAjaW5jbHVk
-ZSAicGluY3RybC1tdGstbXQ2NzY1LmgiDQo+ID4gICNpbmNsdWRlICJwaW5jdHJsLXBhcmlzLmgi
-DQo+ID4NCj4gPiBAQCAtMTEwMywzICsxMTA0LDYgQEAgc3RhdGljIGludCBfX2luaXQgbXQ2NzY1
-X3BpbmN0cmxfaW5pdCh2b2lkKQ0KPiA+ICAgICAgICAgcmV0dXJuIHBsYXRmb3JtX2RyaXZlcl9y
-ZWdpc3RlcigmbXQ2NzY1X3BpbmN0cmxfZHJpdmVyKTsNCj4gPiAgfQ0KPiA+ICBhcmNoX2luaXRj
-YWxsKG10Njc2NV9waW5jdHJsX2luaXQpOw0KPiA+ICsNCj4gPiArTU9EVUxFX0xJQ0VOU0UoIkdQ
-TCB2MiIpOw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1lZGlhVGVrIE1UNjc2NSBQaW5jdHJs
-IERyaXZlciIpOw0KPiA+IC0tDQo+ID4gMS44LjEuMS5kaXJ0eQ0KDQo=
+On Tue, Mar 17, 2020 at 10:24:35AM +0530, Rayagonda Kokatanur wrote:
+> Check clk_prepare_enable() return value.
+> 
+> Fixes: 2c7230446bc9 ("net: phy: Add pm support to Broadcom iProc mdio mux driver")
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
