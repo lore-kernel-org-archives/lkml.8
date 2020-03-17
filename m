@@ -2,148 +2,69 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D507BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07772C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A588E206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:26:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="k5Hee8so"
+	by mail.kernel.org (Postfix) with ESMTP id CDB57206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgCQI0y (ORCPT
+        id S1726345AbgCQI06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:26:54 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44970 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgCQI0x (ORCPT
+        Tue, 17 Mar 2020 04:26:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43946 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgCQI05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:26:53 -0400
-Received: by mail-il1-f196.google.com with SMTP id j69so19235578ila.11
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 01:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8aOuyJoCrMzyvXHSlDSwNMADBZRpY3b4ROkMfslZB48=;
-        b=k5Hee8soUFcdVO+I6avboQHDvGJamIlUdtAa9jEGpo/uilBwzwba3lZorbRHrpeJs+
-         mzKIQfYEFlUJV0c+PS9u9SAKiPnnQHcx/GKTSsS+/FvQ7KD99ukdr+RAXLPE10oyBPMR
-         lKCeNAO5CTAV9TWFxlRb+ob9I6bGndxQbo7FQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8aOuyJoCrMzyvXHSlDSwNMADBZRpY3b4ROkMfslZB48=;
-        b=JVtbY9X/+5XpZ2z+hXi1ZhghXqoEEXhxoPUzeh0Jas2Qtz73vTbeXCD8zZa9CuCTkD
-         3stOMV1fxQZMBLzUlyknEYe3L/bj1+4DuCIov8xvzcFCJK8oQWbmMRoBiCcqO9Bdzpwh
-         eB3mOFIyuaczYL88M0+2F5Rcj0uW1Wpc69iN3lhrHW4yvT6QCKtX7Gtt4AYZJbRhOhA8
-         ji5ivR9ofFz7pc6AltbLSG/HhfV6KGiiVTGVvI/g7hWHimJ36Ggl4j+PbgBEpoAbgoZV
-         x9b2h6Cwwm1ISu2aJ1ECAxeI5TF6+pMom7MDNDqYCkdLT0SGV8jiXeyUmVq1jj+M+cKn
-         PuiQ==
-X-Gm-Message-State: ANhLgQ2ZxizEYl7f7PSXZgYMINRfnExr+KwQMarEmZE0BgI0KAjT60eT
-        3epB5m8GHmHll2JFsDEpx6S0madUMDOiiLBXdrBn5g==
-X-Google-Smtp-Source: ADFU+vuurAtCAkyqCIHFcLdznh3heTGQ3XHwTYG5aY0816GZbUgWE2P5XFfJ3rW0Pu1UJql5n8z5r8atIwDae7WWeqs=
-X-Received: by 2002:a92:778e:: with SMTP id s136mr4076428ilc.256.1584433612716;
- Tue, 17 Mar 2020 01:26:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200225094437.4170502-0-mholenko@antmicro.com>
- <20200225094437.4170502-3-mholenko@antmicro.com> <291b0a18-2b50-515e-d6f8-31f766dbe567@infradead.org>
-In-Reply-To: <291b0a18-2b50-515e-d6f8-31f766dbe567@infradead.org>
-From:   Mateusz Holenko <mholenko@antmicro.com>
-Date:   Tue, 17 Mar 2020 09:26:41 +0100
-Message-ID: <CAPk366T03OT9TxsR27X4cPU5jew2TB32u3URnTy8b9r6MmpTeQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] drivers/soc/litex: add LiteX SoC Controller driver
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Tue, 17 Mar 2020 04:26:57 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jE7Yt-0005u6-E9; Tue, 17 Mar 2020 08:26:55 +0000
+Date:   Tue, 17 Mar 2020 09:26:54 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     linux- stable <stable@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Todd Kjos <tkjos@google.com>, Shuah Khan <shuah@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>, tkjos@android.com,
+        ardb@kernel.org, Kees Cook <keescook@chromium.org>,
+        lkft-triage@lists.linaro.org, Basil Eljuse <Basil.Eljuse@arm.com>,
+        YongQin Liu <yongqin.liu@linaro.org>
+Subject: Re: [stable-rc-5.4 and 5.5 ] WARNING: CPU: 3 PID: 2548 at
+ /usr/src/kernel/lib/refcount.c:28 refcount_warn_saturate
+Message-ID: <20200317082654.zl6piqg6kbc43ivm@wittgenstein>
+References: <CA+G9fYu06RPexAK-4huCSwYC4=FkuH2QduVpxOgG43ojX2jyBA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYu06RPexAK-4huCSwYC4=FkuH2QduVpxOgG43ojX2jyBA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 5:16 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 2/25/20 12:46 AM, Mateusz Holenko wrote:
-> > diff --git a/drivers/soc/litex/Kconfig b/drivers/soc/litex/Kconfig
-> > new file mode 100644
-> > index 000000000000..22c78cda0b83
-> > --- /dev/null
-> > +++ b/drivers/soc/litex/Kconfig
-> > @@ -0,0 +1,14 @@
-> > +# SPDX-License_Identifier: GPL-2.0
-> > +
-> > +menu "Enable LiteX SoC Builder specific drivers"
-> > +
-> > +config LITEX_SOC_CONTROLLER
-> > +     tristate "Enable LiteX SoC Controller driver"
-> > +     help
-> > +     This option enables the SoC Controller Driver which verifies
-> > +     LiteX CSR access and provides common litex_get_reg/litex_set_reg
-> > +     accessors.
-> > +     All drivers that use functions from litex.h must depend on
-> > +     LITEX_SOC_CONTROLLER
->
-> Hi,
-> Please indent the help text with 2 additional spaces, as explained in the
-> coding-style.rst file:
->
-> 10) Kconfig configuration files
-> -------------------------------
->
-> For all of the Kconfig* configuration files throughout the source tree,
-> the indentation is somewhat different.  Lines under a ``config`` definition
-> are indented with one tab, while help text is indented an additional two
-> spaces.  Example::
->
->   config AUDIT
->         bool "Auditing support"
->         depends on NET
->         help
->           Enable auditing infrastructure that can be used with another
->           kernel subsystem, such as SELinux (which requires this for
->           logging of avc messages output).  Does not do system-call
->           auditing without CONFIG_AUDITSYSCALL.
->
-> > +
-> > +endmenu
->
-> and then end the last line of the help text with a period ('.').
->
-> thanks.
->
-> --
-> ~Randy
->
+On Tue, Mar 17, 2020 at 01:15:40PM +0530, Naresh Kamboju wrote:
+> While running selftests binderfs_test on stable rc 5.4 and 5.5
+> branches the following
+> warning on arm64, arm, x86_64 and i386.
+> 
+> This warning was noticed on Linus's tree and reported [1] and then
+> Christian Brauner investigated this problem.
 
-Thanks for the comments!
+I've sent a fix (You should've been Cced on.) which has made it into
+Greg's tree so should land in mainline soon. I've also made sure to Cc
+stable meaning it should land in all relevant kernels soon after. Please
+see:
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git/commit/?h=char-misc-linus&id=211b64e4b5b6bd5fdc19cd525c2cc9a90e6b0ec9
 
-I'll fix the documentation and resubmit the patch after addressing all
-other remarks.
-
--- 
-Mateusz Holenko
-Antmicro Ltd | www.antmicro.com
-Roosevelta 22, 60-829 Poznan, Poland
+Thanks!
+Christian
