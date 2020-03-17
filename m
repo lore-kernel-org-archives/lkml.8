@@ -2,142 +2,136 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8BBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EB2C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40E420719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="I+6r/pEQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6C2A820719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:23:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgCQEV4 (ORCPT
+        id S1726638AbgCQEXD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:21:56 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43387 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgCQEVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:21:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hKkS2T8lz9sR4;
-        Tue, 17 Mar 2020 15:21:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584418913;
-        bh=RKizELq7+yJhhSQqciMLy1s3drq2vyDrZAPXBp7AUwU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=I+6r/pEQFQJY3/w5V1gMgeKqcrc3atyQ9isB3PujllSUyo5yfOmy7gs3Test/f0SK
-         SM2N+Gs1hHgWAJ4tvHHZnzlDbqkVB+J/PTpU3mLq4LiPWDf6rxOH2e3+ptirAxTEk6
-         d/fEZxJnEZNqeXyOCubPpEjKew0OI4DXXBV3eo6Evf2ZhkLvzbTsFMQyTpiouTiR8p
-         obvVgYdxEMH+LssiiPThkHO+wJQM4w/oeN4A0YTd6szDLRRjbD7/HhP1+0luoC2YLK
-         GlFfqDbiCJZmwTTiKftpunwa/aS8TtN5vNTvfcJR28LNFIKqWDa0e7PLfaeNkROl/R
-         ZpmLenanE5lxw==
-Date:   Tue, 17 Mar 2020 15:21:49 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Rob Herring <robherring2@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: linux-next: manual merge of the usb-gadget tree with the
- devicetree tree
-Message-ID: <20200317152149.3fd4db28@canb.auug.org.au>
-In-Reply-To: <20200316141436.2113f68c@canb.auug.org.au>
-References: <20200316141436.2113f68c@canb.auug.org.au>
+        Tue, 17 Mar 2020 00:23:03 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33507 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgCQEXD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:23:03 -0400
+Received: from mail-wm1-f71.google.com ([209.85.128.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <chia-lin.kao@canonical.com>)
+        id 1jE3kq-0006l6-4D
+        for linux-kernel@vger.kernel.org; Tue, 17 Mar 2020 04:23:00 +0000
+Received: by mail-wm1-f71.google.com with SMTP id n25so5294995wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 21:23:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LR2lWYgIayYbanKxoGsZXWtRIFq/icnuafwUCJSqlBY=;
+        b=DJ4qIYE7ZefJ9sIynxliiVlfjsre0c8M1tF2U8cP/XTzztej4Rcjfp9prKtUrIaiet
+         OBdmCGRui4dXgELj0lautcdANuG0edh1flgxS9tOKFkTcikum0/ygYeC8W+nD/wse9+e
+         2KTmzK2vyLRUpYyy2mWcDMH1WdpQgvTCGxXpFeVW0b5LZGitqQbJlBzGsDdeNMtKZycG
+         JrvAHzHvNzRj/VoNqcz+VUVpXSjIs/+Z9rkOxAdQ5fqWqajR0n2EpEh7AlDAUEmvvEmh
+         k/ZI7hkzLlWgcbwPs+Rz8F8yKVX4xh6TTs5xg3Ov4KnNmrBzRLotaULOTfQK4AjWHRcw
+         0M0g==
+X-Gm-Message-State: ANhLgQ1guZgxsRy+mMOX4rrkQyHrMyqxyi3g8GhXnFEio2b87MxZKHD9
+        Ga3PQdghUuk756r2Nc2FlyWIZJj/yoU6RPc4RtSKXD1ztPFbicZkoukw4W36/Myin5/U6MLIyvM
+        O+rcOw7wkzCGZd38LhwbwSplyn4Oj/GlKoHNjPkXBNqR4WeATtyWRHeKQPg==
+X-Received: by 2002:a5d:480a:: with SMTP id l10mr3446126wrq.178.1584418979798;
+        Mon, 16 Mar 2020 21:22:59 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtS9xGu/clE7LssO/c1MTX7szfSJuHMsj9Z3gBuclu0wafunqLHCm+rn+msLWfL6mk91VyTZm7sdG3II1XWvOY=
+X-Received: by 2002:a5d:480a:: with SMTP id l10mr3446094wrq.178.1584418979572;
+ Mon, 16 Mar 2020 21:22:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/iz78cqsaLHjNqxnrr_JEJc3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <501e8224-e334-0aa8-41c0-8f67552e7069@gmail.com> <20200310033640.14440-1-vicamo@gmail.com>
+In-Reply-To: <20200310033640.14440-1-vicamo@gmail.com>
+From:   AceLan Kao <acelan.kao@canonical.com>
+Date:   Tue, 17 Mar 2020 12:22:48 +0800
+Message-ID: <CAFv23Q=q2N7gyvKrgJZJN04+1YqV=VxP2smm6gxn4oAwx2=QNA@mail.gmail.com>
+Subject: Re: [PATCH v2] Input: i8042 - fix the selftest retry logic
+To:     You-Sheng Yang <vicamo@gmail.com>
+Cc:     Allison Randal <allison@lohutok.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Enrico Weigelt <info@metux.net>, linux-input@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        You-Sheng Yang <vicamo.yang@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/iz78cqsaLHjNqxnrr_JEJc3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This v2 fix my issue, too.
+Please consider to merge this patch.
+Thanks.
 
-Hi all,
-
-On Mon, 16 Mar 2020 14:14:36 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+You-Sheng Yang <vicamo@gmail.com> 於 2020年3月10日 週二 上午11:37寫道：
 >
-> Hi all,
->=20
-> Today's linux-next merge of the usb-gadget tree got a conflict in:
->=20
->   Documentation/devicetree/bindings/usb/generic.txt
->=20
-> between commit:
->=20
->   431a30b7d495 ("dt-bindings: Convert usb-connector to YAML format.")
->=20
-> from the devicetree tree and commit:
->=20
->   dd2d0d1fac2b ("dt-bindings: usb: generic: Add role-switch-default-mode =
-binding")
->=20
-> from the usb-gadget tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc Documentation/devicetree/bindings/usb/generic.txt
-> index 474e74c06522,67c51759a642..000000000000
-> --- a/Documentation/devicetree/bindings/usb/generic.txt
-> +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> @@@ -34,7 -34,13 +34,13 @@@ Optional properties
->    - usb-role-switch: boolean, indicates that the device is capable of as=
-signing
->   			the USB data role (USB host or USB device) for a given
->   			USB connector, such as Type-C, Type-B(micro).
->  -			see connector/usb-connector.txt.
->  +			see connector/usb-connector.yaml.
-> +  - role-switch-default-mode: indicating if usb-role-switch is enabled, =
-the
-> + 			device default operation mode of controller while usb
-> + 			role is USB_ROLE_NONE. Valid arguments are "host" and
-> + 			"peripheral". Defaults to "peripheral" if not
-> + 			specified.
-> +=20
->  =20
->   This is an attribute to a USB controller such as:
->  =20
-
-This is now a conflict between the usb tree and the devicetree tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/iz78cqsaLHjNqxnrr_JEJc3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5wUF0ACgkQAVBC80lX
-0Gx06Qf/QRzhPFQwQOaDLY3laMHmeBdggzpkdsPFLHpmoV2lGREsZh1zAuqzbG85
-dmk/SmeP2xFDzNW2kf3hEBPFdgUAP1bXrKze/TqKdMngYgiOrZ+i2PcxRx8McTJu
-rDOpmvr7VoBS14h9bq8mlUw3KroXsQ5XQQ+2t2muFsWU9C54fEXmVCIoWPuNgPZI
-rqrEJTrj/pmU9r23HiOmZ6dXAgSgSGjK3YRTLc0/BvysauGS5S9ZGjzUdMbhqeGY
-a9n+JhQdIyOml2+RAGtJQIAAhozHRqQ/WgweWpHKTpMizjhH1Igyc52qTuoMeRva
-lmGpF6tKY3MBKq030U5eDGMwHrQwOA==
-=rYA6
------END PGP SIGNATURE-----
-
---Sig_/iz78cqsaLHjNqxnrr_JEJc3--
+> From: You-Sheng Yang <vicamo.yang@canonical.com>
+>
+> It returns -NODEV at the first selftest timeout, so the retry logic
+> doesn't work. Move the return outside of the while loop to make it real
+> retry 5 times before returns -ENODEV.
+>
+> BTW, the origin loop will retry 6 times, also fix this.
+>
+> Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+> ---
+>  drivers/input/serio/i8042.c | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
+> index 20ff2bed3917..e8f2004071d4 100644
+> --- a/drivers/input/serio/i8042.c
+> +++ b/drivers/input/serio/i8042.c
+> @@ -937,25 +937,28 @@ static int i8042_controller_selftest(void)
+>  {
+>         unsigned char param;
+>         int i = 0;
+> +       int ret;
+>
+>         /*
+>          * We try this 5 times; on some really fragile systems this does not
+>          * take the first time...
+>          */
+> -       do {
+> -
+> -               if (i8042_command(&param, I8042_CMD_CTL_TEST)) {
+> -                       pr_err("i8042 controller selftest timeout\n");
+> -                       return -ENODEV;
+> -               }
+> +       while (i++ < 5) {
+>
+> -               if (param == I8042_RET_CTL_TEST)
+> +               ret = i8042_command(&param, I8042_CMD_CTL_TEST);
+> +               if (ret)
+> +                       pr_err("i8042 controller selftest timeout (%d/5)\n", i);
+> +               else if (param == I8042_RET_CTL_TEST)
+>                         return 0;
+> +               else
+> +                       dbg("i8042 controller selftest: %#x != %#x\n",
+> +                           param, I8042_RET_CTL_TEST);
+>
+> -               dbg("i8042 controller selftest: %#x != %#x\n",
+> -                   param, I8042_RET_CTL_TEST);
+>                 msleep(50);
+> -       } while (i++ < 5);
+> +       }
+> +
+> +       if (ret)
+> +               return -ENODEV;
+>
+>  #ifdef CONFIG_X86
+>         /*
+> --
+> 2.25.0
+>
