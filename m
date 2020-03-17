@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20248C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEF9C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69732071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35BF720658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443039;
-	bh=51yulXfNqWebYz/Y5VuAdOufMoLUdCW4U1+oHKowC/Y=;
+	s=default; t=1584443042;
+	bh=De0LadD2WRqVJkPE0M+fU9od+pLryn7IlaEhwppLaHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1akDXcj27KBdpfhYbabTepKaCHQmEQv5PQlYcm0HgrH8y8LbDgE3h4pzJ2rO9b0qR
-	 AeD2R3ezQYhYodOVz4YnIdcW7M6qyrMfcBFlKGxZ2v6AfPxHii2DKtr4/oyp1bh/N4
-	 troMz4s+epuUkcL0o5DwAjutPdKD0P0zOftuK2H8=
+	b=COhH96Q7K91CFCWyaP/5/J+JI652fAiqEQgSlmMKlqcJ5TJqW8zuUJT6VQut6pSZx
+	 IyHnEREIFbGoM23zAUWI2PG4+AptDMuH5lJnGRxPUkpsY4f9GqDpMxnIpzcCM9gLz9
+	 g+tzHWiu+BO7vVagL+2rtqTkTjtEqU8XsXy93jpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbgCQLD5 (ORCPT
+        id S1727825AbgCQLEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:03:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43958 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728201AbgCQLDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:03:55 -0400
+        id S1728201AbgCQLD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:03:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F3C220736;
-        Tue, 17 Mar 2020 11:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1132720658;
+        Tue, 17 Mar 2020 11:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443034;
-        bh=51yulXfNqWebYz/Y5VuAdOufMoLUdCW4U1+oHKowC/Y=;
+        s=default; t=1584443037;
+        bh=De0LadD2WRqVJkPE0M+fU9od+pLryn7IlaEhwppLaHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MmZWrTC/qNx91TofkwyNTE9cQfmG9nHtzczjI3QnGOW7/vZTj+/dNvdBRhdS9LsfA
-         vmYSUkz/pwVMIYo59LbB6QclO0BKMo2OUfLs1YCILzl8f1BahxEjhs2oaUJbOO6Vuc
-         qBmFiEezQ/TO28HyRdMd5MkGc3g3/tqPquTtVdYw=
+        b=GYaG+2cjUOqb48txUwv9nSgDVrpqb9p6zSVkb4dE4AJRoPEttkvu5jCP6AUJ/E7I/
+         67wxdEYpcQkVMOOefPUaf420kmlZN+ZIWcnkjBsItcVv5UiLdIFOP77+NeAmicNVBA
+         abQ3+7Jmw/STS1e06FZnJn/ljwWz7AVF6X6KOBho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
         Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 036/123] devlink: validate length of param values
-Date:   Tue, 17 Mar 2020 11:54:23 +0100
-Message-Id: <20200317103311.592294668@linuxfoundation.org>
+Subject: [PATCH 5.4 037/123] devlink: validate length of region addr/len
+Date:   Tue, 17 Mar 2020 11:54:24 +0100
+Message-Id: <20200317103311.693229382@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -62,76 +62,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 8750939b6ad86abc3f53ec8a9683a1cded4a5654 ]
+[ Upstream commit ff3b63b8c299b73ac599b120653b47e275407656 ]
 
-DEVLINK_ATTR_PARAM_VALUE_DATA may have different types
-so it's not checked by the normal netlink policy. Make
-sure the attribute length is what we expect.
+DEVLINK_ATTR_REGION_CHUNK_ADDR and DEVLINK_ATTR_REGION_CHUNK_LEN
+lack entries in the netlink policy. Corresponding nla_get_u64()s
+may read beyond the end of the message.
 
-Fixes: e3b7ca18ad7b ("devlink: Add param set command")
+Fixes: 4e54795a27f5 ("devlink: Add support for region snapshot read command")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/devlink.c |   31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ net/core/devlink.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 --- a/net/core/devlink.c
 +++ b/net/core/devlink.c
-@@ -3222,34 +3222,41 @@ devlink_param_value_get_from_info(const
- 				  struct genl_info *info,
- 				  union devlink_param_value *value)
- {
-+	struct nlattr *param_data;
- 	int len;
- 
--	if (param->type != DEVLINK_PARAM_TYPE_BOOL &&
--	    !info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA])
-+	param_data = info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA];
-+
-+	if (param->type != DEVLINK_PARAM_TYPE_BOOL && !param_data)
- 		return -EINVAL;
- 
- 	switch (param->type) {
- 	case DEVLINK_PARAM_TYPE_U8:
--		value->vu8 = nla_get_u8(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]);
-+		if (nla_len(param_data) != sizeof(u8))
-+			return -EINVAL;
-+		value->vu8 = nla_get_u8(param_data);
- 		break;
- 	case DEVLINK_PARAM_TYPE_U16:
--		value->vu16 = nla_get_u16(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]);
-+		if (nla_len(param_data) != sizeof(u16))
-+			return -EINVAL;
-+		value->vu16 = nla_get_u16(param_data);
- 		break;
- 	case DEVLINK_PARAM_TYPE_U32:
--		value->vu32 = nla_get_u32(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]);
-+		if (nla_len(param_data) != sizeof(u32))
-+			return -EINVAL;
-+		value->vu32 = nla_get_u32(param_data);
- 		break;
- 	case DEVLINK_PARAM_TYPE_STRING:
--		len = strnlen(nla_data(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]),
--			      nla_len(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]));
--		if (len == nla_len(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]) ||
-+		len = strnlen(nla_data(param_data), nla_len(param_data));
-+		if (len == nla_len(param_data) ||
- 		    len >= __DEVLINK_PARAM_MAX_STRING_VALUE)
- 			return -EINVAL;
--		strcpy(value->vstr,
--		       nla_data(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]));
-+		strcpy(value->vstr, nla_data(param_data));
- 		break;
- 	case DEVLINK_PARAM_TYPE_BOOL:
--		value->vbool = info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA] ?
--			       true : false;
-+		if (param_data && nla_len(param_data))
-+			return -EINVAL;
-+		value->vbool = nla_get_flag(param_data);
- 		break;
- 	}
- 	return 0;
+@@ -5804,6 +5804,8 @@ static const struct nla_policy devlink_n
+ 	[DEVLINK_ATTR_PARAM_VALUE_CMODE] = { .type = NLA_U8 },
+ 	[DEVLINK_ATTR_REGION_NAME] = { .type = NLA_NUL_STRING },
+ 	[DEVLINK_ATTR_REGION_SNAPSHOT_ID] = { .type = NLA_U32 },
++	[DEVLINK_ATTR_REGION_CHUNK_ADDR] = { .type = NLA_U64 },
++	[DEVLINK_ATTR_REGION_CHUNK_LEN] = { .type = NLA_U64 },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_NAME] = { .type = NLA_NUL_STRING },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_GRACEFUL_PERIOD] = { .type = NLA_U64 },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_AUTO_RECOVER] = { .type = NLA_U8 },
 
 
