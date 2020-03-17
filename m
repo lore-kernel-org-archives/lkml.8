@@ -2,126 +2,152 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22A7C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA045C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968C820674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584431984;
-	bh=fl8pl4W7bSue8L5SJNVLfRm5YSGX6fuIy5fWAbnSqaQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dOBAgTSmA4yMwY+QHQhDZArRfxMjsd/RUKrDE1TiGw2JtOqRRcUSTw0/77SxN9go7
-	 RbeNLTqAEAEa3yWThIoy0q3TY8mSMqJnRr5qtQJ2Kxy0syERIghzlXtfGQOSzZrnf+
-	 E3Y224V/aHCV5ukMpMsQliYZgrIbllyiIs4aetaI=
+	by mail.kernel.org (Postfix) with ESMTP id AE22C20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgCQH7n (ORCPT
+        id S1726345AbgCQIAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:59:43 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45503 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgCQH7n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:59:43 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t2so14271204wrx.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 00:59:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=COSdnxnIOsN3EOb8hRM3mTHRvlfS3wYkyMMxHIL4X4U=;
-        b=SEuTFLHGlaomHAU4fZMLOFQF+EUokRlMT4xEddcj+JnMm8+WPXWu8Gq+Z5iZLR9lzp
-         NvsjdbD62w2mC+JvPprLyyzjIvlystsYOgxFWOxUGB5jl/id/Ant5FPayHNcsa9Qgjy8
-         LqMl0sOLaLQr0eRERDCk2tGzPfr2LCCZwK2f2RjLCR+xR+qXcdThDHl2DbTOVDke/AXi
-         D+MoKdmTlJ4Cbxae8HVDXbmoBWPTBaCXeXVk3kMh+5OhCNz2ziLmYmdaHY3Th7uArgn8
-         FmtbatRL0S+mop3Ee9HGrfa1RmyOtHgFMSnUm+WRN+Xg6cXnnIazkknRaiF6Dxq+Dg4F
-         NIzQ==
-X-Gm-Message-State: ANhLgQ1ifQAws2gVR2DExyKGnybWXRFZW2wPWViSHH9nq1rBfsFwUy6L
-        bN3lzyTndXfEdNoV02mYaJg=
-X-Google-Smtp-Source: ADFU+vuwKantGoDyxWPeXBYjQjtbjYm5qNqzH0vpREbbQTITnn51vvyBJ7rwuV3Mw+wIV2o2vgzf0g==
-X-Received: by 2002:adf:bb06:: with SMTP id r6mr4533468wrg.324.1584431981101;
-        Tue, 17 Mar 2020 00:59:41 -0700 (PDT)
-Received: from localhost (ip-37-188-255-121.eurotel.cz. [37.188.255.121])
-        by smtp.gmail.com with ESMTPSA id x13sm3150071wmj.5.2020.03.17.00.59.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 00:59:40 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 08:59:39 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Robert Kolchmeyer <rkolchmeyer@google.com>,
-        David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [patch] mm, oom: make a last minute check to prevent unnecessary
- memcg oom kills
-Message-ID: <20200317075939.GD26018@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.2003101454580.142656@chino.kir.corp.google.com>
- <20200310221938.GF8447@dhcp22.suse.cz>
- <alpine.DEB.2.21.2003101547090.177273@chino.kir.corp.google.com>
- <20200311083900.GC23944@dhcp22.suse.cz>
+        Tue, 17 Mar 2020 04:00:20 -0400
+Received: from mga01.intel.com ([192.55.52.88]:20397 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgCQIAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 04:00:20 -0400
+IronPort-SDR: zoY88/N6vC3PcT7G+BSLGtZ32nMK650P1nmyNK7Dw+GDBQU6WZtv8HR1uDHhwa2B877s0UoPWL
+ vEm+VyeHUx0Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 01:00:19 -0700
+IronPort-SDR: 9R7l+2HCScjNEkQGsEtQT2xSVjo+c9fucFo7R7IR0BTPLRB0NGE5b+tIeH5iQzv+v2eQ/CBXBM
+ ug/XQlKc/0ug==
+X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
+   d="scan'208";a="417462225"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.82]) ([10.238.4.82])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 01:00:16 -0700
+Subject: Re: [PATCH] kvm/x86: Reduce counter period change overhead and delay
+ the effective time
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Eric Hankland <ehankland@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200317075315.70933-1-like.xu@linux.intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <cfc35223-2a8c-e995-ef2c-a85b44b5fea7@linux.intel.com>
+Date:   Tue, 17 Mar 2020 16:00:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311083900.GC23944@dhcp22.suse.cz>
+In-Reply-To: <20200317075315.70933-1-like.xu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-03-20 09:39:01, Michal Hocko wrote:
-> On Tue 10-03-20 15:54:44, David Rientjes wrote:
-> > On Tue, 10 Mar 2020, Michal Hocko wrote:
-> > 
-> > > On Tue 10-03-20 14:55:50, David Rientjes wrote:
-> > > > Killing a user process as a result of hitting memcg limits is a serious
-> > > > decision that is unfortunately needed only when no forward progress in
-> > > > reclaiming memory can be made.
-> > > > 
-> > > > Deciding the appropriate oom victim can take a sufficient amount of time
-> > > > that allows another process that is exiting to actually uncharge to the
-> > > > same memcg hierarchy and prevent unnecessarily killing user processes.
-> > > > 
-> > > > An example is to prevent *multiple* unnecessary oom kills on a system
-> > > > with two cores where the oom kill occurs when there is an abundance of
-> > > > free memory available:
-> > > > 
-> > > > Memory cgroup out of memory: Killed process 628 (repro) total-vm:41944kB, anon-rss:40888kB, file-rss:496kB, shmem-rss:0kB, UID:0 pgtables:116kB oom_score_adj:0
-> > > > <immediately after>
-> > > > repro invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
-> > > > CPU: 1 PID: 629 Comm: repro Not tainted 5.6.0-rc5+ #130
-> > > > Call Trace:
-> > > >  dump_stack+0x78/0xb6
-> > > >  dump_header+0x55/0x240
-> > > >  oom_kill_process+0xc5/0x170
-> > > >  out_of_memory+0x305/0x4a0
-> > > >  try_charge+0x77b/0xac0
-> > > >  mem_cgroup_try_charge+0x10a/0x220
-> > > >  mem_cgroup_try_charge_delay+0x1e/0x40
-> > > >  handle_mm_fault+0xdf2/0x15f0
-> > > >  do_user_addr_fault+0x21f/0x420
-> > > >  async_page_fault+0x2f/0x40
-> > > > memory: usage 61336kB, limit 102400kB, failcnt 74
-> > > > 
-> > > > Notice the second memcg oom kill shows usage is >40MB below its limit of
-> > > > 100MB but a process is still unnecessarily killed because the decision has
-> > > > already been made to oom kill by calling out_of_memory() before the
-> > > > initial victim had a chance to uncharge its memory.
-> > > 
-> > > Could you be more specific about the specific workload please?
-> > > 
-> > 
-> > Robert, could you elaborate on the user-visible effects of this issue that 
-> > caused it to initially get reported?
+On 2020/3/17 15:53, Like Xu wrote:
+> The cost of perf_event_period() is unstable, and when the guest samples
+> multiple events, the overhead increases dramatically (5378 ns on E5-2699).
 > 
-> Yes please, real life usecases are important when adding hacks like this
-> one and we should have a clear data to support the check actually helps
-> (in how many instances etc...)
+> For a non-running counter, the effective time of the new period is when
+> its corresponding enable bit is enabled. Calling perf_event_period()
+> in advance is superfluous. For a running counter, it's safe to delay the
+> effective time until the KVM_REQ_PMU event is handled. If there are
+> multiple perf_event_period() calls before handling KVM_REQ_PMU,
+> it helps to reduce the total cost.
+> 
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> 
+> ---
+>   arch/x86/kvm/pmu.c           | 11 -----------
+>   arch/x86/kvm/pmu.h           | 11 +++++++++++
+>   arch/x86/kvm/vmx/pmu_intel.c | 10 ++++------
+>   3 files changed, 15 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index d1f8ca57d354..527a8bb85080 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -437,17 +437,6 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
+>   	kvm_pmu_refresh(vcpu);
+>   }
+>   
+> -static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+> -{
+> -	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+> -
+> -	if (pmc_is_fixed(pmc))
+> -		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+> -			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+> -
+> -	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+> -}
+> -
+>   /* Release perf_events for vPMCs that have been unused for a full time slice.  */
+>   void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
+>   {
+> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+> index d7da2b9e0755..cd112e825d2c 100644
+> --- a/arch/x86/kvm/pmu.h
+> +++ b/arch/x86/kvm/pmu.h
+> @@ -138,6 +138,17 @@ static inline u64 get_sample_period(struct kvm_pmc *pmc, u64 counter_value)
+>   	return sample_period;
+>   }
+>   
+> +static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+> +{
+> +	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+> +
+> +	if (pmc_is_fixed(pmc))
+> +		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+> +			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+> +
+> +	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+> +}
+> +
+>   void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
+>   void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
+>   void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 7c857737b438..4e689273eb05 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -263,15 +263,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   			if (!msr_info->host_initiated)
+>   				data = (s64)(s32)data;
+>   			pmc->counter += data - pmc_read_counter(pmc);
+> -			if (pmc->perf_event)
+> -				perf_event_period(pmc->perf_event,
+> -						  get_sample_period(pmc, data));
+> +			if (pmc_speculative_in_use(pmc)) {
 
-Friendly ping.
--- 
-Michal Hocko
-SUSE Labs
+Oops, the "{" is a shameful mistake.
+
+> +				kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
+>   			return 0;
+>   		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
+>   			pmc->counter += data - pmc_read_counter(pmc);
+> -			if (pmc->perf_event)
+> -				perf_event_period(pmc->perf_event,
+> -						  get_sample_period(pmc, data));
+> +			if (pmc_speculative_in_use(pmc)) {
+
+> +				kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
+>   			return 0;
+>   		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+>   			if (data == pmc->eventsel)
+> 
+
