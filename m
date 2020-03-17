@@ -2,116 +2,132 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38330C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EABC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B43D20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443895;
-	bh=EGOVcHAm9+4S56CNGZKK0RMTbMh0xuIspggeSUBZaHg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dgkVG6+RwXkOXKiAvIxPrWYQLj7kTpoCsuxgHQ1M5xxRz+lzv4bq135H8s2QCLwUq
-	 hU1Q/mSxwzpXJFgo/R0JeVUpVxOI+xmB/Fb04D2lK34E8wF5vW1F1A42d+Wk3URoFs
-	 NLstAxM0hOMVymt25SedrBA0PlKLPpiXYO5ILc1I=
+	by mail.kernel.org (Postfix) with ESMTP id 34F58206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgCQLGi (ORCPT
+        id S1727791AbgCQLST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:06:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgCQLGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:06:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 355D320658;
-        Tue, 17 Mar 2020 11:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443189;
-        bh=EGOVcHAm9+4S56CNGZKK0RMTbMh0xuIspggeSUBZaHg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZyfShOpBCUZtEA3PLB0qfRoJrHW+lj2m7qUW0NCDKZWfQNizknHSm5OvfkxSkB/QV
-         NA5J10R+HiTyZi3FiHUGfco+DV+QeRC/WP9SVRltYfE4wHQ+vWV0HqrP5sfeFcFo9Q
-         TD2EgTGpMj2gx0g/KYcoi49qrVX1vItCEg5D8zEc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 116/123] netfilter: nft_chain_nat: inet family is missing module ownership
-Date:   Tue, 17 Mar 2020 11:55:43 +0100
-Message-Id: <20200317103319.220673550@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
-References: <20200317103307.343627747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 17 Mar 2020 07:18:19 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11713 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728631AbgCQLGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:33 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 908F797E1D8A3139C2F5;
+        Tue, 17 Mar 2020 19:06:28 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 17 Mar 2020 19:06:19 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <james.clark@arm.com>,
+        <qiangqing.zhang@nxp.com>, John Garry <john.garry@huawei.com>
+Subject: [PATCH v2 3/7] perf pmu: Refactor pmu_add_cpu_aliases()
+Date:   Tue, 17 Mar 2020 19:02:15 +0800
+Message-ID: <1584442939-8911-4-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
+References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+Create pmu_add_cpu_aliases_map() from pmu_add_cpu_aliases(), so the caller
+can pass the map; the pmu-events test would use this since there would
+be no CPUID matching to a mapfile there.
 
-commit 6a42cefb25d8bdc1b391f4a53c78c32164eea2dd upstream.
-
-Set owner to THIS_MODULE, otherwise the nft_chain_nat module might be
-removed while there are still inet/nat chains in place.
-
-[  117.942096] BUG: unable to handle page fault for address: ffffffffa0d5e040
-[  117.942101] #PF: supervisor read access in kernel mode
-[  117.942103] #PF: error_code(0x0000) - not-present page
-[  117.942106] PGD 200c067 P4D 200c067 PUD 200d063 PMD 3dc909067 PTE 0
-[  117.942113] Oops: 0000 [#1] PREEMPT SMP PTI
-[  117.942118] CPU: 3 PID: 27 Comm: kworker/3:0 Not tainted 5.6.0-rc3+ #348
-[  117.942133] Workqueue: events nf_tables_trans_destroy_work [nf_tables]
-[  117.942145] RIP: 0010:nf_tables_chain_destroy.isra.0+0x94/0x15a [nf_tables]
-[  117.942149] Code: f6 45 54 01 0f 84 d1 00 00 00 80 3b 05 74 44 48 8b 75 e8 48 c7 c7 72 be de a0 e8 56 e6 2d e0 48 8b 45 e8 48 c7 c7 7f be de a0 <48> 8b 30 e8 43 e6 2d e0 48 8b 45 e8 48 8b 40 10 48 85 c0 74 5b 8b
-[  117.942152] RSP: 0018:ffffc9000015be10 EFLAGS: 00010292
-[  117.942155] RAX: ffffffffa0d5e040 RBX: ffff88840be87fc2 RCX: 0000000000000007
-[  117.942158] RDX: 0000000000000007 RSI: 0000000000000086 RDI: ffffffffa0debe7f
-[  117.942160] RBP: ffff888403b54b50 R08: 0000000000001482 R09: 0000000000000004
-[  117.942162] R10: 0000000000000000 R11: 0000000000000001 R12: ffff8883eda7e540
-[  117.942164] R13: dead000000000122 R14: dead000000000100 R15: ffff888403b3db80
-[  117.942167] FS:  0000000000000000(0000) GS:ffff88840e4c0000(0000) knlGS:0000000000000000
-[  117.942169] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  117.942172] CR2: ffffffffa0d5e040 CR3: 00000003e4c52002 CR4: 00000000001606e0
-[  117.942174] Call Trace:
-[  117.942188]  nf_tables_trans_destroy_work.cold+0xd/0x12 [nf_tables]
-[  117.942196]  process_one_work+0x1d6/0x3b0
-[  117.942200]  worker_thread+0x45/0x3c0
-[  117.942203]  ? process_one_work+0x3b0/0x3b0
-[  117.942210]  kthread+0x112/0x130
-[  117.942214]  ? kthread_create_worker_on_cpu+0x40/0x40
-[  117.942221]  ret_from_fork+0x35/0x40
-
-nf_tables_chain_destroy() crashes on module_put() because the module is
-gone.
-
-Fixes: d164385ec572 ("netfilter: nat: add inet family nat support")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- net/netfilter/nft_chain_nat.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/pmu.c | 21 +++++++++++++--------
+ tools/perf/util/pmu.h |  3 +++
+ 2 files changed, 16 insertions(+), 8 deletions(-)
 
---- a/net/netfilter/nft_chain_nat.c
-+++ b/net/netfilter/nft_chain_nat.c
-@@ -89,6 +89,7 @@ static const struct nft_chain_type nft_c
- 	.name		= "nat",
- 	.type		= NFT_CHAIN_T_NAT,
- 	.family		= NFPROTO_INET,
-+	.owner		= THIS_MODULE,
- 	.hook_mask	= (1 << NF_INET_PRE_ROUTING) |
- 			  (1 << NF_INET_LOCAL_IN) |
- 			  (1 << NF_INET_LOCAL_OUT) |
-
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 8b99fd312aae..c616a06a34a8 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -21,7 +21,6 @@
+ #include "pmu.h"
+ #include "parse-events.h"
+ #include "header.h"
+-#include "pmu-events/pmu-events.h"
+ #include "string2.h"
+ #include "strbuf.h"
+ #include "fncache.h"
+@@ -744,16 +743,11 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+  * to the current running CPU. Then, add all PMU events from that table
+  * as aliases.
+  */
+-static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
++void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
++			     struct pmu_events_map *map)
+ {
+ 	int i;
+-	struct pmu_events_map *map;
+ 	const char *name = pmu->name;
+-
+-	map = perf_pmu__find_map(pmu);
+-	if (!map)
+-		return;
+-
+ 	/*
+ 	 * Found a matching PMU events table. Create aliases
+ 	 */
+@@ -788,6 +782,17 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+ 	}
+ }
+ 
++static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
++{
++	struct pmu_events_map *map;
++
++	map = perf_pmu__find_map(pmu);
++	if (!map)
++		return;
++
++	pmu_add_cpu_aliases_map(head, pmu, map);
++}
++
+ struct perf_event_attr * __weak
+ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
+ {
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 6737e3d5d568..0b4a0efae38e 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -7,6 +7,7 @@
+ #include <linux/perf_event.h>
+ #include <stdbool.h>
+ #include "parse-events.h"
++#include "pmu-events/pmu-events.h"
+ 
+ struct perf_evsel_config_term;
+ 
+@@ -97,6 +98,8 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
+ int perf_pmu__test(void);
+ 
+ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
++void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
++			     struct pmu_events_map *map);
+ 
+ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+ 
+-- 
+2.12.3
 
