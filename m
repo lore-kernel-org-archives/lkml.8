@@ -2,108 +2,146 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BD9C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D799BC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FA020753
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CDC2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbpcp/Ru"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="H+Zrpb6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgCQULW (ORCPT
+        id S1726730AbgCQUPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:11:22 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:37790 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgCQULW (ORCPT
+        Tue, 17 Mar 2020 16:15:25 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37625 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgCQUPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:11:22 -0400
-Received: by mail-qv1-f65.google.com with SMTP id n1so7861621qvz.4
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:11:21 -0700 (PDT)
+        Tue, 17 Mar 2020 16:15:25 -0400
+Received: by mail-qk1-f194.google.com with SMTP id z25so29990059qkj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:15:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6FuZZoVTFoFF+1kD/gUu0wVHL7she4RE1ISWVv5X9/Y=;
-        b=dbpcp/RuzqPmQK6KVQzTxDWpN0UCo5KtMvqAZZPoxySTTmsfREbl0sQgsgpEDhLZnX
-         r3oFKW5hojLd7kUsqJEN+Ikmj44Nl3ZqNZPM+u3MITdDCFpcWbB4ki3tUpiTLKen/X6y
-         fg91QHgWSXyPEwVDlXGU2mMKuE2VhQ8Mk+kzw8ru6uWCAex+uWeYeXBqwaNdsIaXxqi2
-         JrWak7xDWraqmi7X83SRMvSdJ/BXyASjCV+Ji6pmZ015CFgOHa2K7HsdPhkNONJQEW+X
-         CjCcdrr8nJ7ojvE5TY8xoOgB24kdAKbvFOShtZ1dJaScDluHltgJvAWJb+XLy9cNEegD
-         FU0Q==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RcQJB7Wv962sHHetSf7hshBSrNKNeDkBlfxsZ1vpNAQ=;
+        b=H+Zrpb6UUFLTVGuaCO9shavuaBpy9fRH43KpXyKlr5OXdSg9H1w16puFUjvChYoJG9
+         arBboQbS17s9m6xViJ6DtPqCDyhZvLqQbha+Dby2Qs8EV27NiCOMbR5v0XirC8Om6Bn4
+         F92d27t8rV3N3v6igdLX/nQctMIkuDUCZFV6WLVhzEWWstlgFDwHuoN9H1GAJS7KIPwO
+         kwwm7DZyolGj4QLa2nT0W7uAZ9wvjOpRvnoUh7j6hLQXV4bDPi4S5sUlNXU3LagmS3BU
+         JC+evzW7kC+tMMLQIjgX56i21gexoc+XPUSs9Cy98DkR8Mj6uxB6o7QQX82uL1gTjUaX
+         GgRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6FuZZoVTFoFF+1kD/gUu0wVHL7she4RE1ISWVv5X9/Y=;
-        b=EYPtTxyBpE/mPj3grddi+XB2CqGbMPxcgk4bkZaNu/n7sVfYRmRk+Y63NtfVD0fmHH
-         aNCq9oo8c/X/1lL37UMJU9avgMrjeAHYNBTEUQHu3sWX1iTqaYCZrnSiUZzs6Z+9L+Zr
-         17ehBiB2x3nea+ntJLQ6jiVMBnRRi/Mtjwf/AX3jCpEWBJatYUFXNChRueY7F3i0ADq3
-         QDLhcCCXAzzVj12l7aTGVMWcksTdrXf3Ma68h9bhcvHrGXFS3OF33Jnp55YzZJL3r08A
-         ggEs4AV2l3kOjqvRMgbOxKMwbBtubCs3vc+aU5lLN9ngeFxV01e+Kig7zut4pA22Xxlm
-         jlUw==
-X-Gm-Message-State: ANhLgQ1VtT9ZdZCF9bKRNjmKksby67v18fe5ZJNrzM/h4jnOEeEXRe55
-        e81J4HCxejkZ45R8QQBJPOrX3AOBtlT2Og==
-X-Google-Smtp-Source: ADFU+vuT1Ym7m/1ayMnfgO0ZcMOck2lWOFvio2W1ILFfrT2EJs/LZjoAZ45vaZoYBkzzqaJILQKAwA==
-X-Received: by 2002:a05:6214:164d:: with SMTP id f13mr926612qvw.214.1584475881076;
-        Tue, 17 Mar 2020 13:11:21 -0700 (PDT)
-Received: from localhost.localdomain ([179.159.236.147])
-        by smtp.googlemail.com with ESMTPSA id t7sm2831852qtr.88.2020.03.17.13.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 13:11:20 -0700 (PDT)
-From:   Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
-To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        sumit.semwal@linaro.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Igor Matheus Andrade Torrente <igormtorrente@gmail.com>,
-        Rodrigo.Siqueira@amd.com, rodrigosiqueiramelo@gmail.com,
-        andrealmeid@collabora.com
-Subject: [PATCH v2] drm: Alligne a comment block
-Date:   Tue, 17 Mar 2020 17:11:09 -0300
-Message-Id: <20200317201109.1619-1-igormtorrente@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200317133959.pdimegprq3gn4gsf@outlook.office365.com>
-References: <20200317133959.pdimegprq3gn4gsf@outlook.office365.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RcQJB7Wv962sHHetSf7hshBSrNKNeDkBlfxsZ1vpNAQ=;
+        b=hKG7zt8vGRnzDk9sHKMC8ZN+yLUwz8yjo1LRC/MfG8LUYm7Awaj93DTQ9AeSGMhD3X
+         hOVtPxXfaw+kpulAuySqfNc3KebksjVpPh6COrywIb9Hx3cBUsOwxVw0zSa1vSXBNPSu
+         58y6cB/AstEACdYbH9WWxxWpTKSFTvSbOwnUcYva5bjlD333MNUt5L3q2cMA+32cE8xf
+         rUisOjgPIm6rhi7SlmAqr4CNRQc/4Gx1C34vytVBGVTZjowEDQOglTRBs0aeDpEQetG2
+         UNcbathuyTVVHmfaMiaZGD6keUVqwiEo5AunB/d1p2g4/6YjvJeKkfa+gwoOiWNLmtyk
+         cjxQ==
+X-Gm-Message-State: ANhLgQ1wNlt/QOENZiwsIVe+WdVd3POe44lVYpnN+uj+33ZKkUo0/1Ec
+        VbdIQtWsjbC1CXvOLFH542h3UA==
+X-Google-Smtp-Source: ADFU+vtL85ZtLUqcFFFOB/lV2/hNJyHX2knPLqCstgkmwBYunmQ5HDwcBwxhf0dbiC+XeS4Mku1kxg==
+X-Received: by 2002:ae9:e892:: with SMTP id a140mr654387qkg.274.1584476124127;
+        Tue, 17 Mar 2020 13:15:24 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id w134sm2553134qka.127.2020.03.17.13.15.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Mar 2020 13:15:23 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jEIcU-0005IL-VY; Tue, 17 Mar 2020 17:15:22 -0300
+Date:   Tue, 17 Mar 2020 17:15:22 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
+        Haggai Eran <haggaie@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Sean Hefty <sean.hefty@intel.com>
+Subject: Re: [PATCH rdma-next 00/15] Fix locking around cm_id.state in the
+ ib_cm
+Message-ID: <20200317201522.GA20284@ziepe.ca>
+References: <20200310092545.251365-1-leon@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310092545.251365-1-leon@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a checkpatch warning caused by a misaligned comment block.
+On Tue, Mar 10, 2020 at 11:25:30AM +0200, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> >From Jason:
+> 
+> cm_id.state is a non-atomic value that must always be read and written
+> under lock, or while the thread has the only pointer to the cm_id.
+> 
+> Critically, during MAD handling the cm_id.state is used to control when
+> MAD handlers can run, and in turn what data they can touch. Without
+> locking, an assignment to state can immediately allow concurrent MAD
+> handlers to execute, potentially creating a mess.
+> 
+> Several of these cases only risk load/store tearing, but create very
+> confusing code. For instance changing the state from IB_CM_IDLE to
+> IB_CM_LISTEN doesn't allow any MAD handlers to run in either state, but a
+> superficial audit would suggest that it is not locked properly.
+> 
+> This loose methodology has allowed two bugs to creep in. After creating an
+> ID the code did not lock the state transition, apparently mistakenly
+> assuming that the new ID could not be used concurrently. However, the ID
+> is immediately placed in the xarray and so a carefully crafted network
+> sequence could trigger races with the unlocked stores.
+> 
+> The main solution to many of these problems is to use the xarray to create
+> a two stage add - the first reserves the ID and the second publishes the
+> pointer. The second stage is either omitted entirely or moved after the
+> newly created ID is setup.
+> 
+> Where it is trivial to do so other places directly put the state
+> manipulation under lock, or add an assertion that it is, in fact, under
+> lock.
+> 
+> This also removes a number of places where the state is being read under
+> lock, then the lock dropped, reacquired and state tested again.
+> 
+> There remain other issues related to missing locking on cm_id data.
+> 
+> Thanks
+> 
+> It is based on rdma-next + rdma-rc patch c14dfddbd869
+> ("RMDA/cm: Fix missing ib_cm_destroy_id() in ib_cm_insert_listen()")
+> 
+> Jason Gunthorpe (15):
+>   RDMA/cm: Fix ordering of xa_alloc_cyclic() in ib_create_cm_id()
+>   RDMA/cm: Fix checking for allowed duplicate listens
+>   RDMA/cm: Remove a race freeing timewait_info
+>   RDMA/cm: Make the destroy_id flow more robust
+>   RDMA/cm: Simplify establishing a listen cm_id
+>   RDMA/cm: Read id.state under lock when doing pr_debug()
+>   RDMA/cm: Make it clear that there is no concurrency in
+>     cm_sidr_req_handler()
+>   RDMA/cm: Make it clearer how concurrency works in cm_req_handler()
+>   RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
+>   RDMA/cm: Add some lockdep assertions for cm_id_priv->lock
+>   RDMA/cm: Allow ib_send_cm_dreq() to be done under lock
+>   RDMA/cm: Allow ib_send_cm_drep() to be done under lock
+>   RDMA/cm: Allow ib_send_cm_rej() to be done under lock
+>   RDMA/cm: Allow ib_send_cm_sidr_rep() to be done under lock
+>   RDMA/cm: Make sure the cm_id is in the IB_CM_IDLE state in destroy
 
-Signed-off-by: Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
----
- drivers/gpu/drm/drm_gem.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Applied to for-next. 
 
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 000fa4a1899f..6e960d57371e 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -222,10 +222,10 @@ drm_gem_object_handle_put_unlocked(struct drm_gem_object *obj)
- 		return;
- 
- 	/*
--	* Must bump handle count first as this may be the last
--	* ref, in which case the object would disappear before we
--	* checked for a name
--	*/
-+	 * Must bump handle count first as this may be the last
-+	 * ref, in which case the object would disappear before we
-+	 * checked for a name
-+	 */
- 
- 	mutex_lock(&dev->object_name_lock);
- 	if (--obj->handle_count == 0) {
--- 
-2.20.1
-
+Jason
