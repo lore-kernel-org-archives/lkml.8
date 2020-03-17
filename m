@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3162C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FC9C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2227206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3564C20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443166;
-	bh=vr34iW1Lped7GFTjkm1+omk3htk2we9zxuSzW2rNpB0=;
+	s=default; t=1584443169;
+	bh=2gNUVrFf3z0eqzjHAqn4loYBqESHZkwaMZOw7bbK8Vc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2AeorQoV7cAgl00fPCQT932HtUameC7A42UU6QQauxF7JReOuSZs/xJcYGPRnkwam
-	 GIkPW3Ag+3FGdQ4vM4yW3VKU4a3Z37VvYnqlCVUGAQxcFCJ9ibIjcmIEIpiXJzg9gU
-	 Zf6Op9jT+q/kFuy/HVzbw/1dL300jc7Vz+r6b3K8=
+	b=ao71ojvnwwtaV7MIw8j5ZdY/XHv0oKPrfCaodlkjyMnnrL34XXUrahPRr7+mQvgLz
+	 eMoJ1O+mVtatk0wlvgpLwbOZPCJDm+dpIoHlCf5uoN92KN3sbRazQA4XEzens+Qm7Y
+	 U/Kf7at8kHdpaG4L0Gw2G5omE1HmpqArMU8/xpEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbgCQLGF (ORCPT
+        id S1728173AbgCQLGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:06:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46558 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:06:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728437AbgCQLFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:41 -0400
+        id S1726879AbgCQLGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515EF20714;
-        Tue, 17 Mar 2020 11:05:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D12D20714;
+        Tue, 17 Mar 2020 11:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443140;
-        bh=vr34iW1Lped7GFTjkm1+omk3htk2we9zxuSzW2rNpB0=;
+        s=default; t=1584443163;
+        bh=2gNUVrFf3z0eqzjHAqn4loYBqESHZkwaMZOw7bbK8Vc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eUtfZPG/ZH5yKXIawIQ/jZgo+v1swi0NB/cKFlavK0kYJWIxu8Y93c+KW2vCI1qZ9
-         9c8txJYQq4vLV9cX7Sl40FNPC7zhagOQHiXdTgeEAQQQjiNHNHXhe2M6Glr2JOBvj1
-         UzNLZrJDhJ3Xi729Sqq5BxmtOpD0YPMVql7PNQSk=
+        b=OX3gx1JM6kellXBh8BpemvuCqhnUKYWv7eQqVRUVamihbxJZjsGo+79BC3WXd2/zk
+         TvUVHiuJPwfXbgezQ6jPN7O3q0zEVZ2M60mNKz8qtqT56ElvcDzEPzz6Dpjrw5lWcf
+         T0rRww8COO9NbMtG5PWj8xbs/JDDFV/D5AoPnDx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.4 109/123] nl80211: add missing attribute validation for beacon report scanning
-Date:   Tue, 17 Mar 2020 11:55:36 +0100
-Message-Id: <20200317103318.635560084@linuxfoundation.org>
+        stable@vger.kernel.org, Kyle Sanderson <kyle.leet@gmail.com>,
+        Michael Stapelberg <michael+lkml@stapelberg.ch>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.4 080/123] fuse: fix stack use after return
+Date:   Tue, 17 Mar 2020 11:55:07 +0100
+Message-Id: <20200317103315.648900423@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,33 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 056e9375e1f3c4bf2fd49b70258c7daf788ecd9d upstream.
+commit 3e8cb8b2eaeb22f540f1cbc00cbb594047b7ba89 upstream.
 
-Add missing attribute validation for beacon report scanning
-to the netlink policy.
+Normal, synchronous requests will have their args allocated on the stack.
+After the FR_FINISHED bit is set by receiving the reply from the userspace
+fuse server, the originating task may return and reuse the stack frame,
+resulting in an Oops if the args structure is dereferenced.
 
-Fixes: 1d76250bd34a ("nl80211: support beacon report scanning")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Link: https://lore.kernel.org/r/20200303051058.4089398-3-kuba@kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fix by setting a flag in the request itself upon initializing, indicating
+whether it has an asynchronous ->end() callback.
+
+Reported-by: Kyle Sanderson <kyle.leet@gmail.com>
+Reported-by: Michael Stapelberg <michael+lkml@stapelberg.ch>
+Fixes: 2b319d1f6f92 ("fuse: don't dereference req->args on finished request")
+Cc: <stable@vger.kernel.org> # v5.4
+Tested-by: Michael Stapelberg <michael+lkml@stapelberg.ch>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/fuse/dev.c    |    6 +++---
+ fs/fuse/fuse_i.h |    2 ++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -469,6 +469,8 @@ const struct nla_policy nl80211_policy[N
- 	[NL80211_ATTR_WOWLAN_TRIGGERS] = { .type = NLA_NESTED },
- 	[NL80211_ATTR_STA_PLINK_STATE] =
- 		NLA_POLICY_MAX(NLA_U8, NUM_NL80211_PLINK_STATES - 1),
-+	[NL80211_ATTR_MEASUREMENT_DURATION] = { .type = NLA_U16 },
-+	[NL80211_ATTR_MEASUREMENT_DURATION_MANDATORY] = { .type = NLA_FLAG },
- 	[NL80211_ATTR_MESH_PEER_AID] =
- 		NLA_POLICY_RANGE(NLA_U16, 1, IEEE80211_MAX_AID),
- 	[NL80211_ATTR_SCHED_SCAN_INTERVAL] = { .type = NLA_U32 },
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -276,12 +276,10 @@ static void flush_bg_queue(struct fuse_c
+ void fuse_request_end(struct fuse_conn *fc, struct fuse_req *req)
+ {
+ 	struct fuse_iqueue *fiq = &fc->iq;
+-	bool async;
+ 
+ 	if (test_and_set_bit(FR_FINISHED, &req->flags))
+ 		goto put_request;
+ 
+-	async = req->args->end;
+ 	/*
+ 	 * test_and_set_bit() implies smp_mb() between bit
+ 	 * changing and below intr_entry check. Pairs with
+@@ -324,7 +322,7 @@ void fuse_request_end(struct fuse_conn *
+ 		wake_up(&req->waitq);
+ 	}
+ 
+-	if (async)
++	if (test_bit(FR_ASYNC, &req->flags))
+ 		req->args->end(fc, req->args, req->out.h.error);
+ put_request:
+ 	fuse_put_request(fc, req);
+@@ -471,6 +469,8 @@ static void fuse_args_to_req(struct fuse
+ 	req->in.h.opcode = args->opcode;
+ 	req->in.h.nodeid = args->nodeid;
+ 	req->args = args;
++	if (args->end)
++		__set_bit(FR_ASYNC, &req->flags);
+ }
+ 
+ ssize_t fuse_simple_request(struct fuse_conn *fc, struct fuse_args *args)
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -301,6 +301,7 @@ struct fuse_io_priv {
+  * FR_SENT:		request is in userspace, waiting for an answer
+  * FR_FINISHED:		request is finished
+  * FR_PRIVATE:		request is on private list
++ * FR_ASYNC:		request is asynchronous
+  */
+ enum fuse_req_flag {
+ 	FR_ISREPLY,
+@@ -314,6 +315,7 @@ enum fuse_req_flag {
+ 	FR_SENT,
+ 	FR_FINISHED,
+ 	FR_PRIVATE,
++	FR_ASYNC,
+ };
+ 
+ /**
 
 
