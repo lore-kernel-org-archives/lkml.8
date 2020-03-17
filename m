@@ -2,119 +2,108 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67581C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F30C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5BF206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:24:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IT859BKv"
+	by mail.kernel.org (Postfix) with ESMTP id 73161206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584483947;
+	bh=OiHevbk3bmBxyxPbqaJ83O8jsVIPqM8xvnuAVwvdE0E=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=KHAVEVsMS9zY6ImQLgdAu68ua3u3RCg+FbXT5Fs74IVg75O/hnDOoP6ktQHsPsNsL
+	 mzr6FIaWXYZq12x7Nu0rwMaMZ8g5nfQUXawZtGIdx9kK5+Ua8oSFlVyGjrxe2CPNUF
+	 1/gIa630iMgBIhyip3mVcoMZ7gQGL99m2COx443E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgCQWYO (ORCPT
+        id S1727052AbgCQWZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:24:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35111 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgCQWYN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:24:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h4so7215446wru.2;
-        Tue, 17 Mar 2020 15:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AX+RV3FQdaQCktHrarZsh0Sc9mln1v0WFAS6/e+iIl4=;
-        b=IT859BKvTYsEhZFBH4MCcu+1EzWJKxGDCp4UF0/Pd+CTDCQCLqxGClzj4JlyFd+4LH
-         Ys0kdoodElRrZC0JA5gmXQH5/Enga8utUXxLWr/tDEaNN0n9PBcNIcLda8VwIVneVhuV
-         oHgC2SUi3ijq9doiATuSyswY2nqyyyuRoopSvbo1HIjJ3GPNlmOZtVheSIM+OyffJwto
-         YgOdpUCIovDEF0qVLkHvas8uHY03LXf4QxKm/EW5YA5VW2khMJziEFoC3LllzOtRKJ3D
-         I6+WZxCWPG3WLQ1DFwpZbw9SJQrNvj7ynV1sAX5FMjR8iWutGUfR8tskrvj93mT116Io
-         4uDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AX+RV3FQdaQCktHrarZsh0Sc9mln1v0WFAS6/e+iIl4=;
-        b=Hnyv1TYAQGvqht5RtO1/x8AmNlpUWg7jOQqNtEpePDSF3lpmNtHvqEJzhsUikUbRKJ
-         PqDSYmKP8GVbPmk5v5W3xPClzdzXWwgXNE8xUxyYImvtRVPJOkE5P2JujgY3XOtBAIYZ
-         mjKQJrLoCefRHAVvgaNGiJovRSn1u61thDsyp/o3ROazAla1dtq4UnCltXjeCDJ7y99q
-         jW0cavh8pjhhiKHIli9JNbOoicleHLWZ8Y2bLmSWRHqcU0GgDTZE290H5mpXjMYGd3QT
-         l4k4OvRM4ZWgrpMfgoIcBOmG3ydiBHi9hBSiDAmVavSzVBCrbK5MQ2IhRNe+6xxiurqZ
-         8g1Q==
-X-Gm-Message-State: ANhLgQ2HsBykdYUVPDs62LpNRrr/DSUpuUdhFkb3m/V2wRbeYnPJG6fc
-        xJRmuYRO6qja6EY7LOrMhEc=
-X-Google-Smtp-Source: ADFU+vt8f4AAZPIyrQa8ZOQhtBN+IMVOluhC7o/agtBjdWF696Gd3ZLLKacockNGMxdBtWXoieIFag==
-X-Received: by 2002:adf:b197:: with SMTP id q23mr1198513wra.412.1584483851329;
-        Tue, 17 Mar 2020 15:24:11 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id f203sm1088742wmf.18.2020.03.17.15.24.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 15:24:09 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 22:24:09 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v2 6/8] mm/memory_hotplug: unexport memhp_auto_online
-Message-ID: <20200317222409.jufwrcrqtyu263cc@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200317104942.11178-1-david@redhat.com>
- <20200317104942.11178-7-david@redhat.com>
+        Tue, 17 Mar 2020 18:25:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbgCQWZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:25:46 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9C9E206EC;
+        Tue, 17 Mar 2020 22:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584483945;
+        bh=OiHevbk3bmBxyxPbqaJ83O8jsVIPqM8xvnuAVwvdE0E=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=sfxDGEi/saW9CAJBqjckkf66Ev9DcSMKx1jXZo5bMrVUrVHjecGE4Qi46t2NDpcud
+         jX+x5X5GBcAPBD7CvzLJIWeciX0QsOaxqgL20araA/SEoiJ7bNncVMFQHcylTME6wX
+         7Qa9iPPvZ0CvQKneEEDwaGrKWJmTpeEN9XpBpMoU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7B4AC352272E; Tue, 17 Mar 2020 15:25:45 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 15:25:45 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2020.03.16a 60/68] kernel/rcu/tasks.h:1000:37: error:
+ 'rcu_tasks_rude' undeclared; did you mean 'rcu_tasks_qs'?
+Message-ID: <20200317222545.GO3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202003180521.jou9H4n6%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200317104942.11178-7-david@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <202003180521.jou9H4n6%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 11:49:40AM +0100, David Hildenbrand wrote:
->All in-tree users except the mm-core are gone. Let's drop the export.
->
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Michal Hocko <mhocko@kernel.org>
->Cc: Oscar Salvador <osalvador@suse.de>
->Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Wei Yang <richard.weiyang@gmail.com>
->Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-
->---
-> mm/memory_hotplug.c | 1 -
-> 1 file changed, 1 deletion(-)
->
->diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->index 1a00b5a37ef6..2d2aae830b92 100644
->--- a/mm/memory_hotplug.c
->+++ b/mm/memory_hotplug.c
->@@ -71,7 +71,6 @@ bool memhp_auto_online;
-> #else
-> bool memhp_auto_online = true;
-> #endif
->-EXPORT_SYMBOL_GPL(memhp_auto_online);
+On Wed, Mar 18, 2020 at 05:28:25AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.03.16a
+> head:   ad7a7c12b09555e7c488ee3be512d549cd78a2c0
+> commit: 277258c315b7c732948e47718de02c6908d1745e [60/68] rcu-tasks: Add RCU tasks to rcutorture writer stall output
+> config: arc-defconfig (attached as .config)
+> compiler: arc-elf-gcc (GCC) 9.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 277258c315b7c732948e47718de02c6908d1745e
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=9.2.0 make.cross ARCH=arc 
 > 
-> static int __init setup_memhp_default_state(char *str)
-> {
->-- 
->2.24.1
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from kernel/rcu/update.c:562:
+>    kernel/rcu/tasks.h: In function 'show_rcu_tasks_gp_kthreads':
+> >> kernel/rcu/tasks.h:1000:37: error: 'rcu_tasks_rude' undeclared (first use in this function); did you mean 'rcu_tasks_qs'?
+>     1000 |  show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
+>          |                                     ^~~~~~~~~~~~~~
+>          |                                     rcu_tasks_qs
+>    kernel/rcu/tasks.h:1000:37: note: each undeclared identifier is reported only once for each function it appears in
 
--- 
-Wei Yang
-Help you, Help me
+Good catch!  Will fix!!!
+
+							Thanx, Paul
+
+> vim +1000 kernel/rcu/tasks.h
+> 
+>    996	
+>    997	void show_rcu_tasks_gp_kthreads(void)
+>    998	{
+>    999		show_rcu_tasks_generic_gp_kthread(&rcu_tasks, "");
+> > 1000		show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
+>   1001		show_rcu_tasks_trace_gp_kthread();
+>   1002	}
+>   1003	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+
