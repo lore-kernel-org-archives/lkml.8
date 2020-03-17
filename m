@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E394C5ACD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EDDC5ACC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7E720719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33EFD20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443249;
-	bh=HloH5/S8q8Fps7+NuGRfK8R+tEnCdAPq8XIMLUqLL74=;
+	s=default; t=1584443250;
+	bh=DLZr9X0dUzjdBDR77VJICOcHsghNExY8GdcrmKIiK/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PfwQlWgyY/iaxiv3xegrN0XoYfMy/XI5WHZH6U+ZIt5WaxqapgxAayVS0HYLk9QeK
-	 7BsQ/7A/Gg8LL6kDJN7ns4YgLcy6JDzy1ulDhrNwl/ZjVtzKiUKAYb7+t7VIgQQHnZ
-	 qBJGqVFsCkSsYEbThBOqM8zcDqe+2yEMDTyEFEVk=
+	b=Ya+UOWOI50BgO4mgkFtZP40/xFXiAoSpHBb0nJyha4YUWjLvzmG0NbHFr57Qzdh8Z
+	 aLQD3f8ttH6AI6rU3X9Kpy1SW8woS8bz5GQC4iisRbQ7F7G04dhiN3Owx0rA1pY0jf
+	 hr+J+PbvyFZQg7AJyKg7Gwz3AL7NvkAPr0lXqP20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbgCQLH1 (ORCPT
+        id S1728580AbgCQLH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49082 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:07:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727711AbgCQLHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:07:25 -0400
+        id S1727711AbgCQLH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:07:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E41820719;
-        Tue, 17 Mar 2020 11:07:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FEF02073C;
+        Tue, 17 Mar 2020 11:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443245;
-        bh=HloH5/S8q8Fps7+NuGRfK8R+tEnCdAPq8XIMLUqLL74=;
+        s=default; t=1584443247;
+        bh=DLZr9X0dUzjdBDR77VJICOcHsghNExY8GdcrmKIiK/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMOiYvaB0UY6H0IascHCZVUnv4oYkz9akpFfErH4Z8mhl5bcsH8AqP02kEEoYm+Qe
-         xUKYOwSaPLOG2+0aTvT7r3dTMWADWG5tLJAR+JFqTXbftlWbDZfwoJvedY6a6UHf5N
-         cSHkFOJ6yThhTRxsliC6gvCF5vaNa5OOkTGmPUdo=
+        b=ifg3cFWzFdv5lWW9SdMPPDUIjeRBIb11LWSDT3Y7JnUOwmu1Z1O4WE7GRNYTVNxXa
+         VaUAEOULImq3y+/JLOzPw79s8gtASpd/+IeoYZtqZf0jhh+2Aj7h8mUbuY0CFtLih+
+         ZAD7bV19HrUgny2MbfUYJifUQIb7yChsxg8Qq6C4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 014/151] macvlan: add cond_resched() during multicast processing
-Date:   Tue, 17 Mar 2020 11:53:44 +0100
-Message-Id: <20200317103327.448274084@linuxfoundation.org>
+Subject: [PATCH 5.5 023/151] net: nfc: fix bounds checking bugs on "pipe"
+Date:   Tue, 17 Mar 2020 11:53:53 +0100
+Message-Id: <20200317103328.424462990@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,40 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ce9a4186f9ac475c415ffd20348176a4ea366670 ]
+[ Upstream commit a3aefbfe45751bf7b338c181b97608e276b5bb73 ]
 
-The Rx bound multicast packets are deferred to a workqueue and
-macvlan can also suffer from the same attack that was discovered
-by Syzbot for IPvlan. This solution is not as effective as in
-IPvlan. IPvlan defers all (Tx and Rx) multicast packet processing
-to a workqueue while macvlan does this way only for the Rx. This
-fix should address the Rx codition to certain extent.
+This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
+corruption when handling SHDLC I-Frame commands") and commit d7ee81ad09f0
+("NFC: nci: Add some bounds checking in nci_hci_cmd_received()") which
+added range checks on "pipe".
 
-Tx is still suseptible. Tx multicast processing happens when
-.ndo_start_xmit is called, hence we cannot add cond_resched().
-However, it's not that severe since the user which is generating
- / flooding will be affected the most.
+The "pipe" variable comes skb->data[0] in nfc_hci_msg_rx_work().
+It's in the 0-255 range.  We're using it as the array index into the
+hdev->pipes[] array which has NFC_HCI_MAX_PIPES (128) members.
 
-Fixes: 412ca1550cbe ("macvlan: Move broadcasts into a work queue")
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
+Fixes: 118278f20aa8 ("NFC: hci: Add pipes table to reference them with a tuple {gate, host}")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/macvlan.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/nfc/hci/core.c |   19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -334,6 +334,8 @@ static void macvlan_process_broadcast(st
- 		if (src)
- 			dev_put(src->dev);
- 		consume_skb(skb);
-+
-+		cond_resched();
- 	}
- }
+--- a/net/nfc/hci/core.c
++++ b/net/nfc/hci/core.c
+@@ -181,13 +181,20 @@ exit:
+ void nfc_hci_cmd_received(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
+ 			  struct sk_buff *skb)
+ {
+-	u8 gate = hdev->pipes[pipe].gate;
+ 	u8 status = NFC_HCI_ANY_OK;
+ 	struct hci_create_pipe_resp *create_info;
+ 	struct hci_delete_pipe_noti *delete_info;
+ 	struct hci_all_pipe_cleared_noti *cleared_info;
++	u8 gate;
  
+-	pr_debug("from gate %x pipe %x cmd %x\n", gate, pipe, cmd);
++	pr_debug("from pipe %x cmd %x\n", pipe, cmd);
++
++	if (pipe >= NFC_HCI_MAX_PIPES) {
++		status = NFC_HCI_ANY_E_NOK;
++		goto exit;
++	}
++
++	gate = hdev->pipes[pipe].gate;
+ 
+ 	switch (cmd) {
+ 	case NFC_HCI_ADM_NOTIFY_PIPE_CREATED:
+@@ -375,8 +382,14 @@ void nfc_hci_event_received(struct nfc_h
+ 			    struct sk_buff *skb)
+ {
+ 	int r = 0;
+-	u8 gate = hdev->pipes[pipe].gate;
++	u8 gate;
++
++	if (pipe >= NFC_HCI_MAX_PIPES) {
++		pr_err("Discarded event %x to invalid pipe %x\n", event, pipe);
++		goto exit;
++	}
+ 
++	gate = hdev->pipes[pipe].gate;
+ 	if (gate == NFC_HCI_INVALID_GATE) {
+ 		pr_err("Discarded event %x to unopened pipe %x\n", event, pipe);
+ 		goto exit;
 
 
