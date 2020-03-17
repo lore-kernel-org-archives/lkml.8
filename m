@@ -2,99 +2,206 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08927C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E043C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76DF206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516E020663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:34:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="C36HycbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgCQPch (ORCPT
+        id S1726680AbgCQPef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:32:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12705 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbgCQPch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:32:37 -0400
-IronPort-SDR: WrOyJMVk9110BS9P+wpTelS5oToTZEWCOS7vJv1YFyUq9HKFjcUEIXIYPcJh7q74Yy48CnFV3u
- Ed++G/cgKDig==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 08:32:36 -0700
-IronPort-SDR: AlObTxabHgmiM6Jn3ywAh/Yt0oaBfUo/bqhYV9hSVEb6s6cToF6f79VnvrY/w1+8SKKs8wIUcS
- rEU7Bof4w0Eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="268002291"
-Received: from atthomas-mobl.amr.corp.intel.com (HELO [10.255.32.45]) ([10.255.32.45])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Mar 2020 08:32:33 -0700
-Subject: Re: [PATCH] soundwire: stream: only change state if needed
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
- <6bc8412a-f6d9-64d1-2218-ca98cfdb31c0@linaro.org>
- <27a73cbd-9418-4488-5cb2-fb21f9fc9110@linux.intel.com>
- <c1e5dc89-a069-a427-4912-89d90ecc0334@linaro.org>
- <6dde3b32-a29a-3ac9-d95d-283f5b05e64a@linux.intel.com>
- <7c7b334d-ae5c-35f6-9cf3-04700677211f@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <7a362c6a-364e-499a-e841-0a919f48bf84@linux.intel.com>
-Date:   Tue, 17 Mar 2020 10:31:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 17 Mar 2020 11:34:35 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55610 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726016AbgCQPef (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:34:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584459274; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Reply-To: Sender;
+ bh=n0DB5rQk3vxOGb0AlK5NXyNF/JWOE9+RENHn6S1ppc0=; b=C36HycbGOL+yFcNdP+vTp82qfKwLLfV5ytCCRt9kfVOX8U0alPFo1JIvq+fSV5ECmqk3nwxr
+ 5gX4MO/Q5LvF3/DIoQA1M0NEM+kk77rJxu8wniNbNMjAQXLtpIV9DHSAeUqYHkWti5ZcMoGV
+ zuE+e4ri7OUgZOyglGd2AtbwbkE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e70ee03.7f4691655b58-smtp-out-n05;
+ Tue, 17 Mar 2020 15:34:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2FFE9C44788; Tue, 17 Mar 2020 15:34:26 +0000 (UTC)
+Received: from BCAIN (104-54-226-75.lightspeed.austtx.sbcglobal.net [104.54.226.75])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bcain)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 344BDC433D2;
+        Tue, 17 Mar 2020 15:34:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 344BDC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bcain@codeaurora.org
+Reply-To: <bcain@codeaurora.org>
+From:   "Brian Cain" <bcain@codeaurora.org>
+To:     "'Dmitry Safonov'" <dima@arista.com>,
+        <linux-kernel@vger.kernel.org>
+Cc:     "'Dmitry Safonov'" <0x7f454c46@gmail.com>,
+        "'Andrew Morton'" <akpm@linux-foundation.org>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'Ingo Molnar'" <mingo@kernel.org>,
+        "'Jiri Slaby'" <jslaby@suse.com>,
+        "'Petr Mladek'" <pmladek@suse.com>,
+        "'Sergey Senozhatsky'" <sergey.senozhatsky@gmail.com>,
+        "'Steven Rostedt'" <rostedt@goodmis.org>,
+        "'Tetsuo Handa'" <penguin-kernel@I-love.SAKURA.ne.jp>,
+        <linux-hexagon@vger.kernel.org>
+References: <20200316143916.195608-1-dima@arista.com> <20200316143916.195608-15-dima@arista.com>
+In-Reply-To: <20200316143916.195608-15-dima@arista.com>
+Subject: RE: [PATCHv2 14/50] hexagon: Add show_stack_loglvl()
+Date:   Tue, 17 Mar 2020 10:34:22 -0500
+Message-ID: <016201d5fc71$89c01ab0$9d405010$@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <7c7b334d-ae5c-35f6-9cf3-04700677211f@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-us
+Thread-Index: AQHVQBC9Nz7qrLFcmabjETiJ0mIiewG/9sU+qEBi1pA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Acked-by: Brian Cain <bcain@codeaurora.org>
 
->>>> The change below would be an error case for Intel, so it's probably 
->>>> better if we go with your suggestion. You have a very specific state 
->>>> handling due to your power amps and it's probably better to keep it 
->>>> platform-specific.
->>>
->>> Just trying to understand, why would it be error for Intel case?
->>>
->>> IMO, If stream state is SDW_STREAM_ENABLED that also implicit that 
->>> its prepared too. Similar thing with SDW_STREAM_DEPREPARED.
->>> Isn't it?
->>
->> the stream state is a scalar value, not a mask. The state machine only 
->> allows transition from CONFIGURED TO PREPARED or from DEPREPARED TO 
->> PREPARED, or DISABLED to PREPARED.
->> There is no allowed transition from ENABLED TO PREPARED, you have to 
->> go through the DISABLED state and make sure a bank switch occurred, 
->> and re-do a bank switch to prepare again.
-> I agree with you if are on single dai case. Am happy to move to stream 
-> handling to machine driver for now.
+> Cc: Brian Cain <bcain@codeaurora.org>
+> Cc: linux-hexagon@vger.kernel.org
+> [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-
+> dima@arista.com/T/#u
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> ---
+>  arch/hexagon/kernel/traps.c | 31 +++++++++++++++++--------------
+>  1 file changed, 17 insertions(+), 14 deletions(-)
 > 
-> But this also means that in cases like multi-codec its not recommended 
-> to call sdw_prepare and sdw_enable in a single function from codec.
-> Which might be worth documenting.
+> diff --git a/arch/hexagon/kernel/traps.c b/arch/hexagon/kernel/traps.c
+> index 69c623b14ddd..a8a3a210d781 100644
+> --- a/arch/hexagon/kernel/traps.c
+> +++ b/arch/hexagon/kernel/traps.c
+> @@ -79,7 +79,7 @@ static const char *ex_name(int ex)  }
+> 
+>  static void do_show_stack(struct task_struct *task, unsigned long *fp,
+> -			  unsigned long ip)
+> +			  unsigned long ip, const char *loglvl)
+>  {
+>  	int kstack_depth_to_print = 24;
+>  	unsigned long offset, size;
+> @@ -93,9 +93,8 @@ static void do_show_stack(struct task_struct *task,
+> unsigned long *fp,
+>  	if (task == NULL)
+>  		task = current;
+> 
+> -	printk(KERN_INFO "CPU#%d, %s/%d, Call Trace:\n",
+> -	       raw_smp_processor_id(), task->comm,
+> -	       task_pid_nr(task));
+> +	printk("%sCPU#%d, %s/%d, Call Trace:\n", loglvl,
+> raw_smp_processor_id(),
+> +		task->comm, task_pid_nr(task));
+> 
+>  	if (fp == NULL) {
+>  		if (task == current) {
+> @@ -108,7 +107,7 @@ static void do_show_stack(struct task_struct *task,
+> unsigned long *fp,
+>  	}
+> 
+>  	if ((((unsigned long) fp) & 0x3) || ((unsigned long) fp < 0x1000)) {
+> -		printk(KERN_INFO "-- Corrupt frame pointer %p\n", fp);
+> +		printk("%s-- Corrupt frame pointer %p\n", loglvl, fp);
+>  		return;
+>  	}
+> 
+> @@ -125,8 +124,7 @@ static void do_show_stack(struct task_struct *task,
+> unsigned long *fp,
+> 
+>  		name = kallsyms_lookup(ip, &size, &offset, &modname,
+> tmpstr);
+> 
+> -		printk(KERN_INFO "[%p] 0x%lx: %s + 0x%lx", fp, ip, name,
+> -			offset);
+> +		printk("%s[%p] 0x%lx: %s + 0x%lx", loglvl, fp, ip, name,
+> offset);
+>  		if (((unsigned long) fp < low) || (high < (unsigned long)
+fp))
+>  			printk(KERN_CONT " (FP out of bounds!)");
+>  		if (modname)
+> @@ -136,8 +134,7 @@ static void do_show_stack(struct task_struct *task,
+> unsigned long *fp,
+>  		newfp = (unsigned long *) *fp;
+> 
+>  		if (((unsigned long) newfp) & 0x3) {
+> -			printk(KERN_INFO "-- Corrupt frame pointer %p\n",
+> -				newfp);
+> +			printk("%s-- Corrupt frame pointer %p\n", loglvl,
+> newfp);
+>  			break;
+>  		}
+> 
+> @@ -147,7 +144,7 @@ static void do_show_stack(struct task_struct *task,
+> unsigned long *fp,
+>  						+ 8);
+> 
+>  			if (regs->syscall_nr != -1) {
+> -				printk(KERN_INFO "-- trap0 -- syscall_nr:
+> %ld",
+> +				printk("%s-- trap0 -- syscall_nr: %ld",
+loglvl,
+>  					regs->syscall_nr);
+>  				printk(KERN_CONT "  psp: %lx  elr: %lx\n",
+>  					 pt_psp(regs), pt_elr(regs));
+> @@ -155,7 +152,7 @@ static void do_show_stack(struct task_struct *task,
+> unsigned long *fp,
+>  			} else {
+>  				/* really want to see more ... */
+>  				kstack_depth_to_print += 6;
+> -				printk(KERN_INFO "-- %s (0x%lx)  badva:
+> %lx\n",
+> +				printk("%s-- %s (0x%lx)  badva: %lx\n",
+loglvl,
+>  					ex_name(pt_cause(regs)),
+> pt_cause(regs),
+>  					pt_badva(regs));
+>  			}
+> @@ -178,10 +175,16 @@ static void do_show_stack(struct task_struct
+> *task, unsigned long *fp,
+>  	}
+>  }
+> 
+> -void show_stack(struct task_struct *task, unsigned long *fp)
+> +void show_stack_loglvl(struct task_struct *task, unsigned long *fp,
+> +		       const char *loglvl)
+>  {
+>  	/* Saved link reg is one word above FP */
+> -	do_show_stack(task, fp, 0);
+> +	do_show_stack(task, fp, 0, loglvl);
+> +}
+> +
+> +void show_stack(struct task_struct *task, unsigned long *fp) {
+> +	show_stack_loglvl(task, fp, 0, KERN_INFO);
+>  }
+> 
+>  int die(const char *str, struct pt_regs *regs, long err) @@ -207,7 +210,7
+> @@ int die(const char *str, struct pt_regs *regs, long err)
+> 
+>  	print_modules();
+>  	show_regs(regs);
+> -	do_show_stack(current, &regs->r30, pt_elr(regs));
+> +	do_show_stack(current, &regs->r30, pt_elr(regs), KERN_EMERG);
+> 
+>  	bust_spinlocks(0);
+>  	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
+> --
+> 2.25.1
 
-Well, the bigger question is why use sdw_stream functions at the codec 
-level in the first place? All other codec drivers seem to have no issue 
-leaving the dais owned by the master control stream state changes.
-
-I am not saying I object or it's bad, just that there were significant 
-changes in usages of the 'stream' concept since it was introduced, as 
-well as threads in MIPI circles to clarify the prepare/enable 
-dependencies, so it'd be useful to have a complete picture of what 
-different platforms need/want.
