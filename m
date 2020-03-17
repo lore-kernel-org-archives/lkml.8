@@ -6,40 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD4FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D65C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE24B206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E97206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgCQGWh (ORCPT
+        id S1726467AbgCQGWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:22:37 -0400
+        Tue, 17 Mar 2020 02:22:41 -0400
 Received: from mga12.intel.com ([192.55.52.136]:53584 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgCQGWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:22:37 -0400
-IronPort-SDR: USMivveEUvBV9VHRnGPzCYDuSyI2oc3JLIxHLcmRpqjQLTsZQFxJzDFx5hOh4sX/rsbDEQnKwx
- xv+L8yZ/OaZA==
+        id S1726399AbgCQGWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 02:22:40 -0400
+IronPort-SDR: kYrrwdzL0L6S7C72DeR3nlhyu3whj4NhoYeJfoZ8SmEtmZQ8SXc/SSPYpU6riLDb/UOoiHrJ31
+ hzilha/CGHOg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 23:22:37 -0700
-IronPort-SDR: zraXoa41tEBgEM1Bf66mcMJuxtFtPWMgqnxA1RZ914NBR4k4Xj/Ox3VPjvgUupNBSKYKBuaLfQ
- Z4Z5ozaLLo/w==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 23:22:40 -0700
+IronPort-SDR: J4plOpkVXSuwaaBljT4MbkXKzSRokxtbrXEyAQmoKdgfD1VpMJRlCTjgR2hXAtYqyGJgzqr5jM
+ qcSWtvEG4b7Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="445390311"
+   d="scan'208";a="445390322"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Mar 2020 23:22:35 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 16 Mar 2020 23:22:39 -0700
 From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL 1/6] intel_th: Disallow multi mode on devices where it's broken
-Date:   Tue, 17 Mar 2020 08:22:10 +0200
-Message-Id: <20200317062215.15598-2-alexander.shishkin@linux.intel.com>
+Subject: [GIT PULL 3/6] intel_th: msu: Make stopping the trace optional
+Date:   Tue, 17 Mar 2020 08:22:12 +0200
+Message-Id: <20200317062215.15598-4-alexander.shishkin@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317062215.15598-1-alexander.shishkin@linux.intel.com>
 References: <20200317062215.15598-1-alexander.shishkin@linux.intel.com>
@@ -50,114 +50,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some versions of Intel TH have an issue that prevents the multi mode of
-MSU from working correctly, resulting in no trace data and potentially
-stuck MSU pipeline.
+Some use cases prefer to keep collecting the trace data into the last
+available window while the other windows are being offloaded instead of
+stopping the trace. In this scenario, the window switch happens
+automatically when the next window becomes available again.
 
-Disable multi mode on such devices.
+Add an option to allow this and a sysfs attribute to enable it.
 
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/hwtracing/intel_th/intel_th.h |  2 ++
- drivers/hwtracing/intel_th/msu.c      | 11 +++++++++--
- drivers/hwtracing/intel_th/pci.c      |  8 ++++++--
- 3 files changed, 17 insertions(+), 4 deletions(-)
+ .../testing/sysfs-bus-intel_th-devices-msc    |  8 ++++
+ drivers/hwtracing/intel_th/msu.c              | 37 ++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/intel_th/intel_th.h b/drivers/hwtracing/intel_th/intel_th.h
-index 6f4f5486fe6d..5fe694708b7a 100644
---- a/drivers/hwtracing/intel_th/intel_th.h
-+++ b/drivers/hwtracing/intel_th/intel_th.h
-@@ -47,11 +47,13 @@ struct intel_th_output {
- /**
-  * struct intel_th_drvdata - describes hardware capabilities and quirks
-  * @tscu_enable:	device needs SW to enable time stamping unit
-+ * @multi_is_broken:	device has multiblock mode is broken
-  * @has_mintctl:	device has interrupt control (MINTCTL) register
-  * @host_mode_only:	device can only operate in 'host debugger' mode
-  */
- struct intel_th_drvdata {
- 	unsigned int	tscu_enable        : 1,
-+			multi_is_broken    : 1,
- 			has_mintctl        : 1,
- 			host_mode_only     : 1;
- };
+diff --git a/Documentation/ABI/testing/sysfs-bus-intel_th-devices-msc b/Documentation/ABI/testing/sysfs-bus-intel_th-devices-msc
+index 456cb62b384c..7fd2601c2831 100644
+--- a/Documentation/ABI/testing/sysfs-bus-intel_th-devices-msc
++++ b/Documentation/ABI/testing/sysfs-bus-intel_th-devices-msc
+@@ -40,3 +40,11 @@ Description:	(RW) Trigger window switch for the MSC's buffer, in
+ 		triggering a window switch for the buffer. Returns an error in any
+ 		other operating mode or attempts to write something other than "1".
+ 
++What:		/sys/bus/intel_th/devices/<intel_th_id>-msc<msc-id>/stop_on_full
++Date:		March 2020
++KernelVersion:	5.7
++Contact:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
++Description:	(RW) Configure whether trace stops when the last available window
++		becomes full (1/y/Y) or wraps around and continues until the next
++		window becomes available again (0/n/N).
++
 diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
-index 8e48c7458aa3..6e118b790d83 100644
+index 6e118b790d83..45916b48bcf0 100644
 --- a/drivers/hwtracing/intel_th/msu.c
 +++ b/drivers/hwtracing/intel_th/msu.c
-@@ -157,7 +157,8 @@ struct msc {
+@@ -138,6 +138,7 @@ struct msc {
+ 	struct list_head	win_list;
+ 	struct sg_table		single_sgt;
+ 	struct msc_window	*cur_win;
++	struct msc_window	*switch_on_unlock;
+ 	unsigned long		nr_pages;
+ 	unsigned long		single_sz;
+ 	unsigned int		single_wrap : 1;
+@@ -154,6 +155,8 @@ struct msc {
+ 
+ 	struct list_head	iter_list;
+ 
++	bool			stop_on_full;
++
  	/* config */
  	unsigned int		enabled : 1,
  				wrap	: 1,
--				do_irq	: 1;
-+				do_irq	: 1,
-+				multi_is_broken : 1;
- 	unsigned int		mode;
- 	unsigned int		burst_len;
- 	unsigned int		index;
-@@ -1664,7 +1665,7 @@ static int intel_th_msc_init(struct msc *msc)
- {
- 	atomic_set(&msc->user_count, -1);
+@@ -1717,6 +1720,10 @@ void intel_th_msc_window_unlock(struct device *dev, struct sg_table *sgt)
+ 		return;
  
--	msc->mode = MSC_MODE_MULTI;
-+	msc->mode = msc->multi_is_broken ? MSC_MODE_SINGLE : MSC_MODE_MULTI;
- 	mutex_init(&msc->buf_mutex);
- 	INIT_LIST_HEAD(&msc->win_list);
- 	INIT_LIST_HEAD(&msc->iter_list);
-@@ -1876,6 +1877,9 @@ mode_store(struct device *dev, struct device_attribute *attr, const char *buf,
- 	return -EINVAL;
- 
- found:
-+	if (i == MSC_MODE_MULTI && msc->multi_is_broken)
-+		return -EOPNOTSUPP;
-+
- 	mutex_lock(&msc->buf_mutex);
- 	ret = 0;
- 
-@@ -2082,6 +2086,9 @@ static int intel_th_msc_probe(struct intel_th_device *thdev)
- 	if (!res)
- 		msc->do_irq = 1;
- 
-+	if (INTEL_TH_CAP(to_intel_th(thdev), multi_is_broken))
-+		msc->multi_is_broken = 1;
-+
- 	msc->index = thdev->id;
- 
- 	msc->thdev = thdev;
-diff --git a/drivers/hwtracing/intel_th/pci.c b/drivers/hwtracing/intel_th/pci.c
-index e9d90b53bbc4..ad7e51ebe49e 100644
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -120,6 +120,10 @@ static void intel_th_pci_remove(struct pci_dev *pdev)
- 	pci_free_irq_vectors(pdev);
+ 	msc_win_set_lockout(win, WIN_LOCKED, WIN_READY);
++	if (msc->switch_on_unlock == win) {
++		msc->switch_on_unlock = NULL;
++		msc_win_switch(msc);
++	}
  }
+ EXPORT_SYMBOL_GPL(intel_th_msc_window_unlock);
  
-+static const struct intel_th_drvdata intel_th_1x_multi_is_broken = {
-+	.multi_is_broken	= 1,
-+};
+@@ -1757,7 +1764,11 @@ static irqreturn_t intel_th_msc_interrupt(struct intel_th_device *thdev)
+ 
+ 	/* next window: if READY, proceed, if LOCKED, stop the trace */
+ 	if (msc_win_set_lockout(next_win, WIN_READY, WIN_INUSE)) {
+-		schedule_work(&msc->work);
++		if (msc->stop_on_full)
++			schedule_work(&msc->work);
++		else
++			msc->switch_on_unlock = next_win;
 +
- static const struct intel_th_drvdata intel_th_2x = {
- 	.tscu_enable	= 1,
- 	.has_mintctl	= 1,
-@@ -152,7 +156,7 @@ static const struct pci_device_id intel_th_pci_id_table[] = {
- 	{
- 		/* Kaby Lake PCH-H */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa2a6),
--		.driver_data = (kernel_ulong_t)0,
-+		.driver_data = (kernel_ulong_t)&intel_th_1x_multi_is_broken,
- 	},
- 	{
- 		/* Denverton */
-@@ -207,7 +211,7 @@ static const struct pci_device_id intel_th_pci_id_table[] = {
- 	{
- 		/* Comet Lake PCH-V */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa3a6),
--		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+		.driver_data = (kernel_ulong_t)&intel_th_1x_multi_is_broken,
- 	},
- 	{
- 		/* Ice Lake NNPI */
+ 		return IRQ_HANDLED;
+ 	}
+ 
+@@ -2050,11 +2061,35 @@ win_switch_store(struct device *dev, struct device_attribute *attr,
+ 
+ static DEVICE_ATTR_WO(win_switch);
+ 
++static ssize_t stop_on_full_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	struct msc *msc = dev_get_drvdata(dev);
++
++	return scnprintf(buf, PAGE_SIZE, "%d\n", msc->stop_on_full);
++}
++
++static ssize_t stop_on_full_store(struct device *dev,
++				  struct device_attribute *attr,
++				  const char *buf, size_t size)
++{
++	struct msc *msc = dev_get_drvdata(dev);
++	unsigned long val;
++	int ret;
++
++	ret = kstrtobool(buf, &msc->stop_on_full);
++
++	return ret ? ret : size;
++}
++
++static DEVICE_ATTR_RW(stop_on_full);
++
+ static struct attribute *msc_output_attrs[] = {
+ 	&dev_attr_wrap.attr,
+ 	&dev_attr_mode.attr,
+ 	&dev_attr_nr_pages.attr,
+ 	&dev_attr_win_switch.attr,
++	&dev_attr_stop_on_full.attr,
+ 	NULL,
+ };
+ 
 -- 
 2.25.1
 
