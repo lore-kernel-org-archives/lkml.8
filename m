@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71615C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3196C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F1A2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75BC120735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442859;
-	bh=xGL/aX6wK11vFz52iETWlJWAKLw5QhtLoH9fTvi27bA=;
+	s=default; t=1584442864;
+	bh=ttFVe+yP36IF+RprTIdY9BFpzGWzZDHW0WaLD4WWx9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R//j4RZIurr+MEyB96B/G1OYs+2RIrMhQf0sL7dOOm01FmkbnhsWpKChDTC0Z9bOc
-	 B/9mUBBQOugkN+/uSJffPqcZ+Ns8LtzYvKsgPzdUfD08PSpduQxWNSRA2yQlHYh1AP
-	 azYPJTiLv6j9ehs6LfJosnSVIF+wL2OhTkA8Cs+k=
+	b=MEkkVNbPBKXP8uXudyhp3luPtDsu068j/OFui+2LGOHRSg2a7dhWeCiU2TjjB0DDF
+	 G5K/dM+pdLkcNIKXrR+BAjus5gxcujez1LwKz65KhCNY9XjIUI1VKyip+KsHC+oJQC
+	 6+oE9yGEP7aywCWjcF3gFuZOBlgboVqSilM1fPps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgCQLA5 (ORCPT
+        id S1727704AbgCQLBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:00:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:01:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbgCQLAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:00:54 -0400
+        id S1726823AbgCQLBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:01:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A39B520736;
-        Tue, 17 Mar 2020 11:00:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39D0D20736;
+        Tue, 17 Mar 2020 11:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442854;
-        bh=xGL/aX6wK11vFz52iETWlJWAKLw5QhtLoH9fTvi27bA=;
+        s=default; t=1584442860;
+        bh=ttFVe+yP36IF+RprTIdY9BFpzGWzZDHW0WaLD4WWx9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZRSe5jLUnq5RBnH6lm1pOuDE1CmJovRzQNboTZRkIk/IS53pKh8hxEyMhfZFJR1vr
-         JBGPLhNtFeR0cU/LVjMnAqq2Xc6HErvKzGzNMjnA0tu2iPZAHiWnxyBXtMRLxtpas9
-         kTysbBxHVkbdeQYx36+Bl9I9GosH9rWZwE9JXuiU=
+        b=HUgh0dvJdduo5/70VabBqpdIJwTCEV4zqq9fdk77frZChNRacMnE2m78Q4FrKkMnJ
+         kQho31kDHmSpMqa/HX7YPapgFP4Lgwhi+qARuxnNPjcETROP+AopI4BwhjyCtmQWzL
+         z/ZcUZq+nWh1mA17iaCaxYxf8gqR8dnYyGGKsZoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 015/123] net: dsa: mv88e6xxx: fix lockup on warm boot
-Date:   Tue, 17 Mar 2020 11:54:02 +0100
-Message-Id: <20200317103309.275983809@linuxfoundation.org>
+Subject: [PATCH 5.4 017/123] net: hns3: fix a not link up issue when fibre port supports autoneg
+Date:   Tue, 17 Mar 2020 11:54:04 +0100
+Message-Id: <20200317103309.499210595@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,53 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit 0395823b8d9a4d87bd1bf74359123461c2ae801b ]
+[ Upstream commit 68e1006f618e509fc7869259fe83ceec4a95dac3 ]
 
-If the switch is not hardware reset on a warm boot, interrupts can be
-left enabled, and possibly pending. This will cause us to enter an
-infinite loop trying to service an interrupt we are unable to handle,
-thereby preventing the kernel from booting.
+When fibre port supports auto-negotiation, the IMP(Intelligent
+Management Process) processes the speed of auto-negotiation
+and the  user's speed separately.
+For below case, the port will get a not link up problem.
+step 1: disables auto-negotiation and sets speed to A, then
+the driver's MAC speed will be updated to A.
+step 2: enables auto-negotiation and MAC gets negotiated
+speed B, then the driver's MAC speed will be updated to B
+through querying in periodical task.
+step 3: MAC gets new negotiated speed A.
+step 4: disables auto-negotiation and sets speed to B before
+periodical task query new MAC speed A, the driver will  ignore
+the speed configuration.
 
-Ensure that the global 2 interrupt sources are disabled before we claim
-the parent interrupt.
+This patch fixes it by skipping speed and duplex checking when
+fibre port supports auto-negotiation.
 
-Observed on the ZII development revision B and C platforms with
-reworked serdes support, and using reboot -f to reboot the platform.
-
-Fixes: dc30c35be720 ("net: dsa: mv88e6xxx: Implement interrupt support.")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 22f48e24a23d ("net: hns3: add autoneg and change speed support for fibre port")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/global2.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/dsa/mv88e6xxx/global2.c
-+++ b/drivers/net/dsa/mv88e6xxx/global2.c
-@@ -1083,6 +1083,13 @@ int mv88e6xxx_g2_irq_setup(struct mv88e6
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2417,10 +2417,12 @@ static int hclge_cfg_mac_speed_dup_hw(st
+ 
+ int hclge_cfg_mac_speed_dup(struct hclge_dev *hdev, int speed, u8 duplex)
  {
- 	int err, irq, virq;
++	struct hclge_mac *mac = &hdev->hw.mac;
+ 	int ret;
  
-+	chip->g2_irq.masked = ~0;
-+	mv88e6xxx_reg_lock(chip);
-+	err = mv88e6xxx_g2_int_mask(chip, ~chip->g2_irq.masked);
-+	mv88e6xxx_reg_unlock(chip);
-+	if (err)
-+		return err;
-+
- 	chip->g2_irq.domain = irq_domain_add_simple(
- 		chip->dev->of_node, 16, 0, &mv88e6xxx_g2_irq_domain_ops, chip);
- 	if (!chip->g2_irq.domain)
-@@ -1092,7 +1099,6 @@ int mv88e6xxx_g2_irq_setup(struct mv88e6
- 		irq_create_mapping(chip->g2_irq.domain, irq);
+ 	duplex = hclge_check_speed_dup(duplex, speed);
+-	if (hdev->hw.mac.speed == speed && hdev->hw.mac.duplex == duplex)
++	if (!mac->support_autoneg && mac->speed == speed &&
++	    mac->duplex == duplex)
+ 		return 0;
  
- 	chip->g2_irq.chip = mv88e6xxx_g2_irq_chip;
--	chip->g2_irq.masked = ~0;
- 
- 	chip->device_irq = irq_find_mapping(chip->g1_irq.domain,
- 					    MV88E6XXX_G1_STS_IRQ_DEVICE);
+ 	ret = hclge_cfg_mac_speed_dup_hw(hdev, speed, duplex);
 
 
