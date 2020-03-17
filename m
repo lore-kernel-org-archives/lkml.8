@@ -2,106 +2,113 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E07C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DEFC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0C220724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B15E20735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ia2aMF4T"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lMYrLx5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgCQRi3 (ORCPT
+        id S1726776AbgCQRic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:38:29 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:43771 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726189AbgCQRi2 (ORCPT
+        Tue, 17 Mar 2020 13:38:32 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38624 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgCQRia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:38:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584466707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KqXznweBlwjgjbqOmCj0t1wRnXCMMt9Q5oGndDgHqKw=;
-        b=Ia2aMF4Tm8eocrFe4OQXmSbA9FRlHffG1AnEBAP0WMtAVZv0ip7fsTiYGJBwKQIXK+PKO+
-        XhPGSnuwR5XdYrxW52X5aHtGO6PbVABM5ZnI+cjCgjQj9suquxKwB8v1FPerrjfmawJGT1
-        17zTro9Vem3GSE+zb7Fwbq05KQVDAy0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-YRTtiqN_MXOTgvLOissZSQ-1; Tue, 17 Mar 2020 13:38:23 -0400
-X-MC-Unique: YRTtiqN_MXOTgvLOissZSQ-1
-Received: by mail-wm1-f70.google.com with SMTP id z16so59476wmi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:38:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KqXznweBlwjgjbqOmCj0t1wRnXCMMt9Q5oGndDgHqKw=;
-        b=bc6MKOTFFsfZHY8J0WaJOH3SqyWaT7gAuD6zRdDJ8dkjfYOXdJqR5pC2O6yXwDgrii
-         xJ8AzCSb8VB8b5Fw2KTsuw5NLnvzotBdDLrnCEbfhGgCZwy0j39HYGWqi++8a1b63K0g
-         bI0xOxhL/Ou+kqKJ2u+7rp1Tu5We1lr2+DSQJ06UYtvaLOmcyz5DjJHIHgmsibrNPDrA
-         GFndWB9rxTkNokb0LHY8+TQ/6yxMB2ghwTJd69Jbtx/j/UmHyhOWIacmWtWEvhX5BF+i
-         poO3/bCFiOjAghsVRC01b6jJmF2f2LashFqjLsyp/+TwrqKefXh2Wrr6SsuEeypnqHR6
-         oLFg==
-X-Gm-Message-State: ANhLgQ1tWMa2RKMmWIY0zyNrM0TeovHrDbVNGw/bEu1uEsAgpr7OEGOg
-        cVF1hSOo2XWexuj/hRyOoGhN1gC1JTQDEemSo2/z/Kq69XrXDMjB5U5kA+7RM1jWNnb8iOCr/IW
-        k0kPkBXDfoY/t4pe5kgf2MS8e
-X-Received: by 2002:a5d:698c:: with SMTP id g12mr109548wru.382.1584466702583;
-        Tue, 17 Mar 2020 10:38:22 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vv2+A6tWc5nG/r5JkQ3oWBizSODgSFk5DmsHpehp4pOI8egGtrWh/hnLDHQmJahsWLHxSYI6A==
-X-Received: by 2002:a5d:698c:: with SMTP id g12mr109524wru.382.1584466702334;
-        Tue, 17 Mar 2020 10:38:22 -0700 (PDT)
-Received: from [192.168.178.58] ([151.21.15.227])
-        by smtp.gmail.com with ESMTPSA id k9sm5609036wrd.74.2020.03.17.10.38.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 10:38:21 -0700 (PDT)
-Subject: Re: [PATCH 01/10] KVM: nVMX: Move reflection check into
- nested_vmx_reflect_vmexit()
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200312184521.24579-1-sean.j.christopherson@intel.com>
- <20200312184521.24579-2-sean.j.christopherson@intel.com>
- <87k13opi6m.fsf@vitty.brq.redhat.com>
- <20200317053327.GR24267@linux.intel.com>
- <20200317161631.GD12526@linux.intel.com>
- <874kum533c.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <bd3fec03-c7c3-6c80-2dce-688340a1ae72@redhat.com>
-Date:   Tue, 17 Mar 2020 18:38:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <874kum533c.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Mar 2020 13:38:30 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HHHqVk056217;
+        Tue, 17 Mar 2020 17:38:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=HhYQtNzT7W8ofZ1VIhf3mFuaTo9RNACqiUJRCIPqvIw=;
+ b=lMYrLx5QWiZ+xiLWVnB/bSb6CnfNPhPAbqlPt4I+93thcy4JFREQZV+KJm/EUJTbewk8
+ dyjRdONeiG9pWWmQjOtsW+OkFv8qyqJU3oeM5TPBPf4EMKv/nYRfTbrm2/4M+1Ib4UDr
+ FPm1wJkMB2AcVfxw455pwwi/PDXs9Rea0H4bWDt0tK3AFhZBF1XlosVYYDhY23m+iQnS
+ y7K0z4Dvu9sV1IZX6evOOfEswKHvZrVsJIqPB0B/JR7HJJd6dP3orqOHm2Bhi5dMY/uH
+ DLazI99Wrpa1t+Q+k5vLXbXfrh+o+yztN1rcq5BGUOK7gl2OLgyOtbS9ROrsnM0Db8B4 ag== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2yrqwn671a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 17:38:00 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HHJjBa102500;
+        Tue, 17 Mar 2020 17:35:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2ys92dmrug-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 17:35:59 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02HHZrdG015128;
+        Tue, 17 Mar 2020 17:35:53 GMT
+Received: from dhcp-10-175-196-233.vpn.oracle.com (/10.175.196.233)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 17 Mar 2020 10:35:53 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        alex.dewar@gmx.co.uk, erelx.geron@intel.com,
+        johannes.berg@intel.com, arnd@arndb.de,
+        linux-um@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH] arch/um: falloc.h needs to be directly included for older libc
+Date:   Tue, 17 Mar 2020 17:35:34 +0000
+Message-Id: <1584466534-13248-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9563 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=686
+ mlxscore=0 spamscore=0 bulkscore=0 adultscore=82 suspectscore=3
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003170069
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9563 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=748
+ mlxscore=0 bulkscore=0 phishscore=0 spamscore=0 suspectscore=3
+ malwarescore=0 priorityscore=1501 clxscore=1011 adultscore=45
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003170069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/20 18:00, Vitaly Kuznetsov wrote:
-> 
-> On the other hand, I'm a great fan of splitting checkers ('pure'
-> functions) from actors (functions with 'side-effects') and
-> nested_vmx_exit_reflected() while looking like a checker does a lot of
-> 'acting': nested_mark_vmcs12_pages_dirty(), trace printk.
+When building UML with glibc 2.17 installed, compilation
+of arch/um/os-Linux/file.c fails due to failure to find
+FALLOC_FL_PUNCH_HOLE and FALLOC_FL_KEEP_SIZE definitions.
 
-Good idea (trace_printk is not a big deal, but
-nested_mark_vmcs12_pages_dirty should be done outside).  I'll send a
-patch, just to show that I can still write KVM code. :)
+It appears that /usr/include/bits/fcntl-linux.h (indirectly
+included by /usr/include/fcntl.h) does not include falloc.h
+with an older glibc, whereas a more up-to-date version
+does.
 
-Paolo
+Adding the direct include to file.c resolves the issue
+and does not cause problems for more recent glibc.
+
+Fixes: 50109b5a03b4 ("um: Add support for DISCARD in the UBD Driver")
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+---
+ arch/um/os-Linux/file.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/um/os-Linux/file.c b/arch/um/os-Linux/file.c
+index fbda105..5c819f8 100644
+--- a/arch/um/os-Linux/file.c
++++ b/arch/um/os-Linux/file.c
+@@ -8,6 +8,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <signal.h>
++#include <linux/falloc.h>
+ #include <sys/ioctl.h>
+ #include <sys/mount.h>
+ #include <sys/socket.h>
+-- 
+1.8.3.1
 
