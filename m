@@ -2,112 +2,182 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD093C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979AFC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940DD205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="S2qnvktO"
+	by mail.kernel.org (Postfix) with ESMTP id 6E98720719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584443465;
+	bh=oKUQcNoM+pCBU8d14JbIiqP37ZEJTlXryKcN8HNgmOs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fiEd4TITsnhOVAEGYGafNWECzod3dXfRzIWFhz1je658PWRilrS+8tQHbVz+ZnivI
+	 m2M/F3IXg8DXodJ7qDuGH1m2ZiPb95mHxkHc8YYucjlG3hlQxIRn5dvi/+ALJHB+4f
+	 SODlijA+EmSl4EhZTq+IGBj4uzNZG+vQIhgo1fro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729177AbgCQLK6 (ORCPT
+        id S1729009AbgCQLLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:10:58 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:46442 "EHLO pegase1.c-s.fr"
+        Tue, 17 Mar 2020 07:11:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbgCQLK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:10:56 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48hVpQ3gWvz9tyNL;
-        Tue, 17 Mar 2020 12:10:54 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=S2qnvktO; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id tw69ROBWa6CW; Tue, 17 Mar 2020 12:10:54 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48hVpQ2R82z9tyNJ;
-        Tue, 17 Mar 2020 12:10:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584443454; bh=5ZVaxgAPu7tRLwzrgx0YFwBG2He1G66cpQN69Xz0K3I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=S2qnvktOMP0HeIE4yDIfvL8NtDojuzvqd6Yono4mp4tlyid+D2eqdC6uNj7eRj0wX
-         FHOC+zMWLqjaAGqnuE6tHE824l/AcsFlrF5NTK4eYimJ4TADfjMOC7LIMWoIaVbqU3
-         KBCSot4jqb+oEXLpaQSdetJWRycgM8DaB8UQoGGI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 654358B785;
-        Tue, 17 Mar 2020 12:10:54 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id emwlBXj-XvrU; Tue, 17 Mar 2020 12:10:54 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E44B8B787;
-        Tue, 17 Mar 2020 12:10:46 +0100 (CET)
-Subject: Re: [PATCH 14/15] powerpc/watchpoint/xmon: Don't allow breakpoint
- overwriting
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
-        mikey@neuling.org
-Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
- <20200309085806.155823-15-ravi.bangoria@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <b6892b22-c521-207e-e5fd-ca66c774b314@c-s.fr>
-Date:   Tue, 17 Mar 2020 12:10:39 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728587AbgCQLLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:11:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DACA205ED;
+        Tue, 17 Mar 2020 11:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584443462;
+        bh=oKUQcNoM+pCBU8d14JbIiqP37ZEJTlXryKcN8HNgmOs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HlAXxLd8Wrdg/L43CjtKOLrvL6kVBSEzYvyiblS+nCBAWQV46NEqJx6knKd0Ga8dG
+         cvKg67qwV/BGwAcv09Jh88LehDXDIQV62UIGgAWlGgkoLZDE/EZdjZqTbNvaV2k9NB
+         NjDtR/G/5ffSipehNCCKnZO1CjwlYy7qRdynZH1M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 088/151] drm/i915: Defer semaphore priority bumping to a workqueue
+Date:   Tue, 17 Mar 2020 11:54:58 +0100
+Message-Id: <20200317103332.701376068@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+References: <20200317103326.593639086@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200309085806.155823-15-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Chris Wilson <chris@chris-wilson.co.uk>
+
+commit 14a0d527a479eb2cb6067f9e5e163e1bf35db2a9 upstream.
+
+Since the semaphore fence may be signaled from inside an interrupt
+handler from inside a request holding its request->lock, we cannot then
+enter into the engine->active.lock for processing the semaphore priority
+bump as we may traverse our call tree and end up on another held
+request.
+
+CPU 0:
+[ 2243.218864]  _raw_spin_lock_irqsave+0x9a/0xb0
+[ 2243.218867]  i915_schedule_bump_priority+0x49/0x80 [i915]
+[ 2243.218869]  semaphore_notify+0x6d/0x98 [i915]
+[ 2243.218871]  __i915_sw_fence_complete+0x61/0x420 [i915]
+[ 2243.218874]  ? kmem_cache_free+0x211/0x290
+[ 2243.218876]  i915_sw_fence_complete+0x58/0x80 [i915]
+[ 2243.218879]  dma_i915_sw_fence_wake+0x3e/0x80 [i915]
+[ 2243.218881]  signal_irq_work+0x571/0x690 [i915]
+[ 2243.218883]  irq_work_run_list+0xd7/0x120
+[ 2243.218885]  irq_work_run+0x1d/0x50
+[ 2243.218887]  smp_irq_work_interrupt+0x21/0x30
+[ 2243.218889]  irq_work_interrupt+0xf/0x20
+
+CPU 1:
+[ 2242.173107]  _raw_spin_lock+0x8f/0xa0
+[ 2242.173110]  __i915_request_submit+0x64/0x4a0 [i915]
+[ 2242.173112]  __execlists_submission_tasklet+0x8ee/0x2120 [i915]
+[ 2242.173114]  ? i915_sched_lookup_priolist+0x1e3/0x2b0 [i915]
+[ 2242.173117]  execlists_submit_request+0x2e8/0x2f0 [i915]
+[ 2242.173119]  submit_notify+0x8f/0xc0 [i915]
+[ 2242.173121]  __i915_sw_fence_complete+0x61/0x420 [i915]
+[ 2242.173124]  ? _raw_spin_unlock_irqrestore+0x39/0x40
+[ 2242.173137]  i915_sw_fence_complete+0x58/0x80 [i915]
+[ 2242.173140]  i915_sw_fence_commit+0x16/0x20 [i915]
+
+Closes: https://gitlab.freedesktop.org/drm/intel/issues/1318
+Fixes: b7404c7ecb38 ("drm/i915: Bump ready tasks ahead of busywaits")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: <stable@vger.kernel.org> # v5.2+
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200310101720.9944-1-chris@chris-wilson.co.uk
+(cherry picked from commit 209df10bb4536c81c2540df96c02cd079435357f)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/gpu/drm/i915/i915_request.c |   22 +++++++++++++++++-----
+ drivers/gpu/drm/i915/i915_request.h |    2 ++
+ 2 files changed, 19 insertions(+), 5 deletions(-)
+
+--- a/drivers/gpu/drm/i915/i915_request.c
++++ b/drivers/gpu/drm/i915/i915_request.c
+@@ -529,19 +529,31 @@ submit_notify(struct i915_sw_fence *fenc
+ 	return NOTIFY_DONE;
+ }
+ 
++static void irq_semaphore_cb(struct irq_work *wrk)
++{
++	struct i915_request *rq =
++		container_of(wrk, typeof(*rq), semaphore_work);
++
++	i915_schedule_bump_priority(rq, I915_PRIORITY_NOSEMAPHORE);
++	i915_request_put(rq);
++}
++
+ static int __i915_sw_fence_call
+ semaphore_notify(struct i915_sw_fence *fence, enum i915_sw_fence_notify state)
+ {
+-	struct i915_request *request =
+-		container_of(fence, typeof(*request), semaphore);
++	struct i915_request *rq = container_of(fence, typeof(*rq), semaphore);
+ 
+ 	switch (state) {
+ 	case FENCE_COMPLETE:
+-		i915_schedule_bump_priority(request, I915_PRIORITY_NOSEMAPHORE);
++		if (!(READ_ONCE(rq->sched.attr.priority) & I915_PRIORITY_NOSEMAPHORE)) {
++			i915_request_get(rq);
++			init_irq_work(&rq->semaphore_work, irq_semaphore_cb);
++			irq_work_queue(&rq->semaphore_work);
++		}
+ 		break;
+ 
+ 	case FENCE_FREE:
+-		i915_request_put(request);
++		i915_request_put(rq);
+ 		break;
+ 	}
+ 
+@@ -1283,9 +1295,9 @@ void __i915_request_queue(struct i915_re
+ 	 * decide whether to preempt the entire chain so that it is ready to
+ 	 * run at the earliest possible convenience.
+ 	 */
+-	i915_sw_fence_commit(&rq->semaphore);
+ 	if (attr && rq->engine->schedule)
+ 		rq->engine->schedule(rq, attr);
++	i915_sw_fence_commit(&rq->semaphore);
+ 	i915_sw_fence_commit(&rq->submit);
+ }
+ 
+--- a/drivers/gpu/drm/i915/i915_request.h
++++ b/drivers/gpu/drm/i915/i915_request.h
+@@ -26,6 +26,7 @@
+ #define I915_REQUEST_H
+ 
+ #include <linux/dma-fence.h>
++#include <linux/irq_work.h>
+ #include <linux/lockdep.h>
+ 
+ #include "gt/intel_context_types.h"
+@@ -147,6 +148,7 @@ struct i915_request {
+ 	};
+ 	struct list_head execute_cb;
+ 	struct i915_sw_fence semaphore;
++	struct irq_work semaphore_work;
+ 
+ 	/*
+ 	 * A list of everyone we wait upon, and everyone who waits upon us.
 
 
-Le 09/03/2020 à 09:58, Ravi Bangoria a écrit :
-> Xmon allows overwriting breakpoints because it's supported by only
-> one dawr. But with multiple dawrs, overwriting becomes ambiguous
-> or unnecessary complicated. So let's not allow it.
-
-Could we drop this completely (I mean the functionnality, not the patch).
-
-Christophe
-
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->   arch/powerpc/xmon/xmon.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-> index 0ca0d29f99c6..ac18fe3e4295 100644
-> --- a/arch/powerpc/xmon/xmon.c
-> +++ b/arch/powerpc/xmon/xmon.c
-> @@ -1381,6 +1381,10 @@ bpt_cmds(void)
->   			printf("Hardware data breakpoint not supported on this cpu\n");
->   			break;
->   		}
-> +		if (dabr.enabled) {
-> +			printf("Couldn't find free breakpoint register\n");
-> +			break;
-> +		}
->   		mode = 7;
->   		cmd = inchar();
->   		if (cmd == 'r')
-> 
