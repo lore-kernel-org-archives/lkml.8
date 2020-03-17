@@ -2,216 +2,144 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D548C0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D6DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682DC2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0C42051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:35:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIRr+yri"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=biamp.com header.i=@biamp.com header.b="apSZaguN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbgCQB2m (ORCPT
+        id S1726409AbgCQBff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:28:42 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38218 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733017AbgCQB2g (ORCPT
+        Mon, 16 Mar 2020 21:35:35 -0400
+Received: from outbound-ip8a.ess.barracuda.com ([209.222.82.175]:44842 "EHLO
+        outbound-ip8a.ess.barracuda.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726187AbgCQBfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:28:36 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x7so10783578pgh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 18:28:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Va5UX5LTG/PbDYFMWXp7ney7E1y0v7mEaerBejG/K4E=;
-        b=LIRr+yriG6pj/VMT+1Pr//O7xrgS8MHGcxzp9wJOkKNBLJ5jmwhfxjtZvJcJzjrt7x
-         sHKxBEZGEST4LY6FPAH/7JM0QjxPsDf/NbMTp6RJZPBHxL2MgcY8CUavdovsCw6aDCR4
-         YapO6UGg00zAy1zsDmEhtu6dMETR11zmqPfFhGbM6SHlda+SkjrENUR9eEwvNqKmPxYl
-         CJEDUIFNYpa6SF+JTuIYV1fjuSchFv3Y11P/7DAz4mluZbH9cTPV70BXWNMynikt4hYj
-         XZJi+ZFWVe4XQbm0+2rpTNIp97NPJW45YMWIIk+7u/tglVbouPnvue4OlvDA+Xhhay0m
-         v+Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Va5UX5LTG/PbDYFMWXp7ney7E1y0v7mEaerBejG/K4E=;
-        b=UrzgFufP/A6ckjdV73/G0lBmhXN3P6aIwxFmiLpraS23NFYizeFk1AYu0DoXuSGZrp
-         2WTinJ5snq5axxu6Ct+ypRvA0Rsj8P85VNykloHzCLMyYjNqCH36lgeZPNt9MBe/eXvW
-         fMxMziWHB+SaPxeFafIz/LsW48pYPe/ZR81TONGD4GAUhXCSE7n+IxAmol9McSd3F+1+
-         qKM3BqwnnCIrnZD6aj0Fq2Kng2LScSRNBG9r5iNOQre6sv+5EcY9tYCeiIE5b3A1M/Xb
-         kzm5VrExfGkC9RTsd/XHJNsxiFqqGocPpx6ZtO5yxX0UfKS48f3QW/I1+6nzlW1lWEtK
-         HPpQ==
-X-Gm-Message-State: ANhLgQ02F0ili7mZeGlNBAiHR+sgXPknc9tupbIAwgYItCDKGD0kgNLl
-        GTjdjMuIQH06CdTaIJBIyMQ=
-X-Google-Smtp-Source: ADFU+vsPf8UE++tkaMdzY8hRCKV9M94sAGnlJksmoCNjQGnxI5MTQofGsQO60+VW3X7RnDrk/pBqBw==
-X-Received: by 2002:a63:1459:: with SMTP id 25mr2641053pgu.427.1584408515489;
-        Mon, 16 Mar 2020 18:28:35 -0700 (PDT)
-Received: from dev.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id p8sm1062687pff.26.2020.03.16.18.28.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Mar 2020 18:28:34 -0700 (PDT)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     hannes@cmpxchg.org, willy@infradead.org, akpm@linux-foundation.org,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v2] psi: move PF_MEMSTALL out of task->flags
-Date:   Mon, 16 Mar 2020 21:28:05 -0400
-Message-Id: <1584408485-1921-1-git-send-email-laoar.shao@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 16 Mar 2020 21:35:34 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11lp2175.outbound.protection.outlook.com [104.47.56.175]) by mx8.us-east-2a.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Tue, 17 Mar 2020 01:34:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KXLe3NVvDS7ZVNIXprkIKRPwM6rzrAL3xvFwzBlSafp885F7oP89tPmDIy3HQVpiU0HwmKpZuy8C8I/I+zC/WBK1Cg0P1NtxvtngEwgfzy0G9Evwp68RTu7n5VNx3BZCdr8HWOTQ4QjUDEeit7KDCEfJMUwS9G+KZM2IsNMZcZ9XGL+DDBHXzoUrTBUrey1QGki5OmTu5FxxHioESRZKEEsCqqobFDjPA9PGM8Ms+h6FXAd6CJ+CUp/HBTyh9wn15n7rxUFKuILFrZswqGLuowAj5Ys/Fa+dl1kLstx9PUoTDYTDFxC8lrwhPB5fmntt4U+l/vLRysSa6Id4O3nR0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5aM6vSsglwBDmz+JBPcobVbVbcE2U0hhc9FbCbr3VvA=;
+ b=DAjXyopjOumWcjDrC573DKvlhr66nCUeNcM3cMGMZdies+oxpVT3n/n0eW0cnCauwwn4YHK8dOA6bhj2+UpxIhvVpDyP/JyPLCaEInJCq0VuDDt/RkxbLLkozEzHXoampOW2Q6vaT0AzYrRZgkoxu0hgAecGB2iQKclubPq6dsXrIed1KUnUDrKbo0ML7OSUSMPFLOyHwDEiYjTcjR8Xcjpu3WJm/QJYfGMpMma7jk8bushiTa2YNruonhPA9o9ipIt9dB3yioDcsznBO2vAr18KwdSB3HxUobliUVecr1RLiNBuzt2YICQI9UsCkPE7CY/pR+tOms06gybBNS2HIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=biamp.com; dmarc=pass action=none header.from=biamp.com;
+ dkim=pass header.d=biamp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=biamp.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5aM6vSsglwBDmz+JBPcobVbVbcE2U0hhc9FbCbr3VvA=;
+ b=apSZaguNzUQ2y6pBP16BmPVQgVkL1SrcjKJ2bT0xNbV4qcABGjZOeE5wbItNjkY2lNABtrATrgN0mguQ+rQFFdErNeuSy8RDENlTJiCsG9ZsHz8gTkElvrYu2JXkggq3JnOTHSMnQ8RsE4Gg8HMHTSNruzkkyJ7NvtHfJGppp/8=
+Received: from MN2PR17MB3197.namprd17.prod.outlook.com (2603:10b6:208:136::33)
+ by MN2PR17MB2863.namprd17.prod.outlook.com (2603:10b6:208:e1::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21; Tue, 17 Mar
+ 2020 01:34:44 +0000
+Received: from MN2PR17MB3197.namprd17.prod.outlook.com
+ ([fe80::31e3:fa7c:d1c0:ce24]) by MN2PR17MB3197.namprd17.prod.outlook.com
+ ([fe80::31e3:fa7c:d1c0:ce24%3]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 01:34:43 +0000
+From:   Shreyas Joshi <Shreyas.Joshi@biamp.com>
+To:     Shreyas Joshi <Shreyas.Joshi@biamp.com>,
+        "pmladek@suse.com" <pmladek@suse.com>,
+        "sergey.senozhatsky@gmail.com" <sergey.senozhatsky@gmail.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "shreyasjoshi15@gmail.com" <shreyasjoshi15@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] printk: handle blank console arguments passed in.
+Thread-Topic: [PATCH] printk: handle blank console arguments passed in.
+Thread-Index: AQHV9dPJ7vgXqRbTUEq4Sjf2AplQlqhMDLFw
+Date:   Tue, 17 Mar 2020 01:34:43 +0000
+Message-ID: <MN2PR17MB31979437E605257461AC003DFCF60@MN2PR17MB3197.namprd17.prod.outlook.com>
+References: <20200309052915.858-1-shreyas.joshi@biamp.com>
+In-Reply-To: <20200309052915.858-1-shreyas.joshi@biamp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Shreyas.Joshi@biamp.com; 
+x-originating-ip: [203.54.172.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d05add94-cf41-4e55-17d5-08d7ca135ec1
+x-ms-traffictypediagnostic: MN2PR17MB2863:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR17MB286329DAD72CEE64E06E98F2FCF60@MN2PR17MB2863.namprd17.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0345CFD558
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(136003)(396003)(376002)(346002)(366004)(199004)(81156014)(66556008)(66476007)(64756008)(81166006)(7696005)(8936002)(76116006)(66946007)(66446008)(71200400001)(86362001)(52536014)(316002)(55016002)(4744005)(26005)(6506007)(5660300002)(478600001)(186003)(8676002)(4326008)(9686003)(2906002)(33656002)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR17MB2863;H:MN2PR17MB3197.namprd17.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: biamp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZJ7LqCgcCsxF1+s8sKDYqtpNXe/0JwMRjl+s0PoZTxYZVXqZz8k9pbqphE2Qp1qfXwrM4gDPy139MonJzC2koiKM855iBaNmVfb4REwbnPH87SPwydCDtD/L4tFyG9igl7eT1+iCSn9CJN0SD+1mCKnteocahOFqo/32SEr6WK2o8W+7FGJ3F21OzoiDcV+JecloZash1NjwH2tmA9Rky6lwyHmh4jtYohz8RwUU/kUjBrHuXw6ZKj6T3Sldi1kVupoJ+tNOcDFZXYihIFiTC8aNW8BIIrJV3Akjmh/bgJbju4JjBdB8ROpVN03MTSAKxfFdyJXJY3CHa9ja486BTKEvHdyhl4SRNY7UjRzU8rIyK2pazT5e2S5XrV1qZtMZUNs2t/J8ht7AgY6TKLYi01xMTv9iZVcF6VlG2W1Mj45ug1c6mbSbka2joWL8YSB1
+x-ms-exchange-antispam-messagedata: qIUZnU1Y5iaoqtFcWXO8F9R2LRkpurTP6iVZ+/n6i1lqOvLV4cbOs6Tir8FaD9S0FYSOdDDvN0TbBVM/RAzcMU8mLvg4VtRgnLce45exMt3gl7+4vUfrPDcV346sGqj0y9hVcgX8xQnafUBx3a20SA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: biamp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d05add94-cf41-4e55-17d5-08d7ca135ec1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 01:34:43.8137
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 341ac572-066c-46f6-bf06-b2d0c7ddf1be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XGWV7SP6XwWGdhnlch5VZ/MXaatsKGn7uRBR+RyIG5ryCtg30UhoYNr57m9kejSzGj2OKFNR9kLkoMzr6kTAOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR17MB2863
+X-BESS-ID: 1584408885-893014-22206-7049-1
+X-BESS-VER: 2019.1_20200316.2111
+X-BESS-Apparent-Source-IP: 104.47.56.175
+X-BESS-Outbound-Spam-Score: 0.50
+X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.222889 [from 
+        cloudscan14-19.us-east-2a.ess.aws.cudaops.com]
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------
+        0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
+        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH META: Sender Address Matches Recipient Address  
+X-BESS-Outbound-Spam-Status: SCORE=0.50 using account:ESS74049 scores of KILL_LEVEL=7.0 tests=BSF_BESS_OUTBOUND, BSF_SC0_SA_TO_FROM_ADDR_MATCH
+X-BESS-BRTS-Status: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The task->flags is a 32-bits flag, in which 31 bits have already been
-consumed. So it is hardly to introduce other new per process flag.
-Currently there're still enough spaces in the bit-field section of
-task_struct, so we can define the memstall state as a single bit in
-task_struct instead.
-This patch also removes an out-of-date comment pointed by Matthew.
+If uboot passes a blank string to console_setup then it results in a trashe=
+d memory.
+Ultimately, the kernel crashes during freeing up the memory. This fix check=
+s if there is a blank parameter being passed to console_setup from uboot.
+In case it detects that the console parameter is blank then it doesn't setu=
+p the serial device and it gracefully exits.
 
-Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: Shreyas Joshi <shreyas.joshi@biamp.com>
 ---
- include/linux/sched.h |  6 ++++--
- kernel/sched/psi.c    | 12 ++++++------
- kernel/sched/stats.h  | 10 +++++-----
- 3 files changed, 15 insertions(+), 13 deletions(-)
+ kernel/printk/printk.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 0d84f8f..c429e97 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -783,9 +783,12 @@ struct task_struct {
- 	unsigned			frozen:1;
- #endif
- #ifdef CONFIG_BLK_CGROUP
--	/* to be used once the psi infrastructure lands upstream. */
- 	unsigned			use_memdelay:1;
- #endif
-+#ifdef CONFIG_PSI
-+	/* Stalled due to lack of memory */
-+	unsigned			in_memstall:1;
-+#endif
- 
- 	unsigned long			atomic_flags; /* Flags requiring atomic access. */
- 
-@@ -1490,7 +1493,6 @@ static inline int is_global_init(struct task_struct *tsk)
- #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
- #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
- #define PF_SWAPWRITE		0x00800000	/* Allowed to write to swap */
--#define PF_MEMSTALL		0x01000000	/* Stalled due to lack of memory */
- #define PF_UMH			0x02000000	/* I'm an Usermodehelper process */
- #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with cpus_mask */
- #define PF_MCE_EARLY		0x08000000      /* Early kill for mce process policy */
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 517e371..d068e83 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -817,17 +817,17 @@ void psi_memstall_enter(unsigned long *flags)
- 	if (static_branch_likely(&psi_disabled))
- 		return;
- 
--	*flags = current->flags & PF_MEMSTALL;
-+	*flags = current->in_memstall;
- 	if (*flags)
- 		return;
- 	/*
--	 * PF_MEMSTALL setting & accounting needs to be atomic wrt
-+	 * in_memstall setting & accounting needs to be atomic wrt
- 	 * changes to the task's scheduling state, otherwise we can
- 	 * race with CPU migration.
- 	 */
- 	rq = this_rq_lock_irq(&rf);
- 
--	current->flags |= PF_MEMSTALL;
-+	current->in_memstall = 1;
- 	psi_task_change(current, 0, TSK_MEMSTALL);
- 
- 	rq_unlock_irq(rq, &rf);
-@@ -850,13 +850,13 @@ void psi_memstall_leave(unsigned long *flags)
- 	if (*flags)
- 		return;
- 	/*
--	 * PF_MEMSTALL clearing & accounting needs to be atomic wrt
-+	 * in_memstall clearing & accounting needs to be atomic wrt
- 	 * changes to the task's scheduling state, otherwise we could
- 	 * race with CPU migration.
- 	 */
- 	rq = this_rq_lock_irq(&rf);
- 
--	current->flags &= ~PF_MEMSTALL;
-+	current->in_memstall = 0;
- 	psi_task_change(current, TSK_MEMSTALL, 0);
- 
- 	rq_unlock_irq(rq, &rf);
-@@ -920,7 +920,7 @@ void cgroup_move_task(struct task_struct *task, struct css_set *to)
- 	else if (task->in_iowait)
- 		task_flags = TSK_IOWAIT;
- 
--	if (task->flags & PF_MEMSTALL)
-+	if (task->in_memstall)
- 		task_flags |= TSK_MEMSTALL;
- 
- 	if (task_flags)
-diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
-index ba683fe..199e304 100644
---- a/kernel/sched/stats.h
-+++ b/kernel/sched/stats.h
-@@ -70,7 +70,7 @@ static inline void psi_enqueue(struct task_struct *p, bool wakeup)
- 		return;
- 
- 	if (!wakeup || p->sched_psi_wake_requeue) {
--		if (p->flags & PF_MEMSTALL)
-+		if (p->in_memstall)
- 			set |= TSK_MEMSTALL;
- 		if (p->sched_psi_wake_requeue)
- 			p->sched_psi_wake_requeue = 0;
-@@ -90,7 +90,7 @@ static inline void psi_dequeue(struct task_struct *p, bool sleep)
- 		return;
- 
- 	if (!sleep) {
--		if (p->flags & PF_MEMSTALL)
-+		if (p->in_memstall)
- 			clear |= TSK_MEMSTALL;
- 	} else {
- 		if (p->in_iowait)
-@@ -109,14 +109,14 @@ static inline void psi_ttwu_dequeue(struct task_struct *p)
- 	 * deregister its sleep-persistent psi states from the old
- 	 * queue, and let psi_enqueue() know it has to requeue.
- 	 */
--	if (unlikely(p->in_iowait || (p->flags & PF_MEMSTALL))) {
-+	if (unlikely(p->in_iowait || p->in_memstall)) {
- 		struct rq_flags rf;
- 		struct rq *rq;
- 		int clear = 0;
- 
- 		if (p->in_iowait)
- 			clear |= TSK_IOWAIT;
--		if (p->flags & PF_MEMSTALL)
-+		if (p->in_memstall)
- 			clear |= TSK_MEMSTALL;
- 
- 		rq = __task_rq_lock(p, &rf);
-@@ -131,7 +131,7 @@ static inline void psi_task_tick(struct rq *rq)
- 	if (static_branch_likely(&psi_disabled))
- 		return;
- 
--	if (unlikely(rq->curr->flags & PF_MEMSTALL))
-+	if (unlikely(rq->curr->in_memstall))
- 		psi_memstall_tick(rq->curr, cpu_of(rq));
- }
- #else /* CONFIG_PSI */
--- 
-1.8.3.1
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c index ad460623=
+4545..e9ad730991e0 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2165,7 +2165,10 @@ static int __init console_setup(char *str)
+ 	char buf[sizeof(console_cmdline[0].name) + 4]; /* 4 for "ttyS" */
+ 	char *s, *options, *brl_options =3D NULL;
+ 	int idx;
+-
++	if (str[0] =3D=3D 0) {
++		console_loglevel =3D 0;
++		return 1;
++	}
+ 	if (_braille_console_setup(&str, &brl_options))
+ 		return 1;
+=20
+--
+2.20.1
 
