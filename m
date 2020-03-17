@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE5DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA9BC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26948206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4258220724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584456914;
-	bh=K2CqNzyP9Xh6nbedN69NWDYulb1KlpnZ6sAC5LNYrkQ=;
+	s=default; t=1584456921;
+	bh=0AuL5ik1PkjJ+CosUbhOjV9BkLKR6KOQzFJir/RXkZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yzsO6dViDiJUGwKRec2ioMijsasv01q53k+YjkcnuGhp6pVdYvIbAI7zHPNfYctaA
-	 fxcf7FUdYosMdkEUWTd4FprPVvghGkrmtF1XtNvzDstV6OzUUcwjeicGSchmUDYj6W
-	 Nt0I/9p79nxyEanjmxnAeF6I0d7VgEAObfk8DDrM=
+	b=UQB56qLDDkIVy21JLKybpdJPHSK7Sn1/QurY87IMcoEMMfGGc5ljeByWyTm9xf0fy
+	 +Be908AJZ+9G1EE5oSPFNYIIWQ/9km/eZODf8f41B10JR2uz1BNYqU4+uz2cqwkjmc
+	 1GIK5Hr4H6qxKpmeC3AaO4ynZurybt8eMR6EwIU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCQOzD (ORCPT
+        id S1727275AbgCQOzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:55:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43588 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 10:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbgCQOyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726922AbgCQOyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 10:54:31 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 726E420754;
+        by mail.kernel.org (Postfix) with ESMTPSA id B232320774;
         Tue, 17 Mar 2020 14:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1584456870;
-        bh=K2CqNzyP9Xh6nbedN69NWDYulb1KlpnZ6sAC5LNYrkQ=;
+        bh=0AuL5ik1PkjJ+CosUbhOjV9BkLKR6KOQzFJir/RXkZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1120EDb2wo2SIYejqvQfRjQsM7ALh/h2AzM6/RJh2K9AXE0MTo28Aa/K1k4Ku5doy
-         cABfV9piTVNeIRwU5bZNi0nyyqVzrk9MQk7XHIN2bflt2BsaqgjDRUCT1rbiQupD4r
-         EfGH2ueTxJCAaWfuTXdlnMZjnxoHUZGRcasmHdtE=
+        b=m8ldmA9DU/iSxsfnETccdctspko9w3ZRBbUmLw54wnHXP3hLUrbXj27KYlCBcQIGu
+         wPbAvFJvAaPuUKtwJqRau9wtNa4BUEE8ed5Y1Rz+z25ju6vnRvr7mAT0GHq8mh3cvX
+         zK8bmMlESnTs+4IeG7gojw74UawFtBD5ikVvjA2k=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jEDbw-000AMX-H6; Tue, 17 Mar 2020 15:54:28 +0100
+        id 1jEDbw-000AN5-Px; Tue, 17 Mar 2020 15:54:28 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org
-Subject: [PATCH 05/17] devfreq: devfreq.h: get rid of some doc warnings
-Date:   Tue, 17 Mar 2020 15:54:14 +0100
-Message-Id: <c013b308c08b47d1208c22362ec1034ac148c1b6.1584456635.git.mchehab+huawei@kernel.org>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
+Date:   Tue, 17 Mar 2020 15:54:21 +0100
+Message-Id: <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1584456635.git.mchehab+huawei@kernel.org>
 References: <cover.1584456635.git.mchehab+huawei@kernel.org>
@@ -62,48 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark "void *data" as literal, in order to avoid those doc warnings:
+Use a different markup for the ERR_PTR, as %FOO doesn't work
+if there are parenthesis. So, use, instead:
 
-	./include/linux/devfreq.h:156: WARNING: Inline emphasis start-string without end-string.
-	./include/linux/devfreq.h:259: WARNING: Inline emphasis start-string without end-string.
-	./include/linux/devfreq.h:279: WARNING: Inline emphasis start-string without end-string.
+	``ERR_PTR(-EINVAL)``
+
+This fixes the following warning:
+
+	./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- include/linux/devfreq.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-index 82630fafacde..57e871a559a9 100644
---- a/include/linux/devfreq.h
-+++ b/include/linux/devfreq.h
-@@ -158,7 +158,7 @@ struct devfreq_stats {
-  * functions except for the context of callbacks defined in struct
-  * devfreq_governor, the governor should protect its access with the
-  * struct mutex lock in struct devfreq. A governor may use this mutex
-- * to protect its own private data in void *data as well.
-+ * to protect its own private data in ``void *data`` as well.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index f31b1d46599e..74d8973025da 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -136,7 +136,7 @@ EXPORT_SYMBOL_GPL(gpio_to_desc);
+  * @hwnum: hardware number of the GPIO for this chip
+  *
+  * Returns:
+- * A pointer to the GPIO descriptor or %ERR_PTR(-EINVAL) if no GPIO exists
++ * A pointer to the GPIO descriptor or ``ERR_PTR(-EINVAL)`` if no GPIO exists
+  * in the given chip for the specified hardware number.
   */
- struct devfreq {
- 	struct list_head node;
-@@ -256,7 +256,7 @@ struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index);
- 
- #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)
- /**
-- * struct devfreq_simple_ondemand_data - void *data fed to struct devfreq
-+ * struct devfreq_simple_ondemand_data - ``void *data`` fed to struct devfreq
-  *	and devfreq_add_device
-  * @upthreshold:	If the load is over this value, the frequency jumps.
-  *			Specify 0 to use the default. Valid value = 0 to 100.
-@@ -276,7 +276,7 @@ struct devfreq_simple_ondemand_data {
- 
- #if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
- /**
-- * struct devfreq_passive_data - void *data fed to struct devfreq
-+ * struct devfreq_passive_data - ``void *data`` fed to struct devfreq
-  *	and devfreq_add_device
-  * @parent:	the devfreq instance of parent device.
-  * @get_target_freq:	Optional callback, Returns desired operating frequency
+ struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip,
 -- 
 2.24.1
 
