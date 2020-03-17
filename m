@@ -2,163 +2,116 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C620FC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9A6C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A392F20752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D5620738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584481986;
+	bh=4fpXMStLT3ChZUSNNoR5DM0vAh+pn633V+leBozCyWA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cPopFDl9HZr/xxSZ7EyohFn/OMMijQNdCGkHrcMAQaHjhO1BVuyh8ybkygOESUYw/
+	 6qrbjufCrrRrVChkk2L4nU9+KS7Cn3pbXhfY8abYdMxPbBTXgqToo2AaQwM7z2apJ0
+	 xW03FbsfGJdvy0Q4xbgzpUVI83rTCi07xacqoMQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCQVqQ (ORCPT
+        id S1726801AbgCQVxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:46:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51076 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726388AbgCQVqQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:46:16 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HLX7xk011319;
-        Tue, 17 Mar 2020 17:46:09 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yrtwverjb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Mar 2020 17:46:09 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02HLj0wm026781;
-        Tue, 17 Mar 2020 21:46:08 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03dal.us.ibm.com with ESMTP id 2yrpw6ja7b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Mar 2020 21:46:08 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02HLk7FJ62587192
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Mar 2020 21:46:07 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16897BE059;
-        Tue, 17 Mar 2020 21:46:07 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E423EBE053;
-        Tue, 17 Mar 2020 21:46:06 +0000 (GMT)
-Received: from crimini9.aus.stglabs.ibm.com (unknown [9.40.192.141])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Tue, 17 Mar 2020 21:46:06 +0000 (GMT)
-Received: (from gcwilson@localhost)
-        by crimini9.aus.stglabs.ibm.com (8.15.2/8.15.2/Submit) id 02HLk4Xm009611;
-        Tue, 17 Mar 2020 17:46:04 -0400
-X-Authentication-Warning: crimini9.aus.stglabs.ibm.com: gcwilson set sender to gcwilson@linux.ibm.com using -f
-From:   George Wilson <gcwilson@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Nayna Jain <nayna@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Linh Pham <phaml@us.ibm.com>
-Subject: [PATCH v2] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
-Date:   Tue, 17 Mar 2020 17:46:00 -0400
-Message-Id: <20200317214600.9561-1-gcwilson@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 17 Mar 2020 17:53:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgCQVxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:53:05 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F25DB20724;
+        Tue, 17 Mar 2020 21:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584481984;
+        bh=4fpXMStLT3ChZUSNNoR5DM0vAh+pn633V+leBozCyWA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j9izuxAJEYWfwOlyHm+dzHMrstapzlPoXAEYb7DfotjV7f8+lIrKsh/8yjOmRey35
+         G6BkqEvgCCE0/nxL4u9SrTR3Ai5Q51DCYkWMsq7w+HwzxaZHlQeiS4oaslEAOKqBXs
+         HfHocYpm5b4/XhOJrKH+WzAynGxE3ddRp080wgDc=
+Date:   Tue, 17 Mar 2020 21:52:57 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@suse.de>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] arm64/build: Use common DISCARDS in linker script
+Message-ID: <20200317215256.GA20788@willie-the-truck>
+References: <20200228002244.15240-1-keescook@chromium.org>
+ <20200228002244.15240-7-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-17_09:2020-03-17,2020-03-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 phishscore=0 suspectscore=1
- priorityscore=1501 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003170082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228002244.15240-7-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
-with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
-“partner partition suspended” transport event disables the associated CRQ
-such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
-until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
-This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
-ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
-retries the ibmvtpm_send_crq() once.
+On Thu, Feb 27, 2020 at 04:22:41PM -0800, Kees Cook wrote:
+> Use the common DISCARDS rule for the linker script in an effort to
+> regularize the linker script to prepare for warning on orphaned
+> sections.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/arm64/kernel/vmlinux.lds.S | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+> index 497f9675071d..c61d9ab3211c 100644
+> --- a/arch/arm64/kernel/vmlinux.lds.S
+> +++ b/arch/arm64/kernel/vmlinux.lds.S
+> @@ -6,6 +6,7 @@
+>   */
+>  
+>  #define RO_EXCEPTION_TABLE_ALIGN	8
+> +#define RUNTIME_DISCARD_EXIT
+>  
+>  #include <asm-generic/vmlinux.lds.h>
+>  #include <asm/cache.h>
+> @@ -19,7 +20,6 @@
+>  
+>  /* .exit.text needed in case of alternative patching */
+>  #define ARM_EXIT_KEEP(x)	x
+> -#define ARM_EXIT_DISCARD(x)
+>  
+>  OUTPUT_ARCH(aarch64)
+>  ENTRY(_text)
+> @@ -94,12 +94,8 @@ SECTIONS
+>  	 * matching the same input section name.  There is no documented
+>  	 * order of matching.
+>  	 */
+> +	DISCARDS
+>  	/DISCARD/ : {
+> -		ARM_EXIT_DISCARD(EXIT_TEXT)
+> -		ARM_EXIT_DISCARD(EXIT_DATA)
+> -		EXIT_CALL
+> -		*(.discard)
+> -		*(.discard.*)
+>  		*(.interp .dynamic)
+>  		*(.dynsym .dynstr .hash .gnu.hash)
+>  		*(.eh_frame)
 
-Reported-by: Linh Pham <phaml@us.ibm.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
-Tested-by: Linh Pham <phaml@us.ibm.com>
----
- drivers/char/tpm/tpm_ibmvtpm.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+Acked-by: Will Deacon <will@kernel.org>
 
-diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
-index 78cc52690177..ba3bd503e080 100644
---- a/drivers/char/tpm/tpm_ibmvtpm.c
-+++ b/drivers/char/tpm/tpm_ibmvtpm.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2012 IBM Corporation
-+ * Copyright (C) 2012-2020 IBM Corporation
-  *
-  * Author: Ashley Lai <ashleydlai@gmail.com>
-  *
-@@ -25,6 +25,8 @@
- #include "tpm.h"
- #include "tpm_ibmvtpm.h"
- 
-+static int tpm_ibmvtpm_resume(struct device *dev);
-+
- static const char tpm_ibmvtpm_driver_name[] = "tpm_ibmvtpm";
- 
- static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
-@@ -147,6 +149,7 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
- {
- 	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
- 	int rc, sig;
-+	bool retry = true;
- 
- 	if (!ibmvtpm->rtce_buf) {
- 		dev_err(ibmvtpm->dev, "ibmvtpm device is not ready\n");
-@@ -179,18 +182,28 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
- 	 */
- 	ibmvtpm->tpm_processing_cmd = true;
- 
-+again:
- 	rc = ibmvtpm_send_crq(ibmvtpm->vdev,
- 			IBMVTPM_VALID_CMD, VTPM_TPM_COMMAND,
- 			count, ibmvtpm->rtce_dma_handle);
-+
- 	if (rc != H_SUCCESS) {
-+		/*
-+		 * H_CLOSED can be returned after LPM resume.  Call
-+		 * tpm_ibmvtpm_resume() to re-enable the CRQ then retry
-+		 * ibmvtpm_send_crq() once before failing.
-+		 */
-+		if (rc == H_CLOSED && retry) {
-+			tpm_ibmvtpm_resume(ibmvtpm->dev);
-+			retry = false;
-+			goto again;
-+		}
- 		dev_err(ibmvtpm->dev, "tpm_ibmvtpm_send failed rc=%d\n", rc);
--		rc = 0;
- 		ibmvtpm->tpm_processing_cmd = false;
--	} else
--		rc = 0;
-+	}
- 
- 	spin_unlock(&ibmvtpm->rtce_lock);
--	return rc;
-+	return 0;
- }
- 
- static void tpm_ibmvtpm_cancel(struct tpm_chip *chip)
--- 
-2.24.1
-
+Will
