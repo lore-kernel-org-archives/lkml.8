@@ -2,102 +2,99 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9046CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08927C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B8720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76DF206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgCQPbM (ORCPT
+        id S1726738AbgCQPch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:31:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60452 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726019AbgCQPbM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:31:12 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HFLvcn072619;
-        Tue, 17 Mar 2020 11:30:52 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ytb4uk3v9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Mar 2020 11:30:52 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02HFH5Lv006235;
-        Tue, 17 Mar 2020 15:30:51 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03wdc.us.ibm.com with ESMTP id 2yrpw696ww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Mar 2020 15:30:51 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02HFUoca16384432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Mar 2020 15:30:51 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF441AE062;
-        Tue, 17 Mar 2020 15:30:50 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CFD5FAE05F;
-        Tue, 17 Mar 2020 15:30:50 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Mar 2020 15:30:50 +0000 (GMT)
-Subject: Re: [PATCH] tpm2: Export tpm2_get_cc_attrs_tbl for ibmvtpm driver as
- module
-To:     Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au
-References: <20200317130819.720318-1-stefanb@linux.vnet.ibm.com>
- <03C24A2B-643D-4CDB-99FA-F5321684EEE4@linux.vnet.ibm.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <d0c79cd1-a16b-b0c2-1828-69133670ea82@linux.ibm.com>
-Date:   Tue, 17 Mar 2020 11:30:50 -0400
+        Tue, 17 Mar 2020 11:32:37 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12705 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbgCQPch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:32:37 -0400
+IronPort-SDR: WrOyJMVk9110BS9P+wpTelS5oToTZEWCOS7vJv1YFyUq9HKFjcUEIXIYPcJh7q74Yy48CnFV3u
+ Ed++G/cgKDig==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 08:32:36 -0700
+IronPort-SDR: AlObTxabHgmiM6Jn3ywAh/Yt0oaBfUo/bqhYV9hSVEb6s6cToF6f79VnvrY/w1+8SKKs8wIUcS
+ rEU7Bof4w0Eg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
+   d="scan'208";a="268002291"
+Received: from atthomas-mobl.amr.corp.intel.com (HELO [10.255.32.45]) ([10.255.32.45])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Mar 2020 08:32:33 -0700
+Subject: Re: [PATCH] soundwire: stream: only change state if needed
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
+ <6bc8412a-f6d9-64d1-2218-ca98cfdb31c0@linaro.org>
+ <27a73cbd-9418-4488-5cb2-fb21f9fc9110@linux.intel.com>
+ <c1e5dc89-a069-a427-4912-89d90ecc0334@linaro.org>
+ <6dde3b32-a29a-3ac9-d95d-283f5b05e64a@linux.intel.com>
+ <7c7b334d-ae5c-35f6-9cf3-04700677211f@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <7a362c6a-364e-499a-e841-0a919f48bf84@linux.intel.com>
+Date:   Tue, 17 Mar 2020 10:31:29 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <03C24A2B-643D-4CDB-99FA-F5321684EEE4@linux.vnet.ibm.com>
+In-Reply-To: <7c7b334d-ae5c-35f6-9cf3-04700677211f@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-17_05:2020-03-17,2020-03-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- suspectscore=0 malwarescore=0 spamscore=0 clxscore=1011 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003170062
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/20 11:22 AM, Sachin Sant wrote:
->> On 17-Mar-2020, at 6:38 PM, Stefan Berger <stefanb@linux.vnet.ibm.com> wrote:
->>
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> This patch fixes the following problem when the ibmvtpm driver
->> is built as a module:
->>
->> ERROR: modpost: "tpm2_get_cc_attrs_tbl" [drivers/char/tpm/tpm_ibmvtpm.ko] undefined!
->> make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
->> make: *** [Makefile:1298: modules] Error 2
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-> Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
 
-Thank you!
+>>>> The change below would be an error case for Intel, so it's probably 
+>>>> better if we go with your suggestion. You have a very specific state 
+>>>> handling due to your power amps and it's probably better to keep it 
+>>>> platform-specific.
+>>>
+>>> Just trying to understand, why would it be error for Intel case?
+>>>
+>>> IMO, If stream state is SDW_STREAM_ENABLED that also implicit that 
+>>> its prepared too. Similar thing with SDW_STREAM_DEPREPARED.
+>>> Isn't it?
+>>
+>> the stream state is a scalar value, not a mask. The state machine only 
+>> allows transition from CONFIGURED TO PREPARED or from DEPREPARED TO 
+>> PREPARED, or DISABLED to PREPARED.
+>> There is no allowed transition from ENABLED TO PREPARED, you have to 
+>> go through the DISABLED state and make sure a bank switch occurred, 
+>> and re-do a bank switch to prepare again.
+> I agree with you if are on single dai case. Am happy to move to stream 
+> handling to machine driver for now.
+> 
+> But this also means that in cases like multi-codec its not recommended 
+> to call sdw_prepare and sdw_enable in a single function from codec.
+> Which might be worth documenting.
 
-    Stefan
+Well, the bigger question is why use sdw_stream functions at the codec 
+level in the first place? All other codec drivers seem to have no issue 
+leaving the dais owned by the master control stream state changes.
 
-
+I am not saying I object or it's bad, just that there were significant 
+changes in usages of the 'stream' concept since it was introduced, as 
+well as threads in MIPI circles to clarify the prepare/enable 
+dependencies, so it'd be useful to have a complete picture of what 
+different platforms need/want.
