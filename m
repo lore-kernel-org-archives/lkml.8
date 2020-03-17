@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD2AC4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C8CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A55520658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF4320719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442689;
-	bh=pSEs/hEnsGS9DdFtBvKtx6cusZIGkWIBMY4c2zhPwDk=;
+	s=default; t=1584442694;
+	bh=crHfczvaOvyBjdaupDDbrqfiw5gkUysKVSSnMhu59+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GKTyIuVkc38tFkqtr23ckjDbqWd+cqq+uerdhRpr1qWr0DMcTRHxmOLduK/3pbSPt
-	 9wZ8N8IUjezns6aM/T6HPoU/jL8LtDnFniHY5E0P4kl/PwrEvjj4lPFJq4T1pfU+ZK
-	 0sbAjbHHDn9p3/VJVJCCNsTZIT6GTm12TTFdq+ZI=
+	b=P6Ov4UuyfIJoqS+sJiC2/mH1GEcincy1NtfjYkj1mV//aBBz4fFaMjtHcvLV4CaIV
+	 K54eHwil8a6meTBjzJmYTLcdcjBIWWnWOZaNsr97E1B1l8Es1vZzjAM/93W/At2em0
+	 nMlj0M1So/W+pMpbQVEyEUZMo2svm+r6ClxaNDCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbgCQK6I (ORCPT
+        id S1727188AbgCQK6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:58:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:58:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727140AbgCQK6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:58:06 -0400
+        id S1726747AbgCQK6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:58:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACF4F20714;
-        Tue, 17 Mar 2020 10:58:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 376C720735;
+        Tue, 17 Mar 2020 10:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442686;
-        bh=pSEs/hEnsGS9DdFtBvKtx6cusZIGkWIBMY4c2zhPwDk=;
+        s=default; t=1584442688;
+        bh=crHfczvaOvyBjdaupDDbrqfiw5gkUysKVSSnMhu59+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BfRfA1i1yCgKxyDhjbWUBTF2GL++757CyIPFsjU0raI+zrfHrM7bFSrLT+XdLvUMD
-         l2KlfcP+O2dQ2HeJtE/WPdkgW7h0L2exEG4R12dyYXF2a5fj5ufhBDCvAhNzM6s5xx
-         ARh7vnnmD5teUjNBpumvJqeLOLZh6yKTLa8qvxG4=
+        b=nHwN0519JVoETDWoEMS77INznBdxvROWIzQi0bD+cieEdHFoE3/OG8z8UNY/9eXtA
+         3obciX9URHZF45t7Mq1HcJgRrKPwxn4KenK8BslZViMcMny5hD8HXia43gBByoBHai
+         hPgAuf1zB02qLuhtjnzHfONyHYere9S3gWDiY4RY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 30/89] net: fq: add missing attribute validation for orphan mask
-Date:   Tue, 17 Mar 2020 11:54:39 +0100
-Message-Id: <20200317103303.358565638@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Moulding <dmoulding@me.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 48/89] iwlwifi: mvm: Do not require PHY_SKU NVM section for 3168 devices
+Date:   Tue, 17 Mar 2020 11:54:57 +0100
+Message-Id: <20200317103305.480700493@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -59,30 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Dan Moulding <dmoulding@me.com>
 
-[ Upstream commit 7e6dc03eeb023e18427a373522f1d247b916a641 ]
+commit a9149d243f259ad8f02b1e23dfe8ba06128f15e1 upstream.
 
-Add missing attribute validation for TCA_FQ_ORPHAN_MASK
-to the netlink policy.
+The logic for checking required NVM sections was recently fixed in
+commit b3f20e098293 ("iwlwifi: mvm: fix NVM check for 3168
+devices"). However, with that fixed the else is now taken for 3168
+devices and within the else clause there is a mandatory check for the
+PHY_SKU section. This causes the parsing to fail for 3168 devices.
 
-Fixes: 06eb395fa985 ("pkt_sched: fq: better control of DDOS traffic")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The PHY_SKU section is really only mandatory for the IWL_NVM_EXT
+layout (the phy_sku parameter of iwl_parse_nvm_data is only used when
+the NVM type is IWL_NVM_EXT). So this changes the PHY_SKU section
+check so that it's only mandatory for IWL_NVM_EXT.
+
+Fixes: b3f20e098293 ("iwlwifi: mvm: fix NVM check for 3168 devices")
+Signed-off-by: Dan Moulding <dmoulding@me.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_fq.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/sched/sch_fq.c
-+++ b/net/sched/sch_fq.c
-@@ -695,6 +695,7 @@ static const struct nla_policy fq_policy
- 	[TCA_FQ_FLOW_MAX_RATE]		= { .type = NLA_U32 },
- 	[TCA_FQ_BUCKETS_LOG]		= { .type = NLA_U32 },
- 	[TCA_FQ_FLOW_REFILL_DELAY]	= { .type = NLA_U32 },
-+	[TCA_FQ_ORPHAN_MASK]		= { .type = NLA_U32 },
- 	[TCA_FQ_LOW_RATE_THRESHOLD]	= { .type = NLA_U32 },
- };
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/nvm.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
+@@ -314,7 +314,8 @@ iwl_parse_nvm_sections(struct iwl_mvm *m
+ 		}
  
+ 		/* PHY_SKU section is mandatory in B0 */
+-		if (!mvm->nvm_sections[NVM_SECTION_TYPE_PHY_SKU].data) {
++		if (mvm->trans->cfg->nvm_type == IWL_NVM_EXT &&
++		    !mvm->nvm_sections[NVM_SECTION_TYPE_PHY_SKU].data) {
+ 			IWL_ERR(mvm,
+ 				"Can't parse phy_sku in B0, empty sections\n");
+ 			return NULL;
 
 
