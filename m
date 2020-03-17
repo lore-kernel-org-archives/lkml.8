@@ -2,170 +2,130 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66379C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E407C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30054206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D852051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733035AbgCQASD (ORCPT
+        id S1733103AbgCQAST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 20:18:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53129 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732903AbgCQASC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 20:18:02 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jDzvF-00079O-4t; Tue, 17 Mar 2020 01:17:29 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id EC905101161; Tue, 17 Mar 2020 01:17:27 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/9] pci/switchtec: Don't abuse completion wait queue for poll
-In-Reply-To: <39f2bd27-1a4a-f7ad-5d54-7fe133390cd0@deltatee.com>
-References: <20200313174701.148376-1-bigeasy@linutronix.de> <20200313174701.148376-4-bigeasy@linutronix.de> <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com> <87v9n4ccvp.fsf@nanos.tec.linutronix.de> <39f2bd27-1a4a-f7ad-5d54-7fe133390cd0@deltatee.com>
-Date:   Tue, 17 Mar 2020 01:17:27 +0100
-Message-ID: <87sgi7deco.fsf@nanos.tec.linutronix.de>
+        Mon, 16 Mar 2020 20:18:19 -0400
+Received: from mga02.intel.com ([134.134.136.20]:62281 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732903AbgCQASS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 20:18:18 -0400
+IronPort-SDR: YdcuCOhX2edA0ShvmtGnHwY0e2jHbEBPmksqTPFLI2BAGC5SMIe6p951j4+0qAzCY43cJW4T0T
+ iohWrhrnMzpQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 17:18:17 -0700
+IronPort-SDR: NI5b5CnKThT0AelkDM4a6c4KSP7e2scts3kMDY6YhnC/zZsNZIKkScpL8fbJTsOxwLg7GIgCrl
+ xkrNTXi2uCxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,562,1574150400"; 
+   d="scan'208";a="244314140"
+Received: from bxing-mobl.amr.corp.intel.com (HELO [10.135.8.145]) ([10.135.8.145])
+  by orsmga003.jf.intel.com with ESMTP; 16 Mar 2020 17:18:14 -0700
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <20200315012523.GC208715@linux.intel.com>
+ <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
+ <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
+ <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
+ <20200316225322.GJ24267@linux.intel.com>
+ <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
+ <20200316235934.GM24267@linux.intel.com>
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+Message-ID: <ca2c9ac0-b717-ee96-c7df-4e39f03a9193@intel.com>
+Date:   Mon, 16 Mar 2020 17:18:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200316235934.GM24267@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Logan,
+On 3/16/2020 4:59 PM, Sean Christopherson wrote:
+> On Mon, Mar 16, 2020 at 04:50:26PM -0700, Xing, Cedric wrote:
+>> On 3/16/2020 3:53 PM, Sean Christopherson wrote:
+>>> On Mon, Mar 16, 2020 at 11:38:24PM +0200, Jarkko Sakkinen wrote:
+>>>>> My suggestions explicitly maintained robustness, and in fact increased
+>>>>> it. If you think we've lost capability, please speak with specificity
+>>>>> rather than in vague generalities. Under my suggestions we can:
+>>>>> 1. call the vDSO from C
+>>>>> 2. pass context to the handler
+>>>>> 3. have additional stack manipulation options in the handler
+>>>>>
+>>>>> The cost for this is a net 2 additional instructions. No existing
+>>>>> capability is lost.
+>>>>
+>>>> My vague generality in this case is just that the whole design
+>>>> approach so far has been to minimize the amount of wrapping to
+>>>> EENTER.
+>>>
+>>> Yes and no.   If we wanted to minimize the amount of wrapping around the
+>>> vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
+>>> first place.  The whole process has been about balancing the wants of each
+>>> use case against the overall quality of the API and code.
+>>>
+>> The design of this vDSO API was NOT to minimize wrapping, but to allow
+>> maximal flexibility. More specifically, we strove not to restrict how info
+>> was exchanged between the enclave and its host process. After all, calling
+>> convention is compiler specific - i.e. the enclave could be built by a
+>> different compiler (e.g. MSVC) that doesn't share the same list of CSRs as
+>> the host process. Therefore, the API has been implemented to pass through
+>> virtually all registers except those used by EENTER itself. Similarly, all
+>> registers are passed back from enclave to the caller (or the exit handler)
+>> except those used by EEXIT. %rbp is an exception because the vDSO API has to
+>> anchor the stack, using either %rsp or %rbp. We picked %rbp to allow the
+>> enclave to allocate space on the stack.
+> 
+> And unless I'm missing something, using %rcx to pass @leaf would still
+> satisfy the above, correct?  Ditto for saving/restoring %rbx.
+> 
+> I.e. a runtime that's designed to work with enclave's using a different
+> calling convention wouldn't be able to take advantage of being able to call
+> the vDSO from C, but neither would it take on any meaningful burden.
+> 
+Not exactly.
 
-Logan Gunthorpe <logang@deltatee.com> writes:
-> On 2020-03-16 1:34 p.m., Thomas Gleixner wrote:
->> Logan Gunthorpe <logang@deltatee.com> writes:
-> I certainly would not agree that this qualifies as "seriously broken",
-
-I concede that this is the wrong wording, but chasing things like this
-and constantly mopping up code is not necessarily keeping my mood up all
-the time.
-
-> and I'm not even sure I'd agree that this actually violates the
-> semantics of poll() seeing the man page clearly states that with
-> EPOLLEXCLUSIVE set, "one or more" pollers will be woken up. So waking up
-> all of them is still allowed. Ensuring fewer pollers wake up is just an
-> optimization to avoid the thundering herd problem which users of this
-> interface are very unlikely to ever have (I can confidently tell you
-> that none have this problem now).
-
-I can see the point, but in general we should just strive for keeping
-the interfaces consistent and not subject to interpretation by
-individual developers. Maybe in your case the probability that someone
-wants to use it in that way is close to zero, but we've been surprised
-often enough by the creativity of user space developers who came up with
-use cases nobody ever expected.
-
-> If we do want to say that all poll_wait() users *must* respect
-> EPOLLEXCLUSIVE, we should at least have some documentation saying that
-> combining poll_wait() with wake_up_all() (or similar) is not allowed. A
-> *very* quick check finds there's at least a few drivers doing this:
->
->   drivers/char/ipmi/ipmb_dev_int.c
->   drivers/dma-buf/sync_file.c
->   drivers/gpu/vga/vgaarb.c
-
-Right. There is surely quite some stuff in drivers which either predates
-these things or slipped through review.
-
-> Finally, since we seem to back to more reasonable discussion, I will
-> make this point: it's fairly common for wait queue users to directly use
-> the spinlock from within wait_queue_head_t without an interface (even
-> completion.c does it).
-
-completions and waitqueues are both core code. Core primitives build
-obviously on other primitives so dependencies on the inner workings are
-expected to some degree, especially for real and valuable optimization
-reasons. Solving these dependencies when one primitive changes has
-limited scope.
-
-> How are developers supposed to know when an interface is required and
-> when it's not? Sometimes using "implementation" details interface-free
-> is standard practice, but other times it's "yuck" and will illicit ire
-> from other developers? Is it valid to use completion.wait.lock?
-> Where's the line?
-
-That's a good question, but that question simply arises due to the fact
-that C does not provide proper privatizing or if you want to work around
-that it forces you to come up with really horrible constructs.
-
-The waitqueue lock usage has a very long history. It goes back to 2002
-when the semaphore implementation was optimized. That exposed some of
-the waitqueue internals which got consequently used elsewhere as
-well. But looking at the actual usage sites, that's a pretty limited
-amount. Most of them are core infrastrucure. Of course there are drivers
-as well which use it for questionable reasons.
-
-In general I think that silently using implementation details just to
-scratch an itch or "optimizing" code is pretty much bad practice.
-
-Especially as this has a tendency to spread out in creative ways. And
-this happens simply because developers often copy the next thing which
-looks suitable and then expand on it. As this is not necessarily caught
-in reviews, this can spread to the point where the core infrastructure
-cannot be changed anymore.
-
-That's not a made up nightmare scenario. This happened in reality and
-caused me to mop up 50+ interrupt chip implementations in order to be
-able to make an urgently needed 10 line change to the core interrupt
-infrastructure. Guess what, the vast majority of instances fiddling with
-the core internals were either voodoo programming or plain bugs. There
-were a few legitimate issues, but they had been better solved in the
-core code upfront.  Even after that cleanup a driver got merged which
-had #include "../../../../kernel/irg/internal.h" inside just because the
-code which was developed out of tree before this change had be made to
-"work".
-
-That's just not a workable solution with the ever expanding code base of
-the kernel.
-
-I really prefer when people come along and show the problem they want to
-solve - I'm completely fine with the POC hack which uses internals for
-that purpose - so that this can be discussed and eventually integrated
-into core infrastructure in one way or the other or better suitable
-solutions can be found.
-
-There are other aspects to this:
-
- - Using existing interfaces allows a reviewer to do the quick check on
-   init, run time usage and tear down instead of wrapping his head
-   around the special case
-
- - Verification tooling of all sorts just works
-
- - Improvements to the core implementation including new features are
-   just coming for free.
-
-I hope that clarifies where I'm coming from.
-
-This has nothing to do with you personally, you just triggered a few
-sensible fuses while understandably defending your admittedly smart
-solution.
-
-Thanks,
-
-        tglx
+If called directly from C code, the caller would expect CSRs to be 
+preserved. Then who should preserve CSRs? It can't be the enclave 
+because it may not follow the same calling convention. Moreover, the 
+enclave may run into an exception, in which case it doesn't have the 
+ability to restore CSRs. So it has to be done by the vDSO API. That 
+means CSRs will be overwritten upon enclave exits, which violates the 
+goal of "passing all registers back to the caller except those used by 
+EEXIT".
