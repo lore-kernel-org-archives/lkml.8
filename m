@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F82EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34609C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0712C20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0386D2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584456928;
-	bh=EQt8XNF67n6Qz/qYgjsQ6OrZnV8PGeVV9kM2E6Xo1RM=;
+	s=default; t=1584456930;
+	bh=7uUf4ls1frgYC0YC7nGl7q8HJwlLjSoEjGcFoFzYh6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uljFVTGICv39APIMxlxT/w2gZ3G6pAVjiNFstzmOp5Jgh2O3vGcwu/LJGZz/DH6HL
-	 oWHi+/noox6ApV+iqkr8ybqXLKrYwEEdU/gvkdygvVQxU5EcKxSYQlL3NO/fek0m7P
-	 bTi9CcfQGV9rrN/c9zTvdThxLXcvDEDwO0bRdols=
+	b=xHcDVDzcB+71J5ekOmPi1vEKsUH/GYlzfRuPO1AEDpIaJMcRUB3gK5d5gY34Cdu9d
+	 RM9gbWvGUyAupdTYL03lF/gHEXqq6/DDAnkqfAGGpoLYkBszwYe3Bl+TTAklbOqeA7
+	 LR5bOIgGKZycNi1BBNQVkstvG95CvKa/6SHcKFV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgCQOyb (ORCPT
+        id S1727286AbgCQOz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:54:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43428 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 10:55:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbgCQOya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:54:30 -0400
+        id S1726908AbgCQOyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:54:31 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F90F20724;
+        by mail.kernel.org (Postfix) with ESMTPSA id A7BCD2076D;
         Tue, 17 Mar 2020 14:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1584456870;
-        bh=EQt8XNF67n6Qz/qYgjsQ6OrZnV8PGeVV9kM2E6Xo1RM=;
+        bh=7uUf4ls1frgYC0YC7nGl7q8HJwlLjSoEjGcFoFzYh6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RueX3oIjzReC6mbi0x8E5FbR4B6JmuuosRjGYhQfoJP6FUW5I1d87YHLzroI3VqHr
-         aTlyextonkTgWKILznM0gPhOolMhHWhoCwjS4lmyZRoAF6OcqNFTe24gxlNj44gMMY
-         nLp9fwI1zZvq+RkAkB/vMntVV6cEiLmBE7xn/ETw=
+        b=c0iz7+p2FjXdEzZ4NMy7+vG9MSSy1NrTujtgV8+mFlQd9qGyvfGAmJmgzoBAaLNRz
+         44afYt+cfm5LmFXzqvTK0lwdAHgSf82tunHruQ4sJaiNMUOf3JWfzsekCvlSOmt3FU
+         d20WpQNBY2DFHVBi2cU4ey87RCcusKFQU0MyYUf0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jEDbw-000AMH-Bc; Tue, 17 Mar 2020 15:54:28 +0100
+        id 1jEDbw-000ANB-RV; Tue, 17 Mar 2020 15:54:28 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 01/17] docs: amu: supress some Sphinx warnings
-Date:   Tue, 17 Mar 2020 15:54:10 +0100
-Message-Id: <d12f2ee809ee078c1e5e6d6da6dd9465f35109e2.1584456635.git.mchehab+huawei@kernel.org>
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
+Subject: [PATCH 13/17] i2c: include/linux/i2c.h: fix a doc warning
+Date:   Tue, 17 Mar 2020 15:54:22 +0100
+Message-Id: <24cbf9166b21531186e5b6d37a3f9201f957abef.1584456635.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1584456635.git.mchehab+huawei@kernel.org>
 References: <cover.1584456635.git.mchehab+huawei@kernel.org>
@@ -62,63 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add extra blank lines on some places, in order to avoid those
-warnings when building the docs:
+Don't let non-letters inside a literal block without escaping it, as
+the toolchain would mis-interpret it:
 
-    Documentation/arm64/amu.rst:26: WARNING: Unexpected indentation.
-    Documentation/arm64/amu.rst:60: WARNING: Unexpected indentation.
-    Documentation/arm64/amu.rst:81: WARNING: Unexpected indentation.
-    Documentation/arm64/amu.rst:108: WARNING: Unexpected indentation.
+./include/linux/i2c.h:518: WARNING: Inline strong start-string without end-string.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/arm64/amu.rst | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/i2c.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/arm64/amu.rst b/Documentation/arm64/amu.rst
-index 5057b11100ed..452ec8b115c2 100644
---- a/Documentation/arm64/amu.rst
-+++ b/Documentation/arm64/amu.rst
-@@ -23,6 +23,7 @@ optional external memory-mapped interface.
- 
- Version 1 of the Activity Monitors architecture implements a counter group
- of four fixed and architecturally defined 64-bit event counters.
-+
-   - CPU cycle counter: increments at the frequency of the CPU.
-   - Constant counter: increments at the fixed frequency of the system
-     clock.
-@@ -57,6 +58,7 @@ counters, only the presence of the extension.
- 
- Firmware (code running at higher exception levels, e.g. arm-tf) support is
- needed to:
-+
-  - Enable access for lower exception levels (EL2 and EL1) to the AMU
-    registers.
-  - Enable the counters. If not enabled these will read as 0.
-@@ -78,6 +80,7 @@ are not trapped in EL2/EL3.
- 
- The fixed counters of AMUv1 are accessible though the following system
- register definitions:
-+
-  - SYS_AMEVCNTR0_CORE_EL0
-  - SYS_AMEVCNTR0_CONST_EL0
-  - SYS_AMEVCNTR0_INST_RET_EL0
-@@ -93,6 +96,7 @@ Userspace access
- ----------------
- 
- Currently, access from userspace to the AMU registers is disabled due to:
-+
-  - Security reasons: they might expose information about code executed in
-    secure mode.
-  - Purpose: AMU counters are intended for system management use.
-@@ -105,6 +109,7 @@ Virtualization
- 
- Currently, access from userspace (EL0) and kernelspace (EL1) on the KVM
- guest side is disabled due to:
-+
-  - Security reasons: they might expose information about code executed
-    by other guests or the host.
- 
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index f834687989f7..f6b942150631 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -506,7 +506,7 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
+  * @smbus_xfer_atomic: same as @smbus_xfer. Yet, only using atomic context
+  *   so e.g. PMICs can be accessed very late before shutdown. Optional.
+  * @functionality: Return the flags that this algorithm/adapter pair supports
+- *   from the I2C_FUNC_* flags.
++ *   from the ``I2C_FUNC_*`` flags.
+  * @reg_slave: Register given client to I2C slave mode of this adapter
+  * @unreg_slave: Unregister given client from I2C slave mode of this adapter
+  *
+@@ -515,7 +515,7 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
+  * be addressed using the same bus algorithms - i.e. bit-banging or the PCF8584
+  * to name two of the most common.
+  *
+- * The return codes from the @master_xfer{_atomic} fields should indicate the
++ * The return codes from the ``master_xfer{_atomic}`` fields should indicate the
+  * type of error code that occurred during the transfer, as documented in the
+  * Kernel Documentation file Documentation/i2c/fault-codes.rst.
+  */
 -- 
 2.24.1
 
