@@ -2,257 +2,114 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B4FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF22C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11B22051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:24:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="lkAth6EI"
+	by mail.kernel.org (Postfix) with ESMTP id BB47820663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584444525;
+	bh=ejZrq+F/lKEfO3Yj3IeUxgVu9TpeCSHvgQhm0SrXQNU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wAyoOLCGAtHx58k69D/C9fRWhX/cPvMxFOsy8lG0y42l+wVo3kLlQYs37H0Eg1Akq
+	 pdVBE867YkVKW1mfpgTCxdVkOO2DdFX4PUFTzHzz2MBaA68l+wqvFwiL/RyGNUQQp3
+	 w6b+S+XEZLuGI3OGGLc6yEbm2AjBG142zWttoBqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgCQLY4 (ORCPT
+        id S1726407AbgCQL2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:24:56 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:39385 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgCQLY4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:24:56 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        Tue, 17 Mar 2020 07:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbgCQL2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:28:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 4C603230E1;
-        Tue, 17 Mar 2020 12:24:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584444292;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DH7/qC/0vrafdQUdfPhAFCMPVOhjlNydJl9NhPMW6H4=;
-        b=lkAth6EIWKqub3WBQbzy1ugASP5btzGanfdrY388qh4nS7e6Ha6bnA1DjlCpYUkUNexJFh
-        QOkJGFhWsIx90SMWNSe6WI1wlkC0MhQKQMXpW7dqEqCMRZa5kD8gaDDzDKCxFOjdIARyOs
-        kz9z67+kG+gidTJZ/heFu/d98/9qt4w=
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CCC220658;
+        Tue, 17 Mar 2020 11:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584444521;
+        bh=ejZrq+F/lKEfO3Yj3IeUxgVu9TpeCSHvgQhm0SrXQNU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DGCcj+MF1Wyxc28slHUPFTccGeRP4pffXEJ3SLQxXrCOZirsNXBhjUEeHb66S7Ssg
+         JoYauMqKCAdyhTxC76V9Usx40hrya+OOPH7lkaEPY+OEWMXx/7pJD+gx5mZHAaTnLK
+         asNZXtvCJupOzk0aZYmiVcj24b8ARQtPTPiCfKfI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.5 129/151] x86/mce/therm_throt: Undo thermal polling properly on CPU offline
+Date:   Tue, 17 Mar 2020 11:55:39 +0100
+Message-Id: <20200317103335.605735505@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+References: <20200317103326.593639086@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Mar 2020 12:24:49 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
- queue with a simple completion
-In-Reply-To: <8c22cb70b7c0acb6769e0c68540ab523@walle.cc>
-References: <20200314224340.1544-1-olteanv@gmail.com>
- <20200314224340.1544-7-olteanv@gmail.com>
- <20200316122613.GE5010@sirena.org.uk>
- <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
- <20200316124945.GF5010@sirena.org.uk>
- <CA+h21hpoHGuDwpOqtWJFO7+0mQVUrmcBLW7nnGq6dt3QU5axfw@mail.gmail.com>
- <d05fda0e119405343e540b9768db534f@walle.cc>
- <CA+h21hqt7Xe1LrSDsCVS8zqunQp2tKGhmHDraMirxL595go4nA@mail.gmail.com>
- <8c22cb70b7c0acb6769e0c68540ab523@walle.cc>
-Message-ID: <52ce52ed4f045c4276dfb885ed29e835@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 4C603230E1
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.617];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-16 18:15, schrieb Michael Walle:
->>> dd: /dev/mtd0: Input/output error
->> 
->> I don't really have a SPI flash connected to DSPI on any LS1028A 
->> board.
-> 
-> I'm already debugging it again.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Ok now maybe a more experienced kernel developer could have a look at 
-this.
+commit d364847eed890211444ad74496bb549f838c6018 upstream.
 
-(1) the error is EIO because the actual_length doesn't match the 
-expected
-     length
-(2) I've put trace_printk() where the actual_length is modified:
-     in dspi_fifo_write()
+Chris Wilson reported splats from running the thermal throttling
+workqueue callback on offlined CPUs. The problem is that that callback
+should not even run on offlined CPUs but it happens nevertheless because
+the offlining callback thermal_throttle_offline() does not symmetrically
+undo the setup work done in its onlining counterpart. IOW,
 
-         /* Update total number of bytes that were transferred */
-         bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
-         msg->actual_length += bytes_sent;
-         trace_printk("msg=%px actual_length=%d bytes_sent=%d 
-word_in_flight=%d oper_word_size=%d\n",
-                         msg, msg->actual_length,
-                         bytes_sent, dspi->words_in_flight,
-                         dspi->oper_word_size);
-         dspi->progress += bytes_sent / DIV_ROUND_UP(xfer->bits_per_word, 
-8);
+ 1. The thermal interrupt vector should be masked out before ...
 
-    At the start of the foreach transfer loop in 
-dspi_transfer_one_message():
+ 2. ... cancelling any pending work synchronously so that no new work is
+ enqueued anymore.
 
-         list_for_each_entry(transfer, &message->transfers, 
-transfer_list) {
-                 trace_printk("%d transfer->length=%d\n", i++, 
-transfer->len);
-                 dspi->cur_transfer = transfer;
+Do those things and fix the issue properly.
 
-    And at the end of this function:
+ [ bp: Write commit message. ]
 
+Fixes: f6656208f04e ("x86/mce/therm_throt: Optimize notifications of thermal throttle")
+Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
+Tested-by: Pandruvada, Srinivas <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/158120068234.18291.7938335950259651295@skylake-alporthouse-com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-         }
-         trace_printk("returning actual_length=%d\n", 
-message->actual_length);
+---
+ arch/x86/kernel/cpu/mce/therm_throt.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-         message->status = status;
-         spi_finalize_current_message(ctlr);
-
-         return status;
-
-(3) The trace is attached at the end of this mail. There is a good case 
-and the
-     bad one. What I've noticed (besides returning the wrong count, eg 
-13, which
-     seems to be the first one) is the preempt-depth which is always none 
-in the
-     bad case. In all transfers before, the preempt-depth is 1. The flags 
-are
-     usually "d.h1", sometimes "d.H1" and in case of the error "d.H.".
-     I also don't know why the fifo_write() with actual_length=13 is 
-traced after
-     all the ones printed inside the interrupt handler. Also something 
-seems to
-     be off with the words_in_flight and oper_word_size in the bad case.
-
-     So besides the flags.. I still think there is a race between the
-     dspi_fifo_write() call in transfer_one_message and the interrupt 
-handler
-     for the shared data like words_in_flight and oper_word_size.
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -486,9 +486,14 @@ static int thermal_throttle_offline(unsi
+ {
+ 	struct thermal_state *state = &per_cpu(thermal_state, cpu);
+ 	struct device *dev = get_cpu_device(cpu);
++	u32 l;
+ 
+-	cancel_delayed_work(&state->package_throttle.therm_work);
+-	cancel_delayed_work(&state->core_throttle.therm_work);
++	/* Mask the thermal vector before draining evtl. pending work */
++	l = apic_read(APIC_LVTTHMR);
++	apic_write(APIC_LVTTHMR, l | APIC_LVT_MASKED);
++
++	cancel_delayed_work_sync(&state->package_throttle.therm_work);
++	cancel_delayed_work_sync(&state->core_throttle.therm_work);
+ 
+ 	state->package_throttle.rate_control_active = false;
+ 	state->core_throttle.rate_control_active = false;
 
 
-good one:
-               dd-1259  [000] ....  3383.499863: 
-dspi_transfer_one_message: 0 transfer->length=1
-               dd-1259  [000] ....  3383.499886: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=1 bytes_sent=1 word_in_flight=1 
-oper_word_size=1
-               dd-1259  [000] ....  3383.499891: 
-dspi_transfer_one_message: 1 transfer->length=3
-               dd-1259  [000] ....  3383.499915: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=4 bytes_sent=3 word_in_flight=3 
-oper_word_size=1
-               dd-1259  [000] ....  3383.499920: 
-dspi_transfer_one_message: 2 transfer->length=1
-               dd-1259  [000] ....  3383.499940: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=5 bytes_sent=1 word_in_flight=1 
-oper_word_size=1
-               dd-1259  [000] ....  3383.499946: 
-dspi_transfer_one_message: 3 transfer->length=64
-               dd-1259  [000] d.h1  3383.499973: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=21 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.h1  3383.499993: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=29 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.h1  3383.500013: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=37 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.h1  3383.500032: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=45 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.h1  3383.500051: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=53 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.h1  3383.500070: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=61 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.h1  3383.500089: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=69 bytes_sent=8 word_in_flight=4 
-oper_word_size=2
-               dd-1259  [000] ....  3383.500107: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=13 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] ....  3383.500111: 
-dspi_transfer_one_message: returning actual_length=69
-
-bad one:
-               dd-1259  [000] ....  3383.500149: 
-dspi_transfer_one_message: 0 transfer->length=1
-               dd-1259  [000] ....  3383.500172: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=1 bytes_sent=1 word_in_flight=1 
-oper_word_size=1
-               dd-1259  [000] ....  3383.500178: 
-dspi_transfer_one_message: 1 transfer->length=3
-               dd-1259  [000] ....  3383.500202: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=4 bytes_sent=3 word_in_flight=3 
-oper_word_size=1
-               dd-1259  [000] ....  3383.500207: 
-dspi_transfer_one_message: 2 transfer->length=1
-               dd-1259  [000] ....  3383.500227: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=5 bytes_sent=1 word_in_flight=1 
-oper_word_size=1
-               dd-1259  [000] ....  3383.500232: 
-dspi_transfer_one_message: 3 transfer->length=64
-               dd-1259  [000] d.H.  3383.500286: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=13 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.H.  3383.500307: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=21 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.H.  3383.500327: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=29 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.H.  3383.500347: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=37 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.H.  3383.500366: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=45 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.H.  3383.500385: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=53 bytes_sent=8 word_in_flight=2 
-oper_word_size=4
-               dd-1259  [000] d.H.  3383.500404: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=61 bytes_sent=8 word_in_flight=4 
-oper_word_size=2
-               dd-1259  [000] ....  3383.500436: dspi_fifo_write: 
-msg=ffff800011973840 actual_length=13 bytes_sent=8 word_in_flight=4 
-oper_word_size=2
-               dd-1259  [000] ....  3383.500441: 
-dspi_transfer_one_message: returning actual_length=13
-
-
--michael
