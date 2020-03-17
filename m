@@ -2,109 +2,58 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B8CC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B0FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EB120714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:37:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BEu7t7wr"
+	by mail.kernel.org (Postfix) with ESMTP id ECBCC20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgCQShA (ORCPT
+        id S1726744AbgCQSh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:37:00 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:50277 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726506AbgCQShA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:37:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584470219;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gwrf4J2FnOgQssJONp9zFLVSRMiMPIXEXh9xD+q8AIo=;
-        b=BEu7t7wrUHu99pDvTQu/xXNo1vKB0z6aHn0gpCpHOd5ekri4eSxQZ2xNoGZzk9ts615qB/
-        Ms1g4Kkg6xAtMqELR/j4m7gvbSmPB83dIZLwixTz6Cp31uxZyNGwas/3Ep+0BQnIUWblpC
-        MeJOA9H73ECiI/SSkz9OPitrv4NdIjM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-DopgLM-EMf20XOl6Py1l5w-1; Tue, 17 Mar 2020 14:36:55 -0400
-X-MC-Unique: DopgLM-EMf20XOl6Py1l5w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A0B31405;
-        Tue, 17 Mar 2020 18:36:53 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-115-15.rdu2.redhat.com [10.10.115.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76BFE6E3EE;
-        Tue, 17 Mar 2020 18:36:51 +0000 (UTC)
-Subject: Re: [PATCH v3 2/3] KEYS: Avoid false positive ENOMEM error on key
- read
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-References: <20200313152102.1707-1-longman@redhat.com>
- <20200313152102.1707-3-longman@redhat.com>
- <20200315213245.GF224162@linux.intel.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <98feb3ff-835a-e4cf-40a9-284d21e16993@redhat.com>
-Date:   Tue, 17 Mar 2020 14:36:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 17 Mar 2020 14:37:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:41442 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgCQSh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 14:37:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D608131B;
+        Tue, 17 Mar 2020 11:37:26 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6D383F67D;
+        Tue, 17 Mar 2020 11:37:25 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 18:37:23 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     glider@google.com
+Cc:     will.deacon@arm.com, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        keescook@chromium.org, akpm@linux-foundation.org
+Subject: Re: [PATCH] arm64: define __alloc_zeroed_user_highpage
+Message-ID: <20200317183723.GH632169@arrakis.emea.arm.com>
+References: <20200312155920.50067-1-glider@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200315213245.GF224162@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312155920.50067-1-glider@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/15/20 5:32 PM, Jarkko Sakkinen wrote:
-> On Fri, Mar 13, 2020 at 11:21:01AM -0400, Waiman Long wrote:
->> -		 * Read methods will just return the required length
->> -		 * without any copying if the provided length isn't big
->> -		 * enough.
->> +		 * We don't want an erronous -ENOMEM error due to an
->> +		 * arbitrary large user-supplied buflen. So if buflen
->> +		 * exceeds a threshold (1024 bytes in this case), we call
->> +		 * the read method twice. The first time to get the buffer
->> +		 * length and the second time to read out the key data.
->> +		 *
->> +		 * N.B. All the read methods will return the required
->> +		 *      buffer length with a NULL input buffer or when
->> +		 *      the input buffer length isn't large enough.
->>  		 */
->> +		if (buflen <= 0x400) {
-> 1. The overwhelmingly long comment. Will be destined to rotten.
-> 2. Magic number.
-> 3. The cap must be updated both in comment and code, and not only
->    that, but the numbers use a different base (dec and hex).
->
-> /Jarkko
->
-Thank for the comment. I will make the necessary change.
+On Thu, Mar 12, 2020 at 04:59:20PM +0100, glider@google.com wrote:
+> When running the kernel with init_on_alloc=1, calling the default
+> implementation of __alloc_zeroed_user_highpage() from include/linux/highmem.h
+> leads to double-initialization of the allocated page (first by the page
+> allocator, then by clear_user_page().
+> Calling alloc_page_vma() with __GFP_ZERO, similarly to e.g. x86, seems
+> to be enough to ensure the user page is zeroed only once.
+> 
+> Signed-off-by: Alexander Potapenko <glider@google.com>
 
-Cheers,
-Longman
+I queued this for 5.7. Thanks.
 
+-- 
+Catalin
