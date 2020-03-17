@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A70C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C92C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B2620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFB920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443691;
-	bh=b+dT2WJfsjgAtzNNSBjjsrruhNxhdxhBaqv0UWRxRRY=;
+	s=default; t=1584443695;
+	bh=UM1jBLKFzCcE/cd3i8fg+UzlGgR3gLrxgTZisoqc0Rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f6bW+e+ZQdMGNnAQu5UCkxMEldbKAa4zg5Gfgn6C6K8t0/B59rt0+r1vHLYpqQxvP
-	 WYQx9Thfw6b9J6AoH75QdC3W7zvPgVrN1vi/N+rhXEk/w3Rc7KO4F9Whb656vsh5JL
-	 ZI+1CSVJqa0EqPJdbIz5sCMpS73P0x0J0kp6Y9RU=
+	b=gjpYQVu8Y8rJMgDXfdCTjXdx0EYWu7mQDWM1IaHFNNcck6ll2x7XxGhV3g+m4baOh
+	 DYW2JRB/7Jt659ajOhnTjeU6dU5+B4Zpka0/8DpytOLykN2nVj3+cR3+nPQegfJh1O
+	 4NJfw8NiT/sUkZ0H6q5I/PVd+2fK7WnG1V2b6a+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgCQLNz (ORCPT
+        id S1729278AbgCQLOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:13:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57896 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:14:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729519AbgCQLNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:51 -0400
+        id S1729509AbgCQLNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:13:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A002071C;
-        Tue, 17 Mar 2020 11:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9011B205ED;
+        Tue, 17 Mar 2020 11:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443630;
-        bh=b+dT2WJfsjgAtzNNSBjjsrruhNxhdxhBaqv0UWRxRRY=;
+        s=default; t=1584443618;
+        bh=UM1jBLKFzCcE/cd3i8fg+UzlGgR3gLrxgTZisoqc0Rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2tRbu/82BDXYbvpMaRkzHHPkhbiS7zyA3fhMqRxXqV9mOUYfqSrLSYhG71uXm43LP
-         6KFeQnPdcc6PjrKtvVt/L9IslPYWJNSG3aAha1wdAfkz5RJHyjd3vM87n3scWEuyEz
-         2uIgBJxCoUZZcX7xBFZ33EojkYIqYtrvKrhMSe4M=
+        b=nFu/HfFKOpEbohHv4NcMXwghreJYZl9At9wrvJiU+RfBA5x4pzEuXoK5Eff0MQmGC
+         XvpVH9392Z95kdb0AVPNpd2UOWsYWYcr1CnKNPdi3sCdHm0hYJUiWho/m+xsX+xNpo
+         ulC8g/Grhaw9rsQ0YfGjBB1EKfuT6fBcyNxq6pX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.5 148/151] i2c: acpi: put device when verifying client fails
-Date:   Tue, 17 Mar 2020 11:55:58 +0100
-Message-Id: <20200317103337.268549104@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.5 144/151] netfilter: nf_tables: dump NFTA_CHAIN_FLAGS attribute
+Date:   Tue, 17 Mar 2020 11:55:54 +0100
+Message-Id: <20200317103336.890985032@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -63,46 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 8daee952b4389729358665fb91949460641659d4 upstream.
+commit d78008de6103c708171baff9650a7862645d23b0 upstream.
 
-i2c_verify_client() can fail, so we need to put the device when that
-happens.
+Missing NFTA_CHAIN_FLAGS netlink attribute when dumping basechain
+definitions.
 
-Fixes: 525e6fabeae2 ("i2c / ACPI: add support for ACPI reconfigure notifications")
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: c9626a2cbdb2 ("netfilter: nf_tables: add hardware offload support")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/i2c-core-acpi.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ net/netfilter/nf_tables_api.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -394,9 +394,17 @@ EXPORT_SYMBOL_GPL(i2c_acpi_find_adapter_
- static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
- {
- 	struct device *dev;
-+	struct i2c_client *client;
- 
- 	dev = bus_find_device_by_acpi_dev(&i2c_bus_type, adev);
--	return dev ? i2c_verify_client(dev) : NULL;
-+	if (!dev)
-+		return NULL;
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -1405,6 +1405,11 @@ static int nf_tables_fill_chain_info(str
+ 					      lockdep_commit_lock_is_held(net));
+ 		if (nft_dump_stats(skb, stats))
+ 			goto nla_put_failure;
 +
-+	client = i2c_verify_client(dev);
-+	if (!client)
-+		put_device(dev);
-+
-+	return client;
- }
++		if ((chain->flags & NFT_CHAIN_HW_OFFLOAD) &&
++		    nla_put_be32(skb, NFTA_CHAIN_FLAGS,
++				 htonl(NFT_CHAIN_HW_OFFLOAD)))
++			goto nla_put_failure;
+ 	}
  
- static int i2c_acpi_notify(struct notifier_block *nb, unsigned long value,
+ 	if (nla_put_be32(skb, NFTA_CHAIN_USE, htonl(chain->use)))
 
 
