@@ -2,127 +2,139 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8F1C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E754C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3D6205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Ew+tdsK6"
+	by mail.kernel.org (Postfix) with ESMTP id 0EDD5205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584452042;
+	bh=ubR0JrKy3jQmSPnc1EN0k8pifk/MO4gNg2fiNHZs1bk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ownvvRVVOVx7KP3WGbvOwMDZKTV4xsEFiOavHpj2AmCKhw/MG9F6h1klhAvR2PM1/
+	 T099kbr0ptTGs/2CldFec6UKDOyege6YhQWPzUUA0Us1r95JsJpJUvDp00yb5w6tzN
+	 ynnMCLRDElXsrOiqYeWljs97zXkOfaNFStPNrftc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgCQNdV (ORCPT
+        id S1726646AbgCQNeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:33:21 -0400
-Received: from mail-dm6nam10on2111.outbound.protection.outlook.com ([40.107.93.111]:29921
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726148AbgCQNdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:33:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IwRKlx4YaP8bUo4OvGj+uKQ1WMYGK2b4ild/VUULUoxx19rt7d+DBiQZCRPjH+pNhoc9gG4yrdLJ70pp24BwMrbbZe4SMIfrQmuX/dF1h/0ffglLo05NhzYXmghvIyrjXuwv6Y/aD7EZvYKwFDNtNCasbpgEI0rHl5Px//ZEXM4O2p6fviDMOL7bq9qgJCKIe6OrE+LIs7MSP7q1q3AN/MfX0+SbYz3tZvywTGK333ghFVP7trPF+8D4qeB5q2+1YD4K/1GXOMOKTHVNQwj3XwmVYFah8N/flMXNxN8sUEReanCHsF3E7+JRKw+PlY/ND9TZeULSVw5JX2kFB6Rtmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxVsLOim+eXOKOOh9X4yJX0Is0ZNpv8/LCVY/fNWGG0=;
- b=abA/svMx1/N9Z8q44rHoBfjYSmNRUmg7CbFJmM+TeB2w4xeg6WENiY/iysno50wChnXqcgl1Qq3oZT2E/jlZMuXjPdPkmLGIEOF912uDN6UZPdcfJTwwVg3ydeb7cES7Zp4CbYdFPB1C1wTf9vTEQdvN9jWxHrTK4EZzTorwEnr18widt1DlP8A9PludmxPtKtB5PPbRrnzIhBYu7niHh/G09qnOtyAYTOjwcd7qRTdvjGuW/bAS163yi6Y/Bwznvy0GBHU1K6FxYCr2AiMBzKLM/ccW6QeW27KXcsZkH3I6eVzn/sDPOdOYcGQ6duUSkRbpGSCHFIKOqO78TyT+wA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxVsLOim+eXOKOOh9X4yJX0Is0ZNpv8/LCVY/fNWGG0=;
- b=Ew+tdsK6UaTh+yYr8l2ceSyOrlnS0hImDASBn57rHpaJGO/oquGUw+YTNOct/f6blqC9G6VxQVxYYZVJqSgx18ToNXY4/NGsmkZEdc+irho/ihji6wVvhufRij9iI9QpIfHPNqxnfx0z+FBBeo/I+OQdmax1dEBTQtW+728+mOA=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3655.namprd13.prod.outlook.com (2603:10b6:610:95::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.7; Tue, 17 Mar
- 2020 13:33:16 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::9570:c1b8:9eb3:1c36]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::9570:c1b8:9eb3:1c36%7]) with mapi id 15.20.2835.013; Tue, 17 Mar 2020
- 13:33:16 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "paul@paul-moore.com" <paul@paul-moore.com>
-CC:     "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "smayhew@redhat.com" <smayhew@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the selinux tree with the nfs tree
-Thread-Topic: linux-next: manual merge of the selinux tree with the nfs tree
-Thread-Index: AQHV/GCdCTUQjWouDEyc7fMKz7N8wg==
-Date:   Tue, 17 Mar 2020 13:33:16 +0000
-Message-ID: <bb623275e936c026cc425904e6c1cee0cbe85f28.camel@hammerspace.com>
-References: <20200317133117.4569cc6a@canb.auug.org.au>
-In-Reply-To: <20200317133117.4569cc6a@canb.auug.org.au>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 90c51648-656f-467d-94af-08d7ca77bff9
-x-ms-traffictypediagnostic: CH2PR13MB3655:
-x-microsoft-antispam-prvs: <CH2PR13MB3655DD91A962CE40540A1609B8F60@CH2PR13MB3655.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39830400003)(136003)(346002)(396003)(366004)(199004)(8676002)(66946007)(81166006)(81156014)(8936002)(64756008)(66446008)(66556008)(66476007)(5660300002)(2616005)(86362001)(26005)(110136005)(316002)(54906003)(6506007)(186003)(36756003)(2906002)(6486002)(4326008)(6512007)(478600001)(76116006)(71200400001)(91956017);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR13MB3655;H:CH2PR13MB3398.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kV5mkboaHhmvW7QdFOv2UdP0OmWMocYJDwN9ENYJeWciQJm3ovTLx+DK6/XGCDttIijQOuatOynJHsbItLbUXEQhkRlOuLeA0OJTRzS/zAuBOEr8yBtwCUrJ0fZwcfOH3sTVmSrB/OBchfBGaSUypnKoULgEZoB9FzzBT6BlJKQ1NUnI/m+bsGgwaElKq3cA6SweQdsLtFcVotOP7OJboldjueK6OMRv7DPOCA4tXoyeu2BbTqRc4p5dtw6/nFT5bvQnRCrZdokE3csCLpJYru/Csz1wm9r5prtUrAesfzx5FVlzCv81qmLah+G/vomF0Go9FP+KiMmWl36JRUufaPQ+cnx+qqFd+UQBPAj0td23qUaOgIiWxjxlDld5NCbklSxSt9oH6SPbyVa1Lwrk7HI5osKzLytwETE8gVbxcNSzTYvSCqDdzwStuvjpNzkR
-x-ms-exchange-antispam-messagedata: zUn7vv5Wi0aVQ/KEBDFanL3sMTWUayAI3ELRXtuamuyu5BXsX9q6U32Qq6zIaCRkvSS0Zw/ETXFyjlHHvsfeIK3c1D8yE9Ji1ka1ZTJbHKVe39yUjSCan6P+kq49qmy1udMhrk7iS8r4sgjAabJg1w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B93B199992A0AD479D9989211F55065C@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 17 Mar 2020 09:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgCQNeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:34:00 -0400
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46A0A2075E;
+        Tue, 17 Mar 2020 13:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584452039;
+        bh=ubR0JrKy3jQmSPnc1EN0k8pifk/MO4gNg2fiNHZs1bk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=g3CzeVFOQaYZV9EheV69Kl+xkmd1VoLN2Wadwenh/r8KcYQ60hrSyk5Lbn1PK30sK
+         Q4CytD2x0XH9MlGQyMissAw5uULD8w7X0phEjWX4dUJ3mwTh0hyJBtx8vSnjEQwCA+
+         fIzjtRVSvLR0Q2zQu2wOaLp/d2c1uYoZYTgUNpwk=
+Received: by mail-ed1-f52.google.com with SMTP id v6so11328153edw.8;
+        Tue, 17 Mar 2020 06:33:59 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3pjZsVoNxCWV1kGT/PaMUH0PhXG9Xu5tNjK/JMr9FdK8+dUOLH
+        BSMcceHzfMa48TDB2d8Y131I9dQSa7Q2d4FFrw==
+X-Google-Smtp-Source: ADFU+vvl8fdjLZSjGkoy60pvuqiGdObvt/Ojt0xErZdZ41QZdboB+pIFrAwQ1zW7Jvg5alkgMZgvmRSvdeoEemfJOIo=
+X-Received: by 2002:a17:906:4bc3:: with SMTP id x3mr4209614ejv.38.1584452037617;
+ Tue, 17 Mar 2020 06:33:57 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90c51648-656f-467d-94af-08d7ca77bff9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 13:33:16.4139
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7AZxR3JsLO+AMj7G50J4c0kaGfZupvsroI+xqJpqHMJ6n8hyiVmb6vj8drpEx+hQ3hygtZgVjTmX9Y/jNJcLnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3655
+References: <20200311071823.117899-1-jitao.shi@mediatek.com>
+ <20200311071823.117899-2-jitao.shi@mediatek.com> <c46e49e6-846f-4f41-a8e3-57d5503e1cd7@baylibre.com>
+In-Reply-To: <c46e49e6-846f-4f41-a8e3-57d5503e1cd7@baylibre.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 17 Mar 2020 21:33:46 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8B+AS9uUvazfg_OtvnaW8kJVbyNB-FVUYh5MPMuJnf8g@mail.gmail.com>
+Message-ID: <CAAOTY_8B+AS9uUvazfg_OtvnaW8kJVbyNB-FVUYh5MPMuJnf8g@mail.gmail.com>
+Subject: Re: [PATCH v13 1/6] dt-bindings: media: add pclk-sample dual edge property
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
+        huijuan.xie@mediatek.com, stonea168@163.com,
+        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTE3IGF0IDEzOjMxICsxMTAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
-Og0KPiBIaSBhbGwsDQo+IA0KPiBUb2RheSdzIGxpbnV4LW5leHQgbWVyZ2Ugb2YgdGhlIHNlbGlu
-dXggdHJlZSBnb3QgYSBjb25mbGljdCBpbjoNCj4gDQo+ICAgZnMvbmZzL2dldHJvb3QuYw0KPiAN
-Cj4gYmV0d2VlbiBjb21taXQ6DQo+IA0KPiAgIGU4MjEzZmZjMmFlYyAoIk5GUzogRW5zdXJlIHNl
-Y3VyaXR5IGxhYmVsIGlzIHNldCBmb3Igcm9vdCBpbm9kZSIpDQo+IA0KPiBmcm9tIHRoZSBuZnMg
-dHJlZSBhbmQgY29tbWl0Og0KPiANCj4gICAyOGQ0ZDBlMTZmMDkgKCJXaGVuIHVzaW5nIE5GU3Y0
-LjIsIHRoZSBzZWN1cml0eSBsYWJlbCBmb3IgdGhlIHJvb3QNCj4gaW5vZGUgc2hvdWxkIGJlIHNl
-dCB2aWEgYSBjYWxsIHRvIG5mc19zZXRzZWN1cml0eSgpIGR1cmluZyB0aGUgbW91bnQNCj4gcHJv
-Y2Vzcywgb3RoZXJ3aXNlIHRoZSBpbm9kZSB3aWxsIGFwcGVhciBhcyB1bmxhYmVsZWQgZm9yIHVw
-IHRvDQo+IGFjZGlybWluIHNlY29uZHMuICBDdXJyZW50bHkgdGhlIGxhYmVsIGZvciB0aGUgcm9v
-dCBpbm9kZSBpcw0KPiBhbGxvY2F0ZWQsIHJldHJpZXZlZCwgYW5kIGZyZWVkIGVudGlyZWx5IHdp
-dGluDQo+IG5mczRfcHJvY19nZXRfcm9vdCgpLiIpDQo+IA0KPiBmcm9tIHRoZSBzZWxpbnV4IHRy
-ZWUuDQo+IA0KPiBUaGVzZSBhcmUgYmFzaWNhbGx5IHRoZSBzYW1lIHBhdGNoIHdpdGggc2xpZ2h0
-IGZvcm1hdHRpbmcNCj4gZGlmZmVyZW5jZXMuDQo+IA0KPiBJIGZpeGVkIGl0IHVwIChJIHVzZWQg
-dGhlIGxhdHRlcikgYW5kIGNhbiBjYXJyeSB0aGUgZml4IGFzIG5lY2Vzc2FyeS4NCj4gVGhpcyBp
-cyBub3cgZml4ZWQgYXMgZmFyIGFzIGxpbnV4LW5leHQgaXMgY29uY2VybmVkLCBidXQgYW55IG5v
-bg0KPiB0cml2aWFsDQo+IGNvbmZsaWN0cyBzaG91bGQgYmUgbWVudGlvbmVkIHRvIHlvdXIgdXBz
-dHJlYW0gbWFpbnRhaW5lciB3aGVuIHlvdXINCj4gdHJlZQ0KPiBpcyBzdWJtaXR0ZWQgZm9yIG1l
-cmdpbmcuICBZb3UgbWF5IGFsc28gd2FudCB0byBjb25zaWRlciBjb29wZXJhdGluZw0KPiB3aXRo
-IHRoZSBtYWludGFpbmVyIG9mIHRoZSBjb25mbGljdGluZyB0cmVlIHRvIG1pbmltaXNlIGFueQ0K
-PiBwYXJ0aWN1bGFybHkNCj4gY29tcGxleCBjb25mbGljdHMuDQo+IA0KT0suLi4gV2h5IGlzIHRo
-aXMgYmVpbmcgcHVzaGVkIHRocm91Z2ggdGhlIHNlbGludXggdHJlZT8gV2FzIHRoYXQgeW91cg0K
-aW50ZW50aW9uIFNjb3R0PyBHaXZlbiB0aGF0IGl0IGRpZG4ndCB0b3VjaCBhbnl0aGluZyBvdXRz
-aWRlIE5GUyBhbmQNCmhhZCBiZWVuIGFja2VkIGJ5IHRoZSBTZWxpbnV4IGZvbGtzLCBidXQgaGFk
-IG5vdCBiZWVuIGFja2VkIGJ5IHRoZSBORlMNCm1haW50YWluZXJzLCBJIHdhcyBhc3N1bWluZyBp
-dCB3YXMgd2FpdGluZyB0byBiZSBhcHBsaWVkIGhlcmUuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0
-DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1
-c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+Hi, Jitao:
+
+I agree with Neil, so please base on Boris' effort to negotiate with bridge=
+.
+
+Regards,
+Chun-Kuang Hu
+
+Neil Armstrong <narmstrong@baylibre.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=881=
+1=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=889:53=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+
+>
+> Hi,
+>
+> On 11/03/2020 08:18, Jitao Shi wrote:
+> > Some chips's sample mode are rising, falling and dual edge (both
+> > falling and rising edge).
+> > Extern the pclk-sample property to support dual edge.
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.t=
+xt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > index f884ada0bffc..da9ad24935db 100644
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -118,8 +118,8 @@ Optional endpoint properties
+> >  - data-enable-active: similar to HSYNC and VSYNC, specifies the data e=
+nable
+> >    signal polarity.
+> >  - field-even-active: field signal level during the even field data tra=
+nsmission.
+> > -- pclk-sample: sample data on rising (1) or falling (0) edge of the pi=
+xel clock
+> > -  signal.
+> > +- pclk-sample: sample data on rising (1), falling (0) or both rising a=
+nd
+> > +  falling (2) edge of the pixel clock signal.
+> >  - sync-on-green-active: active state of Sync-on-green (SoG) signal, 0/=
+1 for
+> >    LOW/HIGH respectively.
+> >  - data-lanes: an array of physical data lane indexes. Position of an e=
+ntry
+> >
+>
+> This changes the bus format, but we recently introduced a bus format nego=
+ciation
+> between bridges to avoid adding such properties into DT, and make bus for=
+mat setup
+> dynamic between an encoder and a bridge.
+>
+> It would be great to use that instead.
+>
+> Neil
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
