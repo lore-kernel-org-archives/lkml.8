@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86948C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895CEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DEF20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C44C20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442666;
-	bh=ZdQxGakgcduVHQIkpYEHIkNcty6bIPDaAhw1bJVtv9I=;
+	s=default; t=1584442669;
+	bh=slp8IlgZx8qngddPVVEAVbFUZ8WlJCrVYZu9ViaRb0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M05p6aYh+Qf3sjLjHaL5jdGT676C7ftkYGQRtMJmd4GnkwyQvswDQH06HH8MpjyV1
-	 PU4XeGQuHeqNnTJ4dr0G/sYeQ7Kxw32mAC4lIPNCUMCInKk0Rd26H0PKpgoXOOg8L0
-	 9ZroYDvVZRmOa5/WVR8xYZQbqU5U7NQvNqIowNE8=
+	b=YdG4zacRpHuJDoOA+7iDTGHZo2FosfgNxbND5byEI9qdAuyiRNqzgWim16uu6MNah
+	 Zg9vfeK+p818Kupeyk4/Iwe5/txi4x+liQcleSZlCRQylSV1urTXqyIkRvHrqDipJY
+	 oHnfiDAojWtOUMkGORpoxoig+fqRuSF3kgkpuHhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCQK5p (ORCPT
+        id S1726628AbgCQK5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:57:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35584 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:57:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbgCQK5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:57:41 -0400
+        id S1727033AbgCQK5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:57:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B443C20658;
-        Tue, 17 Mar 2020 10:57:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EB272071C;
+        Tue, 17 Mar 2020 10:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442660;
-        bh=ZdQxGakgcduVHQIkpYEHIkNcty6bIPDaAhw1bJVtv9I=;
+        s=default; t=1584442662;
+        bh=slp8IlgZx8qngddPVVEAVbFUZ8WlJCrVYZu9ViaRb0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SIn3XsN19nIFRH3ZtZRkeuTG5uODROxEsAtyn5OLPTUIAS5T8u6mAere1w0dFFecE
-         VmyrRaMGObhxLSaiJsa2IbLoZTLBFi34e5EL2IuJgUiDcftlUalNn5DmoSTQn3Z6sA
-         yGTTY4CriYjfIYDuM4QC2zIFg7Rnubru5nKvXaTE=
+        b=ghhZGI1GtXS95DcnlVfUeLp8e+rlzfSvsTWkF6eIOU2uTs0m4FHWbny9ZWufGCyQ5
+         nab2rmhqQYtCX9ygHYBp2ILlkvSwWQZVj9hrX/lJC4JsY3afX0S+sA0L9zuSXuId4I
+         HmVB5lTt8eN37M42AKJSIfIcV4GuFsdGaX/iBOvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 39/89] net/ipv6: remove the old peer route if change it to a new one
-Date:   Tue, 17 Mar 2020 11:54:48 +0100
-Message-Id: <20200317103304.503935325@linuxfoundation.org>
+Subject: [PATCH 4.19 40/89] tipc: add missing attribute validation for MTU property
+Date:   Tue, 17 Mar 2020 11:54:49 +0100
+Message-Id: <20200317103304.622382091@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -60,105 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit d0098e4c6b83e502cc1cd96d67ca86bc79a6c559 ]
+[ Upstream commit 213320a67962ff6e7b83b704d55cbebc341426db ]
 
-When we modify the peer route and changed it to a new one, we should
-remove the old route first. Before the fix:
+Add missing attribute validation for TIPC_NLA_PROP_MTU
+to the netlink policy.
 
-+ ip addr add dev dummy1 2001:db8::1 peer 2001:db8::2
-+ ip -6 route show dev dummy1
-2001:db8::1 proto kernel metric 256 pref medium
-2001:db8::2 proto kernel metric 256 pref medium
-+ ip addr change dev dummy1 2001:db8::1 peer 2001:db8::3
-+ ip -6 route show dev dummy1
-2001:db8::1 proto kernel metric 256 pref medium
-2001:db8::2 proto kernel metric 256 pref medium
-
-After the fix:
-+ ip addr change dev dummy1 2001:db8::1 peer 2001:db8::3
-+ ip -6 route show dev dummy1
-2001:db8::1 proto kernel metric 256 pref medium
-2001:db8::3 proto kernel metric 256 pref medium
-
-This patch depend on the previous patch "net/ipv6: need update peer route
-when modify metric" to update new peer route after delete old one.
-
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Fixes: 901271e0403a ("tipc: implement configuration of UDP media MTU")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/addrconf.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ net/tipc/netlink.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -1175,11 +1175,12 @@ check_cleanup_prefix_route(struct inet6_
- }
+--- a/net/tipc/netlink.c
++++ b/net/tipc/netlink.c
+@@ -110,7 +110,8 @@ const struct nla_policy tipc_nl_prop_pol
+ 	[TIPC_NLA_PROP_UNSPEC]		= { .type = NLA_UNSPEC },
+ 	[TIPC_NLA_PROP_PRIO]		= { .type = NLA_U32 },
+ 	[TIPC_NLA_PROP_TOL]		= { .type = NLA_U32 },
+-	[TIPC_NLA_PROP_WIN]		= { .type = NLA_U32 }
++	[TIPC_NLA_PROP_WIN]		= { .type = NLA_U32 },
++	[TIPC_NLA_PROP_MTU]		= { .type = NLA_U32 }
+ };
  
- static void
--cleanup_prefix_route(struct inet6_ifaddr *ifp, unsigned long expires, bool del_rt)
-+cleanup_prefix_route(struct inet6_ifaddr *ifp, unsigned long expires,
-+		     bool del_rt, bool del_peer)
- {
- 	struct fib6_info *f6i;
- 
--	f6i = addrconf_get_prefix_route(&ifp->addr,
-+	f6i = addrconf_get_prefix_route(del_peer ? &ifp->peer_addr : &ifp->addr,
- 				       ifp->prefix_len,
- 				       ifp->idev->dev,
- 				       0, RTF_GATEWAY | RTF_DEFAULT);
-@@ -1244,7 +1245,7 @@ static void ipv6_del_addr(struct inet6_i
- 
- 	if (action != CLEANUP_PREFIX_RT_NOP) {
- 		cleanup_prefix_route(ifp, expires,
--			action == CLEANUP_PREFIX_RT_DEL);
-+			action == CLEANUP_PREFIX_RT_DEL, false);
- 	}
- 
- 	/* clean up prefsrc entries */
-@@ -4577,6 +4578,7 @@ static int inet6_addr_modify(struct inet
- 	unsigned long timeout;
- 	bool was_managetempaddr;
- 	bool had_prefixroute;
-+	bool new_peer = false;
- 
- 	ASSERT_RTNL();
- 
-@@ -4608,6 +4610,13 @@ static int inet6_addr_modify(struct inet
- 		cfg->preferred_lft = timeout;
- 	}
- 
-+	if (cfg->peer_pfx &&
-+	    memcmp(&ifp->peer_addr, cfg->peer_pfx, sizeof(struct in6_addr))) {
-+		if (!ipv6_addr_any(&ifp->peer_addr))
-+			cleanup_prefix_route(ifp, expires, true, true);
-+		new_peer = true;
-+	}
-+
- 	spin_lock_bh(&ifp->lock);
- 	was_managetempaddr = ifp->flags & IFA_F_MANAGETEMPADDR;
- 	had_prefixroute = ifp->flags & IFA_F_PERMANENT &&
-@@ -4623,6 +4632,9 @@ static int inet6_addr_modify(struct inet
- 	if (cfg->rt_priority && cfg->rt_priority != ifp->rt_priority)
- 		ifp->rt_priority = cfg->rt_priority;
- 
-+	if (new_peer)
-+		ifp->peer_addr = *cfg->peer_pfx;
-+
- 	spin_unlock_bh(&ifp->lock);
- 	if (!(ifp->flags&IFA_F_TENTATIVE))
- 		ipv6_ifa_notify(0, ifp);
-@@ -4658,7 +4670,7 @@ static int inet6_addr_modify(struct inet
- 
- 		if (action != CLEANUP_PREFIX_RT_NOP) {
- 			cleanup_prefix_route(ifp, rt_expires,
--				action == CLEANUP_PREFIX_RT_DEL);
-+				action == CLEANUP_PREFIX_RT_DEL, false);
- 		}
- 	}
- 
+ const struct nla_policy tipc_nl_bearer_policy[TIPC_NLA_BEARER_MAX + 1]	= {
 
 
