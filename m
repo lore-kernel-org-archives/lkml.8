@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D033C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4615BC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB4820724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBDE20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442723;
-	bh=66/bLf6Hi1EaCyAFrklBvcq42gI8ICTXvyQYaCRAOkY=;
+	s=default; t=1584442726;
+	bh=vvDFFA7OpNzplXPQu5xFRXtAga+W7W7d3xBukR0g4zQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wNXpiNICV+vVoyj5+FdC8ae+9uaMLoVPylht1NsgHbcHJ1o8rHM2ls6anYu4HkB5G
-	 JmNIpCszNIR6mnZERA98m3Okxw441Kp9w7zoHM4ji0DpXrV06bQvQRd/91vNj80eRi
-	 SmZZqA50Ke+rEMLSwp2S1j7TeqXyy/WORWntF4oQ=
+	b=iHRJyeUO2luuIn9bP7Frd5ps344Uw2qVIlRSB2x1pVPJ2DimmKemeKtJQvJiGkJfS
+	 0KxO5xyWHfP+HIFo8iJ0vVXtipdSsRnuvGQZxJjG074jlsVeU0ryY/8T1VDMTPjvuY
+	 4tbMNL6DcO1szfZmhy/bo2imW28+31POJaajGyOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbgCQK6l (ORCPT
+        id S1727308AbgCQK6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:58:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36844 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:58:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726564AbgCQK6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:58:39 -0400
+        id S1727296AbgCQK6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:58:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37E9420735;
-        Tue, 17 Mar 2020 10:58:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADF6D20719;
+        Tue, 17 Mar 2020 10:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442718;
-        bh=66/bLf6Hi1EaCyAFrklBvcq42gI8ICTXvyQYaCRAOkY=;
+        s=default; t=1584442721;
+        bh=vvDFFA7OpNzplXPQu5xFRXtAga+W7W7d3xBukR0g4zQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FE+jM8ZcjBAlrTvqtbepqjb/7gbPHJr920Bf0T/Eic8P7WUdo2f2JOGj2TScgyfPx
-         cAy6irT3AaI/9v5No/yC2UKsW2s150bgNByN/gEtqOkqHup/7CCIldOyZ7Rvs7DEPd
-         TZN7BZoGu6n15KAfDK/zr2u8dBN2AhDjR2SqXG2s=
+        b=HUYGeaZnL9s+7o25FY+X+U58O6bAyUlrHbWvFHHxBDnaAKJCJPeLe6E+8ZCKIZTQZ
+         +Kcmlke3JLEwS4yiJxTwITwTREUxsm4sBe77R/1m2IEalviD2BEyh2sr8gyPB0MQDX
+         vtMpzg8SqQGdWELOvIJBPhptlu4N2w8jLtdOxa/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 57/89] ktest: Add timeout for ssh sync testing
-Date:   Tue, 17 Mar 2020 11:55:06 +0100
-Message-Id: <20200317103306.457163324@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 31/89] team: add missing attribute validation for port ifindex
+Date:   Tue, 17 Mar 2020 11:54:40 +0100
+Message-Id: <20200317103303.468949087@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -59,36 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit 4d00fc477a2ce8b6d2b09fb34ef9fe9918e7d434 upstream.
+[ Upstream commit dd25cb272ccce4db67dc8509278229099e4f5e99 ]
 
-Before rebooting the box, a "ssh sync" is called to the test machine to see
-if it is alive or not. But if the test machine is in a partial state, that
-ssh may never actually finish, and the ktest test hangs.
+Add missing attribute validation for TEAM_ATTR_OPTION_PORT_IFINDEX
+to the netlink policy.
 
-Add a 10 second timeout to the sync test, which will fail after 10 seconds
-and then cause the test to reboot the test machine.
-
-Cc: stable@vger.kernel.org
-Fixes: 6474ace999edd ("ktest.pl: Powercycle the box on reboot if no connection can be made")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 80f7c6683fe0 ("team: add support for per-port options")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/testing/ktest/ktest.pl |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/team/team.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -1372,7 +1372,7 @@ sub reboot {
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -2215,6 +2215,7 @@ team_nl_option_policy[TEAM_ATTR_OPTION_M
+ 	[TEAM_ATTR_OPTION_CHANGED]		= { .type = NLA_FLAG },
+ 	[TEAM_ATTR_OPTION_TYPE]			= { .type = NLA_U8 },
+ 	[TEAM_ATTR_OPTION_DATA]			= { .type = NLA_BINARY },
++	[TEAM_ATTR_OPTION_PORT_IFINDEX]		= { .type = NLA_U32 },
+ };
  
-     } else {
- 	# Make sure everything has been written to disk
--	run_ssh("sync");
-+	run_ssh("sync", 10);
- 
- 	if (defined($time)) {
- 	    start_monitor;
+ static int team_nl_cmd_noop(struct sk_buff *skb, struct genl_info *info)
 
 
