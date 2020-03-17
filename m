@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEDFC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD00C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370FF20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3760206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443477;
-	bh=eFg44DtLtx240mxrbqaeZnXCo/psQRsqmlQBJ5JYo0E=;
+	s=default; t=1584443479;
+	bh=YeOkMtyWLIEoF9MWDXRDRMp7xN/CAzz3pEq7S4IaUVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmak2yDneh9DMvW2Fc2ZqmLWhoQyG6bhK5/d3J6Dh8VhmlbtdheVRLRS/DqQb98FN
-	 s/YOGNAZxpq74VZWnpw3ftGzbzozJmetCcpCeGhLFkozuF8972F3A2tRE8qXPQWOnO
-	 0yHQxd7fFeEJl+ugQr3UkC7bXnXj2hAhJQ98UPQ0=
+	b=LLuACjjeKoAKO0sERgzddnuBhoJ9nT7JmWUKfcM3YeRLuJkTnubd6CGfvyYv20Zj/
+	 WdHlCNLYlvmq2iE/JtjsbhwgwtkTo9B3gfUrfC2hXSAcbo8G6QISyzchB0JHyTeRil
+	 V+6vsV5mmz/n+pE05/Ckq2KayFOtRBUsJagXxMKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbgCQLLQ (ORCPT
+        id S1728467AbgCQLLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:11:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54338 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:11:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729178AbgCQLLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:11:13 -0400
+        id S1729011AbgCQLLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:11:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10B8A205ED;
-        Tue, 17 Mar 2020 11:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8968620658;
+        Tue, 17 Mar 2020 11:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443471;
-        bh=eFg44DtLtx240mxrbqaeZnXCo/psQRsqmlQBJ5JYo0E=;
+        s=default; t=1584443475;
+        bh=YeOkMtyWLIEoF9MWDXRDRMp7xN/CAzz3pEq7S4IaUVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t78Y+1jxL4DhIEb+ZaNAFi1D+d2szoNFiUC0oTkXz1B6qD3sn+1QHNowmN5ba/tuZ
-         DwLRNSgQDKXoQ/l5z1/yf44O1NCKj2ZOnjTXZgPs9ppu+hgrqi+1ZxrlS9OsPQznMQ
-         ZYY1B2+pH/8NmgvNjBMR+PGblqgqdWvqbzmoyhk0=
+        b=05o4OMxSAzZj/AH9tQBMJ5vNOJjmEFV1tlguRh9ka8yZZa3vNB95ybun8spH8Dp2y
+         wfXSGYCWZjIC73JY6XJqDyMyIx9bmKI2jhNtVLWoHs9bP6SPnM/pqo7FwIR3iC+tTB
+         zxW72aufD+mMgPUIZr9bbJY+Q8IXBE6Q1KSQqQ20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.5 091/151] mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x
-Date:   Tue, 17 Mar 2020 11:55:01 +0100
-Message-Id: <20200317103332.914733778@linuxfoundation.org>
+        stable@vger.kernel.org, Mathias Kresin <dev@kresin.me>,
+        Thomas Langer <thomas.langer@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.5 092/151] pinctrl: falcon: fix syntax error
+Date:   Tue, 17 Mar 2020 11:55:02 +0100
+Message-Id: <20200317103332.985921436@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -61,68 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+From: Mathias Kresin <dev@kresin.me>
 
-commit 31e43f31890ca6e909b27dcb539252b46aa465da upstream.
+commit d62e7fbea4951c124a24176da0c7bf3003ec53d4 upstream.
 
-Enable MSI interrupt for GL9750/GL9755. Some platforms
-do not support PCI INTx and devices can not work without
-interrupt. Like messages below:
+Add the missing semicolon after of_node_put to get the file compiled.
 
-[    4.487132] sdhci-pci 0000:01:00.0: SDHCI controller found [17a0:9755] (rev 0)
-[    4.487198] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.PBR2._PRT.APS2], AE_NOT_FOUND (20190816/psargs-330)
-[    4.487397] ACPI Error: Aborting method \_SB.PCI0.PBR2._PRT due to previous error (AE_NOT_FOUND) (20190816/psparse-529)
-[    4.487707] pcieport 0000:00:01.3: can't derive routing for PCI INT A
-[    4.487709] sdhci-pci 0000:01:00.0: PCI INT A: no GSI
-
-Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-Tested-by: Raul E Rangel <rrangel@chromium.org>
-Fixes: e51df6ce668a ("mmc: host: sdhci-pci: Add Genesys Logic GL975x support")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200219092900.9151-1-benchuanggli@gmail.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: f17d2f54d36d ("pinctrl: falcon: Add of_node_put() before return")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Mathias Kresin <dev@kresin.me>
+Link: https://lore.kernel.org/r/20200305182245.9636-1-dev@kresin.me
+Acked-by: Thomas Langer <thomas.langer@intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-pci-gli.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/pinctrl/pinctrl-falcon.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/sdhci-pci-gli.c
-+++ b/drivers/mmc/host/sdhci-pci-gli.c
-@@ -262,10 +262,26 @@ static int gl9750_execute_tuning(struct
- 	return 0;
- }
- 
-+static void gli_pcie_enable_msi(struct sdhci_pci_slot *slot)
-+{
-+	int ret;
-+
-+	ret = pci_alloc_irq_vectors(slot->chip->pdev, 1, 1,
-+				    PCI_IRQ_MSI | PCI_IRQ_MSIX);
-+	if (ret < 0) {
-+		pr_warn("%s: enable PCI MSI failed, error=%d\n",
-+		       mmc_hostname(slot->host->mmc), ret);
-+		return;
-+	}
-+
-+	slot->host->irq = pci_irq_vector(slot->chip->pdev, 0);
-+}
-+
- static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
- {
- 	struct sdhci_host *host = slot->host;
- 
-+	gli_pcie_enable_msi(slot);
- 	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
- 	sdhci_enable_v4_mode(host);
- 
-@@ -276,6 +292,7 @@ static int gli_probe_slot_gl9755(struct
- {
- 	struct sdhci_host *host = slot->host;
- 
-+	gli_pcie_enable_msi(slot);
- 	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
- 	sdhci_enable_v4_mode(host);
- 
+--- a/drivers/pinctrl/pinctrl-falcon.c
++++ b/drivers/pinctrl/pinctrl-falcon.c
+@@ -451,7 +451,7 @@ static int pinctrl_falcon_probe(struct p
+ 		falcon_info.clk[*bank] = clk_get(&ppdev->dev, NULL);
+ 		if (IS_ERR(falcon_info.clk[*bank])) {
+ 			dev_err(&ppdev->dev, "failed to get clock\n");
+-			of_node_put(np)
++			of_node_put(np);
+ 			return PTR_ERR(falcon_info.clk[*bank]);
+ 		}
+ 		falcon_info.membase[*bank] = devm_ioremap_resource(&pdev->dev,
 
 
