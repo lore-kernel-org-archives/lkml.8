@@ -2,177 +2,108 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A51C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BD9C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEB22073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FA020753
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ke6ursww"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbpcp/Ru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgCQUJu (ORCPT
+        id S1726680AbgCQULW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:09:50 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38420 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgCQUJu (ORCPT
+        Tue, 17 Mar 2020 16:11:22 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:37790 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgCQULW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:09:50 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n13so16536359lfh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:09:49 -0700 (PDT)
+        Tue, 17 Mar 2020 16:11:22 -0400
+Received: by mail-qv1-f65.google.com with SMTP id n1so7861621qvz.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=o6SMg60n6dg5E5UNtnrzS3MRKvlSt5FGzxfh8BfptUY=;
-        b=ke6ursww/qGx36NPHKodMebn0EUWWsMpVusLaZnkOpVW16yVEPxURVZvdHjJW5xlxc
-         /fBVoTH4pSjtmzDRfYhTokDMC+zY+jqgErQtkwsLueAieSGDOl7pfuu+F/vGCUbbQpUe
-         rfz3iGX8H5xNjpoSTrepPgyvUczTk8vou1/inD0ok/7yJ6Z7d/QDadu+uQrvFafHAZiK
-         xpxIL7qfbmo2eGGt4T6v6HPURn64jNGobJsjjVKMnyr1+3GTdnGbmKqAu4iRGA1OifK5
-         QAcvyl/yjB7vEKsAwoD5H8ETdTH+Dqhq+BehHn6yaPUE9teBuvehF4QAs4DK/HoTL6UQ
-         rdOQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6FuZZoVTFoFF+1kD/gUu0wVHL7she4RE1ISWVv5X9/Y=;
+        b=dbpcp/RuzqPmQK6KVQzTxDWpN0UCo5KtMvqAZZPoxySTTmsfREbl0sQgsgpEDhLZnX
+         r3oFKW5hojLd7kUsqJEN+Ikmj44Nl3ZqNZPM+u3MITdDCFpcWbB4ki3tUpiTLKen/X6y
+         fg91QHgWSXyPEwVDlXGU2mMKuE2VhQ8Mk+kzw8ru6uWCAex+uWeYeXBqwaNdsIaXxqi2
+         JrWak7xDWraqmi7X83SRMvSdJ/BXyASjCV+Ji6pmZ015CFgOHa2K7HsdPhkNONJQEW+X
+         CjCcdrr8nJ7ojvE5TY8xoOgB24kdAKbvFOShtZ1dJaScDluHltgJvAWJb+XLy9cNEegD
+         FU0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=o6SMg60n6dg5E5UNtnrzS3MRKvlSt5FGzxfh8BfptUY=;
-        b=P3DRIIH/p+tAccR0CuwrF2Ow2OBnoV2Hsma/grxd6CnqyzIg9CyLubPhmL81KNa3et
-         RcMmIWgd7lGINDI2ZZ0iPgIrejt9caXvhMOe5PVA3+TJQG21aqQHnCETGEpJrj03PyoC
-         lh+sYh2CxVf4hprAiMP7K+sFWLjVcv/KJHd6GA+XfP73g1oPHr4eZYNtfl6JPz/7b9Ov
-         O9ULoYX1b085TO58HcZVNoZz1BUyWmcRwX89upYGWJ30leFy1CFCwl+em8OqvaJ9tQMh
-         kZe8tLQ+abxDvEvxP8Tq3jJqyZhXrIwglBYKn2sMRnra1O+UQ3ymu1U5bi5PQtEgmw01
-         I8xg==
-X-Gm-Message-State: ANhLgQ26CPs87EgfCFuRy8x54fMsGolv5l5S9TdGQwVqxNTgJ2WANDxJ
-        7vymtieZQx3R30cfuCYMvqkBTlUu5vko9o37VXLyIw==
-X-Google-Smtp-Source: ADFU+vv5pChAMal27PYi3RBLZVYCuM6C/nsMAuznRXnLPi7fU0rTV7p7aYC4q66wQ2a17tzJYUe9zl6GEKrM26yZajA=
-X-Received: by 2002:ac2:43a8:: with SMTP id t8mr678007lfl.82.1584475788356;
- Tue, 17 Mar 2020 13:09:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6FuZZoVTFoFF+1kD/gUu0wVHL7she4RE1ISWVv5X9/Y=;
+        b=EYPtTxyBpE/mPj3grddi+XB2CqGbMPxcgk4bkZaNu/n7sVfYRmRk+Y63NtfVD0fmHH
+         aNCq9oo8c/X/1lL37UMJU9avgMrjeAHYNBTEUQHu3sWX1iTqaYCZrnSiUZzs6Z+9L+Zr
+         17ehBiB2x3nea+ntJLQ6jiVMBnRRi/Mtjwf/AX3jCpEWBJatYUFXNChRueY7F3i0ADq3
+         QDLhcCCXAzzVj12l7aTGVMWcksTdrXf3Ma68h9bhcvHrGXFS3OF33Jnp55YzZJL3r08A
+         ggEs4AV2l3kOjqvRMgbOxKMwbBtubCs3vc+aU5lLN9ngeFxV01e+Kig7zut4pA22Xxlm
+         jlUw==
+X-Gm-Message-State: ANhLgQ1VtT9ZdZCF9bKRNjmKksby67v18fe5ZJNrzM/h4jnOEeEXRe55
+        e81J4HCxejkZ45R8QQBJPOrX3AOBtlT2Og==
+X-Google-Smtp-Source: ADFU+vuT1Ym7m/1ayMnfgO0ZcMOck2lWOFvio2W1ILFfrT2EJs/LZjoAZ45vaZoYBkzzqaJILQKAwA==
+X-Received: by 2002:a05:6214:164d:: with SMTP id f13mr926612qvw.214.1584475881076;
+        Tue, 17 Mar 2020 13:11:21 -0700 (PDT)
+Received: from localhost.localdomain ([179.159.236.147])
+        by smtp.googlemail.com with ESMTPSA id t7sm2831852qtr.88.2020.03.17.13.11.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 13:11:20 -0700 (PDT)
+From:   Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
+To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
+        sumit.semwal@linaro.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     Igor Matheus Andrade Torrente <igormtorrente@gmail.com>,
+        Rodrigo.Siqueira@amd.com, rodrigosiqueiramelo@gmail.com,
+        andrealmeid@collabora.com
+Subject: [PATCH v2] drm: Alligne a comment block
+Date:   Tue, 17 Mar 2020 17:11:09 -0300
+Message-Id: <20200317201109.1619-1-igormtorrente@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200317133959.pdimegprq3gn4gsf@outlook.office365.com>
+References: <20200317133959.pdimegprq3gn4gsf@outlook.office365.com>
 MIME-Version: 1.0
-References: <20200317103307.343627747@linuxfoundation.org>
-In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 18 Mar 2020 01:39:36 +0530
-Message-ID: <CA+G9fYvJfOc9VJMUs6yQN-3BVgHMmCM3L=fbAffwQHETYLV2EQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/123] 5.4.26-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020 at 16:32, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.26 release.
-> There are 123 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 19 Mar 2020 10:31:16 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.26-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Fix a checkpatch warning caused by a misaligned comment block.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Signed-off-by: Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
+---
+ drivers/gpu/drm/drm_gem.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Summary
-------------------------------------------------------------------------
+diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+index 000fa4a1899f..6e960d57371e 100644
+--- a/drivers/gpu/drm/drm_gem.c
++++ b/drivers/gpu/drm/drm_gem.c
+@@ -222,10 +222,10 @@ drm_gem_object_handle_put_unlocked(struct drm_gem_object *obj)
+ 		return;
+ 
+ 	/*
+-	* Must bump handle count first as this may be the last
+-	* ref, in which case the object would disappear before we
+-	* checked for a name
+-	*/
++	 * Must bump handle count first as this may be the last
++	 * ref, in which case the object would disappear before we
++	 * checked for a name
++	 */
+ 
+ 	mutex_lock(&dev->object_name_lock);
+ 	if (--obj->handle_count == 0) {
+-- 
+2.20.1
 
-kernel: 5.4.26-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: bd9158ff941e0efcea216f7311abc7fe13e8ae39
-git describe: v5.4.25-124-gbd9158ff941e
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.25-124-gbd9158ff941e
-
-
-No regressions (compared to build v5.4.25)
-
-No fixes (compared to build v5.4.25)
-
-Ran 16905 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* libgpiod
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* libhugetlbfs
-* ltp-fs-tests
-* network-basic-tests
-* kvm-unit-tests
-* ltp-containers-tests
-* ltp-cve-tests
-* spectre-meltdown-checker-test
-* ltp-open-posix-tests
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
