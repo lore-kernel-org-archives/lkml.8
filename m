@@ -2,223 +2,170 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3E2C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF4DC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB5C20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB26920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DThUjTgT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uLwO+yJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgCQRof (ORCPT
+        id S1726541AbgCQRpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:44:35 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40789 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgCQRoe (ORCPT
+        Tue, 17 Mar 2020 13:45:35 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52415 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgCQRpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:44:34 -0400
-Received: by mail-oi1-f195.google.com with SMTP id y71so22681994oia.7
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:44:34 -0700 (PDT)
+        Tue, 17 Mar 2020 13:45:34 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 11so237340wmo.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uny09Ikq2gRYtvFRYVAmcVvvtWssTyutAcTyjFY40Jo=;
-        b=DThUjTgTucOr18Wp1UZD/1cFdTWwBV8uIN+p5KUTJ6I7KA3P2xEqTPyVWmWILig+Bh
-         rF1zTEcnnwsfKDTTcR3rjykCe/bleoEgnMVYafYFwToOJEUhu2ETKajbEj6928d/zcNl
-         fpBIUevyhrdCmz8J+Y+btMJamG/FEN274FxubxbqJZ4/Wl+FK9i5Eh3D5yhCBLkC+ukj
-         LtUQrXxASXbYVly5jRtYEVH/+ZFZx0ZgrNAWDcCF0+ih2ktrGTE4EWhZu24+HmWSHchI
-         v21Px0nOWOTIopmfH02YUusP+/m60gKxgtncucev2farv9B80Jh9BXdHv2iBVYwiT6tp
-         Uugw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MV6bJ7OXyhpfltDqO0Lw2KymN+GAxG920LeU1KrtDiI=;
+        b=uLwO+yJRZqviznaDBRv8U/ML8qJ4zC8EfZ3gg30rJ4COb10pDchTJxUdsoelI90Osk
+         J68F8R/syFW6g9WIXp3U9UjmeWOQps9g//OLPl0ooVqqf0mOPaAlR0kScK2MDoxRxEL8
+         1hCmoLSpUA2IIKDA2Xf99ART9byDTIu9Ce+9xYBkuHD2tgeMITF4qIi+Sl+aB1pimroY
+         nf90U/IgF8qhLL6aRnWBV9VxaL5LRJ4gJykPjqA++9qHW4OP53o9CKxHYf4DuxMOg5dI
+         NijmfiRbx+RvPPtTuf0R2XKvVb0iDfZiokG11hag2ws4tWKCuuxKB4RxMqERfZ4fYfvU
+         +u8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uny09Ikq2gRYtvFRYVAmcVvvtWssTyutAcTyjFY40Jo=;
-        b=Qikb69GdiEW592IdF7Wj9hj1cDULwr3E2luhESCY1Eu5SZ2k9l38PLHEW+zs6RiAc5
-         JW7wvwNg06Tqi3RakVKh3mXuEQUjo1NTaWnOyaZnvUDyf+AYDc7FCumuv1HFV75FgkXO
-         n4qoevJu2Hs50jevI53mP+o4obKn6XvibhLZfQyQOrDR3RwYo48+BfY3w+4Eq+5JP+MZ
-         MTYAhINgANqx2RPWjno0IMNMuxJJ2dr2ev1+n/Dv4jbP2v7RRVWrqaHVOhwJICubM0qn
-         12GlYD7YoxTA1+VfrBcvO8aUJbgHhMsxJiEkYt9vTM8B3a5FCh0KKtOwu5BuVMqbJsln
-         tdTg==
-X-Gm-Message-State: ANhLgQ3VdngH317WhC0G5neLy0Fs62MnDSbPNnTe1CCDk8Gunv83dI1i
-        DtcXmPT1r3Tk/ekfJTNuZCJ7ZfbMNK3/l00vYQrLOw==
-X-Google-Smtp-Source: ADFU+vsA2Sf5DwSLtvYCdJwkzVDeFYXHjoDvJ7ubh8/S00O5M/rsBeMhZZYuAswAai/e3PR6C5hIFMm32sYBh02ZRps=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr14021oih.172.1584467073577;
- Tue, 17 Mar 2020 10:44:33 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MV6bJ7OXyhpfltDqO0Lw2KymN+GAxG920LeU1KrtDiI=;
+        b=FyatspYRqrIPFOj1ZdZeNi32vwmpxjdOP0FmgulLFe+MpcNKDhkDqiqBADBlIMpYZL
+         Q+phYVzaXzex4RnXDoTn/o6QSo1Kpq65gchJThCysuLcQPGFBlgDu+3Op9rpFIbbhmNu
+         OtseOIyH4I+NNEr3TNTovXk/lRri8x5GxGmjAXuy1p7uLk52tas+xcXV7W5WZ194GD31
+         asuoLHxSlQb78tzNpgcSri6Lsz1Tr1gR2kxSTIowzwGLLPUocJAZD2AfkMEwz5p1MkSl
+         zJ0KDYjeH1O1Xj35hARbp2KqOLbzGqHEvx+Jwjpoy0mZJZSbqhJuDFM3acI1091L49Mg
+         MnKg==
+X-Gm-Message-State: ANhLgQ14MryhQwYH02FZcROqccKHhuNs/qQzBbARSoy996BOTjXvVqf7
+        4BhjjK6c4X/DrS0WGDs9nUNvR+RuFQk=
+X-Google-Smtp-Source: ADFU+vujeVpIEXut4cNkuA4V8XSCBRiZ19cgOtk4UBJHak7VfS+ssphXA8BaRjvpqVPtANLvut+rig==
+X-Received: by 2002:a7b:cb50:: with SMTP id v16mr193903wmj.74.1584467131701;
+        Tue, 17 Mar 2020 10:45:31 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:bd37:618d:f415:31ea? ([2a01:e34:ed2f:f020:bd37:618d:f415:31ea])
+        by smtp.googlemail.com with ESMTPSA id d15sm5471861wrp.37.2020.03.17.10.45.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 10:45:31 -0700 (PDT)
+Subject: Re: [PATCH] thermal: hisilicon: Don't enable by default
+To:     Lubomir Rintel <lkundrak@v3.sk>, Zhang Rui <rui.zhang@intel.com>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        kongxinwei <kong.kongxinwei@hisilicon.com>,
+        Wangtao <kevin.wangtao@hisilicon.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200317174130.23523-1-lkundrak@v3.sk>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1940ceca-c791-5fa6-c680-461a27c09ccf@linaro.org>
+Date:   Tue, 17 Mar 2020 18:45:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200309190359.GA5822@paulmck-ThinkPad-P72> <20200309190420.6100-27-paulmck@kernel.org>
- <20200312180328.GA4772@paulmck-ThinkPad-P72> <20200312180414.GA8024@paulmck-ThinkPad-P72>
- <CANpmjNOqmsm69vfdCAVGhLzTV-oB3E5saRbjzwrkbO-6nGgTYw@mail.gmail.com>
- <CANpmjNO=jGNNd4J0hBhz4ORLdw_+EHQDvyoQRikRCOsuMAcXYg@mail.gmail.com>
- <20200316154535.GX3199@paulmck-ThinkPad-P72> <CANpmjNOsLeiD6hYXeD4g8fA=Ti6EiUsbtiv4VshRGg+oG1ct-g@mail.gmail.com>
- <20200317171320.GI3199@paulmck-ThinkPad-P72>
-In-Reply-To: <20200317171320.GI3199@paulmck-ThinkPad-P72>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 17 Mar 2020 18:44:21 +0100
-Message-ID: <CANpmjNMN0DTxCXVL+OOPRaDiZUMGn5EsdyEQ==w_=5MOXc8J4Q@mail.gmail.com>
-Subject: Re: [PATCH kcsan 27/32] kcsan: Add option to allow watcher interruptions
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>, kernel-team@fb.com,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, Qian Cai <cai@lca.pw>,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200317174130.23523-1-lkundrak@v3.sk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020 at 18:13, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Mon, Mar 16, 2020 at 05:22:34PM +0100, Marco Elver wrote:
-> > On Mon, 16 Mar 2020 at 16:45, Paul E. McKenney <paulmck@kernel.org> wro=
-te:
-> > >
-> > > On Mon, Mar 16, 2020 at 02:56:38PM +0100, Marco Elver wrote:
-> > > > On Fri, 13 Mar 2020 at 16:28, Marco Elver <elver@google.com> wrote:
-> > > > >
-> > > > > On Thu, 12 Mar 2020 at 19:04, Paul E. McKenney <paulmck@kernel.or=
-g> wrote:
-> > > > > >
-> > > > > > On Thu, Mar 12, 2020 at 11:03:28AM -0700, Paul E. McKenney wrot=
-e:
-> > > > > > > On Mon, Mar 09, 2020 at 12:04:15PM -0700, paulmck@kernel.org =
-wrote:
-> > > > > > > > From: Marco Elver <elver@google.com>
-> > > > > > > >
-> > > > > > > > Add option to allow interrupts while a watchpoint is set up=
-. This can be
-> > > > > > > > enabled either via CONFIG_KCSAN_INTERRUPT_WATCHER or via th=
-e boot
-> > > > > > > > parameter 'kcsan.interrupt_watcher=3D1'.
-> > > > > > > >
-> > > > > > > > Note that, currently not all safe per-CPU access primitives=
- and patterns
-> > > > > > > > are accounted for, which could result in false positives. F=
-or example,
-> > > > > > > > asm-generic/percpu.h uses plain operations, which by defaul=
-t are
-> > > > > > > > instrumented. On interrupts and subsequent accesses to the =
-same
-> > > > > > > > variable, KCSAN would currently report a data race with thi=
-s option.
-> > > > > > > >
-> > > > > > > > Therefore, this option should currently remain disabled by =
-default, but
-> > > > > > > > may be enabled for specific test scenarios.
-> > > > > > > >
-> > > > > > > > To avoid new warnings, changes all uses of smp_processor_id=
-() to use the
-> > > > > > > > raw version (as already done in kcsan_found_watchpoint()). =
-The exact SMP
-> > > > > > > > processor id is for informational purposes in the report, a=
-nd
-> > > > > > > > correctness is not affected.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Marco Elver <elver@google.com>
-> > > > > > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > > > >
-> > > > > > > And I get silent hangs that bisect to this patch when running=
- the
-> > > > > > > following rcutorture command, run in the kernel source tree o=
-n a
-> > > > > > > 12-hardware-thread laptop:
-> > > > > > >
-> > > > > > > bash tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 12 =
---duration 10 --kconfig "CONFIG_DEBUG_INFO=3Dy CONFIG_KCSAN=3Dy CONFIG_KCSA=
-N_ASSUME_PLAIN_WRITES_ATOMIC=3Dn CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=3Dn =
-CONFIG_KCSAN_REPORT_ONCE_IN_MS=3D100000 CONFIG_KCSAN_VERBOSE=3Dy CONFIG_KCS=
-AN_INTERRUPT_WATCHER=3Dy" --configs TREE03
-> > > > > > >
-> > > > > > > It works fine on some (but not all) of the other rcutorture t=
-est
-> > > > > > > scenarios.  It fails on TREE01, TREE02, TREE03, TREE09.  The =
-common thread
-> > > > > > > is that these are the TREE scenarios are all PREEMPT=3Dy.  So=
- are RUDE01,
-> > > > > > > SRCU-P, TASKS01, and TASKS03, but these scenarios are not ham=
-mering
-> > > > > > > on Tree RCU, and thus have far less interrupt activity and th=
-e like.
-> > > > > > > Given that it is an interrupt-related feature being added by =
-this commit,
-> > > > > > > this seems like expected (mis)behavior.
-> > > > > > >
-> > > > > > > Can you reproduce this?  If not, are there any diagnostics I =
-can add to
-> > > > > > > my testing?  Or a diagnostic patch I could apply?
-> > > > >
-> > > > > I think I can reproduce it.  Let me debug some more, so far I hav=
-en't
-> > > > > found anything yet.
-> > > > >
-> > > > > What I do know is that it's related to reporting. Turning kcsan_r=
-eport
-> > > > > into a noop makes the test run to completion.
-> > > > >
-> > > > > > I should hasten to add that this feature was quite helpful in r=
-ecent work!
-> > > > >
-> > > > > Good to know. :-)  We can probably keep this patch, since the def=
-ault
-> > > > > config doesn't turn this on. But I will try to see what's up with=
- the
-> > > > > hangs, and hopefully find a fix.
-> > > >
-> > > > So this one turned out to be quite interesting. We can get deadlock=
-s
-> > > > if we can set up multiple watchpoints per task in case it's
-> > > > interrupted and the interrupt sets up another watchpoint, and there
-> > > > are many concurrent races happening; because the other_info struct =
-in
-> > > > report.c may never be released if an interrupt blocks the consumer =
-due
-> > > > to waiting for other_info to become released.
-> > >
-> > > Been there, done that!  ;-)
-> > >
-> > > > Give me another day or 2 to come up with a decent fix.
-> > >
-> > > My thought is to send a pull request for the commits up to but not
-> > > including this patch, allowing ample development and testing time for
-> > > the fix.  My concern with sending this, even with a fix, is that any
-> > > further bugs might cast a shadow on the whole series, further slowing
-> > > acceptance into mainline.
-> > >
-> > > Fair enough?
-> >
-> > That's fine. I think the features changes can stay on -rcu/kcsan-dev
-> > for now, but the documentation updates don't depend on them.
-> > If it'd be useful, the updated documentation could be moved before
-> > this patch to -rcu/kcsan, so we'd have
-> >
-> >  kcsan: Add current->state to implicitly atomic accesses
-> >  kcsan: Add option for verbose reporting
-> >  kcsan: Add option to allow watcher interruptions
-> > -- cut --
-> >  kcsan: Update API documentation in kcsan-checks.h
-> >  kcsan: Update Documentation/dev-tools/kcsan.rst
-> >  kcsan: Fix a typo in a comment
-> > .. rest of series ..
-> >
-> > Although I'm fine with either.
->
-> Given my churn with a recent merge window, I am more reluctant than
-> I might otherwise be to do that sort of rearrangement.  Sorry to be
-> so cowardly!
+On 17/03/2020 18:41, Lubomir Rintel wrote:
+> Users are generally unlikely to have a HiSilicon thermal sensor.
 
-No problem. This should be fine either way.
+Why ?
 
-Thank you!
--- Marco
+The thermal sensor is needed for the thermal mitigation.
+
+> Like most other thermal drivers, don't build it by default/
+>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  drivers/thermal/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 02c3aa322a4a6..2062f8ec272b6 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -233,7 +233,6 @@ config HISI_THERMAL
+>  	depends on ARCH_HISI || COMPILE_TEST
+>  	depends on HAS_IOMEM
+>  	depends on OF
+> -	default y
+>  	help
+>  	  Enable this to plug hisilicon's thermal sensor driver into the Linux
+>  	  thermal framework. cpufreq is used as the cooling device to throttle
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
