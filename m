@@ -2,209 +2,158 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193B8C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391FAC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49932073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CCC320409
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:41:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E7kG0Bh4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="up5ayR0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgCQUiB (ORCPT
+        id S1726836AbgCQUlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:38:01 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39433 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbgCQUiB (ORCPT
+        Tue, 17 Mar 2020 16:41:20 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:34484 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgCQUlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:38:01 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m1so1930197pll.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:38:00 -0700 (PDT)
+        Tue, 17 Mar 2020 16:41:19 -0400
+Received: by mail-qv1-f68.google.com with SMTP id o18so11672388qvf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:41:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jSVWcinVBkF0TMKRp+eiaEghUtTt1NtWoljB+scbYVU=;
-        b=E7kG0Bh4ffCX+4pdDmDPEmUhRmqjjHdpF00agUUQidB2g5ozNWGsEsH0SIKM17G1o0
-         kKvHkzZFHoDdyK2uhSwOtfxD85hYXYbqjBRhD2Z8MyBL1yLf91SoC8M8RanLJT9OhKxG
-         UJbMDTT3i+mBSqkInAH4BzNZDwEB/dKYUUW8k=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=p7n64HFEEFD1bxFrQS335VRgtrxyON8bbgS0WDdlslE=;
+        b=up5ayR0p8zH39veN7UqJNt0jdqt8l3r16i1ksu6T2anaYpPn4LVaakMwjxoBdyACN+
+         cJ264U44HGDzUD+hadlCx7rG6VAhFDqxWGAjJL12v4bmUYgjcYZA5uSlztOUCxq8t+fD
+         KxSiPjBLnHSPUmVILrWXIP0WlxocEqMeNmOiP0SN3ZS6i2IYwNFt2H1bWb0bCQAlQuHS
+         1uO3GudsOSvLtDPMzFxhY3/YqwiGww0CsvhLFm6kRxIKz4V+yyZ36XClHSLiv5ngtgjW
+         JG6mujPI/oP0QnSNM2g3tLe4YacUocpKaarUqCUaawrOlV3HMUtDAFj2zfe9YXp355Dz
+         05Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jSVWcinVBkF0TMKRp+eiaEghUtTt1NtWoljB+scbYVU=;
-        b=tl8PjdWopvyXWlKrOVCrG1AE16eYXz7FFJCSyHf8Jxpb5llOHm3Y2sMhscDbVyM4Oa
-         mXf68QOGoQZKL43eG1T9EM+i8WCTAFHAUBE0YIUKlNFaR48EC9HbVhgnZl3HvsLL2YgR
-         HdrsPRCx4OKeKSTWbRBUjZ/Z4L3A8tqi03XCHVIZs/BHx02LDtWnFpk3x/TOBjxl5WnP
-         /jwpzDCmAz85A+dmrxT3BVpt5KHV7jrAw4LlIRAvdkHwD+4DS1nICrJ1BwFfL2V50Sd4
-         yigsBdqGlls5iZ54kBakpL6ahiflPvqpUE1KfWvH7Mj3jYF4t6GOajcLisUercNxEN2w
-         etEg==
-X-Gm-Message-State: ANhLgQ3yMZWSsD+trmcX0JasDahNi9g14yPF8cYdjO0xMZa/yAK+bodj
-        bIBiLv9MOdSFb4XxjGCAFmeETw==
-X-Google-Smtp-Source: ADFU+vuIDjiQMApXAYFSk7YrsY5SDvRSiRmwdvphWyIPFu20X5lDnDUyBU77VGieDUZBYjnqzJ4NKQ==
-X-Received: by 2002:a17:902:7d97:: with SMTP id a23mr436529plm.31.1584477479756;
-        Tue, 17 Mar 2020 13:37:59 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id q123sm1039286pfb.54.2020.03.17.13.37.58
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=p7n64HFEEFD1bxFrQS335VRgtrxyON8bbgS0WDdlslE=;
+        b=PNpfGW8IS28362siuysPJBvLgQFIsUwylbIIOrg3iRoGpz7rwn/fpYfVlQtlRh+1dG
+         WjddaVoGQAyvplQfMPJwu2YerYSWLc2+b+DvNgp0dzv1OxDD8zDSmavGUtwJQnr51BAq
+         Nc5rjiGwJGQSkNgajjGIHhv/lTrjBDrdEPdmo64ex8rM2xFNJCNOQ8gQiTvqyJOyPhwQ
+         oJV5VMpBzOELH1zxueQNR1frWwnKjvn+p1hti9W4JuJ7dr+yoarI2hnzVDb7grMBDONR
+         RyQij+ah3xzJRM1EiREFcOlpLJ4AaZtp3nvG0T2/u2nm6qjJkMZ+tg1CVzZwTtrOHHER
+         FGaQ==
+X-Gm-Message-State: ANhLgQ15Es3DzZ9s58Qpi32T6TJS9bW4EPvWf8jI90JqeNpB1BBOKiVN
+        j9rvTgd8LPRyioUNGDNOoeM=
+X-Google-Smtp-Source: ADFU+vsdIWNhPCxdordz3SLRqEvuM+XT3++eIJX0J5W8tPVDMxDLoEg1WFVGTriylzbNx/qaGx8r/g==
+X-Received: by 2002:a0c:ffd3:: with SMTP id h19mr1057949qvv.166.1584477678727;
+        Tue, 17 Mar 2020 13:41:18 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id 82sm2715647qkd.62.2020.03.17.13.41.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 13:37:59 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: [PATCH v2] spi: spi-geni-qcom: Speculative fix of "nobody cared" about interrupt
-Date:   Tue, 17 Mar 2020 13:37:06 -0700
-Message-Id: <20200317133653.v2.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        Tue, 17 Mar 2020 13:41:17 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CF6CD404E4; Tue, 17 Mar 2020 17:41:15 -0300 (-03)
+Date:   Tue, 17 Mar 2020 17:41:15 -0300
+To:     John Garry <john.garry@huawei.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        will@kernel.org, ak@linux.intel.com, linuxarm@huawei.com,
+        linux-kernel@vger.kernel.org, james.clark@arm.com,
+        qiangqing.zhang@nxp.com
+Subject: Re: [PATCH v2 2/7] perf jevents: Support test events folder
+Message-ID: <20200317204115.GA11531@kernel.org>
+References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
+ <1584442939-8911-3-git-send-email-john.garry@huawei.com>
+ <20200317162052.GD759708@krava>
+ <de5b58ee-980e-973a-16db-73f23c3edfef@huawei.com>
+ <20200317170645.GE759708@krava>
+ <dcaf4aa9-213e-47c5-16e2-e7f8af259ce9@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <dcaf4aa9-213e-47c5-16e2-e7f8af259ce9@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every once in a while (like once in a few months on a device) people
-have seen warnings on devices using spi-geni-qcom like:
+Em Tue, Mar 17, 2020 at 05:42:46PM +0000, John Garry escreveu:
+> On 17/03/2020 17:06, Jiri Olsa wrote:
+> > On Tue, Mar 17, 2020 at 04:25:32PM +0000, John Garry wrote:
+> > > On 17/03/2020 16:20, Jiri Olsa wrote:
+> > > > On Tue, Mar 17, 2020 at 07:02:14PM +0800, John Garry wrote:
+> > > > > With the goal of supporting pmu-events test case, introduce support for a
+> > > > > test events folder.
+> > > > > 
+> > > > > These test events can be used for testing generation of pmu-event tables
+> > > > > and alias creation for any arch.
+> > > > > 
+> > > > > When running the pmu-events test case, these test events will be used
+> > > > > as the platform-agnostic events, so aliases can be created per-PMU and
+> > > > > validated against known expected values.
+> > > > > 
+> > > > > To support the test events, add a "testcpu" entry in pmu_events_map[].
+> > > > > The pmu-events test will be able to lookup the events map for "testcpu",
+> > > > > to verify the generated tables against expected values.
+> > > > > 
+> > > > > The resultant generated pmu-events.c will now look like the following:
+> > > > 
+> > > > can't compile this one:
+> > > > 
+> > > >     HOSTCC   pmu-events/jevents.o
+> > > > pmu-events/jevents.c: In function ‘main’:
+> > > > pmu-events/jevents.c:1195:3: error: ‘ret’ undeclared (first use in this function)
+> > > >    1195 |   ret = 1;
+> > > >         |   ^~~
+> > > > pmu-events/jevents.c:1195:3: note: each undeclared identifier is reported only once for each function it appears in
+> > > > pmu-events/jevents.c:1196:3: error: label ‘out_free_mapfile’ used but not defined
+> > > >    1196 |   goto out_free_mapfile;
+> > > >         |   ^~~~
+> > > > mv: cannot stat 'pmu-events/.jevents.o.tmp': No such file or directory
+> > > > make[3]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:97: pmu-events/jevents.o] Error 1
+> > > > make[2]: *** [Makefile.perf:619: pmu-events/jevents-in.o] Error 2
+> > > > make[1]: *** [Makefile.perf:225: sub-make] Error 2
+> > > > make: *** [Makefile:70: all] Error 2
+> > > 
+> > > Hi jirka,
+> > > 
+> > > What baseline are you using? I used v5.6-rc6. The patches are here:
+> > 
+> > I applied your patches on Arnaldo's perf/core
+> 
+> My recent fix on jevents.c does not seem to be on that branch, but it is on
+> perf/urgent and also included in v5.6-rc6
 
-  irq ...: nobody cared (try booting with the "irqpoll" option)
+I'll merge perf/urgent into perf/core soon,
 
-...where the interrupt number listed matches up with "spi_geni" in
-/proc/interrupts.
+- Arnaldo
+ 
+> Thanks,
+> John
+> 
+> > 
+> > > 
+> > > https://github.com/hisilicon/kernel-dev/commits/private-topic-perf-5.6-pmu-events-test-upstream-v2
+> > 
+> > ok, will check
+> > 
+> > jirka
+> > 
+> > .
+> > 
+> 
 
-You can get "nobody cared" if the interrupt handler returns IRQ_NONE.
-Once you get into this state the driver will just stop working.
-
-Auditing the code makes me believe that it's probably not so good
-checking "cur_mcmd" in the interrupt handler not under spinlock.
-Let's move it to be under spinlock.  Looking more closely at the code,
-it looks as if there are some other places that could be under
-spinlock, so let's add.  It looks as if the original code was assuming
-that by the time that the interrupt handler got called that the write
-to "cur_mcmd" (to make it not CMD_NONE anymore) would make it to the
-processor handling the interrupt.  Perhaps with weakly ordered memory
-this sometimes (though very rarely) happened.
-
-Let's also add a warning (with the IRQ status) in the case that we
-ever end up getting an interrupt when we think we shouldn't.  This
-would give us a better chance to debug if this patch doesn't help the
-issue.  We'll also try our best to clear the interrupt to hopefully
-get us out of this state.
-
-Patch is marked "speculative" because I have no way to reproduce this
-problem, so I'm just hoping this fixes it.  Weakly ordered memory
-makes my brain hurt.
-
-Fixes: 561de45f72bd ("spi: spi-geni-qcom: Add SPI driver support for GENI based QUP")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- Detect true spurious interrupt.
-- Still return IRQ_NONE for state machine mismatch, but print warn.
-
- drivers/spi/spi-geni-qcom.c | 35 ++++++++++++++++++++++++++++++-----
- 1 file changed, 30 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index c3972424af71..92e51ccb427f 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
-@@ -151,16 +151,19 @@ static void spi_geni_set_cs(struct spi_device *slv, bool set_flag)
- 	struct geni_se *se = &mas->se;
- 	unsigned long time_left;
- 
--	reinit_completion(&mas->xfer_done);
- 	pm_runtime_get_sync(mas->dev);
- 	if (!(slv->mode & SPI_CS_HIGH))
- 		set_flag = !set_flag;
- 
-+	spin_lock_irq(&mas->lock);
-+	reinit_completion(&mas->xfer_done);
-+
- 	mas->cur_mcmd = CMD_CS;
- 	if (set_flag)
- 		geni_se_setup_m_cmd(se, SPI_CS_ASSERT, 0);
- 	else
- 		geni_se_setup_m_cmd(se, SPI_CS_DEASSERT, 0);
-+	spin_unlock_irq(&mas->lock);
- 
- 	time_left = wait_for_completion_timeout(&mas->xfer_done, HZ);
- 	if (!time_left)
-@@ -307,6 +310,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 	u32 spi_tx_cfg, len;
- 	struct geni_se *se = &mas->se;
- 
-+	spin_lock_irq(&mas->lock);
-+
- 	spi_tx_cfg = readl(se->base + SE_SPI_TRANS_CFG);
- 	if (xfer->bits_per_word != mas->cur_bits_per_word) {
- 		spi_setup_word_len(mas, mode, xfer->bits_per_word);
-@@ -376,6 +381,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 	 */
- 	if (m_cmd & SPI_TX_ONLY)
- 		writel(mas->tx_wm, se->base + SE_GENI_TX_WATERMARK_REG);
-+
-+	spin_unlock_irq(&mas->lock);
- }
- 
- static int spi_geni_transfer_one(struct spi_master *spi,
-@@ -478,13 +485,29 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 	struct geni_se *se = &mas->se;
- 	u32 m_irq;
- 	unsigned long flags;
--
--	if (mas->cur_mcmd == CMD_NONE)
--		return IRQ_NONE;
-+	irqreturn_t ret = IRQ_HANDLED;
- 
- 	spin_lock_irqsave(&mas->lock, flags);
- 	m_irq = readl(se->base + SE_GENI_M_IRQ_STATUS);
- 
-+	/* Check for spurious interrupt */
-+	if (!m_irq) {
-+		ret = IRQ_NONE;
-+		goto exit;
-+	}
-+
-+	/*
-+	 * If we got a real interrupt but software state machine thinks
-+	 * we were idle then give a warning.  We'll do our best to clear
-+	 * the interrupt but we'll still return IRQ_NONE.  If this keeps
-+	 * happening the system will eventually disable us.
-+	 */
-+	if (mas->cur_mcmd == CMD_NONE) {
-+		pr_warn("Unexpected SPI interrupt: %#010x\n", m_irq);
-+		ret = IRQ_NONE;
-+		goto exit;
-+	}
-+
- 	if ((m_irq & M_RX_FIFO_WATERMARK_EN) || (m_irq & M_RX_FIFO_LAST_EN))
- 		geni_spi_handle_rx(mas);
- 
-@@ -523,9 +546,11 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 		complete(&mas->xfer_done);
- 	}
- 
-+exit:
- 	writel(m_irq, se->base + SE_GENI_M_IRQ_CLEAR);
- 	spin_unlock_irqrestore(&mas->lock, flags);
--	return IRQ_HANDLED;
-+
-+	return ret;
- }
- 
- static int spi_geni_probe(struct platform_device *pdev)
 -- 
-2.25.1.481.gfbce0eb801-goog
 
+- Arnaldo
