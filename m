@@ -2,265 +2,130 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968F8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9F6C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 717DB205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361F7206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgCQLS0 (ORCPT
+        id S1728632AbgCQLSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:18:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45496 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbgCQLSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:18:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 429AFAD71;
-        Tue, 17 Mar 2020 11:18:21 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 12:18:23 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH] treewide: Rename "unencrypted" to "decrypted"
-Message-ID: <20200317111822.GA15609@zn.tnic>
+        Tue, 17 Mar 2020 07:18:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11707 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728607AbgCQLGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:31 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 612FFC122464A3917050;
+        Tue, 17 Mar 2020 19:06:28 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 17 Mar 2020 19:06:18 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <james.clark@arm.com>,
+        <qiangqing.zhang@nxp.com>, John Garry <john.garry@huawei.com>
+Subject: [PATCH v2 0/7] perf test pmu-events case
+Date:   Tue, 17 Mar 2020 19:02:12 +0800
+Message-ID: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+This series introduces a basic pmu-events test case.
 
-this hasn't been fully tested yet but it is mechanical rename only so
-there shouldn't be any problems (famous last words :-)).
+The test works in two steps:
+- Verifies events in generated pmu-events.c are as expected for some test
+  events
+- Verifies correctly created aliases for those test events for the HW PMUs
+  in the host system
 
-I'll run it through the randconfig bench today and take it through tip if
-there are no objections.
+The test events are invented, and are (mostly) arch agnostic (even though
+I copied these events from pre-existing x86 and arm64 JSONs).
 
-Thx.
+In the test, core and uncore events are treated slightly differently for
+testing aliases. For core test events, all events are matched. However,
+for uncore test events, these have "Unit" property, so can only be matched
+when the corresponding HW PMU exists in the host sytem.
 
----
+A test run looks like this on my x86 dev box:
 
-Back then when the whole SME machinery started getting mainlined, it
-was agreed that for simplicity, clarity and sanity's sake, the terms
-denoting encrypted and not-encrypted memory should be "encrypted" and
-"decrypted". And the majority of the code sticks to that convention
-except those two. So rename them.
+$ tools/perf/perf test -vv 10
 
-No functional changes.
+10: PMU events                                            :
+--- start ---
+test child forked, pid 26610
+testing event table bp_l1_btb_correct: pass
+testing event table bp_l2_btb_correct: pass
+testing event table segment_reg_loads.any: pass
+testing event table dispatch_blocked.any: pass
+testing event table eist_trans: pass
+testing event table uncore_hisi_ddrc.flux_wcmd: pass
+testing event table unc_cbo_xsnp_response.miss_eviction: pass
+Using CPUID GenuineIntel-6-3D-4
+intel_pt default config: tsc,pt,branch
+skipping testing PMU breakpoint
+testing aliases PMU uncore_cbox_1: matched event unc_cbo_xsnp_response.miss_eviction
+testing PMU uncore_cbox_1 aliases: pass
+testing aliases PMU cpu: matched event bp_l1_btb_correct
+testing aliases PMU cpu: matched event bp_l2_btb_correct
+testing aliases PMU cpu: matched event segment_reg_loads.any
+testing aliases PMU cpu: matched event dispatch_blocked.any
+testing aliases PMU cpu: matched event eist_trans
+testing PMU cpu aliases: pass
+skipping testing PMU software
+skipping testing PMU intel_bts
+testing aliases PMU uncore_cbox_0: matched event unc_cbo_xsnp_response.miss_eviction
+testing PMU uncore_cbox_0 aliases: pass
+skipping testing PMU tracepoint
+test child finished with 0
+---- end ----
+PMU events: Ok
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/powerpc/platforms/pseries/Kconfig |  2 +-
- arch/s390/Kconfig                      |  2 +-
- arch/x86/Kconfig                       |  2 +-
- arch/x86/mm/mem_encrypt.c              |  4 ++--
- include/linux/dma-direct.h             |  8 ++++----
- kernel/dma/Kconfig                     |  2 +-
- kernel/dma/direct.c                    | 14 +++++++-------
- kernel/dma/mapping.c                   |  2 +-
- 8 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
-index 24c18362e5ea..a78e2c3e1d92 100644
---- a/arch/powerpc/platforms/pseries/Kconfig
-+++ b/arch/powerpc/platforms/pseries/Kconfig
-@@ -151,7 +151,7 @@ config PPC_SVM
- 	depends on PPC_PSERIES
- 	select SWIOTLB
- 	select ARCH_HAS_MEM_ENCRYPT
--	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_FORCE_DMA_DECRYPTED
- 	help
- 	 There are certain POWER platforms which support secure guests using
- 	 the Protected Execution Facility, with the help of an Ultravisor
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 8abe77536d9d..ab1dbb7415b4 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -192,7 +192,7 @@ config S390
- 	select VIRT_CPU_ACCOUNTING
- 	select ARCH_HAS_SCALED_CPUTIME
- 	select HAVE_NMI
--	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_FORCE_DMA_DECRYPTED
- 	select SWIOTLB
- 	select GENERIC_ALLOCATOR
- 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea77046f9b..2ae904f505e1 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1525,7 +1525,7 @@ config AMD_MEM_ENCRYPT
- 	depends on X86_64 && CPU_SUP_AMD
- 	select DYNAMIC_PHYSICAL_MASK
- 	select ARCH_USE_MEMREMAP_PROT
--	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_FORCE_DMA_DECRYPTED
- 	---help---
- 	  Say yes to enable support for the encryption of system memory.
- 	  This requires an AMD processor that supports Secure Memory
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index a03614bd3e1a..66d09f269e6d 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -350,8 +350,8 @@ bool sev_active(void)
- 	return sme_me_mask && sev_enabled;
- }
- 
--/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
--bool force_dma_unencrypted(struct device *dev)
-+/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_DECRYPTED */
-+bool force_dma_decrypted(struct device *dev)
- {
- 	/*
- 	 * For SEV, all DMA must be to unencrypted addresses.
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index 24b8684aa21d..9f955844e9c7 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -26,14 +26,14 @@ static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
- }
- #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
- 
--#ifdef CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED
--bool force_dma_unencrypted(struct device *dev);
-+#ifdef CONFIG_ARCH_HAS_FORCE_DMA_DECRYPTED
-+bool force_dma_decrypted(struct device *dev);
- #else
--static inline bool force_dma_unencrypted(struct device *dev)
-+static inline bool force_dma_decrypted(struct device *dev)
- {
- 	return false;
- }
--#endif /* CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED */
-+#endif /* CONFIG_ARCH_HAS_FORCE_DMA_DECRYPTED */
- 
- /*
-  * If memory encryption is supported, phys_to_dma will set the memory encryption
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-index 4c103a24e380..55c4147bb2b1 100644
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -51,7 +51,7 @@ config ARCH_HAS_SYNC_DMA_FOR_CPU_ALL
- config ARCH_HAS_DMA_PREP_COHERENT
- 	bool
- 
--config ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+config ARCH_HAS_FORCE_DMA_DECRYPTED
- 	bool
- 
- config DMA_NONCOHERENT_CACHE_SYNC
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index ac7956c38f69..a0576c0ccacd 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -26,7 +26,7 @@ unsigned int zone_dma_bits __ro_after_init = 24;
- static inline dma_addr_t phys_to_dma_direct(struct device *dev,
- 		phys_addr_t phys)
- {
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		return __phys_to_dma(dev, phys);
- 	return phys_to_dma(dev, phys);
- }
-@@ -49,7 +49,7 @@ static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- {
- 	u64 dma_limit = min_not_zero(dma_mask, dev->bus_dma_limit);
- 
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		*phys_limit = __dma_to_phys(dev, dma_limit);
- 	else
- 		*phys_limit = dma_to_phys(dev, dma_limit);
-@@ -138,7 +138,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 		return NULL;
- 
- 	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
--	    !force_dma_unencrypted(dev)) {
-+	    !force_dma_decrypted(dev)) {
- 		/* remove any dirty cache lines on the kernel alias */
- 		if (!PageHighMem(page))
- 			arch_dma_prep_coherent(page, size);
-@@ -179,7 +179,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	}
- 
- 	ret = page_address(page);
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		set_memory_decrypted((unsigned long)ret, 1 << get_order(size));
- 
- 	memset(ret, 0, size);
-@@ -190,7 +190,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 		ret = uncached_kernel_address(ret);
- 	}
- done:
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		*dma_handle = __phys_to_dma(dev, page_to_phys(page));
- 	else
- 		*dma_handle = phys_to_dma(dev, page_to_phys(page));
-@@ -203,7 +203,7 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- 	unsigned int page_order = get_order(size);
- 
- 	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
--	    !force_dma_unencrypted(dev)) {
-+	    !force_dma_decrypted(dev)) {
- 		/* cpu_addr is a struct page cookie, not a kernel address */
- 		dma_free_contiguous(dev, cpu_addr, size);
- 		return;
-@@ -213,7 +213,7 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- 	    dma_free_from_pool(cpu_addr, PAGE_ALIGN(size)))
- 		return;
- 
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
- 
- 	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr))
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 98e3d873792e..dbd0605a39c5 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -154,7 +154,7 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
-  */
- pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
- {
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		prot = pgprot_decrypted(prot);
- 	if (dev_is_dma_coherent(dev) ||
- 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
--- 
-2.21.0
+Changes since v1:
+- Verify event table in generated pmu-events.c, in addition to verifying
+  aliases
+- Don't create separate table for test events, but include as a "testcpu"
+
+John Garry (7):
+  perf jevents: Add some test events
+  perf jevents: Support test events folder
+  perf pmu: Refactor pmu_add_cpu_aliases()
+  perf test: Add pmu-events test
+  perf pmu: Add is_pmu_core()
+  perf pmu: Make pmu_uncore_alias_match() public
+  perf test: Test pmu-events aliases
+
+ .../perf/pmu-events/arch/test/test_cpu/branch.json |  12 +
+ .../perf/pmu-events/arch/test/test_cpu/other.json  |  26 ++
+ .../perf/pmu-events/arch/test/test_cpu/uncore.json |  21 ++
+ tools/perf/pmu-events/jevents.c                    |  30 ++
+ tools/perf/tests/Build                             |   1 +
+ tools/perf/tests/builtin-test.c                    |   4 +
+ tools/perf/tests/pmu-events.c                      | 373 +++++++++++++++++++++
+ tools/perf/tests/tests.h                           |   1 +
+ tools/perf/util/pmu.c                              |  28 +-
+ tools/perf/util/pmu.h                              |   5 +
+ 10 files changed, 492 insertions(+), 9 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/other.json
+ create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/uncore.json
+ create mode 100644 tools/perf/tests/pmu-events.c
 
 -- 
-Regards/Gruss,
-    Boris.
+2.12.3
 
-https://people.kernel.org/tglx/notes-about-netiquette
