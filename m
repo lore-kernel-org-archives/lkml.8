@@ -2,57 +2,64 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772BBC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D878C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B7620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FD720658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442933;
-	bh=HDvlXOkjsqJp0/dSElyxbOZnUOtaOJXvkK+oezhbntE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ovdCWpM6H0eSUg+PJT7BrUxxh43X/CmaOZBq+LfhUjcYfP0WdR/M9UKOPWK3Ak0cL
-	 Q2wn3cRrVranNHBeZWMvvra/gZ3qt39J6ssGI+dqgemjgrHzui9KXCRXPKX8hvq6Av
-	 cyJQsbmaKZ4APqs15kLv15uQl0kKYwHIdxSclEN4=
+	s=default; t=1584442936;
+	bh=YdDBbfii1dBQIbCYiCaxlpIjpV+ZCjgaURjXl0YrUGQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=gaVd0N/IFhKbdfGcLzNaz2YBrzPLRQim01WrvpPQUiBTXbe2f6gfkkWDSaFvW2qUM
+	 oityijnhjay40lUyX1Jg19vs6I0RkLYVxOTaPaU3XB6lRUykwM4d1+RYcil/9n8n/N
+	 7b9eDiPHAdfj5VAJYqXlIK8FQUnlTSaSVtzYKwvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgCQLCL (ORCPT
+        id S1727903AbgCQLCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41688 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:02:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbgCQLCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:02:08 -0400
+        id S1726740AbgCQLCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:02:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B99E320714;
-        Tue, 17 Mar 2020 11:02:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB7F720714;
+        Tue, 17 Mar 2020 11:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442927;
-        bh=HDvlXOkjsqJp0/dSElyxbOZnUOtaOJXvkK+oezhbntE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+z+Pg4HEj2KogRBibMyBO7aRoD71aKLF0Upa3p5UZoaZos0Vo/QHxFmWSluyNhmr
-         NmsJoSXioZFjfBTk70rItBePq4S6C+lDviW0Qctik3WP5V6yJ2+woZgOMf7iO9I9Co
-         DksI8ilrehDjnbFw+Xw722Ik/g4ylW3+UZQm2WQA=
+        s=default; t=1584442931;
+        bh=YdDBbfii1dBQIbCYiCaxlpIjpV+ZCjgaURjXl0YrUGQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MeaY9685CHMNto++r7fmzwo5E1lAlza7AoutjCb1+Q5MNBi5cl3icuwXuU0E4uiBd
+         zIYLiWg6APYbSqu/sAQ3YyW7gzSDcXneHOY1C42KC/nCG7KaX/vJ478Q0Ypyb8rhW9
+         GtADw8xdFYnHZrY5gPfSF+xup9FS53ciZiMQr5O4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 009/123] ipvlan: add cond_resched_rcu() while processing muticast backlog
-Date:   Tue, 17 Mar 2020 11:53:56 +0100
-Message-Id: <20200317103308.435913651@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 000/123] 5.4.26-rc1 review
+Date:   Tue, 17 Mar 2020 11:53:47 +0100
+Message-Id: <20200317103307.343627747@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
-References: <20200317103307.343627747@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.26-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.26-rc1
+X-KernelTest-Deadline: 2020-03-19T10:33+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,114 +67,523 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+This is the start of the stable review cycle for the 5.4.26 release.
+There are 123 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit e18b353f102e371580f3f01dd47567a25acc3c1d ]
+Responses should be made by Thu, 19 Mar 2020 10:31:16 +0000.
+Anything received after that time might be too late.
 
-If there are substantial number of slaves created as simulated by
-Syzbot, the backlog processing could take much longer and result
-into the issue found in the Syzbot report.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.26-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
 
-INFO: rcu_sched detected stalls on CPUs/tasks:
-        (detected by 1, t=10502 jiffies, g=5049, c=5048, q=752)
-All QSes seen, last rcu_sched kthread activity 10502 (4294965563-4294955061), jiffies_till_next_fqs=1, root ->qsmask 0x0
-syz-executor.1  R  running task on cpu   1  10984 11210   3866 0x30020008 179034491270
-Call Trace:
- <IRQ>
- [<ffffffff81497163>] _sched_show_task kernel/sched/core.c:8063 [inline]
- [<ffffffff81497163>] _sched_show_task.cold+0x2fd/0x392 kernel/sched/core.c:8030
- [<ffffffff8146a91b>] sched_show_task+0xb/0x10 kernel/sched/core.c:8073
- [<ffffffff815c931b>] print_other_cpu_stall kernel/rcu/tree.c:1577 [inline]
- [<ffffffff815c931b>] check_cpu_stall kernel/rcu/tree.c:1695 [inline]
- [<ffffffff815c931b>] __rcu_pending kernel/rcu/tree.c:3478 [inline]
- [<ffffffff815c931b>] rcu_pending kernel/rcu/tree.c:3540 [inline]
- [<ffffffff815c931b>] rcu_check_callbacks.cold+0xbb4/0xc29 kernel/rcu/tree.c:2876
- [<ffffffff815e3962>] update_process_times+0x32/0x80 kernel/time/timer.c:1635
- [<ffffffff816164f0>] tick_sched_handle+0xa0/0x180 kernel/time/tick-sched.c:161
- [<ffffffff81616ae4>] tick_sched_timer+0x44/0x130 kernel/time/tick-sched.c:1193
- [<ffffffff815e75f7>] __run_hrtimer kernel/time/hrtimer.c:1393 [inline]
- [<ffffffff815e75f7>] __hrtimer_run_queues+0x307/0xd90 kernel/time/hrtimer.c:1455
- [<ffffffff815e90ea>] hrtimer_interrupt+0x2ea/0x730 kernel/time/hrtimer.c:1513
- [<ffffffff844050f4>] local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1031 [inline]
- [<ffffffff844050f4>] smp_apic_timer_interrupt+0x144/0x5e0 arch/x86/kernel/apic/apic.c:1056
- [<ffffffff84401cbe>] apic_timer_interrupt+0x8e/0xa0 arch/x86/entry/entry_64.S:778
-RIP: 0010:do_raw_read_lock+0x22/0x80 kernel/locking/spinlock_debug.c:153
-RSP: 0018:ffff8801dad07ab8 EFLAGS: 00000a02 ORIG_RAX: ffffffffffffff12
-RAX: 0000000000000000 RBX: ffff8801c4135680 RCX: 0000000000000000
-RDX: 1ffff10038826afe RSI: ffff88019d816bb8 RDI: ffff8801c41357f0
-RBP: ffff8801dad07ac0 R08: 0000000000004b15 R09: 0000000000310273
-R10: ffff88019d816bb8 R11: 0000000000000001 R12: ffff8801c41357e8
-R13: 0000000000000000 R14: ffff8801cfb19850 R15: ffff8801cfb198b0
- [<ffffffff8101460e>] __raw_read_lock_bh include/linux/rwlock_api_smp.h:177 [inline]
- [<ffffffff8101460e>] _raw_read_lock_bh+0x3e/0x50 kernel/locking/spinlock.c:240
- [<ffffffff840d78ca>] ipv6_chk_mcast_addr+0x11a/0x6f0 net/ipv6/mcast.c:1006
- [<ffffffff84023439>] ip6_mc_input+0x319/0x8e0 net/ipv6/ip6_input.c:482
- [<ffffffff840211c8>] dst_input include/net/dst.h:449 [inline]
- [<ffffffff840211c8>] ip6_rcv_finish+0x408/0x610 net/ipv6/ip6_input.c:78
- [<ffffffff840214de>] NF_HOOK include/linux/netfilter.h:292 [inline]
- [<ffffffff840214de>] NF_HOOK include/linux/netfilter.h:286 [inline]
- [<ffffffff840214de>] ipv6_rcv+0x10e/0x420 net/ipv6/ip6_input.c:278
- [<ffffffff83a29efa>] __netif_receive_skb_one_core+0x12a/0x1f0 net/core/dev.c:5303
- [<ffffffff83a2a15c>] __netif_receive_skb+0x2c/0x1b0 net/core/dev.c:5417
- [<ffffffff83a2f536>] process_backlog+0x216/0x6c0 net/core/dev.c:6243
- [<ffffffff83a30d1b>] napi_poll net/core/dev.c:6680 [inline]
- [<ffffffff83a30d1b>] net_rx_action+0x47b/0xfb0 net/core/dev.c:6748
- [<ffffffff846002c8>] __do_softirq+0x2c8/0x99a kernel/softirq.c:317
- [<ffffffff813e656a>] invoke_softirq kernel/softirq.c:399 [inline]
- [<ffffffff813e656a>] irq_exit+0x16a/0x1a0 kernel/softirq.c:439
- [<ffffffff84405115>] exiting_irq arch/x86/include/asm/apic.h:561 [inline]
- [<ffffffff84405115>] smp_apic_timer_interrupt+0x165/0x5e0 arch/x86/kernel/apic/apic.c:1058
- [<ffffffff84401cbe>] apic_timer_interrupt+0x8e/0xa0 arch/x86/entry/entry_64.S:778
- </IRQ>
-RIP: 0010:__sanitizer_cov_trace_pc+0x26/0x50 kernel/kcov.c:102
-RSP: 0018:ffff880196033bd8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff12
-RAX: ffff88019d8161c0 RBX: 00000000ffffffff RCX: ffffc90003501000
-RDX: 0000000000000002 RSI: ffffffff816236d1 RDI: 0000000000000005
-RBP: ffff880196033bd8 R08: ffff88019d8161c0 R09: 0000000000000000
-R10: 1ffff10032c067f0 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000000
- [<ffffffff816236d1>] do_futex+0x151/0x1d50 kernel/futex.c:3548
- [<ffffffff816260f0>] C_SYSC_futex kernel/futex_compat.c:201 [inline]
- [<ffffffff816260f0>] compat_SyS_futex+0x270/0x3b0 kernel/futex_compat.c:175
- [<ffffffff8101da17>] do_syscall_32_irqs_on arch/x86/entry/common.c:353 [inline]
- [<ffffffff8101da17>] do_fast_syscall_32+0x357/0xe1c arch/x86/entry/common.c:415
- [<ffffffff84401a9b>] entry_SYSENTER_compat+0x8b/0x9d arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f23c69
-RSP: 002b:00000000f5d1f12c EFLAGS: 00000282 ORIG_RAX: 00000000000000f0
-RAX: ffffffffffffffda RBX: 000000000816af88 RCX: 0000000000000080
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000816af8c
-RBP: 00000000f5d1f228 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-rcu_sched kthread starved for 10502 jiffies! g5049 c5048 f0x2 RCU_GP_WAIT_FQS(3) ->state=0x0 ->cpu=1
-rcu_sched       R  running task on cpu   1  13048     8      2 0x90000000 179099587640
-Call Trace:
- [<ffffffff8147321f>] context_switch+0x60f/0xa60 kernel/sched/core.c:3209
- [<ffffffff8100095a>] __schedule+0x5aa/0x1da0 kernel/sched/core.c:3934
- [<ffffffff810021df>] schedule+0x8f/0x1b0 kernel/sched/core.c:4011
- [<ffffffff8101116d>] schedule_timeout+0x50d/0xee0 kernel/time/timer.c:1803
- [<ffffffff815c13f1>] rcu_gp_kthread+0xda1/0x3b50 kernel/rcu/tree.c:2327
- [<ffffffff8144b318>] kthread+0x348/0x420 kernel/kthread.c:246
- [<ffffffff84400266>] ret_from_fork+0x56/0x70 arch/x86/entry/entry_64.S:393
+thanks,
 
-Fixes: ba35f8588f47 (“ipvlan: Defer multicast / broadcast processing to a work-queue”)
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ipvlan/ipvlan_core.c |    1 +
- 1 file changed, 1 insertion(+)
+greg k-h
 
---- a/drivers/net/ipvlan/ipvlan_core.c
-+++ b/drivers/net/ipvlan/ipvlan_core.c
-@@ -277,6 +277,7 @@ void ipvlan_process_multicast(struct wor
- 			}
- 			ipvlan_count_rx(ipvlan, len, ret == NET_RX_SUCCESS, true);
- 			local_bh_enable();
-+			cond_resched_rcu();
- 		}
- 		rcu_read_unlock();
- 
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.26-rc1
+
+Karsten Graul <kgraul@linux.ibm.com>
+    net/smc: cancel event worker during device removal
+
+Karsten Graul <kgraul@linux.ibm.com>
+    net/smc: check for valid ib_client_data
+
+Eric Dumazet <edumazet@google.com>
+    ipv6: restrict IPV6_ADDRFORM operation
+
+Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+    iommu/amd: Fix IOMMU AVIC not properly update the is_run bit in IRTE
+
+Wolfram Sang <wsa+renesas@sang-engineering.com>
+    i2c: acpi: put device when verifying client fails
+
+Daniel Drake <drake@endlessm.com>
+    iommu/vt-d: Ignore devices with out-of-spec domain number
+
+Zhenzhong Duan <zhenzhong.duan@gmail.com>
+    iommu/vt-d: Fix the wrong printing in RHSA parsing
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nft_chain_nat: inet family is missing module ownership
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nf_tables: dump NFTA_CHAIN_FLAGS attribute
+
+Jakub Kicinski <kuba@kernel.org>
+    netfilter: nft_tunnel: add missing attribute validation for tunnels
+
+Jakub Kicinski <kuba@kernel.org>
+    netfilter: nft_payload: add missing attribute validation for payload csum flags
+
+Jakub Kicinski <kuba@kernel.org>
+    netfilter: cthelper: add missing attribute validation for cthelper
+
+Tommi Rantala <tommi.t.rantala@nokia.com>
+    perf bench futex-wake: Restore thread count default to online CPU count
+
+Jakub Kicinski <kuba@kernel.org>
+    nl80211: add missing attribute validation for channel switch
+
+Jakub Kicinski <kuba@kernel.org>
+    nl80211: add missing attribute validation for beacon report scanning
+
+Jakub Kicinski <kuba@kernel.org>
+    nl80211: add missing attribute validation for critical protocol indication
+
+Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+    i2c: gpio: suppress error on probe defer
+
+Qian Cai <cai@lca.pw>
+    iommu/vt-d: Fix RCU-list bugs in intel_iommu_init()
+
+Christoph Hellwig <hch@lst.de>
+    driver code: clarify and fix platform device DMA mask allocation
+
+Zhenyu Wang <zhenyuw@linux.intel.com>
+    drm/i915/gvt: Fix unnecessary schedule timer when no vGPU exits
+
+Charles Keepax <ckeepax@opensource.cirrus.com>
+    pinctrl: core: Remove extra kref_get which blocks hogs being freed
+
+Tina Zhang <tina.zhang@intel.com>
+    drm/i915/gvt: Fix dma-buf display blur issue on CFL
+
+Suman Anna <s-anna@ti.com>
+    virtio_ring: Fix mem leak with vring_new_virtqueue()
+
+Leonard Crestez <leonard.crestez@nxp.com>
+    pinctrl: imx: scu: Align imx sc msg structs to 4
+
+Nicolas Belin <nbelin@baylibre.com>
+    pinctrl: meson-gxl: fix GPIOX sdio pins
+
+Anson Huang <Anson.Huang@nxp.com>
+    clk: imx8mn: Fix incorrect clock defines
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Don't schedule OGM for disabled interface
+
+Yonghyun Hwang <yonghyun@google.com>
+    iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys() for huge page
+
+Amol Grover <frextrite@gmail.com>
+    iommu/vt-d: Fix RCU list debugging warnings
+
+Hans de Goede <hdegoede@redhat.com>
+    iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_taint
+
+Marc Zyngier <maz@kernel.org>
+    iommu/dma: Fix MSI reservation allocation
+
+Tony Luck <tony.luck@intel.com>
+    x86/mce: Fix logic and comments around MSR_PPIN_CTL
+
+Kim Phillips <kim.phillips@amd.com>
+    perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
+
+Felix Fietkau <nbd@nbd.name>
+    mt76: fix array overflow on receiving too many fragments for a packet
+
+Jarkko Nikula <jarkko.nikula@linux.intel.com>
+    i2c: designware-pci: Fix BUG_ON during device removal
+
+Vladis Dronov <vdronov@redhat.com>
+    efi: Add a sanity check to efivar_store_raw()
+
+Vladis Dronov <vdronov@redhat.com>
+    efi: Fix a race and a buffer overflow while reading efivars via sysfs
+
+Tom Lendacky <thomas.lendacky@amd.com>
+    x86/ioremap: Map EFI runtime services data as encrypted for SEV
+
+Wolfram Sang <wsa@the-dreams.de>
+    macintosh: windfarm: fix MODINFO regression
+
+Eric Biggers <ebiggers@google.com>
+    fscrypt: don't evict dirty inodes after removing key
+
+Tejun Heo <tj@kernel.org>
+    blk-iocost: fix incorrect vtime comparison in iocg_is_idle()
+
+Takashi Iwai <tiwai@suse.de>
+    ipmi_si: Avoid spurious errors for optional IRQs
+
+Stefan Haberland <sth@linux.ibm.com>
+    s390/dasd: fix data corruption for thin provisioned devices
+
+Miklos Szeredi <mszeredi@redhat.com>
+    fuse: fix stack use after return
+
+Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+    ARC: define __ALIGN_STR and __ALIGN symbols for ARC
+
+Vitaly Kuznetsov <vkuznets@redhat.com>
+    KVM: nVMX: avoid NULL pointer dereference with incorrect EVMCS GPAs
+
+Vitaly Kuznetsov <vkuznets@redhat.com>
+    KVM: x86: clear stale x86_emulate_ctxt->intercept value
+
+Al Viro <viro@zeniv.linux.org.uk>
+    gfs2_atomic_open(): fix O_EXCL|O_CREAT handling on cold dcache
+
+Al Viro <viro@zeniv.linux.org.uk>
+    cifs_atomic_open(): fix double-put on late allocation failure
+
+Steven Rostedt (VMware) <rostedt@goodmis.org>
+    ktest: Add timeout for ssh sync testing
+
+Mathias Kresin <dev@kresin.me>
+    pinctrl: falcon: fix syntax error
+
+Ben Chuang <ben.chuang@genesyslogic.com.tw>
+    mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    drm/i915: Defer semaphore priority bumping to a workqueue
+
+Matthew Auld <matthew.auld@intel.com>
+    drm/i915: be more solid in checking the alignment
+
+Colin Ian King <colin.king@canonical.com>
+    drm/amd/display: remove duplicated assignment to grph_obj_type
+
+Hillf Danton <hdanton@sina.com>
+    workqueue: don't use wq_select_unbound_cpu() for bound works
+
+Vasily Averin <vvs@virtuozzo.com>
+    netfilter: x_tables: xt_mttg_seq_next should increase position index
+
+Vasily Averin <vvs@virtuozzo.com>
+    netfilter: xt_recent: recent_seq_next should increase position index
+
+Vasily Averin <vvs@virtuozzo.com>
+    netfilter: synproxy: synproxy_cpu_seq_next should increase position index
+
+Vasily Averin <vvs@virtuozzo.com>
+    netfilter: nf_conntrack: ct_cpu_seq_next should increase position index
+
+Hans de Goede <hdegoede@redhat.com>
+    iommu/vt-d: quirk_ioat_snb_local_iommu: replace WARN_TAINT with pr_warn + add_taint
+
+Halil Pasic <pasic@linux.ibm.com>
+    virtio-blk: fix hw_queue stopped on arbitrary error
+
+Dan Moulding <dmoulding@me.com>
+    iwlwifi: mvm: Do not require PHY_SKU NVM section for 3168 devices
+
+Florian Westphal <fw@strlen.de>
+    netfilter: nf_tables: fix infinite loop when expr is not available
+
+Michal Koutný <mkoutny@suse.com>
+    cgroup: Iterate tasks that did not finish do_exit()
+
+Vasily Averin <vvs@virtuozzo.com>
+    cgroup: cgroup_procs_next should increase position index
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: phy: Avoid multiple suspends
+
+Andrew Lunn <andrew@lunn.ch>
+    net: dsa: Don't instantiate phylink for CPU/DSA ports unless needed
+
+Hangbin Liu <liuhangbin@gmail.com>
+    selftests/net/fib_tests: update addr_metric_test for peer route testing
+
+Hangbin Liu <liuhangbin@gmail.com>
+    net/ipv6: remove the old peer route if change it to a new one
+
+Hangbin Liu <liuhangbin@gmail.com>
+    net/ipv6: need update peer route when modify metric
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: phy: fix MDIO bus PM PHY resuming
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: phy: avoid clearing PHY interrupts twice in irq handler
+
+Jakub Kicinski <kuba@kernel.org>
+    nfc: add missing attribute validation for vendor subcommand
+
+Jakub Kicinski <kuba@kernel.org>
+    nfc: add missing attribute validation for deactivate target
+
+Jakub Kicinski <kuba@kernel.org>
+    nfc: add missing attribute validation for SE API
+
+Jakub Kicinski <kuba@kernel.org>
+    tipc: add missing attribute validation for MTU property
+
+Jakub Kicinski <kuba@kernel.org>
+    team: add missing attribute validation for array index
+
+Jakub Kicinski <kuba@kernel.org>
+    team: add missing attribute validation for port ifindex
+
+Jakub Kicinski <kuba@kernel.org>
+    net: taprio: add missing attribute validation for txtime delay
+
+Jakub Kicinski <kuba@kernel.org>
+    net: fq: add missing attribute validation for orphan mask
+
+Jakub Kicinski <kuba@kernel.org>
+    macsec: add missing attribute validation for port
+
+Jakub Kicinski <kuba@kernel.org>
+    can: add missing attribute validation for termination
+
+Jakub Kicinski <kuba@kernel.org>
+    nl802154: add missing attribute validation for dev_type
+
+Jakub Kicinski <kuba@kernel.org>
+    nl802154: add missing attribute validation
+
+Jakub Kicinski <kuba@kernel.org>
+    fib: add missing attribute validation for tun_id
+
+Jakub Kicinski <kuba@kernel.org>
+    devlink: validate length of region addr/len
+
+Jakub Kicinski <kuba@kernel.org>
+    devlink: validate length of param values
+
+Eric Dumazet <edumazet@google.com>
+    net: memcg: fix lockdep splat in inet_csk_accept()
+
+Shakeel Butt <shakeelb@google.com>
+    net: memcg: late association of sock to memcg
+
+Shakeel Butt <shakeelb@google.com>
+    cgroup: memcg: net: do not associate sock with unrelated cgroup
+
+Edwin Peer <edwin.peer@broadcom.com>
+    bnxt_en: fix error handling when flashing from file
+
+Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+    bnxt_en: reinitialize IRQs when MTU is modified
+
+Eric Dumazet <edumazet@google.com>
+    bonding/alb: make sure arp header is pulled before accessing it
+
+Vinicius Costa Gomes <vinicius.gomes@intel.com>
+    taprio: Fix sending packets without dequeueing them
+
+Eric Dumazet <edumazet@google.com>
+    slip: make slhc_compress() more robust against malicious packets
+
+Edward Cree <ecree@solarflare.com>
+    sfc: detach from cb_page in efx_copy_channel()
+
+You-Sheng Yang <vicamo.yang@canonical.com>
+    r8152: check disconnect status after long sleep
+
+Colin Ian King <colin.king@canonical.com>
+    net: systemport: fix index check to avoid an array out of bounds access
+
+Remi Pommarel <repk@triplefau.lt>
+    net: stmmac: dwmac1000: Disable ACS if enhanced descs are not used
+
+Jonas Gorski <jonas.gorski@gmail.com>
+    net: phy: bcm63xx: fix OOPS due to missing driver name
+
+Willem de Bruijn <willemb@google.com>
+    net/packet: tpacket_rcv: do not increment ring index on drop
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    net: nfc: fix bounds checking bugs on "pipe"
+
+Dmitry Bogdanov <dbogdanov@marvell.com>
+    net: macsec: update SCI upon MAC address change.
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netlink: Use netlink header as base to calculate bad attribute offset
+
+Hangbin Liu <liuhangbin@gmail.com>
+    net/ipv6: use configured metric when add peer route
+
+Jian Shen <shenjian15@huawei.com>
+    net: hns3: fix a not link up issue when fibre port supports autoneg
+
+Jakub Kicinski <kuba@kernel.org>
+    net: fec: validate the new settings in fec_enet_set_coalesce()
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    net: dsa: mv88e6xxx: fix lockup on warm boot
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    net: dsa: fix phylink_start()/phylink_stop() calls
+
+Mahesh Bandewar <maheshb@google.com>
+    macvlan: add cond_resched() during multicast processing
+
+Mahesh Bandewar <maheshb@google.com>
+    ipvlan: don't deref eth hdr before checking it's set
+
+Eric Dumazet <edumazet@google.com>
+    ipvlan: do not use cond_resched_rcu() in ipvlan_process_multicast()
+
+Jiri Wiesner <jwiesner@suse.com>
+    ipvlan: do not add hardware address of master to its unicast filter list
+
+Mahesh Bandewar <maheshb@google.com>
+    ipvlan: add cond_resched_rcu() while processing muticast backlog
+
+Hangbin Liu <liuhangbin@gmail.com>
+    ipv6/addrconf: call ipv6_mc_up() for non-Ethernet interface
+
+Dmitry Yakunin <zeil@yandex-team.ru>
+    inet_diag: return classid for all socket types
+
+Eric Dumazet <edumazet@google.com>
+    gre: fix uninit-value in __iptunnel_pull_header
+
+Dmitry Yakunin <zeil@yandex-team.ru>
+    cgroup, netclassid: periodically release file_lock on classid updating
+
+Kailang Yang <kailang@realtek.com>
+    ALSA: hda/realtek - Fixed one of HP ALC671 platform Headset Mic supported
+
+Kailang Yang <kailang@realtek.com>
+    ALSA: hda/realtek - Add Headset Mic supported for HP cPC
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek - More constifications
+
+Nathan Chancellor <natechancellor@gmail.com>
+    virtio_balloon: Adjust label in virtballoon_probe
+
+
+-------------
+
+Diffstat:
+
+ Documentation/filesystems/porting.rst              |   8 +
+ Makefile                                           |   4 +-
+ arch/arc/include/asm/linkage.h                     |   2 +
+ arch/x86/events/amd/uncore.c                       |  17 +--
+ arch/x86/kernel/cpu/mce/intel.c                    |   9 +-
+ arch/x86/kvm/emulate.c                             |   1 +
+ arch/x86/kvm/vmx/nested.c                          |   5 +-
+ arch/x86/mm/ioremap.c                              |  18 +++
+ block/blk-iocost.c                                 |   2 +-
+ drivers/base/platform.c                            |  25 +---
+ drivers/block/virtio_blk.c                         |   8 +-
+ drivers/char/ipmi/ipmi_si_platform.c               |   4 +-
+ drivers/firmware/efi/efivars.c                     |  32 ++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c       |   3 +-
+ drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c     |   3 +-
+ drivers/gpu/drm/i915/gvt/display.c                 |   3 +-
+ drivers/gpu/drm/i915/gvt/vgpu.c                    |  12 +-
+ drivers/gpu/drm/i915/i915_request.c                |  22 ++-
+ drivers/gpu/drm/i915/i915_request.h                |   2 +
+ drivers/gpu/drm/i915/i915_utils.h                  |   5 +
+ drivers/i2c/busses/i2c-designware-pcidrv.c         |   1 +
+ drivers/i2c/busses/i2c-gpio.c                      |   2 +-
+ drivers/i2c/i2c-core-acpi.c                        |  10 +-
+ drivers/iommu/amd_iommu.c                          |   4 +-
+ drivers/iommu/dma-iommu.c                          |  16 +-
+ drivers/iommu/dmar.c                               |  21 ++-
+ drivers/iommu/intel-iommu.c                        |  18 ++-
+ drivers/macintosh/windfarm_ad7417_sensor.c         |   7 +
+ drivers/macintosh/windfarm_fcu_controls.c          |   7 +
+ drivers/macintosh/windfarm_lm75_sensor.c           |  16 +-
+ drivers/macintosh/windfarm_lm87_sensor.c           |   7 +
+ drivers/macintosh/windfarm_max6690_sensor.c        |   7 +
+ drivers/macintosh/windfarm_smu_sat.c               |   7 +
+ drivers/mmc/host/sdhci-pci-gli.c                   |  17 +++
+ drivers/net/bonding/bond_alb.c                     |  20 +--
+ drivers/net/can/dev.c                              |   1 +
+ drivers/net/dsa/mv88e6xxx/global2.c                |   8 +-
+ drivers/net/ethernet/broadcom/bcmsysport.c         |   2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c          |   4 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c  |  24 ++-
+ drivers/net/ethernet/freescale/fec_main.c          |   6 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |   4 +-
+ drivers/net/ethernet/sfc/efx.c                     |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |   3 +-
+ drivers/net/ipvlan/ipvlan_core.c                   |  19 ++-
+ drivers/net/ipvlan/ipvlan_main.c                   |   5 +-
+ drivers/net/macsec.c                               |  12 +-
+ drivers/net/macvlan.c                              |   2 +
+ drivers/net/phy/bcm63xx.c                          |   1 +
+ drivers/net/phy/phy.c                              |   3 +-
+ drivers/net/phy/phy_device.c                       |  11 +-
+ drivers/net/slip/slhc.c                            |  14 +-
+ drivers/net/team/team.c                            |   2 +
+ drivers/net/usb/r8152.c                            |   8 +
+ drivers/net/wireless/intel/iwlwifi/mvm/nvm.c       |   3 +-
+ drivers/net/wireless/mediatek/mt76/dma.c           |   9 +-
+ drivers/pinctrl/core.c                             |   1 -
+ drivers/pinctrl/freescale/pinctrl-scu.c            |   4 +-
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c          |   4 +-
+ drivers/pinctrl/pinctrl-falcon.c                   |   2 +-
+ drivers/s390/block/dasd.c                          |  27 +++-
+ drivers/s390/block/dasd_eckd.c                     | 163 ++++++++++++++++++++-
+ drivers/s390/block/dasd_int.h                      |  15 +-
+ drivers/virtio/virtio_balloon.c                    |   2 +-
+ drivers/virtio/virtio_ring.c                       |   4 +-
+ fs/cifs/dir.c                                      |   1 -
+ fs/crypto/keysetup.c                               |   9 ++
+ fs/fuse/dev.c                                      |   6 +-
+ fs/fuse/fuse_i.h                                   |   2 +
+ fs/gfs2/inode.c                                    |   2 +-
+ fs/open.c                                          |   3 -
+ include/dt-bindings/clock/imx8mn-clock.h           |   4 +-
+ include/linux/cgroup.h                             |   1 +
+ include/linux/dmar.h                               |   8 +-
+ include/linux/inet_diag.h                          |  18 ++-
+ include/linux/phy.h                                |   3 +
+ include/linux/platform_device.h                    |   2 +-
+ include/net/fib_rules.h                            |   1 +
+ kernel/cgroup/cgroup.c                             |  37 +++--
+ kernel/workqueue.c                                 |  14 +-
+ mm/memcontrol.c                                    |  14 +-
+ net/batman-adv/bat_iv_ogm.c                        |   4 +
+ net/core/devlink.c                                 |  33 +++--
+ net/core/netclassid_cgroup.c                       |  47 ++++--
+ net/core/sock.c                                    |   5 +-
+ net/dsa/dsa_priv.h                                 |   2 +
+ net/dsa/port.c                                     |  44 ++++--
+ net/dsa/slave.c                                    |   8 +-
+ net/ieee802154/nl_policy.c                         |   6 +
+ net/ipv4/gre_demux.c                               |  12 +-
+ net/ipv4/inet_connection_sock.c                    |  20 +++
+ net/ipv4/inet_diag.c                               |  44 +++---
+ net/ipv4/raw_diag.c                                |   5 +-
+ net/ipv4/udp_diag.c                                |   5 +-
+ net/ipv6/addrconf.c                                |  51 +++++--
+ net/ipv6/ipv6_sockglue.c                           |  10 +-
+ net/netfilter/nf_conntrack_standalone.c            |   2 +-
+ net/netfilter/nf_synproxy_core.c                   |   2 +-
+ net/netfilter/nf_tables_api.c                      |  15 +-
+ net/netfilter/nfnetlink_cthelper.c                 |   2 +
+ net/netfilter/nft_chain_nat.c                      |   1 +
+ net/netfilter/nft_payload.c                        |   1 +
+ net/netfilter/nft_tunnel.c                         |   2 +
+ net/netfilter/x_tables.c                           |   6 +-
+ net/netfilter/xt_recent.c                          |   2 +-
+ net/netlink/af_netlink.c                           |   2 +-
+ net/nfc/hci/core.c                                 |  19 ++-
+ net/nfc/netlink.c                                  |   4 +
+ net/packet/af_packet.c                             |  13 +-
+ net/sched/sch_fq.c                                 |   1 +
+ net/sched/sch_taprio.c                             |  13 +-
+ net/sctp/diag.c                                    |   8 +-
+ net/smc/smc_ib.c                                   |   3 +
+ net/tipc/netlink.c                                 |   1 +
+ net/wireless/nl80211.c                             |   5 +
+ sound/pci/hda/patch_realtek.c                      | 163 +++++++++++++--------
+ tools/perf/bench/futex-wake.c                      |   4 +-
+ tools/testing/ktest/ktest.pl                       |   2 +-
+ tools/testing/selftests/net/fib_tests.sh           |  34 ++++-
+ 119 files changed, 1038 insertions(+), 397 deletions(-)
 
 
