@@ -2,101 +2,108 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAD7C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F295C0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA731206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584407086;
-	bh=Wbg6Rtk1wpx3tRDX+mqiJ9Yo99G3T/nP1fANeE8dp70=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=v4FMgGsBKcMwRJjsXmIJSoOwa87/mRKoBhD2+aSJy/FMlTUQDfjuiGqO9IkHeszCy
-	 jGVjUs5T9TNLW1eDklEcW9D6P7NUIpI41XxPtJoviW5iBiRvPOvyG6dVX5Evx++plZ
-	 IWG3yzVOG+T+hF9EC4nD0DxvE51/LW79yyBAmjzM=
+	by mail.kernel.org (Postfix) with ESMTP id 5FCF62051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbgCQBEW (ORCPT
+        id S2387515AbgCQBFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733193AbgCQBEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:04:22 -0400
-Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1446B2051A;
-        Tue, 17 Mar 2020 01:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584407061;
-        bh=Wbg6Rtk1wpx3tRDX+mqiJ9Yo99G3T/nP1fANeE8dp70=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YlR9DmTVHpktl51bYvDFEyWMXYC/6VEgdI2H+AOnvQ2Mgbn82paCF0OEB3MOgVZw0
-         5fyescRl7tZnQCBVOtVJA7G241wu5uypm5skLLU5N/tuaItA4jcUM0vlghUxDS/6R9
-         JxWPxgPznbd7LZFX/c2vNOJz0MGPGy75v6rIBamQ=
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     shuah@kernel.org, keescook@chromium.org
-Cc:     luto@amacapital.net, wad@chromium.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Tim.Bird@sony.com, Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH v4 0/5] kselftest: add fixture parameters
-Date:   Mon, 16 Mar 2020 18:04:14 -0700
-Message-Id: <20200317010419.3268916-1-kuba@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Mon, 16 Mar 2020 21:05:04 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:9749 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387413AbgCQBFD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:05:03 -0400
+X-IronPort-AV: E=Sophos;i="5.70,562,1574092800"; 
+   d="scan'208";a="86431452"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 17 Mar 2020 09:05:00 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id CD3CE50A9967;
+        Tue, 17 Mar 2020 08:54:53 +0800 (CST)
+Received: from [10.167.220.69] (10.167.220.69) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 17 Mar 2020 09:04:56 +0800
+Message-ID: <5E702236.8070109@cn.fujitsu.com>
+Date:   Tue, 17 Mar 2020 09:04:54 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
+To:     <yamada.masahiro@socionext.com>, <michal.lkml@markovi.net>
+CC:     Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] modpost: Get proper section index by get_secindex() instead
+ of st_shndx
+References: <20200316122820.11032-1-yangx.jy@cn.fujitsu.com>
+In-Reply-To: <20200316122820.11032-1-yangx.jy@cn.fujitsu.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.220.69]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: CD3CE50A9967.AB563
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On 2020/3/16 20:28, Xiao Yang wrote:
+> (uint16_t) st_shndx is limited to 65535(i.e. SHN_XINDEX) so sym_get_data() gets
+> wrong section index by st_shndx if object file(e.g. vmlinux.o) has more than
+Hi,
 
-Shuah please consider applying to the kselftest tree.
+It seems better to say that sym_get_data() gets wrong section index by 
+st_shndx if requested symbol contains extended section index that is 
+more than 65535.
 
-This set is an attempt to make running tests for different
-sets of data easier. The direct motivation is the tls
-test which we'd like to run for TLS 1.2 and TLS 1.3,
-but currently there is no easy way to invoke the same
-tests with different parameters.
+Thanks,
+Xiao Yang
+> 65535 sessions.  In this case, we need to get proper section index by .symtab_shndx
+> section.
+>
+> Module.symvers generated by building kernel with "-ffunction-sections -fdata-sections"
+> shows the issue(i.e. cannot get 89902 by st_shndx):
+> -------------------------------------------------------------------
+> [root@Fedora-30 linux]# file Module.symvers
+> Module.symvers: data
+> [root@Fedora-30 linux]# head -n1 Module.symvers
+> 0x5caf3011      ipv6_chk_custom_prefix  ▒▒▒▒▒▒▒▒        vmlinux EXPORT_SYMBOL
+> ...
+> [root@Fedora-30 linux]# readelf -s -W vmlinux.o | grep __kstrtabns_ipv6_chk_custom_prefix
+> 199174: 0000000000032578     1 OBJECT  LOCAL  DEFAULT 89902 __kstrtabns_ipv6_chk_custom_prefix
+> [root@Fedora-30 linux]# readelf -S -W vmlinux.o | grep 89902
+>    [89902] __ksymtab_strings PROGBITS        0000000000000000 a94e00 0345a2 00   A  0   0  1
+> -------------------------------------------------------------------
+>
+> Fixes: afa0459daa7b ("modpost: add a helper to get data pointed by a symbol")
+> Fixes: 5545322c86d9 ("modpost: refactor namespace_from_kstrtabns() to not hard-code section name")
+> Signed-off-by: Xiao Yang<yangx.jy@cn.fujitsu.com>
+> ---
+>   scripts/mod/modpost.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index d9418c58a8c0..c1fec8cac257 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -310,7 +310,8 @@ static const char *sec_name(struct elf_info *elf, int secindex)
+>
+>   static void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym)
+>   {
+> -	Elf_Shdr *sechdr =&info->sechdrs[sym->st_shndx];
+> +	unsigned int secindex = get_secindex(info, sym);
+> +	Elf_Shdr *sechdr =&info->sechdrs[secindex];
+>   	unsigned long offset;
+>
+>   	offset = sym->st_value;
 
-Tested all users of kselftest_harness.h.
 
-v2:
- - don't run tests by fixture
- - don't pass params as an explicit argument
-
-v3:
- - go back to the orginal implementation with an extra
-   parameter, and running by fixture (Kees);
- - add LIST_APPEND helper (Kees);
- - add a dot between fixture and param name (Kees);
- - rename the params to variants (Tim);
-
-v4:
- - whitespace fixes.
-
-v1: https://lore.kernel.org/netdev/20200313031752.2332565-1-kuba@kernel.org/
-v2: https://lore.kernel.org/netdev/20200314005501.2446494-1-kuba@kernel.org/
-v3: https://lore.kernel.org/netdev/20200316225647.3129354-1-kuba@kernel.org/
-
-Jakub Kicinski (5):
-  kselftest: factor out list manipulation to a helper
-  kselftest: create fixture objects
-  kselftest: run tests by fixture
-  kselftest: add fixture variants
-  selftests: tls: run all tests for TLS 1.2 and TLS 1.3
-
- Documentation/dev-tools/kselftest.rst       |   3 +-
- tools/testing/selftests/kselftest_harness.h | 236 +++++++++++++++-----
- tools/testing/selftests/net/tls.c           |  93 ++------
- 3 files changed, 204 insertions(+), 128 deletions(-)
-
--- 
-2.24.1
 
