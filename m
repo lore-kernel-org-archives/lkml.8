@@ -2,169 +2,124 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49599C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548A3C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17227206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A94206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="rDNtGB7s"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Y+uImdpO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgCQKcE (ORCPT
+        id S1726192AbgCQKcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:32:04 -0400
-Received: from mail-eopbgr1400099.outbound.protection.outlook.com ([40.107.140.99]:58596
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725730AbgCQKcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:32:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TiSBUcrr4bjwM7KPwb5yat0MnuqWWqC2EepXhTV7YvlHMtTO0o3/E6ak/ObYr8r1orw8REEdhRur3syRrHYT5LDwhbrA+CaCrTzCK2LD45iRKmGjufiV1K4vBkcxDRGjF9AOG3QjD447uGZZsVGptZlBjJMRTsR31NBgMxzym58R9qE20HfaLvUqNBc5c6x+lEQWmwXayybPiA1fZTbPL5ia6J4LfUhz06y00b2Dvk0KALKiArEiZFc6Zps7HhljTRBnN04YpLlspuENLTD9ih/KOWdl+L/AWgFcwq405cX9PulyjGLcQGDX1Tkli1KYFLAco8kxOng7KiB45ZPcAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eu8UK+Jfc4WoPTx5eJLlb5g59gTziksrjZufXPvKPmg=;
- b=RlMJWXkHSpY+ww+t81hf5Ijx9yy3dH7fV1cIQOiXmd+Gn6p5m3FBmRHS0zJ2V9pmPaQNT5gd9Fgp2U8eEJ6g7eeawg7ZW6ZDE7vBn41MbpvcjRikcyxEJ4zQVt6TWMh491xXDUTTuWXvL9f7NUoRPrvIU+j8/sUPbim985h6fjiIbN2a9M9LVPB7c/40zFNNubBHtAp/2V/2abHEduFU2Ki5k0+XD8mcBPWyG0JDwoKf2wGKxD/nCiWIn0p7TqF8FMkiYTibE38bv7dH/5FGBl/M11s6Wnvx0dWCjkL/qtGOmKvDUjKqAk9cO0fX0V+f0oDMDiVTVdwche0WphIb3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eu8UK+Jfc4WoPTx5eJLlb5g59gTziksrjZufXPvKPmg=;
- b=rDNtGB7s6aqNn3RXFVeQOO9/w6kM/0AlsnrNqGyPiSpkJL87xX1iazfqosKjVmsbEt8TxDkocbOFmXYbnJTaebzVgQl+HgowSAe02jcY/LpYN7RwmNYcdJnNFWzHyzNFLQx0b5GvOP3dWprsMoJfrr/RwiVj3VAVsPW/5K3hlS8=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB2909.jpnprd01.prod.outlook.com (20.177.104.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.15; Tue, 17 Mar 2020 10:31:59 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 10:31:58 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-CC:     Andrew Murray <andrew.murray@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: RE: [PATCH v5 7/7] misc: pci_endpoint_test: Add Device ID for RZ/G2E
- PCIe controller
-Thread-Topic: [PATCH v5 7/7] misc: pci_endpoint_test: Add Device ID for RZ/G2E
- PCIe controller
-Thread-Index: AQHV7k2qI6asQ7deFUG6PTswsFNMeqhMr50A
-Date:   Tue, 17 Mar 2020 10:31:58 +0000
-Message-ID: <TYAPR01MB45441E4766FD57506A5B9F98D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200228154122.14164-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200228154122.14164-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dc60be62-cd83-4385-3346-08d7ca5e6c4a
-x-ms-traffictypediagnostic: TYAPR01MB2909:|TYAPR01MB2909:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB2909D1E180965EE442FA1A72D8F60@TYAPR01MB2909.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(199004)(7416002)(4326008)(2906002)(66946007)(316002)(76116006)(66476007)(66556008)(66446008)(64756008)(6916009)(9686003)(33656002)(5660300002)(55016002)(26005)(52536014)(186003)(478600001)(7696005)(6506007)(55236004)(86362001)(81156014)(8936002)(54906003)(71200400001)(81166006)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2909;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: v+Z6XA03ak9zirdqR98LV5G+L6woEeK3tSMU7Cezr3QhlfhAKRNAhFPorBbWIObzUNDWIVpa/Ub8ik8terMAqDxEcgjI7tyKRwCL6msl7Rmw+R/h1CO0Z9+FUkMzz+ITMvTD/hY6CF/4B53MjvB9z5BDkf1cIY/ttJ5f2Gw3FplPNgk6Hk7h0y8URqidbYmXkXhzl9yePfem6i1zxKu8VC3hgDqE5ogDDldSRBlo7EwpFBSpF9sXeP65+Q5EIKgobYt0QQ40WQcmEnSynsat7PmLtGRCCzAu1BN44fquSYVQY+HSqt0zBS+G/ytYgE5N0c7oTXVCoGkcKUg+07+64I6Z6ARAgqNz7rQmkT2BltHgi9mw4sXTbTwi9MymY/00i4MUh4jJy6oFoK53cuYiJBhOIumO7LHAny5m/8jOYgXBXcUROw/AS4SnC6KYTXzR
-x-ms-exchange-antispam-messagedata: cn++2yLtz0+nAfPMwGGSSxwW1dv+kEoIVupTtAz1fLbl+b4mwgFwvVYfo7tR1uWjxZ6M3DRdhjXtYSH3rgf6AgRJtWW9Xc0t9c7i0qA2NHiVIFqF4ICQrrvy0bb7N4vZ9wufkF73AGM3tisqKFfUOw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 17 Mar 2020 06:32:33 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:20861 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbgCQKcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:32:32 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48hTy568mKz9tyN5;
+        Tue, 17 Mar 2020 11:32:29 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Y+uImdpO; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id G4YSIjMRBAsW; Tue, 17 Mar 2020 11:32:29 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48hTy54mPkz9tyMf;
+        Tue, 17 Mar 2020 11:32:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1584441149; bh=LALR/zxUOMpA80nMDV+tOAog68wf9TQeChna0DpVIP8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Y+uImdpOvm80NjoOw1hEYQrZcmt+o0TWNpcdCxyqdIAy1AL3LIaurar0P8a7WyDTq
+         YDoaSdJ7NeRE5po/9Dr1T+x00Z7KyaYpRFrbxRdTtAphwtzMCMm6o12qVSYW2SSyU7
+         gObKIQhEuY7D2bej98VXXok6IRKA687LdQKsaovw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E71E8B786;
+        Tue, 17 Mar 2020 11:32:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id iCLhs1qlnk3o; Tue, 17 Mar 2020 11:32:30 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1DB818B785;
+        Tue, 17 Mar 2020 11:32:28 +0100 (CET)
+Subject: Re: [PATCH 07/15] powerpc/watchpoint: Get watchpoint count
+ dynamically while disabling them
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
+        mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
+ <20200309085806.155823-8-ravi.bangoria@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <c73b77fd-b983-2c5c-75bb-4b2f47a94d92@c-s.fr>
+Date:   Tue, 17 Mar 2020 11:32:26 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc60be62-cd83-4385-3346-08d7ca5e6c4a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 10:31:58.6804
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v6960+RUidK/DpGaBZTNvwjs9iSgZN1Xex9OkltPpzWMxmsF4+s/40+5ynpAbA2XMbkJdUhs/B6IyHhtND8L3y3xz++l1KaUKVlB+c/qvV0GbGpvyFn+fmp+T7/wk/Lj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2909
+In-Reply-To: <20200309085806.155823-8-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar-san,
 
-Thank you for the patch!
 
-> From: Lad Prabhakar, Sent: Saturday, February 29, 2020 12:41 AM
->=20
-> Add RZ/G2E in pci_device_id table so that pci-epf-test can be used for
-> testing PCIe EP in RZ/G2E.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Le 09/03/2020 à 09:57, Ravi Bangoria a écrit :
+> Instead of disabling only one watchpooint, get num of available
+> watchpoints dynamically and disable all of them.
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 > ---
->  drivers/misc/pci_endpoint_test.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint=
-_test.c
-> index a5e3170..3c84e9a 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -66,6 +66,8 @@
->=20
->  #define PCI_DEVICE_ID_TI_AM654			0xb00c
->=20
-> +#define PCI_DEVICE_ID_RENESAS_RZG2E		0x002d
+>   arch/powerpc/include/asm/hw_breakpoint.h | 15 +++++++--------
+>   1 file changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+> index 980ac7d9f267..ec61e2b7195c 100644
+> --- a/arch/powerpc/include/asm/hw_breakpoint.h
+> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
+> @@ -75,14 +75,13 @@ extern void ptrace_triggered(struct perf_event *bp,
+>   			struct perf_sample_data *data, struct pt_regs *regs);
+>   static inline void hw_breakpoint_disable(void)
+>   {
+> -	struct arch_hw_breakpoint brk;
+> -
+> -	brk.address = 0;
+> -	brk.type = 0;
+> -	brk.len = 0;
+> -	brk.hw_len = 0;
+> -	if (ppc_breakpoint_available())
+> -		__set_breakpoint(&brk, 0);
+> +	int i;
+> +	struct arch_hw_breakpoint null_brk = {0};
+> +
+> +	if (ppc_breakpoint_available()) {
 
-This define should be in include/linux/pci_ids.h, and adding
-the define should be separated.
-Also, I think "R8A774C0" is better than "RZG2E".
+I think this test should go into nr_wp_slots() which should return zero 
+when no breakpoint is available. This would simplify at least here and 
+patch 4
 
-Best regards,
-Yoshihiro Shimoda
+Christophe
 
->  #define is_am654_pci_dev(pdev)		\
->  		((pdev)->device =3D=3D PCI_DEVICE_ID_TI_AM654)
->=20
-> @@ -797,6 +799,7 @@ static const struct pci_device_id pci_endpoint_test_t=
-bl[] =3D {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
->  	  .driver_data =3D (kernel_ulong_t)&am654_data
->  	},
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_RZG2E) },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
-> --
-> 2.7.4
-
+> +		for (i = 0; i < nr_wp_slots(); i++)
+> +			__set_breakpoint(&null_brk, i);
+> +	}
+>   }
+>   extern void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs);
+>   int hw_breakpoint_handler(struct die_args *args);
+> 
