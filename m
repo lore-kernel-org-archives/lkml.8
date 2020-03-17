@@ -2,82 +2,91 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A805CC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6119C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAA220735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584470935;
-	bh=gGV1ItYxNQ6tY67FPy0h+CFqjiIH3Jj4TqMkX5acqCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2nxb4gGEbywAEvJLTSEd350A2xSFQFlPAXtZwcpyil4z0NDCPXSWFCe/+SLEGCfjq
-	 1Oce+/PSILJZUwizwKvV99+rTswlpw6w38a+LsxK2OdEFKLpGujhBagdsZZB6vxsVO
-	 2g+Z++e+EXvUOFOqY/YpUes/YDKI20WJwpxraJNg=
+	by mail.kernel.org (Postfix) with ESMTP id BCBFD20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgCQSsy (ORCPT
+        id S1726756AbgCQSt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 14:49:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:41546 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgCQSsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:48:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B851420724;
-        Tue, 17 Mar 2020 18:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584470933;
-        bh=gGV1ItYxNQ6tY67FPy0h+CFqjiIH3Jj4TqMkX5acqCA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zko1XOTxt4aT2xvx5Olsk3hD1VHMQuKfHG0S8hxhqNlIJ2CWrE9YAswDXeSQF4hpc
-         1pJC2r8FglzvsjEe8X2y2I6HMckPOiucIdvfBD/AAiyamuVQzbf3oi3EBrC//SvrUC
-         jTZWBScZTuV8yPWZlE0X3vGZuMwx05yWIsyaU7NQ=
-Date:   Tue, 17 Mar 2020 19:48:51 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Al Cooper <alcooperx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] usb: ehci: Add new EHCI driver for Broadcom STB SoC's
-Message-ID: <20200317184851.GA1470797@kroah.com>
-References: <20200313141545.31943-1-alcooperx@gmail.com>
- <20200313141545.31943-4-alcooperx@gmail.com>
+        id S1726452AbgCQSt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 14:49:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5557831B;
+        Tue, 17 Mar 2020 11:49:25 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F9F53F67D;
+        Tue, 17 Mar 2020 11:49:22 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 18:49:20 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
+Message-ID: <20200317184920.GI632169@arrakis.emea.arm.com>
+References: <20200316165055.31179-1-broonie@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313141545.31943-4-alcooperx@gmail.com>
+In-Reply-To: <20200316165055.31179-1-broonie@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 10:15:44AM -0400, Al Cooper wrote:
-> +static int __init ehci_brcm_init(void)
-> +{
-> +	if (usb_disabled())
-> +		return -ENODEV;
-> +
-> +	pr_info("%s: " BRCM_DRIVER_DESC "\n", brcm_hcd_name);
+On Mon, Mar 16, 2020 at 04:50:42PM +0000, Mark Brown wrote:
+> Daniel Kiss (1):
+>   mm: smaps: Report arm64 guarded pages in smaps
+> 
+> Dave Martin (11):
+>   ELF: UAPI and Kconfig additions for ELF program properties
+>   ELF: Add ELF program property parsing support
+>   arm64: Basic Branch Target Identification support
+>   elf: Allow arch to tweak initial mmap prot flags
+>   arm64: elf: Enable BTI at exec based on ELF program properties
+>   arm64: BTI: Decode BYTPE bits when printing PSTATE
+>   arm64: unify native/compat instruction skipping
+>   arm64: traps: Shuffle code to eliminate forward declarations
+>   arm64: BTI: Reset BTYPE when skipping emulated instructions
+>   KVM: arm64: BTI: Reset BTYPE when skipping emulated instructions
+>   arm64: BTI: Add Kconfig entry for userspace BTI
+> 
+> Mark Brown (1):
+>   arm64: mm: Display guarded pages in ptdump
 
-Drivers should be quiet if all is good, no need for this line.
+I provisionally pushed this patches to linux-next (and arm64
+for-next/bti).
 
-thanks,
+I'm not sure whether they'll make it into 5.7 yet (still missing acks on
+the fs/* changes) but at least they'll get some wider exposure,
+especially as they go outside arch/arm64/.
 
-greg k-h
+-- 
+Catalin
