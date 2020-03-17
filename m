@@ -2,289 +2,143 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B4DC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5664C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B424620724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:21:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=jlekstrand-net.20150623.gappssmtp.com header.i=@jlekstrand-net.20150623.gappssmtp.com header.b="YU13BVIr"
+	by mail.kernel.org (Postfix) with ESMTP id A073920724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgCQVVk (ORCPT
+        id S1726834AbgCQVZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:21:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42155 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgCQVVk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:21:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h8so12413244pgs.9
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 14:21:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jlekstrand-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jcoY8Zv5ldWOcQg9c9S82nSPUSBzSFSRHAdLvHZUCvo=;
-        b=YU13BVIrZ5/2E7dWu6Deuj2TkAksebpqKYWjq03Q2pwGLx5YETjkI/keI2njmjVtb9
-         6De3yh3kHxDzh59pqgVS89EJSJOQhF9bJqgt9idcLYtInaMyQmDZGJHT1RPNlIxkop5z
-         UhL3NYjCRf2Jd+Rrj/z1iZCG1Fz30todcoluOEGyzpb8PIIdwl0VLL0ujhvtXDnK6xCP
-         eT6ochriC7LKAzwYOB9kTIo79oAK/Xo3wZgZ1J3oNb7exyFiT09QUqIes1PBubRc+HQd
-         W63UWQ4g0NMcGgSL9iScCHBDtEv+mh7FL24/CyraNr/BmxoN9jkDU0+6EvnedPcHPmv4
-         x/Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jcoY8Zv5ldWOcQg9c9S82nSPUSBzSFSRHAdLvHZUCvo=;
-        b=MRRsabqV1wKlzNQav8IZc7g6dM/bVKeW3kVG2/nHUqWhkA1/DMsw0xga8uNkyk2wkE
-         0h40IVIlu8sEtljw/fjW/JyskGIeGZtGW6iptdoOo6i1Hfcy3dY5A/V21t39xQE7U3QA
-         F6XOObhFr17Rhz350aRyuUgflSsEyeq2d/B1g2DQpPsZoIYa3MWNLs1GD8Wfs3wh9A8N
-         OSwebTEO6ZebA41saBBhMiPKS+ZV82aBt5ga6ufoLvqL9lqOrmkRherJTCP3S91i9Ryo
-         C/TnwYni8+SiBLPU4CMp0QyQ6KFK7ManYCzn8M2G9N61s78gqkAb5xN22fzhDxtfD1z4
-         eiqg==
-X-Gm-Message-State: ANhLgQ2h1xkpJxH6Rdv6tSpF5CI29/YpPYSDGXtHzz9Ucpb2ICC4ZQ/5
-        K4e/O9R9D+BZUda2iaePVKGrsg==
-X-Google-Smtp-Source: ADFU+vtDMmPsTS80Fu9wPKROmr6woIdo1fBvmrAYDGmH5X8K6c6182n05bvtuifFjC6i93SF3P28DQ==
-X-Received: by 2002:a63:c445:: with SMTP id m5mr1150883pgg.194.1584480098604;
-        Tue, 17 Mar 2020 14:21:38 -0700 (PDT)
-Received: from omlet.com ([2605:6000:1026:c273::ce4])
-        by smtp.gmail.com with ESMTPSA id u5sm4185087pfb.153.2020.03.17.14.21.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 14:21:37 -0700 (PDT)
-From:   Jason Ekstrand <jason@jlekstrand.net>
-Cc:     airlied@redhat.com, christian.koenig@amd.com, jessehall@google.com,
-        jajones@nvidia.com, daniels@collabora.com, hoegsberg@google.com,
-        daniel.vetter@ffwll.ch, bas@basnieuwenhuizen.nl,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Chenbo Feng <fengc@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] RFC: dma-buf: Add an API for importing and exporting sync files (v5)
-Date:   Tue, 17 Mar 2020 16:21:14 -0500
-Message-Id: <20200317212115.419358-1-jason@jlekstrand.net>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200311034351.1275197-3-jason@jlekstrand.net>
-References: <20200311034351.1275197-3-jason@jlekstrand.net>
+        Tue, 17 Mar 2020 17:25:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31477 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbgCQVZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:25:01 -0400
+IronPort-SDR: RyGixqkKC6p8sV4oxza+7SFkPfj6EJauN0LFkzIsIJNAwf+RRnH5yh1KDEXEum2EZ/Ig5EZfto
+ wRM5qBKB1M8Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 14:25:00 -0700
+IronPort-SDR: E/XxKLvzbd76Edz4DBiEjgXjvB5DhmPwJNrjXVgFuhT1EfqbjKYf8TfObqf7cJrznNaIvQPf0J
+ AwSPLn0zck3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
+   d="scan'208";a="247961428"
+Received: from dslea-mobl.amr.corp.intel.com (HELO [10.251.3.73]) ([10.251.3.73])
+  by orsmga006.jf.intel.com with ESMTP; 17 Mar 2020 14:24:59 -0700
+Subject: Re: [PATCH] treewide: Rename "unencrypted" to "decrypted"
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Borislav Petkov <bp@suse.de>, lkml <linux-kernel@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Shutemov, Kirill" <kirill.shutemov@intel.com>
+References: <20200317111822.GA15609@zn.tnic>
+ <2cb4a8ae-3b13-67bd-c021-aee47fdf58c5@intel.com>
+ <20200317210602.GG15609@zn.tnic>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <f3e520c6-f455-9c82-abfc-d014ca63eeb5@intel.com>
+Date:   Tue, 17 Mar 2020 14:24:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200317210602.GG15609@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicit synchronization is the future.  At least, that seems to be what
-most userspace APIs are agreeing on at this point.  However, most of our
-Linux APIs (both userspace and kernel UAPI) are currently built around
-implicit synchronization with dma-buf.  While work is ongoing to change
-many of the userspace APIs and protocols to an explicit synchronization
-model, switching over piecemeal is difficult due to the number of
-potential components involved.  On the kernel side, many drivers use
-dma-buf including GPU (3D/compute), display, v4l, and others.  In
-userspace, we have X11, several Wayland compositors, 3D drivers, compute
-drivers (OpenCL etc.), media encode/decode, and the list goes on.
+On 3/17/20 2:06 PM, Borislav Petkov wrote:
+> On Tue, Mar 17, 2020 at 01:35:12PM -0700, Dave Hansen wrote:
+>> On 3/17/20 4:18 AM, Borislav Petkov wrote:
+>>> Back then when the whole SME machinery started getting mainlined, it
+>>> was agreed that for simplicity, clarity and sanity's sake, the terms
+>>> denoting encrypted and not-encrypted memory should be "encrypted" and
+>>> "decrypted". And the majority of the code sticks to that convention
+>>> except those two. So rename them.
+>> Don't "unencrypted" and "decrypted" mean different things?
+>>
+>> Unencrypted to me means "encryption was never used for this data".
+>>
+>> Decrypted means "this was/is encrypted but here is a plaintext copy".
+> Maybe but linguistical semantics is not the point here.
+> 
+> The idea is to represent a "binary" concept of memory being encrypted
+> or memory being not encrypted. And at the time we decided to use
+> "encrypted" and "decrypted" for those two things.
 
-This patch provides a path forward by allowing userspace to manually
-manage the fences attached to a dma-buf.  Alternatively, one can think
-of this as making dma-buf's implicit synchronization simply a carrier
-for an explicit fence.  This is accomplished by adding two IOCTLs to
-dma-buf for importing and exporting a sync file to/from the dma-buf.
-This way a userspace component which is uses explicit synchronization,
-such as a Vulkan driver, can manually set the write fence on a buffer
-before handing it off to an implicitly synchronized component such as a
-Wayland compositor or video encoder.  In this way, each of the different
-components can be upgraded to an explicit synchronization model one at a
-time as long as the userspace pieces connecting them are aware of it and
-import/export fences at the right times.
+Yeah, agreed.  We're basically trying to name "!encrypted".
 
-There is a potential race condition with this API if userspace is not
-careful.  A typical use case for implicit synchronization is to wait for
-the dma-buf to be ready, use it, and then signal it for some other
-component.  Because a sync_file cannot be created until it is guaranteed
-to complete in finite time, userspace can only signal the dma-buf after
-it has already submitted the work which uses it to the kernel and has
-received a sync_file back.  There is no way to atomically submit a
-wait-use-signal operation.  This is not, however, really a problem with
-this API so much as it is a problem with explicit synchronization
-itself.  The way this is typically handled is to have very explicit
-ownership transfer points in the API or protocol which ensure that only
-one component is using it at any given time.  Both X11 (via the PRESENT
-extension) and Wayland provide such ownership transfer points via
-explicit present and idle messages.
+> Do you see the need to differentiate a third "state", so to speak, of
+> memory which was never encrypted?
 
-The decision was intentionally made in this patch to make the import and
-export operations IOCTLs on the dma-buf itself rather than as a DRM
-IOCTL.  This makes it the import/export operation universal across all
-components which use dma-buf including GPU, display, v4l, and others.
-It also means that a userspace component can do the import/export
-without access to the DRM fd which may be tricky to get in cases where
-the client communicates with DRM via a userspace API such as OpenGL or
-Vulkan.  At a future date we may choose to add direct import/export APIs
-to components such as drm_syncobj to avoid allocating a file descriptor
-and going through two ioctls.  However, that seems to be something of a
-micro-optimization as import/export operations are likely to happen at a
-rate of a few per frame of rendered or decoded video.
-
-v2 (Jason Ekstrand):
- - Use a wrapper dma_fence_array of all fences including the new one
-   when importing an exclusive fence.
-
-v3 (Jason Ekstrand):
- - Lock around setting shared fences as well as exclusive
- - Mark SIGNAL_SYNC_FILE as a read-write ioctl.
- - Initialize ret to 0 in dma_buf_wait_sync_file
-
-v4 (Jason Ekstrand):
- - Use the new dma_resv_get_singleton helper
-
-v5 (Jason Ekstrand):
- - Rename the IOCTLs to import/export rather than wait/signal
- - Drop the WRITE flag and always get/set the exclusive fence
-
-Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
----
- drivers/dma-buf/dma-buf.c    | 84 ++++++++++++++++++++++++++++++++++++
- include/uapi/linux/dma-buf.h | 11 ++++-
- 2 files changed, 93 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index d4097856c86b..d34d27aa3077 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -20,6 +20,7 @@
- #include <linux/debugfs.h>
- #include <linux/module.h>
- #include <linux/seq_file.h>
-+#include <linux/sync_file.h>
- #include <linux/poll.h>
- #include <linux/dma-resv.h>
- #include <linux/mm.h>
-@@ -348,6 +349,83 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
- 	return ret;
- }
- 
-+static long dma_buf_import_sync_file(struct dma_buf *dmabuf,
-+				     const void __user *user_data)
-+{
-+	struct dma_buf_sync_file arg;
-+	struct dma_fence *fence, *singleton = NULL;
-+	int ret = 0;
-+
-+	if (copy_from_user(&arg, user_data, sizeof(arg)))
-+		return -EFAULT;
-+
-+	if (arg.flags != 0)
-+		return -EINVAL;
-+
-+	fence = sync_file_get_fence(arg.fd);
-+	if (!fence)
-+		return -EINVAL;
-+
-+	dma_resv_lock(dmabuf->resv, NULL);
-+
-+	ret = dma_resv_get_singleton(dmabuf->resv, fence, &singleton);
-+	if (!ret && singleton)
-+		dma_resv_add_excl_fence(dmabuf->resv, singleton);
-+
-+	dma_resv_unlock(dmabuf->resv);
-+
-+	dma_fence_put(fence);
-+
-+	return ret;
-+}
-+
-+static long dma_buf_export_sync_file(struct dma_buf *dmabuf,
-+				     void __user *user_data)
-+{
-+	struct dma_buf_sync_file arg;
-+	struct dma_fence *fence = NULL;
-+	struct sync_file *sync_file;
-+	int fd, ret;
-+
-+	if (copy_from_user(&arg, user_data, sizeof(arg)))
-+		return -EFAULT;
-+
-+	if (arg.flags != 0)
-+		return -EINVAL;
-+
-+	fd = get_unused_fd_flags(O_CLOEXEC);
-+	if (fd < 0)
-+		return fd;
-+
-+	ret = dma_resv_get_singleton(dmabuf->resv, NULL, &fence);
-+	if (ret)
-+		goto err_put_fd;
-+
-+	if (!fence)
-+		fence = dma_fence_get_stub();
-+
-+	sync_file = sync_file_create(fence);
-+
-+	dma_fence_put(fence);
-+
-+	if (!sync_file) {
-+		ret = -EINVAL;
-+		goto err_put_fd;
-+	}
-+
-+	fd_install(fd, sync_file->file);
-+
-+	arg.fd = fd;
-+	if (copy_to_user(user_data, &arg, sizeof(arg)))
-+		return -EFAULT;
-+
-+	return 0;
-+
-+err_put_fd:
-+	put_unused_fd(fd);
-+	return ret;
-+}
-+
- static long dma_buf_ioctl(struct file *file,
- 			  unsigned int cmd, unsigned long arg)
- {
-@@ -390,6 +468,12 @@ static long dma_buf_ioctl(struct file *file,
- 	case DMA_BUF_SET_NAME:
- 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
- 
-+	case DMA_BUF_IOCTL_IMPORT_SYNC_FILE:
-+		return dma_buf_import_sync_file(dmabuf, (const void __user *)arg);
-+
-+	case DMA_BUF_IOCTL_EXPORT_SYNC_FILE:
-+		return dma_buf_export_sync_file(dmabuf, (void __user *)arg);
-+
- 	default:
- 		return -ENOTTY;
- 	}
-diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
-index dbc7092e04b5..b746c6459e24 100644
---- a/include/uapi/linux/dma-buf.h
-+++ b/include/uapi/linux/dma-buf.h
-@@ -37,8 +37,15 @@ struct dma_buf_sync {
- 
- #define DMA_BUF_NAME_LEN	32
- 
-+struct dma_buf_sync_file {
-+	__u32 flags;
-+	__s32 fd;
-+};
-+
- #define DMA_BUF_BASE		'b'
--#define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
--#define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
-+#define DMA_BUF_IOCTL_SYNC	    _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
-+#define DMA_BUF_SET_NAME	    _IOW(DMA_BUF_BASE, 1, const char *)
-+#define DMA_BUF_IOCTL_IMPORT_SYNC_FILE	_IOW(DMA_BUF_BASE, 2, struct dma_buf_sync)
-+#define DMA_BUF_IOCTL_EXPORT_SYNC_FILE	_IOWR(DMA_BUF_BASE, 3, struct dma_buf_sync)
- 
- #endif
--- 
-2.24.1
-
+No, there are just two states.  I just think the "!encrypted" case
+should not be called "decrypted".
