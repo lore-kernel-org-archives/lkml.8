@@ -2,105 +2,208 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB501C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BD1C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C930F20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C380620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:58:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a2mLvMyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgCQEz4 (ORCPT
+        id S1726112AbgCQE6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:55:56 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34097 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgCQExK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:53:10 -0400
-IronPort-SDR: tmaYWY7KkIGopAakRUkOxRUpQrDzxbo99Y8gJMXWszT+2dhKfkQo3dCxWJ3XkQqAwlqjvwejy3
- tqwnaytxMXFQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:10 -0700
-IronPort-SDR: IklKnvC6wqKzieCvjvs1tgX1OlXfcm8VOIO1vC+UD1HTSFlGOMWaojs59yR/FpDAFTzbkM+Vtf
- W0xKJWfcG9Tg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252740"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:09 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 03/32] KVM: nVMX: Invalidate all EPTP contexts when emulating INVEPT for L1
-Date:   Mon, 16 Mar 2020 21:52:09 -0700
-Message-Id: <20200317045238.30434-4-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
-References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
+        Tue, 17 Mar 2020 00:58:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58238 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgCQE6d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:58:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=AS+SgROKP8G+DTFfJES7tSe4kMz29uyw2YEKmGKMMWc=; b=a2mLvMyqyZJEZ6ADLZ4S0hRhGW
+        O4/5tkcKcxZ3vqIhklIU5CEuhmxzBaS6QPlQpr/zDOh7OrYH4lYqhN0skzmZHs9kABTtiYdechHuz
+        ChQVF3KVa4ldA1ZaG7d67SYxaLIG1SD2GlhPl2WBRGBeDhtQx8sEadu0KNbQdF94efIHzKsKcfivO
+        hFDzVT1/+nzoftOnL1nfZeTsYp9KnpvT+ibRv9jo7OI5pKIHKzm2qOUlLxU/maVmeEyC2mHvGhGuu
+        A6hp2/6oWDdJoIttX7CD5reNC531b5KEibxki/9wbiRFJqjp5JCG5a4lrfl2hR9Wvt0g8oVLJmp4w
+        wT9JIr1A==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jE4JE-0000w9-KO; Tue, 17 Mar 2020 04:58:32 +0000
+Subject: Re: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+References: <4c0db5d0-1a61-cb80-2bcb-034f5bcd1597@infradead.org>
+ <20200312193917.GA160316@google.com>
+ <DB8PR04MB6747C1032BF126CFFB5720E084F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e53be1bc-e84d-433a-e9a7-ea442c93f2cf@infradead.org>
+Date:   Mon, 16 Mar 2020 21:58:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <DB8PR04MB6747C1032BF126CFFB5720E084F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Free all L2 (guest_mmu) roots when emulating INVEPT for L1.  Outstanding
-changes to the EPT tables managed by L1 need to be recognized, and
-relying on KVM to always flush L2's EPTP context on nested VM-Enter is
-dangerous.
+On 3/16/20 9:31 PM, Z.q. Hou wrote:
+> Hi Randy and Bjorn,
+> 
+>> -----Original Message-----
+>> From: Bjorn Helgaas <helgaas@kernel.org>
+>> Sent: 2020年3月13日 3:39
+>> To: Z.q. Hou <zhiqiang.hou@nxp.com>
+>> Cc: Randy Dunlap <rdunlap@infradead.org>; Stephen Rothwell
+>> <sfr@canb.auug.org.au>; Linux Next Mailing List
+>> <linux-next@vger.kernel.org>; Linux Kernel Mailing List
+>> <linux-kernel@vger.kernel.org>; linux-pci <linux-pci@vger.kernel.org>;
+>> Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+>> Subject: Re: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+>>
+>> On Thu, Mar 12, 2020 at 08:13:50AM -0700, Randy Dunlap wrote:
+>>> On 3/12/20 3:04 AM, Stephen Rothwell wrote:
+>>>> Hi all,
+>>>>
+>>>> Changes since 20200311:
+>>>>
+>>>
+>>> on i386:
+>>> # CONFIG_PCI_MSI is not set
+>>>
+>>> WARNING: unmet direct dependencies detected for PCIE_MOBIVEIL_HOST
+>>>   Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
+>>>   Selected by [y]:
+>>>   - PCIE_MOBIVEIL_PLAT [=y] && PCI [=y] && (ARCH_ZYNQMP ||
+>> COMPILE_TEST [=y]) && OF [=y]
+>>
+>> Thanks, Randy.
+>>
+>> I'm not sure if this is a new problem introduced by something in my
+>> "next" branch, or if this is an existing problem we just happened to
+>> hit with randconfig.
+>>
+>> Here are the commits on remotes/lorenzo/pci/mobiveil branch:
+>>
+>>   d29ad70a813b ("PCI: mobiveil: Add PCIe Gen4 RC driver for Layerscape
+>> SoCs")
+>>   3edeb49525bb ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4
+>> controller")
+>>   11d22cc395ca ("PCI: mobiveil: Add Header Type field check")
+>>   029dea3cdc67 ("PCI: mobiveil: Add 8-bit and 16-bit CSR register
+>> accessors")
+>>   52cae4c7082f ("PCI: mobiveil: Allow mobiveil_host_init() to be used to
+>> re-init host")
+>>   fc99b3311af7 ("PCI: mobiveil: Add callback function for link up check")
+>>   ed620e96541f ("PCI: mobiveil: Add callback function for interrupt
+>> initialization")
+>>   03bdc3884019 ("PCI: mobiveil: Modularize the Mobiveil PCIe Host Bridge IP
+>> driver")
+>>   39e3a03eea5b ("PCI: mobiveil: Collect the interrupt related operations into
+>> a function")
+>>   2ba24842d6b4 ("PCI: mobiveil: Move the host initialization into a function")
+>>   1f442218d657 ("PCI: mobiveil: Introduce a new structure
+>> mobiveil_root_port")
+>>
+>> I dropped that mobiveil branch for now, so Hou, can you please check
+>> this out and resolve it one way or the other?
+> 
+> I don't reproduce this issue with i386_defconfig, can you help me to reproduce it?
 
-Similar to handle_invpcid(), rely on kvm_mmu_free_roots() to do a remote
-TLB flush if necessary, e.g. if L1 has never entered L2 then there is
-nothing to be done.
+Sure, see below.
 
-Nuking all L2 roots is overkill for the single-context variant, but it's
-the safe and easy bet.  A more precise zap mechanism will be added in
-the future.  Add a TODO to call out that KVM only needs to invalidate
-affected contexts.
 
-Fixes: b119019847fbc ("kvm: nVMX: Remove unnecessary sync_roots from handle_invept")
-Reported-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Thanks,
+> Zhiqiang
+> 
+>>
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:375:15: error:
+>> variable ‘mobiveil_msi_domain_info’ has initializer but incomplete type
+>>>  static struct msi_domain_info mobiveil_msi_domain_info = {
+>>>                ^~~~~~~~~~~~~~~
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:3: error: ‘struct
+>> msi_domain_info’ has no member named ‘flags’
+>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>    ^~~~~
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:12: error:
+>> ‘MSI_FLAG_USE_DEF_DOM_OPS’ undeclared here (not in a function); did
+>> you mean ‘SIMPLE_DEV_PM_OPS’?
+>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>             ^~~~~~~~~~~~~~~~~~~~~~~~
+>>>             SIMPLE_DEV_PM_OPS
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:39: error:
+>> ‘MSI_FLAG_USE_DEF_CHIP_OPS’ undeclared here (not in a function); did
+>> you mean ‘MSI_FLAG_USE_DEF_DOM_OPS’?
+>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>
+>> ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>>
+>> MSI_FLAG_USE_DEF_DOM_OPS
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:377:6: error:
+>> ‘MSI_FLAG_PCI_MSIX’ undeclared here (not in a function); did you mean
+>> ‘SS_FLAG_BITS’?
+>>>       MSI_FLAG_PCI_MSIX),
+>>>       ^~~~~~~~~~~~~~~~~
+>>>       SS_FLAG_BITS
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:11: warning:
+>> excess elements in struct initializer
+>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>            ^
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:11: note: (near
+>> initialization for ‘mobiveil_msi_domain_info’)
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:378:3: error: ‘struct
+>> msi_domain_info’ has no member named ‘chip’
+>>>   .chip = &mobiveil_msi_irq_chip,
+>>>    ^~~~
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:378:10: warning:
+>> excess elements in struct initializer
+>>>   .chip = &mobiveil_msi_irq_chip,
+>>>           ^
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:378:10: note: (near
+>> initialization for ‘mobiveil_msi_domain_info’)
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c: In function
+>> ‘mobiveil_allocate_msi_domains’:
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:469:20: error:
+>> implicit declaration of function ‘pci_msi_create_irq_domain’; did you mean
+>> ‘pci_msi_get_device_domain’? [-Werror=implicit-function-declaration]
+>>>   msi->msi_domain = pci_msi_create_irq_domain(fwnode,
+>>>                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>>                     pci_msi_get_device_domain
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:469:18: warning:
+>> assignment makes pointer from integer without a cast [-Wint-conversion]
+>>>   msi->msi_domain = pci_msi_create_irq_domain(fwnode,
+>>>                   ^
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c: At top level:
+>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:375:31: error:
+>> storage size of ‘mobiveil_msi_domain_info’ isn’t known
+>>>  static struct msi_domain_info mobiveil_msi_domain_info = {
+>>>                                ^~~~~~~~~~~~~~~~~~~~~~~~
+>>>
+>>>
+>>>
+>>> Full randconfig file is attached.
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index f3774cef4fd4..9624cea4ed9f 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5160,12 +5160,12 @@ static int handle_invept(struct kvm_vcpu *vcpu)
- 		if (!nested_vmx_check_eptp(vcpu, operand.eptp))
- 			return nested_vmx_failValid(vcpu,
- 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
-+
-+		/* TODO: sync only the target EPTP context. */
- 		fallthrough;
- 	case VMX_EPT_EXTENT_GLOBAL:
--	/*
--	 * TODO: Sync the necessary shadow EPT roots here, rather than
--	 * at the next emulated VM-entry.
--	 */
-+		kvm_mmu_free_roots(vcpu, &vcpu->arch.guest_mmu,
-+				   KVM_MMU_ROOTS_ALL);
- 		break;
- 	default:
- 		BUG_ON(1);
+Use the .config file that was attached in the report.
+
+
 -- 
-2.24.1
+~Randy
 
