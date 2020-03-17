@@ -2,34 +2,34 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA74C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DC3C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB4520770
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BAA4206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgCQTx5 (ORCPT
+        id S1726822AbgCQTx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:53:57 -0400
+        Tue, 17 Mar 2020 15:53:58 -0400
 Received: from mga07.intel.com ([134.134.136.100]:43598 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgCQTx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:53:56 -0400
-IronPort-SDR: nRHavrib3Ig8MbYf2o0K7mAiL+GxtPrCHGjtf9+LBqMW98TiLHwcohLBGsBAyuNh4DHFO3LtYu
- /o2Po1BrsOoQ==
+        id S1726294AbgCQTx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 15:53:57 -0400
+IronPort-SDR: NiXrL8DwljF97pNa85UmhnH34T2gA/S8mUt1s/zz57SQRqnL8XaRpUUUXpAXWGNSdBcjN5NjxN
+ zJ96kevVUDfA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 12:53:55 -0700
-IronPort-SDR: sZRlNPJhdYT1bnnh1jFZqjJuXOWD5N4DSj5+9TdIF+zJ/lntfhmOTcP8eFFn+vt/JaH5koFds3
- Oiq6H8jciBxA==
+IronPort-SDR: Ycsnj1AQXL2CoIr8PVFPOfKU/5vlVSg0xS409rOMErNjN36rTjp9vnKrdM3OalM48kYhMliZmt
+ kr2E4TTQzT9g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="233604297"
+   d="scan'208";a="233604303"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga007.jf.intel.com with ESMTP; 17 Mar 2020 12:53:55 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -41,10 +41,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>,
         Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH 0/2] KVM: x86: CPUID tracepoint enhancements
-Date:   Tue, 17 Mar 2020 12:53:52 -0700
-Message-Id: <20200317195354.28384-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 2/2] KVM: x86: Add blurb to CPUID tracepoint when using max basic leaf values
+Date:   Tue, 17 Mar 2020 12:53:54 -0700
+Message-Id: <20200317195354.28384-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200317195354.28384-1-sean.j.christopherson@intel.com>
+References: <20200317195354.28384-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,34 +54,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Two enhancements to the CPUID tracepoint.  Patch 01 was originally in the
-CPUID ranges series, but I unintentionally dropped it in v2.
+Tack on "used max basic" at the end of the CPUID tracepoint when the
+output values correspond to the max basic leaf, i.e. when emulating
+Intel's out-of-range CPUID behavior.  Observing "cpuid entry not found"
+in the tracepoint with non-zero output values is confusing for users
+that aren't familiar with the out-of-range semantics, and qualifying the
+"not found" case hopefully makes it clear that "found" means "found the
+exact entry".
 
-The final output looks like:
-
-  kvm_cpuid: func 0 idx 0 rax d rbx 68747541 rcx 444d4163 rdx 69746e65, cpuid entry found
-  kvm_cpuid: func d idx 444d4163 rax 0 rbx 0 rcx 0 rdx 0, cpuid entry not found
-  kvm_cpuid: func 80000023 idx 1 rax f rbx 240 rcx 0 rdx 0, cpuid entry not found, used max basic
-  kvm_cpuid: func 80000023 idx 2 rax 100 rbx 240 rcx 0 rdx 0, cpuid entry not found, used max basic
-
-I also considered appending "exact" to the "found" case, which is more
-directly what Jan suggested, but IMO "found exact" implies there's also a
-"found inexact", which is not true.  AIUI, calling out that KVM is using
-the max basic leaf values is what's really important to avoid confusion.
-
-Ideally, the function of the max basic leaf would also be displayed, but
-doing that without printing garbage for the other cases is a lot of ugly
-code for marginal value.
-
-Sean Christopherson (2):
-  KVM: x86: Add requested index to the CPUID tracepoint
-  KVM: x86: Add blurb to CPUID tracepoint when using max basic leaf
-    values
-
+Suggested-by: Jan Kiszka <jan.kiszka@siemens.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
  arch/x86/kvm/cpuid.c |  9 ++++++---
- arch/x86/kvm/trace.h | 18 ++++++++++++------
- 2 files changed, 18 insertions(+), 9 deletions(-)
+ arch/x86/kvm/trace.h | 11 +++++++----
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index bccaae0df668..a515a83c6f29 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -990,13 +990,15 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+ {
+ 	u32 orig_function = *eax, function = *eax, index = *ecx;
+ 	struct kvm_cpuid_entry2 *entry;
+-	bool exact;
++	bool exact, used_max_basic = false;
+ 
+ 	entry = kvm_find_cpuid_entry(vcpu, function, index);
+ 	exact = !!entry;
+ 
+-	if (!entry && !exact_only)
++	if (!entry && !exact_only) {
+ 		entry = get_out_of_range_cpuid_entry(vcpu, &function, index);
++		used_max_basic = !!entry;
++	}
+ 
+ 	if (entry) {
+ 		*eax = entry->eax;
+@@ -1026,7 +1028,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+ 			}
+ 		}
+ 	}
+-	trace_kvm_cpuid(orig_function, index, *eax, *ebx, *ecx, *edx, exact);
++	trace_kvm_cpuid(orig_function, index, *eax, *ebx, *ecx, *edx, exact,
++			used_max_basic);
+ 	return exact;
+ }
+ EXPORT_SYMBOL_GPL(kvm_cpuid);
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index 27270ba0f05f..c3d1e9f4a2c0 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -153,8 +153,8 @@ TRACE_EVENT(kvm_fast_mmio,
+ TRACE_EVENT(kvm_cpuid,
+ 	TP_PROTO(unsigned int function, unsigned int index, unsigned long rax,
+ 		 unsigned long rbx, unsigned long rcx, unsigned long rdx,
+-		 bool found),
+-	TP_ARGS(function, index, rax, rbx, rcx, rdx, found),
++		 bool found, bool used_max_basic),
++	TP_ARGS(function, index, rax, rbx, rcx, rdx, found, used_max_basic),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	unsigned int,	function	)
+@@ -164,6 +164,7 @@ TRACE_EVENT(kvm_cpuid,
+ 		__field(	unsigned long,	rcx		)
+ 		__field(	unsigned long,	rdx		)
+ 		__field(	bool,		found		)
++		__field(	bool,		used_max_basic	)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -174,12 +175,14 @@ TRACE_EVENT(kvm_cpuid,
+ 		__entry->rcx		= rcx;
+ 		__entry->rdx		= rdx;
+ 		__entry->found		= found;
++		__entry->used_max_basic	= used_max_basic;
+ 	),
+ 
+-	TP_printk("func %x idx %x rax %lx rbx %lx rcx %lx rdx %lx, cpuid entry %s",
++	TP_printk("func %x idx %x rax %lx rbx %lx rcx %lx rdx %lx, cpuid entry %s%s",
+ 		  __entry->function, __entry->index, __entry->rax,
+ 		  __entry->rbx, __entry->rcx, __entry->rdx,
+-		  __entry->found ? "found" : "not found")
++		  __entry->found ? "found" : "not found",
++		  __entry->used_max_basic ? ", used max basic" : "")
+ );
+ 
+ #define AREG(x) { APIC_##x, "APIC_" #x }
 -- 
 2.24.1
 
