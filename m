@@ -2,91 +2,108 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78FFC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB02C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966AE205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8390205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bWmkxz+T"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YeIk7e4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgCQNyx (ORCPT
+        id S1726792AbgCQNzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:54:53 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40760 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgCQNyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:54:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=LNq2eKVxIu584aKzn7PR2nMigwhw6HSeqmPI6yI3yWw=; b=bWmkxz+TZfitERg98q+TlX4I//
-        zst6mY+QmHJrhANsZJQ8LrJoSPWark4wkYXLrPqI8aZOkNEhguJXo/ayTy+B+tGEL+52mgAQswzH5
-        8VbKMrKs6/fzNlMAxxhX6X58bBYinAoIgKW4XBAy926duG4w++axND7a+MrA2WCcchSw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jECfz-0006fW-0y; Tue, 17 Mar 2020 14:54:35 +0100
-Date:   Tue, 17 Mar 2020 14:54:35 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 15/28] dt-bindings: arm: mrvl: Add missing compatible
- strings
-Message-ID: <20200317135435.GP24270@lunn.ch>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-16-lkundrak@v3.sk>
+        Tue, 17 Mar 2020 09:55:17 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1395 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726148AbgCQNzQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:55:16 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HDhTpk012643;
+        Tue, 17 Mar 2020 14:55:00 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=Gu8RU4M1Yo3oc9oR0Y2I53Ep8ZKZwvbmvsOve/l4pnw=;
+ b=YeIk7e4ZHYokxGEvJ18AYwo9q/lhRftRIISV68pYsX4428j05cOV4Wdo3NwrLZRl4QKD
+ 9ndz/oH7Ew/B4Y5aCOBpxjVQqT2pXjc70DhV/OK/60O5Sd+SzCPoD/6EutHDqcoxoRAb
+ q13Qrgj52tkTXLYIbHaLf2w8U/saael70S7apisoDRJNCDq7k+0aCg3MUeZDj7w5Bi/b
+ jj6pWVcuAhrVTd5yiEdoeudUUPGYlG17FewmGlaam/QvoRr241JkkJhwtbcVhi8O/nKf
+ PxLctnxUiIgCODE3E+Di4H2WPor5ajfAbFbdp6mhZ90tMeYwy5Xj5fzuVfYbp0pADyGn rA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yrqa9rjf1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 14:55:00 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BAEC1100034;
+        Tue, 17 Mar 2020 14:54:55 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 694092AE6AE;
+        Tue, 17 Mar 2020 14:54:55 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 17 Mar
+ 2020 14:54:55 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Tue, 17 Mar 2020 14:54:55 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Dan Murphy <dmurphy@ti.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
+Thread-Topic: [PATCH 04/12] docs: dt: fix references to m_can.txt file
+Thread-Index: AQHV/F1/4CRB7GeziEugXmY9nZvK7ahMs1sAgAADZYCAAAcHAA==
+Date:   Tue, 17 Mar 2020 13:54:55 +0000
+Message-ID: <15305686-3795-3af6-ae13-b77ce62e857f@st.com>
+References: <cover.1584450500.git.mchehab+huawei@kernel.org>
+ <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
+ <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
+ <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
+In-Reply-To: <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E7AAA9F3391F1B41B639F9310C1C4FDE@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317093922.20785-16-lkundrak@v3.sk>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_05:2020-03-17,2020-03-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:39:09AM +0100, Lubomir Rintel wrote:
-> Add compatible strings for the boards we have in tree. At the same time,
-> fix the MMP3 compatible string: the preferred vendor name for Marvell is
-> "marvell", not "mrvl", and indeed "marvell,mmp3" has been actively used,
-> not "mrvl,mmp3".
-> 
-> Fixes: 95aecb71b84e ("dt-bindings: arm: mrvl: Document MMP3 compatible string")
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
-What is implied by the Fixes: tag? Do you expect this to be
-back ported? Is anything actually broken here?
-
-Apart from that:
-
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+DQoNCk9uIDMvMTcvMjAgMjoyOSBQTSwgRGFuIE11cnBoeSB3cm90ZToNCj4gSGVsbG8NCj4NCj4g
+T24gMy8xNy8yMCA4OjE3IEFNLCBNYXJjIEtsZWluZS1CdWRkZSB3cm90ZToNCj4+IE9uIDMvMTcv
+MjAgMjoxMCBQTSwgTWF1cm8gQ2FydmFsaG8gQ2hlaGFiIHdyb3RlOg0KPj4+IFRoaXMgZmlsZSB3
+YXMgY29udmVydGVkIHRvIGpzb24gYW5kIHJlbmFtZWQuIFVwZGF0ZSBpdHMNCj4+PiByZWZlcmVu
+Y2VzIGFjY29yZGluZ2x5Lg0KPj4+DQo+Pj4gRml4ZXM6IDgyNDY3NGI1OWY3MiAoImR0LWJpbmRp
+bmdzOiBuZXQ6IGNhbjogQ29udmVydCBNX0NBTiB0byANCj4+PiBqc29uLXNjaGVtYSIpDQo+DQo+
+IEkgYW0gdHJ5aW5nIHRvIGZpbmQgb3V0IHdoZXJlIHRoZSBhYm92ZSBjb21taXQgd2FzIGFwcGxp
+ZWQNCj4NCj4gSSBkb24ndCBzZWUgaXQgaW4gY2FuLW5leHQgb3IgbGludXgtY2FuLiBJIG5lZWQg
+dG8gdXBkYXRlIHRoZSB0Y2FuIGR0IA0KPiBiaW5kaW5nIGZpbGUgYXMgaXQgd2FzIG1pc3NlZC4N
+Cj4NCj4gQW5kIEkgYW0gbm90IHN1cmUgd2h5IHRoZSBtYWludGFpbmVycyBvZiB0aGVzZSBmaWxl
+cyB3ZXJlIG5vdCBDQydkIG9uIA0KPiB0aGUgY29udmVyc2lvbiBvZiB0aGlzIGJpbmRpbmcuDQoN
+Ckl0IHdhcyBtZXJnZWQgaW4gZGV2aWNlLXRyZWUtbmV4dC4NCg0KSSBoYXZlIHB1dCBpbiBjb3B5
+IHRoZSBwZW9wbGUgdGhhdCBnZXRfbWFpbnRhaW5lcnMgcHJvdmlkZXMgdG8gbWUuDQpTb3JyeSBp
+ZiBJIGZvcmdvdCBzb21lb25lLg0KDQpCZW5qYW1pbg0KPg0KPiBEYW4NCj4NCg==
