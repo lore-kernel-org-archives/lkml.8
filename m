@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6516BC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB4BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEB020658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8092073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442967;
-	bh=h/kIjDv2xTNpT4MgTWA/Bf85z2gj7vvs8SRL/Gxd+Ek=;
+	s=default; t=1584442971;
+	bh=pg3IySRnNH7ZDbp4awweiQiUEA/O6S+oklA42NMx3xM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LkBNa59WBXEZYnbBP550lXpMwgREtDK862VIzikTylWuDNPSz8OPWeEtXR44lsfhO
-	 L9C6fwcSCpZN/ePpRFd30utfX1pNY6E8+a0S4zsvScItxCarHJuG9kv/n4e2x6mcYl
-	 5ZBLYIWJQN22R1/HW8bjZq5d8OM8oROp/RNUZLw4=
+	b=DHjgRnOTMqGxmTCWT/1phi39cq2ZzDI1aqnLXMt7Mra/AZ/C5AiZxMgUrtRKuQmKM
+	 rxFk4HVTF3KB2x5eiiZ34PweiekP//D5/SCAcldpWynXaosbuYEmpJiKWKldx+syY6
+	 QLPEXyUi+ys/WtOfhYz/4cxUM/ty0TYzRpByjjJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgCQLCq (ORCPT
+        id S1728011AbgCQLCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42546 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:02:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727985AbgCQLCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:02:44 -0400
+        id S1726842AbgCQLCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:02:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF265205ED;
-        Tue, 17 Mar 2020 11:02:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4542C205ED;
+        Tue, 17 Mar 2020 11:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442964;
-        bh=h/kIjDv2xTNpT4MgTWA/Bf85z2gj7vvs8SRL/Gxd+Ek=;
+        s=default; t=1584442966;
+        bh=pg3IySRnNH7ZDbp4awweiQiUEA/O6S+oklA42NMx3xM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NkpS5Z3WE28AdW/u+GN92D+GmFOivtzuAXSyz59StZCGT0Myba6GVN6IPO8C0Dcj6
-         ZKJaq6Hb86LCigxcSO+ZCtiI8v0dYMBPePOVIVlQghRuXVsj775N6slq7EftJ1eS9h
-         /nugLjqJCtWI8O7S5gtmzC6vWsFfr5w0r2jZ1lxg=
+        b=m3bk1YN6JtuUPAinVbGcTzoHsC84wn/YfeAnlfXFjRGIGNseNNQlOPTky2bSvYAjO
+         vUItzyjRpjP0+5GxCG8zFOH18vMFY9oEvwvekJCLML0+CJny2Tn3GhuDc1alYpsVFV
+         lMZ1NhsO8kSFZJf36QNvNdbgvxERsiJezJwm4XHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 050/123] nfc: add missing attribute validation for vendor subcommand
-Date:   Tue, 17 Mar 2020 11:54:37 +0100
-Message-Id: <20200317103312.843540178@linuxfoundation.org>
+Subject: [PATCH 5.4 033/123] cgroup: memcg: net: do not associate sock with unrelated cgroup
+Date:   Tue, 17 Mar 2020 11:54:20 +0100
+Message-Id: <20200317103311.269332438@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,31 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Shakeel Butt <shakeelb@google.com>
 
-[ Upstream commit 6ba3da446551f2150fadbf8c7788edcb977683d3 ]
+[ Upstream commit e876ecc67db80dfdb8e237f71e5b43bb88ae549c ]
 
-Add missing attribute validation for vendor subcommand attributes
-to the netlink policy.
+We are testing network memory accounting in our setup and noticed
+inconsistent network memory usage and often unrelated cgroups network
+usage correlates with testing workload. On further inspection, it
+seems like mem_cgroup_sk_alloc() and cgroup_sk_alloc() are broken in
+irq context specially for cgroup v1.
 
-Fixes: 9e58095f9660 ("NFC: netlink: Implement vendor command support")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+mem_cgroup_sk_alloc() and cgroup_sk_alloc() can be called in irq context
+and kind of assumes that this can only happen from sk_clone_lock()
+and the source sock object has already associated cgroup. However in
+cgroup v1, where network memory accounting is opt-in, the source sock
+can be unassociated with any cgroup and the new cloned sock can get
+associated with unrelated interrupted cgroup.
+
+Cgroup v2 can also suffer if the source sock object was created by
+process in the root cgroup or if sk_alloc() is called in irq context.
+The fix is to just do nothing in interrupt.
+
+WARNING: Please note that about half of the TCP sockets are allocated
+from the IRQ context, so, memory used by such sockets will not be
+accouted by the memcg.
+
+The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
+
+CPU: 70 PID: 12720 Comm: ssh Tainted:  5.6.0-smp-DEV #1
+Hardware name: ...
+Call Trace:
+ <IRQ>
+ dump_stack+0x57/0x75
+ mem_cgroup_sk_alloc+0xe9/0xf0
+ sk_clone_lock+0x2a7/0x420
+ inet_csk_clone_lock+0x1b/0x110
+ tcp_create_openreq_child+0x23/0x3b0
+ tcp_v6_syn_recv_sock+0x88/0x730
+ tcp_check_req+0x429/0x560
+ tcp_v6_rcv+0x72d/0xa40
+ ip6_protocol_deliver_rcu+0xc9/0x400
+ ip6_input+0x44/0xd0
+ ? ip6_protocol_deliver_rcu+0x400/0x400
+ ip6_rcv_finish+0x71/0x80
+ ipv6_rcv+0x5b/0xe0
+ ? ip6_sublist_rcv+0x2e0/0x2e0
+ process_backlog+0x108/0x1e0
+ net_rx_action+0x26b/0x460
+ __do_softirq+0x104/0x2a6
+ do_softirq_own_stack+0x2a/0x40
+ </IRQ>
+ do_softirq.part.19+0x40/0x50
+ __local_bh_enable_ip+0x51/0x60
+ ip6_finish_output2+0x23d/0x520
+ ? ip6table_mangle_hook+0x55/0x160
+ __ip6_finish_output+0xa1/0x100
+ ip6_finish_output+0x30/0xd0
+ ip6_output+0x73/0x120
+ ? __ip6_finish_output+0x100/0x100
+ ip6_xmit+0x2e3/0x600
+ ? ipv6_anycast_cleanup+0x50/0x50
+ ? inet6_csk_route_socket+0x136/0x1e0
+ ? skb_free_head+0x1e/0x30
+ inet6_csk_xmit+0x95/0xf0
+ __tcp_transmit_skb+0x5b4/0xb20
+ __tcp_send_ack.part.60+0xa3/0x110
+ tcp_send_ack+0x1d/0x20
+ tcp_rcv_state_process+0xe64/0xe80
+ ? tcp_v6_connect+0x5d1/0x5f0
+ tcp_v6_do_rcv+0x1b1/0x3f0
+ ? tcp_v6_do_rcv+0x1b1/0x3f0
+ __release_sock+0x7f/0xd0
+ release_sock+0x30/0xa0
+ __inet_stream_connect+0x1c3/0x3b0
+ ? prepare_to_wait+0xb0/0xb0
+ inet_stream_connect+0x3b/0x60
+ __sys_connect+0x101/0x120
+ ? __sys_getsockopt+0x11b/0x140
+ __x64_sys_connect+0x1a/0x20
+ do_syscall_64+0x51/0x200
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
+Fixes: 2d7580738345 ("mm: memcontrol: consolidate cgroup socket tracking")
+Fixes: d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/netlink.c |    2 ++
- 1 file changed, 2 insertions(+)
+ kernel/cgroup/cgroup.c |    4 ++++
+ mm/memcontrol.c        |    4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -46,6 +46,8 @@ static const struct nla_policy nfc_genl_
- 				     .len = NFC_FIRMWARE_NAME_MAXSIZE },
- 	[NFC_ATTR_SE_INDEX] = { .type = NLA_U32 },
- 	[NFC_ATTR_SE_APDU] = { .type = NLA_BINARY },
-+	[NFC_ATTR_VENDOR_ID] = { .type = NLA_U32 },
-+	[NFC_ATTR_VENDOR_SUBCMD] = { .type = NLA_U32 },
- 	[NFC_ATTR_VENDOR_DATA] = { .type = NLA_BINARY },
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -6381,6 +6381,10 @@ void cgroup_sk_alloc(struct sock_cgroup_
+ 		return;
+ 	}
  
- };
++	/* Don't associate the sock with unrelated interrupted task's cgroup. */
++	if (in_interrupt())
++		return;
++
+ 	rcu_read_lock();
+ 
+ 	while (true) {
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6806,6 +6806,10 @@ void mem_cgroup_sk_alloc(struct sock *sk
+ 		return;
+ 	}
+ 
++	/* Do not associate the sock with unrelated interrupted task's memcg. */
++	if (in_interrupt())
++		return;
++
+ 	rcu_read_lock();
+ 	memcg = mem_cgroup_from_task(current);
+ 	if (memcg == root_mem_cgroup)
 
 
