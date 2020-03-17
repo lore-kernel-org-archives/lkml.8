@@ -2,145 +2,104 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA084C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5D8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892BD20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584429165;
-	bh=GOWo0DpIKsVYWlFPqLvvRi10oEaaiiiQZ/vxOVP+NFI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Pw7W2rbd5lL93PCJBXny3NCnzvEdtwDBtG8nH36zCuZ6x7ptSs1xg/7BhiS777qz
-	 y3B+oiAQFRTO3LJyi6tI6rqcMR4lzRxPPEY9YuKvfKSPuOdABY9la0zPZJEMWbFHDP
-	 O+x68o3SMQAytccqZPBzv4V1Y8/K22pYNBuylcIA=
+	by mail.kernel.org (Postfix) with ESMTP id 3CA1F20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:15:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LM4/ISsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgCQHMo (ORCPT
+        id S1725916AbgCQHP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:12:44 -0400
-Received: from mail-wr1-f53.google.com ([209.85.221.53]:33039 "EHLO
-        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgCQHMo (ORCPT
+        Tue, 17 Mar 2020 03:15:58 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53836 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgCQHP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:12:44 -0400
-Received: by mail-wr1-f53.google.com with SMTP id a25so24210917wrd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 00:12:42 -0700 (PDT)
+        Tue, 17 Mar 2020 03:15:57 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 25so20218174wmk.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 00:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MFz/fOJixvWzcvSU4go/rFHGmxjYPGKF/Ch+nsy/6+A=;
+        b=LM4/ISszOBUpkchVKZxUKcKxPDaf5/m4Dl5b4wiHzO82d/D9d4+nUiQ6z9VY3uYUuI
+         PN4xZI8u/KohR+5cUA1tPX95LVGypE1HZVY5ff0vAw9R0qH77EOdFyHKY+A8noP5dpwU
+         G/bY7gkrq6QYKrLNTmPicsPFOhkbbdpODFKCQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jgNGQw6qu/GqhOoQ4W2/EShkjIEq6enz5IIfSPkXGhg=;
-        b=dc86Q0wnhjNufU64gRZAX5recKi60kWj5oBRplksU7A/7xeJVDM3yoGHwS24dYT38g
-         twprhkMgPhtHjI0J/5e4C2B2mdkwTyyLJn6o3CSYPhYDi3mw2YnRpeW/yGzP9a/Y45Ym
-         J7vpQyYAbDFjik1gYoJ1onSFwMFK97fNugbqx5BVZBBGTbVBMOEzWfKh0llYV4JvuBJj
-         h12TWrYe7E/v/d65cQK8M1L1+NEH3P3PZPi9MYUrU5QQOg0w88VZNrefsnuUZSHvHYla
-         gd4O+s1MoZEFLTvrELQMCpNSr1pY6A6AAb6QPBih8hqDWhpi6bgSc2VZ+l+H0rC4YJwI
-         E2Ig==
-X-Gm-Message-State: ANhLgQ2OxNDcawNdnreS0ZLuFj5wPEGppOVogWXu53NLrWzRXEG+CUuf
-        yr7hZUvv6enMFnkhNVKk0Zg=
-X-Google-Smtp-Source: ADFU+vuMvxdoDP1eI6p0pPIIbGtAK4Mir0ISAuLnuscKA5ADGvrivvORk/ec1/GcFZL09WZDkHoZlQ==
-X-Received: by 2002:a5d:654e:: with SMTP id z14mr4137791wrv.274.1584429162083;
-        Tue, 17 Mar 2020 00:12:42 -0700 (PDT)
-Received: from localhost (ip-37-188-255-121.eurotel.cz. [37.188.255.121])
-        by smtp.gmail.com with ESMTPSA id i1sm3532242wrs.18.2020.03.17.00.12.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MFz/fOJixvWzcvSU4go/rFHGmxjYPGKF/Ch+nsy/6+A=;
+        b=Lnu3ShVpGOA0nKLInmHM1B/9gl8OJSBhxSTjh36zVvqCkAME2njxw09r5BKKJPKsYm
+         cj0tWEGhSikFNhpCbRoyN1fMu4hiVWOTHkT7m6eJ0dzJ2rR+JBucSp4yzngICXYZatGt
+         SkPnl4JX+HDVdYFpfAdQGDjXZZ8mijxukW19JZF47xMnw3QpIn1+i7Nnm7plyHYi8QeG
+         tXteRlggjSZ9XHskEaOTIeqtCzmLU5K28WxJ0j40YpfZVtXlQBN8gIiYCarnWFL8Qzib
+         0qSYcsVL2mX7AVkLn35djQgBxsWLt0+GY5uMuEeO+lqzxBe4Z8nE1YH/MZnkR5oRLiI+
+         iynw==
+X-Gm-Message-State: ANhLgQ0deKaPJrDFqoJn/qUm2JzvVpPUTjTpTGt08PDeBAranTHRSCFY
+        6IzJcVil2ZxiYcucBoZsxp74r0GPJyaw4I9J
+X-Google-Smtp-Source: ADFU+vshR5dL7XEFTVt5fsXsNS9srnBWqq1zc+uhfogGkq31eM9oA0HMTXTh3QU5dIxWcXYALTZGrQ==
+X-Received: by 2002:a05:600c:2250:: with SMTP id a16mr3486950wmm.57.1584429353745;
+        Tue, 17 Mar 2020 00:15:53 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id 9sm2707769wmx.32.2020.03.17.00.15.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 00:12:40 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 08:12:39 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-Message-ID: <20200317071239.GB26018@dhcp22.suse.cz>
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200312082248.GS23944@dhcp22.suse.cz>
- <20200312201602.GA68817@google.com>
- <20200312204155.GE23944@dhcp22.suse.cz>
- <20200313020851.GD68817@google.com>
- <20200313080546.GA21007@dhcp22.suse.cz>
- <20200313205941.GA78185@google.com>
- <20200316092052.GD11482@dhcp22.suse.cz>
- <20200317014340.GA73302@google.com>
+        Tue, 17 Mar 2020 00:15:53 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, Joe Perches <joe@perches.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH] MAINTAINERS: Better regex for dma_buf|fence|resv
+Date:   Tue, 17 Mar 2020 08:15:47 +0100
+Message-Id: <20200317071547.1008622-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317014340.GA73302@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 16-03-20 18:43:40, Minchan Kim wrote:
-> On Mon, Mar 16, 2020 at 10:20:52AM +0100, Michal Hocko wrote:
-> > On Fri 13-03-20 13:59:41, Minchan Kim wrote:
-> > > On Fri, Mar 13, 2020 at 09:05:46AM +0100, Michal Hocko wrote:
-> > > > On Thu 12-03-20 19:08:51, Minchan Kim wrote:
-> > > > > On Thu, Mar 12, 2020 at 09:41:55PM +0100, Michal Hocko wrote:
-> > > > > > On Thu 12-03-20 13:16:02, Minchan Kim wrote:
-> > > > > > > On Thu, Mar 12, 2020 at 09:22:48AM +0100, Michal Hocko wrote:
-> > > > > > [...]
-> > > > > > > > From eca97990372679c097a88164ff4b3d7879b0e127 Mon Sep 17 00:00:00 2001
-> > > > > > > > From: Michal Hocko <mhocko@suse.com>
-> > > > > > > > Date: Thu, 12 Mar 2020 09:04:35 +0100
-> > > > > > > > Subject: [PATCH] mm: do not allow MADV_PAGEOUT for CoW pages
-> > > > > > > > 
-> > > > > > > > Jann has brought up a very interesting point [1]. While shared pages are
-> > > > > > > > excluded from MADV_PAGEOUT normally, CoW pages can be easily reclaimed
-> > > > > > > > that way. This can lead to all sorts of hard to debug problems. E.g.
-> > > > > > > > performance problems outlined by Daniel [2]. There are runtime
-> > > > > > > > environments where there is a substantial memory shared among security
-> > > > > > > > domains via CoW memory and a easy to reclaim way of that memory, which
-> > > > > > > > MADV_{COLD,PAGEOUT} offers, can lead to either performance degradation
-> > > > > > > > in for the parent process which might be more privileged or even open
-> > > > > > > > side channel attacks. The feasibility of the later is not really clear
-> > > > > > > 
-> > > > > > > I am not sure it's a good idea to mention performance stuff because
-> > > > > > > it's rather arguble. You and Johannes already pointed it out when I sbumit
-> > > > > > > early draft which had shared page filtering out logic due to performance
-> > > > > > > reason. You guys suggested the shared pages has higher chance to be touched
-> > > > > > > so that if it's really hot pages, that whould keep in the memory. I agree.
-> > > > > > 
-> > > > > > Yes, the hot memory is likely to be referenced but the point was an
-> > > > > > unexpected latency because of the major fault. I have to say that I have
-> > > > > 
-> > > > > I don't understand your point here. If it's likely to be referenced
-> > > > > among several processes, it doesn't have the major fault latency.
-> > > > > What's your point here?
-> > > > 
-> > > > a) the particular CoW page might be cold enough to be reclaimed and b)
-> > > 
-> > > If it is, that means it's *cold* so it's really worth to be reclaimed.
-> > > 
-> > > > nothing really prevents the MADV_PAGEOUT to be called faster than the
-> > > > reference bit being readded.
-> > > 
-> > > Yeb, that's undesirable. I should admit it was not intended when I implemented
-> > > PAGEOUT. The thing is page_check_references clears access bit of pte for every
-> > > process are sharing the page so that two times MADV_PAGEOUT from a process could
-> > > evict the page. That's the really bug.
-> > 
-> > I do not really think this is a bug. This is a side effect of the
-> > reclaim process and we do not really want MADV_{PAGEOUT,COLD} behave
-> 
-> No, that's the bug since we didn't consider the side effect.
-> 
-> > differently here because then the behavior would be even harder to
-> 
-> No, I do want to have difference because it's per-process hint. IOW,
-> what he know is for only his context, not others so it shouldn't clean
-> others' pte. That makes difference between LRU aging and the hint.
+We're getting some random other stuff that we're not relly interested
+in, so match only word boundaries. Also avoid the capture group while
+at it.
 
-Just to make it clear, are you really suggesting to special case
-page_check_references for madvise path?
+Suggested by Joe Perches.
 
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: Joe Perches <joe@perches.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3005be638c2c..fc5d5aa53147 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5025,7 +5025,7 @@ F:	include/linux/dma-buf*
+ F:	include/linux/reservation.h
+ F:	include/linux/*fence.h
+ F:	Documentation/driver-api/dma-buf.rst
+-K:	dma_(buf|fence|resv)
++K:	'\bdma_(?:buf|fence|resv)\b'
+ T:	git git://anongit.freedesktop.org/drm/drm-misc
+ 
+ DMA-BUF HEAPS FRAMEWORK
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
