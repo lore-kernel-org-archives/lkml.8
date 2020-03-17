@@ -2,115 +2,121 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6666DC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBB6C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310FF2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584484480;
-	bh=/LP+yOTLJ8bmG3iy62G9dpLGOzZo7YWw9GhpuzL/3Zs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CrDeArmUYtKXXqA5rFN4WKnu5lNZ9f5udeMdXpxBgr9WaHvlDHbHca8Jz8h2PV9MI
-	 rSnsEhiUTcWeXMt/j3J2E15BXa0BDRunlRXoPYBhQcSULltgByy/qBbh+HWvjvSm3t
-	 uzvyfG3gBZi3wBUE+x7gAqs+YJyiScaH77w08Cxs=
+	by mail.kernel.org (Postfix) with ESMTP id E0A5120738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgCQWej (ORCPT
+        id S1726897AbgCQWhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:34:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39544 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 18:37:00 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1851 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgCQWei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:34:38 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1DE820674;
-        Tue, 17 Mar 2020 22:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584484478;
-        bh=/LP+yOTLJ8bmG3iy62G9dpLGOzZo7YWw9GhpuzL/3Zs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ovh3ufRqT9Kuyo9vQDhUv7CQkINb8MM9jyYJfqQwQ+2OZ535SCMb8SWLt3EXfRA+E
-         MvWraLAlFagDJiHV+WH16RTeK3bAk57Ro2Rb2j5ay4/vfaC+i1DYK8vvt/OlezHboy
-         nvKpIex7HtHVlPKF2eU7nHym/Y/cbkuYjzF1oZ3I=
-Date:   Tue, 17 Mar 2020 22:34:33 +0000
-From:   Will Deacon <will@kernel.org>
-To:     =?iso-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>
-Cc:     catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: reduce trampoline data alignment
-Message-ID: <20200317223433.GL20788@willie-the-truck>
-References: <20200316124046.103844-3-remi@remlab.net>
+        id S1726476AbgCQWhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:37:00 -0400
+IronPort-SDR: vJYtLLSTG6N+ivPZqmh/JHzPNJs2FZxaXs+zqN1hFZC3yCRNktOG/HiK3eNCDRgqdd3eXJ5XQm
+ Tp+OYKYMvf4Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 15:36:59 -0700
+IronPort-SDR: UpuZx7UVRRjax5q9nR18EPLOuIhxVzSSS01CWlg8oVG2ugwGMJD/F3XfICMuTDZn5F3Z2iUJ9t
+ X7SayYdHD3yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
+   d="scan'208";a="445649386"
+Received: from bxing-mobl.amr.corp.intel.com (HELO [10.135.41.245]) ([10.135.41.245])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Mar 2020 15:36:57 -0700
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+References: <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
+ <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
+ <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
+ <20200316225322.GJ24267@linux.intel.com>
+ <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
+ <20200316235934.GM24267@linux.intel.com>
+ <ca2c9ac0-b717-ee96-c7df-4e39f03a9193@intel.com>
+ <CAOASepN7n1XUGPQHwk2Vcu-dyyBJ7dwhM_mF_RcJa71PcNiLmA@mail.gmail.com>
+ <afec507a-48cd-a730-586a-b9135cc66315@intel.com>
+ <20200317220948.GB14566@linux.intel.com>
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+Message-ID: <acf660c0-7b8e-911c-8640-75fe43e5c384@intel.com>
+Date:   Tue, 17 Mar 2020 15:36:57 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200316124046.103844-3-remi@remlab.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200317220948.GB14566@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:40:46PM +0200, Rémi Denis-Courmont wrote:
-> From: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
+On 3/17/2020 3:09 PM, Sean Christopherson wrote:
+> On Tue, Mar 17, 2020 at 02:40:34PM -0700, Xing, Cedric wrote:
+>> Hi Nathaniel,
+>>
+>> I reread your email today and thought I might have misunderstood your email
+>> earlier. What changes are you asking for exactly? Is that just passing @leaf
+>> in %ecx rather than in %eax? If so, I wouldn't have any problem. I agree
+>> with you that the resulted API would then be callable from C, even though it
+>> wouldn't be able to return back to C due to tampered %rbx. But I think the
+>> vDSO API can preserve %rbx too, given it is used by both EENTER and EEXIT
+>> (so is unavailable for parameter passing anyway). Alternatively, the C
+>> caller can setjmp() to be longjmp()'d back from within the exit handler.
 > 
-> The trampoline data, currently consisting of two relocated pointers,
-> must be within a single page. However, there are no needs for it to
-> start a page.
+> Yep, exactly.  The other proposed change that is fairly straightforward is
+> to make the save/restore of %rsp across the exit handler call relative
+> instead of absolute, i.e. allow the exit handler to modify %rsp.  I don't
+> think this would conflict with the Intel SDK usage model?
 > 
-> This reduces the alignment to 16 bytes (with SDEI) or 8 bytes (without
-> SDEI), which is sufficient to ensure that the data is entirely within a
-> single page of the fixmap.
+> diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> index 94a8e5f99961..05d54f79b557 100644
+> --- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> @@ -139,8 +139,9 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+>          /* Pass the untrusted RSP (at exit) to the callback via %rcx. */
+>          mov     %rsp, %rcx
 > 
-> Signed-off-by: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
-> ---
->  arch/arm64/kernel/entry.S | 4 ++--
->  arch/arm64/mm/mmu.c       | 5 ++---
->  2 files changed, 4 insertions(+), 5 deletions(-)
+> -       /* Save the untrusted RSP in %rbx (non-volatile register). */
+> +       /* Save the untrusted RSP offset in %rbx (non-volatile register). */
+>          mov     %rsp, %rbx
+> +       and     $0xf, %rbx
 > 
-> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> index af17fcb4aaea..b648f9fe1e33 100644
-> --- a/arch/arm64/kernel/entry.S
-> +++ b/arch/arm64/kernel/entry.S
-> @@ -858,12 +858,12 @@ SYM_CODE_END(tramp_exit_compat)
->  	.popsection				// .entry.tramp.text
->  #ifdef CONFIG_RANDOMIZE_BASE
->  	.pushsection ".rodata", "a"
-> -	.align PAGE_SHIFT
->  #ifdef CONFIG_ARM_SDE_INTERFACE
-> +	.align	4	// all .rodata must be in a single fixmap page
->  SYM_DATA_START(__sdei_asm_trampoline_next_handler)
->  	.quad	__sdei_asm_handler
->  SYM_DATA_END(__sdei_asm_trampoline_next_handler)
-> -#endif
-> +#endif /* CONFIG_ARM_SDE_INTERFACE */
->  SYM_DATA_START(__entry_tramp_data_start)
->  	.quad	vectors
->  SYM_DATA_END(__entry_tramp_data_start)
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 9b08f7c7e6f0..6a0e75f48e7b 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -599,9 +599,8 @@ static int __init map_entry_trampoline(void)
->  	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
->  		extern char __entry_tramp_data_start[];
->  
-> -		__set_fixmap(FIX_ENTRY_TRAMP_DATA,
-> -			     __pa_symbol(__entry_tramp_data_start),
-> -			     PAGE_KERNEL_RO);
-> +		pa_start = __pa_symbol(__entry_tramp_data_start) & PAGE_MASK;
-> +		__set_fixmap(FIX_ENTRY_TRAMP_DATA, pa_start, PAGE_KERNEL_RO);
->  	}
->  
->  	return 0;
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+>          /*
+>           * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
+> @@ -161,8 +162,8 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+>          mov     0x20(%rbp), %rax
+>          call    .Lretpoline
+> 
+> -       /* Restore %rsp to its post-exit value. */
+> -       mov     %rbx, %rsp
+> +       /* Undo the post-exit %rsp adjustment. */
+> +       lea     0x20(%rsp,%rbx), %rsp
+> 
+Yep. Though it looks a bit uncommon, I do think it will work.
