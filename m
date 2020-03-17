@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3251EC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C06BC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB4420736
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273B020719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443084;
-	bh=0dvnIHjIvrMzVSv9CLZhGvjeFyWFTtD1oWPl5DeL6NA=;
+	s=default; t=1584443088;
+	bh=9NoQVqoZS1Vz2ny1kBlQ6fnhup0i0q5dtmWUnuZaFbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MOpQKGZ4wX5i8o2piqaZ+E0BymPml8CIu35aq1EOehwRgCSyrdUxYkgImDXo2ZckS
-	 j1S70XM1bMNDOGRJJnnpYmEke8Wp1bJsCeh3HBo/FE+Z0NsRH67Ch3knj1vjU3nSnZ
-	 4OvYTllbJK/wzAMFkd8nDIs1yyowA+ESVNoXO+C4=
+	b=NoDuKSk7EstvjBcUkfje4mszn0+XQ0y7jVgVnj+fI5wlhKKt/x0xAL9Jq/zPC6+YX
+	 arFbBZJ46+d8RQq4wijqfoOugOUChJ/m9WjHT0ZgixHvjkhVx3vs4P5jM9kQJE4CP9
+	 ee5thRw9hot32zz94Oe8skQ8NCMZVSIvbfr5tvnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgCQLEn (ORCPT
+        id S1726872AbgCQLEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44984 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728312AbgCQLEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:38 -0400
+        id S1727940AbgCQLEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36E5420658;
-        Tue, 17 Mar 2020 11:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A80EA20736;
+        Tue, 17 Mar 2020 11:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443077;
-        bh=0dvnIHjIvrMzVSv9CLZhGvjeFyWFTtD1oWPl5DeL6NA=;
+        s=default; t=1584443080;
+        bh=9NoQVqoZS1Vz2ny1kBlQ6fnhup0i0q5dtmWUnuZaFbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQS93WGeabGvKuPRnboaetedfBX7I5D+6mzPd6oixLpH8jepFC/C2IL44F/VuKXKt
-         lGNr1v7OudwyMDoD926ElMnquwDi6ju0XpqP5FMuseoozmRgWBeYcL01aTMYv9qNdZ
-         hQa5Q50LnxvmWv0LQ5raMkUZshHO5/lsLoTAeyso=
+        b=lCCrKGMhOhLx20RIRGgpmWrYklPvqe7IBPLda/hSWfr51VBpqT8GhGfSZk5VmKT/v
+         52jX1lBYSVsZ924s1B/8Bqf4K/H2iz7ip5WBcX4UpCMZELuA6wsYGiGKP3SZy2TdnU
+         CDHYzGICrMfxAf0o7YyRkGENMZ+Cep5SQw3CJNcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.4 089/123] i2c: designware-pci: Fix BUG_ON during device removal
-Date:   Tue, 17 Mar 2020 11:55:16 +0100
-Message-Id: <20200317103316.846384251@linuxfoundation.org>
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 090/123] mt76: fix array overflow on receiving too many fragments for a packet
+Date:   Tue, 17 Mar 2020 11:55:17 +0100
+Message-Id: <20200317103316.934745037@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -61,39 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-commit 9be8bc4dd6177cf992b93b0bd014c4f611283896 upstream.
+commit b102f0c522cf668c8382c56a4f771b37d011cda2 upstream.
 
-Function i2c_dw_pci_remove() -> pci_free_irq_vectors() ->
-pci_disable_msi() -> free_msi_irqs() will throw a BUG_ON() for MSI
-enabled device since the driver has not released the requested IRQ before
-calling the pci_free_irq_vectors().
+If the hardware receives an oversized packet with too many rx fragments,
+skb_shinfo(skb)->frags can overflow and corrupt memory of adjacent pages.
+This becomes especially visible if it corrupts the freelist pointer of
+a slab page.
 
-Here driver requests an IRQ using devm_request_irq() but automatic
-release happens only after remove callback. Fix this by explicitly
-freeing the IRQ before calling pci_free_irq_vectors().
-
-Fixes: 21aa3983d619 ("i2c: designware-pci: Switch over to MSI interrupts")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-designware-pcidrv.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/mediatek/mt76/dma.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/i2c/busses/i2c-designware-pcidrv.c
-+++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
-@@ -313,6 +313,7 @@ static void i2c_dw_pci_remove(struct pci
- 	pm_runtime_get_noresume(&pdev->dev);
+--- a/drivers/net/wireless/mediatek/mt76/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/dma.c
+@@ -448,10 +448,13 @@ mt76_add_fragment(struct mt76_dev *dev,
+ 	struct page *page = virt_to_head_page(data);
+ 	int offset = data - page_address(page);
+ 	struct sk_buff *skb = q->rx_head;
++	struct skb_shared_info *shinfo = skb_shinfo(skb);
  
- 	i2c_del_adapter(&dev->adapter);
-+	devm_free_irq(&pdev->dev, dev->irq, dev);
- 	pci_free_irq_vectors(pdev);
- }
+-	offset += q->buf_offset;
+-	skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, page, offset, len,
+-			q->buf_size);
++	if (shinfo->nr_frags < ARRAY_SIZE(shinfo->frags)) {
++		offset += q->buf_offset;
++		skb_add_rx_frag(skb, shinfo->nr_frags, page, offset, len,
++				q->buf_size);
++	}
  
+ 	if (more)
+ 		return;
 
 
