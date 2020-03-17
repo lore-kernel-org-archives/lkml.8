@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17FFC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7988C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD7520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C1A20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444124;
-	bh=Xm8Z014pk2x8VwaGlzsmRLXltETeKcYWHoTM1dlIbYE=;
+	s=default; t=1584444131;
+	bh=nXgozMkuLoOhBNTl0mDmZ/R/xVKVI29dOWMN34GolFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NsCBOlzzhGnCjhAP/wqyH2wU5TDhvyk8lf90rnodXpEp8N7P17nL2hsz/G9V0vsBu
-	 UXwqSYoh8JeBBMh6rY2Ak436Wdo2HoPRVeMnz9E7ldau8ZhPgq4udrwXhhz6f0gZ3c
-	 ZjVKIAdneqA/zHG4Ub127YPO0aYABUIM8MNedsXg=
+	b=gA4P2BJ6kNE5bO/fVp57Fkx9tJktIDPYH0eFICC8IwVMMMVF/lzBy5/sCaoTQr06W
+	 cRPyPhcsy95WM5riFQnqYizSn1x1N16wntsZgSXiZvCMI1CMnN/ai3uFXdsYvF45Yn
+	 Jfma+qA5rj+UcsU/rkagLXwLbMuzCjibuBMeta+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgCQK5d (ORCPT
+        id S1727071AbgCQLWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:57:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35358 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgCQK52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:57:28 -0400
+        id S1726077AbgCQK50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:57:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7A582076E;
-        Tue, 17 Mar 2020 10:57:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41EC220724;
+        Tue, 17 Mar 2020 10:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442648;
-        bh=Xm8Z014pk2x8VwaGlzsmRLXltETeKcYWHoTM1dlIbYE=;
+        s=default; t=1584442645;
+        bh=nXgozMkuLoOhBNTl0mDmZ/R/xVKVI29dOWMN34GolFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xr4ltx8jzj0L45Phr5DOiv++uY/GwYwezFlNV12Vw87lF96TAZzgjbqyZurJAnk03
-         2tykZtAtvO2Su3ReaHWbCsvI/hsBTMoV56K0b9ocdLyoOJlmB/9NQ8uE0OD5HNcnMt
-         PqGXDLmbIc6kBatPx88zKD+TvuSIWTzBXjY0DcZg=
+        b=QlgOU+2giftc/wOgWlwV1HI6/vLmkqESXDIXSYQzjrq5eq3DYU8Pa3/oXY2nN+Lvn
+         qbJt5mFKbDknLXd7gcSS0EHjMpQzyMbTKBbk6DDdkKY7X3fH7rkoRmoQwrnS2Di4Lu
+         ZNCVNW3OLAn0nicB8Ja3U+IzPFgWgt7Z6R9O82NI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Per Sundstrom <per.sundstrom@redqube.se>,
+        Jiri Wiesner <jwiesner@suse.com>,
+        Eric Dumazet <edumazet@google.com>,
         Mahesh Bandewar <maheshb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 09/89] ipvlan: do not use cond_resched_rcu() in ipvlan_process_multicast()
-Date:   Tue, 17 Mar 2020 11:54:18 +0100
-Message-Id: <20200317103300.940961121@linuxfoundation.org>
+Subject: [PATCH 4.19 08/89] ipvlan: do not add hardware address of master to its unicast filter list
+Date:   Tue, 17 Mar 2020 11:54:17 +0100
+Message-Id: <20200317103300.806460880@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -60,43 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jiri Wiesner <jwiesner@suse.com>
 
-[ Upstream commit afe207d80a61e4d6e7cfa0611a4af46d0ba95628 ]
+[ Upstream commit 63aae7b17344d4b08a7d05cb07044de4c0f9dcc6 ]
 
-Commit e18b353f102e ("ipvlan: add cond_resched_rcu() while
-processing muticast backlog") added a cond_resched_rcu() in a loop
-using rcu protection to iterate over slaves.
+There is a problem when ipvlan slaves are created on a master device that
+is a vmxnet3 device (ipvlan in VMware guests). The vmxnet3 driver does not
+support unicast address filtering. When an ipvlan device is brought up in
+ipvlan_open(), the ipvlan driver calls dev_uc_add() to add the hardware
+address of the vmxnet3 master device to the unicast address list of the
+master device, phy_dev->uc. This inevitably leads to the vmxnet3 master
+device being forced into promiscuous mode by __dev_set_rx_mode().
 
-This is breaking rcu rules, so lets instead use cond_resched()
-at a point we can reschedule
+Promiscuous mode is switched on the master despite the fact that there is
+still only one hardware address that the master device should use for
+filtering in order for the ipvlan device to be able to receive packets.
+The comment above struct net_device describes the uc_promisc member as a
+"counter, that indicates, that promiscuous mode has been enabled due to
+the need to listen to additional unicast addresses in a device that does
+not implement ndo_set_rx_mode()". Moreover, the design of ipvlan
+guarantees that only the hardware address of a master device,
+phy_dev->dev_addr, will be used to transmit and receive all packets from
+its ipvlan slaves. Thus, the unicast address list of the master device
+should not be modified by ipvlan_open() and ipvlan_stop() in order to make
+ipvlan a workable option on masters that do not support unicast address
+filtering.
 
-Fixes: e18b353f102e ("ipvlan: add cond_resched_rcu() while processing muticast backlog")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Mahesh Bandewar <maheshb@google.com>
+Fixes: 2ad7bf3638411 ("ipvlan: Initial check-in of the IPVLAN driver")
+Reported-by: Per Sundstrom <per.sundstrom@redqube.se>
+Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Mahesh Bandewar <maheshb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ipvlan/ipvlan_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ipvlan/ipvlan_main.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/net/ipvlan/ipvlan_core.c
-+++ b/drivers/net/ipvlan/ipvlan_core.c
-@@ -282,7 +282,6 @@ void ipvlan_process_multicast(struct wor
- 			}
- 			ipvlan_count_rx(ipvlan, len, ret == NET_RX_SUCCESS, true);
- 			local_bh_enable();
--			cond_resched_rcu();
- 		}
- 		rcu_read_unlock();
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -236,7 +236,6 @@ static void ipvlan_uninit(struct net_dev
+ static int ipvlan_open(struct net_device *dev)
+ {
+ 	struct ipvl_dev *ipvlan = netdev_priv(dev);
+-	struct net_device *phy_dev = ipvlan->phy_dev;
+ 	struct ipvl_addr *addr;
  
-@@ -299,6 +298,7 @@ void ipvlan_process_multicast(struct wor
- 		}
- 		if (dev)
- 			dev_put(dev);
-+		cond_resched();
- 	}
+ 	if (ipvlan->port->mode == IPVLAN_MODE_L3 ||
+@@ -250,7 +249,7 @@ static int ipvlan_open(struct net_device
+ 		ipvlan_ht_addr_add(ipvlan, addr);
+ 	rcu_read_unlock();
+ 
+-	return dev_uc_add(phy_dev, phy_dev->dev_addr);
++	return 0;
  }
  
+ static int ipvlan_stop(struct net_device *dev)
+@@ -262,8 +261,6 @@ static int ipvlan_stop(struct net_device
+ 	dev_uc_unsync(phy_dev, dev);
+ 	dev_mc_unsync(phy_dev, dev);
+ 
+-	dev_uc_del(phy_dev, phy_dev->dev_addr);
+-
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(addr, &ipvlan->addrs, anode)
+ 		ipvlan_ht_addr_del(addr);
 
 
