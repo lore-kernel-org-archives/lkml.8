@@ -2,120 +2,128 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE1CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E987CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA8920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA4B20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:07:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WW5z8lsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgCQPHK (ORCPT
+        id S1727016AbgCQPHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:07:10 -0400
-Received: from mga07.intel.com ([134.134.136.100]:23049 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgCQPHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:07:10 -0400
-IronPort-SDR: W+pmRMzMsWWIonsSDVOoS0JiKVoVBdMnAEqGhq1KB+/RK2vfyOjQSmkwwkKbpsAWLqD+41LJl9
- TXCIaMyYNgtg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 08:07:09 -0700
-IronPort-SDR: +8+4g4cTydYa/j7bUY6QqCEIpWQSFEJnJ6LCC7IGQCOV3sCnsQhbFyB0u4NH4Op51mh7L5JV/y
- J0Zwp5bkIa7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="445524084"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Mar 2020 08:07:07 -0700
-Subject: Re: [PATCH v2 0/3] Introduce the request_atomic() for the host
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cover.1584428736.git.baolin.wang7@gmail.com>
- <7866e519-80ad-8678-6708-7726a53ea4f5@intel.com>
- <CADBw62q7q=wqKGBnLRA+npYLVZVXeMiFwGP-K1TLkG2GPCwLjg@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <ce622b0c-6ec0-10c8-f71f-fa2bba8b4a66@intel.com>
-Date:   Tue, 17 Mar 2020 17:06:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 11:07:24 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:23990 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726726AbgCQPHY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:07:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584457642;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EO6KQuA127O5XZwuqvLGhbQe2uTfyPpCExwjf2857y0=;
+        b=WW5z8lsTjyK5Olp/LoEWxf4c4XwXMouLJFR1HPmL+gr/stMbSoGxmjnptl0/TEgYFn59pD
+        hnMaPyjGGgsVdr96UKsozb7SUHtMRqEB9ZQemz3dpsU5HRW80vOYQ3RQJnlzEfv4DsfKHA
+        VF4ZROuYgqUqBLLZzh1OYFm4xVdAl/8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-sJ61PwVKPvCDsPCkPWqb7w-1; Tue, 17 Mar 2020 11:07:18 -0400
+X-MC-Unique: sJ61PwVKPvCDsPCkPWqb7w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B66CD107B789;
+        Tue, 17 Mar 2020 15:06:58 +0000 (UTC)
+Received: from krava (unknown [10.40.195.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E3DB60BF3;
+        Tue, 17 Mar 2020 15:06:53 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 16:06:47 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
+        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
+        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
+        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH v5 09/11] perf/tools: Enhance JSON/metric infrastructure
+ to handle "?"
+Message-ID: <20200317150647.GA757893@krava>
+References: <20200317062333.14555-1-kjain@linux.ibm.com>
+ <20200317062333.14555-10-kjain@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CADBw62q7q=wqKGBnLRA+npYLVZVXeMiFwGP-K1TLkG2GPCwLjg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317062333.14555-10-kjain@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/20 3:49 pm, Baolin Wang wrote:
-> On Tue, Mar 17, 2020 at 9:25 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 17/03/20 12:14 pm, Baolin Wang wrote:
->>> This patch set introduces a new request_atomic() interface for the
->>> MMC host controller, which is used to submit a request to host in
->>> the atomic context, such as in the irq hard handler, to reduce the
->>> request latency.
->>>
->>> Any comments are welcome. Thanks.
->>>
->>> Note: Adrian pointed out that it is not good if moving the polling of
->>> inhibit bits in sdhci_send_command() into the interrupt context, but
->>> now I have not found a better way to address Adrian's concern. Moveover
->>> this is an unusual abnormal case and the original code has the same
->>> problem, so I plan to create another patch set to talk about and fix
->>> this issue.
->>
->> I tend to think the API requires the possibility for host controllers to
->> return "busy", so that should be sorted out first.
-> 
-> If request_atomic() can return 'busy', the HSQ need queue a work to
-> dispatch this request to host again?
+On Tue, Mar 17, 2020 at 11:53:31AM +0530, Kajol Jain wrote:
 
-Sounds reasonable
+SNIP
 
-> 
-> I am thinking if I can introduce a new flag to avoid polling the
-> status before sending commands, cause from the datasheet, I did not
-> see we should need do this if the command complete and transfer
-> complete interrupts are processed normally. At least on my platfrom, I
-> did not see the inhibit bits are set. If we meet this issue, I think
-> some abormal things are happened, we should give out errors. How do
-> you think?
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index 0938ad166ece..7786829b048b 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -17,12 +17,13 @@ struct expr_parse_ctx {
+>  
+>  struct expr_scanner_ctx {
+>  	int start_token;
+> +	int expr__runtimeparam;
 
-For the atomic path, some kind of warning would be ok.
+no need for expr__ prefix in here.. jsut runtime_param
 
-> 
->>>
->>> Changes from v1:
->>>  - Re-split the changes to make them more clear suggested by Ulf.
->>>  - Factor out the auto CMD23 checking into a separate function.
->>>
->>> Baolin Wang (3):
->>>   mmc: host: Introduce the request_atomic() for the host
->>>   mmc: host: sdhci: Implement the request_atomic() API
->>>   mmc: host: sdhci-sprd: Implement the request_atomic() API
->>>
->>>  drivers/mmc/host/mmc_hsq.c    |  5 ++++-
->>>  drivers/mmc/host/sdhci-sprd.c | 23 ++++++++++++++++++++---
->>>  drivers/mmc/host/sdhci.c      | 27 +++++++++++++++++++--------
->>>  drivers/mmc/host/sdhci.h      |  1 +
->>>  include/linux/mmc/host.h      |  3 +++
->>>  5 files changed, 47 insertions(+), 12 deletions(-)
->>>
->>
-> 
-> 
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 402af3e8d287..85ac6d913782 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -336,7 +336,7 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+>  		metric_events = counter->metric_events;
+>  		if (!metric_events) {
+>  			if (expr__find_other(counter->metric_expr, counter->name,
+> -						&metric_names, &num_metric_names) < 0)
+> +						&metric_names, &num_metric_names, 1) < 0)
+>  				continue;
+>  
+>  			metric_events = calloc(sizeof(struct evsel *),
+> @@ -777,7 +777,15 @@ static void generic_metric(struct perf_stat_config *config,
+>  	}
+>  
+>  	if (!metric_events[i]) {
+> -		if (expr__parse(&ratio, &pctx, metric_expr) == 0) {
+> +		int param = 1;
+> +		if (strstr(metric_expr, "?")) {
+> +			char *tmp = strrchr(metric_name, '_');
+> +
+> +			tmp++;
+> +			param = strtol(tmp, &tmp, 10);
+> +		}
+
+so, if metric_expr contains '?' you go and search metric_name for '_'
+and use the number after '_' ... ugh.. what's the logic? 
+
+I understand you create as many metrics as the magic runtime param
+tells you.. but what's the connection to this?
+
+could you please outline in the changelog or comment the whole scheme
+of how this all should work? like step by step on some simple example?
+
+thanks,
+jirka
 
