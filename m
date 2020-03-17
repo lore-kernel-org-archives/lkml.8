@@ -2,149 +2,94 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60841C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00906C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EFE2076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81A72076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JWAyEiNu"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="se96Gfa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgCQNgU (ORCPT
+        id S1726769AbgCQNgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:36:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41437 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCQNgT (ORCPT
+        Tue, 17 Mar 2020 09:36:42 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34210 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgCQNgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:36:19 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t16so2612681plr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:36:19 -0700 (PDT)
+        Tue, 17 Mar 2020 09:36:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z15so25675584wrl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:36:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=YXH/xNjxfleJEOV9byMjccsKxIs9a6z9OWbDdfpz6zc=;
-        b=JWAyEiNuawTbzorI83x8So0gmfsgpwNOs6jttV8hfKCHYkRXRBaT+C+hh87XItsDBm
-         vPgKo0OZ3oIVlb6gTgvnxKtV1zz3tRx5tzYAU5gs0JfLy/xBcGXBsBPWRZzBLEEaXfIV
-         28uEueo9T1tDm+axDqubcH/w1zJYyTpnbaXJeUiDY1FSKtQxmULUN4ZaUSmDr+O6rr83
-         lt/F5WUbANR/ANSEw/aNW2OVy233bGggVheNCdEls8PSMuwWinSVvwxKx5yhYWGsQC5T
-         coCaY+Sr/nSPn9lWGHCO5W5ehx3hv6xphbd1kR0WTalMsf0zPMUA55xRRc/977aj4zU6
-         B9QQ==
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=C5UUMlB1vuVsFqD+amvxd3LJdmlP7Psxf6b/ICw2yeE=;
+        b=se96Gfa2PabhLjXbMk3DF/dsiXpQcRoXaNnO0MF+OIOP+6Ga54A4maQX31UU5r4vPU
+         5/hGqPTpnRLR8DecY2Pg23NZ1/yWDIJoZWfsSry8XsID7ZcqDz1R9QAiNgSTrPlRbaqx
+         Kx5W9cykjsWagYxQgEhiKtKMvH2zCyN6USHJs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=YXH/xNjxfleJEOV9byMjccsKxIs9a6z9OWbDdfpz6zc=;
-        b=swUwsHFZVn1PRB8+a4dYDu5jfOPKX+J2cbYOcMciAkC/uYt5u5sOFpBQbJ384AKTdQ
-         VgLv92N21DPx6qaqtUZy5xPEq1z0sGbyC88OcllhwEOTiPzrk2RqZJyf+4mIr4RFWswY
-         aYxXDNoqe7+6YfAgs2FWMk01/O9CSIgfQkgY5pQLmvD+F4IpTSQkTtDx88zsNtr4quB7
-         RwMcoMwUJYGtwPWUMXxl9LahTpDYLDpATCHzl2+hQt2hTCyySWyLohiLn1ECL6eoJpWd
-         LbgFezJXNpGtrETvivdaoHMiT07hgqs/jJDmpnQVSzJQuMLkMrG1ufCTwtYPuu6Ex721
-         olVw==
-X-Gm-Message-State: ANhLgQ1jr4gSDl5Emi4T5n9RzV8A+zxA92EqC2mtiqNkkYJIl7c9Ngzu
-        YwMiWoqdhgUchEOHGIRtlSaufvEZ
-X-Google-Smtp-Source: ADFU+vsdKkZOSbYKYTdaP996gRlC8ZEsAXNNtMSQ+NHtfA057RJVAxylFVonGmibsVEfMno0CouzLw==
-X-Received: by 2002:a17:90a:3a8c:: with SMTP id b12mr5498911pjc.48.1584452178849;
-        Tue, 17 Mar 2020 06:36:18 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s125sm2853594pgc.53.2020.03.17.06.36.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 06:36:17 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Subject: [PATCH] lib/test_lockup: Rename disable_irq to fix build error
-Date:   Tue, 17 Mar 2020 06:36:14 -0700
-Message-Id: <20200317133614.23152-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=C5UUMlB1vuVsFqD+amvxd3LJdmlP7Psxf6b/ICw2yeE=;
+        b=arxiaQfUj92u8zvbX1hA+ve1RAtZ3Ngwf22qUB/FFwDpkR+otqJedT9Z7RPDsos3qW
+         YZYxhi2e5UvH2UOnPyabF4o6JHPgRYums8n0pKkJ/3YjY0VBvwWqJj0+MxOANgN/Q1d+
+         zV/tiAg1btptkgX6aN/TreU4FlQCOvQCp1RyCWD5ehKLU1zE5l8LrG58JVbMH6g1ZtRf
+         sChtcbd7PPLjgWBcg/ut5zjUfu7D3DhuiFCQuZdf365fL2BMzo/1cGjgXzzYHZDTXCXR
+         +N2uSa+Ck92nlZB/tnFAj2itB3Jm763Ndm2CEy+reGsJYV4Gl4Nd7IIlx68Z6lmkgawz
+         OVsg==
+X-Gm-Message-State: ANhLgQ2VbK2GQN7ZJitdZP+HUC73M4z8tbKuMkCxJyFTpsNTJVWL+Qvi
+        pC9wfMffPClsud8v3XgzLWQ51BjUZLIuJ4Ie
+X-Google-Smtp-Source: ADFU+vt2hjTZMVdUwDmhSalbO2esCViQhgfOwq7UWI9SwWOAqbVu4rfpvcU688VZVd1B1aN3n2pb0g==
+X-Received: by 2002:a5d:522c:: with SMTP id i12mr5953325wra.176.1584452200128;
+        Tue, 17 Mar 2020 06:36:40 -0700 (PDT)
+Received: from ub1910 ([213.48.11.149])
+        by smtp.gmail.com with ESMTPSA id k5sm3743373wmj.18.2020.03.17.06.36.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 06:36:39 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 13:36:38 +0000
+From:   Paul Barker <pbarker@konsulko.com>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/7] dt-bindings: pwm: add normal PWM polarity flag
+Message-ID: <20200317133638.5951a743@ub1910>
+In-Reply-To: <20200317123231.2843297-4-oleksandr.suvorov@toradex.com>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+        <20200317123231.2843297-4-oleksandr.suvorov@toradex.com>
+Organization: Konsulko Group
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mips:allmodconfig fails to build.
+On Tue, 17 Mar 2020 14:32:27 +0200
+Oleksandr Suvorov <oleksandr.suvorov@toradex.com> wrote:
 
-lib/test_lockup.c:87:13: error:
-	'disable_irq' redeclared as different kind of symbol
-   87 | static bool disable_irq;
-      |             ^~~~~~~~~~~
-In file included from arch/mips/include/asm/highmem.h:24,
-                 from arch/mips/include/asm/pgtable-32.h:22,
-                 from arch/mips/include/asm/pgtable.h:14,
-                 from include/linux/mm.h:95,
-                 from lib/test_lockup.c:15:
-include/linux/interrupt.h:237:13: note:
-	previous declaration of 'disable_irq' was here
-  237 | extern void disable_irq(unsigned int irq);
+> PWM can have a normal polarity and a reverted one. The reverted polarity
+> value is defined.
+> Define the PWM_POLARITY_NORMAL to be used further.
+> 
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-Rename the variable to fix the problem.
+s/reverted/inverted/
 
-Fixes: 0e86238873f3 ("lib/test_lockup: test module to generate lockups")
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- lib/test_lockup.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/lib/test_lockup.c b/lib/test_lockup.c
-index b45afd3ad7cb..83683ec1f429 100644
---- a/lib/test_lockup.c
-+++ b/lib/test_lockup.c
-@@ -84,8 +84,8 @@ static unsigned long lock_wait_threshold = ULONG_MAX;
- module_param(lock_wait_threshold, ulong, 0400);
- MODULE_PARM_DESC(lock_wait_threshold, "print lock wait time longer than this in nanoseconds, default off");
- 
--static bool disable_irq;
--module_param(disable_irq, bool, 0400);
-+static bool test_disable_irq;
-+module_param_named(disable_irq, test_disable_irq, bool, 0400);
- MODULE_PARM_DESC(disable_irq, "disable interrupts: generate hard-lockups");
- 
- static bool disable_softirq;
-@@ -179,7 +179,7 @@ static void test_lock(bool master, bool verbose)
- 			down_write(&main_task->mm->mmap_sem);
- 	}
- 
--	if (disable_irq)
-+	if (test_disable_irq)
- 		local_irq_disable();
- 
- 	if (disable_softirq)
-@@ -252,7 +252,7 @@ static void test_unlock(bool master, bool verbose)
- 	if (disable_softirq)
- 		local_bh_enable();
- 
--	if (disable_irq)
-+	if (test_disable_irq)
- 		local_irq_enable();
- 
- 	if (lock_mmap_sem && master) {
-@@ -479,8 +479,8 @@ static int __init test_lockup_init(void)
- 	if ((wait_state != TASK_RUNNING ||
- 	     (call_cond_resched && !reacquire_locks) ||
- 	     (alloc_pages_nr && gfpflags_allow_blocking(alloc_pages_gfp))) &&
--	    (disable_irq || disable_softirq || disable_preempt || lock_rcu ||
--	     lock_spinlock_ptr || lock_rwlock_ptr)) {
-+	    (test_disable_irq || disable_softirq || disable_preempt ||
-+	     lock_rcu || lock_spinlock_ptr || lock_rwlock_ptr)) {
- 		pr_err("refuse to sleep in atomic context\n");
- 		return -EINVAL;
- 	}
-@@ -495,7 +495,7 @@ static int __init test_lockup_init(void)
- 		  cooldown_secs, cooldown_nsecs, iterations, state,
- 		  all_cpus ? "all_cpus " : "",
- 		  iowait ? "iowait " : "",
--		  disable_irq ? "disable_irq " : "",
-+		  test_disable_irq ? "disable_irq " : "",
- 		  disable_softirq ? "disable_softirq " : "",
- 		  disable_preempt ? "disable_preempt " : "",
- 		  lock_rcu ? "lock_rcu " : "",
 -- 
-2.17.1
-
+Paul Barker
+Konsulko Group
