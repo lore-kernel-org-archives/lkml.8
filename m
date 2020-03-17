@@ -2,59 +2,64 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059D7C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D542CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC507205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ADF205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qLUq4/RN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tdBd3JXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbgCQGzA (ORCPT
+        id S1726189AbgCQGzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:55:00 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:45681 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgCQGy7 (ORCPT
+        Tue, 17 Mar 2020 02:55:05 -0400
+Received: from mail-qv1-f73.google.com ([209.85.219.73]:47701 "EHLO
+        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgCQGzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:54:59 -0400
-Received: by mail-pf1-f201.google.com with SMTP id a188so681925pfa.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:54:58 -0700 (PDT)
+        Tue, 17 Mar 2020 02:55:04 -0400
+Received: by mail-qv1-f73.google.com with SMTP id o102so8555791qvo.14
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:55:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cF0mn8RFp/NzGOPpgquFoVLhCbRSN6dQrHYHqFzbKxU=;
-        b=qLUq4/RNPb7PhrgnudeQu/ls8asTv9i4YDOfr3NggSvcNYi4UxSfYMit8S1WUgfRKZ
-         hZbbZQPFLrVYc4w+L0UZzkonnR+9Rm8+cgeDoLy//zUl/eEx1tyOtsRTwwk0IC1GmMk5
-         7CS7xqEvKVY1hdXlUYzYVEQFG7dy5X2lR4whv4tssypZlespqwDBYf2ykgBrHzGRsoWw
-         KSyWF/LIwFFvygdQi7hxsX3du+o+gHjUR3p65oe+tr2Bc5ohTBv5n7uD892DON5VSkoX
-         pinFPh3FrUqi+8QXt/ZEbxdi0FQwUvd8TPga7GUwJMefUnNRxfnPnWu3NX9YAlqNlHUu
-         10hg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=Vz8Rl+tO3s2Fvzy9mMmth3PcVEenCGW3CyqKGLCsJ9M=;
+        b=tdBd3JXMEOE0YT+L7rwOPZHaK8kRVwY4smj7X3+QwEyDXEwn7tlhTF4Ytp0NC86X6q
+         fT+BVMQpi67m9Q7lWDaj5yz1NykcSCPNpGQVIgCGqBeH1Z3YwPU9zQxS2D9ZnXph+o+9
+         hQBq1hYrgu7RWtKAszJvhlM964Knk9Pwoh/q+j+w4Kvxg0e3dKq1Mkb9+356AB/d/H7h
+         iAD7OzZ0QrCyxEdaBvXRTCqKVt8QlI4DQXlT6N+Mz+wM845Q62Q3guDM61RAa9rg7bzG
+         /LgCZAZbkmbfP7IiHAyTZtQ6S9+jLL1Ghvq0dxxWFL35GKxD7ldotwJLihuEfRF9jzU2
+         dnsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cF0mn8RFp/NzGOPpgquFoVLhCbRSN6dQrHYHqFzbKxU=;
-        b=bO0zT3aXNtLRhVGhMEO6Gg88ikXUCCQ+DavhDvP2SH1c9nORDT11cCGVALIpm/ZvVa
-         5twzsqOqAZiS4IH1HiXXszuyAO7KxqIOtah9aavnKs0XLUhjTtpfWC67Nvw5+o9lV2g5
-         m5nFXCHKIwA+QZirlluQdqwjeM1C7tkvvN/dKToIxh0PoIXgrLWPALVvGDIBDQzXlBi6
-         FRqx3IkgMot7lOntxLtXYNiGzVK0waKTmuDwR0p5GClwVVY7D1IbDxgVqyszCZBmnKdp
-         HZVStlokzjrAD1BGE35ALZirpTdo5lmcWeUrTNfzdzqBB57TQlqfoPLHGaKNWvxp1t/W
-         uvag==
-X-Gm-Message-State: ANhLgQ2082ISvPpzS+cX18n8epQQegZ/TFUkYonJBizVcOX88y8ZCRbA
-        S/accbaVTF1J5b24SWlHuVHuPXbW7cZqGbA=
-X-Google-Smtp-Source: ADFU+vt2Zvqf1px/Dmb35lmQnUB5JpW8RvY7l95YZat6XfupQdXF2UMeOYFTa4BNyZ32vltscuYTU3kAv+PeRtc=
-X-Received: by 2002:a63:8342:: with SMTP id h63mr3660917pge.141.1584428098211;
- Mon, 16 Mar 2020 23:54:58 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 23:54:46 -0700
-Message-Id: <20200317065452.236670-1-saravanak@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Vz8Rl+tO3s2Fvzy9mMmth3PcVEenCGW3CyqKGLCsJ9M=;
+        b=qF8FNGymVJAKohEO/txYVU/4hLPe/xqhJXmR/R7YeUzI6ue4DduF6+SOQ2Ye5ZmUN0
+         PcF/puxNqcA7jP57b/sIpotpb4sFf+3KlzwomGSmnniQU+qrsGX5fy0cAiBISdrDafoH
+         Ma6NgXBhRbILrl6u55JAUiJJdct0RbaoW2q0QmKjyXorw6dNGWtsTWCd9PkzO32VZRE7
+         F4I/2Ba1VYFizF6BAI97oJrmngJLvO6v3Hu+LM8XUk55TchljzuEsDrT1iURIILmYD/s
+         LlcJGjbUdKbJYFLD7YzLnaGM25+irw7C6wR7qKTR6rO6zQlsqG20YiHapLt0z/OXWuXy
+         zlrQ==
+X-Gm-Message-State: ANhLgQ0r/vixPgmj8FUQ9iLIaZZstK7XD8TFIPAMzvHF0N/zDdJeipo1
+        Q/4ofZDHsP5kSeC8ZepYV4dQsXkVIol97zg=
+X-Google-Smtp-Source: ADFU+vslXcTXZHxFbul+vKyVDDYbE109vB2qzmfCtTVliZ++Zd5h8tOc4jJH81ED+tXuc5j8cMzPwT/wJ2uvyfk=
+X-Received: by 2002:ac8:5193:: with SMTP id c19mr3907270qtn.204.1584428101406;
+ Mon, 16 Mar 2020 23:55:01 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 23:54:47 -0700
+In-Reply-To: <20200317065452.236670-1-saravanak@google.com>
+Message-Id: <20200317065452.236670-2-saravanak@google.com>
 Mime-Version: 1.0
+References: <20200317065452.236670-1-saravanak@google.com>
 X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v1 0/6] Fix device links functional breakage in 4.19.99
+Subject: [PATCH v1 1/6] driver core: Remove the link if there is no driver
+ with AUTO flag
 From:   Saravana Kannan <saravanak@google.com>
 To:     stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -64,52 +69,52 @@ To:     stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
 Cc:     Saravana Kannan <saravanak@google.com>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, kernel-team@android.com
+        linux-mediatek@lists.infradead.org, kernel-team@android.com,
+        Yong Wu <yong.wu@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As mentioned in an earlier email thread [1], 4.19.99 broke the ability
-to create stateful and stateless device links between the same set of
-devices when it pulled in a valid bug fix [2]. While the fix was valid,
-it removes a functionality that was present before the bug fix.
+From: Yong Wu <yong.wu@mediatek.com>
 
-This patch series attempts to fix that by pulling in more patches from
-upstream. I've just done compilation testing so far. But wanted to send
-out a v1 to see if this patch list was acceptable before I fixed up the
-commit text format to match what's needed for stable mailing list.
+DL_FLAG_AUTOREMOVE_CONSUMER/SUPPLIER means "Remove the link
+automatically on consumer/supplier driver unbind", that means we should
+remove whole the device_link when there is no this driver no matter what
+the ref_count of the link is.
 
-Some of the patches are new functionality, but for a first pass, it was
-easier to pull these in than try and fix the conflicts. If these patches
-are okay to pull into stable, then all I need to do is fix the commit
-text.
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+(cherry picked from commit 0fe6f7874d467456da6f6a221dd92499a3ab1780)
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/base/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Saravana
-
-[1] - https://lore.kernel.org/stable/CAGETcx-0dKRWo=tTVcfJQhQUsMtX_LtL6yvDkb3CMbvzREsvOQ@mail.gmail.com/#t
-[2] - 6fdc440366f1a99f344b629ac92f350aefd77911
-
-
-Rafael J. Wysocki (5):
-  driver core: Fix adding device links to probing suppliers
-  driver core: Make driver core own stateful device links
-  driver core: Add device link flag DL_FLAG_AUTOPROBE_CONSUMER
-  driver core: Remove device link creation limitation
-  driver core: Fix creation of device links with PM-runtime flags
-
-Yong Wu (1):
-  driver core: Remove the link if there is no driver with AUTO flag
-
- Documentation/driver-api/device_link.rst |  63 +++--
- drivers/base/core.c                      | 293 +++++++++++++++++------
- drivers/base/dd.c                        |   2 +-
- drivers/base/power/runtime.c             |   4 +-
- include/linux/device.h                   |   7 +-
- 5 files changed, 265 insertions(+), 104 deletions(-)
-
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 742bc60e9cca..b354fdd7ce75 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -546,7 +546,7 @@ static void __device_links_no_driver(struct device *dev)
+ 			continue;
+ 
+ 		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
+-			kref_put(&link->kref, __device_link_del);
++			__device_link_del(&link->kref);
+ 		else if (link->status != DL_STATE_SUPPLIER_UNBIND)
+ 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
+ 	}
+@@ -591,7 +591,7 @@ void device_links_driver_cleanup(struct device *dev)
+ 		 */
+ 		if (link->status == DL_STATE_SUPPLIER_UNBIND &&
+ 		    link->flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
+-			kref_put(&link->kref, __device_link_del);
++			__device_link_del(&link->kref);
+ 
+ 		WRITE_ONCE(link->status, DL_STATE_DORMANT);
+ 	}
 -- 
 2.25.1.481.gfbce0eb801-goog
 
