@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DDEC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C1AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9EDB20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8954D20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443113;
-	bh=eQo3vOkdx+gbyH57SiasHpKgrg8xrYXjhCMuRy2WDGY=;
+	s=default; t=1584443121;
+	bh=S5G1KHBEaEL4NDBxq8BafkUPfEetq4PzQnKJ/q0Y/ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o52gKswzh4xLAtTL5mmuFL0yRQv23S2B2ekt3kzUwibiRaA4u+2bIj4Ndk4DULw/h
-	 5SHLUHwdd2FcrWcZ8hNdgbEtm3/IuDufVz461z+fTdKKA0ZKbPYEZ1G+j7sxyG1YpV
-	 ulnDN6jrc3KqDeOw+UPJM3+UiGUslwn6606JCDPg=
+	b=zBb04tOaLtOJZfeRXKjNey+AFHiAXQyKzbe0MZjM2DKxtGU1EqJmHdwthZXUbZ8L6
+	 qHe/bBQ/a4K4KrjFluCLLW0HIXnMYiBj/UNNxo8ZhkCzP8d7eE3CYQo1nkXEwn+D2R
+	 CazpT3v9Ux4ebTv3Y4Xlcz1zpdQLeGtVJemNO+D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgCQLFL (ORCPT
+        id S1728042AbgCQLFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:05:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45758 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:05:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727999AbgCQLFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:06 -0400
+        id S1727320AbgCQLFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:05:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C16A720714;
-        Tue, 17 Mar 2020 11:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64D78206EC;
+        Tue, 17 Mar 2020 11:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443106;
-        bh=eQo3vOkdx+gbyH57SiasHpKgrg8xrYXjhCMuRy2WDGY=;
+        s=default; t=1584443114;
+        bh=S5G1KHBEaEL4NDBxq8BafkUPfEetq4PzQnKJ/q0Y/ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eU0O/Jdc3Egxd+/RqVMx6yj1v6yrik/afJWD/tYFpNSkclzISyXSIFnNHLYBOYstJ
-         Ks+gZxGgeoEzeQ3T2DoVSMlmDeNV8rZZKVnXamTcgKSqTzXSTRgTae6wR1WgrtjliC
-         XlM4O3IOvV7xFCuH3voptpHKGlBgs0QbUbUrJGfo=
+        b=JFFigtD/ps9dZ5+wU/HCj8w9iDTm3cSl+z4dQ+JkaA8EKPvjWErLRKq0z3ABBu27l
+         PncrKNCbPXQ2Kf71K+DSU++9MZmANwydoZVg3iptri6sg8QRbEsBVe7sfXz8JuRQ+m
+         ChvYM2RkgaUeooht/fvw2nh43dt4Lb/Li9zj/uug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.4 098/123] clk: imx8mn: Fix incorrect clock defines
-Date:   Tue, 17 Mar 2020 11:55:25 +0100
-Message-Id: <20200317103317.734391046@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 074/123] ktest: Add timeout for ssh sync testing
+Date:   Tue, 17 Mar 2020 11:55:01 +0100
+Message-Id: <20200317103315.057778302@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,34 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 5eb40257047fb11085d582b7b9ccd0bffe900726 upstream.
+commit 4d00fc477a2ce8b6d2b09fb34ef9fe9918e7d434 upstream.
 
-IMX8MN_CLK_I2C4 and IMX8MN_CLK_UART1's index definitions are incorrect,
-fix them.
+Before rebooting the box, a "ssh sync" is called to the test machine to see
+if it is alive or not. But if the test machine is in a partial state, that
+ssh may never actually finish, and the ktest test hangs.
 
-Fixes: 1e80936a42e1 ("dt-bindings: imx: Add clock binding doc for i.MX8MN")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Add a 10 second timeout to the sync test, which will fail after 10 seconds
+and then cause the test to reboot the test machine.
+
+Cc: stable@vger.kernel.org
+Fixes: 6474ace999edd ("ktest.pl: Powercycle the box on reboot if no connection can be made")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/dt-bindings/clock/imx8mn-clock.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/ktest/ktest.pl |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/dt-bindings/clock/imx8mn-clock.h
-+++ b/include/dt-bindings/clock/imx8mn-clock.h
-@@ -122,8 +122,8 @@
- #define IMX8MN_CLK_I2C1				105
- #define IMX8MN_CLK_I2C2				106
- #define IMX8MN_CLK_I2C3				107
--#define IMX8MN_CLK_I2C4				118
--#define IMX8MN_CLK_UART1			119
-+#define IMX8MN_CLK_I2C4				108
-+#define IMX8MN_CLK_UART1			109
- #define IMX8MN_CLK_UART2			110
- #define IMX8MN_CLK_UART3			111
- #define IMX8MN_CLK_UART4			112
+--- a/tools/testing/ktest/ktest.pl
++++ b/tools/testing/ktest/ktest.pl
+@@ -1383,7 +1383,7 @@ sub reboot {
+ 
+     } else {
+ 	# Make sure everything has been written to disk
+-	run_ssh("sync");
++	run_ssh("sync", 10);
+ 
+ 	if (defined($time)) {
+ 	    start_monitor;
 
 
