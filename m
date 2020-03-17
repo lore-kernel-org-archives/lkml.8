@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDABC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A90C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040EB20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0AF20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgCQEzU (ORCPT
+        id S1727253AbgCQEz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:55:20 -0400
+        Tue, 17 Mar 2020 00:55:27 -0400
 Received: from mga04.intel.com ([192.55.52.120]:34106 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbgCQExP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726859AbgCQExP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 00:53:15 -0400
-IronPort-SDR: aTakwm/XadrHgn4xnwJdAyI+zti8/eot0VGE0xDMI1wsXHUG88gQUf3QzQuf7H3nl9md9fL+VX
- ALyhC2hIt8ww==
+IronPort-SDR: iSqhsLFKSBewFCH4yOWqZNRnwd5/S9aJp3XxU05p2T6BLzw5IskpgLL0XPkyKKpjYHmF1jgtgE
+ 3OegPX1S49jA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:15 -0700
-IronPort-SDR: LJoMdxIibcwhIXkmFKyZ1i7TGlGRmUP9tfA9uAd7WWF1ZFz7Ycg5tfbl8OV8cCRvkflUBcwPSt
- XPwfBmTkxoJA==
+IronPort-SDR: X7RcKHBgDV7adjmDxpRKw+wRGXUiGZuxUNzpxDDoqJ0q7K8gKE1eukIbcpi1qlkhGcIN6EWMpN
+ Qfrm7DjfzExA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252777"
+   d="scan'208";a="355252771"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:15 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:14 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 13/32] KVM: nVMX: Use vpid_sync_vcpu_addr() to emulate INVVPID with address
-Date:   Mon, 16 Mar 2020 21:52:19 -0700
-Message-Id: <20200317045238.30434-14-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 12/32] KVM: VMX: Drop redundant capability checks in low level INVVPID helpers
+Date:   Mon, 16 Mar 2020 21:52:18 -0700
+Message-Id: <20200317045238.30434-13-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
 References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
@@ -59,41 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use vpid_sync_vcpu_addr() to emulate the "individual address" variant of
-INVVPID now that said function handles the fallback case of the (host)
-CPU not supporting "individual address".
+Remove the INVVPID capabilities checks from vpid_sync_vcpu_single() and
+vpid_sync_vcpu_global() now that all callers ensure the INVVPID variant
+is supported.  Note, in some cases the guarantee is provided in concert
+with hardware_setup(), which enables VPID if and only if at least of
+invvpid_single() or invvpid_global() is supported.
 
-Note, the "vpid == 0" checks in the vpid_sync_*() helpers aren't
-actually redundant with the "!operand.vpid" check in handle_invvpid(),
-as the vpid passed to vpid_sync_vcpu_addr() is a KVM (host) controlled
-value, i.e. vpid02 can be zero even if operand.vpid is non-zero.
+Drop the WARN_ON_ONCE() from vmx_flush_tlb() as vpid_sync_vcpu_single()
+will trigger a WARN() on INVVPID failure, i.e. if SINGLE_CONTEXT isn't
+supported.
 
-No functional change intended.
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/x86/kvm/vmx/ops.h | 6 ++----
+ arch/x86/kvm/vmx/vmx.h | 1 -
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index cc36e8da215b..20c6e363f760 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5251,11 +5251,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
- 		    is_noncanonical_address(operand.gla, vcpu))
- 			return nested_vmx_failValid(vcpu,
- 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
--		if (cpu_has_vmx_invvpid_individual_addr())
--			__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR,
--				vpid02, operand.gla);
--		else
--			vpid_sync_context(vpid02);
-+		vpid_sync_vcpu_addr(vpid02, operand.gla);
- 		break;
- 	case VMX_VPID_EXTENT_SINGLE_CONTEXT:
- 	case VMX_VPID_EXTENT_SINGLE_NON_GLOBAL:
+diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
+index 39122699cfeb..aa1aab52971a 100644
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -258,14 +258,12 @@ static inline void vpid_sync_vcpu_single(int vpid)
+ 	if (vpid == 0)
+ 		return;
+ 
+-	if (cpu_has_vmx_invvpid_single())
+-		__invvpid(VMX_VPID_EXTENT_SINGLE_CONTEXT, vpid, 0);
++	__invvpid(VMX_VPID_EXTENT_SINGLE_CONTEXT, vpid, 0);
+ }
+ 
+ static inline void vpid_sync_vcpu_global(void)
+ {
+-	if (cpu_has_vmx_invvpid_global())
+-		__invvpid(VMX_VPID_EXTENT_ALL_CONTEXT, 0, 0);
++	__invvpid(VMX_VPID_EXTENT_ALL_CONTEXT, 0, 0);
+ }
+ 
+ static inline void vpid_sync_context(int vpid)
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index d6d67b816ebe..3770ae111e6a 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -537,7 +537,6 @@ static inline void vmx_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
+ 			if (cpu_has_vmx_invvpid_global()) {
+ 				vpid_sync_vcpu_global();
+ 			} else {
+-				WARN_ON_ONCE(!cpu_has_vmx_invvpid_single());
+ 				vpid_sync_vcpu_single(vmx->vpid);
+ 				vpid_sync_vcpu_single(vmx->nested.vpid02);
+ 			}
 -- 
 2.24.1
 
