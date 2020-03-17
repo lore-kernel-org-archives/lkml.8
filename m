@@ -2,401 +2,209 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD49AC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193B8C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8B32073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49932073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:38:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VhA6UQpx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E7kG0Bh4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCQUhb (ORCPT
+        id S1726877AbgCQUiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:37:31 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39205 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgCQUha (ORCPT
+        Tue, 17 Mar 2020 16:38:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39433 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgCQUiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:37:30 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d25so4575767pfn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:37:28 -0700 (PDT)
+        Tue, 17 Mar 2020 16:38:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m1so1930197pll.6
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:38:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ia3F2HvTleBUd5k0glVvssWumV1C7B/usfl4j8ziVTk=;
-        b=VhA6UQpxRprIfMALPyddXrkODXZ1mLdlDqeNGMb/3XLpomhqvXD/+V+AruOkekOaF1
-         ejFlvWGOo7GdRrpAASBGuJFIbWqayHNGCIpceSescVLPpHaGkP4C9LXseHm2+vBBHXw4
-         Hqp9Hka0S/2cM5QLCYK7oVtsa/KWy84dn77Mg=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jSVWcinVBkF0TMKRp+eiaEghUtTt1NtWoljB+scbYVU=;
+        b=E7kG0Bh4ffCX+4pdDmDPEmUhRmqjjHdpF00agUUQidB2g5ozNWGsEsH0SIKM17G1o0
+         kKvHkzZFHoDdyK2uhSwOtfxD85hYXYbqjBRhD2Z8MyBL1yLf91SoC8M8RanLJT9OhKxG
+         UJbMDTT3i+mBSqkInAH4BzNZDwEB/dKYUUW8k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ia3F2HvTleBUd5k0glVvssWumV1C7B/usfl4j8ziVTk=;
-        b=ftvS7LX55lT3hopZ+QCjaHweczkROh7HNNFhelVYICAIlHXTZ0r1+vrG+N+QZR7/8S
-         6AfcDbQqOyvV5VsExgtDv5GwTZsncv9SsffrovgEX8CFvxrSDGAe/n8NAEYoG6tKm1Hc
-         KYULWVBjchmKyI8atCnBwxJB8bpl0xTOruA0fIptoCNDBr1cnJofYQiTUdIvtJ4goUdW
-         8hub12fYwIon5EpJ7e1bCggkINBpTsRNcGJX4j7M7aw/fwmtZhq0LLTE9z26pT/VKFJe
-         hHmsr3NxG/AYtiWfobvM+Zg6W9h+WcrNvbMiELRVqQJRazNNeYaH85umtWXStTC0BzWv
-         h4ig==
-X-Gm-Message-State: ANhLgQ3VrqhpxxyLA6GYRdwTg9aYir2zYOaUmz7uDXLOJnBgPpYUqF9R
-        RWiu1VXUnb+d/UZ4L52TZpx7XA==
-X-Google-Smtp-Source: ADFU+vubc5WMN81vQ0fe8aciie9n6/qdhF8awX9OBaYM/+OhP6oVuSINpp+M/RKBOM/oxWdetcPIUQ==
-X-Received: by 2002:a63:8b42:: with SMTP id j63mr953821pge.27.1584477447536;
-        Tue, 17 Mar 2020 13:37:27 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 72sm3509508pgd.86.2020.03.17.13.37.26
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jSVWcinVBkF0TMKRp+eiaEghUtTt1NtWoljB+scbYVU=;
+        b=tl8PjdWopvyXWlKrOVCrG1AE16eYXz7FFJCSyHf8Jxpb5llOHm3Y2sMhscDbVyM4Oa
+         mXf68QOGoQZKL43eG1T9EM+i8WCTAFHAUBE0YIUKlNFaR48EC9HbVhgnZl3HvsLL2YgR
+         HdrsPRCx4OKeKSTWbRBUjZ/Z4L3A8tqi03XCHVIZs/BHx02LDtWnFpk3x/TOBjxl5WnP
+         /jwpzDCmAz85A+dmrxT3BVpt5KHV7jrAw4LlIRAvdkHwD+4DS1nICrJ1BwFfL2V50Sd4
+         yigsBdqGlls5iZ54kBakpL6ahiflPvqpUE1KfWvH7Mj3jYF4t6GOajcLisUercNxEN2w
+         etEg==
+X-Gm-Message-State: ANhLgQ3yMZWSsD+trmcX0JasDahNi9g14yPF8cYdjO0xMZa/yAK+bodj
+        bIBiLv9MOdSFb4XxjGCAFmeETw==
+X-Google-Smtp-Source: ADFU+vuIDjiQMApXAYFSk7YrsY5SDvRSiRmwdvphWyIPFu20X5lDnDUyBU77VGieDUZBYjnqzJ4NKQ==
+X-Received: by 2002:a17:902:7d97:: with SMTP id a23mr436529plm.31.1584477479756;
+        Tue, 17 Mar 2020 13:37:59 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id q123sm1039286pfb.54.2020.03.17.13.37.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 13:37:26 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 13:37:25 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, Tim.Bird@sony.com
-Subject: Re: [PATCH v3 5/6] kselftest: add fixture variants
-Message-ID: <202003171337.900705E@keescook>
-References: <20200316225647.3129354-1-kuba@kernel.org>
- <20200316225647.3129354-7-kuba@kernel.org>
+        Tue, 17 Mar 2020 13:37:59 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: [PATCH v2] spi: spi-geni-qcom: Speculative fix of "nobody cared" about interrupt
+Date:   Tue, 17 Mar 2020 13:37:06 -0700
+Message-Id: <20200317133653.v2.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316225647.3129354-7-kuba@kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v3.1 ;) My suggestions stand for the expansion of this commit log,
-though. :)
+Every once in a while (like once in a few months on a device) people
+have seen warnings on devices using spi-geni-qcom like:
 
--Kees
+  irq ...: nobody cared (try booting with the "irqpoll" option)
 
-On Mon, Mar 16, 2020 at 03:56:46PM -0700, Jakub Kicinski wrote:
-> Allow users to pass parameters to fixtures.
-> 
-> Each fixture will be evaluated for each of its variants.
-> 
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> --
-> v3:
->  - separate variant name out with a dot;
->  - count variants as "cases" in the opening print.
-> ---
->  Documentation/dev-tools/kselftest.rst       |   3 +-
->  tools/testing/selftests/kselftest_harness.h | 145 ++++++++++++++++----
->  2 files changed, 121 insertions(+), 27 deletions(-)
-> 
-> diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
-> index 61ae13c44f91..5d1f56fcd2e7 100644
-> --- a/Documentation/dev-tools/kselftest.rst
-> +++ b/Documentation/dev-tools/kselftest.rst
-> @@ -301,7 +301,8 @@ Helpers
->  
->  .. kernel-doc:: tools/testing/selftests/kselftest_harness.h
->      :functions: TH_LOG TEST TEST_SIGNAL FIXTURE FIXTURE_DATA FIXTURE_SETUP
-> -                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN
-> +                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN FIXTURE_VARIANT
-> +                FIXTURE_VARIANT_ADD
->  
->  Operators
->  ---------
-> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-> index 36ab1b92eb35..1a079afa2d01 100644
-> --- a/tools/testing/selftests/kselftest_harness.h
-> +++ b/tools/testing/selftests/kselftest_harness.h
-> @@ -168,9 +168,15 @@
->  
->  #define __TEST_IMPL(test_name, _signal) \
->  	static void test_name(struct __test_metadata *_metadata); \
-> +	static inline void wrapper_##test_name( \
-> +		struct __test_metadata *_metadata, \
-> +		struct __fixture_variant_metadata *variant) \
-> +	{ \
-> +		test_name(_metadata); \
-> +	} \
->  	static struct __test_metadata _##test_name##_object = \
->  		{ .name = #test_name, \
-> -		  .fn = &test_name, \
-> +		  .fn = &wrapper_##test_name, \
->  		  .fixture = &_fixture_global, \
->  		  .termsig = _signal, \
->  		  .timeout = TEST_TIMEOUT_DEFAULT, }; \
-> @@ -214,6 +220,7 @@
->   * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
->   */
->  #define FIXTURE(fixture_name) \
-> +	FIXTURE_VARIANT(fixture_name); \
->  	static struct __fixture_metadata _##fixture_name##_fixture_object = \
->  		{ .name =  #fixture_name, }; \
->  	static void __attribute__((constructor)) \
-> @@ -245,7 +252,9 @@
->  #define FIXTURE_SETUP(fixture_name) \
->  	void fixture_name##_setup( \
->  		struct __test_metadata __attribute__((unused)) *_metadata, \
-> -		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
-> +		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
-> +		const FIXTURE_VARIANT(fixture_name) __attribute__((unused)) *variant)
-> +
->  /**
->   * FIXTURE_TEARDOWN(fixture_name)
->   * *_metadata* is included so that EXPECT_* and ASSERT_* work correctly.
-> @@ -267,6 +276,58 @@
->  		struct __test_metadata __attribute__((unused)) *_metadata, \
->  		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
->  
-> +/**
-> + * FIXTURE_VARIANT(fixture_name) - Optionally called once per fixture
-> + * to declare fixture variant
-> + *
-> + * @fixture_name: fixture name
-> + *
-> + * .. code-block:: c
-> + *
-> + *     FIXTURE_VARIANT(datatype name) {
-> + *       type property1;
-> + *       ...
-> + *     };
-> + *
-> + * Defines type of constant parameters provided to FIXTURE_SETUP() and TEST_F()
-> + * as *variant*. Variants allow the same tests to be run with different
-> + * arguments.
-> + */
-> +#define FIXTURE_VARIANT(fixture_name) struct _fixture_variant_##fixture_name
-> +
-> +/**
-> + * FIXTURE_VARIANT_ADD(fixture_name, variant_name) - Called once per fixture
-> + * variant to setup and register the data
-> + *
-> + * @fixture_name: fixture name
-> + * @variant_name: name of the parameter set
-> + *
-> + * .. code-block:: c
-> + *
-> + *     FIXTURE_ADD(datatype name) {
-> + *       .property1 = val1;
-> + *       ...
-> + *     };
-> + *
-> + * Defines a variant of the test fixture, provided to FIXTURE_SETUP() and
-> + * TEST_F() as *variant*. Tests of each fixture will be run once for each
-> + * variant.
-> + */
-> +#define FIXTURE_VARIANT_ADD(fixture_name, variant_name) \
-> +	extern FIXTURE_VARIANT(fixture_name) \
-> +		_##fixture_name##_##variant_name##_variant; \
-> +	static struct __fixture_variant_metadata \
-> +		_##fixture_name##_##variant_name##_object = \
-> +		{ .name = #variant_name, \
-> +		  .data = &_##fixture_name##_##variant_name##_variant}; \
-> +	static void __attribute__((constructor)) \
-> +		_register_##fixture_name##_##variant_name(void) \
-> +	{ \
-> +		__register_fixture_variant(&_##fixture_name##_fixture_object, \
-> +			&_##fixture_name##_##variant_name##_object);	\
-> +	} \
-> +	FIXTURE_VARIANT(fixture_name) _##fixture_name##_##variant_name##_variant =
-> +
->  /**
->   * TEST_F(fixture_name, test_name) - Emits test registration and helpers for
->   * fixture-based test cases
-> @@ -297,18 +358,20 @@
->  #define __TEST_F_IMPL(fixture_name, test_name, signal, tmout) \
->  	static void fixture_name##_##test_name( \
->  		struct __test_metadata *_metadata, \
-> -		FIXTURE_DATA(fixture_name) *self); \
-> +		FIXTURE_DATA(fixture_name) *self, \
-> +		const FIXTURE_VARIANT(fixture_name) *variant); \
->  	static inline void wrapper_##fixture_name##_##test_name( \
-> -		struct __test_metadata *_metadata) \
-> +		struct __test_metadata *_metadata, \
-> +		struct __fixture_variant_metadata *variant) \
->  	{ \
->  		/* fixture data is alloced, setup, and torn down per call. */ \
->  		FIXTURE_DATA(fixture_name) self; \
->  		memset(&self, 0, sizeof(FIXTURE_DATA(fixture_name))); \
-> -		fixture_name##_setup(_metadata, &self); \
-> +		fixture_name##_setup(_metadata, &self, variant->data); \
->  		/* Let setup failure terminate early. */ \
->  		if (!_metadata->passed) \
->  			return; \
-> -		fixture_name##_##test_name(_metadata, &self); \
-> +		fixture_name##_##test_name(_metadata, &self, variant->data); \
->  		fixture_name##_teardown(_metadata, &self); \
->  	} \
->  	static struct __test_metadata \
-> @@ -326,7 +389,8 @@
->  	} \
->  	static void fixture_name##_##test_name( \
->  		struct __test_metadata __attribute__((unused)) *_metadata, \
-> -		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
-> +		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
-> +		const FIXTURE_VARIANT(fixture_name) __attribute__((unused)) *variant)
->  
->  /**
->   * TEST_HARNESS_MAIN - Simple wrapper to run the test harness
-> @@ -661,10 +725,12 @@
->  
->  /* Contains all the information about a fixture */
->  struct __test_metadata;
-> +struct __fixture_variant_metadata;
->  
->  struct __fixture_metadata {
->  	const char *name;
->  	struct __test_metadata *tests;
-> +	struct __fixture_variant_metadata *variant;
->  	struct __fixture_metadata *prev, *next;
->  } _fixture_global __attribute__((unused)) = {
->  	.name = "global",
-> @@ -672,7 +738,6 @@ struct __fixture_metadata {
->  };
->  
->  static struct __fixture_metadata *__fixture_list = &_fixture_global;
-> -static unsigned int __fixture_count;
->  static int __constructor_order;
->  
->  #define _CONSTRUCTOR_ORDER_FORWARD   1
-> @@ -680,14 +745,27 @@ static int __constructor_order;
->  
->  static inline void __register_fixture(struct __fixture_metadata *f)
->  {
-> -	__fixture_count++;
->  	__LIST_APPEND(__fixture_list, f);
->  }
->  
-> +struct __fixture_variant_metadata {
-> +	const char *name;
-> +	const void *data;
-> +	struct __fixture_variant_metadata *prev, *next;
-> +};
-> +
-> +static inline void
-> +__register_fixture_variant(struct __fixture_metadata *f,
-> +			  struct __fixture_variant_metadata *variant)
-> +{
-> +	__LIST_APPEND(f->variant, variant);
-> +}
-> +
->  /* Contains all the information for test execution and status checking. */
->  struct __test_metadata {
->  	const char *name;
-> -	void (*fn)(struct __test_metadata *);
-> +	void (*fn)(struct __test_metadata *,
-> +		   struct __fixture_variant_metadata *);
->  	struct __fixture_metadata *fixture;
->  	int termsig;
->  	int passed;
-> @@ -698,9 +776,6 @@ struct __test_metadata {
->  	struct __test_metadata *prev, *next;
->  };
->  
-> -/* Storage for the (global) tests to be run. */
-> -static unsigned int __test_count;
-> -
->  /*
->   * Since constructors are called in reverse order, reverse the test
->   * list so tests are run in source declaration order.
-> @@ -714,7 +789,6 @@ static inline void __register_test(struct __test_metadata *t)
->  {
->  	struct __fixture_metadata *f = t->fixture;
->  
-> -	__test_count++;
->  	__LIST_APPEND(f->tests, t);
->  }
->  
-> @@ -729,21 +803,27 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
->  }
->  
->  void __run_test(struct __fixture_metadata *f,
-> +		struct __fixture_variant_metadata *variant,
->  		struct __test_metadata *t)
->  {
->  	pid_t child_pid;
->  	int status;
->  
-> +	/* reset test struct */
->  	t->passed = 1;
->  	t->trigger = 0;
-> -	printf("[ RUN      ] %s.%s\n", f->name, t->name);
-> +	t->step = 0;
-> +	t->no_print = 0;
-> +
-> +	printf("[ RUN      ] %s%s%s.%s\n",
-> +	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
->  	alarm(t->timeout);
->  	child_pid = fork();
->  	if (child_pid < 0) {
->  		printf("ERROR SPAWNING TEST CHILD\n");
->  		t->passed = 0;
->  	} else if (child_pid == 0) {
-> -		t->fn(t);
-> +		t->fn(t, variant);
->  		/* return the step that failed or 0 */
->  		_exit(t->passed ? 0 : t->step);
->  	} else {
-> @@ -785,31 +865,44 @@ void __run_test(struct __fixture_metadata *f,
->  				status);
->  		}
->  	}
-> -	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
-> -	       f->name, t->name);
-> +	printf("[     %4s ] %s%s%s.%s\n", (t->passed ? "OK" : "FAIL"),
-> +	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
->  	alarm(0);
->  }
->  
->  static int test_harness_run(int __attribute__((unused)) argc,
->  			    char __attribute__((unused)) **argv)
->  {
-> +	struct __fixture_variant_metadata no_variant = { .name = "", };
-> +	struct __fixture_variant_metadata *v;
->  	struct __fixture_metadata *f;
->  	struct __test_metadata *t;
->  	int ret = 0;
-> +	unsigned int case_count = 0, test_count = 0;
->  	unsigned int count = 0;
->  	unsigned int pass_count = 0;
->  
-> +	for (f = __fixture_list; f; f = f->next) {
-> +		for (v = f->variant ?: &no_variant; v; v = v->next) {
-> +			case_count++;
-> +			for (t = f->tests; t; t = t->next)
-> +				test_count++;
-> +		}
-> +	}
-> +
->  	/* TODO(wad) add optional arguments similar to gtest. */
->  	printf("[==========] Running %u tests from %u test cases.\n",
-> -	       __test_count, __fixture_count + 1);
-> +	       test_count, case_count);
->  	for (f = __fixture_list; f; f = f->next) {
-> -		for (t = f->tests; t; t = t->next) {
-> -			count++;
-> -			__run_test(f, t);
-> -			if (t->passed)
-> -				pass_count++;
-> -			else
-> -				ret = 1;
-> +		for (v = f->variant ?: &no_variant; v; v = v->next) {
-> +			for (t = f->tests; t; t = t->next) {
-> +				count++;
-> +				__run_test(f, v, t);
-> +				if (t->passed)
-> +					pass_count++;
-> +				else
-> +					ret = 1;
-> +			}
->  		}
->  	}
->  	printf("[==========] %u / %u tests passed.\n", pass_count, count);
-> -- 
-> 2.24.1
-> 
+...where the interrupt number listed matches up with "spi_geni" in
+/proc/interrupts.
 
+You can get "nobody cared" if the interrupt handler returns IRQ_NONE.
+Once you get into this state the driver will just stop working.
+
+Auditing the code makes me believe that it's probably not so good
+checking "cur_mcmd" in the interrupt handler not under spinlock.
+Let's move it to be under spinlock.  Looking more closely at the code,
+it looks as if there are some other places that could be under
+spinlock, so let's add.  It looks as if the original code was assuming
+that by the time that the interrupt handler got called that the write
+to "cur_mcmd" (to make it not CMD_NONE anymore) would make it to the
+processor handling the interrupt.  Perhaps with weakly ordered memory
+this sometimes (though very rarely) happened.
+
+Let's also add a warning (with the IRQ status) in the case that we
+ever end up getting an interrupt when we think we shouldn't.  This
+would give us a better chance to debug if this patch doesn't help the
+issue.  We'll also try our best to clear the interrupt to hopefully
+get us out of this state.
+
+Patch is marked "speculative" because I have no way to reproduce this
+problem, so I'm just hoping this fixes it.  Weakly ordered memory
+makes my brain hurt.
+
+Fixes: 561de45f72bd ("spi: spi-geni-qcom: Add SPI driver support for GENI based QUP")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+Changes in v2:
+- Detect true spurious interrupt.
+- Still return IRQ_NONE for state machine mismatch, but print warn.
+
+ drivers/spi/spi-geni-qcom.c | 35 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+index c3972424af71..92e51ccb427f 100644
+--- a/drivers/spi/spi-geni-qcom.c
++++ b/drivers/spi/spi-geni-qcom.c
+@@ -151,16 +151,19 @@ static void spi_geni_set_cs(struct spi_device *slv, bool set_flag)
+ 	struct geni_se *se = &mas->se;
+ 	unsigned long time_left;
+ 
+-	reinit_completion(&mas->xfer_done);
+ 	pm_runtime_get_sync(mas->dev);
+ 	if (!(slv->mode & SPI_CS_HIGH))
+ 		set_flag = !set_flag;
+ 
++	spin_lock_irq(&mas->lock);
++	reinit_completion(&mas->xfer_done);
++
+ 	mas->cur_mcmd = CMD_CS;
+ 	if (set_flag)
+ 		geni_se_setup_m_cmd(se, SPI_CS_ASSERT, 0);
+ 	else
+ 		geni_se_setup_m_cmd(se, SPI_CS_DEASSERT, 0);
++	spin_unlock_irq(&mas->lock);
+ 
+ 	time_left = wait_for_completion_timeout(&mas->xfer_done, HZ);
+ 	if (!time_left)
+@@ -307,6 +310,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
+ 	u32 spi_tx_cfg, len;
+ 	struct geni_se *se = &mas->se;
+ 
++	spin_lock_irq(&mas->lock);
++
+ 	spi_tx_cfg = readl(se->base + SE_SPI_TRANS_CFG);
+ 	if (xfer->bits_per_word != mas->cur_bits_per_word) {
+ 		spi_setup_word_len(mas, mode, xfer->bits_per_word);
+@@ -376,6 +381,8 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
+ 	 */
+ 	if (m_cmd & SPI_TX_ONLY)
+ 		writel(mas->tx_wm, se->base + SE_GENI_TX_WATERMARK_REG);
++
++	spin_unlock_irq(&mas->lock);
+ }
+ 
+ static int spi_geni_transfer_one(struct spi_master *spi,
+@@ -478,13 +485,29 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
+ 	struct geni_se *se = &mas->se;
+ 	u32 m_irq;
+ 	unsigned long flags;
+-
+-	if (mas->cur_mcmd == CMD_NONE)
+-		return IRQ_NONE;
++	irqreturn_t ret = IRQ_HANDLED;
+ 
+ 	spin_lock_irqsave(&mas->lock, flags);
+ 	m_irq = readl(se->base + SE_GENI_M_IRQ_STATUS);
+ 
++	/* Check for spurious interrupt */
++	if (!m_irq) {
++		ret = IRQ_NONE;
++		goto exit;
++	}
++
++	/*
++	 * If we got a real interrupt but software state machine thinks
++	 * we were idle then give a warning.  We'll do our best to clear
++	 * the interrupt but we'll still return IRQ_NONE.  If this keeps
++	 * happening the system will eventually disable us.
++	 */
++	if (mas->cur_mcmd == CMD_NONE) {
++		pr_warn("Unexpected SPI interrupt: %#010x\n", m_irq);
++		ret = IRQ_NONE;
++		goto exit;
++	}
++
+ 	if ((m_irq & M_RX_FIFO_WATERMARK_EN) || (m_irq & M_RX_FIFO_LAST_EN))
+ 		geni_spi_handle_rx(mas);
+ 
+@@ -523,9 +546,11 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
+ 		complete(&mas->xfer_done);
+ 	}
+ 
++exit:
+ 	writel(m_irq, se->base + SE_GENI_M_IRQ_CLEAR);
+ 	spin_unlock_irqrestore(&mas->lock, flags);
+-	return IRQ_HANDLED;
++
++	return ret;
+ }
+ 
+ static int spi_geni_probe(struct platform_device *pdev)
 -- 
-Kees Cook
+2.25.1.481.gfbce0eb801-goog
+
