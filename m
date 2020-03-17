@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3196C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E58EC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75BC120735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6397320658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442864;
-	bh=ttFVe+yP36IF+RprTIdY9BFpzGWzZDHW0WaLD4WWx9E=;
+	s=default; t=1584442867;
+	bh=ORNsf8ifWYNyfXskgtLojG9pXI7P4qlT0Mdcgsoa344=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MEkkVNbPBKXP8uXudyhp3luPtDsu068j/OFui+2LGOHRSg2a7dhWeCiU2TjjB0DDF
-	 G5K/dM+pdLkcNIKXrR+BAjus5gxcujez1LwKz65KhCNY9XjIUI1VKyip+KsHC+oJQC
-	 6+oE9yGEP7aywCWjcF3gFuZOBlgboVqSilM1fPps=
+	b=SXAwi09hcZTivgxoaZrwsvsLjN7hFf0D6K+Q41p0IBOkMxrZI9fzeqq4b0eUXEpO1
+	 y4yWVXv8CQRRwzKxHDgueA6O3AsElLUNWa7cXyeVlS9CTKnJjYvvOpfqAUHEPaKFht
+	 7EQOAKI212LiVrOCp1QMOHOI/BPkT06KnMmir/uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbgCQLBC (ORCPT
+        id S1727695AbgCQLBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgCQLBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 07:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727296AbgCQLA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:00:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39D0D20736;
-        Tue, 17 Mar 2020 11:01:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B51DE20735;
+        Tue, 17 Mar 2020 11:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442860;
-        bh=ttFVe+yP36IF+RprTIdY9BFpzGWzZDHW0WaLD4WWx9E=;
+        s=default; t=1584442858;
+        bh=ORNsf8ifWYNyfXskgtLojG9pXI7P4qlT0Mdcgsoa344=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUgh0dvJdduo5/70VabBqpdIJwTCEV4zqq9fdk77frZChNRacMnE2m78Q4FrKkMnJ
-         kQho31kDHmSpMqa/HX7YPapgFP4Lgwhi+qARuxnNPjcETROP+AopI4BwhjyCtmQWzL
-         z/ZcUZq+nWh1mA17iaCaxYxf8gqR8dnYyGGKsZoI=
+        b=XDuK1qxfdRIH+bFRs3DcZjeSpbXCvI1Zv0WT2icqR3w2Mn27eAvxRIv5KVs7dyzzJ
+         6w4DqPT8TYtz5qBMwgA5zR/rGaVX2RX5ldTw8fq+U3ZGwnyAVsOlgoVd5K1F/3yuG9
+         gvDskzxxdWm87cU4UipXfzffInEJg1pTFHB5gCMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Fugang Duan <fugang.duan@nxp.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 017/123] net: hns3: fix a not link up issue when fibre port supports autoneg
-Date:   Tue, 17 Mar 2020 11:54:04 +0100
-Message-Id: <20200317103309.499210595@linuxfoundation.org>
+Subject: [PATCH 5.4 016/123] net: fec: validate the new settings in fec_enet_set_coalesce()
+Date:   Tue, 17 Mar 2020 11:54:03 +0100
+Message-Id: <20200317103309.387625321@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,51 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 68e1006f618e509fc7869259fe83ceec4a95dac3 ]
+[ Upstream commit ab14961d10d02d20767612c78ce148f6eb85bd58 ]
 
-When fibre port supports auto-negotiation, the IMP(Intelligent
-Management Process) processes the speed of auto-negotiation
-and the  user's speed separately.
-For below case, the port will get a not link up problem.
-step 1: disables auto-negotiation and sets speed to A, then
-the driver's MAC speed will be updated to A.
-step 2: enables auto-negotiation and MAC gets negotiated
-speed B, then the driver's MAC speed will be updated to B
-through querying in periodical task.
-step 3: MAC gets new negotiated speed A.
-step 4: disables auto-negotiation and sets speed to B before
-periodical task query new MAC speed A, the driver will  ignore
-the speed configuration.
+fec_enet_set_coalesce() validates the previously set params
+and if they are within range proceeds to apply the new ones.
+The new ones, however, are not validated. This seems backwards,
+probably a copy-paste error?
 
-This patch fixes it by skipping speed and duplex checking when
-fibre port supports auto-negotiation.
+Compile tested only.
 
-Fixes: 22f48e24a23d ("net: hns3: add autoneg and change speed support for fibre port")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fixes: d851b47b22fc ("net: fec: add interrupt coalescence feature support")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Fugang Duan <fugang.duan@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fec_main.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2417,10 +2417,12 @@ static int hclge_cfg_mac_speed_dup_hw(st
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -2529,15 +2529,15 @@ fec_enet_set_coalesce(struct net_device
+ 		return -EINVAL;
+ 	}
  
- int hclge_cfg_mac_speed_dup(struct hclge_dev *hdev, int speed, u8 duplex)
- {
-+	struct hclge_mac *mac = &hdev->hw.mac;
- 	int ret;
+-	cycle = fec_enet_us_to_itr_clock(ndev, fep->rx_time_itr);
++	cycle = fec_enet_us_to_itr_clock(ndev, ec->rx_coalesce_usecs);
+ 	if (cycle > 0xFFFF) {
+ 		dev_err(dev, "Rx coalesced usec exceed hardware limitation\n");
+ 		return -EINVAL;
+ 	}
  
- 	duplex = hclge_check_speed_dup(duplex, speed);
--	if (hdev->hw.mac.speed == speed && hdev->hw.mac.duplex == duplex)
-+	if (!mac->support_autoneg && mac->speed == speed &&
-+	    mac->duplex == duplex)
- 		return 0;
+-	cycle = fec_enet_us_to_itr_clock(ndev, fep->tx_time_itr);
++	cycle = fec_enet_us_to_itr_clock(ndev, ec->tx_coalesce_usecs);
+ 	if (cycle > 0xFFFF) {
+-		dev_err(dev, "Rx coalesced usec exceed hardware limitation\n");
++		dev_err(dev, "Tx coalesced usec exceed hardware limitation\n");
+ 		return -EINVAL;
+ 	}
  
- 	ret = hclge_cfg_mac_speed_dup_hw(hdev, speed, duplex);
 
 
