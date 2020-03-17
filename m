@@ -2,105 +2,173 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40860C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09171C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142802076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584480881;
-	bh=FU6/YhzHCy5DWzCb2Jjd6xpKYKIlYfn0Nkn8S0an218=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qq8sZzyqR4TKsd7GqYp7tJ95O4n7VIV83giRU+M+KZyrxdhuzBxZ9cT7N1Dj6dsUc
-	 dkHXdEbTicL71yqvcgM3trnePjSuaUwolxsS+NX6UJYjkE6ZhTK7xQe875ctK6K4BB
-	 u+WcQC/Y7R1V1+7oWA3WA+1cToOohPYIbuWLdcx4=
+	by mail.kernel.org (Postfix) with ESMTP id D7C1020752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgCQVek (ORCPT
+        id S1727388AbgCQVeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:34:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54414 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 17:34:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbgCQVeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:34:36 -0400
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727334AbgCQVeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:34:17 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AFF120774
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 21:34:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584480875;
-        bh=FU6/YhzHCy5DWzCb2Jjd6xpKYKIlYfn0Nkn8S0an218=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aaAKrQvr1UPKXoqSl2Xez3aX9YvAC2YlC+m1eLZNTBLgDh8s1vRjXMcwG3x4vnBM5
-         TTa5g/gdhOFRAZ1DFOxjMw7JMMKwzmTdHJS3CXSqETyMXBoHn2YbAFrjzXNVBR7bjQ
-         lFXC0+JRfZOZDujzOCrU1X4Iz1w2OacosqTLJYCg=
-Received: by mail-wr1-f47.google.com with SMTP id b2so21443907wrj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 14:34:35 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2FJ8OiP2oRizON9mTnbKuHuPTwzd8qUu0RnGG8FUq6TC+woFyi
-        VtPQp5pEtOkFnbef7ZbZ5BaUdkSFjEmPazZDQALNBQ==
-X-Google-Smtp-Source: ADFU+vtGXARxy1KWOouUhaZnISUK705uJFt7DrOok2Eu+G2fu4TjnS61RAdWYoQTjxk7jomgV/TRyqL9G7ZtF7EGMwA=
-X-Received: by 2002:adf:9dc6:: with SMTP id q6mr1062310wre.70.1584480873869;
- Tue, 17 Mar 2020 14:34:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-39-joro@8bytes.org>
- <CALCETrVRmg88xY0s4a2CONXQ3fgvCKXpW2eYJRJGhqQLneoGqQ@mail.gmail.com> <20200313091221.GA16378@suse.de>
-In-Reply-To: <20200313091221.GA16378@suse.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 17 Mar 2020 14:34:22 -0700
-X-Gmail-Original-Message-ID: <CALCETrX74dJEXd7OxZZ=2sPy8nOjqO5Lzjt04VrxP0TYgTXnUg@mail.gmail.com>
-Message-ID: <CALCETrX74dJEXd7OxZZ=2sPy8nOjqO5Lzjt04VrxP0TYgTXnUg@mail.gmail.com>
-Subject: Re: [PATCH 38/62] x86/sev-es: Handle instruction fetches from user-space
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E1720784;
+        Tue, 17 Mar 2020 21:34:17 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jEJqq-000EWc-4S; Tue, 17 Mar 2020 17:34:16 -0400
+Message-Id: <20200317213416.018928618@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Tue, 17 Mar 2020 17:32:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [RFC][PATCH 03/11] ring-buffer: Rename ring_buffer_read() to read_buffer_iter_advance()
+References: <20200317213222.421100128@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 2:12 AM Joerg Roedel <jroedel@suse.de> wrote:
->
-> On Wed, Feb 12, 2020 at 01:42:48PM -0800, Andy Lutomirski wrote:
-> > I realize that this is a somewhat arbitrary point in the series to
-> > complain about this, but: the kernel already has infrastructure to
-> > decode and fix up an instruction-based exception.  See
-> > fixup_umip_exception().  Please refactor code so that you can share
-> > the same infrastructure rather than creating an entirely new thing.
->
-> Okay, but 'infrastructure' is a bold word for the call path down
-> fixup_umip_exception().
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-I won't argue with that.
+When the ring buffer was first created, the iterator followed the normal
+producer/consumer operations where it had both a peek() operation, that just
+returned the event at the current location, and a read(), that would return
+the event at the current location and also increment the iterator such that
+the next peek() or read() will return the next event.
 
-> It uses the in-kernel instruction decoder, which
-> I already use in my patch-set. But I agree that some code in this
-> patch-set is duplicated and already present in the instruction decoder,
-> and that fixup_umip_exception() has more robust instruction decoding.
->
-> I factor the instruction decoding part out and make is usable for the
-> #VC handler too and remove the code that is already present in the
-> instruction decoder.
+The only use of the ring_buffer_read() is currently to move the iterator to
+the next location and nothing now actually reads the event it returns.
+Rename this function to its actual use case to ring_buffer_iter_advance(),
+which also adds the "iter" part to the name, which is more meaningful. As
+the timestamp returned by ring_buffer_read() was never used, there's no
+reason that this new version should bother having returning it. It will also
+become a void function.
 
-Thanks!
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ include/linux/ring_buffer.h          |  3 +--
+ kernel/trace/ring_buffer.c           | 23 ++++++-----------------
+ kernel/trace/trace.c                 |  4 ++--
+ kernel/trace/trace_functions_graph.c |  2 +-
+ 4 files changed, 10 insertions(+), 22 deletions(-)
 
->
-> Regards,
->
->         Joerg
->
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index df0124eabece..0ae603b79b0e 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -135,8 +135,7 @@ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
+ 
+ struct ring_buffer_event *
+ ring_buffer_iter_peek(struct ring_buffer_iter *iter, u64 *ts);
+-struct ring_buffer_event *
+-ring_buffer_read(struct ring_buffer_iter *iter, u64 *ts);
++void ring_buffer_iter_advance(struct ring_buffer_iter *iter);
+ void ring_buffer_iter_reset(struct ring_buffer_iter *iter);
+ int ring_buffer_iter_empty(struct ring_buffer_iter *iter);
+ 
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1718520a2809..f57eeaa80e3e 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4318,35 +4318,24 @@ ring_buffer_read_finish(struct ring_buffer_iter *iter)
+ EXPORT_SYMBOL_GPL(ring_buffer_read_finish);
+ 
+ /**
+- * ring_buffer_read - read the next item in the ring buffer by the iterator
++ * ring_buffer_iter_advance - advance the iterator to the next location
+  * @iter: The ring buffer iterator
+- * @ts: The time stamp of the event read.
+  *
+- * This reads the next event in the ring buffer and increments the iterator.
++ * Move the location of the iterator such that the next read will
++ * be the next location of the iterator.
+  */
+-struct ring_buffer_event *
+-ring_buffer_read(struct ring_buffer_iter *iter, u64 *ts)
++void ring_buffer_iter_advance(struct ring_buffer_iter *iter)
+ {
+-	struct ring_buffer_event *event;
+ 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+- again:
+-	event = rb_iter_peek(iter, ts);
+-	if (!event)
+-		goto out;
+-
+-	if (event->type_len == RINGBUF_TYPE_PADDING)
+-		goto again;
+ 
+ 	rb_advance_iter(iter);
+- out:
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 
+-	return event;
++	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ }
+-EXPORT_SYMBOL_GPL(ring_buffer_read);
++EXPORT_SYMBOL_GPL(ring_buffer_iter_advance);
+ 
+ /**
+  * ring_buffer_size - return the size of the ring buffer (in bytes)
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 52425aaf26c2..1085b3d5d0dc 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3378,7 +3378,7 @@ static void trace_iterator_increment(struct trace_iterator *iter)
+ 
+ 	iter->idx++;
+ 	if (buf_iter)
+-		ring_buffer_read(buf_iter, NULL);
++		ring_buffer_iter_advance(buf_iter);
+ }
+ 
+ static struct trace_entry *
+@@ -3562,7 +3562,7 @@ void tracing_iter_reset(struct trace_iterator *iter, int cpu)
+ 		if (ts >= iter->array_buffer->time_start)
+ 			break;
+ 		entries++;
+-		ring_buffer_read(buf_iter, NULL);
++		ring_buffer_iter_advance(buf_iter);
+ 	}
+ 
+ 	per_cpu_ptr(iter->array_buffer->data, cpu)->skipped_entries = entries;
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 7d71546ba00a..4a9c49c08ec9 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -482,7 +482,7 @@ get_return_for_leaf(struct trace_iterator *iter,
+ 
+ 	/* this is a leaf, now advance the iterator */
+ 	if (ring_iter)
+-		ring_buffer_read(ring_iter, NULL);
++		ring_buffer_iter_advance(ring_iter);
+ 
+ 	return next;
+ }
+-- 
+2.25.1
+
+
