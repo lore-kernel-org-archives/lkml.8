@@ -2,132 +2,73 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EC7C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184A5C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA6ED20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UledzLdG"
+	by mail.kernel.org (Postfix) with ESMTP id EB1232073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgCQGzT (ORCPT
+        id S1726352AbgCQGzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:55:19 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:33932 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgCQGzS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:55:18 -0400
-Received: by mail-pl1-f201.google.com with SMTP id j8so11939913plk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=pBzGjleoRDABxMsluExcps57eD2wDVloI24KvIbaURE=;
-        b=UledzLdGZZjZgCktwDrReM83P2/tmN5F4Qnd1xTlFNMGgY4exTx7PpUlYpVJcYkHn2
-         qOqSDPrlyo1Tg8E7TNmeCbcaRvzN8X/3p3klGc1pbS5gp4joG2QV+m7zPocAKbdG/djV
-         mjbSeXmumJlZpNyD2H16Tr4UjjvSjJ9VFvp84bYCSC8nAKD0ptzQmWlkEpmb2H+YyfEx
-         Q5CmFKr/pxFMWAzVJsJwrAUZbJgxAjQUKhVZinz2cSSZ3AoAfMo2MvYj7YHTC2PK7FYy
-         y7OzDTmhrmK/3gX546uw6Y/xdIMPy5ZSM/4+vdG2TJbkV4Jqx4cGvW2bLV42+qET+yvr
-         zeNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=pBzGjleoRDABxMsluExcps57eD2wDVloI24KvIbaURE=;
-        b=GL1J4SXyDU4b6wljk8FhheSYSJvaQUqIENREwwA/kbxhaaBgByIlXvi0kSnW8KTGmL
-         OK8Mf+BKPKDVzfOyK9jHGqHOonBuFBV4uvmq5KCquzMn+9WJ4PD3MQ5nNvmw+43V+jSE
-         2fuXCy4pv3pG+LJ8/rY7q4FdN8xqwriJC5MNShRuSzvREaKI6jF8UvRR7sPZjzghk+Wq
-         3CQgGp/lRr/BHEBH8cQERqSuhWzSut8yXaJXWMYSAenZNpZoxlPy3TntdVdwSPrdw9HN
-         m3kpc+v2iaVujgyAre0JIwh4wz6Ih3upontnJNjuaes/ZJD9pgeBIYMZxeWYAi2jkWJa
-         G3XA==
-X-Gm-Message-State: ANhLgQ03yeP46jS5i4Tpb1M0aZrOL0927I1dfj1IeQiJh06GhPpuiT54
-        LEmmjU8S1dqKj/C5BkYT7TF3J/HTaM6N2ys=
-X-Google-Smtp-Source: ADFU+vsI46mjOrzK35IlZFKtn+I16f/ZJ36YpcLgiFZqwRzWEH2bTScx3tkAxfqOUW2oCR5e/5W0bdip3gPKHnQ=
-X-Received: by 2002:a17:90a:178e:: with SMTP id q14mr3975908pja.132.1584428117265;
- Mon, 16 Mar 2020 23:55:17 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 23:54:52 -0700
-In-Reply-To: <20200317065452.236670-1-saravanak@google.com>
-Message-Id: <20200317065452.236670-7-saravanak@google.com>
-Mime-Version: 1.0
-References: <20200317065452.236670-1-saravanak@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v1 6/6] driver core: Fix creation of device links with
- PM-runtime flags
-From:   Saravana Kannan <saravanak@google.com>
-To:     stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, kernel-team@android.com,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 17 Mar 2020 02:55:07 -0400
+Received: from mga14.intel.com ([192.55.52.115]:25817 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbgCQGzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 02:55:05 -0400
+IronPort-SDR: 9URtp7CndDTfHErMEtxwd6mIexQMGiaZub9bvI7xpo62rRn3SrBAeLdJgXZaJvkNmOSFlIMzlV
+ r8RsRuZ7xuyg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 23:55:05 -0700
+IronPort-SDR: Ks2lyFR4oQi+/qPyHNM8E+gog2qCtpLm5wZsCX9HHOT8ta1lsCwXUxodY71dHg89zhK5itHWIN
+ FBE4ui/9eucg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
+   d="scan'208";a="233412448"
+Received: from debian-skl.sh.intel.com ([10.239.160.44])
+  by orsmga007.jf.intel.com with ESMTP; 16 Mar 2020 23:55:03 -0700
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Zhong, Yang" <yang.zhong@intel.com>
+Subject: [PATCH] KVM: x86: Expose AVX512 VP2INTERSECT in cpuid for TGL
+Date:   Tue, 17 Mar 2020 14:55:53 +0800
+Message-Id: <20200317065553.64790-1-zhenyuw@linux.intel.com>
+X-Mailer: git-send-email 2.25.0.rc2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On Tigerlake new AVX512 VP2INTERSECT feature is available.
+This would expose it for KVM supported cpuid.
 
-After commit 515db266a9da ("driver core: Remove device link creation
-limitation"), if PM-runtime flags are passed to device_link_add(), it
-will fail (returning NULL) due to an overly restrictive flags check
-introduced by that commit.
-
-Fix this issue by extending the check in question to cover the
-PM-runtime flags too.
-
-Fixes: 515db266a9da ("driver core: Remove device link creation limitation")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Link: https://lore.kernel.org/r/7674989.cD04D8YV3U@kreacher
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-(cherry picked from commit fb583c8eeeb1fd57e24ef41ed94c9112067aeac9)
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Cc: "Zhong, Yang" <yang.zhong@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
 ---
- drivers/base/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/kvm/cpuid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 31007af4cb79..928fc1532a70 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -213,6 +213,9 @@ void device_pm_move_to_tail(struct device *dev)
- 			       DL_FLAG_AUTOREMOVE_SUPPLIER | \
- 			       DL_FLAG_AUTOPROBE_CONSUMER)
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index b1c469446b07..b4e25ff6ab0a 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -374,7 +374,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+ 	const u32 kvm_cpuid_7_0_edx_x86_features =
+ 		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+ 		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+-		F(MD_CLEAR);
++		F(MD_CLEAR) | F(AVX512_VP2INTERSECT);
  
-+#define DL_ADD_VALID_FLAGS (DL_MANAGED_LINK_FLAGS | DL_FLAG_STATELESS | \
-+			    DL_FLAG_PM_RUNTIME | DL_FLAG_RPM_ACTIVE)
-+
- /**
-  * device_link_add - Create a link between two devices.
-  * @consumer: Consumer end of the link.
-@@ -274,8 +277,7 @@ struct device_link *device_link_add(struct device *consumer,
- {
- 	struct device_link *link;
- 
--	if (!consumer || !supplier ||
--	    (flags & ~(DL_FLAG_STATELESS | DL_MANAGED_LINK_FLAGS)) ||
-+	if (!consumer || !supplier || flags & ~DL_ADD_VALID_FLAGS ||
- 	    (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) ||
- 	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
- 	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+ 	/* cpuid 7.1.eax */
+ 	const u32 kvm_cpuid_7_1_eax_x86_features =
 -- 
-2.25.1.481.gfbce0eb801-goog
+2.25.0.rc2
 
