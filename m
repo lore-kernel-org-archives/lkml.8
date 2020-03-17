@@ -2,149 +2,176 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEFAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F6AC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CE42073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:12:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mt3m6Rbi"
+	by mail.kernel.org (Postfix) with ESMTP id C79FF20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:13:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584465204;
+	bh=BqCVv2OsKZz+I4IGlw/e0EIks1KktHt7HapHjxJ5TfM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=vR5YdbVCeCUHguqSs9uXLgEYM/Rf49JhXZtCj1nThCYfs26cwkFPqb/3+J8kGD7q4
+	 P6jxwwZEDrsJX/1QcChIMpri1rt+ywF4x7tCmfy1cMBijsD3u32k9S9DpurAlPKROt
+	 A497i3Q2reHShKCI+ai/9hA6q8sWQg75YacQKAdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgCQRMt (ORCPT
+        id S1727071AbgCQRNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:12:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46218 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgCQRMC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:12:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=piGWWulTk/Ov0pTiMRYfA+U7bMQU7zVTS0znoAEkY9M=; b=mt3m6RbiQvxUGlCFn+RwEC8WY2
-        b+a6LPe7fL0kl9q6Z1yJ08ZxKXka3cyfSc98TzP2mToW5NkL6HABS7p/ExMxFSb9p2jZrUqFrh7W/
-        /yo3o1OvEmKWa3Ny3AvA5zy8tsOiE3wOE8Y/Oyc/Pz+4h1mKUxk/XcXeHLHE+fWYObAhu+z+tBWjs
-        cYEuzO5wEU2C/T9GMllv5rvCDRfMExT+3ciQxrBaFAwVMn6537KTzs+GgP2T++mWJIE6OO+gfKC92
-        ZwGoD6HQY99MMap72WkLmyTrBYizd6pHr76DCg4nWwzbq17o7IxkKVUEaHkU21dzxx2F0PDfnKtMa
-        x3+IKYMw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEFky-0002r1-Lc; Tue, 17 Mar 2020 17:11:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 17 Mar 2020 13:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726407AbgCQRNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 13:13:21 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D0514300606;
-        Tue, 17 Mar 2020 18:11:54 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id BA9BA20B16493; Tue, 17 Mar 2020 18:11:54 +0100 (CET)
-Message-Id: <20200317170909.821700312@infradead.org>
-User-Agent: quilt/0.65
-Date:   Tue, 17 Mar 2020 18:02:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, jpoimboe@redhat.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: [PATCH v2 01/19] objtool: Introduce validate_return()
-References: <20200317170234.897520633@infradead.org>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57CFC20738;
+        Tue, 17 Mar 2020 17:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584465200;
+        bh=BqCVv2OsKZz+I4IGlw/e0EIks1KktHt7HapHjxJ5TfM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=mR6aXKPiuaEP/zjSjTImPnNGr7rETk3A8xHAPHt8BJ6L58JGejapK+uKrSswNtweU
+         NvGWK+r0zzOFtnb1mhZJPCLP8naq2JcDT0wQX57uE8HGpuZpvwMWkbLeSEDVNG0hQR
+         MQP68hXV5LAbq5Jw8L/vE+0U6SrxPcp7J8wJsWhk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 30E1C35226E2; Tue, 17 Mar 2020 10:13:20 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 10:13:20 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>, kernel-team@fb.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, Qian Cai <cai@lca.pw>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [PATCH kcsan 27/32] kcsan: Add option to allow watcher
+ interruptions
+Message-ID: <20200317171320.GI3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
+ <20200309190420.6100-27-paulmck@kernel.org>
+ <20200312180328.GA4772@paulmck-ThinkPad-P72>
+ <20200312180414.GA8024@paulmck-ThinkPad-P72>
+ <CANpmjNOqmsm69vfdCAVGhLzTV-oB3E5saRbjzwrkbO-6nGgTYw@mail.gmail.com>
+ <CANpmjNO=jGNNd4J0hBhz4ORLdw_+EHQDvyoQRikRCOsuMAcXYg@mail.gmail.com>
+ <20200316154535.GX3199@paulmck-ThinkPad-P72>
+ <CANpmjNOsLeiD6hYXeD4g8fA=Ti6EiUsbtiv4VshRGg+oG1ct-g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNOsLeiD6hYXeD4g8fA=Ti6EiUsbtiv4VshRGg+oG1ct-g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trivial 'cleanup' to save one indentation level and match
-validate_call().
+On Mon, Mar 16, 2020 at 05:22:34PM +0100, Marco Elver wrote:
+> On Mon, 16 Mar 2020 at 16:45, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Mon, Mar 16, 2020 at 02:56:38PM +0100, Marco Elver wrote:
+> > > On Fri, 13 Mar 2020 at 16:28, Marco Elver <elver@google.com> wrote:
+> > > >
+> > > > On Thu, 12 Mar 2020 at 19:04, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, Mar 12, 2020 at 11:03:28AM -0700, Paul E. McKenney wrote:
+> > > > > > On Mon, Mar 09, 2020 at 12:04:15PM -0700, paulmck@kernel.org wrote:
+> > > > > > > From: Marco Elver <elver@google.com>
+> > > > > > >
+> > > > > > > Add option to allow interrupts while a watchpoint is set up. This can be
+> > > > > > > enabled either via CONFIG_KCSAN_INTERRUPT_WATCHER or via the boot
+> > > > > > > parameter 'kcsan.interrupt_watcher=1'.
+> > > > > > >
+> > > > > > > Note that, currently not all safe per-CPU access primitives and patterns
+> > > > > > > are accounted for, which could result in false positives. For example,
+> > > > > > > asm-generic/percpu.h uses plain operations, which by default are
+> > > > > > > instrumented. On interrupts and subsequent accesses to the same
+> > > > > > > variable, KCSAN would currently report a data race with this option.
+> > > > > > >
+> > > > > > > Therefore, this option should currently remain disabled by default, but
+> > > > > > > may be enabled for specific test scenarios.
+> > > > > > >
+> > > > > > > To avoid new warnings, changes all uses of smp_processor_id() to use the
+> > > > > > > raw version (as already done in kcsan_found_watchpoint()). The exact SMP
+> > > > > > > processor id is for informational purposes in the report, and
+> > > > > > > correctness is not affected.
+> > > > > > >
+> > > > > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > > > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > > > >
+> > > > > > And I get silent hangs that bisect to this patch when running the
+> > > > > > following rcutorture command, run in the kernel source tree on a
+> > > > > > 12-hardware-thread laptop:
+> > > > > >
+> > > > > > bash tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 12 --duration 10 --kconfig "CONFIG_DEBUG_INFO=y CONFIG_KCSAN=y CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=n CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000 CONFIG_KCSAN_VERBOSE=y CONFIG_KCSAN_INTERRUPT_WATCHER=y" --configs TREE03
+> > > > > >
+> > > > > > It works fine on some (but not all) of the other rcutorture test
+> > > > > > scenarios.  It fails on TREE01, TREE02, TREE03, TREE09.  The common thread
+> > > > > > is that these are the TREE scenarios are all PREEMPT=y.  So are RUDE01,
+> > > > > > SRCU-P, TASKS01, and TASKS03, but these scenarios are not hammering
+> > > > > > on Tree RCU, and thus have far less interrupt activity and the like.
+> > > > > > Given that it is an interrupt-related feature being added by this commit,
+> > > > > > this seems like expected (mis)behavior.
+> > > > > >
+> > > > > > Can you reproduce this?  If not, are there any diagnostics I can add to
+> > > > > > my testing?  Or a diagnostic patch I could apply?
+> > > >
+> > > > I think I can reproduce it.  Let me debug some more, so far I haven't
+> > > > found anything yet.
+> > > >
+> > > > What I do know is that it's related to reporting. Turning kcsan_report
+> > > > into a noop makes the test run to completion.
+> > > >
+> > > > > I should hasten to add that this feature was quite helpful in recent work!
+> > > >
+> > > > Good to know. :-)  We can probably keep this patch, since the default
+> > > > config doesn't turn this on. But I will try to see what's up with the
+> > > > hangs, and hopefully find a fix.
+> > >
+> > > So this one turned out to be quite interesting. We can get deadlocks
+> > > if we can set up multiple watchpoints per task in case it's
+> > > interrupted and the interrupt sets up another watchpoint, and there
+> > > are many concurrent races happening; because the other_info struct in
+> > > report.c may never be released if an interrupt blocks the consumer due
+> > > to waiting for other_info to become released.
+> >
+> > Been there, done that!  ;-)
+> >
+> > > Give me another day or 2 to come up with a decent fix.
+> >
+> > My thought is to send a pull request for the commits up to but not
+> > including this patch, allowing ample development and testing time for
+> > the fix.  My concern with sending this, even with a fix, is that any
+> > further bugs might cast a shadow on the whole series, further slowing
+> > acceptance into mainline.
+> >
+> > Fair enough?
+> 
+> That's fine. I think the features changes can stay on -rcu/kcsan-dev
+> for now, but the documentation updates don't depend on them.
+> If it'd be useful, the updated documentation could be moved before
+> this patch to -rcu/kcsan, so we'd have
+> 
+>  kcsan: Add current->state to implicitly atomic accesses
+>  kcsan: Add option for verbose reporting
+>  kcsan: Add option to allow watcher interruptions
+> -- cut --
+>  kcsan: Update API documentation in kcsan-checks.h
+>  kcsan: Update Documentation/dev-tools/kcsan.rst
+>  kcsan: Fix a typo in a comment
+> .. rest of series ..
+> 
+> Although I'm fine with either.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- tools/objtool/check.c |   64 ++++++++++++++++++++++++++++----------------------
- 1 file changed, 36 insertions(+), 28 deletions(-)
+Given my churn with a recent merge window, I am more reluctant than
+I might otherwise be to do that sort of rearrangement.  Sorry to be
+so cowardly!
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1935,6 +1935,41 @@ static int validate_sibling_call(struct
- 	return validate_call(insn, state);
- }
- 
-+static int validate_return(struct symbol *func, struct instruction *insn, struct insn_state *state)
-+{
-+	if (state->uaccess && !func_uaccess_safe(func)) {
-+		WARN_FUNC("return with UACCESS enabled",
-+			  insn->sec, insn->offset);
-+		return 1;
-+	}
-+
-+	if (!state->uaccess && func_uaccess_safe(func)) {
-+		WARN_FUNC("return with UACCESS disabled from a UACCESS-safe function",
-+			  insn->sec, insn->offset);
-+		return 1;
-+	}
-+
-+	if (state->df) {
-+		WARN_FUNC("return with DF set",
-+			  insn->sec, insn->offset);
-+		return 1;
-+	}
-+
-+	if (func && has_modified_stack_frame(state)) {
-+		WARN_FUNC("return with modified stack frame",
-+			  insn->sec, insn->offset);
-+		return 1;
-+	}
-+
-+	if (state->bp_scratch) {
-+		WARN("%s uses BP as a scratch register",
-+		     func->name);
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -2050,34 +2085,7 @@ static int validate_branch(struct objtoo
- 		switch (insn->type) {
- 
- 		case INSN_RETURN:
--			if (state.uaccess && !func_uaccess_safe(func)) {
--				WARN_FUNC("return with UACCESS enabled", sec, insn->offset);
--				return 1;
--			}
--
--			if (!state.uaccess && func_uaccess_safe(func)) {
--				WARN_FUNC("return with UACCESS disabled from a UACCESS-safe function", sec, insn->offset);
--				return 1;
--			}
--
--			if (state.df) {
--				WARN_FUNC("return with DF set", sec, insn->offset);
--				return 1;
--			}
--
--			if (func && has_modified_stack_frame(&state)) {
--				WARN_FUNC("return with modified stack frame",
--					  sec, insn->offset);
--				return 1;
--			}
--
--			if (state.bp_scratch) {
--				WARN("%s uses BP as a scratch register",
--				     func->name);
--				return 1;
--			}
--
--			return 0;
-+			return validate_return(func, insn, &state);
- 
- 		case INSN_CALL:
- 		case INSN_CALL_DYNAMIC:
-
-
+							Thanx, Paul
