@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EA9C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31ADEC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C036720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6852071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgCQJkU (ORCPT
+        id S1726222AbgCQJk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:40:20 -0400
-Received: from v6.sk ([167.172.42.174]:50272 "EHLO v6.sk"
+        Tue, 17 Mar 2020 05:40:27 -0400
+Received: from v6.sk ([167.172.42.174]:50344 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgCQJkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:40:15 -0400
+        id S1726852AbgCQJkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:40:23 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 3A2E261008;
-        Tue, 17 Mar 2020 09:40:13 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 332816108C;
+        Tue, 17 Mar 2020 09:40:21 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -48,9 +48,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 10/28] ARM: dts: mmp3: fix USB & USB PHY node names
-Date:   Tue, 17 Mar 2020 10:39:04 +0100
-Message-Id: <20200317093922.20785-11-lkundrak@v3.sk>
+Subject: [PATCH 12/28] spi: dt-bindings: spi-controller: Slaves have no address cells
+Date:   Tue, 17 Mar 2020 10:39:06 +0100
+Message-Id: <20200317093922.20785-13-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
 References: <20200317093922.20785-1-lkundrak@v3.sk>
@@ -61,76 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are better generic ones and the validation is going to complain:
+SPI controllers in slave mode have a single child node that has no
+address. Enforce #address-cells of zero instead of one.
 
-  mmp3-dell-ariel.dt.yaml: hsic@f0001000: $nodename:0: 'hsic@f0001000'
-      does not match '^usb(@.*)?'
-  mmp3-dell-ariel.dt.yaml: hsic@f0002000: $nodename:0: 'hsic@f0002000'
-      does not match '^usb(@.*)?'
-  ...
-
+Fixes: 0a1b929356830 ("spi: Add YAML schemas for the generic SPI options")
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/mmp3.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ .../bindings/spi/spi-controller.yaml          | 23 ++++++++++++++-----
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
-index eaff9b1bc1d9f..fc75f96106351 100644
---- a/arch/arm/boot/dts/mmp3.dtsi
-+++ b/arch/arm/boot/dts/mmp3.dtsi
-@@ -183,14 +183,14 @@ hsi0_mux: interrupt-controller@d42821d0 {
- 				mrvl,intc-nr-irqs = <5>;
- 			};
+diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+index d8e5509a70816..30d774cf6cc95 100644
+--- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+@@ -15,16 +15,27 @@ description: |
+   controller may be described for use in SPI master mode or in SPI slave mode,
+   but not for both at the same time.
  
--			usb_otg_phy0: usb-otg-phy@d4207000 {
-+			usb_otg_phy0: usb-phy@d4207000 {
- 				compatible = "marvell,mmp3-usb-phy";
- 				reg = <0xd4207000 0x40>;
- 				#phy-cells = <0>;
- 				status = "disabled";
- 			};
++allOf:
++  - if:
++      required:
++        - spi-slave
++    then:
++      properties:
++        "#address-cells":
++          const: 0
++        "#size-cells":
++          const: 0
++    else:
++      properties:
++        "#address-cells":
++          const: 1
++        "#size-cells":
++          const: 0
++
+ properties:
+   $nodename:
+     pattern: "^spi(@.*|-[0-9a-f])*$"
  
--			usb_otg0: usb-otg@d4208000 {
-+			usb_otg0: usb@d4208000 {
- 				compatible = "marvell,pxau2o-ehci";
- 				reg = <0xd4208000 0x200>;
- 				interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-@@ -201,7 +201,7 @@ usb_otg0: usb-otg@d4208000 {
- 				status = "disabled";
- 			};
- 
--			hsic_phy0: hsic-phy@f0001800 {
-+			hsic_phy0: usb-phy@f0001800 {
- 				compatible = "marvell,mmp3-hsic-phy",
- 					     "usb-nop-xceiv";
- 				reg = <0xf0001800 0x40>;
-@@ -209,7 +209,7 @@ hsic_phy0: hsic-phy@f0001800 {
- 				status = "disabled";
- 			};
- 
--			hsic0: hsic@f0001000 {
-+			hsic0: usb@f0001000 {
- 				compatible = "marvell,pxau2o-ehci";
- 				reg = <0xf0001000 0x200>;
- 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-@@ -223,7 +223,7 @@ hsic0: hsic@f0001000 {
- 				status = "disabled";
- 			};
- 
--			hsic_phy1: hsic-phy@f0002800 {
-+			hsic_phy1: usb-phy@f0002800 {
- 				compatible = "marvell,mmp3-hsic-phy",
- 					     "usb-nop-xceiv";
- 				reg = <0xf0002800 0x40>;
-@@ -231,7 +231,7 @@ hsic_phy1: hsic-phy@f0002800 {
- 				status = "disabled";
- 			};
- 
--			hsic1: hsic@f0002000 {
-+			hsic1: usb@f0002000 {
- 				compatible = "marvell,pxau2o-ehci";
- 				reg = <0xf0002000 0x200>;
- 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+-  "#address-cells":
+-    const: 1
+-
+-  "#size-cells":
+-    const: 0
+-
+   cs-gpios:
+     description: |
+       GPIOs used as chip selects.
 -- 
 2.25.1
 
