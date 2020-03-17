@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8BCC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ECAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5650120658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F6F2073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443340;
-	bh=nWLuPFOQVOPLikwVQh7fKPutOMPbZCw7WgkfAD8CmnE=;
+	s=default; t=1584443344;
+	bh=QQ129eu6WhXBVL86aVphaEF5TJnd8BZqbt1aZgE+7Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h6Z94genfJoNPxl09tT6gFno8TIEYRYnWx7hxjTZRCkHwiid6OZIkxmyIUj2qm3AN
-	 2VadfEd1MPnaAKTaEF+EWEHBbE66MLZS4t7H9mvGK+SIK7XVCizPt8nyD3thYhkQVC
-	 4IlEksrLEtR70ewH63wFXDE/XYIrAXvp/+JhVwDk=
+	b=HfW75sf1I3fP8p0zCUq/jUPGKw54LFk8ely+OjdY3uuYjPHbJCbeoczSdco6GD+iK
+	 0hurPAkUGMmMTmb0MAMzLoPITdavlkj9xpeqU3atSuupW7tOXpNkpuLw8D2nP7H6Ab
+	 gkFYtiHxIbkA4YEwAA6TCz2j0rv4FeWGdr7O4RZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgCQLIv (ORCPT
+        id S1728713AbgCQLJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50686 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728877AbgCQLIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:08:44 -0400
+        id S1727135AbgCQLI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:08:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81E3F20658;
-        Tue, 17 Mar 2020 11:08:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EAFC205ED;
+        Tue, 17 Mar 2020 11:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443324;
-        bh=nWLuPFOQVOPLikwVQh7fKPutOMPbZCw7WgkfAD8CmnE=;
+        s=default; t=1584443338;
+        bh=QQ129eu6WhXBVL86aVphaEF5TJnd8BZqbt1aZgE+7Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3x1WzuvDBNmT7BXpGSKPk4u1EdCXoSp9lJ3C4Tr73ljuLF/CMlYxaRaZ6U7lhO0m
-         OE4i2LRku1Yj1xpZmmzh0QWcibyUO9/s/9R9Rvc9fQSufb+IQjFIUAe56RnVgqwNNZ
-         GmYveYXsh5GXz9Wq1POkmS7UBDwjpqTDJ8Eyn97g=
+        b=dwIUT1EHax54WbwYDk8H4BFjdiUoXQ6YE+IaM0Je2AiKN1M8s9gnych1TyAWUsS+U
+         HU/UPB4eyw2I+a+HiQLlqiIibU7djD9HxOhEfMqpz05L9kwY8XiVwXqBAgdI4DLvRR
+         a8il07+p02KDMi2kh+iNhKM9JQis9AWPshHnuKm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 045/151] net: hns3: clear port base VLAN when unload PF
-Date:   Tue, 17 Mar 2020 11:54:15 +0100
-Message-Id: <20200317103329.807375517@linuxfoundation.org>
+Subject: [PATCH 5.5 049/151] nl802154: add missing attribute validation
+Date:   Tue, 17 Mar 2020 11:54:19 +0100
+Message-Id: <20200317103330.075068394@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,61 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 59359fc8a2f7af062777692e6a7aae73483729ec ]
+[ Upstream commit 9322cd7c4af2ccc7fe7c5f01adb53f4f77949e92 ]
 
-Currently, PF missed to clear the port base VLAN for VF when
-unload. In this case, the VLAN id will remain in the VLAN
-table. This patch fixes it.
+Add missing attribute validation for several u8 types.
 
-Fixes: 92f11ea177cd ("net: hns3: fix set port based VLAN issue for VF")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fixes: 2c21d11518b6 ("net: add NL802154 interface for configuration of 802.15.4 devices")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c |   23 ++++++++++++++++
- 1 file changed, 23 insertions(+)
+ net/ieee802154/nl_policy.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -8486,6 +8486,28 @@ static int hclge_set_vf_vlan_filter(stru
- 	}
- }
- 
-+static void hclge_clear_vf_vlan(struct hclge_dev *hdev)
-+{
-+	struct hclge_vlan_info *vlan_info;
-+	struct hclge_vport *vport;
-+	int ret;
-+	int vf;
-+
-+	/* clear port base vlan for all vf */
-+	for (vf = HCLGE_VF_VPORT_START_NUM; vf < hdev->num_alloc_vport; vf++) {
-+		vport = &hdev->vport[vf];
-+		vlan_info = &vport->port_base_vlan_cfg.vlan_info;
-+
-+		ret = hclge_set_vlan_filter_hw(hdev, htons(ETH_P_8021Q),
-+					       vport->vport_id,
-+					       vlan_info->vlan_tag, true);
-+		if (ret)
-+			dev_err(&hdev->pdev->dev,
-+				"failed to clear vf vlan for vf%d, ret = %d\n",
-+				vf - HCLGE_VF_VPORT_START_NUM, ret);
-+	}
-+}
-+
- int hclge_set_vlan_filter(struct hnae3_handle *handle, __be16 proto,
- 			  u16 vlan_id, bool is_kill)
- {
-@@ -9895,6 +9917,7 @@ static void hclge_uninit_ae_dev(struct h
- 	struct hclge_mac *mac = &hdev->hw.mac;
- 
- 	hclge_reset_vf_rate(hdev);
-+	hclge_clear_vf_vlan(hdev);
- 	hclge_misc_affinity_teardown(hdev);
- 	hclge_state_uninit(hdev);
- 
+--- a/net/ieee802154/nl_policy.c
++++ b/net/ieee802154/nl_policy.c
+@@ -21,6 +21,11 @@ const struct nla_policy ieee802154_polic
+ 	[IEEE802154_ATTR_HW_ADDR] = { .type = NLA_HW_ADDR, },
+ 	[IEEE802154_ATTR_PAN_ID] = { .type = NLA_U16, },
+ 	[IEEE802154_ATTR_CHANNEL] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_BCN_ORD] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_SF_ORD] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_PAN_COORD] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_BAT_EXT] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_COORD_REALIGN] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_PAGE] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_COORD_SHORT_ADDR] = { .type = NLA_U16, },
+ 	[IEEE802154_ATTR_COORD_HW_ADDR] = { .type = NLA_HW_ADDR, },
 
 
