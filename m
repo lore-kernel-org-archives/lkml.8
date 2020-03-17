@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C1AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B08C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8954D20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E9020736
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443121;
-	bh=S5G1KHBEaEL4NDBxq8BafkUPfEetq4PzQnKJ/q0Y/ds=;
+	s=default; t=1584443124;
+	bh=7AeRdUFqB8nXUpeMqPPG48ncKguSxkwesFV4prQw9Ak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBb04tOaLtOJZfeRXKjNey+AFHiAXQyKzbe0MZjM2DKxtGU1EqJmHdwthZXUbZ8L6
-	 qHe/bBQ/a4K4KrjFluCLLW0HIXnMYiBj/UNNxo8ZhkCzP8d7eE3CYQo1nkXEwn+D2R
-	 CazpT3v9Ux4ebTv3Y4Xlcz1zpdQLeGtVJemNO+D8=
+	b=k7JRQEALZJDN3Q3dz8t2ibiRXfO9ZQMuzoo97VGPjzdy+dx5IzoDZ4pZnys38bAc1
+	 /wLmXLwR+Fjmgk79H+snm76N6kALtWUOYzaeYgbadusn/1EnIhKGqZVk485kJ5CKsD
+	 8DGr1hFGwFt3GGFOLrJ5CG/ixx6MkhqRvzgi1Zsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgCQLFU (ORCPT
+        id S1726847AbgCQLFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:05:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46016 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727320AbgCQLFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:15 -0400
+        id S1728415AbgCQLFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:05:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64D78206EC;
-        Tue, 17 Mar 2020 11:05:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82D0A20658;
+        Tue, 17 Mar 2020 11:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443114;
-        bh=S5G1KHBEaEL4NDBxq8BafkUPfEetq4PzQnKJ/q0Y/ds=;
+        s=default; t=1584443120;
+        bh=7AeRdUFqB8nXUpeMqPPG48ncKguSxkwesFV4prQw9Ak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JFFigtD/ps9dZ5+wU/HCj8w9iDTm3cSl+z4dQ+JkaA8EKPvjWErLRKq0z3ABBu27l
-         PncrKNCbPXQ2Kf71K+DSU++9MZmANwydoZVg3iptri6sg8QRbEsBVe7sfXz8JuRQ+m
-         ChvYM2RkgaUeooht/fvw2nh43dt4Lb/Li9zj/uug=
+        b=gyItrkkr8+M4BEqS4HNi8AH97o5T14aSqIfXDiZE86zX442ynmBJ/nYgaD+Fcz4Nv
+         +l9K0SGGGNhpF539NAZ95juHhWhPb3i49uTDCNytuBjsQ/SmH1uBo0n3AlqxmdYOlB
+         yoqLmFQSfW4j9fN/0sPHakfmiRABB/WYgiao2jgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.4 074/123] ktest: Add timeout for ssh sync testing
-Date:   Tue, 17 Mar 2020 11:55:01 +0100
-Message-Id: <20200317103315.057778302@linuxfoundation.org>
+        stable@vger.kernel.org, Tina Zhang <tina.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.4 102/123] drm/i915/gvt: Fix dma-buf display blur issue on CFL
+Date:   Tue, 17 Mar 2020 11:55:29 +0100
+Message-Id: <20200317103318.045252448@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,36 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Tina Zhang <tina.zhang@intel.com>
 
-commit 4d00fc477a2ce8b6d2b09fb34ef9fe9918e7d434 upstream.
+commit 259170cb4c84f4165a36c0b05811eb74c495412c upstream.
 
-Before rebooting the box, a "ssh sync" is called to the test machine to see
-if it is alive or not. But if the test machine is in a partial state, that
-ssh may never actually finish, and the ktest test hangs.
+Commit c3b5a8430daad ("drm/i915/gvt: Enable gfx virtualiztion for CFL")
+added the support on CFL. The vgpu emulation hotplug support on CFL was
+supposed to be included in that patch. Without the vgpu emulation
+hotplug support, the dma-buf based display gives us a blur face.
 
-Add a 10 second timeout to the sync test, which will fail after 10 seconds
-and then cause the test to reboot the test machine.
+So fix this issue by adding the vgpu emulation hotplug support on CFL.
 
-Cc: stable@vger.kernel.org
-Fixes: 6474ace999edd ("ktest.pl: Powercycle the box on reboot if no connection can be made")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: c3b5a8430daad ("drm/i915/gvt: Enable gfx virtualiztion for CFL")
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200227010041.32248-1-tina.zhang@intel.com
+(cherry picked from commit 135dde8853c7e00f6002e710f7e4787ed8585c0e)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/ktest/ktest.pl |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/gvt/display.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -1383,7 +1383,7 @@ sub reboot {
+--- a/drivers/gpu/drm/i915/gvt/display.c
++++ b/drivers/gpu/drm/i915/gvt/display.c
+@@ -457,7 +457,8 @@ void intel_vgpu_emulate_hotplug(struct i
+ 	struct drm_i915_private *dev_priv = vgpu->gvt->dev_priv;
  
-     } else {
- 	# Make sure everything has been written to disk
--	run_ssh("sync");
-+	run_ssh("sync", 10);
- 
- 	if (defined($time)) {
- 	    start_monitor;
+ 	/* TODO: add more platforms support */
+-	if (IS_SKYLAKE(dev_priv) || IS_KABYLAKE(dev_priv)) {
++	if (IS_SKYLAKE(dev_priv) || IS_KABYLAKE(dev_priv) ||
++		IS_COFFEELAKE(dev_priv)) {
+ 		if (connected) {
+ 			vgpu_vreg_t(vgpu, SFUSE_STRAP) |=
+ 				SFUSE_STRAP_DDID_DETECTED;
 
 
