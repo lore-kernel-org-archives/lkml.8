@@ -2,141 +2,91 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F2BC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78FFC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C46205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966AE205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oq96GvwK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bWmkxz+T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgCQNy0 (ORCPT
+        id S1726736AbgCQNyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:54:26 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36466 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgCQNyZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:54:25 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 39so6261117otu.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZmJ1DX6hWX/M0tJ4tb+T+vnuuVl9PBhyVPx9KWg+TfE=;
-        b=oq96GvwKE3QjPaVLIL6puTSWYMA2JZDVaTmuQkU5YS2oAf/mr3PnEKvKHJR0ZRhtIa
-         co1ejwVmMjf45HEIGsFS7ucBT3DK6y8RniLfZE9atxfSrHzRC4LR7/HbpPoNhsm9Csw9
-         4WgJovPpiFVSd6SpId/tkc9AFWMsO7+/Fgrhd5ZALH+GelrL93lZpFiNJkbpxOyGI9jj
-         cfuiFY4wiYKRNaziZ2clJGs0DujKo7wScsDUBJMincBMB9URA1hz8xIaq7/5PVaD2a+m
-         3b74LJeSYTOYbUGyuvbKRYBDDMHveVikkENWoxUtiLK++DNrQ92vG/eDVnrxruhpAR9B
-         pdMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZmJ1DX6hWX/M0tJ4tb+T+vnuuVl9PBhyVPx9KWg+TfE=;
-        b=BCgbl8SPLsjFWIagMPx0xaOURj9nMZ2T057SWWD5pr5iIgRMAKPojlaXaBCbGwEEpS
-         8nWkMPX1uI2tQckIkjBjCOg5TZZjx767SZ7NM9VfFGp1qhbSBLf2AhGpkcbA/na/9yu+
-         Kg/aGH3TgW6r+h35eedY9N9mzAcVPMNu8+FyQ5NwmVI0nM0XDhE+sTvsxeOGKPoHImVH
-         EySi/MLOx6S2akP69d5066qIIv0tZwpoP68pl/rt95/mlrUXwEHTS1Be3Mytg9Tjcmpb
-         wsyJc1jz+vTZiT6JFCCAZ/+WcSX3BN6HAIOWJ4iVWAEJoLugSN5oOBFpOuRwnmKv/771
-         N7MQ==
-X-Gm-Message-State: ANhLgQ3Cm+jO4V6PI4MJpEqdL54lhPE72f8sOvp99OXl7HvoGmkk8TZ3
-        IVpx7uX4w/5wFoZyI0pLORDyGULHRVaFvRHCPFwkqA==
-X-Google-Smtp-Source: ADFU+vthRF1CGXBIcX8eCWjLSUuv0ijsh47UzzDn/jzCwqg/7g0xalXEDtotKi4n7rENshDbZBHeysQsEaf4csLdeEE=
-X-Received: by 2002:a9d:1d43:: with SMTP id m61mr3763477otm.91.1584453264637;
- Tue, 17 Mar 2020 06:54:24 -0700 (PDT)
+        Tue, 17 Mar 2020 09:54:53 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40760 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgCQNyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:54:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=LNq2eKVxIu584aKzn7PR2nMigwhw6HSeqmPI6yI3yWw=; b=bWmkxz+TZfitERg98q+TlX4I//
+        zst6mY+QmHJrhANsZJQ8LrJoSPWark4wkYXLrPqI8aZOkNEhguJXo/ayTy+B+tGEL+52mgAQswzH5
+        8VbKMrKs6/fzNlMAxxhX6X58bBYinAoIgKW4XBAy926duG4w++axND7a+MrA2WCcchSw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jECfz-0006fW-0y; Tue, 17 Mar 2020 14:54:35 +0100
+Date:   Tue, 17 Mar 2020 14:54:35 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 15/28] dt-bindings: arm: mrvl: Add missing compatible
+ strings
+Message-ID: <20200317135435.GP24270@lunn.ch>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-16-lkundrak@v3.sk>
 MIME-Version: 1.0
-References: <20200311123501.18202-1-robert.foss@linaro.org>
- <20200311123501.18202-7-robert.foss@linaro.org> <20200312053544.GY264362@yoga>
-In-Reply-To: <20200312053544.GY264362@yoga>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Tue, 17 Mar 2020 14:54:13 +0100
-Message-ID: <CAG3jFyuEWqkWSZzVt04y4GcO=0LUwLq4bHe_=dirWePdVW+NSA@mail.gmail.com>
-Subject: Re: [v1 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     leonard.crestez@nxp.com, dinguyen@kernel.org,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Loic Poulain <loic.poulain@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317093922.20785-16-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Mar 2020 at 06:35, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Wed 11 Mar 05:35 PDT 2020, Robert Foss wrote:
->
-> > Build camera clock, isp and controller drivers as modules.
-> >
-> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
->
-> Thanks for the series Robert!
+On Tue, Mar 17, 2020 at 10:39:09AM +0100, Lubomir Rintel wrote:
+> Add compatible strings for the boards we have in tree. At the same time,
+> fix the MMP3 compatible string: the preferred vendor name for Marvell is
+> "marvell", not "mrvl", and indeed "marvell,mmp3" has been actively used,
+> not "mrvl,mmp3".
+> 
+> Fixes: 95aecb71b84e ("dt-bindings: arm: mrvl: Document MMP3 compatible string")
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Thanks for the quick & thorough review, I'll send out a v2 with all of
-the feedback corrected.
+What is implied by the Fixes: tag? Do you expect this to be
+back ported? Is anything actually broken here?
 
->
-> Regards,
-> Bjorn
->
-> > ---
-> >  arch/arm64/configs/defconfig | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index 4db223dbc549..7cb6989249ab 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -376,6 +376,7 @@ CONFIG_I2C_MESON=y
-> >  CONFIG_I2C_MV64XXX=y
-> >  CONFIG_I2C_OWL=y
-> >  CONFIG_I2C_PXA=y
-> > +CONFIG_I2C_QCOM_CCI=m
-> >  CONFIG_I2C_QCOM_GENI=m
-> >  CONFIG_I2C_QUP=y
-> >  CONFIG_I2C_RK3X=y
-> > @@ -530,6 +531,7 @@ CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
-> >  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
-> >  CONFIG_VIDEO_RENESAS_FCP=m
-> >  CONFIG_VIDEO_RENESAS_VSP1=m
-> > +CONFIG_VIDEO_QCOM_CAMSS=m
-> >  CONFIG_DRM=m
-> >  CONFIG_DRM_I2C_NXP_TDA998X=m
-> >  CONFIG_DRM_NOUVEAU=m
-> > @@ -732,6 +734,7 @@ CONFIG_MSM_GCC_8994=y
-> >  CONFIG_MSM_MMCC_8996=y
-> >  CONFIG_MSM_GCC_8998=y
-> >  CONFIG_QCS_GCC_404=y
-> > +CONFIG_SDM_CAMCC_845=m
-> >  CONFIG_SDM_GCC_845=y
-> >  CONFIG_SM_GCC_8150=y
-> >  CONFIG_QCOM_HFPLL=y
-> > @@ -762,6 +765,7 @@ CONFIG_QCOM_COMMAND_DB=y
-> >  CONFIG_QCOM_GENI_SE=y
-> >  CONFIG_QCOM_GLINK_SSR=m
-> >  CONFIG_QCOM_RMTFS_MEM=m
-> > +CONFIG_SDM_CAMCC_845=m
-> >  CONFIG_QCOM_RPMH=y
-> >  CONFIG_QCOM_RPMHPD=y
-> >  CONFIG_QCOM_SMEM=y
-> > --
-> > 2.20.1
-> >
+Apart from that:
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
