@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78557C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB668C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49FC72071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E5320735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442810;
-	bh=cTVYqttNEkjaDmWhfICp2OkP3PlrRJyx3/vSbF1scVo=;
+	s=default; t=1584442812;
+	bh=dhGUR4xatn233XksUDPF0ILpwQzNjiz/U8o9OsPwpEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pbRMPXqdQFZOTrhLcI6wFw9WFqiPbcv32NMXCT6oBQQI5UMSSt5n5sLMnzgrWNVGm
-	 7j4cFHLpsL/EJzFXDACuQtmvqFeRR2+Vrl8sfDe8Jd9L2IglmvFflNuvAXgwIXVvQV
-	 QK/usz7oNYjvZHglbLuL0fH4FU7T7UsNgw4OLZGs=
+	b=NjE1/exDov3DULaDyzeT+6tuhLzwgoqy5VmyXAciYfX/ydQ2QjAAiwruAqZ/3O6Rl
+	 77WfTg/tLxoEzQ6e0xIpS9Ms/IwkVpy6gyvHsOzRRrnA+qOtHQTD3RDQ0poxvJQ9tl
+	 kj0ObuocyeTsftVstqqDMzGjn/vTpfnClI/BgkCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgCQLAI (ORCPT
+        id S1727566AbgCQLAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:00:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727545AbgCQLAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:00:05 -0400
+        id S1727556AbgCQLAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:00:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C962420735;
-        Tue, 17 Mar 2020 11:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B8DD20736;
+        Tue, 17 Mar 2020 11:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442805;
-        bh=cTVYqttNEkjaDmWhfICp2OkP3PlrRJyx3/vSbF1scVo=;
+        s=default; t=1584442807;
+        bh=dhGUR4xatn233XksUDPF0ILpwQzNjiz/U8o9OsPwpEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YxB1R66+ABrXfsux4P/bmpZ5Lo4KKc5qkb5q+TZo8ARbR9JSmqXzBfuVGuBNj2Kvb
-         oGcSHeQLGFaoH5AeOv7MEeZ8QG7CFqH9uNUrEQquA+s27L74Ua61X1ZvjuOdJDFCV8
-         TaFaFUMfiLTADOhkfK3e/A8axFUIb9hTsKz1geFQ=
+        b=tDmfCxg2SqQFa8ijfjJUoEOjIHL5ICzmkJ4nrtiAPWk6jwUSqBcNK7gf8bsjkeCIt
+         nmLVcAXqqDGZOltnT6Z+q/Jdr9zIK69Qd3Y2ffB/zcwiiX6QJIEJ5uOKb1SD3lFVjK
+         ye3RBajTNjFAc4j2NorHx6OVPiAnuurrkwsbgrOo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com,
-        syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.19 70/89] batman-adv: Dont schedule OGM for disabled interface
-Date:   Tue, 17 Mar 2020 11:55:19 +0100
-Message-Id: <20200317103308.008137404@linuxfoundation.org>
+        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 88/89] efi: Add a sanity check to efivar_store_raw()
+Date:   Tue, 17 Mar 2020 11:55:37 +0100
+Message-Id: <20200317103310.194798201@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -63,43 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Vladis Dronov <vdronov@redhat.com>
 
-commit 8e8ce08198de193e3d21d42e96945216e3d9ac7f upstream.
+commit d6c066fda90d578aacdf19771a027ed484a79825 upstream.
 
-A transmission scheduling for an interface which is currently dropped by
-batadv_iv_ogm_iface_disable could still be in progress. The B.A.T.M.A.N. V
-is simply cancelling the workqueue item in an synchronous way but this is
-not possible with B.A.T.M.A.N. IV because the OGM submissions are
-intertwined.
+Add a sanity check to efivar_store_raw() the same way
+efivar_{attr,size,data}_read() and efivar_show_raw() have it.
 
-Instead it has to stop submitting the OGM when it detect that the buffer
-pointer is set to NULL.
-
-Reported-by: syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com
-Reported-by: syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Cc: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200305084041.24053-3-vdronov@redhat.com
+Link: https://lore.kernel.org/r/20200308080859.21568-25-ardb@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- net/batman-adv/bat_iv_ogm.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -970,6 +970,10 @@ static void batadv_iv_ogm_schedule_buff(
+---
+ drivers/firmware/efi/efivars.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -272,6 +272,9 @@ efivar_store_raw(struct efivar_entry *en
+ 	u8 *data;
+ 	int err;
  
- 	lockdep_assert_held(&hard_iface->bat_iv.ogm_buff_mutex);
- 
-+	/* interface already disabled by batadv_iv_ogm_iface_disable */
-+	if (!*ogm_buff)
-+		return;
++	if (!entry || !buf)
++		return -EINVAL;
 +
- 	/* the interface gets activated here to avoid race conditions between
- 	 * the moment of activating the interface in
- 	 * hardif_activate_interface() where the originator mac is set and
+ 	if (is_compat()) {
+ 		struct compat_efi_variable *compat;
+ 
 
 
