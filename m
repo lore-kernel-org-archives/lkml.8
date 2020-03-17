@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCEEC0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58022C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F927206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FEA206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733183AbgCQAsh (ORCPT
+        id S1733195AbgCQAwH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 20:48:37 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:50358 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733005AbgCQAsh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 20:48:37 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9CCDA1579A147;
-        Mon, 16 Mar 2020 17:48:36 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 17:48:36 -0700 (PDT)
-Message-Id: <20200316.174836.1008034012256551916.davem@davemloft.net>
-To:     masahiroy@kernel.org
-Cc:     linux-kbuild@vger.kernel.org, sparclinux@vger.kernel.org,
-        clang-built-linux@googlegroups.com, viro@zeniv.linux.org.uk,
-        ndesaulniers@google.com, ilie.halip@gmail.com,
-        natechancellor@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] sparc: revive __HAVE_ARCH_STRLEN for 32bit sparc
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200311223725.27662-1-masahiroy@kernel.org>
-References: <20200311223725.27662-1-masahiroy@kernel.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Mar 2020 17:48:37 -0700 (PDT)
+        Mon, 16 Mar 2020 20:52:07 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:51908 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733152AbgCQAwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 20:52:06 -0400
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jE0Sh-0004VF-6h; Tue, 17 Mar 2020 01:52:03 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: remove properties from spdif node RK3399 Excavator
+Date:   Tue, 17 Mar 2020 01:52:02 +0100
+Message-ID: <18213991.ifHWx50xby@phil>
+In-Reply-To: <20200312172240.21362-1-jbx6244@gmail.com>
+References: <20200312172240.21362-1-jbx6244@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 12 Mar 2020 07:37:24 +0900
+Am Donnerstag, 12. März 2020, 18:22:39 CET schrieb Johan Jonker:
+> An expermental test with the command below gives this error:
+> 
+> arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml:
+> spdif@ff870000:
+> 'i2c-scl-falling-time-ns', 'i2c-scl-rising-time-ns', 'power-domains'
+> do not match any of the regexes: 'pinctrl-[0-9]+'
+> 
+> 'i2c-scl-falling-time-ns', 'i2c-scl-rising-time-ns'
+> are not valid properties for 'spdif' nodes, so remove them.
+> 
+> make ARCH=arm64 dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-> Prior to commit 70a6fcf3283a ("[sparc] unify 32bit and 64bit string.h"),
-> __HAVE_ARCH_STRLEN was defined in both of string_32.h and string_64.h
-> 
-> It did not unify __HAVE_ARCH_STRLEN, but deleted it from string_32.h
-> 
-> This issue was reported by the kbuild test robot in the trial of
-> forcible linking of $(lib-y) to vmlinux.
-> 
-> Fixes: 70a6fcf3283a ("[sparc] unify 32bit and 64bit string.h")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+applied for 5.7
 
-Acked-by: David S. Miller <davem@davemloft.net>
+Thanks
+Heiko
+
+
