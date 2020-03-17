@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F5AC5ACC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC46BC5ACC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6C420674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08162071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="do6ckJEu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HIhK7ksT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgCQH27 (ORCPT
+        id S1726277AbgCQH3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:28:59 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53692 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgCQH26 (ORCPT
+        Tue, 17 Mar 2020 03:29:15 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55642 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgCQH3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:28:58 -0400
+        Tue, 17 Mar 2020 03:29:13 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02H7Srub069328;
-        Tue, 17 Mar 2020 02:28:53 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02H7T7ip063623;
+        Tue, 17 Mar 2020 02:29:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584430133;
-        bh=i/TegccITaPMoMi6UVP/BPk+ArR8UaOpWaWzIsURoBI=;
+        s=ti-com-17Q1; t=1584430147;
+        bh=/Dw8KFsaIkFkfgLKZhRV5MXpefmC30Xga+RKXA8psqw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=do6ckJEuMxysbv/pppNA8U/OnmMYIcCq+jzaNC927oiZTNjO3bLROBXS0ZpQv9Aap
-         fc8iHVoocBdtjNmJRtj8+Fg/5PhXQ9r7/MSgKB675YfeCiAxo+hlFCQFFI+4zcnZIp
-         j6zPOnM14EaMhqdYeSc7UqW1CDnk38bHkuileDpI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7Sr2U070626;
-        Tue, 17 Mar 2020 02:28:53 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 02:28:53 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+        b=HIhK7ksTRep1G2Xw7F45BBnD2C02mkJXp5S4CEAecZbd1sVW9RxPkz33HEYZumZPm
+         HHOsUw9pJCQzt2tA/ic4X6QXfABXhiGTGpNwTfe3HDXbBDketxiXRbBLXFz/zOwXLY
+         UDbqRgn6hoIKZQuWBeOTf1FImcqyFOCCIODhn0aA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7T7vo071090;
+        Tue, 17 Mar 2020 02:29:07 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
  (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Mar 2020 02:29:07 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 02:28:52 -0500
+ Frontend Transport; Tue, 17 Mar 2020 02:29:07 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7Sprs069777;
-        Tue, 17 Mar 2020 02:28:52 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7T6Kf094089;
+        Tue, 17 Mar 2020 02:29:06 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -60,9 +60,9 @@ CC:     Murali Karicheri <m-karicheri2@ti.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v4 09/11] arm64: dts: ti: k3-j721e-mcu: add mcu cpsw nuss node
-Date:   Tue, 17 Mar 2020 09:27:37 +0200
-Message-ID: <20200317072739.23950-10-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v4 11/11] arm64: defconfig: ti: k3: enable dma and networking
+Date:   Tue, 17 Mar 2020 09:27:39 +0200
+Message-ID: <20200317072739.23950-12-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200317072739.23950-1-grygorii.strashko@ti.com>
 References: <20200317072739.23950-1-grygorii.strashko@ti.com>
@@ -74,85 +74,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for The TI J721E MCU SoC Gigabit Ethernet
-subsystem (MCU CPSW NUSS).
+Enable TI K3 AM654x/J721E DMA and networking options.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      | 49 +++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j721e.dtsi          |  1 +
- 2 files changed, 50 insertions(+)
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 6f961d5f077a..dc047273f101 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -284,4 +284,53 @@
- 			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
- 		};
- 	};
-+
-+	mcu_cpsw: ethernet@46000000 {
-+		compatible = "ti,j721e-cpsw-nuss";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		reg = <0x0 0x46000000 0x0 0x200000>;
-+		reg-names = "cpsw_nuss";
-+		ranges = <0x0 0x0 0x0 0x46000000 0x0 0x200000>;
-+		dma-coherent;
-+		clocks = <&k3_clks 18 22>;
-+		clock-names = "fck";
-+		power-domains = <&k3_pds 18 TI_SCI_PD_EXCLUSIVE>;
-+
-+		dmas = <&mcu_udmap 0xf000>,
-+		       <&mcu_udmap 0xf001>,
-+		       <&mcu_udmap 0xf002>,
-+		       <&mcu_udmap 0xf003>,
-+		       <&mcu_udmap 0xf004>,
-+		       <&mcu_udmap 0xf005>,
-+		       <&mcu_udmap 0xf006>,
-+		       <&mcu_udmap 0xf007>,
-+		       <&mcu_udmap 0x7000>;
-+		dma-names = "tx0", "tx1", "tx2", "tx3",
-+			    "tx4", "tx5", "tx6", "tx7",
-+			    "rx";
-+
-+		ethernet-ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			cpsw_port1: port@1 {
-+				reg = <1>;
-+				ti,mac-only;
-+				label = "port1";
-+				ti,syscon-efuse = <&mcu_conf 0x200>;
-+				phys = <&phy_gmii_sel 1>;
-+			};
-+		};
-+
-+		davinci_mdio: mdio@f00 {
-+			compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-+			reg = <0x0 0xf00 0x0 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&k3_clks 18 22>;
-+			clock-names = "fck";
-+			bus_freq = <1000000>;
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-index 027bd1febafa..2f9a56d9b114 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-@@ -30,6 +30,7 @@
- 		serial9 = &main_uart7;
- 		serial10 = &main_uart8;
- 		serial11 = &main_uart9;
-+		ethernet0 = &cpsw_port1;
- 	};
- 
- 	chosen { };
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 4db223dbc549..13cd865d7d4b 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -283,6 +283,7 @@ CONFIG_SMSC911X=y
+ CONFIG_SNI_AVE=y
+ CONFIG_SNI_NETSEC=y
+ CONFIG_STMMAC_ETH=m
++CONFIG_TI_K3_AM65_CPSW_NUSS=y
+ CONFIG_MDIO_BUS_MUX_MMIOREG=y
+ CONFIG_MARVELL_PHY=m
+ CONFIG_MARVELL_10G_PHY=m
+@@ -698,6 +699,8 @@ CONFIG_QCOM_HIDMA_MGMT=y
+ CONFIG_QCOM_HIDMA=y
+ CONFIG_RCAR_DMAC=y
+ CONFIG_RENESAS_USB_DMAC=m
++CONFIG_TI_K3_UDMA=y
++CONFIG_TI_K3_UDMA_GLUE_LAYER=y
+ CONFIG_VFIO=y
+ CONFIG_VFIO_PCI=y
+ CONFIG_VIRTIO_PCI=y
 -- 
 2.17.1
 
