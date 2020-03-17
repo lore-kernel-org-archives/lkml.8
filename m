@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FDFC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014A9C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A4D2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB9120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442607;
-	bh=Qllv0735Xvs+NmyTdZDg/yT7lhojP9oxMEi+Es5JoYM=;
+	s=default; t=1584442610;
+	bh=0j2JV9/OuKp6+xyp5BEnQ4P1BlZoBZG0cQMrlzBcIQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nJIwQSyplv/4FCXHLXIDzwSoADlAn140FRhpekzz/5kYgYWPtNIhFNFGs9CHzVXya
-	 QHP0i+MVHLzcyCzPomkYHj2azOhnpQmpFluM7nLqYiMIsneOolbXjeoT1gzQXp9z/U
-	 CbdczwJlUy/bkHzmVt/ZocmPzTNrkAa5Y6Gk1Ts0=
+	b=HLApvqxfUn5jO8caTGZ3Y9spFi8Alii+1iFWoY6qXkBgUgMtPS9xNr5Oo5ijkXL0Y
+	 4zThaiVA8pEqaci11BUyW4FcRMEQmcKPuuHlf+4sCFtI9AbytJndm2AsKLUIFV3eYa
+	 F1YzGNZWijEa06U8fWpJ/yQOq94YJqTfkarlA6b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgCQK4q (ORCPT
+        id S1726775AbgCQK4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:56:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34396 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:56:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbgCQK4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:56:45 -0400
+        id S1726717AbgCQK4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:56:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34DFE20658;
-        Tue, 17 Mar 2020 10:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE0E920658;
+        Tue, 17 Mar 2020 10:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442603;
-        bh=Qllv0735Xvs+NmyTdZDg/yT7lhojP9oxMEi+Es5JoYM=;
+        s=default; t=1584442606;
+        bh=0j2JV9/OuKp6+xyp5BEnQ4P1BlZoBZG0cQMrlzBcIQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ihkGblEau35JB+QZfUD/eZJ686JxJPThQSnntDPuddqXPO9FjS/rfwXoEHrd0Ub6+
-         OgNkeSZmzAtlNe3rpQGdb3qwRjC19W3Fs+PnihoDD2NdxAaE6SMCK/Xmy35DbMnHGL
-         vU4pO2WXtJwo2b9/jJteCPKJZ2B8x4WEL3DhWw7Y=
+        b=1tgdVpBuNurCpL2gKdXGADdBJv9cpjwagc27G92iCnjuqoZ1CEtWtRX4cFLyu1MtK
+         8ocL40hirHh+AQaY9gjudGzbqjoyZkYQpuhKU2n+Pew2SUFvu+doQnaWajxDUfTqIm
+         CO1835muiZuj6Fh/B84htrcS8NyyAjDY8IxpYoGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 02/89] net: phy: Avoid multiple suspends
-Date:   Tue, 17 Mar 2020 11:54:11 +0100
-Message-Id: <20200317103300.047788201@linuxfoundation.org>
+Subject: [PATCH 4.19 20/89] bnxt_en: reinitialize IRQs when MTU is modified
+Date:   Tue, 17 Mar 2020 11:54:29 +0100
+Message-Id: <20200317103302.334604093@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -59,50 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit 503ba7c6961034ff0047707685644cad9287c226 upstream.
+[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
 
-It is currently possible for a PHY device to be suspended as part of a
-network device driver's suspend call while it is still being attached to
-that net_device, either via phy_suspend() or implicitly via phy_stop().
+MTU changes may affect the number of IRQs so we must call
+bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
+set to true.  The reason is that a larger MTU may require
+aggregation rings not needed with smaller MTU.  We may not be
+able to allocate the required number of aggregation rings and
+so we reduce the number of channels which will change the number
+of IRQs.  Without this patch, it may crash eventually in
+pci_disable_msix() when the IRQs are not properly unwound.
 
-Later on, when the MDIO bus controller get suspended, we would attempt
-to suspend again the PHY because it is still attached to a network
-device.
-
-This is both a waste of time and creates an opportunity for improper
-clock/power management bugs to creep in.
-
-Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/phy/phy_device.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -91,7 +91,7 @@ static bool mdio_bus_phy_may_suspend(str
- 	 * MDIO bus driver and clock gated at this point.
- 	 */
- 	if (!netdev)
--		return !phydev->suspended;
-+		goto out;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -8097,13 +8097,13 @@ static int bnxt_change_mtu(struct net_de
+ 	struct bnxt *bp = netdev_priv(dev);
  
- 	if (netdev->wol_enabled)
- 		return false;
-@@ -111,7 +111,8 @@ static bool mdio_bus_phy_may_suspend(str
- 	if (device_may_wakeup(&netdev->dev))
- 		return false;
+ 	if (netif_running(dev))
+-		bnxt_close_nic(bp, false, false);
++		bnxt_close_nic(bp, true, false);
  
--	return true;
-+out:
-+	return !phydev->suspended;
+ 	dev->mtu = new_mtu;
+ 	bnxt_set_ring_params(bp);
+ 
+ 	if (netif_running(dev))
+-		return bnxt_open_nic(bp, false, false);
++		return bnxt_open_nic(bp, true, false);
+ 
+ 	return 0;
  }
- 
- static int mdio_bus_phy_suspend(struct device *dev)
 
 
