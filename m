@@ -2,104 +2,112 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E595EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22C8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B192820735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584454580;
-	bh=kQeMODH2g1jF52fgfITFeXn4GVeNONcypwuYlT0Rr/w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dBzn4AEyYF9wgyTaOhdHDd4uaMO6sGearOlvDIWCLA7pYKmYVcP7IcvT28GuglyVB
-	 UEh76dGpzeRmz91N3AWiKAS+IxWcp19ulhlAAxo2obVVuXx4Vw65EMG2VNXHoKlMWN
-	 G0fduQMi5HeXZmtEvgDIBIb2eYadmKxdrlKJbXxo=
+	by mail.kernel.org (Postfix) with ESMTP id AA62420735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:16:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="hVo+iLHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgCQOQT (ORCPT
+        id S1726735AbgCQOQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:16:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbgCQOQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:16:19 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70EC82051A;
-        Tue, 17 Mar 2020 14:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584454578;
-        bh=kQeMODH2g1jF52fgfITFeXn4GVeNONcypwuYlT0Rr/w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XdeJU8IV8STjPf+I5baHlba0R4EaaGU92lYOb+Dobc1OKj7iH41ibGNBzH6xP6LM4
-         hJf5IIFBfZ8iJA410jYcxVfLjO0mbrrIKPMGyj2HOUw5M7PZviBSiWGrLijXFlnYMl
-         YFEyypR51RuteNSEbVl1enj4E9ipcctwevdqXCfA=
-Date:   Tue, 17 Mar 2020 23:16:13 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, allison@lohutok.net,
-        rostedt@goodmis.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] perf probe: Fix an error handling path in
- 'parse_perf_probe_command()'
-Message-Id: <20200317231613.af181e378e7c09ea97097314@kernel.org>
-In-Reply-To: <20200315201259.29190-1-christophe.jaillet@wanadoo.fr>
-References: <20200315201259.29190-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 17 Mar 2020 10:16:22 -0400
+Received: from www381.your-server.de ([78.46.137.84]:54382 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgCQOQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:16:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YfS8o63jfAqwGDkdP2CSSYM3Rf1BRlF0LrbfMG+UcYQ=; b=hVo+iLHdbWnEILZnD50R5jkBBg
+        cOTsgW6J/L9KIq/OWWbITAn3DEkYAgYJQYAXLaaw13z01bIjW/+kzSvqejvLacYIeHGt45wkZb+O5
+        mnQKxCzx5ocQFTBvP6o+XB7Hz60BX4KZPPBbC1skQdVGx3UMd7PIWHYKkxRV4gyr+ZnCRl4kJqGmR
+        e4R7ZHGb2o5h7mAOvJ+FtrcBNqn9ejNWeC7M+dyZWt0ehETk6He9ALyqEfwDoCt/BXh0XoiCGlUDl
+        BiudTM9Lpcihx+ZscoJTkmyL5cOuqWwe9dRzGKVj3ZM5vb+WTcno/eNY/umNR3HrJsiACQ38GmNsZ
+        b4J3AeaA==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jED0v-0006JD-Pu; Tue, 17 Mar 2020 15:16:13 +0100
+Received: from [93.104.105.202] (helo=[192.168.178.20])
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jED0v-000XDr-F0; Tue, 17 Mar 2020 15:16:13 +0100
+Subject: Re: [PATCH 1/2] iio: adc: ad7291: convert to device tree
+To:     Michael Auchter <michael.auchter@ni.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20200317135649.8876-1-michael.auchter@ni.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <7ee1dfe4-3289-4428-5787-6dddd63111b2@metafoo.de>
+Date:   Tue, 17 Mar 2020 15:16:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200317135649.8876-1-michael.auchter@ni.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25754/Tue Mar 17 14:09:15 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Mar 2020 21:12:59 +0100
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
-
-> If a memory allocation fail, we should branch to the error handling path in
-> order to free some resources allocated a few lines above.
+On 3/17/20 2:56 PM, Michael Auchter wrote:
+> There are no in-tree users of the platform data for this driver, so
+> remove it and convert the driver to use device tree instead.
 > 
+> Signed-off-by: Michael Auchter <michael.auchter@ni.com>
 
-Good catch!
+Hi,
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Thanks for the patch, looks good for the most part. One comment inline.
 
-Thank you,
-
-> Fixes: 15354d546986 ("perf probe: Generate event name with line number")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  tools/perf/util/probe-event.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index eea132f512b0..65a615ee4b4c 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -1683,8 +1683,10 @@ int parse_perf_probe_command(const char *cmd, struct perf_probe_event *pev)
->  	if (!pev->event && pev->point.function && pev->point.line
->  			&& !pev->point.lazy_line && !pev->point.offset) {
->  		if (asprintf(&pev->event, "%s_L%d", pev->point.function,
-> -			pev->point.line) < 0)
-> -			return -ENOMEM;
-> +			pev->point.line) < 0) {
-> +			ret = -ENOMEM;
-> +			goto out;
-> +		}
->  	}
->  
->  	/* Copy arguments and ensure return probe has no C argument */
-> -- 
-> 2.20.1
-> 
+> diff --git a/drivers/iio/adc/ad7291.c b/drivers/iio/adc/ad7291.c
+> index b2b137fed246..536e31862309 100644
+> --- a/drivers/iio/adc/ad7291.c
+> +++ b/drivers/iio/adc/ad7291.c
+> @@ -495,8 +482,19 @@ static int ad7291_probe(struct i2c_client *client,
+>   			AD7291_T_SENSE_MASK | /* Tsense always enabled */
+>   			AD7291_ALERT_POLARITY; /* set irq polarity low level */
+>   
+> -	if (pdata && pdata->use_external_ref)
+> +	chip->reg = devm_regulator_get_optional(&client->dev, "vref");
+> +	if (IS_ERR(chip->reg)) {
+> +		if (PTR_ERR(chip->reg) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
 
+We should only continue if the error is ENODEV, which means that no 
+regulator was specified. Any other error means it was specified but 
+there was an issue requesting it. See for example ad7266.c
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> +
+> +		chip->reg = NULL;
+> +	} else {
+> +		ret = regulator_enable(chip->reg);
+> +		if (ret)
+> +			return ret;
+> +
+>   		chip->command |= AD7291_EXT_REF;
+> +	}
