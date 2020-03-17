@@ -2,125 +2,106 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D6EC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82483C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764B920752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584453443;
-	bh=b8vjWdrp4novBJCSOe8aDz4sezN0TkVJjtw03tKFpqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XR/nXum9nwVQnby/thXPLVPOxKinV68784CQOeXfs5OEE+aWUliqDIzaW+jRbzyNF
-	 8RUDP665cYQyUgupTEKIoiTg04aq3ZcN8I3Rg8ADCSLk6ZYHlY5Jj0kzwcleQHigum
-	 QJFpJDhEKMZx5A1UR0iN0FnfY+NHiJ2RASgC37vQ=
+	by mail.kernel.org (Postfix) with ESMTP id 59A49206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:57:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="almf5Jtj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgCQN5W (ORCPT
+        id S1726498AbgCQN5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:57:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:38500 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbgCQN5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:57:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BBBDFEC;
-        Tue, 17 Mar 2020 06:57:21 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F172C3F534;
-        Tue, 17 Mar 2020 06:57:20 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 13:57:19 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH] arm64: fix the missing ktpi= cmdline check in
- arm64_kernel_unmapped_at_el0()
-Message-ID: <20200317135719.GH3971@sirena.org.uk>
-References: <20200317114708.109283-1-yaohongbo@huawei.com>
- <20200317121050.GH8831@lakrids.cambridge.arm.com>
- <20200317124323.GA16200@willie-the-truck>
+        Tue, 17 Mar 2020 09:57:52 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35938 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQN5w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:57:52 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s5so25860604wrg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R7mPWyazQzpq+QB7kvcjm1xqFg1EYXZslw7p+6l9zyk=;
+        b=almf5Jtj3eNx0d/aXBR7+Oze2+ETeYjtyMlJ9OEbQmb8gMN8blXwHv2GG8cTMSG8Gb
+         TqQI2NvD/8dBdMeEBmIXhIlFHwrbl/hv5ChDDsNGpnlpK5hvQzof8fIixUIUsBguIXTb
+         KDN4gxBzEroJNoXlYrX/bRITTsURtbZ+0C1rc3DI0n3W0P0ylmLJ6omYznM5Mry+BHEl
+         sXOc3Pq73C98/nsy0iLaajh56wLjwq7AMkYoauh0RYGnVUMCy44eNrnIGcJTSZeVDb/w
+         dYQ9baRi0UO2Pr1LUpCM6HKEzgo2MXSbZM7mFSpDv3xrJ2Ax8m4VmF9IwYMZTjiNJSAG
+         YvNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R7mPWyazQzpq+QB7kvcjm1xqFg1EYXZslw7p+6l9zyk=;
+        b=I3GMNe7TerjBsgNX6cOP351MclOf1vzOBT+L9aKy1SJyVs8tIiBsFKELmlorDKipA2
+         MOf2gZz92EQc/t5qHzuk6d2Jxh5pgP0I53J2seV0Q2euYAoqKGDVc+AH64WKmXkYdjBu
+         fsvnZfTFp4TDAurHOPR2AvCcObDmiq9IBHxru1VKr2g7nLKZY8kC+QVIyjIHEtvYGVl9
+         XzUjqrMhRXysg/0oQ48CyzwSJFu7IjC5EmiEoIeFVYl0NQkeEWQD+hVe3TFq/B7pO6bz
+         EFZNkTcIPz087/zojvt9kBhoUa7X/KHXRLMVwEeFiGnE4fPY9GPi2arnUCFWS1i9AcOe
+         nJbA==
+X-Gm-Message-State: ANhLgQ2pfY/D/lk16qLR28h5EluO5jLl+n1IcePiu9JNOLP1mAHPm+8O
+        zyCPWXNtPRR4NekXTkbRp+GI1Q==
+X-Google-Smtp-Source: ADFU+vtjVlC/k5+6U/ZJ5/Eyy3Wu7I7oB0zbdo6cV/jFpbNjcRBn/Fnh1DNmBZO9Lag7OIncCJrjOw==
+X-Received: by 2002:a5d:490e:: with SMTP id x14mr6707580wrq.58.1584453470131;
+        Tue, 17 Mar 2020 06:57:50 -0700 (PDT)
+Received: from xps7590.local ([2a02:2450:102f:13b8:84f7:5c25:a9d8:81a1])
+        by smtp.gmail.com with ESMTPSA id r3sm2976558wrn.35.2020.03.17.06.57.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 06:57:49 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        shawnguo@kernel.org, olof@lixom.net, maxime@cerno.tech,
+        Anson.Huang@nxp.com, dinguyen@kernel.org, leonard.crestez@nxp.com,
+        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Loic Poulain <loic.poulain@linaro.org>
+Cc:     Robert Foss <robert.foss@linaro.org>
+Subject: [v2 0/6] Qualcomm CCI & Camera for db410c & db845c
+Date:   Tue, 17 Mar 2020 14:57:34 +0100
+Message-Id: <20200317135740.19412-1-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="CEUtFxTsmBsHRLs3"
-Content-Disposition: inline
-In-Reply-To: <20200317124323.GA16200@willie-the-truck>
-X-Cookie: There's only one everything.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series depends on the Qualcom CCI I2C driver series:
+https://patchwork.kernel.org/cover/10569957/
 
---CEUtFxTsmBsHRLs3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This series enables basic camera functionality on the Qualcomm db410c and
+db845c (RB3) platforms.
 
-On Tue, Mar 17, 2020 at 12:43:24PM +0000, Will Deacon wrote:
-> On Tue, Mar 17, 2020 at 12:10:51PM +0000, Mark Rutland wrote:
-> > On Tue, Mar 17, 2020 at 07:47:08PM +0800, Hongbo Yao wrote:
+This includes building drivers as modules, adding devicetree nodes
+for camera controllers, clocks, regulators and sensor nodes.
 
-> > > Kpti cannot be disabled from the kernel cmdline after the commit
-> > > 09e3c22a("arm64: Use a variable to store non-global mappings decision").
+Loic Poulain (2):
+  arm64: dts: msm8916: Add i2c-qcom-cci node
+  arm64: dts: apq8016-sbc: Add CCI/Sensor nodes
 
-> > > Bring back the missing check of kpti= command-line option to fix the
-> > > case where the SPE driver complains the missing "kpti-off" even it has
-> > > already been set.
+Robert Foss (4):
+  arm64: dts: sdm845: Add i2c-qcom-cci node
+  arm64: dts: sdm845-db845c: Add pm_8998 gpio names
+  arm64: dts: sdm845-db845c: Add ov8856 & ov7251 camera nodes
+  arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
 
-> > > -	return arm64_use_ng_mappings;
-> > > +	return arm64_use_ng_mappings &&
-> > > +		cpus_have_const_cap(ARM64_UNMAP_KERNEL_AT_EL0);
-> > >  }
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi  |  76 ++++++++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi      |  27 +++
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 210 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       |  92 +++++++++
+ arch/arm64/configs/defconfig               |   4 +
+ 5 files changed, 409 insertions(+)
 
-> This probably isn't the right fix, since this will mean that early mappings
-> will be global and we'll have to go through the painful page-table rewrite
-> logic when the cap gets enabled for KASLR-enabled kernels.
+-- 
+2.20.1
 
-Aren't we looking for a rewrite from non-global to global here (disable
-KPTI where we would otherwise have it), which we don't currently have
-code for?
-
-> Maybe a better bodge is something like:
-
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 0b6715625cf6..ad10f55b7bb9 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -1085,6 +1085,8 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
->  		if (!__kpti_forced) {
->  			str = "KASLR";
->  			__kpti_forced = 1;
-> +		} else if (__kpti_forced < 0) {
-> +			arm64_use_ng_mappings = false;
->  		}
->  	}
-
-That is probably a good idea but I think that runs too late to affect
-the early mappings, they're done based on kaslr_requires_kpti() well
-before we start secondaries.  My first pass not having paged everything
-back in yet is that there needs to be command line parsing in
-kaslr_requires_kpti() but as things stand the command line isn't
-actually ready then...
-
---CEUtFxTsmBsHRLs3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5w1z4ACgkQJNaLcl1U
-h9DHPQf/Yk+8QriE8OOokiXkCDmOzV62HaR9JUB4YrP/wXt51ciPUarL47VDjxX0
-BVZornO01cOyFwLJ9ZPhFc+XXYoaO7hhRXI+9eervR0LYo9pEvTzGyAXPpKyyldo
-lNUHzr5zABlfNy9XMAPHWUu2audTlT5ECyLd5jzKYvQH6fIQ3GMr7niaEauktkue
-mJYqjjnCXMZdCfIPB1djyXTWIwHWA1d4SC1IuxSfEG1Z+3pmWB6O2xcuLXPzDpiC
-C9pZ8fPwDbG1fqOKCMT4RkoAgceWg2jhE2ATlpEawsOyF8Xy9pnlXcV4el33+rMP
-iNg5UVCxpnbw8Z2WQXOD4er3dk5BHw==
-=o53u
------END PGP SIGNATURE-----
-
---CEUtFxTsmBsHRLs3--
