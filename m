@@ -2,139 +2,206 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCFFC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C97CC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B74020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490DD20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgCQLz0 (ORCPT
+        id S1726669AbgCQL4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:55:26 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:48139 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgCQLz0 (ORCPT
+        Tue, 17 Mar 2020 07:56:37 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44635 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgCQL4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:55:26 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 3BBF820003;
-        Tue, 17 Mar 2020 11:55:24 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 12:55:23 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     maggarwa@codeaurora.org
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
-Message-ID: <20200317115523.GB3448@piout.net>
-References: <1584342688-14035-1-git-send-email-maggarwa@codeaurora.org>
- <20200316102905.GN4518@piout.net>
- <000001d5fc17$9c327ee0$d4977ca0$@codeaurora.org>
+        Tue, 17 Mar 2020 07:56:34 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jEAph-0004NO-Ff; Tue, 17 Mar 2020 12:56:29 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jEApf-0000e0-1U; Tue, 17 Mar 2020 12:56:27 +0100
+Date:   Tue, 17 Mar 2020 12:56:27 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Mark Rutland <mark.rutland@arm.com>,
+        Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+Message-ID: <20200317115626.4ncavxdcw4wu5zgc@pengutronix.de>
+References: <20200313052252.25389-1-o.rempel@pengutronix.de>
+ <20200313052252.25389-2-o.rempel@pengutronix.de>
+ <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
+ <20200313181056.GA29732@lunn.ch>
+ <20200313181601.sbxdrqdjqfj3xn3e@pengutronix.de>
+ <15dafdcd-1979-bf35-3968-c80ffc113001@gmail.com>
+ <20200313185327.nawcp2imfldyhpqa@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lfhwj2ovh2lzetah"
 Content-Disposition: inline
-In-Reply-To: <000001d5fc17$9c327ee0$d4977ca0$@codeaurora.org>
+In-Reply-To: <20200313185327.nawcp2imfldyhpqa@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:55:55 up 123 days,  3:14, 156 users,  load average: 0.19, 0.12,
+ 0.04
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/2020 10:20:36+0530, maggarwa@codeaurora.org wrote:
-> Hi,
-> 
-> Comments inline.
-> 
-> 
-> Thanks & Regards,
-> Mohit
-> 
-> -----Original Message-----
-> From: Alexandre Belloni <alexandre.belloni@bootlin.com> 
-> Sent: Monday, March 16, 2020 3:59 PM
-> To: Mohit Aggarwal <maggarwa@codeaurora.org>
-> Cc: a.zummo@towertech.it; linux-rtc@vger.kernel.org;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
-> 
-> Hi,
-> 
-> On 16/03/2020 12:41:28+0530, Mohit Aggarwal wrote:
-> > Currently, alarm register is not cleared on resume leading to reboot 
-> > during power off charging mode.
-> > 
-> > Change-Id: Ie2e6bbab8aa46e4e9b9cc984181ffab557cbbdae
-> 
-> No Change-Id upstream please.
-> [Mohit]: Will fix in next patch.
-> 
-> > Signed-off-by: Mohit Aggarwal <maggarwa@codeaurora.org>
-> > ---
-> >  drivers/rtc/rtc-pm8xxx.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c index 
-> > bbe013f..96e7985 100644
-> > --- a/drivers/rtc/rtc-pm8xxx.c
-> > +++ b/drivers/rtc/rtc-pm8xxx.c
-> > @@ -1,5 +1,5 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> > -/* Copyright (c) 2010-2011, 2019, The Linux Foundation. All rights 
-> > reserved. */
-> > +/* Copyright (c) 2010-2011, 2019-2020, The Linux Foundation. All 
-> > +rights reserved. */
-> >  
-> >  #include <linux/of.h>
-> >  #include <linux/module.h>
-> > @@ -301,6 +301,7 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device
-> *dev, unsigned int enable)
-> >  	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
-> >  	const struct pm8xxx_rtc_regs *regs = rtc_dd->regs;
-> >  	unsigned int ctrl_reg;
-> > +	u8 value[NUM_8_BIT_RTC_REGS] = {0};
-> >  
-> >  	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
-> >  
-> > @@ -319,6 +320,16 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device
-> *dev, unsigned int enable)
-> >  		goto rtc_rw_fail;
-> >  	}
-> >  
-> > +	/* Clear Alarm register */
-> > +	if (!enable) {
-> > +		rc = regmap_bulk_write(rtc_dd->regmap, regs->alarm_rw,
-> value,
-> > +					sizeof(value));
-> 
-> This is not properly aligned.
-> [Mohit]: I don't see any alignment issue at my end. I can see proper tabs
-> are present.
-> 
 
-The alignment should match the opening parenthesis.
+--lfhwj2ovh2lzetah
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +		if (rc) {
-> > +			dev_err(dev, "Write to RTC ALARM register
-> failed\n");
-> 
-> Is that error message necessary? What would be the user action after seeing
-> that in the logs? Will the logs actually be seen?
-> [Mohit]: In case issue in question reproduces even after this change then
-> for debugging purposes user can look out for this error log in kernel logs
-> which can help to triage the issue.
-> 
+On Fri, Mar 13, 2020 at 07:53:27PM +0100, Oleksij Rempel wrote:
+> On Fri, Mar 13, 2020 at 11:20:35AM -0700, Florian Fainelli wrote:
+> >=20
+> >=20
+> > On 3/13/2020 11:16 AM, Oleksij Rempel wrote:
+> > > On Fri, Mar 13, 2020 at 07:10:56PM +0100, Andrew Lunn wrote:
+> > >>>> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yam=
+l b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > >>>> new file mode 100644
+> > >>>> index 000000000000..42be0255512b
+> > >>>> --- /dev/null
+> > >>>> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > >>>> @@ -0,0 +1,61 @@
+> > >>>> +# SPDX-License-Identifier: GPL-2.0+
+> > >>>> +%YAML 1.2
+> > >>>> +---
+> > >>>> +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> > >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > >>>> +
+> > >>>> +title: NXP TJA11xx PHY
+> > >>>> +
+> > >>>> +maintainers:
+> > >>>> +  - Andrew Lunn <andrew@lunn.ch>
+> > >>>> +  - Florian Fainelli <f.fainelli@gmail.com>
+> > >>>> +  - Heiner Kallweit <hkallweit1@gmail.com>
+> > >>>> +
+> > >>>> +description:
+> > >>>> +  Bindings for NXP TJA11xx automotive PHYs
+> > >>>> +
+> > >>>> +allOf:
+> > >>>> +  - $ref: ethernet-phy.yaml#
+> > >>>> +
+> > >>>> +patternProperties:
+> > >>>> +  "^ethernet-phy@[0-9a-f]+$":
+> > >>>> +    type: object
+> > >>>> +    description: |
+> > >>>> +      Some packages have multiple PHYs. Secondary PHY should be d=
+efines as
+> > >>>> +      subnode of the first (parent) PHY.
+> > >>>
+> > >>>
+> > >>> There are QSGMII PHYs which have 4 PHYs embedded and AFAICT they are
+> > >>> defined as 4 separate Ethernet PHY nodes and this would not be quit=
+e a
+> > >>> big stretch to represent them that way compared to how they are.
+> > >>>
+> > >>> I would recommend doing the same thing and not bend the MDIO framew=
+ork
+> > >>> to support the registration of "nested" Ethernet PHY nodes.
+> > >>
+> > >> Hi Florian
+> > >>
+> > >> The issue here is the missing PHY ID in the secondary PHY. Because of
+> > >> that, the secondary does not probe in the normal way. We need the
+> > >> primary to be involved to some degree. It needs to register it. What
+> > >> i'm not so clear on is if it just needs to register it, or if these
+> > >> sub nodes are actually needed, given the current code.
+> > >=20
+> > > There are a bit more dependencies:
+> > > - PHY0 is responsible for health monitoring. If some thing wrong, it =
+may
+> > >   shut down complete chip.
+> > > - We have shared reset. It make no sense to probe PHY1 before PHY0 wi=
+th
+> > >   more controlling options will be probed
+> > > - It is possible bat dangerous to use PHY1 without PHY0.
+> >=20
+> > probing is a software problem though. If we want to describe the PHY
+> > package more correctly, we should be using a container node, something
+> > like this maybe:
+> >
+> > phy-package {
+> > 	compatible =3D "nxp,tja1102";
+> >=20
+> > 	ethernet-phy@4 {
+> > 		reg =3D <4>;
+> > 	};
+> >=20
+> > 	ethernet-phy@5 {
+> > 		reg =3D <5>;
+> > 	};
+> > };
+>=20
+> Yes, this is almost the same as it is currently done:
+>=20
+> phy-package {
+> 	reg =3D <4>;
+> =20
+>  	ethernet-phy@5 {
+>  		reg =3D <5>;
+>  	};
+> };
+>=20
+> Because the primary PHY0 can be autodetected by the bus scan.
+> But I have nothing against your suggestions. Please, some one should say =
+the
+> last word here, how exactly it should be implemented?
 
-Who in the field on the final product will see this error message? For
-debugging purposes, regmap already provides plenty of tracing
-facilities.
+ping,
 
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
+--lfhwj2ovh2lzetah
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5wuuoACgkQ4omh9DUa
+UbNG5g/+KdSOq7b8v5yauULhvpEsrHlJGpaFL3EMI1ufAip3z/1a62usEZp1aVNd
+IInBhS+m1Vkj4IIQ7+Aw962e3637PZPMEHswkW9nWS3ozpSlDZgZgb9NDqBlIWLp
+B7uYxZlW401HdfSVl3tC8vYP9kxve/CsZAfPWfRtAk4DebWhV7d9c1Hib3YMJG7x
+P46EVCl0IiSMrqQ1bVxDn+RimsCj3REeAJlQhaWHfzMwTG8Tr001pYmahL1d9/LD
+NkaKi8CX9p1BgMkobHNP078bE7bKF2PVjHpa9fWKRkdFS6F5drXTaDiGW6eGRK37
+sRragvu3xxHvrx+D2RpbyZ+XC+ifbU5zlQNjJ8meOrPMl/wdjqLrHMpDnJWc8gI5
+fC7qwqraiEd+BEJaJM1lVHeGQ0A+19QDQ/NSTcsz70kMqg9wP7dORmraRz2BJaFp
+WyZkVkRl9du9t4doptaybDTi4e5D2CF5wTmztq+PE935bhVz7qUTCiY59b0rRSkc
+I0HPkoQUxH2uylzpv7sDuosefWIa62UvhThDQBtN8GXvdjxkvM0DHdSaaeRebZ0L
+wivnBhgtKE5T8BKYdno/Yool41CY38tJ8/KEgc75COxp51yoE8h+4Ke+WehpKpSX
+rnXW/6mn+Kk58hWf6GUPVzJYMVwT0AQ9Sd6Eh+ahIc3JPg9hnqE=
+=hDpJ
+-----END PGP SIGNATURE-----
+
+--lfhwj2ovh2lzetah--
