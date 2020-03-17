@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B75C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4B5C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF972051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1683C2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443959;
-	bh=5QJOn0BGZeqjo1WWc33zP/NAQjl4vPPkzkv1rjbDqwo=;
+	s=default; t=1584443968;
+	bh=QQ129eu6WhXBVL86aVphaEF5TJnd8BZqbt1aZgE+7Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WMFkIMEc0aWO1Vg2Ru0dGu5SVDbhUMRvT6nLcV1uIDTXKLvOY1KC/7uubtWIVPcW2
-	 QLNL5ba+xp46hWk4tb08sayYkVBbC3p6oilpCiGODLQWGNSEC+VI6yl7/L0qOEjOYy
-	 Q70SnWCyF4wJubR2WCo9NcQOVXywV1RG+7fv6t6g=
+	b=gkzE7SQWyx9rpDK14W5KEinPbSHTX46bLFyOblUV2G8XOiXOG3IsaHr1cwa0Vw4Lz
+	 tnRkHh2/iomkLtyGlO77r7COSumJ5AxpZAIcOVZQ6427mGOODBBL0SOBNJpK0itQID
+	 H1QHaSdn48xdbo9TZq8Vs+sfK9hjUIS5IRilg/kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgCQLTS (ORCPT
+        id S1728226AbgCQLEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:19:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44818 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727225AbgCQLEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:33 -0400
+        id S1727564AbgCQLEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33A3220752;
-        Tue, 17 Mar 2020 11:04:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C02E20658;
+        Tue, 17 Mar 2020 11:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443072;
-        bh=5QJOn0BGZeqjo1WWc33zP/NAQjl4vPPkzkv1rjbDqwo=;
+        s=default; t=1584443043;
+        bh=QQ129eu6WhXBVL86aVphaEF5TJnd8BZqbt1aZgE+7Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1GzjeoH99e4V9h/3ZNhmE+INlH8+qLH9iyXze0x0kSPTz6XuShBNsoti7RWnCrq3/
-         o2xsI08N77poC9CSr6UrQubLWG1UHe02zTXfX+AvewCmW3T8a/5psTsrny5L5YPy8t
-         cu6f1/IPs9cbKT/BdLD9t8oG5z6TCLaszXJ+80u8=
+        b=sI9ZsNIdAIrPAdck5pbDV356rMsZs08E9tjv5nfTYWujWu8FpaIEYMwo4qaEWn11B
+         3Brc20kCrdJB//qmemTDlm1sDqPrTHx8L1cQ5A64EmgX3g6BbyhYXKKi5QjSPisw+q
+         LllMeNlFLaPFW65K3E3YCpR9GmNKIXLCz+uOq9FI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Bob Sanders <bob.sanders@hpe.com>
-Subject: [PATCH 5.4 087/123] efi: Fix a race and a buffer overflow while reading efivars via sysfs
-Date:   Tue, 17 Mar 2020 11:55:14 +0100
-Message-Id: <20200317103316.676814868@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 039/123] nl802154: add missing attribute validation
+Date:   Tue, 17 Mar 2020 11:54:26 +0100
+Message-Id: <20200317103311.882837828@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -61,138 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit 286d3250c9d6437340203fb64938bea344729a0e upstream.
+[ Upstream commit 9322cd7c4af2ccc7fe7c5f01adb53f4f77949e92 ]
 
-There is a race and a buffer overflow corrupting a kernel memory while
-reading an EFI variable with a size more than 1024 bytes via the older
-sysfs method. This happens because accessing struct efi_variable in
-efivar_{attr,size,data}_read() and friends is not protected from
-a concurrent access leading to a kernel memory corruption and, at best,
-to a crash. The race scenario is the following:
+Add missing attribute validation for several u8 types.
 
-CPU0:                                CPU1:
-efivar_attr_read()
-  var->DataSize = 1024;
-  efivar_entry_get(... &var->DataSize)
-    down_interruptible(&efivars_lock)
-                                     efivar_attr_read() // same EFI var
-                                       var->DataSize = 1024;
-                                       efivar_entry_get(... &var->DataSize)
-                                         down_interruptible(&efivars_lock)
-    virt_efi_get_variable()
-    // returns EFI_BUFFER_TOO_SMALL but
-    // var->DataSize is set to a real
-    // var size more than 1024 bytes
-    up(&efivars_lock)
-                                         virt_efi_get_variable()
-                                         // called with var->DataSize set
-                                         // to a real var size, returns
-                                         // successfully and overwrites
-                                         // a 1024-bytes kernel buffer
-                                         up(&efivars_lock)
-
-This can be reproduced by concurrent reading of an EFI variable which size
-is more than 1024 bytes:
-
-  ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
-  cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
-
-Fix this by using a local variable for a var's data buffer size so it
-does not get overwritten.
-
-Fixes: e14ab23dde12b80d ("efivars: efivar_entry API")
-Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200305084041.24053-2-vdronov@redhat.com
-Link: https://lore.kernel.org/r/20200308080859.21568-24-ardb@kernel.org
+Fixes: 2c21d11518b6 ("net: add NL802154 interface for configuration of 802.15.4 devices")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/firmware/efi/efivars.c |   29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ net/ieee802154/nl_policy.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -83,13 +83,16 @@ static ssize_t
- efivar_attr_read(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
-+	unsigned long size = sizeof(var->Data);
- 	char *str = buf;
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return -EINVAL;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-+	var->DataSize = size;
-+	if (ret)
- 		return -EIO;
- 
- 	if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
-@@ -116,13 +119,16 @@ static ssize_t
- efivar_size_read(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
-+	unsigned long size = sizeof(var->Data);
- 	char *str = buf;
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return -EINVAL;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-+	var->DataSize = size;
-+	if (ret)
- 		return -EIO;
- 
- 	str += sprintf(str, "0x%lx\n", var->DataSize);
-@@ -133,12 +139,15 @@ static ssize_t
- efivar_data_read(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
-+	unsigned long size = sizeof(var->Data);
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return -EINVAL;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-+	var->DataSize = size;
-+	if (ret)
- 		return -EIO;
- 
- 	memcpy(buf, var->Data, var->DataSize);
-@@ -250,14 +259,16 @@ efivar_show_raw(struct efivar_entry *ent
- {
- 	struct efi_variable *var = &entry->var;
- 	struct compat_efi_variable *compat;
-+	unsigned long datasize = sizeof(var->Data);
- 	size_t size;
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return 0;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &entry->var.Attributes,
--			     &entry->var.DataSize, entry->var.Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &datasize, var->Data);
-+	var->DataSize = datasize;
-+	if (ret)
- 		return -EIO;
- 
- 	if (in_compat_syscall()) {
+--- a/net/ieee802154/nl_policy.c
++++ b/net/ieee802154/nl_policy.c
+@@ -21,6 +21,11 @@ const struct nla_policy ieee802154_polic
+ 	[IEEE802154_ATTR_HW_ADDR] = { .type = NLA_HW_ADDR, },
+ 	[IEEE802154_ATTR_PAN_ID] = { .type = NLA_U16, },
+ 	[IEEE802154_ATTR_CHANNEL] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_BCN_ORD] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_SF_ORD] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_PAN_COORD] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_BAT_EXT] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_COORD_REALIGN] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_PAGE] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_COORD_SHORT_ADDR] = { .type = NLA_U16, },
+ 	[IEEE802154_ATTR_COORD_HW_ADDR] = { .type = NLA_HW_ADDR, },
 
 
