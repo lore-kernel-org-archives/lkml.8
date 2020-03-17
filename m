@@ -2,162 +2,115 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9E8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABCBC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C91520738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D134420735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:40:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wAhJj7sO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgCQQkZ (ORCPT
+        id S1726598AbgCQQku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:40:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:40334 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgCQQkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:40:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63A6630E;
-        Tue, 17 Mar 2020 09:40:24 -0700 (PDT)
-Received: from [10.37.12.228] (unknown [10.37.12.228])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 400063F52E;
-        Tue, 17 Mar 2020 09:40:20 -0700 (PDT)
-Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
- vgettimeofday
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-mips@vger.kernel.org, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
- <20200317122220.30393-19-vincenzo.frascino@arm.com>
- <20200317143834.GC632169@arrakis.emea.arm.com>
- <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
- <20200317155031.GD632169@arrakis.emea.arm.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
-Date:   Tue, 17 Mar 2020 16:40:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 17 Mar 2020 12:40:50 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48140 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbgCQQku (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:40:50 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HGdjiB039777;
+        Tue, 17 Mar 2020 16:40:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=T5tsVKMIG7XPMSHs9gjaBJJXCqRM0l5UsJSpLrAOiPA=;
+ b=wAhJj7sOJdkPDno0zaw3Kue06mgis1jdpy8OU9v85Qt5TBtOrSKas2p20SLQ5i4HPxQh
+ slxNXzkrnBSsTo3gwGc4JjeoGKiOufMNDsNeoJlQ/e3ZdHhNKuprpnEpKoEJBtEvO+/c
+ 2P6zR0I1pjG6jKLtIf7xN0Pt79y0/YeUd22ihF9XKlmM5q0WhlHaisQm08Cf8wgL5/wl
+ PgRJselhgnyahk2p1F5iibiLbYYfhiI9d1L2d3laU49XQEIMYSqv82w9av1V8kGobVHY
+ 7AdzNnxDCvzXxhEh6A52+8qLXOGd4MjqaKSCKZCH/pr8uazZqhRTbsdqlHKHUlkUF264 kg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2yrqwn5w97-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 16:40:16 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HGOVbJ032830;
+        Tue, 17 Mar 2020 16:40:16 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2ys8rf7kqy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 16:40:15 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02HGe8bM003635;
+        Tue, 17 Mar 2020 16:40:08 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 17 Mar 2020 09:40:07 -0700
+Subject: Re: [PATCH] mm/hugetlb: Fix build failure with HUGETLB_PAGE but not
+ HUGEBTLBFS
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Baoquan He <bhe@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Nishanth Aravamudan <nacc@us.ibm.com>,
+        Nick Piggin <npiggin@suse.de>, Adam Litke <agl@us.ibm.com>,
+        Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org
+References: <7e8c3a3c9a587b9cd8a2f146df32a421b961f3a2.1584432148.git.christophe.leroy@c-s.fr>
+ <20200317082550.GA3375@MiWiFi-R3L-srv>
+ <60117fd7-46ff-326b-34f1-0c7087111ca7@c-s.fr>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <a31c86c9-2f86-4f40-a367-5953037ee137@oracle.com>
+Date:   Tue, 17 Mar 2020 09:40:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200317155031.GD632169@arrakis.emea.arm.com>
+In-Reply-To: <60117fd7-46ff-326b-34f1-0c7087111ca7@c-s.fr>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9563 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003170067
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9563 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
+ mlxscore=0 bulkscore=0 phishscore=0 spamscore=0 suspectscore=0
+ malwarescore=0 priorityscore=1501 clxscore=1011 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003170067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
-
-On 3/17/20 3:50 PM, Catalin Marinas wrote:
-> On Tue, Mar 17, 2020 at 03:04:01PM +0000, Vincenzo Frascino wrote:
->> On 3/17/20 2:38 PM, Catalin Marinas wrote:
->>> On Tue, Mar 17, 2020 at 12:22:12PM +0000, Vincenzo Frascino wrote:
-
-[...]
-
+On 3/17/20 1:43 AM, Christophe Leroy wrote:
+> 
+> 
+> Le 17/03/2020 à 09:25, Baoquan He a écrit :
+>> On 03/17/20 at 08:04am, Christophe Leroy wrote:
+>>> When CONFIG_HUGETLB_PAGE is set but not CONFIG_HUGETLBFS, the
+>>> following build failure is encoutered:
 >>
->> Can TASK_SIZE > UINTPTR_MAX on an arm64 system?
+>>  From the definition of HUGETLB_PAGE, isn't it relying on HUGETLBFS?
+>> I could misunderstand the def_bool, please correct me if I am wrong.
 > 
-> TASK_SIZE yes on arm64 but not TASK_SIZE_32. I was asking about the
-> arm32 check where TASK_SIZE < UINTPTR_MAX. How does the vdsotest return
-> -EFAULT on arm32? Which code path causes this in the user vdso code?
->
-
-Sorry I got confused because you referred to arch/arm/vdso/vgettimeofday.c which
-is the arm64 implementation, not the compat one :)
-
-In the case of arm32 everything is handled via syscall fallback.
-
-> My guess is that on arm32 it only fails with -EFAULT in the syscall
-> fallback path since a copy_to_user() would fail the access_ok() check.
-> Does it always take the fallback path if ts > TASK_SIZE?
+> AFAIU, it means that HUGETLBFS rely on HUGETLB_PAGE, by default HUGETLB_PAGE is not selected when HUGETLBFS is not. But it is still possible for an arch to select HUGETLB_PAGE without selecting HUGETLBFS when it uses huge pages for other purpose than hugetlb file system.
 > 
 
-Correct, it goes via fallback. The return codes for these syscalls are specified
-by the ABI [1]. Then I agree with you the way on which arm32 achieves it should
-be via access_ok() check.
+Hi Christophe,
 
-> On arm64, while we have a similar access_ok() check, USER_DS is (1 <<
-> VA_BITS) even for compat tasks (52-bit maximum), so it doesn't detect
-> the end of the user address space for 32-bit tasks.
-> 
-
-I agree on this as well, if you remember we discussed it in past.
-
-> Is this an issue for other syscalls expecting EFAULT at UINTPTR_MAX and
-> instead getting a signal? The vdsotest seems to be the only one assuming
-> this. I don't have a simple solution here since USER_DS currently needs
-> to be a constant (used in entry.S).
-> 
-> I could as well argue that this is not a valid ABI test, no real-world
-> program relying on this behaviour ;).
-> 
-
-Ok, but I could argue that unless you manage to prove to me that there is no
-software out there relying on this behavior, I guess that the safest way to go
-is to have a check here ;)
-
-More than that, being a simple check, it has no performance impact.
-
-[...]
-
->>>
->>> This last check needs an explanation. If the clock_id is invalid but res
->>> is not NULL, we allow it. I don't see where the compatibility issue is,
->>> arm32 doesn't have such check.
->>
->> The case that you are describing has to return -EPERM per ABI spec. This case
->> has to return -EINVAL.
->>
->> The first case is taken care from the generic code. But if we don't do this
->> check before on arm64 compat we end up returning the wrong error code.
-> 
-> I guess I have the same question as above. Where does the arm32 code
-> return -EINVAL for that case? Did it work correctly before you removed
-> the TASK_SIZE_32 check?
->
-
-I repeated the test and seems that it was failing even before I removed
-TASK_SIZE_32. For reasons I can't explain I did not catch it before.
-
-The getres syscall should return -EINVAL in the cases specified in [1].
-
-
-> Sorry, just trying to figure out where the compatibility aspect is and
-> that we don't add some artificial checks only to satisfy a vdsotest case
-> that may or may not have relevance to any other user program.
-> 
-
-No issue Catalin. I understand the implications of the change that I am
-proposing with this series and I am the first one who wants to get it right.
-
-Said that vdsotest follows "pedantically" the ABI spec and I chose it at the
-beginning of this journey to have as less surprises as I could in the long run.
-
-[1] http://man7.org/linux/man-pages/man2/clock_getres.2.html
+Do you actually have a use case/example of using hugetlb pages without
+hugetlbfs?  I can understand that there are some use cases which never
+use the filesystem interface.  However, hugetlb support is so intertwined
+with hugetlbfs, I am thinking there would be issues trying to use them
+separately.  I will look into this further.
 
 -- 
-Regards,
-Vincenzo
+Mike Kravetz
