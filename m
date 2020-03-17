@@ -2,140 +2,134 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EFAC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5648C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E65620753
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:46:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMRx7nwW"
+	by mail.kernel.org (Postfix) with ESMTP id 8337E20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgCQQqM (ORCPT
+        id S1726809AbgCQQqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:46:12 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34917 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQQqM (ORCPT
+        Tue, 17 Mar 2020 12:46:17 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:52638 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQQqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:46:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k26so22422435otr.2;
-        Tue, 17 Mar 2020 09:46:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5eJQW9u/oqLF6BZRfUiV1G5G6DviGGlWCr2b1498xxQ=;
-        b=LMRx7nwWe7cMHMOWNUg05zRuPgY6DofzFHMhj1gQnEGael6LRUmB87NFm94a/wAfQX
-         qykah79BwhO1P0ntFvhaKtyeXHgmlW5N/BGaWP5tIlIMKLhnE+3K5J8zhdQEUNxGgANf
-         mXgbeSIOtdcNdJ2mSwcAt00z0uL/hD3bOfgu7xKu2E8K4MYFOKF5f/4rqd54WT8p+4JU
-         Gzt//MblJ65rZBgIlXAHxF4Riy/dM6uPNIerdGo5NXG0RHt9RJHKUdWeTrkrfGrEMpeP
-         U9ixsy97/bDAWsXfWP/01XRU5DVl8ZcLaF4BgdJ2y7RJ4bx/dRXjPBaFxBoG5mN/5vsB
-         z+YA==
+        Tue, 17 Mar 2020 12:46:16 -0400
+Received: by mail-io1-f69.google.com with SMTP id e21so1703137ios.19
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:46:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5eJQW9u/oqLF6BZRfUiV1G5G6DviGGlWCr2b1498xxQ=;
-        b=RfpjAdih189gR1m9EytlEdi4rmNm3i6BvpNSS5Z8Fvl/NeACW0/hXfxFXRKYVb4VD5
-         A65CDR9/G+AjO1cBZb3I4ctwra+yTbTZNp7Ntt1c2y7J/yD6a5B/6LalZ2MuSjbpnMjl
-         zIzmSm+6Gwjws3Ezj7XlrtCfBjlhgcO68ew+jrh60thGIzmu0Ps7FPBF2DrZu6HKOziv
-         oWDcGJHyh0pfoh6f0QQwdpoUaMCd2cRqYaZKuQSQfr17803CI/Dj2b6LEEZE2Tz+mQ/4
-         mftaMMUF8hydG/a9mXPah6Mflz9h25NJSZ3KSuCcI4MGIrdLy4xmDeUUDsrwOnJgzHsV
-         A3IA==
-X-Gm-Message-State: ANhLgQ35rZVu1xRGN0xqC6ylF1+GTpyYTqvW9gmbvWR1eleQaWl/zv73
-        stiXmaCYHnp52oo7dLN39HuXGleMW136HHG70A0=
-X-Google-Smtp-Source: ADFU+vvntK56sIrmvkmT/qpvgh4Fm7v80qV219/QCLI53RZ9n5flRN/sXMIpPVYkFqh99ZsVYYoAnS05cZQy56ytVHY=
-X-Received: by 2002:a9d:560b:: with SMTP id e11mr116304oti.226.1584463569050;
- Tue, 17 Mar 2020 09:46:09 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=yjQuUX6jv/gljx+7zPrg/SXXV6Qnx8ZlLfuj0BggKs0=;
+        b=LOiOPGmxsLje6Umis/ex6L/gooXsqtN1BbNMlwaKvDj6sxFuiwN+16F1bedsLEVx8q
+         IjaOEV9+4gLe44ZwKoGt7Y/2Z2ygL+v5Hy60FjCLHNPLvaTYz2enxQSL8pjRHv5tO0gx
+         7+xYQc17hqeTuz8IFQO+XS5Nu3ZP1IvnqUcYZ2ueoiOYtmukNrvHhaHidPljA8Xs59do
+         LZErtJoTyxPsyyaKTVubbqwjKHaxFyGn1oUIMgGvcPdLylkHzBKSLJw36zSp7q3PUAFL
+         OB7twjiuFiX/KNCOk8agWpLVOrwhVXZPZragNZHFvIkjIaAtjun/RrvsKP2PAKKklfe6
+         /exw==
+X-Gm-Message-State: ANhLgQ14xhoEiG0cqo9KvhIRUxiUauvbMp93lAHiAjLrnnocjuWrSEe0
+        jty06sCddoFxs0fVHaoNn36um6WIvOqPs4qXt6n6qUBqLr/G
+X-Google-Smtp-Source: ADFU+vuluMugisi1KFOmKHsMKGe677zO6tUUtJeBPH/BSb7LzPkFrVkws6nHHfjdJJ8p+kc7TsLXloh6ylH3Sc2eFyJJ+uGo23m6
 MIME-Version: 1.0
-References: <20200317155906.31288-1-dev@pascalroeleven.nl>
-In-Reply-To: <20200317155906.31288-1-dev@pascalroeleven.nl>
-From:   Emil Lenngren <emil.lenngren@gmail.com>
-Date:   Tue, 17 Mar 2020 17:45:58 +0100
-Message-ID: <CAO1O6sccq7c_S8ZMsChBKcVcCn-DDv6awZzNr2BEnh8TH6ZxGg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] pwm: sun4i: Properly turn pwm off and fix stuck
- output state
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com
+X-Received: by 2002:a6b:d207:: with SMTP id q7mr4871624iob.49.1584463573936;
+ Tue, 17 Mar 2020 09:46:13 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 09:46:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007bf0e105a10facff@google.com>
+Subject: general protection fault in tlb_finish_mmu
+From:   syzbot <syzbot+dd9e89c646e1d8c05c62@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, npiggin@gmail.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, will@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hello,
 
-Den tis 17 mars 2020 kl 17:00 skrev Pascal Roeleven <dev@pascalroeleven.nl>:
->
-> Hi all,
->
-> For the last few days I've been debugging a lot to get pwm working again since
-> recent changes in 5.6-rc1 broke it for me.
->
-> Testing shows the pwm controller crashes (or the output gets stuck) when the
-> period register is written when the channel is disabled while the clock gate is
-> still on. Usually after multiple writes, but one write can also lead to
-> unpredictable behaviour. Patch 3 and 4 fix this.
->
-> Patch 2 contains a fix which wouldn't completely turn off the pwm if the
-> output is disabled. The clock gate needs to stay on for at least one more
-> period to ensure the output is properly disabled. This issue has been around
-> for a long time but has probably stayed unnoticed because if the duty_cycle is
-> also changed to 0, you can't tell the difference.
->
-> Patch 1 removes some leftovers which aren't needed anymore.
->
-> Obviously these patches work for my device, but I'd like to hear your opinion
-> if any of these changes make sense. After days, this one is a bit blurry for me.
->
-> Thanks to Uwe for some help with debugging.
->
-> Pascal.
->
-> Pascal Roeleven (4):
->   pwm: sun4i: Remove redundant needs_delay
->   pwm: sun4i: Disable pwm before turning off clock gate
->   pwm: sun4i: Move delay to function
->   pwm: sun4i: Delay after writing the period
->
->  drivers/pwm/pwm-sun4i.c | 53 ++++++++++++++++++++---------------------
->  1 file changed, 26 insertions(+), 27 deletions(-)
->
-> --
-> 2.20.1
->
+syzbot found the following crash on:
 
-I also worked on sun4i-pwm some time ago, fixing a bunch of issues.
-One was that disabling the pwm sometimes didn't turn off the signal,
-because the gate and enable bit were modified in the same clock cycle.
-Another was that the current code used an unnecessary sleep of a whole
-period length (or more?) in case of an update to the period, which
-could be very time-consuming if it's a very long interval, like 2
-seconds.
+HEAD commit:    3cc6e2c5 Merge tag 'for-linus-5.6-2' of git://github.com/c..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16e3bb65e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
+dashboard link: https://syzkaller.appspot.com/bug?extid=dd9e89c646e1d8c05c62
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Note that the behaviour is not unpredictable, if you know how it works ;)
-I fiddled around a long time with devmem2, an oscilloscope and the
-prescaler set to max to figure out how works internally.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Please try my version I just posted at https://pastebin.com/GWrhWzPJ.
-It is based on this version from May 28, 2019:
-https://github.com/torvalds/linux/blob/f50a7f3d9225dd374455f28138f79ae3074a7a3d/drivers/pwm/pwm-sun4i.c.
-Sorry for not posting it inline, but GMail would break the formatting.
-It contains quite many comments about how it works internally. I also
-wrote a section at http://linux-sunxi.org/PWM_Controller, but it might
-be a bit old (two years), so please rather look at the code and the
-comments.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+dd9e89c646e1d8c05c62@syzkaller.appspotmail.com
 
-/Emil
+general protection fault, probably for non-canonical address 0xe0000a0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: probably user-memory-access in range [0x0000700000000000-0x0000700000000007]
+CPU: 0 PID: 9753 Comm: syz-executor.2 Not tainted 5.6.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:tlb_batch_list_free mm/mmu_gather.c:60 [inline]
+RIP: 0010:tlb_finish_mmu+0xd8/0x3c0 mm/mmu_gather.c:331
+Code: 85 99 02 00 00 49 bd 00 00 00 00 00 fc ff df 49 8b 6c 24 30 48 85 ed 75 05 eb 2d 48 89 dd e8 8f 23 d0 ff 48 89 e8 48 c1 e8 03 <42> 80 3c 28 00 0f 85 4f 02 00 00 48 8b 5d 00 31 f6 48 89 ef e8 9f
+RSP: 0018:ffffc900062efc30 EFLAGS: 00010206
+RAX: 00000e0000000000 RBX: 0000700000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81a1f201 RDI: 0000000000000282
+RBP: 0000700000000000 R08: ffff88804a694540 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffc900062efc80
+R13: dffffc0000000000 R14: ffffc900062efc80 R15: ffff888045d94500
+FS:  00000000020f0940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdc866ef000 CR3: 00000000a916c000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ exit_mmap+0x2ca/0x510 mm/mmap.c:3128
+ __mmput kernel/fork.c:1082 [inline]
+ mmput+0x168/0x4b0 kernel/fork.c:1103
+ exit_mm kernel/exit.c:485 [inline]
+ do_exit+0xa51/0x2dd0 kernel/exit.c:788
+ do_group_exit+0x125/0x340 kernel/exit.c:899
+ __do_sys_exit_group kernel/exit.c:910 [inline]
+ __se_sys_exit_group kernel/exit.c:908 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:908
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c679
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:0000000000c7fae8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 000000000000000b RCX: 000000000045c679
+RDX: 0000000000416151 RSI: 0000000000c870f0 RDI: 0000000000000000
+RBP: 00000000004c2040 R08: 000000000000000c R09: 0000000000c7fbf0
+R10: 00000000020f0940 R11: 0000000000000246 R12: 000000000076bfa0
+R13: 0000000000000003 R14: 0000000000000001 R15: 000000000076bfac
+Modules linked in:
+---[ end trace cb94cd759cc2503d ]---
+RIP: 0010:tlb_batch_list_free mm/mmu_gather.c:60 [inline]
+RIP: 0010:tlb_finish_mmu+0xd8/0x3c0 mm/mmu_gather.c:331
+Code: 85 99 02 00 00 49 bd 00 00 00 00 00 fc ff df 49 8b 6c 24 30 48 85 ed 75 05 eb 2d 48 89 dd e8 8f 23 d0 ff 48 89 e8 48 c1 e8 03 <42> 80 3c 28 00 0f 85 4f 02 00 00 48 8b 5d 00 31 f6 48 89 ef e8 9f
+RSP: 0018:ffffc900062efc30 EFLAGS: 00010206
+RAX: 00000e0000000000 RBX: 0000700000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81a1f201 RDI: 0000000000000282
+RBP: 0000700000000000 R08: ffff88804a694540 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffc900062efc80
+R13: dffffc0000000000 R14: ffffc900062efc80 R15: ffff888045d94500
+FS:  00000000020f0940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdc866ef000 CR3: 00000000a916c000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
