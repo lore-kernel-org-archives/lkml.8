@@ -2,294 +2,117 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0414C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE87C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755B6205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11158205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:10:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/aa7ZXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725906AbgCQGD4 (ORCPT
+        id S1725928AbgCQGKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:03:56 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:40168 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725468AbgCQGDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:03:55 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD2kkaHBe_2QbAA--.10S2;
-        Tue, 17 Mar 2020 14:03:16 +0800 (CST)
-From:   bibo mao <maobibo@loongson.cn>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        James Hartley <james.hartley@sondrel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2] MIPS: Add header files reference with path prefix
-Date:   Tue, 17 Mar 2020 02:03:14 -0400
-Message-Id: <1584424994-21922-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9DxD2kkaHBe_2QbAA--.10S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3AF17JF1fJFW8CF4rtw48tFb_yoW3uF17pa
-        nrAa4kXFZ8urW7CFyFyrn29r43Jws8Kr4YkayYg3W2y3Z7X3WUXan3Krn8Jr18XF4DKa48
-        WryfW3WUXan2vw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kI
-        c2xKxwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
-        IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-        6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
-        IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2
-        jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-        ZFpf9x07beAp5UUUUU=
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        Tue, 17 Mar 2020 02:10:44 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:39943 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgCQGKo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 02:10:44 -0400
+Received: by mail-qv1-f68.google.com with SMTP id cy12so4367866qvb.7;
+        Mon, 16 Mar 2020 23:10:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Sy+DCV3/0mPLOUw1l/ZG4OHi5SIhsD6Awhdy6a09qv4=;
+        b=Z/aa7ZXefa7STGooR0UMVDDrLiuznSwp9ClLGQb4w44ZTJ4VDE9rxNn+0+61dxBxfC
+         QRKTFrnWpbYd/LbvQM2RPM0+BGQfixyz3+WsHJ02AbTAIhldbu1Qt83gXpZqX3QueIRb
+         VT43t7csfWYoY8PEwY/D5l6pE1hSQY2j3ZcdpXcRCFgnqa1yAffYwlwMVj1MQavsTxBX
+         oVbYO7TlNkuX+zFkiVRGJOzbt6zqhS1JIoxiolYz+ky7bshpClnBkFkepaemW0dN6yIk
+         hlNkiAyGWl7kCZPk/ib7AnLX0HH2G6N40oJXgSdZXHpOaR5MevoPxk6MX2wNUdKPxv5D
+         i7XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Sy+DCV3/0mPLOUw1l/ZG4OHi5SIhsD6Awhdy6a09qv4=;
+        b=s4HCryzbe7Slj/loG5fYtvXZRc7HxrJWM1zWmFvPsuTzB6gKG2ynsS/eCHPYUEPk/s
+         k+so5cqR+nLNihkUNk1i+U6JrBoVZj03y7uAYniT+871orCQTQgMQPc1zuqk96U74gj5
+         R/aPoGFHok8zXSU1S/xYoCOeBJzKADnNieYRctZPnsDErLlmwSVjl9Ukzz5bHaY5yOe5
+         iXIW2l5hSHF891YMLXti8WZSoTP4HxIErWsd5dhk6QOWTXjvyad4iaahM6fxp8OR3jkM
+         AYOztzoEFDxEADA7TGO7amPViv9kWDrlj/LSZ1lQP52xn5BFmdsGFCCFt9l+6BTcSkii
+         DtuQ==
+X-Gm-Message-State: ANhLgQ3VPgSYvzk7gFSKFty2J2K/DxW7cInFc//6ERV4Uzlaq8F/aVGB
+        /Ub5psia7it0ynO+6kftATWC0QVMlOUnOUzJW2Y=
+X-Google-Smtp-Source: ADFU+vvQn6S+icWNa0p5pq0pCDCa3nQI7Y9nT0qRSMa/unA/NzqZGMqTuX84zZRTaYpt9L7OFyy6gF8nkVewV1S9vA0=
+X-Received: by 2002:ad4:44b3:: with SMTP id n19mr3424543qvt.65.1584425443690;
+ Mon, 16 Mar 2020 23:10:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200316101930.9962-1-zhang.lyra@gmail.com> <20200316101930.9962-2-zhang.lyra@gmail.com>
+In-Reply-To: <20200316101930.9962-2-zhang.lyra@gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Tue, 17 Mar 2020 14:10:32 +0800
+Message-ID: <CADBw62q8AqwMjnnVfwGxecn=UUQYGrfQ8Ry6OxgA2iXH1_Lnkw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] serial: sprd: check console via stdout-path in addition
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some common header files which are referenced locally
-with #includenext method, includenext is tricky method and only
-used on mips platform.
+On Mon, Mar 16, 2020 at 6:19 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> The SPRD serial driver need to know which serial port would be used as
+> console in an early period during initialization, the purpose is to
+> keep the console port alive as possible even if there's some error
+> caused by no clock configured under serial devicetree nodes. But with
+> the patch [1], the console port couldn't be identified if missing
+> console command line.
+>
+> So this patch adds using another interface to do check by reading
+> stdout-path.
+>
+> [1] https://lore.kernel.org/lkml/20190826072929.7696-4-zhang.lyra@gmail.com/
+>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-This patech removes includenext method, replace it with defailed
-pathname prefix for header files.
+Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
 
-This patch passes to compile on all mips platform with defconfig,
-and is verified on my loongson64 box.
+> ---
+>  drivers/tty/serial/sprd_serial.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
+> index 3d3c70634589..18706333f146 100644
+> --- a/drivers/tty/serial/sprd_serial.c
+> +++ b/drivers/tty/serial/sprd_serial.c
+> @@ -1147,7 +1147,8 @@ static bool sprd_uart_is_console(struct uart_port *uport)
+>  {
+>         struct console *cons = sprd_uart_driver.cons;
+>
+> -       if (cons && cons->index >= 0 && cons->index == uport->line)
+> +       if ((cons && cons->index >= 0 && cons->index == uport->line) ||
+> +           of_console_check(uport->dev->of_node, SPRD_TTY_NAME, uport->line))
+>                 return true;
+>
+>         return false;
+> --
+> 2.20.1
+>
 
-Changes:
---------
-v2:
-  - Fix compiling issue on malta platform
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: bibo mao <maobibo@loongson.cn>
----
- arch/mips/include/asm/mach-ar7/irq.h           | 2 +-
- arch/mips/include/asm/mach-ath79/irq.h         | 2 +-
- arch/mips/include/asm/mach-emma2rh/irq.h       | 2 +-
- arch/mips/include/asm/mach-ip27/irq.h          | 2 +-
- arch/mips/include/asm/mach-ip30/irq.h          | 2 +-
- arch/mips/include/asm/mach-lantiq/falcon/irq.h | 2 +-
- arch/mips/include/asm/mach-lantiq/xway/irq.h   | 2 +-
- arch/mips/include/asm/mach-lasat/irq.h         | 2 +-
- arch/mips/include/asm/mach-loongson64/irq.h    | 2 +-
- arch/mips/include/asm/mach-malta/irq.h         | 2 +-
- arch/mips/include/asm/mach-pic32/irq.h         | 2 +-
- arch/mips/include/asm/mach-pistachio/irq.h     | 2 +-
- arch/mips/include/asm/mach-ralink/irq.h        | 2 +-
- arch/mips/include/asm/mach-rm/mc146818rtc.h    | 2 +-
- arch/mips/include/asm/mach-vr41xx/irq.h        | 2 +-
- arch/mips/include/asm/mach-xilfpga/irq.h       | 2 +-
- 16 files changed, 16 insertions(+), 16 deletions(-)
-
-diff --git a/arch/mips/include/asm/mach-ar7/irq.h b/arch/mips/include/asm/mach-ar7/irq.h
-index 7ad10e3..46bb730 100644
---- a/arch/mips/include/asm/mach-ar7/irq.h
-+++ b/arch/mips/include/asm/mach-ar7/irq.h
-@@ -11,6 +11,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_AR7_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-ath79/irq.h b/arch/mips/include/asm/mach-ath79/irq.h
-index 2df1abf..882534b 100644
---- a/arch/mips/include/asm/mach-ath79/irq.h
-+++ b/arch/mips/include/asm/mach-ath79/irq.h
-@@ -27,6 +27,6 @@
- #define ATH79_IP3_IRQ_COUNT     3
- #define ATH79_IP3_IRQ(_x)       (ATH79_IP3_IRQ_BASE + (_x))
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_ATH79_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-emma2rh/irq.h b/arch/mips/include/asm/mach-emma2rh/irq.h
-index 2f7155d..d327367 100644
---- a/arch/mips/include/asm/mach-emma2rh/irq.h
-+++ b/arch/mips/include/asm/mach-emma2rh/irq.h
-@@ -10,6 +10,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_EMMA2RH_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-ip27/irq.h b/arch/mips/include/asm/mach-ip27/irq.h
-index fd91c58..f45d799 100644
---- a/arch/mips/include/asm/mach-ip27/irq.h
-+++ b/arch/mips/include/asm/mach-ip27/irq.h
-@@ -12,7 +12,7 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #define IP27_HUB_PEND0_IRQ	(MIPS_CPU_IRQ_BASE + 2)
- #define IP27_HUB_PEND1_IRQ	(MIPS_CPU_IRQ_BASE + 3)
-diff --git a/arch/mips/include/asm/mach-ip30/irq.h b/arch/mips/include/asm/mach-ip30/irq.h
-index e5c3dd9..27ba899 100644
---- a/arch/mips/include/asm/mach-ip30/irq.h
-+++ b/arch/mips/include/asm/mach-ip30/irq.h
-@@ -76,7 +76,7 @@
-  */
- #define IP30_POWER_IRQ		HEART_L2_INT_POWER_BTN
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #define IP30_HEART_L0_IRQ	(MIPS_CPU_IRQ_BASE + 2)
- #define IP30_HEART_L1_IRQ	(MIPS_CPU_IRQ_BASE + 3)
-diff --git a/arch/mips/include/asm/mach-lantiq/falcon/irq.h b/arch/mips/include/asm/mach-lantiq/falcon/irq.h
-index 91d2bc0..c14312f 100644
---- a/arch/mips/include/asm/mach-lantiq/falcon/irq.h
-+++ b/arch/mips/include/asm/mach-lantiq/falcon/irq.h
-@@ -11,6 +11,6 @@
- 
- #define NR_IRQS 328
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif
-diff --git a/arch/mips/include/asm/mach-lantiq/xway/irq.h b/arch/mips/include/asm/mach-lantiq/xway/irq.h
-index 76ebbf6..2980e77 100644
---- a/arch/mips/include/asm/mach-lantiq/xway/irq.h
-+++ b/arch/mips/include/asm/mach-lantiq/xway/irq.h
-@@ -11,6 +11,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif
-diff --git a/arch/mips/include/asm/mach-lasat/irq.h b/arch/mips/include/asm/mach-lasat/irq.h
-index d79cbe0..e899492 100644
---- a/arch/mips/include/asm/mach-lasat/irq.h
-+++ b/arch/mips/include/asm/mach-lasat/irq.h
-@@ -9,6 +9,6 @@
- 
- #define NR_IRQS			24
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* _ASM_MACH_LASAT_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/include/asm/mach-loongson64/irq.h
-index 73a8991..0d39556 100644
---- a/arch/mips/include/asm/mach-loongson64/irq.h
-+++ b/arch/mips/include/asm/mach-loongson64/irq.h
-@@ -36,5 +36,5 @@
- extern void fixup_irqs(void);
- extern void loongson3_ipi_interrupt(struct pt_regs *regs);
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- #endif /* __ASM_MACH_LOONGSON64_IRQ_H_ */
-diff --git a/arch/mips/include/asm/mach-malta/irq.h b/arch/mips/include/asm/mach-malta/irq.h
-index af9eeea..e1bd429 100644
---- a/arch/mips/include/asm/mach-malta/irq.h
-+++ b/arch/mips/include/asm/mach-malta/irq.h
-@@ -5,6 +5,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_MIPS_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-pic32/irq.h b/arch/mips/include/asm/mach-pic32/irq.h
-index d239694..ddaf999 100644
---- a/arch/mips/include/asm/mach-pic32/irq.h
-+++ b/arch/mips/include/asm/mach-pic32/irq.h
-@@ -9,6 +9,6 @@
- #define NR_IRQS	256
- #define MIPS_CPU_IRQ_BASE 0
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_PIC32_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-pistachio/irq.h b/arch/mips/include/asm/mach-pistachio/irq.h
-index 93bc380..74ac016 100644
---- a/arch/mips/include/asm/mach-pistachio/irq.h
-+++ b/arch/mips/include/asm/mach-pistachio/irq.h
-@@ -10,6 +10,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_PISTACHIO_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-ralink/irq.h b/arch/mips/include/asm/mach-ralink/irq.h
-index 86473e3..2262243 100644
---- a/arch/mips/include/asm/mach-ralink/irq.h
-+++ b/arch/mips/include/asm/mach-ralink/irq.h
-@@ -5,6 +5,6 @@
- #define GIC_NUM_INTRS	64
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif
-diff --git a/arch/mips/include/asm/mach-rm/mc146818rtc.h b/arch/mips/include/asm/mach-rm/mc146818rtc.h
-index 145bce0..a074f4f 100644
---- a/arch/mips/include/asm/mach-rm/mc146818rtc.h
-+++ b/arch/mips/include/asm/mach-rm/mc146818rtc.h
-@@ -16,6 +16,6 @@
- #define mc146818_decode_year(year) ((year) + 1980)
- #endif
- 
--#include_next <mc146818rtc.h>
-+#include <asm/mach-generic/mc146818rtc.h>
- 
- #endif /* __ASM_MACH_RM_MC146818RTC_H */
-diff --git a/arch/mips/include/asm/mach-vr41xx/irq.h b/arch/mips/include/asm/mach-vr41xx/irq.h
-index 3d63afa..4281b2b 100644
---- a/arch/mips/include/asm/mach-vr41xx/irq.h
-+++ b/arch/mips/include/asm/mach-vr41xx/irq.h
-@@ -4,6 +4,6 @@
- 
- #include <asm/vr41xx/irq.h> /* for MIPS_CPU_IRQ_BASE */
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_VR41XX_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-xilfpga/irq.h b/arch/mips/include/asm/mach-xilfpga/irq.h
-index b8e93fa..15ad29e 100644
---- a/arch/mips/include/asm/mach-xilfpga/irq.h
-+++ b/arch/mips/include/asm/mach-xilfpga/irq.h
-@@ -9,6 +9,6 @@
- 
- #define NR_IRQS 32
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __MIPS_ASM_MACH_XILFPGA_IRQ_H__ */
 -- 
-1.8.3.1
-
+Baolin Wang
