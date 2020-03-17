@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000D5C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82AEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E2E20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8EE20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442913;
-	bh=gmTjiyzq7oG89aivUwhhWxL805v+c68/WPu0CmxB7ps=;
+	s=default; t=1584442917;
+	bh=jIj8bDtRNdSjSkw3/Yjf0wMwP1auwRWihaaB+uWLOEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCWzjTvS6xXz03cUaS+HiadPsSEFM8ugjGKqu7hNdwpAoHod6b6QGTra8SkhpFF9k
-	 tRllIVTF8fjPspz7OWLVN4L4DgY7BoNN3JsGUbBnBmiFa5NTkC9n/jpCifcOboXG25
-	 h0rV5Tijvg2lz79A8Dh+93rDNPc8IF/r3D+FwL1c=
+	b=AfsGNZ8812dNSyZmAjBbBVRFK3UqkonKQPt5r7WZN9HkBJSmz4HvUzxEMEYgPdUtH
+	 DIt7t97BTjWpNxbY1mITpVMxljbgPJMhpySj+NXisHQl7zQNP3HhfmEntXFQRn5SEt
+	 FkW5j2qcUTakEH0th6pZIg2LN/CrbPKuvWR3F24Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgCQLBt (ORCPT
+        id S1727829AbgCQLB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:01:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41286 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbgCQLBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:01:46 -0400
+        id S1726759AbgCQLBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:01:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B9420719;
-        Tue, 17 Mar 2020 11:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE27205ED;
+        Tue, 17 Mar 2020 11:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442905;
-        bh=gmTjiyzq7oG89aivUwhhWxL805v+c68/WPu0CmxB7ps=;
+        s=default; t=1584442912;
+        bh=jIj8bDtRNdSjSkw3/Yjf0wMwP1auwRWihaaB+uWLOEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ysLg1wdpTs5dKOPVrcQe+OYLC5MlfkwxrB6fvQOCq3uNM4rAvINdYswY+1i9JW7ME
-         NkNVK+I4OvYSocW46CYzd3Zq9za8wJ5Q1NCKHqIAjPrAHpROK7PfYFYExHXPfysEd1
-         J37J+29eDgrcydgMf+4KdAlbOMQ5pJRAcgZg6sbM=
+        b=P8KvGhJkRNhCQVL1mslKjpYKhk/5E5JphA8suoj73DpGjQXvnBr1TJqh1+SBG8JlD
+         ayoA3QRGTot4vey21We8EWUv8y+hZcQNZQ+4HXXHCDomiC+4XCN+0G7vtdQaXPfXBM
+         tlZlleGGOp8trPgUirEAyKq6c8+1eui673iv/XsQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 003/123] ALSA: hda/realtek - Add Headset Mic supported for HP cPC
-Date:   Tue, 17 Mar 2020 11:53:50 +0100
-Message-Id: <20200317103307.771412586@linuxfoundation.org>
+Subject: [PATCH 5.4 004/123] ALSA: hda/realtek - Fixed one of HP ALC671 platform Headset Mic supported
+Date:   Tue, 17 Mar 2020 11:53:51 +0100
+Message-Id: <20200317103307.889339486@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -61,92 +61,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kailang Yang <kailang@realtek.com>
 
-commit 5af29028fd6db9438b5584ab7179710a0a22569d upstream.
+commit f2adbae0cb20c8eaf06914b2187043ea944b0aff upstream.
 
-HP ALC671 need to support Headset Mic.
+HP want to keep BIOS verb table for release platform.
+So, it need to add 0x19 pin for quirk.
 
+Fixes: 5af29028fd6d ("ALSA: hda/realtek - Add Headset Mic supported for HP cPC")
 Signed-off-by: Kailang Yang <kailang@realtek.com>
-Link: https://lore.kernel.org/r/06a9d2b176e14706976d6584cbe2d92a@realtek.com
+Link: https://lore.kernel.org/r/74636ccb700a4cbda24c58a99dc430ce@realtek.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   44 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -8542,6 +8542,29 @@ static void alc662_fixup_aspire_ethos_hp
- 	}
- }
- 
-+static void alc671_fixup_hp_headset_mic2(struct hda_codec *codec,
-+					     const struct hda_fixup *fix, int action)
-+{
-+	struct alc_spec *spec = codec->spec;
-+
-+	static const struct hda_pintbl pincfgs[] = {
-+		{ 0x19, 0x02a11040 }, /* use as headset mic, with its own jack detect */
-+		{ 0x1b, 0x0181304f },
-+		{ }
-+	};
-+
-+	switch (action) {
-+	case HDA_FIXUP_ACT_PRE_PROBE:
-+		spec->gen.mixer_nid = 0;
-+		spec->parse_flags |= HDA_PINCFG_HEADSET_MIC;
-+		snd_hda_apply_pincfgs(codec, pincfgs);
-+		break;
-+	case HDA_FIXUP_ACT_INIT:
-+		alc_write_coef_idx(codec, 0x19, 0xa054);
-+		break;
-+	}
-+}
-+
- static const struct coef_fw alc668_coefs[] = {
- 	WRITE_COEF(0x01, 0xbebe), WRITE_COEF(0x02, 0xaaaa), WRITE_COEF(0x03,    0x0),
- 	WRITE_COEF(0x04, 0x0180), WRITE_COEF(0x06,    0x0), WRITE_COEF(0x07, 0x0f80),
-@@ -8615,6 +8638,7 @@ enum {
- 	ALC662_FIXUP_LENOVO_MULTI_CODECS,
- 	ALC669_FIXUP_ACER_ASPIRE_ETHOS,
- 	ALC669_FIXUP_ACER_ASPIRE_ETHOS_HEADSET,
-+	ALC671_FIXUP_HP_HEADSET_MIC2,
- };
- 
- static const struct hda_fixup alc662_fixups[] = {
-@@ -8956,6 +8980,10 @@ static const struct hda_fixup alc662_fix
- 		.chained = true,
- 		.chain_id = ALC669_FIXUP_ACER_ASPIRE_ETHOS_HEADSET
- 	},
-+	[ALC671_FIXUP_HP_HEADSET_MIC2] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc671_fixup_hp_headset_mic2,
-+	},
- };
- 
- static const struct snd_pci_quirk alc662_fixup_tbl[] = {
-@@ -9138,6 +9166,22 @@ static const struct snd_hda_pin_quirk al
- 		{0x12, 0x90a60130},
- 		{0x14, 0x90170110},
- 		{0x15, 0x0321101f}),
-+	SND_HDA_PIN_QUIRK(0x10ec0671, 0x103c, "HP cPC", ALC671_FIXUP_HP_HEADSET_MIC2,
-+		{0x14, 0x01014010},
-+		{0x17, 0x90170150},
-+		{0x1b, 0x01813030},
-+		{0x21, 0x02211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0671, 0x103c, "HP cPC", ALC671_FIXUP_HP_HEADSET_MIC2,
-+		{0x14, 0x01014010},
-+		{0x18, 0x01a19040},
-+		{0x1b, 0x01813030},
-+		{0x21, 0x02211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0671, 0x103c, "HP cPC", ALC671_FIXUP_HP_HEADSET_MIC2,
-+		{0x14, 0x01014020},
-+		{0x17, 0x90170110},
-+		{0x18, 0x01a19050},
-+		{0x1b, 0x01813040},
-+		{0x21, 0x02211030}),
- 	{}
- };
- 
+@@ -9169,6 +9169,7 @@ static const struct snd_hda_pin_quirk al
+ 	SND_HDA_PIN_QUIRK(0x10ec0671, 0x103c, "HP cPC", ALC671_FIXUP_HP_HEADSET_MIC2,
+ 		{0x14, 0x01014010},
+ 		{0x17, 0x90170150},
++		{0x19, 0x02a11060},
+ 		{0x1b, 0x01813030},
+ 		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0671, 0x103c, "HP cPC", ALC671_FIXUP_HP_HEADSET_MIC2,
 
 
