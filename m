@@ -2,156 +2,167 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FADC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051B4C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD4620674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD4D20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="AIqIR7RZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="au03j/eH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgCQSQH (ORCPT
+        id S1726646AbgCQSQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:16:07 -0400
-Received: from web0081.zxcs.nl ([185.104.29.10]:37432 "EHLO web0081.zxcs.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgCQSQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:16:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Message-ID:References:In-Reply-To:Subject:Cc:To:
-        From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To
-        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LOiksUFklkg8wSbbFyDEYhs3LWuousOngRMWqAii9i8=; b=AIqIR7RZkQor4tIE+CJQZ1ubky
-        cWI+1loIE7+hQieD4z4bM3dtv6C6dwYOQqN8U37FWkOGJHRhVf2xczQslWNHNVhxOc53wvM5rbcPe
-        E5T35/G5SXiwyC/BcgujPt2qdLbkM+ZkO6NNQHLKWFdQ5MjOnx0iO+jhh3kYt2IoPNXDXHQGEMMc4
-        ldbP3l3RSGR5T3vRhyMjjQaZlYOQ5jiJ+s3aVevvXYKL+//T2rIZV+e8Tn79oGsFgxQsHAlrq1Qxz
-        DtEEL7xUzKvtzj3VJzKyCoWjMLIJXfvZWzmQGrVBUUIofutubM4SowbeRNx3SamkSNWunjclcUEnD
-        RjlKv+0A==;
-Received: from spamrelay.zxcs.nl ([185.104.28.12]:39506 helo=mail-slave01.zxcs.nl)
-        by web0081.zxcs.nl with esmtp (Exim 4.92.3)
-        (envelope-from <dev@pascalroeleven.nl>)
-        id 1jEGkv-0048Ip-Pm; Tue, 17 Mar 2020 19:15:57 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Tue, 17 Mar 2020 14:16:28 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33814 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbgCQSQ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 14:16:28 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 23so12413064pfj.1;
+        Tue, 17 Mar 2020 11:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=GPligt8SZ4vmyiqPXrOfMISNtA3jKedmIN0OJu/cq/k=;
+        b=au03j/eHp4oDf86PBtb0jkX/mGTVoyM379kX+93nx3wKMkf+la9MBZCaQsFD54cBCA
+         aCV55pzqQ+X0/Ci8qp7nIqhkrn+TRb1G0t63II+SEcabyPgZWJllk7LkdwHk08f3QNpk
+         zKEHpCr5jQ0fwm5kwnqBJJrNWUEnqnH9rVnL4eVnVV+YnVynHZtE8aychr1mRpcR89fo
+         n9b8BtyC743GyKu0TwZY+DA3KT8L9EOJm06FjmPMDjhdc0Egqsvvp8TphMYm/lXw1FOf
+         ZM7/hsxq4kl2H5MfhS+sun8PifDdwzRL/kVv0N+qXUWucLCC92J3hfsHv3ajaTjnZPGY
+         Nj5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=GPligt8SZ4vmyiqPXrOfMISNtA3jKedmIN0OJu/cq/k=;
+        b=oPvp06daiJL6e4KChmo9J5Nn3xp6+MXxugdjOoYgsBjfNZdC2aI3qSvuGOWi2iJG2T
+         2VpBIjjKz35o//pmoO48Ua2KSi/XfI91BSrU9nw4lTrmYeTdbneQiAm8/albCi127Car
+         UVEUD63lSryP/00UMg56O8oiYGQDSrjTKOXZ4IUWKwXjzAaTnYJ8JvCIx05iNkcHzrLw
+         XJhhTeQszuFuI+MOn3R/3lsiXt7D/IO9sPy5T/CCABjGvaMGCkapry+YLqcAb16DOGLk
+         dMxK7Gq9teGJjjMVIpUIAdNS+Mqxhom/GebuzkV+iHz6g+tchZObfHsQrl6aKxysRnrQ
+         yX0Q==
+X-Gm-Message-State: ANhLgQ3kLTpPt3ZsMbJyInmOeDHtaIelqs7Xn+qFxUYdITfzz15E5+iQ
+        yldgQJY+TDwHUM1UvYWWKwY=
+X-Google-Smtp-Source: ADFU+vtgIxIuv8CicRbTAz6PU9jTobQMQhzhVZ+qBAMcxLxoh5KdzoKvJN8QgYG1CkUPo0oSY57d1A==
+X-Received: by 2002:a63:4c5d:: with SMTP id m29mr480393pgl.376.1584468986648;
+        Tue, 17 Mar 2020 11:16:26 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id x66sm3510220pgb.9.2020.03.17.11.16.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 11:16:25 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 11:16:17 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <5e7113f16e7c6_278b2b1b264c65b445@john-XPS-13-9370.notmuch>
+In-Reply-To: <87imj3xb5t.fsf@cloudflare.com>
+References: <20200310174711.7490-1-lmb@cloudflare.com>
+ <20200310174711.7490-5-lmb@cloudflare.com>
+ <87imj3xb5t.fsf@cloudflare.com>
+Subject: Re: [PATCH 4/5] bpf: sockmap, sockhash: return file descriptors from
+ privileged lookup
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Mar 2020 19:15:57 +0100
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     Emil Lenngren <emil.lenngren@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K?= =?UTF-8?Q?=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com
-Subject: Re: [RFC PATCH 0/4] pwm: sun4i: Properly turn pwm off and fix stuck
- output state
-In-Reply-To: <CAO1O6sccq7c_S8ZMsChBKcVcCn-DDv6awZzNr2BEnh8TH6ZxGg@mail.gmail.com>
-References: <20200317155906.31288-1-dev@pascalroeleven.nl>
- <CAO1O6sccq7c_S8ZMsChBKcVcCn-DDv6awZzNr2BEnh8TH6ZxGg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.2
-Message-ID: <f96002831730bf262ee61df38642e042@pascalroeleven.nl>
-X-Sender: dev@pascalroeleven.nl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-17 17:45, Emil Lenngren wrote:
-> Hi all,
+Jakub Sitnicki wrote:
+> On Tue, Mar 10, 2020 at 06:47 PM CET, Lorenz Bauer wrote:
+> > Allow callers with CAP_NET_ADMIN to retrieve file descriptors from a
+> > sockmap and sockhash. O_CLOEXEC is enforced on all fds.
+> >
+> > Without this, it's difficult to resize or otherwise rebuild existing
+> > sockmap or sockhashes.
+> >
+> > Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+> > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> > ---
+> >  net/core/sock_map.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >
+> > diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> > index 03e04426cd21..3228936aa31e 100644
+> > --- a/net/core/sock_map.c
+> > +++ b/net/core/sock_map.c
+> > @@ -347,12 +347,31 @@ static void *sock_map_lookup(struct bpf_map *map, void *key)
+> >  static int __sock_map_copy_value(struct bpf_map *map, struct sock *sk,
+> >  				 void *value)
+> >  {
+> > +	struct file *file;
+> > +	int fd;
+> > +
+> >  	switch (map->value_size) {
+> >  	case sizeof(u64):
+> >  		sock_gen_cookie(sk);
+> >  		*(u64 *)value = atomic64_read(&sk->sk_cookie);
+> >  		return 0;
+> >
+> > +	case sizeof(u32):
+> > +		if (!capable(CAP_NET_ADMIN))
+> > +			return -EPERM;
+> > +
+> > +		fd = get_unused_fd_flags(O_CLOEXEC);
+> > +		if (unlikely(fd < 0))
+> > +			return fd;
+> > +
+> > +		read_lock_bh(&sk->sk_callback_lock);
+> > +		file = get_file(sk->sk_socket->file);
 > 
-> Den tis 17 mars 2020 kl 17:00 skrev Pascal Roeleven 
-> <dev@pascalroeleven.nl>:
->> 
->> Hi all,
->> 
->> For the last few days I've been debugging a lot to get pwm working 
->> again since
->> recent changes in 5.6-rc1 broke it for me.
->> 
->> Testing shows the pwm controller crashes (or the output gets stuck) 
->> when the
->> period register is written when the channel is disabled while the 
->> clock gate is
->> still on. Usually after multiple writes, but one write can also lead 
->> to
->> unpredictable behaviour. Patch 3 and 4 fix this.
->> 
->> Patch 2 contains a fix which wouldn't completely turn off the pwm if 
->> the
->> output is disabled. The clock gate needs to stay on for at least one 
->> more
->> period to ensure the output is properly disabled. This issue has been 
->> around
->> for a long time but has probably stayed unnoticed because if the 
->> duty_cycle is
->> also changed to 0, you can't tell the difference.
->> 
->> Patch 1 removes some leftovers which aren't needed anymore.
->> 
->> Obviously these patches work for my device, but I'd like to hear your 
->> opinion
->> if any of these changes make sense. After days, this one is a bit 
->> blurry for me.
->> 
->> Thanks to Uwe for some help with debugging.
->> 
->> Pascal.
->> 
->> Pascal Roeleven (4):
->>   pwm: sun4i: Remove redundant needs_delay
->>   pwm: sun4i: Disable pwm before turning off clock gate
->>   pwm: sun4i: Move delay to function
->>   pwm: sun4i: Delay after writing the period
->> 
->>  drivers/pwm/pwm-sun4i.c | 53 
->> ++++++++++++++++++++---------------------
->>  1 file changed, 26 insertions(+), 27 deletions(-)
->> 
->> --
->> 2.20.1
->> 
+> I think this deserves a second look.
 > 
-> I also worked on sun4i-pwm some time ago, fixing a bunch of issues.
-> One was that disabling the pwm sometimes didn't turn off the signal,
-> because the gate and enable bit were modified in the same clock cycle.
-> Another was that the current code used an unnecessary sleep of a whole
-> period length (or more?) in case of an update to the period, which
-> could be very time-consuming if it's a very long interval, like 2
-> seconds.
+> We don't lock the sock, so what if tcp_close orphans it before we enter
+> this critical section? Looks like sk->sk_socket might be NULL.
 > 
-> Note that the behaviour is not unpredictable, if you know how it works 
-> ;)
-> I fiddled around a long time with devmem2, an oscilloscope and the
-> prescaler set to max to figure out how works internally.
+> I'd find a test that tries to trigger the race helpful, like:
 > 
-> Please try my version I just posted at https://pastebin.com/GWrhWzPJ.
-> It is based on this version from May 28, 2019:
-> https://github.com/torvalds/linux/blob/f50a7f3d9225dd374455f28138f79ae3074a7a3d/drivers/pwm/pwm-sun4i.c.
-> Sorry for not posting it inline, but GMail would break the formatting.
-> It contains quite many comments about how it works internally. I also
-> wrote a section at http://linux-sunxi.org/PWM_Controller, but it might
-> be a bit old (two years), so please rather look at the code and the
-> comments.
-> 
-> /Emil
+>   thread A: loop in lookup FD from map
+>   thread B: loop in insert FD into map, close FD
 
-Hi Emil,
+Agreed, this was essentially my question above as well.
 
-Thank you very much, this is helpful. Ah it was your note on the wiki. 
-That is indeed where I took the idea of keeping the gate on and 
-disabling the panel from. As a scope is still on my wishlist, the rest 
-was just trial-and-error. Judging from your code, there are more edge 
-cases which might occur. I will test your code and try to integrate it. 
-If it's okay with you, I can post it on your behalf?
+When the psock is created we call sock_hold() and will only do a sock_put()
+after an rcu grace period when its removed. So at least if you have the
+sock here it should have a sk_refcnt. (Note the user data is set to NULL
+so if you do reference psock you need to check its non-null.)
 
-If you ask me, it's really unfortunate Allwinner didn't provide a timing 
-diagram for such a picky controller.
+Is that enough to ensure sk_socket? Seems not to me, tcp_close for example
+will still happen and call sock_orphan(sk) based on my admittddly quick
+look.
+
+Further, even if you do check sk->sk_socket is non-null what does it mean
+to return a file with a socket that is closed, deleted from the sock_map
+and psock removed? At this point is it just a dangling reference?
+
+Still a bit confused as well what would or should happen when the sock is closed
+after you have the file reference? I could probably dig up what exactly
+would happen but I think we need it in the commiit message so we understand
+it. I also didn't dig up the details here but if the receiver of the
+fd crashes or otherwise disappears this hopefully all get cleaned up?
+
+> 
+> > +		read_unlock_bh(&sk->sk_callback_lock);
+> > +
+> > +		fd_install(fd, file);
+> > +		*(u32 *)value = fd;
+> > +		return 0;
+> > +
+> >  	default:
+> >  		return -ENOSPC;
+> >  	}
