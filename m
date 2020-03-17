@@ -2,96 +2,189 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85ADCC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5683C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6364D20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C728C20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgCQEzJ (ORCPT
+        id S1727233AbgCQEzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:55:09 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:37040 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726016AbgCQEzI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:55:08 -0400
-Received: from mr1.cc.vt.edu (mr1.cc.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 02H4t78C021316
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 00:55:07 -0400
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 02H4t23B007662
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 00:55:07 -0400
-Received: by mail-qv1-f69.google.com with SMTP id m5so18710426qvy.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 21:55:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=Y91b1uFvN0HdY0iOBxMABqgP7XI6TzW5dwQDX8YUsV0=;
-        b=ooBWZOXegjRo3ewRuXf8Gp8rJr7XJI1HOCzf0TqVrBKdqVipO8tzV4qr9KI3p/mtTS
-         iGPiSNflDPYXgE45TdfsGLfrwKF/e6DZrfKhQGPRBiGVciHz08uoWAp1KipkBJz/Oabg
-         y2HoFcuMWWsKmqa4w+vxUyOnMtuNvTD2uFnXvtCmkpXTQkSL8avpHnFoPtHFnkJAO2zE
-         qWwJfUUQiM+IHWl39VuXH/r5WRC7jlWR5t5wbkNo8GDGppQ/+a/Xnqce2Og+C5XY/6Da
-         z6EG8sDrcaF2/aG/i9doJj1weOK3zwk5rB+CezJhtbWaYHPOSETsyEZ2bx4wnyW9SHIE
-         wlMQ==
-X-Gm-Message-State: ANhLgQ2GC/2ZLWBspawVkM2RiNM6OObXNx6G5Rl+wp9RRgLzDr/GAQ74
-        4ylfTGtfIQHKmmdknKGHws4AQ/hPjDUf4G38AHyu04BlzRDvjJDsRWwFaQ775Q/g1TyfsZ9U+4W
-        pXZQh7YfGLEGgPe0G52wTgFlKOwRuvaANRXU=
-X-Received: by 2002:ae9:eb12:: with SMTP id b18mr3285575qkg.168.1584420902119;
-        Mon, 16 Mar 2020 21:55:02 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtUDl88z4JRPHz2zyJmbf9sHj2p29cr0lvKwcAfBTOfcp5n1kViR0e7V1WWDMMM/h35D2RbEw==
-X-Received: by 2002:ae9:eb12:: with SMTP id b18mr3285560qkg.168.1584420901793;
-        Mon, 16 Mar 2020 21:55:01 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id 73sm1264022qkf.82.2020.03.16.21.54.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 21:55:00 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Marco Felsch <m.felsch@pengutronix.de>
-cc:     Support Opensource <support.opensource@diasemi.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: da9062: Fix include path
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Tue, 17 Mar 2020 00:54:59 -0400
-Message-ID: <773115.1584420899@turing-police>
+        Tue, 17 Mar 2020 00:55:15 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34106 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726882AbgCQExQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:53:16 -0400
+IronPort-SDR: FqRNreTz+xrTT9lPKyYwKzSpjX8SXxlRCsuyBKXqxyRybjaRqk2lHZK1ZFHMkCBnDPMGvGc/mJ
+ eJOKtn10frZQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:16 -0700
+IronPort-SDR: wO4xuphU+BEjAZDjIKfoTvJODHsnVQzZ3uJ2gNO+azsxwAXK5LKehi8K/PCBdWmJC4cQlrb+Xq
+ e1a3GFYS8i6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
+   d="scan'208";a="355252780"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [PATCH v2 14/32] KVM: x86: Move "flush guest's TLB" logic to separate kvm_x86_ops hook
+Date:   Mon, 16 Mar 2020 21:52:20 -0700
+Message-Id: <20200317045238.30434-15-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
+References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Found during a allmodconfig build on ARM on an RPi4:
+Add a dedicated hook to handle flushing TLB entries on behalf of the
+guest, i.e. for a paravirtualized TLB flush, and use it directly instead
+of bouncing through kvm_vcpu_flush_tlb().
 
-  CC      drivers/pinctrl/pinctrl-da9062.o
-drivers/pinctrl/pinctrl-da9062.c:28:10: fatal error: ../gpio/gpiolib.h: No such file or directory
- #include <../gpio/gpiolib.h>
-          ^~~~~~~~~~~~~~~~~~~
-compilation terminated.
+For VMX, change the effective implementation implementation to never do
+INVEPT and flush only the current context, i.e. to always flush via
+INVVPID(SINGLE_CONTEXT).  The INVEPT performed by __vmx_flush_tlb() when
+@invalidate_gpa=false and enable_vpid=0 is unnecessary, as it will only
+flush guest-physical mappings; linear and combined mappings are flushed
+by VM-Enter when VPID is disabled, and changes in the guest pages tables
+do not affect guest-physical mappings.
 
-So... fix the errant include.
+When EPT and VPID are enabled, doing INVVPID is not required (by Intel's
+architecture) to invalidate guest-physical mappings, i.e. TLB entries
+that cache guest-physical mappings can live across INVVPID as the
+mappings are associated with an EPTP, not a VPID.  The intent of
+@invalidate_gpa is to inform vmx_flush_tlb() that it must "invalidate
+gpa mappings", i.e. do INVEPT and not simply INVVPID.  Other than nested
+VPID handling, which now calls vpid_sync_context() directly, the only
+scenario where KVM can safely do INVVPID instead of INVEPT (when EPT is
+enabled) is if KVM is flushing TLB entries from the guest's perspective,
+i.e. is only required to invalidate linear mappings.
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Fixes: 56cc3af4e8c8e ("pinctrl: da9062: add driver support")
+For SVM, flushing TLB entries from the guest's perspective can be done
+by flushing the current ASID, as changes to the guest's page tables are
+associated only with the current ASID.
 
-diff --git a/drivers/pinctrl/pinctrl-da9062.c b/drivers/pinctrl/pinctrl-da9062.c
-index f704ee0b2fd9..cfbe529e66c3 100644
---- a/drivers/pinctrl/pinctrl-da9062.c
-+++ b/drivers/pinctrl/pinctrl-da9062.c
-@@ -25,7 +25,7 @@
-  * We need this get the gpio_desc from a <gpio_chip,offset> tuple to decide if
-  * the gpio is active low without a vendor specific dt-binding.
-  */
--#include <../gpio/gpiolib.h>
-+#include <../drivers/gpio/gpiolib.h>
+Adding a dedicated ->tlb_flush_guest() paves the way toward removing
+@invalidate_gpa, which is a potentially dangerous control flag as its
+meaning is not exactly crystal clear, even for those who are familiar
+with the subtleties of what mappings Intel CPUs are/aren't allowed to
+keep across various invalidation scenarios.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/include/asm/kvm_host.h |  6 ++++++
+ arch/x86/kvm/svm.c              |  6 ++++++
+ arch/x86/kvm/vmx/vmx.c          | 13 +++++++++++++
+ arch/x86/kvm/x86.c              |  2 +-
+ 4 files changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index cdbf822c5c8b..c08f4c0bf4d1 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1118,6 +1118,12 @@ struct kvm_x86_ops {
+ 	 */
+ 	void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
  
- #define DA9062_TYPE(offset)		(4 * (offset % 2))
- #define DA9062_PIN_SHIFT(offset)	(4 * (offset % 2))
++	/*
++	 * Flush any TLB entries created by the guest.  Like tlb_flush_gva(),
++	 * does not need to flush GPA->HPA mappings.
++	 */
++	void (*tlb_flush_guest)(struct kvm_vcpu *vcpu);
++
+ 	void (*run)(struct kvm_vcpu *vcpu);
+ 	int (*handle_exit)(struct kvm_vcpu *vcpu,
+ 		enum exit_fastpath_completion exit_fastpath);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 08568ae9f7a1..396f42753489 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5643,6 +5643,11 @@ static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
+ 	invlpga(gva, svm->vmcb->control.asid);
+ }
+ 
++static void svm_flush_tlb_guest(struct kvm_vcpu *vcpu)
++{
++	svm_flush_tlb(vcpu, false);
++}
++
+ static void svm_prepare_guest_switch(struct kvm_vcpu *vcpu)
+ {
+ }
+@@ -7400,6 +7405,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 
+ 	.tlb_flush = svm_flush_tlb,
+ 	.tlb_flush_gva = svm_flush_tlb_gva,
++	.tlb_flush_guest = svm_flush_tlb_guest,
+ 
+ 	.run = svm_vcpu_run,
+ 	.handle_exit = handle_exit,
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index ba24bbda2c12..57c1cee58d18 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2862,6 +2862,18 @@ static void vmx_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t addr)
+ 	 */
+ }
+ 
++static void vmx_flush_tlb_guest(struct kvm_vcpu *vcpu)
++{
++	/*
++	 * vpid_sync_context() is a nop if vmx->vpid==0, e.g. if enable_vpid==0
++	 * or a vpid couldn't be allocated for this vCPU.  VM-Enter and VM-Exit
++	 * are required to flush GVA->{G,H}PA mappings from the TLB if vpid is
++	 * disabled (VM-Enter with vpid enabled and vpid==0 is disallowed),
++	 * i.e. no explicit INVVPID is necessary.
++	 */
++	vpid_sync_context(to_vmx(vcpu)->vpid);
++}
++
+ static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
+ {
+ 	ulong cr0_guest_owned_bits = vcpu->arch.cr0_guest_owned_bits;
+@@ -7875,6 +7887,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 
+ 	.tlb_flush = vmx_flush_tlb,
+ 	.tlb_flush_gva = vmx_flush_tlb_gva,
++	.tlb_flush_guest = vmx_flush_tlb_guest,
+ 
+ 	.run = vmx_vcpu_run,
+ 	.handle_exit = vmx_handle_exit,
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index f506248d61a1..0b90ec2c93cf 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2725,7 +2725,7 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
+ 	trace_kvm_pv_tlb_flush(vcpu->vcpu_id,
+ 		st->preempted & KVM_VCPU_FLUSH_TLB);
+ 	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
+-		kvm_vcpu_flush_tlb(vcpu, false);
++		kvm_x86_ops->tlb_flush_guest(vcpu);
+ 
+ 	vcpu->arch.st.preempted = 0;
+ 
+-- 
+2.24.1
 
