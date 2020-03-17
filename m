@@ -2,130 +2,167 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57675C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2F8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C49220735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:36:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584463003;
-	bh=WWrSnX03rWKs4UYsGvn2UrJZv6jABKt7ucAm8ArZ3VA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QuKjHbodLE63xD0A2pfVTIvON/cI5ag+dS6F8ko4twERtyTN18hDsTv/P/8iZ598a
-	 3grm8uBTNXGapj/xm1/7AsovxA9qnGcQbdvi/QzuwwERUzP6w3a55KRWreMKKdPCig
-	 uBd2Ul90L1CiCyg2oRURrHqdtU8E3Zkxjwn/Rxxo=
+	by mail.kernel.org (Postfix) with ESMTP id 286182073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:38:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IETX7sTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgCQQgm (ORCPT
+        id S1726650AbgCQQiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:36:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:40298 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbgCQQgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:36:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F221030E;
-        Tue, 17 Mar 2020 09:36:40 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7559A3F52E;
-        Tue, 17 Mar 2020 09:36:40 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 16:36:38 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH] arm64: fix the missing ktpi= cmdline check in
- arm64_kernel_unmapped_at_el0()
-Message-ID: <20200317163638.GI3971@sirena.org.uk>
-References: <20200317114708.109283-1-yaohongbo@huawei.com>
- <20200317121050.GH8831@lakrids.cambridge.arm.com>
- <20200317124323.GA16200@willie-the-truck>
- <20200317135719.GH3971@sirena.org.uk>
- <20200317151813.GA16579@willie-the-truck>
+        Tue, 17 Mar 2020 12:38:11 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:24776 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726549AbgCQQiK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:38:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584463089;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1cmo9yvmEUOjZCY2QATmsaxzi5lWYanxsFcnQm9/fag=;
+        b=IETX7sTeoraQTvKexvlfbCHjFkgsrYiA2PRE6LnJrj2RblUElzNaFIkPcz7513yUblrJ9v
+        tvRYG+kiTCRpZS3sol5IWmK87ulkqUFK/Dd0XY0v7Qk4kM82EembdOccoveRXyadlfHy6f
+        isFp3Uvji5YtzZb+WhbSaIb6jLqQgbs=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-F5Usw7kcMkOyVjCVFh85Kw-1; Tue, 17 Mar 2020 12:38:06 -0400
+X-MC-Unique: F5Usw7kcMkOyVjCVFh85Kw-1
+Received: by mail-io1-f69.google.com with SMTP id c7so14530279iog.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1cmo9yvmEUOjZCY2QATmsaxzi5lWYanxsFcnQm9/fag=;
+        b=S/ntu6PnbkafLyVBofOdgbKl/5ppRryuPacbyQ8noRmNTsMC4U8BKFw3dG8RUwNHS2
+         tdpjVodSqe6Tdn43czrR1NiklroE2kTZKLcmL2au682LpSry6js1exTN4WtTti/jEfbQ
+         L1foeE10o9SoqQ2V1DQ4rWpEufWvFIWX+cgXgr/DFweShMaF6b8MGm4Te/Hs7YQoeojc
+         S4XWryJFx/kVSl8NkTCHYz+0LpeAc5Jp/A0zYBL/Uog8WbpVSHngJHDa74piwMFp/KMN
+         VDJlUT0SdVM5s/Yc3Dj0Gz+ZFi0oHLQQhw3vIp8tB6M8vcNJva5tOHyP58JqbuCTKs+J
+         U/vA==
+X-Gm-Message-State: ANhLgQ3mqu9HXd0IcYpafCny1Kyo5TRXzAKtNevsUMPgQ1wpditcBtI7
+        3++PKA1onl5MDf/CCr6znIKh4NixGiS4WrK1zbPKxu/oW3+DcEM/ZXvEJnKwEx6/eyXePyvf7A/
+        415Uq0o1HPue6JVpaI+fNXf+rFJRPJ/aMhlf3Y50s
+X-Received: by 2002:a02:86:: with SMTP id 128mr195326jaa.3.1584463085791;
+        Tue, 17 Mar 2020 09:38:05 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtaDELQPtZX9WKJ1+skbJrbn1BKu58HWv6Zj5HtMcnUzSOIzNHw/Ku3ZCqVS5xSXt8qf7dpVnbQ3f3/xI+1kTM=
+X-Received: by 2002:a02:86:: with SMTP id 128mr195293jaa.3.1584463085470; Tue,
+ 17 Mar 2020 09:38:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tctmm6wHVGT/P6vA"
-Content-Disposition: inline
-In-Reply-To: <20200317151813.GA16579@willie-the-truck>
-X-Cookie: There's only one everything.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <20200315012523.GC208715@linux.intel.com> <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
+ <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
+ <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
+ <20200316225322.GJ24267@linux.intel.com> <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
+ <20200316235934.GM24267@linux.intel.com> <ca2c9ac0-b717-ee96-c7df-4e39f03a9193@intel.com>
+ <20200317002706.GN24267@linux.intel.com>
+In-Reply-To: <20200317002706.GN24267@linux.intel.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Tue, 17 Mar 2020 12:37:54 -0400
+Message-ID: <CAOASepN8wdSL22+YodZW-8as7uGNCBqt3BdtgWBi9d0XD5xkJw@mail.gmail.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 16, 2020 at 8:27 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Mon, Mar 16, 2020 at 05:18:14PM -0700, Xing, Cedric wrote:
+> > On 3/16/2020 4:59 PM, Sean Christopherson wrote:
+> > >On Mon, Mar 16, 2020 at 04:50:26PM -0700, Xing, Cedric wrote:
+> > >>On 3/16/2020 3:53 PM, Sean Christopherson wrote:
+> > >>>On Mon, Mar 16, 2020 at 11:38:24PM +0200, Jarkko Sakkinen wrote:
+> > >>>>>My suggestions explicitly maintained robustness, and in fact increased
+> > >>>>>it. If you think we've lost capability, please speak with specificity
+> > >>>>>rather than in vague generalities. Under my suggestions we can:
+> > >>>>>1. call the vDSO from C
+> > >>>>>2. pass context to the handler
+> > >>>>>3. have additional stack manipulation options in the handler
+> > >>>>>
+> > >>>>>The cost for this is a net 2 additional instructions. No existing
+> > >>>>>capability is lost.
+> > >>>>
+> > >>>>My vague generality in this case is just that the whole design
+> > >>>>approach so far has been to minimize the amount of wrapping to
+> > >>>>EENTER.
+> > >>>
+> > >>>Yes and no.   If we wanted to minimize the amount of wrapping around the
+> > >>>vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
+> > >>>first place.  The whole process has been about balancing the wants of each
+> > >>>use case against the overall quality of the API and code.
+> > >>>
+> > >>The design of this vDSO API was NOT to minimize wrapping, but to allow
+> > >>maximal flexibility. More specifically, we strove not to restrict how info
+> > >>was exchanged between the enclave and its host process. After all, calling
+> > >>convention is compiler specific - i.e. the enclave could be built by a
+> > >>different compiler (e.g. MSVC) that doesn't share the same list of CSRs as
+> > >>the host process. Therefore, the API has been implemented to pass through
+> > >>virtually all registers except those used by EENTER itself. Similarly, all
+> > >>registers are passed back from enclave to the caller (or the exit handler)
+> > >>except those used by EEXIT. %rbp is an exception because the vDSO API has to
+> > >>anchor the stack, using either %rsp or %rbp. We picked %rbp to allow the
+> > >>enclave to allocate space on the stack.
+> > >
+> > >And unless I'm missing something, using %rcx to pass @leaf would still
+> > >satisfy the above, correct?  Ditto for saving/restoring %rbx.
+> > >
+> > >I.e. a runtime that's designed to work with enclave's using a different
+> > >calling convention wouldn't be able to take advantage of being able to call
+> > >the vDSO from C, but neither would it take on any meaningful burden.
+> > >
+> > Not exactly.
+> >
+> > If called directly from C code, the caller would expect CSRs to be
+> > preserved. Then who should preserve CSRs? It can't be the enclave because it
+> > may not follow the same calling convention. Moreover, the enclave may run
+> > into an exception, in which case it doesn't have the ability to restore
+> > CSRs. So it has to be done by the vDSO API. That means CSRs will be
+> > overwritten upon enclave exits, which violates the goal of "passing all
+> > registers back to the caller except those used by EEXIT".
+>
+> IIUC, Nathaniel's use case is to run only enclaves that are compatible
+> with Linux's calling convention and to handle enclave exceptions in the
+> exit handler.
+>
+> As I qualified above, there would certainly be runtimes and use cases that
+> would find no advantage in passing @leaf via %rcx and preserving %rbx.  I'm
+> well aware the Intel SDK falls into that bucket.  But again, the cost to
+> such runtimes is precisely one reg->reg MOV instruction.
 
---tctmm6wHVGT/P6vA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It seems to me that some think my proposal represents a shift in
+strategic direction. I do not see it that way. I affirm the existing
+strategic direction. My proposal only represents a specific
+optimization of that strategic direction that benefits certain use
+cases without significant cost to all other use cases.
 
-On Tue, Mar 17, 2020 at 03:18:14PM +0000, Will Deacon wrote:
-> On Tue, Mar 17, 2020 at 01:57:19PM +0000, Mark Brown wrote:
-> > On Tue, Mar 17, 2020 at 12:43:24PM +0000, Will Deacon wrote:
-> > > On Tue, Mar 17, 2020 at 12:10:51PM +0000, Mark Rutland wrote:
-> > > > On Tue, Mar 17, 2020 at 07:47:08PM +0800, Hongbo Yao wrote:
-
-> > > > > -	return arm64_use_ng_mappings;
-> > > > > +	return arm64_use_ng_mappings &&
-> > > > > +		cpus_have_const_cap(ARM64_UNMAP_KERNEL_AT_EL0);
-
-> > > This probably isn't the right fix, since this will mean that early mappings
-> > > will be global and we'll have to go through the painful page-table rewrite
-> > > logic when the cap gets enabled for KASLR-enabled kernels.
-
-> > Aren't we looking for a rewrite from non-global to global here (disable
-> > KPTI where we would otherwise have it), which we don't currently have
-> > code for?
-
-> What I mean is that cpus_have_const_cap() will be false initially, so we'll
-> put down global mappings early on because PTE_MAYBE_NG will be 0, which
-> means that we'll have to invoke the rewriting code if we then realise we
-> want non-global mappings after the caps are finalised.
-
-Ah, I see - a different case to the one originally reported but also an
-issue.
-
-> > That is probably a good idea but I think that runs too late to affect
-> > the early mappings, they're done based on kaslr_requires_kpti() well
-> > before we start secondaries.  My first pass not having paged everything
-> > back in yet is that there needs to be command line parsing in
-> > kaslr_requires_kpti() but as things stand the command line isn't
-> > actually ready then...
-
-> Yeah, and I think you probably run into chicken and egg problems mapping
-
-The whole area is just a mess.
-
-> the thing. With the change above, it's true that /some/ mappings will
-> still be nG if you pass kpti=off, but I was hoping that didn't really matter
-> :)
-
-> What was the behaviour prior to your patch? If it used to work without
-> any nG mappings, then I suppose we should try to restore that behaviour.
-
-I'd need to go back and retest to confirm but it looks like always had
-the issue that we'd install some nG mappings early even with KPTI
-disabled on the command line so your change is just restoring the
-previous behaviour and we're no worse than we were before.
-
---tctmm6wHVGT/P6vA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5w/JYACgkQJNaLcl1U
-h9Dl1wf9GX3p/adfELLXBzUuhsdtD5YuF5wPbqLNWia/xE1GxwQwLTICvYRzF5UH
-oQ4z9xdwIxtBDXMcOre3yio7NphtC3i0zLTE0TBK5yj2xidtONZkV2hFh/gMFkO1
-AJ798O5jj5gL/oaHIYEA/iuKHi9wj2qA7iXiBIpq8v5z9MkDHz1CFAXYrLKAdcaU
-0mEhWJrh5xTycRkTY55/+Hegou21QfcXvqcEQq+p2zxJ+dLpt+kQ9C2SsK7/sxkj
-buyhcuLV7tUtaW5IrwfyypOpwBR57PTpecCkYGEmPgY51BpHtR9Gp1LBNsC7LbbP
-+Ct5O9PmEr9d6wur0BxoHlrKlz+MeQ==
-=vYFK
------END PGP SIGNATURE-----
-
---tctmm6wHVGT/P6vA--
