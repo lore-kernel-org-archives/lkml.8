@@ -2,105 +2,179 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997F1C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BAFC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8DD20757
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC65720752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aII4WxDC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vN6Lrebw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgCQMgc (ORCPT
+        id S1726575AbgCQMmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 08:36:32 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33899 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgCQMgc (ORCPT
+        Tue, 17 Mar 2020 08:42:33 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46176 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgCQMmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 08:36:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z15so25403289wrl.1;
-        Tue, 17 Mar 2020 05:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o3qXPaTU6PrsJxaBR+W/miPqJdXIPm3n5FrZLJ/cohk=;
-        b=aII4WxDC2xPoJw6uOldC//Wh7pC7AuhV8vqxZjipKLGzQVgPN8B//5CIxStHerKRVx
-         iHo22AxANVinBFsI+BUr+gpqalB1s0ESHlWZqnoVEQpNPCANZVmQC7K+3X/J8ls3mBk8
-         eWVhZY7A+XWvvVgl99TUxhyOpCP1qKfWcFnCD3v6onHtyqDTwXkKlDv/0nnrPrv1FACm
-         dADRmY3AolNspK/vCAsLE71krGiBzQj5Yd6Tmx4Jadi0GsCd40gyHQEH+j6KIItL8lLl
-         bxH1m8bQy7WUHD9GMVANFv/eb1DQg5aE2VvFpZw8wvyH06VXK5GJ8JmdHLMb1SmMdalD
-         lPHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o3qXPaTU6PrsJxaBR+W/miPqJdXIPm3n5FrZLJ/cohk=;
-        b=oZ+deYdNlaRdfQpNyjNtFEJDsPHxMkBVCV4PHCLTJejM8se1o9JHPe2rUv/rwlzflK
-         oT8MP/ZxGznMrVY/D5NPB98wzOpr716tWwv1NskhRyB5HfRIpjuGAdZSfcyfXoy8XTgC
-         QkiqN1mJhNUFw4gqNkYLOJwVAhOJXiXZIX9LOVF0dl0DkA8rtw1lUxfqABRoM/b4829R
-         81Reba77MxOrIt01p5Rffm6Dh0TydLjmsf+aT08ncbqkw7806sGAFZ1AS7oJBL/WIWHQ
-         RZynXN60zdlbThOJtrAJZ8RDuibFX7kbd3lp/P5x4c9iuMb0uBHOIJkw6W5WQ6ziRbxY
-         lwtQ==
-X-Gm-Message-State: ANhLgQ0QY8+wQ0QF7VAAfZ54PdRWaouOy3MbnQLhV2+sLSXymzSVOTod
-        gQfwczOhgCfKZ4oaeaDf4HK8fzFL
-X-Google-Smtp-Source: ADFU+vs1G4RxuyQdAwdPDAYcwg0CpbROQCXwC93f1yUlLtoWWfR7HwqM40WwmRmfUDEjloqYdmijAQ==
-X-Received: by 2002:a5d:6ca7:: with SMTP id a7mr6351863wra.157.1584448589815;
-        Tue, 17 Mar 2020 05:36:29 -0700 (PDT)
-Received: from saturn.lan ([188.26.73.247])
-        by smtp.gmail.com with ESMTPSA id a184sm3961194wmf.29.2020.03.17.05.36.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 05:36:29 -0700 (PDT)
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-X-Google-Original-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jic23@kernel.org, andriy.shevchenko@linux.intel.com,
-        lars@metafoo.de, Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: buffer: re-introduce bitmap_zalloc() for trialmask
-Date:   Tue, 17 Mar 2020 14:36:21 +0200
-Message-Id: <20200317123621.27722-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 17 Mar 2020 08:42:33 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HCfSk6167867;
+        Tue, 17 Mar 2020 12:42:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=qLXLoc2iW/txP0dNGrHzr3+4kcMjVEsFRgTXm08hbuo=;
+ b=vN6LrebwJPlYrnL/Hr4bdHMcqlekUqj21CernyAo4b0WTX7xhNijPuLsxyYZ4mn0Nzvk
+ LJYy0yS6sFxr3F4Nx1FNjOD6zkszqphexFIoD2BVAKS0ciZD0j0DkJdV0JKtTRrJJRI/
+ JRUBYqNjOlkhaVj4RyZZySRiMpafv05BobF2EtMkGHuPmNCkj1vOIu8/o3WjRkyqV2cs
+ GzGphnbu1kwnpDVnsLi79oJB4iWVwjKcXwdG8Q2oELU8TGldfZVZvV5Q+GCo//mm2ykr
+ 62JmCiYRbXOiRwdaLuDsU4i2+SO1bqJYVm1+G6hgWWAetJybb/t3xkiLpEmSXNd8bCsk +g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yrqwn4fey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 12:42:27 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HCacia060428;
+        Tue, 17 Mar 2020 12:42:27 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2ys8trrnph-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 12:42:27 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02HCgQGj023511;
+        Tue, 17 Mar 2020 12:42:26 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 17 Mar 2020 05:42:25 -0700
+Date:   Tue, 17 Mar 2020 15:42:17 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        vkoul@kernel.org, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix an error handling path in
+ 'k3_udma_glue_cfg_rx_flow()'
+Message-ID: <20200317124217.GB4650@kadam>
+References: <20200315155015.27303-1-christophe.jaillet@wanadoo.fr>
+ <49a35126-3cc6-0cbb-e632-42a237ef353e@ti.com>
+ <e1d2d6af-7dc3-6e90-28d3-05d9b293cba9@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1d2d6af-7dc3-6e90-28d3-05d9b293cba9@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9562 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 suspectscore=2 mlxlogscore=999 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003170056
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9562 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
+ mlxscore=0 bulkscore=0 phishscore=0 spamscore=0 suspectscore=2
+ malwarescore=0 priorityscore=1501 clxscore=1011 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003170056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 3862828a903d3 ("iio: buffer: Switch to bitmap_zalloc()") introduced
-bitmap_alloc(), but commit 20ea39ef9f2f9 ("iio: Fix scan mask selection")
-reverted it.
+On Tue, Mar 17, 2020 at 09:50:52AM +0200, Grygorii Strashko wrote:
+> Hi Christophe,
+> 
+> On 16/03/2020 09:20, Peter Ujfalusi wrote:
+> > Hi Christophe,
+> > 
+> > On 15/03/2020 17.50, Christophe JAILLET wrote:
+> > > All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
+> > > function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
+> > > 
+> > > This not correct because this function has a 'channel->flows_ready--;' at
+> > > the end, but 'flows_ready' has not been incremented here, when we branch to
+> > > the error handling path.
+> > > 
+> > > In order to keep a correct value in 'flows_ready', un-roll
+> > > 'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
+> > > at the correct places when an error is detected.
+> > 
+> > Good catch!
+> > 
+> > > Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
+> > 
+> > Even better catch ;)
+> > 
+> > > Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
+> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > > ---
+> > > Not sure that the last point of the description is correct. Maybe, the
+> > > 'xudma_rflow_put / return -ENODEV;' should be kept in order not to
+> > > override 'flow->udma_rflow'.
+> > > ---
+> > >   drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
+> > >   1 file changed, 20 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+> > > index dbccdc7c0ed5..890573eb1625 100644
+> > > --- a/drivers/dma/ti/k3-udma-glue.c
+> > > +++ b/drivers/dma/ti/k3-udma-glue.c
+> > > @@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+> > >   	if (IS_ERR(flow->udma_rflow)) {
+> > >   		ret = PTR_ERR(flow->udma_rflow);
+> > >   		dev_err(dev, "UDMAX rflow get err %d\n", ret);
+> > > -		goto err;
+> > > +		goto err_return;
+> > 
+> > return err; ?
+> > 
+> > >   	}
+> > 
+> > Optionally you could have moved the
+> > 	rx_chn->flows_ready++;
+> > here and
+> 
+> Thank you for your patch.
+> 
+> I tend to agree with Peter here - just may be with comment that it will be dec in
+> k3_udma_glue_release_rx_flow().
+> All clean ups were moved in standalone function intentionally to avoid
+> code duplication in err and normal channel release path, and avoid common errors
+> when normal path is fixed, but err path missed.
 
-This change adds it back. The only difference is that it's adding
-bitmap_zalloc(). There might be some changes later that would require
-initializing it to zero. In any case, now it's already zero-ing the
-trialmask.
+A standalone function to free everything is *always* going to be buggy.
+This patch is the classic bug where when you "free everything", you end
+up undoing things that haven't been done.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/industrialio-buffer.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+The best way to do error handling is to 1) Free the most recently
+allocated resource and 2)  Use label names which say what the goto does.
 
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 4ada5592aa2b..5ff34ce8b6a2 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -316,8 +316,7 @@ static int iio_scan_mask_set(struct iio_dev *indio_dev,
- 	const unsigned long *mask;
- 	unsigned long *trialmask;
- 
--	trialmask = kcalloc(BITS_TO_LONGS(indio_dev->masklength),
--			    sizeof(*trialmask), GFP_KERNEL);
-+	trialmask = bitmap_zalloc(indio_dev->masklength, GFP_KERNEL);
- 	if (trialmask == NULL)
- 		return -ENOMEM;
- 	if (!indio_dev->masklength) {
--- 
-2.20.1
+With multiple labels like "goto err_rflow_put;" the review only needs to
+ask, what was the most recent allocation?   In the case, it was
+"udma_rflow" and the "goto err_rflow_put" puts it.  That's very simple
+and correct.  There is no need to scroll to the bottom of the function.
+
+When it comes to line count, if we only free successfully allocated
+resources then it means we can remove all the if statements from the
+k3_udma_glue_release_rx_flow() so the line count ends up being similar
+either way.
+
+The other problem with "common cleanup functions" is that when people
+want to audit it, instead of looking at the gotos, reviewers have to
+open up two terminal windows and go through it line by line.  Currently
+static analysis tools are not able to parse common clean functions.
+
+Christophe's patch doesn't just fix the bug he observed, it also fixed
+at least one other double free bug.  It's quite hard to spot the second
+bug, but Christophe fixed it automatically by following the rules.
+
+regards,
+dan carpenter
+
 
