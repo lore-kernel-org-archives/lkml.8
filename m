@@ -2,122 +2,141 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F207C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F2BC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6018E20757
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C46205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="q3TpWkQQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aaKcs5r7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oq96GvwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgCQNxU (ORCPT
+        id S1726530AbgCQNy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:53:20 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:45261 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726016AbgCQNxT (ORCPT
+        Tue, 17 Mar 2020 09:54:26 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36466 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgCQNyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:53:19 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9BE9F5C01B3;
-        Tue, 17 Mar 2020 09:53:18 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 17 Mar 2020 09:53:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ETwiKo7uaRHDpEEQzkythE/he2f
-        3dX58bEVdpvTwf0E=; b=q3TpWkQQ94yCpmYJyzmyCTSQ+a4TA/we85kdfyGfwTu
-        b1FxZB1l7AQx07J1xvgkfBEIikyOxoBjjsMnuka6heo86hfkGZvmp4Wxm3FIaFSc
-        Qmilo1F7ho6P/lHR/gKKiwOhI9tchW5JIaGbkd5TPG48iQsUA6rcLQJHIijD95dq
-        oFG0CkCg757LFt0Y+w5Ic+E9NVcDgRLE6oHxOnKyBgSkVppAgsNIwbg1n8FevlD0
-        wbsth31ayBMmkEPqR6nZMgkMH+Bta2duXOvGCLTQFi9gECZKt5lj8LeV6mEPC3IV
-        DYqwDrJxA1zIpdFWKVBTIIjriQiiwXWQwUC0aqjwcEQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ETwiKo
-        7uaRHDpEEQzkythE/he2f3dX58bEVdpvTwf0E=; b=aaKcs5r7G7lLayqbzS2o3k
-        k8e7rgAbKH7n6ERzNpR3WLHhPuKdr0BrFfXH7bbPnimKgg2by3+Q3wkHKSO25upb
-        kZJyrc4PNc47CmD4OZoGpA1SFPuTr/vFcUVjPJEGEd5ci10TnzVnVPHYzN7dQC45
-        IdxY6K+n5BbNMR9en0iazTVPF/hpdqF+Z/LazKfFOwpRT15EKf53fWD2554DrnDw
-        BraeK3EcPzDKL/nmktoys5mJ+Pz6GKwStUTrse3jrzcoTH4rDy/t7sieW+g7OBa2
-        Nlunxq7amRraQwQbaor3Snd75WHxZeekkkmxbGptg1565iD2g85+DgsN33NyvuPw
-        ==
-X-ME-Sender: <xms:TtZwXiXu4k3mVtD6YgmW27TxvKVLTxgH95xSkbYDCjUjykUKuhGupw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefhedgheefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepghhithhhuhgsrd
-    gtohhmnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:TtZwXi2Z1UxtdcQuznPABa8UQGPW8Aug_hhVuL0PcC73mEm25dngyg>
-    <xmx:TtZwXhaTt5tpzak_cqXTIYOMawsrRxvi-A499aRkWUMApnzuZlURIw>
-    <xmx:TtZwXtptlvZtfvKMjnjCaeAzNpMjAfN3Nh01ouzpSFTSaep53QQX-g>
-    <xmx:TtZwXhmJndvaiK8GunkfcMq4zhf1_etlZV6e-7qruUJVU-2-1EVNHA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DA148328006A;
-        Tue, 17 Mar 2020 09:53:17 -0400 (EDT)
-Date:   Tue, 17 Mar 2020 14:53:16 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: Re: linux-next: build warnings after merge of the usb tree
-Message-ID: <20200317135316.GB1360714@kroah.com>
-References: <20200317185748.085ecf7f@canb.auug.org.au>
- <CAAeHK+zvcvxxxGKEhBm3t8rWoyMMEoGYJPpaW3-3sk4__PYJJg@mail.gmail.com>
+        Tue, 17 Mar 2020 09:54:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 39so6261117otu.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:54:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZmJ1DX6hWX/M0tJ4tb+T+vnuuVl9PBhyVPx9KWg+TfE=;
+        b=oq96GvwKE3QjPaVLIL6puTSWYMA2JZDVaTmuQkU5YS2oAf/mr3PnEKvKHJR0ZRhtIa
+         co1ejwVmMjf45HEIGsFS7ucBT3DK6y8RniLfZE9atxfSrHzRC4LR7/HbpPoNhsm9Csw9
+         4WgJovPpiFVSd6SpId/tkc9AFWMsO7+/Fgrhd5ZALH+GelrL93lZpFiNJkbpxOyGI9jj
+         cfuiFY4wiYKRNaziZ2clJGs0DujKo7wScsDUBJMincBMB9URA1hz8xIaq7/5PVaD2a+m
+         3b74LJeSYTOYbUGyuvbKRYBDDMHveVikkENWoxUtiLK++DNrQ92vG/eDVnrxruhpAR9B
+         pdMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZmJ1DX6hWX/M0tJ4tb+T+vnuuVl9PBhyVPx9KWg+TfE=;
+        b=BCgbl8SPLsjFWIagMPx0xaOURj9nMZ2T057SWWD5pr5iIgRMAKPojlaXaBCbGwEEpS
+         8nWkMPX1uI2tQckIkjBjCOg5TZZjx767SZ7NM9VfFGp1qhbSBLf2AhGpkcbA/na/9yu+
+         Kg/aGH3TgW6r+h35eedY9N9mzAcVPMNu8+FyQ5NwmVI0nM0XDhE+sTvsxeOGKPoHImVH
+         EySi/MLOx6S2akP69d5066qIIv0tZwpoP68pl/rt95/mlrUXwEHTS1Be3Mytg9Tjcmpb
+         wsyJc1jz+vTZiT6JFCCAZ/+WcSX3BN6HAIOWJ4iVWAEJoLugSN5oOBFpOuRwnmKv/771
+         N7MQ==
+X-Gm-Message-State: ANhLgQ3Cm+jO4V6PI4MJpEqdL54lhPE72f8sOvp99OXl7HvoGmkk8TZ3
+        IVpx7uX4w/5wFoZyI0pLORDyGULHRVaFvRHCPFwkqA==
+X-Google-Smtp-Source: ADFU+vthRF1CGXBIcX8eCWjLSUuv0ijsh47UzzDn/jzCwqg/7g0xalXEDtotKi4n7rENshDbZBHeysQsEaf4csLdeEE=
+X-Received: by 2002:a9d:1d43:: with SMTP id m61mr3763477otm.91.1584453264637;
+ Tue, 17 Mar 2020 06:54:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+zvcvxxxGKEhBm3t8rWoyMMEoGYJPpaW3-3sk4__PYJJg@mail.gmail.com>
+References: <20200311123501.18202-1-robert.foss@linaro.org>
+ <20200311123501.18202-7-robert.foss@linaro.org> <20200312053544.GY264362@yoga>
+In-Reply-To: <20200312053544.GY264362@yoga>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Tue, 17 Mar 2020 14:54:13 +0100
+Message-ID: <CAG3jFyuEWqkWSZzVt04y4GcO=0LUwLq4bHe_=dirWePdVW+NSA@mail.gmail.com>
+Subject: Re: [v1 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     leonard.crestez@nxp.com, dinguyen@kernel.org,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Loic Poulain <loic.poulain@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 02:45:56PM +0100, Andrey Konovalov wrote:
-> On Tue, Mar 17, 2020 at 8:57 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Thu, 12 Mar 2020 at 06:35, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Wed 11 Mar 05:35 PDT 2020, Robert Foss wrote:
+>
+> > Build camera clock, isp and controller drivers as modules.
 > >
-> > Hi all,
-> >
-> > After merging the usb tree, today's (actually yesterday's) linux-next
-> > build (powerpc allyesconfig) produced these warnings:
-> >
-> > ./usr/include/linux/usb/raw_gadget.h:74:12: warning: 'usb_raw_io_flags_zero' defined but not used [-Wunused-function]
-> >    74 | static int usb_raw_io_flags_zero(__u16 flags)
-> >       |            ^~~~~~~~~~~~~~~~~~~~~
-> > ./usr/include/linux/usb/raw_gadget.h:69:12: warning: 'usb_raw_io_flags_valid' defined but not used [-Wunused-function]
-> >    69 | static int usb_raw_io_flags_valid(__u16 flags)
-> >       |            ^~~~~~~~~~~~~~~~~~~~~~
-> >
-> > Introduced by commit
-> >
-> >   f2c2e717642c ("usb: gadget: add raw-gadget interface")
-> >
-> > Missing "inline" n a header file?
-> 
-> Hi Stephen,
-> 
-> Yes, same issue as reported here:
-> https://github.com/ClangBuiltLinux/linux/issues/934
-> 
-> Thanks for the report!
-> 
-> Greg, should I send a new version with the fix right now, or is it OK
-> to wait until we get comments from Felipe/Alan and then send a new
-> version?
+> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
+>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>
+>
+> Thanks for the series Robert!
 
-Please send a fix for what is in my tree, I can't rebase it.
+Thanks for the quick & thorough review, I'll send out a v2 with all of
+the feedback corrected.
 
-thanks,
-
-greg k-h
+>
+> Regards,
+> Bjorn
+>
+> > ---
+> >  arch/arm64/configs/defconfig | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 4db223dbc549..7cb6989249ab 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -376,6 +376,7 @@ CONFIG_I2C_MESON=y
+> >  CONFIG_I2C_MV64XXX=y
+> >  CONFIG_I2C_OWL=y
+> >  CONFIG_I2C_PXA=y
+> > +CONFIG_I2C_QCOM_CCI=m
+> >  CONFIG_I2C_QCOM_GENI=m
+> >  CONFIG_I2C_QUP=y
+> >  CONFIG_I2C_RK3X=y
+> > @@ -530,6 +531,7 @@ CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
+> >  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
+> >  CONFIG_VIDEO_RENESAS_FCP=m
+> >  CONFIG_VIDEO_RENESAS_VSP1=m
+> > +CONFIG_VIDEO_QCOM_CAMSS=m
+> >  CONFIG_DRM=m
+> >  CONFIG_DRM_I2C_NXP_TDA998X=m
+> >  CONFIG_DRM_NOUVEAU=m
+> > @@ -732,6 +734,7 @@ CONFIG_MSM_GCC_8994=y
+> >  CONFIG_MSM_MMCC_8996=y
+> >  CONFIG_MSM_GCC_8998=y
+> >  CONFIG_QCS_GCC_404=y
+> > +CONFIG_SDM_CAMCC_845=m
+> >  CONFIG_SDM_GCC_845=y
+> >  CONFIG_SM_GCC_8150=y
+> >  CONFIG_QCOM_HFPLL=y
+> > @@ -762,6 +765,7 @@ CONFIG_QCOM_COMMAND_DB=y
+> >  CONFIG_QCOM_GENI_SE=y
+> >  CONFIG_QCOM_GLINK_SSR=m
+> >  CONFIG_QCOM_RMTFS_MEM=m
+> > +CONFIG_SDM_CAMCC_845=m
+> >  CONFIG_QCOM_RPMH=y
+> >  CONFIG_QCOM_RPMHPD=y
+> >  CONFIG_QCOM_SMEM=y
+> > --
+> > 2.20.1
+> >
