@@ -2,142 +2,107 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB11C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919FEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2DE20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6425D206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584443211;
+	bh=b+dT2WJfsjgAtzNNSBjjsrruhNxhdxhBaqv0UWRxRRY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nqpm57GAomYlkMhS3FLW3T3zCtdTgGFStU1gbtHSeWigbl9r8amffoWEnCvHrFnVg
+	 84WjitVEY/8QAnyg7Ql4DZrHind9eQN/Y3KB56icf4eLIXuNI95Gbi1OVxZCGhRSQU
+	 Ky6tM22ypWywngcNcXwyGh5Ifx/KDKnd+2pE4mDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgCQLGm (ORCPT
+        id S1728693AbgCQLGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:06:42 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11709 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728609AbgCQLGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:06:33 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 70C3D6135936AD5E2AAE;
-        Tue, 17 Mar 2020 19:06:28 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 17 Mar 2020 19:06:18 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>
-CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <james.clark@arm.com>,
-        <qiangqing.zhang@nxp.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 1/7] perf jevents: Add some test events
-Date:   Tue, 17 Mar 2020 19:02:13 +0800
-Message-ID: <1584442939-8911-2-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
-References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
+        Tue, 17 Mar 2020 07:06:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728098AbgCQLGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C201C20658;
+        Tue, 17 Mar 2020 11:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584443197;
+        bh=b+dT2WJfsjgAtzNNSBjjsrruhNxhdxhBaqv0UWRxRRY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nYyjoSpGI/Vonaxr8DxZ+VV3mOKFdm90/FqX46oRqY3Wka/M7FKb/Cr5Ry7z2vjS6
+         ZVE6J9Lxsg4XJ6g7dy+gLtj0XW4z7jsM1Hz8ZWX+Eojzxos2oqRc+yjjlAIQRhkSjD
+         Cn/RUGe2+zKmG7OaFzZylpI311x0xnnTQ2ylUrI0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.4 119/123] i2c: acpi: put device when verifying client fails
+Date:   Tue, 17 Mar 2020 11:55:46 +0100
+Message-Id: <20200317103319.462938562@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
+References: <20200317103307.343627747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add some test PMU events. The events are randomly chosen from x86 and
-arm64 JSONs. The events include CPU and uncore events.
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Signed-off-by: John Garry <john.garry@huawei.com>
+commit 8daee952b4389729358665fb91949460641659d4 upstream.
+
+i2c_verify_client() can fail, so we need to put the device when that
+happens.
+
+Fixes: 525e6fabeae2 ("i2c / ACPI: add support for ACPI reconfigure notifications")
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../perf/pmu-events/arch/test/test_cpu/branch.json | 12 ++++++++++
- .../perf/pmu-events/arch/test/test_cpu/other.json  | 26 ++++++++++++++++++++++
- .../perf/pmu-events/arch/test/test_cpu/uncore.json | 21 +++++++++++++++++
- 3 files changed, 59 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/branch.json
- create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/other.json
- create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/uncore.json
+ drivers/i2c/i2c-core-acpi.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/test/test_cpu/branch.json b/tools/perf/pmu-events/arch/test/test_cpu/branch.json
-new file mode 100644
-index 000000000000..93ddfd8053ca
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/test/test_cpu/branch.json
-@@ -0,0 +1,12 @@
-+[
-+  {
-+    "EventName": "bp_l1_btb_correct",
-+    "EventCode": "0x8a",
-+    "BriefDescription": "L1 BTB Correction."
-+  },
-+  {
-+    "EventName": "bp_l2_btb_correct",
-+    "EventCode": "0x8b",
-+    "BriefDescription": "L2 BTB Correction."
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/test/test_cpu/other.json b/tools/perf/pmu-events/arch/test/test_cpu/other.json
-new file mode 100644
-index 000000000000..7d53d7ecd723
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/test/test_cpu/other.json
-@@ -0,0 +1,26 @@
-+[
-+    {
-+        "EventCode": "0x6",
-+        "Counter": "0,1",
-+        "UMask": "0x80",
-+        "EventName": "SEGMENT_REG_LOADS.ANY",
-+        "SampleAfterValue": "200000",
-+        "BriefDescription": "Number of segment register loads."
-+    },
-+    {
-+        "EventCode": "0x9",
-+        "Counter": "0,1",
-+        "UMask": "0x20",
-+        "EventName": "DISPATCH_BLOCKED.ANY",
-+        "SampleAfterValue": "200000",
-+        "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason"
-+    },
-+    {
-+        "EventCode": "0x3A",
-+        "Counter": "0,1",
-+        "UMask": "0x0",
-+        "EventName": "EIST_TRANS",
-+        "SampleAfterValue": "200000",
-+        "BriefDescription": "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions"
-+    }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/test/test_cpu/uncore.json b/tools/perf/pmu-events/arch/test/test_cpu/uncore.json
-new file mode 100644
-index 000000000000..d0a890cc814d
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/test/test_cpu/uncore.json
-@@ -0,0 +1,21 @@
-+[
-+ {
-+	    "EventCode": "0x02",
-+	    "EventName": "uncore_hisi_ddrc.flux_wcmd",
-+	    "BriefDescription": "DDRC write commands",
-+	    "PublicDescription": "DDRC write commands",
-+	    "Unit": "hisi_sccl,ddrc"
-+   },
-+   {
-+	    "Unit": "CBO",
-+	    "EventCode": "0x22",
-+	    "UMask": "0x81",
-+	    "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_EVICTION",
-+	    "BriefDescription": "A cross-core snoop resulted from L3 Eviction which misses in some processor core.",
-+	    "PublicDescription": "A cross-core snoop resulted from L3 Eviction which misses in some processor core.",
-+	    "Counter": "0,1",
-+	    "CounterMask": "0",
-+	    "Invert": "0",
-+	    "EdgeDetect": "0"
-+  }
-+]
--- 
-2.12.3
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -394,9 +394,17 @@ EXPORT_SYMBOL_GPL(i2c_acpi_find_adapter_
+ static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
+ {
+ 	struct device *dev;
++	struct i2c_client *client;
+ 
+ 	dev = bus_find_device_by_acpi_dev(&i2c_bus_type, adev);
+-	return dev ? i2c_verify_client(dev) : NULL;
++	if (!dev)
++		return NULL;
++
++	client = i2c_verify_client(dev);
++	if (!client)
++		put_device(dev);
++
++	return client;
+ }
+ 
+ static int i2c_acpi_notify(struct notifier_block *nb, unsigned long value,
+
 
