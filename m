@@ -2,329 +2,110 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A68C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E2EC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D184F206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9CD20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584443887;
+	bh=xU/j/wGwogZjo5LYbbtyz+qMZblb7nSHObMck9dJxPI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0WB2zKfq2Ghv5kjzlJu44LxbRMLJZVYlR4ZZ0T+ObmSUHv9lMvZdrxjXn+BduZs4Z
+	 nWUANrjarmeoOstm3xB8y8339Er3UShdbkttiYkqjPv/4oliAloNyNqvrailIcPYd+
+	 Ys9xQ2UlYipNQQhUauYLW2ju9EK7ukTryh0M03bM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgCQLGq (ORCPT
+        id S1728836AbgCQLSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 17 Mar 2020 07:18:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728674AbgCQLGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 07:06:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11712 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728637AbgCQLGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:06:35 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7FD7FDD4026377D29A75;
-        Tue, 17 Mar 2020 19:06:28 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 17 Mar 2020 19:06:21 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>
-CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <james.clark@arm.com>,
-        <qiangqing.zhang@nxp.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 7/7] perf test: Test pmu-events aliases
-Date:   Tue, 17 Mar 2020 19:02:19 +0800
-Message-ID: <1584442939-8911-8-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
-References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 132D520658;
+        Tue, 17 Mar 2020 11:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584443205;
+        bh=xU/j/wGwogZjo5LYbbtyz+qMZblb7nSHObMck9dJxPI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=W7JYHekqa+nSjxQ4R0XMI7Ih320JqQOpImLL7nKXJv1GhNBEcr7mFXPgEzu4p5BbI
+         aV1J7/wlAqnpk8LlvV0Sh04sRX06ut86/AnKphDH3d5w7BZRHSduN0FHaqznU2T5cw
+         N5ogsIlxxbOFkll+M73PzCp/Lx/MVOeEWRz2nXyI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 001/151] virtio_balloon: Adjust label in virtballoon_probe
+Date:   Tue, 17 Mar 2020 11:53:31 +0100
+Message-Id: <20200317103326.679618576@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+References: <20200317103326.593639086@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add creating event aliases to the pmu-events test.
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-So currently we verify that the generated pmu-events.c is as expected for
-some test events. Now test that we generate aliases as expected for those
-events during normal operation.
+[ Upstream commit 6ae4edab2fbf86ec92fbf0a8f0c60b857d90d50f ]
 
-For that, we cycle through each HW PMU in the system, and use the test
-events to create aliases, and verify those against known, expected values.
+Clang warns when CONFIG_BALLOON_COMPACTION is unset:
 
-For core PMUs, we should create an alias for every event in
-test_cpu_events[].
+../drivers/virtio/virtio_balloon.c:963:1: warning: unused label
+'out_del_vqs' [-Wunused-label]
+out_del_vqs:
+^~~~~~~~~~~~
+1 warning generated.
 
-However, for uncore PMUs, they need to be matched by the pmu_event.pmu
-member, so use test_uncore_events[]; so check the match beforehand with
-pmu_uncore_alias_match().
+Move the label within the preprocessor block since it is only used when
+CONFIG_BALLOON_COMPACTION is set.
 
-A sample run is as follows for my x86 machine:
-
-john@linux-3c19:~/linux> tools/perf/perf test -vv 10
-10: PMU events                                            :
---- start ---
-
-...
-
-testing PMU uncore_arb aliases: no events to match
-testing PMU cstate_pkg aliases: no events to match
-skipping testing PMU breakpoint
-testing aliases PMU uncore_cbox_1: matched event unc_cbo_xsnp_response.miss_eviction
-testing PMU uncore_cbox_1 aliases: pass
-testing PMU power aliases: no events to match
-testing aliases PMU cpu: matched event bp_l1_btb_correct
-testing aliases PMU cpu: matched event bp_l2_btb_correct
-testing aliases PMU cpu: matched event segment_reg_loads.any
-testing aliases PMU cpu: matched event dispatch_blocked.any
-testing aliases PMU cpu: matched event eist_trans
-testing PMU cpu aliases: pass
-testing PMU intel_pt aliases: no events to match
-skipping testing PMU software
-skipping testing PMU intel_bts
-testing PMU uncore_imc aliases: no events to match
-testing aliases PMU uncore_cbox_0: matched event unc_cbo_xsnp_response.miss_eviction
-testing PMU uncore_cbox_0 aliases: pass
-testing PMU cstate_core aliases: no events to match
-skipping testing PMU tracepoint
-testing PMU msr aliases: no events to match
-test child finished with 0
-
-Signed-off-by: John Garry <john.garry@huawei.com>
+Fixes: 1ad6f58ea936 ("virtio_balloon: Fix memory leaks on errors in virtballoon_probe()")
+Link: https://github.com/ClangBuiltLinux/linux/issues/886
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/20200216004039.23464-1-natechancellor@gmail.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/pmu-events.c | 148 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 147 insertions(+), 1 deletion(-)
+ drivers/virtio/virtio_balloon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 19a30807c880..1a0660e5ee97 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -5,13 +5,24 @@
- #include <errno.h>
- #include <stdio.h>
- #include <linux/kernel.h>
--
-+#include <linux/zalloc.h>
- #include "debug.h"
- #include "../pmu-events/pmu-events.h"
- 
- struct perf_pmu_test_event {
- 	struct pmu_event event;
-+
-+	/* extra events for aliases */
-+	const char *alias_str;
-+
-+	/*
-+	 * Note: For when PublicDescription does not exist in the JSON, we
-+	 * will have no long_desc in pmu_event.long_desc, but long_desc may
-+	 * be set in the alias.
-+	 */
-+	const char *alias_long_desc;
- };
-+
- static struct perf_pmu_test_event test_cpu_events[] = {
- 	{
- 		.event = {
-@@ -20,6 +31,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
- 			.desc = "L1 BTB Correction",
- 			.topic = "branch",
- 		},
-+		.alias_str = "event=0x8a",
-+		.alias_long_desc = "L1 BTB Correction",
- 	},
- 	{
- 		.event = {
-@@ -28,6 +41,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
- 			.desc = "L2 BTB Correction",
- 			.topic = "branch",
- 		},
-+		.alias_str = "event=0x8b",
-+		.alias_long_desc = "L2 BTB Correction",
- 	},
- 	{
- 		.event = {
-@@ -36,6 +51,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
- 			.desc = "Number of segment register loads",
- 			.topic = "other",
- 		},
-+		.alias_str = "umask=0x80,(null)=0x30d40,event=0x6",
-+		.alias_long_desc = "Number of segment register loads",
- 	},
- 	{
- 		.event = {
-@@ -44,6 +61,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
- 			.desc = "Memory cluster signals to block micro-op dispatch for any reason",
- 			.topic = "other",
- 		},
-+		.alias_str = "umask=0x20,(null)=0x30d40,event=0x9",
-+		.alias_long_desc = "Memory cluster signals to block micro-op dispatch for any reason",
- 	},
- 	{
- 		.event = {
-@@ -52,6 +71,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
- 			.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
- 			.topic = "other",
- 		},
-+		.alias_str = "umask=0,(null)=0x30d40,event=0x3a",
-+		.alias_long_desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
- 	},
- 	{ /* sentinel */
- 	}
-@@ -67,6 +88,8 @@ static struct perf_pmu_test_event test_uncore_events[] = {
- 			.long_desc = "DDRC write commands",
- 			.pmu = "hisi_sccl,ddrc",
- 		},
-+		.alias_str = "event=0x2",
-+		.alias_long_desc = "DDRC write commands",
- 	},
- 	{
- 		.event = {
-@@ -77,6 +100,8 @@ static struct perf_pmu_test_event test_uncore_events[] = {
- 			.long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
- 			.pmu = "uncore_cbox",
- 		},
-+		.alias_str = "umask=0x81,event=0x22",
-+		.alias_long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
- 	},
- 	{ /* sentinel */
- 	}
-@@ -217,11 +242,132 @@ static int __test_pmu_event_table(void)
- 
- 	return 0;
- }
-+
-+static struct perf_pmu_alias *find_alias(const char *test_event, struct list_head *aliases)
-+{
-+	struct perf_pmu_alias *alias;
-+
-+	list_for_each_entry(alias, aliases, list)
-+		if (!strcmp(test_event, alias->name))
-+			return alias;
-+
-+	return NULL;
-+}
-+
-+/* Verify aliases are as expected */
-+static int __test__pmu_event_aliases(char *pmu_name, int *count)
-+{
-+	struct perf_pmu_test_event *test;
-+	struct pmu_event *te;
-+	struct perf_pmu *pmu;
-+	LIST_HEAD(aliases);
-+	int res = 0;
-+	bool use_uncore_table;
-+	struct pmu_events_map *map = __test_pmu_get_events_map();
-+
-+	if (!map)
-+		return -1;
-+
-+	if (is_pmu_core(pmu_name)) {
-+		test = &test_cpu_events[0];
-+		use_uncore_table = false;
-+	} else {
-+		test = &test_uncore_events[0];
-+		use_uncore_table = true;
-+	}
-+
-+	pmu = zalloc(sizeof(*pmu));
-+	if (!pmu)
-+		return -1;
-+
-+	pmu->name = pmu_name;
-+
-+	pmu_add_cpu_aliases_map(&aliases, pmu, map);
-+
-+	for (te = &test->event; te->name; test++, te = &test->event) {
-+		struct perf_pmu_alias *alias = find_alias(te->name, &aliases);
-+
-+		if (!alias) {
-+			bool uncore_match = pmu_uncore_alias_match(pmu_name,
-+								   te->pmu);
-+
-+			if (use_uncore_table && !uncore_match) {
-+				pr_debug3("testing aliases PMU %s: skip matching alias %s\n",
-+					  pmu_name, te->name);
-+				continue;
-+			}
-+
-+			pr_debug2("testing aliases PMU %s: no alias, alias_table->name=%s\n",
-+				  pmu_name, te->name);
-+			res = -1;
-+			break;
-+		}
-+
-+		if (!is_same(alias->desc, te->desc)) {
-+			pr_debug2("testing aliases PMU %s: mismatched desc, %s vs %s\n",
-+				  pmu_name, alias->desc, te->desc);
-+			res = -1;
-+			break;
-+		}
-+
-+		if (!is_same(alias->long_desc, test->alias_long_desc)) {
-+			pr_debug2("testing aliases PMU %s: mismatched long_desc, %s vs %s\n",
-+				  pmu_name, alias->long_desc,
-+				  test->alias_long_desc);
-+			res = -1;
-+			break;
-+		}
-+
-+		if (!is_same(alias->str, test->alias_str)) {
-+			pr_debug2("testing aliases PMU %s: mismatched str, %s vs %s\n",
-+				  pmu_name, alias->str, test->alias_str);
-+			res = -1;
-+			break;
-+		}
-+
-+		if (!is_same(alias->topic, te->topic)) {
-+			pr_debug2("testing aliases PMU %s: mismatched topic, %s vs %s\n",
-+				  pmu_name, alias->topic, te->topic);
-+			res = -1;
-+			break;
-+		}
-+
-+		(*count)++;
-+		pr_debug2("testing aliases PMU %s: matched event %s\n",
-+			  pmu_name, alias->name);
-+	}
-+
-+	free(pmu);
-+	return res;
-+}
-+
- int test__pmu_events(struct test *test __maybe_unused,
- 		     int subtest __maybe_unused)
- {
-+	struct perf_pmu *pmu = NULL;
-+
- 	if (__test_pmu_event_table())
- 		return -1;
- 
-+	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-+		int count = 0;
-+
-+		if (list_empty(&pmu->format)) {
-+			pr_debug2("skipping testing PMU %s\n", pmu->name);
-+			continue;
-+		}
-+
-+		if (__test__pmu_event_aliases(pmu->name, &count)) {
-+			pr_debug("testing PMU %s aliases: failed\n", pmu->name);
-+			return -1;
-+		}
-+
-+		if (count == 0)
-+			pr_debug3("testing PMU %s aliases: no events to match\n",
-+				  pmu->name);
-+		else
-+			pr_debug("testing PMU %s aliases: pass\n", pmu->name);
-+	}
-+
- 	return 0;
- }
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 7bfe365d93720..341458fd95ca4 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -959,8 +959,8 @@ out_iput:
+ 	iput(vb->vb_dev_info.inode);
+ out_kern_unmount:
+ 	kern_unmount(balloon_mnt);
+-#endif
+ out_del_vqs:
++#endif
+ 	vdev->config->del_vqs(vdev);
+ out_free_vb:
+ 	kfree(vb);
 -- 
-2.12.3
+2.20.1
+
+
 
