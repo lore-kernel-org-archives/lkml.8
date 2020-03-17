@@ -2,148 +2,113 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042DDC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E3BC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56F320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE9920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584443783;
+	bh=3f+xAsZglAs3nw2pTn20rB9JZ3gYLL6Fy0LGgfxbCME=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2F0HJVGPpCHfgRGEqdrPXUq6qHsneHcXBNdzvfNoEnWm2KP+29krlMimzL4hM2Z/d
+	 /2nnFORW3/v8ur5AVCA1fLgFC34ZVY2+2Dqcumrv40VHw7D5sdpMdWAE0ObvufpoCc
+	 hqzcEQ1EmQizqdeuR/KKxOavXAyrez0naQZwm4Ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgCQLJz (ORCPT
+        id S1729001AbgCQLJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:09:55 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55398 "EHLO mga05.intel.com"
+        Tue, 17 Mar 2020 07:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbgCQLJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:09:52 -0400
-IronPort-SDR: upN4Lle8p1HOnoqErtBg1gA/yI16yPnmw9SpYIGQI8dtS9jL0KclTBefYkABBFWl26Ou28JMeu
- ikB3QwrVjnCA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 04:09:52 -0700
-IronPort-SDR: DcubFaa8G9/CwOKUQ6thFIpoZ8Jo8KEl50diC5OSde67LgFhejYj16g5WhC20KhC/iW6SocgkM
- ZH7vkdC3zl5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="355330981"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 17 Mar 2020 04:09:49 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 17 Mar 2020 13:09:49 +0200
-Date:   Tue, 17 Mar 2020 13:09:49 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH v5 3/4] platform/chrome: typec: Get PD_CONTROL cmd version
-Message-ID: <20200317110949.GB3015886@kuha.fi.intel.com>
-References: <20200316090021.52148-1-pmalani@chromium.org>
- <20200316090021.52148-4-pmalani@chromium.org>
+        id S1728825AbgCQLJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:09:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F440205ED;
+        Tue, 17 Mar 2020 11:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584443389;
+        bh=3f+xAsZglAs3nw2pTn20rB9JZ3gYLL6Fy0LGgfxbCME=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yBXOIu4g5ri2N0aW9y9rrXFcmJ3s09ahWjfn2tgecZQAXIx+pNbEm2RIurLTqO111
+         hs14xKhkpd/83t2bCoMFj8PZiAoAi/e5QD91ohj2DWuPIKaXzPgU8oMTXzC0erCPU+
+         VUFQlz2GCLx3Bo5quLsdql6z1UU4MrP9HI9IEiGU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 068/151] s390/qeth: handle error when backing RX buffer
+Date:   Tue, 17 Mar 2020 11:54:38 +0100
+Message-Id: <20200317103331.335479893@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+References: <20200317103326.593639086@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316090021.52148-4-pmalani@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:00:19AM -0700, Prashant Malani wrote:
-> Query the EC to determine the version number of the PD_CONTROL
-> command which is supported by the EC. Also store this value in the Type
-> C data struct since it will be used to determine how to parse the
-> response to queries for port information from the EC.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-In case there is v6, please consider merging this into patch 4/4. I
-don't think this needs separate patch. Otherwise, FWIW:
+[ Upstream commit 17413852804d7e86e6f0576cca32c1541817800e ]
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+qeth_init_qdio_queues() fills the RX ring with an initial set of
+RX buffers. If qeth_init_input_buffer() fails to back one of the RX
+buffers with memory, we need to bail out and report the error.
 
-> ---
-> 
-> Changes in v5:
-> - No changes.
-> 
-> Changes in v4:
-> - No changes
-> 
-> Changes in v3:
-> - Moved if statement check in the end of probe() from this patch to a
->   previous patch.
-> 
-> Changes in v2:
-> - No changes.
-> 
->  drivers/platform/chrome/cros_ec_typec.c | 32 +++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 02e6d5cbbbf7a..9f692eb78b322 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -21,6 +21,7 @@ struct cros_typec_data {
->  	struct device *dev;
->  	struct cros_ec_device *ec;
->  	int num_ports;
-> +	unsigned int cmd_ver;
->  	/* Array of ports, indexed by port number. */
->  	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
->  	/* Initial capabilities for each port. */
-> @@ -171,6 +172,31 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
->  	return ret;
->  }
->  
-> +static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
-> +{
-> +	struct ec_params_get_cmd_versions_v1 req_v1;
-> +	struct ec_response_get_cmd_versions resp;
-> +	int ret;
-> +
-> +	/* We're interested in the PD control command version. */
-> +	req_v1.cmd = EC_CMD_USB_PD_CONTROL;
-> +	ret = cros_typec_ec_command(typec, 1, EC_CMD_GET_CMD_VERSIONS,
-> +				    &req_v1, sizeof(req_v1), &resp,
-> +				    sizeof(resp));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (resp.version_mask & EC_VER_MASK(1))
-> +		typec->cmd_ver = 1;
-> +	else
-> +		typec->cmd_ver = 0;
-> +
-> +	dev_dbg(typec->dev, "PD Control has version mask 0x%hhx\n",
-> +		typec->cmd_ver);
-> +
-> +	return 0;
-> +}
-> +
->  #ifdef CONFIG_ACPI
->  static const struct acpi_device_id cros_typec_acpi_id[] = {
->  	{ "GOOG0014", 0 },
-> @@ -202,6 +228,12 @@ static int cros_typec_probe(struct platform_device *pdev)
->  	typec->ec = dev_get_drvdata(pdev->dev.parent);
->  	platform_set_drvdata(pdev, typec);
->  
-> +	ret = cros_typec_get_cmd_version(typec);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to get PD command version info\n");
-> +		return ret;
-> +	}
-> +
->  	ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
->  				    &resp, sizeof(resp));
->  	if (ret < 0)
-> -- 
-> 2.25.1.481.gfbce0eb801-goog
+Fixes: 4a71df50047f ("qeth: new qeth device driver")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/s390/net/qeth_core_main.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-thanks,
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -2633,12 +2633,12 @@ static int qeth_init_input_buffer(struct
+ 		buf->rx_skb = netdev_alloc_skb(card->dev,
+ 					       QETH_RX_PULL_LEN + ETH_HLEN);
+ 		if (!buf->rx_skb)
+-			return 1;
++			return -ENOMEM;
+ 	}
+ 
+ 	pool_entry = qeth_find_free_buffer_pool_entry(card);
+ 	if (!pool_entry)
+-		return 1;
++		return -ENOBUFS;
+ 
+ 	/*
+ 	 * since the buffer is accessed only from the input_tasklet
+@@ -2682,10 +2682,15 @@ int qeth_init_qdio_queues(struct qeth_ca
+ 	/* inbound queue */
+ 	qdio_reset_buffers(card->qdio.in_q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
+ 	memset(&card->rx, 0, sizeof(struct qeth_rx));
++
+ 	qeth_initialize_working_pool_list(card);
+ 	/*give only as many buffers to hardware as we have buffer pool entries*/
+-	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; ++i)
+-		qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
++	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; i++) {
++		rc = qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
++		if (rc)
++			return rc;
++	}
++
+ 	card->qdio.in_q->next_buf_to_init =
+ 		card->qdio.in_buf_pool.buf_count - 1;
+ 	rc = do_QDIO(CARD_DDEV(card), QDIO_FLAG_SYNC_INPUT, 0, 0,
 
--- 
-heikki
+
