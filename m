@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1F8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EE8C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE71D20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A49205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443707;
-	bh=6Ht9hRcQ3x8A/4aWNjgCjoKSWvdw+u4LLN81XdYlhHE=;
+	s=default; t=1584443710;
+	bh=x/iwEgPCjqg1vr+Jo85dKncNW7v4aqB6+4VNxqJquD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dt2IOtNxZ5uIgDTTrGswwiG8ZDzY2CN0Vq3r4zvmG5LXlAcsH57NqzVblHMMSwsmL
-	 hq4gZ/7jkTj7EZh2qrPd2r1r6dMRCcHRUDvmmnSDwTt2GXaA6/xPuZX/uSfDaR/iep
-	 gMmctXxh/QAOwcPlquielacOK4ivFP6o4PoUUG5c=
+	b=0fqqsEgxAe0iPhpX+jp1mlMzkeCsBtaHlTOVgSFfN4LuN3y2LY5TN+HMVw0pitFLG
+	 HBsEjAq8Rin+wxReJTwiIE2aTM69qDM18k+i+XTgF6uktwPdnwEsIK6MZhcFVOBROB
+	 8uomsmCKNDq/haTJ+bBc5Pw3nR6BEcvPorLGPWGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgCQLMz (ORCPT
+        id S1729296AbgCQLPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:12:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56476 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:15:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729460AbgCQLMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:46 -0400
+        id S1728797AbgCQLM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A64F206EC;
-        Tue, 17 Mar 2020 11:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D1AC205ED;
+        Tue, 17 Mar 2020 11:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443565;
-        bh=6Ht9hRcQ3x8A/4aWNjgCjoKSWvdw+u4LLN81XdYlhHE=;
+        s=default; t=1584443577;
+        bh=x/iwEgPCjqg1vr+Jo85dKncNW7v4aqB6+4VNxqJquD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f299bMb9V4brqm3+uLvbwMIwENok/KBD8/wcm6zOo9IJBLKP1lmHJDrk88IeC9hst
-         6HL/xZsrk0+LxdwbainhxsEzNHAcy/aU5Dvg+9S21PniQYuP5BG0fiTe+wGzcPDKU9
-         qUczR5MBywForF8sltRD2eowijZ7ObIcyKxj6HtU=
+        b=Dv2gsJ1uDEyIeRibu91TzGBeXg0NPQaBcBul1jQFLINkZBk80nuUBj2hcXvl0PWii
+         almEpCyjm2NfgwOCg6FhgKdjG/FdKRCF15eQWPYHYjjUQ/C9zOh0q7Dsbrg1rXYpER
+         uT5HvdeUIBWaDA+DFbPreByT5MoEjAmslnE15r60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com,
-        syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 5.5 124/151] batman-adv: Dont schedule OGM for disabled interface
-Date:   Tue, 17 Mar 2020 11:55:34 +0100
-Message-Id: <20200317103335.262073922@linuxfoundation.org>
+        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 5.5 128/151] virtio_ring: Fix mem leak with vring_new_virtqueue()
+Date:   Tue, 17 Mar 2020 11:55:38 +0100
+Message-Id: <20200317103335.534521068@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -63,43 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Suman Anna <s-anna@ti.com>
 
-commit 8e8ce08198de193e3d21d42e96945216e3d9ac7f upstream.
+commit f13f09a12cbd0c7b776e083c5d008b6c6a9c4e0b upstream.
 
-A transmission scheduling for an interface which is currently dropped by
-batadv_iv_ogm_iface_disable could still be in progress. The B.A.T.M.A.N. V
-is simply cancelling the workqueue item in an synchronous way but this is
-not possible with B.A.T.M.A.N. IV because the OGM submissions are
-intertwined.
+The functions vring_new_virtqueue() and __vring_new_virtqueue() are used
+with split rings, and any allocations within these functions are managed
+outside of the .we_own_ring flag. The commit cbeedb72b97a ("virtio_ring:
+allocate desc state for split ring separately") allocates the desc state
+within the __vring_new_virtqueue() but frees it only when the .we_own_ring
+flag is set. This leads to a memory leak when freeing such allocated
+virtqueues with the vring_del_virtqueue() function.
 
-Instead it has to stop submitting the OGM when it detect that the buffer
-pointer is set to NULL.
+Fix this by moving the desc_state free code outside the flag and only
+for split rings. Issue was discovered during testing with remoteproc
+and virtio_rpmsg.
 
-Reported-by: syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com
-Reported-by: syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Cc: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring separately")
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Link: https://lore.kernel.org/r/20200224212643.30672-1-s-anna@ti.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/bat_iv_ogm.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/virtio/virtio_ring.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -789,6 +789,10 @@ static void batadv_iv_ogm_schedule_buff(
- 
- 	lockdep_assert_held(&hard_iface->bat_iv.ogm_buff_mutex);
- 
-+	/* interface already disabled by batadv_iv_ogm_iface_disable */
-+	if (!*ogm_buff)
-+		return;
-+
- 	/* the interface gets activated here to avoid race conditions between
- 	 * the moment of activating the interface in
- 	 * hardif_activate_interface() where the originator mac is set and
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueu
+ 					 vq->split.queue_size_in_bytes,
+ 					 vq->split.vring.desc,
+ 					 vq->split.queue_dma_addr);
+-
+-			kfree(vq->split.desc_state);
+ 		}
+ 	}
++	if (!vq->packed_ring)
++		kfree(vq->split.desc_state);
+ 	list_del(&_vq->list);
+ 	kfree(vq);
+ }
 
 
