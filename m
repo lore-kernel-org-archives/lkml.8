@@ -2,142 +2,106 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79768C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB20C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463932051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:10:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="QtVvsnIT"
+	by mail.kernel.org (Postfix) with ESMTP id 2DCA320738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgCQVKS (ORCPT
+        id S1726911AbgCQVK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:10:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40949 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgCQVKR (ORCPT
+        Tue, 17 Mar 2020 17:10:26 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57651 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgCQVKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:10:17 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a24so28381561edy.7
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 14:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nCoCinlfBkBrhCUwU5qZ/6v2x0D3qEE7/5CcMYa+4Hc=;
-        b=QtVvsnITXMu+JQHBuRJji7ST79Y05GMFLP3W+OVBiySALav+qQYW4roSiH/boPJdn1
-         0Ro+edqcp+QsD5buq/7z9JaNDMhOp3n0swq2vlcMaWU9bASfUxXyHFpaKOkUBreYaFlt
-         Zg4iJA8r5Ez4lHcHaRGan64Mgfx3yB+4w6RRJCj6iWneEIQFUmiV/cB6CpnsFSBy6x9T
-         3wyrKvg4gM7zBrYrmk1gQJE5mwkiUiPeXSTkUWttUaaBQRkbRHf39WE5DP/IFhTa6Npc
-         HDBgL/ZrtUU04XlpUQJmIUM27sHpMY+Ggg+4JeEAgAYcrJTlRUKC0m5UPLkQsQVTxFVp
-         /hTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nCoCinlfBkBrhCUwU5qZ/6v2x0D3qEE7/5CcMYa+4Hc=;
-        b=U4Lnq+rdS9hrXZcu4p0f3aI5HTAogi9ou1qKnDAjN5pMolvm78HM/z6beEfE3x29YM
-         k0Cjq2+QXvdsu2QUqVoXUsV00FT7scg8P4R5gsg0QX2j4LxonOXU66ITLfpxJ3J69Rmu
-         O+Pk0IkOiGTZNK5TZrswAkMhot88fT+inppG3ew4Yu5/Jf9usKL0vOaKl55FCIYVU0XN
-         /QDNwka2zb7rMfdxeESKN4N17IxeQHdlPTBVLz9np4uV7kNQ5GP3dBbqxpRSxiPoDr5U
-         +63zmfYu26Y5NbZtrVxQDtHhBN9D8PifRDUjhb21+QHv6V2IFwFDP6+IQR8+t8fpqD5K
-         25Dg==
-X-Gm-Message-State: ANhLgQ1EJxvlOtBayn/5EFdgRA2AlxqfgMD0VbJXfDr4KcNBZLUioXbL
-        1MPsXriOQO3getkiHNk2YDJ4Y2exaoO5cB4h5jE8fAw=
-X-Google-Smtp-Source: ADFU+vuu3jh28tAHj31MfyqCk4tbUgblW6g9cs4HTgMeREjvSzhKoCWkLyDPKfUdpsdchb1gV5IOO3pO8CNY2PtTOfg=
-X-Received: by 2002:a17:907:105a:: with SMTP id oy26mr1044369ejb.308.1584479415386;
- Tue, 17 Mar 2020 14:10:15 -0700 (PDT)
+        Tue, 17 Mar 2020 17:10:25 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jEJTi-0004El-4i; Tue, 17 Mar 2020 22:10:22 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jEJTg-0004Ji-Mt; Tue, 17 Mar 2020 22:10:20 +0100
+Date:   Tue, 17 Mar 2020 22:10:20 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Support Opensource <support.opensource@diasemi.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: da9062: Fix include path
+Message-ID: <20200317211020.4ozletmpvz67jytb@pengutronix.de>
+References: <773115.1584420899@turing-police>
 MIME-Version: 1.0
-References: <20200317133117.4569cc6a@canb.auug.org.au> <bb623275e936c026cc425904e6c1cee0cbe85f28.camel@hammerspace.com>
- <20200317151829.GA4442@aion.usersys.redhat.com> <c28fe5dc9bd58388ce413f30878fd35ef0f1eb1b.camel@hammerspace.com>
-In-Reply-To: <c28fe5dc9bd58388ce413f30878fd35ef0f1eb1b.camel@hammerspace.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 17 Mar 2020 17:10:04 -0400
-Message-ID: <CAHC9VhR8rXQLyfdwmV3xxRLeQF57N28T1rqpLN5fG0R77U5_4A@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the selinux tree with the nfs tree
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "smayhew@redhat.com" <smayhew@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <773115.1584420899@turing-police>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 22:06:02 up 123 days, 12:24, 152 users,  load average: 0.25, 0.16,
+ 0.07
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 12:12 PM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
-> On Tue, 2020-03-17 at 11:18 -0400, Scott Mayhew wrote:
-> > On Tue, 17 Mar 2020, Trond Myklebust wrote:
-> >
-> > > On Tue, 2020-03-17 at 13:31 +1100, Stephen Rothwell wrote:
-> > > > Hi all,
-> > > >
-> > > > Today's linux-next merge of the selinux tree got a conflict in:
-> > > >
-> > > >   fs/nfs/getroot.c
-> > > >
-> > > > between commit:
-> > > >
-> > > >   e8213ffc2aec ("NFS: Ensure security label is set for root
-> > > > inode")
-> > > >
-> > > > from the nfs tree and commit:
-> > > >
-> > > >   28d4d0e16f09 ("When using NFSv4.2, the security label for the
-> > > > root
-> > > > inode should be set via a call to nfs_setsecurity() during the
-> > > > mount
-> > > > process, otherwise the inode will appear as unlabeled for up to
-> > > > acdirmin seconds.  Currently the label for the root inode is
-> > > > allocated, retrieved, and freed entirely witin
-> > > > nfs4_proc_get_root().")
-> > > >
-> > > > from the selinux tree.
-> > > >
-> > > > These are basically the same patch with slight formatting
-> > > > differences.
-> > > >
-> > > > I fixed it up (I used the latter) and can carry the fix as
-> > > > necessary.
-> > > > This is now fixed as far as linux-next is concerned, but any non
-> > > > trivial
-> > > > conflicts should be mentioned to your upstream maintainer when
-> > > > your
-> > > > tree
-> > > > is submitted for merging.  You may also want to consider
-> > > > cooperating
-> > > > with the maintainer of the conflicting tree to minimise any
-> > > > particularly
-> > > > complex conflicts.
-> > > >
-> > > OK... Why is this being pushed through the selinux tree? Was that
-> > > your
-> > > intention Scott?
-> >
-> > Not really... I addressed the patch to you and Anna, after all.  On
-> > the
-> > other hand, I didn't object when Paul picked up the patch in his
-> > tree.
-> > I'm guessing I should have spoken up.  Sorry about that.
-> >
->
-> OK. Well there doesn't seem to be anything else touching the NFS mount
-> code in this dev cycle, so I don't expect any integration issues at
-> this point. I'm therefore OK with it going through the selinux tree.
->
-> I'll therefore drop the patch from the NFS tree, assuming you still
-> have it in the selinux tree, Paul.
+Hi,
 
-I was waiting to hear back from you before reverting, I'll go ahead
-and leave it in the selinux/next tree.  If anything changes on the NFS
-side, let me know.
+On 20-03-17 00:54, Valdis Klētnieks wrote:
+> Found during a allmodconfig build on ARM on an RPi4:
+> 
+>   CC      drivers/pinctrl/pinctrl-da9062.o
+> drivers/pinctrl/pinctrl-da9062.c:28:10: fatal error: ../gpio/gpiolib.h: No such file or directory
+>  #include <../gpio/gpiolib.h>
+>           ^~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+
+this should be fixed already:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/pinctrl/pinctrl-da9062.c?id=2353810dac9ab72d3f835e3fb015c6819a0ef6c2
+
+Regards,
+  Marco
+
+> 
+> So... fix the errant include.
+> 
+> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> Fixes: 56cc3af4e8c8e ("pinctrl: da9062: add driver support")
+> 
+> diff --git a/drivers/pinctrl/pinctrl-da9062.c b/drivers/pinctrl/pinctrl-da9062.c
+> index f704ee0b2fd9..cfbe529e66c3 100644
+> --- a/drivers/pinctrl/pinctrl-da9062.c
+> +++ b/drivers/pinctrl/pinctrl-da9062.c
+> @@ -25,7 +25,7 @@
+>   * We need this get the gpio_desc from a <gpio_chip,offset> tuple to decide if
+>   * the gpio is active low without a vendor specific dt-binding.
+>   */
+> -#include <../gpio/gpiolib.h>
+> +#include <../drivers/gpio/gpiolib.h>
+>  
+>  #define DA9062_TYPE(offset)		(4 * (offset % 2))
+>  #define DA9062_PIN_SHIFT(offset)	(4 * (offset % 2))
+> 
+> 
 
 -- 
-paul moore
-www.paul-moore.com
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
