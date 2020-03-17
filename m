@@ -2,225 +2,179 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541FCC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C269C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2593A206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2242320663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t2hO8/Rp"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="W87B5m7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCQDFD (ORCPT
+        id S1726845AbgCQDNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 23:05:03 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35805 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgCQDFC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 23:05:02 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k8so18803531oik.2;
-        Mon, 16 Mar 2020 20:05:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sbAutxY+MMd/SQjeY5/YKMt12lMLdCJAf1DdUAYR8Tg=;
-        b=t2hO8/RpTKCYZNJeAmfbV2hv6YWpYYQLcETN7xVnmRBZuNenDPRZ8zi/otwjz1EMeo
-         Ouyk940BY2UA0VIHU4DptOg2b7SVQII9MMCKJ1kgWJTDXBlN/S0Zy1ZAO5mXGfNcHV5t
-         4L2x3oSTaoyEBWletjG0C+wXp6MNN4kOLVsox2Q8E4La8OsJpN8gAFZZ8KyATWsKNwDy
-         8hGVamUUpsEo5d6+WskhntXJxD527QzZwTEQmUBPi6cPLZJCEDRQ7ZLJG3Lszs6h9vU2
-         7PMu2q6McZSvSHQhdY6wMWTr02Mun6Ex8GRV56rZgORy/2IZcP5FhT438qYhEMqIUE/j
-         CpFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sbAutxY+MMd/SQjeY5/YKMt12lMLdCJAf1DdUAYR8Tg=;
-        b=jMRnmyTnJGQZag7xMWie3cl5eZNWIPSm+P+GDVbBRUl403kYqlbix+Bsx/8hqRXbjF
-         1kTE+rCImaipHt1oCPH8ga9xbSmftWGrZt+QxPEQX2N9fXUcNLIx/8OmLsGbijMnaWaa
-         53aQXcWapjNhb/eqxjroIwIbS0ZXy/2pnTC19kLe2Qo/AseHzyf8XDXJjQl7fiGj7CIl
-         nFm1WPQYn44qAvARvTofcMug5xiKcORqlz28GHaCprpexSTJ8sGJnd4t0Wz1tv8qbO4H
-         fjSGVGKw4hEH1DzqAjl06M763go8TAFYHjdoYlpmmc1gvWcMaJ5UMRigcgPp/jLw/J6D
-         SNCA==
-X-Gm-Message-State: ANhLgQ2q8rvEErvVmVedzytlELbcI+nTnzsimCMvUdKfwKlKspTSPjSq
-        tJErk34Q/socQuclvKJzgjFlzLURFoVNaPII0cMls9oKWt0=
-X-Google-Smtp-Source: ADFU+vtjeeGC8+hlNw5uVS8yJznnDKurgL1PzzKIqIYqcStJ22twI296KX1QNxWNO3M+6DfYrLQpNvce7kc6+p5/U3M=
-X-Received: by 2002:aca:54ca:: with SMTP id i193mr1945950oib.163.1584414301757;
- Mon, 16 Mar 2020 20:05:01 -0700 (PDT)
+        Mon, 16 Mar 2020 23:13:32 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51033 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbgCQDNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 23:13:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hJCY0Zyrz9sPR;
+        Tue, 17 Mar 2020 14:13:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1584414809;
+        bh=ezGsF1UeoLbn/OJ/iZaLkSdfEqbF8RmQREJ6TMA/QYo=;
+        h=From:To:Subject:In-Reply-To:References:Date:From;
+        b=W87B5m7Hhhtjv0k2eyuuOmxJycvegwOUDjOcCYG9PYelJBtwKoOQGGcNR2hXNFYDo
+         7GKZzyDKdb4tyRbGz0+NNKHnwx2Phrry6sOIP7umvhiL57Vnu6djkfHYf5rCaPa+Eu
+         HbapjvBfS2mdE9kJo0UUx0AzgpOcqZjTyJVOkSDjivQlz223yt1djIBsKegGnuyjhG
+         QGmtSrdAe/O8A2TT0XOVEnc90ZnJpuSuwCBxw36vXVAaSL+hE9myqF+AFW60lAc+ke
+         G7R2EbQqc4XmIPrh/j9PDvs1HBKhKGNFpA8cNRvjapmjJZqUolFzRDa7vFybOn2bPI
+         sig7V7ZCRl5NA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        svaidy@linux.ibm.com, ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
+        pratik.sampat@in.ibm.com, psampat@linux.ibm.com,
+        pratik.r.sampat@gmail.com
+Subject: Re: [PATCH v4 3/3] powerpc/powernv: Parse device tree, population of SPR support
+In-Reply-To: <1f5138b5080606804162b0a7cf20c134589b96b1.1581505210.git.psampat@linux.ibm.com>
+References: <cover.1581505210.git.psampat@linux.ibm.com> <1f5138b5080606804162b0a7cf20c134589b96b1.1581505210.git.psampat@linux.ibm.com>
+Date:   Tue, 17 Mar 2020 14:13:31 +1100
+Message-ID: <87tv2nptb8.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <CGME20200311034454epcas1p2ef0c0081971dd82282583559398e58b2@epcas1p2.samsung.com>
- <20200311034441.23243-1-jaewon31.kim@samsung.com> <af4ace34-0db2-dd17-351f-eaa806f0a6ac@suse.cz>
- <20200313174827.GA67638@unreal> <5E6EFB6C.7050105@samsung.com> <20200316083154.GF8510@unreal>
-In-Reply-To: <20200316083154.GF8510@unreal>
-From:   Jaewon Kim <jaewon31.kim@gmail.com>
-Date:   Tue, 17 Mar 2020 12:04:46 +0900
-Message-ID: <CAJrd-UvttDDSL=q1RXC6Z+jvZAGsN2iM8C8xOSrpJFdLb0e-3g@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] meminfo: introduce extra meminfo
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Jaewon Kim <jaewon31.kim@samsung.com>,
-        Vlastimil Babka <vbabka@suse.cz>, adobriyan@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>, minchan@kernel.org,
-        ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 3=EC=9B=94 16=EC=9D=BC (=EC=9B=94) =EC=98=A4=ED=9B=84 5:32, L=
-eon Romanovsky <leon@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Mon, Mar 16, 2020 at 01:07:08PM +0900, Jaewon Kim wrote:
-> >
-> >
-> > On 2020=EB=85=84 03=EC=9B=94 14=EC=9D=BC 02:48, Leon Romanovsky wrote:
-> > > On Fri, Mar 13, 2020 at 04:19:36PM +0100, Vlastimil Babka wrote:
-> > >> +CC linux-api, please include in future versions as well
-> > >>
-> > >> On 3/11/20 4:44 AM, Jaewon Kim wrote:
-> > >>> /proc/meminfo or show_free_areas does not show full system wide mem=
-ory
-> > >>> usage status. There seems to be huge hidden memory especially on
-> > >>> embedded Android system. Because it usually have some HW IP which d=
-o not
-> > >>> have internal memory and use common DRAM memory.
-> > >>>
-> > >>> In Android system, most of those hidden memory seems to be vmalloc =
-pages
-> > >>> , ion system heap memory, graphics memory, and memory for DRAM base=
-d
-> > >>> compressed swap storage. They may be shown in other node but it see=
-ms to
-> > >>> useful if /proc/meminfo shows all those extra memory information. A=
-nd
-> > >>> show_mem also need to print the info in oom situation.
-> > >>>
-> > >>> Fortunately vmalloc pages is alread shown by commit 97105f0ab7b8
-> > >>> ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swa=
-p
-> > >>> memory using zsmalloc can be seen through vmstat by commit 91537fee=
-0013
-> > >>> ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
-> > >>>
-> > >>> Memory usage of specific driver can be various so that showing the =
-usage
-> > >>> through upstream meminfo.c is not easy. To print the extra memory u=
-sage
-> > >>> of a driver, introduce following APIs. Each driver needs to count a=
-s
-> > >>> atomic_long_t.
-> > >>>
-> > >>> int register_extra_meminfo(atomic_long_t *val, int shift,
-> > >>>                      const char *name);
-> > >>> int unregister_extra_meminfo(atomic_long_t *val);
-> > >>>
-> > >>> Currently register ION system heap allocator and zsmalloc pages.
-> > >>> Additionally tested on local graphics driver.
-> > >>>
-> > >>> i.e) cat /proc/meminfo | tail -3
-> > >>> IonSystemHeap:    242620 kB
-> > >>> ZsPages:          203860 kB
-> > >>> GraphicDriver:    196576 kB
-> > >>>
-> > >>> i.e.) show_mem on oom
-> > >>> <6>[  420.856428]  Mem-Info:
-> > >>> <6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDri=
-ver::13091kB
-> > >>> <6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated=
-_anon:0
-> > >> I like the idea and the dynamic nature of this, so that drivers not =
-present
-> > >> wouldn't add lots of useless zeroes to the output.
-> > >> It also makes simpler the decisions of "what is important enough to =
-need its own
-> > >> meminfo entry".
-> > >>
-> > >> The suggestion for hunting per-driver /sys files would only work if =
-there was a
-> > >> common name to such files so once can find(1) them easily.
-> > >> It also doesn't work for the oom/failed alloc warning output.
-> > > Of course there is a need to have a stable name for such an output, t=
-his
-> > > is why driver/core should be responsible for that and not drivers aut=
-hors.
-> > >
-> > > The use case which I had in mind slightly different than to look afte=
-r OOM.
-> > >
-> > > I'm interested to optimize our drivers in their memory footprint to
-> > > allow better scale in SR-IOV mode where one device creates many separ=
-ate
-> > > copies of itself. Those copies easily can take gigabytes of RAM due t=
-o
-> > > the need to optimize for high-performance networking. Sometimes the
-> > > amount of memory and not HW is actually limits the scale factor.
-> > >
-> > > So I would imagine this feature being used as an aid for the driver
-> > > developers and not for the runtime decisions.
-> > >
-> > > My 2-cents.
-> > >
-> > > Thanks
-> > >
-> > >
-> > Thank you for your comment.
-> > My idea, I think, may be able to help each driver developer to see thei=
-r memory usage.
-> > But I'd like to see overall memory usage through the one node.
->
-> It is more than enough :).
->
-> >
-> > Let me know if you have more comment.
-> > I am planning to move my logic to be shown on a new node, /proc/meminfo=
-_extra at v2.
->
-> Can you please help me to understand how that file will look like once
-> many drivers will start to use this interface? Will I see multiple
-> lines?
->
-> Something like:
-> driver1 ....
-> driver2 ....
-> driver3 ....
-> ...
-> driver1000 ....
->
-> How can we extend it to support subsystems core code?
+Pratik Rajesh Sampat <psampat@linux.ibm.com> writes:
+> Parse the device tree for nodes self-save, self-restore and populate
+> support for the preferred SPRs based what was advertised by the device
+> tree.
 
-I do not have a plan to support subsystem core.
+These should be documented in:
+  Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
 
-I just want the /proc/meminfo_extra to show size of alloc_pages APIs
-rather than slub size. It is to show hidden huge memory.
-I think most of drivers do not need to register its size to
-/proc/meminfo_extra because
-drivers usually use slub APIs and rather than alloc_pages APIs.
-/proc/slabinfo helps for slub size in detail.
+> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+> index 97aeb45e897b..27dfadf609e8 100644
+> --- a/arch/powerpc/platforms/powernv/idle.c
+> +++ b/arch/powerpc/platforms/powernv/idle.c
+> @@ -1436,6 +1436,85 @@ static void __init pnv_probe_idle_states(void)
+>  		supported_cpuidle_states |= pnv_idle_states[i].flags;
+>  }
+>  
+> +/*
+> + * Extracts and populates the self save or restore capabilities
+> + * passed from the device tree node
+> + */
+> +static int extract_save_restore_state_dt(struct device_node *np, int type)
+> +{
+> +	int nr_sprns = 0, i, bitmask_index;
+> +	int rc = 0;
+> +	u64 *temp_u64;
+> +	u64 bit_pos;
+> +
+> +	nr_sprns = of_property_count_u64_elems(np, "sprn-bitmask");
+> +	if (nr_sprns <= 0)
+> +		return rc;
 
-As a candidate of /proc/meminfo_extra, I hope only few drivers using
-huge memory like over 100 MB got from alloc_pages APIs.
+Using <= 0 means zero SPRs is treated by success as the caller, is that
+intended? If so a comment would be appropriate.
 
-As you say, if there is a static node on /sys for each driver, it may
-be used for all the drivers.
-I think sysfs class way may be better to show categorized sum size.
-But /proc/meminfo_extra can be another way to show those hidden huge memory=
-.
-I mean your idea and my idea is not exclusive.
+> +	temp_u64 = kcalloc(nr_sprns, sizeof(u64), GFP_KERNEL);
+> +	if (of_property_read_u64_array(np, "sprn-bitmask",
+> +				       temp_u64, nr_sprns)) {
+> +		pr_warn("cpuidle-powernv: failed to find registers in DT\n");
+> +		kfree(temp_u64);
+> +		return -EINVAL;
+> +	}
+> +	/*
+> +	 * Populate acknowledgment of support for the sprs in the global vector
+> +	 * gotten by the registers supplied by the firmware.
+> +	 * The registers are in a bitmask, bit index within
+> +	 * that specifies the SPR
+> +	 */
+> +	for (i = 0; i < nr_preferred_sprs; i++) {
+> +		bitmask_index = preferred_sprs[i].spr / 64;
+> +		bit_pos = preferred_sprs[i].spr % 64;
 
-Thank you
->
-> Thanks
->
-> >
-> > Thank you
-> > Jaewon Kim
+This is basically a hand coded bitmap, see eg. BIT_WORD(), BIT_MASK() etc.
+
+I don't think there's an easy way to convert temp_u64 into a proper
+bitmap, so it's probably not worth doing that. But at least use the macros.
+
+> +		if ((temp_u64[bitmask_index] & (1UL << bit_pos)) == 0) {
+> +			if (type == SELF_RESTORE_TYPE)
+> +				preferred_sprs[i].supported_mode &=
+> +					~SELF_RESTORE_STRICT;
+> +			else
+> +				preferred_sprs[i].supported_mode &=
+> +					~SELF_SAVE_STRICT;
+> +			continue;
+> +		}
+> +		if (type == SELF_RESTORE_TYPE) {
+> +			preferred_sprs[i].supported_mode |=
+> +				SELF_RESTORE_STRICT;
+> +		} else {
+> +			preferred_sprs[i].supported_mode |=
+> +				SELF_SAVE_STRICT;
+> +		}
+> +	}
+> +
+> +	kfree(temp_u64);
+> +	return rc;
+> +}
+> +
+> +static int pnv_parse_deepstate_dt(void)
+> +{
+> +	struct device_node *sr_np, *ss_np;
+
+You never use these concurrently AFAICS, so you could just have a single *np.
+
+> +	int rc = 0, i;
+> +
+> +	/* Self restore register population */
+> +	sr_np = of_find_node_by_path("/ibm,opal/power-mgt/self-restore");
+
+I know the existing idle code uses of_find_node_by_path(), but that's
+because it's old and crufty. Please don't add new searches by path. You
+should be searching by compatible.
+
+> +	if (!sr_np) {
+> +		pr_warn("opal: self restore Node not found");
+
+This warning and the others below will fire on all existing firmware
+versions, which is not OK.
+
+> +	} else {
+> +		rc = extract_save_restore_state_dt(sr_np, SELF_RESTORE_TYPE);
+> +		if (rc != 0)
+> +			return rc;
+> +	}
+> +	/* Self save register population */
+> +	ss_np = of_find_node_by_path("/ibm,opal/power-mgt/self-save");
+> +	if (!ss_np) {
+> +		pr_warn("opal: self save Node not found");
+> +		pr_warn("Legacy firmware. Assuming default self-restore support");
+> +		for (i = 0; i < nr_preferred_sprs; i++)
+> +			preferred_sprs[i].supported_mode &= ~SELF_SAVE_STRICT;
+> +	} else {
+> +		rc = extract_save_restore_state_dt(ss_np, SELF_SAVE_TYPE);
+> +	}
+> +	return rc;
+
+You're leaking references on all the device_nodes in here, you need
+of_node_put() before exiting.
+
+> +}
+
+
+cheers
