@@ -2,140 +2,229 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782AAC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C0CC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4010620738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kj2QofUv"
+	by mail.kernel.org (Postfix) with ESMTP id D0739206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 23:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCQXoB (ORCPT
+        id S1727201AbgCQXoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 19:44:01 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43417 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgCQXoA (ORCPT
+        Tue, 17 Mar 2020 19:44:21 -0400
+Received: from smtprelay0254.hostedemail.com ([216.40.44.254]:59092 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726721AbgCQXoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 19:44:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f8so10318439plt.10
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 16:43:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ehjo2dfhKDxoZ1Z+RY6tvGulJ8aD8GxzYz/+Nhr00Pw=;
-        b=Kj2QofUvaHGoQBqYlct2ACyGM9mfQS/k0vw9WoVwlfpVZhDZBqU/O6bYjoDBwSSiph
-         /aFIW7RiGubGaGNlcZsAetdGB7Lb21fygmkkqP4OH8KyauYEBdANjowKw9k3FMiPUK1s
-         DCT81hSZc9XJ3r+CIeEamyvEVlHGUEatqYH6JBPj1oBayO4xyfuC5otXBa90vB1xOFrR
-         jGf7lvWBZEaL5jJCHebM5hin1XHaMuqXF+eaUGZtIcTN+3mttkt90+l0OGLIkhwr3Uvl
-         T7WVWMrfAPfrwl/NvRc+VuvTyQNaOkWGMWFQxVjk0mdvqOrppr4wled+aP+ch/hPaZ3B
-         oLqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ehjo2dfhKDxoZ1Z+RY6tvGulJ8aD8GxzYz/+Nhr00Pw=;
-        b=agCL5AHxpLBeoGI7eC1yHcWTCUHnzF+dh9rsvpog/w+8B/eHgDvktB/1UgHnXFZ3xg
-         iGFU5grHBrolWQXdLz4THCpbRlL7EMCHY0Aj1znOD0UDZGrPyBh37X+uxVS+oq7oPWfj
-         s0pNgKETaBVHwEAysaiOO0uhkPVxH1bFrIpQdjLAzOToRGK7EQAQ1YSZwUoD79s2uCxu
-         W7FaUQF5thBd1LQpIkUJtaM3e4KSCAApNb4Jb/88M8cibQH6gmT0AL2PeJIFlnoxhboX
-         K1ejqH1QzCBIuFfAXyyoeAGS8YbLegjXyA4ArpUP/QKhZJ4KDz6pKx4efqw8eJLFafWx
-         uOvQ==
-X-Gm-Message-State: ANhLgQ2DvAiJhElFeoiAyz/d2ahQiuXrNDTzc7OVBRdvVKV4XapXrT2T
-        dA4GQl3L5uh6QyXIKvKlnADqL/KfQr4d9V1gOVSERA==
-X-Google-Smtp-Source: ADFU+vulzZ9b/SxAYf3Mb+GtqHoNiGGHGVkLDCDSq009DOaDkBcH4B7OKIjwGUIAO2ekT07PaRu53id/5sqTqUptOCY=
-X-Received: by 2002:a17:90b:8f:: with SMTP id bb15mr1553468pjb.186.1584488638684;
- Tue, 17 Mar 2020 16:43:58 -0700 (PDT)
+        Tue, 17 Mar 2020 19:44:21 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 1A290180A631E;
+        Tue, 17 Mar 2020 23:44:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: silk39_5fef4fb1a8f52
+X-Filterd-Recvd-Size: 7129
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 17 Mar 2020 23:44:19 +0000 (UTC)
+Message-ID: <12f7e30cabca4cb16989a65ab0fb69f8457d53b2.camel@perches.com>
+Subject: [PATCH] exfat: Remove unnecessary newlines from logging
+From:   Joe Perches <joe@perches.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 17 Mar 2020 16:42:30 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-References: <20200317170910.983729109@infradead.org> <202003180747.qU4yJl06%lkp@intel.com>
-In-Reply-To: <202003180747.qU4yJl06%lkp@intel.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 17 Mar 2020 16:43:47 -0700
-Message-ID: <CAKwvOdmU57K8vRRZd0cfUve2WZXJT0ysEwi+zRTngD3VhLxm3A@mail.gmail.com>
-Subject: Re: [PATCH v2 19/19] objtool: Detect loading function pointers across noinstr
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, mbenes@suse.cz,
-        brgerst@gmail.com, kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just needs a `default:` case.  From personal experience, this warning
-helps you track down every switch on an enum when you add a new
-enumeration value.
+None of these message formats should end in a newline as
+exfat_msg and its callers already appends messages with one.
 
-Ignore the dtc-lexer failure, that's a separate known issue.
+Miscellanea:
 
-On Tue, Mar 17, 2020 at 4:40 PM kbuild test robot <lkp@intel.com> wrote:
->
-> Hi Peter,
->
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on tip/auto-latest]
-> [also build test ERROR on next-20200317]
-> [cannot apply to tip/x86/core linux/master linus/master v5.6-rc6]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Peter-Zijlstra/objtool-vmlinux-o-and-noinstr-validation/20200318-035709
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 3168392536d32920349af53bdd108e3b92b10f4f
-> config: x86_64-allyesconfig (attached as .config)
-> compiler: clang version 11.0.0 (git://gitmirror/llvm_project 14a1b80e044aac1947c891525cf30521be0a79b7)
-> reproduce:
->         # FIXME the reproduce steps for clang is not ready yet
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
-> >> check.c:2131:10: error: 12 enumeration values not handled in switch: 'INSN_JUMP_DYNAMIC', 'INSN_JUMP_DYNAMIC_CONDITIONAL', 'INSN_RETURN'... [-Werror,-Wswitch]
->            switch (insn->type) {
->                    ^
->    1 error generated.
->    mv: cannot stat 'tools/objtool/.check.o.tmp': No such file or directory
->    make[4]: *** [tools/build/Makefile.build:96: tools/objtool/check.o] Error 1
->    /usr/bin/ld: scripts/dtc/dtc-parser.tab.o:(.bss+0x10): multiple definition of `yylloc'; scripts/dtc/dtc-lexer.lex.o:(.bss+0x58): first defined here
->    clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
->    make[2]: *** [scripts/Makefile.host:116: scripts/dtc/dtc] Error 1
->    make[2]: Target '__build' not remade because of errors.
->    make[1]: *** [Makefile:1261: scripts_dtc] Error 2
->    make[4]: Target '__build' not remade because of errors.
->    make[3]: *** [Makefile:46: tools/objtool/objtool-in.o] Error 2
->    make[3]: Target 'all' not remade because of errors.
->    make[2]: *** [Makefile:68: objtool] Error 2
->    make[1]: *** [Makefile:1787: tools/objtool] Error 2
->    make[1]: Target 'prepare' not remade because of errors.
->    make: *** [Makefile:180: sub-make] Error 2
->    10 real  23 user  18 sys  399.16% cpu        make prepare
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/202003180747.qU4yJl06%25lkp%40intel.com.
+o Remove unnecessary trailing periods from formats.
 
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ fs/exfat/dir.c    | 4 ++--
+ fs/exfat/fatent.c | 8 ++++----
+ fs/exfat/file.c   | 2 +-
+ fs/exfat/inode.c  | 6 +++---
+ fs/exfat/misc.c   | 2 +-
+ fs/exfat/nls.c    | 4 ++--
+ fs/exfat/super.c  | 4 ++--
+ 7 files changed, 15 insertions(+), 15 deletions(-)
 
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 4b91af..a213520 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -750,7 +750,7 @@ struct exfat_dentry *exfat_get_dentry(struct super_block *sb,
+ 	sector_t sec;
+ 
+ 	if (p_dir->dir == DIR_DELETED) {
+-		exfat_msg(sb, KERN_ERR, "abnormal access to deleted dentry\n");
++		exfat_msg(sb, KERN_ERR, "abnormal access to deleted dentry");
+ 		return NULL;
+ 	}
+ 
+@@ -853,7 +853,7 @@ struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
+ 	struct buffer_head *bh;
+ 
+ 	if (p_dir->dir == DIR_DELETED) {
+-		exfat_msg(sb, KERN_ERR, "access to deleted dentry\n");
++		exfat_msg(sb, KERN_ERR, "access to deleted dentry");
+ 		return NULL;
+ 	}
+ 
+diff --git a/fs/exfat/fatent.c b/fs/exfat/fatent.c
+index a855b17..dcf840 100644
+--- a/fs/exfat/fatent.c
++++ b/fs/exfat/fatent.c
+@@ -305,7 +305,7 @@ int exfat_zeroed_cluster(struct inode *dir, unsigned int clu)
+ 	return 0;
+ 
+ release_bhs:
+-	exfat_msg(sb, KERN_ERR, "failed zeroed sect %llu\n",
++	exfat_msg(sb, KERN_ERR, "failed zeroed sect %llu",
+ 		(unsigned long long)blknr);
+ 	for (i = 0; i < n; i++)
+ 		bforget(bhs[i]);
+@@ -325,7 +325,7 @@ int exfat_alloc_cluster(struct inode *inode, unsigned int num_alloc,
+ 
+ 	if (unlikely(total_cnt < sbi->used_clusters)) {
+ 		exfat_fs_error_ratelimit(sb,
+-			"%s: invalid used clusters(t:%u,u:%u)\n",
++			"%s: invalid used clusters(t:%u,u:%u)",
+ 			__func__, total_cnt, sbi->used_clusters);
+ 		return -EIO;
+ 	}
+@@ -338,7 +338,7 @@ int exfat_alloc_cluster(struct inode *inode, unsigned int num_alloc,
+ 	if (hint_clu == EXFAT_EOF_CLUSTER) {
+ 		if (sbi->clu_srch_ptr < EXFAT_FIRST_CLUSTER) {
+ 			exfat_msg(sb, KERN_ERR,
+-				"sbi->clu_srch_ptr is invalid (%u)\n",
++				"sbi->clu_srch_ptr is invalid (%u)",
+ 				sbi->clu_srch_ptr);
+ 			sbi->clu_srch_ptr = EXFAT_FIRST_CLUSTER;
+ 		}
+@@ -350,7 +350,7 @@ int exfat_alloc_cluster(struct inode *inode, unsigned int num_alloc,
+ 
+ 	/* check cluster validation */
+ 	if (hint_clu < EXFAT_FIRST_CLUSTER && hint_clu >= sbi->num_clusters) {
+-		exfat_msg(sb, KERN_ERR, "hint_cluster is invalid (%u)\n",
++		exfat_msg(sb, KERN_ERR, "hint_cluster is invalid (%u)",
+ 			hint_clu);
+ 		hint_clu = EXFAT_FIRST_CLUSTER;
+ 		if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index 483f68..146024 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -235,7 +235,7 @@ void exfat_truncate(struct inode *inode, loff_t size)
+ 		/*
+ 		 * Empty start_clu != ~0 (not allocated)
+ 		 */
+-		exfat_fs_error(sb, "tried to truncate zeroed cluster.");
++		exfat_fs_error(sb, "tried to truncate zeroed cluster");
+ 		goto write_size;
+ 	}
+ 
+diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+index 068874..a84819 100644
+--- a/fs/exfat/inode.c
++++ b/fs/exfat/inode.c
+@@ -181,7 +181,7 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
+ 		/* allocate a cluster */
+ 		if (num_to_be_allocated < 1) {
+ 			/* Broken FAT (i_sze > allocated FAT) */
+-			exfat_fs_error(sb, "broken FAT chain.");
++			exfat_fs_error(sb, "broken FAT chain");
+ 			return -EIO;
+ 		}
+ 
+@@ -351,7 +351,7 @@ static int exfat_get_block(struct inode *inode, sector_t iblock,
+ 		err = exfat_map_new_buffer(ei, bh_result, pos);
+ 		if (err) {
+ 			exfat_fs_error(sb,
+-					"requested for bmap out of range(pos : (%llu) > i_size_aligned(%llu)\n",
++					"requested for bmap out of range(pos : (%llu) > i_size_aligned(%llu)",
+ 					pos, ei->i_size_aligned);
+ 			goto unlock_ret;
+ 		}
+@@ -428,7 +428,7 @@ static int exfat_write_end(struct file *file, struct address_space *mapping,
+ 
+ 	if (EXFAT_I(inode)->i_size_aligned < i_size_read(inode)) {
+ 		exfat_fs_error(inode->i_sb,
+-			"invalid size(size(%llu) > aligned(%llu)\n",
++			"invalid size(size(%llu) > aligned(%llu)",
+ 			i_size_read(inode), EXFAT_I(inode)->i_size_aligned);
+ 		return -EIO;
+ 	}
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index 14a330..d480b5a 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -32,7 +32,7 @@ void __exfat_fs_error(struct super_block *sb, int report, const char *fmt, ...)
+ 		va_start(args, fmt);
+ 		vaf.fmt = fmt;
+ 		vaf.va = &args;
+-		exfat_msg(sb, KERN_ERR, "error, %pV\n", &vaf);
++		exfat_msg(sb, KERN_ERR, "error, %pV", &vaf);
+ 		va_end(args);
+ 	}
+ 
+diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
+index 6d1c3a..9e07e1 100644
+--- a/fs/exfat/nls.c
++++ b/fs/exfat/nls.c
+@@ -688,7 +688,7 @@ static int exfat_load_upcase_table(struct super_block *sb,
+ 		bh = sb_bread(sb, sector);
+ 		if (!bh) {
+ 			exfat_msg(sb, KERN_ERR,
+-				"failed to read sector(0x%llx)\n",
++				"failed to read sector(0x%llx)",
+ 				(unsigned long long)sector);
+ 			ret = -EIO;
+ 			goto free_table;
+@@ -723,7 +723,7 @@ static int exfat_load_upcase_table(struct super_block *sb,
+ 		return 0;
+ 
+ 	exfat_msg(sb, KERN_ERR,
+-			"failed to load upcase table (idx : 0x%08x, chksum : 0x%08x, utbl_chksum : 0x%08x)\n",
++			"failed to load upcase table (idx : 0x%08x, chksum : 0x%08x, utbl_chksum : 0x%08x)",
+ 			index, checksum, utbl_checksum);
+ 	ret = -EINVAL;
+ free_table:
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index 16ed202e..3e3c606 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -573,7 +573,7 @@ static int exfat_fill_super(struct super_block *sb, struct fs_context *fc)
+ 
+ 	root_inode = new_inode(sb);
+ 	if (!root_inode) {
+-		exfat_msg(sb, KERN_ERR, "failed to allocate root inode.");
++		exfat_msg(sb, KERN_ERR, "failed to allocate root inode");
+ 		err = -ENOMEM;
+ 		goto free_table;
+ 	}
+@@ -582,7 +582,7 @@ static int exfat_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	inode_set_iversion(root_inode, 1);
+ 	err = exfat_read_root(root_inode);
+ 	if (err) {
+-		exfat_msg(sb, KERN_ERR, "failed to initialize root inode.");
++		exfat_msg(sb, KERN_ERR, "failed to initialize root inode");
+ 		goto put_inode;
+ 	}
+ 
 
--- 
-Thanks,
-~Nick Desaulniers
