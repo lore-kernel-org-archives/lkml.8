@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909D9C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04BAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6232D205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA80620658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443468;
-	bh=5YZR+KQsu8U4RTvoyjtGOblA2D6ELg4tXBfICGzn98A=;
+	s=default; t=1584443472;
+	bh=mFKKfWcFB/9Jb1MTNHl5+8C5MTPIV+2hOeqpObc2q2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n7KdJ6g7u/9NsQNA5sLqXndkJC938Bl6FJPA9Nw6jd1ZiR98AAanUxP9LS7viJgmJ
-	 ZHIy6144E2/Kdx+Za2KEDf2XpH5NSErAr1OnSQFqKqJRbY0DIPdRBxu471WFf179MO
-	 FSiCNXlbdX76YjFkRS09f/E/j7tm1yB5SrqwozE0=
+	b=2G+aK8ADEFkXqA+ruldeBoPXCMQb8sSQiHura4L3rskri/BWZlQGbkghpGefJMjFL
+	 plI+eaInbKQM7A9nq7uOpHIyYkO2itjr3zWhBif+OhngrF73HE51DFBmfnasQuLLuh
+	 voyW4rdUTJn/DymbjkMc+F6p0kynOisf47ERXopk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgCQLLD (ORCPT
+        id S1729037AbgCQLLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:11:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:11:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729187AbgCQLK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:10:59 -0400
+        id S1728543AbgCQLLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:11:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E1B720658;
-        Tue, 17 Mar 2020 11:10:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1FAF20658;
+        Tue, 17 Mar 2020 11:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443458;
-        bh=5YZR+KQsu8U4RTvoyjtGOblA2D6ELg4tXBfICGzn98A=;
+        s=default; t=1584443465;
+        bh=mFKKfWcFB/9Jb1MTNHl5+8C5MTPIV+2hOeqpObc2q2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=POTUngKGrl4krEe39lGBkEdEYZUQNTl3Lx0OE+470NJKrBVe3GFmIlMlNRJiyxAqQ
-         4FSE79pQdSlf7rlhjskfn65y63h+c6X8HcapCEBTtsSpqyTbSpBSDidSFst4O/JFKu
-         Eka61j0axhEw9sXuWxOQi6fObttbSx5AW2QlMU7Y=
+        b=ihJe8eIHDMo1HYKXbMaVvBkayBnCgFcOaRNYecHIL6YqxAzmt0cHicIMvSG34tXld
+         uRdtCNHkh0u3eg3Xe64EkWUrjRtwTJhvuweGzrC9tfYJhKB6VmamnSMpqyxRdxMOeu
+         jOspd6Uxri4lBg+hUI715IqLttJag7PfeKe7tNa8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Auld <matthew.auld@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
         Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.5 087/151] drm/i915: be more solid in checking the alignment
-Date:   Tue, 17 Mar 2020 11:54:57 +0100
-Message-Id: <20200317103332.630634260@linuxfoundation.org>
+Subject: [PATCH 5.5 089/151] drm/i915/gt: Close race between cacheline_retire and free
+Date:   Tue, 17 Mar 2020 11:54:59 +0100
+Message-Id: <20200317103332.771651153@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,53 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Auld <matthew.auld@intel.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 1d61c5d711a2dc0b978ae905535edee9601f9449 upstream.
+commit 8ea6bb8e4d47e07518e5dba4f5cb77e210f0df82 upstream.
 
-The alignment is u64, and yet is_power_of_2() assumes unsigned long,
-which might give different results between 32b and 64b kernel.
+If the cacheline may still be busy, atomically mark it for future
+release, and only if we can determine that it will never be used again,
+immediately free it.
 
-Signed-off-by: Matthew Auld <matthew.auld@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Closes: https://gitlab.freedesktop.org/drm/intel/issues/1392
+Fixes: ebece7539242 ("drm/i915: Keep timeline HWSP allocated until idle across the system")
 Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200305203534.210466-1-matthew.auld@intel.com
-Cc: stable@vger.kernel.org
-(cherry picked from commit 2920516b2f719546f55079bc39a7fe409d9e80ab)
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Cc: Matthew Auld <matthew.auld@intel.com>
+Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Cc: <stable@vger.kernel.org> # v5.2+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200306154647.3528345-1-chris@chris-wilson.co.uk
+(cherry picked from commit 2d4bd971f5baa51418625f379a69f5d58b5a0450)
 Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c |    3 ++-
- drivers/gpu/drm/i915/i915_utils.h              |    5 +++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/i915/gt/intel_timeline.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-@@ -441,7 +441,8 @@ eb_validate_vma(struct i915_execbuffer *
- 	if (unlikely(entry->flags & eb->invalid_flags))
- 		return -EINVAL;
+--- a/drivers/gpu/drm/i915/gt/intel_timeline.c
++++ b/drivers/gpu/drm/i915/gt/intel_timeline.c
+@@ -197,11 +197,15 @@ static void cacheline_release(struct int
  
--	if (unlikely(entry->alignment && !is_power_of_2(entry->alignment)))
-+	if (unlikely(entry->alignment &&
-+		     !is_power_of_2_u64(entry->alignment)))
- 		return -EINVAL;
- 
- 	/*
---- a/drivers/gpu/drm/i915/i915_utils.h
-+++ b/drivers/gpu/drm/i915/i915_utils.h
-@@ -234,6 +234,11 @@ static inline u64 ptr_to_u64(const void
- 	__idx;								\
- })
- 
-+static inline bool is_power_of_2_u64(u64 n)
-+{
-+	return (n != 0 && ((n & (n - 1)) == 0));
-+}
-+
- static inline void __list_del_many(struct list_head *head,
- 				   struct list_head *first)
+ static void cacheline_free(struct intel_timeline_cacheline *cl)
  {
++	if (!i915_active_acquire_if_busy(&cl->active)) {
++		__idle_cacheline_free(cl);
++		return;
++	}
++
+ 	GEM_BUG_ON(ptr_test_bit(cl->vaddr, CACHELINE_FREE));
+ 	cl->vaddr = ptr_set_bit(cl->vaddr, CACHELINE_FREE);
+ 
+-	if (i915_active_is_idle(&cl->active))
+-		__idle_cacheline_free(cl);
++	i915_active_release(&cl->active);
+ }
+ 
+ int intel_timeline_init(struct intel_timeline *timeline,
 
 
