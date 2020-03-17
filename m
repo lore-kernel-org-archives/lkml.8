@@ -2,176 +2,106 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68430C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F28CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBD920752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584480803;
-	bh=m0xo/W6GOQNpk/WU67K9ND/4DuO1vrli3QMy0AnI3rY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VqIjWPDnaR61/jwGHL4CzIvZdBhIkVtznMIuCKhseaSs1+mrqM02Uttwi+K7jx6SR
-	 OQVieVVxRmGHWG8h2erGas//BERjPAFYfAmSjCzRWrlio/26HlLsG9MsulgNrJYKXp
-	 k3XDIJ1mUvPgU/K8CydUflOI1HN2Vp7GqQtLqUjA=
+	by mail.kernel.org (Postfix) with ESMTP id 7B13E20757
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgCQVdW (ORCPT
+        id S1727123AbgCQVdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 17 Mar 2020 17:33:25 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45287 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbgCQVdW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 17:33:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgCQVdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:33:20 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6F1020768;
-        Tue, 17 Mar 2020 21:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584480799;
-        bh=m0xo/W6GOQNpk/WU67K9ND/4DuO1vrli3QMy0AnI3rY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cVjthmkeUp+Npw2YbI/EIWB5YPh/7mToFSe/G2yGuui/wxNHiTJl/PjoLVr8yQtET
-         HrFpINaq+LT/duio+1JrdHN5V1hslfiavNr/7tcoqmlYcfsoakxRchtT9SzcY6jBCb
-         DSBwOgLzjLLZq3nxZ4SG0rXWfMIJXYLlBZVtwbcY=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 03/23] perf metricgroup: Factor out metricgroup__add_metric_weak_group()
-Date:   Tue, 17 Mar 2020 18:32:39 -0300
-Message-Id: <20200317213259.15494-4-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
-References: <20200317213259.15494-1-acme@kernel.org>
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEJpd-0005zP-8Q; Tue, 17 Mar 2020 22:33:01 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEJpQ-0004oj-E1; Tue, 17 Mar 2020 22:32:48 +0100
+Date:   Tue, 17 Mar 2020 22:32:48 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Barker <pbarker@konsulko.com>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+Message-ID: <20200317213248.mmh2t6jgncq3tqp3@pengutronix.de>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
+ <20200317133450.58c25bcb@ub1910>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317133450.58c25bcb@ub1910>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Tue, Mar 17, 2020 at 01:34:50PM +0000, Paul Barker wrote:
+> On Tue, 17 Mar 2020 14:32:25 +0200
+> Oleksandr Suvorov <oleksandr.suvorov@toradex.com> wrote:
+> 
+> > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
+> > Rename it to PWM_POLARITY_INVERTED.
+> > 
+> > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> 
+> Looks good. PWM_POLARITY_INVERSED confused me when I was working in this area
+> recently.
 
-Factor out metricgroup__add_metric_weak_group() which add metrics into a
-weak group. The change can improve code readability. Because following
-patch will introduce a function which add standalone metrics.
+Same for me.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/1582581564-184429-3-git-send-email-kan.liang@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/metricgroup.c | 57 ++++++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 24 deletions(-)
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 02aee946b6c1..1cd042cb262e 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -399,13 +399,42 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
- 	strlist__delete(metriclist);
- }
- 
-+static void metricgroup__add_metric_weak_group(struct strbuf *events,
-+					       const char **ids,
-+					       int idnum)
-+{
-+	bool no_group = false;
-+	int i;
-+
-+	for (i = 0; i < idnum; i++) {
-+		pr_debug("found event %s\n", ids[i]);
-+		/*
-+		 * Duration time maps to a software event and can make
-+		 * groups not count. Always use it outside a
-+		 * group.
-+		 */
-+		if (!strcmp(ids[i], "duration_time")) {
-+			if (i > 0)
-+				strbuf_addf(events, "}:W,");
-+			strbuf_addf(events, "duration_time");
-+			no_group = true;
-+			continue;
-+		}
-+		strbuf_addf(events, "%s%s",
-+			i == 0 || no_group ? "{" : ",",
-+			ids[i]);
-+		no_group = false;
-+	}
-+	if (!no_group)
-+		strbuf_addf(events, "}:W");
-+}
-+
- static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				   struct list_head *group_list)
- {
- 	struct pmu_events_map *map = perf_pmu__find_map(NULL);
- 	struct pmu_event *pe;
--	int ret = -EINVAL;
--	int i, j;
-+	int i, ret = -EINVAL;
- 
- 	if (!map)
- 		return 0;
-@@ -422,7 +451,6 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 			const char **ids;
- 			int idnum;
- 			struct egroup *eg;
--			bool no_group = false;
- 
- 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
- 
-@@ -431,27 +459,8 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				continue;
- 			if (events->len > 0)
- 				strbuf_addf(events, ",");
--			for (j = 0; j < idnum; j++) {
--				pr_debug("found event %s\n", ids[j]);
--				/*
--				 * Duration time maps to a software event and can make
--				 * groups not count. Always use it outside a
--				 * group.
--				 */
--				if (!strcmp(ids[j], "duration_time")) {
--					if (j > 0)
--						strbuf_addf(events, "}:W,");
--					strbuf_addf(events, "duration_time");
--					no_group = true;
--					continue;
--				}
--				strbuf_addf(events, "%s%s",
--					j == 0 || no_group ? "{" : ",",
--					ids[j]);
--				no_group = false;
--			}
--			if (!no_group)
--				strbuf_addf(events, "}:W");
-+
-+			metricgroup__add_metric_weak_group(events, ids, idnum);
- 
- 			eg = malloc(sizeof(struct egroup));
- 			if (!eg) {
+Best regards
+Uwe
+
 -- 
-2.21.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
