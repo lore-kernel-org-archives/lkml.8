@@ -2,34 +2,34 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24ACC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579DDC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABFFA20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263ED2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbgCQVeT (ORCPT
+        id S1727088AbgCQVez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53340 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 17:34:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727332AbgCQVeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:34:17 -0400
+        id S1727339AbgCQVeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:34:19 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E57A920754;
-        Tue, 17 Mar 2020 21:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B3C120791;
+        Tue, 17 Mar 2020 21:34:17 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jEJqp-000EUz-MS; Tue, 17 Mar 2020 17:34:15 -0400
-Message-Id: <20200317213222.421100128@goodmis.org>
+        id 1jEJqq-000EXe-Dj; Tue, 17 Mar 2020 17:34:16 -0400
+Message-Id: <20200317213416.306959216@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Tue, 17 Mar 2020 17:32:22 -0400
+Date:   Tue, 17 Mar 2020 17:32:27 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -40,57 +40,226 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Wu <peter@lekensteyn.nl>,
         Jonathan Corbet <corbet@lwn.net>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [RFC][PATCH 00/11] ring-buffer/tracing: Remove disabling of ring buffer while reading trace file
+Subject: [RFC][PATCH 05/11] ring-buffer: Have rb_iter_head_event() handle concurrent writer
+References: <20200317213222.421100128@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the ring buffer was first written for ftrace, there was two
-human readable files to read it. One was a standard "producer/consumer"
-file (trace_pipe), which would consume data from the ring buffer as
-it read it, and the other was a "static iterator" that would not
-consume the events, such that the file could be read multiple times
-and return the same output each time.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-The "static iterator" was never meant to be read while there was an
-active writer to the ring buffer. If writing was enabled, then it
-would disable the writer when the trace file was opened.
+Have the ring_buffer_iter structure have a place to store an event, such
+that it can not be overwritten by a writer, and load it in such a way via
+rb_iter_head_event() that it will return NULL and reset the iter to the
+start of the current page if a writer updated the page.
 
-There has been some complaints about this by the BPF folks, that did
-not realize this little bit of information and it was requested that
-the "trace" file does not stop the writing to the ring buffer.
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 106 ++++++++++++++++++++++++++-----------
+ 1 file changed, 75 insertions(+), 31 deletions(-)
 
-This patch series attempts to satisfy that request, by creating a
-temporary buffer in each of the per cpu iterators to place the
-read event into, such that it can be passed to users without worrying
-about a writer to corrupt the event while it was being written out.
-It also uses the fact that the ring buffer is broken up into pages,
-where each page has its own timestamp that gets updated when a
-writer crosses over to it. By copying it to the temp buffer, and
-doing a "before and after" test of the time stamp with memory barriers,
-can allow the events to be saved.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index e689bdcb53e8..3d718add73c1 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -503,11 +503,13 @@ struct trace_buffer {
+ struct ring_buffer_iter {
+ 	struct ring_buffer_per_cpu	*cpu_buffer;
+ 	unsigned long			head;
++	unsigned long			next_event;
+ 	struct buffer_page		*head_page;
+ 	struct buffer_page		*cache_reader_page;
+ 	unsigned long			cache_read;
+ 	u64				read_stamp;
+ 	u64				page_stamp;
++	struct ring_buffer_event	*event;
+ };
+ 
+ /**
+@@ -1914,15 +1916,59 @@ rb_reader_event(struct ring_buffer_per_cpu *cpu_buffer)
+ 			       cpu_buffer->reader_page->read);
+ }
+ 
+-static __always_inline struct ring_buffer_event *
+-rb_iter_head_event(struct ring_buffer_iter *iter)
++static __always_inline unsigned rb_page_commit(struct buffer_page *bpage)
+ {
+-	return __rb_page_index(iter->head_page, iter->head);
++	return local_read(&bpage->page->commit);
+ }
+ 
+-static __always_inline unsigned rb_page_commit(struct buffer_page *bpage)
++static struct ring_buffer_event *
++rb_iter_head_event(struct ring_buffer_iter *iter)
+ {
+-	return local_read(&bpage->page->commit);
++	struct ring_buffer_event *event;
++	struct buffer_page *iter_head_page = iter->head_page;
++	unsigned long commit;
++	unsigned length;
++
++	/*
++	 * When the writer goes across pages, it issues a cmpxchg which
++	 * is a mb(), which will synchronize with the rmb here.
++	 * (see rb_tail_page_update() and __rb_reserve_next())
++	 */
++	commit = rb_page_commit(iter_head_page);
++	smp_rmb();
++	event = __rb_page_index(iter_head_page, iter->head);
++	length = rb_event_length(event);
++
++	/*
++	 * READ_ONCE() doesn't work on functions and we don't want the
++	 * compiler doing any crazy optimizations with length.
++	 */
++	barrier();
++
++	if ((iter->head + length) > commit || length > BUF_MAX_DATA_SIZE)
++		/* Writer corrupted the read? */
++		goto reset;
++
++	memcpy(iter->event, event, length);
++	/*
++	 * If the page stamp is still the same after this rmb() then the
++	 * event was safely copied without the writer entering the page.
++	 */
++	smp_rmb();
++
++	/* Make sure the page didn't change since we read this */
++	if (iter->page_stamp != iter_head_page->page->time_stamp ||
++	    commit > rb_page_commit(iter_head_page))
++		goto reset;
++
++	iter->next_event = iter->head + length;
++	return iter->event;
++ reset:
++	/* Reset to the beginning */
++	iter->page_stamp = iter->read_stamp = iter->head_page->page->time_stamp;
++	iter->head = 0;
++	iter->next_event = 0;
++	return NULL;
+ }
+ 
+ /* Size is determined by what has been committed */
+@@ -1962,6 +2008,7 @@ static void rb_inc_iter(struct ring_buffer_iter *iter)
+ 
+ 	iter->page_stamp = iter->read_stamp = iter->head_page->page->time_stamp;
+ 	iter->head = 0;
++	iter->next_event = 0;
+ }
+ 
+ /*
+@@ -3548,6 +3595,7 @@ static void rb_iter_reset(struct ring_buffer_iter *iter)
+ 	/* Iterator usage is expected to have record disabled */
+ 	iter->head_page = cpu_buffer->reader_page;
+ 	iter->head = cpu_buffer->reader_page->read;
++	iter->next_event = iter->head;
+ 
+ 	iter->cache_reader_page = iter->head_page;
+ 	iter->cache_read = cpu_buffer->read;
+@@ -3625,7 +3673,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter)
+ 		return 0;
+ 
+ 	/* Still racy, as it may return a false positive, but that's OK */
+-	return ((iter->head_page == commit_page && iter->head == commit) ||
++	return ((iter->head_page == commit_page && iter->head >= commit) ||
+ 		(iter->head_page == reader && commit_page == head_page &&
+ 		 head_page->read == commit &&
+ 		 iter->head == rb_page_commit(cpu_buffer->reader_page)));
+@@ -3853,15 +3901,22 @@ static void rb_advance_reader(struct ring_buffer_per_cpu *cpu_buffer)
+ static void rb_advance_iter(struct ring_buffer_iter *iter)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+-	struct ring_buffer_event *event;
+-	unsigned length;
+ 
+ 	cpu_buffer = iter->cpu_buffer;
+ 
++	/* If head == next_event then we need to jump to the next event */
++	if (iter->head == iter->next_event) {
++		/* If the event gets overwritten again, there's nothing to do */
++		if (rb_iter_head_event(iter) == NULL)
++			return;
++	}
++
++	iter->head = iter->next_event;
++
+ 	/*
+ 	 * Check if we are at the end of the buffer.
+ 	 */
+-	if (iter->head >= rb_page_size(iter->head_page)) {
++	if (iter->next_event >= rb_page_size(iter->head_page)) {
+ 		/* discarded commits can make the page empty */
+ 		if (iter->head_page == cpu_buffer->commit_page)
+ 			return;
+@@ -3869,27 +3924,7 @@ static void rb_advance_iter(struct ring_buffer_iter *iter)
+ 		return;
+ 	}
+ 
+-	event = rb_iter_head_event(iter);
+-
+-	length = rb_event_length(event);
+-
+-	/*
+-	 * This should not be called to advance the header if we are
+-	 * at the tail of the buffer.
+-	 */
+-	if (RB_WARN_ON(cpu_buffer,
+-		       (iter->head_page == cpu_buffer->commit_page) &&
+-		       (iter->head + length > rb_commit_index(cpu_buffer))))
+-		return;
+-
+-	rb_update_iter_read_stamp(iter, event);
+-
+-	iter->head += length;
+-
+-	/* check for end of page padding */
+-	if ((iter->head >= rb_page_size(iter->head_page)) &&
+-	    (iter->head_page != cpu_buffer->commit_page))
+-		rb_inc_iter(iter);
++	rb_update_iter_read_stamp(iter, iter->event);
+ }
+ 
+ static int rb_lost_events(struct ring_buffer_per_cpu *cpu_buffer)
+@@ -4017,6 +4052,8 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+ 	}
+ 
+ 	event = rb_iter_head_event(iter);
++	if (!event)
++		goto again;
+ 
+ 	switch (event->type_len) {
+ 	case RINGBUF_TYPE_PADDING:
+@@ -4233,10 +4270,16 @@ ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return NULL;
+ 
+-	iter = kmalloc(sizeof(*iter), flags);
++	iter = kzalloc(sizeof(*iter), flags);
+ 	if (!iter)
+ 		return NULL;
+ 
++	iter->event = kmalloc(BUF_MAX_DATA_SIZE, flags);
++	if (!iter->event) {
++		kfree(iter);
++		return NULL;
++	}
++
+ 	cpu_buffer = buffer->buffers[cpu];
+ 
+ 	iter->cpu_buffer = cpu_buffer;
+@@ -4317,6 +4360,7 @@ ring_buffer_read_finish(struct ring_buffer_iter *iter)
+ 
+ 	atomic_dec(&cpu_buffer->record_disabled);
+ 	atomic_dec(&cpu_buffer->buffer->resize_disabled);
++	kfree(iter->event);
+ 	kfree(iter);
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_read_finish);
+-- 
+2.25.1
 
 
-Steven Rostedt (VMware) (11):
-      tracing: Save off entry when peeking at next entry
-      ring-buffer: Have ring_buffer_empty() not depend on tracing stopped
-      ring-buffer: Rename ring_buffer_read() to read_buffer_iter_advance()
-      ring-buffer: Add page_stamp to iterator for synchronization
-      ring-buffer: Have rb_iter_head_event() handle concurrent writer
-      ring-buffer: Do not die if rb_iter_peek() fails more than thrice
-      ring-buffer: Optimize rb_iter_head_event()
-      ring-buffer: Do not disable recording when there is an iterator
-      tracing: Do not disable tracing when reading the trace file
-      ring-buffer/tracing: Have iterator acknowledge dropped events
-      tracing: Have the document reflect that the trace file keeps tracing enabled
-
-----
- Documentation/trace/ftrace.rst       |  13 +--
- include/linux/ring_buffer.h          |   4 +-
- include/linux/trace_events.h         |   2 +
- kernel/trace/ring_buffer.c           | 194 +++++++++++++++++++++++++----------
- kernel/trace/trace.c                 |  55 +++++++---
- kernel/trace/trace_functions_graph.c |   2 +-
- kernel/trace/trace_output.c          |  15 ++-
- 7 files changed, 195 insertions(+), 90 deletions(-)
