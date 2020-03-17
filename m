@@ -2,74 +2,113 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E52C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB6FC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5596320674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF3920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgCQFDb (ORCPT
+        id S1726187AbgCQF2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 01:03:31 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:60674 "EHLO inva021.nxp.com"
+        Tue, 17 Mar 2020 01:28:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:50049 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbgCQFDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 01:03:31 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 70FE8200CB7;
-        Tue, 17 Mar 2020 06:03:29 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 35466200CBB;
-        Tue, 17 Mar 2020 06:03:24 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9ACE9402C4;
-        Tue, 17 Mar 2020 13:03:17 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] irqchip: irq-imx-gpcv2: Remove unnecessary blank lines
-Date:   Tue, 17 Mar 2020 12:56:41 +0800
-Message-Id: <1584421001-2647-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725468AbgCQF2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 01:28:22 -0400
+IronPort-SDR: iUxmuq6hSBANSW4d5cj8M/OW7KeAOT3nRLW3D3P4lAkklxpVc4vn1qNL/XUo7/iCqAlxiOMpdw
+ APxz7ExDWmBA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 22:28:22 -0700
+IronPort-SDR: 3GJVuS7/QG0mC/tegIXXbMouLIAFkNCOVm1EHtnxF0L/oVq04Xm14XzdPJyixyk3ZVRqDnE4Yx
+ UXsVtnTBK1JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
+   d="scan'208";a="247708593"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 16 Mar 2020 22:28:21 -0700
+Date:   Mon, 16 Mar 2020 22:28:21 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH 10/10] KVM: VMX: Convert vcpu_vmx.exit_reason to a union
+Message-ID: <20200317052821.GP24267@linux.intel.com>
+References: <20200312184521.24579-1-sean.j.christopherson@intel.com>
+ <20200312184521.24579-11-sean.j.christopherson@intel.com>
+ <87eetwnxsu.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eetwnxsu.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary blank lines for cleanup.
+On Fri, Mar 13, 2020 at 03:18:09PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> > diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> > index e64da06c7009..2d9a005d11ab 100644
+> > --- a/arch/x86/kvm/vmx/vmx.h
+> > +++ b/arch/x86/kvm/vmx/vmx.h
+> > @@ -93,6 +93,29 @@ struct pt_desc {
+> >  	struct pt_ctx guest;
+> >  };
+> >  
+> > +union vmx_exit_reason {
+> > +	struct {
+> > +		u32	basic			: 16;
+> > +		u32	reserved16		: 1;
+> > +		u32	reserved17		: 1;
+> > +		u32	reserved18		: 1;
+> > +		u32	reserved19		: 1;
+> > +		u32	reserved20		: 1;
+> > +		u32	reserved21		: 1;
+> > +		u32	reserved22		: 1;
+> > +		u32	reserved23		: 1;
+> > +		u32	reserved24		: 1;
+> > +		u32	reserved25		: 1;
+> > +		u32	reserved26		: 1;
+> > +		u32	enclave_mode		: 1;
+> > +		u32	smi_pending_mtf		: 1;
+> > +		u32	smi_from_vmx_root	: 1;
+> > +		u32	reserved30		: 1;
+> > +		u32	failed_vmentry		: 1;
+> 
+> Just wondering, is there any particular benefit in using 'u32' instead
+> of 'u16' here?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/irqchip/irq-imx-gpcv2.c | 2 --
- 1 file changed, 2 deletions(-)
+Not that I know of.  Paranoia that the compiler will do something weird?
 
-diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
-index 4f74c15..4f11b9b 100644
---- a/drivers/irqchip/irq-imx-gpcv2.c
-+++ b/drivers/irqchip/irq-imx-gpcv2.c
-@@ -17,7 +17,6 @@
- #define GPC_IMR1_CORE2		0x1c0
- #define GPC_IMR1_CORE3		0x1d0
- 
--
- struct gpcv2_irqchip_data {
- 	struct raw_spinlock	rlock;
- 	void __iomem		*gpc_base;
-@@ -287,6 +286,5 @@ static int __init imx_gpcv2_irqchip_init(struct device_node *node,
- 	of_node_clear_flag(node, OF_POPULATED);
- 	return 0;
- }
--
- IRQCHIP_DECLARE(imx_gpcv2_imx7d, "fsl,imx7d-gpc", imx_gpcv2_irqchip_init);
- IRQCHIP_DECLARE(imx_gpcv2_imx8mq, "fsl,imx8mq-gpc", imx_gpcv2_irqchip_init);
--- 
-2.7.4
-
+> > +	};
+> > +	u32 full;
+> > +};
+> > +
+> >  /*
+> >   * The nested_vmx structure is part of vcpu_vmx, and holds information we need
+> >   * for correct emulation of VMX (i.e., nested VMX) on this vcpu.
+> > @@ -263,7 +286,7 @@ struct vcpu_vmx {
+> >  	int vpid;
+> >  	bool emulation_required;
+> >  
+> > -	u32 exit_reason;
+> > +	union vmx_exit_reason exit_reason;
+> >  
+> >  	/* Posted interrupt descriptor */
+> >  	struct pi_desc pi_desc;
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> -- 
+> Vitaly
+> 
