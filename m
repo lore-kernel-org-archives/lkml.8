@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6325FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3251EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9BF2073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB4420736
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443080;
-	bh=eYg53x1h58f7rl41capUo+qEjljpXzc3lYnFJUdcGOw=;
+	s=default; t=1584443084;
+	bh=0dvnIHjIvrMzVSv9CLZhGvjeFyWFTtD1oWPl5DeL6NA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xsiKpGSbhnof4ImP5SmxcMpE5q4ikuDt8SEMi3gmPoP5sj5QInFCAhy6qdikwvv8N
-	 IlGqORIJyX5jTUUBaUpJJXMDvgnGYjrUBmWcTmkCoJKTEkUGGxSqXYd2TGN22OjZXE
-	 vs0jNW/qNEgebMRmo9qLm8qzk+KpXnhM6Dnp+5lk=
+	b=MOpQKGZ4wX5i8o2piqaZ+E0BymPml8CIu35aq1EOehwRgCSyrdUxYkgImDXo2ZckS
+	 j1S70XM1bMNDOGRJJnnpYmEke8Wp1bJsCeh3HBo/FE+Z0NsRH67Ch3knj1vjU3nSnZ
+	 4OvYTllbJK/wzAMFkd8nDIs1yyowA+ESVNoXO+C4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgCQLEj (ORCPT
+        id S1726579AbgCQLEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44908 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727915AbgCQLEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:36 -0400
+        id S1728312AbgCQLEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACC02206EC;
-        Tue, 17 Mar 2020 11:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36E5420658;
+        Tue, 17 Mar 2020 11:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443075;
-        bh=eYg53x1h58f7rl41capUo+qEjljpXzc3lYnFJUdcGOw=;
+        s=default; t=1584443077;
+        bh=0dvnIHjIvrMzVSv9CLZhGvjeFyWFTtD1oWPl5DeL6NA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ebG8g09Z0731Ca87VeVZ2awpXS0fCPMNFO3MnAG5rc/lPZycRyeIa5zk5nfk/r2sc
-         zkRjbni0oQJBs0au2hTvrikoXJLWwE/1uCCJFl/nyaKIwj491XMxur+BH7OhZDkCL7
-         e+J6gncVODkxG+Da9IZbirbGrJpnXXGyDFKw90XM=
+        b=mQS93WGeabGvKuPRnboaetedfBX7I5D+6mzPd6oixLpH8jepFC/C2IL44F/VuKXKt
+         lGNr1v7OudwyMDoD926ElMnquwDi6ju0XpqP5FMuseoozmRgWBeYcL01aTMYv9qNdZ
+         hQa5Q50LnxvmWv0LQ5raMkUZshHO5/lsLoTAeyso=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.4 088/123] efi: Add a sanity check to efivar_store_raw()
-Date:   Tue, 17 Mar 2020 11:55:15 +0100
-Message-Id: <20200317103316.759507923@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.4 089/123] i2c: designware-pci: Fix BUG_ON during device removal
+Date:   Tue, 17 Mar 2020 11:55:16 +0100
+Message-Id: <20200317103316.846384251@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-commit d6c066fda90d578aacdf19771a027ed484a79825 upstream.
+commit 9be8bc4dd6177cf992b93b0bd014c4f611283896 upstream.
 
-Add a sanity check to efivar_store_raw() the same way
-efivar_{attr,size,data}_read() and efivar_show_raw() have it.
+Function i2c_dw_pci_remove() -> pci_free_irq_vectors() ->
+pci_disable_msi() -> free_msi_irqs() will throw a BUG_ON() for MSI
+enabled device since the driver has not released the requested IRQ before
+calling the pci_free_irq_vectors().
 
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200305084041.24053-3-vdronov@redhat.com
-Link: https://lore.kernel.org/r/20200308080859.21568-25-ardb@kernel.org
+Here driver requests an IRQ using devm_request_irq() but automatic
+release happens only after remove callback. Fix this by explicitly
+freeing the IRQ before calling pci_free_irq_vectors().
+
+Fixes: 21aa3983d619 ("i2c: designware-pci: Switch over to MSI interrupts")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/efivars.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/i2c/busses/i2c-designware-pcidrv.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -208,6 +208,9 @@ efivar_store_raw(struct efivar_entry *en
- 	u8 *data;
- 	int err;
+--- a/drivers/i2c/busses/i2c-designware-pcidrv.c
++++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
+@@ -313,6 +313,7 @@ static void i2c_dw_pci_remove(struct pci
+ 	pm_runtime_get_noresume(&pdev->dev);
  
-+	if (!entry || !buf)
-+		return -EINVAL;
-+
- 	if (in_compat_syscall()) {
- 		struct compat_efi_variable *compat;
+ 	i2c_del_adapter(&dev->adapter);
++	devm_free_irq(&pdev->dev, dev->irq, dev);
+ 	pci_free_irq_vectors(pdev);
+ }
  
 
 
