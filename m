@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A38DC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58C8C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659B320736
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2852076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443028;
-	bh=xeDGOU2FzIkIfmHeFajp1/GXc4arIXOD6z80Adr3VcY=;
+	s=default; t=1584443033;
+	bh=ybqz6l9Pn0+Ca0VsicFx4luxj8cHQTqRwj67ijp3NkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AnHKLSMvIezGr7/b0drIE/ZfFFO0PuhonNJ9dtVMsDFz8HbiqqILF2MhMQUbMIS/l
-	 YvjSsFFdfCYN3XRjoXpkPmbZoHdcbL1niAc+8KILjzKmOq+eOPl5O/AWLDzC9+Tqs3
-	 K7c1H4oOvNF72D2fh90uQSa/IJsePcmohemIeN/4=
+	b=rtg1OyhH8UgtEV3VUP5k7lOJf/u/r4oehvj1bUU9G2uUl4UtBD0Z7am2Ur/e4peL4
+	 fFMOmARwygH0Y/NDtbZJyuYK2Y9pXN4m8dpNukXOOwUDowfAjCBKhB6swgjgMnxyp9
+	 twrFvfNc21u5rTBjMUj+q+KBqZCRFbM6t6I7hQZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgCQLDr (ORCPT
+        id S1728192AbgCQLDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43730 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728145AbgCQLDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:03:41 -0400
+        id S1728173AbgCQLDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:03:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FBB620719;
-        Tue, 17 Mar 2020 11:03:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06B252071C;
+        Tue, 17 Mar 2020 11:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443020;
-        bh=xeDGOU2FzIkIfmHeFajp1/GXc4arIXOD6z80Adr3VcY=;
+        s=default; t=1584443029;
+        bh=ybqz6l9Pn0+Ca0VsicFx4luxj8cHQTqRwj67ijp3NkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XWH3rJ6coFEf8i9Ao7qbZt6Pssn4Hg/pmz/9KR2M+EgADSz150daS5svIbm4zIy4v
-         jC72pDyuohMzRpGjE/51zHJV08C7bAdFbIaoY5quonijgyHV81eLNfGkLjw6eqleyN
-         Mg3WQwezvg9kVlKbtQWpzv9tWyfHlhc5fsBEBmfU=
+        b=VnyW16ZS/c8IqWrN6hnO1DbeVtMxGBpEVxGfMFStROYUMNu0qME/F1LU35KmTbdkT
+         cs57TjgpfMGNnXoKwjP5QPBKayDH/UHKbPpagR1tb9RiFG1FKwOGOINN9iCAOimMkH
+         h5qiTDkhWMJOaV4KtfGeJ8TOYZwAdaNfjD3E1xZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 067/123] netfilter: x_tables: xt_mttg_seq_next should increase position index
-Date:   Tue, 17 Mar 2020 11:54:54 +0100
-Message-Id: <20200317103314.396389019@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Auld <matthew.auld@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.4 070/123] drm/i915: be more solid in checking the alignment
+Date:   Tue, 17 Mar 2020 11:54:57 +0100
+Message-Id: <20200317103314.666440211@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,69 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Matthew Auld <matthew.auld@intel.com>
 
-commit ee84f19cbbe9cf7cba2958acb03163fed3ecbb0f upstream.
+commit 1d61c5d711a2dc0b978ae905535edee9601f9449 upstream.
 
-If .next function does not change position index,
-following .show function will repeat output related
-to current position index.
+The alignment is u64, and yet is_power_of_2() assumes unsigned long,
+which might give different results between 32b and 64b kernel.
 
-Without patch:
- # dd if=/proc/net/ip_tables_matches  # original file output
- conntrack
- conntrack
- conntrack
- recent
- recent
- icmp
- udplite
- udp
- tcp
- 0+1 records in
- 0+1 records out
- 65 bytes copied, 5.4074e-05 s, 1.2 MB/s
-
- # dd if=/proc/net/ip_tables_matches bs=62 skip=1
- dd: /proc/net/ip_tables_matches: cannot skip to specified offset
- cp   <<< end of  last line
- tcp  <<< and then unexpected whole last line once again
- 0+1 records in
- 0+1 records out
- 7 bytes copied, 0.000102447 s, 68.3 kB/s
-
+Signed-off-by: Matthew Auld <matthew.auld@intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200305203534.210466-1-matthew.auld@intel.com
 Cc: stable@vger.kernel.org
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+(cherry picked from commit 2920516b2f719546f55079bc39a7fe409d9e80ab)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/x_tables.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c |    3 ++-
+ drivers/gpu/drm/i915/i915_utils.h              |    5 +++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/x_tables.c
-+++ b/net/netfilter/x_tables.c
-@@ -1551,6 +1551,9 @@ static void *xt_mttg_seq_next(struct seq
- 	uint8_t nfproto = (unsigned long)PDE_DATA(file_inode(seq->file));
- 	struct nf_mttg_trav *trav = seq->private;
+--- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+@@ -439,7 +439,8 @@ eb_validate_vma(struct i915_execbuffer *
+ 	if (unlikely(entry->flags & eb->invalid_flags))
+ 		return -EINVAL;
  
-+	if (ppos != NULL)
-+		++(*ppos);
+-	if (unlikely(entry->alignment && !is_power_of_2(entry->alignment)))
++	if (unlikely(entry->alignment &&
++		     !is_power_of_2_u64(entry->alignment)))
+ 		return -EINVAL;
+ 
+ 	/*
+--- a/drivers/gpu/drm/i915/i915_utils.h
++++ b/drivers/gpu/drm/i915/i915_utils.h
+@@ -233,6 +233,11 @@ static inline u64 ptr_to_u64(const void
+ 	__idx;								\
+ })
+ 
++static inline bool is_power_of_2_u64(u64 n)
++{
++	return (n != 0 && ((n & (n - 1)) == 0));
++}
 +
- 	switch (trav->class) {
- 	case MTTG_TRAV_INIT:
- 		trav->class = MTTG_TRAV_NFP_UNSPEC;
-@@ -1576,9 +1579,6 @@ static void *xt_mttg_seq_next(struct seq
- 	default:
- 		return NULL;
- 	}
--
--	if (ppos != NULL)
--		++*ppos;
- 	return trav;
- }
- 
+ static inline void __list_del_many(struct list_head *head,
+ 				   struct list_head *first)
+ {
 
 
