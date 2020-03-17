@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9C2C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB84C5AD44
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B6C2076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B58B2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="jsqGqW/y"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="hWvM4tP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgCQUvA (ORCPT
+        id S1727105AbgCQUvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:51:00 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:48037 "EHLO
+        Tue, 17 Mar 2020 16:51:03 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:45523 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgCQUu5 (ORCPT
+        with ESMTP id S1726897AbgCQUvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:50:57 -0400
+        Tue, 17 Mar 2020 16:51:00 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C5B2823E68;
-        Tue, 17 Mar 2020 21:50:52 +0100 (CET)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id AC2E123EB8;
+        Tue, 17 Mar 2020 21:50:55 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584478253;
+        t=1584478256;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VqfcYwyDQKikiyO04HE5MBT8kgxBHODa92cy3skiEn0=;
-        b=jsqGqW/yWgCdmWAn2/TKlz1FzzlAfVx4LVerrvKmRnuMaBRtNkWsXvN+jMLUwS7Uy0U63E
-        KDT/SvAArSsGCt3GQ8eg+1UtoXbBhMLOZp/ZERJOtvBvtcPVmKqspt34573eetvemNSl5M
-        yIdOOByfbOZ9ZtQ1Cz5FrRF6Je+NGqc=
+        bh=9Aga4RzofYNZyq0SiX9RxpLXl7fGWBYL+9Qsz5fx5Kg=;
+        b=hWvM4tP4mNgN8H1MK0OAR6DXozsArqpWFRhvQhydqM4nbPES9GJRWttPt/ztfuVXgHnPgR
+        mpTRMXCm3j90IcEd1tUONpkBrZSs4GaxX6f6O5aoHqNE1dyG3+PhA6yfA9id3UdUpQrwtS
+        tWtlQOBrBmnxVogEdkoWkfF6qy1HBp0=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -58,9 +58,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>, Michael Walle <michael@walle.cc>
-Subject: [PATCH 08/18] watchdog: add support for sl28cpld watchdog
-Date:   Tue, 17 Mar 2020 21:50:07 +0100
-Message-Id: <20200317205017.28280-9-michael@walle.cc>
+Subject: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+Date:   Tue, 17 Mar 2020 21:50:11 +0100
+Message-Id: <20200317205017.28280-13-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200317205017.28280-1-michael@walle.cc>
 References: <20200317205017.28280-1-michael@walle.cc>
@@ -68,7 +68,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
 X-Rspamd-Server: web
-X-Rspamd-Queue-Id: C5B2823E68
+X-Rspamd-Queue-Id: AC2E123EB8
 X-Spamd-Result: default: False [6.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -78,7 +78,7 @@ X-Spamd-Result: default: False [6.40 / 15.00];
          MIME_GOOD(-0.10)[text/plain];
          BROKEN_CONTENT_TYPE(1.50)[];
          TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.507];
+         NEURAL_SPAM(0.00)[0.499];
          DKIM_SIGNED(0.00)[];
          RCPT_COUNT_TWELVE(0.00)[22];
          MID_CONTAINS_FROM(1.00)[];
@@ -94,57 +94,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for the watchdog of the sl28cpld board management
-controller. This is part of a multi-function device driver.
+This adds support for the GPIO controller of the sl28 board management
+controller. This driver is part of a multi-function device.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- drivers/watchdog/Kconfig        |  11 ++
- drivers/watchdog/Makefile       |   1 +
- drivers/watchdog/sl28cpld_wdt.c | 238 ++++++++++++++++++++++++++++++++
- 3 files changed, 250 insertions(+)
- create mode 100644 drivers/watchdog/sl28cpld_wdt.c
+ drivers/gpio/Kconfig         |  11 ++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-sl28cpld.c | 332 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 344 insertions(+)
+ create mode 100644 drivers/gpio/gpio-sl28cpld.c
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 9ea2b43d4b01..c78b90ccc8cf 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -340,6 +340,17 @@ config MLX_WDT
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called mlx-wdt.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 3cbf8882a0dd..516e47017ef5 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1211,6 +1211,17 @@ config GPIO_RC5T583
+ 	  This driver provides the support for driving/reading the gpio pins
+ 	  of RC5T583 device through standard gpio library.
  
-+config SL28CPLD_WATCHDOG
-+	tristate "Kontron sl28 watchdog"
++config GPIO_SL28CPLD
++	tristate "Kontron sl28 GPIO"
 +	depends on MFD_SL28CPLD
-+	select WATCHDOG_CORE
++	depends on OF_GPIO
++	select GPIOLIB_IRQCHIP
 +	help
-+	  Say Y here to include support for the watchdog timer
-+	  on the Kontron sl28 CPLD.
++	  This enables support for the GPIOs found on the Kontron sl28 CPLD.
 +
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called sl28cpld_wdt.
++	  This driver can also be built as a module. If so, the module will be
++	  called gpio-sl28cpld.
 +
- # ALPHA Architecture
- 
- # ARM Architecture
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 2ee352bf3372..060e2f895fe8 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -223,3 +223,4 @@ obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
- obj-$(CONFIG_MENZ069_WATCHDOG) += menz69_wdt.o
- obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
- obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
-+obj-$(CONFIG_SL28CPLD_WATCHDOG) += sl28cpld_wdt.o
-diff --git a/drivers/watchdog/sl28cpld_wdt.c b/drivers/watchdog/sl28cpld_wdt.c
+ config GPIO_STMPE
+ 	bool "STMPE GPIOs"
+ 	depends on MFD_STMPE
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 0b571264ddbc..0ca2d52c78e8 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -127,6 +127,7 @@ obj-$(CONFIG_GPIO_SCH311X)		+= gpio-sch311x.o
+ obj-$(CONFIG_GPIO_SCH)			+= gpio-sch.o
+ obj-$(CONFIG_GPIO_SIFIVE)		+= gpio-sifive.o
+ obj-$(CONFIG_GPIO_SIOX)			+= gpio-siox.o
++obj-$(CONFIG_GPIO_SL28CPLD)		+= gpio-sl28cpld.o
+ obj-$(CONFIG_GPIO_SODAVILLE)		+= gpio-sodaville.o
+ obj-$(CONFIG_GPIO_SPEAR_SPICS)		+= gpio-spear-spics.o
+ obj-$(CONFIG_GPIO_SPRD)			+= gpio-sprd.o
+diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
 new file mode 100644
-index 000000000000..5927b7ad0be4
+index 000000000000..94f82013882f
 --- /dev/null
-+++ b/drivers/watchdog/sl28cpld_wdt.c
-@@ -0,0 +1,238 @@
++++ b/drivers/gpio/gpio-sl28cpld.c
+@@ -0,0 +1,332 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * SMARC-sAL28 Watchdog driver.
++ * SMARC-sAL28 GPIO driver.
 + *
 + * Copyright 2019 Kontron Europe GmbH
 + */
@@ -152,233 +155,327 @@ index 000000000000..5927b7ad0be4
 +#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
++#include <linux/of_device.h>
 +#include <linux/of_address.h>
++#include <linux/interrupt.h>
 +#include <linux/regmap.h>
 +#include <linux/platform_device.h>
-+#include <linux/watchdog.h>
++#include <linux/gpio/driver.h>
 +
-+/*
-+ * Watchdog timer block registers.
-+ */
-+#define SL28CPLD_WDT_CTRL	0
-+#define  WDT_CTRL_EN		BIT(0)
-+#define  WDT_CTRL_LOCK		BIT(2)
-+#define SL28CPLD_WDT_TIMEOUT	1
-+#define SL28CPLD_WDT_KICK	2
-+#define  WDT_KICK_VALUE		0x6b
-+#define SL28CPLD_WDT_COUNT	3
++#define GPIO_REG_DIR	0
++#define GPIO_REG_OUT	1
++#define GPIO_REG_IN	2
++#define GPIO_REG_IE	3
++#define GPIO_REG_IP	4
 +
-+static bool nowayout = WATCHDOG_NOWAYOUT;
-+module_param(nowayout, bool, 0);
-+MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-+				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
++#define GPI_REG_IN	0
 +
-+static int timeout;
-+module_param(timeout, int, 0);
-+MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
++#define GPO_REG_OUT	0
 +
-+struct sl28cpld_wdt {
-+	struct watchdog_device wdd;
++enum sl28cpld_gpio_type {
++	sl28cpld_gpio,
++	sl28cpld_gpi,
++	sl28cpld_gpo,
++};
++
++struct sl28cpld_gpio {
++	struct gpio_chip gpio_chip;
++	struct irq_chip irq_chip;
 +	struct regmap *regmap;
 +	u32 offset;
++	struct mutex lock;
++	u8 ie;
 +};
 +
-+static int sl28cpld_wdt_ping(struct watchdog_device *wdd)
++static void sl28cpld_gpio_set_reg(struct gpio_chip *chip, unsigned int reg,
++				  unsigned int offset, int value)
 +{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
++	struct sl28cpld_gpio *gpio = gpiochip_get_data(chip);
++	unsigned int mask = 1 << offset;
++	unsigned int val = value << offset;
 +
-+	return regmap_write(wdt->regmap, wdt->offset + SL28CPLD_WDT_KICK,
-+			    WDT_KICK_VALUE);
++	regmap_update_bits(gpio->regmap, gpio->offset + reg, mask, val);
 +}
 +
-+static int sl28cpld_wdt_start(struct watchdog_device *wdd)
++static void sl28cpld_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			      int value)
 +{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-+	unsigned int val;
-+
-+	val = WDT_CTRL_EN;
-+	if (nowayout)
-+		val |= WDT_CTRL_LOCK;
-+
-+	return regmap_update_bits(wdt->regmap, wdt->offset + SL28CPLD_WDT_CTRL,
-+				  val, val);
++	sl28cpld_gpio_set_reg(chip, GPIO_REG_OUT, offset, value);
 +}
 +
-+static int sl28cpld_wdt_stop(struct watchdog_device *wdd)
++static void sl28cpld_gpo_set(struct gpio_chip *chip, unsigned int offset,
++			     int value)
 +{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	return regmap_update_bits(wdt->regmap, wdt->offset + SL28CPLD_WDT_CTRL,
-+				  WDT_CTRL_EN, 0);
++	sl28cpld_gpio_set_reg(chip, GPO_REG_OUT, offset, value);
 +}
 +
-+static unsigned int sl28cpld_wdt_status(struct watchdog_device *wdd)
++static int sl28cpld_gpio_get_reg(struct gpio_chip *chip, unsigned int reg,
++				 unsigned int offset)
 +{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-+	unsigned int status;
-+	int ret;
-+
-+	ret = regmap_read(wdt->regmap, wdt->offset + SL28CPLD_WDT_CTRL,
-+			  &status);
-+	if (ret < 0)
-+		return 0;
-+
-+	/* is the watchdog timer running? */
-+	return (status & WDT_CTRL_EN) << WDOG_ACTIVE;
-+}
-+
-+static unsigned int sl28cpld_wdt_get_timeleft(struct watchdog_device *wdd)
-+{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-+	int ret;
-+	unsigned int val;
-+
-+	ret = regmap_read(wdt->regmap, wdt->offset + SL28CPLD_WDT_COUNT, &val);
-+	if (ret < 0)
-+		return 0;
-+
-+	return val;
-+}
-+
-+static int sl28cpld_wdt_set_timeout(struct watchdog_device *wdd,
-+				  unsigned int timeout)
-+{
-+	int ret;
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	ret = regmap_write(wdt->regmap, wdt->offset + SL28CPLD_WDT_TIMEOUT,
-+			   timeout);
-+	if (ret == 0)
-+		wdd->timeout = timeout;
-+
-+	return ret;
-+}
-+
-+static const struct watchdog_info sl28cpld_wdt_info = {
-+	.options = WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-+	.identity = "SMARC-sAL28 CPLD watchdog",
-+};
-+
-+static struct watchdog_ops sl28cpld_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = sl28cpld_wdt_start,
-+	.stop = sl28cpld_wdt_stop,
-+	.status = sl28cpld_wdt_status,
-+	.ping = sl28cpld_wdt_ping,
-+	.set_timeout = sl28cpld_wdt_set_timeout,
-+	.get_timeleft = sl28cpld_wdt_get_timeleft,
-+};
-+
-+static int sl28cpld_wdt_locked(struct sl28cpld_wdt *wdt)
-+{
++	struct sl28cpld_gpio *gpio = gpiochip_get_data(chip);
++	unsigned int mask = 1 << offset;
 +	unsigned int val;
 +	int ret;
 +
-+	ret = regmap_read(wdt->regmap, wdt->offset + SL28CPLD_WDT_CTRL, &val);
-+	if (ret < 0)
++	ret = regmap_read(gpio->regmap, gpio->offset + reg, &val);
++	if (ret)
 +		return ret;
 +
-+	return val & WDT_CTRL_LOCK;
++	return (val & mask) ? 1 : 0;
 +}
 +
-+static int sl28cpld_wdt_probe(struct platform_device *pdev)
++static int sl28cpld_gpio_get(struct gpio_chip *chip, unsigned int offset)
 +{
-+	struct sl28cpld_wdt *wdt;
-+	struct watchdog_device *wdd;
-+	struct resource *res;
-+	unsigned int val;
++	return sl28cpld_gpio_get_reg(chip, GPIO_REG_IN, offset);
++}
++
++static int sl28cpld_gpi_get(struct gpio_chip *chip, unsigned int offset)
++{
++	return sl28cpld_gpio_get_reg(chip, GPI_REG_IN, offset);
++}
++
++static int sl28cpld_gpio_get_direction(struct gpio_chip *chip,
++				       unsigned int offset)
++{
++	struct sl28cpld_gpio *gpio = gpiochip_get_data(chip);
++	unsigned int reg;
 +	int ret;
 +
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
++	ret = regmap_read(gpio->regmap, gpio->offset + GPIO_REG_DIR, &reg);
++	if (ret)
++		return ret;
++
++	if (reg & (1 << offset))
++		return GPIO_LINE_DIRECTION_OUT;
++	else
++		return GPIO_LINE_DIRECTION_IN;
++}
++
++static int sl28cpld_gpio_set_direction(struct gpio_chip *chip,
++				       unsigned int offset,
++				       bool output)
++{
++	struct sl28cpld_gpio *gpio = gpiochip_get_data(chip);
++	unsigned int mask = 1 << offset;
++	unsigned int val = (output) ? mask : 0;
++
++	return regmap_update_bits(gpio->regmap, gpio->offset + GPIO_REG_DIR,
++				  mask, val);
++
++}
++
++static int sl28cpld_gpio_direction_input(struct gpio_chip *chip,
++					 unsigned int offset)
++{
++	return sl28cpld_gpio_set_direction(chip, offset, false);
++}
++
++static int sl28cpld_gpio_direction_output(struct gpio_chip *chip,
++					  unsigned int offset, int value)
++{
++	sl28cpld_gpio_set_reg(chip, GPIO_REG_OUT, offset, value);
++	return sl28cpld_gpio_set_direction(chip, offset, true);
++}
++
++static void sl28cpld_gpio_irq_lock(struct irq_data *data)
++{
++	struct sl28cpld_gpio *gpio =
++		gpiochip_get_data(irq_data_get_irq_chip_data(data));
++
++	mutex_lock(&gpio->lock);
++}
++
++static void sl28cpld_gpio_irq_sync_unlock(struct irq_data *data)
++{
++	struct sl28cpld_gpio *gpio =
++		gpiochip_get_data(irq_data_get_irq_chip_data(data));
++
++	regmap_write(gpio->regmap, gpio->offset + GPIO_REG_IE, gpio->ie);
++	mutex_unlock(&gpio->lock);
++}
++
++static void sl28cpld_gpio_irq_disable(struct irq_data *data)
++{
++	struct sl28cpld_gpio *gpio =
++		gpiochip_get_data(irq_data_get_irq_chip_data(data));
++
++	if (data->hwirq >= 8)
++		return;
++
++	gpio->ie &= ~(1 << data->hwirq);
++}
++
++static void sl28cpld_gpio_irq_enable(struct irq_data *data)
++{
++	struct sl28cpld_gpio *gpio =
++		gpiochip_get_data(irq_data_get_irq_chip_data(data));
++
++	if (data->hwirq >= 8)
++		return;
++
++	gpio->ie |= (1 << data->hwirq);
++}
++
++static int sl28cpld_gpio_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	/* only edge triggered interrupts on both edges are supported */
++	return (type == IRQ_TYPE_EDGE_BOTH) ? 0 : -EINVAL;
++}
++
++static irqreturn_t sl28cpld_gpio_irq_thread(int irq, void *data)
++{
++	struct sl28cpld_gpio *gpio = data;
++	unsigned int ip;
++	unsigned int virq;
++	int pin;
++	int ret;
++
++	ret = regmap_read(gpio->regmap, gpio->offset + GPIO_REG_IP, &ip);
++	if (ret)
++		return IRQ_NONE;
++
++	/* mask other pending interrupts which are not enabled */
++	ip &= gpio->ie;
++
++	/* ack the interrupts */
++	regmap_write(gpio->regmap, gpio->offset + GPIO_REG_IP, ip);
++
++	/* and handle them */
++	while (ip) {
++		pin = __ffs(ip);
++		ip &= ~BIT(pin);
++
++		virq = irq_find_mapping(gpio->gpio_chip.irq.domain, pin);
++		if (virq)
++			handle_nested_irq(virq);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static int sl28_cpld_gpio_irq_init(struct platform_device *pdev, int irq)
++{
++	struct sl28cpld_gpio *gpio = platform_get_drvdata(pdev);
++	struct irq_chip *irq_chip = &gpio->irq_chip;
++	int ret;
++
++	irq_chip->name = "sl28cpld-gpio-irq",
++	irq_chip->irq_bus_lock = sl28cpld_gpio_irq_lock,
++	irq_chip->irq_bus_sync_unlock = sl28cpld_gpio_irq_sync_unlock,
++	irq_chip->irq_disable = sl28cpld_gpio_irq_disable,
++	irq_chip->irq_enable = sl28cpld_gpio_irq_enable,
++	irq_chip->irq_set_type = sl28cpld_gpio_irq_set_type,
++	irq_chip->flags = IRQCHIP_SKIP_SET_WAKE,
++
++	ret = gpiochip_irqchip_add_nested(&gpio->gpio_chip, irq_chip, 0,
++					  handle_simple_irq, IRQ_TYPE_NONE);
++	if (ret)
++		return ret;
++
++	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
++					sl28cpld_gpio_irq_thread,
++					IRQF_SHARED | IRQF_ONESHOT,
++					pdev->name, gpio);
++	if (ret)
++		return ret;
++
++	gpiochip_set_nested_irqchip(&gpio->gpio_chip, irq_chip, irq);
++
++	return 0;
++}
++
++static int sl28cpld_gpio_probe(struct platform_device *pdev)
++{
++	enum sl28cpld_gpio_type type =
++		platform_get_device_id(pdev)->driver_data;
++	struct device_node *np = pdev->dev.of_node;
++	struct sl28cpld_gpio *gpio;
++	struct gpio_chip *chip;
++	struct resource *res;
++	bool irq_support = false;
++	int ret;
++	int irq;
++
++	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
 +		return -ENOMEM;
 +
 +	if (!pdev->dev.parent)
 +		return -ENODEV;
 +
-+	wdt->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!wdt->regmap)
++	gpio->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!gpio->regmap)
 +		return -ENODEV;
 +
 +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-+	if (res == NULL)
++	if (!res)
 +		return -EINVAL;
-+	wdt->offset = res->start;
++	gpio->offset = res->start;
 +
-+	/* initialize struct watchdog_device */
-+	wdd = &wdt->wdd;
-+	wdd->parent = &pdev->dev;
-+	wdd->info = &sl28cpld_wdt_info;
-+	wdd->ops = &sl28cpld_wdt_ops;
-+	wdd->min_timeout = 1;
-+	wdd->max_timeout = 255;
++	/* initialize struct gpio_chip */
++	mutex_init(&gpio->lock);
++	chip = &gpio->gpio_chip;
++	chip->parent = &pdev->dev;
++	chip->label = dev_name(&pdev->dev);
++	chip->owner = THIS_MODULE;
++	chip->can_sleep = true;
++	chip->base = -1;
++	chip->ngpio = 8;
 +
-+	watchdog_set_drvdata(wdd, wdt);
++	switch (type) {
++	case sl28cpld_gpio:
++		chip->get_direction = sl28cpld_gpio_get_direction;
++		chip->direction_input = sl28cpld_gpio_direction_input;
++		chip->direction_output = sl28cpld_gpio_direction_output;
++		chip->get = sl28cpld_gpio_get;
++		chip->set = sl28cpld_gpio_set;
++		irq_support = true;
++		break;
++	case sl28cpld_gpo:
++		chip->set = sl28cpld_gpo_set;
++		chip->get = sl28cpld_gpi_get;
++		break;
++	case sl28cpld_gpi:
++		chip->get = sl28cpld_gpi_get;
++		break;
++	}
 +
-+	/* if the watchdog is locked, we set nowayout to true */
-+	ret = sl28cpld_wdt_locked(wdt);
++	ret = devm_gpiochip_add_data(&pdev->dev, chip, gpio);
 +	if (ret < 0)
 +		return ret;
-+	if (ret)
-+		nowayout = true;
-+	watchdog_set_nowayout(wdd, nowayout);
 +
-+	/*
-+	 * Initial timeout value, can either be set by kernel parameter or by
-+	 * the device tree. If both are not given the current value is used.
-+	 */
-+	watchdog_init_timeout(wdd, timeout, &pdev->dev);
-+	if (wdd->timeout) {
-+		sl28cpld_wdt_set_timeout(wdd, wdd->timeout);
-+	} else {
-+		ret = regmap_read(wdt->regmap,
-+				  wdt->offset + SL28CPLD_WDT_TIMEOUT, &val);
-+		if (ret < 0)
++	platform_set_drvdata(pdev, gpio);
++
++	if (irq_support && of_property_read_bool(np, "interrupt-controller")) {
++		irq = platform_get_irq(pdev, 0);
++		if (irq < 0)
 +			return ret;
-+		wdd->timeout = val;
++
++		ret = sl28_cpld_gpio_irq_init(pdev, irq);
++		if (ret)
++			return ret;
 +	}
-+
-+	ret = watchdog_register_device(wdd);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to register watchdog device\n");
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, wdt);
-+
-+	dev_info(&pdev->dev, "CPLD watchdog: initial timeout %d sec%s\n",
-+		wdd->timeout, nowayout ? ", nowayout" : "");
 +
 +	return 0;
 +}
 +
-+static int sl28cpld_wdt_remove(struct platform_device *pdev)
-+{
-+	struct sl28cpld_wdt *wdt = platform_get_drvdata(pdev);
++static const struct platform_device_id sl28cpld_gpio_id_table[] = {
++	{"sl28cpld-gpio", sl28cpld_gpio},
++	{"sl28cpld-gpi", sl28cpld_gpi},
++	{"sl28cpld-gpo", sl28cpld_gpo},
++};
++MODULE_DEVICE_TABLE(platform, sl28cpld_gpio_id_table);
 +
-+	watchdog_unregister_device(&wdt->wdd);
-+
-+	return 0;
-+}
-+
-+static void sl28cpld_wdt_shutdown(struct platform_device *pdev)
-+{
-+	struct sl28cpld_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	sl28cpld_wdt_stop(&wdt->wdd);
-+}
-+
-+static struct platform_driver sl28cpld_wdt_driver = {
-+	.probe = sl28cpld_wdt_probe,
-+	.remove = sl28cpld_wdt_remove,
-+	.shutdown = sl28cpld_wdt_shutdown,
++static struct platform_driver sl28cpld_gpio_driver = {
++	.probe = sl28cpld_gpio_probe,
++	.id_table = sl28cpld_gpio_id_table,
 +	.driver = {
-+		.name = "sl28cpld-wdt",
++		.name = "sl28cpld-gpio",
 +	},
 +};
-+module_platform_driver(sl28cpld_wdt_driver);
++module_platform_driver(sl28cpld_gpio_driver);
 +
-+MODULE_DESCRIPTION("sl28cpld Watchdog Driver");
++MODULE_DESCRIPTION("sl28cpld GPIO Driver");
 +MODULE_LICENSE("GPL");
 -- 
 2.20.1
