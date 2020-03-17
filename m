@@ -2,70 +2,107 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC89FC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD729C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4B920752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57E620738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:24:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JN0AzelZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PAbRC8Um"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgCQTVk (ORCPT
+        id S1726623AbgCQTY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:21:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59428 "EHLO
+        Tue, 17 Mar 2020 15:24:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60182 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgCQTVk (ORCPT
+        with ESMTP id S1726294AbgCQTY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:21:40 -0400
+        Tue, 17 Mar 2020 15:24:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=b+zfqjJJKArO89lYc5D7AoeuSHTXzYgw70bPUpJTsPA=; b=JN0AzelZ51FBfzVAgwUsuP0RuO
-        JHEtx+lrODYkdbaJgKRBPlYgliQHrWV/uMbpTw/a7gcdMuwz0V0R9ZLhGunPdDyUQieNMr5uxbx2k
-        ocUyqSx2lnGiqE8Y9t9+32FkEAg/GopV3py2OLShAO1qrg+pHyo4E3lk2cxDa5bCLZaDdCmEx9fZZ
-        LJnP/S00kDdTEr56TbnUT7BMsexZA8BCP/jUroVV3syxIHzHU22eQtX0CDssQMJgd+3J4fHMRBNfW
-        sZ0QvGZ6ab1Y5lAO6ISCvuHWSh1kInAU8cICaTnYfhJHSBclSu+mgSSLQF83KGfSc1OzcEG0V84/Z
-        lJOGNf8Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEHmS-0000x1-9o; Tue, 17 Mar 2020 19:21:36 +0000
-Date:   Tue, 17 Mar 2020 12:21:36 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     shakeelb@google.com, vbabka@suse.cz, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v3 PATCH 1/2] mm: swap: make page_evictable() inline
-Message-ID: <20200317192136.GE22433@bombadil.infradead.org>
-References: <1584466971-110029-1-git-send-email-yang.shi@linux.alibaba.com>
+        bh=mAb+lK7uiT3ldfeyyLr+kiJibGSBEZhmuX8jrROVGvY=; b=PAbRC8UmjK7Da14hi1EjiZgSxx
+        OJRb1TNOFcCb3HMABHjCPKeA3tNzE65fqpxKqBfpRMZgbEAtyeOdEUN+lldTC9RLL0CRyv/FQlYkY
+        sTUZV7l8ATDLVp7AONiHPY/pOfUEHfAAdD1MflfG/6rrOh7U1Z7X5MSGybuzH0jcGAXKIkyzGbmlB
+        QT9AqrsOjzxsUIJFkgcgNWYBElbplhROrg+e2XL4t9HXeOjtdB53nyTTUiAly3t6dBYnRUx8/7mN2
+        OpzxuPZW7p0gldx7C4DHpql4wTFKFPeuHONP62ioXdZLtS4YNuGsJgf6aQ1j2x1/i4Pm13KQQ/CRT
+        F5AfgwqQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEHop-0001Io-MK; Tue, 17 Mar 2020 19:24:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7ABBC30110E;
+        Tue, 17 Mar 2020 20:24:01 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 36E85284D7DF3; Tue, 17 Mar 2020 20:24:01 +0100 (CET)
+Date:   Tue, 17 Mar 2020 20:24:01 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Paul Turner <pjt@google.com>
+Subject: Re: [PATCH v2] sched/cpuset: distribute tasks within affinity masks
+Message-ID: <20200317192401.GE20713@hirez.programming.kicks-ass.net>
+References: <20200311010113.136465-1-joshdon@google.com>
+ <20200311140533.pclgecwhbpqzyrks@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584466971-110029-1-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <20200311140533.pclgecwhbpqzyrks@e107158-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 01:42:50AM +0800, Yang Shi wrote:
-> -static inline int mapping_unevictable(struct address_space *mapping)
-> +static inline bool mapping_unevictable(struct address_space *mapping)
->  {
->  	if (mapping)
->  		return test_bit(AS_UNEVICTABLE, &mapping->flags);
+On Wed, Mar 11, 2020 at 02:05:33PM +0000, Qais Yousef wrote:
+> On 03/10/20 18:01, Josh Don wrote:
+> > From: Paul Turner <pjt@google.com>
+> > 
+> > Currently, when updating the affinity of tasks via either cpusets.cpus,
+> > or, sched_setaffinity(); tasks not currently running within the newly
+> > specified mask will be arbitrarily assigned to the first CPU within the
+> > mask.
+> > 
+> > This (particularly in the case that we are restricting masks) can
+> > result in many tasks being assigned to the first CPUs of their new
+> > masks.
+> > 
+> > This:
+> >  1) Can induce scheduling delays while the load-balancer has a chance to
+> >     spread them between their new CPUs.
+> >  2) Can antogonize a poor load-balancer behavior where it has a
+> >     difficult time recognizing that a cross-socket imbalance has been
+> >     forced by an affinity mask.
+> > 
+> > This change adds a new cpumask interface to allow iterated calls to
+> > distribute within the intersection of the provided masks.
+> > 
+> > The cases that this mainly affects are:
+> > - modifying cpuset.cpus
+> > - when tasks join a cpuset
+> > - when modifying a task's affinity via sched_setaffinity(2)
+> > 
+> > Co-developed-by: Josh Don <joshdon@google.com>
+> > Signed-off-by: Josh Don <joshdon@google.com>
+> > Signed-off-by: Paul Turner <pjt@google.com>
 
-Shouldn't this be:
+> Anyway, for the API.
+> 
+> Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+> Tested-by: Qais Yousef <qais.yousef@arm.com>
 
--static inline int mapping_unevictable(struct address_space *mapping)
-+static inline bool mapping_unevictable(struct address_space *mapping)
- {
--       if (mapping)
--               return test_bit(AS_UNEVICTABLE, &mapping->flags);
--       return !!mapping;
-+       return mapping && test_bit(AS_UNEVICTABLE, &mapping->flags);
- }
-
+Thanks guys!
