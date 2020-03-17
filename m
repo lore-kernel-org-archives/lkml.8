@@ -2,120 +2,68 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1760AC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B32BC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E021C20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444095;
-	bh=HcFsNp3XYCBkZR4tEFW8Zcl8QhdgAavIYqCgaU7LXxM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VCg0wWgGgVaeu7M9pjVKDbUQUtyDRkzupgyChboOnGUVbQ3dAwKyZ7EQ23o46HX2V
-	 HB7qYrCa7tGNX4DI2jVqJdU77GHKzCnv8Lr4wdJ6AtFSOZAxBEW+3UshwzJaOoPRnE
-	 ahhJd1Ia/l3minzRGV/Vey7I2ta4RxRBMuRYAeeo=
+	by mail.kernel.org (Postfix) with ESMTP id 7A5CA20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbgCQLVd (ORCPT
+        id S1727534AbgCQLVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36726 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:21:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:35932 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727259AbgCQK6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:58:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36E7E20724;
-        Tue, 17 Mar 2020 10:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442712;
-        bh=HcFsNp3XYCBkZR4tEFW8Zcl8QhdgAavIYqCgaU7LXxM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdlMcU5ZNoiTDlRhP/3mjeqAvuxc+c0DfNGNTBEqh5hTVNsR90WTy1VtjCRBAAry0
-         fk2Rx/AFDVwjbDNXx28Q4pAxo/wmtQ+hr08tS0fLMSyJqcFrDeieMIuZBm+RFyw/zG
-         pu1OaRLubM/uQalLJesBmUyoBw/fhexxKBRsZPV0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH 4.19 55/89] workqueue: dont use wq_select_unbound_cpu() for bound works
-Date:   Tue, 17 Mar 2020 11:55:04 +0100
-Message-Id: <20200317103306.244039443@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
-References: <20200317103259.744774526@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1726541AbgCQLVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:21:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DB121FB;
+        Tue, 17 Mar 2020 04:21:30 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48B033F534;
+        Tue, 17 Mar 2020 04:21:29 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 11:21:27 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 05/15] arm64: Don't use disable_nonboot_cpus()
+Message-ID: <20200317112127.GA632169@arrakis.emea.arm.com>
+References: <20200223192942.18420-1-qais.yousef@arm.com>
+ <20200223192942.18420-6-qais.yousef@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223192942.18420-6-qais.yousef@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+On Sun, Feb 23, 2020 at 07:29:32PM +0000, Qais Yousef wrote:
+> disable_nonboot_cpus() is not safe to use when doing machine_down(),
+> because it relies on freeze_secondary_cpus() which in turn is
+> a suspend/resume related freeze and could abort if the logic detects any
+> pending activities that can prevent finishing the offlining process.
+> 
+> Beside disable_nonboot_cpus() is dependent on CONFIG_PM_SLEEP_SMP which
+> is an othogonal config to rely on to ensure this function works
+> correctly.
+> 
+> Use `reboot_cpu` variable instead of hardcoding 0 as the reboot cpu.
+> 
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> CC: Catalin Marinas <catalin.marinas@arm.com>
+> CC: Will Deacon <will@kernel.org>
+> CC: linux-arm-kernel@lists.infradead.org
+> CC: linux-kernel@vger.kernel.org
 
-commit aa202f1f56960c60e7befaa0f49c72b8fa11b0a8 upstream.
+I'm not sure whether these patches have been queued already (still
+unread in my inbox), so here it is:
 
-wq_select_unbound_cpu() is designed for unbound workqueues only, but
-it's wrongly called when using a bound workqueue too.
-
-Fixing this ensures work queued to a bound workqueue with
-cpu=WORK_CPU_UNBOUND always runs on the local CPU.
-
-Before, that would happen only if wq_unbound_cpumask happened to include
-it (likely almost always the case), or was empty, or we got lucky with
-forced round-robin placement.  So restricting
-/sys/devices/virtual/workqueue/cpumask to a small subset of a machine's
-CPUs would cause some bound work items to run unexpectedly there.
-
-Fixes: ef557180447f ("workqueue: schedule WORK_CPU_UNBOUND work on wq_unbound_cpumask CPUs")
-Cc: stable@vger.kernel.org # v4.5+
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-[dj: massage changelog]
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/workqueue.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -1384,14 +1384,16 @@ static void __queue_work(int cpu, struct
- 	    WARN_ON_ONCE(!is_chained_work(wq)))
- 		return;
- retry:
--	if (req_cpu == WORK_CPU_UNBOUND)
--		cpu = wq_select_unbound_cpu(raw_smp_processor_id());
--
- 	/* pwq which will be used unless @work is executing elsewhere */
--	if (!(wq->flags & WQ_UNBOUND))
--		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
--	else
-+	if (wq->flags & WQ_UNBOUND) {
-+		if (req_cpu == WORK_CPU_UNBOUND)
-+			cpu = wq_select_unbound_cpu(raw_smp_processor_id());
- 		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
-+	} else {
-+		if (req_cpu == WORK_CPU_UNBOUND)
-+			cpu = raw_smp_processor_id();
-+		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
-+	}
- 
- 	/*
- 	 * If @work was previously on a different pool, it might still be
-
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
