@@ -2,152 +2,87 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B351FC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67716C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8897E20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:05:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+26uggo"
+	by mail.kernel.org (Postfix) with ESMTP id 2B46C2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584482772;
+	bh=jg1FxJQAmhdeplR39xeuAeUIFFGrx1NIE4MK8j7xaGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x58kVKS+j4MHiEgSj22fSeA53QKON5BLUShQa4H9XeAIM7ab5bI1MlKneDvAvz63G
+	 Oj+LEO6BAFrfN3FixPpD+aMZ2JrS6RxikCV8Gx/PM2F/lfl/SJk+GzRnvSpLcEAdaw
+	 Th5CqGGT8i51Tf6Y2dRT6HIyOmbKcPRRNXduH0mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgCQWFD (ORCPT
+        id S1727036AbgCQWGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:05:03 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37490 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgCQWFA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:05:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 6so27761803wre.4;
-        Tue, 17 Mar 2020 15:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Qiz8SPGjq8UjHt5B7MxSwjAG4ELELv3CtLSiX/rkTdo=;
-        b=s+26uggoLggNmytLFNkdi5ReaP1mQqXWgjWy8h5Gs+gJsYAbnX71plLhfx3iTGckQJ
-         3mf1zQUAz7jDZ3g6nApgpqoGosK8gPPrhlFBHDcDoL9v2pE/eeoF4r27DSIx7JfTM6dW
-         cT7v5UZFhkEwJMZWl3oh3WfUmJyG6O6uDQsG2jFaNB45EGA5y6eZYi6qOyotGpQ/P2rs
-         MDaqKFpT2V/jik4ZT0LcexOjipeNHS2V86cxJJVDbdppigFG8Fbga86Mi/2PSd/wU7W3
-         35TKgLQF83iGAQp3rLZ1losEJcw8tKxBUQho2gmDuh0jeWLS80cLVtMh4PCzeXxBTvrZ
-         v66Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qiz8SPGjq8UjHt5B7MxSwjAG4ELELv3CtLSiX/rkTdo=;
-        b=LBbGfRtiwmayShvpy2ak03+WQrSdTCpvpqZ0rB4fTkrRkurJ32r0hBP28XbjJfbRqM
-         utS3sV2Zgxd7kRWb49zIrJwRO1x6tPx1dHFAUPQYyKuldUt93MnN5y3ddX+tJTsakyh9
-         Vd1GCwEnJUc+D1abGPJxEfR0nTkktNjYweyhsjF859sTtOiHOWhOGiQ7sA6ZVP+42FK9
-         pfWqQu02CS885qwOvh0czHWX/UHkNiz+cQDFmb+TLAa7T4jjOZIYh6rDSB9q25r3jTyO
-         KMWyA+jR6WTbfd8QUHoWhfN+npUZEyOEPhhfS7BA9kNOSLiPR/Zpvkt1y+6V0DauXnRM
-         /ojw==
-X-Gm-Message-State: ANhLgQ0GWyE6ONZGrXYZii+vxA/MQB/3i7dGwP0Iz5xG9hqcYFddPtju
-        VbFIIS7/Zup9XqveNRKTinA=
-X-Google-Smtp-Source: ADFU+vvUbJs7CjVtSah/hWS9CT/exY7FEYlJgzu0BJZSQqsLIr7AAJOzF8YKAtYskOQ1IKl756J0tA==
-X-Received: by 2002:adf:ef12:: with SMTP id e18mr1155345wro.108.1584482697768;
-        Tue, 17 Mar 2020 15:04:57 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id y200sm1059104wmc.20.2020.03.17.15.04.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 15:04:57 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 22:04:56 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v2 4/8] powernv/memtrace: always online added memory
- blocks
-Message-ID: <20200317220456.wczzkgtqwgxjw5c6@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200317104942.11178-1-david@redhat.com>
- <20200317104942.11178-5-david@redhat.com>
+        Tue, 17 Mar 2020 18:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726494AbgCQWGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:06:10 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5672B20714;
+        Tue, 17 Mar 2020 22:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584482770;
+        bh=jg1FxJQAmhdeplR39xeuAeUIFFGrx1NIE4MK8j7xaGU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VERFBito2jxzIAn/ZE8ds7YhF97HaUU1BEXN6qy5jL0hkelyWgvRcmHGwmFmuE/kQ
+         oRemJf6/sC3fcz2FEBjEbj3VZciyNAENHgXXClQ4YERLD8FZtnlwg7PhPvQWUnSdrm
+         adBYiU9nqV7l2Jpyf1ZRbuIds2wC2o/f2CNzbFtA=
+Date:   Tue, 17 Mar 2020 22:06:04 +0000
+From:   Will Deacon <will@kernel.org>
+To:     =?utf-8?B?6Z+p56eR5omN?= <hankecai@vivo.com>
+Cc:     catalin.marinas@arm.com, suzuki.poulose@arm.com,
+        Dave.Martin@arm.com, broonie@kernel.org,
+        amurray@thegoodpenguin.co.uk, jeremy.linton@arm.com,
+        tglx@linutronix.de, =?utf-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>,
+        trivial@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: remove redundant blank for '=' operator
+Message-ID: <20200317220602.GC20788@willie-the-truck>
+References: <ALsA-QB3CCyH77MiU4gx3arM.1.1583909569099.Hmail.hankecai@vivo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200317104942.11178-5-david@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ALsA-QB3CCyH77MiU4gx3arM.1.1583909569099.Hmail.hankecai@vivo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 11:49:38AM +0100, David Hildenbrand wrote:
->Let's always try to online the re-added memory blocks. In case add_memory()
->already onlined the added memory blocks, the first device_online() call
->will fail and stop processing the remaining memory blocks.
->
->This avoids manually having to check memhp_auto_online.
->
->Note: PPC always onlines all hotplugged memory directly from the kernel
->as well - something that is handled by user space on other
->architectures.
->
->Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->Cc: Paul Mackerras <paulus@samba.org>
->Cc: Michael Ellerman <mpe@ellerman.id.au>
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Cc: Michal Hocko <mhocko@kernel.org>
->Cc: Oscar Salvador <osalvador@suse.de>
->Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Wei Yang <richard.weiyang@gmail.com>
->Cc: linuxppc-dev@lists.ozlabs.org
->Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Looks good.
-
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-
->---
-> arch/powerpc/platforms/powernv/memtrace.c | 14 ++++----------
-> 1 file changed, 4 insertions(+), 10 deletions(-)
->
->diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
->index d6d64f8718e6..13b369d2cc45 100644
->--- a/arch/powerpc/platforms/powernv/memtrace.c
->+++ b/arch/powerpc/platforms/powernv/memtrace.c
->@@ -231,16 +231,10 @@ static int memtrace_online(void)
-> 			continue;
-> 		}
+On Wed, Mar 11, 2020 at 02:52:49PM +0800, 韩科才 wrote:
+> remove redundant blank for '=' operator, it may be more elegant.
 > 
->-		/*
->-		 * If kernel isn't compiled with the auto online option
->-		 * we need to online the memory ourselves.
->-		 */
->-		if (!memhp_auto_online) {
->-			lock_device_hotplug();
->-			walk_memory_blocks(ent->start, ent->size, NULL,
->-					   online_mem_block);
->-			unlock_device_hotplug();
->-		}
->+		lock_device_hotplug();
->+		walk_memory_blocks(ent->start, ent->size, NULL,
->+				   online_mem_block);
->+		unlock_device_hotplug();
+> Signed-off-by: hankecai <hankecai@vivo.com>
+> ---
+>  arch/arm64/kernel/cpufeature.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 		/*
-> 		 * Memory was added successfully so clean up references to it
->-- 
->2.24.1
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 0b6715625cf6..ce60d1012bfa 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -551,7 +551,7 @@ static void __init init_cpu_ftr_reg(u32 sys_reg, u64 new)
+>  
+>  	BUG_ON(!reg);
+>  
+> -	for (ftrp  = reg->ftr_bits; ftrp->width; ftrp++) {
+> +	for (ftrp = reg->ftr_bits; ftrp->width; ftrp++) {
+>  		u64 ftr_mask = arm64_ftr_mask(ftrp);
+>  		s64 ftr_new = arm64_ftr_value(ftrp, new);
 
--- 
-Wei Yang
-Help you, Help me
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
