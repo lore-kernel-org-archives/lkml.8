@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEE4C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D061C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BE3205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8320205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442988;
-	bh=tZZMnHIqT8ARNbWOY9+ZUdErgifyM5I8DObl5dgItgA=;
+	s=default; t=1584442990;
+	bh=Ggz1sRhTzQZoTuPck6ZrQkVJyEgMExwVHKHueR0GWSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOKhYxvVs+gXluGrQijr5bBABiio3sgBx6JX/HdUXzMcKaJSkoQfHQJEzx9bGaR79
-	 Hi51wCL4SNGpfY667NDM+ZVJHTJbLoeLajZUedrLtOzzELCrbX/bl75Pskchs9Fqxb
-	 VanD9K6ZJAxGHKRbNzflZ2OFj6n8tn+dgpKjbOaM=
+	b=l3vDv/zjpIHgk1usLnvinuJGaIVyHXtPtziPBBRE7c7uOfaB8PSrPLS11Wh1DdtzC
+	 9xCFtEybYw7svhbljOK6oqEXNg4D8suwo6HiUdL3OADy/2ivZ9M2cWjxOiERd6iAxd
+	 EyVuNkpUY4MLl0HC8vzYyrpHiNZyFKxHpMp91NPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgCQLDH (ORCPT
+        id S1727532AbgCQLDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:03:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42982 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:03:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727684AbgCQLDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:03:04 -0400
+        id S1728044AbgCQLDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:03:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6CA2205ED;
-        Tue, 17 Mar 2020 11:03:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14E5E205ED;
+        Tue, 17 Mar 2020 11:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442984;
-        bh=tZZMnHIqT8ARNbWOY9+ZUdErgifyM5I8DObl5dgItgA=;
+        s=default; t=1584442980;
+        bh=Ggz1sRhTzQZoTuPck6ZrQkVJyEgMExwVHKHueR0GWSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rifxZvQP6X+DtueuVGrlswDpcNXK0jfKpXwpmKaJVfmUQoBplEEWEHbaIhSdoFh47
-         WJoPaI/dRaRM/oxrmSNPuoWbJNhSmOWr1tGnIc8zXhOwK2ViCchZT/SusCcswTC7PU
-         WfD/0mmE4ENuVlVtFXgya4zCK/pgM4RwytN/gi/g=
+        b=NxMW3cR+3cr1hvrp8487270ETmO+kPqCZqSxuP3u0TpIHZb8mHtsAQIEaW/q9Zo2A
+         oT9zq2Tftqmrx36rh8AjyfybIdb14dp6xIa60kgs9uOqTGOigAwDIbAhiybH0s8Q8c
+         shJ4n5IwONgLsLVPZb9qKSj3Qt/9DyNPjIJcTdfc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 056/123] net: dsa: Dont instantiate phylink for CPU/DSA ports unless needed
-Date:   Tue, 17 Mar 2020 11:54:43 +0100
-Message-Id: <20200317103313.418148269@linuxfoundation.org>
+Subject: [PATCH 5.4 055/123] selftests/net/fib_tests: update addr_metric_test for peer route testing
+Date:   Tue, 17 Mar 2020 11:54:42 +0100
+Message-Id: <20200317103313.312688013@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,63 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit a20f997010c4ec76eaa55b8cc047d76dcac69f70 ]
+[ Upstream commit 0d29169a708bf730ede287248e429d579f432d1d ]
 
-By default, DSA drivers should configure CPU and DSA ports to their
-maximum speed. In many configurations this is sufficient to make the
-link work.
+This patch update {ipv4, ipv6}_addr_metric_test with
+1. Set metric of address with peer route and see if the route added
+correctly.
+2. Modify metric and peer address for peer route and see if the route
+changed correctly.
 
-In some cases it is necessary to configure the link to run slower,
-e.g. because of limitations of the SoC it is connected to. Or back to
-back PHYs are used and the PHY needs to be driven in order to
-establish link. In this case, phylink is used.
-
-Only instantiate phylink if it is required. If there is no PHY, or no
-fixed link properties, phylink can upset a link which works in the
-default configuration.
-
-Fixes: 0e27921816ad ("net: dsa: Use PHYLINK for the CPU/DSA ports")
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/port.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/fib_tests.sh |   34 ++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -649,9 +649,14 @@ err_phy_connect:
- int dsa_port_link_register_of(struct dsa_port *dp)
- {
- 	struct dsa_switch *ds = dp->ds;
-+	struct device_node *phy_np;
+--- a/tools/testing/selftests/net/fib_tests.sh
++++ b/tools/testing/selftests/net/fib_tests.sh
+@@ -1041,6 +1041,27 @@ ipv6_addr_metric_test()
+ 	fi
+ 	log_test $rc 0 "Prefix route with metric on link up"
  
--	if (!ds->ops->adjust_link)
--		return dsa_port_phylink_register(dp);
-+	if (!ds->ops->adjust_link) {
-+		phy_np = of_parse_phandle(dp->dn, "phy-handle", 0);
-+		if (of_phy_is_fixed_link(dp->dn) || phy_np)
-+			return dsa_port_phylink_register(dp);
-+		return 0;
-+	}
++	# verify peer metric added correctly
++	set -e
++	run_cmd "$IP -6 addr flush dev dummy2"
++	run_cmd "$IP -6 addr add dev dummy2 2001:db8:104::1 peer 2001:db8:104::2 metric 260"
++	set +e
++
++	check_route6 "2001:db8:104::1 dev dummy2 proto kernel metric 260"
++	log_test $? 0 "Set metric with peer route on local side"
++	log_test $? 0 "User specified metric on local address"
++	check_route6 "2001:db8:104::2 dev dummy2 proto kernel metric 260"
++	log_test $? 0 "Set metric with peer route on peer side"
++
++	set -e
++	run_cmd "$IP -6 addr change dev dummy2 2001:db8:104::1 peer 2001:db8:104::3 metric 261"
++	set +e
++
++	check_route6 "2001:db8:104::1 dev dummy2 proto kernel metric 261"
++	log_test $? 0 "Modify metric and peer address on local side"
++	check_route6 "2001:db8:104::3 dev dummy2 proto kernel metric 261"
++	log_test $? 0 "Modify metric and peer address on peer side"
++
+ 	$IP li del dummy1
+ 	$IP li del dummy2
+ 	cleanup
+@@ -1457,13 +1478,20 @@ ipv4_addr_metric_test()
  
- 	dev_warn(ds->dev,
- 		 "Using legacy PHYLIB callbacks. Please migrate to PHYLINK!\n");
-@@ -666,11 +671,12 @@ void dsa_port_link_unregister_of(struct
- {
- 	struct dsa_switch *ds = dp->ds;
+ 	run_cmd "$IP addr flush dev dummy2"
+ 	run_cmd "$IP addr add dev dummy2 172.16.104.1/32 peer 172.16.104.2 metric 260"
+-	run_cmd "$IP addr change dev dummy2 172.16.104.1/32 peer 172.16.104.2 metric 261"
+ 	rc=$?
+ 	if [ $rc -eq 0 ]; then
+-		check_route "172.16.104.2 dev dummy2 proto kernel scope link src 172.16.104.1 metric 261"
++		check_route "172.16.104.2 dev dummy2 proto kernel scope link src 172.16.104.1 metric 260"
++		rc=$?
++	fi
++	log_test $rc 0 "Set metric of address with peer route"
++
++	run_cmd "$IP addr change dev dummy2 172.16.104.1/32 peer 172.16.104.3 metric 261"
++	rc=$?
++	if [ $rc -eq 0 ]; then
++		check_route "172.16.104.3 dev dummy2 proto kernel scope link src 172.16.104.1 metric 261"
+ 		rc=$?
+ 	fi
+-	log_test $rc 0 "Modify metric of address with peer route"
++	log_test $rc 0 "Modify metric and peer address for peer route"
  
--	if (!ds->ops->adjust_link) {
-+	if (!ds->ops->adjust_link && dp->pl) {
- 		rtnl_lock();
- 		phylink_disconnect_phy(dp->pl);
- 		rtnl_unlock();
- 		phylink_destroy(dp->pl);
-+		dp->pl = NULL;
- 		return;
- 	}
- 
+ 	$IP li del dummy1
+ 	$IP li del dummy2
 
 
