@@ -2,105 +2,111 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF16FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D72C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF330206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1506620674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:08:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fmCrtBZl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qqNOC86Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgCQIFG (ORCPT
+        id S1726157AbgCQIIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:05:06 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:29127 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbgCQIFG (ORCPT
+        Tue, 17 Mar 2020 04:08:07 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43041 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgCQIIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:05:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584432305; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Rq46QNsjxgxfwewDcZ407dX0IB+0d3ABIku8fCN0K48=; b=fmCrtBZlnVLEIkQ1Xxs8gLz4msc45hVEsLKwAo8ffoSajdw/bCbjjdgNMV3BePN02yQoL7Hs
- 7DNw9dqfjDHVUq+j96XivQVYWMgFHszaxeFoc0u44dQWoqqTEpPapFYMG/a+xVzeknC60GIn
- Yw6Zals5P1kwHVw43zUKW4URSaw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7084a3.7f311cef2dc0-smtp-out-n02;
- Tue, 17 Mar 2020 08:04:51 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 93F51C43636; Tue, 17 Mar 2020 08:04:51 +0000 (UTC)
-Received: from maggarwa-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: maggarwa)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 41017C433CB;
-        Tue, 17 Mar 2020 08:04:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 41017C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=maggarwa@codeaurora.org
-From:   Mohit Aggarwal <maggarwa@codeaurora.org>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc:     Mohit Aggarwal <maggarwa@codeaurora.org>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
-Date:   Tue, 17 Mar 2020 13:34:19 +0530
-Message-Id: <1584432259-28687-1-git-send-email-maggarwa@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 17 Mar 2020 04:08:06 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r7so21693455ljp.10;
+        Tue, 17 Mar 2020 01:08:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xJDoChAKlMblDnmdsWkrHiAcckWv+m3XVo6l0TPCl5M=;
+        b=qqNOC86QEbDtH12YTw6vhbr3LNJZVbggyXoR5v+zm9yqy4dDAmLkRrpnCpSXvdAiZL
+         IboHI+kGpdv+fFLxgsMSIZhR8f4TmjXerfnmWY5tItwLqFww2KBpJ8dnzlv+xla+TSkR
+         67OZQ6uMUkUTE2On2maijpoQngQ0mT+bCzuunr1HQSVI/fbn4y6cppioG6BaxFHXWqDj
+         gKWfwjWVBAaDCB8Cxesy2QTusbzwOLtQrqu4fQAs0he2t9DzBUXWAjU04xnPQXhLq4Ab
+         IM/G81ipMbL41jwI14qQFi0o+ZK5t7VpxvVvIDiUQAVONn8kz5FmkfyxjtTiPL5cTSKS
+         1Bpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xJDoChAKlMblDnmdsWkrHiAcckWv+m3XVo6l0TPCl5M=;
+        b=nCrOs+gAn3hqZoDT+5fjiqvwmPo+jUzLexrBbQJ2fuFmdKWjrHMzUg+c2zmk2/WPyP
+         ZxJYEjF5XwlmdkS8/c5qijR6lIcL30vUcv1hwqGEQfjMPdbMjpnqmIzfDrlZpUEgzfi4
+         DibZUY/VjEwNau/ms4BTnF7SgFY0U6oWag+Q4GO52B6+X/nRtesVdFLfuJqoOK4oWJm4
+         KS4CsSpjl50+rBnzOmduszXQZWcu/Zpv/rcD45H5RiMewlWk1aKeGCJBeX1klItO9LIg
+         9jdCNvQu9IrOu81wR6uNOJxH4nV2MGubRC+ebRrf+YEWMNTJKfhFLZhJ5tLM/D6cEX58
+         m49w==
+X-Gm-Message-State: ANhLgQ1kq/R44ipkV0kgQcsab7UsYkzOvmIiNhfXtnSzpNgaqzENyn11
+        rw70ZdlNuX87PScJ7xVkrXU=
+X-Google-Smtp-Source: ADFU+vvCQ3NoEJ3nb/OwR5lcRkL8eBY/cGrtriKrq/5tktFEr921qBkjihV+rjh0ZWyiMV4z1K2PxQ==
+X-Received: by 2002:a05:651c:1047:: with SMTP id x7mr2013039ljm.246.1584432483618;
+        Tue, 17 Mar 2020 01:08:03 -0700 (PDT)
+Received: from gmail.com (94-255-169-249.cust.bredband2.com. [94.255.169.249])
+        by smtp.gmail.com with ESMTPSA id 207sm1846451lfh.33.2020.03.17.01.08.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 01:08:03 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 09:11:19 +0100
+From:   Marcus Folkesson <marcus.folkesson@gmail.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v4 0/3] media: i2c: imx219: Feature enhancements
+Message-ID: <20200317081119.GB138007@gmail.com>
+References: <1583846229-6799-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200317080135.GA138007@gmail.com>
+ <OSBPR01MB359081F292B1F7E3D56242EFAAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB359081F292B1F7E3D56242EFAAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, alarm register is not cleared on resume
-leading to reboot during power off charging mode.
+Hi Prabhakar,
 
-Signed-off-by: Mohit Aggarwal <maggarwa@codeaurora.org>
----
- drivers/rtc/rtc-pm8xxx.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+On Tue, Mar 17, 2020 at 08:03:49AM +0000, Prabhakar Mahadev Lad wrote:
+> Hi Marcus,
+> 
+> > -----Original Message-----
+> > From: Marcus Folkesson <marcus.folkesson@gmail.com>
+> > Sent: 17 March 2020 08:02
+> > To: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>; Sakari Ailus
+> > <sakari.ailus@linux.intel.com>; Mauro Carvalho Chehab
+> > <mchehab@kernel.org>; linux-media@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Lad Prabhakar <prabhakar.csengg@gmail.com>
+> > Subject: Re: [PATCH v4 0/3] media: i2c: imx219: Feature enhancements
+> >
+> > Hi,
+> >
+> > To which tree does this patchset apply?
+> >
+> These patches apply to media_tree [1], btw v4 patches have been accepted and  merged into master branch of media_tree.
 
-diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-index bbe013f..96e7985 100644
---- a/drivers/rtc/rtc-pm8xxx.c
-+++ b/drivers/rtc/rtc-pm8xxx.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
--/* Copyright (c) 2010-2011, 2019, The Linux Foundation. All rights reserved. */
-+/* Copyright (c) 2010-2011, 2019-2020, The Linux Foundation. All rights reserved. */
- 
- #include <linux/of.h>
- #include <linux/module.h>
-@@ -301,6 +301,7 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
- 	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
- 	const struct pm8xxx_rtc_regs *regs = rtc_dd->regs;
- 	unsigned int ctrl_reg;
-+	u8 value[NUM_8_BIT_RTC_REGS] = {0};
- 
- 	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
- 
-@@ -319,6 +320,16 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
- 		goto rtc_rw_fail;
- 	}
- 
-+	/* Clear Alarm register */
-+	if (!enable) {
-+		rc = regmap_bulk_write(rtc_dd->regmap, regs->alarm_rw, value,
-+					sizeof(value));
-+		if (rc) {
-+			dev_err(dev, "Write to RTC ALARM register failed\n");
-+			goto rtc_rw_fail;
-+		}
-+	}
-+
- rtc_rw_fail:
- 	spin_unlock_irqrestore(&rtc_dd->ctrl_reg_lock, irq_flags);
- 	return rc;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thank you and good work!
+
+> 
+> [1] https://git.linuxtv.org//media_tree.git
+> 
+> Cheers,
+> --Prabhakar
+
+Best regards
+Marcus Folkesson
