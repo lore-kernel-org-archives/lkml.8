@@ -2,162 +2,65 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09019C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27378C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE15420735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E119520752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:55:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="qr4URIDH"
+	dkim=pass (1024-bit key) header.d=emersion.fr header.i=@emersion.fr header.b="cGfJjt1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgCQRw7 (ORCPT
+        id S1726473AbgCQRy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:52:59 -0400
-Received: from web0081.zxcs.nl ([185.104.29.10]:36948 "EHLO web0081.zxcs.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgCQRw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:52:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Message-ID:References:In-Reply-To:Subject:Cc:To:
-        From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To
-        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kYE0yHNNN9LAxleq7P2y1gIFBIIP2Wmb0USpvPZmwSM=; b=qr4URIDH2cQk45mFHknGWBzW2M
-        bQwg7rAVDWTrTlb+Z7P+knyEsBmvdVuw715UOGwMdlsgnc0J+GP2h7kE1SRvVF2db1VaaD+lk6ZYB
-        GjTvXOPCjHahkS4pxBwaNS1Q/1FtkUg4N2zkbVL1KZVx8EMGPArFgZqfRNArCEwg2c6XDh11B3ibz
-        ShxBPIbEE7Sd12Pqk75icoOHKKHX/8iFLszEoR2pNpYJ2bd0yB7OXCgMmYQeDPICfmdaYI7TNuLZh
-        mqni9XKg0dFLx2iNrechiSS9sn3CYPDYRD1Hya2ZZUKFH3GAOUrftrUfhPS7EhoKlkwSatcGJbQ+2
-        zUL7BQSA==;
-Received: from spamrelay.zxcs.nl ([185.104.28.12]:41856 helo=mail-slave01.zxcs.nl)
-        by web0081.zxcs.nl with esmtp (Exim 4.92.3)
-        (envelope-from <dev@pascalroeleven.nl>)
-        id 1jEGOY-003b4c-Dm; Tue, 17 Mar 2020 18:52:50 +0100
+        Tue, 17 Mar 2020 13:54:59 -0400
+Received: from mail1.protonmail.ch ([185.70.40.18]:35179 "EHLO
+        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgCQRy7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 13:54:59 -0400
+Date:   Tue, 17 Mar 2020 17:54:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
+        s=protonmail; t=1584467697;
+        bh=QhRsZkiS34kLl49yJQAowGH2092tzJe/Rf0Sdi2s4ZM=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=cGfJjt1AsGzuodm5NxsbQdCrM4cDb+CE9Fr/8goDC44MLih6MSsI7hHnHSBTYK/Us
+         Sbk3FveAuUzR2weUHvtzNxqiBQslNg6pVEPzk3LGJn8lUOTDiLB/JB91SPpjFvRc7G
+         vRHaWW1jKXWJeeyoX0XmfnLFxWgfUKCgOBsAWVz8=
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "christian@brauner.io" <christian@brauner.io>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>
+From:   Simon Ser <contact@emersion.fr>
+Reply-To: Simon Ser <contact@emersion.fr>
+Subject: SO_PEERCRED and pidfd
+Message-ID: <go0RLOS7_DdxyAmfrDR38QPUloZuUtiFdXe2Ey3EkGGuvmW7z18Dvt4fY1qZ1k-Y75-YZSxqVWnZpWRGN7TZ6OPbDczfL7HI25bXLIYq1y4=@emersion.fr>
+Feedback-ID: FsVprHBOgyvh0T8bxcZ0CmvJCosWkwVUg658e_lOUQMnA9qynD8O1lGeniuBDfPSkDAUuhiKfOIXUZBfarMyvA==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 17 Mar 2020 18:52:50 +0100
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
-In-Reply-To: <20200317173208.t5s63pfz3byxsgzi@pengutronix.de>
-References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
- <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
- <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
- <20200316072613.37lnjfloac4npudf@pengutronix.de>
- <20200317173208.t5s63pfz3byxsgzi@pengutronix.de>
-User-Agent: Roundcube Webmail/1.4.2
-Message-ID: <ddd9b9c5b3d28a30c888fdcfc1ac6d64@pascalroeleven.nl>
-X-Sender: dev@pascalroeleven.nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-17 18:32, Uwe Kleine-König wrote:
-> Hello Pascal,
-> 
-> On Mon, Mar 16, 2020 at 08:26:13AM +0100, Uwe Kleine-König wrote:
->> On Thu, Mar 12, 2020 at 04:06:07PM +0100, Pascal Roeleven wrote:
->> > On 2020-03-12 14:29, Uwe Kleine-König wrote:
->> > > On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
->> > > > Hi all,
->> > > >
->> > > > I am working on adding an old A10 device to mainline and noticed an
->> > > > issue
->> > > > when testing on 5.5.8 vs master.
->> > > >
->> > > > Since 5.6-rc1, I can't control the brightness of my LCD backlight
->> > > > anymore.
->> > > > The backlight stays on full brightness instead. I am controlling the
->> > > > brightness value via sysfs for testing.
->> > > >
->> > > > I am not sure if this is a general pwm-sun4i issue or if it is
->> > > > related to
->> > > > the backlight. However I narrowed it down to one commit for pwm-sun4i:
->> > > >
->> > > > fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
->> > > >
->> > > > If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
->> > > > master, the backlight works fine. Unfortunately, due to my lack of
->> > > > kernel
->> > > > experience, I can't see how the commit above broke it.
->> > >
->> > > Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
->> > > this. Looking at the output of
->> > >
->> > > 	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
->> > >
->> > > (i.e. ignoring whitespace changes) I don't see how the behaviour you're
->> > > reporting can be explained.
->> > >
->> > > Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
->> > > commit?
->> > >
->> > > Can you install a tool to inspect register values and check how the
->> > > affected registers change if you switch kernel versions and/or pwm
->> > > settings?
->> > >
->> > > (e.g.
->> > > 	memtool md 0x1c20e00+0xc
->> > > )
->> > >
->> > > Best regards
->> > > Uwe
->> >
->> > Thanks for your response.
->> >
->> > Yes I am sure that is the commit. If I am on master, and replace pwm-sun4i.c
->> > with the one from 5b090b43, everything works. If I then apply fa4d8178, it
->> > stops working.
->> >
->> > And strangely the output of the registers is exactly the same before and
->> > after fa4d8178:
->> >
->> > 01c20e00: 00000050 00130014 00000000 (full brightness)
->> > 01c20e00: 00000050 00130006 00000000 (min brightness)
->> >
->> > Even when I'm on 5b090b43 and cherry-pick fa4d8178 can I reproduce the
->> > issue.
->> 
->> Very strange. I'm out of sensible ideas. The remaining ones are:
->> 
->> - enable tracing in the kernel and boot with
->> 
->> 	trace_event=pwm
->> 
->>   And then check after the problem occurred in
->>   /sys/kernel/debug/tracing/trace if something sticks out.
->> 
->> - Try modifying the registers using memtool. E.g.
->> 
->> 	memtool mw 0x01c20e04 0x00130012
->> 
->> - Do you have equipment to check the actual output of the PWM 
->> hardware?
->>   If so, what do you see?
-> 
-> I assume the sun4i-series you sent earlier today resolves the problems
-> you reported here?
-> 
-> Best regards
-> Uwe
+Hi all,
 
-Hi Uwe,
+I'm a Wayland developer and I've been working on protocol security,
+which involves identifying the process on the other end of a Unix
+socket [1]. This is already done by e.g. D-Bus via the PID, however
+this is racy [2].
 
-Yes it does, but as Emil mentioned it's probably not complete. It's just 
-an RFC for now to make sure it doesn't cause a regression. Turns out the 
-Allwinner PWM controller is even more pickier than I thought.
+Getting the PID is done via SO_PEERCRED. Would there be interest in
+adding a way to get a pidfd out of a Unix socket to fix the race?
 
-Again, thank you for your help.
+Thanks,
+
+Simon Ser
+
+[1]: https://gitlab.freedesktop.org/wayland/weston/issues/206
+[2]: https://github.com/flatpak/flatpak/issues/2995
