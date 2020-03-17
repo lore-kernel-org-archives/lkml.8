@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C92C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1F8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFB920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE71D20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443695;
-	bh=UM1jBLKFzCcE/cd3i8fg+UzlGgR3gLrxgTZisoqc0Rg=;
+	s=default; t=1584443707;
+	bh=6Ht9hRcQ3x8A/4aWNjgCjoKSWvdw+u4LLN81XdYlhHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjpYQVu8Y8rJMgDXfdCTjXdx0EYWu7mQDWM1IaHFNNcck6ll2x7XxGhV3g+m4baOh
-	 DYW2JRB/7Jt659ajOhnTjeU6dU5+B4Zpka0/8DpytOLykN2nVj3+cR3+nPQegfJh1O
-	 4NJfw8NiT/sUkZ0H6q5I/PVd+2fK7WnG1V2b6a+8=
+	b=dt2IOtNxZ5uIgDTTrGswwiG8ZDzY2CN0Vq3r4zvmG5LXlAcsH57NqzVblHMMSwsmL
+	 hq4gZ/7jkTj7EZh2qrPd2r1r6dMRCcHRUDvmmnSDwTt2GXaA6/xPuZX/uSfDaR/iep
+	 gMmctXxh/QAOwcPlquielacOK4ivFP6o4PoUUG5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbgCQLOy (ORCPT
+        id S1729479AbgCQLMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:14:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57604 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729509AbgCQLNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:38 -0400
+        id S1729460AbgCQLMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9011B205ED;
-        Tue, 17 Mar 2020 11:13:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A64F206EC;
+        Tue, 17 Mar 2020 11:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443618;
-        bh=UM1jBLKFzCcE/cd3i8fg+UzlGgR3gLrxgTZisoqc0Rg=;
+        s=default; t=1584443565;
+        bh=6Ht9hRcQ3x8A/4aWNjgCjoKSWvdw+u4LLN81XdYlhHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nFu/HfFKOpEbohHv4NcMXwghreJYZl9At9wrvJiU+RfBA5x4pzEuXoK5Eff0MQmGC
-         XvpVH9392Z95kdb0AVPNpd2UOWsYWYcr1CnKNPdi3sCdHm0hYJUiWho/m+xsX+xNpo
-         ulC8g/Grhaw9rsQ0YfGjBB1EKfuT6fBcyNxq6pX8=
+        b=f299bMb9V4brqm3+uLvbwMIwENok/KBD8/wcm6zOo9IJBLKP1lmHJDrk88IeC9hst
+         6HL/xZsrk0+LxdwbainhxsEzNHAcy/aU5Dvg+9S21PniQYuP5BG0fiTe+wGzcPDKU9
+         qUczR5MBywForF8sltRD2eowijZ7ObIcyKxj6HtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.5 144/151] netfilter: nf_tables: dump NFTA_CHAIN_FLAGS attribute
-Date:   Tue, 17 Mar 2020 11:55:54 +0100
-Message-Id: <20200317103336.890985032@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com,
+        syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com,
+        Sven Eckelmann <sven@narfation.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 5.5 124/151] batman-adv: Dont schedule OGM for disabled interface
+Date:   Tue, 17 Mar 2020 11:55:34 +0100
+Message-Id: <20200317103335.262073922@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -58,34 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit d78008de6103c708171baff9650a7862645d23b0 upstream.
+commit 8e8ce08198de193e3d21d42e96945216e3d9ac7f upstream.
 
-Missing NFTA_CHAIN_FLAGS netlink attribute when dumping basechain
-definitions.
+A transmission scheduling for an interface which is currently dropped by
+batadv_iv_ogm_iface_disable could still be in progress. The B.A.T.M.A.N. V
+is simply cancelling the workqueue item in an synchronous way but this is
+not possible with B.A.T.M.A.N. IV because the OGM submissions are
+intertwined.
 
-Fixes: c9626a2cbdb2 ("netfilter: nf_tables: add hardware offload support")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Instead it has to stop submitting the OGM when it detect that the buffer
+pointer is set to NULL.
+
+Reported-by: syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com
+Reported-by: syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com
+Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Cc: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_tables_api.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ net/batman-adv/bat_iv_ogm.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1405,6 +1405,11 @@ static int nf_tables_fill_chain_info(str
- 					      lockdep_commit_lock_is_held(net));
- 		if (nft_dump_stats(skb, stats))
- 			goto nla_put_failure;
-+
-+		if ((chain->flags & NFT_CHAIN_HW_OFFLOAD) &&
-+		    nla_put_be32(skb, NFTA_CHAIN_FLAGS,
-+				 htonl(NFT_CHAIN_HW_OFFLOAD)))
-+			goto nla_put_failure;
- 	}
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -789,6 +789,10 @@ static void batadv_iv_ogm_schedule_buff(
  
- 	if (nla_put_be32(skb, NFTA_CHAIN_USE, htonl(chain->use)))
+ 	lockdep_assert_held(&hard_iface->bat_iv.ogm_buff_mutex);
+ 
++	/* interface already disabled by batadv_iv_ogm_iface_disable */
++	if (!*ogm_buff)
++		return;
++
+ 	/* the interface gets activated here to avoid race conditions between
+ 	 * the moment of activating the interface in
+ 	 * hardif_activate_interface() where the originator mac is set and
 
 
