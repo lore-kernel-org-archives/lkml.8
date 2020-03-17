@@ -2,98 +2,149 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932CEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60841C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D47820754
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33EFE2076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tMDFRzTM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JWAyEiNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgCQNfu (ORCPT
+        id S1726857AbgCQNgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:35:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57534 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgCQNft (ORCPT
+        Tue, 17 Mar 2020 09:36:20 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41437 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCQNgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:35:49 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02HDZXeK024397;
-        Tue, 17 Mar 2020 08:35:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584452133;
-        bh=EYviLt1tmLkkYRzO5gGJjof15MRwO/EmxXKZpB0sQHk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tMDFRzTMMQ1GDonZySKl3XHX+nAUbToR1HJEl8E6lVspjZJ4YWRsOW8NAbrVQ4MbF
-         +KpGYS81qKMBNN9U1mWmp0PSAgNtE+pHtRI15SeA8AUZ2t4R6r3hmDoAoHQlYaq5zV
-         k9pRbyhadAnj33LU0IIuComaQYUV4ZPFwzrp4Fvs=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02HDZXg5096136
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Mar 2020 08:35:33 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 08:35:33 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 08:35:33 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02HDZWL5047553;
-        Tue, 17 Mar 2020 08:35:32 -0500
-Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <cover.1584450500.git.mchehab+huawei@kernel.org>
- <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
- <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
-Date:   Tue, 17 Mar 2020 08:29:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 17 Mar 2020 09:36:19 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t16so2612681plr.8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:36:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=YXH/xNjxfleJEOV9byMjccsKxIs9a6z9OWbDdfpz6zc=;
+        b=JWAyEiNuawTbzorI83x8So0gmfsgpwNOs6jttV8hfKCHYkRXRBaT+C+hh87XItsDBm
+         vPgKo0OZ3oIVlb6gTgvnxKtV1zz3tRx5tzYAU5gs0JfLy/xBcGXBsBPWRZzBLEEaXfIV
+         28uEueo9T1tDm+axDqubcH/w1zJYyTpnbaXJeUiDY1FSKtQxmULUN4ZaUSmDr+O6rr83
+         lt/F5WUbANR/ANSEw/aNW2OVy233bGggVheNCdEls8PSMuwWinSVvwxKx5yhYWGsQC5T
+         coCaY+Sr/nSPn9lWGHCO5W5ehx3hv6xphbd1kR0WTalMsf0zPMUA55xRRc/977aj4zU6
+         B9QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=YXH/xNjxfleJEOV9byMjccsKxIs9a6z9OWbDdfpz6zc=;
+        b=swUwsHFZVn1PRB8+a4dYDu5jfOPKX+J2cbYOcMciAkC/uYt5u5sOFpBQbJ384AKTdQ
+         VgLv92N21DPx6qaqtUZy5xPEq1z0sGbyC88OcllhwEOTiPzrk2RqZJyf+4mIr4RFWswY
+         aYxXDNoqe7+6YfAgs2FWMk01/O9CSIgfQkgY5pQLmvD+F4IpTSQkTtDx88zsNtr4quB7
+         RwMcoMwUJYGtwPWUMXxl9LahTpDYLDpATCHzl2+hQt2hTCyySWyLohiLn1ECL6eoJpWd
+         LbgFezJXNpGtrETvivdaoHMiT07hgqs/jJDmpnQVSzJQuMLkMrG1ufCTwtYPuu6Ex721
+         olVw==
+X-Gm-Message-State: ANhLgQ1jr4gSDl5Emi4T5n9RzV8A+zxA92EqC2mtiqNkkYJIl7c9Ngzu
+        YwMiWoqdhgUchEOHGIRtlSaufvEZ
+X-Google-Smtp-Source: ADFU+vsdKkZOSbYKYTdaP996gRlC8ZEsAXNNtMSQ+NHtfA057RJVAxylFVonGmibsVEfMno0CouzLw==
+X-Received: by 2002:a17:90a:3a8c:: with SMTP id b12mr5498911pjc.48.1584452178849;
+        Tue, 17 Mar 2020 06:36:18 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s125sm2853594pgc.53.2020.03.17.06.36.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Mar 2020 06:36:17 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Subject: [PATCH] lib/test_lockup: Rename disable_irq to fix build error
+Date:   Tue, 17 Mar 2020 06:36:14 -0700
+Message-Id: <20200317133614.23152-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+mips:allmodconfig fails to build.
 
-On 3/17/20 8:17 AM, Marc Kleine-Budde wrote:
-> On 3/17/20 2:10 PM, Mauro Carvalho Chehab wrote:
->> This file was converted to json and renamed. Update its
->> references accordingly.
->>
->> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-schema")
+lib/test_lockup.c:87:13: error:
+	'disable_irq' redeclared as different kind of symbol
+   87 | static bool disable_irq;
+      |             ^~~~~~~~~~~
+In file included from arch/mips/include/asm/highmem.h:24,
+                 from arch/mips/include/asm/pgtable-32.h:22,
+                 from arch/mips/include/asm/pgtable.h:14,
+                 from include/linux/mm.h:95,
+                 from lib/test_lockup.c:15:
+include/linux/interrupt.h:237:13: note:
+	previous declaration of 'disable_irq' was here
+  237 | extern void disable_irq(unsigned int irq);
 
-I am trying to find out where the above commit was applied
+Rename the variable to fix the problem.
 
-I don't see it in can-next or linux-can. I need to update the tcan dt 
-binding file as it was missed.
+Fixes: 0e86238873f3 ("lib/test_lockup: test module to generate lockups")
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ lib/test_lockup.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-And I am not sure why the maintainers of these files were not CC'd on 
-the conversion of this binding.
-
-Dan
+diff --git a/lib/test_lockup.c b/lib/test_lockup.c
+index b45afd3ad7cb..83683ec1f429 100644
+--- a/lib/test_lockup.c
++++ b/lib/test_lockup.c
+@@ -84,8 +84,8 @@ static unsigned long lock_wait_threshold = ULONG_MAX;
+ module_param(lock_wait_threshold, ulong, 0400);
+ MODULE_PARM_DESC(lock_wait_threshold, "print lock wait time longer than this in nanoseconds, default off");
+ 
+-static bool disable_irq;
+-module_param(disable_irq, bool, 0400);
++static bool test_disable_irq;
++module_param_named(disable_irq, test_disable_irq, bool, 0400);
+ MODULE_PARM_DESC(disable_irq, "disable interrupts: generate hard-lockups");
+ 
+ static bool disable_softirq;
+@@ -179,7 +179,7 @@ static void test_lock(bool master, bool verbose)
+ 			down_write(&main_task->mm->mmap_sem);
+ 	}
+ 
+-	if (disable_irq)
++	if (test_disable_irq)
+ 		local_irq_disable();
+ 
+ 	if (disable_softirq)
+@@ -252,7 +252,7 @@ static void test_unlock(bool master, bool verbose)
+ 	if (disable_softirq)
+ 		local_bh_enable();
+ 
+-	if (disable_irq)
++	if (test_disable_irq)
+ 		local_irq_enable();
+ 
+ 	if (lock_mmap_sem && master) {
+@@ -479,8 +479,8 @@ static int __init test_lockup_init(void)
+ 	if ((wait_state != TASK_RUNNING ||
+ 	     (call_cond_resched && !reacquire_locks) ||
+ 	     (alloc_pages_nr && gfpflags_allow_blocking(alloc_pages_gfp))) &&
+-	    (disable_irq || disable_softirq || disable_preempt || lock_rcu ||
+-	     lock_spinlock_ptr || lock_rwlock_ptr)) {
++	    (test_disable_irq || disable_softirq || disable_preempt ||
++	     lock_rcu || lock_spinlock_ptr || lock_rwlock_ptr)) {
+ 		pr_err("refuse to sleep in atomic context\n");
+ 		return -EINVAL;
+ 	}
+@@ -495,7 +495,7 @@ static int __init test_lockup_init(void)
+ 		  cooldown_secs, cooldown_nsecs, iterations, state,
+ 		  all_cpus ? "all_cpus " : "",
+ 		  iowait ? "iowait " : "",
+-		  disable_irq ? "disable_irq " : "",
++		  test_disable_irq ? "disable_irq " : "",
+ 		  disable_softirq ? "disable_softirq " : "",
+ 		  disable_preempt ? "disable_preempt " : "",
+ 		  lock_rcu ? "lock_rcu " : "",
+-- 
+2.17.1
 
