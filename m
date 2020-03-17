@@ -2,156 +2,177 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB2EC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C7BC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6C920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:55:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="XVkIrOVE"
+	by mail.kernel.org (Postfix) with ESMTP id A081020663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgCQHzt (ORCPT
+        id S1726408AbgCQH4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:55:49 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:37848 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgCQHzs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:55:48 -0400
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 989095C0103;
-        Tue, 17 Mar 2020 08:55:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1584431745;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=p3KVNi+Ory+PQWNhNehyp69k/05vP43IyXekB0qsnHY=;
-        b=XVkIrOVEZKLTLr/TEn5jiDgZkGpH+kf+fDq2LuXJxf4Wu19ollYOy7FNTptWdotjlo0Bnl
-        9J7hiQ/PzatQP9rX1qfsxfaj24Enfe708N68CAl5Z0v3QhE8gGgVWQSvqbUvbnoUdzUAQe
-        jCrsMwbWP3q2cGDo9rYIUlzWfPEFsqU=
+        Tue, 17 Mar 2020 03:56:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:33460 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgCQH4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 03:56:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33E0E1FB;
+        Tue, 17 Mar 2020 00:56:11 -0700 (PDT)
+Received: from e105550-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC0853F52E;
+        Tue, 17 Mar 2020 00:56:09 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 07:56:07 +0000
+From:   Morten Rasmussen <morten.rasmussen@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
+Message-ID: <20200317075607.GE10914@e105550-lin.cambridge.arm.com>
+References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
+ <CAKfTPtAqeHhVCeSgE1DsaGGkM6nY-9oAvGw_6zWvv1bKyE85JQ@mail.gmail.com>
+ <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Mar 2020 08:55:45 +0100
-From:   Stefan Agner <stefan@agner.ch>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Jian Cai <jiancai@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] ARM: warn if pre-UAL assembler syntax is used
-In-Reply-To: <CAKwvOdneF5nXgx3Rh6=NhPK+q93VRhs7mDCcK2eGY0e2rOqqnQ@mail.gmail.com>
-References: <cd74f11eaee5d8fe3599280eb1e3812ce577c835.1582849064.git.stefan@agner.ch>
- <CAKwvOdneF5nXgx3Rh6=NhPK+q93VRhs7mDCcK2eGY0e2rOqqnQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.1
-Message-ID: <dc6a2492b5d7726ccda09ae69543f62f@agner.ch>
-X-Sender: stefan@agner.ch
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-17 01:00, Nick Desaulniers wrote:
-> Revert "ARM: 8846/1: warn if divided syntax assembler is used"On Thu,
-> Feb 27, 2020 at 4:19 PM Stefan Agner <stefan@agner.ch> wrote:
->>
->> Remove the -mno-warn-deprecated assembler flag for GCC versions newer
->> than 5.1 to make sure the GNU assembler warns in case non-unified
->> syntax is used.
+Hi Daniel,
+
+First, I think letting the scheduler know about desired minimum idle
+times is an interesting optimization if the overhead can be kept at a
+minimum. I do have a few comments about the patch though.
+
+On Thu, Mar 12, 2020 at 11:04:19AM +0100, Daniel Lezcano wrote:
+> On 12/03/2020 09:36, Vincent Guittot wrote:
+> > Hi Daniel,
+> > 
+> > On Wed, 11 Mar 2020 at 21:28, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+> >>
+> >> In the idle CPU selection process occuring in the slow path via the
+> >> find_idlest_group_cpu() function, we pick up in priority an idle CPU
+> >> with the shallowest idle state otherwise we fall back to the least
+> >> loaded CPU.
+> > 
+> > The idea makes sense but this path is only used by fork and exec so
+> > I'm not sure about the real impact
 > 
-> Hi Stefan, sorry for the late reply from me; digging out my backlog.
-> Do you happen to have a godbolt link perhaps that demonstrates this?
-> It sounds like GCC itself is emitting pre-UAL?
+> I agree the fork / exec path is called much less often than the wake
+> path but it makes more sense for the decision.
 
-Yes, that is what Russell observed and caused the revert:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b752bb405a13
+Looking at the flow in find_idlest_cpu(), AFAICT,
+find_idlest_group_cpu() is not actually making the final choice of CPU,
+so going through a lot of trouble there looking at idle states is
+pointless. Is there something I don't see?
 
-I do not have a godbolt link at hand, I just built the complete kernel
-using some GCC toolchains I had locally available and noticed that the
-problem persists up to and including GCC 5.0. I did not track down what
-exactly is causing GCC to emit pre-UAL.
+We fellow sd->child until groups == CPUs which which means that
+find_idlest_group() actually makes the final choice as the final group
+passed to find_idlest_group_cpu() is single-CPU group. The flow has been
+like that for years. Even before you added the initial idle-state
+awareness.
 
-> 
->>
->> This also prevents a warning when building with Clang and enabling
->> its integrated assembler:
->> clang-10: error: unsupported argument '-mno-warn-deprecated' to option 'Wa,'
->>
->> This is a second attempt of commit e8c24bbda7d5 ("ARM: 8846/1: warn if
->> divided syntax assembler is used").
-> 
-> Would it be helpful to also make note of
-> commit b752bb405a13 ("Revert "ARM: 8846/1: warn if divided syntax
-> assembler is used"")?
-
-Sure, I can do that.
-
-> 
-> 
->>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> ---
->>  arch/arm/Makefile | 14 +++++++++-----
->>  1 file changed, 9 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
->> index db857d07114f..a6c8c9f39185 100644
->> --- a/arch/arm/Makefile
->> +++ b/arch/arm/Makefile
->> @@ -119,21 +119,25 @@ ifeq ($(CONFIG_CC_IS_CLANG),y)
->>  CFLAGS_ABI     += -meabi gnu
->>  endif
->>
->> -# Accept old syntax despite ".syntax unified"
->> -AFLAGS_NOWARN  :=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
-> 
-> This existing code is quite bad for Clang, which doesn't support
-> `-Wa,-mno-warn-deprecated`, so this falls back to `-Wa,-W`, which
-> disables all warnings from the assembler, which we definitely do not
-> want.  That alone is worth putting in the GCC guard.  But I would like
-> more info about GCC above before signing off.
-
-FWIW, I submitted this to the patch tracker already, but I don't think
-it got merged already.
-
---
-Stefan
+I agree with Vincent, if this should really make a difference it should
+include wake-ups existing tasks too. Although I'm aware it would be a
+more invasive change. As said from the beginning, the idea is fine, but
+the current implementation should not make any measurable difference?
 
 > 
->> -
->>  ifeq ($(CONFIG_THUMB2_KERNEL),y)
->> -CFLAGS_ISA     :=-mthumb -Wa,-mimplicit-it=always $(AFLAGS_NOWARN)
->> +CFLAGS_ISA     :=-mthumb -Wa,-mimplicit-it=always
->>  AFLAGS_ISA     :=$(CFLAGS_ISA) -Wa$(comma)-mthumb
->>  # Work around buggy relocation from gas if requested:
->>  ifeq ($(CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11),y)
->>  KBUILD_CFLAGS_MODULE   +=-fno-optimize-sibling-calls
->>  endif
->>  else
->> -CFLAGS_ISA     :=$(call cc-option,-marm,) $(AFLAGS_NOWARN)
->> +CFLAGS_ISA     :=$(call cc-option,-marm,)
->>  AFLAGS_ISA     :=$(CFLAGS_ISA)
->>  endif
->>
->> +ifeq ($(CONFIG_CC_IS_GCC),y)
->> +ifeq ($(call cc-ifversion, -lt, 0501, y), y)
->> +# GCC <5.1 emits pre-UAL code and causes assembler warnings, suppress them
->> +CFLAGS_ISA     +=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
->> +endif
->> +endif
->> +
->>  # Need -Uarm for gcc < 3.x
->>  KBUILD_CFLAGS  +=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
->>  KBUILD_AFLAGS  +=$(CFLAGS_ABI) $(AFLAGS_ISA) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
->> --
+> >> In order to be more energy efficient but without impacting the
+> >> performances, let's use another criteria: the break even deadline.
+> >>
+> >> At idle time, when we store the idle state the CPU is entering in, we
+> >> compute the next deadline where the CPU could be woken up without
+> >> spending more energy to sleep.
+
+I don't follow the argument that sleeping longer should improve energy
+consumption. The patch doesn't affect the number of idle state
+enter/exit cycles, so you spend the amount of energy on those
+transitions. The main change is that idle time get spread out, so CPUs
+are less likely to be in the process of entering an idle state when they
+are asked to wake back up again.
+
+Isn't it fair to say that we expect the total number of wake-ups remains
+unchanged? Total busy and idle times across all CPUs should remain the
+same too? Unless chosen idle-state is changed, which I don't think we
+expect either, there should be no net effect on energy? The main benefit
+is reduced wake-up latency I think.
+
+Regarding chosen idle state, I'm wondering how this patch affects the
+cpuidle governor's idle state selection. Could the spreading of wake-ups
+trick governor to pick a shallower idle-state for some idle CPUs because
+we actively spread wake-ups rather than consolidating them? Just a
+thought.
+
+> >>
+> >> At the selection process, we use the shallowest CPU but in addition we
+> >> choose the one with the minimal break even deadline instead of relying
+> >> on the idle_timestamp. When the CPU is idle, the timestamp has less
+> >> meaning because the CPU could have wake up and sleep again several times
+> >> without exiting the idle loop. In this case the break even deadline is
+> >> more relevant as it increases the probability of choosing a CPU which
+> >> reached its break even.
+
+I guess you could improve the idle time stamping without adding the
+break-even time, they don't have to go together?
+
+> >>
+> >> Tested on:
+> >>  - a synquacer 24 cores, 6 sched domains
+> >>  - a hikey960 HMP 8 cores, 2 sched domains, with the EAS and energy probe
+> >>
+> >> sched/perf and messaging does not show a performance regression. Ran
+> >> 50 times schbench, adrestia and forkbench.
+> >>
+> >> The tools described at https://lwn.net/Articles/724935/
+> >>
+> >>  --------------------------------------------------------------
+> >> | Synquacer             | With break even | Without break even |
+> >>  --------------------------------------------------------------
+> >> | schbench *99.0th      |      14844.8    |         15017.6    |
+> >> | adrestia / periodic   |        57.95    |              57    |
+> >> | adrestia / single     |         49.3    |            55.4    |
+> >>  --------------------------------------------------------------
+> > 
+> > Have you got some figures or cpuidle statistics for the syncquacer ?
+> 
+> No, and we just noticed the syncquacer has a bug in the firmware and
+> does not actually go to the idle states.
+
+I would also like some statistics to help understanding what actually
+changes.
+
+I did some measurements on TX2, which only has one idle-state. I don't
+see the same trends as you do. adrestia single seems to be most affected
+by the patch, but _increases_ with the break_even patch rather than
+decrease. I don't trust adrestia too much though as the time resolution
+is low on TX2.
+
+TX2			tip		break_even
+----------------------------------------------------
+adrestia / single	5.21		5.51
+adrestia / periodic	5.75		5.67
+schbench 99.0th		45465.6		45376.0
+hackbench		27.9851		27.9775
+
+Notes:
+adrestia: Avg of 100 runs: adrestia -l 25000
+schbench: Avg of 10 runs: schbench -m16 -t64
+hackbench: Avg of 10 runs: hackbench -g 20 -T 256 -l 100000
+
+Morten
