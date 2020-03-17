@@ -2,139 +2,160 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E29CC0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC69C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED702051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:43:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="B+DdGP6r"
+	by mail.kernel.org (Postfix) with ESMTP id EAF8420724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584409428;
+	bh=OEMc4ILQXTMRwpM+jtvyEYvPoIiljQ9u3pjLvQVoEZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sUYpU+lXOoP15zvNdSKLNxP/smaOSAz9gvBxXHX3nGmXKJPeXVsJoaYcAC5eCLHI2
+	 12ngMBuc0DD21alp0ZLEj2nBJs0yCCfgNGzA09Z3GqPzqlH1JPCbbITVeL7XCaJPwV
+	 qQWkW3xqr/oZrFx0oalqsGkOap0yAnkCRK2vfqns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCQBnV (ORCPT
+        id S1726701AbgCQBnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:43:21 -0400
-Received: from mail-eopbgr140049.outbound.protection.outlook.com ([40.107.14.49]:62008
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726623AbgCQBnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:43:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DLvHHdLMn+uyVv3iLvgGsengNaMAt7iFahYc1b9xJpjoUjbsL8c6XQ9B71/pRhk/oLwVc43IAjdAoaE/Swyc7mCOWvxTGS/WlDZC16+i8ACdn3rG3NZ4rAljSMvGriE+mI4S5//VMoXyJyVXpVtDBkCCojZ4mrv4YfE58dT3BV2Qb2Da/tjbAOTq58GjV/qllbN9kQtfbkpGiKIXbBtQn3nmZneXvE/K0O3fj7SwQLlNlfjcHBJ7p61Gu3Xa9RpPzSPgu6KDZMJgzu7YRczUQSc7Yi+PSeIGjP80oNe5h+riaq0A/bch5JlaK974T79aB+diXVVyu1PmPH2iQczSXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AjpPiMG0v4kANUg/vdZM4fkyh5Kkv2kMkxAAm5cqWr0=;
- b=HZU61vdmhmptyNufYNR8uIsnsA4FzxfDoMQWbWX6rWEl3nau3MX4cK+xxPfUqltsqKFBSQzC9CjJ8OV3pzMmCLz7+loKnDLKDnx1rFrmYwpUktj+hHY7Jg2pPnfCj6VmZGesR2iGO0xJzr5cUDYojCfbKUh7Q92kXfv2oshXiG5QPZBZT7po+Oh1FwYXs4bNKmZGO4cnvpm1pxZjzXJ1A+614xhzWoNjBRcSBgfOyJDRlQ2K67H8Wyy5YNnMbbbxaLqAoPynZ75rry3YtnEcaSNaQvkN9EqpGn6Wmo11pk0mlSziZqV3UIBPARQCDrNQwzoKuAtTFkr+IyuhOp35bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AjpPiMG0v4kANUg/vdZM4fkyh5Kkv2kMkxAAm5cqWr0=;
- b=B+DdGP6rEcCkA/v85XAe0G7cm7CxaqurRZAAG+bXL0HT+UDUtFicbzAUosZM6dMHhJez1waNZ45z2wa9qevYFnZ+OME9Qj5pvma7b9HXwTfFEHPhjjP/j7K4xuoIJuMjbridMiBlEtbBJmf3TAfuWmCUxrDwL7ghDVgAPhql4eY=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5124.eurprd04.prod.outlook.com (20.177.40.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.16; Tue, 17 Mar 2020 01:43:05 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 01:43:05 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 3/3] soc: imx: select ARM_GIC_V3 for i.MX8M
-Thread-Topic: [PATCH 3/3] soc: imx: select ARM_GIC_V3 for i.MX8M
-Thread-Index: AQHV+OhCoWIlKfRHBEqAZhv4+QN6jahGTaKAgAR8rgCAABcfgIABJn0w
-Date:   Tue, 17 Mar 2020 01:43:05 +0000
-Message-ID: <AM0PR04MB4481E9713BCBF6B0E924750988F60@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com>
- <1584070036-26447-4-git-send-email-peng.fan@nxp.com>
- <CAK8P3a14BU5uHEqkVyWkeFVmxA1hJifQE+GkXFgmn59s_TL+Rw@mail.gmail.com>
- <AM0PR04MB4481E7BC1DF01CFC975577A088F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CAK8P3a2F4oREw8AgNqQo18hLfVG4GcMJ72bST6EBd_KYhsRfsA@mail.gmail.com>
-In-Reply-To: <CAK8P3a2F4oREw8AgNqQo18hLfVG4GcMJ72bST6EBd_KYhsRfsA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 000c6652-30f5-4afe-ccd9-08d7ca148995
-x-ms-traffictypediagnostic: AM0PR04MB5124:|AM0PR04MB5124:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB512453D506178D711845E67B88F60@AM0PR04MB5124.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(376002)(346002)(199004)(71200400001)(9686003)(6916009)(8936002)(33656002)(26005)(8676002)(81156014)(186003)(4326008)(54906003)(55016002)(53546011)(86362001)(6506007)(7416002)(81166006)(44832011)(316002)(7696005)(66446008)(66476007)(66556008)(64756008)(66946007)(76116006)(5660300002)(52536014)(2906002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5124;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6C6VFT2qSpuzbrn/bUH8l84S3O1uCi7u4uhXbd6f/CbeCxRNn3SUtWsu1QEIgKjwaWvU1quBJPLmdlfbcO3z+EskQTJ0/uSuDKHevqn9Qso7vxmyQAalINv6VBxuevfrB9JhH6HCpM+N/ilKNebsUWB5lEMFCgC12sF2wg8gn8PDTRuAedXNp4lgVssD7R2Pr1kacjN03wYN3WZAJGhdHqF/a2RVgWQ7uWnuVN79n1YmWLLFFkJYhZ6OaiBddTUQ5YHDBt/NNyjlqY1cnumwLW6FgX6zAX3xxoGUpAnaSKIqZ8TKURhNsdmqc2Dq0Zffi9a1Rxh7BWkk4taEkTFBOU8hZfWT8zy5NiuWniVMyFFlrsSgAyF3bjVIkONhdRayXsEZ+RDU/3qkHwTQPIapWLh64kfASz0lSsc3frQkdYDKWBb15G1O8lHvaPZH3BLe
-x-ms-exchange-antispam-messagedata: q1n3qvz/N5N5Oc+0UVdzPF+9aYfACUZbk0n1DTEYdshpLaf5sPwI2ljIsnX20QAxq6CzBCCkf+HvCaLl4OaUzxuntCDWG/WCqzj5XNbF/4hEvaaELySHyHUGh9O3sKXd7gpiDrPNoM85uPhQx5n0CQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 16 Mar 2020 21:43:46 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:33132 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgCQBnq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:43:46 -0400
+Received: by mail-pg1-f181.google.com with SMTP id m5so10814568pgg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 18:43:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YPrE3TC9cvR5eow6UPNLAi081AyK8g0VypG98zq/3rI=;
+        b=Qs7KHkvGrxolIHTiAhyQGd2igPK8/UgI2BqNWe8908q+A6DbfydjZ89uzH8KvnLNG7
+         bxKuwqDsn/gl0UbTRoIEIZgf6ViRSq9GQRIrCNibxeR52oKm7yVGsTqWvBckF5PHJ5Hw
+         WjfnQU+Q+v973TV+wdXPdsOtge82uAMlVNlwqb0OqohYOi47Kht7dzaKMteRyAVcRBSp
+         868NkrAAF0c8BBzyHhbBv8B12BDOldVVIZCDBQwFK5mmln13hICY8/+hhp5dHjlgoRnM
+         ezqNu3oeHGObMUlKU2uaEYQ+soCYl5bKQt2P0xnFoSM5k6hTgmmCYfVgrhlulFRMqIFD
+         rWRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YPrE3TC9cvR5eow6UPNLAi081AyK8g0VypG98zq/3rI=;
+        b=NAQNbXSOwLtCVhOrhdgl3bmx7740KXObwVncn6Z2R64Xyzpl0BXCSyb+mgpbfRTzVw
+         0y1MaTzFdtSxT9fzaERsttokmrU2r2HceYRsdDa3U9yOFJMAq5frLwOfuMtlCevTILhF
+         lkDw7hDK6HDrXGGx3cnQIwm/6/d5CpXf8i3ovNJr0o0huZzjyY3OESGLFU9SMiEHAO3Z
+         PKTxPtG+r0VpGfPenbzEpAv89bM6GtjoJZwtl1cykhzmpej6/qcQybUhQm2AkNizV+Gt
+         Pql5/2WI2TUn6fg4d7Jrd1R5Jt9Pfd0RRo+WnL9lAQbjnCsJwnb8D9HoPbLiUVb3mVxj
+         zusw==
+X-Gm-Message-State: ANhLgQ3jtCFiBiuEQNPD9GleCcxbF3C4T2wI6q1jNNhvZVKWbSdP6Ygx
+        3xFdxffqsGxEmmGxGjgduwM=
+X-Google-Smtp-Source: ADFU+vuLfSSQxDO7LSW23UwCfFLT6vWrf39N6cgbnHenoukHb5KoqNoLNE7b8ejtHEZzZijNiDuTFw==
+X-Received: by 2002:a63:1f58:: with SMTP id q24mr2755192pgm.334.1584409424318;
+        Mon, 16 Mar 2020 18:43:44 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id d84sm1031512pfd.197.2020.03.16.18.43.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 18:43:42 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 18:43:40 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+Message-ID: <20200317014340.GA73302@google.com>
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+ <20200312082248.GS23944@dhcp22.suse.cz>
+ <20200312201602.GA68817@google.com>
+ <20200312204155.GE23944@dhcp22.suse.cz>
+ <20200313020851.GD68817@google.com>
+ <20200313080546.GA21007@dhcp22.suse.cz>
+ <20200313205941.GA78185@google.com>
+ <20200316092052.GD11482@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 000c6652-30f5-4afe-ccd9-08d7ca148995
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 01:43:05.1088
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nyLzvrrWNYqczCNHnXXNaa4goLML75G6ntoGlPO632Fl3PM2+qa/DLa9YzLZr7yvjK8QCvZmcB2nY9jhY36W9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5124
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316092052.GD11482@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXJuZCwNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMvM10gc29jOiBpbXg6IHNlbGVjdCBB
-Uk1fR0lDX1YzIGZvciBpLk1YOE0NCj4gDQo+IE9uIE1vbiwgTWFyIDE2LCAyMDIwIGF0IDc6NDMg
-QU0gUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+IHdyb3RlOg0KPiA+ID4gU3ViamVjdDogUmU6
-IFtQQVRDSCAzLzNdIHNvYzogaW14OiBzZWxlY3QgQVJNX0dJQ19WMyBmb3IgaS5NWDhNDQo+ID4g
-Pg0KPiA+ID4gT24gRnJpLCBNYXIgMTMsIDIwMjAgYXQgNDozNCBBTSA8cGVuZy5mYW5AbnhwLmNv
-bT4gd3JvdGU6DQo+ID4gPiA+DQo+ID4gPiA+IEZyb206IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAu
-Y29tPg0KPiA+ID4gPg0KPiA+ID4gPiBTZWxlY3QgQVJNX0dJQ19WMywgdGhlbiBpdCBpcyBhYmxl
-IHRvIHVzZSBnaWMgdjMgZHJpdmVyIGluIGFhcmNoMzINCj4gPiA+ID4gbW9kZSBsaW51eCBvbiBh
-YXJjaDY0IGhhcmR3YXJlLiBGb3IgYWFyY2g2NCBtb2RlLCBpdCBub3QgaHVydHMgdG8NCj4gPiA+
-ID4gc2VsZWN0IEFSTV9HSUNfVjMuDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFBl
-bmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+DQo+ID4gPiBBY2tl
-ZC1ieTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4NCj4gPiA+DQo+ID4gPiA+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL3NvYy9pbXgvS2NvbmZpZyBiL2RyaXZlcnMvc29jL2lteC9LY29uZmln
-DQo+ID4gPiA+IGluZGV4DQo+ID4gPiA+IDcwMDE5Y2VmYTYxNy4uMGI2OTAyNDI5NmQ1IDEwMDY0
-NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL3NvYy9pbXgvS2NvbmZpZw0KPiA+ID4gPiArKysgYi9k
-cml2ZXJzL3NvYy9pbXgvS2NvbmZpZw0KPiA+ID4gPiBAQCAtMjEsNiArMjEsNyBAQCBjb25maWcg
-U09DX0lNWDhNDQo+ID4gPiA+ICAgICAgICAgYm9vbCAiaS5NWDhNIFNvQyBmYW1pbHkgc3VwcG9y
-dCINCj4gPiA+ID4gICAgICAgICBkZXBlbmRzIG9uIEFSQ0hfTVhDIHx8IENPTVBJTEVfVEVTVA0K
-PiA+ID4gPiAgICAgICAgIGRlZmF1bHQgQVJDSF9NWEMgJiYgQVJNNjQNCj4gPiA+ID4gKyAgICAg
-ICBzZWxlY3QgQVJNX0dJQ19WMw0KPiA+ID4NCj4gPiA+IEl0IHdvdWxkIHNlZW0gc2Vuc2libGUg
-dG8gYWxzbyBkcm9wIHRoZSBkZXBlbmRlbmN5IG9uIHRoZSAnZGVmYXVsdCcNCj4gPg0KPiA+IElm
-IGRyb3AgZGVmYXVsdCwgd2UgbmVlZCBlbmFibGUgdGhpcyBjb25maWcgb3B0aW9uIGluIEFSTTY0
-IGRlZmNvbmZpZywNCj4gPiBJIHdvdWxkIGxlYXZlIGl0IGFzIGlzIGZvciBub3cuDQo+IA0KPiBJ
-IG1lYW50IG1ha2luZyBpdCAnZGVmYXVsdCBBUkNIX01YQycgc28gaXQgZ2V0cyBlbmFibGVkIGZv
-ciBib3RoIDMyLWJpdCBhbmQNCj4gNjQtYml0IGkuTVggY29uZmlndXJhdGlvbnMsIG5vdCBqdXN0
-IDY0LWJpdC4NCg0KVW5kZXJzdGFuZC4gSSdsbCBkcm9wIEFSTTY0IGFuZCBwb3N0IHYyIHdpdGgg
-eW91ciBBLWIuDQoNClRoYW5rcywNClBlbmcuDQoNCj4gDQo+ICAgICAgIEFybmQNCg==
+On Mon, Mar 16, 2020 at 10:20:52AM +0100, Michal Hocko wrote:
+> On Fri 13-03-20 13:59:41, Minchan Kim wrote:
+> > On Fri, Mar 13, 2020 at 09:05:46AM +0100, Michal Hocko wrote:
+> > > On Thu 12-03-20 19:08:51, Minchan Kim wrote:
+> > > > On Thu, Mar 12, 2020 at 09:41:55PM +0100, Michal Hocko wrote:
+> > > > > On Thu 12-03-20 13:16:02, Minchan Kim wrote:
+> > > > > > On Thu, Mar 12, 2020 at 09:22:48AM +0100, Michal Hocko wrote:
+> > > > > [...]
+> > > > > > > From eca97990372679c097a88164ff4b3d7879b0e127 Mon Sep 17 00:00:00 2001
+> > > > > > > From: Michal Hocko <mhocko@suse.com>
+> > > > > > > Date: Thu, 12 Mar 2020 09:04:35 +0100
+> > > > > > > Subject: [PATCH] mm: do not allow MADV_PAGEOUT for CoW pages
+> > > > > > > 
+> > > > > > > Jann has brought up a very interesting point [1]. While shared pages are
+> > > > > > > excluded from MADV_PAGEOUT normally, CoW pages can be easily reclaimed
+> > > > > > > that way. This can lead to all sorts of hard to debug problems. E.g.
+> > > > > > > performance problems outlined by Daniel [2]. There are runtime
+> > > > > > > environments where there is a substantial memory shared among security
+> > > > > > > domains via CoW memory and a easy to reclaim way of that memory, which
+> > > > > > > MADV_{COLD,PAGEOUT} offers, can lead to either performance degradation
+> > > > > > > in for the parent process which might be more privileged or even open
+> > > > > > > side channel attacks. The feasibility of the later is not really clear
+> > > > > > 
+> > > > > > I am not sure it's a good idea to mention performance stuff because
+> > > > > > it's rather arguble. You and Johannes already pointed it out when I sbumit
+> > > > > > early draft which had shared page filtering out logic due to performance
+> > > > > > reason. You guys suggested the shared pages has higher chance to be touched
+> > > > > > so that if it's really hot pages, that whould keep in the memory. I agree.
+> > > > > 
+> > > > > Yes, the hot memory is likely to be referenced but the point was an
+> > > > > unexpected latency because of the major fault. I have to say that I have
+> > > > 
+> > > > I don't understand your point here. If it's likely to be referenced
+> > > > among several processes, it doesn't have the major fault latency.
+> > > > What's your point here?
+> > > 
+> > > a) the particular CoW page might be cold enough to be reclaimed and b)
+> > 
+> > If it is, that means it's *cold* so it's really worth to be reclaimed.
+> > 
+> > > nothing really prevents the MADV_PAGEOUT to be called faster than the
+> > > reference bit being readded.
+> > 
+> > Yeb, that's undesirable. I should admit it was not intended when I implemented
+> > PAGEOUT. The thing is page_check_references clears access bit of pte for every
+> > process are sharing the page so that two times MADV_PAGEOUT from a process could
+> > evict the page. That's the really bug.
+> 
+> I do not really think this is a bug. This is a side effect of the
+> reclaim process and we do not really want MADV_{PAGEOUT,COLD} behave
+
+No, that's the bug since we didn't consider the side effect.
+
+> differently here because then the behavior would be even harder to
+
+No, I do want to have difference because it's per-process hint. IOW,
+what he know is for only his context, not others so it shouldn't clean
+others' pte. That makes difference between LRU aging and the hint.
+
+> understand.
+
+It's not hard to understand.. MADV_PAGEOUT should consider only his
+context since it's per-process hint(Even, he couldn't know others'
+context) so it shouldn't bother others.
+
+Actually, Dave's suggestion is correct to fix the issue if there
+was no isse with side channel attack. However, due to the attack
+issue, page_mapcount could prevent the problem effectively.
+That's why I am not against of the patch now since it fixes
+the bug as well as vulnerability.
