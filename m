@@ -2,183 +2,154 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52422C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BD9C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C83920724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1949920752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584482619;
+	bh=NRUE2ckhs8n5Ozlq9QGah87GvPHMhCBA9ESXYy5Zdtg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=h4kkKIRnnlU//pvmh1JsEHJJM/bvNshS2noacYNyj2iiwML3cB8MdraqvnO2m4Wyb
+	 KIAM2waBAF8aCEiTJDttP+VRebJDb/Yig9pK3Ab1MOg7H5fx0cyZmrp7ujOCpMl6yo
+	 svP1HwRwdAn9WhaTIM83IVP3adEhGpxfjOLRnSPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgCQWCJ (ORCPT
+        id S1727000AbgCQWDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:02:09 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36178 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgCQWCI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:02:08 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k18so23591457oib.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:02:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ya5i9h9BDB0gF/4044yCkDpgVppUSZpZ2zck8bl6SA0=;
-        b=QmYjnUPcDxvYRxj7vbmJYt+oc+xLi7TnR/p0KC8LlCCkCnfuyhVWDhk/Mo2NwJTruP
-         jNzl5AEDGmzJsHMDYZPemHTbaK2j39iCb7SHL0Ml28F8mDSXyYZp66EU6ZH3x9vlCYFn
-         uQGXaA3gDTvJ3i+CFQ3AisbS22uGBZAx7cch9HwdGyi05P/DnEEfQGVIgfjgXFHj1SuK
-         diEbnbcVwok0HbVxSxwLgMVc+GMMoEiilDqK2vUv4ZVfBlNTzfxLlbb7DjmqiGgCu17s
-         IazAwZbiRmcexFwbjL2rF9T8ar5neXg0+DpAq6Wwpm9D7jVSQK9vNdxQi0GqtL1E0uXX
-         XIHQ==
-X-Gm-Message-State: ANhLgQ17d0GgtILGytfVEOQOACPa2V2aRD7B9/QOUiKzLYS37oO3ydLz
-        5XgSXnmLjOg5OCBFbkX5mOd8/awm
-X-Google-Smtp-Source: ADFU+vsxDuTqjMCAsEYDHcrPvTvo4S/sp9twj6Q2+i3ThotxWouvuSLvxrjc39AH3M4l7/DnDm0vig==
-X-Received: by 2002:a54:4e13:: with SMTP id a19mr868065oiy.108.1584482527353;
-        Tue, 17 Mar 2020 15:02:07 -0700 (PDT)
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com. [209.85.210.45])
-        by smtp.gmail.com with ESMTPSA id a73sm1450422oib.16.2020.03.17.15.02.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 15:02:07 -0700 (PDT)
-Received: by mail-ot1-f45.google.com with SMTP id e19so2361035otj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:02:07 -0700 (PDT)
-X-Received: by 2002:a9d:7607:: with SMTP id k7mr1220783otl.205.1584482526826;
- Tue, 17 Mar 2020 15:02:06 -0700 (PDT)
+        Tue, 17 Mar 2020 18:03:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgCQWDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:03:37 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC4B20714;
+        Tue, 17 Mar 2020 22:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584482616;
+        bh=NRUE2ckhs8n5Ozlq9QGah87GvPHMhCBA9ESXYy5Zdtg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1QGfUU91mkGNhqaAE5qkukrE5YGD0RThABDfnFSsg6yyPBnpZ/OoVSS8JJFuWo23r
+         ThYXwUFPgcoopP7DR1QbWF1dlJInVWRqKWlMr64DZHN0CZJTsg5h3FzHB7jeKPHdn0
+         O36i7OCDqShLa3H4tFGVcqvDcEDogrn3BnfyYFBg=
+Date:   Tue, 17 Mar 2020 17:03:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq
+ correctly
+Message-ID: <20200317220334.GA230141@google.com>
 MIME-Version: 1.0
-References: <20200312222827.17409-1-leoyang.li@nxp.com> <20200312222827.17409-7-leoyang.li@nxp.com>
- <b9c5a514-18c1-e36c-1595-2b86c9bfcff1@rasmusvillemoes.dk>
-In-Reply-To: <b9c5a514-18c1-e36c-1595-2b86c9bfcff1@rasmusvillemoes.dk>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Tue, 17 Mar 2020 17:01:55 -0500
-X-Gmail-Original-Message-ID: <CADRPPNT2vRNU6uddqhqUcmyNVOpFbEUz+F5giCSfm9q5ZdYH5A@mail.gmail.com>
-Message-ID: <CADRPPNT2vRNU6uddqhqUcmyNVOpFbEUz+F5giCSfm9q5ZdYH5A@mail.gmail.com>
-Subject: Re: [PATCH 6/6] soc: fsl: qe: fix sparse warnings for ucc_slow.c
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Timur Tabi <timur@kernel.org>, Zhao Qiang <qiang.zhao@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313215642.GA202015@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 4:08 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> On 12/03/2020 23.28, Li Yang wrote:
-> > Fixes the following sparse warnings:
-> >
-> [snip]
-> >
-> > Also removed the unneccessary clearing for kzalloc'ed structure.
->
-> Please don't mix that in the same patch, do it in a preparatory patch.
-> That makes reviewing much easier.
+On Fri, Mar 13, 2020 at 04:56:42PM -0500, Bjorn Helgaas wrote:
+> On Fri, Mar 13, 2020 at 10:05:58PM +0100, Thomas Gleixner wrote:
+> > Bjorn Helgaas <helgaas@kernel.org> writes:
+> > > On Thu, Mar 12, 2020 at 10:53:06AM +0100, Marc Gonzalez wrote:
+> > >> Last time around, my understanding was that, going forward,
+> > >> the best solution was:
+> > >> 
+> > >> 	virq = platform_get_irq(...)
+> > >> 	if (virq <= 0)
+> > >> 		return virq ? : -ENODEV;
+> > >> 
+> > >> i.e. map 0 to -ENODEV, pass other errors as-is, remove the dev_err
+> > >> 
+> > >> @Bjorn/Lorenzo did you have a change of heart?
+> > >
+> > > Yes.  In 10006651 (Oct 20, 2017), I thought:
+> > >
+> > >   irq = platform_get_irq(pdev, 0);
+> > >   if (irq <= 0)
+> > >     return -ENODEV;
+> > >
+> > > was fine.  In 11066455 (Aug 7, 2019), I said I thought I was wrong and
+> > > that:
+> > >
+> > >   platform_get_irq() is a generic interface and we have to be able to
+> > >   interpret return values consistently.  The overwhelming consensus
+> > >   among platform_get_irq() callers is to treat "irq < 0" as an error,
+> > >   and I think we should follow suit.
+> > >   ...
+> > >   I think the best pattern is:
+> > >
+> > >     irq = platform_get_irq(pdev, i);
+> > >     if (irq < 0)
+> > >       return irq;
+> > 
+> > Careful. 0 is not a valid interrupt.
+> 
+> Should callers of platform_get_irq() check for a 0 return value?
+> About 900 of them do not.
+> 
+> Or should platform_get_irq() return a negative error instead of 0?
+> If 0 is not a valid interrupt, I think it would be easier to use the
+> interface if we made it so platform_get_irq() could never return 0,
+> which I think would also fit the interface documentation better:
+> 
+>  * Return: IRQ number on success, negative error number on failure.
 
-Thanks for the review.
+Trying again -- I'm not quite catching your meaning, Thomas.
 
-One of the few lines removed are actually causing sparse warning,
-that's why I changed this together with the sparse fixes.  I can add
-all the lines removed in the log for better record.
+If platform_get_irq*() can return 0, but 0 is not a valid IRQ, I think
+it's sort of complicated to parse that return value.  Drivers that
+require an IRQ would do this:
 
->
-> >
-> >       /* Get PRAM base */
-> >       uccs->us_pram_offset =
-> > @@ -231,24 +224,24 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
-> >               /* clear bd buffer */
-> >               qe_iowrite32be(0, &bd->buf);
-> >               /* set bd status and length */
-> > -             qe_iowrite32be(0, (u32 *)bd);
-> > +             qe_iowrite32be(0, (u32 __iomem *)bd);
->
-> It's cleaner to do two qe_iowrite16be to &bd->status and &bd->length,
-> that avoids the casting altogether.
+  irq = platform_get_irq(pdev, i);
+  if (irq < 0)
+    return irq;
+  if (irq == 0)
+    return -EINVAL;         # error since driver requires IRQ
+  return devm_request_irq(dev, irq, ...);
 
-It probably is cleaner, but also slower for the bd manipulation that
-can be in the hot path.  The QE code has been using this way to
-access/update the bd status and length together for a long time.  And
-I remembered that it could help to prevent synchronization issues for
-accessing status and length separately.
+Drivers that can either use an IRQ or do polling would do this:
 
-It is probably cleaner to change the data structure to use union for
-accessing status and length together.  But that will need a big change
-to update all the current users of the structure which I don't have
-the time to do right now.
+  irq = platform_get_irq(pdev, i);
+  if (irq <= 0)
+    return setup_polling();
+  return devm_request_irq(dev, irq, ...);
 
->
-> >               bd++;
-> >       }
-> >       /* for last BD set Wrap bit */
-> >       qe_iowrite32be(0, &bd->buf);
-> > -     qe_iowrite32be(cpu_to_be32(T_W), (u32 *)bd);
-> > +     qe_iowrite32be(T_W, (u32 __iomem *)bd);
->
-> Yeah, and this is why. Who can actually keep track of where that bit
-> ends up being set with that casting going on. Please use
-> qe_iowrite16be() with an appropriately modified constant to the
-> appropriate field instead of these games.
->
-> And if the hardware doesn't support 16 bit writes, the definition of
-> struct qe_bd is wrong and should have a single __be32 status_length
-> field, with appropriate accessors defined.
+I think those are sort of ungainly, especially the first.  If we made
+it so those functions never returned 0, drivers that need an IRQ could
+do this:
 
-Same comment as above.
+  irq = platform_get_irq(pdev, i);
+  if (irq < 0)
+    return irq;
+  return devm_request_irq(dev, irq, ...);
 
->
-> >       /* Init Rx bds */
-> >       bd = uccs->rx_bd = qe_muram_addr(uccs->rx_base_offset);
-> >       for (i = 0; i < us_info->rx_bd_ring_len - 1; i++) {
-> >               /* set bd status and length */
-> > -             qe_iowrite32be(0, (u32 *)bd);
-> > +             qe_iowrite32be(0, (u32 __iomem *)bd);
->
-> Same.
->
-> >               /* clear bd buffer */
-> >               qe_iowrite32be(0, &bd->buf);
-> >               bd++;
-> >       }
-> >       /* for last BD set Wrap bit */
-> > -     qe_iowrite32be(cpu_to_be32(R_W), (u32 *)bd);
-> > +     qe_iowrite32be(R_W, (u32 __iomem *)bd);
->
-> Same.
->
-> >       qe_iowrite32be(0, &bd->buf);
-> >
-> >       /* Set GUMR (For more details see the hardware spec.). */
-> > @@ -273,8 +266,8 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
-> >       qe_iowrite32be(gumr, &us_regs->gumr_h);
-> >
-> >       /* gumr_l */
-> > -     gumr = us_info->tdcr | us_info->rdcr | us_info->tenc | us_info->renc |
-> > -             us_info->diag | us_info->mode;
-> > +     gumr = (u32)us_info->tdcr | (u32)us_info->rdcr | (u32)us_info->tenc |
-> > +            (u32)us_info->renc | (u32)us_info->diag | (u32)us_info->mode;
->
-> Are the tdcr, rdcr, tenc, renc fields actually set anywhere (the same
-> for the diag and mode, but word-grepping for those give way too many
-> false positives)? They seem to be a somewhat pointless split out of the
-> bitfields of gumr_l, and not populated anywhere?. That's not directly
-> related to this patch, of course, but getting rid of them first (if they
-> are indeed completely unused) might make the sparse cleanup a little
-> simpler.
+and drivers that support polling could do this:
 
-I would agree with you that is not neccessary to create different enum
-types for these bits in the same register in the first place.  But I
-would like to prevent aggressive cleanups of this driver for old
-hardware that is becoming harder and harder to be thoroughly tested
-right now.  These fields are probably not used by the in tree ucc_uart
-driver right now.  But as a generic library for QE, I think it is
-harmless to keep these simple code there for potentially customized
-version of the uart driver or other ucc slow drivers.
+  irq = platform_get_irq(pdev, i);
+  if (irq < 0)
+    return setup_polling();
+  return devm_request_irq(dev, irq, ...);
 
-Regards,
-Leo
+That seems a lot easier to get correct, and it matches what most of
+the callers already do.
