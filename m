@@ -2,136 +2,68 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FD5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD11C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FA520674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8F420674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733228AbgCQA1H (ORCPT
+        id S1733239AbgCQA1T convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 20:27:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11938 "EHLO mga05.intel.com"
+        Mon, 16 Mar 2020 20:27:19 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:51532 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733009AbgCQA1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 20:27:06 -0400
-IronPort-SDR: SWYlLZolBDWgGg27spfn+BDNr9JSrfcecYrvVdvAeQ50w98B+8VupXfi4cH5/FtfW0FYKcu8WO
- YhHlzfyp50OQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 17:27:06 -0700
-IronPort-SDR: f6fK7XCFbrqoX9QH1ubWde0FEwjXYcIVIFQIg2HLkvaCEhnvMUzkd3g7CoAam5wv6BSWBZZJRg
- KITRnQGJhFkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,562,1574150400"; 
-   d="scan'208";a="390888441"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 16 Mar 2020 17:27:06 -0700
-Date:   Mon, 16 Mar 2020 17:27:06 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200317002706.GN24267@linux.intel.com>
-References: <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
- <20200315012523.GC208715@linux.intel.com>
- <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
- <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
- <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
- <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
- <20200316225322.GJ24267@linux.intel.com>
- <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
- <20200316235934.GM24267@linux.intel.com>
- <ca2c9ac0-b717-ee96-c7df-4e39f03a9193@intel.com>
+        id S1733141AbgCQA1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 20:27:18 -0400
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jE04h-0004OF-28; Tue, 17 Mar 2020 01:27:15 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: rockchip: remove clock-frequency from saradc node rv1108
+Date:   Tue, 17 Mar 2020 01:27:14 +0100
+Message-ID: <3820267.Gqg2QCzSh7@phil>
+In-Reply-To: <20200313132646.10317-1-jbx6244@gmail.com>
+References: <20200313132646.10317-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca2c9ac0-b717-ee96-c7df-4e39f03a9193@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 05:18:14PM -0700, Xing, Cedric wrote:
-> On 3/16/2020 4:59 PM, Sean Christopherson wrote:
-> >On Mon, Mar 16, 2020 at 04:50:26PM -0700, Xing, Cedric wrote:
-> >>On 3/16/2020 3:53 PM, Sean Christopherson wrote:
-> >>>On Mon, Mar 16, 2020 at 11:38:24PM +0200, Jarkko Sakkinen wrote:
-> >>>>>My suggestions explicitly maintained robustness, and in fact increased
-> >>>>>it. If you think we've lost capability, please speak with specificity
-> >>>>>rather than in vague generalities. Under my suggestions we can:
-> >>>>>1. call the vDSO from C
-> >>>>>2. pass context to the handler
-> >>>>>3. have additional stack manipulation options in the handler
-> >>>>>
-> >>>>>The cost for this is a net 2 additional instructions. No existing
-> >>>>>capability is lost.
-> >>>>
-> >>>>My vague generality in this case is just that the whole design
-> >>>>approach so far has been to minimize the amount of wrapping to
-> >>>>EENTER.
-> >>>
-> >>>Yes and no.   If we wanted to minimize the amount of wrapping around the
-> >>>vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
-> >>>first place.  The whole process has been about balancing the wants of each
-> >>>use case against the overall quality of the API and code.
-> >>>
-> >>The design of this vDSO API was NOT to minimize wrapping, but to allow
-> >>maximal flexibility. More specifically, we strove not to restrict how info
-> >>was exchanged between the enclave and its host process. After all, calling
-> >>convention is compiler specific - i.e. the enclave could be built by a
-> >>different compiler (e.g. MSVC) that doesn't share the same list of CSRs as
-> >>the host process. Therefore, the API has been implemented to pass through
-> >>virtually all registers except those used by EENTER itself. Similarly, all
-> >>registers are passed back from enclave to the caller (or the exit handler)
-> >>except those used by EEXIT. %rbp is an exception because the vDSO API has to
-> >>anchor the stack, using either %rsp or %rbp. We picked %rbp to allow the
-> >>enclave to allocate space on the stack.
-> >
-> >And unless I'm missing something, using %rcx to pass @leaf would still
-> >satisfy the above, correct?  Ditto for saving/restoring %rbx.
-> >
-> >I.e. a runtime that's designed to work with enclave's using a different
-> >calling convention wouldn't be able to take advantage of being able to call
-> >the vDSO from C, but neither would it take on any meaningful burden.
-> >
-> Not exactly.
+Am Freitag, 13. März 2020, 14:26:46 CET schrieb Johan Jonker:
+> An experimental test with the command below gives these errors:
 > 
-> If called directly from C code, the caller would expect CSRs to be
-> preserved. Then who should preserve CSRs? It can't be the enclave because it
-> may not follow the same calling convention. Moreover, the enclave may run
-> into an exception, in which case it doesn't have the ability to restore
-> CSRs. So it has to be done by the vDSO API. That means CSRs will be
-> overwritten upon enclave exits, which violates the goal of "passing all
-> registers back to the caller except those used by EEXIT".
+> arch/arm/boot/dts/rv1108-elgin-r1.dt.yaml: adc@1038c000:
+> 'clock-frequency'
+> does not match any of the regexes: 'pinctrl-[0-9]+'
+> arch/arm/boot/dts/rv1108-evb.dt.yaml: adc@1038c000:
+> 'clock-frequency'
+> does not match any of the regexes: 'pinctrl-[0-9]+'
+> 
+> 'clock-frequency' is not a valid property for a saradc node,
+> so remove it.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/iio/adc/
+> rockchip-saradc.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-IIUC, Nathaniel's use case is to run only enclaves that are compatible
-with Linux's calling convention and to handle enclave exceptions in the
-exit handler.
+applied for 5.7
 
-As I qualified above, there would certainly be runtimes and use cases that
-would find no advantage in passing @leaf via %rcx and preserving %rbx.  I'm
-well aware the Intel SDK falls into that bucket.  But again, the cost to
-such runtimes is precisely one reg->reg MOV instruction.
+Thanks
+Heiko
+
+
