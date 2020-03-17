@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74D5C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731ACC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB8D20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F79920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443668;
-	bh=ng0rIq4lb1Gt+CABGzF4M9dNcAFtcYGFMu3c96wZV0g=;
+	s=default; t=1584443673;
+	bh=dQGo55uQMiFIb5aNVp3BPHWFeBMjTlJVHkfp4QmnnCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fbu3bs20TaW+1yIAmJr8+Tljm69k7k1QBe855d3FCR1f/RstJQw0NsmO2rjZcbLtz
-	 65VVAWfsO2cFpAQV+r4V/xOXiPPYYMaReTlq+0Qd3XAp/RwM/VXILovzTqKHJOfKPV
-	 MiowDGx+gLqDYcbxbT/NOMylPHUhm9TmX1zlmesk=
+	b=d/B5bMKZ/FdmWfs82x79P5Qev/U5n8+Fv/HlZAGGMaKz5fPnwT/ZRUf+CaqAvu/31
+	 PB30f7vWd1P2Uz9+ISIQIHmimcsSCM7xPM25VyRk9/ofCysB5PYUFKBGCQuu5HUYen
+	 3Xf/Xao6DcnmRaDIYu/fq2kXQ+cTGkjBa+imMPcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgCQLO1 (ORCPT
+        id S1729631AbgCQLOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:14:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58688 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:14:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729613AbgCQLOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:14:24 -0400
+        id S1729390AbgCQLO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:14:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB19205ED;
-        Tue, 17 Mar 2020 11:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F55F205ED;
+        Tue, 17 Mar 2020 11:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443663;
-        bh=ng0rIq4lb1Gt+CABGzF4M9dNcAFtcYGFMu3c96wZV0g=;
+        s=default; t=1584443666;
+        bh=dQGo55uQMiFIb5aNVp3BPHWFeBMjTlJVHkfp4QmnnCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kvlVagmbYAHwX6q3S2U4Gve3p8k2603MA5ZC8i0fqqtzCs6xsV0+CuszCamYx7VKb
-         qORwdr8cnARYLNsvniFYeUkw4+HjFkNEg3n2eP+3BwCoR+eNTzRl6H0CE9vS+KA3x7
-         W3/KDJEcq8q0/RiD7UARnNrZISiAlnf3KDrWCr1w=
+        b=Sm/EFAoT1OijQ/gM+2R0PyDWJstE/dmYyeSJPW1LKBTAju+7lyLn8DEsNX472Y0ig
+         DXuKA4x4YRGI6XOWyUcI6+cE94rfGgDlTSfy6yzn2aB1c9z7B8wBu/wXMn2eT+86m0
+         kHHxha2rI7RzzldLUsvjTLjU1GnK7q7HuKq8P1OM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.5 142/151] netfilter: nft_payload: add missing attribute validation for payload csum flags
-Date:   Tue, 17 Mar 2020 11:55:52 +0100
-Message-Id: <20200317103336.747899413@linuxfoundation.org>
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Artem S . Tashkinov" <aros@gmx.com>
+Subject: [PATCH 5.5 133/151] driver code: clarify and fix platform device DMA mask allocation
+Date:   Tue, 17 Mar 2020 11:55:43 +0100
+Message-Id: <20200317103335.885563252@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,31 +61,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Christoph Hellwig <hch@lst.de>
 
-commit 9d6effb2f1523eb84516e44213c00f2fd9e6afff upstream.
+commit e3a36eb6dfaeea8175c05d5915dcf0b939be6dab upstream.
 
-Add missing attribute validation for NFTA_PAYLOAD_CSUM_FLAGS
-to the netlink policy.
+This does three inter-related things to clarify the usage of the
+platform device dma_mask field. In the process, fix the bug introduced
+by cdfee5623290 ("driver core: initialize a default DMA mask for
+platform device") that caused Artem Tashkinov's laptop to not boot with
+newer Fedora kernels.
 
-Fixes: 1814096980bb ("netfilter: nft_payload: layer 4 checksum adjustment for pseudoheader fields")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+This does:
+
+ - First off, rename the field to "platform_dma_mask" to make it
+   greppable.
+
+   We have way too many different random fields called "dma_mask" in
+   various data structures, where some of them are actual masks, and
+   some of them are just pointers to the mask. And the structures all
+   have pointers to each other, or embed each other inside themselves,
+   and "pdev" sometimes means "platform device" and sometimes it means
+   "PCI device".
+
+   So to make it clear in the code when you actually use this new field,
+   give it a unique name (it really should be something even more unique
+   like "platform_device_dma_mask", since it's per platform device, not
+   per platform, but that gets old really fast, and this is unique
+   enough in context).
+
+   To further clarify when the field gets used, initialize it when we
+   actually start using it with the default value.
+
+ - Then, use this field instead of the random one-off allocation in
+   platform_device_register_full() that is now unnecessary since we now
+   already have a perfectly fine allocation for it in the platform
+   device structure.
+
+ - The above then allows us to fix the actual bug, where the error path
+   of platform_device_register_full() would unconditionally free the
+   platform device DMA allocation with 'kfree()'.
+
+   That kfree() was dont regardless of whether the allocation had been
+   done earlier with the (now removed) kmalloc, or whether
+   setup_pdev_dma_masks() had already been used and the dma_mask pointer
+   pointed to the mask that was part of the platform device.
+
+It seems most people never triggered the error path, or only triggered
+it from a call chain that set an explicit pdevinfo->dma_mask value (and
+thus caused the unnecessary allocation that was "cleaned up" in the
+error path) before calling platform_device_register_full().
+
+Robin Murphy points out that in Artem's case the wdat_wdt driver failed
+in platform_device_add(), and that was the one that had called
+platform_device_register_full() with pdevinfo.dma_mask = 0, and would
+have caused that kfree() of pdev.dma_mask corrupting the heap.
+
+A later unrelated kmalloc() then oopsed due to the heap corruption.
+
+Fixes: cdfee5623290 ("driver core: initialize a default DMA mask for platform device")
+Reported-bisected-and-tested-by:  Artem S. Tashkinov <aros@gmx.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_payload.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/platform.c         |   25 ++++++-------------------
+ include/linux/platform_device.h |    2 +-
+ 2 files changed, 7 insertions(+), 20 deletions(-)
 
---- a/net/netfilter/nft_payload.c
-+++ b/net/netfilter/nft_payload.c
-@@ -129,6 +129,7 @@ static const struct nla_policy nft_paylo
- 	[NFTA_PAYLOAD_LEN]		= { .type = NLA_U32 },
- 	[NFTA_PAYLOAD_CSUM_TYPE]	= { .type = NLA_U32 },
- 	[NFTA_PAYLOAD_CSUM_OFFSET]	= { .type = NLA_U32 },
-+	[NFTA_PAYLOAD_CSUM_FLAGS]	= { .type = NLA_U32 },
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -363,10 +363,10 @@ static void setup_pdev_dma_masks(struct
+ {
+ 	if (!pdev->dev.coherent_dma_mask)
+ 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+-	if (!pdev->dma_mask)
+-		pdev->dma_mask = DMA_BIT_MASK(32);
+-	if (!pdev->dev.dma_mask)
+-		pdev->dev.dma_mask = &pdev->dma_mask;
++	if (!pdev->dev.dma_mask) {
++		pdev->platform_dma_mask = DMA_BIT_MASK(32);
++		pdev->dev.dma_mask = &pdev->platform_dma_mask;
++	}
  };
  
- static int nft_payload_init(const struct nft_ctx *ctx,
+ /**
+@@ -662,20 +662,8 @@ struct platform_device *platform_device_
+ 	pdev->dev.of_node_reused = pdevinfo->of_node_reused;
+ 
+ 	if (pdevinfo->dma_mask) {
+-		/*
+-		 * This memory isn't freed when the device is put,
+-		 * I don't have a nice idea for that though.  Conceptually
+-		 * dma_mask in struct device should not be a pointer.
+-		 * See http://thread.gmane.org/gmane.linux.kernel.pci/9081
+-		 */
+-		pdev->dev.dma_mask =
+-			kmalloc(sizeof(*pdev->dev.dma_mask), GFP_KERNEL);
+-		if (!pdev->dev.dma_mask)
+-			goto err;
+-
+-		kmemleak_ignore(pdev->dev.dma_mask);
+-
+-		*pdev->dev.dma_mask = pdevinfo->dma_mask;
++		pdev->platform_dma_mask = pdevinfo->dma_mask;
++		pdev->dev.dma_mask = &pdev->platform_dma_mask;
+ 		pdev->dev.coherent_dma_mask = pdevinfo->dma_mask;
+ 	}
+ 
+@@ -700,7 +688,6 @@ struct platform_device *platform_device_
+ 	if (ret) {
+ err:
+ 		ACPI_COMPANION_SET(&pdev->dev, NULL);
+-		kfree(pdev->dev.dma_mask);
+ 		platform_device_put(pdev);
+ 		return ERR_PTR(ret);
+ 	}
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -24,7 +24,7 @@ struct platform_device {
+ 	int		id;
+ 	bool		id_auto;
+ 	struct device	dev;
+-	u64		dma_mask;
++	u64		platform_dma_mask;
+ 	u32		num_resources;
+ 	struct resource	*resource;
+ 
 
 
