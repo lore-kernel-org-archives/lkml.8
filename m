@@ -2,140 +2,104 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5D7C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E2BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489EE205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50DD7205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbgCQIRb (ORCPT
+        id S1726192AbgCQIR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:17:31 -0400
-Received: from mga11.intel.com ([192.55.52.93]:17620 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgCQIRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:17:30 -0400
-IronPort-SDR: JWpHzikvSX4FPH3+JvEfRalfolr5JXzm/ewvSdi61VKpicIbCcgt6CQHzPNDv1oJpKq/XdR1Oq
- s2g0FZz6rOnA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 01:17:30 -0700
-IronPort-SDR: PogRVo52L4c/bHJT8ZMdD3bunGoSsLhHQc/kjfz1lqeJ2kBhfpOnK+G1yBjX10VJVMqJyVoXWX
- HHJzp5nQh2ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="445419123"
-Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Mar 2020 01:17:27 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     pbonzini@redhat.com, like.xu@linux.intel.com
-Cc:     ehankland@google.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com
-Subject: [PATCH v2] KVM: x86/pmu: Reduce counter period change overhead and delay the effective time
-Date:   Tue, 17 Mar 2020 16:14:58 +0800
-Message-Id: <20200317081458.88714-1-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200317075315.70933-1-like.xu@linux.intel.com>
-References: <20200317075315.70933-1-like.xu@linux.intel.com>
+        Tue, 17 Mar 2020 04:17:57 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:41114 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgCQIR4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 04:17:56 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 3646A20044;
+        Tue, 17 Mar 2020 09:17:52 +0100 (CET)
+Date:   Tue, 17 Mar 2020 09:17:51 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Joe Perches <joe@perches.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Better regex for dma_buf|fence|resv
+Message-ID: <20200317081751.GA1455@ravnborg.org>
+References: <20200317071547.1008622-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317071547.1008622-1-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=IJv9LcIfAAAA:8
+        a=VwQbUJbxAAAA:8 a=e5mUnYsNAAAA:8 a=KKAkSRfTAAAA:8 a=QyXUC8HyAAAA:8
+        a=yHm9WYn_3syTCuk5iU0A:9 a=CjuIK1q_8ugA:10 a=cmr4hm9N53k6aw-X_--Q:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22
+        a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cost of perf_event_period() is unstable, and when the guest samples
-multiple events, the overhead increases dramatically (5378 ns on E5-2699).
+Hi Daniel.
 
-For a non-running counter, the effective time of the new period is when
-its corresponding enable bit is enabled. Calling perf_event_period()
-in advance is superfluous. For a running counter, it's safe to delay the
-effective time until the KVM_REQ_PMU event is handled. If there are
-multiple perf_event_period() calls before handling KVM_REQ_PMU,
-it helps to reduce the total cost.
+On Tue, Mar 17, 2020 at 08:15:47AM +0100, Daniel Vetter wrote:
+> We're getting some random other stuff that we're not relly interested
+                                                       really
 
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
----
- arch/x86/kvm/pmu.c           | 11 -----------
- arch/x86/kvm/pmu.h           | 11 +++++++++++
- arch/x86/kvm/vmx/pmu_intel.c | 10 ++++------
- 3 files changed, 15 insertions(+), 17 deletions(-)
+> in, so match only word boundaries. Also avoid the capture group while
+> at it.
+> 
+> Suggested by Joe Perches.
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index d1f8ca57d354..527a8bb85080 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -437,17 +437,6 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
- 	kvm_pmu_refresh(vcpu);
- }
- 
--static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
--{
--	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
--
--	if (pmc_is_fixed(pmc))
--		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
--			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
--
--	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
--}
--
- /* Release perf_events for vPMCs that have been unused for a full time slice.  */
- void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
- {
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index d7da2b9e0755..cd112e825d2c 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -138,6 +138,17 @@ static inline u64 get_sample_period(struct kvm_pmc *pmc, u64 counter_value)
- 	return sample_period;
- }
- 
-+static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
-+{
-+	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
-+
-+	if (pmc_is_fixed(pmc))
-+		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
-+			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
-+
-+	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
-+}
-+
- void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
- void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
- void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 7c857737b438..20f654a0c09b 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -263,15 +263,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			if (!msr_info->host_initiated)
- 				data = (s64)(s32)data;
- 			pmc->counter += data - pmc_read_counter(pmc);
--			if (pmc->perf_event)
--				perf_event_period(pmc->perf_event,
--						  get_sample_period(pmc, data));
-+			if (pmc_speculative_in_use(pmc))
-+				kvm_make_request(KVM_REQ_PMU, vcpu);
- 			return 0;
- 		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
- 			pmc->counter += data - pmc_read_counter(pmc);
--			if (pmc->perf_event)
--				perf_event_period(pmc->perf_event,
--						  get_sample_period(pmc, data));
-+			if (pmc_speculative_in_use(pmc))
-+				kvm_make_request(KVM_REQ_PMU, vcpu);
- 			return 0;
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
- 			if (data == pmc->eventsel)
--- 
-2.21.1
+You want a:
+Suggested-by: Joe Perches <joe@perches.com>
 
+The patch looks correct, but I am not fluent in perlish.
+
+	Sam
+> 
+> Cc: linux-media@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3005be638c2c..fc5d5aa53147 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5025,7 +5025,7 @@ F:	include/linux/dma-buf*
+>  F:	include/linux/reservation.h
+>  F:	include/linux/*fence.h
+>  F:	Documentation/driver-api/dma-buf.rst
+> -K:	dma_(buf|fence|resv)
+> +K:	'\bdma_(?:buf|fence|resv)\b'
+>  T:	git git://anongit.freedesktop.org/drm/drm-misc
+>  
+>  DMA-BUF HEAPS FRAMEWORK
+> -- 
+> 2.25.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
