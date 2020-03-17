@@ -2,231 +2,151 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CA6C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072F0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1231120663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pd48EvGw"
+	by mail.kernel.org (Postfix) with ESMTP id D15F820663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584431537;
+	bh=ZcWHs52QytyEx27uzcGx/ocQa1qmkx3LxKIEZ+0VMds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pw4PsMNPeVFLF/cjt0ogKsG76nslsHVSH6i8Xvie9rI8tKqaI3qGw/ThORvCCWYJy
+	 pFhp+NYwUz10eadsnvrCqbag2yyxHaZ9A3yd6oWpWTJRQbQlQXzniZgyrxLHuhCjy8
+	 dxIAqcfSjaEkDoqLLXOe7ci+sfT8mLb5vSCe04ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgCQHvB (ORCPT
+        id S1726278AbgCQHwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:51:01 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47444 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgCQHvA (ORCPT
+        Tue, 17 Mar 2020 03:52:16 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44826 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbgCQHwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:51:00 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02H7ouEY068091;
-        Tue, 17 Mar 2020 02:50:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584431456;
-        bh=NOP/2vAOC5LFpFfqytL3Gc0eN0Oq0HRszM6WcFzGB4M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Pd48EvGweGloD+VNaJj77H+QF5gJ2irwl5dBd3E5Y2NoK6ASl97izMAGvhaZiO0mq
-         HW8YD9+ldz9N/epvFvCC81PTK1/wD7IadjC+3G1kXC98eASKnqk9QuOWmATiMKQmD9
-         H1XMGRDzU9gkDKr6MyafAVAXS2UMnsV7eaiIw+Dc=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7ouTS101201;
-        Tue, 17 Mar 2020 02:50:56 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 02:50:56 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 02:50:56 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7orCX032532;
-        Tue, 17 Mar 2020 02:50:54 -0500
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix an error handling path in
- 'k3_udma_glue_cfg_rx_flow()'
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        <vkoul@kernel.org>, <dan.j.williams@intel.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20200315155015.27303-1-christophe.jaillet@wanadoo.fr>
- <49a35126-3cc6-0cbb-e632-42a237ef353e@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <e1d2d6af-7dc3-6e90-28d3-05d9b293cba9@ti.com>
-Date:   Tue, 17 Mar 2020 09:50:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Mar 2020 03:52:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y2so8821407wrn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 00:52:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FuaQPF1ZWPKes0ddeJfIKVDXd4T44v9s14fJWIErxcE=;
+        b=P26j+LlnYmTOJWCP87P5Oc6WyLoDiFgOq6TGdOUvjakZxcrmx/bver+N+U/0235vw3
+         IIDtVhR1uKWRTFoo3Gyo333/g7NdW+R3V2Lby0b7Wk08lmV22zBnaLzKJ0TTXwIbJBb7
+         7bZvXKyYToZiRJuMXSrDpninocK5fN+Dk86Ug1VzwbcSHSkr6JweMcWPOrx5MGJKXbDq
+         b7IPlX4+qw3SiF556yN1zFAzLFn3Pg/lPenqU0wMzPDF4v3dlWCjSc9he8fVYtaI5OLi
+         ixMnHij3JDKlRaw6PIFxAHPrZb5nEpsoM2qbNsYi5IlC0MaD9sNlzxeuejwxjESMESO7
+         6HRg==
+X-Gm-Message-State: ANhLgQ0AKyvqT3+zHE4xKs/GtYmLpm/2caUD3rQU5+WaX8ME0hxdNt3/
+        aooUebuKocG3aiNElvcAwmM=
+X-Google-Smtp-Source: ADFU+vuAYroYBbemsZbZfWLaUtPDVfvJGwI/+NUsFg3a4LiTnMlH4PpyoJvKi6hxXHz8t2ZqTxqXeQ==
+X-Received: by 2002:adf:ed04:: with SMTP id a4mr4372448wro.76.1584431534404;
+        Tue, 17 Mar 2020 00:52:14 -0700 (PDT)
+Received: from localhost (ip-37-188-255-121.eurotel.cz. [37.188.255.121])
+        by smtp.gmail.com with ESMTPSA id z11sm2875547wmc.30.2020.03.17.00.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 00:52:13 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 08:52:12 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: memcg: make memory.oom.group tolerable to task
+ migration
+Message-ID: <20200317075212.GC26018@dhcp22.suse.cz>
+References: <20200316223510.3176148-1-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <49a35126-3cc6-0cbb-e632-42a237ef353e@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316223510.3176148-1-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
+On Mon 16-03-20 15:35:10, Roman Gushchin wrote:
+> If a task is getting moved out of the OOMing cgroup, it might
+> result in unexpected OOM killings if memory.oom.group is used
+> anywhere in the cgroup tree.
+> 
+> Imagine the following example:
+> 
+>           A (oom.group = 1)
+>          / \
+>   (OOM) B   C
+> 
+> Let's say B's memory.max is exceeded and it's OOMing. The OOM killer
+> selects a task in B as a victim, but someone asynchronously moves
+> the task into C.
 
-On 16/03/2020 09:20, Peter Ujfalusi wrote:
-> Hi Christophe,
-> 
-> On 15/03/2020 17.50, Christophe JAILLET wrote:
->> All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
->> function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
->>
->> This not correct because this function has a 'channel->flows_ready--;' at
->> the end, but 'flows_ready' has not been incremented here, when we branch to
->> the error handling path.
->>
->> In order to keep a correct value in 'flows_ready', un-roll
->> 'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
->> at the correct places when an error is detected.
-> 
-> Good catch!
-> 
->> Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
-> 
-> Even better catch ;)
-> 
->> Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->> Not sure that the last point of the description is correct. Maybe, the
->> 'xudma_rflow_put / return -ENODEV;' should be kept in order not to
->> override 'flow->udma_rflow'.
->> ---
->>   drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
->>   1 file changed, 20 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
->> index dbccdc7c0ed5..890573eb1625 100644
->> --- a/drivers/dma/ti/k3-udma-glue.c
->> +++ b/drivers/dma/ti/k3-udma-glue.c
->> @@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->>   	if (IS_ERR(flow->udma_rflow)) {
->>   		ret = PTR_ERR(flow->udma_rflow);
->>   		dev_err(dev, "UDMAX rflow get err %d\n", ret);
->> -		goto err;
->> +		goto err_return;
-> 
-> return err; ?
-> 
->>   	}
-> 
-> Optionally you could have moved the
-> 	rx_chn->flows_ready++;
-> here and
+I can see Reported-by here, does that mean that the race really happened
+in real workloads? If yes, I would be really curious. Mostly because
+moving tasks outside of the oom domain is quite questionable without
+charge migration.
 
-Thank you for your patch.
+> mem_cgroup_get_oom_group() will iterate over all
+> ancestors of C up to the root cgroup. In theory it had to stop
+> at the oom_domain level - the memory cgroup which is OOMing.
+> But because B is not an ancestor of C, it's not happening.
+> Instead it chooses A (because it's oom.group is set), and kills
+> all tasks in A. This behavior is wrong because the OOM happened in B,
+> so there is no reason to kill anything outside.
+> 
+> Fix this by checking it the memory cgroup to which the task belongs
+> is a descendant of the oom_domain. If not, memory.oom.group should
+> be ignored, and the OOM killer should kill only the victim task.
 
-I tend to agree with Peter here - just may be with comment that it will be dec in
-k3_udma_glue_release_rx_flow().
-All clean ups were moved in standalone function intentionally to avoid
-code duplication in err and normal channel release path, and avoid common errors
-when normal path is fixed, but err path missed.
+I was about to suggest storing the memcg in oom_evaluate_task but then I
+have realized that this would be both more complex and I am not yet
+sure it would be better so much better after all.
 
+The thing is that killing the selected task makes a lot of sense
+because it was the largest consumer. No matter it has run away. On the
+other hand if your B was oom.group = 1 then one could expect that any
+OOM killer event in that group will result in the whole group tear
+down. This is however a gray zone because we do emit MEMCG_OOM event but
+MEMCG_OOM_KILL event will go to the victim's at-the-time memcg. So the
+observer B could think that the oom was resolved without killing while
+observer C would see a kill event without oom.
 
+That being said, please try to think about the above. I will give it
+some more time as well. Killing the selected victim is the obviously
+correct thing and your patch does that so it is correct in that regard
+but I believe that the group oom behavior in the original oom domain
+remains an open question.
 
+Fixes: 3d8b38eb81ca ("mm, oom: introduce memory.oom.group")
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reported-by: Dan Schatzberg <dschatzberg@fb.com>
+> ---
+>  mm/memcontrol.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
->>   
->>   	if (flow->udma_rflow_id != xudma_rflow_get_id(flow->udma_rflow)) {
->> -		xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
->> -		return -ENODEV;
->> +		ret = -ENODEV;
->> +		goto err_rflow_put;
-> 
-> goto err;
-> 
->>   	}
->>   
->>   	/* request and cfg rings */
->> @@ -592,7 +592,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->>   	if (!flow->ringrx) {
->>   		ret = -ENODEV;
->>   		dev_err(dev, "Failed to get RX ring\n");
->> -		goto err;
->> +		goto err_rflow_put;
->>   	}
->>   
->>   	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
->> @@ -600,19 +600,19 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->>   	if (!flow->ringrxfdq) {
->>   		ret = -ENODEV;
->>   		dev_err(dev, "Failed to get RXFDQ ring\n");
->> -		goto err;
->> +		goto err_ringrx_free;
->>   	}
->>   
->>   	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
->>   	if (ret) {
->>   		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
->> -		goto err;
->> +		goto err_ringrxfdq_free;
->>   	}
->>   
->>   	ret = k3_ringacc_ring_cfg(flow->ringrxfdq, &flow_cfg->rxfdq_cfg);
->>   	if (ret) {
->>   		dev_err(dev, "Failed to cfg ringrxfdq %d\n", ret);
->> -		goto err;
->> +		goto err_ringrxfdq_free;
->>   	}
->>   
->>   	if (rx_chn->remote) {
->> @@ -662,7 +662,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->>   	if (ret) {
->>   		dev_err(dev, "flow%d config failed: %d\n", flow->udma_rflow_id,
->>   			ret);
->> -		goto err;
->> +		goto err_ringrxfdq_free;
->>   	}
->>   
->>   	rx_chn->flows_ready++;
->> @@ -670,8 +670,18 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->>   		flow->udma_rflow_id, rx_chn->flows_ready);
->>   
->>   	return 0;
->> -err:
->> -	k3_udma_glue_release_rx_flow(rx_chn, flow_idx);
->> +
->> +err_ringrxfdq_free:
->> +	k3_ringacc_ring_free(flow->ringrxfdq);
->> +
->> +err_ringrx_free:
->> +	k3_ringacc_ring_free(flow->ringrx);
->> +
->> +err_rflow_put:
->> +	xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
->> +	flow->udma_rflow = NULL;
->> +
->> +err_return:
-> 
-> You could have kept the single err label and just copy the
-> release_rx_flow() without the rx_chn->flows_ready--;
-> 
-> I don't have anything against multiple labels as such, but a single one
-> might be easier to follow?
-> 
-> and you don't need the err_return, just return in place when you would
-> jump to it.
-> 
->>   	return ret;
->>   }
->>   
->>
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index daa399be4688..d8c4b7aa4e73 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1930,6 +1930,14 @@ struct mem_cgroup *mem_cgroup_get_oom_group(struct task_struct *victim,
+>  	if (memcg == root_mem_cgroup)
+>  		goto out;
+>  
+> +	/*
+> +	 * If the victim task has been asynchronously moved to a different
+> +	 * memory cgroup, we might end up killing tasks outside oom_domain.
+> +	 * In this case it's better to ignore memory.group.oom.
+> +	 */
+> +	if (unlikely(!mem_cgroup_is_descendant(memcg, oom_domain)))
+> +		goto out;
+> +
+>  	/*
+>  	 * Traverse the memory cgroup hierarchy from the victim task's
+>  	 * cgroup up to the OOMing cgroup (or root) to find the
+> -- 
+> 2.24.1
 
 -- 
-Best regards,
-grygorii
+Michal Hocko
+SUSE Labs
