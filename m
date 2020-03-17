@@ -2,91 +2,59 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008B5C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE03C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76E9206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CBB206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgCQGWq (ORCPT
+        id S1726005AbgCQGYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:22:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:53584 "EHLO mga12.intel.com"
+        Tue, 17 Mar 2020 02:24:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:60996 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726474AbgCQGWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:22:43 -0400
-IronPort-SDR: 3erJ1kviT51g3FPCZYjwj5ikSK0Kcqz6A2jIsgppbBGakVcrXNU7SGfW32AeCjglBTspr3Vgv+
- p+/MUnctim7w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 23:22:43 -0700
-IronPort-SDR: dF9lqlgOi8hk5lSI1s/j4THCYuZCCey2wDzUzstiYJOh/CRO5Ptjz+CfV61zgYysy7TB5YNQRI
- ZYFlZxTftVXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="445390324"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Mar 2020 23:22:40 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: [GIT PULL 4/6] intel_th: msu: Fix the unexpected state warning
-Date:   Tue, 17 Mar 2020 08:22:13 +0200
-Message-Id: <20200317062215.15598-5-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317062215.15598-1-alexander.shishkin@linux.intel.com>
-References: <20200317062215.15598-1-alexander.shishkin@linux.intel.com>
+        id S1725536AbgCQGYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 02:24:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D68841FB;
+        Mon, 16 Mar 2020 23:24:13 -0700 (PDT)
+Received: from e107533-lin.cambridge.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B57633F52E;
+        Mon, 16 Mar 2020 23:28:12 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 06:24:00 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc:     linux-kernel@vger.kernel.org, anders.roxell@linaro.org,
+        arnd@arndb.de, sboyd@kernel.org, gregkh@linuxfoundation.org,
+        naresh.kamboju@linaro.org, daniel.lezcano@linaro.org,
+        Basil.Eljuse@arm.com, mturquette@baylibre.com,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] arch_topology: Fix putting invalid cpu clk
+Message-ID: <20200317062348.GA12791@e107533-lin.cambridge.arm.com>
+References: <20200317001829.29516-1-jeffy.chen@rock-chips.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317001829.29516-1-jeffy.chen@rock-chips.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The unexpected state warning should only warn on illegal state
-transitions. Fix that.
+On Tue, Mar 17, 2020 at 08:18:29AM +0800, Jeffy Chen wrote:
+> Add a sanity check before putting the cpu clk.
+> 
+> Fixes: 2a6d1c6bcd1f (“arch_topology: Adjust initial CPU capacities with current freq")
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Fixes: 615c164da0eb4 ("intel_th: msu: Introduce buffer interface")
-Cc: stable@vger.kernel.org # v5.4+
----
- drivers/hwtracing/intel_th/msu.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Fixing a non-existent commit ?
 
-diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
-index 45916b48bcf0..7ac7dd4d3b1c 100644
---- a/drivers/hwtracing/intel_th/msu.c
-+++ b/drivers/hwtracing/intel_th/msu.c
-@@ -722,9 +722,6 @@ static int msc_win_set_lockout(struct msc_window *win,
- 
- 	if (old != expect) {
- 		ret = -EINVAL;
--		dev_warn_ratelimited(msc_dev(win->msc),
--				     "expected lockout state %d, got %d\n",
--				     expect, old);
- 		goto unlock;
- 	}
- 
-@@ -745,6 +742,10 @@ static int msc_win_set_lockout(struct msc_window *win,
- 		/* from intel_th_msc_window_unlock(), don't warn if not locked */
- 		if (expect == WIN_LOCKED && old == new)
- 			return 0;
-+
-+		dev_warn_ratelimited(msc_dev(win->msc),
-+				     "expected lockout state %d, got %d\n",
-+				     expect, old);
- 	}
- 
- 	return ret;
--- 
-2.25.1
-
+--
+Regards,
+Sudeep
