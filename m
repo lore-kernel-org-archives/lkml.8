@@ -2,101 +2,138 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F47C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F661C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9F720575
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FCB220736
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgCQDXH (ORCPT
+        id S1726979AbgCQDZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 23:23:07 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:38864 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgCQDXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 23:23:07 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jE2oW-0007Oi-Rq; Tue, 17 Mar 2020 14:22:45 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 17 Mar 2020 14:22:44 +1100
-Date:   Tue, 17 Mar 2020 14:22:44 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v4 1/2] crypto: engine - support for parallel requests
-Message-ID: <20200317032244.GA18743@gondor.apana.org.au>
-References: <1583707893-23699-1-git-send-email-iuliana.prodan@nxp.com>
- <1583707893-23699-2-git-send-email-iuliana.prodan@nxp.com>
- <20200312032553.GB19920@gondor.apana.org.au>
- <61c28d90-af55-25a1-3729-90a622f2a7b2@nxp.com>
+        Mon, 16 Mar 2020 23:25:03 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:41698 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725837AbgCQDZD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 23:25:03 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tsq-E9i_1584415494;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tsq-E9i_1584415494)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 17 Mar 2020 11:24:56 +0800
+Subject: Re: [v2 PATCH 1/2] mm: swap: make page_evictable() inline
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, shakeelb@google.com, vbabka@suse.cz,
+        willy@infradead.org, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1584397455-28701-1-git-send-email-yang.shi@linux.alibaba.com>
+ <202003171004.Kg80NfWn%lkp@intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <1c710863-ed2e-88ec-2ea9-401c56ecc630@linux.alibaba.com>
+Date:   Mon, 16 Mar 2020 20:24:51 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <202003171004.Kg80NfWn%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <61c28d90-af55-25a1-3729-90a622f2a7b2@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 01:05:32PM +0200, Horia GeantÄƒ wrote:
-> On 3/12/2020 5:26 AM, Herbert Xu wrote:
-> > On Mon, Mar 09, 2020 at 12:51:32AM +0200, Iuliana Prodan wrote:
-> >>
-> >>  	ret = enginectx->op.do_one_request(engine, async_req);
-> >> -	if (ret) {
-> >> -		dev_err(engine->dev, "Failed to do one request from queue: %d\n", ret);
-> >> -		goto req_err;
-> >> +	can_enq_more = ret;
-> >> +	if (can_enq_more < 0) {
-> >> +		dev_err(engine->dev, "Failed to do one request from queue: %d\n",
-> >> +			ret);
-> >> +		goto req_err_1;
-> >> +	}
-> > 
-> > So this now includes the case of the hardware queue being full
-> > and the request needs to be queued until space opens up again.
-> I see no difference when compared with existing implementation:
-> in both cases failing the transfer from SW queue to HW queue means
-> losing the request irrespective of the error code returned by .do_one_request.
-> 
-> This doesn't mean it shouldn't be fixed.
 
-I don't think they are the same though.  With the existing code,
-you only ever have one outstanding request so a new one is only
-given over to the hardware after the previous one has completed.
-That means that the only errors you expect to get from the driver
-are fatal ones that you cannot recover from.
 
-With parallel requests, you will be giving as many requests to
-the driver as it can take.  In fact the error condition is now
-used to tell the engine to stop giving more requests.  This is
-in no way the same as a fatal error from before.
+On 3/16/20 8:00 PM, kbuild test robot wrote:
+> Hi Yang,
+>
+> Thank you for the patch! Yet something to improve:
+>
+> [auto build test ERROR on mmotm/master]
+> [also build test ERROR on linus/master v5.6-rc6 next-20200316]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Yang-Shi/mm-swap-make-page_evictable-inline/20200317-094836
+> base:   git://git.cmpxchg.org/linux-mmotm.git master
+> config: i386-tinyconfig (attached as .config)
+> compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
+> reproduce:
+>          # save the attached .config to linux build tree
+>          make ARCH=i386
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>     In file included from include/linux/suspend.h:5:0,
+>                      from arch/x86/kernel/asm-offsets.c:13:
+>     include/linux/swap.h: In function 'page_evictable':
+>>> include/linux/swap.h:395:9: error: implicit declaration of function 'mapping_unevictable'; did you mean 'mapping_deny_writable'? [-Werror=implicit-function-declaration]
 
-We should not print out an error in this case and we should ensure
-that the request is put back on the queue and reprocessed when the
-driver comes back for more.
+It looks pagemap.h need to be included. The below patch should be able 
+to fix the build error:
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index d296c70..e8b8bbe 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -12,6 +12,7 @@
+  #include <linux/fs.h>
+  #include <linux/atomic.h>
+  #include <linux/page-flags.h>
++#include <linux/pagemap.h>
+  #include <asm/page.h>
+
+  struct notifier_block;
+
+
+>       ret = !mapping_unevictable(page_mapping(page)) && !PageMlocked(page);
+>              ^~~~~~~~~~~~~~~~~~~
+>              mapping_deny_writable
+>     cc1: some warnings being treated as errors
+>     make[2]: *** [scripts/Makefile.build:99: arch/x86/kernel/asm-offsets.s] Error 1
+>     make[2]: Target '__build' not remade because of errors.
+>     make[1]: *** [Makefile:1139: prepare0] Error 2
+>     make[1]: Target 'prepare' not remade because of errors.
+>     make: *** [Makefile:179: sub-make] Error 2
+>     11 real  4 user  5 sys  89.51% cpu 	make prepare
+>
+> vim +395 include/linux/swap.h
+>
+>     376	
+>     377	/**
+>     378	 * page_evictable - test whether a page is evictable
+>     379	 * @page: the page to test
+>     380	 *
+>     381	 * Test whether page is evictable--i.e., should be placed on active/inactive
+>     382	 * lists vs unevictable list.
+>     383	 *
+>     384	 * Reasons page might not be evictable:
+>     385	 * (1) page's mapping marked unevictable
+>     386	 * (2) page is part of an mlocked VMA
+>     387	 *
+>     388	 */
+>     389	static inline bool page_evictable(struct page *page)
+>     390	{
+>     391		bool ret;
+>     392	
+>     393		/* Prevent address_space of inode and swap cache from being freed */
+>     394		rcu_read_lock();
+>   > 395		ret = !mapping_unevictable(page_mapping(page)) && !PageMlocked(page);
+>     396		rcu_read_unlock();
+>     397		return ret;
+>     398	}
+>     399	
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
