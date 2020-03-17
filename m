@@ -2,426 +2,240 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC72C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7D9C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5BE2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34ED720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:37:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dYo3YFbL"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bwGtZqu4";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="lNfSUtN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgCQUgp (ORCPT
+        id S1726840AbgCQUhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:36:45 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39337 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbgCQUgp (ORCPT
+        Tue, 17 Mar 2020 16:37:01 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:36186 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726555AbgCQUhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:36:45 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m1so1928792pll.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ib4SwHPhEWfJb/uM7SZdOGzb1C9ZMwqW8KhF+YMLT3M=;
-        b=dYo3YFbLQ3sdflQTmyvLyS4EkAkzpXmfCXPFn/r3mL7/ofYBawg+1sMIb53TSIod48
-         ZAsSb0PVHK8YmDLVaWLK64XknHAQKwgmN5kZC5vdqhTLAQQPA6NOhOBKFNsWSazmQFo4
-         bgj7ZMb1T+os0t2EOSHfGNcHiX61oSH/+I2jk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ib4SwHPhEWfJb/uM7SZdOGzb1C9ZMwqW8KhF+YMLT3M=;
-        b=E69RGruH9xCN5VEGvUpFv5xLnMTzGtcPmPF1x0WSKQ4q1MK3aX5q6XK42u/GMOfcMX
-         48UHQMuGWRri7sFlryVjJT1CbaVbsrhAAlGpefh2x+5wel32YHwfjiL9/8rIdJfzf3o5
-         pACqJ8FHHHNsJCS3o7grRidLtpeVv0q4TVJOA9pIEBftaO5/ZEDX+qzv4p7FKcFle4wN
-         iIp9vlPhpQ4iOmepIOMRdI+/Wb85SIYFzNCa+B9X09AC8beuaiFvfBE8hzycsO6vxHHM
-         U8XBrki/MSnAvGHYW9iQMRwwNYAEZ/IlNnZ9Rx2puww6A+RzDZSFQipfNbXX0P6iD2Sf
-         8MLQ==
-X-Gm-Message-State: ANhLgQ0bPOk0R+F56yHf9+vtkLZeZW56Qpi6XV19yvG1dfZ1bpOeKL52
-        E4IDzcbcGtmUDm8dMGkP+AJ2Eezt32s=
-X-Google-Smtp-Source: ADFU+vtywVKdA3PLHVrwUfLlI+Te1WxZLBOBQRoXC+vTAGy5lQ5ckL9RCHaEDGa2W5XtgG2S7iRKcQ==
-X-Received: by 2002:a17:90a:ab0a:: with SMTP id m10mr1046373pjq.105.1584477402819;
-        Tue, 17 Mar 2020 13:36:42 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d14sm3071222pfq.29.2020.03.17.13.36.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 13:36:41 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 13:36:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, Tim.Bird@sony.com
-Subject: Re: [PATCH v3 5/6] kselftest: add fixture parameters
-Message-ID: <202003171326.0EB9CC2@keescook>
-References: <20200316225647.3129354-1-kuba@kernel.org>
- <20200316225647.3129354-6-kuba@kernel.org>
-MIME-Version: 1.0
+        Tue, 17 Mar 2020 16:37:00 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HKaGjU030657;
+        Tue, 17 Mar 2020 13:36:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=LqE6Nlcm++u/r6jtITO3vr20fSbJXiIQaJ6SVe+cjQc=;
+ b=bwGtZqu4StTAJjq9y2rdipBFux8GADsjjbf7iKHpIXNeJT8W5wVKnccO8CC6/JnJusiz
+ E8hwkOq5gua+Xwgd3C/grkizKht/M5yYXhC6qn0WzhZA4broIEced/f+o2+WKb5if5fx
+ LBKyHhAjzvfrjAVESf/WpPFl0Qmc6B1CTq4= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yrw0pxvhe-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 17 Mar 2020 13:36:55 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 17 Mar 2020 13:36:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cOBIRt7SB2gdjb+9XvB3i9NJ7SjOWxow5mXnwR6+VP9ey49J5tSdn0Xggt2nWO9dssYLLSoZqgL3jJHc++XND3PxpiEgsniihUjbhA0iwTnyXA0WbfMT82RkYBehGlzsUknZ/tNBcYODTsDRlJnwDQfxKkyQEE6lnp16uPkuBqXPV/BF20pn4u6XvvKAzgOVj4WAjaY5WU4BuEcuRSH93s8qYIO1vO1brA5WG4zk1QJa4d4r8vSfIf6CYRKTdp/s4KQnWqhsH6gs9eu3Nznpy82zWw9Gb9ok+aewyY4M2y/UJWxtouYCLoJxtBosusWMSXc/Qwuod7F4cJoakut+xA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LqE6Nlcm++u/r6jtITO3vr20fSbJXiIQaJ6SVe+cjQc=;
+ b=JdFIb/IpT3Kwknd/qlR2UqRGNMKW/Xe0uRuxLUoywOWD2OOCnb01I8lpvpuOZFfmGc1uuUwc6cprKiaaW3wPDJnlpg5T6XqW7fGgkuBIk9ZXCxkz+/XJDvyOG/L2Mja177Yi3jaZU+d4ktrmQ9oxnKGxXnroDN7fqGVIgEyzQooQqHFslsfhk027kRNKEZ+5cp7xC+82q4176+EoJdvr5jKrXv8yFhpOwYAmHNvPEf+XY/5fR+qfLzituDnd5+ZS+Wow+bBNrpsQGga6h0CfNk0Vvc3+NJ2B4JCsJ9795tKCDvOvN0mHl0XSPYiQUEOVC3aBk9Nuwg82RIwodl470Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LqE6Nlcm++u/r6jtITO3vr20fSbJXiIQaJ6SVe+cjQc=;
+ b=lNfSUtN2GButSasU0jIVIpYHGpy7uueBHKAiQCJIp2OAxE7tJMpcEXoxFPy5naOIPSEk5JkrQKzY6Kol4O4JO4w7KCmo2Dcbt+NOp8xAuZR5AgJwlYY2gXM3Q5Dl5P/GSaq1e1YReOjNAr2mOFSDla/L1vm69RllLdBkgSWRr9Q=
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2517.namprd15.prod.outlook.com (2603:10b6:a03:151::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Tue, 17 Mar
+ 2020 20:36:49 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::a0af:3ebe:a804:f648]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::a0af:3ebe:a804:f648%6]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 20:36:49 +0000
+Date:   Tue, 17 Mar 2020 13:36:45 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: memcg: make memory.oom.group tolerable to task
+ migration
+Message-ID: <20200317203645.GC276471@carbon.DHCP.thefacebook.com>
+References: <20200316223510.3176148-1-guro@fb.com>
+ <20200317075212.GC26018@dhcp22.suse.cz>
+ <20200317183836.GA276471@carbon.DHCP.thefacebook.com>
+ <20200317185529.GV26018@dhcp22.suse.cz>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316225647.3129354-6-kuba@kernel.org>
+In-Reply-To: <20200317185529.GV26018@dhcp22.suse.cz>
+X-ClientProxiedBy: CO1PR15CA0107.namprd15.prod.outlook.com
+ (2603:10b6:101:21::27) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:96a1) by CO1PR15CA0107.namprd15.prod.outlook.com (2603:10b6:101:21::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.19 via Frontend Transport; Tue, 17 Mar 2020 20:36:48 +0000
+X-Originating-IP: [2620:10d:c090:400::5:96a1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 195e57d5-a7f3-4fba-813b-08d7cab2ead8
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2517:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2517B4557B4FDF280AFE5C9FBEF60@BYAPR15MB2517.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(199004)(81166006)(8676002)(16526019)(1076003)(6506007)(4326008)(33656002)(81156014)(6916009)(8936002)(55016002)(52116002)(9686003)(7696005)(66946007)(186003)(6666004)(5660300002)(86362001)(66556008)(498600001)(66476007)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2517;H:BYAPR15MB4136.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +i7Jq3/2UNzIX8oPJfNK5zUtA+2pLA0culOQsHgUupycPs3ZbyUghlI96a6y5mBGbvbIpil8BIMDm38QLYSSpswgIcJ8uetX9Wx6WBPiuC0XX4qsE7aUzmh090FnqU3lEnoXdJaa+TAclM3u4RRq6G9dZfSkE2atfudCe7dzHWUDDp3YphxQBhn60c3L2mzsNgKoCzycf46FUfwhZNLx23ANpGod0Oso0OqmS2SpKSJ8Psh75vTmujb3twIgss6+FU3JS9bgBQ80iUd/c4qFwXqkl3Df/Tl5kVpoTZqtnzaPUaRujWglHnFIdWttRcpi0F28LoLIgF0uLlyrFzgI3i0DGVJDHewrIvSfOktRKuB27+xeOpJPE9qytu1FxukZXa5aerZb0ztulgvLwaf5IGYrZT91+iGb4N8vXuJTOMa3oVa2B2FRH8H+2ZnoNP/T
+X-MS-Exchange-AntiSpam-MessageData: Ljtgufhx4HPjrxrojpJG4U74+zwAXkvC+d1S/V88qVFZ5HyRvX03mRsAJmqjj1YNIdZtwS168tpUTjxbp/vHiFMeuoJ+hudtgGMhaCrZhjuBbjYT8mNmfjfs+L7yAX9CJgGNJP2P65wdlPWRx5kV68RGpGLy1eJTNNY9A/nCKu8wE1kn1Ms/hFmRD/lMIHdP
+X-MS-Exchange-CrossTenant-Network-Message-Id: 195e57d5-a7f3-4fba-813b-08d7cab2ead8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 20:36:49.1829
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DVyeoeP+7i0kRCKivTnJhrNAcDMwzsJVkqOvC0DjXw9zDMazpr0Io7/eeCZESvS0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2517
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_09:2020-03-17,2020-03-17 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ mlxscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ bulkscore=0 malwarescore=0 adultscore=0 suspectscore=2 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003170077
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 03:56:45PM -0700, Jakub Kicinski wrote:
-> Allow users to pass parameters to fixtures.
+On Tue, Mar 17, 2020 at 07:55:29PM +0100, Michal Hocko wrote:
+> On Tue 17-03-20 11:38:36, Roman Gushchin wrote:
+> > On Tue, Mar 17, 2020 at 08:52:12AM +0100, Michal Hocko wrote:
+> > > On Mon 16-03-20 15:35:10, Roman Gushchin wrote:
+> > > > If a task is getting moved out of the OOMing cgroup, it might
+> > > > result in unexpected OOM killings if memory.oom.group is used
+> > > > anywhere in the cgroup tree.
+> > > > 
+> > > > Imagine the following example:
+> > > > 
+> > > >           A (oom.group = 1)
+> > > >          / \
+> > > >   (OOM) B   C
+> > > > 
+> > > > Let's say B's memory.max is exceeded and it's OOMing. The OOM killer
+> > > > selects a task in B as a victim, but someone asynchronously moves
+> > > > the task into C.
+> > > 
+> > > I can see Reported-by here, does that mean that the race really happened
+> > > in real workloads? If yes, I would be really curious. Mostly because
+> > > moving tasks outside of the oom domain is quite questionable without
+> > > charge migration.
+> > 
+> > Yes, I've got a number of OOM messages where oom_cgroup != task_cgroup.
+> > The only reasonable explanation is that the task has been moved out after
+> > being selected as a victim. In my case it resulted in killing all tasks
+> > in A, and it what hurt the workload.
 > 
-> Each fixture will be evaluated for each of its parameter
-> sets.
+> Is this an expected behavior of the workload or potentially a bug.
+> Because really, migrating outside of the oom domain is problematic
+> already. Essentially you are going to kill a wrong task if the largest
+> memory consumer is migrating before the oom killer manages to find the
+> task.
 
-This commit log (and subject) needs to be reworded/expanded slightly.
-Perhaps:
+I don't think it's easy to a userspace program to predict OOMs and avoid migrations
+in these circumstances. In my case one cgroup is some sort of execution
+engine and the other is the workload which it starts. All inside the bigger
+cgroup managed by systemd.
 
-
-Subject: kselftest: add fixture variants
-
-Allow users to build parameterized variants of fixtures.
-
-If fixtures want variants, they call FIXTURE_VARIANT() to declare the
-structure to fill for each variant. Each fixture will be re-run for each
-of the variants defined by calling FIXTURE_VARIANT_ADD() with the
-differing parameters initializing the structure.
-
-Since tests are being re-run, additional initialization (steps,
-no_print) is also added.
-
-
-
+Generally speaking, charge migration was always very problematic, and it's
+super easy to expose weird corner cases with migrating large tasks.
+I hope that long-term we will switch to entering cgroups using clone3
+or something similar.
 
 > 
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> --
-> v3:
->  - separate variant name out with a dot.
-> ---
->  Documentation/dev-tools/kselftest.rst       |   3 +-
->  tools/testing/selftests/kselftest_harness.h | 145 ++++++++++++++++----
->  2 files changed, 121 insertions(+), 27 deletions(-)
+> > > > mem_cgroup_get_oom_group() will iterate over all
+> > > > ancestors of C up to the root cgroup. In theory it had to stop
+> > > > at the oom_domain level - the memory cgroup which is OOMing.
+> > > > But because B is not an ancestor of C, it's not happening.
+> > > > Instead it chooses A (because it's oom.group is set), and kills
+> > > > all tasks in A. This behavior is wrong because the OOM happened in B,
+> > > > so there is no reason to kill anything outside.
+> > > > 
+> > > > Fix this by checking it the memory cgroup to which the task belongs
+> > > > is a descendant of the oom_domain. If not, memory.oom.group should
+> > > > be ignored, and the OOM killer should kill only the victim task.
+> > > 
+> > > I was about to suggest storing the memcg in oom_evaluate_task but then I
+> > > have realized that this would be both more complex and I am not yet
+> > > sure it would be better so much better after all.
+> > > 
+> > > The thing is that killing the selected task makes a lot of sense
+> > > because it was the largest consumer. No matter it has run away. On the
+> > > other hand if your B was oom.group = 1 then one could expect that any
+> > > OOM killer event in that group will result in the whole group tear
+> > > down. This is however a gray zone because we do emit MEMCG_OOM event but
+> > > MEMCG_OOM_KILL event will go to the victim's at-the-time memcg. So the
+> > > observer B could think that the oom was resolved without killing while
+> > > observer C would see a kill event without oom.
+> > 
+> > I agree. Killing the task outside of the OOMing cgroup is already strange.
 > 
-> diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
-> index 61ae13c44f91..5d1f56fcd2e7 100644
-> --- a/Documentation/dev-tools/kselftest.rst
-> +++ b/Documentation/dev-tools/kselftest.rst
-> @@ -301,7 +301,8 @@ Helpers
->  
->  .. kernel-doc:: tools/testing/selftests/kselftest_harness.h
->      :functions: TH_LOG TEST TEST_SIGNAL FIXTURE FIXTURE_DATA FIXTURE_SETUP
-> -                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN
-> +                FIXTURE_TEARDOWN TEST_F TEST_HARNESS_MAIN FIXTURE_VARIANT
-> +                FIXTURE_VARIANT_ADD
->  
->  Operators
->  ---------
-> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-> index 36ab1b92eb35..1a079afa2d01 100644
-> --- a/tools/testing/selftests/kselftest_harness.h
-> +++ b/tools/testing/selftests/kselftest_harness.h
-> @@ -168,9 +168,15 @@
->  
->  #define __TEST_IMPL(test_name, _signal) \
->  	static void test_name(struct __test_metadata *_metadata); \
-> +	static inline void wrapper_##test_name( \
-> +		struct __test_metadata *_metadata, \
-> +		struct __fixture_variant_metadata *variant) \
-> +	{ \
-> +		test_name(_metadata); \
-> +	} \
->  	static struct __test_metadata _##test_name##_object = \
->  		{ .name = #test_name, \
-> -		  .fn = &test_name, \
-> +		  .fn = &wrapper_##test_name, \
->  		  .fixture = &_fixture_global, \
->  		  .termsig = _signal, \
->  		  .timeout = TEST_TIMEOUT_DEFAULT, }; \
-> @@ -214,6 +220,7 @@
->   * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
->   */
->  #define FIXTURE(fixture_name) \
-> +	FIXTURE_VARIANT(fixture_name); \
->  	static struct __fixture_metadata _##fixture_name##_fixture_object = \
->  		{ .name =  #fixture_name, }; \
->  	static void __attribute__((constructor)) \
-> @@ -245,7 +252,9 @@
->  #define FIXTURE_SETUP(fixture_name) \
->  	void fixture_name##_setup( \
->  		struct __test_metadata __attribute__((unused)) *_metadata, \
-> -		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
-> +		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
-> +		const FIXTURE_VARIANT(fixture_name) __attribute__((unused)) *variant)
-> +
->  /**
->   * FIXTURE_TEARDOWN(fixture_name)
->   * *_metadata* is included so that EXPECT_* and ASSERT_* work correctly.
-> @@ -267,6 +276,58 @@
->  		struct __test_metadata __attribute__((unused)) *_metadata, \
->  		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
->  
-> +/**
-> + * FIXTURE_VARIANT(fixture_name) - Optionally called once per fixture
-> + * to declare fixture variant
-> + *
-> + * @fixture_name: fixture name
-> + *
-> + * .. code-block:: c
-> + *
-> + *     FIXTURE_VARIANT(datatype name) {
-> + *       type property1;
-> + *       ...
-> + *     };
-> + *
-> + * Defines type of constant parameters provided to FIXTURE_SETUP() and TEST_F()
-> + * as *variant*. Variants allow the same tests to be run with different
-> + * arguments.
-> + */
-> +#define FIXTURE_VARIANT(fixture_name) struct _fixture_variant_##fixture_name
-> +
-> +/**
-> + * FIXTURE_VARIANT_ADD(fixture_name, variant_name) - Called once per fixture
-> + * variant to setup and register the data
-> + *
-> + * @fixture_name: fixture name
-> + * @variant_name: name of the parameter set
-> + *
-> + * .. code-block:: c
-> + *
-> + *     FIXTURE_ADD(datatype name) {
-> + *       .property1 = val1;
-> + *       ...
-> + *     };
-> + *
-> + * Defines a variant of the test fixture, provided to FIXTURE_SETUP() and
-> + * TEST_F() as *variant*. Tests of each fixture will be run once for each
-> + * variant.
-> + */
-> +#define FIXTURE_VARIANT_ADD(fixture_name, variant_name) \
-> +	extern FIXTURE_VARIANT(fixture_name) \
-> +		_##fixture_name##_##variant_name##_variant; \
-> +	static struct __fixture_variant_metadata \
-> +		_##fixture_name##_##variant_name##_object = \
-> +		{ .name = #variant_name, \
-> +		  .data = &_##fixture_name##_##variant_name##_variant}; \
-> +	static void __attribute__((constructor)) \
-> +		_register_##fixture_name##_##variant_name(void) \
-> +	{ \
-> +		__register_fixture_variant(&_##fixture_name##_fixture_object, \
-> +			&_##fixture_name##_##variant_name##_object);	\
-> +	} \
-> +	FIXTURE_VARIANT(fixture_name) _##fixture_name##_##variant_name##_variant =
-> +
->  /**
->   * TEST_F(fixture_name, test_name) - Emits test registration and helpers for
->   * fixture-based test cases
-> @@ -297,18 +358,20 @@
->  #define __TEST_F_IMPL(fixture_name, test_name, signal, tmout) \
->  	static void fixture_name##_##test_name( \
->  		struct __test_metadata *_metadata, \
-> -		FIXTURE_DATA(fixture_name) *self); \
-> +		FIXTURE_DATA(fixture_name) *self, \
-> +		const FIXTURE_VARIANT(fixture_name) *variant); \
->  	static inline void wrapper_##fixture_name##_##test_name( \
-> -		struct __test_metadata *_metadata) \
-> +		struct __test_metadata *_metadata, \
-> +		struct __fixture_variant_metadata *variant) \
->  	{ \
->  		/* fixture data is alloced, setup, and torn down per call. */ \
->  		FIXTURE_DATA(fixture_name) self; \
->  		memset(&self, 0, sizeof(FIXTURE_DATA(fixture_name))); \
-> -		fixture_name##_setup(_metadata, &self); \
-> +		fixture_name##_setup(_metadata, &self, variant->data); \
->  		/* Let setup failure terminate early. */ \
->  		if (!_metadata->passed) \
->  			return; \
-> -		fixture_name##_##test_name(_metadata, &self); \
-> +		fixture_name##_##test_name(_metadata, &self, variant->data); \
->  		fixture_name##_teardown(_metadata, &self); \
->  	} \
->  	static struct __test_metadata \
-> @@ -326,7 +389,8 @@
->  	} \
->  	static void fixture_name##_##test_name( \
->  		struct __test_metadata __attribute__((unused)) *_metadata, \
-> -		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
-> +		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
-> +		const FIXTURE_VARIANT(fixture_name) __attribute__((unused)) *variant)
->  
->  /**
->   * TEST_HARNESS_MAIN - Simple wrapper to run the test harness
-> @@ -661,10 +725,12 @@
->  
->  /* Contains all the information about a fixture */
->  struct __test_metadata;
-> +struct __fixture_variant_metadata;
->  
->  struct __fixture_metadata {
->  	const char *name;
->  	struct __test_metadata *tests;
-> +	struct __fixture_variant_metadata *variant;
->  	struct __fixture_metadata *prev, *next;
->  } _fixture_global __attribute__((unused)) = {
->  	.name = "global",
-> @@ -672,7 +738,6 @@ struct __fixture_metadata {
->  };
->  
->  static struct __fixture_metadata *__fixture_list = &_fixture_global;
-> -static unsigned int __fixture_count;
->  static int __constructor_order;
->  
->  #define _CONSTRUCTOR_ORDER_FORWARD   1
-> @@ -680,14 +745,27 @@ static int __constructor_order;
->  
->  static inline void __register_fixture(struct __fixture_metadata *f)
->  {
-> -	__fixture_count++;
->  	__LIST_APPEND(__fixture_list, f);
->  }
->  
-> +struct __fixture_variant_metadata {
-> +	const char *name;
-> +	const void *data;
-> +	struct __fixture_variant_metadata *prev, *next;
-> +};
-> +
-> +static inline void
-> +__register_fixture_variant(struct __fixture_metadata *f,
-> +			  struct __fixture_variant_metadata *variant)
-> +{
-> +	__LIST_APPEND(f->variant, variant);
-> +}
-> +
->  /* Contains all the information for test execution and status checking. */
->  struct __test_metadata {
->  	const char *name;
-> -	void (*fn)(struct __test_metadata *);
-> +	void (*fn)(struct __test_metadata *,
-> +		   struct __fixture_variant_metadata *);
->  	struct __fixture_metadata *fixture;
->  	int termsig;
->  	int passed;
-> @@ -698,9 +776,6 @@ struct __test_metadata {
->  	struct __test_metadata *prev, *next;
->  };
->  
-> -/* Storage for the (global) tests to be run. */
-> -static unsigned int __test_count;
-> -
->  /*
->   * Since constructors are called in reverse order, reverse the test
->   * list so tests are run in source declaration order.
-> @@ -714,7 +789,6 @@ static inline void __register_test(struct __test_metadata *t)
->  {
->  	struct __fixture_metadata *f = t->fixture;
->  
-> -	__test_count++;
->  	__LIST_APPEND(f->tests, t);
->  }
->  
-> @@ -729,21 +803,27 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
->  }
->  
->  void __run_test(struct __fixture_metadata *f,
-> +		struct __fixture_variant_metadata *variant,
->  		struct __test_metadata *t)
->  {
->  	pid_t child_pid;
->  	int status;
->  
-> +	/* reset test struct */
->  	t->passed = 1;
->  	t->trigger = 0;
-> -	printf("[ RUN      ] %s.%s\n", f->name, t->name);
-> +	t->step = 0;
-> +	t->no_print = 0;
-
-I called this out in the commit log. This will need some merge attention
-when my series for timeouts is merged too (since the new "timed_out"
-will need to be initialized here too), but you don't have to worry about
-that yet.
-
-> +
-> +	printf("[ RUN      ] %s%s%s.%s\n",
-> +	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
->  	alarm(t->timeout);
->  	child_pid = fork();
->  	if (child_pid < 0) {
->  		printf("ERROR SPAWNING TEST CHILD\n");
->  		t->passed = 0;
->  	} else if (child_pid == 0) {
-> -		t->fn(t);
-> +		t->fn(t, variant);
->  		/* return the step that failed or 0 */
->  		_exit(t->passed ? 0 : t->step);
->  	} else {
-> @@ -785,31 +865,44 @@ void __run_test(struct __fixture_metadata *f,
->  				status);
->  		}
->  	}
-> -	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
-> -	       f->name, t->name);
-> +	printf("[     %4s ] %s%s%s.%s\n", (t->passed ? "OK" : "FAIL"),
-> +	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
->  	alarm(0);
->  }
->  
->  static int test_harness_run(int __attribute__((unused)) argc,
->  			    char __attribute__((unused)) **argv)
->  {
-> +	struct __fixture_variant_metadata no_variant = { .name = "", };
-> +	struct __fixture_variant_metadata *v;
->  	struct __fixture_metadata *f;
->  	struct __test_metadata *t;
->  	int ret = 0;
-> +	unsigned int case_count = 0, test_count = 0;
->  	unsigned int count = 0;
->  	unsigned int pass_count = 0;
->  
-> +	for (f = __fixture_list; f; f = f->next) {
-> +		for (v = f->variant ?: &no_variant; v; v = v->next) {
-> +			case_count++;
-> +			for (t = f->tests; t; t = t->next)
-> +				test_count++;
-> +		}
-> +	}
-> +
->  	/* TODO(wad) add optional arguments similar to gtest. */
->  	printf("[==========] Running %u tests from %u test cases.\n",
-> -	       __test_count, __fixture_count + 1);
-> +	       test_count, case_count);
->  	for (f = __fixture_list; f; f = f->next) {
-> -		for (t = f->tests; t; t = t->next) {
-> -			count++;
-> -			__run_test(f, t);
-> -			if (t->passed)
-> -				pass_count++;
-> -			else
-> -				ret = 1;
-> +		for (v = f->variant ?: &no_variant; v; v = v->next) {
-> +			for (t = f->tests; t; t = t->next) {
-> +				count++;
-> +				__run_test(f, v, t);
-> +				if (t->passed)
-> +					pass_count++;
-> +				else
-> +					ret = 1;
-> +			}
->  		}
->  	}
->  	printf("[==========] %u / %u tests passed.\n", pass_count, count);
-> -- 
-> 2.24.1
+> Strange? Maybe but if you think about it, not that much in fact because
+> you are still killing a task that was in the memcg at the time of the
+> evaluation. Sure that largest task might not be the biggest contributor
+> to the charged memory - as mentioned above - but well, this is what you
+> ask for when migrating over oom domains.
 > 
+> > Should we somehow lock the OOMing cgroup? So that tasks can not escape
+> > and enter it until the finish of the OOM killing?
+> 
+> I do not think this is going to help all that much. Sure we can note the
+> memcg at the oom_evaluate_task and use it later for the group oom
+> handling. But races will always be there. Having oom path to depend on
+> locks used elsewhere is a can of worms. It would add a very hard to
+> evaluate dependences.
 
-Otherwise, with those things fixed, yes:
+Well, it can be just a single cgroup flag/bit. But I agree that it can
+create more problems, so maybe it's better to avoid this path.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+> 
+> > It seems to be a better idea, because it will also make the oom.group
+> > killing less racy: currently a forking app can potentially escape from it.
+> > 
+> > And the we can put something like
+> > 	if (WARN_ON_ONCE(!mem_cgroup_is_descendant(memcg, oom_domain)))
+> > 		goto out;
+> > to mem_cgroup_get_oom_group?
+> 
+> This would be a user triggerable warning and that sounds like a bad idea
+> to me. We should just live with races. The only question I still do not
+> have a proper answer for is how much we do care. If we do not care all
+> that much about the original memcg then go with your patch. But if we
+> want to be slightly more careful then we should note the memcg in
+> oom_evaluate_task and use it when killing.
 
--- 
-Kees Cook
+But it won't close the race, right?
+
+oom_evaluate_task() can race with a task migration too, so we can record
+the old or the new cgroup.
+
+Then I'd stick with my original patch which solves the main problem here:
+unnecessary killing of too many tasks.
+
+Thanks!
