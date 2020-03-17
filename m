@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26587C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E651C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD8420735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C02720736
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442715;
-	bh=K/bdzkzeh1qRPK264I+1ky5PKNqHMQE9Nl4FVD1QJSc=;
+	s=default; t=1584442717;
+	bh=kICxU/gC+MYWUitD2LqlLjc4HyHeI4qjKrKsHJYo6gQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xm3HVLa630jIIHyyNuNO5iLD+T6WQI3boKTItVQPBkOdFkZWxNNYWwvUxczeV7by2
-	 JnvGw/1qLb91u36+VLsPcLmuIXt+Mu7LGuvXkOvWObJT5YsaESjYXZEsmiC3CNCfjg
-	 +hu9WREnaBSbuwgZWU8A0SHOf0V+gfnOa9wRrGw4=
+	b=zPqgUa2G1QdsipH1mkQIXr0+tdy7mbOkB/h8RDdQYlpKCYH8ljdHyc70VhfMo3kT+
+	 NN2dS7qZZDzANPmG/U83OylMcEyKf4K/E09GK/8Tj0G65v2T/0uoO1PObnBgJ4LSoC
+	 0hxCP95hTH22KGlNem3EYx8j+8MGVsHPOwUzj638=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgCQK6d (ORCPT
+        id S1727273AbgCQK6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:58:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36604 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:58:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726827AbgCQK60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:58:26 -0400
+        id S1727241AbgCQK63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:58:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E43D020724;
-        Tue, 17 Mar 2020 10:58:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60C8C20719;
+        Tue, 17 Mar 2020 10:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442706;
-        bh=K/bdzkzeh1qRPK264I+1ky5PKNqHMQE9Nl4FVD1QJSc=;
+        s=default; t=1584442708;
+        bh=kICxU/gC+MYWUitD2LqlLjc4HyHeI4qjKrKsHJYo6gQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzXjNxYzsN/upmQbf6oqN17/aL3geCqC3Q3/KclOJ9Mi7yOPl7FyqF4kgQ5bI6efU
-         /nci7nqUzEHfqtZVMxire5aiIPODuZRZ3JqpjZY+vLuxV0bdyKs/fyNiXgEJp7+rft
-         hkHQY5Wf9g9J23AB+wKrkv5f2LteFyQ/CT3qDZ+c=
+        b=WQ4MxTLO6QmSceQb30K1ZmJo1wPZHmW2I/MFjvK1B1D1x/+yCvpLhHRwcPiz+62Hu
+         eCW2cRyu2NX2SfAEByn1GrSz9Rj6MgGoZogEN4k0efH6K7LCeRjzbID+Ocdvj1d2Vz
+         FvOi4Q4AvApgvPcib1JoTgQ5o+nqJ1Xf74vAtxyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 53/89] netfilter: xt_recent: recent_seq_next should increase position index
-Date:   Tue, 17 Mar 2020 11:55:02 +0100
-Message-Id: <20200317103306.027529324@linuxfoundation.org>
+Subject: [PATCH 4.19 54/89] netfilter: x_tables: xt_mttg_seq_next should increase position index
+Date:   Tue, 17 Mar 2020 11:55:03 +0100
+Message-Id: <20200317103306.135395178@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -61,32 +61,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vasily Averin <vvs@virtuozzo.com>
 
-commit db25517a550926f609c63054b12ea9ad515e1a10 upstream.
+commit ee84f19cbbe9cf7cba2958acb03163fed3ecbb0f upstream.
 
 If .next function does not change position index,
 following .show function will repeat output related
 to current position index.
 
-Without the patch:
- # dd if=/proc/net/xt_recent/SSH # original file outpt
- src=127.0.0.4 ttl: 0 last_seen: 6275444819 oldest_pkt: 1 6275444819
- src=127.0.0.2 ttl: 0 last_seen: 6275438906 oldest_pkt: 1 6275438906
- src=127.0.0.3 ttl: 0 last_seen: 6275441953 oldest_pkt: 1 6275441953
+Without patch:
+ # dd if=/proc/net/ip_tables_matches  # original file output
+ conntrack
+ conntrack
+ conntrack
+ recent
+ recent
+ icmp
+ udplite
+ udp
+ tcp
  0+1 records in
  0+1 records out
- 204 bytes copied, 6.1332e-05 s, 3.3 MB/s
+ 65 bytes copied, 5.4074e-05 s, 1.2 MB/s
 
-Read after lseek into middle of last line (offset 140 in example below)
-generates expected end of last line and then unexpected whole last line
-once again
-
- # dd if=/proc/net/xt_recent/SSH bs=140 skip=1
- dd: /proc/net/xt_recent/SSH: cannot skip to specified offset
- 127.0.0.3 ttl: 0 last_seen: 6275441953 oldest_pkt: 1 6275441953
- src=127.0.0.3 ttl: 0 last_seen: 6275441953 oldest_pkt: 1 6275441953
+ # dd if=/proc/net/ip_tables_matches bs=62 skip=1
+ dd: /proc/net/ip_tables_matches: cannot skip to specified offset
+ cp   <<< end of  last line
+ tcp  <<< and then unexpected whole last line once again
  0+1 records in
  0+1 records out
- 132 bytes copied, 6.2487e-05 s, 2.1 MB/s
+ 7 bytes copied, 0.000102447 s, 68.3 kB/s
 
 Cc: stable@vger.kernel.org
 Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
@@ -96,23 +98,29 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/xt_recent.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/x_tables.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/netfilter/xt_recent.c
-+++ b/net/netfilter/xt_recent.c
-@@ -497,12 +497,12 @@ static void *recent_seq_next(struct seq_
- 	const struct recent_entry *e = v;
- 	const struct list_head *head = e->list.next;
+--- a/net/netfilter/x_tables.c
++++ b/net/netfilter/x_tables.c
+@@ -1556,6 +1556,9 @@ static void *xt_mttg_seq_next(struct seq
+ 	uint8_t nfproto = (unsigned long)PDE_DATA(file_inode(seq->file));
+ 	struct nf_mttg_trav *trav = seq->private;
  
-+	(*pos)++;
- 	while (head == &t->iphash[st->bucket]) {
- 		if (++st->bucket >= ip_list_hash_size)
- 			return NULL;
- 		head = t->iphash[st->bucket].next;
++	if (ppos != NULL)
++		++(*ppos);
++
+ 	switch (trav->class) {
+ 	case MTTG_TRAV_INIT:
+ 		trav->class = MTTG_TRAV_NFP_UNSPEC;
+@@ -1581,9 +1584,6 @@ static void *xt_mttg_seq_next(struct seq
+ 	default:
+ 		return NULL;
  	}
--	(*pos)++;
- 	return list_entry(head, struct recent_entry, list);
+-
+-	if (ppos != NULL)
+-		++*ppos;
+ 	return trav;
  }
  
 
