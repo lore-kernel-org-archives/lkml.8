@@ -2,81 +2,181 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9379FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7288CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F6F20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4750220658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584442602;
+	bh=cLhHEqSIyWxV+Jb22yA3iTeUrema/kKlQP9EcX7r64E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KJNqnDo3EZxYW71GIe07u4uSztbKQ8g52MjFxUhsfEqnFjtpDSmiAV47VIyJEAx8r
+	 P23LfQCxlgIt9N/ZktsFnL4binYW/e5BmWmNolKbHuoJ6co2+MJVoSFe5/Kb7a7GWY
+	 yq69Hx8ZtcsFcG5zXQ8PJEQoPDl+Q5VJLqhL83t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgCQK4j (ORCPT
+        id S1726716AbgCQK4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:56:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:35000 "EHLO foss.arm.com"
+        Tue, 17 Mar 2020 06:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgCQK4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:56:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35ECC1FB;
-        Tue, 17 Mar 2020 03:56:35 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9F4D3F534;
-        Tue, 17 Mar 2020 03:56:33 -0700 (PDT)
-References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     peterz@infradead.org, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com,
-        linux-kernel@vger.kernel.org, qais.yousef@arm.com
-Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
-In-reply-to: <20200311202625.13629-1-daniel.lezcano@linaro.org>
-Date:   Tue, 17 Mar 2020 10:56:11 +0000
-Message-ID: <jhjy2rzntbo.mognet@arm.com>
+        id S1726699AbgCQK4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:56:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C04E20714;
+        Tue, 17 Mar 2020 10:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584442598;
+        bh=cLhHEqSIyWxV+Jb22yA3iTeUrema/kKlQP9EcX7r64E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2kl7V3T+xnMo93IsvaqMZT5nCSuQkMvUz83UHMLFZSU87FcIIiJEw1Ai4/eUXFW+d
+         oOJbuw/cEyXUu6SUSMwDqZlAoogsgiOmb+f5Uph4v9NRvWdU+KvLXw6TDJCoZtxkox
+         yTnUt0saGQHd9XZbFsF37Eaxxj3gLq+xozO4sOig=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, You-Sheng Yang <vicamo.yang@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 18/89] r8152: check disconnect status after long sleep
+Date:   Tue, 17 Mar 2020 11:54:27 +0100
+Message-Id: <20200317103302.102954540@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
+References: <20200317103259.744774526@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: You-Sheng Yang <vicamo.yang@canonical.com>
 
-Hi Daniel,
+[ Upstream commit d64c7a08034b32c285e576208ae44fc3ba3fa7df ]
 
-One more comment on the break even itself, ignoring the rest:
+Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
 
-On Wed, Mar 11 2020, Daniel Lezcano wrote:
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index b743bf38f08f..3342e7bae072 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -19,7 +19,13 @@ extern char __cpuidle_text_start[], __cpuidle_text_end[];
->   */
->  void sched_idle_set_state(struct cpuidle_state *idle_state)
->  {
-> -	idle_set_state(this_rq(), idle_state);
-> +	struct rq *rq = this_rq();
-> +
-> +	idle_set_state(rq, idle_state);
-> +
-> +	if (idle_state)
-> +		idle_set_break_even(rq, ktime_get_ns() +
-> +				    idle_state->exit_latency_ns);
+  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
+              Driver=r8152, 5000M
 
-I'm not sure I follow why we go for entry time + exit latency. If this
-is based on the minimum residency, shouldn't this be something depending
-on the entry latency? i.e. something like
+where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
 
-  break_even = now + entry_latency + idling_time
-                     \_________________________/
-                            min-residency
+When hotplugging such dock with additional usb devices already attached on
+it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
+device is also reset. However, during r8152 device init there are several
+for-loops that, when it's unable to retrieve hardware registers due to
+being disconnected from USB, may take up to 14 seconds each in practice,
+and that has to be completed before USB may re-enumerate devices on the
+bus. As a result, devices attached to the dock will only be available
+after nearly 1 minute after the dock was plugged in:
 
-or am I missing something?
+  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
+  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
+  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
+  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
+  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
 
->  }
->
->  static int __read_mostly cpu_idle_force_poll;
+This happens in, for example, r8153_init:
+
+  static int generic_ocp_read(struct r8152 *tp, u16 index, u16 size,
+			    void *data, u16 type)
+  {
+    if (test_bit(RTL8152_UNPLUG, &tp->flags))
+      return -ENODEV;
+    ...
+  }
+
+  static u16 ocp_read_word(struct r8152 *tp, u16 type, u16 index)
+  {
+    u32 data;
+    ...
+    generic_ocp_read(tp, index, sizeof(tmp), &tmp, type | byen);
+
+    data = __le32_to_cpu(tmp);
+    ...
+    return (u16)data;
+  }
+
+  static void r8153_init(struct r8152 *tp)
+  {
+    ...
+    if (test_bit(RTL8152_UNPLUG, &tp->flags))
+      return;
+
+    for (i = 0; i < 500; i++) {
+      if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+          AUTOLOAD_DONE)
+        break;
+      msleep(20);
+    }
+    ...
+  }
+
+Since ocp_read_word() doesn't check the return status of
+generic_ocp_read(), and the only exit condition for the loop is to have
+a match in the returned value, such loops will only ends after exceeding
+its maximum runs when the device has been marked as disconnected, which
+takes 500 * 20ms = 10 seconds in theory, 14 in practice.
+
+To solve this long latency another test to RTL8152_UNPLUG flag should be
+added after those 20ms sleep to skip unnecessary loops, so that the device
+probe can complete early and proceed to parent port reset/reprobe process.
+
+This can be reproduced on all kernel versions up to latest v5.6-rc2, but
+after v5.5-rc7 the reproduce rate is dramatically lowered to 1/30 or less
+while it was around 1/2.
+
+Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/usb/r8152.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -2701,6 +2701,8 @@ static u16 r8153_phy_status(struct r8152
+ 		}
+ 
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	return data;
+@@ -4062,7 +4064,10 @@ static void r8153_init(struct r8152 *tp)
+ 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+ 		    AUTOLOAD_DONE)
+ 			break;
++
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	data = r8153_phy_status(tp, 0);
+@@ -4180,7 +4185,10 @@ static void r8153b_init(struct r8152 *tp
+ 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+ 		    AUTOLOAD_DONE)
+ 			break;
++
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	data = r8153_phy_status(tp, 0);
+
+
