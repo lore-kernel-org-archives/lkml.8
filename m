@@ -2,113 +2,97 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C80AC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD4EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E3620714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C6920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c9nyhi39"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oYcqLL7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgCQUrT (ORCPT
+        id S1726762AbgCQUug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:47:19 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46759 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgCQUrS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:47:18 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c19so12594652pfo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/ZMNFVo7Tsi5t68rALsYOvDVbYQdbqGTWKL9lb3JvuE=;
-        b=c9nyhi39KsZWTsbpDFXgSXKk3n7yOwp3uxTzHaQnVDIM13uJ4QnSSw/aQZXKdFL1ei
-         88iumTiBDgVcsVpOXraZRTpCQZJC4n/haKrhbtsyJ1arprcZ2hNrICrMgesDskYlzrHL
-         m0keVQltdevZKhucb9zYrQJdR6L7RgUiKoNJ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/ZMNFVo7Tsi5t68rALsYOvDVbYQdbqGTWKL9lb3JvuE=;
-        b=FxU6bG7bz0D8dhayHRQbJ6UUMBQslMP7s2S3GxRIVq8JQF9ip5VGbkvA1GNFz5A55w
-         yVIiuxFM6wiUtxOloPEdRNv/UAVg2esvwlmYDKpDqZ3pv3TqtdUrSvRsetnQsIpPG/lI
-         BoCbw0dB4YYAe8RcfVOcpygpCoYsoOHSMTQ9bi5ZJgHn0oPIDDJGhu8Kfy8dOXFCdPnQ
-         Us6+HWPZlppThLo/OTWUZCa0wZlI7j9JD9HCaSTgDDMm5xvlHu/tbnjmmczGngf1toQq
-         DHNkBP9uatSfY0BuzObLiIWpCLJ2H1R50tGiMWJRuY5DoHzDjBDDj/HRGN6UHKcqy3Ua
-         84PQ==
-X-Gm-Message-State: ANhLgQ0Pt29qfOLaITeoLW2P3/Ij+qMi61AbdzixieVs4JH55UEBc2h/
-        irK9EuebOGGYY1CKqKWTIuId9f8cRRw=
-X-Google-Smtp-Source: ADFU+vu6/iwKJHS7qAmilHd6qy3wjFZHBgJSRKd1VFcdNCaGVajZVzYQ5jIB8zxApm9ZrQs3cBrUsw==
-X-Received: by 2002:a62:de83:: with SMTP id h125mr607859pfg.161.1584478035217;
-        Tue, 17 Mar 2020 13:47:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j21sm258232pji.13.2020.03.17.13.47.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 13:47:14 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 13:47:13 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, Tim.Bird@sony.com
-Subject: Re: [PATCH v3 0/6] kselftest: add fixture parameters
-Message-ID: <202003171346.C4E287D@keescook>
-References: <20200316225647.3129354-1-kuba@kernel.org>
- <20200316155917.5ba8db1c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Tue, 17 Mar 2020 16:50:36 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38983 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbgCQUug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 16:50:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hlgG1Vjtz9sPJ;
+        Wed, 18 Mar 2020 07:50:34 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584478234;
+        bh=YxislPlYDcOrbEnlAds6A8PAKFcAav8LkLzt+kSz4SY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oYcqLL7NgrNuGaIMJIrjz1kdu9lxBVyn43gSCqFN80uOwmt3h3dFJWeJVg5yGfZqo
+         JspQwD4mJxoAXSV6uIt5LEa5G/mjF2/JB5D/KMrIk9EQPZouY8EMjJbTI+9ngQNHqK
+         ig8/rJ1c+OAA5n9mvoDDX999ip5IhJnHQ33mKAOCBU5nZG5dMU9Y+D4AwkVykCp6Et
+         GRvttE26L+szGybMwyNpOyJxWaNxDKCusjgdpMvM6UcYqGwSov9ldsvu+E4tBj/qn/
+         E1WlMe7Z7ZIQ+VtoijFfdzva3PpGhcUQqiB8rQ/LICBpIeTt6gS3IgEsYVQXGZ0zdI
+         G6rx2QvY/0YJQ==
+Date:   Wed, 18 Mar 2020 07:50:33 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: Fixes tag needs some work in the hmm tree
+Message-ID: <20200318075033.4d06b1be@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316155917.5ba8db1c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: multipart/signed; boundary="Sig_/ZRJgaeRkzV8__XxmSCxCH7T";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 03:59:17PM -0700, Jakub Kicinski wrote:
-> On Mon, 16 Mar 2020 15:56:40 -0700 Jakub Kicinski wrote:
-> > Hi!
-> > 
-> > Shuah please consider applying to the kselftest tree.
-> > 
-> > This set is an attempt to make running tests for different
-> > sets of data easier. The direct motivation is the tls
-> > test which we'd like to run for TLS 1.2 and TLS 1.3,
-> > but currently there is no easy way to invoke the same
-> > tests with different parameters.
-> > 
-> > Tested all users of kselftest_harness.h.
-> > 
-> > v2:
-> >  - don't run tests by fixture
-> >  - don't pass params as an explicit argument
-> > 
-> > v3:
-> >  - go back to the orginal implementation with an extra
-> >    parameter, and running by fixture (Kees);
-> >  - add LIST_APPEND helper (Kees);
-> >  - add a dot between fixture and param name (Kees);
-> >  - rename the params to variants (Tim);
-> > 
-> > v1: https://lore.kernel.org/netdev/20200313031752.2332565-1-kuba@kernel.org/
-> > v2: https://lore.kernel.org/netdev/20200314005501.2446494-1-kuba@kernel.org/
-> 
-> Ugh, sorry I forgot to realign things after the rename :S
-> 
-> I'll send a whitespace-only v4 in a hour, allowing a little bit 
-> of time in case there are some comments already.
+--Sig_/ZRJgaeRkzV8__XxmSCxCH7T
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-No worries! I think a few small changes are needed for a v5 (please
-carry my Acked-bys with for v5). Thanks for working on this; I love it!
-:)
+Hi all,
 
--Kees
+In commit
 
--- 
-Kees Cook
+  ee37d9e6e474 ("mm/hmm: don't handle the non-fault case in hmm_vma_walk_ho=
+le_()")
+
+Fixes tag
+
+  Fixes: 2aee09d ("mm/hmm: change hmm_vma_fault() to allow write fault on p=
+age basis")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ZRJgaeRkzV8__XxmSCxCH7T
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5xOBkACgkQAVBC80lX
+0GxN3ggAhjiTiQKbNQ2Wi3SP1s4/L9Q3XyLBFZAKeK7lZrCQ49QTqOlFqJY9AiF3
+dxFcwat9O7l3hX6ZwJyimPWCVEWjeB9L7bYaIyrj/6+Zha6dg4BrxifcPmuIukKC
+LZQR4tgjET+VOYKH+wJpD2Ac9vAC2pOkGx39NuYohh3nSDPc193J5gLECKoMDnIJ
+TtZ5Y8U6MhVL5O+SdAJ6I1NdNsRUKQtemw7Kz2fYeq55LhAkKfmQTv7ts67LMFGH
+rD7TYIJWQzp7YhK4l1QFz0pgDIhBZZEtM+XDQ/oT0HoUUzWLLkpykEJ0vvLrzwcS
+79tGbnt4q1U+tBwUE+UOfO14jC9z3g==
+=/FGJ
+-----END PGP SIGNATURE-----
+
+--Sig_/ZRJgaeRkzV8__XxmSCxCH7T--
