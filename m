@@ -2,132 +2,93 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D45C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6937AC0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F72206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D062051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:22:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhWjCTip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733146AbgCQBQQ (ORCPT
+        id S1733161AbgCQBWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:16:16 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:54966 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733017AbgCQBQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:16:15 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jE0pn-0008BY-Ie; Mon, 16 Mar 2020 19:15:56 -0600
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20200313174701.148376-1-bigeasy@linutronix.de>
- <20200313174701.148376-4-bigeasy@linutronix.de>
- <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com>
- <87v9n4ccvp.fsf@nanos.tec.linutronix.de>
- <39f2bd27-1a4a-f7ad-5d54-7fe133390cd0@deltatee.com>
- <87sgi7deco.fsf@nanos.tec.linutronix.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <1adfff2f-86a5-d692-bac6-c87a15f24d67@deltatee.com>
-Date:   Mon, 16 Mar 2020 19:15:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Mar 2020 21:22:31 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42003 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732939AbgCQBWa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:22:30 -0400
+Received: by mail-il1-f196.google.com with SMTP id p2so10730548ile.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 18:22:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gHa0JTzyEoTOZCffeBozLM1zvC+PIGXjhON/tx6muwA=;
+        b=fhWjCTipb3UY1+39YACCt/MXpv2E80jqT6ejg0UYL7h6BKKpuxQNTXhA1kbJqbKq4J
+         L7yOPIR4GbNB5vCeIK7CLfHSnBE2kk87XxLloyWUEqnVo1WOGNinAtzF/eJBWP46rK3g
+         0jrY4F4vMXJNrlc0Pm205fDelEU/8PoKYfYagijNbaPHMUbd+kJNUROHQXDd9/SszNSf
+         0iKMYcq6rXWQQVO5zjp/ugTBdBai82zd+SjGGrpYgb/ZMkdkGJ7ycyFEJ4nkHAqFBJJJ
+         BJ+UYtGN4C+RpWtBbyHP3+O7yrhWYPgqlRPvQ54dDRXwt0ubmbDvYNFCKX9MAITqrBXq
+         QgFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gHa0JTzyEoTOZCffeBozLM1zvC+PIGXjhON/tx6muwA=;
+        b=eNRafNu/CG2OeRZxaS5yKrA2aP7OKX4gAeLD5WDtnO67+3ObdWD6Zh+CY/XAH4EVEW
+         5/iqQoXjrcqOUfQ4D3zltYv3/TqDojpiqODIhfx1+MdTuSKXYC0/e30arXu65RnAslz7
+         IpTM5FbU260sphOKtVMo3OK50PUPkai7j8WE0+1rVtBSUYA7ayzhs7S5dYedujR1EhaU
+         rWjawx33f3bB9PF1S47w6e2YjsepWtzqCrHtpzgeUpb5iNCK9mqG4zzGp04IcgBlIDXj
+         UjDMi+d9N2nnTToXZE7tM5z6mbS/ziWCd98aWBVPhKV3utE6gDVwXOOWtyotZJlD5+YU
+         EwJw==
+X-Gm-Message-State: ANhLgQ3YuwzkklQ52wdfdYJzvSHHZWWaszAEbbfsPcXWSZGg9trs1Vjx
+        bd7IXkl6IxHWb4o7TmBbw/yrdQu3iWiAZ1g1/T0=
+X-Google-Smtp-Source: ADFU+vugqsxcKnpiclXGumoSGkqikkN0d500psosdsPbvzQzmUTSSzxf85ruDeZW3yUz2EhxWSG5GVLaSh482+O0iBE=
+X-Received: by 2002:a92:7b10:: with SMTP id w16mr2572144ilc.93.1584408150127;
+ Mon, 16 Mar 2020 18:22:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87sgi7deco.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, torvalds@linux-foundation.org, rostedt@goodmis.org, joel@joelfernandes.org, paulmck@kernel.org, will@kernel.org, mingo@kernel.org, peterz@infradead.org, linux-kernel@vger.kernel.org, bigeasy@linutronix.de, tglx@linutronix.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 3/9] pci/switchtec: Don't abuse completion wait queue for
- poll
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <1584355585-10210-1-git-send-email-laoar.shao@gmail.com> <20200316164056.GY22433@bombadil.infradead.org>
+In-Reply-To: <20200316164056.GY22433@bombadil.infradead.org>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Tue, 17 Mar 2020 09:21:54 +0800
+Message-ID: <CALOAHbAf8nMP=xSzLKkDNc8Jcywzdrn5-OFDJj5hZb5PYVpW3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] psi: move PF_MEMSTALL out of task->flags
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>, mingo@redhat.com,
+        Peter Zijlstra <peterz@infradead.org>, juri.lelli@redhat.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        dietmar.eggemann@arm.com, Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>, mgorman@suse.de,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 17, 2020 at 12:40 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Mon, Mar 16, 2020 at 06:46:25AM -0400, Yafang Shao wrote:
+> > +++ b/include/linux/sched.h
+> > @@ -786,6 +786,10 @@ struct task_struct {
+> >       /* to be used once the psi infrastructure lands upstream. */
+>
+> That comment looks out of date ...
+>
+
+Yes, I will remove this comment.
+
+> >       unsigned                        use_memdelay:1;
 
 
-On 2020-03-16 6:17 p.m., Thomas Gleixner wrote:
-> That's a good question, but that question simply arises due to the fact
-> that C does not provide proper privatizing or if you want to work around
-> that it forces you to come up with really horrible constructs.
-
-Well, we do have the underscore convention. Though, I concede this code
-could potentially predate that. Had there been a preceding underscore, I
-definitely would have thought twice before touching it.
-
-> That's not a made up nightmare scenario. This happened in reality and
-> caused me to mop up 50+ interrupt chip implementations in order to be
-> able to make an urgently needed 10 line change to the core interrupt
-> infrastructure. Guess what, the vast majority of instances fiddling with
-> the core internals were either voodoo programming or plain bugs. There
-> were a few legitimate issues, but they had been better solved in the
-> core code upfront.  Even after that cleanup a driver got merged which
-> had #include "../../../../kernel/irg/internal.h" inside just because the
-> code which was developed out of tree before this change had be made to
-> "work".
-
-I get where your coming from, and it sucks having to clean up so many
-instances in an urgent situation. But I see this kind of cleanup work as
-routine, a necessary thing that happens all the time. I've done it
-myself a couple times before in the kernel. The hard trick is to get
-developers to do more of it, before it becomes a problem like the one
-you faced.
-
-In my experience, what makes clean up work even harder is where
-developers see an interface, notice it's not a perfect fit and so open
-code the whole thing themselves. Then you have random buggy primitives
-open coded all over the place that are impossible to find. And the
-primitives themselves never improve or grow new interfaces because
-nobody knows there's a bunch of instances that require the improvement.
-That's a much bigger mess.
-
-> I really prefer when people come along and show the problem they want to
-> solve - I'm completely fine with the POC hack which uses internals for
-> that purpose - so that this can be discussed and eventually integrated
-> into core infrastructure in one way or the other or better suitable
-> solutions can be found.
-
-Yes, and this code was a prototype at one point and went through review
-from a number of people in the community, and nobody complained about
-this. I've also been in the situation where I submitted a POC and
-somebody pointed out a better way (though with a few swears thrown in
-for good measure); but in that case, I was actually changing a primitive
-so it got their attention more easily.
-
-It's impossible for the maintainer of a primitive to review all the use
-cases of every primitive when new code gets merged. But at least if new
-code uses/abuses the primitive they will eventually come to light and
-can be cleaned up as appropriate with a holistic view.
-
-> I hope that clarifies where I'm coming from.
-
-Yes, I understood your point. And I concede that a completion is a
-pretty trivial primitive to open code and the change is not really worth
-any further fight. If the patch gets merged (preferably with a reworked
-commit message), I will not complain.
-
-> This has nothing to do with you personally, you just triggered a few
-> sensible fuses while understandably defending your admittedly smart
-> solution.
-
-Thank you.
-
-Logan
+-- 
+Yafang Shao
+DiDi
