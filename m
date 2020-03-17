@@ -2,132 +2,91 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 824E8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B23C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52DED20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:25:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r6lEtRqd"
+	by mail.kernel.org (Postfix) with ESMTP id 5054820754
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgCQNZq (ORCPT
+        id S1726847AbgCQNZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:25:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38230 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgCQNZd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:25:33 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w3so9630367plz.5;
-        Tue, 17 Mar 2020 06:25:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kvShCFneTqNWCShSIFRg6DQFBqujhrj5sjdHfCk9weg=;
-        b=r6lEtRqdkojIaCRzqksEKRqICnthfZXUavxesNwoNyv3H6rjq75b5EUE9AKoh0MhBS
-         6vIFmOM73ladz7zHK1QecXEe4WqzlgEk40azox9L5gP10rqNuIQPqrQR7JQfSVl4NB4p
-         j/KgRlWtwsbS8pae84BnC2RHoDTF0+7QNIu6L2qn01qtRtqP7WY+HzLP0QsMPiR4sDAk
-         Lfa10fcI9uYuOgLrDvAuLyrZI6/jXq5rh6W1VMMhLFb0LKNtL1vUrTLHbCCePukZchkk
-         PjNV5aD1iapF/p+z3AIbH5MR7VTaoKRY+06rIq/mjFLz58CQIBjN5bUuUTP9Mj56fSZD
-         n1Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kvShCFneTqNWCShSIFRg6DQFBqujhrj5sjdHfCk9weg=;
-        b=kJ54M8ichXkjeP5TnBVI4NbdQxA+hXRG8M3Bv7xm53E8V3sYGQfU/VPXzn9lkqMWVY
-         Bj16afPnq3KLsJ6kmzUikkGxt76u36NpA44HcB6aFz6MJhFb0rKPOqywgjyXqO35+Hu3
-         wWcES+0OEkjB1U+fTjxk+hq3vmNGMzeLol81Eezt9LxSn0PqZ3UCUUP7Uuj9zZVU46ui
-         kzN4a+wvVyXJ/f1I6kFNy831CEQkFXY4FhRpXdC6Hl9/kViqGmfEQnn3MGu6/z+LVWjK
-         BEB3B1xxy/zUxwVvqQ1zmwubO/jxAfeyVEYgsp/2LUeb+yX8UNj+nI2Ho9Ph5XJKYJHK
-         qvWw==
-X-Gm-Message-State: ANhLgQ34lsbAhL3wqKtyrAw8EIViPCnc/6Oe2+bLu6l0daTKlbLoA/ko
-        2dAlbuNS/serRXu5oKltHl8=
-X-Google-Smtp-Source: ADFU+vteWXHd6n9nuJOFGQMBnhZ/il1kMyVw9aW2v4v52kZvfrF89ZHOa/PNnFOHez1jtvt8yhSkHQ==
-X-Received: by 2002:a17:902:b208:: with SMTP id t8mr4228476plr.94.1584451532323;
-        Tue, 17 Mar 2020 06:25:32 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.2.210])
-        by smtp.googlemail.com with ESMTPSA id e30sm2910902pga.6.2020.03.17.06.25.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 06:25:31 -0700 (PDT)
-From:   ltykernel@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com
-Subject: [PATCH 3/4] x86/Hyper-V: Trigger crash enlightenment only once during system crash.
-Date:   Tue, 17 Mar 2020 06:25:22 -0700
-Message-Id: <20200317132523.1508-4-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
-References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
+        Tue, 17 Mar 2020 09:25:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:19749 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726598AbgCQNZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:25:47 -0400
+IronPort-SDR: ue1rbw7J6dlN0MKVJ8tC/i7b9daFjn9iMkxUOg/PBvySRYZYs7IrAThp9/R8i/19DX+M7ohNkM
+ r9n1XTudgvow==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 06:25:46 -0700
+IronPort-SDR: L28m/kiwhYUy/mfnSa8h9loV0UoWrxrfnkyDYHyqd3wPWXkLjk7UEfYgIBStmQe/HZfHyQJlK7
+ T0gq/Gov4yQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
+   d="scan'208";a="244476497"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by orsmga003.jf.intel.com with ESMTP; 17 Mar 2020 06:25:44 -0700
+Subject: Re: [PATCH v2 0/3] Introduce the request_atomic() for the host
+To:     Baolin Wang <baolin.wang7@gmail.com>, ulf.hansson@linaro.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1584428736.git.baolin.wang7@gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <7866e519-80ad-8678-6708-7726a53ea4f5@intel.com>
+Date:   Tue, 17 Mar 2020 15:25:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <cover.1584428736.git.baolin.wang7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On 17/03/20 12:14 pm, Baolin Wang wrote:
+> This patch set introduces a new request_atomic() interface for the
+> MMC host controller, which is used to submit a request to host in
+> the atomic context, such as in the irq hard handler, to reduce the
+> request latency.
+> 
+> Any comments are welcome. Thanks.
+> 
+> Note: Adrian pointed out that it is not good if moving the polling of
+> inhibit bits in sdhci_send_command() into the interrupt context, but
+> now I have not found a better way to address Adrian's concern. Moveover
+> this is an unusual abnormal case and the original code has the same
+> problem, so I plan to create another patch set to talk about and fix
+> this issue.
 
-Hyper-V expects guest only triggers crash enlightenment.
-The second crash notify will be ignored by Hyper-V.
+I tend to think the API requires the possibility for host controllers to
+return "busy", so that should be sorted out first.
 
-Current code may trigger crash enlightenment during system
-panic twice.
-1) The enlightenment is triggered in hyperv_panic/die_event()
-via hyperv_report_panic().
-2) hv_kmsg_dump() reports kmsg to host via hyperv_report_panic_msg().
-
-Fix it. If kmsg dump is registered successfully, just report
-kmsg via hyperv_report_panic_msg() and not report register values
-via hyperv_report_panic().
-
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
- drivers/hv/vmbus_drv.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index b043efea092a..1787d6246251 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -55,7 +55,12 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
- 
- 	vmbus_initiate_unload(true);
- 
--	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
-+	/*
-+	 * Crash notify only can be triggered once. If crash notify
-+	 * message is available, just report kmsg to crash buffer.
-+	 */
-+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
-+	    && !hv_panic_page) {
- 		regs = current_pt_regs();
- 		hyperv_report_panic(regs, val);
- 	}
-@@ -68,7 +73,12 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
- 	struct die_args *die = (struct die_args *)args;
- 	struct pt_regs *regs = die->regs;
- 
--	hyperv_report_panic(regs, val);
-+	/*
-+	 * Crash notify only can be triggered once. If crash notify
-+	 * message is available, just report kmsg to crash buffer.
-+	 */
-+	if (!hv_panic_page)
-+		hyperv_report_panic(regs, val);
- 	return NOTIFY_DONE;
- }
- 
--- 
-2.14.5
+> 
+> Changes from v1:
+>  - Re-split the changes to make them more clear suggested by Ulf.
+>  - Factor out the auto CMD23 checking into a separate function.
+> 
+> Baolin Wang (3):
+>   mmc: host: Introduce the request_atomic() for the host
+>   mmc: host: sdhci: Implement the request_atomic() API
+>   mmc: host: sdhci-sprd: Implement the request_atomic() API
+> 
+>  drivers/mmc/host/mmc_hsq.c    |  5 ++++-
+>  drivers/mmc/host/sdhci-sprd.c | 23 ++++++++++++++++++++---
+>  drivers/mmc/host/sdhci.c      | 27 +++++++++++++++++++--------
+>  drivers/mmc/host/sdhci.h      |  1 +
+>  include/linux/mmc/host.h      |  3 +++
+>  5 files changed, 47 insertions(+), 12 deletions(-)
+> 
 
