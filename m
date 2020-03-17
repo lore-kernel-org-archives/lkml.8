@@ -6,282 +6,240 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EEAC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6DBC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9FE20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446AF206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgCQO1K (ORCPT
+        id S1726553AbgCQOa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:27:10 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:44840 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgCQO1J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:27:09 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 2158F20031;
-        Tue, 17 Mar 2020 15:27:04 +0100 (CET)
-Date:   Tue, 17 Mar 2020 15:27:02 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Vinay Simha B N <simhavcs@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
-Message-ID: <20200317142702.GA16338@ravnborg.org>
-References: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
- <20200312151752.GA7490@bogus>
- <CAGWqDJ7DP3DuR7EWT6Ni8YxN3Adg3RgJZut6+AtpAak_HB=QCQ@mail.gmail.com>
- <CAGWqDJ4cAU98_xMk6f-bsT5LF5cD2JJk8_JCykwM=cd6CCfWtw@mail.gmail.com>
+        Tue, 17 Mar 2020 10:30:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:39004 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgCQOa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:30:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 430DA30E;
+        Tue, 17 Mar 2020 07:30:57 -0700 (PDT)
+Received: from e105550-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC5F23F534;
+        Tue, 17 Mar 2020 07:30:55 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 14:30:53 +0000
+From:   Morten Rasmussen <morten.rasmussen@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
+Message-ID: <20200317143053.GF10914@e105550-lin.cambridge.arm.com>
+References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
+ <CAKfTPtAqeHhVCeSgE1DsaGGkM6nY-9oAvGw_6zWvv1bKyE85JQ@mail.gmail.com>
+ <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
+ <20200317075607.GE10914@e105550-lin.cambridge.arm.com>
+ <3520b762-08f5-0db8-30cb-372709188bb9@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGWqDJ4cAU98_xMk6f-bsT5LF5cD2JJk8_JCykwM=cd6CCfWtw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=gEfo2CItAAAA:8
-        a=pGLkceISAAAA:8 a=KY18R1YYeKRrVLQ61OwA:9 a=5V_uxFQuYriqKHR4:21
-        a=H5yeRiyAWD2ozbk7:21 a=CjuIK1q_8ugA:10 a=sptkURWiP4Gy88Gu7hUp:22
+In-Reply-To: <3520b762-08f5-0db8-30cb-372709188bb9@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinay.
-
-On Tue, Mar 17, 2020 at 12:25:42PM +0530, Vinay Simha B N wrote:
-> sam,
+On Tue, Mar 17, 2020 at 02:48:51PM +0100, Daniel Lezcano wrote:
 > 
-> i need some inputs on the below  error. I had created this file
-> Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> by using vim editor. Do we have any tool to create yaml file?
+> Hi Morten,
+> 
+> On 17/03/2020 08:56, Morten Rasmussen wrote:
+> > Hi Daniel,
+> > 
+> > First, I think letting the scheduler know about desired minimum idle
+> > times is an interesting optimization if the overhead can be kept at a
+> > minimum. I do have a few comments about the patch though.
+> > 
+> > On Thu, Mar 12, 2020 at 11:04:19AM +0100, Daniel Lezcano wrote:
+> >> On 12/03/2020 09:36, Vincent Guittot wrote:
+> >>> Hi Daniel,
+> >>>
+> >>> On Wed, 11 Mar 2020 at 21:28, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+> >>>>
+> >>>> In the idle CPU selection process occuring in the slow path via the
+> >>>> find_idlest_group_cpu() function, we pick up in priority an idle CPU
+> >>>> with the shallowest idle state otherwise we fall back to the least
+> >>>> loaded CPU.
+> >>>
+> >>> The idea makes sense but this path is only used by fork and exec so
+> >>> I'm not sure about the real impact
+> >>
+> >> I agree the fork / exec path is called much less often than the wake
+> >> path but it makes more sense for the decision.
+> > 
+> > Looking at the flow in find_idlest_cpu(), AFAICT,
+> > find_idlest_group_cpu() is not actually making the final choice of CPU,
+> > so going through a lot of trouble there looking at idle states is
+> > pointless. Is there something I don't see?
+> > 
+> > We fellow sd->child until groups == CPUs which which means that
+> > find_idlest_group() actually makes the final choice as the final group
+> > passed to find_idlest_group_cpu() is single-CPU group. The flow has been
+> > like that for years. Even before you added the initial idle-state
+> > awareness.
+> > 
+> > I agree with Vincent, if this should really make a difference it should
+> > include wake-ups existing tasks too. Although I'm aware it would be a
+> > more invasive change. As said from the beginning, the idea is fine, but
+> > the current implementation should not make any measurable difference?
+> 
+> I'm seeing the wake-ups path so sensitive, I'm not comfortable to do any
+> changes in it. That is the reason why the patch only changes the slow path.
 
-I use vim myself, but is careful to follow the right syntax.
+Right. I'm not against being cautious at all. It would be interesting to
+evaluate how bad it really is. The extra time-stamping business cost is
+the same, so it really down how much we dare to use the information in
+the fast-path and change the CPU selection policy. And of course, how
+much can be gained by the change.
 
 > 
-> i do not get the error when running 'make dt_binding_check' in my
-> build environment
-> Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> >>>> In order to be more energy efficient but without impacting the
+> >>>> performances, let's use another criteria: the break even deadline.
+> >>>>
+> >>>> At idle time, when we store the idle state the CPU is entering in, we
+> >>>> compute the next deadline where the CPU could be woken up without
+> >>>> spending more energy to sleep.
+> > 
+> > I don't follow the argument that sleeping longer should improve energy
+> > consumption. 
 > 
-> is there any tool available similar to  scripts/checkpatch.pl -f
-> <file> , for yaml files?
+> May be it is not explained correctly.
+> 
+> The patch is about selecting a CPU with the smallest break even deadline
+> value. In a group of idle CPUs in the same idle state, we will pick the
+> one with the smallest break even dead line which is the one with the
+> highest probability it already reached its target residency.
+> 
+> It is best effort.
 
-Please read Documentation/devicetree/writing-schema.
-Here you can find general info + instruction how to install the tools
-required for "make dt_binding_check".
+Indeed. I get what the patch does, I just don't see how the patch
+improves energy efficiency.
 
-I could reproduce the error reported by Rob.
-I gave your binding file a shot - there were a lot of smaller issues:
+> 
+> > The patch doesn't affect the number of idle state
+> > enter/exit cycles, so you spend the amount of energy on those
+> > transitions. The main change is that idle time get spread out, so CPUs
+> > are less likely to be in the process of entering an idle state when they
+> > are asked to wake back up again.
+> > 
+> > Isn't it fair to say that we expect the total number of wake-ups remains
+> > unchanged? Total busy and idle times across all CPUs should remain the
+> > same too? Unless chosen idle-state is changed, which I don't think we
+> > expect either, there should be no net effect on energy? The main benefit
+> > is reduced wake-up latency I think.
+> > 
+> > Regarding chosen idle state, I'm wondering how this patch affects the
+> > cpuidle governor's idle state selection. Could the spreading of wake-ups
+> > trick governor to pick a shallower idle-state for some idle CPUs because
+> > we actively spread wake-ups rather than consolidating them? Just a
+> > thought.
+> 
+> May be I missed the point, why are we spreading the tasks?
 
-- do not use tabs in yaml files
-- be consistent in indent
-- vendor prefixed properties needed some extra care
-- example was full of bugs
-  - "..."
-  - no need for status = "okay";
-  - properties spelled wrong
+Picking the CPU with the smallest break-even time-stamp means you pick
+the CPU that has been idle longest in the shallowest idle-state. If you
+periodically one-shot spawn tasks at a rate which is long enough that
+the shallowest state is the same for several CPUs, you would end up
+picking the least recently used CPU each time effectively spreading the
+wake-ups across all the CPUs in the same state.
 
-For the example I adjusted it to use indent of 4 spaces, which IMO
-is more readable than the two spaces used in the other parts of the 
-file.
+Thinking more about it, it might not be a real problem as if one of the
+CPUs suddenly choose a shallower idle-state, it would become the target
+all new tasks from that point onwards.
 
-I have attached the updated binding file - please review and fix.
-This is just a quick shot, I did not do a proper review.
+> We are taking the decision on the same sched domain, no?
 
-Please rename the file, other files in same dir are named "toshiba,xxx",
-so replace '-' with ','.
+I'm not sure I get the relation to the sched_domain?
 
-And try to introduce bugs in the example - and check that the tooling
-catches the bug.
+> 
+> >>>> At the selection process, we use the shallowest CPU but in addition we
+> >>>> choose the one with the minimal break even deadline instead of relying
+> >>>> on the idle_timestamp. When the CPU is idle, the timestamp has less
+> >>>> meaning because the CPU could have wake up and sleep again several times
+> >>>> without exiting the idle loop. In this case the break even deadline is
+> >>>> more relevant as it increases the probability of choosing a CPU which
+> >>>> reached its break even.
+> > 
+> > I guess you could improve the idle time stamping without adding the
+> > break-even time, they don't have to go together?
+> 
+> Yes, we can add the idle start time when entering idle in the
+> cpuidle_enter function which is different from the idle_timestamp which
+> gives the idle task scheduling. I sent a RFC for that [1].
+> 
+> However, each time we would like to inspect the deadline, we will have
+> to compute it, so IMO it makes more sense to pre-compute it when
+> entering idle in addition to the idle start.
+> 
+> [1] https://lkml.org/lkml/2020/3/16/902
 
-hint:
+Yes, I saw that patch too. Seems to make sense :-)
 
-    make DT=.../foo.yaml dt_binding_check
+> 
+> >>>> Tested on:
+> >>>>  - a synquacer 24 cores, 6 sched domains
+> >>>>  - a hikey960 HMP 8 cores, 2 sched domains, with the EAS and energy probe
+> >>>>
+> >>>> sched/perf and messaging does not show a performance regression. Ran
+> >>>> 50 times schbench, adrestia and forkbench.
+> >>>>
+> >>>> The tools described at https://lwn.net/Articles/724935/
+> >>>>
+> >>>>  --------------------------------------------------------------
+> >>>> | Synquacer             | With break even | Without break even |
+> >>>>  --------------------------------------------------------------
+> >>>> | schbench *99.0th      |      14844.8    |         15017.6    |
+> >>>> | adrestia / periodic   |        57.95    |              57    |
+> >>>> | adrestia / single     |         49.3    |            55.4    |
+> >>>>  --------------------------------------------------------------
+> >>>
+> >>> Have you got some figures or cpuidle statistics for the syncquacer ?
+> >>
+> >> No, and we just noticed the syncquacer has a bug in the firmware and
+> >> does not actually go to the idle states.
+> > 
+> > I would also like some statistics to help understanding what actually
+> > changes.
+> > 
+> > I did some measurements on TX2, which only has one idle-state. I don't
+> > see the same trends as you do. adrestia single seems to be most affected
+> > by the patch, but _increases_ with the break_even patch rather than
+> > decrease. I don't trust adrestia too much though as the time resolution
+> > is low on TX2.
+> > 
+> > TX2			tip		break_even
+> > ----------------------------------------------------
+> > adrestia / single	5.21		5.51
+> > adrestia / periodic	5.75		5.67
+> > schbench 99.0th		45465.6		45376.0
+> > hackbench		27.9851		27.9775
+> > 
+> > Notes:
+> > adrestia: Avg of 100 runs: adrestia -l 25000
+> > schbench: Avg of 10 runs: schbench -m16 -t64
+> > hackbench: Avg of 10 runs: hackbench -g 20 -T 256 -l 100000
+> 
+> Thanks for testing. Is that a Jetson TX2 from Nvidia? If that is the
+> case, IIRC, it has some kind of switcher for the CPUs in the firmware, I
+> don't know how that can interact with the testing.
 
-is a qucik way to check only your binding.
+Sorry, I should have been clearer. It is a ThunderX2. 2x 32-core (128
+threads) = 256 HW threads.
 
-And for new bindings the preferred license is: (GPL-2.0-only OR BSD-2-Clause)
-
-	Sam
-
-# SPDX-License-Identifier: GPL-2.0
-%YAML 1.2
----
-$id: http://devicetree.org/schemas/display/bridge/toshiba-tc358775.yaml#
-$schema: http://devicetree.org/meta-schemas/core.yaml#
-
-
-title: Toshiba TC358775 DSI to LVDS bridge bindings
-
-maintainers:
-  - Vinay Simha BN <simhavcs@gmail.com>
-
-description: |
-  This binding supports DSI to LVDS bridge TC358775
-
-properties:
-  compatible:
-    const: toshiba,tc358775
-
-  reg:
-    maxItems: 1
-    description: i2c address of the bridge, 0x0f
-
-  toshiba,dsi-lanes:
-    allOf:
-      - $ref: /schemas/types.yaml#/definitions/uint32
-      - minimum: 1
-        maximum: 4
-        default: 1
-    description: bla bla
-
-  toshiba,dual-link:
-    $ref: /schemas/types.yaml#definitions/flag
-    description: bla bla
-
-  vdd-supply:
-    maxItems: 1
-    description: 1.2V LVDS Power Supply
-
-  vddio-supply:
-    maxItems: 1
-    description: 1.8V IO Power Supply
-
-  stby-gpios:
-    maxItems: 1
-    description: Standby pin, Low active
-
-  reset-gpios:
-    maxItems: 1
-    description: Hardware reset, Low active
-
-  ports:
-    type: object
-
-    properties:
-      port@0:
-        type: object
-        description: |
-          DSI Input. The remote endpoint phandle should be a
-          reference to a valid mipi_dsi_host device node.
-      port@1:
-        type: object
-        description: |
-          Video port for LVDS output (panel or connector).
-
-    required:
-      - port@0
-      - port@1
-
-required:
- - compatible
- - reg
- - tc,dsi-lanes
- - vdd-supply
- - vddio-supply
- - stby-gpios
- - reset-gpios
- - ports
-
-examples:
-  - |+
-    #include <dt-bindings/gpio/gpio.h>
-
-    i2c@78b8000 {
-        #address-cells = <1>;
-        #size-cells = <0>;
-
-        /* On High speed expansion */
-        label = "HS-I2C2";
-        status = "okay";
-
-        tc_bridge: bridge@f {
-            compatible = "toshiba,tc358775";
-            reg = <0x0f>;
-
-            tc,dsi-lanes = <4>;
-            tc,dual-link = <0>;
-
-            vdd-supply = <&pm8916_l2>;
-            vddio-supply = <&pm8916_l6>;
-
-            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-
-            ports {
-                #address-cells = <1>;
-                #size-cells = <0>;
-
-                port@0 {
-                    reg = <0>;
-                    d2l_in: endpoint {
-                        remote-endpoint = <&dsi0_out>;
-                    };
-                };
-
-                port@1 {
-                    reg = <1>;
-                    d2l_out: endpoint {
-                        remote-endpoint = <&panel_in>;
-                    };
-                };
-            };
-        };
-    };
-
-    panel: auo,b101xtn01 {
-        status = "okay";
-        compatible = "auo,b101xtn01", "panel-lvds";
-        power-supply = <&pm8916_l14>;
-
-        width-mm = <223>;
-        height-mm = <125>;
-
-        data-mapping = "jeida-24";
-
-        panel-timing {
-            /* 1366x768 @60Hz */
-            clock-frequency = <72000000>;
-            hactive = <1366>;
-            vactive = <768>;
-            hsync-len = <70>;
-            hfront-porch = <20>;
-            hback-porch = <0>;
-            vsync-len = <42>;
-            vfront-porch = <14>;
-            vback-porch = <0>;
-        };
-
-        port {
-            panel_in: endpoint {
-                remote-endpoint = <&d2l_out>;
-            };
-        };
-    };
-
-    mdss {
-        dsi@1a98000 {
-            ports {
-                port@1 {
-                    dsi0_out: endpoint {
-                        remote-endpoint = <&d2l_in>;
-                        data-lanes = <0 1 2 3>;
-                    };
-                };
-            };
-        };
-    };
-
-...
+Morten
