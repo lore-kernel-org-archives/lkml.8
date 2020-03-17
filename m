@@ -2,113 +2,133 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185D5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D134C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FD620752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5307420714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q/CW7wqC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iVlGe0eQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgCQRHB (ORCPT
+        id S1726784AbgCQRHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:07:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43856 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgCQRHB (ORCPT
+        Tue, 17 Mar 2020 13:07:05 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:30361 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726207AbgCQRHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:07:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2BoGGEdNQTv247lOoGQWSuvht20oQxr110Feea+TlWs=; b=q/CW7wqCHqnFnpmJV+W5tVWP4e
-        QCWw6HRa29pZio3fs1qQwZn6DwftNjCAEoEpckv8LNzYmwsLLvL7Z10FJuhVCKvuuu20J9yReNFGr
-        be4yOdRpocDxxoA6qxamS0Pk5E+pf841lrJN+vrkzFyseQOxWl5Ch0VD6CJ8B5gTMVj3re1ocF4fT
-        R3qw+ty5i7fofRDHRmqBGJ6GrtH+NLeOeZNn8v0UPQ3zXfEqAvOINV0CuQg+adyZiFuYN5TUWi3yA
-        UlQfJQlMAXu/BjFtbUwesx8L21ixKlHym8Vc6BRHBf1Xnq+T1gTW5FhNUL9aXxEIURAbTtYWmbpz4
-        J3Dhw+eQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEFg6-00010h-7t; Tue, 17 Mar 2020 17:06:54 +0000
-Date:   Tue, 17 Mar 2020 10:06:54 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     bjorn@helgaas.com
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: Re: [PATCH v17 06/12] Documentation: PCI: Remove reset_link
- references
-Message-ID: <20200317170654.GA23125@infradead.org>
-References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <a46938d227f6a11c010943800450a10aac39b7d3.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20200317144203.GE23471@infradead.org>
- <ebb79d02-53f5-cc23-0b38-72a351a05097@linux.intel.com>
- <20200317150735.GA653@infradead.org>
- <CABhMZUUn2RJWRTGc7xa1XcV3ozBOV24jjwhf6k08sP7XC1ETkw@mail.gmail.com>
+        Tue, 17 Mar 2020 13:07:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584464822;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DtMQ752kWSoLyMfx0zJhLWBQJ+KAxziM+SQA+3+EK0c=;
+        b=iVlGe0eQCH+p3R6NwSfYwhxCY1xGBHAiVs/o9IAGiRqGdfhFGVNv8MwCqpbchz917a9Z8z
+        VstHosjmSozvUEGtSIdhDHIfnp314XK5ridaoEs7vN5sHcLcGiMEyxhUAfqZOWK2INAwrX
+        yLTY6B2t+9y6GPshbrIaOsW5TRu8W5Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-Hao-DTm-M8msT4ZUSzaqiA-1; Tue, 17 Mar 2020 13:06:58 -0400
+X-MC-Unique: Hao-DTm-M8msT4ZUSzaqiA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 321ED107ACCA;
+        Tue, 17 Mar 2020 17:06:54 +0000 (UTC)
+Received: from krava (unknown [10.40.195.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1969D9B918;
+        Tue, 17 Mar 2020 17:06:47 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 18:06:45 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, will@kernel.org, ak@linux.intel.com,
+        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
+        james.clark@arm.com, qiangqing.zhang@nxp.com
+Subject: Re: [PATCH v2 2/7] perf jevents: Support test events folder
+Message-ID: <20200317170645.GE759708@krava>
+References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
+ <1584442939-8911-3-git-send-email-john.garry@huawei.com>
+ <20200317162052.GD759708@krava>
+ <de5b58ee-980e-973a-16db-73f23c3edfef@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABhMZUUn2RJWRTGc7xa1XcV3ozBOV24jjwhf6k08sP7XC1ETkw@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <de5b58ee-980e-973a-16db-73f23c3edfef@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 11:03:36AM -0500, Bjorn Helgaas wrote:
-> On Tue, Mar 17, 2020 at 10:09 AM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > On Tue, Mar 17, 2020 at 08:05:50AM -0700, Kuppuswamy, Sathyanarayanan wrote:
-> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > >
-> > > >
-> > > > This should be folded into the patch removing the method.
-> > > This is also folded in the mentioned patch.
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=review/edr&id=7a18dc6506f108db3dc40f5cd779bc15270c4183
-> >
-> > I can't find that series anywhere on the list.  What did I miss?
-> 
-> We've still been discussing other issues (access to AER registers,
-> synchronization between EDR and hotplug, etc) in other parts of this
-> thread.  The git branch Sathy pointed to above is my local branch.
-> I'll send it to the list before putting it into -next, but I wanted to
-> make progress on some of these other issues first.
+On Tue, Mar 17, 2020 at 04:25:32PM +0000, John Garry wrote:
+> On 17/03/2020 16:20, Jiri Olsa wrote:
+> > On Tue, Mar 17, 2020 at 07:02:14PM +0800, John Garry wrote:
+> > > With the goal of supporting pmu-events test case, introduce support=
+ for a
+> > > test events folder.
+> > >=20
+> > > These test events can be used for testing generation of pmu-event t=
+ables
+> > > and alias creation for any arch.
+> > >=20
+> > > When running the pmu-events test case, these test events will be us=
+ed
+> > > as the platform-agnostic events, so aliases can be created per-PMU =
+and
+> > > validated against known expected values.
+> > >=20
+> > > To support the test events, add a "testcpu" entry in pmu_events_map=
+[].
+> > > The pmu-events test will be able to lookup the events map for "test=
+cpu",
+> > > to verify the generated tables against expected values.
+> > >=20
+> > > The resultant generated pmu-events.c will now look like the followi=
+ng:
+> >=20
+> > can't compile this one:
+> >=20
+> >    HOSTCC   pmu-events/jevents.o
+> > pmu-events/jevents.c: In function =E2=80=98main=E2=80=99:
+> > pmu-events/jevents.c:1195:3: error: =E2=80=98ret=E2=80=99 undeclared =
+(first use in this function)
+> >   1195 |   ret =3D 1;
+> >        |   ^~~
+> > pmu-events/jevents.c:1195:3: note: each undeclared identifier is repo=
+rted only once for each function it appears in
+> > pmu-events/jevents.c:1196:3: error: label =E2=80=98out_free_mapfile=E2=
+=80=99 used but not defined
+> >   1196 |   goto out_free_mapfile;
+> >        |   ^~~~
+> > mv: cannot stat 'pmu-events/.jevents.o.tmp': No such file or director=
+y
+> > make[3]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.buil=
+d:97: pmu-events/jevents.o] Error 1
+> > make[2]: *** [Makefile.perf:619: pmu-events/jevents-in.o] Error 2
+> > make[1]: *** [Makefile.perf:225: sub-make] Error 2
+> > make: *** [Makefile:70: all] Error 2
+>=20
+> Hi jirka,
+>=20
+> What baseline are you using? I used v5.6-rc6. The patches are here:
 
-A few nitpicks:
+I applied your patches on Arnaldo's perf/core
 
-PCI/ERR: Update error status after reset_link():
+>=20
+> https://github.com/hisilicon/kernel-dev/commits/private-topic-perf-5.6-=
+pmu-events-test-upstream-v2
 
- - there are two "if (state == pci_channel_io_frozen)"
-   right after each other now, merging them would make the code a little
-   easier to read.
+ok, will check
 
-PCI/DPC: Move DPC data into struct pci_dev:
+jirka
 
- - dpc_rp_extensions probable should be a "bool : 1"
-
-PCI/ERR: Remove service dependency in pcie_do_recovery():
-
- - as mentioned to Kuppuswamy the reset_cb is never NULL, and thus
-   a lot of dead code in reset_link can be removed.  Also reset_link
-   should be merged into pcie_do_recovery.  That would also enable
-   to call the argument reset_link, which might be a bit more
-   descriptive than reset_cb.
-
-PCI/DPC: Cache DPC capabilities in pci_init_capabilities():
-
- - I think the pci_dpc_init could be cleaned up a bit to:
-
-	...
-	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
-	if (!(cap & PCI_EXP_DPC_CAP_RP_EXT))
-		return;
-	pdev->dpc_rp_extensions = true;
-	pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
-	...
