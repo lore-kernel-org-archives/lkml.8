@@ -2,134 +2,130 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E28BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AD0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4E720674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7BF206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:51:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="J0YtZAQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgCQIvJ (ORCPT
+        id S1726370AbgCQIvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:51:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38472 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgCQIvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:51:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id F0D9AAD94;
-        Tue, 17 Mar 2020 08:51:05 +0000 (UTC)
-Subject: Re: [PATCH -V2] mm: Code cleanup for MADV_FREE
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Rik van Riel <riel@surriel.com>
-References: <20200316063740.2542014-1-ying.huang@intel.com>
- <b328ac30-6c4e-0dfb-c771-cb09c6346c75@suse.cz>
- <87v9n3qu4p.fsf@yhuang-dev.intel.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <29193b53-b83a-b595-3117-f8d10342a49a@suse.cz>
-Date:   Tue, 17 Mar 2020 09:51:04 +0100
+        Tue, 17 Mar 2020 04:51:21 -0400
+Received: from mail-dm6nam11on2084.outbound.protection.outlook.com ([40.107.223.84]:6220
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725837AbgCQIvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 04:51:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T522SExmIjkhyFivE8yZxHTFvhVhSA4frE/GDHt2xDIxcIThDUr4Te/sZoIT9lbvCC95CDDnR06i7wQdp4mak8UDAHk0XKLM6IIPKon4zjzPTebeZWQfP/qLex27ghEXyYXuhSwkvIzek67AeJAah0KA85A1uQ4lYW2XXpY3EhVesXrLweuRIxzcRWQzYwFElvVcCfDY/VdGieX547Q6xC3xLTnNLnHzJN+6VornsTOCs05fpGcGRTeqm8xIqDi7x3uoHNYQxcX1mu+JWCvwo0MEzzPMh5N4LJ1ze0FmccdCVcOdTtX7mAuIycSNWXsysyvD527w+0YFcGMFCJKqWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9WugqhJajJHze7/v3UNlcdp44ts/ljA9OUhriXEl4FQ=;
+ b=QNTkoWs7f8Yv3h4uez5D11E/r/1VjmI/fDxhYFgZtsFZQKnnNDdzNh8lJCraSiOgt3Y0wDBtoDkqRY3SNPH8MSQ/1dCxjj0Cedrl3BmViKVkwZjEoK3PyH4gs2RWf/BqfCbXVk+iwPxRpgfLA2FKBRTS2CgomBMl11u8KELP8ACzheEB3T93fkWM3gwWKKdM6RZz16jaSmqxvVq4XkwQOhwawgih/DyrXEyc4hcleYTXfu5Px3VGP58j5/8jE9CzsLoow5Zhy+LcRqEPBNWLy2a5zSH/LmOW9bYEupcP06qMIsRu2MPN+jBaNx/PCOVUKIepwqR1810CnDQdvldfGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9WugqhJajJHze7/v3UNlcdp44ts/ljA9OUhriXEl4FQ=;
+ b=J0YtZAQvH/k+7Wb8TmcxtnrWRxC7Q40PxDEGIwkyS1VOIpVWdxEh5NXvLezeDnJMetIKTwuPHb6x95DKloa4OYuQJQucjTcsa6C2TlW3dmEDqWiRDlvihf1G01VqO74mQE8vhFuD2P5R5gAxKrvMjPsXvgpJzFkp79XzhHwSOJE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Zhe.He@windriver.com; 
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
+ by SN6PR11MB2880.namprd11.prod.outlook.com (2603:10b6:805:58::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Tue, 17 Mar
+ 2020 08:51:18 +0000
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::d852:181d:278b:ba9d]) by SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::d852:181d:278b:ba9d%5]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 08:51:18 +0000
+Subject: Re: disk revalidation updates and OOM
+To:     Martin Wilck <mwilck@suse.com>, Christoph Hellwig <hch@lst.de>,
+        jack@suse.cz, Jens Axboe <axboe@kernel.dk>,
+        viro@zeniv.linux.org.uk, bvanassche@acm.org, keith.busch@intel.com,
+        tglx@linutronix.de, yuyufen@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <93b395e6-5c3f-0157-9572-af0f9094dbd7@windriver.com>
+ <209f06496c1ef56b52b0ec67c503838e402c8911.camel@suse.com>
+ <47735babf2f02ce85e9201df403bf3e1ec5579d6.camel@suse.com>
+ <3315bffe-80d2-ca43-9d24-05a827483fce@windriver.com>
+ <34bb7fc55efb7231ba51c6e3ff539701d2dbd28a.camel@suse.com>
+From:   He Zhe <zhe.he@windriver.com>
+Message-ID: <b915a52d-95a2-e2db-8661-e47001b684ee@windriver.com>
+Date:   Tue, 17 Mar 2020 16:51:11 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <87v9n3qu4p.fsf@yhuang-dev.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+ Thunderbird/68.4.1
+In-Reply-To: <34bb7fc55efb7231ba51c6e3ff539701d2dbd28a.camel@suse.com>
+Content-Type: text/plain; charset=iso-8859-15
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: BYAPR01CA0047.prod.exchangelabs.com (2603:10b6:a03:94::24)
+ To SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [128.224.162.175] (60.247.85.82) by BYAPR01CA0047.prod.exchangelabs.com (2603:10b6:a03:94::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Tue, 17 Mar 2020 08:51:15 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: caa1a335-470c-492b-499b-08d7ca505bc7
+X-MS-TrafficTypeDiagnostic: SN6PR11MB2880:
+X-Microsoft-Antispam-PRVS: <SN6PR11MB2880437EFE3D4C7E75AC70FD8FF60@SN6PR11MB2880.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(39850400004)(136003)(366004)(199004)(956004)(2616005)(478600001)(6486002)(2906002)(5660300002)(31686004)(7416002)(52116002)(53546011)(8676002)(6706004)(81166006)(8936002)(81156014)(31696002)(86362001)(26005)(66946007)(186003)(16526019)(4744005)(66476007)(6666004)(66556008)(36756003)(110136005)(16576012)(316002)(78286006)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB2880;H:SN6PR11MB3360.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: windriver.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uCGHVyKYzt1LOlxHSu91qAGMhEy11UgioARS2OFHpqthIBoZ4DZBDm3C9qfbDp2N1fYDNPufCsUEVccDdQltJ5ZDOomcfJYzcH1OnBHeErT022EeW9Lcoii2DLhxuicaaKLkDfcVkpzOHmf36SNcWTxPqgje64Vn6wUIbyis0HT/6OhZh6cxysuIohfBq2ujpZUtor5ELUoPXTbwEasTlCG4Bhv7fJmdFqGSUR2gnk6SMDJrXboduw6GdQFIXCQ550uXRGooHZyOZ2LYNiJIUvYWovzGWT6fjm4CVSaDxYPjLeFr2ktpgJbX4e0q6i26yLVJ5UqlnKL/vEI/cYpz7xZlIADFBU6h3iLWLJFj9yh1VAc0EQpxYD0qIEqBiO3StBdiUkuRlfqxsJTrBB/QERTYFIMwSL+2OqprvkvuGO9KAgBv/esAEoNubxNy/2vWGcwRBw3JSRfvP+2TMy2LMyJ75TMpJDWMSBRe7LjBl+gVtjGTUDeaDznU9HZqklHGtVAAKwgHZTFX2A6MvEovJo8GBuAXJYEsvuntAox+qZEosgRGq9utsJq8GJjB/OfVhhHgf073G5RKksQGYK1DWw==
+X-MS-Exchange-AntiSpam-MessageData: M6PSU9f7ZI/FuJliPAw6Yp//aDttZAqRvONXXCy44RI5ePhMHdTC0G5mxlhn+bwbp0iQJJt88WC6aaUaAtSq1pzLECYBqUbdQ+OuNN6XN/4coqyHKdgzvLgZEW/F2rN21NmEU7PJBk+zHYI7Y9LcHw==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: caa1a335-470c-492b-499b-08d7ca505bc7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 08:51:18.3865
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: opF7l+kH5OHuwRd2mHza4nHe0AxZhGyphqOyJIT6jwGfRD2201vfdkA3fYr90bMgM36XC1G7f2QpW1PXPMuc9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2880
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/20 9:10 AM, Huang, Ying wrote:
-> Vlastimil Babka <vbabka@suse.cz> writes:
-> 
->> On 3/16/20 7:37 AM, Huang, Ying wrote:
->>> From: Huang Ying <ying.huang@intel.com>
->>> 
->>> Some comments for MADV_FREE is revised and added to help people understand the
->>> MADV_FREE code, especially the page flag, PG_swapbacked.  This makes
->>> page_is_file_cache() isn't consistent with its comments.  So the function is
->>> renamed to page_is_file_lru() to make them consistent again.  All these are put
->>> in one patch as one logical change.
->>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->>> Suggested-by: David Hildenbrand <david@redhat.com>
->>> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
->>> Suggested-and-acked-by: David Rientjes <rientjes@google.com>
->>> Acked-by: Michal Hocko <mhocko@kernel.org>
->>> Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
->>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->>> Cc: Mel Gorman <mgorman@suse.de>
->>> Cc: Vlastimil Babka <vbabka@suse.cz>
->>> Cc: Minchan Kim <minchan@kernel.org>
->>> Cc: Hugh Dickins <hughd@google.com>
->>> Cc: Rik van Riel <riel@surriel.com>
->>
->> Acked-by: Vlastimil Babka <vbabka@suse.cz>
->>
->> Thanks! A grammar nit below:
->>
->>> --- a/include/linux/mm_inline.h
->>> +++ b/include/linux/mm_inline.h
->>> @@ -6,19 +6,20 @@
->>>  #include <linux/swap.h>
->>>  
->>>  /**
->>> - * page_is_file_cache - should the page be on a file LRU or anon LRU?
->>> + * page_is_file_lru - should the page be on a file LRU or anon LRU?
->>>   * @page: the page to test
->>>   *
->>> - * Returns 1 if @page is page cache page backed by a regular filesystem,
->>> - * or 0 if @page is anonymous, tmpfs or otherwise ram or swap backed.
->>> - * Used by functions that manipulate the LRU lists, to sort a page
->>> - * onto the right LRU list.
->>> + * Returns 1 if @page is page cache page backed by a regular filesystem or
->>> + * anonymous page lazily freed (e.g. via MADV_FREE).  Returns 0 if @page is
->>
->>       a lazily freed anonymous page (e.g. ...
-> 
-> Thought again.  Should we make the 2 sub-clauses consistent?  That is,
-> either
-> 
-> if @page is page cache page backed by a regular filesystem or anonymous
-> page freed lazily
-> 
-> or
-> 
-> if @page is a regular filesystem backed page cache page or a lazily
-> freed anonymous page
 
-Yeah this one looks fine :)
 
-> But I know that my English grammar isn't good enough :-(
-> 
-> Best Regards,
-> Huang, Ying
-> 
->>> + * normal anonymous page, tmpfs or otherwise ram or swap backed.  Used by
->>> + * functions that manipulate the LRU lists, to sort a page onto the right LRU
->>> + * list.
->>>   *
->>>   * We would like to get this info without a page flag, but the state
->>>   * needs to survive until the page is last deleted from the LRU, which
->>>   * could be as far down as __page_cache_release.
->>>   */
->>> -static inline int page_is_file_cache(struct page *page)
->>> +static inline int page_is_file_lru(struct page *page)
->>>  {
->>>  	return !PageSwapBacked(page);
->>>  }
-> 
+On 3/16/20 7:17 PM, Martin Wilck wrote:
+> Hello Zhe,
+>
+> On Mon, 2020-03-16 at 19:02 +0800, He Zhe wrote:
+>>> Is it possible that you have the legacy udisksd running, and didn't
+>>> disable CD-ROM polling?
+>> Thanks for the suggestion, I'll try this ASAP.
+> Since this is difficult to reproduce and you said this happens in a VM,
+> would you mind uploading the image and qemu settings somewhere, so that
+> others could have a look?
+
+Christoph's diff on the other thread has fixed this issue.
+
+Thank you very much.
+
+Zhe
+
+>
+> Regards,
+> Martin
+>
+>
 
