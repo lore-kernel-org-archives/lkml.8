@@ -2,104 +2,74 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A681C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED63C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A80C20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:44:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AK6tEpD+"
+	by mail.kernel.org (Postfix) with ESMTP id B0B6B20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgCQEoX (ORCPT
+        id S1726717AbgCQEpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:44:23 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39555 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgCQEoW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:44:22 -0400
-Received: by mail-io1-f67.google.com with SMTP id c19so18546586ioo.6;
-        Mon, 16 Mar 2020 21:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LLh9WEkB9hCvNCPoVrwAAYggf2WFsHcOiqOg9CycRzk=;
-        b=AK6tEpD+luiz5pKN/vp4AchiO1ciwHPnVwAYZBNXvLtBr2NhUCzLZ86fj19Ocx869y
-         khKh2G6PLuehKagz6NeSHeohensCduAB/1vUaS06oQ9zUnbwKnj10DIG9yQK2b/uqBOi
-         mNMNoMNZefrukNCgWPYBru+1b3f9MOJLm/OB3L8dOPsrGyqEbZI5ixn8Pb0YT0YBKJoL
-         T2f8KEK4LpIJTzrQETT/pLuiUDMLfoXWAKfCnMTNFIai4cEQ5PfVqzydjcDd8A47/h7Q
-         sm7kVJwqCSkUlWFZaokIsrxeULrzjspKzvfN3p03tvM6sAn668mfGt/Jg9BXT1KAwGtv
-         vAaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LLh9WEkB9hCvNCPoVrwAAYggf2WFsHcOiqOg9CycRzk=;
-        b=ZdqdlJQUMXhPD6+UDcRiiByCkDdDVY5U4zHC23uqVZME+vHqKN1Q8FfLZfFx5pOnbI
-         PuSYnam+BKc5H5jSjBObzm9ZyBDVm+7hSGTEeJnmKO7y6xLB/EzfvC9dXF8XBjP3EOTv
-         uBOmcNGKI++IIBuIcujCwsTS7vSrr3y+wOLNr7tY8FlDJK0k6UZjTVuMn0h13o5RIsQ6
-         6+6iRRpiMlQmu3I5o97xg8PFL6eP9Wgruyb1htg9VXCKmqzeyXrPR65TqKz6kvd3eCbk
-         Komq3rBp6bagBMPlVZsxSHj5bCXfRRO9efDpI05tZxlxAhtig8MC7h9bCSztIrObADgj
-         8guQ==
-X-Gm-Message-State: ANhLgQ0hkEWafqlj4dyz0SjIdtcZKHwPMhzTUGgkrr1m+dPxIB3OgqzQ
-        F9gWA909Z/4HYgxWKAzCM5byl55R71eqpJeHbAc=
-X-Google-Smtp-Source: ADFU+vtSOxQ5/szRxmQfsje34YMe9w6YBped55Rfvr7ivgI4Jat5cM4nBsBKqEFHpf43rWklHGFbSzlm4Io6jIIgKOM=
-X-Received: by 2002:a6b:f404:: with SMTP id i4mr2243728iog.175.1584420259614;
- Mon, 16 Mar 2020 21:44:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584330804-18477-1-git-send-email-hqjagain@gmail.com> <20200317041523.GB3756@localhost.localdomain>
-In-Reply-To: <20200317041523.GB3756@localhost.localdomain>
-From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Tue, 17 Mar 2020 12:44:10 +0800
-Message-ID: <CAJRQjodkqMM8Sap50UaDr5fXD+30+5tgpj4-CdEt9fM2WVjm7w@mail.gmail.com>
-Subject: Re: [PATCH] sctp: fix refcount bug in sctp_wfree
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 17 Mar 2020 00:45:44 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:34630 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgCQEpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:45:44 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B836200C66;
+        Tue, 17 Mar 2020 05:45:42 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5CF03200CA5;
+        Tue, 17 Mar 2020 05:45:37 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C14F04029F;
+        Tue, 17 Mar 2020 12:45:30 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] cpufreq: imx6q-cpufreq: Improve the logic of -EPROBE_DEFER handling
+Date:   Tue, 17 Mar 2020 12:38:54 +0800
+Message-Id: <1584419934-2303-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 12:15 PM Marcelo Ricardo Leitner
-<marcelo.leitner@gmail.com> wrote:
->
-> On Mon, Mar 16, 2020 at 11:53:24AM +0800, Qiujun Huang wrote:
-> > Do accounting for skb's real sk.
-> > In some case skb->sk != asoc->base.sk.
->
-> This is a too simple description.  Please elaborate how this can
-> happen in sctp_wfree. Especially considering the construct for
-> migrating the tx queue on sctp_sock_migrate(), as both sockets are
-> locked while moving the chunks around and the asoc itself is only
-> moved in between decrementing and incrementing the refcount:
->
->         lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
->         sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
->         sctp_assoc_migrate(assoc, newsk);
->         sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
->         ...
+Improve the -EPROBE_DEFER handling logic to simplify the code.
 
-Yeah, the description is too simple. I'll send v2.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/cpufreq/imx6q-cpufreq.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
->
-> >
-> > Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
->
-> I can't see a positive test result, though. If I didn't loose any
-> email, your last test with a patch similar to this one actually
-> failed.
-> I'm talking about syzbot test result at Message-ID: <000000000000e7736205a0e041f5@google.com>
+diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+index 285b8e9..fdb2fff 100644
+--- a/drivers/cpufreq/imx6q-cpufreq.c
++++ b/drivers/cpufreq/imx6q-cpufreq.c
+@@ -400,11 +400,9 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
+ 		ret = imx6q_opp_check_speed_grading(cpu_dev);
+ 	}
+ 	if (ret) {
+-		if (ret == -EPROBE_DEFER)
+-			goto out_free_opp;
+-
+-		dev_err(cpu_dev, "failed to read ocotp: %d\n",
+-			ret);
++		if (ret != -EPROBE_DEFER)
++			dev_err(cpu_dev, "failed to read ocotp: %d\n",
++				ret);
+ 		goto out_free_opp;
+ 	}
+ 
+-- 
+2.7.4
 
-I told with syzbot privately avoiding noise :p
-Thanks!
