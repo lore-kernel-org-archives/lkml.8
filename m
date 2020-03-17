@@ -2,136 +2,160 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DD8C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D9EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC6D20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA7420714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wdii35CN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nc8IM5/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgCQKdx (ORCPT
+        id S1726112AbgCQKfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:33:53 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:20413 "EHLO
+        Tue, 17 Mar 2020 06:35:24 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25214 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725730AbgCQKdx (ORCPT
+        by vger.kernel.org with ESMTP id S1725730AbgCQKfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:33:53 -0400
+        Tue, 17 Mar 2020 06:35:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584441232;
+        s=mimecast20190719; t=1584441322;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=eOy9TskxxEsCdIzYH89n1iIguuWEe+XNl7wM6A1bFDk=;
-        b=Wdii35CNV1QsVtqp8xFPyaW/0u2Hmu1KDbFDLzPEWgvu+VL3DUvcGzWquVKtr3a2fK93/q
-        EWE+kQnPQ2LTJ9sZGyhH124DGgBUgIUgAayN7JZD6OSQ0N43h+pa1ZcWiMmfwJ8Uozvt/1
-        icvviXSsfjJqrCvnQAPyCCdj63iXqQc=
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PDF9KX2gWP/KQxi7FPC/r6zYWiKxTIB+y9Tt6qr75x0=;
+        b=Nc8IM5/p2kEfKVbONuOE93Zu4S3yzZEIiJuyDCGm/rqb3To/HfiqeAfooJESHWvvrjLo/U
+        Jgo8DPC+SLDsQjkOIds6hZIrkZ1GEP0mvRpjfxUsQbbHw8/VDGoTFiF5MjxuRo0U4dk5eE
+        TCJj9G2PW2jRGUJg0zZGiWtHaROSYBM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-v69Xyi8eMXGPU6_IIDwINA-1; Tue, 17 Mar 2020 06:33:51 -0400
-X-MC-Unique: v69Xyi8eMXGPU6_IIDwINA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-362-MHeVK9nTPLqv1JiyvpOjEw-1; Tue, 17 Mar 2020 06:35:18 -0400
+X-MC-Unique: MHeVK9nTPLqv1JiyvpOjEw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03E5F8010EC;
-        Tue, 17 Mar 2020 10:33:50 +0000 (UTC)
-Received: from localhost (ovpn-113-80.rdu2.redhat.com [10.10.113.80])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E96BD1001DC0;
-        Tue, 17 Mar 2020 10:33:46 +0000 (UTC)
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, David.Laight@ACULAB.COM,
-        Bruno Meneguele <bmeneg@redhat.com>
-Subject: [PATCH v2] kernel/printk: add kmsg SEEK_CUR handling
-Date:   Tue, 17 Mar 2020 07:33:44 -0300
-Message-Id: <20200317103344.574277-1-bmeneg@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0656118A551B;
+        Tue, 17 Mar 2020 10:35:16 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F33D75C1C3;
+        Tue, 17 Mar 2020 10:35:12 +0000 (UTC)
+Subject: Re: [PATCH v5 12/23] irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI
+ callbacks
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-13-maz@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <2f981328-92e8-7554-ccf7-962c79add0c3@redhat.com>
+Date:   Tue, 17 Mar 2020 11:35:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200304203330.4967-13-maz@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userspace libraries, e.g. glibc's dprintf(), perform a SEEK_CUR operation
-over any file descriptor requested to make sure the current position isn'=
-t
-pointing to junk due to previous manipulation of that same fd. And whenev=
-er
-that fd doesn't have support for such operation, the userspace code expec=
-ts
--ESPIPE to be returned.
+Hi Marc,
 
-However, when the fd in question references the /dev/kmsg interface, the
-current kernel code state returns -EINVAL instead, causing an unexpected
-behavior in userspace: in the case of glibc, when -ESPIPE is returned it
-gets ignored and the call completes successfully, while returning -EINVAL
-forces dprintf to fail without performing any action over that fd:
+On 3/4/20 9:33 PM, Marc Zyngier wrote:
+> Just like for vLPIs, there is some configuration information that cannot
+> be directly communicated through the normal irqchip API, and we have to
+> use our good old friend set_vcpu_affinity as a side-band communication
+> mechanism.
+> 
+> This is used to configure group and priority for a given vSGI.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c   | 18 ++++++++++++++++++
+>  include/linux/irqchip/arm-gic-v4.h |  5 +++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index fb2b836c31ff..effb0e0b0c9d 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -4033,6 +4033,23 @@ static int its_sgi_get_irqchip_state(struct irq_data *d,
+>  	return 0;
+>  }
+>  
+> +static int its_sgi_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
+> +{
+> +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+> +	struct its_cmd_info *info = vcpu_info;
+> +
+> +	switch (info->cmd_type) {
+> +	case PROP_UPDATE_SGI:
+PROP_UPDATE_VSGI directly?
+> +		vpe->sgi_config[d->hwirq].priority = info->priority;
+> +		vpe->sgi_config[d->hwirq].group = info->group;
+> +		its_configure_sgi(d, false);
+> +		return 0;
+> +
+extra line
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  static struct irq_chip its_sgi_irq_chip = {
+>  	.name			= "GICv4.1-sgi",
+>  	.irq_mask		= its_sgi_mask_irq,
+> @@ -4040,6 +4057,7 @@ static struct irq_chip its_sgi_irq_chip = {
+>  	.irq_set_affinity	= its_sgi_set_affinity,
+>  	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
+>  	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
+> +	.irq_set_vcpu_affinity	= its_sgi_set_vcpu_affinity,
+>  };
+>  
+>  static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
+> diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+> index 44e8c19e3d56..b4dbf899460b 100644
+> --- a/include/linux/irqchip/arm-gic-v4.h
+> +++ b/include/linux/irqchip/arm-gic-v4.h
+> @@ -103,6 +103,7 @@ enum its_vcpu_info_cmd_type {
+>  	SCHEDULE_VPE,
+>  	DESCHEDULE_VPE,
+>  	INVALL_VPE,
+> +	PROP_UPDATE_SGI,
+>  };
+>  
+>  struct its_cmd_info {
+> @@ -115,6 +116,10 @@ struct its_cmd_info {
+>  			bool		g0en;
+>  			bool		g1en;
+>  		};
+> +		struct {
+> +			u8		priority;
+> +			bool		group;
+> +		};
+>  	};
+>  };
+>  
+> 
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-  if (_IO_SEEKOFF (fp, (off64_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT) =
-=3D=3D
-  _IO_pos_BAD && errno !=3D ESPIPE)
-    return NULL;
-
-With this patch we make sure to return the correct value when SEEK_CUR is
-requested over kmsg and also add some kernel doc information to formalize
-this behavior.
-
-Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
----
-v2: add more documentation details to code, kernel doc and patch log
-
- Documentation/ABI/testing/dev-kmsg |  5 +++++
- kernel/printk/printk.c             | 10 ++++++++++
- 2 files changed, 15 insertions(+)
-
-diff --git a/Documentation/ABI/testing/dev-kmsg b/Documentation/ABI/testi=
-ng/dev-kmsg
-index f307506eb54c..1e6c28b1942b 100644
---- a/Documentation/ABI/testing/dev-kmsg
-+++ b/Documentation/ABI/testing/dev-kmsg
-@@ -56,6 +56,11 @@ Description:	The /dev/kmsg character device node provi=
-des userspace access
- 		  seek after the last record available at the time
- 		  the last SYSLOG_ACTION_CLEAR was issued.
-=20
-+		Due to the record nature of this interface with a "read all"
-+		behavior and the specific positions each seek operation sets,
-+		SEEK_CUR is not supported, returning -ESPIPE (invalid seek) to
-+		errno whenever requested.
-+
- 		The output format consists of a prefix carrying the syslog
- 		prefix including priority and facility, the 64 bit message
- 		sequence number and the monotonic timestamp in microseconds,
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index ad4606234545..d1a219759ed3 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -963,6 +963,16 @@ static loff_t devkmsg_llseek(struct file *file, loff=
-_t offset, int whence)
- 		user->idx =3D log_next_idx;
- 		user->seq =3D log_next_seq;
- 		break;
-+	case SEEK_CUR:
-+		/*
-+		 * It isn't supported due to the record nature of this
-+		 * interface: _SET _DATA and _END point to very specific
-+		 * record positions, while _CUR would be more useful in case
-+		 * of a byte-based log. Because of that, return the default
-+		 * errno value for invalid seek operation.
-+		 */
-+		ret =3D -ESPIPE;
-+		break;
- 	default:
- 		ret =3D -EINVAL;
- 	}
---=20
-2.24.1
+Eric
 
