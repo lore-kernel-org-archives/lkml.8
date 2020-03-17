@@ -2,108 +2,108 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A2AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED77C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E9620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA49205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbgCQImB (ORCPT
+        id S1726132AbgCQImL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:42:01 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39126 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgCQImB (ORCPT
+        Tue, 17 Mar 2020 04:42:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44213 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgCQImL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:42:01 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r2so5370266otn.6;
-        Tue, 17 Mar 2020 01:41:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8KAPg4bTos1rY9vws0C/xCO+F9oh55hyP0CnonU852I=;
-        b=iubqMyUjFGwNTCeuykhwnWPzi4ZrZ5EAUPhIabkVYgSTUKLyhu0/Oq8Ej1wsSQ+Lhr
-         FVEjQixNIRRE46dW4+rFtOr1cutw+RabudP3D52+hPUkpmrTxBDJisfA/yJwx1f6rmLO
-         X4vETRYEpsYWPE0GWBbd4kUyPXL8wnq/9vnUZyKo7qF1awioM9aH7npPywhmNMcDvx73
-         2ZU4QqcbSUSzl8d/iQWMAUjo2Mu4K+5TCNS1PXNn06R7/mKjAL5HRELuqimlg19z8yk4
-         d11x4D3uhpfK6WSjEwagBzsIYNMpZQWEbdPFsdFspkT4keJXCGDRM4eYBH8AyrciIcaq
-         NBwQ==
-X-Gm-Message-State: ANhLgQ26eX7G394qQtfH2C+Y4ZRrRj+jDJHMnLERKIzaUsN8u5SW7faW
-        Dg48UiVckW6MyEJqHVrHGM7QUC/OqdhE0lTVY7g=
-X-Google-Smtp-Source: ADFU+vvJp0nv92HoVayJxMdw/lQoVKJfhGofeOWGjeWQZ4VsyHP2OYzQFJDW/aLh70OIkdl5GYBag7ZinGzuIjBpa74=
-X-Received: by 2002:a9d:8d0:: with SMTP id 74mr2800645otf.39.1584434518599;
- Tue, 17 Mar 2020 01:41:58 -0700 (PDT)
+        Tue, 17 Mar 2020 04:42:11 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jE7nP-0006jj-MB; Tue, 17 Mar 2020 08:41:55 +0000
+Date:   Tue, 17 Mar 2020 09:41:54 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: clone3: allow creation of time namespace with offset
+Message-ID: <20200317084154.m2u76jqj5f47mxqc@wittgenstein>
+References: <20200317083043.226593-1-areber@redhat.com>
 MIME-Version: 1.0
-References: <20200218151812.7816-1-geert+renesas@glider.be>
- <20200218151812.7816-2-geert+renesas@glider.be> <CACRpkdZGKB9opaOFT8Yz-tfE9vcCVeF9EvvBi7jWWuAAh3C_FA@mail.gmail.com>
-In-Reply-To: <CACRpkdZGKB9opaOFT8Yz-tfE9vcCVeF9EvvBi7jWWuAAh3C_FA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 17 Mar 2020 09:41:47 +0100
-Message-ID: <CAMuHMdVM=F_p0L24shstWbQSur7JJ6irVBiugxxqKsky0hxdAg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/5] gpiolib: Add support for gpiochipN-based table lookup
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200317083043.226593-1-areber@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Mar 17, 2020 at 09:30:40AM +0100, Adrian Reber wrote:
+> This is an attempt to add time namespace support to clone3(). I am not
+> really sure which way clone3() should handle time namespaces. The time
+> namespace through /proc cannot be used with clone3() because the offsets
+> for the time namespace need to be written before a process has been
+> created in that time namespace. This means it is necessary to somehow
+> tell clone3() the offsets for the clocks.
+> 
+> The time namespace offers the possibility to set offsets for
+> CLOCK_MONOTONIC and CLOCK_BOOTTIME. My first approach was to extend
+> 'struct clone_args` with '__aligned_u64 monotonic_offset' and
+> '__aligned_u64 boottime_offset'. The problem with this approach was that
+> it was not possible to set nanoseconds for the clocks in the time
+> namespace.
+> 
+> One of the motivations for clone3() with CLONE_NEWTIME was to enable
+> CRIU to restore a process in a time namespace with the corresponding
+> offsets. And although the nanosecond value can probably never be
+> restored to the same value it had during checkpointing, because the
+> clock keeps on running between CRIU pausing all processes and CRIU
+> actually reading the value of the clocks, the nanosecond value is still
+> necessary for CRIU to not restore a process where the clock jumps back
+> due to CRIU restoring it with a nanonsecond value that is too small.
+> 
+> Requiring nanoseconds as well as seconds for two clocks during clone3()
+> means that it would require 4 additional members to 'struct clone_args':
+> 
+>         __aligned_u64 tls;
+>         __aligned_u64 set_tid;
+>         __aligned_u64 set_tid_size;
+> +       __aligned_u64 boottime_offset_seconds;
+> +       __aligned_u64 boottime_offset_nanoseconds;
+> +       __aligned_u64 monotonic_offset_seconds;
+> +       __aligned_u64 monotonic_offset_nanoseconds;
+>  };
+> 
+> To avoid four additional members to 'struct clone_args' this patchset
+> uses another approach:
+> 
+>         __aligned_u64 tls;
+>         __aligned_u64 set_tid;
+>         __aligned_u64 set_tid_size;
+> +       __aligned_u64 timens_offset;
+> +       __aligned_u64 timens_offset_size;
 
-On Thu, Mar 12, 2020 at 3:23 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Feb 18, 2020 at 4:18 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
->
-> > Currently GPIO controllers can only be referred to by label in GPIO
-> > lookup tables.
-> >
-> > Add support for looking them up by "gpiochipN" name, with "N" the
-> > corresponding GPIO device's ID number.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> > Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> > Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
->
-> Just like with patch 2/5 I have the same problem here that
-> the commit message doesn't state the technical reason why
-> we need to change this and support the device name in these
-> tables and not just labels.
+Hm, so for set_tid we did set_tid and set_tid_size which makes sense
+because set_tid wasn't actually a struct. But I'm not a fan of
+establishing a pattern whereby we always have to grow two member, the
+object and it's size; at least when we're adding a struct.
+So at a first glance here are two possible ideas:
+- Don't add a size argument and assume that struct timens_offset won't
+  grow. I'm not sure how likely it is it will grow.
+- Make the size the first member of struct timens_offset the size of the
+  struct. (See examples for this pattern in the sched syscalls.)
 
-As these "gpiochipN" names are not stable, I will drop this patch, and
-the related support.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Christian
