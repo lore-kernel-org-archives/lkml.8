@@ -2,171 +2,150 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF61C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26726C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8282B2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:26:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wz79KUH2"
+	by mail.kernel.org (Postfix) with ESMTP id EEE0C20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgCQU0o (ORCPT
+        id S1726775AbgCQUfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:26:44 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41102 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgCQU0o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:26:44 -0400
-Received: by mail-lj1-f193.google.com with SMTP id o10so24478341ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:26:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IUDQ6CemnSepNAfhTqvmK88Cb+1wupixNpF7ny5ZDK4=;
-        b=wz79KUH2ObEjP2IvithwCLj/s8BBSB9UBRojmU+zfkPUJ8/eurkTsSIWx5Na7kJd3X
-         vB70frIsMF2TPyOImlitSv2iQ2gjULWcNZdTzjo7rE04vja4AQzDzOdaoE6cqPqIMHFh
-         haXgncz0D53yE08QjPbmhKEJdSfaXBn4HhqjGqFgOl+9MKS8j+queA3N/2XfbyE7MpH0
-         8FjEUEQ7g1881iNVwl/TBM96QU09EHZXu3P5jKPLCow+tgdm0xhk/hAqwRFxoswgteL4
-         rGmnGEGrKK4TBbPChTlB9FIUSaJUl9cjhKx8/+v6J4kRIAcAcLw9FrIaRwOc9477ddXf
-         2MBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IUDQ6CemnSepNAfhTqvmK88Cb+1wupixNpF7ny5ZDK4=;
-        b=RAl0BmTTVPuX8Iqd2amRAjXdgS7DjVuf87N2s4uYXS4skfXykWchh92illDrS0Ymz5
-         muEfcEeLsrbZAWAAQsXEIdD826sQSDkgtsgpy8/aiRSG+AaB1PXO+Uep3NrrCHuqq3AN
-         98FmzuJ7RLwfPENxLTXecNOT+eca1h86rHlvUxCGcTJP5QlVcpcpB1+xL9MLnXIrjay0
-         CDrTEJ/Ogxw4cqwA/qKfud1Jhz2PpgNpZR/rzcRxD+be/31wP/VfWQZLJE9TMBMgcZMp
-         TQ5DPw5BxyL+xr+9olBAHbHsXQ2ILdhuBlMhf4xW97RPoigii9nOTmgbxYTHN6VyumG4
-         uciw==
-X-Gm-Message-State: ANhLgQ2dDgUL+UIcajAzw7TRvpX7B5rMq6kVcb489lSuHdhqTOlmRJKj
-        bMcSXZZLcfTZ6aMmWXM4jZS2eIFhEvRnCzfy9IO3+w==
-X-Google-Smtp-Source: ADFU+vtQ3Ylqb3KX+SgZ0YYy5xk6AnB3Aahd73Qs2sTHbj/d8fdgpaqlllHnjNy1X4VcDcTLd4CSutFtNMquEdzzUf0=
-X-Received: by 2002:a2e:8885:: with SMTP id k5mr302202lji.123.1584476801643;
- Tue, 17 Mar 2020 13:26:41 -0700 (PDT)
+        Tue, 17 Mar 2020 16:35:14 -0400
+Received: from mga17.intel.com ([192.55.52.151]:17562 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbgCQUfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 16:35:14 -0400
+IronPort-SDR: 5Wl964iVNXgMWWoZ6tUZ9b2p+r+9Xl1+XfIgK2geAMcZpPHKaiWMRp+swJIuFElYFPunXmCBuc
+ o6Fk9pK56/Ig==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 13:35:13 -0700
+IronPort-SDR: xSlZJbVgHc2AKONDJ/Sljm9V3xwLfDRMe6qHvlFckW78s/QGMK4b8Va7m/tazkGak9vdmxo6Ef
+ Jr0yudYeMmHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
+   d="scan'208";a="247949524"
+Received: from dslea-mobl.amr.corp.intel.com (HELO [10.251.3.73]) ([10.251.3.73])
+  by orsmga006.jf.intel.com with ESMTP; 17 Mar 2020 13:35:12 -0700
+Subject: Re: [PATCH] treewide: Rename "unencrypted" to "decrypted"
+To:     Borislav Petkov <bp@suse.de>, lkml <linux-kernel@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Shutemov, Kirill" <kirill.shutemov@intel.com>
+References: <20200317111822.GA15609@zn.tnic>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <2cb4a8ae-3b13-67bd-c021-aee47fdf58c5@intel.com>
+Date:   Tue, 17 Mar 2020 13:35:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200317103259.744774526@linuxfoundation.org>
-In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 18 Mar 2020 01:56:30 +0530
-Message-ID: <CA+G9fYtOUpN_3Vj-x8UgbK8CCUrhssbSdhNE=4GkE9OmR_Nmag@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/89] 4.19.111-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200317111822.GA15609@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020 at 16:27, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.111 release.
-> There are 89 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 19 Mar 2020 10:31:16 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.111-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 3/17/20 4:18 AM, Borislav Petkov wrote:
+> Back then when the whole SME machinery started getting mainlined, it
+> was agreed that for simplicity, clarity and sanity's sake, the terms
+> denoting encrypted and not-encrypted memory should be "encrypted" and
+> "decrypted". And the majority of the code sticks to that convention
+> except those two. So rename them.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Don't "unencrypted" and "decrypted" mean different things?
 
-Summary
-------------------------------------------------------------------------
+Unencrypted to me means "encryption was never used for this data".
 
-kernel: 4.19.111-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: ad35ac79caefa8ec9fbaaf4737d87fd7bc0329cd
-git describe: v4.19.110-90-gad35ac79caef
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.110-90-gad35ac79caef
+Decrypted means "this was/is encrypted but here is a plaintext copy".
 
-No regressions (compared to build v4.19.109-92-gad35ac79caef)
+This, for instance:
 
-No fixes (compared to build v4.19.109-92-gad35ac79caef)
+> +++ b/kernel/dma/direct.c
+> @@ -26,7 +26,7 @@ unsigned int zone_dma_bits __ro_after_init = 24;
+>  static inline dma_addr_t phys_to_dma_direct(struct device *dev,
+>  		phys_addr_t phys)
+>  {
+> -	if (force_dma_unencrypted(dev))
+> +	if (force_dma_decrypted(dev))
+>  		return __phys_to_dma(dev, phys);
 
-Ran 17272 total tests in the following environments and test suites.
+is referring to DMA that is not and never was encrypted.  It's skipping
+the encryption altogether.  There's no act of "decryption" anywhere.
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+This, on the other hand, seems named wrong to me:
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* linux-log-parser
-* perf
-* kselftest
-* libhugetlbfs
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-dio-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* v4l2-compliance
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* spectre-meltdown-checker-test
-* ltp-open-posix-tests
+> /*
+>  * Macros to add or remove encryption attribute
+>  */
+> #define pgprot_encrypted(prot)  __pgprot(__sme_set(pgprot_val(prot)))
+> #define pgprot_decrypted(prot)  __pgprot(__sme_clr(pgprot_val(prot)))
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+This seems like it would be better named pgprot_unencrypted().
