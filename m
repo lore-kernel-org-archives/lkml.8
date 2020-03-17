@@ -2,125 +2,125 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB777C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ADCC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0DD20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520C320754
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:42:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vOEHN32J"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gO/vNSzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgCQTke (ORCPT
+        id S1726651AbgCQTmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:40:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43470 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgCQTke (ORCPT
+        Tue, 17 Mar 2020 15:42:42 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:41831 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726294AbgCQTmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:40:34 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b2so21044427wrj.10;
-        Tue, 17 Mar 2020 12:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D/wp0Gm2mcc4rtHMD8u+N/+L8w8kJ6W08T5eblVfqN4=;
-        b=vOEHN32J+wbhh7cEtbPHhRbQAXy0rRIhL4LzvUk8Dic2S3cAOqmz3Gzk3FKPhb2Heo
-         LJjW3KY+Arjh6Ceyc2x3hjKhTRKnCB/sW3504NVASVVdmoHF3H4t8SucpzGwd4Lb/9nY
-         jpaI7050NV8PCjCIuaB906gXs/D/A7FpjFva4x4HMUB5aiBZzzND46Wwyv0Zi+3LSFWh
-         cXXWIuq/qHrR5Hapo2fz7bPmsLvOh3AoAAQe/sgjEv7FqwMq27EunoBcrKk8j/aJyaz8
-         BV7JM5M48h0OK/8i6A1CBHJRYOwn4vL+WLMuccE3fyNafoI5WPOaS+fkxsSuSEXyuGR0
-         9mtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D/wp0Gm2mcc4rtHMD8u+N/+L8w8kJ6W08T5eblVfqN4=;
-        b=egN1Izs+FM1GiULBR89O2whIn5JXlT5jtWL8HT9pCKwiFtvmbFNHQCzyeJga2wnz0J
-         JTsRHp6t/IYcG/KXrEwyMg8yJGcAWPjjrATNaUZ74M0SzRghEcMpzD0+tgPE/tPyptzN
-         /dKv0fYXqbpEtYMTjWf4UgmWstOyj9lluoXOXpJKaHED83ofCd5/8SuFegjA+PInlc3c
-         9GS3kWkg1vbsVC1n03UxMilGBn1M0wwe45HHtofcgkbESLwU5/nexTgFBUgcyQ+hMIQv
-         TJftyPpqriGamcsiBrnO3Qv0HUFrvtfb5BCN1y201U9tQw1EFWwT38wb18n8v6PBzD9p
-         zyOw==
-X-Gm-Message-State: ANhLgQ1T040PUI8mvag6iHf2l9jo23lgROCBxSdbP2LFCK63okN6XH0S
-        OZ/nZ38Z8E+7ODAkAEgjgTYRicJI
-X-Google-Smtp-Source: ADFU+vthhBbNJO+yiWuwtAHW/axQSOlee3wEVkhsBobDeC76r87CTk4FJv+R6Wocf5FNVNuivbbU9Q==
-X-Received: by 2002:a5d:6908:: with SMTP id t8mr687283wru.92.1584474031610;
-        Tue, 17 Mar 2020 12:40:31 -0700 (PDT)
-Received: from [10.230.31.111] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m2sm541200wml.24.2020.03.17.12.40.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Mar 2020 12:40:30 -0700 (PDT)
-Subject: Re: [PATCH net 1/2] Revert "net: bcmgenet: use RGMII loopback for MAC
- reset"
-To:     Florian Fainelli <florian.fainelli@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1584395096-41674-1-git-send-email-opendmb@gmail.com>
- <1584395096-41674-2-git-send-email-opendmb@gmail.com>
- <de2ef417-ddf0-516f-4b11-ce834764497c@broadcom.com>
-From:   Doug Berger <opendmb@gmail.com>
-Message-ID: <4f4a7695-0c6c-c5e8-84b2-602d0ee4fd29@gmail.com>
-Date:   Tue, 17 Mar 2020 12:43:09 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <de2ef417-ddf0-516f-4b11-ce834764497c@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Mar 2020 15:42:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584474160;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=1fFQOEoei54nx8OzjJR+NcuP/thiJUDry70cCne9lJ0=;
+        b=gO/vNSzQUcs2pQ7iCWXVHRPppZq6lu/indF2rUIxMfDK4Ml+Q0al0iL7vlm3xcJEFmgdBC
+        EidnTnMxuVvY2pxJCebzyxH3NcFv4gS+SEIxk9Vo/+PRQJlqw1UGyF+1dBT5aX+XrzqTjk
+        UJPDAQ1Ul9VZQjCYs+oSqSkqFSbVnis=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-121-x4VM4dJDOzCifI5d55Tjjg-1; Tue, 17 Mar 2020 15:42:38 -0400
+X-MC-Unique: x4VM4dJDOzCifI5d55Tjjg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A4F6107ACCA;
+        Tue, 17 Mar 2020 19:42:36 +0000 (UTC)
+Received: from llong.com (ovpn-115-15.rdu2.redhat.com [10.10.115.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 70EDD10002AB;
+        Tue, 17 Mar 2020 19:42:26 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v4 0/4] KEYS: Read keys to internal buffer & then copy to userspace
+Date:   Tue, 17 Mar 2020 15:41:36 -0400
+Message-Id: <20200317194140.6031-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/16/2020 7:21 PM, Florian Fainelli wrote:
-> 
-> 
-> On 3/16/2020 2:44 PM, Doug Berger wrote:
->> This reverts commit 3a55402c93877d291b0a612d25edb03d1b4b93ac.
->>
->> This is not a good solution when connecting to an external switch
->> that may not support the isolation of the TXC signal resulting in
->> output driver contention on the pin.
->>
->> A different solution is necessary.
->>
->> Signed-off-by: Doug Berger <opendmb@gmail.com>
-> 
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> Did you want this to be tagged with:
-> 
-> Fixes: 3a55402c9387 ("net: bcmgenet: use RGMII loopback for MAC reset")
-> 
-> so as to make it more explicit how the two commits relate to each other?
-I wasn't sure how best to tag this commit.
+v4:
+ - Remove the __user annotation from big_key_read() and user_read() in
+   patch 1.
+ - Add a new patch 2 to remove __user annotation from rxrpc_read().
+ - Add a new patch 3 to remove __user annotation from dns_resolver_read().
+ - Merge the original patches 2 and 3 into a single patch 4 and refactor
+   it as suggested by Jarkko and Eric.
 
-It seems odd to indicate that the reversion of a commit fixes the commit
-that is reverted, but maybe that is the best way. It is more accurate to
-say that the reversion of the commit reintroduces the problem that it
-was intended to address, and therefore doesn't fix anything but rather
-trades one problem for another.
+v3:
+ - Reorganize the keyctl_read_key() code to make it more readable as
+   suggested by Jarkko Sakkinen.
+ - Add patch 3 to use kvmalloc() for safer large buffer allocation as
+   suggested by David Howells.
 
-It is clearer that the second commit fixes the original issue and so I
-tagged it accordingly, but it is far less clear how a reversion like
-this should be tagged.
+v2:
+ - Handle NULL buffer and buflen properly in patch 1.
+ - Fix a bug in big_key.c.
+ - Add patch 2 to handle arbitrary large user-supplied buflen.
 
-If you think it is clearer to tag this as you describe I have no objection.
+The current security key read methods are called with the key semaphore
+held.  The methods then copy out the key data to userspace which is
+subjected to page fault and may acquire the mmap semaphore. That can
+result in circular lock dependency and hence a chance to get into
+deadlock.
 
-> 
-> Thanks!
-> --
-> Florian
-> 
-Thank you for taking a look at this and for the feedback,
-    Doug
+To avoid such a deadlock, an internal buffer is now allocated for getting
+out the necessary data first. After releasing the key semaphore, the
+key data are then copied out to userspace sidestepping the circular
+lock dependency.
+
+The keyutils test suite was run and the test passed with these patchset
+applied without any falure.
+
+Waiman Long (4):
+  KEYS: Don't write out to userspace while holding key semaphore
+  KEYS: Remove __user annotation from rxrpc_read()
+  KEYS: Remove __user annotation from dns_resolver_read()
+  KEYS: Avoid false positive ENOMEM error on key read
+
+ include/keys/big_key-type.h               |  2 +-
+ include/keys/user-type.h                  |  3 +-
+ include/linux/key-type.h                  |  2 +-
+ net/dns_resolver/dns_key.c                |  2 +-
+ net/rxrpc/key.c                           | 27 +++----
+ security/keys/big_key.c                   | 11 ++-
+ security/keys/encrypted-keys/encrypted.c  |  7 +-
+ security/keys/internal.h                  | 12 ++++
+ security/keys/keyctl.c                    | 86 ++++++++++++++++++++---
+ security/keys/keyring.c                   |  6 +-
+ security/keys/request_key_auth.c          |  7 +-
+ security/keys/trusted-keys/trusted_tpm1.c | 14 +---
+ security/keys/user_defined.c              |  5 +-
+ 13 files changed, 116 insertions(+), 68 deletions(-)
+
+-- 
+2.18.1
+
