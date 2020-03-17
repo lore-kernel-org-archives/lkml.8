@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B74C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13C8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5687320658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F95C20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443284;
-	bh=gwOOFIba/Xe2ZhVi9dCWmL00lqjTQhUYPSCVHThL0QA=;
+	s=default; t=1584443287;
+	bh=/++VJIRY3cBO4bpRQWxAtnuxUen9U+BQEk4J9ByTLrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZBtn1hcC42e2c547ViIq95EI528TiLvdt5On310f+IssR8WG2cF/d28DfMcaltoJQ
-	 GH6mP/OfQArUdmDxH0bvmNGevzYBhqJVZiHt3t+xy+01fYxDCqmdiJyongQgW47VNQ
-	 JDcnlrakEqOpYqpE5z8Wlv9BqJ/1XrAv/zIa3O+E=
+	b=eKgDkQPXcHlj1tWXBX4RqNiMC3kmtUfWHfxfM8sLJuNEIPQghljXVpAoBc89y9y04
+	 xNlwD9UTsuLFRj03eKdEUGrdAxJBuFxq/0zfhLVLol4yqWQZ7h0tNryshcLf1UaWnh
+	 A6O0wLtVwzHAB5fZ6gMijAHTiXL2L0zoQw+Al9PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgCQLID (ORCPT
+        id S1728489AbgCQLIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:08:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728796AbgCQLIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:08:00 -0400
+        id S1728791AbgCQLID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:08:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6336B2073E;
-        Tue, 17 Mar 2020 11:07:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF5CE20753;
+        Tue, 17 Mar 2020 11:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443279;
-        bh=gwOOFIba/Xe2ZhVi9dCWmL00lqjTQhUYPSCVHThL0QA=;
+        s=default; t=1584443283;
+        bh=/++VJIRY3cBO4bpRQWxAtnuxUen9U+BQEk4J9ByTLrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BlSThnqAqCoYScAffQNxdleKsrRLNl4uzpmF4pMIAXyCIAD3/cmo59xNvHKXRP/UE
-         MmJryI0byG9ZwfHZKdxJiQUBGveGSY3m6hYB8pmCrqi4XMu84Ihus95fuAFicIAXLx
-         fR3FF05ZjGLJKTGKDuMZGYAxFV+Vj1hfatTH0n2w=
+        b=kI5C9HZyfkDfF5ESLrpeGAzkcJK8gz39iFmQNoq4XaFp3cfI5KBAfxJd7ydbn+APz
+         gJzYMnCwlErp2Uq8WLCEZZ0IHcD2EgnI2X3djYumYuR+/fR16b6TIjFAMp9g3Iyr3v
+         9et3Cnb8/184CmDl+grIXarFxQvWIf3XzHChkZqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 033/151] bonding/alb: make sure arp header is pulled before accessing it
-Date:   Tue, 17 Mar 2020 11:54:03 +0100
-Message-Id: <20200317103329.013165083@linuxfoundation.org>
+Subject: [PATCH 5.5 034/151] bnxt_en: reinitialize IRQs when MTU is modified
+Date:   Tue, 17 Mar 2020 11:54:04 +0100
+Message-Id: <20200317103329.078984267@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -63,157 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit b7469e83d2add567e4e0b063963db185f3167cea upstream.
+[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
 
-Similar to commit 38f88c454042 ("bonding/alb: properly access headers
-in bond_alb_xmit()"), we need to make sure arp header was pulled
-in skb->head before blindly accessing it in rlb_arp_xmit().
+MTU changes may affect the number of IRQs so we must call
+bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
+set to true.  The reason is that a larger MTU may require
+aggregation rings not needed with smaller MTU.  We may not be
+able to allocate the required number of aggregation rings and
+so we reduce the number of channels which will change the number
+of IRQs.  Without this patch, it may crash eventually in
+pci_disable_msix() when the IRQs are not properly unwound.
 
-Remove arp_pkt() private helper, since it is more readable/obvious
-to have the following construct back to back :
-
-	if (!pskb_network_may_pull(skb, sizeof(*arp)))
-		return NULL;
-	arp = (struct arp_pkt *)skb_network_header(skb);
-
-syzbot reported :
-
-BUG: KMSAN: uninit-value in bond_slave_has_mac_rx include/net/bonding.h:704 [inline]
-BUG: KMSAN: uninit-value in rlb_arp_xmit drivers/net/bonding/bond_alb.c:662 [inline]
-BUG: KMSAN: uninit-value in bond_alb_xmit+0x575/0x25e0 drivers/net/bonding/bond_alb.c:1477
-CPU: 0 PID: 12743 Comm: syz-executor.4 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- bond_slave_has_mac_rx include/net/bonding.h:704 [inline]
- rlb_arp_xmit drivers/net/bonding/bond_alb.c:662 [inline]
- bond_alb_xmit+0x575/0x25e0 drivers/net/bonding/bond_alb.c:1477
- __bond_start_xmit drivers/net/bonding/bond_main.c:4257 [inline]
- bond_start_xmit+0x85d/0x2f70 drivers/net/bonding/bond_main.c:4282
- __netdev_start_xmit include/linux/netdevice.h:4524 [inline]
- netdev_start_xmit include/linux/netdevice.h:4538 [inline]
- xmit_one net/core/dev.c:3470 [inline]
- dev_hard_start_xmit+0x531/0xab0 net/core/dev.c:3486
- __dev_queue_xmit+0x37de/0x4220 net/core/dev.c:4063
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4096
- packet_snd net/packet/af_packet.c:2967 [inline]
- packet_sendmsg+0x8347/0x93b0 net/packet/af_packet.c:2992
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- __sys_sendto+0xc1b/0xc50 net/socket.c:1998
- __do_sys_sendto net/socket.c:2010 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:2006
- __x64_sys_sendto+0x6e/0x90 net/socket.c:2006
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc77ffbbc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00007fc77ffbc6d4 RCX: 000000000045c479
-RDX: 000000000000000e RSI: 00000000200004c0 RDI: 0000000000000003
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a04 R14: 00000000004cc7b0 R15: 000000000076bf2c
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
- slab_alloc_node mm/slub.c:2793 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1051 [inline]
- alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5766
- sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2242
- packet_alloc_skb net/packet/af_packet.c:2815 [inline]
- packet_snd net/packet/af_packet.c:2910 [inline]
- packet_sendmsg+0x66a0/0x93b0 net/packet/af_packet.c:2992
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- __sys_sendto+0xc1b/0xc50 net/socket.c:1998
- __do_sys_sendto net/socket.c:2010 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:2006
- __x64_sys_sendto+0x6e/0x90 net/socket.c:2006
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Cc: Veaceslav Falico <vfalico@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_alb.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/bonding/bond_alb.c
-+++ b/drivers/net/bonding/bond_alb.c
-@@ -50,11 +50,6 @@ struct arp_pkt {
- };
- #pragma pack()
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -10973,13 +10973,13 @@ static int bnxt_change_mtu(struct net_de
+ 	struct bnxt *bp = netdev_priv(dev);
  
--static inline struct arp_pkt *arp_pkt(const struct sk_buff *skb)
--{
--	return (struct arp_pkt *)skb_network_header(skb);
--}
--
- /* Forward declaration */
- static void alb_send_learning_packets(struct slave *slave, u8 mac_addr[],
- 				      bool strict_match);
-@@ -553,10 +548,11 @@ static void rlb_req_update_subnet_client
- 	spin_unlock(&bond->mode_lock);
+ 	if (netif_running(dev))
+-		bnxt_close_nic(bp, false, false);
++		bnxt_close_nic(bp, true, false);
+ 
+ 	dev->mtu = new_mtu;
+ 	bnxt_set_ring_params(bp);
+ 
+ 	if (netif_running(dev))
+-		return bnxt_open_nic(bp, false, false);
++		return bnxt_open_nic(bp, true, false);
+ 
+ 	return 0;
  }
- 
--static struct slave *rlb_choose_channel(struct sk_buff *skb, struct bonding *bond)
-+static struct slave *rlb_choose_channel(struct sk_buff *skb,
-+					struct bonding *bond,
-+					const struct arp_pkt *arp)
- {
- 	struct alb_bond_info *bond_info = &(BOND_ALB_INFO(bond));
--	struct arp_pkt *arp = arp_pkt(skb);
- 	struct slave *assigned_slave, *curr_active_slave;
- 	struct rlb_client_info *client_info;
- 	u32 hash_index = 0;
-@@ -653,8 +649,12 @@ static struct slave *rlb_choose_channel(
-  */
- static struct slave *rlb_arp_xmit(struct sk_buff *skb, struct bonding *bond)
- {
--	struct arp_pkt *arp = arp_pkt(skb);
- 	struct slave *tx_slave = NULL;
-+	struct arp_pkt *arp;
-+
-+	if (!pskb_network_may_pull(skb, sizeof(*arp)))
-+		return NULL;
-+	arp = (struct arp_pkt *)skb_network_header(skb);
- 
- 	/* Don't modify or load balance ARPs that do not originate locally
- 	 * (e.g.,arrive via a bridge).
-@@ -664,7 +664,7 @@ static struct slave *rlb_arp_xmit(struct
- 
- 	if (arp->op_code == htons(ARPOP_REPLY)) {
- 		/* the arp must be sent on the selected rx channel */
--		tx_slave = rlb_choose_channel(skb, bond);
-+		tx_slave = rlb_choose_channel(skb, bond, arp);
- 		if (tx_slave)
- 			bond_hw_addr_copy(arp->mac_src, tx_slave->dev->dev_addr,
- 					  tx_slave->dev->addr_len);
-@@ -676,7 +676,7 @@ static struct slave *rlb_arp_xmit(struct
- 		 * When the arp reply is received the entry will be updated
- 		 * with the correct unicast address of the client.
- 		 */
--		tx_slave = rlb_choose_channel(skb, bond);
-+		tx_slave = rlb_choose_channel(skb, bond, arp);
- 
- 		/* The ARP reply packets must be delayed so that
- 		 * they can cancel out the influence of the ARP request.
 
 
