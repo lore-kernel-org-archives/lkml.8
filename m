@@ -2,130 +2,89 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9F6C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF09C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361F7206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0093206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584443919;
+	bh=XjYT1b6paNI3ACUNi7k83KjMPu2yA3xLoAtWOv4tEL0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LoiIX/Z1OB/5luJe9Vk419iBlpPq6KPK0YGzAkrMHSQk/4sTnHVaUG3wKfLsi3HD7
+	 jYNpvSzFZTvPRY9tie6e1PGuGSij3aZlTH/mawO+z8QATBB/FKsE7EkLEMvMJ6AQoo
+	 FvPM5TkIqM59KsYictpAeG3Xeoq7P9y3pZCjoigc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgCQLSc (ORCPT
+        id S1728211AbgCQLGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:18:32 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11707 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728607AbgCQLGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:06:31 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 612FFC122464A3917050;
-        Tue, 17 Mar 2020 19:06:28 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 17 Mar 2020 19:06:18 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>
-CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <james.clark@arm.com>,
-        <qiangqing.zhang@nxp.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 0/7] perf test pmu-events case
-Date:   Tue, 17 Mar 2020 19:02:12 +0800
-Message-ID: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Tue, 17 Mar 2020 07:06:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728504AbgCQLGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B31F7206EC;
+        Tue, 17 Mar 2020 11:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584443169;
+        bh=XjYT1b6paNI3ACUNi7k83KjMPu2yA3xLoAtWOv4tEL0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EjFzDZK8BE0zm3A5wqhPs6orWdx5UwkrEbF7PASqedEJW7D9E9zqWmSf6WFE3MzjZ
+         BMd8sU7W1lfgUvhBWohK00KWsgnPOIz9ds87q/ZQJA1Q2iCkwaMNGQo6igv4IQHXxb
+         4xHkBmwsov+i87vBDwFhQdGaJFC9Wq21toRL2tUo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 112/123] netfilter: cthelper: add missing attribute validation for cthelper
+Date:   Tue, 17 Mar 2020 11:55:39 +0100
+Message-Id: <20200317103318.885392397@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
+References: <20200317103307.343627747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduces a basic pmu-events test case.
+From: Jakub Kicinski <kuba@kernel.org>
 
-The test works in two steps:
-- Verifies events in generated pmu-events.c are as expected for some test
-  events
-- Verifies correctly created aliases for those test events for the HW PMUs
-  in the host system
+commit c049b3450072b8e3998053490e025839fecfef31 upstream.
 
-The test events are invented, and are (mostly) arch agnostic (even though
-I copied these events from pre-existing x86 and arm64 JSONs).
+Add missing attribute validation for cthelper
+to the netlink policy.
 
-In the test, core and uncore events are treated slightly differently for
-testing aliases. For core test events, all events are matched. However,
-for uncore test events, these have "Unit" property, so can only be matched
-when the corresponding HW PMU exists in the host sytem.
+Fixes: 12f7a505331e ("netfilter: add user-space connection tracking helper infrastructure")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-A test run looks like this on my x86 dev box:
+---
+ net/netfilter/nfnetlink_cthelper.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-$ tools/perf/perf test -vv 10
+--- a/net/netfilter/nfnetlink_cthelper.c
++++ b/net/netfilter/nfnetlink_cthelper.c
+@@ -742,6 +742,8 @@ static const struct nla_policy nfnl_cthe
+ 	[NFCTH_NAME] = { .type = NLA_NUL_STRING,
+ 			 .len = NF_CT_HELPER_NAME_LEN-1 },
+ 	[NFCTH_QUEUE_NUM] = { .type = NLA_U32, },
++	[NFCTH_PRIV_DATA_LEN] = { .type = NLA_U32, },
++	[NFCTH_STATUS] = { .type = NLA_U32, },
+ };
+ 
+ static const struct nfnl_callback nfnl_cthelper_cb[NFNL_MSG_CTHELPER_MAX] = {
 
-10: PMU events                                            :
---- start ---
-test child forked, pid 26610
-testing event table bp_l1_btb_correct: pass
-testing event table bp_l2_btb_correct: pass
-testing event table segment_reg_loads.any: pass
-testing event table dispatch_blocked.any: pass
-testing event table eist_trans: pass
-testing event table uncore_hisi_ddrc.flux_wcmd: pass
-testing event table unc_cbo_xsnp_response.miss_eviction: pass
-Using CPUID GenuineIntel-6-3D-4
-intel_pt default config: tsc,pt,branch
-skipping testing PMU breakpoint
-testing aliases PMU uncore_cbox_1: matched event unc_cbo_xsnp_response.miss_eviction
-testing PMU uncore_cbox_1 aliases: pass
-testing aliases PMU cpu: matched event bp_l1_btb_correct
-testing aliases PMU cpu: matched event bp_l2_btb_correct
-testing aliases PMU cpu: matched event segment_reg_loads.any
-testing aliases PMU cpu: matched event dispatch_blocked.any
-testing aliases PMU cpu: matched event eist_trans
-testing PMU cpu aliases: pass
-skipping testing PMU software
-skipping testing PMU intel_bts
-testing aliases PMU uncore_cbox_0: matched event unc_cbo_xsnp_response.miss_eviction
-testing PMU uncore_cbox_0 aliases: pass
-skipping testing PMU tracepoint
-test child finished with 0
----- end ----
-PMU events: Ok
-
-
-Changes since v1:
-- Verify event table in generated pmu-events.c, in addition to verifying
-  aliases
-- Don't create separate table for test events, but include as a "testcpu"
-
-John Garry (7):
-  perf jevents: Add some test events
-  perf jevents: Support test events folder
-  perf pmu: Refactor pmu_add_cpu_aliases()
-  perf test: Add pmu-events test
-  perf pmu: Add is_pmu_core()
-  perf pmu: Make pmu_uncore_alias_match() public
-  perf test: Test pmu-events aliases
-
- .../perf/pmu-events/arch/test/test_cpu/branch.json |  12 +
- .../perf/pmu-events/arch/test/test_cpu/other.json  |  26 ++
- .../perf/pmu-events/arch/test/test_cpu/uncore.json |  21 ++
- tools/perf/pmu-events/jevents.c                    |  30 ++
- tools/perf/tests/Build                             |   1 +
- tools/perf/tests/builtin-test.c                    |   4 +
- tools/perf/tests/pmu-events.c                      | 373 +++++++++++++++++++++
- tools/perf/tests/tests.h                           |   1 +
- tools/perf/util/pmu.c                              |  28 +-
- tools/perf/util/pmu.h                              |   5 +
- 10 files changed, 492 insertions(+), 9 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/branch.json
- create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/other.json
- create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/uncore.json
- create mode 100644 tools/perf/tests/pmu-events.c
-
--- 
-2.12.3
 
