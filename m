@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32AAC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C84C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F687205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163AA20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443731;
-	bh=z4bfa8hZ8/4gypOjATA/W96jKijPpT9z5KWSPWrzcXU=;
+	s=default; t=1584443734;
+	bh=lW/xQPDNx9Rchc5aT/oz1voqUYIyuWyVlYk7rkwx3L0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRoWdIOm+JIJocNRSNQvZe8nqvpvzG+DDRp33uJK7XwoP1akbmPvTUpcS3n4U3pX/
-	 F2HM/HtCgnH/w47zBL2NtiF9QxNPvLprdvnPiMykYI1hbS+9Ev/KYQb/xHwnaSV+4r
-	 JKpZAuRU4HFQ4kj62ounL3vI3cv5m6Uk/UdfKgu8=
+	b=vnERUX4vXLzH2zLc7o0Ozug/qCPSBqbgzNIaKpwDoaOomI8ydHlnFWuqS5gRfNyXp
+	 g0r7J6HWYj6UvIxvc5CSix5zzy5k/6svRfX1xUgG3ZhTnOnu6Lx0eqgLPq4r88Htkn
+	 zYs7AuDyuY1GyYPDoZO6VhZZiqrlcW1VU5QyFynk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgCQLML (ORCPT
+        id S1729375AbgCQLMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:12:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55686 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbgCQLMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:06 -0400
+        id S1728987AbgCQLMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 463D92071C;
-        Tue, 17 Mar 2020 11:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEC2620658;
+        Tue, 17 Mar 2020 11:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443525;
-        bh=z4bfa8hZ8/4gypOjATA/W96jKijPpT9z5KWSPWrzcXU=;
+        s=default; t=1584443523;
+        bh=lW/xQPDNx9Rchc5aT/oz1voqUYIyuWyVlYk7rkwx3L0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ccQ55FvJzvqSZVIkbfbFajLjN4c97XPfIDrbyoW39KMOcAL3PvvUZN9Yd3Uf11lTQ
-         S5qY5akw5rXjb+JBLZoEOdNXwNM8twHVeTDReaqhFpr38QWCrhhO47YrpO/qVbFMtd
-         0rXlYM25F6oLM+Q8YKsv8DfEpw77MPDmTtKX7UrY=
+        b=cA+EuLj4ZqRxgprvQ+a4pXe2JwJEFGm7QsSw1JhWANPP6xeotMF7s10oCRgtdFZXw
+         NQLZTsmKVi+a61nnqjxpGaMsPvHyXnk3lit7Ct57ysc1aBeQAeWUwvH1SoqLcqPR4A
+         aFMDWSKYtHB4b/130GG5yQgLD9RG4FGvhhaShR4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.5 112/151] x86/ioremap: Map EFI runtime services data as encrypted for SEV
-Date:   Tue, 17 Mar 2020 11:55:22 +0100
-Message-Id: <20200317103334.414287301@linuxfoundation.org>
+        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Michael Ellerman <mpe@ellerman.id.au>, stable@kernel.org
+Subject: [PATCH 5.5 111/151] macintosh: windfarm: fix MODINFO regression
+Date:   Tue, 17 Mar 2020 11:55:21 +0100
+Message-Id: <20200317103334.343358605@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,80 +60,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Wolfram Sang <wsa@the-dreams.de>
 
-commit 985e537a4082b4635754a57f4f95430790afee6a upstream.
+commit bcf3588d8ed3517e6ffaf083f034812aee9dc8e2 upstream.
 
-The dmidecode program fails to properly decode the SMBIOS data supplied
-by OVMF/UEFI when running in an SEV guest. The SMBIOS area, under SEV, is
-encrypted and resides in reserved memory that is marked as EFI runtime
-services data.
+Commit af503716ac14 made sure OF devices get an OF style modalias with
+I2C events. It assumed all in-tree users were converted, yet it missed
+some Macintosh drivers.
 
-As a result, when memremap() is attempted for the SMBIOS data, it
-can't be mapped as regular RAM (through try_ram_remap()) and, since
-the address isn't part of the iomem resources list, it isn't mapped
-encrypted through the fallback ioremap().
+Add an OF module device table for all windfarm drivers to make them
+automatically load again.
 
-Add a new __ioremap_check_other() to deal with memory types like
-EFI_RUNTIME_SERVICES_DATA which are not covered by the resource ranges.
-
-This allows any runtime services data which has been created encrypted,
-to be mapped encrypted too.
-
- [ bp: Move functionality to a separate function. ]
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Joerg Roedel <jroedel@suse.de>
-Tested-by: Joerg Roedel <jroedel@suse.de>
-Cc: <stable@vger.kernel.org> # 5.3
-Link: https://lkml.kernel.org/r/2d9e16eb5b53dc82665c95c6764b7407719df7a0.1582645327.git.thomas.lendacky@amd.com
+Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=199471
+Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+Tested-by: Erhard Furtner <erhard_f@mailbox.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org # v4.17+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/mm/ioremap.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/macintosh/windfarm_ad7417_sensor.c  |    7 +++++++
+ drivers/macintosh/windfarm_fcu_controls.c   |    7 +++++++
+ drivers/macintosh/windfarm_lm75_sensor.c    |   16 +++++++++++++++-
+ drivers/macintosh/windfarm_lm87_sensor.c    |    7 +++++++
+ drivers/macintosh/windfarm_max6690_sensor.c |    7 +++++++
+ drivers/macintosh/windfarm_smu_sat.c        |    7 +++++++
+ 6 files changed, 50 insertions(+), 1 deletion(-)
 
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -106,6 +106,19 @@ static unsigned int __ioremap_check_encr
- 	return 0;
- }
+--- a/drivers/macintosh/windfarm_ad7417_sensor.c
++++ b/drivers/macintosh/windfarm_ad7417_sensor.c
+@@ -312,9 +312,16 @@ static const struct i2c_device_id wf_ad7
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_ad7417_id);
  
-+/*
-+ * The EFI runtime services data area is not covered by walk_mem_res(), but must
-+ * be mapped encrypted when SEV is active.
-+ */
-+static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *desc)
-+{
-+	if (!sev_active())
-+		return;
++static const struct of_device_id wf_ad7417_of_id[] = {
++	{ .compatible = "ad7417", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_ad7417_of_id);
 +
-+	if (efi_mem_type(addr) == EFI_RUNTIME_SERVICES_DATA)
-+		desc->flags |= IORES_MAP_ENCRYPTED;
-+}
-+
- static int __ioremap_collect_map_flags(struct resource *res, void *arg)
- {
- 	struct ioremap_desc *desc = arg;
-@@ -124,6 +137,9 @@ static int __ioremap_collect_map_flags(s
-  * To avoid multiple resource walks, this function walks resources marked as
-  * IORESOURCE_MEM and IORESOURCE_BUSY and looking for system RAM and/or a
-  * resource described not as IORES_DESC_NONE (e.g. IORES_DESC_ACPI_TABLES).
-+ *
-+ * After that, deal with misc other ranges in __ioremap_check_other() which do
-+ * not fall into the above category.
-  */
- static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
- 				struct ioremap_desc *desc)
-@@ -135,6 +151,8 @@ static void __ioremap_check_mem(resource
- 	memset(desc, 0, sizeof(struct ioremap_desc));
+ static struct i2c_driver wf_ad7417_driver = {
+ 	.driver = {
+ 		.name	= "wf_ad7417",
++		.of_match_table = wf_ad7417_of_id,
+ 	},
+ 	.probe		= wf_ad7417_probe,
+ 	.remove		= wf_ad7417_remove,
+--- a/drivers/macintosh/windfarm_fcu_controls.c
++++ b/drivers/macintosh/windfarm_fcu_controls.c
+@@ -580,9 +580,16 @@ static const struct i2c_device_id wf_fcu
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_fcu_id);
  
- 	walk_mem_res(start, end, desc, __ioremap_collect_map_flags);
++static const struct of_device_id wf_fcu_of_id[] = {
++	{ .compatible = "fcu", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_fcu_of_id);
 +
-+	__ioremap_check_other(addr, desc);
- }
+ static struct i2c_driver wf_fcu_driver = {
+ 	.driver = {
+ 		.name	= "wf_fcu",
++		.of_match_table = wf_fcu_of_id,
+ 	},
+ 	.probe		= wf_fcu_probe,
+ 	.remove		= wf_fcu_remove,
+--- a/drivers/macintosh/windfarm_lm75_sensor.c
++++ b/drivers/macintosh/windfarm_lm75_sensor.c
+@@ -14,6 +14,7 @@
+ #include <linux/init.h>
+ #include <linux/wait.h>
+ #include <linux/i2c.h>
++#include <linux/of_device.h>
+ #include <asm/prom.h>
+ #include <asm/machdep.h>
+ #include <asm/io.h>
+@@ -91,9 +92,14 @@ static int wf_lm75_probe(struct i2c_clie
+ 			 const struct i2c_device_id *id)
+ {	
+ 	struct wf_lm75_sensor *lm;
+-	int rc, ds1775 = id->driver_data;
++	int rc, ds1775;
+ 	const char *name, *loc;
  
- /*
++	if (id)
++		ds1775 = id->driver_data;
++	else
++		ds1775 = !!of_device_get_match_data(&client->dev);
++
+ 	DBG("wf_lm75: creating  %s device at address 0x%02x\n",
+ 	    ds1775 ? "ds1775" : "lm75", client->addr);
+ 
+@@ -164,9 +170,17 @@ static const struct i2c_device_id wf_lm7
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_lm75_id);
+ 
++static const struct of_device_id wf_lm75_of_id[] = {
++	{ .compatible = "lm75", .data = (void *)0},
++	{ .compatible = "ds1775", .data = (void *)1 },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_lm75_of_id);
++
+ static struct i2c_driver wf_lm75_driver = {
+ 	.driver = {
+ 		.name	= "wf_lm75",
++		.of_match_table = wf_lm75_of_id,
+ 	},
+ 	.probe		= wf_lm75_probe,
+ 	.remove		= wf_lm75_remove,
+--- a/drivers/macintosh/windfarm_lm87_sensor.c
++++ b/drivers/macintosh/windfarm_lm87_sensor.c
+@@ -166,9 +166,16 @@ static const struct i2c_device_id wf_lm8
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_lm87_id);
+ 
++static const struct of_device_id wf_lm87_of_id[] = {
++	{ .compatible = "lm87cimt", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_lm87_of_id);
++
+ static struct i2c_driver wf_lm87_driver = {
+ 	.driver = {
+ 		.name	= "wf_lm87",
++		.of_match_table = wf_lm87_of_id,
+ 	},
+ 	.probe		= wf_lm87_probe,
+ 	.remove		= wf_lm87_remove,
+--- a/drivers/macintosh/windfarm_max6690_sensor.c
++++ b/drivers/macintosh/windfarm_max6690_sensor.c
+@@ -120,9 +120,16 @@ static const struct i2c_device_id wf_max
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_max6690_id);
+ 
++static const struct of_device_id wf_max6690_of_id[] = {
++	{ .compatible = "max6690", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_max6690_of_id);
++
+ static struct i2c_driver wf_max6690_driver = {
+ 	.driver = {
+ 		.name		= "wf_max6690",
++		.of_match_table = wf_max6690_of_id,
+ 	},
+ 	.probe		= wf_max6690_probe,
+ 	.remove		= wf_max6690_remove,
+--- a/drivers/macintosh/windfarm_smu_sat.c
++++ b/drivers/macintosh/windfarm_smu_sat.c
+@@ -341,9 +341,16 @@ static const struct i2c_device_id wf_sat
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_sat_id);
+ 
++static const struct of_device_id wf_sat_of_id[] = {
++	{ .compatible = "smu-sat", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_sat_of_id);
++
+ static struct i2c_driver wf_sat_driver = {
+ 	.driver = {
+ 		.name		= "wf_smu_sat",
++		.of_match_table = wf_sat_of_id,
+ 	},
+ 	.probe		= wf_sat_probe,
+ 	.remove		= wf_sat_remove,
 
 
