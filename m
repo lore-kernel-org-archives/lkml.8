@@ -2,111 +2,95 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A220C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0278AC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DC820754
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6467205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:00:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cGnLnBuV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgCQN7n (ORCPT
+        id S1726787AbgCQOAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:59:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:38618 "EHLO foss.arm.com"
+        Tue, 17 Mar 2020 10:00:12 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40808 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgCQN7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:59:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAF01FEC;
-        Tue, 17 Mar 2020 06:59:41 -0700 (PDT)
-Received: from [10.37.12.184] (unknown [10.37.12.184])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C0E73F534;
-        Tue, 17 Mar 2020 06:59:40 -0700 (PDT)
-Subject: Re: [PATCH] KVM: arm64: Use the correct timer for accessing CNT
-To:     KarimAllah Ahmed <karahmed@amazon.de>
-Cc:     linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-References: <1584351546-5018-1-git-send-email-karahmed@amazon.de>
-From:   James Morse <james.morse@arm.com>
-Openpgp: preference=signencrypt
-Message-ID: <ac2933bf-452a-f27a-2d8a-8299c3044111@arm.com>
-Date:   Tue, 17 Mar 2020 13:59:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726148AbgCQOAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:00:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FrLx3+zGH3oU0Jo8/lq72eF8fifQc3xB2bQg8gY6tl8=; b=cGnLnBuVsp6fkYfQcJ+N0lP7Zi
+        1CQ0257uMP73Zssq480GqtOsiT6dtz3j4jFY4auOWYouzd6Noyy4GBuZ2grQ+9xBQnBkb7o8JyQgO
+        LYVpPM0bbhZnw1Ygcjk+w5hK1jV6VmA0mj+VI2m8UsxHjo1atAFpbrGsSPzlUpACujao=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jEClA-0006j0-3H; Tue, 17 Mar 2020 14:59:56 +0100
+Date:   Tue, 17 Mar 2020 14:59:56 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 00/28] DT: Improve validation for Marvell SoCs
+Message-ID: <20200317135956.GQ24270@lunn.ch>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317134609.GN24270@lunn.ch>
+ <20200317135551.GE3448@piout.net>
 MIME-Version: 1.0
-In-Reply-To: <1584351546-5018-1-git-send-email-karahmed@amazon.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317135551.GE3448@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi KarimAllah,
-
-On 3/16/20 9:39 AM, KarimAllah Ahmed wrote:
-> Use the physical timer object when reading the physical timer counter
-> instead of using the virtual timer object. This is only visible when
-> reading it from user-space as kvm_arm_timer_get_reg() is only executed on
-> the get register patch from user-space.
-
-Have you seen this go wrong?
-
-I agree this looks like this was a typo introduced by:
-84135d3d1 ("KVM: arm/arm64: consolidate arch timer trap handlers")
------------------%<-----------------
-        case KVM_REG_ARM_PTIMER_CNT:
--               return kvm_phys_timer_read();
-+               return kvm_arm_timer_read(vcpu,
-+                                         vcpu_vtimer(vcpu), TIMER_REG_CNT);
------------------%<-----------------
-
-This would be a problem when the guest reads the physical counter
-directly, (which doesn't get trapped), and the VMM makes this API call
-and gets a number in a totally different ball-park.
-
-
-Can the VMM actually read these registers with this path?
-
-kvm_arm_get_reg() gets to filter out the coproc registers that aren't in
-the sys_reg[], it also uses is_timer_reg() to spot the timer/counter
-registers, but is_timer_reg() only matches three of them:
-|	case KVM_REG_ARM_TIMER_CTL:
-|	case KVM_REG_ARM_TIMER_CNT:
-|	case KVM_REG_ARM_TIMER_CVAL:
-
-KVM_REG_ARM_PTIMER_CNT is not one of them.
-
-It looks like when the VMM tries to read this, it fails is_timer_reg(),
-and matches in the sys_regs[] and is handled by access_arch_timer(),
-which uses kvm_arm_timer_read_sysreg() -> kvm_arm_timer_read(),
-bypassing this bug.
-
-... this looks like a bug in dead code ...
-
-
-Thanks!
-
-James
-
-> diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
-> index 0d9438e..93bd59b 100644
-> --- a/virt/kvm/arm/arch_timer.c
-> +++ b/virt/kvm/arm/arch_timer.c
-> @@ -788,7 +788,7 @@ u64 kvm_arm_timer_get_reg(struct kvm_vcpu *vcpu, u64 regid)
->  					  vcpu_ptimer(vcpu), TIMER_REG_CTL);
->  	case KVM_REG_ARM_PTIMER_CNT:
->  		return kvm_arm_timer_read(vcpu,
-> -					  vcpu_vtimer(vcpu), TIMER_REG_CNT);
-> +					  vcpu_ptimer(vcpu), TIMER_REG_CNT);
->  	case KVM_REG_ARM_PTIMER_CVAL:
->  		return kvm_arm_timer_read(vcpu,
->  					  vcpu_ptimer(vcpu), TIMER_REG_CVAL);
+On Tue, Mar 17, 2020 at 02:55:59PM +0100, Alexandre Belloni wrote:
+> On 17/03/2020 14:46:09+0100, Andrew Lunn wrote:
+> > On Tue, Mar 17, 2020 at 10:38:54AM +0100, Lubomir Rintel wrote:
+> > > Hello World,
+> > 
+> > Yah, that is an issue here. Marvell have a few different SoC families,
+> > each with there own maintainers. Gregory and I tend to look after
+> > 'mvebu', aka orion5x, kirkwood, dove, berlin and a few others. All the
+> > others are 'Somebody elses' problem'.
+> > 
 > 
+> Hum, berlin is not mvebu, it was the same BU as the MMP and it has been
+> sold to synopsys a while ago.
 
+Yes, the boundaries are a bit fluffy. At least the early work by
+Sebastian was merged via the mvebu maintainers, even if it is not
+technically part of mvebu.
+
+This is also part of the discussion about how this lot actually gets
+merged.
+
+	   Andrew
