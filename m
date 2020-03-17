@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEF7C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D5BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C7820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E7620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IBeYF+jD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fNnH6KSa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgCQJMV (ORCPT
+        id S1726192AbgCQJMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:12:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42597 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgCQJMV (ORCPT
+        Tue, 17 Mar 2020 05:12:34 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54484 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgCQJMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:12:21 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v11so24618186wrm.9
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:12:18 -0700 (PDT)
+        Tue, 17 Mar 2020 05:12:34 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n8so20533828wmc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yWfuMP/ed00gkJxdSgfE9ZUkN67XDakJfshXagsm6b8=;
-        b=IBeYF+jDn6oLBvH7fBBKFUNSiq+LLLCBp4RxSFkpjnodDT3E63Z8A1M09ivkRMCenx
-         sE/F2wk+hZfxcGExlsjtvQwNQQ4BuBS6xcz9WzOV1OMuNcBJJTVQcts/fLGWJLK+0y/O
-         K+shbAZOu3Vxxj/k8LS9W6hDWhmoBbpbpnNpZcQE1KQoMYsSW+jGHKcnFUO/k1pPEfRX
-         r3QDBf9Mf7cwtrDeZTjtRdo6LXNabZIFtigOG8eztjweZ4dNipSZDI7HY7Bfb0Tsu59V
-         WQjkwY9RBx+/yB15OvQyWGiQUpBTM77YN5r/Ojk6paxbo6tMYeW9JxcbHE1vLLCWSElX
-         TRfQ==
+        bh=LGo6+/iDBsuQyjv0NQE6TZWd1aVZDZAxaL4jsuE4xKw=;
+        b=fNnH6KSa77+Knosk1dMapQwG3r5yOotw7G0MltaaKUMM55E4099i7bVeE7Dj+B10MM
+         WGQGj1uB4BtZl9wYrNYgfvGJ9ZEaYv5ORGaPDPKO9gRwu17XWHdanURiVZlCRmGyGAsK
+         EMWf2lLt5l/HGD9hWIqpQU7QiYJAvBTXTPPa7Ff0f2Ip+STFLGpp9QHVSXg85xCudD/s
+         U6XlP8TeDX5AXNnMvxuQ0lpPma30MlZJuvTzncBwckx0j1uzVLNPvyGvskHcOIgZOYGw
+         L5N14oYUCzvr6umNI/2/9oMg7Ob7qTzBFnsj0DUfY0Xj/x6byAy++M8GIQ2qtUTknDP8
+         nolQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=yWfuMP/ed00gkJxdSgfE9ZUkN67XDakJfshXagsm6b8=;
-        b=CW24Tjids0PBzOPURD9H9RMJbX4++ejwH2mJnBvHMxWMzd/5GA0s6QVN0lLIH0dXm+
-         Y0Ru66C4akzdF0lj68ZI2R2WC6r70nmxJPZVmuyD0s2xYmtBnOlsM1sG8Tj3HCRTWLH5
-         E5Gl/qDZiRSM4zfu5I5oPdcRzcAtpFylN23zdxeaZIN3QWFDYZou8G3vP+D7+umKoFHR
-         86LYkq6dDOL3C4U4GHV0IUInH82FGmgvBwp7sc2ryjkIuxGso6XMlTxV8K1muqjgkiLB
-         8lbrxBJ1b2TMfrBuFETUB2XMdNwPvYvlvffZFl3kK8vWDAQKTZid80d2fKz5z1/q6nph
-         zSpg==
-X-Gm-Message-State: ANhLgQ1ICxH6tPynff784FkPQ0rmFWwNdWdfQu6sjh7meT4ouw7R9v/r
-        Ng0HDlkAKc/Txsl41nMGZFk0+A==
-X-Google-Smtp-Source: ADFU+vuWssyhEADiHHL3wde1jPp7l00doEOqhXFAaCRtED4GXYUYXeSPnFJPxXeHvODWlP0OOpsTzg==
-X-Received: by 2002:a5d:60c2:: with SMTP id x2mr4799269wrt.123.1584436337310;
-        Tue, 17 Mar 2020 02:12:17 -0700 (PDT)
+        bh=LGo6+/iDBsuQyjv0NQE6TZWd1aVZDZAxaL4jsuE4xKw=;
+        b=DxFFNQXZXeSyl4xqQdaxm65gTWCXkhBGzryhmY9jDRhGd3AdO0mOE9ceQV97vOZn2D
+         sWVh1pvLPdbqhQFof++dz8qnUpFJR2Mqzk/zH4LNtGaKUI/43RP02KXI7UV3do3u96py
+         qfnuPMN7VgfTJmIGyxN4/8SMF4sBjtNokR3TC9qVlYWNA8+qQ1JSmMR26TljnzGKKDtv
+         8hVtADD+JpmvfC9DIj8fxNH89aV7PbKdXFxaSx2QR6WG9yz+lrSrYZGTQvbFtFFIU3wZ
+         3/z+/qF7JmReMnEpAOkt30WrleSxuFby3w7cHD/Mz5Cv3QBtwimNcbL5ECiyazWJLCdM
+         1yKA==
+X-Gm-Message-State: ANhLgQ3PYAON7ucOtEisLI8r6HyLRCpM0+IGbmyod6jQD010V4kvQsL+
+        Pa2oFjuoibxPNO8c4nJSi7Vlng==
+X-Google-Smtp-Source: ADFU+vsMtWcnFFJw3oCpl7GDkUEqUz7Z8VEnfkQyE8Ep1DhtGCRowkzU2vTd6JfdZjBJRUS/QT9wVA==
+X-Received: by 2002:a7b:c308:: with SMTP id k8mr4418229wmj.40.1584436351808;
+        Tue, 17 Mar 2020 02:12:31 -0700 (PDT)
 Received: from ?IPv6:2a01:e34:ed2f:f020:817f:1d16:730:fbfb? ([2a01:e34:ed2f:f020:817f:1d16:730:fbfb])
-        by smtp.googlemail.com with ESMTPSA id s7sm3651025wro.10.2020.03.17.02.12.15
+        by smtp.googlemail.com with ESMTPSA id a7sm27982143wmb.0.2020.03.17.02.12.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 02:12:16 -0700 (PDT)
-Subject: Re: [PATCH] clocksource: imx-tpm: Remove unused includes
+        Tue, 17 Mar 2020 02:12:31 -0700 (PDT)
+Subject: Re: [PATCH] clocksource: imx-sysctr: Remove unused includes
 To:     Anson Huang <Anson.Huang@nxp.com>, tglx@linutronix.de,
         shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
         festevam@gmail.com, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Linux-imx@nxp.com
-References: <1584412549-18354-1-git-send-email-Anson.Huang@nxp.com>
+References: <1584413713-7376-1-git-send-email-Anson.Huang@nxp.com>
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
@@ -119,12 +119,12 @@ Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
  X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
  fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
-Message-ID: <afa0b637-a179-4e4b-4da5-60c87efa7c4c@linaro.org>
-Date:   Tue, 17 Mar 2020 10:12:15 +0100
+Message-ID: <b4dcd73d-9ea2-329b-5dca-e8bd228027f4@linaro.org>
+Date:   Tue, 17 Mar 2020 10:12:29 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1584412549-18354-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1584413713-7376-1-git-send-email-Anson.Huang@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -133,31 +133,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/2020 03:35, Anson Huang wrote:
+On 17/03/2020 03:55, Anson Huang wrote:
 > There is nothing in use from of_address.h/of_irq.h, remove them.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
 Applied, thanks
 
-
 > ---
->  drivers/clocksource/timer-imx-tpm.c | 2 --
+>  drivers/clocksource/timer-imx-sysctr.c | 2 --
 >  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/clocksource/timer-imx-tpm.c b/drivers/clocksource/timer-imx-tpm.c
-> index c1d52d5..6334a35 100644
-> --- a/drivers/clocksource/timer-imx-tpm.c
-> +++ b/drivers/clocksource/timer-imx-tpm.c
-> @@ -8,8 +8,6 @@
->  #include <linux/clocksource.h>
->  #include <linux/delay.h>
+> diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
+> index b7c80a3..18b90fc 100644
+> --- a/drivers/clocksource/timer-imx-sysctr.c
+> +++ b/drivers/clocksource/timer-imx-sysctr.c
+> @@ -4,8 +4,6 @@
+>  
 >  #include <linux/interrupt.h>
+>  #include <linux/clockchips.h>
 > -#include <linux/of_address.h>
 > -#include <linux/of_irq.h>
->  #include <linux/sched_clock.h>
 >  
 >  #include "timer-of.h"
+>  
 > 
 
 
