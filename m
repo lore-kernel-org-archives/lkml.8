@@ -2,178 +2,85 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120C4C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EC4C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66FB20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060002051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgCQOKl (ORCPT
+        id S1726484AbgCQOON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:10:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31612 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726250AbgCQOKl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:10:41 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HE2D04010315
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:10:40 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yrsdscc00-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:10:38 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Tue, 17 Mar 2020 14:10:28 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Mar 2020 14:10:25 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02HEAOFQ41746506
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Mar 2020 14:10:24 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6778011C070;
-        Tue, 17 Mar 2020 14:10:24 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F18C911C066;
-        Tue, 17 Mar 2020 14:10:22 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.199.61.203])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Mar 2020 14:10:22 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
-        psampat@in.ibm.com, pratik.r.sampat@gmail.com
-Subject: [PATCH v5 2/3] powerpc/powernv: Introduce Self save support
-Date:   Tue, 17 Mar 2020 19:40:17 +0530
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200317141018.42380-1-psampat@linux.ibm.com>
-References: <20200317141018.42380-1-psampat@linux.ibm.com>
+        Tue, 17 Mar 2020 10:14:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45998 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbgCQOOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:14:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C223EABDC;
+        Tue, 17 Mar 2020 14:14:10 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 15:14:09 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: VAIO EEPROM support in at24
+Message-ID: <20200317151409.7940926c@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031714-0008-0000-0000-0000035EC01A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031714-0009-0000-0000-00004A8016F9
-Message-Id: <20200317141018.42380-3-psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-17_05:2020-03-17,2020-03-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- suspectscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- adultscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003170059
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduces and leverages the Self save API which OPAL now
-supports.
+Hi all,
 
-Add the new Self Save OPAL API call in the list of OPAL calls.
-Implement the self saving of the SPRs based on the support populated
-while respecting it's preferences.
+As the legacy eeprom driver is being phased out, I am reviewing all its
+use cases to ensure that the at24 driver will be a suitable replacement.
 
-This implementation allows mixing of support for the SPRs, which
-means that a SPR can be self restored while another SPR be self saved if
-they support and prefer it to be so.
+One issue I have found is the handling of specific EEPROMs found on the
+SMBus of some Sony VAIO laptops. The legacy eeprom driver would expose
+them to user-space, read-only for all users. It would also recognize
+them as VAIO EEPROMs and would hide some bytes from non-root users
+because these bytes contain the BIOS password in a lightly encoded form.
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Reviewed-by: Ram Pai <linuxram@us.ibm.com>
----
- arch/powerpc/include/asm/opal-api.h        |  3 ++-
- arch/powerpc/include/asm/opal.h            |  1 +
- arch/powerpc/platforms/powernv/idle.c      | 22 ++++++++++++++++++++++
- arch/powerpc/platforms/powernv/opal-call.c |  1 +
- 4 files changed, 26 insertions(+), 1 deletion(-)
+In order to keep the same level of functionality, we would have to offer
+the same with the at24 driver. At this time, the user has to
+instantiate a "24c02" device manually from user-space. By default this
+device has permissions 600, which is insufficient for users, and
+dangerous for root, so a quick chmod 444 is needed.
 
-diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-index c1f25a760eb1..1b6e1a68d431 100644
---- a/arch/powerpc/include/asm/opal-api.h
-+++ b/arch/powerpc/include/asm/opal-api.h
-@@ -214,7 +214,8 @@
- #define OPAL_SECVAR_GET				176
- #define OPAL_SECVAR_GET_NEXT			177
- #define OPAL_SECVAR_ENQUEUE_UPDATE		178
--#define OPAL_LAST				178
-+#define OPAL_SLW_SELF_SAVE_REG			181
-+#define OPAL_LAST				181
- 
- #define QUIESCE_HOLD			1 /* Spin all calls at entry */
- #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 9986ac34b8e2..389a85b63805 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -203,6 +203,7 @@ int64_t opal_handle_hmi(void);
- int64_t opal_handle_hmi2(__be64 *out_flags);
- int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
- int64_t opal_unregister_dump_region(uint32_t id);
-+int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
- int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
- int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
- int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index 03fe835aadd1..97aeb45e897b 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -279,6 +279,26 @@ static int pnv_self_save_restore_sprs(void)
- 					if (rc != 0)
- 						return rc;
- 					break;
-+				} else if (preferred & curr_spr.supported_mode
-+					   & SELF_SAVE_STRICT) {
-+					is_initialized = true;
-+					if (curr_spr.spr == SPRN_HMEER &&
-+					    cpu_thread_in_core(cpu) != 0) {
-+						continue;
-+					}
-+					rc = opal_slw_self_save_reg(pir,
-+								curr_spr.spr);
-+					if (rc != 0)
-+						return rc;
-+					switch (curr_spr.spr) {
-+					case SPRN_LPCR:
-+						is_lpcr_self_save = true;
-+						break;
-+					case SPRN_PTCR:
-+						is_ptcr_self_save = true;
-+						break;
-+					}
-+					break;
- 				}
- 				preferred_sprs[index].preferred_mode =
- 					preferred_sprs[index].preferred_mode >>
-@@ -1159,6 +1179,8 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
- 		if (!is_lpcr_self_save)
- 			opal_slw_set_reg(pir, SPRN_LPCR,
- 					 lpcr_val);
-+		else
-+			opal_slw_self_save_reg(pir, SPRN_LPCR);
- 	}
- }
- 
-diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-index 5cd0f52d258f..11e0ceb90de0 100644
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -223,6 +223,7 @@ OPAL_CALL(opal_handle_hmi,			OPAL_HANDLE_HMI);
- OPAL_CALL(opal_handle_hmi2,			OPAL_HANDLE_HMI2);
- OPAL_CALL(opal_config_cpu_idle_state,		OPAL_CONFIG_CPU_IDLE_STATE);
- OPAL_CALL(opal_slw_set_reg,			OPAL_SLW_SET_REG);
-+OPAL_CALL(opal_slw_self_save_reg,		OPAL_SLW_SELF_SAVE_REG);
- OPAL_CALL(opal_register_dump_region,		OPAL_REGISTER_DUMP_REGION);
- OPAL_CALL(opal_unregister_dump_region,		OPAL_UNREGISTER_DUMP_REGION);
- OPAL_CALL(opal_pci_set_phb_cxl_mode,		OPAL_PCI_SET_PHB_CAPI_MODE);
+Without the password issue, I would just document the procedure and
+live with it. However in order to protect the password from being read
+by random users, the driver itself needs to know that it is dealing
+with a specific type of EEPROM. It seems that we need to introduce a
+new device flavor to the at24 driver for this purpose.
+
+I see that we already have a number of specific flags (AT24_FLAG_SERIAL
+and AT24_FLAG_MAC) so I suppose we could add something similar for
+these VAIO EEPROMs. Something like:
+
+/* Some Sony VAIO laptops have a 24c02 at 0x57 with product info */
+AT24_CHIP_DATA(at24_data_sony_vaio, 2048 / 8,
+	AT24_FLAG_READONLY | AT24_FLAG_IRUGO | AT24_FLAG_SONY_VAIO);
+
+Then I suppose it's only a matter of conditionally zeroing a selected
+range in at24_read() before it returns, to hide the password from
+non-root users.
+
+Before I start implementing the idea above, I would like to know if
+anyone objects to it, or has a better idea?
+
+Thanks,
 -- 
-2.17.1
-
+Jean Delvare
+SUSE L3 Support
