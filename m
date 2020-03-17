@@ -2,224 +2,121 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B34C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC81CC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A615F20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="MLWJ9SsH"
+	by mail.kernel.org (Postfix) with ESMTP id A1C522073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:25:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgCQOZ1 (ORCPT
+        id S1726863AbgCQOZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:25:27 -0400
-Received: from mx0b-00010702.pphosted.com ([148.163.158.57]:10754 "EHLO
-        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726294AbgCQOZ0 (ORCPT
+        Tue, 17 Mar 2020 10:25:50 -0400
+Received: from m176151.mail.qiye.163.com ([59.111.176.151]:52388 "EHLO
+        m176151.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgCQOZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:25:26 -0400
-X-Greylist: delayed 1686 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Mar 2020 10:25:25 EDT
-Received: from pps.filterd (m0098778.ppops.net [127.0.0.1])
-        by mx0b-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HDdYPd016250;
-        Tue, 17 Mar 2020 08:57:00 -0500
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2175.outbound.protection.outlook.com [104.47.57.175])
-        by mx0b-00010702.pphosted.com with ESMTP id 2yrv7yrgt9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Mar 2020 08:57:00 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GPiMz+yzhOzapvCK1oFAoonSIG3EF+gWkOUva9gsoQX0JNxMrqq+0vgIoCcQ7qZU6Gv9tsvihsmi3HlWuWdEkt5qrpgm2VivlmMU5BIkA0rszDAiiFyo92wDBcIh3aO8hLumQVHmhLoJYL5nPWgR/wSO+c+he7Jv3dzmtEce+v3fqGqy1UdHO2MfoDPhH5KZe5fL7BKOChHSpvPuVpX07t2xkr8JJziYhcPXc6U7l6XNUDWR5ZAluvXaGhfB9K6zW1yAVrptndQz5vrEfqpP/An7ClkeYbyid6uWW8t0R+oEVluxoO6rBdaIHPlx5/gEbVixvgwrJSpkv9pSnQ0D9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8l5aLNEki9ZFpEdtjpTUKTOppPhOtJdsdsNw0WOwhoM=;
- b=KuUiUgQIgHqCCSPaovOUM3CLIm3KK7Weq8N3NHc4HMGxNZvG3RNvxnKllF/ELOA9h2jUvwzOL8nuPSugeaD0ACqqObpBPKvlxmck+6NDifrWwKYWRebIQMxVQF4c8DRVrngbdLiwR/CVMLqPjjb4GEnU0iWt8aYN73XZ+Yl8Xt4ZnHdNBWjbcalsjT4VFubW4MRGsHqLvKKnYccU/H8gtfeq2aNZciYOkPW0ZbChLzXbhMoZ2QPjNvVhnbGeJsTJL1EAYcL18sx8uL/lXucqpWsX3wr18huV4pG6AfXx74vOyG4CjkPZ1Pp20+qmwY/hL8B/+OvAVAIVkaYbxarnBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
- header.d=ni.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8l5aLNEki9ZFpEdtjpTUKTOppPhOtJdsdsNw0WOwhoM=;
- b=MLWJ9SsHva+R5fYrEkUl3PFeRBazKLyepjmuczT26ugytIPSnQwmiMpIAEvZbI/0yR8eU1QScHR8fedbTHZkI7QvzkiC8eVGmINSDPdU7kXrnMKVrJDq6Bd20Hcp06jugo1Zsor6eFrn4/XbhGfvc6hPH2dPhl68qnD8DRiejuw=
-Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
- (2603:10b6:803:4b::29) by SN4PR0401MB3567.namprd04.prod.outlook.com
- (2603:10b6:803:4b::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 17 Mar
- 2020 13:56:59 +0000
-Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
- ([fe80::d05b:1953:4111:38e4]) by SN4PR0401MB3646.namprd04.prod.outlook.com
- ([fe80::d05b:1953:4111:38e4%5]) with mapi id 15.20.2793.023; Tue, 17 Mar 2020
- 13:56:59 +0000
-From:   Michael Auchter <michael.auchter@ni.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Michael Auchter <michael.auchter@ni.com>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [PATCH 1/2] iio: adc: ad7291: convert to device tree
-Date:   Tue, 17 Mar 2020 08:56:48 -0500
-Message-Id: <20200317135649.8876-1-michael.auchter@ni.com>
-X-Mailer: git-send-email 2.24.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0401CA0034.namprd04.prod.outlook.com
- (2603:10b6:803:2a::20) To SN4PR0401MB3646.namprd04.prod.outlook.com
- (2603:10b6:803:4b::29)
+        Tue, 17 Mar 2020 10:25:50 -0400
+Received: from vivo.com (wm-11.qy.internal [127.0.0.1])
+        by m176151.mail.qiye.163.com (Hmail) with ESMTP id BF500483D7B;
+        Tue, 17 Mar 2020 22:25:04 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <ACEA7wD3CNSN-spMiGEyUqod.3.1584455104769.Hmail.wenhu.wang@vivo.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org, kernel@vivo.com,
+        stable <stable@vger.kernel.org>
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCB2M10gcG93ZXJwYy9mc2wtODV4eDogZml4IGNvbXBpbGUgZXJyb3I=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.227
+In-Reply-To: <878sjzfcpm.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xaphan.phire.org (66.90.216.181) by SN4PR0401CA0034.namprd04.prod.outlook.com (2603:10b6:803:2a::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Tue, 17 Mar 2020 13:56:58 +0000
-X-Mailer: git-send-email 2.24.1
-X-Originating-IP: [66.90.216.181]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 84482265-6754-4f5e-e173-08d7ca7b0f97
-X-MS-TrafficTypeDiagnostic: SN4PR0401MB3567:|SN4PR0401MB3567:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN4PR0401MB356770C5794BF740806F457A87F60@SN4PR0401MB3567.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-Forefront-PRVS: 0345CFD558
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(346002)(136003)(396003)(199004)(6666004)(110136005)(2906002)(6512007)(186003)(66476007)(2616005)(956004)(44832011)(6506007)(5660300002)(478600001)(52116002)(4326008)(316002)(26005)(1076003)(7416002)(16526019)(66556008)(36756003)(81156014)(81166006)(8936002)(8676002)(6486002)(66946007)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN4PR0401MB3567;H:SN4PR0401MB3646.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: ni.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GSKTuYIKTc1hCSGi6W8AeONFf3CqUn+1O3geajmsxiuVLnUOJP7Y/qLPWiIpbOje4kD0EgXMEfPWr7waPgpIka+ETGE9LGKzrekP617U/lrDw+qL0n1mv+DxTTdRzaTKmU2/55wqfBJM9Il3gH35CSePA1Ghs7Gvo0xvHwmF8nrmDZm3Ay4TQ1V4ET6KCmNB7knWNLXoUugFv4OmbVJ/smaMPMiN9l2zzZr4U05FlzgOaVCX5zCCFOTZIuMN9/NohznNBecKKOEPPxJis2I2nx+jQfaf/iUU26r7JcKJmT9VD8IMNSdEfBXzYxgvddOPnxuO55mNK2JeyubT0XewmrxnEEekBJAAh9Vlso4aiwclg5bQy7gSvfEH/lDCWxQdf8e8EfH338JjXAPW7Cu3ZsicPz8JPpXsWbvSjIEOP6pfArSawL8T3IMbQpxlTlUe
-X-MS-Exchange-AntiSpam-MessageData: vH4EHDiME/INafscMrRJ1+7fw4DjPdKEoe1lFRh4Tc1QBHMsyvhzt6VQopewRT2rh4rElYbXAD979QtUe8KNgPBQ7vvx4DpOqeJ6LrzGLJ2cEmpBWCUp0urihReN7iNOA4gam1zaU/YRkiGlCSerYg==
-X-OriginatorOrg: ni.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84482265-6754-4f5e-e173-08d7ca7b0f97
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 13:56:59.0153
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z6//nGCv0zCSVpwcTp5lXz64AyRy8JNOQZYZIbymZ9iLw16AKmPU/QC1Spx1KvD1S6A2AXwx2jnI9fp/gfc/Fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3567
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-17_05:2020-03-17,2020-03-17 signatures=0
-X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30 mlxscore=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999
- clxscore=1011 adultscore=0 classifier=spam adjust=30 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003170060
+Received: from wenhu.wang@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 17 Mar 2020 22:25:04 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Date:   Tue, 17 Mar 2020 22:25:04 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVDSEJCQkJNTE5MTktMSFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNTEhMSUlNSklNN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6OD46TAw*SDg1KDVWCAs2Ejw#Ai4KFB9VSFVKTkNPT05OSktMSE5MVTMWGhIXVQweFRMOVQwa
+        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlMWVdZCAFZQUxJQkg3Bg++
+X-HM-Tid: 0a70e8e2391993b5kuwsbf500483d7b
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no in-tree users of the platform data for this driver, so
-remove it and convert the driver to use device tree instead.
-
-Signed-off-by: Michael Auchter <michael.auchter@ni.com>
----
- drivers/iio/adc/ad7291.c             | 33 ++++++++++++++++------------
- include/linux/platform_data/ad7291.h | 13 -----------
- 2 files changed, 19 insertions(+), 27 deletions(-)
- delete mode 100644 include/linux/platform_data/ad7291.h
-
-diff --git a/drivers/iio/adc/ad7291.c b/drivers/iio/adc/ad7291.c
-index b2b137fed246..536e31862309 100644
---- a/drivers/iio/adc/ad7291.c
-+++ b/drivers/iio/adc/ad7291.c
-@@ -20,8 +20,6 @@
- #include <linux/iio/sysfs.h>
- #include <linux/iio/events.h>
- 
--#include <linux/platform_data/ad7291.h>
--
- /*
-  * Simplified handling
-  *
-@@ -465,7 +463,6 @@ static const struct iio_info ad7291_info = {
- static int ad7291_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
--	struct ad7291_platform_data *pdata = client->dev.platform_data;
- 	struct ad7291_chip_info *chip;
- 	struct iio_dev *indio_dev;
- 	int ret;
-@@ -475,16 +472,6 @@ static int ad7291_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	chip = iio_priv(indio_dev);
- 
--	if (pdata && pdata->use_external_ref) {
--		chip->reg = devm_regulator_get(&client->dev, "vref");
--		if (IS_ERR(chip->reg))
--			return PTR_ERR(chip->reg);
--
--		ret = regulator_enable(chip->reg);
--		if (ret)
--			return ret;
--	}
--
- 	mutex_init(&chip->state_lock);
- 	/* this is only used for device removal purposes */
- 	i2c_set_clientdata(client, indio_dev);
-@@ -495,8 +482,19 @@ static int ad7291_probe(struct i2c_client *client,
- 			AD7291_T_SENSE_MASK | /* Tsense always enabled */
- 			AD7291_ALERT_POLARITY; /* set irq polarity low level */
- 
--	if (pdata && pdata->use_external_ref)
-+	chip->reg = devm_regulator_get_optional(&client->dev, "vref");
-+	if (IS_ERR(chip->reg)) {
-+		if (PTR_ERR(chip->reg) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		chip->reg = NULL;
-+	} else {
-+		ret = regulator_enable(chip->reg);
-+		if (ret)
-+			return ret;
-+
- 		chip->command |= AD7291_EXT_REF;
-+	}
- 
- 	indio_dev->name = id->name;
- 	indio_dev->channels = ad7291_channels;
-@@ -569,9 +567,16 @@ static const struct i2c_device_id ad7291_id[] = {
- 
- MODULE_DEVICE_TABLE(i2c, ad7291_id);
- 
-+static const struct of_device_id ad7291_of_match[] = {
-+	{ .compatible = "adi,ad7291", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ad7291_of_match);
-+
- static struct i2c_driver ad7291_driver = {
- 	.driver = {
- 		.name = KBUILD_MODNAME,
-+		.of_match_table = of_match_ptr(ad7291_of_match),
- 	},
- 	.probe = ad7291_probe,
- 	.remove = ad7291_remove,
-diff --git a/include/linux/platform_data/ad7291.h b/include/linux/platform_data/ad7291.h
-deleted file mode 100644
-index b1fd1530c9a5..000000000000
---- a/include/linux/platform_data/ad7291.h
-+++ /dev/null
-@@ -1,13 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __IIO_AD7291_H__
--#define __IIO_AD7291_H__
--
--/**
-- * struct ad7291_platform_data - AD7291 platform data
-- * @use_external_ref: Whether to use an external or internal reference voltage
-- */
--struct ad7291_platform_data {
--	bool use_external_ref;
--};
--
--#endif
--- 
-2.24.1
-
+RnJvbTogTWljaGFlbCBFbGxlcm1hbiA8bXBlQGVsbGVybWFuLmlkLmF1PgogRGF0ZTogMjAyMC0w
+My0xNyAxOToyMjoxMwpUbzoi546L5paH6JmOIiA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KIGNjOiBC
+ZW5qYW1pbiBIZXJyZW5zY2htaWR0IDxiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc+LFBhdWwgTWFj
+a2VycmFzIDxwYXVsdXNAc2FtYmEub3JnPixBbGxpc29uIFJhbmRhbCA8YWxsaXNvbkBsb2h1dG9r
+Lm5ldD4sUmljaGFyZCBGb250YW5hIDxyZm9udGFuYUByZWRoYXQuY29tPixHcmVnIEtyb2FoLUhh
+cnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPixUaG9tYXMgR2xlaXhuZXIgPHRnbHhA
+bGludXRyb25peC5kZT4sbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcsbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZyx0cml2aWFsQGtlcm5lbC5vcmcsa2VybmVsQHZpdm8uY29tLHN0YWJs
+ZSA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4KU3ViamVjdDogUmU6IFtQQVRDSCB2M10gcG93ZXJw
+Yy9mc2wtODV4eDogZml4IGNvbXBpbGUgZXJyb3I+546L5paH6JmOIDx3ZW5odS53YW5nQHZpdm8u
+Y29tPiB3cml0ZXM6Cj4+IEZyb206IE1pY2hhZWwgRWxsZXJtYW4gPG1wZUBlbGxlcm1hbi5pZC5h
+dT4KPj4gIERhdGU6IDIwMjAtMDMtMTYgMTc6NDE6MTIKPj4gVG86V0FORyBXZW5odSA8d2VuaHUu
+d2FuZ0B2aXZvLmNvbT4sQmVuamFtaW4gSGVycmVuc2NobWlkdCA8YmVuaEBrZXJuZWwuY3Jhc2hp
+bmcub3JnPixQYXVsIE1hY2tlcnJhcyA8cGF1bHVzQHNhbWJhLm9yZz4sV0FORyBXZW5odSA8d2Vu
+aHUud2FuZ0B2aXZvLmNvbT4sQWxsaXNvbiBSYW5kYWwgPGFsbGlzb25AbG9odXRvay5uZXQ+LFJp
+Y2hhcmQgRm9udGFuYSA8cmZvbnRhbmFAcmVkaGF0LmNvbT4sR3JlZyBLcm9haC1IYXJ0bWFuIDxn
+cmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4sVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9u
+aXguZGU+LGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnLGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmcKPj4gIGNjOiB0cml2aWFsQGtlcm5lbC5vcmcsa2VybmVsQHZpdm8uY29tLHN0YWJs
+ZSA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4KPj4gU3ViamVjdDogUmU6IFtQQVRDSCB2M10gcG93
+ZXJwYy9mc2wtODV4eDogZml4IGNvbXBpbGUgZXJyb3I+V0FORyBXZW5odSA8d2VuaHUud2FuZ0B2
+aXZvLmNvbT4gd3JpdGVzOgo+Pj4+IEluY2x1ZGUgImxpbnV4L29mX2FkZHJlc3MuaCIgdG8gZml4
+IHRoZSBjb21waWxlIGVycm9yIGZvcgo+Pj4+IG1wYzg1eHhfbDJjdGxyX29mX3Byb2JlKCkgd2hl
+biBjb21waWxpbmcgZnNsXzg1eHhfY2FjaGVfc3JhbS5jLgo+Pj4+Cj4+Pj4gICBDQyAgICAgIGFy
+Y2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfbDJjdGxyLm8KPj4+PiBhcmNoL3Bvd2VycGMvc3lz
+ZGV2L2ZzbF84NXh4X2wyY3Rsci5jOiBJbiBmdW5jdGlvbiDigJhtcGM4NXh4X2wyY3Rscl9vZl9w
+cm9iZeKAmToKPj4+PiBhcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF84NXh4X2wyY3Rsci5jOjkwOjEx
+OiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24g4oCYb2ZfaW9tYXDigJk7
+IGRpZCB5b3UgbWVhbiDigJhwY2lfaW9tYXDigJk/IFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0aW9u
+LWRlY2xhcmF0aW9uXQo+Pj4+ICAgbDJjdGxyID0gb2ZfaW9tYXAoZGV2LT5kZXYub2Zfbm9kZSwg
+MCk7Cj4+Pj4gICAgICAgICAgICBefn5+fn5+fgo+Pj4+ICAgICAgICAgICAgcGNpX2lvbWFwCj4+
+Pj4gYXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xfODV4eF9sMmN0bHIuYzo5MDo5OiBlcnJvcjogYXNz
+aWdubWVudCBtYWtlcyBwb2ludGVyIGZyb20gaW50ZWdlciB3aXRob3V0IGEgY2FzdCBbLVdlcnJv
+cj1pbnQtY29udmVyc2lvbl0KPj4+PiAgIGwyY3RsciA9IG9mX2lvbWFwKGRldi0+ZGV2Lm9mX25v
+ZGUsIDApOwo+Pj4+ICAgICAgICAgIF4KPj4+PiBjYzE6IGFsbCB3YXJuaW5ncyBiZWluZyB0cmVh
+dGVkIGFzIGVycm9ycwo+Pj4+IHNjcmlwdHMvTWFrZWZpbGUuYnVpbGQ6MjY3OiByZWNpcGUgZm9y
+IHRhcmdldCAnYXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xfODV4eF9sMmN0bHIubycgZmFpbGVkCj4+
+Pj4gbWFrZVsyXTogKioqIFthcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF84NXh4X2wyY3Rsci5vXSBF
+cnJvciAxCj4+Pj4KPj4+PiBGaXhlczogY29tbWl0IDZkYjkyY2M5ZDA3ZCAoInBvd2VycGMvODV4
+eDogYWRkIGNhY2hlLXNyYW0gc3VwcG9ydCIpCj4+Pgo+Pj5UaGUgc3ludGF4IGlzOgo+Pj4KPj4+
+Rml4ZXM6IDZkYjkyY2M5ZDA3ZCAoInBvd2VycGMvODV4eDogYWRkIGNhY2hlLXNyYW0gc3VwcG9y
+dCIpCj4+Pgo+Pj4+IENjOiBzdGFibGUgPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+Cj4+Pgo+Pj5U
+aGUgY29tbWl0IGFib3ZlIHdlbnQgaW50byB2Mi42LjM3Lgo+Pj4KPj4+U28gbm8gb25lIGhhcyBu
+b3RpY2VkIHRoaXMgYnVnIHNpbmNlIHRoZW4sIGhvdz8gT3IgZGlkIHNvbWV0aGluZyBlbHNlCj4+
+PmNoYW5nZSB0byBleHBvc2UgdGhlIHByb2JsZW0/Cj4+Cj4+IEFjdHVhbGx5IGEgaGFyZCBxdWVz
+dGlvbiB0byBhbnN3ZXIgY2F1c2UgaXQgYWxzbyBsZWZ0IG1lIHNjcmF0Y2hpbmcgZm9yIGxvbmcu
+Cj4+IEhvd2V2ZXIsIEkgY2FuIG5vdCBmaW5kIHJpZ2h0IG9yIGRlZmluaXRlIGFuc3dlci4KPgo+
+T2gsIGFjdHVhbGx5IGl0J3MgZmFpcmx5IHN0cmFpZ2h0IGZvcndhcmQsIHRoZSBjb2RlIGNhbid0
+IGJlIGJ1aWx0IGF0Cj5hbGwgaW4gdXBzdHJlYW0gYmVjYXVzZSBDT05GSUdfRlNMXzg1WFhfQ0FD
+SEVfU1JBTSBpcyBub3Qgc2VsZWN0YWJsZSBvcgo+c2VsZWN0ZWQgYnkgYW55dGhpbmcuCgpZZWFo
+LCBzdXJlIHRoYXQgaXMgdGhlIHJlYXNvbiwgYW5kIEkgbWVhbnQgaXQgd2FzIGhhcmQgdG8gZmln
+dXJlIG91dCB3aHkKbm9ib2R5IGhhZCBldmVyIGNvbXBpbGVkIHRoZSBkcml2ZXIgd2l0aCBGU0xf
+ODVYWF9DQUNIRV9TUkFNIGVuYWJsZWQKdW50aWwgbWUuCj4KPllvdSBzZW50IGEgcGF0Y2ggcHJl
+dmlvdXNseSB0byBtYWtlIGl0IHNlbGVjdGFibGUsIHdoaWNoIFNjb3R0IHRob3VnaHQKPndhcyBh
+IGJhZCBpZGVhLgo+Cj5TbyB0aGlzIHdob2xlIGZpbGUgaXMgZGVhZCBjb2RlIGFzIGZhciBhcyBJ
+J20gY29uY2VybmVkLCBzbyBwYXRjaGVzIGZvcgo+aXQgZGVmaW5pdGVseSBkbyBub3QgbmVlZCB0
+byBnbyB0byBzdGFibGUuCj4KPklmIHlvdSB3YW50IHRvIGFkZCBhIHVzZXIgZm9yIGl0IHRoZW4g
+cGxlYXNlIHNlbmQgYSBzZXJpZXMgZG9pbmcgdGhhdCwKPmFuZCB0aGlzIGNvbW1pdCBjYW4gYmUg
+dGhlIGZpcnN0LgoKRm9yIHRoaXMsIGFzIHlvdSBtZW50aW9uZWQsIGl0IGlzIGRlYWQgYW5kIGRv
+IG5vdCBuZWVkIHRvIGJlIGFwcGxpZWQgdG8gYW55IHN0YWJsZS4KQW5kIEkgcmVjb21tYW5kIHRo
+ZSBwYXRjaCBhcyBhIHVuaXQgaXRzZWxmIGNhdXNlIG91ciBtb2R1bGUgd2hpY2ggdXNlcwppdCBp
+cyBzdGlsbCB1bmRlciBkZXZlbG9waW5nLCBhbmQgdGhlIG1vZHVsZSBpdHNlbGYgd291bGQgYmUg
+dGFrZW4gYXMgYQpjb21wbGV0ZSBsb2dpY2FsIGJsb2NrLiBBbHNvIGl0IHdvdWxkIHRha2Ugc29t
+ZSB0aW1lLgoKVGhhbmtzLCBXZW5odQo+Cj5jaGVlcnMKDQoNCg==
