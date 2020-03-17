@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFBEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C29C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222FD20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8359920738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgCQVfS (ORCPT
+        id S1727468AbgCQVfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:35:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 17:35:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727346AbgCQVeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727338AbgCQVeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 17:34:18 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1980D20880;
-        Tue, 17 Mar 2020 21:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3F5D20873;
+        Tue, 17 Mar 2020 21:34:17 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jEJqr-000EZi-0n; Tue, 17 Mar 2020 17:34:17 -0400
-Message-Id: <20200317213416.903351225@goodmis.org>
+        id 1jEJqq-000EYA-IP; Tue, 17 Mar 2020 17:34:16 -0400
+Message-Id: <20200317213416.452888193@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Tue, 17 Mar 2020 17:32:31 -0400
+Date:   Tue, 17 Mar 2020 17:32:28 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -40,7 +40,7 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Wu <peter@lekensteyn.nl>,
         Jonathan Corbet <corbet@lwn.net>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [RFC][PATCH 09/11] tracing: Do not disable tracing when reading the trace file
+Subject: [RFC][PATCH 06/11] ring-buffer: Do not die if rb_iter_peek() fails more than thrice
 References: <20200317213222.421100128@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -51,39 +51,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-When opening the "trace" file, it is no longer necessary to disable tracing.
+As the iterator will be reading a live buffer, and if the event being read
+is on a page that a writer crosses, it will fail and try again, the
+condition in rb_iter_peek() that only allows a retry to happen three times
+is no longer valid. Allow rb_iter_peek() to retry more than three times
+without killing the ring buffer, but only if rb_iter_head_event() had failed
+at least once.
 
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 8 --------
- 1 file changed, 8 deletions(-)
+ kernel/trace/ring_buffer.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1085b3d5d0dc..a60f49c401f9 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4261,10 +4261,6 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	if (trace_clocks[tr->clock_id].in_ns)
- 		iter->iter_flags |= TRACE_FILE_TIME_IN_NS;
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 3d718add73c1..475338fda969 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4012,6 +4012,7 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_event *event;
+ 	int nr_loops = 0;
++	bool failed = false;
  
--	/* stop the trace while dumping if we are not opening "snapshot" */
--	if (!iter->snapshot)
--		tracing_stop_tr(tr);
--
- 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter->buffer_iter[cpu] =
-@@ -4358,10 +4354,6 @@ static int tracing_release(struct inode *inode, struct file *file)
- 	if (iter->trace && iter->trace->close)
- 		iter->trace->close(iter);
+ 	if (ts)
+ 		*ts = 0;
+@@ -4038,10 +4039,14 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+ 	 * to a data event, we should never loop more than three times.
+ 	 * Once for going to next page, once on time extend, and
+ 	 * finally once to get the event.
+-	 * (We never hit the following condition more than thrice).
++	 * We should never hit the following condition more than thrice,
++	 * unless the buffer is very small, and there's a writer
++	 * that is causing the reader to fail getting an event.
+ 	 */
+-	if (RB_WARN_ON(cpu_buffer, ++nr_loops > 3))
++	if (++nr_loops > 3) {
++		RB_WARN_ON(cpu_buffer, !failed);
+ 		return NULL;
++	}
  
--	if (!iter->snapshot)
--		/* reenable tracing if it was previously enabled */
--		tracing_start_tr(tr);
--
- 	__trace_array_put(tr);
+ 	if (rb_per_cpu_empty(cpu_buffer))
+ 		return NULL;
+@@ -4052,8 +4057,10 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+ 	}
  
- 	mutex_unlock(&trace_types_lock);
+ 	event = rb_iter_head_event(iter);
+-	if (!event)
++	if (!event) {
++		failed = true;
+ 		goto again;
++	}
+ 
+ 	switch (event->type_len) {
+ 	case RINGBUF_TYPE_PADDING:
 -- 
 2.25.1
 
