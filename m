@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A04C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9E3C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D3420735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC8E2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgCQRHE (ORCPT
+        id S1726809AbgCQRHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:07:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54664 "EHLO mx2.suse.de"
+        Tue, 17 Mar 2020 13:07:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54864 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgCQRHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:07:03 -0400
+        id S1726207AbgCQRHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 13:07:11 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C83F3AFDC;
-        Tue, 17 Mar 2020 17:07:00 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 18:07:00 +0100
-Message-ID: <s5hpndax64r.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 76BB1AFDC;
+        Tue, 17 Mar 2020 17:07:10 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 18:07:10 +0100
+Message-ID: <s5ho8sux64h.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Jian-Hong Pan <jian-hong@endlessm.com>
 Cc:     Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         linux@endlessm.com
-Subject: Re: [PATCH 1/2] ALSA: hda/realtek - Enable headset mic of Acer X2660G with ALC662
-In-Reply-To: <20200317082806.73194-2-jian-hong@endlessm.com>
+Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Enable the headset of Acer N50-600 with ALC662
+In-Reply-To: <20200317082806.73194-3-jian-hong@endlessm.com>
 References: <20200317082806.73194-1-jian-hong@endlessm.com>
-        <20200317082806.73194-2-jian-hong@endlessm.com>
+        <20200317082806.73194-3-jian-hong@endlessm.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -44,11 +44,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020 09:28:07 +0100,
+On Tue, 17 Mar 2020 09:28:09 +0100,
 Jian-Hong Pan wrote:
 > 
-> The Acer desktop X2660G with ALC662 can't detect the headset microphone
-> until ALC662_FIXUP_ACER_X2660G_HEADSET_MODE quirk applied.
+> A headset on the desktop like Acer N50-600 does not work, until quirk
+> ALC662_FIXUP_ACER_NITRO_HEADSET_MODE is applied.
 > 
 > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
 
