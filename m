@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BEBC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEDFC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13114205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370FF20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443474;
-	bh=zNvJ3ICknpkN2zIsT7l86XyKLAoZLFhMG9n0Y6AeR+U=;
+	s=default; t=1584443477;
+	bh=eFg44DtLtx240mxrbqaeZnXCo/psQRsqmlQBJ5JYo0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IV8CT1ao422dLtkRBF3KDEaL4yTQTERjT3SzDleY17BXDGx3sNI1VnvGJX05WAScw
-	 G8RczowvaNo3iQLfpKAol/joC4c4v+u6MDkeqFyAIUwcrPrHffcW6w3/VOKzFwZ8a0
-	 xkX8eBdzye6mp5IX0/zfTzSOCKJvl9yrP1L1JR30=
+	b=vmak2yDneh9DMvW2Fc2ZqmLWhoQyG6bhK5/d3J6Dh8VhmlbtdheVRLRS/DqQb98FN
+	 s/YOGNAZxpq74VZWnpw3ftGzbzozJmetCcpCeGhLFkozuF8972F3A2tRE8qXPQWOnO
+	 0yHQxd7fFeEJl+ugQr3UkC7bXnXj2hAhJQ98UPQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgCQLLM (ORCPT
+        id S1729201AbgCQLLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:11:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54282 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729029AbgCQLLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:11:10 -0400
+        id S1729178AbgCQLLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:11:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8491B20719;
-        Tue, 17 Mar 2020 11:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10B8A205ED;
+        Tue, 17 Mar 2020 11:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443469;
-        bh=zNvJ3ICknpkN2zIsT7l86XyKLAoZLFhMG9n0Y6AeR+U=;
+        s=default; t=1584443471;
+        bh=eFg44DtLtx240mxrbqaeZnXCo/psQRsqmlQBJ5JYo0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kWQVq5gNDXmzivzdhEYvgH/2Te4ZJQiGgltOp0Px4py7ZkOjwR8kE/G5BAdEQ55hS
-         pu14LHMh5bAfeLyBIhvlqzJygPp9//NvkJFdKBlx/BDmk5hskiEl7ixkU68MvGWVuX
-         8VgLPuq27Pt8G75roV5BqqAAT3NOwkXYwjX0I2f8=
+        b=t78Y+1jxL4DhIEb+ZaNAFi1D+d2szoNFiUC0oTkXz1B6qD3sn+1QHNowmN5ba/tuZ
+         DwLRNSgQDKXoQ/l5z1/yf44O1NCKj2ZOnjTXZgPs9ppu+hgrqi+1ZxrlS9OsPQznMQ
+         ZYY1B2+pH/8NmgvNjBMR+PGblqgqdWvqbzmoyhk0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.5 090/151] drm/i915/execlists: Enable timeslice on partial virtual engine dequeue
-Date:   Tue, 17 Mar 2020 11:55:00 +0100
-Message-Id: <20200317103332.842961594@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.5 091/151] mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x
+Date:   Tue, 17 Mar 2020 11:55:01 +0100
+Message-Id: <20200317103332.914733778@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -61,91 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-commit eafc2aa20fba319b6e791a1b0c45a91511eccb6b upstream.
+commit 31e43f31890ca6e909b27dcb539252b46aa465da upstream.
 
-If we stop filling the ELSP due to an incompatible virtual engine
-request, check if we should enable the timeslice on behalf of the queue.
+Enable MSI interrupt for GL9750/GL9755. Some platforms
+do not support PCI INTx and devices can not work without
+interrupt. Like messages below:
 
-This fixes the case where we are inspecting the last->next element when
-we know that the last element is the last request in the execution queue,
-and so decided we did not need to enable timeslicing despite the intent
-to do so!
+[    4.487132] sdhci-pci 0000:01:00.0: SDHCI controller found [17a0:9755] (rev 0)
+[    4.487198] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.PBR2._PRT.APS2], AE_NOT_FOUND (20190816/psargs-330)
+[    4.487397] ACPI Error: Aborting method \_SB.PCI0.PBR2._PRT due to previous error (AE_NOT_FOUND) (20190816/psparse-529)
+[    4.487707] pcieport 0000:00:01.3: can't derive routing for PCI INT A
+[    4.487709] sdhci-pci 0000:01:00.0: PCI INT A: no GSI
 
-Fixes: 8ee36e048c98 ("drm/i915/execlists: Minimalistic timeslicing")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: <stable@vger.kernel.org> # v5.4+
-Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200306113012.3184606-1-chris@chris-wilson.co.uk
-(cherry picked from commit 3df2deed411e0f1b7312baf0139aab8bba4c0410)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Tested-by: Raul E Rangel <rrangel@chromium.org>
+Fixes: e51df6ce668a ("mmc: host: sdhci-pci: Add Genesys Logic GL975x support")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200219092900.9151-1-benchuanggli@gmail.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gt/intel_lrc.c |   29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ drivers/mmc/host/sdhci-pci-gli.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
---- a/drivers/gpu/drm/i915/gt/intel_lrc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
-@@ -1501,11 +1501,9 @@ need_timeslice(struct intel_engine_cs *e
- 	if (!intel_engine_has_timeslices(engine))
- 		return false;
- 
--	if (list_is_last(&rq->sched.link, &engine->active.requests))
--		return false;
--
--	hint = max(rq_prio(list_next_entry(rq, sched.link)),
--		   engine->execlists.queue_priority_hint);
-+	hint = engine->execlists.queue_priority_hint;
-+	if (!list_is_last(&rq->sched.link, &engine->active.requests))
-+		hint = max(hint, rq_prio(list_next_entry(rq, sched.link)));
- 
- 	return hint >= effective_prio(rq);
- }
-@@ -1547,6 +1545,18 @@ static void set_timeslice(struct intel_e
- 	set_timer_ms(&engine->execlists.timer, active_timeslice(engine));
+--- a/drivers/mmc/host/sdhci-pci-gli.c
++++ b/drivers/mmc/host/sdhci-pci-gli.c
+@@ -262,10 +262,26 @@ static int gl9750_execute_tuning(struct
+ 	return 0;
  }
  
-+static void start_timeslice(struct intel_engine_cs *engine)
++static void gli_pcie_enable_msi(struct sdhci_pci_slot *slot)
 +{
-+	struct intel_engine_execlists *execlists = &engine->execlists;
++	int ret;
 +
-+	execlists->switch_priority_hint = execlists->queue_priority_hint;
-+
-+	if (timer_pending(&execlists->timer))
++	ret = pci_alloc_irq_vectors(slot->chip->pdev, 1, 1,
++				    PCI_IRQ_MSI | PCI_IRQ_MSIX);
++	if (ret < 0) {
++		pr_warn("%s: enable PCI MSI failed, error=%d\n",
++		       mmc_hostname(slot->host->mmc), ret);
 +		return;
++	}
 +
-+	set_timer_ms(&execlists->timer, timeslice(engine));
++	slot->host->irq = pci_irq_vector(slot->chip->pdev, 0);
 +}
 +
- static void record_preemption(struct intel_engine_execlists *execlists)
+ static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
  {
- 	(void)I915_SELFTEST_ONLY(execlists->preempt_hang.count++);
-@@ -1705,11 +1715,7 @@ static void execlists_dequeue(struct int
- 				 * Even if ELSP[1] is occupied and not worthy
- 				 * of timeslices, our queue might be.
- 				 */
--				if (!execlists->timer.expires &&
--				    need_timeslice(engine, last))
--					set_timer_ms(&execlists->timer,
--						     timeslice(engine));
--
-+				start_timeslice(engine);
- 				return;
- 			}
- 		}
-@@ -1744,7 +1750,8 @@ static void execlists_dequeue(struct int
+ 	struct sdhci_host *host = slot->host;
  
- 			if (last && !can_merge_rq(last, rq)) {
- 				spin_unlock(&ve->base.active.lock);
--				return; /* leave this for another */
-+				start_timeslice(engine);
-+				return; /* leave this for another sibling */
- 			}
++	gli_pcie_enable_msi(slot);
+ 	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
+ 	sdhci_enable_v4_mode(host);
  
- 			GEM_TRACE("%s: virtual rq=%llx:%lld%s, new engine? %s\n",
+@@ -276,6 +292,7 @@ static int gli_probe_slot_gl9755(struct
+ {
+ 	struct sdhci_host *host = slot->host;
+ 
++	gli_pcie_enable_msi(slot);
+ 	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
+ 	sdhci_enable_v4_mode(host);
+ 
 
 
