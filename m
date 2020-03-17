@@ -2,202 +2,120 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8A8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FA1C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648C920752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD1A20735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584443445;
+	bh=LOwO1tNMBcdQgjkXNiDY+TMnSmzF8tRAF1qDoS8uw5Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=THMpBmN/JIp9Tv5G/Jspx2mFU/NhvamwOsjQzTmSNE81p+ljn40pqXvPZY/ItEyvG
+	 tmvNMgZ5F3wrlFRKzvSDRcQUYHBg6GyaQ3MleFPvXDEwabk4PGCaGGVknYet7q3kvZ
+	 JwCHn8eCp4TXEQqqO2OQTMkXcc1wMT5iSai6U1mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgCQLKm (ORCPT
+        id S1729137AbgCQLKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:10:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:1480 "EHLO mga09.intel.com"
+        Tue, 17 Mar 2020 07:10:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbgCQLKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:10:36 -0400
-IronPort-SDR: 4QgzKK/1+0Z0WTZZY8dMjBTFpnVMxVmYbQnlVVcCnpaTYaM3fLUCJvfLqnDhUrP3WwCy1HZM9F
- lopsuTMCxQiA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 04:10:35 -0700
-IronPort-SDR: sVQKvxbQe9sOZGKHSB7RHRSk0PG1hS7mfqR62mo/5CjOwX3N5niTvK/52RBOL6q2+QqBxTSdCW
- i2gCnGIuzoIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="355331166"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 17 Mar 2020 04:10:32 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 17 Mar 2020 13:10:31 +0200
-Date:   Tue, 17 Mar 2020 13:10:31 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Jon Flatley <jflat@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH v5 4/4] platform/chrome: typec: Update port info from EC
-Message-ID: <20200317111031.GC3015886@kuha.fi.intel.com>
-References: <20200316090021.52148-1-pmalani@chromium.org>
- <20200316090021.52148-5-pmalani@chromium.org>
+        id S1729109AbgCQLKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:10:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6166520658;
+        Tue, 17 Mar 2020 11:10:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584443438;
+        bh=LOwO1tNMBcdQgjkXNiDY+TMnSmzF8tRAF1qDoS8uw5Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HEpaiBZynaNf7O+YDhTkU+QRJxq+dojkryw/Cr/TLX5Zo7/xmAfZwq6AXZsnjLo9m
+         Ba3QE/OT3Lp4bWXrz5P/DG8Q7BTQNYvW3GwVIjQVLhCvB9qIJetm0w/1PGMEEKSByY
+         zK+AiooRu+EKE6RGjqOsfdotGqfFrzBDdUsZe154=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH 5.5 083/151] workqueue: dont use wq_select_unbound_cpu() for bound works
+Date:   Tue, 17 Mar 2020 11:54:53 +0100
+Message-Id: <20200317103332.354594035@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+References: <20200317103326.593639086@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316090021.52148-5-pmalani@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:00:21AM -0700, Prashant Malani wrote:
-> After registering the ports at probe, get the current port information
-> from EC and update the Type C connector class ports accordingly.
-> 
-> Co-developed-by: Jon Flatley <jflat@chromium.org>
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+From: Hillf Danton <hdanton@sina.com>
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+commit aa202f1f56960c60e7befaa0f49c72b8fa11b0a8 upstream.
 
-> ---
-> 
-> Changes in v5:
-> - No changes.
-> 
-> Changes in v4:
-> - No changes
-> 
-> Changes in v3:
-> - No changes.
-> 
-> Changes in v2:
-> - No changes.
-> 
->  drivers/platform/chrome/cros_ec_typec.c | 89 ++++++++++++++++++++++++-
->  1 file changed, 88 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 9f692eb78b322..874269c070739 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -172,6 +172,81 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
->  	return ret;
->  }
->  
-> +static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
-> +		int port_num, struct ec_response_usb_pd_control *resp)
-> +{
-> +	struct typec_port *port = typec->ports[port_num];
-> +	enum typec_orientation polarity;
-> +
-> +	if (!resp->enabled)
-> +		polarity = TYPEC_ORIENTATION_NONE;
-> +	else if (!resp->polarity)
-> +		polarity = TYPEC_ORIENTATION_NORMAL;
-> +	else
-> +		polarity = TYPEC_ORIENTATION_REVERSE;
-> +
-> +	typec_set_pwr_role(port, resp->role ? TYPEC_SOURCE : TYPEC_SINK);
-> +	typec_set_orientation(port, polarity);
-> +}
-> +
-> +static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
-> +		int port_num, struct ec_response_usb_pd_control_v1 *resp)
-> +{
-> +	struct typec_port *port = typec->ports[port_num];
-> +	enum typec_orientation polarity;
-> +
-> +	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
-> +		polarity = TYPEC_ORIENTATION_NONE;
-> +	else if (!resp->polarity)
-> +		polarity = TYPEC_ORIENTATION_NORMAL;
-> +	else
-> +		polarity = TYPEC_ORIENTATION_REVERSE;
-> +	typec_set_orientation(port, polarity);
-> +	typec_set_data_role(port, resp->role & PD_CTRL_RESP_ROLE_DATA ?
-> +			TYPEC_HOST : TYPEC_DEVICE);
-> +	typec_set_pwr_role(port, resp->role & PD_CTRL_RESP_ROLE_POWER ?
-> +			TYPEC_SOURCE : TYPEC_SINK);
-> +	typec_set_vconn_role(port, resp->role & PD_CTRL_RESP_ROLE_VCONN ?
-> +			TYPEC_SOURCE : TYPEC_SINK);
-> +}
-> +
-> +static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
-> +{
-> +	struct ec_params_usb_pd_control req;
-> +	struct ec_response_usb_pd_control_v1 resp;
-> +	int ret;
-> +
-> +	if (port_num < 0 || port_num >= typec->num_ports) {
-> +		dev_err(typec->dev, "cannot get status for invalid port %d\n",
-> +			port_num);
-> +		return -EINVAL;
-> +	}
-> +
-> +	req.port = port_num;
-> +	req.role = USB_PD_CTRL_ROLE_NO_CHANGE;
-> +	req.mux = USB_PD_CTRL_MUX_NO_CHANGE;
-> +	req.swap = USB_PD_CTRL_SWAP_NONE;
-> +
-> +	ret = cros_typec_ec_command(typec, typec->cmd_ver,
-> +				    EC_CMD_USB_PD_CONTROL, &req, sizeof(req),
-> +				    &resp, sizeof(resp));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	dev_dbg(typec->dev, "Enabled %d: 0x%hhx\n", port_num, resp.enabled);
-> +	dev_dbg(typec->dev, "Role %d: 0x%hhx\n", port_num, resp.role);
-> +	dev_dbg(typec->dev, "Polarity %d: 0x%hhx\n", port_num, resp.polarity);
-> +	dev_dbg(typec->dev, "State %d: %s\n", port_num, resp.state);
-> +
-> +	if (typec->cmd_ver == 1)
-> +		cros_typec_set_port_params_v1(typec, port_num, &resp);
-> +	else
-> +		cros_typec_set_port_params_v0(typec, port_num,
-> +			(struct ec_response_usb_pd_control *) &resp);
-> +
-> +	return 0;
-> +}
-> +
->  static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
->  {
->  	struct ec_params_get_cmd_versions_v1 req_v1;
-> @@ -218,7 +293,7 @@ static int cros_typec_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct cros_typec_data *typec;
->  	struct ec_response_usb_pd_ports resp;
-> -	int ret;
-> +	int ret, i;
->  
->  	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
->  	if (!typec)
-> @@ -251,7 +326,19 @@ static int cros_typec_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		return ret;
->  
-> +	for (i = 0; i < typec->num_ports; i++) {
-> +		ret = cros_typec_port_update(typec, i);
-> +		if (ret < 0)
-> +			goto unregister_ports;
-> +	}
-> +
->  	return 0;
-> +
-> +unregister_ports:
-> +	for (i = 0; i < typec->num_ports; i++)
-> +		if (typec->ports[i])
-> +			typec_unregister_port(typec->ports[i]);
-> +	return ret;
->  }
->  
->  static struct platform_driver cros_typec_driver = {
-> -- 
-> 2.25.1.481.gfbce0eb801-goog
+wq_select_unbound_cpu() is designed for unbound workqueues only, but
+it's wrongly called when using a bound workqueue too.
 
-thanks,
+Fixing this ensures work queued to a bound workqueue with
+cpu=WORK_CPU_UNBOUND always runs on the local CPU.
 
--- 
-heikki
+Before, that would happen only if wq_unbound_cpumask happened to include
+it (likely almost always the case), or was empty, or we got lucky with
+forced round-robin placement.  So restricting
+/sys/devices/virtual/workqueue/cpumask to a small subset of a machine's
+CPUs would cause some bound work items to run unexpectedly there.
+
+Fixes: ef557180447f ("workqueue: schedule WORK_CPU_UNBOUND work on wq_unbound_cpumask CPUs")
+Cc: stable@vger.kernel.org # v4.5+
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+[dj: massage changelog]
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/workqueue.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1411,14 +1411,16 @@ static void __queue_work(int cpu, struct
+ 		return;
+ 	rcu_read_lock();
+ retry:
+-	if (req_cpu == WORK_CPU_UNBOUND)
+-		cpu = wq_select_unbound_cpu(raw_smp_processor_id());
+-
+ 	/* pwq which will be used unless @work is executing elsewhere */
+-	if (!(wq->flags & WQ_UNBOUND))
+-		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
+-	else
++	if (wq->flags & WQ_UNBOUND) {
++		if (req_cpu == WORK_CPU_UNBOUND)
++			cpu = wq_select_unbound_cpu(raw_smp_processor_id());
+ 		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
++	} else {
++		if (req_cpu == WORK_CPU_UNBOUND)
++			cpu = raw_smp_processor_id();
++		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
++	}
+ 
+ 	/*
+ 	 * If @work was previously on a different pool, it might still be
+
+
