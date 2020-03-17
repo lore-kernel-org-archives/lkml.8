@@ -2,170 +2,119 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FA4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67581C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06232206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5BF206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IT859BKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgCQWXe (ORCPT
+        id S1727050AbgCQWYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:23:34 -0400
-Received: from mga14.intel.com ([192.55.52.115]:35870 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgCQWXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:23:34 -0400
-IronPort-SDR: hYlK0UY0fUzbNOdCN7Am68g3pbMhIsgMV5u8dv9ycu3XH6aqsBsSRA6M/ksiJCJzFIFHAfqBNe
- yYqd0vd5mZ6Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 15:23:33 -0700
-IronPort-SDR: 43PSZtYE1nZk6hpve9vVDs0R1jAEkP4vD0F2F2ds1DE1l8P07WGBrdIO43zsY9dDliaRF9ivHE
- imWhp15r1E0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="445645858"
-Received: from bxing-mobl.amr.corp.intel.com (HELO [10.135.41.245]) ([10.135.41.245])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Mar 2020 15:23:32 -0700
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
- <20200315012523.GC208715@linux.intel.com>
- <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
- <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
- <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
- <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
- <20200316225322.GJ24267@linux.intel.com>
- <fa773504-4cc1-5cbd-c018-890f7a5d3152@intel.com>
- <20200316235934.GM24267@linux.intel.com>
- <ca2c9ac0-b717-ee96-c7df-4e39f03a9193@intel.com>
- <CAOASepN7n1XUGPQHwk2Vcu-dyyBJ7dwhM_mF_RcJa71PcNiLmA@mail.gmail.com>
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-Message-ID: <a447fb5c-b3bd-ef82-ee5f-33be69796a27@intel.com>
-Date:   Tue, 17 Mar 2020 15:23:31 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 17 Mar 2020 18:24:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35111 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgCQWYN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:24:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h4so7215446wru.2;
+        Tue, 17 Mar 2020 15:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AX+RV3FQdaQCktHrarZsh0Sc9mln1v0WFAS6/e+iIl4=;
+        b=IT859BKvTYsEhZFBH4MCcu+1EzWJKxGDCp4UF0/Pd+CTDCQCLqxGClzj4JlyFd+4LH
+         Ys0kdoodElRrZC0JA5gmXQH5/Enga8utUXxLWr/tDEaNN0n9PBcNIcLda8VwIVneVhuV
+         oHgC2SUi3ijq9doiATuSyswY2nqyyyuRoopSvbo1HIjJ3GPNlmOZtVheSIM+OyffJwto
+         YgOdpUCIovDEF0qVLkHvas8uHY03LXf4QxKm/EW5YA5VW2khMJziEFoC3LllzOtRKJ3D
+         I6+WZxCWPG3WLQ1DFwpZbw9SJQrNvj7ynV1sAX5FMjR8iWutGUfR8tskrvj93mT116Io
+         4uDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AX+RV3FQdaQCktHrarZsh0Sc9mln1v0WFAS6/e+iIl4=;
+        b=Hnyv1TYAQGvqht5RtO1/x8AmNlpUWg7jOQqNtEpePDSF3lpmNtHvqEJzhsUikUbRKJ
+         PqDSYmKP8GVbPmk5v5W3xPClzdzXWwgXNE8xUxyYImvtRVPJOkE5P2JujgY3XOtBAIYZ
+         mjKQJrLoCefRHAVvgaNGiJovRSn1u61thDsyp/o3ROazAla1dtq4UnCltXjeCDJ7y99q
+         jW0cavh8pjhhiKHIli9JNbOoicleHLWZ8Y2bLmSWRHqcU0GgDTZE290H5mpXjMYGd3QT
+         l4k4OvRM4ZWgrpMfgoIcBOmG3ydiBHi9hBSiDAmVavSzVBCrbK5MQ2IhRNe+6xxiurqZ
+         8g1Q==
+X-Gm-Message-State: ANhLgQ2HsBykdYUVPDs62LpNRrr/DSUpuUdhFkb3m/V2wRbeYnPJG6fc
+        xJRmuYRO6qja6EY7LOrMhEc=
+X-Google-Smtp-Source: ADFU+vt8f4AAZPIyrQa8ZOQhtBN+IMVOluhC7o/agtBjdWF696Gd3ZLLKacockNGMxdBtWXoieIFag==
+X-Received: by 2002:adf:b197:: with SMTP id q23mr1198513wra.412.1584483851329;
+        Tue, 17 Mar 2020 15:24:11 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id f203sm1088742wmf.18.2020.03.17.15.24.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Mar 2020 15:24:09 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 22:24:09 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v2 6/8] mm/memory_hotplug: unexport memhp_auto_online
+Message-ID: <20200317222409.jufwrcrqtyu263cc@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200317104942.11178-1-david@redhat.com>
+ <20200317104942.11178-7-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOASepN7n1XUGPQHwk2Vcu-dyyBJ7dwhM_mF_RcJa71PcNiLmA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317104942.11178-7-david@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/2020 9:50 AM, Nathaniel McCallum wrote:
-> On Mon, Mar 16, 2020 at 8:18 PM Xing, Cedric <cedric.xing@intel.com> wrote:
->>
->> On 3/16/2020 4:59 PM, Sean Christopherson wrote:
->>> On Mon, Mar 16, 2020 at 04:50:26PM -0700, Xing, Cedric wrote:
->>>> On 3/16/2020 3:53 PM, Sean Christopherson wrote:
->>>>> On Mon, Mar 16, 2020 at 11:38:24PM +0200, Jarkko Sakkinen wrote:
->>>>>>> My suggestions explicitly maintained robustness, and in fact increased
->>>>>>> it. If you think we've lost capability, please speak with specificity
->>>>>>> rather than in vague generalities. Under my suggestions we can:
->>>>>>> 1. call the vDSO from C
->>>>>>> 2. pass context to the handler
->>>>>>> 3. have additional stack manipulation options in the handler
->>>>>>>
->>>>>>> The cost for this is a net 2 additional instructions. No existing
->>>>>>> capability is lost.
->>>>>>
->>>>>> My vague generality in this case is just that the whole design
->>>>>> approach so far has been to minimize the amount of wrapping to
->>>>>> EENTER.
->>>>>
->>>>> Yes and no.   If we wanted to minimize the amount of wrapping around the
->>>>> vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
->>>>> first place.  The whole process has been about balancing the wants of each
->>>>> use case against the overall quality of the API and code.
->>>>>
->>>> The design of this vDSO API was NOT to minimize wrapping, but to allow
->>>> maximal flexibility. More specifically, we strove not to restrict how info
->>>> was exchanged between the enclave and its host process. After all, calling
->>>> convention is compiler specific - i.e. the enclave could be built by a
->>>> different compiler (e.g. MSVC) that doesn't share the same list of CSRs as
->>>> the host process. Therefore, the API has been implemented to pass through
->>>> virtually all registers except those used by EENTER itself. Similarly, all
->>>> registers are passed back from enclave to the caller (or the exit handler)
->>>> except those used by EEXIT. %rbp is an exception because the vDSO API has to
->>>> anchor the stack, using either %rsp or %rbp. We picked %rbp to allow the
->>>> enclave to allocate space on the stack.
->>>
->>> And unless I'm missing something, using %rcx to pass @leaf would still
->>> satisfy the above, correct?  Ditto for saving/restoring %rbx.
->>>
->>> I.e. a runtime that's designed to work with enclave's using a different
->>> calling convention wouldn't be able to take advantage of being able to call
->>> the vDSO from C, but neither would it take on any meaningful burden.
->>>
->> Not exactly.
->>
->> If called directly from C code, the caller would expect CSRs to be
->> preserved.
-> 
-> Correct. This requires collaboration between the caller of the vDSO
-> and the enclave.
-> 
->> Then who should preserve CSRs?
-> 
-> The enclave.
-> 
->> It can't be the enclave
->> because it may not follow the same calling convention.
-> 
-> This is incorrect. You are presuming there is not tight integration
-> between the caller of the vDSO and the enclave. In my case, the
-> integration is total and complete. We have working code today that
-> does this.
-> 
->> Moreover, the
->> enclave may run into an exception, in which case it doesn't have the
->> ability to restore CSRs.
-> 
-> There are two solutions to this:
-> 1. Write the handler in assembly and don't return to C on AEX.
-> 2. The caller can simply preserve the registers. Nothing stops that.
-> 
-> We have implemented #1.
-> 
-What if the enclave cannot proceed due to an unhandled exception so the 
-execution has to get back to the C caller of the vDSO API?
+On Tue, Mar 17, 2020 at 11:49:40AM +0100, David Hildenbrand wrote:
+>All in-tree users except the mm-core are gone. Let's drop the export.
+>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Michal Hocko <mhocko@kernel.org>
+>Cc: Oscar Salvador <osalvador@suse.de>
+>Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>Cc: Baoquan He <bhe@redhat.com>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
 
-It seems to me the caller has to preserve CSRs by itself, otherwise it 
-cannot continue execution after any enclave exception. Passing @leaf in 
-%ecx will allow saving/restoring CSRs in C by setjmp()/longjmp(), with 
-the help of an exit handler. But if the C caller has already preserved 
-CSRs, why preserve CSRs again inside the enclave? It looks to me things 
-can be simplified only if the host process handles no enclave exceptions 
-(or exceptions inside the enclave will crash the calling thread). Thus 
-the only case of enclave EEXIT'ing back to its caller is considered 
-valid, hence the enclave will always be able to restore CSRs, so that 
-neither vDSO nor its caller has to preserve CSRs.
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
 
-Is my understanding correct?
+>---
+> mm/memory_hotplug.c | 1 -
+> 1 file changed, 1 deletion(-)
+>
+>diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>index 1a00b5a37ef6..2d2aae830b92 100644
+>--- a/mm/memory_hotplug.c
+>+++ b/mm/memory_hotplug.c
+>@@ -71,7 +71,6 @@ bool memhp_auto_online;
+> #else
+> bool memhp_auto_online = true;
+> #endif
+>-EXPORT_SYMBOL_GPL(memhp_auto_online);
+> 
+> static int __init setup_memhp_default_state(char *str)
+> {
+>-- 
+>2.24.1
+
+-- 
+Wei Yang
+Help you, Help me
