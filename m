@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB51C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94651C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC6820735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E342076D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbgCQMYD (ORCPT
+        id S1727347AbgCQMYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 08:24:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:37162 "EHLO foss.arm.com"
+        Tue, 17 Mar 2020 08:24:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:37060 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727302AbgCQMX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 08:23:59 -0400
+        id S1726452AbgCQMXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 08:23:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50BBF1045;
-        Tue, 17 Mar 2020 05:23:59 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71C0C101E;
+        Tue, 17 Mar 2020 05:23:49 -0700 (PDT)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 401173F534;
-        Tue, 17 Mar 2020 05:23:56 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6157C3F534;
+        Tue, 17 Mar 2020 05:23:46 -0700 (PDT)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
@@ -48,9 +48,9 @@ Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Marc Zyngier <maz@kernel.org>,
         Mark Rutland <Mark.Rutland@arm.com>,
         Will Deacon <will@kernel.org>
-Subject: [PATCH v4 21/26] arm64: vdso32: Include common headers in the vdso library
-Date:   Tue, 17 Mar 2020 12:22:15 +0000
-Message-Id: <20200317122220.30393-22-vincenzo.frascino@arm.com>
+Subject: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in vgettimeofday
+Date:   Tue, 17 Mar 2020 12:22:12 +0000
+Message-Id: <20200317122220.30393-19-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317122220.30393-1-vincenzo.frascino@arm.com>
 References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
@@ -61,48 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vDSO library should only include the necessary headers required for
-a userspace library (UAPI and a minimal set of kernel headers). To make
-this possible it is necessary to isolate from the kernel headers the
-common parts that are strictly necessary to build the library.
+For ABI compatibility with arm32, the compat vDSO layer on arm64 needs
+to return -EINVAL when UINTPTR_MAX is passed as argument to the
+clock_get* functions.
 
-Refactor the vdso32 implementation to include common headers.
+Replace TASK_SIZE_32 with a more semantically correct formula that checks
+for wrapping around 0.
+
+Note: This will allow to not define TASK_SIZE_32 for the vdso headers in a
+future patch that will introduce asm/vdso/processor.h on arm64.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- arch/arm64/include/asm/vdso/compat_gettimeofday.h | 2 +-
- arch/arm64/kernel/vdso32/vgettimeofday.c          | 3 ---
- 2 files changed, 1 insertion(+), 4 deletions(-)
+ arch/arm64/kernel/vdso32/vgettimeofday.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index 81b0c394f1d8..8d8d1c006a68 100644
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -8,7 +8,7 @@
- #ifndef __ASSEMBLY__
- 
- #include <asm/unistd.h>
--#include <uapi/linux/time.h>
-+#include <asm/errno.h>
- 
- #include <asm/vdso/compat_barrier.h>
- 
 diff --git a/arch/arm64/kernel/vdso32/vgettimeofday.c b/arch/arm64/kernel/vdso32/vgettimeofday.c
-index 91138077b073..54fefacb1637 100644
+index 54fc1c2ce93f..91138077b073 100644
 --- a/arch/arm64/kernel/vdso32/vgettimeofday.c
 +++ b/arch/arm64/kernel/vdso32/vgettimeofday.c
-@@ -5,9 +5,6 @@
-  * Copyright (C) 2018 ARM Limited
-  *
-  */
--#include <linux/time.h>
--#include <linux/types.h>
--
- #define VALID_CLOCK_ID(x) \
- 	((x >= 0) && (x < VDSO_BASES))
+@@ -8,11 +8,14 @@
+ #include <linux/time.h>
+ #include <linux/types.h>
+ 
++#define VALID_CLOCK_ID(x) \
++	((x >= 0) && (x < VDSO_BASES))
++
+ int __vdso_clock_gettime(clockid_t clock,
+ 			 struct old_timespec32 *ts)
+ {
+ 	/* The checks below are required for ABI consistency with arm */
+-	if ((u32)ts >= TASK_SIZE_32)
++	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
+ 		return -EFAULT;
+ 
+ 	return __cvdso_clock_gettime32(clock, ts);
+@@ -22,7 +25,7 @@ int __vdso_clock_gettime64(clockid_t clock,
+ 			   struct __kernel_timespec *ts)
+ {
+ 	/* The checks below are required for ABI consistency with arm */
+-	if ((u32)ts >= TASK_SIZE_32)
++	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
+ 		return -EFAULT;
+ 
+ 	return __cvdso_clock_gettime(clock, ts);
+@@ -38,9 +41,12 @@ int __vdso_clock_getres(clockid_t clock_id,
+ 			struct old_timespec32 *res)
+ {
+ 	/* The checks below are required for ABI consistency with arm */
+-	if ((u32)res >= TASK_SIZE_32)
++	if ((u32)res > UINTPTR_MAX - sizeof(res) + 1)
+ 		return -EFAULT;
+ 
++	if (!VALID_CLOCK_ID(clock_id) && res == NULL)
++		return -EINVAL;
++
+ 	return __cvdso_clock_getres_time32(clock_id, res);
+ }
  
 -- 
 2.25.1
