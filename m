@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370DDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF30C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F71C20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D744520738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MWWbI+n7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W6n6C7if"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgCQNF4 (ORCPT
+        id S1726736AbgCQNHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:05:56 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46199 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726485AbgCQNFz (ORCPT
+        Tue, 17 Mar 2020 09:07:49 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58525 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726016AbgCQNHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:05:55 -0400
+        Tue, 17 Mar 2020 09:07:48 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584450355; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1584450468; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ZTED8PjW1HwvOigSt/VzJRJKGdN0cV9OXysHgYPS88c=; b=MWWbI+n71j+1qNHdWcto0KIv71U8TrdOR9WK/FUcEx/naSCiwXF1Fva1NX3F2A5ZrM0lP9Py
- WdQWBDzEJ5LwZPDWmr9zH1dDTsEQF2weBQbfrzhI2qiA88l5gjkpGG+mZUPA7BzRDFOA9rJk
- +ex3HxLaOzAsP0qGqoVsW92j5KU=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ Subject: Sender; bh=OzBinwjasneXX1n8YD6svwHCtiwmcexTJOEThjdgLII=; b=W6n6C7ifJr1nAbcsEPeOihll56GI91Sku8Dvvk8vYLaVpVNeksfc4bjP1uEjU9PD3/B/DcJs
+ 0UBlIYV29e18obkxYP+WLvOLwrrbW9EqqwI2Cpe6n6briDFDy1CPHxbVJO35etb2e74tLBbq
+ H+VjMDW+U8nBf3Gbj08g44N0ils=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e70cb26.7f4eca5d7650-smtp-out-n04;
- Tue, 17 Mar 2020 13:05:42 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e70cb94.7f8b3efc2e30-smtp-out-n05;
+ Tue, 17 Mar 2020 13:07:32 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C4B25C4478F; Tue, 17 Mar 2020 13:05:40 +0000 (UTC)
+        id 33F58C44788; Tue, 17 Mar 2020 13:07:31 +0000 (UTC)
 Received: from [192.168.0.8] (unknown [183.83.138.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A2CA6C433CB;
-        Tue, 17 Mar 2020 13:05:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A2CA6C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B656C433D2;
+        Tue, 17 Mar 2020 13:07:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8B656C433D2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH 1/2] tty: serial: qcom_geni_serial: No need to stop tx/rx
- on UART shutdown
+Subject: Re: [PATCH 2/2] tty: serial: qcom_geni_serial: Don't try to manually
+ disable the console
 To:     Douglas Anderson <dianders@chromium.org>,
         gregkh@linuxfoundation.org
 Cc:     mka@chromium.org, swboyd@chromium.org, ryandcase@chromium.org,
@@ -61,13 +61,14 @@ Cc:     mka@chromium.org, swboyd@chromium.org, ryandcase@chromium.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-serial@vger.kernel.org
 References: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
+ <20200313134635.2.I3648fac6c98b887742934146ac2729ecb7232eb1@changeid>
 From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <ce79643c-e854-a48f-2faf-f405c310a8a7@codeaurora.org>
-Date:   Tue, 17 Mar 2020 18:35:31 +0530
+Message-ID: <7663863d-3f38-2ad9-d544-370064695aef@codeaurora.org>
+Date:   Tue, 17 Mar 2020 18:37:22 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
+In-Reply-To: <20200313134635.2.I3648fac6c98b887742934146ac2729ecb7232eb1@changeid>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -78,25 +79,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 3/14/2020 2:16 AM, Douglas Anderson wrote:
-> On a board using qcom_geni_serial I found that I could no longer
-> interact with kdb if I got a crash after the "agetty" running on the
-> same serial port was killed.  This meant that various classes of
-> crashes that happened at reboot time were undebuggable.
+> The geni serial driver's shutdown code had a special case to call
+> console_stop().  Grepping through the code, it was the only serial
+> driver doing something like this (the only other caller of
+> console_stop() was in serial_core.c).
 >
-> Reading through the code, I couldn't figure out why qcom_geni_serial
-> felt the need to run so much code at port shutdown time.  All we need
-> to do is disable the interrupt.
->
-> After I make this change then a hardcoded kgdb_breakpoint in some late
-> shutdown code now allows me to interact with the debugger.  I also
-> could freely close / re-open the port without problems.
+> As far as I can tell there's no reason to call console_stop() in the
+> geni code.  ...and a good reason _not_ to call it.  Specifically if
+> you have an agetty running on the same serial port as the console then
+> killing the agetty kills your console and if you start the agetty
+> again the console doesn't come back.
 >
 > Fixes: c4f528795d1a ("tty: serial: msm_geni_serial: Add serial driver support for GENI based QUP")
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
-
-Looks good to me.
-
 Reviewed-by: Akash Asthana <akashast@codeaurora.org>
 
 -- 
