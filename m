@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F9AC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A53C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B3820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D4220736
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443129;
-	bh=x/iwEgPCjqg1vr+Jo85dKncNW7v4aqB6+4VNxqJquD0=;
+	s=default; t=1584443136;
+	bh=2Es2x8F4ndjoVOQ0H+k7WmfpKbG/6r8wz6oEvR92m5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JyZjmqyAEnw/SZJ+LKYjL04fViYjm+QfSEAON2FdMMmYRlYnxZSIe8xqsH2ZwXPtk
-	 Ql2Jsru3JPs9DF9P9E9uMVsbNLwqG3jNaOb4kE1dNoiTVqZMne82OYacuTJDHRrF42
-	 rJKJA/1UBezZEDM5hgVVs0l5JYWEnJH5iXWC9eMY=
+	b=oPrvLsH5/SJmX/D8Eqg3b9l/k2lQj01jWR0GwQHR4kvoYYhnzneLkh5MTaVtsDrYX
+	 DCHFWkDBv9KlCiqxKiZAQUGE0swmNnFNjJM06SjcM+Pwmmpd/tCLW1JLxdP5Odt7KV
+	 MRGnz+TN7iE1HpR0P7MQWi0GCcSPffnI6rsl9JTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgCQLF2 (ORCPT
+        id S1728451AbgCQLFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46062 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728061AbgCQLFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:17 -0400
+        id S1726947AbgCQLFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:05:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 055DE20736;
-        Tue, 17 Mar 2020 11:05:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D9D120714;
+        Tue, 17 Mar 2020 11:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443117;
-        bh=x/iwEgPCjqg1vr+Jo85dKncNW7v4aqB6+4VNxqJquD0=;
+        s=default; t=1584443132;
+        bh=2Es2x8F4ndjoVOQ0H+k7WmfpKbG/6r8wz6oEvR92m5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2rOYSmPgslhsUtz9n6PlW2cFSepmZtR00xu/Nrx1iMArPaXBLvPuGBi+32HIJfIOd
-         hZZj+3UH4TfPifbhueHXni06KeoPluvzrnXstUlM0RDGfdml0PZgYfXnVd4m7+Wq1l
-         hDbNvupEl1gd3XoCxAvEBNyMd6fMqg59VQquid3A=
+        b=whxvImbOu7KUeZHeePnaqPzjwPLo+lgd+UqU3qiuL+J0dSVPW7oePyNvvtHkz/3G4
+         le7IQrn9FvqaSY4dM0QGnmU2sUdTBYuvNz1wP3r008StyXcHyz6ZfveBiXXlvICJjG
+         2jj7HyqPVBxkLBjblL36xfYFc+XxFI9fzURmmTsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH 5.4 101/123] virtio_ring: Fix mem leak with vring_new_virtqueue()
-Date:   Tue, 17 Mar 2020 11:55:28 +0100
-Message-Id: <20200317103317.968666344@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.4 106/123] iommu/vt-d: Fix RCU-list bugs in intel_iommu_init()
+Date:   Tue, 17 Mar 2020 11:55:33 +0100
+Message-Id: <20200317103318.386788238@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,47 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+From: Qian Cai <cai@lca.pw>
 
-commit f13f09a12cbd0c7b776e083c5d008b6c6a9c4e0b upstream.
+commit 2d48ea0efb8887ebba3e3720bb5b738aced4e574 upstream.
 
-The functions vring_new_virtqueue() and __vring_new_virtqueue() are used
-with split rings, and any allocations within these functions are managed
-outside of the .we_own_ring flag. The commit cbeedb72b97a ("virtio_ring:
-allocate desc state for split ring separately") allocates the desc state
-within the __vring_new_virtqueue() but frees it only when the .we_own_ring
-flag is set. This leads to a memory leak when freeing such allocated
-virtqueues with the vring_del_virtqueue() function.
+There are several places traverse RCU-list without holding any lock in
+intel_iommu_init(). Fix them by acquiring dmar_global_lock.
 
-Fix this by moving the desc_state free code outside the flag and only
-for split rings. Issue was discovered during testing with remoteproc
-and virtio_rpmsg.
+ WARNING: suspicious RCU usage
+ -----------------------------
+ drivers/iommu/intel-iommu.c:5216 RCU-list traversed in non-reader section!!
 
-Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring separately")
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Link: https://lore.kernel.org/r/20200224212643.30672-1-s-anna@ti.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ no locks held by swapper/0/1.
+
+ Call Trace:
+  dump_stack+0xa0/0xea
+  lockdep_rcu_suspicious+0x102/0x10b
+  intel_iommu_init+0x947/0xb13
+  pci_iommu_init+0x26/0x62
+  do_one_initcall+0xfe/0x500
+  kernel_init_freeable+0x45a/0x4f8
+  kernel_init+0x11/0x139
+  ret_from_fork+0x3a/0x50
+ DMAR: Intel(R) Virtualization Technology for Directed I/O
+
+Fixes: d8190dc63886 ("iommu/vt-d: Enable DMA remapping after rmrr mapped")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virtio/virtio_ring.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-iommu.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueu
- 					 vq->split.queue_size_in_bytes,
- 					 vq->split.vring.desc,
- 					 vq->split.queue_dma_addr);
--
--			kfree(vq->split.desc_state);
- 		}
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5024,6 +5024,7 @@ int __init intel_iommu_init(void)
+ 
+ 	init_iommu_pm_ops();
+ 
++	down_read(&dmar_global_lock);
+ 	for_each_active_iommu(iommu, drhd) {
+ 		iommu_device_sysfs_add(&iommu->iommu, NULL,
+ 				       intel_iommu_groups,
+@@ -5031,6 +5032,7 @@ int __init intel_iommu_init(void)
+ 		iommu_device_set_ops(&iommu->iommu, &intel_iommu_ops);
+ 		iommu_device_register(&iommu->iommu);
  	}
-+	if (!vq->packed_ring)
-+		kfree(vq->split.desc_state);
- 	list_del(&_vq->list);
- 	kfree(vq);
- }
++	up_read(&dmar_global_lock);
+ 
+ 	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
+ 	if (si_domain && !hw_pass_through)
+@@ -5041,7 +5043,6 @@ int __init intel_iommu_init(void)
+ 	down_read(&dmar_global_lock);
+ 	if (probe_acpi_namespace_devices())
+ 		pr_warn("ACPI name space devices didn't probe correctly\n");
+-	up_read(&dmar_global_lock);
+ 
+ 	/* Finally, we enable the DMA remapping hardware. */
+ 	for_each_iommu(iommu, drhd) {
+@@ -5050,6 +5051,8 @@ int __init intel_iommu_init(void)
+ 
+ 		iommu_disable_protect_mem_regions(iommu);
+ 	}
++	up_read(&dmar_global_lock);
++
+ 	pr_info("Intel(R) Virtualization Technology for Directed I/O\n");
+ 
+ 	intel_iommu_enabled = 1;
 
 
