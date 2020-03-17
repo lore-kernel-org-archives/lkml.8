@@ -2,266 +2,314 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BDAC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E905CC5ACD8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEFF220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B026120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:44:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H85KDwXx"
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="ne+bVIFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgCQRoQ (ORCPT
+        id S1726809AbgCQRoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:44:16 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41179 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgCQRoQ (ORCPT
+        Tue, 17 Mar 2020 13:44:20 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33695 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbgCQRoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:44:16 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f11so10071321wrp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:44:14 -0700 (PDT)
+        Tue, 17 Mar 2020 13:44:19 -0400
+Received: by mail-ot1-f65.google.com with SMTP id x26so5549278otk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:44:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=EK44VVG+KH3H5aTC5J1cCQvH2q7GwAk+V56is7JfZuk=;
-        b=H85KDwXxBy/l7uVQR3C0nhnQtw6t9GpvnSEIj4NDmpPN2qMo8J5MuMjgPqVX+EPS3E
-         aYqsbBK1P0vpDMn3/M4kgI6s+i9h/RoWoJWH3TnafA98qecvDQL6RSSnQj0kHETYqNzZ
-         4uPCroFPty21y4riolZ4PXrDO9qfg8rUcYwSrmaQ63i49EAIH4n0Bl/gFNGJ7TLbapb5
-         jahqAJrnsYFnbXFdM1zOzdqVTHjiZLjr1kLGJvxlh6cm8R22lB2JvLKFe7KUHSsfyx0Z
-         6zFKTro6eoPDTl9IPLR6or+3uLWHTsTwABimwBhHnQv5yn3HtqXBGwQfbBPsMPBiHna7
-         ji8w==
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HFObV0SspXma1gLo5gg6wz6AEKM5WgviBnCNdKtRKgU=;
+        b=ne+bVIFRKWbvsEFwYhkf7+KIi+MANbz/V+ZJeByU8P2/DmFk2G4m83PxdKxp14ZcyZ
+         zpwcxW3Q/0jmHunemkBhZeEPnLWnDHgffP+YxHm5MkqUx4TxPhzxRkGStLVz3DvPpdNB
+         dwmc58QWAwjatkC+hkCLDQC8XLreSV1Hlay2BRDjaFXacT1hvgKONvUPE37D7idzZkRI
+         F6m6NaZmFEw/Um4fSpLT/yA30FyLmtbJvMvIcFAsjkflCF0WJsKXcFwO+qfw0n3hzJJd
+         3oZs9wrI7l5TRThsC9zKWUtQM37zdpS32x5ieEgBUMAJdGFtZiY7INTl8fohCEaDHjKk
+         YtWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=EK44VVG+KH3H5aTC5J1cCQvH2q7GwAk+V56is7JfZuk=;
-        b=XT4aFvfvw/XuJ9csc6mfUSyMfVaFqd+X/aPBAOEBmdteN+gDXHpgAGdZqCWGX+vPu0
-         T0FZsnU0B0EuOzVrKCuui5jBLFORKsc1yezxjvXJv4q8oTffhe9yzw2O8oVAqrC08ySK
-         N7qoaHWL+f3BfawvrD9SAI4Mq9nJzfyun2oPxHWaAIirFiObiMo26SCqfXLlFleELiKc
-         CH2YR/C9Cuql1QTRSFGfqZPZGs/brT+lLG9IQ1CkHwCbhJPf1KR81sMpkABXKPfZG4Wc
-         Pv9F8aMRB2n9smX/84AbkERkGkDf5+JK3dxTTrXKqMX0jB8oAwam6l1cr46DaTwHLUtr
-         C+ew==
-X-Gm-Message-State: ANhLgQ2UpC5Q4qo6ckHc2irOpZaEOOCJseerS5ENzTwtNVIjTGDLcP8L
-        /q28h/WD6Wjvm194RSlBLrhclQ==
-X-Google-Smtp-Source: ADFU+vt2EuzK91aDVK9jtj8xz4riGmHPAywnuGetgvwFeJwinrUHU6cNn1ahKgSDGuj9xjuBwWgqSQ==
-X-Received: by 2002:adf:e68b:: with SMTP id r11mr154168wrm.138.1584467053475;
-        Tue, 17 Mar 2020 10:44:13 -0700 (PDT)
-Received: from [192.168.0.105] (84-33-72-137.dyn.eolo.it. [84.33.72.137])
-        by smtp.gmail.com with ESMTPSA id t124sm197919wmg.13.2020.03.17.10.44.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Mar 2020 10:44:12 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] block, bfq: fix use-after-free in
- bfq_idle_slice_timer_body
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <6c0d0b36-751b-a63a-418b-888a88ce58f4@huawei.com>
-Date:   Tue, 17 Mar 2020 18:44:48 +0100
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>, renxudong <renxudong1@huawei.com>,
-        Louhongxiang <louhongxiang@huawei.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C69604D5-CBB7-4A5F-AD73-7A9C0B6B3360@linaro.org>
-References: <6c0d0b36-751b-a63a-418b-888a88ce58f4@huawei.com>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HFObV0SspXma1gLo5gg6wz6AEKM5WgviBnCNdKtRKgU=;
+        b=C90SVqMoeUM7gXxQQzYAld2qEgSb18yL6VET2ApCCXUWufqVTPm5J6M5iyX+N759P4
+         667/TFnC/5fUIFyfV/LcIiIOaukXIKAoBmPlWlKoocRKo6T914ehDB6F7Q3uhrrUP7Uz
+         3hpZl3JQfmBxJYzNPyyoAWPbWWr5qRtuHSxrFAtq6xZ9d89QOz+y/DGRWvsAGV+jxIvA
+         RAMV0RWmdDWf1hIdBlE6MY1jqUMnPn5An1CZuRfxqDZ/S6GxTHTzKuccZ4BLi6sjY0eT
+         yCYgbgfUsNKeTipvy7dM3Gl1amKV/aMcwqaGA1eCWCerfs0v+VTMrnRydVTfmg8IWuo8
+         XjIA==
+X-Gm-Message-State: ANhLgQ1j179bz3neeMpe3A2E0DoiynEF99H6QOO8MvSNO+i/pDqE9fMb
+        2xuN2ai25FpKhKDFU0S88p1zWNq7XTrATslcIBT/Pw==
+X-Google-Smtp-Source: ADFU+vvTUir1AUne+7NEC2On9ZdgUJLPHpEJZX9GlK21WrFda8uHLpjtU7BW6sdX6h575+/z1dUqSCMKlnsKqda5gNg=
+X-Received: by 2002:a05:6830:1e06:: with SMTP id s6mr385357otr.28.1584467057819;
+ Tue, 17 Mar 2020 10:44:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <1584464453-28200-1-git-send-email-tharvey@gateworks.com>
+ <1584464453-28200-4-git-send-email-tharvey@gateworks.com> <8570eb47-d446-9fcb-1033-682114c9ca59@roeck-us.net>
+In-Reply-To: <8570eb47-d446-9fcb-1033-682114c9ca59@roeck-us.net>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Tue, 17 Mar 2020 10:44:06 -0700
+Message-ID: <CAJ+vNU0oc17q-Ajgh29hAZRNeTa+CeRfKjz22-33XqHOdYwQyA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] hwmon: add Gateworks System Controller support
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Robert Jones <rjones@gateworks.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 17, 2020 at 10:18 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 3/17/20 10:00 AM, Tim Harvey wrote:
+> > The Gateworks System Controller has a hwmon sub-component that exposes
+> > up to 16 ADC's, some of which are temperature sensors, others which are
+> > voltage inputs. The ADC configuration (register mapping and name) is
+> > configured via device-tree and varies board to board.
+> >
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> > ---
+> > v6:
+> > - fix size of info field
+> > - improve pwm output control documentation
+> > - include unit suffix in divider and offset
+> > - change adc subnode name to gsc-adc
+> > - change fan base to fan subnode
+> > - change adc type to mode
+> > - fix voltage offset scaling
+> >
+> > v5:
+> > - fix various checkpatch issues
+> > - correct gsc-hwmon.rst in MAINTAINERS
+> > - encorporate Gunter's feedback:
+> >  - switch to SENSOR_DEVICE_ATTR_{RW,RO}
+> >  - use tmp value to avoid excessive pointer deference
+> >  - simplify shift operation
+> >  - scale voffset once
+> >  - simplify is_visible function
+> >  - remove empty line at end of file
+> >
+> > v4:
+> > - adjust for uV offset from device-tree
+> > - remove unnecessary optional write function
+> > - remove register range check
+> > - change dev_err prints to use gsc dev
+> > - hard-code resolution/scaling for raw adcs
+> > - describe units of ADC resolution
+> > - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+> > - ensure space before/after operators
+> > - remove unnecessary parens
+> > - remove more debugging
+> > - add default case and comment for type_voltage
+> > - remove unnecessary index bounds checks for channel
+> > - remove unnecessary clearing of struct fields
+> > - added Documentation/hwmon/gsc-hwmon.rst
+> >
+> > v3:
+> > - add voltage_raw input type and supporting fields
+> > - add channel validation to is_visible function
+> > - remove unnecessary channel validation from read/write functions
+> >
+> > v2:
+> > - change license comment style
+> > - remove DEBUG
+> > - simplify regmap_bulk_read err check
+> > - remove break after returns in switch statement
+> > - fix fan setpoint buffer address
+> > - remove unnecessary parens
+> > - consistently use struct device *dev pointer
+> > - change license/comment block
+> > - add validation for hwmon child node props
+> > - move parsing of of to own function
+> > - use strlcpy to ensure null termination
+> > - fix static array sizes and removed unnecessary initializers
+> > - dynamically allocate channels
+> > - fix fan input label
+> > - support platform data
+> > - fixed whitespace issues
+> > ---
+> >  Documentation/hwmon/gsc-hwmon.rst       |  53 +++++
+> >  Documentation/hwmon/index.rst           |   1 +
+> >  MAINTAINERS                             |   3 +
+> >  drivers/hwmon/Kconfig                   |   9 +
+> >  drivers/hwmon/Makefile                  |   1 +
+> >  drivers/hwmon/gsc-hwmon.c               | 372 ++++++++++++++++++++++++++++++++
+> >  include/linux/platform_data/gsc_hwmon.h |  44 ++++
+> >  7 files changed, 483 insertions(+)
+> >  create mode 100644 Documentation/hwmon/gsc-hwmon.rst
+> >  create mode 100644 drivers/hwmon/gsc-hwmon.c
+> >  create mode 100644 include/linux/platform_data/gsc_hwmon.h
+> >
+> > diff --git a/Documentation/hwmon/gsc-hwmon.rst b/Documentation/hwmon/gsc-hwmon.rst
+> > new file mode 100644
+> > index 00000000..ffac392
+> > --- /dev/null
+> > +++ b/Documentation/hwmon/gsc-hwmon.rst
+> > @@ -0,0 +1,53 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +Kernel driver gsc-hwmon
+> > +=======================
+> > +
+> > +Supported chips: Gateworks GSC
+> > +Datasheet: http://trac.gateworks.com/wiki/gsc
+> > +Author: Tim Harvey <tharvey@gateworks.com>
+> > +
+> > +Description:
+> > +------------
+> > +
+> > +This driver supports hardware monitoring for the temperature sensor,
+> > +various ADC's connected to the GSC, and optional FAN controller available
+> > +on some boards.
+> > +
+> > +
+> > +Voltage Monitoring
+> > +------------------
+> > +
+> > +The voltage inputs are scaled either internally or by the driver depending
+> > +on the GSC version and firmware. The values returned by the driver do not need
+> > +further scaling. The voltage input labels provide the voltage rail name:
+> > +
+> > +inX_input                  Measured voltage (mV).
+> > +inX_label                  Name of voltage rail.
+> > +
+> > +
+> > +Temperature Monitoring
+> > +----------------------
+> > +
+> > +Temperatures are measured with 12-bit or 10-bit resolution and are scaled
+> > +either internally or by the driver depending on the GSC version and firmware.
+> > +The values returned by the driver reflect millidegree Celcius:
+> > +
+> > +tempX_input                Measured temperature.
+> > +tempX_label                Name of temperature input.
+> > +
+> > +
+> > +PWM Output Control
+> > +------------------
+> > +
+> > +The GSC features 1 PWM output that operates in automatic mode where the
+> > +PWM value will be scalled depending on 6 temperature boundaries.
+> > +The tempeature boundaries are read-write and in millidegree Celcius and the
+> > +read-only PWM values range from 0 (off) to 255 (full speed).
+> > +Fan speed will be set to minimum (off) when the temperature sensor reads
+> > +less than pwm1_auto_point1_temp and maximum when the temperature sensor
+> > +equals or exceeds pwm1_auto_point6_temp.
+> > +
+> > +pwm1_auto_point[1-6]_pwm       PWM value.
+> > +pwm1_auto_point[1-6]_temp      Temperature boundary.
+> > +
+> > diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> > index 43cc605..a4fab69 100644
+> > --- a/Documentation/hwmon/index.rst
+> > +++ b/Documentation/hwmon/index.rst
+> > @@ -58,6 +58,7 @@ Hardware Monitoring Kernel Drivers
+> >     ftsteutates
+> >     g760a
+> >     g762
+> > +   gsc-hwmon
+> >     gl518sm
+> >     hih6130
+> >     ibmaem
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index bb79b60..3f15542 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -6846,6 +6846,9 @@ S:      Maintained
+> >  F:   Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> >  F:   drivers/mfd/gateworks-gsc.c
+> >  F:   include/linux/mfd/gsc.h
+> > +F:   Documentation/hwmon/gsc-hwmon.rst
+> > +F:   drivers/hwmon/gsc-hwmon.c
+> > +F:   include/linux/platform_data/gsc_hwmon.h
+> >
+> >  GCC PLUGINS
+> >  M:   Kees Cook <keescook@chromium.org>
+> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> > index 23dfe84..99dae13 100644
+> > --- a/drivers/hwmon/Kconfig
+> > +++ b/drivers/hwmon/Kconfig
+> > @@ -494,6 +494,15 @@ config SENSORS_F75375S
+> >         This driver can also be built as a module. If so, the module
+> >         will be called f75375s.
+> >
+> > +config SENSORS_GSC
+> > +        tristate "Gateworks System Controller ADC"
+> > +        depends on MFD_GATEWORKS_GSC
+> > +        help
+> > +          Support for the Gateworks System Controller A/D converters.
+> > +
+> > +       To compile this driver as a module, choose M here:
+> > +       the module will be called gsc-hwmon.
+> > +
+> >  config SENSORS_MC13783_ADC
+> >          tristate "Freescale MC13783/MC13892 ADC"
+> >          depends on MFD_MC13XXX
+> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> > index 6db5db9..259cba7 100644
+> > --- a/drivers/hwmon/Makefile
+> > +++ b/drivers/hwmon/Makefile
+> > @@ -71,6 +71,7 @@ obj-$(CONFIG_SENSORS_G760A) += g760a.o
+> >  obj-$(CONFIG_SENSORS_G762)   += g762.o
+> >  obj-$(CONFIG_SENSORS_GL518SM)        += gl518sm.o
+> >  obj-$(CONFIG_SENSORS_GL520SM)        += gl520sm.o
+> > +obj-$(CONFIG_SENSORS_GSC)    += gsc-hwmon.o
+> >  obj-$(CONFIG_SENSORS_GPIO_FAN)       += gpio-fan.o
+> >  obj-$(CONFIG_SENSORS_HIH6130)        += hih6130.o
+> >  obj-$(CONFIG_SENSORS_ULTRA45)        += ultra45_env.o
+> > diff --git a/drivers/hwmon/gsc-hwmon.c b/drivers/hwmon/gsc-hwmon.c
+> > new file mode 100644
+> > index 00000000..c498786
+> > --- /dev/null
+> > +++ b/drivers/hwmon/gsc-hwmon.c
+> > @@ -0,0 +1,372 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Driver for Gateworks System Controller Hardware Monitor module
+> > + *
+> > + * Copyright (C) 2020 Gateworks Corporation
+> > + */
+> > +#include <linux/hwmon.h>
+> > +#include <linux/hwmon-sysfs.h>
+> > +#include <linux/mfd/gsc.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/slab.h>
+> > +
+> > +#include <linux/platform_data/gsc_hwmon.h>
+> > +
+> > +#define GSC_HWMON_MAX_TEMP_CH        16
+> > +#define GSC_HWMON_MAX_IN_CH  16
+> > +
+> > +#define GSC_HWMON_RESOLUTION 12
+> > +#define GSC_HWMON_VREF               2500
+> > +
+> > +struct gsc_hwmon_data {
+> > +     struct gsc_dev *gsc;
+> > +     struct device *dev;
+>
+> What is 'dev' used for ? I don't think it is necessary.
+>
 
+Agreed - will remove.
 
-> Il giorno 17 mar 2020, alle ore 15:06, Zhiqiang Liu =
-<liuzhiqiang26@huawei.com> ha scritto:
->=20
-> In bfq_idle_slice_timer func, bfqq =3D bfqd->in_service_queue is
-> not in bfqd-lock critical section. The bfqq, which is not
-> equal to NULL in bfq_idle_slice_timer, may be freed after passing
-> to bfq_idle_slice_timer_body. So we will access the freed memory.
->=20
-> KASAN log is given as follows:
-> [13058.354613] =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [13058.354640] BUG: KASAN: use-after-free in =
-bfq_idle_slice_timer+0xac/0x290
-> [13058.354644] Read of size 8 at addr ffffa02cf3e63f78 by task =
-fork13/19767
-> [13058.354646]
-> [13058.354655] CPU: 96 PID: 19767 Comm: fork13
-> [13058.354661] Call trace:
-> [13058.354667]  dump_backtrace+0x0/0x310
-> [13058.354672]  show_stack+0x28/0x38
-> [13058.354681]  dump_stack+0xd8/0x108
-> [13058.354687]  print_address_description+0x68/0x2d0
-> [13058.354690]  kasan_report+0x124/0x2e0
-> [13058.354697]  __asan_load8+0x88/0xb0
-> [13058.354702]  bfq_idle_slice_timer+0xac/0x290
-> [13058.354707]  __hrtimer_run_queues+0x298/0x8b8
-> [13058.354710]  hrtimer_interrupt+0x1b8/0x678
-> [13058.354716]  arch_timer_handler_phys+0x4c/0x78
-> [13058.354722]  handle_percpu_devid_irq+0xf0/0x558
-> [13058.354731]  generic_handle_irq+0x50/0x70
-> [13058.354735]  __handle_domain_irq+0x94/0x110
-> [13058.354739]  gic_handle_irq+0x8c/0x1b0
-> [13058.354742]  el1_irq+0xb8/0x140
-> [13058.354748]  do_wp_page+0x260/0xe28
-> [13058.354752]  __handle_mm_fault+0x8ec/0x9b0
-> [13058.354756]  handle_mm_fault+0x280/0x460
-> [13058.354762]  do_page_fault+0x3ec/0x890
-> [13058.354765]  do_mem_abort+0xc0/0x1b0
-> [13058.354768]  el0_da+0x24/0x28
-> [13058.354770]
-> [13058.354773] Allocated by task 19731:
-> [13058.354780]  kasan_kmalloc+0xe0/0x190
-> [13058.354784]  kasan_slab_alloc+0x14/0x20
-> [13058.354788]  kmem_cache_alloc_node+0x130/0x440
-> [13058.354793]  bfq_get_queue+0x138/0x858
-> [13058.354797]  bfq_get_bfqq_handle_split+0xd4/0x328
-> [13058.354801]  bfq_init_rq+0x1f4/0x1180
-> [13058.354806]  bfq_insert_requests+0x264/0x1c98
-> [13058.354811]  blk_mq_sched_insert_requests+0x1c4/0x488
-> [13058.354818]  blk_mq_flush_plug_list+0x2d4/0x6e0
-> [13058.354826]  blk_flush_plug_list+0x230/0x548
-> [13058.354830]  blk_finish_plug+0x60/0x80
-> [13058.354838]  read_pages+0xec/0x2c0
-> [13058.354842]  __do_page_cache_readahead+0x374/0x438
-> [13058.354846]  ondemand_readahead+0x24c/0x6b0
-> [13058.354851]  page_cache_sync_readahead+0x17c/0x2f8
-> [13058.354858]  generic_file_buffered_read+0x588/0xc58
-> [13058.354862]  generic_file_read_iter+0x1b4/0x278
-> [13058.354965]  ext4_file_read_iter+0xa8/0x1d8 [ext4]
-> [13058.354972]  __vfs_read+0x238/0x320
-> [13058.354976]  vfs_read+0xbc/0x1c0
-> [13058.354980]  ksys_read+0xdc/0x1b8
-> [13058.354984]  __arm64_sys_read+0x50/0x60
-> [13058.354990]  el0_svc_common+0xb4/0x1d8
-> [13058.354994]  el0_svc_handler+0x50/0xa8
-> [13058.354998]  el0_svc+0x8/0xc
-> [13058.354999]
-> [13058.355001] Freed by task 19731:
-> [13058.355007]  __kasan_slab_free+0x120/0x228
-> [13058.355010]  kasan_slab_free+0x10/0x18
-> [13058.355014]  kmem_cache_free+0x288/0x3f0
-> [13058.355018]  bfq_put_queue+0x134/0x208
-> [13058.355022]  bfq_exit_icq_bfqq+0x164/0x348
-> [13058.355026]  bfq_exit_icq+0x28/0x40
-> [13058.355030]  ioc_exit_icq+0xa0/0x150
-> [13058.355035]  put_io_context_active+0x250/0x438
-> [13058.355038]  exit_io_context+0xd0/0x138
-> [13058.355045]  do_exit+0x734/0xc58
-> [13058.355050]  do_group_exit+0x78/0x220
-> [13058.355054]  __wake_up_parent+0x0/0x50
-> [13058.355058]  el0_svc_common+0xb4/0x1d8
-> [13058.355062]  el0_svc_handler+0x50/0xa8
-> [13058.355066]  el0_svc+0x8/0xc
-> [13058.355067]
-> [13058.355071] The buggy address belongs to the object at =
-ffffa02cf3e63e70#012 which belongs to the cache bfq_queue of size 464
-> [13058.355075] The buggy address is located 264 bytes inside of#012 =
-464-byte region [ffffa02cf3e63e70, ffffa02cf3e64040)
-> [13058.355077] The buggy address belongs to the page:
-> [13058.355083] page:ffff7e80b3cf9800 count:1 mapcount:0 =
-mapping:ffff802db5c90780 index:0xffffa02cf3e606f0 compound_mapcount: 0
-> [13058.366175] flags: 0x2ffffe0000008100(slab|head)
-> [13058.370781] raw: 2ffffe0000008100 ffff7e80b53b1408 ffffa02d730c1c90 =
-ffff802db5c90780
-> [13058.370787] raw: ffffa02cf3e606f0 0000000000370023 00000001ffffffff =
-0000000000000000
-> [13058.370789] page dumped because: kasan: bad access detected
-> [13058.370791]
-> [13058.370792] Memory state around the buggy address:
-> [13058.370797]  ffffa02cf3e63e00: fc fc fc fc fc fc fc fc fc fc fc fc =
-fc fc fb fb
-> [13058.370801]  ffffa02cf3e63e80: fb fb fb fb fb fb fb fb fb fb fb fb =
-fb fb fb fb
-> [13058.370805] >ffffa02cf3e63f00: fb fb fb fb fb fb fb fb fb fb fb fb =
-fb fb fb fb
-> [13058.370808]                                                         =
-        ^
-> [13058.370811]  ffffa02cf3e63f80: fb fb fb fb fb fb fb fb fb fb fb fb =
-fb fb fb fb
-> [13058.370815]  ffffa02cf3e64000: fb fb fb fb fb fb fb fb fc fc fc fc =
-fc fc fc fc
-> [13058.370817] =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [13058.370820] Disabling lock debugging due to kernel taint
->=20
-> Here, we directly pass the bfqd to bfq_idle_slice_timer_body func.
->=20
-> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> Signed-off-by: Feilong Lin <linfeilong@huawei.com>
-> ---
-> block/bfq-iosched.c | 10 +++++-----
-> 1 file changed, 5 insertions(+), 5 deletions(-)
->=20
-> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-> index 8c436abfaf14..f470b9daa98b 100644
-> --- a/block/bfq-iosched.c
-> +++ b/block/bfq-iosched.c
-> @@ -6215,20 +6215,20 @@ static struct bfq_queue *bfq_init_rq(struct =
-request *rq)
-> 	return bfqq;
-> }
->=20
-> -static void bfq_idle_slice_timer_body(struct bfq_queue *bfqq)
-> +static void
-> +bfq_idle_slice_timer_body(struct bfq_data *bfqd, struct bfq_queue =
-*bfqq)
-> {
-> -	struct bfq_data *bfqd =3D bfqq->bfqd;
-> 	enum bfqq_expiration reason;
-> 	unsigned long flags;
->=20
-> 	spin_lock_irqsave(&bfqd->lock, flags);
-> -	bfq_clear_bfqq_wait_request(bfqq);
-> -
-> 	if (bfqq !=3D bfqd->in_service_queue) {
-> 		spin_unlock_irqrestore(&bfqd->lock, flags);
-> 		return;
-> 	}
->=20
-> +	bfq_clear_bfqq_wait_request(bfqq);
-> +
+Thanks!
 
-Please add a comment on why you (correctly) clear this flag only if bfqq =
-is in service.
-
-For the rest, seems ok to me.
-
-Thank you very much for spotting and fixing this bug,
-Paolo
-
-> 	if (bfq_bfqq_budget_timeout(bfqq))
-> 		/*
-> 		 * Also here the queue can be safely expired
-> @@ -6273,7 +6273,7 @@ static enum hrtimer_restart =
-bfq_idle_slice_timer(struct hrtimer *timer)
-> 	 * early.
-> 	 */
-> 	if (bfqq)
-> -		bfq_idle_slice_timer_body(bfqq);
-> +		bfq_idle_slice_timer_body(bfqd, bfqq);
->=20
-> 	return HRTIMER_NORESTART;
-> }
-> --=20
-> 2.19.1
->=20
->=20
-
+Tim
