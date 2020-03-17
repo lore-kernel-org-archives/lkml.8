@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F02C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD53C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD3920658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9C120658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgCQExO (ORCPT
+        id S1727231AbgCQEze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:53:14 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34097 "EHLO mga04.intel.com"
+        Tue, 17 Mar 2020 00:55:34 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34105 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgCQExL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:53:11 -0400
-IronPort-SDR: xnTIaWNCS9EybYkw8SjA5uMJaI18PJ7S5aDzuQ6DXfl63rB/hgnet4MSboqzHhsAYElcGg3/Ww
- fHPQY+dsuwLA==
+        id S1726838AbgCQExN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:53:13 -0400
+IronPort-SDR: vqy1bLstdA9x/QUbFPuHEaM/7NlHJ9V8Rl9EaALeczuM4itEwh3Vkqb6xXcJN2Sy2LiGut6/ji
+ WwNgY7CJl11g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:10 -0700
-IronPort-SDR: tgYOwLO76Po8JG5m0M3/2vdAKqYmKv5GzwKf3hCWb++LSc8WHWNGBq9BgPHaPAoXUUxR5vz5Hl
- 54nVbcMnc13w==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:13 -0700
+IronPort-SDR: vM7OJp7X91z6nOnMqc6nQyav74o1PYSBiswzroOdSGvtqEpspYtfA4UyKNWD3AQoTcyXQJxc+j
+ VToWf7z1Qiaw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252745"
+   d="scan'208";a="355252758"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:10 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:12 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 04/32] KVM: nVMX: Invalidate all L2 roots when emulating INVVPID without EPT
-Date:   Mon, 16 Mar 2020 21:52:10 -0700
-Message-Id: <20200317045238.30434-5-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 08/32] KVM: VMX: Skip global INVVPID fallback if vpid==0 in vpid_sync_context()
+Date:   Mon, 16 Mar 2020 21:52:14 -0700
+Message-Id: <20200317045238.30434-9-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
 References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
@@ -59,44 +59,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junaid Shahid <junaids@google.com>
+Skip the global INVVPID in the unlikely scenario that vpid==0 and the
+SINGLE_CONTEXT variant of INVVPID is unsupported.  If vpid==0, there's
+no need to INVVPID as it's impossible to do VM-Enter with VPID enabled
+and vmcs.VPID==0, i.e. there can't be any TLB entries for the vCPU with
+vpid==0.  The fact that the SINGLE_CONTEXT variant isn't supported is
+irrelevant.
 
-Free all L2 (guest_mmu) roots when emulating INVVPID for L1 and EPT is
-disabled, as outstanding changes to the page tables managed by L1 need
-to be recognized.
-
-Similar to handle_invpcid() and handle_invept(), rely on
-kvm_mmu_free_roots() to do a remote TLB flush if necessary, e.g. if L1
-has never entered L2 then there is nothing to be done.
-
-Fixes: 5c614b3583e7b ("KVM: nVMX: nested VPID emulation")
-Signed-off-by: Junaid Shahid <junaids@google.com>
-[sean: ported to upstream KVM, reworded the comment and changelog]
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/kvm/vmx/ops.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 9624cea4ed9f..50bb7d8862aa 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5250,6 +5250,17 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
- 		return kvm_skip_emulated_instruction(vcpu);
- 	}
- 
-+	/*
-+	 * Sync L2's shadow page tables if EPT is disabled, L1 is effectively
-+	 * invalidating linear mappings for L2 (tagged with L2's VPID).  Sync
-+	 * all roots as VPIDs are not tracked in the MMU role.
-+	 *
-+	 * TODO: sync only the affected SPTEs for INVDIVIDUAL_ADDR.
-+	 */
-+	if (!enable_ept)
-+		kvm_mmu_free_roots(vcpu, &vcpu->arch.guest_mmu,
-+				   KVM_MMU_ROOTS_ALL);
-+
- 	return nested_vmx_succeed(vcpu);
+diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
+index 45eaedee2ac0..33645a8e5463 100644
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -285,7 +285,7 @@ static inline void vpid_sync_context(int vpid)
+ {
+ 	if (cpu_has_vmx_invvpid_single())
+ 		vpid_sync_vcpu_single(vpid);
+-	else
++	else if (vpid != 0)
+ 		vpid_sync_vcpu_global();
  }
  
 -- 
