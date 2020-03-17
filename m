@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB29C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DB6C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0D0206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246FB20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443516;
-	bh=oBIkwvkWSfSaIPFaRd38+MCP5MdNKN11rWJETiWECyU=;
+	s=default; t=1584443519;
+	bh=y+OaqMIx5L66GMyJ/vStR04kTYrrZ6vXz6F2UkjolYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H5cHYKGvuZul0F3V7ydXHLv6s40cPBQAzsadOEmF7mmB5X0oLEYlFVDzti1Pg6c5+
-	 Yu3EzKcBjwTzhceIV4xPXUC0zzLxqfQZy4HgQzxd8Wmt3IhlRDRnu+rkHQC1Y0pqvp
-	 hqAGMvU+GZNsxaqsCxNYebx/JZ0srX/3uJLMRdRw=
+	b=fYoBQUBkzq5a7YyalBNWz1MK5bSy3HQq5Ho3d0JhwjVxZGAkT0u87r0z6afF1M0kC
+	 wKTS0vCI7tELG47HmRCkjE0wLIF0GlbmkWHUj/OZkDIPyfTihUFSLjr72amsuwPNci
+	 b4YsE0f4LJH1x9NbB+VSko72HFw+GR9yEe0DeT+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgCQLLz (ORCPT
+        id S1729148AbgCQLL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55412 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbgCQLLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:11:51 -0400
+        id S1726759AbgCQLLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:11:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC76C20719;
-        Tue, 17 Mar 2020 11:11:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E6C20735;
+        Tue, 17 Mar 2020 11:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443511;
-        bh=oBIkwvkWSfSaIPFaRd38+MCP5MdNKN11rWJETiWECyU=;
+        s=default; t=1584443508;
+        bh=y+OaqMIx5L66GMyJ/vStR04kTYrrZ6vXz6F2UkjolYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r/Tb7Nmxq0g4j2xY0xUzD8IZj8EGMkCg4LtNg6aax3vraDJbMwkv9O/5UIdN7VE0J
-         Ehp28uOk/Jh8N/ItN/c1AirDVw7xExSQKy09Vz1aRi/dt36WALq9K34tz0HwHRV39a
-         NmHo/QQGqagPw3MVGC2zDpGG5JKHmcbnrrGcvKwA=
+        b=WphW424YbA90OmkEcnrMl1mQ4AldRkrGmDcO6Z9QMwBf2bQOu/Xrz85hMsXbU2SuP
+         HklF0rX/njX/YHjgVi457loWCy1xZY8SAQVl7KU/tBGQ2ZNNhrsOdmqDannl9/AU2z
+         bR2reSjuhEDXSUvl90IQotezCi4cUCNbd8WM8Xd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Artem Savkov <asavkov@redhat.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.5 107/151] ftrace: Return the first found result in lookup_rec()
-Date:   Tue, 17 Mar 2020 11:55:17 +0100
-Message-Id: <20200317103334.059635900@linuxfoundation.org>
+        stable@vger.kernel.org, John Donnelly <john.p.donnelly@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Corey Minyard <cminyard@mvista.com>,
+        Patrick Vo <patrick.vo@hpe.com>
+Subject: [PATCH 5.5 106/151] ipmi_si: Avoid spurious errors for optional IRQs
+Date:   Tue, 17 Mar 2020 11:55:16 +0100
+Message-Id: <20200317103333.987948852@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,46 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Artem Savkov <asavkov@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit d9815bff6b379ff46981bea9dfeb146081eab314 upstream.
+commit 443d372d6a96cd94ad119e5c14bb4d63a536a7f6 upstream.
 
-It appears that ip ranges can overlap so. In that case lookup_rec()
-returns whatever results it got last even if it found nothing in last
-searched page.
+Although the IRQ assignment in ipmi_si driver is optional,
+platform_get_irq() spews error messages unnecessarily:
+  ipmi_si dmi-ipmi-si.0: IRQ index 0 not found
 
-This breaks an obscure livepatch late module patching usecase:
-  - load livepatch
-  - load the patched module
-  - unload livepatch
-  - try to load livepatch again
+Fix this by switching to platform_get_irq_optional().
 
-To fix this return from lookup_rec() as soon as it found the record
-containing searched-for ip. This used to be this way prior lookup_rec()
-introduction.
-
-Link: http://lkml.kernel.org/r/20200306174317.21699-1-asavkov@redhat.com
-
-Cc: stable@vger.kernel.org
-Fixes: 7e16f581a817 ("ftrace: Separate out functionality from ftrace_location_range()")
-Signed-off-by: Artem Savkov <asavkov@redhat.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: stable@vger.kernel.org # 5.4.x
+Cc: John Donnelly <john.p.donnelly@oracle.com>
+Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
+Reported-and-tested-by: Patrick Vo <patrick.vo@hpe.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Message-Id: <20200205093146.1352-1-tiwai@suse.de>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ftrace.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/char/ipmi/ipmi_si_platform.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1552,6 +1552,8 @@ static struct dyn_ftrace *lookup_rec(uns
- 		rec = bsearch(&key, pg->records, pg->index,
- 			      sizeof(struct dyn_ftrace),
- 			      ftrace_cmp_recs);
-+		if (rec)
-+			break;
- 	}
- 	return rec;
- }
+--- a/drivers/char/ipmi/ipmi_si_platform.c
++++ b/drivers/char/ipmi/ipmi_si_platform.c
+@@ -194,7 +194,7 @@ static int platform_ipmi_probe(struct pl
+ 	else
+ 		io.slave_addr = slave_addr;
+ 
+-	io.irq = platform_get_irq(pdev, 0);
++	io.irq = platform_get_irq_optional(pdev, 0);
+ 	if (io.irq > 0)
+ 		io.irq_setup = ipmi_std_irq_setup;
+ 	else
+@@ -378,7 +378,7 @@ static int acpi_ipmi_probe(struct platfo
+ 		io.irq = tmp;
+ 		io.irq_setup = acpi_gpe_irq_setup;
+ 	} else {
+-		int irq = platform_get_irq(pdev, 0);
++		int irq = platform_get_irq_optional(pdev, 0);
+ 
+ 		if (irq > 0) {
+ 			io.irq = irq;
 
 
