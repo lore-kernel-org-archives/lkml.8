@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D6DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758DCC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99CBC206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0972071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFZQuTgf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gp5vOfr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgCQKUR (ORCPT
+        id S1726597AbgCQKUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:20:17 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37474 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgCQKUM (ORCPT
+        Tue, 17 Mar 2020 06:20:25 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41982 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgCQKUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:20:12 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r24so22171847ljd.4;
-        Tue, 17 Mar 2020 03:20:11 -0700 (PDT)
+        Tue, 17 Mar 2020 06:20:14 -0400
+Received: by mail-lj1-f195.google.com with SMTP id o10so22119500ljc.8;
+        Tue, 17 Mar 2020 03:20:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TGItJuz5W+h2gk6C+B6NIbPkvJZ2cZOlOG/P+lQP9D0=;
-        b=JFZQuTgf0ix5GURciyxJzWH0sf14opuwqmkI7yvs/F5Adnfkifh53/Erfv3MQTmy9/
-         9GQY7KikuoGDq/yCVcBDkdMFy3/kh7ZhPUiHw2lGonWtoSOaIFA2KhsqhfzSlN2rPWfG
-         IlXWiOriBmkqXsDsZNrFxijHgX2FRmzOEdxtc1ijrDL2F2M2s4ulfcWlt2AN0AC3diI1
-         s5rjK2JxOg8XUC9PJybzYaqxvBKFukvPzQH/pjfB1j83zku/E8mskdc33c8vCKAr4aW3
-         inpShlE9qeQPQIWCfAZmUMCh8N/1dztWnZmGKEvsohgeY2GjsUB/kdzujVEVzcqlx22+
-         fqug==
+        bh=WGynCl+wfPeR4qb/AG3pyJyPwdo3k8wHw+AwHbtPDSo=;
+        b=gp5vOfr4E7mqJYwNhg7/IIR8w1lDuNJON4+f9eMbKOf/7Amusv/O2Tvh9K8HEoSlpe
+         xiMIASpuj2uiVqkt6a6mTnyqETDiZoFFalrBXBnVggQYun6llahJlZ+XO7h7dwb79Rjh
+         1vL+qRTUS06BicP3SfkSNZRLvdgWBEVNYPQwdHD8Fqmv1qqs67v9n/59uxtlst137v8J
+         XsOSGyw2DQ9ze9cAeb3OyMMiIQGeeFsJZGp1riG6UQiRBh6AX0oPxg/YgTQjsl4Xmq7Z
+         +RtoO4y8XFCs+yR5Ar7bSh04yMxFlmljjs/sNYm4NPlHHOQhsOVMPPInqh12Un2rdooc
+         XFeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=TGItJuz5W+h2gk6C+B6NIbPkvJZ2cZOlOG/P+lQP9D0=;
-        b=pRlI8iDs6zOLA37RwfCzEUFVOvcgD1In9nz7Rf3fQtQZjO4/Q5Kr8PYk8TzE6ww234
-         ZJaQA+8hSShRH4Ejb3qaGLDpaJX58OcnCeQQgMRkrL9wilG/LBMcEHkfzVt+Ck62HkcS
-         GQbnMAel5TS+9lVZ8Be/d99i7n2j+7oaUgk5P8dyVN5kkfyxLSNxyiHa3e1keka8KN28
-         xfjpC7yKhDcmnPvAPM6vcYfDkGaAivzJknt++Q8ShPjZ6l4t8QP9bAZeaUfm6nAc3t48
-         aze5etRThvTCa3MDfxkhf5aEaIIrKC6grNazHakYg8tnHekL9PvNfbAVqWwRkeYZx5Su
-         fTvg==
-X-Gm-Message-State: ANhLgQ25ArdZoLW8dgd1snQ7Gdt7PE8fOIiMoDC6ixSEdqmaDQ4HtWTF
-        G9iDw8uDT26sPSRGJhNuMYk=
-X-Google-Smtp-Source: ADFU+vslGfTWII4zYbs4+SWZVmzcm1asQXYP0xCVtUNvJ3fqgQvjprHgGlIsriWG0xbiU7Nx1gBO4A==
-X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr2423894ljm.248.1584440410561;
-        Tue, 17 Mar 2020 03:20:10 -0700 (PDT)
+        bh=WGynCl+wfPeR4qb/AG3pyJyPwdo3k8wHw+AwHbtPDSo=;
+        b=Rz3GMdH51jHg5vw/H7Cnf8KVa9T8Iucf6qd32kMJ0r0wG78ZwQulsVALMJ6wm1axr5
+         lOHNs7fibGojWUOLVRk10WjzY3t96xKW+O7rTfcqLbBX2tL3TwCYnyH1sLW5WWDNSa/w
+         SldZxG3ANw26OBCdiSktI5ssYGr1m/CMSSYciKz7Q3+YbnBT3qiS4RbGD48iGk07KeV6
+         paUcGnUG3/TCWegM53oNtYRBikCBmOk3bba5GmJH99M5/hOsUyO0Z44YGcRyzJ9ah/73
+         /DO6iNA7yqIad1hMvFeZ+ad3OUvJqgQFiiMXQ2ZCj9OcEXGP0b3r5TWgVaOzxTTfvxmq
+         wYQg==
+X-Gm-Message-State: ANhLgQ2J38mzlQQ8aUCcOuqpi99JJkcPmYPTkPVSIzB09Pndr1by4CoI
+        lzfab1xu4rvd90LKWG8PKrQ=
+X-Google-Smtp-Source: ADFU+vtY35x2PkeN39BHTb3sRwtOAYWhTE1k0pSIWTXjVyFc5Yh/KLkKzaQCsDKkUAvWZnyLNwLqRg==
+X-Received: by 2002:a2e:9797:: with SMTP id y23mr2322272lji.183.1584440412020;
+        Tue, 17 Mar 2020 03:20:12 -0700 (PDT)
 Received: from localhost (host-176-37-176-139.la.net.ua. [176.37.176.139])
-        by smtp.gmail.com with ESMTPSA id m18sm1956945ljj.52.2020.03.17.03.20.09
+        by smtp.gmail.com with ESMTPSA id w22sm1962649ljm.58.2020.03.17.03.20.11
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 03:20:10 -0700 (PDT)
+        Tue, 17 Mar 2020 03:20:11 -0700 (PDT)
 From:   Igor Opaniuk <igor.opaniuk@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
@@ -68,9 +68,9 @@ Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 3/5] dt-bindings: gpio: Dual license file adding MIT
-Date:   Tue, 17 Mar 2020 12:19:45 +0200
-Message-Id: <20200317101947.27250-3-igor.opaniuk@gmail.com>
+Subject: [RFC PATCH v1 4/5] dt-bindings: input: Dual license input.h adding MIT
+Date:   Tue, 17 Mar 2020 12:19:46 +0200
+Message-Id: <20200317101947.27250-4-igor.opaniuk@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200317101947.27250-1-igor.opaniuk@gmail.com>
 References: <20200317101947.27250-1-igor.opaniuk@gmail.com>
@@ -81,24 +81,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Igor Opaniuk <igor.opaniuk@toradex.com>
 
-Dual license files adding MIT license, which will permit to re-use
-bindings and dependent device tree sources in other non-GPL OSS projects.
+Dual license header adding MIT license, which will permit to re-use
+dependent device tree sources that include this header
+in other non-GPL OSS projects.
 
 Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
 ---
 
- include/dt-bindings/gpio/gpio.h | 2 +-
+ include/dt-bindings/input/input.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
-index c029467e828b..01c528708208 100644
---- a/include/dt-bindings/gpio/gpio.h
-+++ b/include/dt-bindings/gpio/gpio.h
+diff --git a/include/dt-bindings/input/input.h b/include/dt-bindings/input/input.h
+index bcf0ae100f21..c3cf5d034025 100644
+--- a/include/dt-bindings/input/input.h
++++ b/include/dt-bindings/input/input.h
 @@ -1,4 +1,4 @@
 -/* SPDX-License-Identifier: GPL-2.0 */
 +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
  /*
-  * This header provides constants for most GPIO bindings.
+  * This header provides constants for most input bindings.
   *
 -- 
 2.17.1
