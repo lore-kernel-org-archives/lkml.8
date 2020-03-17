@@ -2,145 +2,185 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DC3C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4773BC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAA4206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1847820752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584475086;
+	bh=4ktS7vkXbvWPqEkGLuhwSvTcermavdaiwrVzlyvDMTU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Tbwq0Nu6cQ8FVl4An2fPer19k7xh7SqeO6kTt5NSgAaNCf8XAaHg3QON8TGSvMX4L
+	 +Sxhd9lMyRBWyMOZ3ikViP4xUu/vYX/2WeWf920z3sX7jhAOZgirt4pcBZvYkm6mhi
+	 zKck71VVdWL5YWT0TjO4FXFPJsTBlPH7PamfQIDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCQTx6 (ORCPT
+        id S1726643AbgCQT6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:53:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:43598 "EHLO mga07.intel.com"
+        Tue, 17 Mar 2020 15:58:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbgCQTx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:53:57 -0400
-IronPort-SDR: NiXrL8DwljF97pNa85UmhnH34T2gA/S8mUt1s/zz57SQRqnL8XaRpUUUXpAXWGNSdBcjN5NjxN
- zJ96kevVUDfA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 12:53:55 -0700
-IronPort-SDR: Ycsnj1AQXL2CoIr8PVFPOfKU/5vlVSg0xS409rOMErNjN36rTjp9vnKrdM3OalM48kYhMliZmt
- kr2E4TTQzT9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="233604303"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 17 Mar 2020 12:53:55 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH 2/2] KVM: x86: Add blurb to CPUID tracepoint when using max basic leaf values
-Date:   Tue, 17 Mar 2020 12:53:54 -0700
-Message-Id: <20200317195354.28384-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200317195354.28384-1-sean.j.christopherson@intel.com>
-References: <20200317195354.28384-1-sean.j.christopherson@intel.com>
+        id S1726294AbgCQT6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 15:58:04 -0400
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E51820753;
+        Tue, 17 Mar 2020 19:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584475084;
+        bh=4ktS7vkXbvWPqEkGLuhwSvTcermavdaiwrVzlyvDMTU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ErekzIionC/I7zFmUNqh7MxcljAySREdp8+XSrVaIt2HsegDI9CUw2Q9Ay+w0gLyW
+         6unmLPpaIgjirEHSIzlZ3SpkFSF/a26BjhaOk7/fNMrx1IW8zjF2uatw753SUDT8EN
+         Q6W+2DCAe6qxa2Sggc+xveh3nGbdqzVHUNkvlC9g=
+Received: by mail-il1-f173.google.com with SMTP id p12so6714315ilm.7;
+        Tue, 17 Mar 2020 12:58:04 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1M/FjSa47hg4/gTfzz43nNroPTohAYJv8y/u63lv+L+GF6P08d
+        R6MrqQjkDJbdEx3raxqd2d6aWylF4auADMhLF4k=
+X-Google-Smtp-Source: ADFU+vskZaQmZn/HUDvAI0R1yO/yTvGjvDEnMeLhFaqNGK4UcwDiZkQLGNE8fGZ58Cs1uMLUqtdXJCc5dza1ryNDO9g=
+X-Received: by 2002:a92:4b0d:: with SMTP id m13mr514342ilg.43.1584475083400;
+ Tue, 17 Mar 2020 12:58:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1583825986-8189-1-git-send-email-light.hsieh@mediatek.com>
+ <1583825986-8189-2-git-send-email-light.hsieh@mediatek.com>
+ <CAGp9LzpJTYXp9R6SKjauemPYMd9wfoacD_czQBVgWtJoMcPFKg@mail.gmail.com> <1584437292.12211.9.camel@mtkswgap22>
+In-Reply-To: <1584437292.12211.9.camel@mtkswgap22>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Tue, 17 Mar 2020 12:57:52 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzoQoWyrMSYQaqH=OL9iCeakBvosZO5T3c757x3pBwwMJw@mail.gmail.com>
+Message-ID: <CAGp9LzoQoWyrMSYQaqH=OL9iCeakBvosZO5T3c757x3pBwwMJw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] pinctrl: make MediaTek pinctrl v2 driver ready for
+ buidling loadable module
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tack on "used max basic" at the end of the CPUID tracepoint when the
-output values correspond to the max basic leaf, i.e. when emulating
-Intel's out-of-range CPUID behavior.  Observing "cpuid entry not found"
-in the tracepoint with non-zero output values is confusing for users
-that aren't familiar with the out-of-range semantics, and qualifying the
-"not found" case hopefully makes it clear that "found" means "found the
-exact entry".
+Hi, Light
 
-Suggested-by: Jan Kiszka <jan.kiszka@siemens.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/cpuid.c |  9 ++++++---
- arch/x86/kvm/trace.h | 11 +++++++----
- 2 files changed, 13 insertions(+), 7 deletions(-)
+On Tue, Mar 17, 2020 at 2:28 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
+>
+> On Sun, 2020-03-15 at 14:35 -0700, Sean Wang wrote:
+> > Hi, Light
+> >
+> > On Tue, Mar 10, 2020 at 12:39 AM <light.hsieh@mediatek.com> wrote:
+> > >
+> > > From: Light Hsieh <light.hsieh@mediatek.com>
+> > >
+> >
+> > Correct the prefix of the subject with "pinctrl: mediatek".
+> >
+> > > In the future we want to be able to build the MediaTek pinctrl driver,
+> > > based on paris, as kernel module. This patch allows pinctrl-paris.c, the
+> > > external interrupt controller mtk-eint.c, and pinctrl-mtk-common-v2.c to
+> > > be loadable as module.
+> > >
+> > > Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
+> > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > > ---
+> > >  drivers/pinctrl/mediatek/Kconfig                 | 13 +++++++++++--
+> > >  drivers/pinctrl/mediatek/Makefile                |  5 +++--
+> > >  drivers/pinctrl/mediatek/mtk-eint.c              |  9 +++++++++
+> > >  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 ++++++++++++++++++++++++
+> > >  drivers/pinctrl/mediatek/pinctrl-paris.c         |  6 ++++++
+> > >  drivers/pinctrl/pinconf-generic.c                |  1 +
+> >
+> > Separate the patches for the device driver and for the core respectively.
+>
+> Since the patch for pinconf-generic.c had been done in  b88d145191ad
+> ("pinctrl: Export some needed symbols at module load time").
+> I will remove patch for pinconf-generic.c.
+>
+> > >  6 files changed, 54 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+> > > index 701f9af..4cd1109 100644
+> > > --- a/drivers/pinctrl/mediatek/Kconfig
+> > > +++ b/drivers/pinctrl/mediatek/Kconfig
+> > > @@ -3,10 +3,12 @@ menu "MediaTek pinctrl drivers"
+> > >         depends on ARCH_MEDIATEK || COMPILE_TEST
+> > >
+> > >  config EINT_MTK
+> > > -       bool "MediaTek External Interrupt Support"
+> > > +       tristate "MediaTek External Interrupt Support"
+> > >         depends on PINCTRL_MTK || PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS || COMPILE_TEST
+> > >         select GPIOLIB
+> > >         select IRQ_DOMAIN
+> > > +       default y if PINCTRL_MTK || PINCTRL_MTK_MOORE
+> > > +       default PINCTRL_MTK_PARIS
+> > >
+> > >  config PINCTRL_MTK
+> > >         bool
+> > > @@ -17,23 +19,30 @@ config PINCTRL_MTK
+> > >         select EINT_MTK
+> > >         select OF_GPIO
+> > >
+> > > +config PINCTRL_MTK_V2
+> > > +       tristate
+> > > +       depends on PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS
+> >
+> > PINCTRL_MTK_V2 doesn't have to depend on PINCTRL_MTK_MOORE or
+> > PINCTRL_MTK_PARIS to work and it can build on it own so that lets us
+> > remove the dependency.
+> >
+> The usage of PINCTRL_MTK had been describe in cover letter:
+>
+> 1.4 PINCTRL_MTK_V2: add this tristate config which depends on
+>         PINCTRL_MTK_PARIS and PINCTRL_MTK_MOORE. No need to specify in
+>         defconfig file.
+>       * PINCTRL_MTK_V2 will be y if either PINCTRL_MTK_PARIS or
+>         PINCTRL_MTK_MOORE is y.
+>       * PINCTRL_MTK_V2 will be n if both PINCTRL_MTK_PARIS and
+>         PINCTRL_MTK_MOORE are n.
+>       * PINCTRL_MTK_V2 will be m if PINCTRL_MTK_PARIS is m and
+>         PINCTRL_MTK_MOORE is n.
+>
+>
+> Without PINCTRL_MTK_V2, we cannot specify whether
+> pinctrl-mtk-common-v2.c is built-in or loadable kernel module.
+>
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index bccaae0df668..a515a83c6f29 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -990,13 +990,15 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
- {
- 	u32 orig_function = *eax, function = *eax, index = *ecx;
- 	struct kvm_cpuid_entry2 *entry;
--	bool exact;
-+	bool exact, used_max_basic = false;
- 
- 	entry = kvm_find_cpuid_entry(vcpu, function, index);
- 	exact = !!entry;
- 
--	if (!entry && !exact_only)
-+	if (!entry && !exact_only) {
- 		entry = get_out_of_range_cpuid_entry(vcpu, &function, index);
-+		used_max_basic = !!entry;
-+	}
- 
- 	if (entry) {
- 		*eax = entry->eax;
-@@ -1026,7 +1028,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
- 			}
- 		}
- 	}
--	trace_kvm_cpuid(orig_function, index, *eax, *ebx, *ecx, *edx, exact);
-+	trace_kvm_cpuid(orig_function, index, *eax, *ebx, *ecx, *edx, exact,
-+			used_max_basic);
- 	return exact;
- }
- EXPORT_SYMBOL_GPL(kvm_cpuid);
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index 27270ba0f05f..c3d1e9f4a2c0 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -153,8 +153,8 @@ TRACE_EVENT(kvm_fast_mmio,
- TRACE_EVENT(kvm_cpuid,
- 	TP_PROTO(unsigned int function, unsigned int index, unsigned long rax,
- 		 unsigned long rbx, unsigned long rcx, unsigned long rdx,
--		 bool found),
--	TP_ARGS(function, index, rax, rbx, rcx, rdx, found),
-+		 bool found, bool used_max_basic),
-+	TP_ARGS(function, index, rax, rbx, rcx, rdx, found, used_max_basic),
- 
- 	TP_STRUCT__entry(
- 		__field(	unsigned int,	function	)
-@@ -164,6 +164,7 @@ TRACE_EVENT(kvm_cpuid,
- 		__field(	unsigned long,	rcx		)
- 		__field(	unsigned long,	rdx		)
- 		__field(	bool,		found		)
-+		__field(	bool,		used_max_basic	)
- 	),
- 
- 	TP_fast_assign(
-@@ -174,12 +175,14 @@ TRACE_EVENT(kvm_cpuid,
- 		__entry->rcx		= rcx;
- 		__entry->rdx		= rdx;
- 		__entry->found		= found;
-+		__entry->used_max_basic	= used_max_basic;
- 	),
- 
--	TP_printk("func %x idx %x rax %lx rbx %lx rcx %lx rdx %lx, cpuid entry %s",
-+	TP_printk("func %x idx %x rax %lx rbx %lx rcx %lx rdx %lx, cpuid entry %s%s",
- 		  __entry->function, __entry->index, __entry->rax,
- 		  __entry->rbx, __entry->rcx, __entry->rdx,
--		  __entry->found ? "found" : "not found")
-+		  __entry->found ? "found" : "not found",
-+		  __entry->used_max_basic ? ", used max basic" : "")
- );
- 
- #define AREG(x) { APIC_##x, "APIC_" #x }
--- 
-2.24.1
+What I was actually meaning is
 
+config PINCTRL_MTK_V2
+          tristate
+
+with that should work for your case.
+
+> > > +
+> > >  config PINCTRL_MTK_MOORE
+> > >         bool
+> > >         depends on OF
+> > >         select GENERIC_PINCONF
+> > >         select GENERIC_PINCTRL_GROUPS
+> > >         select GENERIC_PINMUX_FUNCTIONS
+> > > +       select EINT_MTK
+> >
+> > The original design of PINCTRL_MTK_MOORE doesn't have to work with
+> > EINT_MTK coupled tightly so that let us remove the reverse dependency.
+> >
+>
+> Actually, PINCTRL_MTK_MOORE use EINT_MTK in the following call flow:
+> mtk_moore_pinctrl_probe() -> mtk_build_eint() -> mtk_eint_do_init().
+> mtk_eint_do_init() is defined in mtk-eint.c.
+
+CONFIG_EINT_MTK is actually an option to Moore pinctrl since Moore
+pinctrl has already carefully considered the condition with
+CONFIG_EINT_MTK=n in mtk_build_eint.
+
+>
+> > >         select GPIOLIB
+> > >         select OF_GPIO
+> > > +       select PINCTRL_MTK_V2
