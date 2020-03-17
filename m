@@ -2,173 +2,127 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09171C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB33C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C1020752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0C22073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584480886;
+	bh=TGPhnr5mY8Vj1ckf0GoDpXrsvJyl+8f5dLtUZCHvYkM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rTcwOcMtOyPMgGKjM7tc7zj0BcP/o+OsZjacn6OtNKzQbgJ/aETDOBVd9mcDTfC0x
+	 6o5oYvIsMTMmIWJO9YFSb6p+mwN8kklCEx6+p5CwA3ELGax0LqOxCs+FujqDu/hMnr
+	 SM2dG+RNjRKpL2RWjeoOC42qUzVHDt1ehc+YkS8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbgCQVeY (ORCPT
+        id S1727383AbgCQVeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:34:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 17:34:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbgCQVeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727337AbgCQVeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 17:34:17 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34E1720784;
-        Tue, 17 Mar 2020 21:34:17 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jEJqq-000EWc-4S; Tue, 17 Mar 2020 17:34:16 -0400
-Message-Id: <20200317213416.018928618@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Tue, 17 Mar 2020 17:32:25 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 87D3120775;
+        Tue, 17 Mar 2020 21:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584480857;
+        bh=TGPhnr5mY8Vj1ckf0GoDpXrsvJyl+8f5dLtUZCHvYkM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vpVd6AYmTkzy8bVMb6uhnZncXrcUteBsQXc3RFeH/VBKZ6mXN8nZqQMo5q/xi4XFM
+         oubcRTmIWUih4YE/8FLoCLhgC9bb+xNLnD+S26Z4POVeNQWXN+KBwQyO678F3m7pOZ
+         cppNXn58rCJOotogPD01LIYCcNnQcaSmUBroSPcQ=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [RFC][PATCH 03/11] ring-buffer: Rename ring_buffer_read() to read_buffer_iter_advance()
-References: <20200317213222.421100128@goodmis.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 19/23] perf record: Fix binding of AIO user space buffers to nodes
+Date:   Tue, 17 Mar 2020 18:32:55 -0300
+Message-Id: <20200317213259.15494-20-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
+References: <20200317213259.15494-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-When the ring buffer was first created, the iterator followed the normal
-producer/consumer operations where it had both a peek() operation, that just
-returned the event at the current location, and a read(), that would return
-the event at the current location and also increment the iterator such that
-the next peek() or read() will return the next event.
+Correct maxnode parameter value passed to mbind() syscall to be the
+amount of node mask bits to analyze plus 1. Dynamically allocate node
+mask memory depending on the index of node of cpu being profiled.
 
-The only use of the ring_buffer_read() is currently to move the iterator to
-the next location and nothing now actually reads the event it returns.
-Rename this function to its actual use case to ring_buffer_iter_advance(),
-which also adds the "iter" part to the name, which is more meaningful. As
-the timestamp returned by ring_buffer_read() was never used, there's no
-reason that this new version should bother having returning it. It will also
-become a void function.
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: c44a8b44ca9f ("perf record: Bind the AIO user space buffers to nodes")
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/c7ea8ffe-1357-bf9e-3a89-1da1d8e9b75b@linux.intel.com
+[ Remove leftover nr_bits + 1 comment in mbind() call ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- include/linux/ring_buffer.h          |  3 +--
- kernel/trace/ring_buffer.c           | 23 ++++++-----------------
- kernel/trace/trace.c                 |  4 ++--
- kernel/trace/trace_functions_graph.c |  2 +-
- 4 files changed, 10 insertions(+), 22 deletions(-)
+ tools/perf/util/mmap.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index df0124eabece..0ae603b79b0e 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -135,8 +135,7 @@ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
- 
- struct ring_buffer_event *
- ring_buffer_iter_peek(struct ring_buffer_iter *iter, u64 *ts);
--struct ring_buffer_event *
--ring_buffer_read(struct ring_buffer_iter *iter, u64 *ts);
-+void ring_buffer_iter_advance(struct ring_buffer_iter *iter);
- void ring_buffer_iter_reset(struct ring_buffer_iter *iter);
- int ring_buffer_iter_empty(struct ring_buffer_iter *iter);
- 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 1718520a2809..f57eeaa80e3e 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4318,35 +4318,24 @@ ring_buffer_read_finish(struct ring_buffer_iter *iter)
- EXPORT_SYMBOL_GPL(ring_buffer_read_finish);
- 
- /**
-- * ring_buffer_read - read the next item in the ring buffer by the iterator
-+ * ring_buffer_iter_advance - advance the iterator to the next location
-  * @iter: The ring buffer iterator
-- * @ts: The time stamp of the event read.
-  *
-- * This reads the next event in the ring buffer and increments the iterator.
-+ * Move the location of the iterator such that the next read will
-+ * be the next location of the iterator.
-  */
--struct ring_buffer_event *
--ring_buffer_read(struct ring_buffer_iter *iter, u64 *ts)
-+void ring_buffer_iter_advance(struct ring_buffer_iter *iter)
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 3b664fa673a6..ab7108d22428 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -98,20 +98,29 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
  {
--	struct ring_buffer_event *event;
- 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
- 	unsigned long flags;
+ 	void *data;
+ 	size_t mmap_len;
+-	unsigned long node_mask;
++	unsigned long *node_mask;
++	unsigned long node_index;
++	int err = 0;
  
- 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-- again:
--	event = rb_iter_peek(iter, ts);
--	if (!event)
--		goto out;
--
--	if (event->type_len == RINGBUF_TYPE_PADDING)
--		goto again;
- 
- 	rb_advance_iter(iter);
-- out:
--	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 
--	return event;
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- }
--EXPORT_SYMBOL_GPL(ring_buffer_read);
-+EXPORT_SYMBOL_GPL(ring_buffer_iter_advance);
- 
- /**
-  * ring_buffer_size - return the size of the ring buffer (in bytes)
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 52425aaf26c2..1085b3d5d0dc 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3378,7 +3378,7 @@ static void trace_iterator_increment(struct trace_iterator *iter)
- 
- 	iter->idx++;
- 	if (buf_iter)
--		ring_buffer_read(buf_iter, NULL);
-+		ring_buffer_iter_advance(buf_iter);
- }
- 
- static struct trace_entry *
-@@ -3562,7 +3562,7 @@ void tracing_iter_reset(struct trace_iterator *iter, int cpu)
- 		if (ts >= iter->array_buffer->time_start)
- 			break;
- 		entries++;
--		ring_buffer_read(buf_iter, NULL);
-+		ring_buffer_iter_advance(buf_iter);
+ 	if (affinity != PERF_AFFINITY_SYS && cpu__max_node() > 1) {
+ 		data = map->aio.data[idx];
+ 		mmap_len = mmap__mmap_len(map);
+-		node_mask = 1UL << cpu__get_node(cpu);
+-		if (mbind(data, mmap_len, MPOL_BIND, &node_mask, 1, 0)) {
+-			pr_err("Failed to bind [%p-%p] AIO buffer to node %d: error %m\n",
+-				data, data + mmap_len, cpu__get_node(cpu));
++		node_index = cpu__get_node(cpu);
++		node_mask = bitmap_alloc(node_index + 1);
++		if (!node_mask) {
++			pr_err("Failed to allocate node mask for mbind: error %m\n");
+ 			return -1;
+ 		}
++		set_bit(node_index, node_mask);
++		if (mbind(data, mmap_len, MPOL_BIND, node_mask, node_index + 1 + 1, 0)) {
++			pr_err("Failed to bind [%p-%p] AIO buffer to node %lu: error %m\n",
++				data, data + mmap_len, node_index);
++			err = -1;
++		}
++		bitmap_free(node_mask);
  	}
  
- 	per_cpu_ptr(iter->array_buffer->data, cpu)->skipped_entries = entries;
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 7d71546ba00a..4a9c49c08ec9 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -482,7 +482,7 @@ get_return_for_leaf(struct trace_iterator *iter,
- 
- 	/* this is a leaf, now advance the iterator */
- 	if (ring_iter)
--		ring_buffer_read(ring_iter, NULL);
-+		ring_buffer_iter_advance(ring_iter);
- 
- 	return next;
+-	return 0;
++	return err;
  }
+ #else /* !HAVE_LIBNUMA_SUPPORT */
+ static int perf_mmap__aio_alloc(struct mmap *map, int idx)
 -- 
-2.25.1
-
+2.21.1
 
