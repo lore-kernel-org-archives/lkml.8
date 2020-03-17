@@ -7,57 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5541C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33617C5ACC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F41820658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9DE206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443215;
-	bh=TxtH6v93lCviriMgATKOd/9gkT51bsKELkLVIpHu/HE=;
+	s=default; t=1584443219;
+	bh=HDvlXOkjsqJp0/dSElyxbOZnUOtaOJXvkK+oezhbntE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LP16DZRQOsPGKnRypTgjji/Z5zBG/A271DunISa/WAaDBLW3Jy91B2kpYyYIdg8a0
-	 tFhQfRC9XwPsjpG32fUEbIWmA6wdBCrInnpTCaCboBPxYDNYuW+P9jYL1R4/jsBk7F
-	 RxmJlgWsSxZF+vqznA2i8iZx+0tLrvYrm8Qtjzdc=
+	b=twoqkhd/e9fy3PYD+xmdD2oQrlrBTvzlwrSvQHG7ZjrsfDc1b88WtboVKdysicmk/
+	 Bva0MBTBf+Qwk7zlAWGfIc+8k/woadNsPQpmAyucyjc54rxGH9bQvLqGRsEfpnWHrR
+	 BOVsc2SDeV+jpmgvUOkOLahnYmw54i0E3+j8sROA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgCQLGy (ORCPT
+        id S1728718AbgCQLG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48162 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:06:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727521AbgCQLGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:06:43 -0400
+        id S1728687AbgCQLGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ED7A20719;
-        Tue, 17 Mar 2020 11:06:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1189720658;
+        Tue, 17 Mar 2020 11:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443203;
-        bh=TxtH6v93lCviriMgATKOd/9gkT51bsKELkLVIpHu/HE=;
+        s=default; t=1584443209;
+        bh=HDvlXOkjsqJp0/dSElyxbOZnUOtaOJXvkK+oezhbntE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ntNfSunRwXZ8uWS4oaI0YA6K69RmptN3+99r11c2diru/vtLBQvZG90hkA2uA/5C7
-         Gg9d8YropWvuMR7Q2qD7UinhC1kIBPEMdRPoCvz2SrzNrIBk9/HZOwYN2OIqGf9Bfb
-         dnNUtUKee7uOkIZ3MWj9oDCF2ku9kLGS0WaHcNjA=
+        b=qqVmsxqfeJQzSnGokLOFYaP4bfsRW2RcP7oOZ8/h8NyDnJyZ8OdZjEDlwlK/CbXUN
+         77Bn/S9oFbZPQzBtIeTv0hW9uJoRC3A/HUA+qOzgAJTS5ccWXosyNDrbxS1Mkq68SY
+         8PiJeurwiikLStD3cLcP5pSBdetlBydLSJbH6JHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tommi Rantala <tommi.t.rantala@nokia.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.4 111/123] perf bench futex-wake: Restore thread count default to online CPU count
-Date:   Tue, 17 Mar 2020 11:55:38 +0100
-Message-Id: <20200317103318.804053407@linuxfoundation.org>
+        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 010/151] ipvlan: add cond_resched_rcu() while processing muticast backlog
+Date:   Tue, 17 Mar 2020 11:53:40 +0100
+Message-Id: <20200317103327.195557245@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
-References: <20200317103307.343627747@linuxfoundation.org>
+In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+References: <20200317103326.593639086@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,71 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tommi Rantala <tommi.t.rantala@nokia.com>
+From: Mahesh Bandewar <maheshb@google.com>
 
-commit f649bd9dd5d5004543bbc3c50b829577b49f5d75 upstream.
+[ Upstream commit e18b353f102e371580f3f01dd47567a25acc3c1d ]
 
-Since commit 3b2323c2c1c4 ("perf bench futex: Use cpumaps") the default
-number of threads the benchmark uses got changed from number of online
-CPUs to zero:
+If there are substantial number of slaves created as simulated by
+Syzbot, the backlog processing could take much longer and result
+into the issue found in the Syzbot report.
 
-  $ perf bench futex wake
-  # Running 'futex/wake' benchmark:
-  Run summary [PID 15930]: blocking on 0 threads (at [private] futex 0x558b8ee4bfac), waking up 1 at a time.
-  [Run 1]: Wokeup 0 of 0 threads in 0.0000 ms
-  [...]
-  [Run 10]: Wokeup 0 of 0 threads in 0.0000 ms
-  Wokeup 0 of 0 threads in 0.0004 ms (+-40.82%)
+INFO: rcu_sched detected stalls on CPUs/tasks:
+        (detected by 1, t=10502 jiffies, g=5049, c=5048, q=752)
+All QSes seen, last rcu_sched kthread activity 10502 (4294965563-4294955061), jiffies_till_next_fqs=1, root ->qsmask 0x0
+syz-executor.1  R  running task on cpu   1  10984 11210   3866 0x30020008 179034491270
+Call Trace:
+ <IRQ>
+ [<ffffffff81497163>] _sched_show_task kernel/sched/core.c:8063 [inline]
+ [<ffffffff81497163>] _sched_show_task.cold+0x2fd/0x392 kernel/sched/core.c:8030
+ [<ffffffff8146a91b>] sched_show_task+0xb/0x10 kernel/sched/core.c:8073
+ [<ffffffff815c931b>] print_other_cpu_stall kernel/rcu/tree.c:1577 [inline]
+ [<ffffffff815c931b>] check_cpu_stall kernel/rcu/tree.c:1695 [inline]
+ [<ffffffff815c931b>] __rcu_pending kernel/rcu/tree.c:3478 [inline]
+ [<ffffffff815c931b>] rcu_pending kernel/rcu/tree.c:3540 [inline]
+ [<ffffffff815c931b>] rcu_check_callbacks.cold+0xbb4/0xc29 kernel/rcu/tree.c:2876
+ [<ffffffff815e3962>] update_process_times+0x32/0x80 kernel/time/timer.c:1635
+ [<ffffffff816164f0>] tick_sched_handle+0xa0/0x180 kernel/time/tick-sched.c:161
+ [<ffffffff81616ae4>] tick_sched_timer+0x44/0x130 kernel/time/tick-sched.c:1193
+ [<ffffffff815e75f7>] __run_hrtimer kernel/time/hrtimer.c:1393 [inline]
+ [<ffffffff815e75f7>] __hrtimer_run_queues+0x307/0xd90 kernel/time/hrtimer.c:1455
+ [<ffffffff815e90ea>] hrtimer_interrupt+0x2ea/0x730 kernel/time/hrtimer.c:1513
+ [<ffffffff844050f4>] local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1031 [inline]
+ [<ffffffff844050f4>] smp_apic_timer_interrupt+0x144/0x5e0 arch/x86/kernel/apic/apic.c:1056
+ [<ffffffff84401cbe>] apic_timer_interrupt+0x8e/0xa0 arch/x86/entry/entry_64.S:778
+RIP: 0010:do_raw_read_lock+0x22/0x80 kernel/locking/spinlock_debug.c:153
+RSP: 0018:ffff8801dad07ab8 EFLAGS: 00000a02 ORIG_RAX: ffffffffffffff12
+RAX: 0000000000000000 RBX: ffff8801c4135680 RCX: 0000000000000000
+RDX: 1ffff10038826afe RSI: ffff88019d816bb8 RDI: ffff8801c41357f0
+RBP: ffff8801dad07ac0 R08: 0000000000004b15 R09: 0000000000310273
+R10: ffff88019d816bb8 R11: 0000000000000001 R12: ffff8801c41357e8
+R13: 0000000000000000 R14: ffff8801cfb19850 R15: ffff8801cfb198b0
+ [<ffffffff8101460e>] __raw_read_lock_bh include/linux/rwlock_api_smp.h:177 [inline]
+ [<ffffffff8101460e>] _raw_read_lock_bh+0x3e/0x50 kernel/locking/spinlock.c:240
+ [<ffffffff840d78ca>] ipv6_chk_mcast_addr+0x11a/0x6f0 net/ipv6/mcast.c:1006
+ [<ffffffff84023439>] ip6_mc_input+0x319/0x8e0 net/ipv6/ip6_input.c:482
+ [<ffffffff840211c8>] dst_input include/net/dst.h:449 [inline]
+ [<ffffffff840211c8>] ip6_rcv_finish+0x408/0x610 net/ipv6/ip6_input.c:78
+ [<ffffffff840214de>] NF_HOOK include/linux/netfilter.h:292 [inline]
+ [<ffffffff840214de>] NF_HOOK include/linux/netfilter.h:286 [inline]
+ [<ffffffff840214de>] ipv6_rcv+0x10e/0x420 net/ipv6/ip6_input.c:278
+ [<ffffffff83a29efa>] __netif_receive_skb_one_core+0x12a/0x1f0 net/core/dev.c:5303
+ [<ffffffff83a2a15c>] __netif_receive_skb+0x2c/0x1b0 net/core/dev.c:5417
+ [<ffffffff83a2f536>] process_backlog+0x216/0x6c0 net/core/dev.c:6243
+ [<ffffffff83a30d1b>] napi_poll net/core/dev.c:6680 [inline]
+ [<ffffffff83a30d1b>] net_rx_action+0x47b/0xfb0 net/core/dev.c:6748
+ [<ffffffff846002c8>] __do_softirq+0x2c8/0x99a kernel/softirq.c:317
+ [<ffffffff813e656a>] invoke_softirq kernel/softirq.c:399 [inline]
+ [<ffffffff813e656a>] irq_exit+0x16a/0x1a0 kernel/softirq.c:439
+ [<ffffffff84405115>] exiting_irq arch/x86/include/asm/apic.h:561 [inline]
+ [<ffffffff84405115>] smp_apic_timer_interrupt+0x165/0x5e0 arch/x86/kernel/apic/apic.c:1058
+ [<ffffffff84401cbe>] apic_timer_interrupt+0x8e/0xa0 arch/x86/entry/entry_64.S:778
+ </IRQ>
+RIP: 0010:__sanitizer_cov_trace_pc+0x26/0x50 kernel/kcov.c:102
+RSP: 0018:ffff880196033bd8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff12
+RAX: ffff88019d8161c0 RBX: 00000000ffffffff RCX: ffffc90003501000
+RDX: 0000000000000002 RSI: ffffffff816236d1 RDI: 0000000000000005
+RBP: ffff880196033bd8 R08: ffff88019d8161c0 R09: 0000000000000000
+R10: 1ffff10032c067f0 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000000
+ [<ffffffff816236d1>] do_futex+0x151/0x1d50 kernel/futex.c:3548
+ [<ffffffff816260f0>] C_SYSC_futex kernel/futex_compat.c:201 [inline]
+ [<ffffffff816260f0>] compat_SyS_futex+0x270/0x3b0 kernel/futex_compat.c:175
+ [<ffffffff8101da17>] do_syscall_32_irqs_on arch/x86/entry/common.c:353 [inline]
+ [<ffffffff8101da17>] do_fast_syscall_32+0x357/0xe1c arch/x86/entry/common.c:415
+ [<ffffffff84401a9b>] entry_SYSENTER_compat+0x8b/0x9d arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f23c69
+RSP: 002b:00000000f5d1f12c EFLAGS: 00000282 ORIG_RAX: 00000000000000f0
+RAX: ffffffffffffffda RBX: 000000000816af88 RCX: 0000000000000080
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000816af8c
+RBP: 00000000f5d1f228 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+rcu_sched kthread starved for 10502 jiffies! g5049 c5048 f0x2 RCU_GP_WAIT_FQS(3) ->state=0x0 ->cpu=1
+rcu_sched       R  running task on cpu   1  13048     8      2 0x90000000 179099587640
+Call Trace:
+ [<ffffffff8147321f>] context_switch+0x60f/0xa60 kernel/sched/core.c:3209
+ [<ffffffff8100095a>] __schedule+0x5aa/0x1da0 kernel/sched/core.c:3934
+ [<ffffffff810021df>] schedule+0x8f/0x1b0 kernel/sched/core.c:4011
+ [<ffffffff8101116d>] schedule_timeout+0x50d/0xee0 kernel/time/timer.c:1803
+ [<ffffffff815c13f1>] rcu_gp_kthread+0xda1/0x3b50 kernel/rcu/tree.c:2327
+ [<ffffffff8144b318>] kthread+0x348/0x420 kernel/kthread.c:246
+ [<ffffffff84400266>] ret_from_fork+0x56/0x70 arch/x86/entry/entry_64.S:393
 
-Restore the old behavior by grabbing the number of online CPUs via
-cpu->nr:
-
-  $ perf bench futex wake
-  # Running 'futex/wake' benchmark:
-  Run summary [PID 18356]: blocking on 8 threads (at [private] futex 0xb3e62c), waking up 1 at a time.
-  [Run 1]: Wokeup 8 of 8 threads in 0.0260 ms
-  [...]
-  [Run 10]: Wokeup 8 of 8 threads in 0.0270 ms
-  Wokeup 8 of 8 threads in 0.0419 ms (+-24.35%)
-
-Fixes: 3b2323c2c1c4 ("perf bench futex: Use cpumaps")
-Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200305083714.9381-3-tommi.t.rantala@nokia.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: ba35f8588f47 (“ipvlan: Defer multicast / broadcast processing to a work-queue”)
+Signed-off-by: Mahesh Bandewar <maheshb@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/perf/bench/futex-wake.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ipvlan/ipvlan_core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/perf/bench/futex-wake.c
-+++ b/tools/perf/bench/futex-wake.c
-@@ -43,7 +43,7 @@ static bool done = false, silent = false
- static pthread_mutex_t thread_lock;
- static pthread_cond_t thread_parent, thread_worker;
- static struct stats waketime_stats, wakeup_stats;
--static unsigned int ncpus, threads_starting, nthreads = 0;
-+static unsigned int threads_starting, nthreads = 0;
- static int futex_flag = 0;
+--- a/drivers/net/ipvlan/ipvlan_core.c
++++ b/drivers/net/ipvlan/ipvlan_core.c
+@@ -277,6 +277,7 @@ void ipvlan_process_multicast(struct wor
+ 			}
+ 			ipvlan_count_rx(ipvlan, len, ret == NET_RX_SUCCESS, true);
+ 			local_bh_enable();
++			cond_resched_rcu();
+ 		}
+ 		rcu_read_unlock();
  
- static const struct option options[] = {
-@@ -141,7 +141,7 @@ int bench_futex_wake(int argc, const cha
- 	sigaction(SIGINT, &act, NULL);
- 
- 	if (!nthreads)
--		nthreads = ncpus;
-+		nthreads = cpu->nr;
- 
- 	worker = calloc(nthreads, sizeof(*worker));
- 	if (!worker)
 
 
