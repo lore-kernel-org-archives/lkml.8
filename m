@@ -2,99 +2,83 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B3DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763EAC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F3020674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5502620674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgCQGdy (ORCPT
+        id S1726187AbgCQGea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:33:54 -0400
-Received: from regular1.263xmail.com ([211.150.70.198]:35508 "EHLO
+        Tue, 17 Mar 2020 02:34:30 -0400
+Received: from regular1.263xmail.com ([211.150.70.206]:43556 "EHLO
         regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbgCQGdx (ORCPT
+        with ESMTP id S1725837AbgCQGe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:33:53 -0400
-Received: from localhost (unknown [192.168.167.13])
-        by regular1.263xmail.com (Postfix) with ESMTP id 2F4F9345;
-        Tue, 17 Mar 2020 14:33:10 +0800 (CST)
+        Tue, 17 Mar 2020 02:34:29 -0400
+Received: from localhost (unknown [192.168.167.8])
+        by regular1.263xmail.com (Postfix) with ESMTP id 445632C7;
+        Tue, 17 Mar 2020 14:34:11 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
 X-ANTISPAM-LEVEL: 2
 X-SKE-CHECKED: 1
 X-ABS-CHECKED: 1
-Received: from localhost (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P30131T140169344710400S1584426789590745_;
-        Tue, 17 Mar 2020 14:33:10 +0800 (CST)
+Received: from [172.16.22.134] (unknown [103.29.142.67])
+        by smtp.263.net (postfix) whith ESMTP id P24781T140190873843456S1584426846845729_;
+        Tue, 17 Mar 2020 14:34:11 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <f78793f1b0da05f9d036f31a68ad4d38>
+X-UNIQUE-TAG: <74c5c1252da5ded59c6443458b98bdac>
 X-RL-SENDER: jeffy.chen@rock-chips.com
 X-SENDER: cjf@rock-chips.com
 X-LOGIN-NAME: jeffy.chen@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 58.22.7.114
+X-FST-TO: sudeep.holla@arm.com
+X-SENDER-IP: 103.29.142.67
 X-ATTACHMENT-NUM: 0
 X-DNS-TYPE: 0
 X-System-Flag: 0
-From:   Jeffy Chen <jeffy.chen@rock-chips.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     anders.roxell@linaro.org, arnd@arndb.de, sboyd@kernel.org,
-        gregkh@linuxfoundation.org, naresh.kamboju@linaro.org,
-        daniel.lezcano@linaro.org, Basil.Eljuse@arm.com,
-        mturquette@baylibre.com, Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH v2] arch_topology: Fix putting invalid cpu clk
-Date:   Tue, 17 Mar 2020 14:33:08 +0800
-Message-Id: <20200317063308.23209-1-jeffy.chen@rock-chips.com>
-X-Mailer: git-send-email 2.11.0
+Message-ID: <5E706F5E.7020306@rock-chips.com>
+Date:   Tue, 17 Mar 2020 14:34:06 +0800
+From:   JeffyChen <jeffy.chen@rock-chips.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20130126 Thunderbird/19.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+To:     Sudeep Holla <sudeep.holla@arm.com>
+CC:     linux-kernel@vger.kernel.org, anders.roxell@linaro.org,
+        arnd@arndb.de, sboyd@kernel.org, gregkh@linuxfoundation.org,
+        naresh.kamboju@linaro.org, daniel.lezcano@linaro.org,
+        Basil.Eljuse@arm.com, mturquette@baylibre.com,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] arch_topology: Fix putting invalid cpu clk
+References: <20200317001829.29516-1-jeffy.chen@rock-chips.com> <20200317062348.GA12791@e107533-lin.cambridge.arm.com>
+In-Reply-To: <20200317062348.GA12791@e107533-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a sanity check before putting the cpu clk.
+Hi Sudeep,
 
-Fixes: b8fe128dad8f (“arch_topology: Adjust initial CPU capacities with current freq")
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
+On 03/17/2020 02:24 PM, Sudeep Holla wrote:
+> On Tue, Mar 17, 2020 at 08:18:29AM +0800, Jeffy Chen wrote:
+>> Add a sanity check before putting the cpu clk.
+>>
+>> Fixes: 2a6d1c6bcd1f (“arch_topology: Adjust initial CPU capacities with current freq")
+>
+> Fixing a non-existent commit ?
+>
+Sorry, wrong commit id, will resend it soon.
 
-Changes in v2:
-Correct fixes commit's commit id
-
- drivers/base/arch_topology.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 8a9fe2bc8635..4d0a0038b476 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -176,11 +176,11 @@ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
- 		 * frequency (by keeping the initial freq_factor value).
- 		 */
- 		cpu_clk = of_clk_get(cpu_node, 0);
--		if (!PTR_ERR_OR_ZERO(cpu_clk))
-+		if (!PTR_ERR_OR_ZERO(cpu_clk)) {
- 			per_cpu(freq_factor, cpu) =
- 				clk_get_rate(cpu_clk) / 1000;
--
--		clk_put(cpu_clk);
-+			clk_put(cpu_clk);
-+		}
- 	} else {
- 		if (raw_capacity) {
- 			pr_err("cpu_capacity: missing %pOF raw capacity\n",
--- 
-2.11.0
+> --
+> Regards,
+> Sudeep
+>
 
 
 
