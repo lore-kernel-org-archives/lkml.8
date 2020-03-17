@@ -2,117 +2,142 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F7DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79768C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7C420738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584479305;
-	bh=NhQ+lSLxcJWBOhE4q+o6nHrpVNsWd2d4S8RZ4T+UrA4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=H/i3p+rW956pU+O1AhL4Sn3XLiw30fF5rbYHfIXWNmEhZ2Yo6HrJctji4dAghvbU4
-	 b0FE//l2IPZailz3N5Po+ccw5zW8wO7YIUd9RkDzm9QRlo6d1BXHSTNzIbmotMqFJk
-	 MpvvkrpuDQ4kh2T7MqagP7YNTq/U3zYRvtAVWVac=
+	by mail.kernel.org (Postfix) with ESMTP id 463932051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="QtVvsnIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgCQVIY (ORCPT
+        id S1726842AbgCQVKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgCQVIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:08:23 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C0292051A;
-        Tue, 17 Mar 2020 21:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584479303;
-        bh=NhQ+lSLxcJWBOhE4q+o6nHrpVNsWd2d4S8RZ4T+UrA4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=yv6pTt81zflKi3+dlOrCfoeddtiozZWbHCPty0uEhBmsg3D9EuUIQ5plIjSZ7NkSo
-         upRQRW7voXphZhI/lDWnPuU22/U72GqU9qk3uu7rddMMpBoBZztVrYgD9mzh6tUmQW
-         aZraDVIYUuGFqetcF1XNVoBcAx7Bhbn0qLbh3M4k=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E2A003523295; Tue, 17 Mar 2020 14:08:22 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 14:08:22 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        urezki@gmail.com
-Subject: Re: [PATCH v2 rcu-dev 1/3] rcuperf: Add ability to increase object
- allocation size
-Message-ID: <20200317210822.GM3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200316163228.62068-1-joel@joelfernandes.org>
+        Tue, 17 Mar 2020 17:10:18 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40949 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgCQVKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:10:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a24so28381561edy.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 14:10:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nCoCinlfBkBrhCUwU5qZ/6v2x0D3qEE7/5CcMYa+4Hc=;
+        b=QtVvsnITXMu+JQHBuRJji7ST79Y05GMFLP3W+OVBiySALav+qQYW4roSiH/boPJdn1
+         0Ro+edqcp+QsD5buq/7z9JaNDMhOp3n0swq2vlcMaWU9bASfUxXyHFpaKOkUBreYaFlt
+         Zg4iJA8r5Ez4lHcHaRGan64Mgfx3yB+4w6RRJCj6iWneEIQFUmiV/cB6CpnsFSBy6x9T
+         3wyrKvg4gM7zBrYrmk1gQJE5mwkiUiPeXSTkUWttUaaBQRkbRHf39WE5DP/IFhTa6Npc
+         HDBgL/ZrtUU04XlpUQJmIUM27sHpMY+Ggg+4JeEAgAYcrJTlRUKC0m5UPLkQsQVTxFVp
+         /hTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nCoCinlfBkBrhCUwU5qZ/6v2x0D3qEE7/5CcMYa+4Hc=;
+        b=U4Lnq+rdS9hrXZcu4p0f3aI5HTAogi9ou1qKnDAjN5pMolvm78HM/z6beEfE3x29YM
+         k0Cjq2+QXvdsu2QUqVoXUsV00FT7scg8P4R5gsg0QX2j4LxonOXU66ITLfpxJ3J69Rmu
+         O+Pk0IkOiGTZNK5TZrswAkMhot88fT+inppG3ew4Yu5/Jf9usKL0vOaKl55FCIYVU0XN
+         /QDNwka2zb7rMfdxeESKN4N17IxeQHdlPTBVLz9np4uV7kNQ5GP3dBbqxpRSxiPoDr5U
+         +63zmfYu26Y5NbZtrVxQDtHhBN9D8PifRDUjhb21+QHv6V2IFwFDP6+IQR8+t8fpqD5K
+         25Dg==
+X-Gm-Message-State: ANhLgQ1EJxvlOtBayn/5EFdgRA2AlxqfgMD0VbJXfDr4KcNBZLUioXbL
+        1MPsXriOQO3getkiHNk2YDJ4Y2exaoO5cB4h5jE8fAw=
+X-Google-Smtp-Source: ADFU+vuu3jh28tAHj31MfyqCk4tbUgblW6g9cs4HTgMeREjvSzhKoCWkLyDPKfUdpsdchb1gV5IOO3pO8CNY2PtTOfg=
+X-Received: by 2002:a17:907:105a:: with SMTP id oy26mr1044369ejb.308.1584479415386;
+ Tue, 17 Mar 2020 14:10:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316163228.62068-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200317133117.4569cc6a@canb.auug.org.au> <bb623275e936c026cc425904e6c1cee0cbe85f28.camel@hammerspace.com>
+ <20200317151829.GA4442@aion.usersys.redhat.com> <c28fe5dc9bd58388ce413f30878fd35ef0f1eb1b.camel@hammerspace.com>
+In-Reply-To: <c28fe5dc9bd58388ce413f30878fd35ef0f1eb1b.camel@hammerspace.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 17 Mar 2020 17:10:04 -0400
+Message-ID: <CAHC9VhR8rXQLyfdwmV3xxRLeQF57N28T1rqpLN5fG0R77U5_4A@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the selinux tree with the nfs tree
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "smayhew@redhat.com" <smayhew@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 12:32:26PM -0400, Joel Fernandes (Google) wrote:
-> This allows us to increase memory pressure dynamically using a new
-> rcuperf boot command line parameter called 'rcumult'.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Tue, Mar 17, 2020 at 12:12 PM Trond Myklebust
+<trondmy@hammerspace.com> wrote:
+> On Tue, 2020-03-17 at 11:18 -0400, Scott Mayhew wrote:
+> > On Tue, 17 Mar 2020, Trond Myklebust wrote:
+> >
+> > > On Tue, 2020-03-17 at 13:31 +1100, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > >
+> > > > Today's linux-next merge of the selinux tree got a conflict in:
+> > > >
+> > > >   fs/nfs/getroot.c
+> > > >
+> > > > between commit:
+> > > >
+> > > >   e8213ffc2aec ("NFS: Ensure security label is set for root
+> > > > inode")
+> > > >
+> > > > from the nfs tree and commit:
+> > > >
+> > > >   28d4d0e16f09 ("When using NFSv4.2, the security label for the
+> > > > root
+> > > > inode should be set via a call to nfs_setsecurity() during the
+> > > > mount
+> > > > process, otherwise the inode will appear as unlabeled for up to
+> > > > acdirmin seconds.  Currently the label for the root inode is
+> > > > allocated, retrieved, and freed entirely witin
+> > > > nfs4_proc_get_root().")
+> > > >
+> > > > from the selinux tree.
+> > > >
+> > > > These are basically the same patch with slight formatting
+> > > > differences.
+> > > >
+> > > > I fixed it up (I used the latter) and can carry the fix as
+> > > > necessary.
+> > > > This is now fixed as far as linux-next is concerned, but any non
+> > > > trivial
+> > > > conflicts should be mentioned to your upstream maintainer when
+> > > > your
+> > > > tree
+> > > > is submitted for merging.  You may also want to consider
+> > > > cooperating
+> > > > with the maintainer of the conflicting tree to minimise any
+> > > > particularly
+> > > > complex conflicts.
+> > > >
+> > > OK... Why is this being pushed through the selinux tree? Was that
+> > > your
+> > > intention Scott?
+> >
+> > Not really... I addressed the patch to you and Anna, after all.  On
+> > the
+> > other hand, I didn't object when Paul picked up the patch in his
+> > tree.
+> > I'm guessing I should have spoken up.  Sorry about that.
+> >
+>
+> OK. Well there doesn't seem to be anything else touching the NFS mount
+> code in this dev cycle, so I don't expect any integration issues at
+> this point. I'm therefore OK with it going through the selinux tree.
+>
+> I'll therefore drop the patch from the NFS tree, assuming you still
+> have it in the selinux tree, Paul.
 
-Applied for testing and review, thank you!
+I was waiting to hear back from you before reverting, I'll go ahead
+and leave it in the selinux/next tree.  If anything changes on the NFS
+side, let me know.
 
-							Thanx, Paul
-
-> ---
-> 
-> The Series v1->v2 only has added a new patch (3/3).
-> 
-> 
->  kernel/rcu/rcuperf.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-> index a4a8d097d84d9..16dd1e6b7c09f 100644
-> --- a/kernel/rcu/rcuperf.c
-> +++ b/kernel/rcu/rcuperf.c
-> @@ -88,6 +88,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
->  torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
->  torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
->  torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
-> +torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
->  
->  static char *perf_type = "rcu";
->  module_param(perf_type, charp, 0444);
-> @@ -635,7 +636,7 @@ kfree_perf_thread(void *arg)
->  		}
->  
->  		for (i = 0; i < kfree_alloc_num; i++) {
-> -			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
-> +			alloc_ptr = kmalloc(kfree_mult * sizeof(struct kfree_obj), GFP_KERNEL);
->  			if (!alloc_ptr)
->  				return -ENOMEM;
->  
-> @@ -722,6 +723,8 @@ kfree_perf_init(void)
->  		schedule_timeout_uninterruptible(1);
->  	}
->  
-> +	pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
-> +
->  	kfree_reader_tasks = kcalloc(kfree_nrealthreads, sizeof(kfree_reader_tasks[0]),
->  			       GFP_KERNEL);
->  	if (kfree_reader_tasks == NULL) {
-> -- 
-> 2.25.1.481.gfbce0eb801-goog
+-- 
+paul moore
+www.paul-moore.com
