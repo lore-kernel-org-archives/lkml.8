@@ -2,258 +2,188 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91933C0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B45C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516FD20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAA820679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 02:18:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=biamp.com header.i=@biamp.com header.b="N5yqxmFX"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hBipPsTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgCQCLS (ORCPT
+        id S1726530AbgCQCSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 22:11:18 -0400
-Received: from outbound-ip13b.ess.barracuda.com ([209.222.82.195]:53976 "EHLO
-        outbound-ip13b.ess.barracuda.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725783AbgCQCLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 22:11:17 -0400
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2058.outbound.protection.outlook.com [104.47.46.58]) by mx15.us-east-2b.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Tue, 17 Mar 2020 02:11:10 +0000
+        Mon, 16 Mar 2020 22:18:15 -0400
+Received: from mail-db8eur05on2062.outbound.protection.outlook.com ([40.107.20.62]:43968
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726250AbgCQCSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 22:18:15 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KJncQjPKogk6nXykJHnPRNwVJpGsS1CYQqo414ctyYSRXrWoUtxNuxoHqj2Lr2n2XrgAnM3fPWj7boo861hGwARD+GKL8MF5BAWTeAhHwFAdjeYxoOOcLIGnsaSXD1WxQm0i/lH4oj90zYK78/nbAv8NZh9HY6VdmbrPBb090Y1e+TcGrDwV7TEc2N418VRuF0LlB6yuohuC887EGSM8JPxohO1lCHP8YgwqhQVg6Esldj8yXxuY9l1m5FdKwlJK+syTAv5RRfo+LkKM4MJvyrCYi6IS2E/yroKUX9nVRKm+/I1XS8nEmELl/5mnLEAQw2UYTzjcwB0UURlPrG/cpA==
+ b=MkAMG0feb/BmKLoE78JMVJcbVyWN7psqt064J9R7nBVmTOO4rF1ttd+BlCGzwhWJiCwgA8uegSFC+DLMWYFv26CAowJcHIioc7j9au1MS/pZgfbN/qG6bwc0v/Le3+Fzw0GdPpA/w0dJCsj6XInXOlzxAXvcVraxBGWVI9nX92shcT0EgOwlbh0KMZS1760ymuaOo8NHX4KvwpeaCiDI4sgvfhXSc7AXQez/tyn5ySUGtslBZjtBT9U5OqKPjpVoQfQ6NVml5XRR4mHDUbgK0JxlOsmuGM1oNX995bFOjSDqNgu3sIpREtXzI/rg0mZXXC6n43AOXtXtcrIpcG06Cw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dCNKy7BaR8qtehSheH72dAPS++/+yOikYHOa1yL8C1Y=;
- b=QIzTYPruwTJPAT+jGgBgNd+ddV4vGf+F5fh1TIgCjYC93Zvtx4PiBduHgqML1xDBuwNO0VNPqaCdNlnPUR/f8aa/rlI+sJktPTSBY0lP9G0GtYckLm8MP9yRAJEfvrQmNP8uTgAUOPbkTSB1Ay0LzERidkEipoMDtv1yWwq4sQ3a3Zd62cNlJCOoB7rJqsYOr3UKkiMILAlaZpmlAeQstcbNrSZy0zy3ajeaSTRGOlww6XxAlWqFixnQ75oOTHow8G0oOdmY5sa4wttkSy7695UhOBbG4LndhFSB7TfOlr6ZrZVz1SFYri9XxNvjuhXtqyD9BleBkYHWxq8UGc8ONA==
+ bh=7K14LEJ6sd10QVJzaWfYp9Yj8Dk7ko9sl+emhNLGwIU=;
+ b=e8egMXqW7KMGCa5jxufohTJcBdXj31A/J2Y5DL4y65GGvXHPhlTkdUfBPCQUW4h3pytNbGJKKnGV7NammU04hCeME0bBxl1r1JLKGOUVuf2dMTaKRG43yYvZ7h4zCAffJGmchL39L4iSeVDVOI/9BfmeEZ6dwSgrlQErarbdbyTAEgXgfTsE2vZFyX0jv/0D5Hj9DSyF3KmzD4Jn433wIOrEmet+AB7V/FRIxxLdoRc5DiI8I9LTIbShXAMu/ewHjT5/oPZPipwkP9EoHa0FbZWenv4o+AcFUQaieFJVwwwsnwLEHJRdRJmt5XwJ1maqyg6NlhPRb46XZzuq/iU/Xw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=biamp.com; dmarc=pass action=none header.from=biamp.com;
- dkim=pass header.d=biamp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=biamp.com;
- s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dCNKy7BaR8qtehSheH72dAPS++/+yOikYHOa1yL8C1Y=;
- b=N5yqxmFXxOQ1lktKikYu7LfV3oWttEI9yFKPZCe7w+9kVi7NYKzLc2ipy3/TqTn8sLAGXYLg/hDb0xTmr6SbYzBzqXnADykuZNhQqsGXBhXugknVAtAwDx/J7WFPaYArZFpaeZvas1F4WpPZGNd0RiS0J0HtTxdCfPqse1fql0E=
-Received: from MN2PR17MB3197.namprd17.prod.outlook.com (2603:10b6:208:136::33)
- by MN2PR17MB3533.namprd17.prod.outlook.com (2603:10b6:208:17b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.22; Tue, 17 Mar
- 2020 02:11:05 +0000
-Received: from MN2PR17MB3197.namprd17.prod.outlook.com
- ([fe80::31e3:fa7c:d1c0:ce24]) by MN2PR17MB3197.namprd17.prod.outlook.com
- ([fe80::31e3:fa7c:d1c0:ce24%3]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 02:11:05 +0000
-From:   Shreyas Joshi <Shreyas.Joshi@biamp.com>
-To:     Shreyas Joshi <Shreyas.Joshi@biamp.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "Support.Opensource@diasemi.com" <Support.Opensource@diasemi.com>,
-        "shreyasjoshi15@gmail.com" <shreyasjoshi15@gmail.com>,
-        "Adam.Thomson.Opensource@diasemi.com" 
-        <Adam.Thomson.Opensource@diasemi.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V6] mfd: da9062: Add support for interrupt polarity
- defined in device tree
-Thread-Topic: [PATCH V6] mfd: da9062: Add support for interrupt polarity
- defined in device tree
-Thread-Index: AQHV7EMiHDYnv4ttBUekTGBj8r6AgahMKX+g
-Date:   Tue, 17 Mar 2020 02:11:05 +0000
-Message-ID: <MN2PR17MB31975A1D9E3DEDE788877F18FCF60@MN2PR17MB3197.namprd17.prod.outlook.com>
-References: <AM6PR10MB22635CBCBF559AEB9A5C2BFF80120@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <20200226012108.361-1-shreyas.joshi@biamp.com>
-In-Reply-To: <20200226012108.361-1-shreyas.joshi@biamp.com>
+ bh=7K14LEJ6sd10QVJzaWfYp9Yj8Dk7ko9sl+emhNLGwIU=;
+ b=hBipPsTgsB30NtJxC6tsxW9cBpiVUpmtiofMH/WOAZyTglyhhnT2l+qHP8cxRTuWlMQA00rYxkXgfN4dDU3yX7ce6bwsdv/8klvwy+KyNoTq9z5DOBuNKJ6UBhRaHPzq+ZPRZbzy4wRhHktS2mEWGf9+ptAiz7gVR/wR+8HyiTg=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4145.eurprd04.prod.outlook.com (52.134.90.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.16; Tue, 17 Mar 2020 02:18:07 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 02:18:07 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Shawn Guo <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "ronald@innovation.ch" <ronald@innovation.ch>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+Thread-Topic: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+Thread-Index: AQHV9av6lP0y7UryDUCSkdoJ2q6AXKhARRTAgAop3wCAACC+IIAABReAgAACi8CAAAUEAIAAS0uAgAAKPgCAAADnAIAABKyAgAACPICAAAHmgIAABwkAgAEV3aA=
+Date:   Tue, 17 Mar 2020 02:18:07 +0000
+Message-ID: <AM0PR04MB4481A54C639FD1D45098302088F60@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20200316005219.GD17221@dragon>
+ <AM0PR04MB44819E4A9E027F1555C33D0B88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316030744.GC17221@dragon>
+ <AM0PR04MB44817A48746601EADA4E06BC88F90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200316033447.GE17221@dragon>
+ <DB3PR0402MB3916DA9F0F175B9D2E9E684FF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20200316084056.GG4518@piout.net>
+ <DB3PR0402MB391663DB37A8D241092AD708F5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20200316090053.GH4518@piout.net>
+ <DB3PR0402MB391683A05820920158DFDA77F5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20200316091541.GI4518@piout.net>
+ <DB3PR0402MB39169528B3FF39E23C7A90FCF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39169528B3FF39E23C7A90FCF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Shreyas.Joshi@biamp.com; 
-x-originating-ip: [203.54.172.54]
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7edc3dc8-1042-4aae-ee04-08d7ca187323
-x-ms-traffictypediagnostic: MN2PR17MB3533:
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f90fa381-0cf1-4ba6-c8b0-08d7ca196ea2
+x-ms-traffictypediagnostic: AM0PR04MB4145:|AM0PR04MB4145:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR17MB3533F6F4F3F4C7E6CFE97FFEFCF60@MN2PR17MB3533.namprd17.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-microsoft-antispam-prvs: <AM0PR04MB41452060FEBA42D7B81D5A7088F60@AM0PR04MB4145.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(396003)(376002)(346002)(39850400004)(199004)(4326008)(8676002)(110136005)(81166006)(86362001)(5660300002)(7696005)(9686003)(8936002)(55016002)(81156014)(52536014)(478600001)(966005)(66556008)(186003)(66446008)(64756008)(2906002)(26005)(53546011)(6506007)(76116006)(66946007)(71200400001)(316002)(66476007)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR17MB3533;H:MN2PR17MB3197.namprd17.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: biamp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(366004)(376002)(199004)(71200400001)(9686003)(4326008)(186003)(53546011)(316002)(7416002)(54906003)(2906002)(52536014)(110136005)(33656002)(55016002)(8936002)(26005)(64756008)(86362001)(7696005)(81156014)(478600001)(66446008)(76116006)(66476007)(6506007)(66946007)(5660300002)(8676002)(44832011)(81166006)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4145;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6dEjDr7mXXAdvQuoJE7vmyndTWLByeXy5wQOSy2ZYg6mokMczWz0m2gxdiUMhzjKGEw8E4717nSeo6ojKW/b0JV+vKrTlTQyDGxEyFwjx8mGo5Rl3+65ldm5jTL/ck6bApmMkbB0++3XNNi4vyqnWMNw9RUfnV3wvt6zheipV7e7Y5HupYj2yxclR4KOI6POy0/dvV3f1XYqT3Ora6qgenqy923InLLu1OuuOx6+E+n/6GktWU7bKgjhq+r/t1dt0S52QEudRhT5oq/WM9PAoroBuT+zH89kuXQfWD/f0e/D3dXgNwWAC69SdmEOkrt+JvOwwqSk7loZTrCAHAGtMO71no35oUb1gIjNs5luLeUJqbiXFoqbqt9CAVvFOURtExr+x1+uygHdilmwzdapkbRGBBJBV6TS69ZztcI8loodm7Dja75aiHpIO9WFTFvYky2X52HcdA6KPcuZWNBAJt8aug2JNyjFSeA3F7X2FsY9MrJ1khpR8gyXf+BAtKlWB+dE6qFs6GSrT3oBcWl9xQ==
-x-ms-exchange-antispam-messagedata: L46gRXAKCOntiGWn5W5CYH1Qg42Oc/+JHpM6iit33lho5SXgmkSVnKucApD1/pncvVxZ4iG4IGok2bEuXV2q3id/ydxWYlO54OvVu6u92YDA9jkaU1wwMkNcs5A0XoVzgLhfyznvw6bd8xMHss1EzA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: QZ1xC6g20MSfhMOzyShfMophmcDi6cdnHqyw9x4BbScXs+uip/HYdIVsdq5BYBlWHqCHro9uT/okZvn2KPZ1fbRK3JCao0XrW2CqYa08bUKdoiB+2MP+EbYxGop0lPKAOja31hAqjacmmcH5oqveFFsPQXVnL+Dqf1U/xc1lXfdpHFInL3YWC86QW5Xo9ZD1KBooSd160z2xylj6weCO2MCF+Qc2DKAZjttwMEyHKjCXDbDF2Kq4s2+PThS+xR3u62otN60+k7JF+Uh6WwhRhHLacFxbBsGMra2/9W35TN/llZgt38EAGEb/1iFWXAhRa9NL7RAfjB2lOsrHdUuNtxPFOucCxwLcHnluzPgYE29oEP82vOVqwrWxG2ZUHJya3ZNhM1AKcBzRbE/2+gqwbQN74izHJ/7dawUdSGbOVCHCIX0x0qtEk+Qw3JwCDngX
+x-ms-exchange-antispam-messagedata: 2FmPbQCGFsO2PfoE21lXKsoi2HUZNuT+0RnkmcKmRu2Bs+4CgLeiMUnij/JyTSfmsxcxZFNjKev4wV41ena9UVotI2B4IcTKIXowbMiFhqeSE+jLDImueKjVGE8lKx3IhH30F48HiB0WDfMJQBpyQA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: biamp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7edc3dc8-1042-4aae-ee04-08d7ca187323
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 02:11:05.3276
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f90fa381-0cf1-4ba6-c8b0-08d7ca196ea2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 02:18:07.4290
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 341ac572-066c-46f6-bf06-b2d0c7ddf1be
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7t8uFNe2x7fhkXPFhTG02hU3wvm1enspMVsEWzKkO/5gy+Z9oT94M/c3g/dSyOYodhXzLlHCgTBXrGeVeBnPEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR17MB3533
-X-BESS-ID: 1584411070-893029-20171-8065-1
-X-BESS-VER: 2019.1_20200316.2111
-X-BESS-Apparent-Source-IP: 104.47.46.58
-X-BESS-Outbound-Spam-Score: 0.50
-X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.222890 [from 
-        cloudscan14-19.us-east-2a.ess.aws.cudaops.com]
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------
-        0.00 MAILTO_TO_SPAM_ADDR    META: Includes a link to a likely spammer email 
-        0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
-        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH META: Sender Address Matches Recipient Address  
-X-BESS-Outbound-Spam-Status: SCORE=0.50 using account:ESS74049 scores of KILL_LEVEL=7.0 tests=MAILTO_TO_SPAM_ADDR, BSF_BESS_OUTBOUND, BSF_SC0_SA_TO_FROM_ADDR_MATCH
-X-BESS-BRTS-Status: 1
+X-MS-Exchange-CrossTenant-userprincipalname: 3Wsz9E0LiKuSMWQ9kT2QfbJpBuzhE2FVy9BktSTTs83Syi/QEmcO3QyDGNV/cjc2RYYvX8oBryrEt8/pk3dHtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the review! Has it already merged now?
-I am using this link to see my patch=20
- - https://lore.kernel.org/patchwork/patch/1200436/=20
-I am not aware of the process like how it goes to the mainline.
-
-Thanks
-Shreyas Joshi
-
-
------Original Message-----
-From: Shreyas Joshi <shreyas.joshi@biamp.com>=20
-Sent: Wednesday, 26 February 2020 11:22 AM
-To: lee.jones@linaro.org; Support.Opensource@diasemi.com; shreyasjoshi15@gm=
-ail.com; Adam.Thomson.Opensource@diasemi.com; linus.walleij@linaro.org
-Cc: linux-kernel@vger.kernel.org; Shreyas Joshi <Shreyas.Joshi@biamp.com>
-Subject: [PATCH V6] mfd: da9062: Add support for interrupt polarity defined=
- in device tree
-
-The da9062 interrupt handler cannot necessarily be low active.
-Add a function to configure the interrupt type based on what is defined in =
-the device tree.
-The allowable interrupt type is either low or high level trigger.
-
-Signed-off-by: Shreyas Joshi <shreyas.joshi@biamp.com>
----
-
-V6:
-  Changed regmap_reg_range to exclude DA9062AA_CONFIG_B for writeable
-  Added regmap_reg_range DA9062AA_CONFIG_A for readable
-
-V5:
-  Added #define for DA9062_IRQ_HIGH and DA9062_IRQ_LOW=20
-
-V4:
-  Changed return code to EINVAL rather than EIO for incorrect irq type
-  Corrected regmap_update_bits usage
- =20
-V3:
-  Changed regmap_write to regmap_update_bits
-
-V2:
-  Added function to update the polarity of CONFIG_A IRQ_TYPE
- =20
- drivers/mfd/da9062-core.c | 44 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 41 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c index 41=
-9c73533401..fc30726e2e27 100644
---- a/drivers/mfd/da9062-core.c
-+++ b/drivers/mfd/da9062-core.c
-@@ -21,6 +21,9 @@
- #define	DA9062_REG_EVENT_B_OFFSET	1
- #define	DA9062_REG_EVENT_C_OFFSET	2
-=20
-+#define	DA9062_IRQ_LOW	0
-+#define	DA9062_IRQ_HIGH	1
-+
- static struct regmap_irq da9061_irqs[] =3D {
- 	/* EVENT A */
- 	[DA9061_IRQ_ONKEY] =3D {
-@@ -369,6 +372,33 @@ static int da9062_get_device_type(struct da9062 *chip)
- 	return ret;
- }
-=20
-+static u32 da9062_configure_irq_type(struct da9062 *chip, int irq, u32=20
-+*trigger) {
-+	u32 irq_type =3D 0;
-+	struct irq_data *irq_data =3D irq_get_irq_data(irq);
-+
-+	if (!irq_data) {
-+		dev_err(chip->dev, "Invalid IRQ: %d\n", irq);
-+		return -EINVAL;
-+	}
-+	*trigger =3D irqd_get_trigger_type(irq_data);
-+
-+	switch (*trigger) {
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		irq_type =3D DA9062_IRQ_HIGH;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		irq_type =3D DA9062_IRQ_LOW;
-+		break;
-+	default:
-+		dev_warn(chip->dev, "Unsupported IRQ type: %d\n", *trigger);
-+		return -EINVAL;
-+	}
-+	return regmap_update_bits(chip->regmap, DA9062AA_CONFIG_A,
-+			DA9062AA_IRQ_TYPE_MASK,
-+			irq_type << DA9062AA_IRQ_TYPE_SHIFT); }
-+
- static const struct regmap_range da9061_aa_readable_ranges[] =3D {
- 	regmap_reg_range(DA9062AA_PAGE_CON, DA9062AA_STATUS_B),
- 	regmap_reg_range(DA9062AA_STATUS_D, DA9062AA_EVENT_C), @@ -388,6 +418,7 @=
-@ static const struct regmap_range da9061_aa_readable_ranges[] =3D {
- 	regmap_reg_range(DA9062AA_VBUCK1_A, DA9062AA_VBUCK4_A),
- 	regmap_reg_range(DA9062AA_VBUCK3_A, DA9062AA_VBUCK3_A),
- 	regmap_reg_range(DA9062AA_VLDO1_A, DA9062AA_VLDO4_A),
-+	regmap_reg_range(DA9062AA_CONFIG_A, DA9062AA_CONFIG_A),
- 	regmap_reg_range(DA9062AA_VBUCK1_B, DA9062AA_VBUCK4_B),
- 	regmap_reg_range(DA9062AA_VBUCK3_B, DA9062AA_VBUCK3_B),
- 	regmap_reg_range(DA9062AA_VLDO1_B, DA9062AA_VLDO4_B), @@ -417,6 +448,7 @@=
- static const struct regmap_range da9061_aa_writeable_ranges[] =3D {
- 	regmap_reg_range(DA9062AA_VBUCK1_A, DA9062AA_VBUCK4_A),
- 	regmap_reg_range(DA9062AA_VBUCK3_A, DA9062AA_VBUCK3_A),
- 	regmap_reg_range(DA9062AA_VLDO1_A, DA9062AA_VLDO4_A),
-+	regmap_reg_range(DA9062AA_CONFIG_A, DA9062AA_CONFIG_A),
- 	regmap_reg_range(DA9062AA_VBUCK1_B, DA9062AA_VBUCK4_B),
- 	regmap_reg_range(DA9062AA_VBUCK3_B, DA9062AA_VBUCK3_B),
- 	regmap_reg_range(DA9062AA_VLDO1_B, DA9062AA_VLDO4_B), @@ -596,6 +628,7 @@=
- static int da9062_i2c_probe(struct i2c_client *i2c,
- 	const struct regmap_irq_chip *irq_chip;
- 	const struct regmap_config *config;
- 	int cell_num;
-+	u32 trigger_type =3D 0;
- 	int ret;
-=20
- 	chip =3D devm_kzalloc(&i2c->dev, sizeof(*chip), GFP_KERNEL); @@ -654,10 +=
-687,15 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
- 	if (ret)
- 		return ret;
-=20
-+	ret =3D da9062_configure_irq_type(chip, i2c->irq, &trigger_type);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "Failed to configure IRQ type\n");
-+		return ret;
-+	}
-+
- 	ret =3D regmap_add_irq_chip(chip->regmap, i2c->irq,
--			IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED,
--			-1, irq_chip,
--			&chip->regmap_irq);
-+			trigger_type | IRQF_SHARED | IRQF_ONESHOT,
-+			-1, irq_chip, &chip->regmap_irq);
- 	if (ret) {
- 		dev_err(chip->dev, "Failed to request IRQ %d: %d\n",
- 			i2c->irq, ret);
---
-2.20.1
-
+PiBTdWJqZWN0OiBSRTogW1BBVENIIFYzIDEvN10gZmlybXdhcmU6IGlteDogQWRkIHN0dWJzIGZv
+ciAhQ09ORklHX0lNWF9TQ1UNCj4gY2FzZQ0KPiANCj4gSGksIEFsZXhhbmRyZQ0KPiANCj4gPiAt
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IEFsZXhhbmRyZSBCZWxsb25pIDxh
+bGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbT4NCj4gPiBTZW50OiBNb25kYXksIE1hcmNoIDE2
+LCAyMDIwIDU6MTYgUE0NCj4gPiBUbzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+
+DQo+ID4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFBlbmcgRmFuIDxwZW5n
+LmZhbkBueHAuY29tPjsNCj4gPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0
+cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gPiBkbWl0cnkudG9yb2tob3ZAZ21haWwu
+Y29tOyBhLnp1bW1vQHRvd2VydGVjaC5pdDsNCj4gcnVpLnpoYW5nQGludGVsLmNvbTsNCj4gPiBk
+YW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnOyBhbWl0Lmt1Y2hlcmlhQHZlcmR1cmVudC5jb207IHdp
+bUBsaW51eC0NCj4gPiB3YXRjaGRvZy5vcmc7IGxpbnV4QHJvZWNrLXVzLm5ldDsgRGFuaWVsIEJh
+bHV0YQ0KPiA+IDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBncmVna2hAbGludXhmb3VuZGF0aW9u
+Lm9yZzsNCj4gPiBsaW51eEByZW1wZWwtcHJpdmF0LmRlOyB0Z2x4QGxpbnV0cm9uaXguZGU7IG0u
+ZmVsc2NoQHBlbmd1dHJvbml4LmRlOw0KPiA+IGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVs
+LmNvbTsNCj4gPiBhcm5kQGFybmRiLmRlOyByb25hbGRAaW5ub3ZhdGlvbi5jaDsga3J6a0BrZXJu
+ZWwub3JnOyByb2JoQGtlcm5lbC5vcmc7DQo+ID4gTGVvbmFyZCBDcmVzdGV6IDxsZW9uYXJkLmNy
+ZXN0ZXpAbnhwLmNvbT47IEFpc2hlbmcgRG9uZw0KPiA+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47
+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+ID4ga2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4g
+PiBydGNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0K
+PiA+IHdhdGNoZG9nQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhw
+LmNvbT4NCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDEvN10gZmlybXdhcmU6IGlteDogQWRk
+IHN0dWJzIGZvcg0KPiA+ICFDT05GSUdfSU1YX1NDVSBjYXNlDQo+ID4NCj4gPiBPbiAxNi8wMy8y
+MDIwIDA5OjA4OjUzKzAwMDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+ID4gPiBXaHkgZG8geW91
+IGFic29sdXRlbHkgbmVlZCB0byBjb21waWxlIHRoZW0gaW5kZXBlbmRlbnRseT8gRnJvbSBhDQo+
+ID4gPiA+IGNvZGUgY292ZXJhZ2UgcG9pbnQgb2YgdmlldywgaGF2aW5nOg0KPiA+ID4gPg0KPiA+
+ID4gPiBDT01QSUxFX1RFU1Q9eQ0KPiA+ID4gPiBDT05GSUdfSU1YX1NDVT15DQo+ID4gPiA+DQo+
+ID4gPiA+IGlzIGVub3VnaCB0byBzZWxlY3QgYW5kIGNvbXBpbGUgdGhlIHJlbWFpbmluZyBkcml2
+ZXJzLg0KPiA+ID4NCj4gPiA+IFdoYXQgSSBtZWFudCBpcyBmb3IgYmVsb3cgY2FzZSwgbGlrZSB1
+c2luZyBvdGhlciBhcmNoIGNvbmZpZyB3aGljaA0KPiA+ID4gZG9lcyBOT1QgaGF2ZSBDT05GSUdf
+SU1YX1NDVSBzZWxlY3RlZCwgT05MWSB3aXRoIENPTVBJTEVfVEVTVA0KPiA+ID4gc2VsZWN0ZWQs
+IGFkZGluZyBzdHVicyBmb3IgSU1YX1NDVSBBUElzIGNhbiBmaXggc3VjaCBzY2VuYXJpby4NCj4g
+PiA+DQo+ID4gPiBDT01QSUxFX1RFU1Q9eQ0KPiA+ID4gQ09ORklHX0lNWF9TQ1U9bg0KPiA+ID4N
+Cj4gPg0KPiA+IFdoeSBpcyB0aGF0IGFuIGlzc3VlPyBJZiB0aGV5IGRvbid0IGhhdmUgSU1YX1ND
+VSBzZWxlY3RlZCwgdGhlbiB0aGUNCj4gPiBvdGhlciBTQ1UgZHJpdmVyIGFyZSBub3Qgc2VsZWN0
+ZWQgZWl0aGVyLCBoYXZpbmcgc3R1YnMgZG9lc24ndCBjaGFuZ2UNCj4gPiB0aGF0IHlvdSB3aWxs
+IGhhdmUgdG8gc2VsZWN0IGF0IGxlYXN0IG9uZSBvcHRpb24uIFBsZWFzZSBleHBsYWluIHdoYXQN
+Cj4gPiBpcyB0aGUgaXNzdWUgdGhhdCBpcyBub3Qgc29sdmVkIGhlcmUuDQo+IA0KPiBPSywgd2hh
+dCBJIHRob3VnaHQgaXMgZXZlbiB3aXRob3V0IElNWF9TQ1Ugc2VsZWN0ZWQsIG90aGVyIFNDVSBk
+cml2ZXJzIHN0aWxsDQo+IGNhbiBiZSBzZWxlY3RlZCBmb3IgYnVpbGQgdGVzdCBhZnRlciBhZGRp
+bmcgIkNPTVBJTEVfVEVTVCIgdG8gdGhlIGtjb25maWcsDQo+IGxpa2UgYmVsb3csIGlmIHdpdGhv
+dXQgSU1YX1NDVSBBUEkgc3R1YnMsIHRoZSAiQ09NUElMRV9URVNUIiBjYW4gTk9UIGJlDQo+IGFk
+ZGVkIHRvIFNDVSBkcml2ZXJzIHRvIGVuYWJsZSBidWlsZCB0ZXN0LCBzbyBJIHRoaW5rIHRoZSBJ
+TVhfU0NVIEFQSSBzdHVicw0KPiBzaG91bGQgYmUgYWRkZWQ/DQoNCkZvcmdvdCB0byBtZW50aW9u
+LCB3aXRob3V0IHN0dWIgYXBpLCBmb3IgZHJpdmVycyB3aXRoDQoiICNpbmNsdWRlIDxsaW51eC9m
+aXJtd2FyZS9pbXgvc2NpLmg+ICIgd2lsbCBtZXQgY29tcGlsZSBlcnJvciB3aXRob3V0DQorI2lm
+ZGVmIENPTkZJR19JTVhfU0NVDQorI2VuZGlmDQoNClNvIHdlIGhhdmUgdG8gdXNlIGlmZGVmIENP
+TkZJR19JTVhfU0NVIHRvIGd1YXJkIHRoZSBpbmNsdWRlLg0KDQpSZWdhcmRzLA0KUGVuZy4NCg0K
+PiANCj4gY29uZmlnIEtFWUJPQVJEX0lNWF9TQ19LRVkNCj4gICAgIHRyaXN0YXRlICJJTVggU0NV
+IEtleSBEcml2ZXIiDQo+ICAgICBkZXBlbmRzIG9uIElNWF9TQ1UgfHwgQ09NUElMRV9URVNUDQo+
+IA0KPiB0aGFua3MsDQo+IEFuc29uDQo=
