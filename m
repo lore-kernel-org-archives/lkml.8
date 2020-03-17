@@ -2,206 +2,135 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA74C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E489BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC7920738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CE72073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="l8YkbChH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ofQMSxU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgCQR4x (ORCPT
+        id S1726545AbgCQSAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:56:53 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38362 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgCQR4x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:56:53 -0400
-Received: by mail-qt1-f194.google.com with SMTP id e20so18277541qto.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4WGq4CF/dR8iCUj35XbboYwcU6jq/WMDHaS7e14zUHU=;
-        b=l8YkbChHMzRzyWgsYzMiOOaKQwqIBfBczFU/QbsilDui8FS7SvOG+wBcK5QvoH2xUV
-         zsY+luGTXUMkvCfYw0krokGbr6uX3EkjAJpALUEVpwCScJqmdk4fS1801CVmf4pQ0Sg+
-         q4S2DcEsWuvZkJZnKL+l0GSNrj87Rf2WwAZ0agwI7kli4Q2lZi21DTKHnN/LFXCx3Nt+
-         uw1kc1QWxj/pw1xeQrpIc2WEbd57LCNMzNg3x7bZQSYzbCllPFHvLl6bwRn4sCQ5Kukk
-         +xKfTx3z3Gkr/czGD+Sjaz3P/dxTuOUZoC//eKBNYJz7tJXvN4JLYod2vKY/Loaee7I+
-         K5UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4WGq4CF/dR8iCUj35XbboYwcU6jq/WMDHaS7e14zUHU=;
-        b=Fi7v6xbvYdvHxMz6v8lL0EdEXm7Dpsy7xquw6/+oP0VGanwhFD8d4FTqgEUW1KaOzd
-         4dAF2f66WhB2i1EN6YStNm9DsVoLSsCvgJYu2+Yul9exr+R74V+YLtv0ylbUpHGUOSDi
-         oZxUVciV20NwmUWppVLuGCrrKxxijpuHuOkz3+TKb0O4lkSda8kCXjf8us+QVwCFe95U
-         pqbSyYkzVLElbtlwhNlMsYoYiwb+PRWe3A+oT9grZFTYrn1y2vmEv9EPcD8OH/mMYF5L
-         U0LRbeu7oO5IoH/Ya0K910/MVkG4QTGOcDvFH2BiRR6bXKfGRWk5BAvGQfZSepGlWQL5
-         Be4w==
-X-Gm-Message-State: ANhLgQ3nEHHnT2uIODWNm893Id6VzVpYsNcyx62bOEzpv9XIMzwNbxyL
-        IKai2cafegHuHyv7C9MEZeBmug==
-X-Google-Smtp-Source: ADFU+vuKg6hr6xOxDHVZru0yHgshRbjUlraQHnxbwMpRAaCMlvZfgToLAacWGLp4vMhXlyfRL13Ugg==
-X-Received: by 2002:ac8:7b39:: with SMTP id l25mr387464qtu.72.1584467811291;
-        Tue, 17 Mar 2020 10:56:51 -0700 (PDT)
-Received: from ovpn-66-200.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r6sm2285068qkf.71.2020.03.17.10.56.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Mar 2020 10:56:50 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     jgg@ziepe.ca, paulmck@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/mmu_notifier: silence PROVE_RCU_LIST warnings
-Date:   Tue, 17 Mar 2020 13:56:40 -0400
-Message-Id: <20200317175640.2047-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Tue, 17 Mar 2020 14:00:04 -0400
+Received: from mail-eopbgr130087.outbound.protection.outlook.com ([40.107.13.87]:22244
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726189AbgCQSAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 14:00:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Lm82Sdyz08yKSH7aweA/tfk0URzncasemay/w2XB+oBLTT8578m/KHFHO7hzF1R2C8LDzvpwmbqTnnSfjpbeMfdd14JLfhGBlnhk4SdYAYkkHkLLWoErpPmsqEwsWfqgsfYE1XuI19a398GR4ux2CK+NyMKq2tIsJAZUWKbGv4iWOdROWjnZ0W176TP49MbHw36oDishQkiRFBCQ3eHLcLwNIq9GEz+CqLUzVg0eu7bgmVNbmiDimfVm7gIi7d+sO4dqxuK05aZZCkKiryCRZk7ktjV5/UvAxqXXEpn6Tf79x0MuxNQCdL3RXVAHkmSz88aAm7BuEbUQSrLWEOK5fQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aTMe45VDREcnKLzoEYUYLXtPyyecLT47F4c8s2ZoP5E=;
+ b=aRB2QdaqJjWRcqYhNPdNrjWqR492KDzeWAPQyDYSNTRfbSlZJ/dopFix7p/duwETpayJDI3sjraVM7e2od5gSnZAKSOAG5QOqPpNP7ntEJB5cGxaAPfTAB83TqKXap1B7yIZseV3RFohRqx4kzBgz0wwYfi/7TlkICu6xkk8CvpOti+8fGj4VfHMYE2A33wf2Yau4dVFYXCLaEoRBvDJjmDKV0mwjZGg3Mpdk2XFrBzbHwNEV1iS0WFJwJdAe8jzf7hRiZX8cPj9DMDO+TRGYdHMF1FwJoXxBuzb6Jd+EF98zcHA+7VqhEublvXqlsEkBI4k+0WDhOIiEoKRC5QCSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aTMe45VDREcnKLzoEYUYLXtPyyecLT47F4c8s2ZoP5E=;
+ b=ofQMSxU/SzQFFt99RY0jiyyKBwwUdbOf3K5ciD9eTAkld931s7fAjavqnEzbwFOiYdjrNHbMEYhytKctKWLLJFYheEiRLCw37oa17XEaqk3I+BDcViYmOSS3s/3yjEMLbm85iMz/Uc4xEfSOdw6IzD5YcSqiZYCXYyx1zrR8luU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3389.eurprd04.prod.outlook.com (52.134.5.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.16; Tue, 17 Mar 2020 17:59:57 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 17:59:56 +0000
+Subject: Re: [PATCH v8 7/8] crypto: caam - enable prediction resistance in
+ HRWNG
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Cc:     Andrei Botila <andrei.botila@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+References: <20200316150047.30828-1-andrew.smirnov@gmail.com>
+ <20200316150047.30828-8-andrew.smirnov@gmail.com>
+From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
+Message-ID: <3b4178a7-f410-b5fd-d154-9682f1acb29e@nxp.com>
+Date:   Tue, 17 Mar 2020 19:59:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <20200316150047.30828-8-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM3PR07CA0083.eurprd07.prod.outlook.com
+ (2603:10a6:207:6::17) To VI1PR0402MB3485.eurprd04.prod.outlook.com
+ (2603:10a6:803:7::25)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.129] (84.117.251.185) by AM3PR07CA0083.eurprd07.prod.outlook.com (2603:10a6:207:6::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.10 via Frontend Transport; Tue, 17 Mar 2020 17:59:55 +0000
+X-Originating-IP: [84.117.251.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 88184432-9f5c-4058-da4a-08d7ca9d00a6
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3389:|VI1PR0402MB3389:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB338973C496F20120B520546498F60@VI1PR0402MB3389.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(199004)(36756003)(4326008)(2616005)(478600001)(2906002)(956004)(86362001)(31686004)(31696002)(66946007)(66556008)(66476007)(8936002)(81166006)(81156014)(4744005)(8676002)(53546011)(186003)(16526019)(6486002)(110136005)(26005)(5660300002)(16576012)(316002)(52116002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3389;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HQ0PDDfUAwJrYs4gmSKEzMd7YQu6FuUD4HMloIRn/tw99DIVUfV0i239jG86GcM6z9mBOhyUzMVzY/DlI1J8+DyPNpDseekamKR7G5PQrA8ZZUsdRZBrg5F8GXDJLPM2C/ze3qbUY88dmjUgJiueaJd0KjSk+m1ZyyYDYJLk3yCgZ5ddEWUpV0khPFdHnwAsR1Zz5vUVHYDwMMQHPmbrBQeOsXCFDz3h02RM5HE6qDXaiEj0vnrfXLQU596QqRrzKkzyKlQ1uSFNlYzLAHqjieZzeCno+9QGasaehJk7k9Fn23ABT2pj54ResepVWJxf7ZUpyGEEct5q0wtmKAGMbh2m66B0lp3Fo5EueBUU9D6mdR8RHqTNLrC7dhKovuMDdE44LAbqr1sanLkbZ6OBlhicYMYTFR1VP+/0UgTh4vcWqYdvpmZYdlDEp0Jd8KbD
+X-MS-Exchange-AntiSpam-MessageData: BrTohAq/oot5bApf0ujQotStiGflCmu3hHMEEz1HNUpz4v6fPja/4gT8SqSMBLfOh6jTyl/IWf9cbn0wnPp0JgenztXeh2bdoHAH2gcTxcGnbhUXH1s6Vo66YuzND511oG4F5Id3yAAhYzp16KuthQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88184432-9f5c-4058-da4a-08d7ca9d00a6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 17:59:56.8514
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zqUE9myPVriBybdVZO0V+y5MZF+Vke5u7bmSv3nOrjUSvszJ/DxPGEiBwAVr0zU+O6BWNCG0yxb67fn0SwKsSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3389
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is safe to traverse mm->notifier_subscriptions->list either under
-SRCU read lock or mm->notifier_subscriptions->lock using
-hlist_for_each_entry_rcu(). Silence the PROVE_RCU_LIST false positives,
-for example,
+On 3/16/2020 5:01 PM, Andrey Smirnov wrote:
+> @@ -564,6 +579,26 @@ static void caam_remove_debugfs(void *root)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_FSL_MC_BUS
+> +static bool check_version(struct fsl_mc_version *mc_version, u32 major,
+> +			  u32 minor, u32 revision)
+> +{
+> +	if (mc_version->major > major)
+> +		return true;
+> +
+> +	if (mc_version->major == major) {
+> +		if (mc_version->minor > minor)
+> +			return true;
+> +
+> +		if (mc_version->minor == minor && mc_version->revision > 0)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +#endif
+> +
+> +
+Nitpick - checkpatch complains here:
+CHECK: Please don't use multiple blank lines
 
- WARNING: suspicious RCU usage
- -----------------------------
- mm/mmu_notifier.c:484 RCU-list traversed in non-reader section!!
-
- other info that might help us debug this:
-
- rcu_scheduler_active = 2, debug_locks = 1
- 3 locks held by libvirtd/802:
-  #0: ffff9321e3f58148 (&mm->mmap_sem#2){++++}, at: do_mprotect_pkey+0xe1/0x3e0
-  #1: ffffffff91ae6160 (mmu_notifier_invalidate_range_start){+.+.}, at: change_p4d_range+0x5fa/0x800
-  #2: ffffffff91ae6e08 (srcu){....}, at: __mmu_notifier_invalidate_range_start+0x178/0x460
-
- stack backtrace:
- CPU: 7 PID: 802 Comm: libvirtd Tainted: G          I       5.6.0-rc6-next-20200317+ #2
- Hardware name: HP ProLiant BL460c Gen8, BIOS I31 11/02/2014
- Call Trace:
-  dump_stack+0xa4/0xfe
-  lockdep_rcu_suspicious+0xeb/0xf5
-  __mmu_notifier_invalidate_range_start+0x3ff/0x460
-  change_p4d_range+0x746/0x800
-  change_protection+0x1df/0x300
-  mprotect_fixup+0x245/0x3e0
-  do_mprotect_pkey+0x23b/0x3e0
-  __x64_sys_mprotect+0x51/0x70
-  do_syscall_64+0x91/0xae8
-  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/mmu_notifier.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
-
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index ef3973a5d34a..06852b896fa6 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -307,7 +307,8 @@ static void mn_hlist_release(struct mmu_notifier_subscriptions *subscriptions,
- 	 * ->release returns.
- 	 */
- 	id = srcu_read_lock(&srcu);
--	hlist_for_each_entry_rcu(subscription, &subscriptions->list, hlist)
-+	hlist_for_each_entry_rcu(subscription, &subscriptions->list, hlist,
-+				 srcu_read_lock_held(&srcu))
- 		/*
- 		 * If ->release runs before mmu_notifier_unregister it must be
- 		 * handled, as it's the only way for the driver to flush all
-@@ -370,7 +371,8 @@ int __mmu_notifier_clear_flush_young(struct mm_struct *mm,
- 
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_rcu(subscription,
--				 &mm->notifier_subscriptions->list, hlist) {
-+				 &mm->notifier_subscriptions->list, hlist,
-+				 srcu_read_lock_held(&srcu)) {
- 		if (subscription->ops->clear_flush_young)
- 			young |= subscription->ops->clear_flush_young(
- 				subscription, mm, start, end);
-@@ -389,7 +391,8 @@ int __mmu_notifier_clear_young(struct mm_struct *mm,
- 
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_rcu(subscription,
--				 &mm->notifier_subscriptions->list, hlist) {
-+				 &mm->notifier_subscriptions->list, hlist,
-+				 srcu_read_lock_held(&srcu)) {
- 		if (subscription->ops->clear_young)
- 			young |= subscription->ops->clear_young(subscription,
- 								mm, start, end);
-@@ -407,7 +410,8 @@ int __mmu_notifier_test_young(struct mm_struct *mm,
- 
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_rcu(subscription,
--				 &mm->notifier_subscriptions->list, hlist) {
-+				 &mm->notifier_subscriptions->list, hlist,
-+				 srcu_read_lock_held(&srcu)) {
- 		if (subscription->ops->test_young) {
- 			young = subscription->ops->test_young(subscription, mm,
- 							      address);
-@@ -428,7 +432,8 @@ void __mmu_notifier_change_pte(struct mm_struct *mm, unsigned long address,
- 
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_rcu(subscription,
--				 &mm->notifier_subscriptions->list, hlist) {
-+				 &mm->notifier_subscriptions->list, hlist,
-+				 srcu_read_lock_held(&srcu)) {
- 		if (subscription->ops->change_pte)
- 			subscription->ops->change_pte(subscription, mm, address,
- 						      pte);
-@@ -476,7 +481,8 @@ static int mn_hlist_invalidate_range_start(
- 	int id;
- 
- 	id = srcu_read_lock(&srcu);
--	hlist_for_each_entry_rcu(subscription, &subscriptions->list, hlist) {
-+	hlist_for_each_entry_rcu(subscription, &subscriptions->list, hlist,
-+				 srcu_read_lock_held(&srcu)) {
- 		const struct mmu_notifier_ops *ops = subscription->ops;
- 
- 		if (ops->invalidate_range_start) {
-@@ -528,7 +534,8 @@ mn_hlist_invalidate_end(struct mmu_notifier_subscriptions *subscriptions,
- 	int id;
- 
- 	id = srcu_read_lock(&srcu);
--	hlist_for_each_entry_rcu(subscription, &subscriptions->list, hlist) {
-+	hlist_for_each_entry_rcu(subscription, &subscriptions->list, hlist,
-+				 srcu_read_lock_held(&srcu)) {
- 		/*
- 		 * Call invalidate_range here too to avoid the need for the
- 		 * subsystem of having to register an invalidate_range_end
-@@ -582,7 +589,8 @@ void __mmu_notifier_invalidate_range(struct mm_struct *mm,
- 
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_rcu(subscription,
--				 &mm->notifier_subscriptions->list, hlist) {
-+				 &mm->notifier_subscriptions->list, hlist,
-+				 srcu_read_lock_held(&srcu)) {
- 		if (subscription->ops->invalidate_range)
- 			subscription->ops->invalidate_range(subscription, mm,
- 							    start, end);
-@@ -714,7 +722,8 @@ find_get_mmu_notifier(struct mm_struct *mm, const struct mmu_notifier_ops *ops)
- 
- 	spin_lock(&mm->notifier_subscriptions->lock);
- 	hlist_for_each_entry_rcu(subscription,
--				 &mm->notifier_subscriptions->list, hlist) {
-+				 &mm->notifier_subscriptions->list, hlist,
-+				 lockdep_is_held(&mm->notifier_subscriptions->lock)) {
- 		if (subscription->ops != ops)
- 			continue;
- 
--- 
-2.21.0 (Apple Git-122.2)
-
+Horia
