@@ -2,197 +2,208 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57793C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100D1C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2020A20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D092820663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V6DmMXKn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cptiBHPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgCQQ3R (ORCPT
+        id S1726643AbgCQQ3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:29:17 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:26678 "EHLO
+        Tue, 17 Mar 2020 12:29:19 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:27175 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726016AbgCQQ3Q (ORCPT
+        by vger.kernel.org with ESMTP id S1726329AbgCQQ3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:29:16 -0400
+        Tue, 17 Mar 2020 12:29:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584462554;
+        s=mimecast20190719; t=1584462556;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=Cesc6+PAoo0uOh9jUHSiNLjLdnEyU/La4E7O0BZjTS4=;
-        b=V6DmMXKnR+jhvacimh1OawBti7Jxgtkp/heyxV86pi/vo/XwAzK9xCuHG5LooD1n73ETnD
-        VArcc7hDTVqnSODS3jHp7Ksz61xuKFNnN9XlaCFktTn3rik05sOSkKB+2neIHKEFo2Trnl
-        GPCBMaRJEmCHAO8J20H7BDLAD23h0vM=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-ph2AUW_JN4-CzoYQG2Ai0g-1; Tue, 17 Mar 2020 12:29:13 -0400
-X-MC-Unique: ph2AUW_JN4-CzoYQG2Ai0g-1
-Received: by mail-io1-f72.google.com with SMTP id q22so6211065ioj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:29:12 -0700 (PDT)
+        bh=hJ9IRxNEXJZnQrunYJpAkXFYXEUKw/iYEqZiM94FqR4=;
+        b=cptiBHPhfZ2cGBgOSRZh7Sm/Fo1Ne2eAHWj/T2+gcTHlzvbxmjacUrQ6TmNywaSPtGj0NO
+        21GQHMu1dA9CG2qx0rjn8jtmijPlnlOt6YfMCjwX/OiZmLZek2WuJR0FdtDSIq0t4N5jCZ
+        tNm8j2u1CmYgdiVOw6DBXec7mS48akw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-3Qse119sPSiQ95C8I3BGxw-1; Tue, 17 Mar 2020 12:29:15 -0400
+X-MC-Unique: 3Qse119sPSiQ95C8I3BGxw-1
+Received: by mail-wr1-f69.google.com with SMTP id g4so3267849wrv.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:29:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cesc6+PAoo0uOh9jUHSiNLjLdnEyU/La4E7O0BZjTS4=;
-        b=YpQbi1fYC8ERLy3M6iGbgLVqsJPXSOInaMCf+mXmxV7P8OqBwUipsZDs6bQmDGTr9D
-         FJLykuWqP9vNo2bt3DbOKl2ULs70JOzdJQ3xGFZQ6TZ9AcntpS1QdcM10vrAJ+wAdAsg
-         3UU/KB/kTV+ASyiqeg6FCjb/hdqUcD8lYnQoe/rzUGDkVgar0o/QxhxLfOEI8KIbIjtm
-         NxFCeXLtiDfK2w04CPt+nY6+86mQ+tIMK1A3sGKWCmYFEquKCqZgEQ1QyfcKrTtBFCMY
-         Aq1jCJXnrgfeZ/2gF2bOYtzg9u7am/+6uQTxn+JVSrqd/zZgd/ZuEw/CeYQvJUM2GQpb
-         XBzQ==
-X-Gm-Message-State: ANhLgQ0DGmNpu13Rpi4RI/S1l6vKC2NyQtIotw6NV3e30AAHnCum6huQ
-        mpM4F4O1M0o5hqj31zdw2XpuelhPJl+YhV48OmS+6a8PnbR48SOySDeeMyBRvzyCWVCse7XplJw
-        rSb3R6vXy0Fbbyb+3ut86ofUENwaN/Pb705gQfCZQ
-X-Received: by 2002:a05:6602:2434:: with SMTP id g20mr4550522iob.97.1584462550257;
-        Tue, 17 Mar 2020 09:29:10 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtjCSQ2lftFJ7EV4bG+5w/GyTA3TbeduLtFqWgxZnR0k8L1ugrfDp90ieq7fWwElhXk2LCyoJxo0AKmX+JtRa0=
-X-Received: by 2002:a05:6602:2434:: with SMTP id g20mr4550458iob.97.1584462549594;
- Tue, 17 Mar 2020 09:29:09 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=hJ9IRxNEXJZnQrunYJpAkXFYXEUKw/iYEqZiM94FqR4=;
+        b=FqeLXKs5RnFx1mYqW95ZjnGO4wmIee976qfLGJM/lqFD/YTX7LSHvCkDclDm0BRqQJ
+         55ZZW3jlQquQQQFRJ4Jqdx+uzDiG6sWaSf5M25AFvMMEaHLgw0zHtXddvG4rI9FPw92Y
+         /RGFeLAE47e5H61n8WDHqvR7EDYNpyGq8O6HcrcAaWEE4ICCYRwdoZDrpsPS54xJkQtE
+         qZOrm1EsPnf5FTLE8jLkI4qT7DoUtZ94qsisUAXoVEibBlZtOoxrqeLae++hZ/qyuA4g
+         xZaFglVbytJP02y67xCU+tKCGXv0pf6eYbyFXxFx54V5zCUl/MuLZ148xWJfG3JkPvSv
+         1I0w==
+X-Gm-Message-State: ANhLgQ1J1eKAb7r4p3tINk0Li3Tmo5zL/VKgOA5rK2p9GgJEi/GxZEgr
+        /QfDTerH7I5hjTQv9TWWZ1ZKbJ/7p322foEO34TZXAsHg5Rc0c1abUy8j6sNXHGNpbS3y20RvCn
+        GcteC+EgPEA/GNxhjgE2DuQwd
+X-Received: by 2002:a1c:4c16:: with SMTP id z22mr155404wmf.50.1584462553801;
+        Tue, 17 Mar 2020 09:29:13 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vu7fxbd1NOj1Fd8X5IeMCfKPLtyDx4k9CrBADtVAaVO0WdO+/adOUSeBrq8Zo7JnejqPA35DQ==
+X-Received: by 2002:a1c:4c16:: with SMTP id z22mr155367wmf.50.1584462553538;
+        Tue, 17 Mar 2020 09:29:13 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id 19sm4550594wma.3.2020.03.17.09.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 09:29:11 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v2 5/8] hv_balloon: don't check for memhp_auto_online manually
+In-Reply-To: <20200317104942.11178-6-david@redhat.com>
+References: <20200317104942.11178-1-david@redhat.com> <20200317104942.11178-6-david@redhat.com>
+Date:   Tue, 17 Mar 2020 17:29:09 +0100
+Message-ID: <877dzj3pyi.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
- <20200315012523.GC208715@linux.intel.com> <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
- <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
- <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
- <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com> <20200316225322.GJ24267@linux.intel.com>
-In-Reply-To: <20200316225322.GJ24267@linux.intel.com>
-From:   Nathaniel McCallum <npmccallum@redhat.com>
-Date:   Tue, 17 Mar 2020 12:28:58 -0400
-Message-ID: <CAOASepNbvproKLFLUvH=+m1xXFeDCWup6O7Pi1py6ENFdarMKg@mail.gmail.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 6:53 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Mon, Mar 16, 2020 at 11:38:24PM +0200, Jarkko Sakkinen wrote:
-> > On Mon, 2020-03-16 at 10:01 -0400, Nathaniel McCallum wrote:
-> > > On Mon, Mar 16, 2020 at 9:56 AM Jarkko Sakkinen
-> > > <jarkko.sakkinen@linux.intel.com> wrote:
-> > > > On Sun, 2020-03-15 at 13:53 -0400, Nathaniel McCallum wrote:
-> > > > > On Sat, Mar 14, 2020 at 9:25 PM Jarkko Sakkinen
-> > > > > <jarkko.sakkinen@linux.intel.com> wrote:
-> > > > > > On Wed, Mar 11, 2020 at 01:30:07PM -0400, Nathaniel McCallum wrote:
-> > > > > > > Currently, the selftest has a wrapper around
-> > > > > > > __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
-> > > > > > > registers (CSRs), though it uses none of them. Then it calls this
-> > > > > > > function which uses %rbx but preserves none of the CSRs. Then it jumps
-> > > > > > > into an enclave which zeroes all these registers before returning.
-> > > > > > > Thus:
-> > > > > > >
-> > > > > > >   1. wrapper saves all CSRs
-> > > > > > >   2. wrapper repositions stack arguments
-> > > > > > >   3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
-> > > > > > >   4. selftest zeros all CSRs
-> > > > > > >   5. wrapper loads all CSRs
-> > > > > > >
-> > > > > > > I'd like to propose instead that the enclave be responsible for saving
-> > > > > > > and restoring CSRs. So instead of the above we have:
-> > > > > > >   1. __vdso_sgx_enter_enclave() saves %rbx
-> > > > > > >   2. enclave saves CSRs
-> > > > > > >   3. enclave loads CSRs
-> > > > > > >   4. __vdso_sgx_enter_enclave() loads %rbx
-> > > > > > >
-> > > > > > > I know that lots of other stuff happens during enclave transitions,
-> > > > > > > but at the very least we could reduce the number of instructions
-> > > > > > > through this critical path.
-> > > > > >
-> > > > > > What Jethro said and also that it is a good general principle to cut
-> > > > > > down the semantics of any vdso as minimal as possible.
-> > > > > >
-> > > > > > I.e. even if saving RBX would make somehow sense it *can* be left
-> > > > > > out without loss in terms of what can be done with the vDSO.
-> > > > >
-> > > > > Please read the rest of the thread. Sean and I have hammered out some
-> > > > > sensible and effective changes.
-> > > >
-> > > > Have skimmed through that discussion but it comes down how much you get
-> > > > by obviously degrading some of the robustness. Complexity of the calling
-> > > > pattern is not something that should be emphasized as that is something
-> > > > that is anyway hidden inside the runtime.
-> > >
-> > > My suggestions explicitly maintained robustness, and in fact increased
-> > > it. If you think we've lost capability, please speak with specificity
-> > > rather than in vague generalities. Under my suggestions we can:
-> > > 1. call the vDSO from C
-> > > 2. pass context to the handler
-> > > 3. have additional stack manipulation options in the handler
-> > >
-> > > The cost for this is a net 2 additional instructions. No existing
-> > > capability is lost.
-> >
-> > My vague generality in this case is just that the whole design
-> > approach so far has been to minimize the amount of wrapping to
-> > EENTER.
->
-> Yes and no.   If we wanted to minimize the amount of wrapping around the
-> vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
-> first place.  The whole process has been about balancing the wants of each
-> use case against the overall quality of the API and code.
->
-> > And since this has been kind of agreed by most of the
-> > stakeholders doing something against the chosen strategy is
-> > something I do hold some resistance.
->
-> Up until Nathaniel joined the party, the only stakeholder in terms of the
-> exit handler was the Intel SDK.
+David Hildenbrand <david@redhat.com> writes:
 
-I would hope that having additional stakeholders would ease the path
-to adoption.
-
-> There was a general consensus to pass
-> registers as-is when there isn't a strong reason to do otherwise.  Note
-> that Nathaniel has also expressed approval of that approach.
-
-I still approve that approach.
-
-> So I think the question that needs to be answered is whether the benefits
-> of using %rcx instead of %rax to pass @leaf justify the "pass registers
-> as-is" guideline.  We've effectively already given this waiver for %rbx,
-> as the whole reason why the TCS is passed in on the stack instead of via
-> %rbx is so that it can be passed to the exit handler.  E.g. the vDSO
-> could take the TCS in %rbx and save it on the stack, but we're throwing
-> the baby out with the bathwater at that point.
+> We get the MEM_ONLINE notifier call if memory is added right from the
+> kernel via add_memory() or later from user space.
 >
-> The major benefits being that the vDSO would be callable from C and that
-> the kernel could define a legitimate prototype instead of a frankenstein
-> prototype that's half assembly and half C.  For me, those are significant
-> benefits and well worth the extra MOV, PUSH and POP.  For some use cases
-> it would eliminate the need for an assembly wrapper.  For runtimes that
-> need an assembly wrapper for whatever reason, it's probably still a win as
-> a well designed runtime can avoid register shuffling in the wrapper.  And
-> if there is a runtime that isn't covered by the above, it's at worst an
-> extra MOV.
+> Let's get rid of the "ha_waiting" flag - the wait event has an inbuilt
+> mechanism (->done) for that. Initialize the wait event only once and
+> reinitialize before adding memory. Unconditionally call complete() and
+> wait_for_completion_timeout().
 >
+> If there are no waiters, complete() will only increment ->done - which
+> will be reset by reinit_completion(). If complete() has already been
+> called, wait_for_completion_timeout() will not wait.
+>
+> There is still the chance for a small race between concurrent
+> reinit_completion() and complete(). If complete() wins, we would not
+> wait - which is tolerable (and the race exists in current code as
+> well).
+
+How can we see concurent reinit_completion() and complete()? Obvioulsy,
+we are not onlining new memory in kernel and hv_mem_hot_add() calls are
+serialized, we're waiting up to 5*HZ for the added block to come online
+before proceeding to the next one. Or do you mean we actually hit this
+5*HZ timeout, proceeded to the next block and immediately after
+reinit_completion() we saw complete() for the previously added block?
+This is tolerable indeed, we're making forward progress (and this all is
+'best effort' anyway).
+
+>
+> Note: We only wait for "some" memory to get onlined, which seems to be
+>       good enough for now.
+>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/hv/hv_balloon.c | 25 ++++++++++---------------
+>  1 file changed, 10 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index a02ce43d778d..af5e09f08130 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -533,7 +533,6 @@ struct hv_dynmem_device {
+>  	 * State to synchronize hot-add.
+>  	 */
+>  	struct completion  ol_waitevent;
+> -	bool ha_waiting;
+>  	/*
+>  	 * This thread handles hot-add
+>  	 * requests from the host as well as notifying
+> @@ -634,10 +633,7 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
+>  	switch (val) {
+>  	case MEM_ONLINE:
+>  	case MEM_CANCEL_ONLINE:
+> -		if (dm_device.ha_waiting) {
+> -			dm_device.ha_waiting = false;
+> -			complete(&dm_device.ol_waitevent);
+> -		}
+> +		complete(&dm_device.ol_waitevent);
+>  		break;
+>  
+>  	case MEM_OFFLINE:
+> @@ -726,8 +722,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+>  		has->covered_end_pfn +=  processed_pfn;
+>  		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+>  
+> -		init_completion(&dm_device.ol_waitevent);
+> -		dm_device.ha_waiting = !memhp_auto_online;
+> +		reinit_completion(&dm_device.ol_waitevent);
+>  
+>  		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
+>  		ret = add_memory(nid, PFN_PHYS((start_pfn)),
+> @@ -753,15 +748,14 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+>  		}
+>  
+>  		/*
+> -		 * Wait for the memory block to be onlined when memory onlining
+> -		 * is done outside of kernel (memhp_auto_online). Since the hot
+> -		 * add has succeeded, it is ok to proceed even if the pages in
+> -		 * the hot added region have not been "onlined" within the
+> -		 * allowed time.
+> +		 * Wait for memory to get onlined. If the kernel onlined the
+> +		 * memory when adding it, this will return directly. Otherwise,
+> +		 * it will wait for user space to online the memory. This helps
+> +		 * to avoid adding memory faster than it is getting onlined. As
+> +		 * adding succeeded, it is ok to proceed even if the memory was
+> +		 * not onlined in time.
+>  		 */
+> -		if (dm_device.ha_waiting)
+> -			wait_for_completion_timeout(&dm_device.ol_waitevent,
+> -						    5*HZ);
+> +		wait_for_completion_timeout(&dm_device.ol_waitevent, 5 * HZ);
+>  		post_status(&dm_device);
+>  	}
+>  }
+> @@ -1707,6 +1701,7 @@ static int balloon_probe(struct hv_device *dev,
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+>  	set_online_page_callback(&hv_online_page);
+>  	register_memory_notifier(&hv_memory_nb);
+> +	init_completion(&dm_device.ol_waitevent);
+>  #endif
+>  
+>  	hv_set_drvdata(dev, &dm_device);
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
 
