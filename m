@@ -2,103 +2,87 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F4CC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E017CC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8D6205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98FF205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:32:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uhlO5uUC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MDNYL4GX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgCQNcX (ORCPT
+        id S1726871AbgCQNch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:32:23 -0400
-Received: from mail-pf1-f175.google.com ([209.85.210.175]:36627 "EHLO
-        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgCQNcX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:32:23 -0400
-Received: by mail-pf1-f175.google.com with SMTP id i13so11976804pfe.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:32:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xrGpJ3uq41Cliav35Ssgq9YTTLCKw7NF05owbZD6QOo=;
-        b=uhlO5uUC3kpL2LshNir8nZNSSZErKSwrjw+MK/VFt65aSVxTY28AecN0G/0AmJ7Mnx
-         sdpbnUoMBD8FW1YBhkHCSdgMoL1d0vU4Gf/djIMc8XoeDyMr+32km9ZmPlGF0LFPZGml
-         Cd3C2cLA2JTbsLWPwbWPi/Ecyoh8ZhdHg8/sFMuc5UfBWx7zhR5flhL811gTgUyVta4e
-         Wr9ntdwILfMye+R1yqAWEp1bUPy1X7OMGG6kVtIEsgXkYTHkIGlDa4CeoJn/clV9RcqQ
-         yQ7EGcUVCrBlV0ko+LkuAxl/hOD6rzMlF0tOIF86DjcTYh/+2BLyzyCp0lFL8JISQTud
-         /dLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=xrGpJ3uq41Cliav35Ssgq9YTTLCKw7NF05owbZD6QOo=;
-        b=id6U4DsN99PnTWlKB1AJZile193Jy8mXCsNZlaBuGnM44ytxhuhKCTEgP5uB+Cf1m0
-         pejZg5VMnEhFsliUkKV+9XndobamU1nKA+/qN5knNsIrLgSAo2sVYKtbi61hBRYJor+4
-         VnG8+0muW+woZzn9UapXI0IO4DWsEd5s74fqqTrPbuvUkeYu/SnNihQhUkSPbB9j+AdU
-         tTpUWByJ9QTLh1ZRHbdeUlxOgMXkPXXAkVtw+6peN09sJmr2nH504Dodvl3tQxxyNrfj
-         ga7mXoGY986iQy605IyXHBZ4vXagY9r4VF4+eQ5xo5PTSJZAxHM1lK6SBqjA1NPmFFBs
-         fhfQ==
-X-Gm-Message-State: ANhLgQ3aRMnpP9oX1cP0ikAs0QNN3h9EhUCLeJHeoUie+tCtaUbtJ/SP
-        l5PgRdu5+GBu6cjwFnMlgxg=
-X-Google-Smtp-Source: ADFU+vt1izRmjOATNr4bmCOuKXWdfwAmBG1m896l3Gz2MajMDZDek6TbURKRAy0pVgZzntU2DKVrLg==
-X-Received: by 2002:a65:6446:: with SMTP id s6mr5276204pgv.5.1584451942216;
-        Tue, 17 Mar 2020 06:32:22 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w11sm3179088pfn.4.2020.03.17.06.32.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 06:32:21 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH -next] samples: Define dummy __NR_keyctl if undefined
-Date:   Tue, 17 Mar 2020 06:32:19 -0700
-Message-Id: <20200317133219.19248-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Mar 2020 09:32:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40608 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgCQNch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:32:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=CWb2HTUV5TgGnf+o0BBHsGyWtpjelxWf0DBnt93JQ9M=; b=MDNYL4GXp4IaqFD6CHLjAAkWcF
+        fMO399fZ3fwiYGkGD8bz2CK8P72x/3SezZNTz5xRVthDXhcQDpHadtVD9VMJkJZAPYTfkAX7I3zEq
+        lRAn1stdbh77Gq3qDDHX9MJQgBwY+3fJ1nUiYt9LGZ6LOlMYD0UH3Tr2fn944FLjBC5c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jECKU-0006X0-R8; Tue, 17 Mar 2020 14:32:22 +0100
+Date:   Tue, 17 Mar 2020 14:32:22 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 10/28] ARM: dts: mmp3: fix USB & USB PHY node names
+Message-ID: <20200317133222.GL24270@lunn.ch>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-11-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317093922.20785-11-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mips:allmodconfig fails to build.
+On Tue, Mar 17, 2020 at 10:39:04AM +0100, Lubomir Rintel wrote:
+> There are better generic ones and the validation is going to complain:
+> 
+>   mmp3-dell-ariel.dt.yaml: hsic@f0001000: $nodename:0: 'hsic@f0001000'
+>       does not match '^usb(@.*)?'
+>   mmp3-dell-ariel.dt.yaml: hsic@f0002000: $nodename:0: 'hsic@f0002000'
+>       does not match '^usb(@.*)?'
+>   ...
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-samples/watch_queue/watch_test.c: In function ‘keyctl_watch_key’:
-samples/watch_queue/watch_test.c:34:17: error: ‘__NR_keyctl’ undeclared
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Declare dummy __NR_keyctl if it is undefined to fix the problem.
-
-Cc: David Howells <dhowells@redhat.com>
-Fixes: 631ec151fd96 ("Add sample notification program")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- samples/watch_queue/watch_test.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/samples/watch_queue/watch_test.c b/samples/watch_queue/watch_test.c
-index 0eaff5dc04c3..ad11417a87f0 100644
---- a/samples/watch_queue/watch_test.c
-+++ b/samples/watch_queue/watch_test.c
-@@ -26,6 +26,9 @@
- #ifndef __NR_watch_devices
- #define __NR_watch_devices -1
- #endif
-+#ifndef __NR_keyctl
-+#define __NR_keyctl -1
-+#endif
- 
- #define BUF_SIZE 256
- 
--- 
-2.17.1
-
+    Andrew
