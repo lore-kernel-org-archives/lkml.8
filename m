@@ -2,76 +2,147 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAB4C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D1EC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECF3206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:04:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LPEYR6Sp"
+	by mail.kernel.org (Postfix) with ESMTP id 9169D206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgCQTEQ (ORCPT
+        id S1726680AbgCQTHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:04:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57276 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgCQTEQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:04:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=khnnmus/Nw8g+jmOk6DqGCz4HgnMXtLLc28X6KhT4xs=; b=LPEYR6SpHd8AlzlAbmcrvhd20f
-        vB2eBNRehKh7EGkvCr7Nl1qwVa0AMHNkR+xIl9wzmj/hbuauMkH3PMmJvx0k+KKIfHPjjju/Qj0Jq
-        gwWC7D0QHECsDmasY2BWWW58eoNQtrXoTC7yKl7tfePHU6b76X66dtMSa9vfGWGXjWvUVqDdOAHxf
-        7/fpRokeF9ZoAYhgSkUM5/EeOIn9aHB9h6jK1iQ378K1HAhcD+/MEqEZz1KNUOl/b2gCBZT43uTEA
-        8PfuM1tkmkDI1nn5nJcCESC7t2TDGnzHRL9ng4JRnyMLbNUTW+FiHENzuhm1w9xKpx8jMWCAYzOdt
-        Chfi9BKQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEHVb-0003C6-RE; Tue, 17 Mar 2020 19:04:11 +0000
-Date:   Tue, 17 Mar 2020 12:04:11 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     shakeelb@google.com, vbabka@suse.cz, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v3 PATCH 1/2] mm: swap: make page_evictable() inline
-Message-ID: <20200317190411.GD22433@bombadil.infradead.org>
-References: <1584466971-110029-1-git-send-email-yang.shi@linux.alibaba.com>
+        Tue, 17 Mar 2020 15:07:48 -0400
+Received: from mga01.intel.com ([192.55.52.88]:11723 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726494AbgCQTHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 15:07:48 -0400
+IronPort-SDR: h2UnIB6Mo8HiYrwzSIo8x64z8mNZr9crnGhdEAznRPDLyrSjwkLU0dN2kzYJQh6xzcMXpG6r8c
+ CMHFDP87D7aQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 12:07:47 -0700
+IronPort-SDR: BNgwjUB08FpzBbWznhz+T+qyrbP+bGbCVf1DIlcszOOSQjd9SUhXOMNuMlLBHmwLqN4g/YqSJC
+ XzLr0Sz6JYpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
+   d="scan'208";a="355456537"
+Received: from rkarmazi-mobl1.amr.corp.intel.com (HELO schen9-mobl.amr.corp.intel.com) ([10.134.81.123])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Mar 2020 12:07:43 -0700
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+To:     Joel Fernandes <joel@joelfernandes.org>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+References: <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+ <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
+ <20200212230705.GA25315@sinkpad>
+ <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
+ <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
+ <CANaguZC40mDHfL1H_9AA7H8cyd028t9PQVRqQ3kB4ha8R7hhqg@mail.gmail.com>
+ <CAERHkruPUrOzDjEp1FV3KY20p9CxLAVzKrZNe5QXsCFZdGskzA@mail.gmail.com>
+ <CANaguZBj_x_2+9KwbHCQScsmraC_mHdQB6uRqMTYMmvhBYfv2Q@mail.gmail.com>
+ <20200221232057.GA19671@sinkpad> <20200317005521.GA8244@google.com>
+Message-ID: <ee268494-c35e-422f-1aaf-baab12191c38@linux.intel.com>
+Date:   Tue, 17 Mar 2020 12:07:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584466971-110029-1-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <20200317005521.GA8244@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 01:42:50AM +0800, Yang Shi wrote:
-> v3: * Fixed the build error reported by lkp.
+Joel,
 
-I'm not terribly enthusiastic about including pagemap.h from swap.h.
-It's a discussion that reasonable people can disagree about, so let's
-set it up:
+> 
+> Looks quite interesting. We are trying apply this work to ChromeOS. What we
+> want to do is selectively marking tasks, instead of grouping sets of trusted
+> tasks. I have a patch that adds a prctl which a task can call, and it works
+> well (task calls prctl and gets a cookie which gives it a dedicated core).
+> 
+> However, I have the following questions, in particular there are 4 scenarios
+> where I feel the current patches do not resolve MDS/L1TF, would you guys
+> please share your thoughts?
+> 
+> 1. HT1 is running either hostile guest or host code.
+>    HT2 is running an interrupt handler (victim).
+> 
+>    In this case I see there is a possible MDS issue between HT1 and HT2.
 
-This patch adds inline bool page_evictable(struct page *page) to swap.h.
-page_evictable() uses mapping_evictable() which is in pagemap.h.
-mapping_evictable() uses AS_UNEVICTABLE which is also in pagemap.h.
+Core scheduling mitigates the userspace to userspace attacks via MDS between the HT.
+It does not prevent the userspace to kernel space attack.  That will
+have to be mitigated via other means, e.g. redirecting interrupts to a core
+that don't run potentially unsafe code.
 
-We could move mapping_evictable() and friends to fs.h (already included
-by swap.h).  But how about just moving page_evictable() to pagemap.h?
-pagemap.h is already included by mm/mlock.c, mm/swap.c and mm/vmscan.c,
-which are the only three current callers of page_evictable().
+> 
+> 2. HT1 is executing hostile host code, and gets interrupted by a victim
+>    interrupt. HT2 is idle.
 
-In fact, since it's only called by those three files, perhaps it should
-be in mm/internal.h?  I don't see it becoming a terribly popular function
-to call outside of the core mm code.
+Similar to above.
 
-I think I have a mild preference for it being in pagemap.h, since I don't
-have a hard time convincing myself that it's part of the page cache API,
-but I definitely prefer internal.h over swap.h.
+> 
+>    In this case, I see there is a possible MDS issue between interrupt and
+>    the host code on the same HT1.
 
+The cpu buffers are cleared before return to the hostile host code.  So
+MDS shouldn't be an issue if interrupt handler and hostile code
+runs on the same HT thread.
+
+> 
+> 3. HT1 is executing hostile guest code, HT2 is executing a victim interrupt
+>    handler on the host.
+> 
+>    In this case, I see there is a possible L1TF issue between HT1 and HT2.
+>    This issue does not happen if HT1 is running host code, since the host
+>    kernel takes care of inverting PTE bits.
+
+The interrupt handler will be run with PTE inverted.  So I don't think
+there's a leak via L1TF in this scenario.
+
+> 
+> 4. HT1 is idle, and HT2 is running a victim process. Now HT1 starts running
+>    hostile code on guest or host. HT2 is being forced idle. However, there is
+>    an overlap between HT1 starting to execute hostile code and HT2's victim
+>    process getting scheduled out.
+>    Speaking to Vineeth, we discussed an idea to monitor the core_sched_seq
+>    counter of the sibling being idled to detect that it is now idle.
+>    However we discussed today that looking at this data, it is not really an
+>    issue since it is such a small window.
+> 
+> My concern is now cases 1, 2 to which there does not seem a good solution,
+> short of disabling interrupts. For 3, we could still possibly do something on
+> the guest side, such as using shadow page tables. Any thoughts on all this?
+> 
+
++ Tony who may have more insights on L1TF and MDS.
+
+Thanks.
+
+Tim
