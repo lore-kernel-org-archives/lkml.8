@@ -2,251 +2,148 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96AFC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E6BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0B9206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DD6206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:46:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JI600Y+S"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="sjmWqFOn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgCQTq1 (ORCPT
+        id S1726776AbgCQTqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:46:27 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41879 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgCQTq0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:46:26 -0400
-Received: by mail-ot1-f68.google.com with SMTP id s15so23023244otq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 12:46:25 -0700 (PDT)
+        Tue, 17 Mar 2020 15:46:50 -0400
+Received: from mail-eopbgr1400121.outbound.protection.outlook.com ([40.107.140.121]:52546
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726555AbgCQTqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 15:46:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NstSNvJaEBYCmf0bv8SXGAMc88xeoVBWIcdEEbnhwGSTTHz4TYMhncDBE5NW8osPC3PUmXt8H4kICGlFYV55yN7UykkM3dcXmlQ/Ge66LhmGvIPn8+PaNFigTBGPe6id8o6h1qauZhVJQjcwoJr17tEVH2EzATfVC+SjUssOZsMZrXcChxlhVifY4fKxXcTfv1DC10R3c5CmdOHAb/A2m2XwOSFlqM68q/kK8HA+JGzEnqM7fk/fIExdj2Qgr0ifbyD/rGIcF2kaHG6lM4/Fe1DukncfqJHwf32lFPRkoIYDifQuR8xnAe7SCen9DTGvpnU4mNcuCi2qbifgaRhBmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ARlASKY5YlAXGKgvUSVcITt7nUO35fqVWnkYIxCw/VM=;
+ b=FHb2FyqR4a7/egT/Yxsiar9q5oCwr9uY7qOmJb3yF0O4Cntx+sVk6GhRG+F70WbNcqXQQ0yHDb2tenJ56zphtZaTbegcFOjVyr2J/LX8vnpLV5Pp0UvmEwATfmwjXbmKPI5Dy1i/44TlWu4NdQV1nV2CTRKFpO4jOabHtwcxp4REeLcXhpKDQPD6QJZyh/ztG9I5tz3N+Blh1Myn360eK1q3tNSzr1qg/bFYDLyAlpRKrr0RCGFPHz/tQDi9eqeCIQvQVpqHdtsntHMMMSYrhCvY+cUH6e1gvLJUHqFg5KZtcmaPz0sYH1IqVOSgm5fCU4akLtxXndPohLLrSTBiXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9s2Sb3c4MxnnBmpoBuePNWugbWE68PyhFAR020YyxKI=;
-        b=JI600Y+S7vaaL+M1SlEKgAEtEUPT5Q45PYyhNUPJY82ExiEm4yLvuyoLjANOxrw/L8
-         K0LSxUZhq+pXM1GGwp3j51HMQSJZsaS91TWVYRhmi3aC265XUUVxVsf85Lt6C4FHfODU
-         F+8841uMdqRd6VymvDirqjn9SmklKMzELb2nq4ltyUMq1nVMo8mh6KrYIj6CXSK8975s
-         8Wppxc9EDwI6+CuP2CcdW21eufAGc9NTfDD0XTQ6x9Ta4mXhWmyFq+EubLApEE3PIMY3
-         UluxszB5ZBrGmCkrxM1stsbflxhZ846CG2/SzeG3kVFjDKkewelUAmzGKrdjkzgjSzUp
-         gkCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9s2Sb3c4MxnnBmpoBuePNWugbWE68PyhFAR020YyxKI=;
-        b=GpmGZrESsC2FidMV/9di/Td+tdzeMZDelNtTJSB6CnFPEXUoNDnkv3MY1e6kI/fyG3
-         ylwjPgU2CDEBm8k6E7tn8iKLbzvcLavb7o0QrosZAVFbRhr+HLIKESLNLZooNLxWbYQU
-         c/bpo0QzJsSP8GnoEdaL+wbUB3cfez35szCsiMcMCpk+gdodLbS3Bz5wOdnls84UopAb
-         roxhSlvAF8kZSU7b2oquu528q9eKmv13wjnX6IzDIwW0AQWAH1r+4gOyAsQHoxaaR+yO
-         wirbpukaax7Ae5ydGAd8wAUZ9whK247CK3tdsYY9d6jeVJKxtGfAfpR4x29I659XUU6A
-         JjsA==
-X-Gm-Message-State: ANhLgQ0U/sfT3ihvbBrrCD6rwlYnCqIJxDsFC31hMg8y/GUlfqTWy1fP
-        FWbJFMQJtjQhukvccusFVxt/1NzPOktMPId3C8+QpQ==
-X-Google-Smtp-Source: ADFU+vuKl0l5cSfO5Cy+yKgBZm1XSTGaBWgXbflYl3a2hR5fw7Go07ECSMEPZtHP+SUIHarbwT5aqXaP0EMleeCdfQE=
-X-Received: by 2002:a9d:5e8b:: with SMTP id f11mr858477otl.110.1584474384151;
- Tue, 17 Mar 2020 12:46:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200224160215.4136-1-mic@digikod.net> <CAG48ez21bEn0wL1bbmTiiu8j9jP5iEWtHOwz4tURUJ+ki0ydYw@mail.gmail.com>
- <873d7419-bdd9-8a52-0a9b-dddbe31df4f9@digikod.net> <CAG48ez0=0W5Ok-8nASqZrZ28JboXRRi3gDxV5u6mdcOtzwuRVA@mail.gmail.com>
- <688dda0f-0907-34eb-c19e-3e9e5f613a74@digikod.net>
-In-Reply-To: <688dda0f-0907-34eb-c19e-3e9e5f613a74@digikod.net>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 17 Mar 2020 20:45:57 +0100
-Message-ID: <CAG48ez16yT+zbK1WPxr2TnxrifW5c2DnpFLbWRRLUT_WpuFNmw@mail.gmail.com>
-Subject: Re: [RFC PATCH v14 00/10] Landlock LSM
-To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ARlASKY5YlAXGKgvUSVcITt7nUO35fqVWnkYIxCw/VM=;
+ b=sjmWqFOnEVsQO6qynPInlNiWumHsLi+alwXLOqYXIWU9oaYftrXNEDIMlDkSLpuCfjHB5w73k33e2tCAfxydvlqcRcFcuU/z8nXAUQIcQbmA6L6yoXt9p2DJ2xsmtCHSW8PfZF9IYUUCDjIMUg1Ky5iFEU7p2PCz0Zy3alP99T4=
+Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com (52.133.177.145) by
+ TYAPR01MB4733.jpnprd01.prod.outlook.com (20.179.174.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.21; Tue, 17 Mar 2020 19:46:45 +0000
+Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com
+ ([fe80::a882:860e:5745:25e1]) by TYAPR01MB2285.jpnprd01.prod.outlook.com
+ ([fe80::a882:860e:5745:25e1%6]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 19:46:45 +0000
+From:   Chris Paterson <Chris.Paterson2@renesas.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 4.19 00/86] 4.19.109-stable review
+Thread-Topic: [PATCH 4.19 00/86] 4.19.109-stable review
+Thread-Index: AQHV9t2MWw5vCoRaqkyWbNkUiDyKMahDMLzwgAAvTYCACdqSYA==
+Date:   Tue, 17 Mar 2020 19:46:45 +0000
+Message-ID: <TYAPR01MB22854206B2C28CB7FDFE5143B7F60@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+References: <20200310124530.808338541@linuxfoundation.org>
+ <OSBPR01MB228067017410645AC3A78939B7FC0@OSBPR01MB2280.jpnprd01.prod.outlook.com>
+ <20200311131341.GB3858095@kroah.com>
+In-Reply-To: <20200311131341.GB3858095@kroah.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Paterson2@renesas.com; 
+x-originating-ip: [188.223.77.164]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 42e15800-166d-48aa-a7f6-08d7caabec9d
+x-ms-traffictypediagnostic: TYAPR01MB4733:
+x-microsoft-antispam-prvs: <TYAPR01MB4733D69B3EA188ADAB120E74B7F60@TYAPR01MB4733.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0345CFD558
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(346002)(136003)(396003)(366004)(199004)(6506007)(5660300002)(7696005)(316002)(54906003)(26005)(71200400001)(4326008)(52536014)(186003)(966005)(478600001)(66946007)(81166006)(64756008)(66556008)(66476007)(66446008)(86362001)(55016002)(81156014)(8676002)(76116006)(9686003)(8936002)(7416002)(33656002)(6916009)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4733;H:TYAPR01MB2285.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FKu0B4MGktcPwiB8bRFIdPc5XBFWweohg+GJm4woVgx9Mk+HsURrgJ2Z56t198LRF/apRNCNU30Wgg7f1TAWNjMdSQjJ3sNzysLKJPLGSzUSRqr3/05dG7SCshyRZ/DmOjaOKgIfjzvrLw2GmC9zrVjC/asjofv1/ZasdZv++qysM2xnu5Kx2soTkLW+zH9w2mmhnW40A9g7HGibT+m4oVyHlEtJamTSb7lN9NImHIvWcZVWmJlSikasFRi83VMtGbO4i7hjiUD9RdQGyIxdf1NTP0zbSEb1scnKQ1LoAlCTBTWGvOJ/tayF5+yW3oujRU9+rVVr26ziFWzY1ZGn2LQVc2/21DJw4O66Afmr1x/SJvZTUsHQOmgy0gCGZLRrlPDVauORj8UCrClPqaDH/fDQa/WvWr/hMYqiAVPaLB9cC4P3DdWjB84bKmC2O9FPeoYSFtOjMN7/wtZ8faZKw3Oae7yghEk1ji/X+D0Alcfr8i93Ci3/m878OJlhQZbFBA9W7gj8Co8dnURNijvsTg==
+x-ms-exchange-antispam-messagedata: TrAK8r2Kinzjx8+vwM7P40xTgLY6Lkb3DudFpBBgDU/R5fjIYkfEAaemKoHeaLU7Rpl+z1XYzFGaz5dA8hhhQOkD/CQ0OGofwxMhTRAam2j8tqZALJFxvaRofSEw83c56k8tj1asT7QI5UfQEFZFkQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42e15800-166d-48aa-a7f6-08d7caabec9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 19:46:45.2858
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +RFGW2sEPJNqBjOzjKEDCMh66IWMUZ/fZelcf8+EEDWp3j9BkLhZHQP7XKAmxUeo075qJ/H4az7sPzTfcbC/HSpAMtmvYoMvQBgqx1m+Y9c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4733
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 6:50 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> =
-wrote:
-> On 17/03/2020 17:19, Jann Horn wrote:
-> > On Thu, Mar 12, 2020 at 12:38 AM Micka=C3=ABl Sala=C3=BCn <mic@digikod.=
-net> wrote:
-> >> On 10/03/2020 00:44, Jann Horn wrote:
-> >>> On Mon, Feb 24, 2020 at 5:03 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod=
-.net> wrote:
->
-> [...]
->
-> >>> Aside from those things, there is also a major correctness issue wher=
-e
-> >>> I'm not sure how to solve it properly:
-> >>>
-> >>> Let's say a process installs a filter on itself like this:
-> >>>
-> >>> struct landlock_attr_ruleset ruleset =3D { .handled_access_fs =3D
-> >>> ACCESS_FS_ROUGHLY_WRITE};
-> >>> int ruleset_fd =3D landlock(LANDLOCK_CMD_CREATE_RULESET,
-> >>> LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
-> >>> struct landlock_attr_path_beneath path_beneath =3D {
-> >>>   .ruleset_fd =3D ruleset_fd,
-> >>>   .allowed_access =3D ACCESS_FS_ROUGHLY_WRITE,
-> >>>   .parent_fd =3D open("/tmp/foobar", O_PATH),
-> >>> };
-> >>> landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
-> >>> sizeof(path_beneath), &path_beneath);
-> >>> prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-> >>> struct landlock_attr_enforce attr_enforce =3D { .ruleset_fd =3D rules=
-et_fd };
-> >>> landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
-> >>> sizeof(attr_enforce), &attr_enforce);
-> >>>
-> >>> At this point, the process is not supposed to be able to write to
-> >>> anything outside /tmp/foobar, right? But what happens if the process
-> >>> does the following next?
-> >>>
-> >>> struct landlock_attr_ruleset ruleset =3D { .handled_access_fs =3D
-> >>> ACCESS_FS_ROUGHLY_WRITE};
-> >>> int ruleset_fd =3D landlock(LANDLOCK_CMD_CREATE_RULESET,
-> >>> LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
-> >>> struct landlock_attr_path_beneath path_beneath =3D {
-> >>>   .ruleset_fd =3D ruleset_fd,
-> >>>   .allowed_access =3D ACCESS_FS_ROUGHLY_WRITE,
-> >>>   .parent_fd =3D open("/", O_PATH),
-> >>> };
-> >>> landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
-> >>> sizeof(path_beneath), &path_beneath);
-> >>> prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-> >>> struct landlock_attr_enforce attr_enforce =3D { .ruleset_fd =3D rules=
-et_fd };
-> >>> landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
-> >>> sizeof(attr_enforce), &attr_enforce);
-> >>>
-> >>> As far as I can tell from looking at the source, after this, you will
-> >>> have write access to the entire filesystem again. I think the idea is
-> >>> that LANDLOCK_CMD_ENFORCE_RULESET should only let you drop privileges=
-,
-> >>> not increase them, right?
-> >>
-> >> There is an additionnal check in syscall.c:get_path_from_fd(): it is
-> >> forbidden to add a rule with a path which is not accessible (according
-> >> to LANDLOCK_ACCESS_FS_OPEN) thanks to a call to security_file_open(),
-> >> but this is definitely not perfect.
+Hello,
+
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Sent: 11 March 2020 13:14
+>=20
+> On Wed, Mar 11, 2020 at 10:56:06AM +0000, Chris Paterson wrote:
+> > Hello Greg,
 > >
-> > Ah, I missed that.
-> >
-> >>> I think the easy way to fix this would be to add a bitmask to each
-> >>> rule that says from which ruleset it originally comes, and then let
-> >>> check_access_path() collect these bitmasks from each rule with OR, an=
-d
-> >>> check at the end whether the resulting bitmask is full - if not, at
-> >>> least one of the rulesets did not permit the access, and it should be
-> >>> denied.
-> >>>
-> >>> But maybe it would make more sense to change how the API works
-> >>> instead, and get rid of the concept of "merging" two rulesets
-> >>> together? Instead, we could make the API work like this:
-> >>>
-> >>>  - LANDLOCK_CMD_CREATE_RULESET gives you a file descriptor whose
-> >>> ->private_data contains a pointer to the old ruleset of the process,
-> >>> as well as a pointer to a new empty ruleset.
-> >>>  - LANDLOCK_CMD_ADD_RULE fails if the specified rule would not be
-> >>> permitted by the old ruleset, then adds the rule to the new ruleset
-> >>>  - LANDLOCK_CMD_ENFORCE_RULESET fails if the old ruleset pointer in
-> >>> ->private_data doesn't match the current ruleset of the process, then
-> >>> replaces the old ruleset with the new ruleset.
-> >>>
-> >>> With this, the new ruleset is guaranteed to be a subset of the old
-> >>> ruleset because each of the new ruleset's rules is permitted by the
-> >>> old ruleset. (Unless the directory hierarchy rotates, but in that cas=
-e
-> >>> the inaccuracy isn't much worse than what would've been possible
-> >>> through RCU path walk anyway AFAIK.)
-> >>>
-> >>> What do you think?
-> >>>
-> >>
-> >> I would prefer to add the same checks you described at first (with
-> >> check_access_path), but only when creating a new ruleset with
-> >> merge_ruleset() (which should probably be renamed). This enables not t=
-o
-> >> rely on a parent ruleset/domain until the enforcement, which is the ca=
+> > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > > Behalf Of Greg Kroah-Hartman
+> > > Sent: 10 March 2020 12:44
+> > >
+> > > This is the start of the stable review cycle for the 4.19.109 release=
+.
+> > > There are 86 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, plea=
 se
-> >> anyway.
-> >> Unfortunately this doesn't work for some cases with bind mounts. Becau=
-se
-> >> check_access_path() goes through one path, another (bind mounted) path
-> >> could be illegitimately allowed.
+> > > let me know.
 > >
-> > Hmm... I'm not sure what you mean. At the moment, landlock doesn't
-> > allow any sandboxed process to change the mount hierarchy, right? Can
-> > you give an example where this would go wrong?
->
-> Indeed, a Landlocked process must no be able to change its mount
-> namespace layout. However, bind mounts may already exist.
-> Let's say a process sandbox itself to only access /a in a read-write
-> way.
+> > No build/test issues seen for CIP configs for Linux 4.19.109-rc1
+> (624c124960e8).
+> > (Okay, there is a boot issue with the arm multi_v7_defconfig, but I'm p=
+retty
+> sure that's an issue my end that's been around for a couple of weeks now)
+> >
+> > Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/li=
+nux-
+> stable-rc-ci/pipelines/124879010
+> > GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-ci=
+p-
+> pipelines/-/blob/master/trees/linux-4.19.y.yml
+>=20
+> Thanks for testing 2 of these and letting me know.
+>=20
+> If you figure out the boot issue, please let us know.
 
-So, first policy:
+Sorted it. Just needed to get u-boot to load the DTB to a different address=
+ to stop it getting overwritten by the giant Kernel.
 
-/a RW
+Chris
 
-> Then, this process (or one of its children) add a new restriction
-> on /a/b to only be able to read this hierarchy.
-
-You mean with the second policy looking like this?
-
-/a RW
-/a/b R
-
-Then the resulting policy would be:
-
-/a RW policy_bitmask=3D0x00000003 (bits 0 and 1 set)
-/a/b R policy_bitmask=3D0x00000002 (bit 1 set)
-required_bits=3D0x00000003 (bits 0 and 1 set)
-
-> The check at insertion
-> time would allow this because this access right is a subset of the
-> access right allowed with the parent directory. However, If /a/b is bind
-> mounted somewhere else, let's say in /private/b, then the second
-> enforcement just gave new access rights to this hierarchy too.
-
-But with the solution I proposed, landlock's path walk would see
-something like this when accessing a file at /private/b/foo:
-/private/b/foo <no rules>
-  policies seen until now: 0x00000000
-/private/b <access: R, policy_bitmask=3D0x00000002>
-  policies seen until now: 0x00000002
-/private <no rules>
-  policies seen until now: 0x00000002
-/ <no rules>
-  policies seen until now: 0x00000002
-
-It wouldn't encounter any rule from the first policy, so the OR of the
-seen policy bitmasks would be 0x00000002, which is not the required
-value 0x00000003, and so the access would be denied.
+>=20
+> greg k-h
