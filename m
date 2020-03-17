@@ -2,79 +2,120 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DC5C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDC6C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B9020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:43:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584459831;
-	bh=3M6KQ+x/xS3b9actzvjEtiSqxHD+FssQ/SJMBjO96DM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oOzIZoz+ktP6bp+QGUgk0G6o1Iywbh8YhI+6D/40B1gpcOqPVebACiuEpDOE/zxQl
-	 eikBAFfTYbkJwp9ecVBq0XvUDASh7mjQ05hVY/cOSv4kW/waCdzKI6Z3ozMa8ZiPTI
-	 wzBgE3YjWfOUgXAFiMHmCK0vWKmQXfY1jae2UnWQ=
+	by mail.kernel.org (Postfix) with ESMTP id 19D4A20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:45:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PhRozuqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgCQPnu (ORCPT
+        id S1726651AbgCQPpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:43:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbgCQPnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:43:50 -0400
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 098E120714;
-        Tue, 17 Mar 2020 15:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584459829;
-        bh=3M6KQ+x/xS3b9actzvjEtiSqxHD+FssQ/SJMBjO96DM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z4RDNg/j8xNMU4GKgnD8q+wVtufDQchEqw5q4MftWja5Hh2cyJd0f3SxKXwfi7W6C
-         S/6v7whedviS9T5cTpBV2mEa7gjORKGgiWKkkQAv31wlSg9H/RzLPRnqqvMpIVbQAk
-         k/EYSilHOaA3qM3fojeBHgV8yaX0YxUWwmDYcW44=
-Date:   Wed, 18 Mar 2020 00:43:43 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     masahiro31.yamada@kioxia.com
-Cc:     axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] nvme: Add compat_ioctl handler for
- NVME_IOCTL_SUBMIT_IO
-Message-ID: <20200317154343.GA29084@redsun51.ssa.fujisawa.hgst.com>
-References: <92c670379c264775b8bb28a2bd3b380b@TGXML281.toshiba.local>
+        Tue, 17 Mar 2020 11:45:24 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:35252 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQPpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:45:24 -0400
+Received: by mail-vk1-f196.google.com with SMTP id g25so4689012vkl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 08:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MqwE0LST7bQrMlS1npkM81NgJLaEPEMndv6Fs6jOD0Q=;
+        b=PhRozuqb3/yllPbcOt9nm5DoWkHAVkcVOmhTNXefUe95wiUC+Gohh8hKoKtKTraQic
+         M6WN6kZOkNRD/QkU4T2xreIdRfS6+zMAMZx2ji+PADf5Gz0Y/t22K7QQJ4Uqg3cbsO8u
+         Dsj1v5tUrR3OR7cFyZoqgKR8efGtBn9eC3Hzg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MqwE0LST7bQrMlS1npkM81NgJLaEPEMndv6Fs6jOD0Q=;
+        b=StzoL5Zg6slR6Dn/Zf8V4dgS/viU2K9CVmIjDK4evjzak68+Vu4yqmasyY6JhOGJD3
+         oHqQzL8AeoYnd/A/M5p0mGqsfnKSVPDbuS4jgL4+/5ppvIkVotjr5z7++YOMtYlcXTjI
+         8HpPfDQIRBAYzCUDVHbnC7F1mjZpSVJZn4ArFBtjSkCciEjmGpnemDonNyxLV4mbkgEu
+         kuhIjbY2qth5J/qUvq6oM11M+yLlYvJFpFBGU34QURuaBIeWdel+pVVY0gRURMLF1gfn
+         KFBtjNGBWjSo5rZJ+w6bBJUNETFLADI0RyL16tnwM9iO0A25ZQskG/k/B0V1NK53Xrev
+         M55Q==
+X-Gm-Message-State: ANhLgQ1QsTXIb1174QEUy2C+oyzMZhGcTbdEel9Nb9RdEet9nZfpdYku
+        yC9rOI3pEgSnDc2IBoBWXO7AI+KXSkM=
+X-Google-Smtp-Source: ADFU+vtHBONuk1xQKOzpvt+MDpZxolTdxbCSh33W3ulwP0Xdzv+5nzrG/MfZoyAltzqUeSSRiInGVw==
+X-Received: by 2002:a1f:934d:: with SMTP id v74mr4413449vkd.3.1584459923064;
+        Tue, 17 Mar 2020 08:45:23 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id m82sm1502214vke.53.2020.03.17.08.45.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 08:45:22 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id 7so14134049vsr.10
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 08:45:22 -0700 (PDT)
+X-Received: by 2002:a05:6102:1cf:: with SMTP id s15mr4040657vsq.109.1584459921604;
+ Tue, 17 Mar 2020 08:45:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92c670379c264775b8bb28a2bd3b380b@TGXML281.toshiba.local>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20200103045016.12459-1-wgong@codeaurora.org> <20200105.144704.221506192255563950.davem@davemloft.net>
+ <CAD=FV=WiceRwLUS1sdL_W=ELKYZ9zKE13e8vx9SO0+tRvX74QQ@mail.gmail.com> <20200317102604.GD1130294@kroah.com>
+In-Reply-To: <20200317102604.GD1130294@kroah.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 17 Mar 2020 08:45:09 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XXPACnPt=5=7gH3L6DufZ4tLSPTN-AtTAmvi5KAJuP6A@mail.gmail.com>
+Message-ID: <CAD=FV=XXPACnPt=5=7gH3L6DufZ4tLSPTN-AtTAmvi5KAJuP6A@mail.gmail.com>
+Subject: Re: [PATCH v2] net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+To:     Greg KH <greg@kroah.com>
+Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Wen Gong <wgong@codeaurora.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, ath11k@lists.infradead.org,
+        David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 11:13:29AM +0000, masahiro31.yamada@kioxia.com wrote:
-> Currently 32 bit application gets ENOTTY when it calls
-> compat_ioctl with NVME_IOCTL_SUBMIT_IO in 64 bit kernel.
-> 
-> The cause is that the results of sizeof(struct nvme_user_io),
-> which is used to define NVME_IOCTL_SUBMIT_IO,
-> are not same between 32 bit compiler and 64 bit compiler.
-> 
-> * 32 bit: the result of sizeof nvme_user_io is 44.
-> * 64 bit: the result of sizeof nvme_user_io is 48.
-> 
-> 64 bit compiler seems to add 32 bit padding for multiple of 8 bytes.
-> 
-> This patch adds a compat_ioctl handler.
-> The handler replaces NVME_IOCTL_SUBMIT_IO32 with NVME_IOCTL_SUBMIT_IO
-> in case 32 bit application calls compat_ioctl for submit in 64 bit kernel.
-> Then, it calls nvme_ioctl as usual.
-> 
-> Signed-off-by: Masahiro Yamada (KIOXIA) <masahiro31.yamada@kioxia.com>
+Hi,
 
-Thank you, applied for 5.7.
+On Tue, Mar 17, 2020 at 3:26 AM Greg KH <greg@kroah.com> wrote:
+>
+> On Tue, Feb 25, 2020 at 02:52:24PM -0800, Doug Anderson wrote:
+> > Hi,
+> >
+> >
+> > On Sun, Jan 5, 2020 at 2:47 PM David Miller <davem@davemloft.net> wrote:
+> > >
+> > > From: Wen Gong <wgong@codeaurora.org>
+> > > Date: Fri,  3 Jan 2020 12:50:16 +0800
+> > >
+> > > > The len used for skb_put_padto is wrong, it need to add len of hdr.
+> > >
+> > > Thanks, applied.
+> >
+> > I noticed this patch is in mainline now as:
+> >
+> > ce57785bf91b net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+> >
+> > Though I'm not an expert on the code, it feels like a stable candidate
+> > unless someone objects.
+>
+> Stable candidate for what tree(s)?
+
+I noticed that it was lacking and applied cleanly on 5.4.  As of
+5.4.25 it's still not stable there.  I only noticed it because I was
+comparing all the patches in mainline in "net/qrtr" with what we had
+in our tree and stumbled upon this one.
+
+Looking at it a little more carefully, I guess you could say:
+
+Fixes: e7044482c8ac ("net: qrtr: Pass source and destination to
+enqueue functions")
+
+...though it will be trickier to apply past commit 194ccc88297a ("net:
+qrtr: Support decoding incoming v2 packets") just because the math
+changed.
+
+-Doug
