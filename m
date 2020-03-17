@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CA8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9E7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B3820658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BE0206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443068;
-	bh=at0jPWMYvZMjVNANj71VSVcc2aFfmEKTKV1uvGdwPB8=;
+	s=default; t=1584443071;
+	bh=IKNsVat4Qmp+G/wMQb+AhQ0QBEoKs5K1SbRdPhd6A0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TbUSF8yC/fcflmqJ3YS3yuKPA+Ed8Akw+6M/wbpQbP8cGfsKput4BRLwy7t+DwiRS
-	 iAae0QoBiiLsS56BqG7SCGRExyNSJ21l1VHFw7ocDttfpalMewKx2ekiAggvRB3Isy
-	 eGVivM+nw/8Db+cadsTurdYchXeMBUkXjxBfZA9E=
+	b=CFJ1ANOjHnug2kvVSciDXxQpLAf4QA1il+J5GvGV/29yTi+yfQXgtlOIrhRBYN+rB
+	 36tA49jCBd8xsaD2Whga052OiEGRQrLqVvBps7eHRKvII8FLM6APkrcRE3yEU/SrxT
+	 LirfmUjN93JD46cSFf9FHrWMNnC+HpsV2iRM6pB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgCQLE1 (ORCPT
+        id S1728289AbgCQLEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44546 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727714AbgCQLEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:24 -0400
+        id S1728279AbgCQLE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71E3020658;
-        Tue, 17 Mar 2020 11:04:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC82B2073C;
+        Tue, 17 Mar 2020 11:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443063;
-        bh=at0jPWMYvZMjVNANj71VSVcc2aFfmEKTKV1uvGdwPB8=;
+        s=default; t=1584443066;
+        bh=IKNsVat4Qmp+G/wMQb+AhQ0QBEoKs5K1SbRdPhd6A0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbmiQsj5FbxG+m641OXdtS57U1Grj8YdhpCDP3e2+ST1xh4l0Yc0EqcA2THs6f36O
-         RfHuYVjHTZ8uYzZ3jUkyHoHsNeNCKyWeUvCF/uKXOY9jStaVj+kWL7B6fkK7q4AKLY
-         SCipqHE0pPCSoFFxL2annVdbTSf2oxLsaY3vaR+E=
+        b=X1KF2RPKwX/kfQ9TrCZJzAM1k8EiBmXqt+BkzbxGpcydoQ2RDCBWvY3nAQCchZhsP
+         jwfMsePD+IvtvhyUhHqheSwYz7bCaJ3C+Brqv/9cYiAD3CtZG6ywjOADNPg/DTydZ2
+         vArqHrm9njRgQ4TYLwwd3YjHYxg1CspgyuBUmNFA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 5.4 084/123] fscrypt: dont evict dirty inodes after removing key
-Date:   Tue, 17 Mar 2020 11:55:11 +0100
-Message-Id: <20200317103316.431595905@linuxfoundation.org>
+        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Michael Ellerman <mpe@ellerman.id.au>, stable@kernel.org
+Subject: [PATCH 5.4 085/123] macintosh: windfarm: fix MODINFO regression
+Date:   Tue, 17 Mar 2020 11:55:12 +0100
+Message-Id: <20200317103316.510952436@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -58,56 +60,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Wolfram Sang <wsa@the-dreams.de>
 
-commit 2b4eae95c7361e0a147b838715c8baa1380a428f upstream.
+commit bcf3588d8ed3517e6ffaf083f034812aee9dc8e2 upstream.
 
-After FS_IOC_REMOVE_ENCRYPTION_KEY removes a key, it syncs the
-filesystem and tries to get and put all inodes that were unlocked by the
-key so that unused inodes get evicted via fscrypt_drop_inode().
-Normally, the inodes are all clean due to the sync.
+Commit af503716ac14 made sure OF devices get an OF style modalias with
+I2C events. It assumed all in-tree users were converted, yet it missed
+some Macintosh drivers.
 
-However, after the filesystem is sync'ed, userspace can modify and close
-one of the files.  (Userspace is *supposed* to close the files before
-removing the key.  But it doesn't always happen, and the kernel can't
-assume it.)  This causes the inode to be dirtied and have i_count == 0.
-Then, fscrypt_drop_inode() failed to consider this case and indicated
-that the inode can be dropped, causing the write to be lost.
+Add an OF module device table for all windfarm drivers to make them
+automatically load again.
 
-On f2fs, other problems such as a filesystem freeze could occur due to
-the inode being freed while still on f2fs's dirty inode list.
-
-Fix this bug by making fscrypt_drop_inode() only drop clean inodes.
-
-I've written an xfstest which detects this bug on ext4, f2fs, and ubifs.
-
-Fixes: b1c0ec3599f4 ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY ioctl")
-Cc: <stable@vger.kernel.org> # v5.4+
-Link: https://lore.kernel.org/r/20200305084138.653498-1-ebiggers@kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=199471
+Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+Tested-by: Erhard Furtner <erhard_f@mailbox.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org # v4.17+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/crypto/keysetup.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/macintosh/windfarm_ad7417_sensor.c  |    7 +++++++
+ drivers/macintosh/windfarm_fcu_controls.c   |    7 +++++++
+ drivers/macintosh/windfarm_lm75_sensor.c    |   16 +++++++++++++++-
+ drivers/macintosh/windfarm_lm87_sensor.c    |    7 +++++++
+ drivers/macintosh/windfarm_max6690_sensor.c |    7 +++++++
+ drivers/macintosh/windfarm_smu_sat.c        |    7 +++++++
+ 6 files changed, 50 insertions(+), 1 deletion(-)
 
---- a/fs/crypto/keysetup.c
-+++ b/fs/crypto/keysetup.c
-@@ -579,6 +579,15 @@ int fscrypt_drop_inode(struct inode *ino
- 	mk = ci->ci_master_key->payload.data[0];
+--- a/drivers/macintosh/windfarm_ad7417_sensor.c
++++ b/drivers/macintosh/windfarm_ad7417_sensor.c
+@@ -312,9 +312,16 @@ static const struct i2c_device_id wf_ad7
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_ad7417_id);
  
- 	/*
-+	 * With proper, non-racy use of FS_IOC_REMOVE_ENCRYPTION_KEY, all inodes
-+	 * protected by the key were cleaned by sync_filesystem().  But if
-+	 * userspace is still using the files, inodes can be dirtied between
-+	 * then and now.  We mustn't lose any writes, so skip dirty inodes here.
-+	 */
-+	if (inode->i_state & I_DIRTY_ALL)
-+		return 0;
++static const struct of_device_id wf_ad7417_of_id[] = {
++	{ .compatible = "ad7417", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_ad7417_of_id);
 +
-+	/*
- 	 * Note: since we aren't holding ->mk_secret_sem, the result here can
- 	 * immediately become outdated.  But there's no correctness problem with
- 	 * unnecessarily evicting.  Nor is there a correctness problem with not
+ static struct i2c_driver wf_ad7417_driver = {
+ 	.driver = {
+ 		.name	= "wf_ad7417",
++		.of_match_table = wf_ad7417_of_id,
+ 	},
+ 	.probe		= wf_ad7417_probe,
+ 	.remove		= wf_ad7417_remove,
+--- a/drivers/macintosh/windfarm_fcu_controls.c
++++ b/drivers/macintosh/windfarm_fcu_controls.c
+@@ -582,9 +582,16 @@ static const struct i2c_device_id wf_fcu
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_fcu_id);
+ 
++static const struct of_device_id wf_fcu_of_id[] = {
++	{ .compatible = "fcu", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_fcu_of_id);
++
+ static struct i2c_driver wf_fcu_driver = {
+ 	.driver = {
+ 		.name	= "wf_fcu",
++		.of_match_table = wf_fcu_of_id,
+ 	},
+ 	.probe		= wf_fcu_probe,
+ 	.remove		= wf_fcu_remove,
+--- a/drivers/macintosh/windfarm_lm75_sensor.c
++++ b/drivers/macintosh/windfarm_lm75_sensor.c
+@@ -14,6 +14,7 @@
+ #include <linux/init.h>
+ #include <linux/wait.h>
+ #include <linux/i2c.h>
++#include <linux/of_device.h>
+ #include <asm/prom.h>
+ #include <asm/machdep.h>
+ #include <asm/io.h>
+@@ -91,9 +92,14 @@ static int wf_lm75_probe(struct i2c_clie
+ 			 const struct i2c_device_id *id)
+ {	
+ 	struct wf_lm75_sensor *lm;
+-	int rc, ds1775 = id->driver_data;
++	int rc, ds1775;
+ 	const char *name, *loc;
+ 
++	if (id)
++		ds1775 = id->driver_data;
++	else
++		ds1775 = !!of_device_get_match_data(&client->dev);
++
+ 	DBG("wf_lm75: creating  %s device at address 0x%02x\n",
+ 	    ds1775 ? "ds1775" : "lm75", client->addr);
+ 
+@@ -164,9 +170,17 @@ static const struct i2c_device_id wf_lm7
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_lm75_id);
+ 
++static const struct of_device_id wf_lm75_of_id[] = {
++	{ .compatible = "lm75", .data = (void *)0},
++	{ .compatible = "ds1775", .data = (void *)1 },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_lm75_of_id);
++
+ static struct i2c_driver wf_lm75_driver = {
+ 	.driver = {
+ 		.name	= "wf_lm75",
++		.of_match_table = wf_lm75_of_id,
+ 	},
+ 	.probe		= wf_lm75_probe,
+ 	.remove		= wf_lm75_remove,
+--- a/drivers/macintosh/windfarm_lm87_sensor.c
++++ b/drivers/macintosh/windfarm_lm87_sensor.c
+@@ -166,9 +166,16 @@ static const struct i2c_device_id wf_lm8
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_lm87_id);
+ 
++static const struct of_device_id wf_lm87_of_id[] = {
++	{ .compatible = "lm87cimt", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_lm87_of_id);
++
+ static struct i2c_driver wf_lm87_driver = {
+ 	.driver = {
+ 		.name	= "wf_lm87",
++		.of_match_table = wf_lm87_of_id,
+ 	},
+ 	.probe		= wf_lm87_probe,
+ 	.remove		= wf_lm87_remove,
+--- a/drivers/macintosh/windfarm_max6690_sensor.c
++++ b/drivers/macintosh/windfarm_max6690_sensor.c
+@@ -120,9 +120,16 @@ static const struct i2c_device_id wf_max
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_max6690_id);
+ 
++static const struct of_device_id wf_max6690_of_id[] = {
++	{ .compatible = "max6690", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_max6690_of_id);
++
+ static struct i2c_driver wf_max6690_driver = {
+ 	.driver = {
+ 		.name		= "wf_max6690",
++		.of_match_table = wf_max6690_of_id,
+ 	},
+ 	.probe		= wf_max6690_probe,
+ 	.remove		= wf_max6690_remove,
+--- a/drivers/macintosh/windfarm_smu_sat.c
++++ b/drivers/macintosh/windfarm_smu_sat.c
+@@ -341,9 +341,16 @@ static const struct i2c_device_id wf_sat
+ };
+ MODULE_DEVICE_TABLE(i2c, wf_sat_id);
+ 
++static const struct of_device_id wf_sat_of_id[] = {
++	{ .compatible = "smu-sat", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wf_sat_of_id);
++
+ static struct i2c_driver wf_sat_driver = {
+ 	.driver = {
+ 		.name		= "wf_smu_sat",
++		.of_match_table = wf_sat_of_id,
+ 	},
+ 	.probe		= wf_sat_probe,
+ 	.remove		= wf_sat_remove,
 
 
