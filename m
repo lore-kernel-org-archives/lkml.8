@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775A4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857E3C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0C020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E53F20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443090;
-	bh=YeOkMtyWLIEoF9MWDXRDRMp7xN/CAzz3pEq7S4IaUVE=;
+	s=default; t=1584443093;
+	bh=xAOwVkY62m9tSTCLIiQRMuwYlf5KeSKDckQa4+Litu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KlgmOl4fofr3qbCL1APEPAKSsZ9b8mnSnKhLuQtO7G/0k8Cr5AdJ0JVNTKFa73FDK
-	 Cm4vDKCA/w1ODQodc/q0DrJSCbfoSh6ky/vtCMt/UpTMZ+XziNm/uIwmnIK9OklCfh
-	 /TpCjzkNgc8b00XdjOMemM8p9eqORJOmXFxNDE88=
+	b=CZWxS9X6QZq2/6gBSnuMRJquNzELrC6GXp0700xcCnn4c8huWaKHyY05IfbCejJT4
+	 rJBhSPallOSXMZW/5FKHU7SNSaC4NxQUniPfKyB6bz3DWzcqg6nGmcs2+wftZVgNMd
+	 i8JQwc+Fj+4kmY+Zo5bRH6HL4u/I7ADG8/XECL1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgCQLEt (ORCPT
+        id S1728317AbgCQLEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45152 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbgCQLEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:44 -0400
+        id S1727233AbgCQLEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54FDF20719;
-        Tue, 17 Mar 2020 11:04:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4C0A2073E;
+        Tue, 17 Mar 2020 11:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443083;
-        bh=YeOkMtyWLIEoF9MWDXRDRMp7xN/CAzz3pEq7S4IaUVE=;
+        s=default; t=1584443089;
+        bh=xAOwVkY62m9tSTCLIiQRMuwYlf5KeSKDckQa4+Litu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HP8wc9g5nRItd3oVufnpRc6YC8vh1I7Om6b5IivCTDozNGvN3Dj2woVHVF72zp6dG
-         AXeNFGapbsUkiJJHKkV+xpZ6V6wKqdQJX1UVpxtdCF+YlTYNG2jl9zFAsHnkkrWOup
-         LVClKV04y+FJqMnPVUvcFReAHLqi6O7/Mx2K5Z2w=
+        b=dUvgPxmp5rpqLpiXdGNVgWopJaZ0M8by/nOCXobkg01eOygOjZbFAcseqTc/YnF3s
+         trPxOrY9dBLKc19vQmxuTx9BNOnR3a5kLRRGD6khgk1CGXrlEdubwWQ9cu4P3+QHME
+         woHCzFMTvva0VjLmCrv/SWJihzDLUBwuPeZyirtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathias Kresin <dev@kresin.me>,
-        Thomas Langer <thomas.langer@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 073/123] pinctrl: falcon: fix syntax error
-Date:   Tue, 17 Mar 2020 11:55:00 +0100
-Message-Id: <20200317103314.963790552@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.4 092/123] x86/mce: Fix logic and comments around MSR_PPIN_CTL
+Date:   Tue, 17 Mar 2020 11:55:19 +0100
+Message-Id: <20200317103317.093943679@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -60,34 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Kresin <dev@kresin.me>
+From: Tony Luck <tony.luck@intel.com>
 
-commit d62e7fbea4951c124a24176da0c7bf3003ec53d4 upstream.
+commit 59b5809655bdafb0767d3fd00a3e41711aab07e6 upstream.
 
-Add the missing semicolon after of_node_put to get the file compiled.
+There are two implemented bits in the PPIN_CTL MSR:
 
-Fixes: f17d2f54d36d ("pinctrl: falcon: Add of_node_put() before return")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Mathias Kresin <dev@kresin.me>
-Link: https://lore.kernel.org/r/20200305182245.9636-1-dev@kresin.me
-Acked-by: Thomas Langer <thomas.langer@intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Bit 0: LockOut (R/WO)
+      Set 1 to prevent further writes to MSR_PPIN_CTL.
+
+Bit 1: Enable_PPIN (R/W)
+       If 1, enables MSR_PPIN to be accessible using RDMSR.
+       If 0, an attempt to read MSR_PPIN will cause #GP.
+
+So there are four defined values:
+	0: PPIN is disabled, PPIN_CTL may be updated
+	1: PPIN is disabled. PPIN_CTL is locked against updates
+	2: PPIN is enabled. PPIN_CTL may be updated
+	3: PPIN is enabled. PPIN_CTL is locked against updates
+
+Code would only enable the X86_FEATURE_INTEL_PPIN feature for case "2".
+When it should have done so for both case "2" and case "3".
+
+Fix the final test to just check for the enable bit. Also fix some of
+the other comments in this function.
+
+Fixes: 3f5a7896a509 ("x86/mce: Include the PPIN in MCE records when available")
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200226011737.9958-1-tony.luck@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/pinctrl-falcon.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/mce/intel.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/pinctrl/pinctrl-falcon.c
-+++ b/drivers/pinctrl/pinctrl-falcon.c
-@@ -451,7 +451,7 @@ static int pinctrl_falcon_probe(struct p
- 		falcon_info.clk[*bank] = clk_get(&ppdev->dev, NULL);
- 		if (IS_ERR(falcon_info.clk[*bank])) {
- 			dev_err(&ppdev->dev, "failed to get clock\n");
--			of_node_put(np)
-+			of_node_put(np);
- 			return PTR_ERR(falcon_info.clk[*bank]);
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -489,17 +489,18 @@ static void intel_ppin_init(struct cpuin
+ 			return;
+ 
+ 		if ((val & 3UL) == 1UL) {
+-			/* PPIN available but disabled: */
++			/* PPIN locked in disabled mode */
+ 			return;
  		}
- 		falcon_info.membase[*bank] = devm_ioremap_resource(&pdev->dev,
+ 
+-		/* If PPIN is disabled, but not locked, try to enable: */
+-		if (!(val & 3UL)) {
++		/* If PPIN is disabled, try to enable */
++		if (!(val & 2UL)) {
+ 			wrmsrl_safe(MSR_PPIN_CTL,  val | 2UL);
+ 			rdmsrl_safe(MSR_PPIN_CTL, &val);
+ 		}
+ 
+-		if ((val & 3UL) == 2UL)
++		/* Is the enable bit set? */
++		if (val & 2UL)
+ 			set_cpu_cap(c, X86_FEATURE_INTEL_PPIN);
+ 	}
+ }
 
 
