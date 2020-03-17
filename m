@@ -2,146 +2,140 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D799BC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A233DC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9CDC2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD6F2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="H+Zrpb6U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fa3L0qNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgCQUPZ (ORCPT
+        id S1726774AbgCQUQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:15:25 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37625 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgCQUPZ (ORCPT
+        Tue, 17 Mar 2020 16:16:15 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41214 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgCQUQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:15:25 -0400
-Received: by mail-qk1-f194.google.com with SMTP id z25so29990059qkj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:15:24 -0700 (PDT)
+        Tue, 17 Mar 2020 16:16:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t16so3079324plr.8;
+        Tue, 17 Mar 2020 13:16:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RcQJB7Wv962sHHetSf7hshBSrNKNeDkBlfxsZ1vpNAQ=;
-        b=H+Zrpb6UUFLTVGuaCO9shavuaBpy9fRH43KpXyKlr5OXdSg9H1w16puFUjvChYoJG9
-         arBboQbS17s9m6xViJ6DtPqCDyhZvLqQbha+Dby2Qs8EV27NiCOMbR5v0XirC8Om6Bn4
-         F92d27t8rV3N3v6igdLX/nQctMIkuDUCZFV6WLVhzEWWstlgFDwHuoN9H1GAJS7KIPwO
-         kwwm7DZyolGj4QLa2nT0W7uAZ9wvjOpRvnoUh7j6hLQXV4bDPi4S5sUlNXU3LagmS3BU
-         JC+evzW7kC+tMMLQIjgX56i21gexoc+XPUSs9Cy98DkR8Mj6uxB6o7QQX82uL1gTjUaX
-         GgRg==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aJkTSDRKNFPgqhyMzTwe0X4901ohD39DtHX+GVvC0N4=;
+        b=fa3L0qNrCFbbTeS1WImgLdtXzoANrCRLYgPXV1n/79PnXlKB2xcS4oc634/SI+iuUn
+         DuSx2OBLbsCKXPljFBZhBvuYeNKWFCgZOO3K6/0JZhjQXyheZP/c8BRSvGEHZzoHsjZT
+         YVc179EKUzKZxGPZ4dB0b1QlbQUFnpIo0REerw5iWLBwAnXgx82qBrJHXj/+DX+ceTCi
+         KIEHJh8zRLtmrRaDXxPnFHaESGVg3NgzGqpXmBy1eEosum8N7D3Hbs53KpApU4PzSge1
+         O6QEIUCqeKYvEGf7u4sO3D4/5VC6IxSu8xfbFhdTCtzs31PvXQGCsAw/RHeJir1tFDu4
+         JPww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RcQJB7Wv962sHHetSf7hshBSrNKNeDkBlfxsZ1vpNAQ=;
-        b=hKG7zt8vGRnzDk9sHKMC8ZN+yLUwz8yjo1LRC/MfG8LUYm7Awaj93DTQ9AeSGMhD3X
-         hOVtPxXfaw+kpulAuySqfNc3KebksjVpPh6COrywIb9Hx3cBUsOwxVw0zSa1vSXBNPSu
-         58y6cB/AstEACdYbH9WWxxWpTKSFTvSbOwnUcYva5bjlD333MNUt5L3q2cMA+32cE8xf
-         rUisOjgPIm6rhi7SlmAqr4CNRQc/4Gx1C34vytVBGVTZjowEDQOglTRBs0aeDpEQetG2
-         UNcbathuyTVVHmfaMiaZGD6keUVqwiEo5AunB/d1p2g4/6YjvJeKkfa+gwoOiWNLmtyk
-         cjxQ==
-X-Gm-Message-State: ANhLgQ1wNlt/QOENZiwsIVe+WdVd3POe44lVYpnN+uj+33ZKkUo0/1Ec
-        VbdIQtWsjbC1CXvOLFH542h3UA==
-X-Google-Smtp-Source: ADFU+vtL85ZtLUqcFFFOB/lV2/hNJyHX2knPLqCstgkmwBYunmQ5HDwcBwxhf0dbiC+XeS4Mku1kxg==
-X-Received: by 2002:ae9:e892:: with SMTP id a140mr654387qkg.274.1584476124127;
-        Tue, 17 Mar 2020 13:15:24 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id w134sm2553134qka.127.2020.03.17.13.15.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 13:15:23 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jEIcU-0005IL-VY; Tue, 17 Mar 2020 17:15:22 -0300
-Date:   Tue, 17 Mar 2020 17:15:22 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Haggai Eran <haggaie@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Sean Hefty <sean.hefty@intel.com>
-Subject: Re: [PATCH rdma-next 00/15] Fix locking around cm_id.state in the
- ib_cm
-Message-ID: <20200317201522.GA20284@ziepe.ca>
-References: <20200310092545.251365-1-leon@kernel.org>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=aJkTSDRKNFPgqhyMzTwe0X4901ohD39DtHX+GVvC0N4=;
+        b=arYHVz5YIX7HLz2wfl2g+M4/1fcDbajZbFk6Ga8E/bo44QFre9edT1WcE+jR4Wk4Un
+         djdh0KuL3tFaYLRmh8vlmUMvLj6p528vvQGS1LzZUI1lbTpYOwqNZ1S3SiMXdoXHkFCo
+         j+zHccikALBOyHlVzvIk9LV8ZGaliCDn0JIWPvG+m0mw3SVSqedORUGcDD3SvoFs81Di
+         4TQ/KjJ97JS64Yl8fClKa7aRM4creQpi3hdUxuoJQJv3iaLdgu47qqNwI30eCMiHzfJI
+         BgmqHhGbXNvM21loUO3UZf9VYK9J+pCX08d5PnwT8GmfnuYPRC7h6lCwgQVbNbdqY+tI
+         aOfw==
+X-Gm-Message-State: ANhLgQ2GkYQ/DhmEnpAGG/vdxdUXZomYAJc8jMPXOU2qbYNPwTDZLWZP
+        CAaadNPiAYTYLWfvSrxmsUD7P4su
+X-Google-Smtp-Source: ADFU+vvbCEB3eDrYeWLp2x01UNC6okmIOb/aCzfuLPXfCU2LNhLkl1z0RHrez0deuI+1Vqtn8+oEZg==
+X-Received: by 2002:a17:902:d213:: with SMTP id t19mr382430ply.155.1584476172960;
+        Tue, 17 Mar 2020 13:16:12 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id ci14sm222228pjb.37.2020.03.17.13.16.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 13:16:11 -0700 (PDT)
+Subject: Re: [PATCH 4.19 00/89] 4.19.111-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200317103259.744774526@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <a03afb6c-43f3-c625-7a92-345d15d4971e@roeck-us.net>
+Date:   Tue, 17 Mar 2020 13:16:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310092545.251365-1-leon@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 11:25:30AM +0200, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
+On 3/17/20 3:54 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.111 release.
+> There are 89 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> >From Jason:
+> Responses should be made by Thu, 19 Mar 2020 10:31:16 +0000.
+> Anything received after that time might be too late.
 > 
-> cm_id.state is a non-atomic value that must always be read and written
-> under lock, or while the thread has the only pointer to the cm_id.
-> 
-> Critically, during MAD handling the cm_id.state is used to control when
-> MAD handlers can run, and in turn what data they can touch. Without
-> locking, an assignment to state can immediately allow concurrent MAD
-> handlers to execute, potentially creating a mess.
-> 
-> Several of these cases only risk load/store tearing, but create very
-> confusing code. For instance changing the state from IB_CM_IDLE to
-> IB_CM_LISTEN doesn't allow any MAD handlers to run in either state, but a
-> superficial audit would suggest that it is not locked properly.
-> 
-> This loose methodology has allowed two bugs to creep in. After creating an
-> ID the code did not lock the state transition, apparently mistakenly
-> assuming that the new ID could not be used concurrently. However, the ID
-> is immediately placed in the xarray and so a carefully crafted network
-> sequence could trigger races with the unlocked stores.
-> 
-> The main solution to many of these problems is to use the xarray to create
-> a two stage add - the first reserves the ID and the second publishes the
-> pointer. The second stage is either omitted entirely or moved after the
-> newly created ID is setup.
-> 
-> Where it is trivial to do so other places directly put the state
-> manipulation under lock, or add an assertion that it is, in fact, under
-> lock.
-> 
-> This also removes a number of places where the state is being read under
-> lock, then the lock dropped, reacquired and state tested again.
-> 
-> There remain other issues related to missing locking on cm_id data.
-> 
-> Thanks
-> 
-> It is based on rdma-next + rdma-rc patch c14dfddbd869
-> ("RMDA/cm: Fix missing ib_cm_destroy_id() in ib_cm_insert_listen()")
-> 
-> Jason Gunthorpe (15):
->   RDMA/cm: Fix ordering of xa_alloc_cyclic() in ib_create_cm_id()
->   RDMA/cm: Fix checking for allowed duplicate listens
->   RDMA/cm: Remove a race freeing timewait_info
->   RDMA/cm: Make the destroy_id flow more robust
->   RDMA/cm: Simplify establishing a listen cm_id
->   RDMA/cm: Read id.state under lock when doing pr_debug()
->   RDMA/cm: Make it clear that there is no concurrency in
->     cm_sidr_req_handler()
->   RDMA/cm: Make it clearer how concurrency works in cm_req_handler()
->   RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
->   RDMA/cm: Add some lockdep assertions for cm_id_priv->lock
->   RDMA/cm: Allow ib_send_cm_dreq() to be done under lock
->   RDMA/cm: Allow ib_send_cm_drep() to be done under lock
->   RDMA/cm: Allow ib_send_cm_rej() to be done under lock
->   RDMA/cm: Allow ib_send_cm_sidr_rep() to be done under lock
->   RDMA/cm: Make sure the cm_id is in the IB_CM_IDLE state in destroy
 
-Applied to for-next. 
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 418 pass: 418 fail: 0
 
-Jason
+Guenter
