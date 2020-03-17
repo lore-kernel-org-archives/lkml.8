@@ -2,336 +2,109 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85330C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70DCC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD50205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C812205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U7REZ17/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgCQHmH (ORCPT
+        id S1726250AbgCQHnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:42:07 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:34883 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725794AbgCQHmH (ORCPT
+        Tue, 17 Mar 2020 03:43:03 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57300 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgCQHnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:42:07 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 17 Mar 2020 13:10:40 +0530
-Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 17 Mar 2020 13:10:21 +0530
-Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
-        id D1C061E20; Tue, 17 Mar 2020 13:10:19 +0530 (IST)
-From:   Rajeshwari <rkambl@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaa@codeaurora.org,
-        sanm@codeaurora.org, Doug Anderson <dianders@chromium.org>,
-        Rajeshwari <rkambl@codeaurora.org>
-Subject: [PATCH] arm64: dts: qcom: sc7180: Changed polling-delay in Thermal-zones node
-Date:   Tue, 17 Mar 2020 13:10:04 +0530
-Message-Id: <1584430804-8343-1-git-send-email-rkambl@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 17 Mar 2020 03:43:03 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02H7gsAX067054;
+        Tue, 17 Mar 2020 02:42:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584430974;
+        bh=7JK5jurkiOzB4xeZ63mZpS0c84gUOTRe8SmMmit+kWg=;
+        h=From:To:CC:Subject:Date;
+        b=U7REZ17/GAzBO2tifO8dcluceWeBq+xj+idXeg68v2ToKSq3hJcJvfFf6zSooAGST
+         4oXDiTW4RiYH0o74KCqn3iGEPhd1iqUYzmlE+UQpXLZ68xUor4zskRLQST2zfieOv6
+         ucq3r0TV46wWchn1U9dgmx/P8RsF7QfTYAHXvwzI=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7gsKk091655;
+        Tue, 17 Mar 2020 02:42:54 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Mar 2020 02:42:54 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Mar 2020 02:42:54 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7gpax019783;
+        Tue, 17 Mar 2020 02:42:52 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Vidya Sagar <vidyas@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH] PCI: endpoint: functions/pci-epf-test: Fix compiler error
+Date:   Tue, 17 Mar 2020 13:17:19 +0530
+Message-ID: <20200317074719.10668-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changed polling-delay and polling-delay-passive to zero as per
-the requirement.
+Commit 812828eb5072 ("PCI: endpoint: Fix ->set_msix() to take BIR
+and offset as arguments") was created before adding deferred
+core initialization support in commit 5e50ee27d4a5 ("PCI: pci-epf-test:
+Add support to defer core initialization").
+However since deferred core initialization was merged before
+re-designing MSI-X support, it caused the following compiler error.
 
-Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+drivers/pci/endpoint/functions/pci-epf-test.c:697:12: error: ‘epf_test’ undeclared (first use in this function);
+
+Fix the compilation error here.
+
+Fixes: 812828eb5072 ("PCI: endpoint: Fix ->set_msix() to take BIR and offset as arguments")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 100 +++++++++++++++++------------------
- 1 file changed, 50 insertions(+), 50 deletions(-)
+Lorenzo,
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index ca876ed..d81c4f1 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1907,8 +1907,8 @@
- 
- 	thermal-zones {
- 		cpu0-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 1>;
- 
-@@ -1955,8 +1955,8 @@
- 		};
- 
- 		cpu1-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 2>;
- 
-@@ -2003,8 +2003,8 @@
- 		};
- 
- 		cpu2-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 3>;
- 
-@@ -2051,8 +2051,8 @@
- 		};
- 
- 		cpu3-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 4>;
- 
-@@ -2099,8 +2099,8 @@
- 		};
- 
- 		cpu4-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 5>;
- 
-@@ -2147,8 +2147,8 @@
- 		};
- 
- 		cpu5-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 6>;
- 
-@@ -2195,8 +2195,8 @@
- 		};
- 
- 		cpu6-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 9>;
- 
-@@ -2235,8 +2235,8 @@
- 		};
- 
- 		cpu7-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 10>;
- 
-@@ -2275,8 +2275,8 @@
- 		};
- 
- 		cpu8-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 11>;
- 
-@@ -2315,8 +2315,8 @@
- 		};
- 
- 		cpu9-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 12>;
- 
-@@ -2355,8 +2355,8 @@
- 		};
- 
- 		aoss0-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 0>;
- 
-@@ -2376,8 +2376,8 @@
- 		};
- 
- 		cpuss0-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 7>;
- 
-@@ -2396,8 +2396,8 @@
- 		};
- 
- 		cpuss1-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 8>;
- 
-@@ -2416,8 +2416,8 @@
- 		};
- 
- 		gpuss0-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 13>;
- 
-@@ -2437,8 +2437,8 @@
- 		};
- 
- 		gpuss1-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 14>;
- 
-@@ -2458,8 +2458,8 @@
- 		};
- 
- 		aoss1-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 0>;
- 
-@@ -2479,8 +2479,8 @@
- 		};
- 
- 		cwlan-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 1>;
- 
-@@ -2500,8 +2500,8 @@
- 		};
- 
- 		audio-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 2>;
- 
-@@ -2521,8 +2521,8 @@
- 		};
- 
- 		ddr-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 3>;
- 
-@@ -2542,8 +2542,8 @@
- 		};
- 
- 		q6-hvx-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 4>;
- 
-@@ -2563,8 +2563,8 @@
- 		};
- 
- 		camera-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 5>;
- 
-@@ -2584,8 +2584,8 @@
- 		};
- 
- 		mdm-core-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 6>;
- 
-@@ -2605,8 +2605,8 @@
- 		};
- 
- 		mdm-dsp-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 7>;
- 
-@@ -2626,8 +2626,8 @@
- 		};
- 
- 		npu-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 8>;
- 
-@@ -2647,8 +2647,8 @@
- 		};
- 
- 		video-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 9>;
- 
+This patch can be squashed with
+"PCI: endpoint: Fix ->set_msix() to take BIR and offset as arguments"
+
+Thanks
+Kishon
+
+ drivers/pci/endpoint/functions/pci-epf-test.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index eaf192be02bb..3b4cf7e2bc60 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -660,6 +660,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+ 
+ static int pci_epf_test_core_init(struct pci_epf *epf)
+ {
++	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+ 	struct pci_epf_header *header = epf->header;
+ 	const struct pci_epc_features *epc_features;
+ 	struct pci_epc *epc = epf->epc;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
 
