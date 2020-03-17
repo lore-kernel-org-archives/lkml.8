@@ -2,119 +2,166 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D06C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48DCC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBDD20753
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584463504;
-	bh=cBMVgSpnWq79rXyBXbwVtrgJxTA5gt9Nbc6cBfcAaoQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=F882MGcgJa+pWdJZbeOms8e+1H8x3NoIyjDGsNd+McFukf/3P1wI2TVJ364MKIYcJ
-	 Yydq//+qpWeKh8nAkr2hRj2MBIFevmwuM8kpcjWzxyNx79J652yEwYlB4Pde+zmkb5
-	 WF9ZgzQJV12l2Z/v5X49Tj1iUTqLUcKv2U2WKzMc=
+	by mail.kernel.org (Postfix) with ESMTP id 8CF8420735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IsVe3PCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgCQQpD (ORCPT
+        id S1726735AbgCQQpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbgCQQpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:45:03 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AB7920735;
-        Tue, 17 Mar 2020 16:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584463502;
-        bh=cBMVgSpnWq79rXyBXbwVtrgJxTA5gt9Nbc6cBfcAaoQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=PbNAsvmR9WWkfg8v2Zjs8qzl7S6PN5Pt3pTYzv6J7VNeQz3vhwqBbx3qliyWJP5qQ
-         Z9bZV1TYs0hjbYRlDvuRvFDTnJNbtxx0Cf4/pK1T5Ph44gFkgJwLZ7Oq9U1hcQz/i8
-         8lmQ2lTbQyiAPzxkPbK93NbBgJXA18jEfUR0wXyE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id BFC9635226E2; Tue, 17 Mar 2020 09:45:01 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 09:45:01 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH 09/17] rcu: update.c: get rid of some doc warnings
-Message-ID: <20200317164501.GG3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <cover.1584456635.git.mchehab+huawei@kernel.org>
- <c69a85d13717c2aec563f702bffd7cd1e3be6a88.1584456635.git.mchehab+huawei@kernel.org>
+        Tue, 17 Mar 2020 12:45:36 -0400
+Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:62592
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726016AbgCQQpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:45:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PuHb2k/NpjFJD1cN+JtGXzkh2/mXHCrSpKOEH5cjDLL0g6qgZqAWzWyDJxWnTsLNvDb7xZJF1QLSQLRrQNLBqBhhvXxNIleTd4bI6NtjukAkA1PjMISU6fF6kqUW0872gdUOISXh8NrVzdloaFk053q5TbQPomFI4H57muz7q85pFloo+Ii/vA2xCel67m/kRCXFzNVbBALtNWRxr6S8Ll3e09pXxn5vicRHKv9+V1Fq4PaUrdmbreYa6bc1lIcWL2O8AuYpEjZijju/T9nDVT9cqGiHbCW9QIGvKkDhn9LudM3chbwpMFOMXRfiyTzAJW8M2xz8ZyRNWltiR0pRrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JJ8q/7An/zFH2oP4PFfQd5wQwEVpidm2fZBwn7r454Y=;
+ b=EvnZVJCZgZWvs6i6J96Q3WZnYG4Cl3PlUnmuhRQLw1uWCaPGd/AT8tgcrUxy76KEnMjiS4mAGTBm76uioK+US5WYpWAKsmgZyNeTDmVqqh12DQRFCaXrnWrWLVLSeQdUoJauXBy2T1Hy9jmu1nrTYJqDHC9ZDpSRs0sYzuAMu0eoDHzJU+vu8yRekIyAdhY1EFclH4Os7POBfJTXyh5njhL0DdXr/aNtmKfHTr0qhANzv8ZcZkTN38RSgvOBG48LP2f1dQgzPnzmpbD9AE0N0bqEcjmdI6r42UoDnIlOW7x7ZjoLico27wSKjEbXXxDE+9LUttmKpB5u0yNE+2Ap9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JJ8q/7An/zFH2oP4PFfQd5wQwEVpidm2fZBwn7r454Y=;
+ b=IsVe3PCthqRnWG5Xa4tvtLJ8KrcwdXByH+wxI+rIZ0WoeMlosA8tUR7TeABpLbYMGKtgPZotU6dKSN8kV0WzDoRbEn4B+3qW/yDVXjUZJqIzEAsnTD8+tGds/wUNGaWlQYwifkli3hmHFeoOFOTqEyuXqLBjuxpwyh9LBI96Rzc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3951.eurprd04.prod.outlook.com (52.134.13.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.22; Tue, 17 Mar 2020 16:45:32 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 16:45:32 +0000
+Subject: Re: [PATCH v8 3/8] crypto: caam - drop global context pointer and
+ init_done
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Cc:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+References: <20200316150047.30828-1-andrew.smirnov@gmail.com>
+ <20200316150047.30828-4-andrew.smirnov@gmail.com>
+From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
+Message-ID: <49971beb-0681-de92-95f5-b18e1be05ce3@nxp.com>
+Date:   Tue, 17 Mar 2020 18:45:29 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <20200316150047.30828-4-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM4PR05CA0007.eurprd05.prod.outlook.com (2603:10a6:205::20)
+ To VI1PR0402MB3485.eurprd04.prod.outlook.com (2603:10a6:803:7::25)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c69a85d13717c2aec563f702bffd7cd1e3be6a88.1584456635.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.129] (84.117.251.185) by AM4PR05CA0007.eurprd05.prod.outlook.com (2603:10a6:205::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.19 via Frontend Transport; Tue, 17 Mar 2020 16:45:31 +0000
+X-Originating-IP: [84.117.251.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 16a3ed67-0b6f-45b3-bb33-08d7ca929b71
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3951:|VI1PR0402MB3951:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB3951F2CFD485F50E285B99A398F60@VI1PR0402MB3951.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(16576012)(31696002)(86362001)(52116002)(2616005)(5660300002)(956004)(2906002)(53546011)(6486002)(186003)(54906003)(16526019)(31686004)(8936002)(498600001)(26005)(36756003)(4326008)(110136005)(8676002)(81156014)(81166006)(66556008)(66476007)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3951;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 05Axj4bRB83wPCyzSrepStSivxn8ocCmiOBTgO5o2qqN3TqrFwiXAa+KXB5bIMW1tMeP/uJ7gdAfWtTinpwj/avz4yp7hIfllh6I9QH3dPdToNuBiFHDQHt1XljUx72jPoyjjmEN7hbWrRylZkoUQnbHB8Cnt0tyvPNWTPQj/UuDFP6jHuKQhUGhvbpDWqi9FVShYUpFiDmPOXhy0edNPnAXC5Fp7aSQlFIE/ZNwZxnJW3GS5ls5xLsCqFH4YJFzEyQhdl0V3KkXbTNCRlh4HNZv32OeGNB+1iK8SB2G06Bh70zqvpwM6ofnQ+Ma6y8C5HvxOor8yIe6sh8EEjnf+BiXnL8xcps3nR4rwB82f9RULPXwFfAFKTbFTEcnNyDZOITpDP4UPgNkSOllq4qsKmxd+G4HXxHUPI+ZKwG27z0DRP8ieOWLLiuHTechvP1E
+X-MS-Exchange-AntiSpam-MessageData: UxJoMBBHlOpgXZ9ir0F1y6dsuO11aVj6XvLO4v/Q+5NkFBq7DT2ZdeB3C+KL+oKqXweEOVZCcHNuvpZonMhTbWSAe6RZSXpn4E+EK+BfQCtcNS/0zq1ZoENNOXuGu6zp40OFXwZRnf818OeTxHXamQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16a3ed67-0b6f-45b3-bb33-08d7ca929b71
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 16:45:32.1140
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Cvvf096ak7GZ3936nKRYYAt2zMViV3tgjW6yeoJANDmNGgsOZYWXVOgZWpxe2RAoz/0w3eRykFr+fZQ24GTRoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3951
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 03:54:18PM +0100, Mauro Carvalho Chehab wrote:
-> We need to escape *ret, as otherwise the documentation system
-> thinks that this is an incomplete emphasis block:
-> 
-> 	./kernel/rcu/update.c:65: WARNING: Inline emphasis start-string without end-string.
-> 	./kernel/rcu/update.c:65: WARNING: Inline emphasis start-string without end-string.
-> 	./kernel/rcu/update.c:70: WARNING: Inline emphasis start-string without end-string.
-> 	./kernel/rcu/update.c:82: WARNING: Inline emphasis start-string without end-string.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On 3/16/2020 5:01 PM, Andrey Smirnov wrote:
+> diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
+> index 69a02ac5de54..753625f2b2c0 100644
+> --- a/drivers/crypto/caam/caamrng.c
+> +++ b/drivers/crypto/caam/caamrng.c
+> @@ -70,6 +70,7 @@ struct buf_data {
+>  
+>  /* rng per-device context */
+>  struct caam_rng_ctx {
+> +	struct hwrng rng;
+>  	struct device *jrdev;
+>  	dma_addr_t sh_desc_dma;
+>  	u32 sh_desc[DESC_RNG_LEN];
+> @@ -78,13 +79,10 @@ struct caam_rng_ctx {
+>  	struct buf_data bufs[2];
+>  };
+[...]
+> +static struct caam_rng_ctx *to_caam_rng_ctx(struct hwrng *r)
+> +{
+> +	return (struct caam_rng_ctx *)r->priv;
+> +}
+[...]
+> -static struct hwrng caam_rng = {
+> -	.name		= "rng-caam",
+> -	.init           = caam_init,
+> -	.cleanup	= caam_cleanup,
+> -	.read		= caam_read,
+> -};
+I would keep this statically allocated, see below.
 
-Applied, thank you!
+> @@ -342,18 +332,27 @@ int caam_rng_init(struct device *ctrldev)
+>  	if (!rng_inst)
+>  		return 0;
+>  
+> -	rng_ctx = kmalloc(sizeof(*rng_ctx), GFP_DMA | GFP_KERNEL);
+> -	if (!rng_ctx)
+> +	if (!devres_open_group(ctrldev, caam_rng_init, GFP_KERNEL))
+> +		return -ENOMEM;
+> +
+> +	ctx = devm_kzalloc(ctrldev, sizeof(*ctx), GFP_DMA | GFP_KERNEL);
+> +	if (!ctx)
+>  		return -ENOMEM;
+>  
+> +	ctx->rng.name    = "rng-caam";
+> +	ctx->rng.init    = caam_init;
+> +	ctx->rng.cleanup = caam_cleanup;
+> +	ctx->rng.read    = caam_read;
+> +	ctx->rng.priv    = (unsigned long)ctx;
+> +
+>  	dev_info(ctrldev, "registering rng-caam\n");
+>  
+> -	err = hwrng_register(&caam_rng);
+> -	if (!err) {
+> -		init_done = true;
+> -		return err;
+> +	ret = devm_hwrng_register(ctrldev, &ctx->rng);
+Now that hwrng.priv is used to keep driver's private data / caam_rng_ctx,
+and thus container_of() is no longer needed to get from hwrng struct
+to caam_rng_ctx, it's no longer needed to embed struct hwrng
+into caam_rng_ctx.
 
-							Thanx, Paul
-
-> ---
->  kernel/rcu/update.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> index b1fa519e5890..16058a5e6da4 100644
-> --- a/kernel/rcu/update.c
-> +++ b/kernel/rcu/update.c
-> @@ -63,12 +63,12 @@ module_param(rcu_normal_after_boot, int, 0);
->   * rcu_read_lock_held_common() - might we be in RCU-sched read-side critical section?
->   * @ret:	Best guess answer if lockdep cannot be relied on
->   *
-> - * Returns true if lockdep must be ignored, in which case *ret contains
-> + * Returns true if lockdep must be ignored, in which case ``*ret`` contains
->   * the best guess described below.  Otherwise returns false, in which
-> - * case *ret tells the caller nothing and the caller should instead
-> + * case ``*ret`` tells the caller nothing and the caller should instead
->   * consult lockdep.
->   *
-> - * If CONFIG_DEBUG_LOCK_ALLOC is selected, set *ret to nonzero iff in an
-> + * If CONFIG_DEBUG_LOCK_ALLOC is selected, set ``*ret`` to nonzero iff in an
->   * RCU-sched read-side critical section.  In absence of
->   * CONFIG_DEBUG_LOCK_ALLOC, this assumes we are in an RCU-sched read-side
->   * critical section unless it can prove otherwise.  Note that disabling
-> @@ -82,7 +82,7 @@ module_param(rcu_normal_after_boot, int, 0);
->   *
->   * Note that if the CPU is in the idle loop from an RCU point of view (ie:
->   * that we are in the section between rcu_idle_enter() and rcu_idle_exit())
-> - * then rcu_read_lock_held() sets *ret to false even if the CPU did an
-> + * then rcu_read_lock_held() sets ``*ret`` to false even if the CPU did an
->   * rcu_read_lock().  The reason for this is that RCU ignores CPUs that are
->   * in such a section, considering these as in extended quiescent state,
->   * so such a CPU is effectively never in an RCU read-side critical section
-> -- 
-> 2.24.1
-> 
+Horia
