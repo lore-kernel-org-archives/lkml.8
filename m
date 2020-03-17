@@ -2,82 +2,86 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6780C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CACC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8037320738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F81E20754
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QW2VmaGz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mBSsae5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgCQNUd (ORCPT
+        id S1726852AbgCQNUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:20:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42864 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgCQNUd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:20:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XvzyhaFk/wu7skK/5j6uwYlT+ZJkYaLS7Iej2CpX2yI=; b=QW2VmaGzcPNbAM0cpTRfclXlIy
-        dOyw2GWUIcqv9bO9vI+4WYLEeyBx0PY04xYG+ZM6PmYLvMPWOIhPPcqp2kqFUT5JssJxyZ5id7qgn
-        EYdU43apJV2k/VVcfrVd4Drha7iaa0Q1/Ig9V51k0XqeXgBx9lH8mgYkOgR8DQfPikCgKLT2UDluT
-        uCAm47h316v3IXPEQ33SkyWLSbKeR68GYo3fJG7Ng3cmwqSIAKGS5TAUMza4aMWHF9G2wvSTySgso
-        Pdnt/J5kJIpFdJE681LWl67wzH4aSzCsTOX1pgB0X9R6sh+tLQqUfkkAN1l8uKyGQHcg3Nk/5OM9W
-        Q+CZKxYw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEC91-00080e-P0; Tue, 17 Mar 2020 13:20:31 +0000
-Date:   Tue, 17 Mar 2020 06:20:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
-        John Stultz <john.stultz@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v5 2/2] drm/msm/a6xx: Use the DMA API for GMU memory
- objects
-Message-ID: <20200317132031.GA8125@infradead.org>
-References: <1583767066-1555-1-git-send-email-jcrouse@codeaurora.org>
- <1583767066-1555-3-git-send-email-jcrouse@codeaurora.org>
+        Tue, 17 Mar 2020 09:20:43 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40322 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgCQNUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:20:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=lL1vp8dV1GjHYa1MgqZ/82PRCzd3WXC1xqbFEV6td9w=; b=mBSsae5NNQ7t5+Bk/G7vxm2D2p
+        oqp+uAfAKanzxfT5F8ObWiD1+amXDCUX9m8sYu4VMDsHF8zA1fVkBx1VANPs/nEBOxk82DDJujjLx
+        Wep2Yubu7jrvxxjokEpDcqCn9e2cd+ufC3Zze3AYVJUNU8hB5yep7l22MW5wySVTUr/c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jEC8o-0006PB-1R; Tue, 17 Mar 2020 14:20:18 +0100
+Date:   Tue, 17 Mar 2020 14:20:18 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 01/28] ARM: dts: kirkwood: Fix interrupt controller node
+ name
+Message-ID: <20200317132018.GB24270@lunn.ch>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-2-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583767066-1555-3-git-send-email-jcrouse@codeaurora.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200317093922.20785-2-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -942,7 +932,6 @@ static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
->  		size_t size)
->  {
->  	struct a6xx_gmu_bo *bo;
-> -	int ret, count, i;
->  
->  	bo = kzalloc(sizeof(*bo), GFP_KERNEL);
->  	if (!bo)
-> @@ -950,86 +939,14 @@ static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
->  
->  	bo->size = PAGE_ALIGN(size);
->  
-> -	count = bo->size >> PAGE_SHIFT;
-> +	bo->virt = dma_alloc_wc(gmu->dev, bo->size, &bo->iova, GFP_KERNEL);
+On Tue, Mar 17, 2020 at 10:38:55AM +0100, Lubomir Rintel wrote:
+> The current ones makes validation unhappy:
+> 
+>   kirkwood-lsxhl.dt.yaml: main-interrupt-ctrl@20200: $nodename:0:
+>     'main-interrupt-ctrl@20200' does not match
+>     '^interrupt-controller(@[0-9a-f,]+)*$'
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-No really new in this patch, but why do you need the a6xx_gmu_bo,
-and even more so, why does it need to be allocated dynamically?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Also please check for errors when setting the dma mask
+    Andrew
