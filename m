@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35A8C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3F9C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A661A205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875DC206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443553;
-	bh=KfkoEY+Syfax/L/wRug3QqCGe34zw6kA5NHS4T9pyJM=;
+	s=default; t=1584443557;
+	bh=VSkvZ2CSeMDWA3EVHHRCuGOMnRRxMVLwPUGFuYsELMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IPq+tN0QIXkE7GUpfMbK/Mi4N5DxNn4EAgh62rNfOfPwInVzorg4z5NtnqtIaSqgB
-	 m7IuvdCNJCIAj6dCES7qfJtL8Z9T5DDGwDyALeH4UgN/PzINOeI0E5yJL5j0Fkw/TX
-	 HIwKPDrxIKiBnZ7V/uQqgGk8ttma9RAaosUI0mLw=
+	b=SUUDyvHvEOOhlXiA3jW22w/GBaKRtROpuS7KDPvBP/XOL6MSX4Ege4BcFmgZQJX13
+	 ZgMxilNx5Aad9BGQ2JUfJFMiGlqaz4qCoOBKzi3jXXtEbKSDzuOZZjcm/4k52b/5Jt
+	 jUN7P1bhkE1UHZCuF/emf8Bhd52l3fCb8b40zN9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbgCQLMc (ORCPT
+        id S1729424AbgCQLMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:12:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56164 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729130AbgCQLM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:29 -0400
+        id S1729170AbgCQLMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF9C20719;
-        Tue, 17 Mar 2020 11:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E840B205ED;
+        Tue, 17 Mar 2020 11:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443548;
-        bh=KfkoEY+Syfax/L/wRug3QqCGe34zw6kA5NHS4T9pyJM=;
+        s=default; t=1584443551;
+        bh=VSkvZ2CSeMDWA3EVHHRCuGOMnRRxMVLwPUGFuYsELMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CLZzI6CMcNvkwZK/9isX+6RKgGVIRdML6O+acKk7RDKIBO+1EcQSUM6ft6dz6vBWQ
-         ICosKqdkE8DM5RGHrqvAtSOCW70copRaj9HuB0A79dV0lgHhwTep0KsqyMZ5aQaO+o
-         B5dr4hYckunwySjMkgVNtpRevr76o1iWpnZbNV9c=
+        b=LoKgaLz/Ezx3UgGz7TOkRsv63wDFjVlF+zWU/6Uzo9/z/+HX765H9V9RQ4tlHQGHh
+         oGoVAuoMb9vCTiV6MEyU4GE6wj3ADayf04gRB6FILlavXz6/ROWs8LLC8MFWIWIvXK
+         BAu1VoIdObt77GxhcHrJptc237JT1po9F2eZ1pSk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>
-Subject: [PATCH 5.5 119/151] iommu/dma: Fix MSI reservation allocation
-Date:   Tue, 17 Mar 2020 11:55:29 +0100
-Message-Id: <20200317103334.923709728@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 5.5 120/151] iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_taint
+Date:   Tue, 17 Mar 2020 11:55:30 +0100
+Message-Id: <20200317103334.992694707@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -61,66 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 65ac74f1de3334852fb7d9b1b430fa5a06524276 upstream.
+commit 59833696442c674acbbd297772ba89e7ad8c753d upstream.
 
-The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
-structures doesn't match the way iommu_put_dma_cookie() frees them.
+Quoting from the comment describing the WARN functions in
+include/asm-generic/bug.h:
 
-The former performs a single allocation of all the required structures,
-while the latter tries to free them one at a time. It doesn't quite
-work for the main use case (the GICv3 ITS where the range is 64kB)
-when the base granule size is 4kB.
+ * WARN(), WARN_ON(), WARN_ON_ONCE, and so on can be used to report
+ * significant kernel issues that need prompt attention if they should ever
+ * appear at runtime.
+ *
+ * Do not use these macros when checking for invalid external inputs
 
-This leads to a nice slab corruption on teardown, which is easily
-observable by simply creating a VF on a SRIOV-capable device, and
-tearing it down immediately (no need to even make use of it).
-Fortunately, this only affects systems where the ITS isn't translated
-by the SMMU, which are both rare and non-standard.
+The (buggy) firmware tables which the dmar code was calling WARN_TAINT
+for really are invalid external inputs. They are not under the kernel's
+control and the issues in them cannot be fixed by a kernel update.
+So logging a backtrace, which invites bug reports to be filed about this,
+is not helpful.
 
-Fix it by allocating iommu_dma_msi_page structures one at a time.
+Some distros, e.g. Fedora, have tools watching for the kernel backtraces
+logged by the WARN macros and offer the user an option to file a bug for
+this when these are encountered. The WARN_TAINT in warn_invalid_dmar()
++ another iommu WARN_TAINT, addressed in another patch, have lead to over
+a 100 bugs being filed this way.
 
-Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Will Deacon <will@kernel.org>
-Cc: stable@vger.kernel.org
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+This commit replaces the WARN_TAINT("...") calls, with
+pr_warn(FW_BUG "...") + add_taint(TAINT_FIRMWARE_WORKAROUND, ...) calls
+avoiding the backtrace and thus also avoiding bug-reports being filed
+about this against the kernel.
+
+Fixes: fd0c8894893c ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
+Fixes: e625b4a95d50 ("iommu/vt-d: Parse ANDD records")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200309140138.3753-2-hdegoede@redhat.com
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1564895
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/dma-iommu.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/iommu/dmar.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -177,15 +177,15 @@ static int cookie_init_hw_msi_region(str
- 	start -= iova_offset(iovad, start);
- 	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -440,12 +440,13 @@ static int __init dmar_parse_one_andd(st
  
--	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
--	if (!msi_page)
--		return -ENOMEM;
--
- 	for (i = 0; i < num_pages; i++) {
--		msi_page[i].phys = start;
--		msi_page[i].iova = start;
--		INIT_LIST_HEAD(&msi_page[i].list);
--		list_add(&msi_page[i].list, &cookie->msi_page_list);
-+		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
-+		if (!msi_page)
-+			return -ENOMEM;
-+
-+		msi_page->phys = start;
-+		msi_page->iova = start;
-+		INIT_LIST_HEAD(&msi_page->list);
-+		list_add(&msi_page->list, &cookie->msi_page_list);
- 		start += iovad->granule;
+ 	/* Check for NUL termination within the designated length */
+ 	if (strnlen(andd->device_name, header->length - 8) == header->length - 8) {
+-		WARN_TAINT(1, TAINT_FIRMWARE_WORKAROUND,
++		pr_warn(FW_BUG
+ 			   "Your BIOS is broken; ANDD object name is not NUL-terminated\n"
+ 			   "BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+ 			   dmi_get_system_info(DMI_BIOS_VENDOR),
+ 			   dmi_get_system_info(DMI_BIOS_VERSION),
+ 			   dmi_get_system_info(DMI_PRODUCT_VERSION));
++		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+ 		return -EINVAL;
  	}
+ 	pr_info("ANDD device: %x name: %s\n", andd->device_number,
+@@ -471,14 +472,14 @@ static int dmar_parse_one_rhsa(struct ac
+ 			return 0;
+ 		}
+ 	}
+-	WARN_TAINT(
+-		1, TAINT_FIRMWARE_WORKAROUND,
++	pr_warn(FW_BUG
+ 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
+ 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+ 		drhd->reg_base_addr,
+ 		dmi_get_system_info(DMI_BIOS_VENDOR),
+ 		dmi_get_system_info(DMI_BIOS_VERSION),
+ 		dmi_get_system_info(DMI_PRODUCT_VERSION));
++	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
  
+ 	return 0;
+ }
+@@ -827,14 +828,14 @@ int __init dmar_table_init(void)
+ 
+ static void warn_invalid_dmar(u64 addr, const char *message)
+ {
+-	WARN_TAINT_ONCE(
+-		1, TAINT_FIRMWARE_WORKAROUND,
++	pr_warn_once(FW_BUG
+ 		"Your BIOS is broken; DMAR reported at address %llx%s!\n"
+ 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+ 		addr, message,
+ 		dmi_get_system_info(DMI_BIOS_VENDOR),
+ 		dmi_get_system_info(DMI_BIOS_VERSION),
+ 		dmi_get_system_info(DMI_PRODUCT_VERSION));
++	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+ }
+ 
+ static int __ref
 
 
