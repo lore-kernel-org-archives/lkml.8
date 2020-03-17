@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FB3C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445A2C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBF020658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1309720658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443602;
-	bh=flFix0AH+FBa8EyGI28pVxd7yD+vez5e4Qs/tyu/KTE=;
+	s=default; t=1584443606;
+	bh=zphD7xWxF3vzvefnjvXiEr6n5KrtXX40M4jj2Al7Ir4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ljeuE3xkSxSFMBJ12biDuCti3mQeTlcgLOh8y9ZhnRARYx42Cj+MFJNgUvT1bZiPk
-	 NOJeG71QnHo2ZIAKVSCijEitARTlP2d2ZTY4a0kj6ZpsEjD0b3RBEY9atPmpHvr9gw
-	 gJ+JYR/fULDzspcAKWxnOj07ZVYrO1pn254x3oVI=
+	b=W+ZyT9q9gm9o5b+hlk8L3+awvUQkjGEGChQT1cF25zHAA2j/LTLb/PmZkUtwKdFmk
+	 lNtbTRrlhtvocu+7dLTj61oP2qezrwptmsC20/TXLcH32vXdBeQVj5ln+Y/UEZ7G5/
+	 ivAgaElvVtO06XcMQXMKjr8F5MUNw5Sb13clIUlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgCQLNV (ORCPT
+        id S1728448AbgCQLNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57158 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:13:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728909AbgCQLNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:18 -0400
+        id S1727006AbgCQLNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:13:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 429AE20752;
-        Tue, 17 Mar 2020 11:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2920F205ED;
+        Tue, 17 Mar 2020 11:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443597;
-        bh=flFix0AH+FBa8EyGI28pVxd7yD+vez5e4Qs/tyu/KTE=;
+        s=default; t=1584443601;
+        bh=zphD7xWxF3vzvefnjvXiEr6n5KrtXX40M4jj2Al7Ir4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YTvrobKdeaju/FqybyB8sNO8uJ+Ez9OPfu/eF9Z8hKvVqpCd2pNjNnxB/gvnJ31jG
-         8t5renvEaKj7KGvZbxgZ80dssY7xcR+X6yDQhRkJdCR9np8HU5Pg9TQKIvTyuy0daD
-         NgptDzTJZkcL9bydCzoT/bKo+niM8+XwtO8JDob0=
+        b=1OOpeAe15UEba1asdOoJVtR7Am5Nvyo2txKqyr8Aj+KVGdN4uuOHafMwIc5FxT7p0
+         0Zw7iGoGc1MSQjPHpTM3sCo0p2Q6v52LIUTyOOGWX80X737V+unn0OPGgtavaX8xAP
+         T+UmogIGKBYcCxrur6Y/3STkYabVIScv2ozwI8Hs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 099/151] KVM: nVMX: avoid NULL pointer dereference with incorrect EVMCS GPAs
-Date:   Tue, 17 Mar 2020 11:55:09 +0100
-Message-Id: <20200317103333.495613247@linuxfoundation.org>
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 5.5 100/151] ARC: define __ALIGN_STR and __ALIGN symbols for ARC
+Date:   Tue, 17 Mar 2020 11:55:10 +0100
+Message-Id: <20200317103333.565654257@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,62 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-commit 95fa10103dabc38be5de8efdfced5e67576ed896 upstream.
+commit 8d92e992a785f35d23f845206cf8c6cafbc264e0 upstream.
 
-When an EVMCS enabled L1 guest on KVM will tries doing enlightened VMEnter
-with EVMCS GPA = 0 the host crashes because the
+The default defintions use fill pattern 0x90 for padding which for ARC
+generates unintended "ldh_s r12,[r0,0x20]" corresponding to opcode 0x9090
 
-evmcs_gpa != vmx->nested.hv_evmcs_vmptr
-
-condition in nested_vmx_handle_enlightened_vmptrld() will evaluate to
-false (as nested.hv_evmcs_vmptr is zeroed after init). The crash will
-happen on vmx->nested.hv_evmcs pointer dereference.
-
-Another problematic EVMCS ptr value is '-1' but it only causes host crash
-after nested_release_evmcs() invocation. The problem is exactly the same as
-with '0', we mistakenly think that the EVMCS pointer hasn't changed and
-thus nested.hv_evmcs_vmptr is valid.
-
-Resolve the issue by adding an additional !vmx->nested.hv_evmcs
-check to nested_vmx_handle_enlightened_vmptrld(), this way we will
-always be trying kvm_vcpu_map() when nested.hv_evmcs is NULL
-and this is supposed to catch all invalid EVMCS GPAs.
-
-Also, initialize hv_evmcs_vmptr to '0' in nested_release_evmcs()
-to be consistent with initialization where we don't currently
-set hv_evmcs_vmptr to '-1'.
+So use ".align 4" which insert a "nop_s" instruction instead.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Acked-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arc/include/asm/linkage.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -234,7 +234,7 @@ static inline void nested_release_evmcs(
- 		return;
+--- a/arch/arc/include/asm/linkage.h
++++ b/arch/arc/include/asm/linkage.h
+@@ -29,6 +29,8 @@
+ .endm
  
- 	kvm_vcpu_unmap(vcpu, &vmx->nested.hv_evmcs_map, true);
--	vmx->nested.hv_evmcs_vmptr = -1ull;
-+	vmx->nested.hv_evmcs_vmptr = 0;
- 	vmx->nested.hv_evmcs = NULL;
- }
+ #define ASM_NL		 `	/* use '`' to mark new line in macro */
++#define __ALIGN		.align 4
++#define __ALIGN_STR	__stringify(__ALIGN)
  
-@@ -1932,7 +1932,8 @@ static int nested_vmx_handle_enlightened
- 	if (!nested_enlightened_vmentry(vcpu, &evmcs_gpa))
- 		return 1;
- 
--	if (unlikely(evmcs_gpa != vmx->nested.hv_evmcs_vmptr)) {
-+	if (unlikely(!vmx->nested.hv_evmcs ||
-+		     evmcs_gpa != vmx->nested.hv_evmcs_vmptr)) {
- 		if (!vmx->nested.hv_evmcs)
- 			vmx->nested.current_vmptr = -1ull;
- 
+ /* annotation for data we want in DCCM - if enabled in .config */
+ .macro ARCFP_DATA nm
 
 
