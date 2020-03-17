@@ -2,76 +2,83 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2864C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25A7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4FBF20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09A820714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:13:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="i53ya7VN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCQQND convert rfc822-to-8bit (ORCPT
+        id S1726780AbgCQQNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:13:03 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:36951 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQQND (ORCPT
+        Tue, 17 Mar 2020 12:13:49 -0400
+Received: from www381.your-server.de ([78.46.137.84]:45108 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQQNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:13:03 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D937F240008;
-        Tue, 17 Mar 2020 16:12:57 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 17:12:56 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Ben Peled <bpeled@marvell.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 05/12] docs: dt: fix references to
- ap806-system-controller.txt
-Message-ID: <20200317171256.7d56dcd6@xps13>
-In-Reply-To: <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
-References: <cover.1584450500.git.mchehab+huawei@kernel.org>
-        <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 17 Mar 2020 12:13:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=x2H936M1HMLS+K983L//AapUVuLSBPmjCsKxeFLo3dU=; b=i53ya7VNPcCTYfD7Sf7eOLpupi
+        t5iciESIt3qb2SiIffCnQ3Mj/PkA/qtH1QL2LouEahKnXOnszS7LQAqbutjmrbvHaTiyOt5QgwPBu
+        oYzzZkNc3QZmedwz81o1Hbh8ZhxMyhmTac1DKTD8jNnMFpzMH3UCrEqeb4JHLuqvEB15PAdgY+mfT
+        SvbUIIkZndVMoZaDeZmVw9mtkapQT/EIaMZAC5nu59uTHs0oLSCGTh+6alAundwxR7ktstW1AgYXk
+        VV1myghB4J9bKBgkw8ZC9wnRV5xP3c8wVO+WsV/FQjOQ+zEqwNQlNM7j07BJ9pzJImt2qPDl2lw99
+        Lr9U8Gdw==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jEEqU-0006EX-RR; Tue, 17 Mar 2020 17:13:35 +0100
+Received: from [93.104.105.202] (helo=[192.168.178.20])
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jEEqU-000UBS-HG; Tue, 17 Mar 2020 17:13:34 +0100
+Subject: Re: [PATCH v2 1/2] iio: adc: ad7291: convert to device tree
+To:     Michael Auchter <michael.auchter@ni.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20200317135649.8876-1-michael.auchter@ni.com>
+ <20200317145113.12413-1-michael.auchter@ni.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <2ae255db-f57b-670b-cf40-9d7f0ae66fdd@metafoo.de>
+Date:   Tue, 17 Mar 2020 17:13:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200317145113.12413-1-michael.auchter@ni.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25754/Tue Mar 17 14:09:15 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
-
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote on Tue, 17 Mar
-2020 14:10:44 +0100:
-
-> ap806-system-controller.txt was renamed to ap80x-system-controller.txt.
+On 3/17/20 3:51 PM, Michael Auchter wrote:
+> There are no in-tree users of the platform data for this driver, so
+> remove it and convert the driver to use device tree instead.
 > 
-> Update its references accordingly.
-> 
-> Fixes: 2537831bbc19 ("dt-bindings: ap80x: replace AP806 with AP80x")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
+> Signed-off-by: Michael Auchter <michael.auchter@ni.com>
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
 
-Thanks,
-Miquèl
