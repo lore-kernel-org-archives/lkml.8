@@ -2,173 +2,135 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C61C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE79C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 303C9205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D3F20736
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AGl3AuZq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pxO43HKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgCQMxl (ORCPT
+        id S1726189AbgCQMzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 08:53:41 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53780 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgCQMxk (ORCPT
+        Tue, 17 Mar 2020 08:55:22 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:24217 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725957AbgCQMzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 08:53:40 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02HCrZ9a057868;
-        Tue, 17 Mar 2020 07:53:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584449615;
-        bh=QEmuQB7fhuGxUGv+P99VY96J8QmR9TntuVE/+3VFqKQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=AGl3AuZqMfeYVvYpVzg8Geui0qgQbFATbPbYe6vNWt8OiSMvuqH/5LCItQqeAYxwi
-         xYsA8sTrwyhN3O3rDMck2J6Cyx5kuj3DZP7GCp3MeyM8iG7saLFcsaXRuMLJGjTFpX
-         Utwv6kCJ+Io2/sc1NaMM19awtVWiRVl0uKPkMNqY=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02HCrYnc023500
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Mar 2020 07:53:35 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 07:53:34 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 07:53:34 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02HCrVuP101312;
-        Tue, 17 Mar 2020 07:53:32 -0500
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix an error handling path in
- 'k3_udma_glue_cfg_rx_flow()'
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        <vkoul@kernel.org>, <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20200315155015.27303-1-christophe.jaillet@wanadoo.fr>
- <49a35126-3cc6-0cbb-e632-42a237ef353e@ti.com>
- <e1d2d6af-7dc3-6e90-28d3-05d9b293cba9@ti.com> <20200317124217.GB4650@kadam>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <117d70b8-5e58-b708-9df4-cd7a9f68a49d@ti.com>
-Date:   Tue, 17 Mar 2020 14:53:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Mar 2020 08:55:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584449721; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=GjbOAVBonUachoEYynZJyqOqo/SneyKPARmLiqRE1nc=;
+ b=pxO43HKXNXWAGyBzuNtEGJytk+EVXi6DQoEgIBLCdhVVsRma7DUtc/GqxhnFJrbl1j6yOdcb
+ I9T/NW8BWnnDADtZRK8X56Wl+sU+NDR/hToqVPkbWbgZq4opG83+wBu4SH2D8Lc1BMZOLDm3
+ pqLMyJY1FzOJeTzQLFmreqf/0Oo=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e70c8a9.7f870ab8da78-smtp-out-n03;
+ Tue, 17 Mar 2020 12:55:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 507C8C43637; Tue, 17 Mar 2020 12:55:04 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 604C1C433BA;
+        Tue, 17 Mar 2020 12:55:03 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200317124217.GB4650@kadam>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Tue, 17 Mar 2020 18:25:03 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?Q?Michael_Turquette_=C2=A0?= <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        linux-soc-owner@vger.kernel.org
+Subject: Re: [PATCH v6 0/3] Add modem Clock controller (MSS CC) driver for
+ SC7180
+In-Reply-To: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
+References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
+Message-ID: <e8bed15b87dda3698e37bfcd09dc3c31@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-03-15 00:19, Taniya Das wrote:
+> [v6]
+>  * Combine the Documentation YAML schema and clock IDs for GCC MSS and
+>    MSS clocks.
+>  * Remove a unnecessary header file inclusion, define the max_registers 
+> for
+>    regmap and also update the fw_name to remove _clk suffix.
+>  * Update the copyright year.
 
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
 
-On 17/03/2020 14:42, Dan Carpenter wrote:
-> On Tue, Mar 17, 2020 at 09:50:52AM +0200, Grygorii Strashko wrote:
->> Hi Christophe,
->>
->> On 16/03/2020 09:20, Peter Ujfalusi wrote:
->>> Hi Christophe,
->>>
->>> On 15/03/2020 17.50, Christophe JAILLET wrote:
->>>> All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
->>>> function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
->>>>
->>>> This not correct because this function has a 'channel->flows_ready--;' at
->>>> the end, but 'flows_ready' has not been incremented here, when we branch to
->>>> the error handling path.
->>>>
->>>> In order to keep a correct value in 'flows_ready', un-roll
->>>> 'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
->>>> at the correct places when an error is detected.
->>>
->>> Good catch!
->>>
->>>> Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
->>>
->>> Even better catch ;)
->>>
->>>> Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
->>>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->>>> ---
->>>> Not sure that the last point of the description is correct. Maybe, the
->>>> 'xudma_rflow_put / return -ENODEV;' should be kept in order not to
->>>> override 'flow->udma_rflow'.
->>>> ---
->>>>    drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
->>>>    1 file changed, 20 insertions(+), 10 deletions(-)
->>>>
->>>> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
->>>> index dbccdc7c0ed5..890573eb1625 100644
->>>> --- a/drivers/dma/ti/k3-udma-glue.c
->>>> +++ b/drivers/dma/ti/k3-udma-glue.c
->>>> @@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->>>>    	if (IS_ERR(flow->udma_rflow)) {
->>>>    		ret = PTR_ERR(flow->udma_rflow);
->>>>    		dev_err(dev, "UDMAX rflow get err %d\n", ret);
->>>> -		goto err;
->>>> +		goto err_return;
->>>
->>> return err; ?
->>>
->>>>    	}
->>>
->>> Optionally you could have moved the
->>> 	rx_chn->flows_ready++;
->>> here and
->>
->> Thank you for your patch.
->>
->> I tend to agree with Peter here - just may be with comment that it will be dec in
->> k3_udma_glue_release_rx_flow().
->> All clean ups were moved in standalone function intentionally to avoid
->> code duplication in err and normal channel release path, and avoid common errors
->> when normal path is fixed, but err path missed.
 > 
-> A standalone function to free everything is *always* going to be buggy.
-> This patch is the classic bug where when you "free everything", you end
-> up undoing things that haven't been done.
+> [v5]
+>  * Update the clock ID for GCC_MSS_NAV_AXIS_CLK to GCC_MSS_NAV_AXI_CLK
 > 
-> The best way to do error handling is to 1) Free the most recently
-> allocated resource and 2)  Use label names which say what the goto does.
+> [v4]
+>  * Split the GCC MSS clocks and Modem clock driver.
+>  * Update mss_regmap_config to const.
+>  * Rename the Documentation binding as per the latest convention.
+>  * Minor comments of clock-names/clocks properties updated.
 > 
-> With multiple labels like "goto err_rflow_put;" the review only needs to
-> ask, what was the most recent allocation?   In the case, it was
-> "udma_rflow" and the "goto err_rflow_put" puts it.  That's very simple
-> and correct.  There is no need to scroll to the bottom of the function.
+> [v3]
+>   * Add clocks/clock-names required for the MSS clock controller.
+>   * Add pm_ops to enable/disable the required dependent clock.
+>   * Add parent_data for the MSS clocks.
+>   * Update the GCC MSS clocks from _CBCR to _CLK.
 > 
-> When it comes to line count, if we only free successfully allocated
-> resources then it means we can remove all the if statements from the
-> k3_udma_glue_release_rx_flow() so the line count ends up being similar
-> either way.
+> [v2]
+>   * Update the license for the documentation and fix minor comments in 
+> the
+>     YAML bindings.
 > 
-> The other problem with "common cleanup functions" is that when people
-> want to audit it, instead of looking at the gotos, reviewers have to
-> open up two terminal windows and go through it line by line.  Currently
-> static analysis tools are not able to parse common clean functions.
+> [v1]
+>   * Add driver support for Modem clock controller for SC7180 and also
+>     update device tree bindings for the various clocks supported in the
+>     clock controller.
 > 
-> Christophe's patch doesn't just fix the bug he observed, it also fixed
-> at least one other double free bug.  It's quite hard to spot the second
-> bug, but Christophe fixed it automatically by following the rules.
+> Taniya Das (3):
+>   dt-bindings: clock: Add YAML schemas for the QCOM MSS clock bindings
+>   clk: qcom: gcc: Add support for modem clocks in GCC
+>   clk: qcom: Add modem clock controller driver for SC7180
 > 
-
-fair enough. Thank you.
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>  .../devicetree/bindings/clock/qcom,sc7180-mss.yaml |  62 +++++++++
+>  drivers/clk/qcom/Kconfig                           |   9 ++
+>  drivers/clk/qcom/Makefile                          |   1 +
+>  drivers/clk/qcom/gcc-sc7180.c                      |  72 ++++++++++-
+>  drivers/clk/qcom/mss-sc7180.c                      | 143 
+> +++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h        |   7 +-
+>  include/dt-bindings/clock/qcom,mss-sc7180.h        |  12 ++
+>  7 files changed, 304 insertions(+), 2 deletions(-)
+>  create mode 100644 
+> Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+>  create mode 100644 drivers/clk/qcom/mss-sc7180.c
+>  create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
+> 
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a 
+> member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
 
 -- 
-Best regards,
-grygorii
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
