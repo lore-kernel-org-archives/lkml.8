@@ -2,167 +2,193 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8019CC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7A5C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5783C20770
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8EA2076D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584480867;
+	bh=CgebnKGj0TtNUc6cpZOYngyn6v1SnlGUhFkFZSwPeho=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XY6Zh/3OnEW8Gd+MJE6ZV76Wk3Xif/BnxkDPZLK9P1AHjx1iQLx9N5gkrXUhE8zks
+	 zCe+PkmRXN3lyzT+ui/N2Qyw/V9LZb2srqs5m14vCyiihza0JBwNEGN/YjcJPGoQCo
+	 maXVE49L326SL8e5s7Y5gpe7vbhgpZVHYnKKYEng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbgCQVeZ (ORCPT
+        id S1727413AbgCQVe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:34:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53330 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 17:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727317AbgCQVeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:34:17 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1727334AbgCQVeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:34:25 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E576A2073E;
-        Tue, 17 Mar 2020 21:34:16 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jEJqp-000EVY-RB; Tue, 17 Mar 2020 17:34:15 -0400
-Message-Id: <20200317213415.722539921@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Tue, 17 Mar 2020 17:32:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 825292076A;
+        Tue, 17 Mar 2020 21:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584480864;
+        bh=CgebnKGj0TtNUc6cpZOYngyn6v1SnlGUhFkFZSwPeho=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dh3V+HNfCD4azrTemhtab6fr86PliJt1IhqS4q4xXsbIaLv0N9bXRZtRTeQU9VI6v
+         GsK+DqeHWdbG6520P2en3D6u47/HW9rw0RyXZtfELNnYaQZSgVjzJasBTpH+x8nvje
+         XNI62g/pNS4qy6ORWYlou2Qme2FEjGczo12tyvzw=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [RFC][PATCH 01/11] tracing: Save off entry when peeking at next entry
-References: <20200317213222.421100128@goodmis.org>
+        Stephane Eranian <eranian@google.com>,
+        clang-built-linux@googlegroups.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 21/23] perf tools: Give synthetic mmap events an inode generation
+Date:   Tue, 17 Mar 2020 18:32:57 -0300
+Message-Id: <20200317213259.15494-22-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
+References: <20200317213259.15494-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Ian Rogers <irogers@google.com>
 
-In order to have the iterator read the buffer even when it's still updating,
-it requires that the ring buffer iterator saves each event in a separate
-location outside the ring buffer such that its use is immutable.
+When mmap2 events are synthesized the ino_generation field isn't being
+set leading to uninitialized memory being compared.
 
-There's one use case that saves off the event returned from the ring buffer
-interator and calls it again to look at the next event, before going back to
-use the first event. As the ring buffer iterator will only have a single
-copy, this use case will no longer be supported.
+Caught with clang's -fsanitize=memory:
 
-Instead, have the one use case create its own buffer to store the first
-event when looking at the next event. This way, when looking at the first
-event again, it wont be corrupted by the second read.
+==124733==WARNING: MemorySanitizer: use-of-uninitialized-value
+    #0 0x55a96a6a65cc in __dso_id__cmp tools/perf/util/dsos.c:23:6
+    #1 0x55a96a6a81d5 in dso_id__cmp tools/perf/util/dsos.c:38:9
+    #2 0x55a96a6a717f in __dso__cmp_long_name tools/perf/util/dsos.c:74:15
+    #3 0x55a96a6a6c4c in __dsos__findnew_link_by_longname_id tools/perf/util/dsos.c:106:12
+    #4 0x55a96a6a851e in __dsos__findnew_by_longname_id tools/perf/util/dsos.c:178:9
+    #5 0x55a96a6a7798 in __dsos__find_id tools/perf/util/dsos.c:191:9
+    #6 0x55a96a6a7b57 in __dsos__findnew_id tools/perf/util/dsos.c:251:20
+    #7 0x55a96a6a7a57 in dsos__findnew_id tools/perf/util/dsos.c:259:17
+    #8 0x55a96a7776ae in machine__findnew_dso_id tools/perf/util/machine.c:2709:9
+    #9 0x55a96a77dfcf in map__new tools/perf/util/map.c:193:10
+    #10 0x55a96a77240a in machine__process_mmap2_event tools/perf/util/machine.c:1670:8
+    #11 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
+    #12 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
+    #13 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
+    #14 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
+    #15 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
+    #16 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
+    #17 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #18 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #19 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #20 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #21 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #22 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+    #23 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
+    #24 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
+    #25 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
+    #26 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
+    #27 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
+    #28 0x55a96a282223 in main tools/perf/perf.c:538:3
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+  Uninitialized value was stored to memory at
+    #1 0x55a96a6a18f7 in dso__new_id tools/perf/util/dso.c:1230:14
+    #2 0x55a96a6a78ee in __dsos__addnew_id tools/perf/util/dsos.c:233:20
+    #3 0x55a96a6a7bcc in __dsos__findnew_id tools/perf/util/dsos.c:252:21
+    #4 0x55a96a6a7a57 in dsos__findnew_id tools/perf/util/dsos.c:259:17
+    #5 0x55a96a7776ae in machine__findnew_dso_id tools/perf/util/machine.c:2709:9
+    #6 0x55a96a77dfcf in map__new tools/perf/util/map.c:193:10
+    #7 0x55a96a77240a in machine__process_mmap2_event tools/perf/util/machine.c:1670:8
+    #8 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
+    #9 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
+    #10 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
+    #11 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
+    #12 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
+    #13 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
+    #14 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #15 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #16 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #17 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #18 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #19 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+
+  Uninitialized value was stored to memory at
+    #0 0x55a96a7725af in machine__process_mmap2_event tools/perf/util/machine.c:1646:25
+    #1 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
+    #2 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
+    #3 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
+    #4 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
+    #5 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
+    #6 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
+    #7 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #8 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #9 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #10 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #11 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #12 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+    #13 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
+    #14 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
+    #15 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
+    #16 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
+    #17 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
+    #18 0x55a96a282223 in main tools/perf/perf.c:538:3
+
+  Uninitialized value was created by a heap allocation
+    #0 0x55a96a22f60d in malloc llvm/llvm-project/compiler-rt/lib/msan/msan_interceptors.cpp:925:3
+    #1 0x55a96a882948 in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:655:15
+    #2 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #3 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #4 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #5 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #6 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #7 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+    #8 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
+    #9 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
+    #10 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
+    #11 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
+    #12 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
+    #13 0x55a96a282223 in main tools/perf/perf.c:538:3
+
+SUMMARY: MemorySanitizer: use-of-uninitialized-value tools/perf/util/dsos.c:23:6 in __dso_id__cmp
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200313053129.131264-1-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- include/linux/trace_events.h |  2 ++
- kernel/trace/trace.c         | 27 ++++++++++++++++++++++++++-
- kernel/trace/trace_output.c  | 15 ++++++---------
- 3 files changed, 34 insertions(+), 10 deletions(-)
+ tools/perf/util/synthetic-events.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 6c7a10a6d71e..5c6943354049 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -85,6 +85,8 @@ struct trace_iterator {
- 	struct mutex		mutex;
- 	struct ring_buffer_iter	**buffer_iter;
- 	unsigned long		iter_flags;
-+	void			*temp;	/* temp holder */
-+	unsigned int		temp_size;
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index dd3e6f43fb86..3f28af39f9c6 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -345,6 +345,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			continue;
  
- 	/* trace_seq for __print_flags() and __print_symbolic() etc. */
- 	struct trace_seq	tmp_seq;
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6b11e4e2150c..52425aaf26c2 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3466,7 +3466,31 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
- struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
- 					  int *ent_cpu, u64 *ent_ts)
- {
--	return __find_next_entry(iter, ent_cpu, NULL, ent_ts);
-+	/* __find_next_entry will reset ent_size */
-+	int ent_size = iter->ent_size;
-+	struct trace_entry *entry;
-+
-+	/*
-+	 * The __find_next_entry() may update iter->ent, making
-+	 * the current iter->ent pointing to stale data.
-+	 * Need to copy it over.
-+	 */
-+	if (iter->ent && iter->ent != iter->temp) {
-+		if (!iter->temp || iter->temp_size < iter->ent_size) {
-+			kfree(iter->temp);
-+			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
-+			if (!iter->temp)
-+				return NULL;
-+		}
-+		memcpy(iter->temp, iter->ent, iter->ent_size);
-+		iter->temp_size = iter->ent_size;
-+		iter->ent = iter->temp;
-+	}
-+	entry = __find_next_entry(iter, ent_cpu, NULL, ent_ts);
-+	/* Put back the original ent_size */
-+	iter->ent_size = ent_size;
-+
-+	return entry;
- }
+ 		event->mmap2.ino = (u64)ino;
++		event->mmap2.ino_generation = 0;
  
- /* Find the next real entry, and increment the iterator to the next entry */
-@@ -4344,6 +4368,7 @@ static int tracing_release(struct inode *inode, struct file *file)
- 
- 	mutex_destroy(&iter->mutex);
- 	free_cpumask_var(iter->started);
-+	kfree(iter->temp);
- 	kfree(iter->trace);
- 	kfree(iter->buffer_iter);
- 	seq_release_private(inode, file);
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index e25a7da79c6b..9a121e147102 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -617,22 +617,19 @@ int trace_print_context(struct trace_iterator *iter)
- 
- int trace_print_lat_context(struct trace_iterator *iter)
- {
-+	struct trace_entry *entry, *next_entry;
- 	struct trace_array *tr = iter->tr;
--	/* trace_find_next_entry will reset ent_size */
--	int ent_size = iter->ent_size;
- 	struct trace_seq *s = &iter->seq;
--	u64 next_ts;
--	struct trace_entry *entry = iter->ent,
--			   *next_entry = trace_find_next_entry(iter, NULL,
--							       &next_ts);
- 	unsigned long verbose = (tr->trace_flags & TRACE_ITER_VERBOSE);
-+	u64 next_ts;
- 
--	/* Restore the original ent_size */
--	iter->ent_size = ent_size;
--
-+	next_entry = trace_find_next_entry(iter, NULL, &next_ts);
- 	if (!next_entry)
- 		next_ts = iter->ts;
- 
-+	/* trace_find_next_entry() may change iter->ent */
-+	entry = iter->ent;
-+
- 	if (verbose) {
- 		char comm[TASK_COMM_LEN];
- 
+ 		/*
+ 		 * Just like the kernel, see __perf_event_mmap in kernel/perf_event.c
 -- 
-2.25.1
-
+2.21.1
 
