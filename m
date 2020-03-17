@@ -2,244 +2,117 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B42C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19185C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464D2205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45DF20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SY8v3/6e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LAr2du4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCQIdA (ORCPT
+        id S1726345AbgCQIdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:33:00 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:42498 "EHLO
+        Tue, 17 Mar 2020 04:33:42 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:34599 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726082AbgCQIc7 (ORCPT
+        by vger.kernel.org with ESMTP id S1725906AbgCQIdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:32:59 -0400
+        Tue, 17 Mar 2020 04:33:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584433977;
+        s=mimecast20190719; t=1584434019;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LnTpb9OQdM3L6h0z4phaAe+x7LNhQqoqwFEnWzNKd4s=;
-        b=SY8v3/6esEzzPCHR3LVYZeGztG/KOayjp+SjTmbGp/qZ4U56Zp89d+F7O/KaJKzyH9jsWp
-        q3L5Y8PZfHE+tvBG7wexGYFBC3Tj4MRKFkb/Mygn3hZyWN1vz4PqtqpXSKg1YsMO2KZh7p
-        Xrokahfk1gzwLEqVrYv2VrpPZDpOGzg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-174-4CuMaePIOaah8csJytRpZw-1; Tue, 17 Mar 2020 04:32:56 -0400
-X-MC-Unique: 4CuMaePIOaah8csJytRpZw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 571A3100550D;
-        Tue, 17 Mar 2020 08:32:54 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-112-179.ams2.redhat.com [10.36.112.179])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C932F60BF3;
-        Tue, 17 Mar 2020 08:32:51 +0000 (UTC)
-From:   Adrian Reber <areber@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Adrian Reber <areber@redhat.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4/4] selftests: add clone3() in time namespace test
-Date:   Tue, 17 Mar 2020 09:30:44 +0100
-Message-Id: <20200317083043.226593-5-areber@redhat.com>
-In-Reply-To: <20200317083043.226593-1-areber@redhat.com>
-References: <20200317083043.226593-1-areber@redhat.com>
+        bh=foL6JJOYZrFK3mSnjY6WUeWsSQCHtrDfHzZTVEx4CZc=;
+        b=LAr2du4uzQ4PaTkoxzLpOxTBhCapU7UWAtXES01nxCukiCVDcmUWpO01zGaX99CmGkYUmn
+        Kh2JaiNjsRkMDXeQbrRBtOHQ/ZWHWE+pYYhUAFN8JS4gCz7UiNODuDewZEXgRHgz3fTAr4
+        zxaan2alxa7W9tXF5dhmPcTnysLvZOE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-279-iPbavoGyPQKomN5YBW4trg-1; Tue, 17 Mar 2020 04:27:23 -0400
+X-MC-Unique: iPbavoGyPQKomN5YBW4trg-1
+Received: by mail-wm1-f72.google.com with SMTP id f185so1638371wmf.8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 01:27:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=foL6JJOYZrFK3mSnjY6WUeWsSQCHtrDfHzZTVEx4CZc=;
+        b=nmjtHZ6I8d3fhalC+4ZJaO9seyCsy9eheD/g2UeBTmWE41GMEPLbLugnqrVKytROCX
+         AaniTEGEZc0GSIFfcEdwaE6D6f8FlF2s24Z74p433V7iRX/c1Kc7/+bzfyjbvCNyl/yv
+         evv5kM3OEPcKAje44wsB7WTMdgJk12AH4+SR+bZbw1W8e+CKsbfe9CAwOVqn1Lquzjhi
+         9L2tHBQae4BxexnM2w+5igqkm4PGNAMBPub4+mA5GP9LdMfmFKK9Uvqz0/7BDi8BRBql
+         LVCfrt/vqmVaOT1VISJOkUAOVOK6ZtousQPy5cdF5Flhd/m2hPs+Za9OVJZvvkNWLgyE
+         mWHg==
+X-Gm-Message-State: ANhLgQ1cOTlrI82ZyMBP34fYNFUPkiwKhWOinb1rfKFOiNtoZNEGw6A+
+        jTBsVAOfUJkcvzumAWEALdJu+9VRzs2SW417HsGDtKMvBw0Iq8mJjXrYmuM7TGmxRebxpP0U0X/
+        jTAmMLoCy0kNe/cWfkBIEzsP3
+X-Received: by 2002:adf:f8cf:: with SMTP id f15mr4550927wrq.79.1584433642581;
+        Tue, 17 Mar 2020 01:27:22 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtzsfYZvt8nfYEYXfZXarAl3GIPsJCUzStTnjN3KlFioXLSxKAYt9rYm3Jvv7s4DtIWPmCwQQ==
+X-Received: by 2002:adf:f8cf:: with SMTP id f15mr4550890wrq.79.1584433642260;
+        Tue, 17 Mar 2020 01:27:22 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:24d8:ed40:c82a:8a01? ([2001:b07:6468:f312:24d8:ed40:c82a:8a01])
+        by smtp.gmail.com with ESMTPSA id t5sm2922781wmi.34.2020.03.17.01.27.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 01:27:21 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86: Expose AVX512 VP2INTERSECT in cpuid for TGL
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Zhong, Yang" <yang.zhong@intel.com>
+References: <20200317065553.64790-1-zhenyuw@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <dcc9899c-f5af-9a4f-3ac2-f37fd8b930f7@redhat.com>
+Date:   Tue, 17 Mar 2020 09:27:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200317065553.64790-1-zhenyuw@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a test to use clone3() with CLONE_NEWTIME. The test tries to
-set CLOCK_BOOTTIME to 1 in the new process in the new time namespace and
-CLOCK_MONOTONIC to +10000.
+On 17/03/20 07:55, Zhenyu Wang wrote:
+> On Tigerlake new AVX512 VP2INTERSECT feature is available.
+> This would expose it for KVM supported cpuid.
+> 
+> Cc: "Zhong, Yang" <yang.zhong@intel.com>
+> Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index b1c469446b07..b4e25ff6ab0a 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -374,7 +374,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+>  	const u32 kvm_cpuid_7_0_edx_x86_features =
+>  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+>  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+> -		F(MD_CLEAR);
+> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT);
+>  
+>  	/* cpuid 7.1.eax */
+>  	const u32 kvm_cpuid_7_1_eax_x86_features =
+> 
 
-Signed-off-by: Adrian Reber <areber@redhat.com>
----
- tools/testing/selftests/timens/Makefile |   4 +-
- tools/testing/selftests/timens/clone3.c | 134 ++++++++++++++++++++++++
- 2 files changed, 136 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/timens/clone3.c
+Hi Zhenyu,
 
-diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/self=
-tests/timens/Makefile
-index b4fd9a934654..4a50c326bdab 100644
---- a/tools/testing/selftests/timens/Makefile
-+++ b/tools/testing/selftests/timens/Makefile
-@@ -1,7 +1,7 @@
--TEST_GEN_PROGS :=3D timens timerfd timer clock_nanosleep procfs exec
-+TEST_GEN_PROGS :=3D timens timerfd timer clock_nanosleep procfs exec clo=
-ne3
- TEST_GEN_PROGS_EXTENDED :=3D gettime_perf
-=20
--CFLAGS :=3D -Wall -Werror -pthread
-+CFLAGS :=3D -Wall -Werror -pthread -I../../../../usr/include/
- LDLIBS :=3D -lrt -ldl
-=20
- include ../lib.mk
-diff --git a/tools/testing/selftests/timens/clone3.c b/tools/testing/self=
-tests/timens/clone3.c
-new file mode 100644
-index 000000000000..212b35d43fa5
---- /dev/null
-+++ b/tools/testing/selftests/timens/clone3.c
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <linux/sched.h>
-+#include <linux/types.h>
-+#include <sched.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <time.h>
-+#include <unistd.h>
-+
-+#include "log.h"
-+#include "timens.h"
-+
-+#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
-+
-+struct set_timens_offset {
-+	int clockid;
-+	struct timespec val;
-+};
-+
-+static void child_exit(int ret)
-+{
-+	fflush(stdout);
-+	fflush(stderr);
-+	_exit(ret);
-+}
-+
-+static pid_t sys_clone3(struct clone_args *args, size_t size)
-+{
-+	fflush(stdout);
-+	fflush(stderr);
-+	return syscall(__NR_clone3, args, size);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct set_timens_offset timens_offset[2];
-+	struct timespec monotonic;
-+	struct timespec boottime;
-+	pid_t pid =3D -1;
-+	int ret =3D 0;
-+	int status;
-+
-+	struct clone_args args =3D {
-+		.flags =3D CLONE_NEWTIME,
-+		.exit_signal =3D SIGCHLD,
-+	};
-+
-+	nscheck();
-+
-+	ksft_set_plan(1);
-+
-+	ret =3D clock_gettime(CLOCK_MONOTONIC, &monotonic);
-+	if (ret)
-+		goto out;
-+
-+	ret =3D clock_gettime(CLOCK_BOOTTIME, &boottime);
-+	if (ret)
-+		goto out;
-+
-+	/* Set CLOCK_BOOTTIME to be 1 (sec). */
-+	timens_offset[0].clockid =3D CLOCK_BOOTTIME;
-+	timens_offset[0].val.tv_sec =3D -boottime.tv_sec + 1;
-+	timens_offset[0].val.tv_nsec =3D 42;
-+	/* Set CLOCK_MONOTONIC to be 10000 (sec) larger than current. */
-+	timens_offset[1].clockid =3D CLOCK_MONOTONIC;
-+	timens_offset[1].val.tv_sec =3D 10000;
-+	timens_offset[1].val.tv_nsec =3D 37;
-+
-+	args.timens_offset_size =3D 2;
-+	args.timens_offset =3D ptr_to_u64(timens_offset);
-+
-+	pid =3D sys_clone3(&args, sizeof(struct clone_args));
-+	if (pid < 0) {
-+		ksft_print_msg("%s - Failed to create new process\n",
-+			       strerror(errno));
-+		ret =3D -errno;
-+		goto out;
-+	}
-+
-+	if (pid =3D=3D 0) {
-+		struct timespec monotonic_in_ns;
-+		struct timespec boottime_in_ns;
-+
-+		ksft_print_msg("I am the child, my PID is %d\n", getpid());
-+		if (clock_gettime(CLOCK_MONOTONIC, &monotonic_in_ns))
-+			return -1;
-+
-+		if (clock_gettime(CLOCK_BOOTTIME, &boottime_in_ns))
-+			return -1;
-+
-+		/*
-+		 * CLOCK_BOOTTIME has been set to such an offset to
-+		 * be 1 in the time namespace after clone3().
-+		 */
-+		if (boottime_in_ns.tv_sec > 5)
-+			child_exit(EXIT_FAILURE);
-+		ksft_print_msg("CLOCK_BOOTTIME %ld\n", boottime_in_ns.tv_sec);
-+		if (monotonic_in_ns.tv_sec <=3D monotonic.tv_sec + 9998)
-+			child_exit(EXIT_FAILURE);
-+		ksft_print_msg("CLOCK_MONOTONIC %ld\n", monotonic_in_ns.tv_sec);
-+		child_exit(EXIT_SUCCESS);
-+	}
-+
-+	if (waitpid(pid, &status, 0) < 0) {
-+		ksft_print_msg("Child returned %s\n", strerror(errno));
-+		ret =3D -errno;
-+		goto out;
-+	}
-+
-+	if (!WIFEXITED(status)) {
-+		ret =3D -1;
-+		ksft_test_result_fail("Child clocks in time NS are wrong\n");
-+		goto out;
-+	}
-+
-+	if (WEXITSTATUS(status)) {
-+		ret =3D -1;
-+		ksft_test_result_fail("Child clocks in time NS are wrong\n");
-+		goto out;
-+	}
-+
-+	ret =3D 0;
-+	ksft_test_result_pass("Clocks set successfully with clone3()\n");
-+out:
-+	if (ret)
-+		ksft_exit_fail();
-+
-+	ksft_exit_pass();
-+	return !!ret;
-+}
---=20
-2.24.1
+please rebase - the CPUID mechanism is completely rewritten in kvm/queue.
+
+Thanks,
+
+Paolo
 
