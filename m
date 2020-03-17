@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1DBC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373FAC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D582071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD1120719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442838;
-	bh=oGOCtuhQfQRHFJ3n4c6pTX5DYZGesr/STagxVkOFJAQ=;
+	s=default; t=1584442843;
+	bh=1jB/l4GgE1xd4mDo1MCDlf+Vfx4SqpMIcFPfZSFr53M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D82MDw37two11R1yFEnazq1AjvIVO/5L8QJKn+cr5bLqrk25ajzQEcY2aULLxjtdm
-	 qlfDGOXz/2u6izqaIdCLRtLuVQHfXeA9tYFudUhTAbedNcN/hI4uNLrJCx/7X2fyX0
-	 RR2fxdIoCv2CrgxhjPeDxBE7OmxiaU9dxxnhDxG8=
+	b=NDVh+rkuhoMZebWruljcUJMTmlk3MGq/VJH5W92pBedMoi9jY1LjxRihP+RGytZs2
+	 ZVmA7XTzDHUMK7UZx1Awp+veCV1msNoMgI13mUBXIjjiQc89XvfQql7OaohamxXRoI
+	 nXs9Gd7GhEr8IHLYDAWfCCnSl22yhKsq3YcOLmEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbgCQLAh (ORCPT
+        id S1727653AbgCQLAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:00:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39786 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:00:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727618AbgCQLAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:00:34 -0400
+        id S1727639AbgCQLAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:00:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64C1B205ED;
-        Tue, 17 Mar 2020 11:00:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD6DF20735;
+        Tue, 17 Mar 2020 11:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442833;
-        bh=oGOCtuhQfQRHFJ3n4c6pTX5DYZGesr/STagxVkOFJAQ=;
+        s=default; t=1584442839;
+        bh=1jB/l4GgE1xd4mDo1MCDlf+Vfx4SqpMIcFPfZSFr53M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E630D/IuBCA1c5ewHPOhDIHgiA972VmsfuavPetjaYZQDTUzQgCSN2eWLo9uwuKbB
-         L90S2qsNMd3LRM39g6xqYr5w/lMsDrVsnate9c6M14Icw7NSje6k19QTb1vXUBDWi+
-         3Yv7ZszuiWuTz5XVEkZzw4dNienhHfL+JYMLGlRE=
+        b=BqNJQ2IT5UmsXaY0PQgxeScea8IthY7LWcZLAdKXDhQzAdah7egMTD65Ow/OLyb+H
+         qoA7BuGHa3dmA67etNKk8AdU+7u/aZVe25OOlvcJXc/LXeX3DalLR/OFVSpLV+gYpa
+         LkJjloxq3WGjXWwWWrr8smig0n3ox17PG4+FMTBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 4.19 68/89] iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_taint
-Date:   Tue, 17 Mar 2020 11:55:17 +0100
-Message-Id: <20200317103307.781236425@linuxfoundation.org>
+        stable@vger.kernel.org, Per Sundstrom <per.sundstrom@redqube.se>,
+        Jiri Wiesner <jwiesner@suse.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Mahesh Bandewar <maheshb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 010/123] ipvlan: do not add hardware address of master to its unicast filter list
+Date:   Tue, 17 Mar 2020 11:53:57 +0100
+Message-Id: <20200317103308.563897187@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
-References: <20200317103259.744774526@linuxfoundation.org>
+In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
+References: <20200317103307.343627747@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,100 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jiri Wiesner <jwiesner@suse.com>
 
-commit 59833696442c674acbbd297772ba89e7ad8c753d upstream.
+[ Upstream commit 63aae7b17344d4b08a7d05cb07044de4c0f9dcc6 ]
 
-Quoting from the comment describing the WARN functions in
-include/asm-generic/bug.h:
+There is a problem when ipvlan slaves are created on a master device that
+is a vmxnet3 device (ipvlan in VMware guests). The vmxnet3 driver does not
+support unicast address filtering. When an ipvlan device is brought up in
+ipvlan_open(), the ipvlan driver calls dev_uc_add() to add the hardware
+address of the vmxnet3 master device to the unicast address list of the
+master device, phy_dev->uc. This inevitably leads to the vmxnet3 master
+device being forced into promiscuous mode by __dev_set_rx_mode().
 
- * WARN(), WARN_ON(), WARN_ON_ONCE, and so on can be used to report
- * significant kernel issues that need prompt attention if they should ever
- * appear at runtime.
- *
- * Do not use these macros when checking for invalid external inputs
+Promiscuous mode is switched on the master despite the fact that there is
+still only one hardware address that the master device should use for
+filtering in order for the ipvlan device to be able to receive packets.
+The comment above struct net_device describes the uc_promisc member as a
+"counter, that indicates, that promiscuous mode has been enabled due to
+the need to listen to additional unicast addresses in a device that does
+not implement ndo_set_rx_mode()". Moreover, the design of ipvlan
+guarantees that only the hardware address of a master device,
+phy_dev->dev_addr, will be used to transmit and receive all packets from
+its ipvlan slaves. Thus, the unicast address list of the master device
+should not be modified by ipvlan_open() and ipvlan_stop() in order to make
+ipvlan a workable option on masters that do not support unicast address
+filtering.
 
-The (buggy) firmware tables which the dmar code was calling WARN_TAINT
-for really are invalid external inputs. They are not under the kernel's
-control and the issues in them cannot be fixed by a kernel update.
-So logging a backtrace, which invites bug reports to be filed about this,
-is not helpful.
-
-Some distros, e.g. Fedora, have tools watching for the kernel backtraces
-logged by the WARN macros and offer the user an option to file a bug for
-this when these are encountered. The WARN_TAINT in warn_invalid_dmar()
-+ another iommu WARN_TAINT, addressed in another patch, have lead to over
-a 100 bugs being filed this way.
-
-This commit replaces the WARN_TAINT("...") calls, with
-pr_warn(FW_BUG "...") + add_taint(TAINT_FIRMWARE_WORKAROUND, ...) calls
-avoiding the backtrace and thus also avoiding bug-reports being filed
-about this against the kernel.
-
-Fixes: fd0c8894893c ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
-Fixes: e625b4a95d50 ("iommu/vt-d: Parse ANDD records")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200309140138.3753-2-hdegoede@redhat.com
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1564895
+Fixes: 2ad7bf3638411 ("ipvlan: Initial check-in of the IPVLAN driver")
+Reported-by: Per Sundstrom <per.sundstrom@redqube.se>
+Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Mahesh Bandewar <maheshb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/iommu/dmar.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ipvlan/ipvlan_main.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -451,12 +451,13 @@ static int __init dmar_parse_one_andd(st
- 
- 	/* Check for NUL termination within the designated length */
- 	if (strnlen(andd->device_name, header->length - 8) == header->length - 8) {
--		WARN_TAINT(1, TAINT_FIRMWARE_WORKAROUND,
-+		pr_warn(FW_BUG
- 			   "Your BIOS is broken; ANDD object name is not NUL-terminated\n"
- 			   "BIOS vendor: %s; Ver: %s; Product Version: %s\n",
- 			   dmi_get_system_info(DMI_BIOS_VENDOR),
- 			   dmi_get_system_info(DMI_BIOS_VERSION),
- 			   dmi_get_system_info(DMI_PRODUCT_VERSION));
-+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
- 		return -EINVAL;
- 	}
- 	pr_info("ANDD device: %x name: %s\n", andd->device_number,
-@@ -482,14 +483,14 @@ static int dmar_parse_one_rhsa(struct ac
- 			return 0;
- 		}
- 	}
--	WARN_TAINT(
--		1, TAINT_FIRMWARE_WORKAROUND,
-+	pr_warn(FW_BUG
- 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
- 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
- 		drhd->reg_base_addr,
- 		dmi_get_system_info(DMI_BIOS_VENDOR),
- 		dmi_get_system_info(DMI_BIOS_VERSION),
- 		dmi_get_system_info(DMI_PRODUCT_VERSION));
-+	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
- 
- 	return 0;
- }
-@@ -838,14 +839,14 @@ int __init dmar_table_init(void)
- 
- static void warn_invalid_dmar(u64 addr, const char *message)
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -164,7 +164,6 @@ static void ipvlan_uninit(struct net_dev
+ static int ipvlan_open(struct net_device *dev)
  {
--	WARN_TAINT_ONCE(
--		1, TAINT_FIRMWARE_WORKAROUND,
-+	pr_warn_once(FW_BUG
- 		"Your BIOS is broken; DMAR reported at address %llx%s!\n"
- 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
- 		addr, message,
- 		dmi_get_system_info(DMI_BIOS_VENDOR),
- 		dmi_get_system_info(DMI_BIOS_VERSION),
- 		dmi_get_system_info(DMI_PRODUCT_VERSION));
-+	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+ 	struct ipvl_dev *ipvlan = netdev_priv(dev);
+-	struct net_device *phy_dev = ipvlan->phy_dev;
+ 	struct ipvl_addr *addr;
+ 
+ 	if (ipvlan->port->mode == IPVLAN_MODE_L3 ||
+@@ -178,7 +177,7 @@ static int ipvlan_open(struct net_device
+ 		ipvlan_ht_addr_add(ipvlan, addr);
+ 	rcu_read_unlock();
+ 
+-	return dev_uc_add(phy_dev, phy_dev->dev_addr);
++	return 0;
  }
  
- static int __ref
+ static int ipvlan_stop(struct net_device *dev)
+@@ -190,8 +189,6 @@ static int ipvlan_stop(struct net_device
+ 	dev_uc_unsync(phy_dev, dev);
+ 	dev_mc_unsync(phy_dev, dev);
+ 
+-	dev_uc_del(phy_dev, phy_dev->dev_addr);
+-
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(addr, &ipvlan->addrs, anode)
+ 		ipvlan_ht_addr_del(addr);
 
 
