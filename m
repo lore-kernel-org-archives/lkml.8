@@ -2,132 +2,129 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE727C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9BDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0C220724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FjjHUtkJ"
+	by mail.kernel.org (Postfix) with ESMTP id 030DF20752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584481505;
+	bh=20DxxSkzpEpNqK1k6Pr8hoOHtM6IxlT9Ib/xkG7YUKg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=rF2A4MCwHpgya1oQD8CHwdvXPz+/p6zBPtaxnoqQvGVkU4mS8kcbepJ/5utupjTDp
+	 PQ98ixV/DYqc8q4udO8LXNSdVnFhsuyKNnXUv9wRCxU2xKjatRkXS51EsHNTfXU4b8
+	 5/4/0gK/vMcIRsjXjTOx4C2QtjewX2AlQef07x70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgCQVoe (ORCPT
+        id S1726936AbgCQVpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:44:34 -0400
-Received: from mail-pf1-f175.google.com ([209.85.210.175]:35269 "EHLO
-        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgCQVoe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:44:34 -0400
-Received: by mail-pf1-f175.google.com with SMTP id u68so12689253pfb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 14:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=89otpOHrqk65HILXOK8dtO4Tm8VdMpFbokIxr7Ul0QE=;
-        b=FjjHUtkJheETmfhQrBxIxdeDgTh5g3mNgUDR8CMgqBg5NSygh4l0kpfSMQfPvoWtqe
-         yE/H+c/99PR4h+31OiUlQsZ2oj3MTjTrP7TAJbO+Asq6YLKt4GJw+EWDLbk/bGsDEZbo
-         M4bMM4H87plQiFMH9GlwoSd85at5c9ZRwRYgW/c26sC/jq/Qxv8wrEFgf4qNXa0U3R9y
-         AHMYrbaPeRdMDVh7IBxidWmu47tAv7VW2YY53zr0MC876S04M3ZE5o+TSDsLikY6t8kU
-         xBCiBOLV9xQAFSCwTwFjPSZB2fofjtGbzEgzNfGLWLL60w7r+7c1tfbpoBjhuimL5/Y0
-         3SIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=89otpOHrqk65HILXOK8dtO4Tm8VdMpFbokIxr7Ul0QE=;
-        b=Hak7xEogGoHsRGt+NUaLfj7gelyusFNSaQWDri7AVqKI89tArLtHNoPitbivASHy6B
-         lrB3HEhitGffOhXUnAqli7vbvnyxSxZRzgufL0VPmSs6Zd8pBEvlBGEZ5q4msTr/GmGf
-         IsO5iDqkLad+Cp5MInF9dZqB2PXsugmzZmT0FWdFZBPsTwUIv9zoKeYr7Mls29mOsJAa
-         NV1d9AAXn9c7pbHqw7EozoiUhZso3wisOpPAcQCSFIH2D2t0WQOnprokudGzEZp8CvQ/
-         Iu3PS//5pWLOUuIovuWCQuQ9CMupC/G3/CfTe+kUEwyMX4KQPCMV37rR/ZCTgOIzfukv
-         YxIw==
-X-Gm-Message-State: ANhLgQ0mQ1ZMZw4gdUg6NQFJcf/+3TwsHHe0JFzzMys794m4G69/FfQW
-        KXjQKlKboz82r9YBGZaPRkOMGA==
-X-Google-Smtp-Source: ADFU+vtCttadpOSvgkvm0uTCHYh4bF3AqGgbUut40qc5YKbdk0olQXxLurvHS3X5RXp3U6GQWDyx+w==
-X-Received: by 2002:a63:5324:: with SMTP id h36mr1231564pgb.414.1584481472660;
-        Tue, 17 Mar 2020 14:44:32 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id mg16sm317366pjb.12.2020.03.17.14.44.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 14:44:31 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 14:44:25 -0700
-From:   Benson Leung <bleung@google.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the
- chrome-platform tree
-Message-ID: <20200317214425.GA79639@google.com>
-References: <20200318074536.3121af53@canb.auug.org.au>
+        Tue, 17 Mar 2020 17:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726783AbgCQVpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:45:03 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4FB720724;
+        Tue, 17 Mar 2020 21:45:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584481502;
+        bh=20DxxSkzpEpNqK1k6Pr8hoOHtM6IxlT9Ib/xkG7YUKg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=V0v/zLyOOxpwl03SxIcjTRapXjXI2bBP+4jK5GlyQ2UR/ZU2GvMmUxdks9/dMq+WB
+         NZcgnrPLFqo9d2x76Xp0LNSHG9MQ2mmMuznpq1v08K9xbISRhNXWvh95QZWUg1/QO8
+         Yt/wOHDNYIZmtdNg1UfeyiQjZssTJP8DGeJaIrd8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A44463523295; Tue, 17 Mar 2020 14:45:02 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 14:45:02 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        urezki@gmail.com
+Subject: Re: [PATCH v2 rcu-dev 1/3] rcuperf: Add ability to increase object
+ allocation size
+Message-ID: <20200317214502.GA29184@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200316163228.62068-1-joel@joelfernandes.org>
+ <20200317210822.GM3199@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200318074536.3121af53@canb.auug.org.au>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317210822.GM3199@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 17, 2020 at 02:08:22PM -0700, Paul E. McKenney wrote:
+> On Mon, Mar 16, 2020 at 12:32:26PM -0400, Joel Fernandes (Google) wrote:
+> > This allows us to increase memory pressure dynamically using a new
+> > rcuperf boot command line parameter called 'rcumult'.
+> > 
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> 
+> Applied for testing and review, thank you!
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But testing did not go far:
 
-Hi Stephen,
+kernel/rcu/tree.c: In function ‘kfree_rcu_shrink_count’:
+kernel/rcu/tree.c:3120:16: warning: unused variable ‘flags’ [-Wunused-variable]
+  unsigned long flags, count = 0;
+                ^~~~~
 
-On Wed, Mar 18, 2020 at 07:45:36AM +1100, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Commit
->=20
->   6314450ece4c ("platform/chrome: cros_usbpd_notify: Fix cros-usbpd-notif=
-y notifier")
->=20
-> is missing a Signed-off-by from its committer.
->=20
+I will drop these and await a replacement.
 
-Thanks. This has been rectified. The for-next branch has been rebased
-and all commits have the correct S-o-B.
+							Thanx, Paul
 
-Thanks,
-Benson
-
-> --=20
-> Cheers,
-> Stephen Rothwell
-
-
-
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXnFEuQAKCRBzbaomhzOw
-woDOAQDIs4TkP5CwMMgmdTuvIMv1Pzvm4NdqQgN6kbNhvJ2g7QEAsX+pDp0/atFF
-gjg3eVUBfF/oY6pZ/uXf8/JBzUZQtAQ=
-=LaX7
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
+> > ---
+> > 
+> > The Series v1->v2 only has added a new patch (3/3).
+> > 
+> > 
+> >  kernel/rcu/rcuperf.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+> > index a4a8d097d84d9..16dd1e6b7c09f 100644
+> > --- a/kernel/rcu/rcuperf.c
+> > +++ b/kernel/rcu/rcuperf.c
+> > @@ -88,6 +88,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
+> >  torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
+> >  torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
+> >  torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
+> > +torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
+> >  
+> >  static char *perf_type = "rcu";
+> >  module_param(perf_type, charp, 0444);
+> > @@ -635,7 +636,7 @@ kfree_perf_thread(void *arg)
+> >  		}
+> >  
+> >  		for (i = 0; i < kfree_alloc_num; i++) {
+> > -			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
+> > +			alloc_ptr = kmalloc(kfree_mult * sizeof(struct kfree_obj), GFP_KERNEL);
+> >  			if (!alloc_ptr)
+> >  				return -ENOMEM;
+> >  
+> > @@ -722,6 +723,8 @@ kfree_perf_init(void)
+> >  		schedule_timeout_uninterruptible(1);
+> >  	}
+> >  
+> > +	pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
+> > +
+> >  	kfree_reader_tasks = kcalloc(kfree_nrealthreads, sizeof(kfree_reader_tasks[0]),
+> >  			       GFP_KERNEL);
+> >  	if (kfree_reader_tasks == NULL) {
+> > -- 
+> > 2.25.1.481.gfbce0eb801-goog
