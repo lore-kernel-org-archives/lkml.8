@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A4BC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DECFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027EA20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C7420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443648;
-	bh=4SNdgRmaeIWhQvOy1czsZYidzBtecEqXmikf3ykWbRA=;
+	s=default; t=1584443650;
+	bh=OZ4tA3swY5p/fXXjR+dJe6w7K3IHPibdXnOGpcN37IQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PnLieJh5f2D09ODbVDqcLHMfrSRADuyFcOv14RTuiK8dz32cW9URKgnmxXiVz6wbA
-	 N22LgitcPH95PME5KP55O8dwh81rqbPGNF9LetdX8Z0NTQQZ75m9OZhnMs8SBI61rA
-	 nGoADMoXA+x+FX9YSTkvPhXaE5NuGDKcaZbACGSQ=
+	b=AkDG/vsAZPmaW3GekY2AtL5ow0v40GXMCc4AqpiVkaPBEprBzjyuYcR+3Cj14RTV7
+	 4J7v3nD0UoTf5II66jbmMltkiWF8KcLtd51XtxSK66JsJRuBJ+HuxeJh/YcVcoHjFs
+	 C3A8Q/lItRMIMSR+69gSSU/cKAK2JmDvsYbBLFTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgCQLOD (ORCPT
+        id S1729493AbgCQLOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:14:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58066 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:14:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbgCQLN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:58 -0400
+        id S1729574AbgCQLOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:14:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 816C9206EC;
-        Tue, 17 Mar 2020 11:13:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86F1F20663;
+        Tue, 17 Mar 2020 11:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443637;
-        bh=4SNdgRmaeIWhQvOy1czsZYidzBtecEqXmikf3ykWbRA=;
+        s=default; t=1584443645;
+        bh=OZ4tA3swY5p/fXXjR+dJe6w7K3IHPibdXnOGpcN37IQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ytLbqImuc+qmEs2LfPWsK7FJ+M6yipE2w4OVnZThyxnzd6keZQBxloNlSC3KxwUJw
-         JaQyHM52KcUrtekp7JubW5JUaanL23Y4hN99sj5j/hvvAG4POmb/58Da2UZYJTyOTh
-         vEQgoyLHfYZw55po0ufm2i0lRKsZD3ijkV3nXf9I=
+        b=O7c7XHMMevh4Il5YY7YgrNeArsjpwSDsvYK02u4j8NLlcVUTJrxHkij+20HcMc0he
+         etfyWC34/aaxanQyk04XwWVciB4vdMdqfk7Hzc3tgVxId2XS4tE6vySTZ/95Bq+4Ey
+         6IZlMePX0z1S1B9HB7hwMXgLv2TuwjkSisyWMdO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 150/151] ipv6: restrict IPV6_ADDRFORM operation
-Date:   Tue, 17 Mar 2020 11:56:00 +0100
-Message-Id: <20200317103337.377926070@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.5 136/151] nl80211: add missing attribute validation for critical protocol indication
+Date:   Tue, 17 Mar 2020 11:55:46 +0100
+Message-Id: <20200317103336.088171769@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -61,108 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit b6f6118901d1e867ac9177bbff3b00b185bd4fdc upstream.
+commit 0e1a1d853ecedc99da9d27f9f5c376935547a0e2 upstream.
 
-IPV6_ADDRFORM is able to transform IPv6 socket to IPv4 one.
-While this operation sounds illogical, we have to support it.
+Add missing attribute validation for critical protocol fields
+to the netlink policy.
 
-One of the things it does for TCP socket is to switch sk->sk_prot
-to tcp_prot.
-
-We now have other layers playing with sk->sk_prot, so we should make
-sure to not interfere with them.
-
-This patch makes sure sk_prot is the default pointer for TCP IPv6 socket.
-
-syzbot reported :
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-PGD a0113067 P4D a0113067 PUD a8771067 PMD 0
-Oops: 0010 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 10686 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
-RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
-RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
-R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
-R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
-FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- inet_release+0x165/0x1c0 net/ipv4/af_inet.c:427
- __sock_release net/socket.c:605 [inline]
- sock_close+0xe1/0x260 net/socket.c:1283
- __fput+0x2e4/0x740 fs/file_table.c:280
- ____fput+0x15/0x20 fs/file_table.c:313
- task_work_run+0x176/0x1b0 kernel/task_work.c:113
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
- prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
- syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
- do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c429
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2ae75dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: 0000000000000000 RBX: 00007f2ae75db6d4 RCX: 000000000045c429
-RDX: 0000000000000001 RSI: 000000000000011a RDI: 0000000000000004
-RBP: 000000000076bf20 R08: 0000000000000038 R09: 0000000000000000
-R10: 0000000020000180 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a9d R14: 00000000004ccfb4 R15: 000000000076bf2c
-Modules linked in:
-CR2: 0000000000000000
----[ end trace 82567b5207e87bae ]---
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
-RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
-RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
-R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
-R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
-FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5de17984898c ("cfg80211: introduce critical protocol indication from user-space")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Link: https://lore.kernel.org/r/20200303051058.4089398-2-kuba@kernel.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv6/ipv6_sockglue.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ net/wireless/nl80211.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -183,9 +183,15 @@ static int do_ipv6_setsockopt(struct soc
- 					retv = -EBUSY;
- 					break;
- 				}
--			} else if (sk->sk_protocol != IPPROTO_TCP)
-+			} else if (sk->sk_protocol == IPPROTO_TCP) {
-+				if (sk->sk_prot != &tcpv6_prot) {
-+					retv = -EBUSY;
-+					break;
-+				}
-+				break;
-+			} else {
- 				break;
--
-+			}
- 			if (sk->sk_state != TCP_ESTABLISHED) {
- 				retv = -ENOTCONN;
- 				break;
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -530,6 +530,8 @@ const struct nla_policy nl80211_policy[N
+ 	[NL80211_ATTR_MDID] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_IE_RIC] = { .type = NLA_BINARY,
+ 				  .len = IEEE80211_MAX_DATA_LEN },
++	[NL80211_ATTR_CRIT_PROT_ID] = { .type = NLA_U16 },
++	[NL80211_ATTR_MAX_CRIT_PROT_DURATION] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_PEER_AID] =
+ 		NLA_POLICY_RANGE(NLA_U16, 1, IEEE80211_MAX_AID),
+ 	[NL80211_ATTR_CH_SWITCH_COUNT] = { .type = NLA_U32 },
 
 
