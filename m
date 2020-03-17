@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3F9C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644BEC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875DC206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FBD8205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443557;
-	bh=VSkvZ2CSeMDWA3EVHHRCuGOMnRRxMVLwPUGFuYsELMQ=;
+	s=default; t=1584443566;
+	bh=Jd+skOHMUMZ5elXm0a0I2INbmUd9M/vLyM09Xr5Ni+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUUDyvHvEOOhlXiA3jW22w/GBaKRtROpuS7KDPvBP/XOL6MSX4Ege4BcFmgZQJX13
-	 ZgMxilNx5Aad9BGQ2JUfJFMiGlqaz4qCoOBKzi3jXXtEbKSDzuOZZjcm/4k52b/5Jt
-	 jUN7P1bhkE1UHZCuF/emf8Bhd52l3fCb8b40zN9s=
+	b=0dZfc5W3Kb/L2/hDY+CpVtlwm2zRf4CnPELtHdBNVx9DZozoo8+vO+7A20dhg8IxV
+	 xMEyUM7xIAbJf0gPGyXakAuoVS0g5WrWnlGwdlY0GSKvo77cJBnEm3TrSTcmB4tF8z
+	 ksMp2RHCSDBiPYcpAOpZBzOYBbS0VT3zT3rkOMtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgCQLMg (ORCPT
+        id S1729446AbgCQLMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56248 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbgCQLMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:32 -0400
+        id S1729438AbgCQLMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E840B205ED;
-        Tue, 17 Mar 2020 11:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3724F20658;
+        Tue, 17 Mar 2020 11:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443551;
-        bh=VSkvZ2CSeMDWA3EVHHRCuGOMnRRxMVLwPUGFuYsELMQ=;
+        s=default; t=1584443560;
+        bh=Jd+skOHMUMZ5elXm0a0I2INbmUd9M/vLyM09Xr5Ni+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LoKgaLz/Ezx3UgGz7TOkRsv63wDFjVlF+zWU/6Uzo9/z/+HX765H9V9RQ4tlHQGHh
-         oGoVAuoMb9vCTiV6MEyU4GE6wj3ADayf04gRB6FILlavXz6/ROWs8LLC8MFWIWIvXK
-         BAu1VoIdObt77GxhcHrJptc237JT1po9F2eZ1pSk=
+        b=TNyOfWiyHgop++8BanR0lP0eKUGS9ZATQGBywH9FbX1Qp3VUB+hL0taR7MhblFAHy
+         mAHqt8TbnkpMXl/mj0cDUl4DmsMqWH5K1Dnq4tgWNK2iW8lkTrbMhyRHQ7xYRoxj/w
+         3G04Sm1A1WOc0Bo5MEcekiRPQkEE4qb2hBOyD/J4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 5.5 120/151] iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_taint
-Date:   Tue, 17 Mar 2020 11:55:30 +0100
-Message-Id: <20200317103334.992694707@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@kernel.org
+Subject: [PATCH 5.5 096/151] cifs_atomic_open(): fix double-put on late allocation failure
+Date:   Tue, 17 Mar 2020 11:55:06 +0100
+Message-Id: <20200317103333.271630910@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,100 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 59833696442c674acbbd297772ba89e7ad8c753d upstream.
+commit d9a9f4849fe0c9d560851ab22a85a666cddfdd24 upstream.
 
-Quoting from the comment describing the WARN functions in
-include/asm-generic/bug.h:
+several iterations of ->atomic_open() calling conventions ago, we
+used to need fput() if ->atomic_open() failed at some point after
+successful finish_open().  Now (since 2016) it's not needed -
+struct file carries enough state to make fput() work regardless
+of the point in struct file lifecycle and discarding it on
+failure exits in open() got unified.  Unfortunately, I'd missed
+the fact that we had an instance of ->atomic_open() (cifs one)
+that used to need that fput(), as well as the stale comment in
+finish_open() demanding such late failure handling.  Trivially
+fixed...
 
- * WARN(), WARN_ON(), WARN_ON_ONCE, and so on can be used to report
- * significant kernel issues that need prompt attention if they should ever
- * appear at runtime.
- *
- * Do not use these macros when checking for invalid external inputs
-
-The (buggy) firmware tables which the dmar code was calling WARN_TAINT
-for really are invalid external inputs. They are not under the kernel's
-control and the issues in them cannot be fixed by a kernel update.
-So logging a backtrace, which invites bug reports to be filed about this,
-is not helpful.
-
-Some distros, e.g. Fedora, have tools watching for the kernel backtraces
-logged by the WARN macros and offer the user an option to file a bug for
-this when these are encountered. The WARN_TAINT in warn_invalid_dmar()
-+ another iommu WARN_TAINT, addressed in another patch, have lead to over
-a 100 bugs being filed this way.
-
-This commit replaces the WARN_TAINT("...") calls, with
-pr_warn(FW_BUG "...") + add_taint(TAINT_FIRMWARE_WORKAROUND, ...) calls
-avoiding the backtrace and thus also avoiding bug-reports being filed
-about this against the kernel.
-
-Fixes: fd0c8894893c ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
-Fixes: e625b4a95d50 ("iommu/vt-d: Parse ANDD records")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200309140138.3753-2-hdegoede@redhat.com
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1564895
+Fixes: fe9ec8291fca "do_last(): take fput() on error after opening to out:"
+Cc: stable@kernel.org # v4.7+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/dmar.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ Documentation/filesystems/porting.rst |    8 ++++++++
+ fs/cifs/dir.c                         |    1 -
+ fs/open.c                             |    3 ---
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -440,12 +440,13 @@ static int __init dmar_parse_one_andd(st
- 
- 	/* Check for NUL termination within the designated length */
- 	if (strnlen(andd->device_name, header->length - 8) == header->length - 8) {
--		WARN_TAINT(1, TAINT_FIRMWARE_WORKAROUND,
-+		pr_warn(FW_BUG
- 			   "Your BIOS is broken; ANDD object name is not NUL-terminated\n"
- 			   "BIOS vendor: %s; Ver: %s; Product Version: %s\n",
- 			   dmi_get_system_info(DMI_BIOS_VENDOR),
- 			   dmi_get_system_info(DMI_BIOS_VERSION),
- 			   dmi_get_system_info(DMI_PRODUCT_VERSION));
-+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
- 		return -EINVAL;
+--- a/Documentation/filesystems/porting.rst
++++ b/Documentation/filesystems/porting.rst
+@@ -850,3 +850,11 @@ business doing so.
+ d_alloc_pseudo() is internal-only; uses outside of alloc_file_pseudo() are
+ very suspect (and won't work in modules).  Such uses are very likely to
+ be misspelled d_alloc_anon().
++
++---
++
++**mandatory**
++
++[should've been added in 2016] stale comment in finish_open() nonwithstanding,
++failure exits in ->atomic_open() instances should *NOT* fput() the file,
++no matter what.  Everything is handled by the caller.
+--- a/fs/cifs/dir.c
++++ b/fs/cifs/dir.c
+@@ -558,7 +558,6 @@ cifs_atomic_open(struct inode *inode, st
+ 		if (server->ops->close)
+ 			server->ops->close(xid, tcon, &fid);
+ 		cifs_del_pending_open(&open);
+-		fput(file);
+ 		rc = -ENOMEM;
  	}
- 	pr_info("ANDD device: %x name: %s\n", andd->device_number,
-@@ -471,14 +472,14 @@ static int dmar_parse_one_rhsa(struct ac
- 			return 0;
- 		}
- 	}
--	WARN_TAINT(
--		1, TAINT_FIRMWARE_WORKAROUND,
-+	pr_warn(FW_BUG
- 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
- 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
- 		drhd->reg_base_addr,
- 		dmi_get_system_info(DMI_BIOS_VENDOR),
- 		dmi_get_system_info(DMI_BIOS_VERSION),
- 		dmi_get_system_info(DMI_PRODUCT_VERSION));
-+	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
  
- 	return 0;
- }
-@@ -827,14 +828,14 @@ int __init dmar_table_init(void)
- 
- static void warn_invalid_dmar(u64 addr, const char *message)
- {
--	WARN_TAINT_ONCE(
--		1, TAINT_FIRMWARE_WORKAROUND,
-+	pr_warn_once(FW_BUG
- 		"Your BIOS is broken; DMAR reported at address %llx%s!\n"
- 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
- 		addr, message,
- 		dmi_get_system_info(DMI_BIOS_VENDOR),
- 		dmi_get_system_info(DMI_BIOS_VERSION),
- 		dmi_get_system_info(DMI_PRODUCT_VERSION));
-+	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
- }
- 
- static int __ref
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -860,9 +860,6 @@ cleanup_file:
+  * the return value of d_splice_alias(), then the caller needs to perform dput()
+  * on it after finish_open().
+  *
+- * On successful return @file is a fully instantiated open file.  After this, if
+- * an error occurs in ->atomic_open(), it needs to clean up with fput().
+- *
+  * Returns zero on success or -errno if the open failed.
+  */
+ int finish_open(struct file *file, struct dentry *dentry,
 
 
