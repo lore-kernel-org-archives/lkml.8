@@ -7,59 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B62B8C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B53C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B5C20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C02E2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584480841;
-	bh=cp/OajyD3gRzQ49t0K84cyurs/ktRa0u33udp0rWu3o=;
+	s=default; t=1584480846;
+	bh=Z9j7UZbT4RR4xbQdANlM4HcRrJBuhd00PkTyuGO8S0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y75RlcJgaxVtlZ3hYVcxGUnsuKrozyoTVU104pTnGr1KkT/Ajulalva5c6yPUObcV
-	 vfUnaWEQJX4vHvg0nbuCZNvt5KKzIlgxVEuhwhyjNk+POATYyyJxVo0afz4PnjpKsz
-	 tx5MarMfV/YbnILKKZO+T+5PzclyZzSyBF9Gt8kA=
+	b=vhrJ5T/vy/ul6MuQovZKBBR2v+gxaVvlymLJoqGymoQ74FOwK5xdyyPCgYs3Q2aVi
+	 XowaaHFj/VEaj29VQ+xUrUaOH60ywk7hDnJq5Ybg9O627n8w77DGykOet0kD8CmKLN
+	 Zx8t9mabW9iX0ZFLho9P5bSrb/iaJptk6mIJI2a0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbgCQVeA (ORCPT
+        id S1727275AbgCQVeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52836 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 17:34:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbgCQVd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:33:59 -0400
+        id S1726980AbgCQVeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:34:03 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 204BD2075E;
-        Tue, 17 Mar 2020 21:33:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 660AB20757;
+        Tue, 17 Mar 2020 21:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584480838;
-        bh=cp/OajyD3gRzQ49t0K84cyurs/ktRa0u33udp0rWu3o=;
+        s=default; t=1584480842;
+        bh=Z9j7UZbT4RR4xbQdANlM4HcRrJBuhd00PkTyuGO8S0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kE42HPlj4QGMlWBz+AtT68g531cYRgeHVTWTWphLGP+G7j+YrNpUzrCdaHTnWjGM8
-         je9ut5n+/8Yjvdswipyq2Feic3A7ZxDbL5Yx+C55ey3vmOOxIIA2xdj5xMz6rYP8zD
-         TWxx5mbt7IFVKWQZYvTmmhpawp1Gsb8GgEDGG8n0=
+        b=XqbHlpXx6TpL1aQfepPIWdS3TwuLfUGZzBqEV6SgQFUPjs+4iCaHbAEcnmLYazfLk
+         2tIQjAfcC1jSvlU/WagJO/BC0MTXTfgdiesFAyFaCgp02OLTO94HdVI+1RvbyjAtSG
+         utp9xi3T5+Pfy/dtUpYT3aODSAygFsKIpFvzRK0E=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Masanari Iida <standby24x7@gmail.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight ml <coresight@lists.linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 13/23] perf cs-etm: Fix unsigned variable comparison to zero
-Date:   Tue, 17 Mar 2020 18:32:49 -0300
-Message-Id: <20200317213259.15494-14-acme@kernel.org>
+        Stephane Eranian <eranian@google.com>
+Subject: [PATCH 14/23] perf doc: Set man page date to last git commit
+Date:   Tue, 17 Mar 2020 18:32:50 -0300
+Message-Id: <20200317213259.15494-15-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
 References: <20200317213259.15494-1-acme@kernel.org>
@@ -70,43 +68,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Ian Rogers <irogers@google.com>
 
-The variable 'offset' in function cs_etm__sample() is u64 type, it's not
-appropriate to check it with 'while (offset > 0)'; this patch changes to
-'while (offset)'.
+Currently the man page dates reflect the date the man pages were built.
+This patch adjusts the date so that the date is when then man page
+last had a commit against it. The date is generated using 'git log'.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Committer testing:
+
+  $ git log -1 --pretty="format:%cd" --date=short tools/perf/Documentation/perf-top.txt
+  2020-01-14
+
+Before:
+
+  rm -rf /tmp/build/perf
+  mkdir -p /tmp/build/perf
+  make -C tools/perf O=/tmp/build/perf/ install
+  $ date
+  Wed 11 Mar 2020 10:21:19 AM -03
+  $ man perf-top | tail -1
+  perf                    03/11/2020           PERF-TOP(1)
+  $
+
+After:
+
+  rm -rf /tmp/build/perf
+  mkdir -p /tmp/build/perf
+  make -C tools/perf O=/tmp/build/perf/ install
+  $ date
+  $ date
+  Wed 11 Mar 2020 10:24:06 AM -03
+  $ man perf-top | tail -1
+  perf                    2020-01-14           PERF-TOP(1)
+  $
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Masanari Iida <standby24x7@gmail.com>
+Cc: Mukesh Ojha <mojha@codeaurora.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Robert Walker <robert.walker@arm.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight ml <coresight@lists.linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/20200219021811.20067-6-leo.yan@linaro.org
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/20200311052110.23132-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/Makefile | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 87d9943177bc..62d2f9b9ce1b 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -962,7 +962,7 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
- 	if (packet->isa == CS_ETM_ISA_T32) {
- 		u64 addr = packet->start_addr;
+diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
+index adc5a7e44b98..31824d5269cc 100644
+--- a/tools/perf/Documentation/Makefile
++++ b/tools/perf/Documentation/Makefile
+@@ -295,7 +295,10 @@ $(OUTPUT)%.1 $(OUTPUT)%.5 $(OUTPUT)%.7 : $(OUTPUT)%.xml
+ $(OUTPUT)%.xml : %.txt
+ 	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
+ 	$(ASCIIDOC) -b docbook -d manpage \
+-		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) -o $@+ $< && \
++		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) \
++		-aperf_date=$(shell git log -1 --pretty="format:%cd" \
++				--date=short $<) \
++		-o $@+ $< && \
+ 	mv $@+ $@
  
--		while (offset > 0) {
-+		while (offset) {
- 			addr += cs_etm__t32_instr_size(etmq,
- 						       trace_chan_id, addr);
- 			offset--;
+ XSLT = docbook.xsl
 -- 
 2.21.1
 
