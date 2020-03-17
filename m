@@ -2,143 +2,89 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A87C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CB7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C505420658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC3320658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:07:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XULrSr+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgCQD7k (ORCPT
+        id S1725876AbgCQEH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 23:59:40 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37518 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgCQD7k (ORCPT
+        Tue, 17 Mar 2020 00:07:58 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35142 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgCQEH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 23:59:40 -0400
-Received: by mail-pj1-f65.google.com with SMTP id ca13so9821921pjb.2;
-        Mon, 16 Mar 2020 20:59:38 -0700 (PDT)
+        Tue, 17 Mar 2020 00:07:58 -0400
+Received: by mail-wm1-f67.google.com with SMTP id m3so20367322wmi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 21:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=33jKlqaYa25AsU3VntdMH3umyT6AHcOYuqn7A0K1VBU=;
+        b=XULrSr+Wd/YnDJMybcFNeMh5Gg9yENwZPEIlhwbKwlq5vSDVqgNcTVtYq0bNvx3yBy
+         pVODbjuuneMTk+XfxXjAJv6lp2w8hCBIk4m+O1KppoeGvDnSGsefYVfgc2O3bUYKVbZo
+         S+fqFBkxEjoOniy7neehOXUGxd6n9fOb0Wodk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=o+0HagUr4HI/xbZe0kDuhSARtN12WFdm90lmgkXYbjo=;
-        b=HpIC7oI7IkH1xvv3lyGo6It8aIM/sJbeLMJCCukl5O9X7Vb7wc6levG1j/L3b72XeF
-         PkK22cTzJOYlK5ds3juOlw65Ek2/qKsnGIREdHm/r2dD4NQYIwhFKiiWxO6UVNwWCnux
-         Kf7PRJWYM6nu/NQZ/3HLxSb6ffIhpFli8C8WSsDX7/hXa9RdQybRPQSl4wtNAmyKfniz
-         hR+nAcrNUWgaRr45GKUnBwU5Tz9eZi9lT466To9yJbBAwgAktDgfSXsyqRHRWcs/fChc
-         uQSorgxwG5TvwpLWglBa/2BiQnQ1ImrcatS9it5tbnukd187BKrtAHbGxB7CJPt5IBJO
-         H8cA==
-X-Gm-Message-State: ANhLgQ0GQ1HCMBVl/Z/fUDfhilSvrRlK+sH/v27c+EbE6fPgSML5r0r7
-        2sG8wFwNeR0SHxfQbw1Ccg8=
-X-Google-Smtp-Source: ADFU+vsXomTDgzT6KgwIqseoW04GHkn2UK/Mw6vKIvY+mvHnkDTo863+r8mAFDy8AB4kc8InAOyEmw==
-X-Received: by 2002:a17:90b:352:: with SMTP id fh18mr3039940pjb.168.1584417577134;
-        Mon, 16 Mar 2020 20:59:37 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:f131:b83b:a5b4:4b1b? ([2601:647:4000:d7:f131:b83b:a5b4:4b1b])
-        by smtp.gmail.com with ESMTPSA id 8sm1293481pfv.65.2020.03.16.20.59.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2020 20:59:36 -0700 (PDT)
-Subject: Re: [PATCH v6 3/7] scsi: ufs: introduce common delay function
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        beanhuo@micron.com, asutoshd@codeaurora.org, cang@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-References: <20200316085303.20350-1-stanley.chu@mediatek.com>
- <20200316085303.20350-4-stanley.chu@mediatek.com>
- <fdf91490-9c7d-df34-1c1f-e03e12855378@acm.org>
- <1584404000.14250.28.camel@mtksdccf07>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <b7a6045e-9615-0cd2-9812-2871bf9ba44c@acm.org>
-Date:   Mon, 16 Mar 2020 20:59:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <1584404000.14250.28.camel@mtksdccf07>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=33jKlqaYa25AsU3VntdMH3umyT6AHcOYuqn7A0K1VBU=;
+        b=Ki2zctlh32O9UCM/1O/jKJwnmRXHIgdmQPch5pM0ha3VJPtzF1Qvf3XYR+xPpmjOmp
+         MDXkrPL+SilBHIb8Ct8s7qydM6bfxMCvUrbX9lICRgXgVN8qq30joPGcIWlvMgotKIdO
+         mb1BgqOse7C9Z91FnGiDdaMYlvfTe2JKVPYtkkoc75sso3ymZrft9akKrOo0dA3+w0wX
+         TZ4z/SgZCxidC6/hZyrRF0DrYbWZpsHIQeSnp46QZd+2DqTC8cOcooHHtiyPdoX9gvhj
+         9+WXhix/vzwVF4gTLbV/Gi6jwkBh258CUgFhoQYbVyZViyepvB1h6hQgFMullgUCfxhx
+         qe0Q==
+X-Gm-Message-State: ANhLgQ3AsI0yERrZvK+Gd7FSPHa4Q/sXRo5s7iLJHCf2tIKMwaElSWD8
+        hWp9nLx4pn8XT2+w2iZMpHzOEA==
+X-Google-Smtp-Source: ADFU+vvv6IHi1oLKWK4ZaJ7buqvEU1QsVEHlTLtwhB2/6w/qOCyZlOM6mC2HvWEVzlS0SrRovdZ1xA==
+X-Received: by 2002:a1c:41d6:: with SMTP id o205mr2656158wma.122.1584418075697;
+        Mon, 16 Mar 2020 21:07:55 -0700 (PDT)
+Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id z4sm2811766wrr.6.2020.03.16.21.07.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 21:07:54 -0700 (PDT)
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: [PATCH v1 1/1] firmware: tee_bnxt: remove unused variable init
+Date:   Tue, 17 Mar 2020 09:37:42 +0530
+Message-Id: <20200317040742.12143-1-rayagonda.kokatanur@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-16 17:13, Stanley Chu wrote:
-> On Mon, 2020-03-16 at 09:23 -0700, Bart Van Assche wrote:
->> On 3/16/20 1:52 AM, Stanley Chu wrote:
->>> +void ufshcd_wait_us(unsigned long us, unsigned long tolerance, bool can_sleep)
->>> +{
->>> +	if (!us)
->>> +		return;
->>> +
->>> +	if (us < 10 || !can_sleep)
->>> +		udelay(us);
->>> +	else
->>> +		usleep_range(us, us + tolerance);
->>> +}
->>> +EXPORT_SYMBOL_GPL(ufshcd_wait_us);
->>
->> I don't like this function because I think it makes the UFS code harder 
->> to read instead of easier. The 'can_sleep' argument is only set by one 
->> caller which I think is a strong argument to remove that argument again 
->> and to move the code that depends on that argument from the above 
->> function into the caller. Additionally, it is not possible to comprehend 
->> what a ufshcd_wait_us() call does without looking up the function 
->> definition to see what the meaning of the third argument is.
->>
->> Please drop this patch.
-> 
-> Thanks for your review and comments.
-> 
-> If the problem is the third argument 'can_sleep' which makes the code
-> not be easily comprehensible, how about just removing 'can_sleep' from
-> this function and keeping left parts because this function provides good
-> flexibility to users to choose udelay or usleep_range according to the
-> 'us' argument?
+Remove unused variable initialization.
 
-Hi Stanley,
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+---
+ drivers/firmware/broadcom/tee_bnxt_fw.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-I think that we need to get rid of 'can_sleep' across the entire UFS
-driver. As far as I can see the only context from which 'can_sleep' is
-set to true is ufshcd_host_reset_and_restore() and 'can_sleep' is set to
-true because ufshcd_hba_stop() is called with a spinlock held. Do you
-agree that it is wrong to call udelay() while holding a spinlock() and
-that doing so has a bad impact on the energy consumption of the UFS
-driver? Has it already been considered to use another mechanism to
-serialize REG_CONTROLLER_ENABLE changes, e.g. a mutex?
+diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
+index ed10da5313e8..6fd62657e35f 100644
+--- a/drivers/firmware/broadcom/tee_bnxt_fw.c
++++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
+@@ -143,8 +143,6 @@ int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size)
+ 	prepare_args(TA_CMD_BNXT_COPY_COREDUMP, &arg, param);
+ 
+ 	while (rbytes)  {
+-		nbytes = rbytes;
+-
+ 		nbytes = min_t(u32, rbytes, param[0].u.memref.size);
+ 
+ 		/* Fill additional invoke cmd params */
+-- 
+2.17.1
 
-Thanks,
-
-Bart.
