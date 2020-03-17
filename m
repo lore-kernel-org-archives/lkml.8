@@ -2,106 +2,111 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB20C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B2AC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCA320738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADB82051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t7xU/aen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgCQVK0 (ORCPT
+        id S1726851AbgCQVNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:10:26 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57651 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgCQVKZ (ORCPT
+        Tue, 17 Mar 2020 17:13:48 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33066 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgCQVNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:10:25 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jEJTi-0004El-4i; Tue, 17 Mar 2020 22:10:22 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jEJTg-0004Ji-Mt; Tue, 17 Mar 2020 22:10:20 +0100
-Date:   Tue, 17 Mar 2020 22:10:20 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: da9062: Fix include path
-Message-ID: <20200317211020.4ozletmpvz67jytb@pengutronix.de>
-References: <773115.1584420899@turing-police>
+        Tue, 17 Mar 2020 17:13:48 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f13so24645272ljp.0;
+        Tue, 17 Mar 2020 14:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LARHXuaKUkUDUGOK/jHk/g5Im0xzFquLTlHFxXm0daM=;
+        b=t7xU/aenX4xqSWnjdQPZN30yZ/IjtmHuiFKftszZqzwhQWL8TRlOqqDYY2SwOL5+I/
+         qQQPKX0PFV/6+99DGDQ6pfyVXCNEvOPtcZ6yIMdxkn3rMT1VonrudSTSx0X8Ckv28ry5
+         Fx4Uv/CcSo6k0iskVK3ZsZn33unZQzzGpHKtlOExLnDT3euQjXcSevzg9HxgqysxlxvR
+         G17Ikijijdpn/COzDMczpwkds4lCXoH4gXCjOlSwOLEjROcZWM9tshGGpsh0qPbvos/a
+         v2i0ZjqJaFpemIEzgTnnWIgKAucfWHQhccIuf8YRJBDNj4kJXvXT1sIkRPDr/hoFkney
+         LoHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LARHXuaKUkUDUGOK/jHk/g5Im0xzFquLTlHFxXm0daM=;
+        b=QB5SG+vPrn3O+lIK3nAgkuOkQGZNPGllOVuYdGll3GJ7qOm8eJwG3SxQPyiA9A3+KF
+         d43R0ETNtZ6r+q/PKUsgN5VScK21vtU70+e8a2WK+WBJgdFAtymNY77puYuQkQB7nge9
+         If5T3ufcvVezEWgVSMA5+1PsQojLV/y98keOFl+pGIGNGpEYlr4WqzJPjl+cU+WDFSgT
+         7c6dFL8o5t6M4ZhYrwsttLXxUVUP4BBz2kBrmXPlCoqNyUhTJCXOIc0uiOhCvvZchcbS
+         rgrdxrr1S2hbYGI1PsFgtzBbto4rDxmI9Mbys6Gfv1X7YbmrRS3fXyCxIv7/WURnZ+Vr
+         y3VQ==
+X-Gm-Message-State: ANhLgQ2KCnkCsWmcbm6CXEKWggRt54v3XpUOxqseg631F7R8zIJx0esn
+        /Cntyb2ECtvjscujXFdt8rjF9OD5MQU=
+X-Google-Smtp-Source: ADFU+vuyM49tC3h/AoMvCI49PxDJ6dQ5ze4WGJnrp9JpPJcDjaJwpK77nRLAOABktoWj2YSKBvJ4dA==
+X-Received: by 2002:a2e:818e:: with SMTP id e14mr435422ljg.104.1584479625500;
+        Tue, 17 Mar 2020 14:13:45 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-186-78.NA.cust.bahnhof.se. [158.174.186.78])
+        by smtp.gmail.com with ESMTPSA id 23sm3341652lfa.28.2020.03.17.14.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 14:13:44 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH RESEND] clk: sunxi: Fix incorrect usage of round_down()
+Date:   Tue, 17 Mar 2020 22:13:32 +0100
+Message-Id: <20200317211333.2597793-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <773115.1584420899@turing-police>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 22:06:02 up 123 days, 12:24, 152 users,  load average: 0.25, 0.16,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+round_down() can only round to powers of 2. If round_down() is asked
+to round to something that is not a power of 2, incorrect results are
+produced. The incorrect results can be both too large and too small.
 
-On 20-03-17 00:54, Valdis Klētnieks wrote:
-> Found during a allmodconfig build on ARM on an RPi4:
-> 
->   CC      drivers/pinctrl/pinctrl-da9062.o
-> drivers/pinctrl/pinctrl-da9062.c:28:10: fatal error: ../gpio/gpiolib.h: No such file or directory
->  #include <../gpio/gpiolib.h>
->           ^~~~~~~~~~~~~~~~~~~
-> compilation terminated.
+Instead, use rounddown() which can round to any number.
 
-this should be fixed already:
+Fixes: 6a721db180a2 ("clk: sunxi: Add A31 clocks support")
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+Resend to include lists, appologies for missing that.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/pinctrl/pinctrl-da9062.c?id=2353810dac9ab72d3f835e3fb015c6819a0ef6c2
+Patch has only been compile tested, I don't have the hardware.
 
-Regards,
-  Marco
+ drivers/clk/sunxi/clk-sunxi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> So... fix the errant include.
-> 
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> Fixes: 56cc3af4e8c8e ("pinctrl: da9062: add driver support")
-> 
-> diff --git a/drivers/pinctrl/pinctrl-da9062.c b/drivers/pinctrl/pinctrl-da9062.c
-> index f704ee0b2fd9..cfbe529e66c3 100644
-> --- a/drivers/pinctrl/pinctrl-da9062.c
-> +++ b/drivers/pinctrl/pinctrl-da9062.c
-> @@ -25,7 +25,7 @@
->   * We need this get the gpio_desc from a <gpio_chip,offset> tuple to decide if
->   * the gpio is active low without a vendor specific dt-binding.
->   */
-> -#include <../gpio/gpiolib.h>
-> +#include <../drivers/gpio/gpiolib.h>
->  
->  #define DA9062_TYPE(offset)		(4 * (offset % 2))
->  #define DA9062_PIN_SHIFT(offset)	(4 * (offset % 2))
-> 
-> 
-
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 27201fd26e44..e1aa1fbac48a 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -90,7 +90,7 @@ static void sun6i_a31_get_pll1_factors(struct factors_request *req)
+ 	 * Round down the frequency to the closest multiple of either
+ 	 * 6 or 16
+ 	 */
+-	u32 round_freq_6 = round_down(freq_mhz, 6);
++	u32 round_freq_6 = rounddown(freq_mhz, 6);
+ 	u32 round_freq_16 = round_down(freq_mhz, 16);
+ 
+ 	if (round_freq_6 > round_freq_16)
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.25.1
+
