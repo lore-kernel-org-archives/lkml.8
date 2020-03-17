@@ -2,98 +2,142 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93445C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B65C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A75220663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:52:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NTwOhRl4"
+	by mail.kernel.org (Postfix) with ESMTP id E359C20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgCQHw6 (ORCPT
+        id S1726187AbgCQHzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:52:58 -0400
-Received: from ozlabs.org ([203.11.71.1]:37745 "EHLO ozlabs.org"
+        Tue, 17 Mar 2020 03:55:47 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45769 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbgCQHw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:52:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hQPz2Xv4z9sPF;
-        Tue, 17 Mar 2020 18:52:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584431576;
-        bh=DSwURBa8VIT0PGHZw7lwX4Ge4O+gelfo51SaBJ2swuE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NTwOhRl4EuzkD7IUdweJ5shFBxIdD9cWY+Gl11jZKlpEz72tzhSYpU6VD9v0qUtk+
-         eT4QHNYXzLvExKBrtgFYyWPGslb87rwgn/ygzg3ot/qPYoUr4jmUHUR/cOpmwmbmGF
-         zMl8KhXhFBz7qk+8frS+x0+1prN1HxinOqrEq/bCHQZmVH+1DHfVaYZVy+v+yKfI1C
-         rrSXQzgR2lpZy6k+dvd7G1Y45QUNKSb20OxkL/tGzl8MZFz3K5hrq3cUmph7sLv9D2
-         UHOpIKLXYjxNxb/LFL4KbLCOruf7fRtn5vyYCr4KwVsmWPRWMiJk0wlBaAcbap1Ctj
-         ZcpXwDVmxN69g==
-Date:   Tue, 17 Mar 2020 18:52:52 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Colin Ian King <colin.king@canonical.com>
-Subject: linux-next: build failure after merge of the pm tree
-Message-ID: <20200317185252.3cfeecde@canb.auug.org.au>
+        id S1725872AbgCQHzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 03:55:47 -0400
+IronPort-SDR: /Hm/qcicNixH3kqTxbs+O+3dJLb4Jt6PP3Cqu3/GtmgKSjRYdUGXW/qy7Le92p0+wMapf+6AW1
+ VtgoPra1XLBw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 00:55:47 -0700
+IronPort-SDR: eOFSdfZVZQknN6RXM/9BeO2Nd2xpz2d7sQp4msxwVTTZseODz8LEN/z76AcPAdzF9Scm4iCM4c
+ 1r3hOkOnq9mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
+   d="scan'208";a="279314858"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Mar 2020 00:55:44 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Eric Hankland <ehankland@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
+Subject: [PATCH] kvm/x86: Reduce counter period change overhead and delay the effective time
+Date:   Tue, 17 Mar 2020 15:53:15 +0800
+Message-Id: <20200317075315.70933-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uI9yGzSnE/VILAmY_B74A.s";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uI9yGzSnE/VILAmY_B74A.s
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The cost of perf_event_period() is unstable, and when the guest samples
+multiple events, the overhead increases dramatically (5378 ns on E5-2699).
 
-Hi all,
+For a non-running counter, the effective time of the new period is when
+its corresponding enable bit is enabled. Calling perf_event_period()
+in advance is superfluous. For a running counter, it's safe to delay the
+effective time until the KVM_REQ_PMU event is handled. If there are
+multiple perf_event_period() calls before handling KVM_REQ_PMU,
+it helps to reduce the total cost.
 
-After merging the pm tree, today's linux-next build (x86_64 allnoconfig)
-failed like this:
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
 
-fs/libfs.c: In function 'memory_read_from_io_buffer':
-fs/libfs.c:829:2: error: implicit declaration of function 'memcpy_fromio' [=
--Werror=3Dimplicit-function-declaration]
-  829 |  memcpy_fromio(to, from + pos, count);
-      |  ^~~~~~~~~~~~~
+---
+ arch/x86/kvm/pmu.c           | 11 -----------
+ arch/x86/kvm/pmu.h           | 11 +++++++++++
+ arch/x86/kvm/vmx/pmu_intel.c | 10 ++++------
+ 3 files changed, 15 insertions(+), 17 deletions(-)
 
-Caused by commit
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index d1f8ca57d354..527a8bb85080 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -437,17 +437,6 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
+ 	kvm_pmu_refresh(vcpu);
+ }
+ 
+-static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+-{
+-	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+-
+-	if (pmc_is_fixed(pmc))
+-		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+-			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+-
+-	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+-}
+-
+ /* Release perf_events for vPMCs that have been unused for a full time slice.  */
+ void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
+ {
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index d7da2b9e0755..cd112e825d2c 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -138,6 +138,17 @@ static inline u64 get_sample_period(struct kvm_pmc *pmc, u64 counter_value)
+ 	return sample_period;
+ }
+ 
++static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
++{
++	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
++
++	if (pmc_is_fixed(pmc))
++		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
++			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
++
++	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
++}
++
+ void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
+ void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
+ void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 7c857737b438..4e689273eb05 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -263,15 +263,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			if (!msr_info->host_initiated)
+ 				data = (s64)(s32)data;
+ 			pmc->counter += data - pmc_read_counter(pmc);
+-			if (pmc->perf_event)
+-				perf_event_period(pmc->perf_event,
+-						  get_sample_period(pmc, data));
++			if (pmc_speculative_in_use(pmc)) {
++				kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
+ 			return 0;
+ 		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
+ 			pmc->counter += data - pmc_read_counter(pmc);
+-			if (pmc->perf_event)
+-				perf_event_period(pmc->perf_event,
+-						  get_sample_period(pmc, data));
++			if (pmc_speculative_in_use(pmc)) {
++				kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
+ 			return 0;
+ 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+ 			if (data == pmc->eventsel)
+-- 
+2.21.1
 
-  08c07cefb304 ("ACPI: sysfs: copy ACPI data using io memory copying")
-
-Missing include of linux/io.h?
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/uI9yGzSnE/VILAmY_B74A.s
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5wgdQACgkQAVBC80lX
-0Gy2hwgAiw8PNpH6t1aX/qvZYVwXeQcVvh3qg/M/0zjpt8zM2latl9NaOetsEa82
-5JvnSwiC41FGcyea03Ur9i/5QOTipKysdZOcBoP1DKKvvzV3c+sgkykYa6bEg+qI
-/qOcDsnIzpRQ6O5o54OUyaQC3VJygqTN8apdsyyMYn/vV6iXb+mzhy4NlBmUbMd5
-Juu9y9zG1BxMenhDjQgsTpdFGc9WBw6H9Gmsi0L/zLdLBhILkzpnpWcjv3I+cmMB
-qvpKNSxGbhxLjhrS6gYQulfo+kTh/z5Opz1eCMAQiqlkxBvYIKuDYImXcqdYJpjT
-cNdBpMDJK8P7rieoNJvLuGiKF8jzOg==
-=jLTP
------END PGP SIGNATURE-----
-
---Sig_/uI9yGzSnE/VILAmY_B74A.s--
