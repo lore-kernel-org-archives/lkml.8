@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84576C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9866EC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E1420738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7CD2071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 04:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCQEx0 (ORCPT
+        id S1727091AbgCQExo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 00:53:26 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34106 "EHLO mga04.intel.com"
+        Tue, 17 Mar 2020 00:53:44 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34131 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726916AbgCQExT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 00:53:19 -0400
-IronPort-SDR: KreRwomM7VJGpCBfE/borSampHbVfiQcTCtQOonbkZwtstv+/9zeSqFeukFnKKw9Rfz2sOY03C
- 1MMA9C7vKf3g==
+        id S1726399AbgCQExZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 00:53:25 -0400
+IronPort-SDR: 2QU8lfrISksUDFNU9T6ow0/JVRaCfeTGhde1ZO4CJ4PJCGy8s9jFKT7mJxy6+R7+hzyq0DS/N8
+ Tv3BJWIK2cww==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:17 -0700
-IronPort-SDR: jQD7X+ULGfM6v79c19ndhGBd76QGW88CrUMnM5XdULPlsG7KpwoMM58s4AkfCY3rU6xh8BFo0n
- Pja434OCZO9g==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 21:53:25 -0700
+IronPort-SDR: ADldV2o6gjw4NvcMKGZo8jkFQBBhzBVX8AGFAOjlQoh48SfIW1KsP/J8bmZTu7bO2bnSkbmR7g
+ NOO3ZVgQg/fg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="355252789"
+   d="scan'208";a="355252842"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:17 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2020 21:53:24 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 17/32] KVM: SVM: Wire up ->tlb_flush_guest() directly to svm_flush_tlb()
-Date:   Mon, 16 Mar 2020 21:52:23 -0700
-Message-Id: <20200317045238.30434-18-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 32/32] KVM: nVMX: Free only the affected contexts when emulating INVEPT
+Date:   Mon, 16 Mar 2020 21:52:38 -0700
+Message-Id: <20200317045238.30434-33-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317045238.30434-1-sean.j.christopherson@intel.com>
 References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
@@ -59,42 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use svm_flush_tlb() directly for kvm_x86_ops->tlb_flush_guest() now that
-the @invalidate_gpa param to ->tlb_flush() is gone, i.e. the wrapper for
-->tlb_flush_guest() is no longer necessary.
-
-No functional change intended.
+Add logic to handle_invept() to free only those roots that match the
+target EPT context when emulating a single-context INVEPT.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/svm.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 62fa45dcb6a4..dfa3b53f8437 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5643,11 +5643,6 @@ static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
- 	invlpga(gva, svm->vmcb->control.asid);
- }
- 
--static void svm_flush_tlb_guest(struct kvm_vcpu *vcpu)
--{
--	svm_flush_tlb(vcpu);
--}
--
- static void svm_prepare_guest_switch(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index a77eab5b0e8a..3652ac2ffa19 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5139,12 +5139,14 @@ static int handle_invept(struct kvm_vcpu *vcpu)
  {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	u32 vmx_instruction_info, types;
+-	unsigned long type;
++	unsigned long type, roots_to_free;
++	struct kvm_mmu *mmu;
+ 	gva_t gva;
+ 	struct x86_exception e;
+ 	struct {
+ 		u64 eptp, gpa;
+ 	} operand;
++	int i;
+ 
+ 	if (!(vmx->nested.msrs.secondary_ctls_high &
+ 	      SECONDARY_EXEC_ENABLE_EPT) ||
+@@ -5176,23 +5178,37 @@ static int handle_invept(struct kvm_vcpu *vcpu)
+ 		return 1;
+ 	}
+ 
++	mmu = &vcpu->arch.guest_mmu;
++
+ 	switch (type) {
+ 	case VMX_EPT_EXTENT_CONTEXT:
+ 		if (!nested_vmx_check_eptp(vcpu, operand.eptp))
+ 			return nested_vmx_failValid(vcpu,
+ 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
+ 
+-		/* TODO: sync only the target EPTP context. */
+-		fallthrough;
++		roots_to_free = 0;
++		if (nested_ept_root_matches(mmu->root_hpa, mmu->root_cr3,
++					    operand.eptp))
++			roots_to_free |= KVM_MMU_ROOT_CURRENT;
++
++		for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++) {
++			if (nested_ept_root_matches(mmu->prev_roots[i].hpa,
++						    mmu->prev_roots[i].cr3,
++						    operand.eptp))
++				roots_to_free |= KVM_MMU_ROOT_PREVIOUS(i);
++		}
++		break;
+ 	case VMX_EPT_EXTENT_GLOBAL:
+-		kvm_mmu_free_roots(vcpu, &vcpu->arch.guest_mmu,
+-				   KVM_MMU_ROOTS_ALL);
++		roots_to_free = KVM_MMU_ROOTS_ALL;
+ 		break;
+ 	default:
+ 		BUG_ON(1);
+ 		break;
+ 	}
+ 
++	if (roots_to_free)
++		kvm_mmu_free_roots(vcpu, mmu, roots_to_free);
++
+ 	return nested_vmx_succeed(vcpu);
  }
-@@ -7405,7 +7400,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
  
- 	.tlb_flush = svm_flush_tlb,
- 	.tlb_flush_gva = svm_flush_tlb_gva,
--	.tlb_flush_guest = svm_flush_tlb_guest,
-+	.tlb_flush_guest = svm_flush_tlb,
- 
- 	.run = svm_vcpu_run,
- 	.handle_exit = handle_exit,
 -- 
 2.24.1
 
