@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B380C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5AEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6134D20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C0020658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443981;
-	bh=zIy4PtTqHP5sG2ZDhv6mTXuYL6t8WgXpvLShD16abIY=;
+	s=default; t=1584443988;
+	bh=SpoceLHzg5AKCH01Z2ag0L+5AX9kLQ7kRAV+kLT7H7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CIc1TLQtyGiPJXKK3KT/z3ZYokwr9TxFSwpH7SMAeBwec5C8aPMnPUNBZmbnQlTrl
-	 o6/kDs+itmHwrzA/fFZ33jOB4uY//k9PrY51V59AA6+0LMysl6NwoCjeO+pTCJxMaS
-	 WH4msc7W4U5G4FcfqIpyaePKCRqBIGm3Yr+kA15k=
+	b=kmZsODBo9hrV5Iqbh+j2h03CDYhM2Yc5YMSxDovt4c5h7kV+wdmd/JegNHRo7p/YM
+	 Zza8LLGtBqPYlAv/T8EJ7LY1l4Nvmy7hI+aiqgRVxbpH4XDnLYC7GoIRgH+oktrJGJ
+	 HzDWGEZLkUiqWnBlEgrDTYgKrjMZmW/Ycl/gkxIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgCQLTj (ORCPT
+        id S1728078AbgCQLDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43766 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:03:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbgCQLDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:03:44 -0400
+        id S1727319AbgCQLDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:03:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F56520658;
-        Tue, 17 Mar 2020 11:03:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5579220735;
+        Tue, 17 Mar 2020 11:03:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443024;
-        bh=zIy4PtTqHP5sG2ZDhv6mTXuYL6t8WgXpvLShD16abIY=;
+        s=default; t=1584442986;
+        bh=SpoceLHzg5AKCH01Z2ag0L+5AX9kLQ7kRAV+kLT7H7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZgSx755Te08PrUqJSGxOL+msB8LSqRdPG5b65w1V65elLUH7gg0dgppyT0cjikT80
-         WiAaWnfHcj91jshHBIdpLaE2QhiooqoaJZ2akH+Qlf+DHH2tmgV3u4+uagM5CcYqNb
-         iNmIvr19HWi0FPlFDPgVwVvlrhzP8mOcpODc4j3k=
+        b=ukxIyd8/hNE5Pnsap3flf6i7WueCYrR+OoZr3ZKXuWHBJJ7Cctba3LYbbp3Gr7H98
+         +vQpkkjUUnMmojGFB3yalGAO8wl0vTdqeOomuK75BX0Gnl/5nblIZn2StJhZFrtGO5
+         c+FQEbxm/dR9LMIMPUJxGg61rn9zsbI5ov9hW/eo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH 5.4 068/123] workqueue: dont use wq_select_unbound_cpu() for bound works
-Date:   Tue, 17 Mar 2020 11:54:55 +0100
-Message-Id: <20200317103314.476639796@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 057/123] net: phy: Avoid multiple suspends
+Date:   Tue, 17 Mar 2020 11:54:44 +0100
+Message-Id: <20200317103313.521377499@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -61,61 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit aa202f1f56960c60e7befaa0f49c72b8fa11b0a8 upstream.
+commit 503ba7c6961034ff0047707685644cad9287c226 upstream.
 
-wq_select_unbound_cpu() is designed for unbound workqueues only, but
-it's wrongly called when using a bound workqueue too.
+It is currently possible for a PHY device to be suspended as part of a
+network device driver's suspend call while it is still being attached to
+that net_device, either via phy_suspend() or implicitly via phy_stop().
 
-Fixing this ensures work queued to a bound workqueue with
-cpu=WORK_CPU_UNBOUND always runs on the local CPU.
+Later on, when the MDIO bus controller get suspended, we would attempt
+to suspend again the PHY because it is still attached to a network
+device.
 
-Before, that would happen only if wq_unbound_cpumask happened to include
-it (likely almost always the case), or was empty, or we got lucky with
-forced round-robin placement.  So restricting
-/sys/devices/virtual/workqueue/cpumask to a small subset of a machine's
-CPUs would cause some bound work items to run unexpectedly there.
+This is both a waste of time and creates an opportunity for improper
+clock/power management bugs to creep in.
 
-Fixes: ef557180447f ("workqueue: schedule WORK_CPU_UNBOUND work on wq_unbound_cpumask CPUs")
-Cc: stable@vger.kernel.org # v4.5+
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-[dj: massage changelog]
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/workqueue.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/phy/phy_device.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -1417,14 +1417,16 @@ static void __queue_work(int cpu, struct
- 		return;
- 	rcu_read_lock();
- retry:
--	if (req_cpu == WORK_CPU_UNBOUND)
--		cpu = wq_select_unbound_cpu(raw_smp_processor_id());
--
- 	/* pwq which will be used unless @work is executing elsewhere */
--	if (!(wq->flags & WQ_UNBOUND))
--		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
--	else
-+	if (wq->flags & WQ_UNBOUND) {
-+		if (req_cpu == WORK_CPU_UNBOUND)
-+			cpu = wq_select_unbound_cpu(raw_smp_processor_id());
- 		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
-+	} else {
-+		if (req_cpu == WORK_CPU_UNBOUND)
-+			cpu = raw_smp_processor_id();
-+		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
-+	}
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -246,7 +246,7 @@ static bool mdio_bus_phy_may_suspend(str
+ 	 * MDIO bus driver and clock gated at this point.
+ 	 */
+ 	if (!netdev)
+-		return !phydev->suspended;
++		goto out;
  
- 	/*
- 	 * If @work was previously on a different pool, it might still be
+ 	if (netdev->wol_enabled)
+ 		return false;
+@@ -266,7 +266,8 @@ static bool mdio_bus_phy_may_suspend(str
+ 	if (device_may_wakeup(&netdev->dev))
+ 		return false;
+ 
+-	return true;
++out:
++	return !phydev->suspended;
+ }
+ 
+ static int mdio_bus_phy_suspend(struct device *dev)
 
 
