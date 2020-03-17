@@ -2,132 +2,94 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EABC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA3CC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F58206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 627A12073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584443904;
+	bh=B4tdeLKm7NZ6cqVXu4gpvNgoZu6YVSYkH/hYD/HE9x4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VjwTPbRMX3icp6X+bGRTiaxyFWRle+2lLGrnSVXBChnxSTTU71c+BYh+XVqbhC/Hj
+	 BLh2TIvjqjUJicf2o5Lup4UcZGOYeoK0L+stgAoUlkwBFi3QhwXCnAEUvq2Fg32Rmu
+	 2yIhwDkpfZUtStQ/xfFaboMadqMiMAf7mkEisNvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgCQLST (ORCPT
+        id S1728528AbgCQLSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:18:19 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11713 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728631AbgCQLGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:06:33 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 908F797E1D8A3139C2F5;
-        Tue, 17 Mar 2020 19:06:28 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 17 Mar 2020 19:06:19 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>
-CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <james.clark@arm.com>,
-        <qiangqing.zhang@nxp.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 3/7] perf pmu: Refactor pmu_add_cpu_aliases()
-Date:   Tue, 17 Mar 2020 19:02:15 +0800
-Message-ID: <1584442939-8911-4-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
-References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
+        Tue, 17 Mar 2020 07:18:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728632AbgCQLGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:06:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACE5C20658;
+        Tue, 17 Mar 2020 11:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584443192;
+        bh=B4tdeLKm7NZ6cqVXu4gpvNgoZu6YVSYkH/hYD/HE9x4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZeA3F/0V90Fwcp80v5bG3BmmH84Mn63hB84yRhaUOMXYyzShn57OKO4CojPkU9IUr
+         TBGz9ODs/bZ5n0mC10Rq9+GW3LHLiRXdKoGAUmBiMuJLc7pt3Kb+ysYXJ8+ow8Veds
+         W2pX4n8P3Uf/QdTSD5sOEbHti+oIlSxc/bv1zDEw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.4 117/123] iommu/vt-d: Fix the wrong printing in RHSA parsing
+Date:   Tue, 17 Mar 2020 11:55:44 +0100
+Message-Id: <20200317103319.300776916@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
+References: <20200317103307.343627747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create pmu_add_cpu_aliases_map() from pmu_add_cpu_aliases(), so the caller
-can pass the map; the pmu-events test would use this since there would
-be no CPUID matching to a mapfile there.
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-Signed-off-by: John Garry <john.garry@huawei.com>
+commit b0bb0c22c4db623f2e7b1a471596fbf1c22c6dc5 upstream.
+
+When base address in RHSA structure doesn't match base address in
+each DRHD structure, the base address in last DRHD is printed out.
+
+This doesn't make sense when there are multiple DRHD units, fix it
+by printing the buggy RHSA's base address.
+
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Fixes: fd0c8894893cb ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/util/pmu.c | 21 +++++++++++++--------
- tools/perf/util/pmu.h |  3 +++
- 2 files changed, 16 insertions(+), 8 deletions(-)
+ drivers/iommu/dmar.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 8b99fd312aae..c616a06a34a8 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -21,7 +21,6 @@
- #include "pmu.h"
- #include "parse-events.h"
- #include "header.h"
--#include "pmu-events/pmu-events.h"
- #include "string2.h"
- #include "strbuf.h"
- #include "fncache.h"
-@@ -744,16 +743,11 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
-  * to the current running CPU. Then, add all PMU events from that table
-  * as aliases.
-  */
--static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
-+void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
-+			     struct pmu_events_map *map)
- {
- 	int i;
--	struct pmu_events_map *map;
- 	const char *name = pmu->name;
--
--	map = perf_pmu__find_map(pmu);
--	if (!map)
--		return;
--
- 	/*
- 	 * Found a matching PMU events table. Create aliases
- 	 */
-@@ -788,6 +782,17 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
- 	}
- }
- 
-+static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
-+{
-+	struct pmu_events_map *map;
-+
-+	map = perf_pmu__find_map(pmu);
-+	if (!map)
-+		return;
-+
-+	pmu_add_cpu_aliases_map(head, pmu, map);
-+}
-+
- struct perf_event_attr * __weak
- perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
- {
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 6737e3d5d568..0b4a0efae38e 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -7,6 +7,7 @@
- #include <linux/perf_event.h>
- #include <stdbool.h>
- #include "parse-events.h"
-+#include "pmu-events/pmu-events.h"
- 
- struct perf_evsel_config_term;
- 
-@@ -97,6 +98,8 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
- int perf_pmu__test(void);
- 
- struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
-+void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
-+			     struct pmu_events_map *map);
- 
- struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
- 
--- 
-2.12.3
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -475,7 +475,7 @@ static int dmar_parse_one_rhsa(struct ac
+ 	pr_warn(FW_BUG
+ 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
+ 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+-		drhd->reg_base_addr,
++		rhsa->base_address,
+ 		dmi_get_system_info(DMI_BIOS_VENDOR),
+ 		dmi_get_system_info(DMI_BIOS_VERSION),
+ 		dmi_get_system_info(DMI_PRODUCT_VERSION));
+
 
