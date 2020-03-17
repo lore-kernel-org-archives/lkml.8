@@ -2,58 +2,109 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD7CC0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBF8C0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B2B2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AB642051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733186AbgCQBZM (ORCPT
+        id S1733165AbgCQBZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:25:12 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:50588 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733114AbgCQBZL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:25:11 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 232ED157A55C2;
-        Mon, 16 Mar 2020 18:25:11 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 18:25:10 -0700 (PDT)
-Message-Id: <20200316.182510.943116149103375831.davem@davemloft.net>
-To:     hqjagain@gmail.com
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, kuba@kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sctp: fix refcount bug in sctp_wfree
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1584330804-18477-1-git-send-email-hqjagain@gmail.com>
-References: <1584330804-18477-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 16 Mar 2020 21:25:17 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:55060 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733017AbgCQBZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:25:16 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jE0yo-0008I8-Hx; Mon, 16 Mar 2020 19:25:15 -0600
+To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+References: <20200313183608.2646-1-logang@deltatee.com>
+ <87mu8fdck6.fsf@nanos.tec.linutronix.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <38781f88-32df-e89a-7d00-fd2fcc097497@deltatee.com>
+Date:   Mon, 16 Mar 2020 19:25:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <87mu8fdck6.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Mar 2020 18:25:11 -0700 (PDT)
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: bigeasy@linutronix.de, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] PCI/switchtec: Fix init_completion race condition with
+ poll_wait()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
-Date: Mon, 16 Mar 2020 11:53:24 +0800
 
-> Do accounting for skb's real sk.
-> In some case skb->sk != asoc->base.sk.
+
+On 2020-03-16 6:56 p.m., Thomas Gleixner wrote:
+> Logan,
 > 
-> Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> Logan Gunthorpe <logang@deltatee.com> writes:
+> 
+>> The call to init_completion() in mrpc_queue_cmd() can theoretically
+>> race with the call to poll_wait() in switchtec_dev_poll().
+>>
+>>   poll()			write()
+>>     switchtec_dev_poll()   	  switchtec_dev_write()
+>>       poll_wait(&s->comp.wait);      mrpc_queue_cmd()
+>> 			               init_completion(&s->comp)
+>> 				         init_waitqueue_head(&s->comp.wait)
+> 
+> just a nitpick. As you took the liberty to copy the description of the
+> race, which was btw. disovered by me, verbatim from a changelog written
+> by someone else w/o providing the courtesy of linking to that original
+> analysis, allow me the liberty to add the missing link:
+>
+> Link: https://lore.kernel.org/lkml/20200313174701.148376-4-bigeasy@linutronix.de
 
-SCTP folks, please review.
+Well, I just copied the call chain. I had no way to know you were the
+one who discovered the bug given the way it was presented to me. And the
+original patch didn't include much in the way of analysis of the bug,
+just "It's Racy".
+
+I didn't deliberately omit the link, it just never occurred to me to add
+it. In retrospect, I should have included it, sorry about that.
+
+>> To my knowledge, no one has hit this bug, but we should fix it for
+>> correctness.
+> 
+> s/,but we should fix/.Fix/ ?
+
+Yes, that's an improvement.
+
+>> Fix this by using reinit_completion() instead of init_completion() in
+>> mrpc_queue_cmd().
+>>
+>> Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+>> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> 
+> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+
+Thanks.
+
+> @Bjorn: Can you please hold off on this for a few days until we sorted
+>         out the remaining issues to avoid potential merge conflicts
+>         vs. the completion series?
+
+I'd suggest simply rebasing the completion patch on this patch, or a
+patch like it. Then we'll have the proper bug fix commit and there won't
+be a conflict.
+
+Logan
