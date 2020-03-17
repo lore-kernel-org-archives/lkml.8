@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291EEC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ED7C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 001B020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C13F20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D5QIq+be"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rj1/+tdV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgCQRMh (ORCPT
+        id S1727033AbgCQRMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:12:37 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45264 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgCQRME (ORCPT
+        Tue, 17 Mar 2020 13:12:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46220 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbgCQRMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:12:04 -0400
+        Tue, 17 Mar 2020 13:12:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=TtIFiidiC1pMhbCuxR9rpMty3o/4GypcOLA9HVS7d+s=; b=D5QIq+bevlglaTrKa0ayFuNU5K
-        5zFzT02i7Q+GMeYS5Z0b+vyzUZRCbwwQwFX6U1XeNBzYoSQ7N12qRWY02/2CLlnx5xhWIvDwwrcE0
-        wH+Q60zWRifj95tzxZrExr1wEM0YA3rEoUJIr4RR+rfFDQfHXmUjDlgvD8UXyKjxYGOhy05Brxuz0
-        QX/IT/hqsMk2bLLvhJJJbJMxRrEydDuYmk+modywfsxCoOWG2yEdbIxEZ3sCFs06nBb8aW/9IQRkl
-        mFflCiyVJ2n56zUW6eMcVvbna1n4Dz2j27fnuNvf5E/ZkHYyl8NRgyrqoufz2uk9BYF3jP87fCbSq
-        twQ3cKrw==;
+        bh=I+xjW8SmjuSc3NcehLz1xs8WhtELcrND9tPUxiTJy1I=; b=rj1/+tdVMy+dy1yAtLE+qHRoCx
+        fnyWUpiIQNdd0joI6c50WL4gJmHrxEN8BAI61yPLChC+HqTRRmiQPAZrCiid1MiDOpUgRJx5kVTBH
+        KWiBY0atYWQr759AZ7F0IACm6VHQLppRImA+xWloUDKN3rNVyXF2X0Uyekm7/ALLJnwdVahm1DFZ2
+        XPo98mb8sypEARDNtuv/SFdhSYXvIfWOoF2rdf1+E9d7eH5OEgssBhAnSfIkvTaqKQ8zOxqNrTPb9
+        hwyEKK3a1rIjyZDN3hBvPlgRCdoTLqoE0OVBgrXVHiazG+ZDtdVO22wEgLauzjpyUZTRzJ2bkEu3M
+        fvIuuczg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEFl1-0003jP-Fk; Tue, 17 Mar 2020 17:11:59 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEFkz-0002r9-Vu; Tue, 17 Mar 2020 17:11:58 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EF72D3060A0;
-        Tue, 17 Mar 2020 18:11:54 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 08FA53070F4;
+        Tue, 17 Mar 2020 18:11:55 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id D2255264FDB19; Tue, 17 Mar 2020 18:11:54 +0100 (CET)
-Message-Id: <20200317170910.118361227@infradead.org>
+        id EC92A20B16493; Tue, 17 Mar 2020 18:11:54 +0100 (CET)
+Message-Id: <20200317170910.356432759@infradead.org>
 User-Agent: quilt/0.65
-Date:   Tue, 17 Mar 2020 18:02:40 +0100
+Date:   Tue, 17 Mar 2020 18:02:44 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     tglx@linutronix.de, jpoimboe@redhat.com
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
         mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: [PATCH v2 06/19] objtool: Add a statistics mode
+Subject: [PATCH v2 10/19] objtool: Rename find_containing_func()
 References: <20200317170234.897520633@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,136 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Have it print a few numbers which can be used to size the hashtables.
+For consistency; we have:
+
+  find_symbol_by_offset() / find_symbol_containing()
+  find_func_by_offset()   / find_containing_func()
+
+fix that.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- tools/objtool/builtin-check.c |    3 ++-
- tools/objtool/builtin.h       |    2 +-
- tools/objtool/check.c         |    5 +++++
- tools/objtool/elf.c           |   18 +++++++++++++++++-
- 4 files changed, 25 insertions(+), 3 deletions(-)
+ tools/objtool/elf.c  |    2 +-
+ tools/objtool/elf.h  |    2 +-
+ tools/objtool/warn.h |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -17,7 +17,7 @@
- #include "builtin.h"
- #include "check.h"
- 
--bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess;
-+bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
- 
- static const char * const check_usage[] = {
- 	"objtool check [<options>] file.o",
-@@ -31,6 +31,7 @@ const struct option check_options[] = {
- 	OPT_BOOLEAN('m', "module", &module, "Indicates the object will be part of a kernel module"),
- 	OPT_BOOLEAN('b', "backtrace", &backtrace, "unwind on error"),
- 	OPT_BOOLEAN('a', "uaccess", &uaccess, "enable uaccess checking"),
-+	OPT_BOOLEAN('s', "stats", &stats, "print statistics"),
- 	OPT_END(),
- };
- 
---- a/tools/objtool/builtin.h
-+++ b/tools/objtool/builtin.h
-@@ -8,7 +8,7 @@
- #include <subcmd/parse-options.h>
- 
- extern const struct option check_options[];
--extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess;
-+extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
- 
- extern int cmd_check(int argc, const char **argv);
- extern int cmd_orc(int argc, const char **argv);
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -239,6 +239,7 @@ static int decode_instructions(struct ob
- 	struct symbol *func;
- 	unsigned long offset;
- 	struct instruction *insn;
-+	unsigned long nr_insns = 0;
- 	int ret;
- 
- 	for_each_sec(file, sec) {
-@@ -274,6 +275,7 @@ static int decode_instructions(struct ob
- 
- 			hash_add(file->insn_hash, &insn->hash, insn->offset);
- 			list_add_tail(&insn->list, &file->insn_list);
-+			nr_insns++;
- 		}
- 
- 		list_for_each_entry(func, &sec->symbol_list, list) {
-@@ -291,6 +293,9 @@ static int decode_instructions(struct ob
- 		}
- 	}
- 
-+	if (stats)
-+		printf("nr_insns: %lu\n", nr_insns);
-+
- 	return 0;
- 
- err:
 --- a/tools/objtool/elf.c
 +++ b/tools/objtool/elf.c
-@@ -15,6 +15,7 @@
- #include <string.h>
- #include <unistd.h>
- #include <errno.h>
-+#include "builtin.h"
+@@ -187,7 +187,7 @@ struct symbol *find_symbol_containing(st
+ 	return NULL;
+ }
  
- #include "elf.h"
- #include "warn.h"
-@@ -202,6 +203,9 @@ static int read_sections(struct elf *elf
- 		sec->len = sec->sh.sh_size;
- 	}
+-struct symbol *find_containing_func(struct section *sec, unsigned long offset)
++struct symbol *find_func_containing(struct section *sec, unsigned long offset)
+ {
+ 	struct rb_node *node;
  
-+	if (stats)
-+		printf("nr_sections: %lu\n", (unsigned long)sections_nr);
-+
- 	/* sanity check, one more call to elf_nextscn() should return NULL */
- 	if (elf_nextscn(elf->elf, s)) {
- 		WARN("section entry mismatch");
-@@ -299,6 +303,9 @@ static int read_symbols(struct elf *elf)
- 		hash_add(elf->symbol_hash, &sym->hash, sym->idx);
- 	}
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -91,7 +91,7 @@ struct symbol *find_symbol_containing(st
+ struct rela *find_rela_by_dest(struct section *sec, unsigned long offset);
+ struct rela *find_rela_by_dest_range(struct section *sec, unsigned long offset,
+ 				     unsigned int len);
+-struct symbol *find_containing_func(struct section *sec, unsigned long offset);
++struct symbol *find_func_containing(struct section *sec, unsigned long offset);
+ struct section *elf_create_section(struct elf *elf, const char *name, size_t
+ 				   entsize, int nr);
+ struct section *elf_create_rela_section(struct elf *elf, struct section *base);
+--- a/tools/objtool/warn.h
++++ b/tools/objtool/warn.h
+@@ -21,7 +21,7 @@ static inline char *offstr(struct sectio
+ 	char *name, *str;
+ 	unsigned long name_off;
  
-+	if (stats)
-+		printf("nr_symbols: %lu\n", (unsigned long)symbols_nr);
-+
- 	/* Create parent/child links for any cold subfunctions */
- 	list_for_each_entry(sec, &elf->sections, list) {
- 		list_for_each_entry(sym, &sec->symbol_list, list) {
-@@ -360,6 +367,7 @@ static int read_relas(struct elf *elf)
- 	struct rela *rela;
- 	int i;
- 	unsigned int symndx;
-+	unsigned long nr_rela, max_rela = 0, tot_rela = 0;
- 
- 	list_for_each_entry(sec, &elf->sections, list) {
- 		if (sec->sh.sh_type != SHT_RELA)
-@@ -374,6 +382,7 @@ static int read_relas(struct elf *elf)
- 
- 		sec->base->rela = sec;
- 
-+		nr_rela = 0;
- 		for (i = 0; i < sec->sh.sh_size / sec->sh.sh_entsize; i++) {
- 			rela = malloc(sizeof(*rela));
- 			if (!rela) {
-@@ -401,8 +410,15 @@ static int read_relas(struct elf *elf)
- 
- 			list_add_tail(&rela->list, &sec->rela_list);
- 			hash_add(sec->rela_hash, &rela->hash, rela->offset);
--
-+			nr_rela++;
- 		}
-+		max_rela = max(max_rela, nr_rela);
-+		tot_rela += nr_rela;
-+	}
-+
-+	if (stats) {
-+		printf("max_rela: %lu\n", max_rela);
-+		printf("tot_rela: %lu\n", tot_rela);
- 	}
- 
- 	return 0;
+-	func = find_containing_func(sec, offset);
++	func = find_func_containing(sec, offset);
+ 	if (func) {
+ 		name = func->name;
+ 		name_off = offset - func->offset;
 
 
