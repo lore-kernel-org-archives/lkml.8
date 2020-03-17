@@ -2,157 +2,89 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E430BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC20C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0BF2071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wd8arqk+"
+	by mail.kernel.org (Postfix) with ESMTP id 84FD52073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgCQJkQ (ORCPT
+        id S1726856AbgCQJkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:40:16 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33464 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgCQJkN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:40:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z65so25528161ede.0;
-        Tue, 17 Mar 2020 02:40:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=Z+fnHPmjTvYVaCbry35HAxtdpXdWo4RD3OIz+px6SGc=;
-        b=Wd8arqk+ky/rUkkIYXPsVMQ1m9DliRq56vGPcryGaIl9nl1q7/V2snm5rdly3z8Oec
-         iRXiFwNg1xdkDZi7oiR4VIA1SaAr1V6j9pCvbgvBv+Mt+AH4XCxUrEh7hK2rs5WHKIHt
-         qFW3M59FVVbcG6mZWmCFljtEzMWJblCi6pydhLeZQptGynR2kJqWicJBBXNUGDUBKcW6
-         9vWGH1JBpfXGwBstUKPHgLrYHHvTwP8Zj1h+MiD01ebw/DmvPg5VBGO8kMeVBpIYnxuK
-         qrXtZak/ruwGq0wAvfVSunWfIVZBw4lsSPAk5ijYvTogzCCFsahhqd7aJPK7KVG3RPgt
-         f8SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Z+fnHPmjTvYVaCbry35HAxtdpXdWo4RD3OIz+px6SGc=;
-        b=UxPsa/21QrvfcMOxopvOuRo1fWpaA2L/nbbht3xXFzrXqFpC/Rz3lpUnpYwqhlBpB/
-         gwRVKCgZplewCxNaihjf6TyCu8nI64u06W3uZHgkn4FxVhxzQZ3X5wZHM2qwXdlOXLSi
-         EUivFJkak02930ry7d1Tfo1/nkNzDPc/QKm6yjYTf7Nc8t7pZazQwkIN/OFJUn7dJh9d
-         +85vEQD/NSw0skAADXaO3m5gtm2vY+QzzoJzu2ryWzk554lcTAl2/CzH5IshOwfebtoK
-         eCYLZ2tzlNCHVnBcG0BvzxI4iSxji2uJHoniRStBphV3Jxn5lW0uP+K/pXXO02+q0vcU
-         v/zA==
-X-Gm-Message-State: ANhLgQ2qIN3lEiG4QMZI2M5KJ6vYyx66U8YlLTYcWVbHmExO3SsP6YrE
-        R/898AoYShIRLwezjsLMG7bQghV5TD7fSmoaa+8=
-X-Google-Smtp-Source: ADFU+vvei8gNf0aOLwxNV7tM+antMLxB/49Sgt3hcAwiXwanufRDe6jH1Jpeb5CgdbhLdyycQMV4+IisSCsMoEVfNSQ=
-X-Received: by 2002:a17:906:70c9:: with SMTP id g9mr3284339ejk.243.1584438011180;
- Tue, 17 Mar 2020 02:40:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200317083043.226593-1-areber@redhat.com>
-In-Reply-To: <20200317083043.226593-1-areber@redhat.com>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Tue, 17 Mar 2020 10:40:00 +0100
-Message-ID: <CAKgNAkh7=2Noyn0o3880xbbi4w5oiwqs9ibTYLtheqzxne3mbQ@mail.gmail.com>
-Subject: Re: clone3: allow creation of time namespace with offset
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Tue, 17 Mar 2020 05:40:22 -0400
+Received: from v6.sk ([167.172.42.174]:50228 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbgCQJkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:40:12 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 50ADC60FFA;
+        Tue, 17 Mar 2020 09:40:09 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 09/28] ARM: dts: mmp3: fix L2 cache controller node name
+Date:   Tue, 17 Mar 2020 10:39:03 +0100
+Message-Id: <20200317093922.20785-10-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[CC += linux-api; please CC on future versions]
+The current one makes validation unhappy:
 
-On Tue, 17 Mar 2020 at 09:32, Adrian Reber <areber@redhat.com> wrote:
->
-> This is an attempt to add time namespace support to clone3(). I am not
-> really sure which way clone3() should handle time namespaces. The time
-> namespace through /proc cannot be used with clone3() because the offsets
-> for the time namespace need to be written before a process has been
-> created in that time namespace. This means it is necessary to somehow
-> tell clone3() the offsets for the clocks.
->
-> The time namespace offers the possibility to set offsets for
-> CLOCK_MONOTONIC and CLOCK_BOOTTIME. My first approach was to extend
-> 'struct clone_args` with '__aligned_u64 monotonic_offset' and
-> '__aligned_u64 boottime_offset'. The problem with this approach was that
-> it was not possible to set nanoseconds for the clocks in the time
-> namespace.
->
-> One of the motivations for clone3() with CLONE_NEWTIME was to enable
-> CRIU to restore a process in a time namespace with the corresponding
-> offsets. And although the nanosecond value can probably never be
-> restored to the same value it had during checkpointing, because the
-> clock keeps on running between CRIU pausing all processes and CRIU
-> actually reading the value of the clocks, the nanosecond value is still
-> necessary for CRIU to not restore a process where the clock jumps back
-> due to CRIU restoring it with a nanonsecond value that is too small.
->
-> Requiring nanoseconds as well as seconds for two clocks during clone3()
-> means that it would require 4 additional members to 'struct clone_args':
->
->         __aligned_u64 tls;
->         __aligned_u64 set_tid;
->         __aligned_u64 set_tid_size;
-> +       __aligned_u64 boottime_offset_seconds;
-> +       __aligned_u64 boottime_offset_nanoseconds;
-> +       __aligned_u64 monotonic_offset_seconds;
-> +       __aligned_u64 monotonic_offset_nanoseconds;
->  };
->
-> To avoid four additional members to 'struct clone_args' this patchset
-> uses another approach:
->
->         __aligned_u64 tls;
->         __aligned_u64 set_tid;
->         __aligned_u64 set_tid_size;
-> +       __aligned_u64 timens_offset;
-> +       __aligned_u64 timens_offset_size;
->  };
->
-> timens_offset is a pointer to an array just as previously done with
-> set_tid and timens_offset_size is the size of the array.
->
-> The timens_offset array is expected to contain a struct like this:
->
-> struct set_timens_offset {
->        int clockid;
->        struct timespec val;
-> };
->
-> This way it is possible to pass the information of multiple clocks with
-> seconds and nanonseconds to clone3().
->
-> To me this seems the better approach, but I am not totally convinced
-> that it is the right thing. If there are other ideas how to pass two
-> clock offsets with seconds and nanonseconds to clone3() I would be happy
-> to hear other ideas.
->
->                 Adrian
->
->
+  mmp3-dell-ariel.dt.yaml: l2-cache-controller@d0020000: $nodename:0:
+      'l2-cache-controller@d0020000' does not match
+      '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ arch/arm/boot/dts/mmp3.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
+index 649aa74851257..eaff9b1bc1d9f 100644
+--- a/arch/arm/boot/dts/mmp3.dtsi
++++ b/arch/arm/boot/dts/mmp3.dtsi
+@@ -523,7 +523,7 @@ ssp4: spi@d4039000 {
+ 			};
+ 		};
+ 
+-		l2: l2-cache-controller@d0020000 {
++		l2: cache-controller@d0020000 {
+ 			compatible = "marvell,tauros3-cache", "arm,pl310-cache";
+ 			reg = <0xd0020000 0x1000>;
+ 			cache-unified;
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.25.1
+
