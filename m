@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67722C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967BBC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E832071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4D920658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443261;
-	bh=jPyM3qE2/ZKFJSaTlU0gmDV+PKPs99wF1Qnb/KkVCiA=;
+	s=default; t=1584443264;
+	bh=kgGuoJjHO/MyoafybOuLhsR0hGAVHxo8y/T7jI7eyFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=omv6VqyIgYq7FofTOHlCmNwmYut9mjFOqvMwBhirU+69SILHxMdRVgZokvVRhCOKd
-	 l8g2f997IicZ/oap+CS3+MYB39k3BORLpgD5rEZ5xWZ9ktKj/HtLGHrwcmxXifedlw
-	 YdiUxiMkZExgPDLXewziQeJJnTxG5kB7YyEsV+as=
+	b=hqKcKRwpasPZay1lrQ9WR0hL9SHkL+WCPdVXk4nBUsDbzR3mN8AkHPeOHKQ6hJpVR
+	 iTgI4IBJIIaiWeJYAlaDbjtijFR3a792jYSSVf80yMdBTuuGiFabseOzvj1wNrm0v4
+	 SNxlDLrGGhJkPv5l0g60OtKEOaA3a60gUwiRPYa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgCQLHk (ORCPT
+        id S1728769AbgCQLHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:07:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49312 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:07:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728748AbgCQLHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:07:37 -0400
+        id S1728762AbgCQLHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:07:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6DAD2071C;
-        Tue, 17 Mar 2020 11:07:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DF37206EC;
+        Tue, 17 Mar 2020 11:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443257;
-        bh=jPyM3qE2/ZKFJSaTlU0gmDV+PKPs99wF1Qnb/KkVCiA=;
+        s=default; t=1584443259;
+        bh=kgGuoJjHO/MyoafybOuLhsR0hGAVHxo8y/T7jI7eyFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OecHsMX7FOMOJv2jmHessTMQycS4sxcZAKgcqkMlOBz85J4k2K21mPHKS3oEHjtT6
-         D5OpoZDEbd2HxFBSUVq+9YW9sfyuHB/hLDkG0B5VRYDmON07Y6eTBA9yAdCybw2lpO
-         W6am8Nu/Bvfs5AnIi4kVmYiec+mYsy27BFFMrrr4=
+        b=O0PtSH+ftu1cRFSdrNOOrJFYHZTB5ZRJ7lYnHq+AGjnzKMxPYlqpit9NiD6cY795f
+         AbbGqu/aPVYUvL2E6iTEg4wZbh1X39JdpqkNEQNEnEhTQ+z2rLRRx7WVdHuWNGAAzF
+         PAxmZRObEa6kiaaO/IxKLmv08deCrOy9E18Se2bU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 026/151] net/smc: cancel event worker during device removal
-Date:   Tue, 17 Mar 2020 11:53:56 +0100
-Message-Id: <20200317103328.588704431@linuxfoundation.org>
+Subject: [PATCH 5.5 027/151] net: stmmac: dwmac1000: Disable ACS if enhanced descs are not used
+Date:   Tue, 17 Mar 2020 11:53:57 +0100
+Message-Id: <20200317103328.645986941@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -63,33 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
+From: Remi Pommarel <repk@triplefau.lt>
 
-[ Upstream commit ece0d7bd74615773268475b6b64d6f1ebbd4b4c6 ]
+[ Upstream commit b723bd933980f4956dabc8a8d84b3e83be8d094c ]
 
-During IB device removal, cancel the event worker before the device
-structure is freed.
+ACS (auto PAD/FCS stripping) removes FCS off 802.3 packets (LLC) so that
+there is no need to manually strip it for such packets. The enhanced DMA
+descriptors allow to flag LLC packets so that the receiving callback can
+use that to strip FCS manually or not. On the other hand, normal
+descriptors do not support that.
 
-Fixes: a4cf0443c414 ("smc: introduce SMC as an IB-client")
-Reported-by: syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Thus in order to not truncate LLC packet ACS should be disabled when
+using normal DMA descriptors.
+
+Fixes: 47dd7a540b8a0 ("net: add support for STMicroelectronics Ethernet controllers.")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/smc/smc_ib.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/smc/smc_ib.c
-+++ b/net/smc/smc_ib.c
-@@ -580,6 +580,7 @@ static void smc_ib_remove_dev(struct ib_
- 	smc_smcr_terminate_all(smcibdev);
- 	smc_ib_cleanup_per_ibdev(smcibdev);
- 	ib_unregister_event_handler(&smcibdev->event_handler);
-+	cancel_work_sync(&smcibdev->port_event_work);
- 	kfree(smcibdev);
- }
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -24,6 +24,7 @@
+ static void dwmac1000_core_init(struct mac_device_info *hw,
+ 				struct net_device *dev)
+ {
++	struct stmmac_priv *priv = netdev_priv(dev);
+ 	void __iomem *ioaddr = hw->pcsr;
+ 	u32 value = readl(ioaddr + GMAC_CONTROL);
+ 	int mtu = dev->mtu;
+@@ -35,7 +36,7 @@ static void dwmac1000_core_init(struct m
+ 	 * Broadcom tags can look like invalid LLC/SNAP packets and cause the
+ 	 * hardware to truncate packets on reception.
+ 	 */
+-	if (netdev_uses_dsa(dev))
++	if (netdev_uses_dsa(dev) || !priv->plat->enh_desc)
+ 		value &= ~GMAC_CONTROL_ACS;
  
+ 	if (mtu > 1500)
 
 
