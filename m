@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B521AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553E7C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8267206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3FB206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443624;
-	bh=/nWrJblcpqnurc3UxqK8I4QcofZIKkRdBaCizCQSezk=;
+	s=default; t=1584443627;
+	bh=EGOVcHAm9+4S56CNGZKK0RMTbMh0xuIspggeSUBZaHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X5KEZZbpktkqBMPNqgQYh2xiyNohphBiN97dNJGrNJ1VEI6HaDQFWtO89a5SwWAP2
-	 z8+tHvDQqqZc/2qH641JpH2i6doCkCllXrOCVnjNtV5kY6WL2Oxg3k+7hSLjOAAJ+T
-	 JXU9ZOMOx8SaYOKxEvqkmezdXqqzVU6CyjD586vU=
+	b=Ew8sscEDvky6XHOV8QeqHB6Wzl5JOlcH2DcbXo4s0OpgqtO9VtjhpOCMO+R5cFbjH
+	 +4jH+rtOHPPGUYsG/+4TMTsadDkpdgnf36LicGfBhYALF2cziQhIZb3h32bg96dVqu
+	 kq4471pdULag4+aJmH/0XLGFvttGddJqesGnYqbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgCQLNj (ORCPT
+        id S1729525AbgCQLNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:13:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:13:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729240AbgCQLNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:33 -0400
+        id S1728012AbgCQLNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:13:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A430205ED;
-        Tue, 17 Mar 2020 11:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07CC1205ED;
+        Tue, 17 Mar 2020 11:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443613;
-        bh=/nWrJblcpqnurc3UxqK8I4QcofZIKkRdBaCizCQSezk=;
+        s=default; t=1584443621;
+        bh=EGOVcHAm9+4S56CNGZKK0RMTbMh0xuIspggeSUBZaHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o204dmFhH6OaUSK93nJjBpTp5uDpNtxGV7YjOTZltlX2m2IbAozGdV3/YZgC1FnnX
-         DRSPFqem+pLDIYGlEWDSWv3Ct4oJaoc/umfHBAZ0oyIl4cutHdixzjSIkd281OOXy1
-         YwAOkUNEXz6RWNjkJZxe2OlZtjHH2geNuqiND9k4=
+        b=iHzXl7Db3nZxYmfYEk2LKZ1QoiE+TczbiUoOGBp2WMXpS43p1pjTGRkhKMjk08cMv
+         dlpSINb7CkO+tJYqBNLfYiXNdd9apM6pADBESc+tSAg19KxUwGqiHYWWJDYoY5596h
+         Ya4vj2WD/0xq/36b9Zsr2n1kHQAk8YGRC8Izv4nQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.5 134/151] iommu/vt-d: Fix RCU-list bugs in intel_iommu_init()
-Date:   Tue, 17 Mar 2020 11:55:44 +0100
-Message-Id: <20200317103335.954284242@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.5 145/151] netfilter: nft_chain_nat: inet family is missing module ownership
+Date:   Tue, 17 Mar 2020 11:55:55 +0100
+Message-Id: <20200317103337.001569181@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,77 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 2d48ea0efb8887ebba3e3720bb5b738aced4e574 upstream.
+commit 6a42cefb25d8bdc1b391f4a53c78c32164eea2dd upstream.
 
-There are several places traverse RCU-list without holding any lock in
-intel_iommu_init(). Fix them by acquiring dmar_global_lock.
+Set owner to THIS_MODULE, otherwise the nft_chain_nat module might be
+removed while there are still inet/nat chains in place.
 
- WARNING: suspicious RCU usage
- -----------------------------
- drivers/iommu/intel-iommu.c:5216 RCU-list traversed in non-reader section!!
+[  117.942096] BUG: unable to handle page fault for address: ffffffffa0d5e040
+[  117.942101] #PF: supervisor read access in kernel mode
+[  117.942103] #PF: error_code(0x0000) - not-present page
+[  117.942106] PGD 200c067 P4D 200c067 PUD 200d063 PMD 3dc909067 PTE 0
+[  117.942113] Oops: 0000 [#1] PREEMPT SMP PTI
+[  117.942118] CPU: 3 PID: 27 Comm: kworker/3:0 Not tainted 5.6.0-rc3+ #348
+[  117.942133] Workqueue: events nf_tables_trans_destroy_work [nf_tables]
+[  117.942145] RIP: 0010:nf_tables_chain_destroy.isra.0+0x94/0x15a [nf_tables]
+[  117.942149] Code: f6 45 54 01 0f 84 d1 00 00 00 80 3b 05 74 44 48 8b 75 e8 48 c7 c7 72 be de a0 e8 56 e6 2d e0 48 8b 45 e8 48 c7 c7 7f be de a0 <48> 8b 30 e8 43 e6 2d e0 48 8b 45 e8 48 8b 40 10 48 85 c0 74 5b 8b
+[  117.942152] RSP: 0018:ffffc9000015be10 EFLAGS: 00010292
+[  117.942155] RAX: ffffffffa0d5e040 RBX: ffff88840be87fc2 RCX: 0000000000000007
+[  117.942158] RDX: 0000000000000007 RSI: 0000000000000086 RDI: ffffffffa0debe7f
+[  117.942160] RBP: ffff888403b54b50 R08: 0000000000001482 R09: 0000000000000004
+[  117.942162] R10: 0000000000000000 R11: 0000000000000001 R12: ffff8883eda7e540
+[  117.942164] R13: dead000000000122 R14: dead000000000100 R15: ffff888403b3db80
+[  117.942167] FS:  0000000000000000(0000) GS:ffff88840e4c0000(0000) knlGS:0000000000000000
+[  117.942169] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  117.942172] CR2: ffffffffa0d5e040 CR3: 00000003e4c52002 CR4: 00000000001606e0
+[  117.942174] Call Trace:
+[  117.942188]  nf_tables_trans_destroy_work.cold+0xd/0x12 [nf_tables]
+[  117.942196]  process_one_work+0x1d6/0x3b0
+[  117.942200]  worker_thread+0x45/0x3c0
+[  117.942203]  ? process_one_work+0x3b0/0x3b0
+[  117.942210]  kthread+0x112/0x130
+[  117.942214]  ? kthread_create_worker_on_cpu+0x40/0x40
+[  117.942221]  ret_from_fork+0x35/0x40
 
- other info that might help us debug this:
+nf_tables_chain_destroy() crashes on module_put() because the module is
+gone.
 
- rcu_scheduler_active = 2, debug_locks = 1
- no locks held by swapper/0/1.
-
- Call Trace:
-  dump_stack+0xa0/0xea
-  lockdep_rcu_suspicious+0x102/0x10b
-  intel_iommu_init+0x947/0xb13
-  pci_iommu_init+0x26/0x62
-  do_one_initcall+0xfe/0x500
-  kernel_init_freeable+0x45a/0x4f8
-  kernel_init+0x11/0x139
-  ret_from_fork+0x3a/0x50
- DMAR: Intel(R) Virtualization Technology for Directed I/O
-
-Fixes: d8190dc63886 ("iommu/vt-d: Enable DMA remapping after rmrr mapped")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: d164385ec572 ("netfilter: nat: add inet family nat support")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/intel-iommu.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/netfilter/nft_chain_nat.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5068,6 +5068,7 @@ int __init intel_iommu_init(void)
- 
- 	init_iommu_pm_ops();
- 
-+	down_read(&dmar_global_lock);
- 	for_each_active_iommu(iommu, drhd) {
- 		iommu_device_sysfs_add(&iommu->iommu, NULL,
- 				       intel_iommu_groups,
-@@ -5075,6 +5076,7 @@ int __init intel_iommu_init(void)
- 		iommu_device_set_ops(&iommu->iommu, &intel_iommu_ops);
- 		iommu_device_register(&iommu->iommu);
- 	}
-+	up_read(&dmar_global_lock);
- 
- 	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
- 	if (si_domain && !hw_pass_through)
-@@ -5085,7 +5087,6 @@ int __init intel_iommu_init(void)
- 	down_read(&dmar_global_lock);
- 	if (probe_acpi_namespace_devices())
- 		pr_warn("ACPI name space devices didn't probe correctly\n");
--	up_read(&dmar_global_lock);
- 
- 	/* Finally, we enable the DMA remapping hardware. */
- 	for_each_iommu(iommu, drhd) {
-@@ -5094,6 +5095,8 @@ int __init intel_iommu_init(void)
- 
- 		iommu_disable_protect_mem_regions(iommu);
- 	}
-+	up_read(&dmar_global_lock);
-+
- 	pr_info("Intel(R) Virtualization Technology for Directed I/O\n");
- 
- 	intel_iommu_enabled = 1;
+--- a/net/netfilter/nft_chain_nat.c
++++ b/net/netfilter/nft_chain_nat.c
+@@ -89,6 +89,7 @@ static const struct nft_chain_type nft_c
+ 	.name		= "nat",
+ 	.type		= NFT_CHAIN_T_NAT,
+ 	.family		= NFPROTO_INET,
++	.owner		= THIS_MODULE,
+ 	.hook_mask	= (1 << NF_INET_PRE_ROUTING) |
+ 			  (1 << NF_INET_LOCAL_IN) |
+ 			  (1 << NF_INET_LOCAL_OUT) |
 
 
