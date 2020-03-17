@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2457C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FB3C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE95205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBF020658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443599;
-	bh=sDFKTy7QVaTA+HHCpN8vUO2vmbvFsJW0ZDHmpsFQ/FU=;
+	s=default; t=1584443602;
+	bh=flFix0AH+FBa8EyGI28pVxd7yD+vez5e4Qs/tyu/KTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z1bkcJ7s5HgzR3n9hy1Itw+g2ukH0EF39l9Hpk3BdEcLrCp4MZsQq4itGx7w/oGWE
-	 /zHJ0YCbxHhcLFdYaPcvhud9oGMXbvUeOPdtHqSyetfN+I2ZMByvxUn7JAyRdx8ySx
-	 SljgXGksdSZi3Jj7OTmSvLtdCRGx1JWI1hCMIVFE=
+	b=ljeuE3xkSxSFMBJ12biDuCti3mQeTlcgLOh8y9ZhnRARYx42Cj+MFJNgUvT1bZiPk
+	 NOJeG71QnHo2ZIAKVSCijEitARTlP2d2ZTY4a0kj6ZpsEjD0b3RBEY9atPmpHvr9gw
+	 gJ+JYR/fULDzspcAKWxnOj07ZVYrO1pn254x3oVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgCQLNS (ORCPT
+        id S1729252AbgCQLNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:13:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57084 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgCQLNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:16 -0400
+        id S1728909AbgCQLNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:13:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97EAE20658;
-        Tue, 17 Mar 2020 11:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 429AE20752;
+        Tue, 17 Mar 2020 11:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443595;
-        bh=sDFKTy7QVaTA+HHCpN8vUO2vmbvFsJW0ZDHmpsFQ/FU=;
+        s=default; t=1584443597;
+        bh=flFix0AH+FBa8EyGI28pVxd7yD+vez5e4Qs/tyu/KTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fd0733xEPmiBW1Z+JMZntwdQiIzJJIe7sNMUvESxGDfM5DccOKuiyNPnPhnSEsOw+
-         kfZE6NA1Idvf6o6UKn0aB30WCnboKx6FV+DV1qx8artVIlbueezZBSW5CVpd/0aEUP
-         9gvoELYuptwcI+D+hVFIj2yhavQsrkGi+7qy5gzE=
+        b=YTvrobKdeaju/FqybyB8sNO8uJ+Ez9OPfu/eF9Z8hKvVqpCd2pNjNnxB/gvnJ31jG
+         8t5renvEaKj7KGvZbxgZ80dssY7xcR+X6yDQhRkJdCR9np8HU5Pg9TQKIvTyuy0daD
+         NgptDzTJZkcL9bydCzoT/bKo+niM8+XwtO8JDob0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 5.5 098/151] KVM: x86: clear stale x86_emulate_ctxt->intercept value
-Date:   Tue, 17 Mar 2020 11:55:08 +0100
-Message-Id: <20200317103333.419618194@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 099/151] KVM: nVMX: avoid NULL pointer dereference with incorrect EVMCS GPAs
+Date:   Tue, 17 Mar 2020 11:55:09 +0100
+Message-Id: <20200317103333.495613247@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -62,48 +61,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-commit 342993f96ab24d5864ab1216f46c0b199c2baf8e upstream.
+commit 95fa10103dabc38be5de8efdfced5e67576ed896 upstream.
 
-After commit 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest
-mode") Hyper-V guests on KVM stopped booting with:
+When an EVMCS enabled L1 guest on KVM will tries doing enlightened VMEnter
+with EVMCS GPA = 0 the host crashes because the
 
- kvm_nested_vmexit:    rip fffff802987d6169 reason EPT_VIOLATION info1 181
-    info2 0 int_info 0 int_info_err 0
- kvm_page_fault:       address febd0000 error_code 181
- kvm_emulate_insn:     0:fffff802987d6169: f3 a5
- kvm_emulate_insn:     0:fffff802987d6169: f3 a5 FAIL
- kvm_inj_exception:    #UD (0x0)
+evmcs_gpa != vmx->nested.hv_evmcs_vmptr
 
-"f3 a5" is a "rep movsw" instruction, which should not be intercepted
-at all.  Commit c44b4c6ab80e ("KVM: emulate: clean up initializations in
-init_decode_cache") reduced the number of fields cleared by
-init_decode_cache() claiming that they are being cleared elsewhere,
-'intercept', however, is left uncleared if the instruction does not have
-any of the "slow path" flags (NotImpl, Stack, Op3264, Sse, Mmx, CheckPerm,
-NearBranch, No16 and of course Intercept itself).
+condition in nested_vmx_handle_enlightened_vmptrld() will evaluate to
+false (as nested.hv_evmcs_vmptr is zeroed after init). The crash will
+happen on vmx->nested.hv_evmcs pointer dereference.
 
-Fixes: c44b4c6ab80e ("KVM: emulate: clean up initializations in init_decode_cache")
-Fixes: 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest mode")
+Another problematic EVMCS ptr value is '-1' but it only causes host crash
+after nested_release_evmcs() invocation. The problem is exactly the same as
+with '0', we mistakenly think that the EVMCS pointer hasn't changed and
+thus nested.hv_evmcs_vmptr is valid.
+
+Resolve the issue by adding an additional !vmx->nested.hv_evmcs
+check to nested_vmx_handle_enlightened_vmptrld(), this way we will
+always be trying kvm_vcpu_map() when nested.hv_evmcs is NULL
+and this is supposed to catch all invalid EVMCS GPAs.
+
+Also, initialize hv_evmcs_vmptr to '0' in nested_release_evmcs()
+to be consistent with initialization where we don't currently
+set hv_evmcs_vmptr to '-1'.
+
 Cc: stable@vger.kernel.org
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/emulate.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/vmx/nested.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -5195,6 +5195,7 @@ int x86_decode_insn(struct x86_emulate_c
- 	ctxt->fetch.ptr = ctxt->fetch.data;
- 	ctxt->fetch.end = ctxt->fetch.data + insn_len;
- 	ctxt->opcode_len = 1;
-+	ctxt->intercept = x86_intercept_none;
- 	if (insn_len > 0)
- 		memcpy(ctxt->fetch.data, insn, insn_len);
- 	else {
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -234,7 +234,7 @@ static inline void nested_release_evmcs(
+ 		return;
+ 
+ 	kvm_vcpu_unmap(vcpu, &vmx->nested.hv_evmcs_map, true);
+-	vmx->nested.hv_evmcs_vmptr = -1ull;
++	vmx->nested.hv_evmcs_vmptr = 0;
+ 	vmx->nested.hv_evmcs = NULL;
+ }
+ 
+@@ -1932,7 +1932,8 @@ static int nested_vmx_handle_enlightened
+ 	if (!nested_enlightened_vmentry(vcpu, &evmcs_gpa))
+ 		return 1;
+ 
+-	if (unlikely(evmcs_gpa != vmx->nested.hv_evmcs_vmptr)) {
++	if (unlikely(!vmx->nested.hv_evmcs ||
++		     evmcs_gpa != vmx->nested.hv_evmcs_vmptr)) {
+ 		if (!vmx->nested.hv_evmcs)
+ 			vmx->nested.current_vmptr = -1ull;
+ 
 
 
