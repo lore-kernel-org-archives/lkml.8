@@ -2,197 +2,188 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757CAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC92C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D38720754
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619DE205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="X5NfUx6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgCQOGv (ORCPT
+        id S1726823AbgCQOG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:06:51 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48320 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726016AbgCQOGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:06:50 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4E6107DE2A866C7292AD;
-        Tue, 17 Mar 2020 22:06:33 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 17 Mar 2020
- 22:06:24 +0800
-To:     <paolo.valente@linaro.org>, Jens Axboe <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>, renxudong <renxudong1@huawei.com>,
-        Louhongxiang <louhongxiang@huawei.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH] block, bfq: fix use-after-free in bfq_idle_slice_timer_body
-Message-ID: <6c0d0b36-751b-a63a-418b-888a88ce58f4@huawei.com>
-Date:   Tue, 17 Mar 2020 22:06:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Mar 2020 10:06:58 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:29794 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726287AbgCQOG5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:06:57 -0400
+X-UUID: a56e5957ebb846e592ef60d15843ef12-20200317
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=bkPlpRT05SglJRIusBDQBaTijmir+/ZYOe9W0z8PlG4=;
+        b=X5NfUx6SRtIMa6a5h2LrbQJtwn7RbOKgyf7n9R1M8fWIlKhUAV8s7BsgX2NyZxxQFcQROkd+gDFeikk8jSouc4kHulKSjySSaQhNDYJ187p4SZV1JHvphc56DU2I8jORMJGzDsLH9QXLtuTHlzKRbvYRW5fm0Zyn2dhI0qvs6JE=;
+X-UUID: a56e5957ebb846e592ef60d15843ef12-20200317
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 829212427; Tue, 17 Mar 2020 22:06:52 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 17 Mar 2020 22:05:52 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 17 Mar 2020 22:06:05 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     Andy Teng <andy.teng@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Subject: [PATCH v3 1/6] dt-bindings: pinctrl: add bindings for MediaTek MT6779 SoC
+Date:   Tue, 17 Mar 2020 22:06:42 +0800
+Message-ID: <1584454007-2115-2-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1584454007-2115-1-git-send-email-hanks.chen@mediatek.com>
+References: <1584454007-2115-1-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In bfq_idle_slice_timer func, bfqq = bfqd->in_service_queue is
-not in bfqd-lock critical section. The bfqq, which is not
-equal to NULL in bfq_idle_slice_timer, may be freed after passing
-to bfq_idle_slice_timer_body. So we will access the freed memory.
-
-KASAN log is given as follows:
-[13058.354613] ==================================================================
-[13058.354640] BUG: KASAN: use-after-free in bfq_idle_slice_timer+0xac/0x290
-[13058.354644] Read of size 8 at addr ffffa02cf3e63f78 by task fork13/19767
-[13058.354646]
-[13058.354655] CPU: 96 PID: 19767 Comm: fork13
-[13058.354661] Call trace:
-[13058.354667]  dump_backtrace+0x0/0x310
-[13058.354672]  show_stack+0x28/0x38
-[13058.354681]  dump_stack+0xd8/0x108
-[13058.354687]  print_address_description+0x68/0x2d0
-[13058.354690]  kasan_report+0x124/0x2e0
-[13058.354697]  __asan_load8+0x88/0xb0
-[13058.354702]  bfq_idle_slice_timer+0xac/0x290
-[13058.354707]  __hrtimer_run_queues+0x298/0x8b8
-[13058.354710]  hrtimer_interrupt+0x1b8/0x678
-[13058.354716]  arch_timer_handler_phys+0x4c/0x78
-[13058.354722]  handle_percpu_devid_irq+0xf0/0x558
-[13058.354731]  generic_handle_irq+0x50/0x70
-[13058.354735]  __handle_domain_irq+0x94/0x110
-[13058.354739]  gic_handle_irq+0x8c/0x1b0
-[13058.354742]  el1_irq+0xb8/0x140
-[13058.354748]  do_wp_page+0x260/0xe28
-[13058.354752]  __handle_mm_fault+0x8ec/0x9b0
-[13058.354756]  handle_mm_fault+0x280/0x460
-[13058.354762]  do_page_fault+0x3ec/0x890
-[13058.354765]  do_mem_abort+0xc0/0x1b0
-[13058.354768]  el0_da+0x24/0x28
-[13058.354770]
-[13058.354773] Allocated by task 19731:
-[13058.354780]  kasan_kmalloc+0xe0/0x190
-[13058.354784]  kasan_slab_alloc+0x14/0x20
-[13058.354788]  kmem_cache_alloc_node+0x130/0x440
-[13058.354793]  bfq_get_queue+0x138/0x858
-[13058.354797]  bfq_get_bfqq_handle_split+0xd4/0x328
-[13058.354801]  bfq_init_rq+0x1f4/0x1180
-[13058.354806]  bfq_insert_requests+0x264/0x1c98
-[13058.354811]  blk_mq_sched_insert_requests+0x1c4/0x488
-[13058.354818]  blk_mq_flush_plug_list+0x2d4/0x6e0
-[13058.354826]  blk_flush_plug_list+0x230/0x548
-[13058.354830]  blk_finish_plug+0x60/0x80
-[13058.354838]  read_pages+0xec/0x2c0
-[13058.354842]  __do_page_cache_readahead+0x374/0x438
-[13058.354846]  ondemand_readahead+0x24c/0x6b0
-[13058.354851]  page_cache_sync_readahead+0x17c/0x2f8
-[13058.354858]  generic_file_buffered_read+0x588/0xc58
-[13058.354862]  generic_file_read_iter+0x1b4/0x278
-[13058.354965]  ext4_file_read_iter+0xa8/0x1d8 [ext4]
-[13058.354972]  __vfs_read+0x238/0x320
-[13058.354976]  vfs_read+0xbc/0x1c0
-[13058.354980]  ksys_read+0xdc/0x1b8
-[13058.354984]  __arm64_sys_read+0x50/0x60
-[13058.354990]  el0_svc_common+0xb4/0x1d8
-[13058.354994]  el0_svc_handler+0x50/0xa8
-[13058.354998]  el0_svc+0x8/0xc
-[13058.354999]
-[13058.355001] Freed by task 19731:
-[13058.355007]  __kasan_slab_free+0x120/0x228
-[13058.355010]  kasan_slab_free+0x10/0x18
-[13058.355014]  kmem_cache_free+0x288/0x3f0
-[13058.355018]  bfq_put_queue+0x134/0x208
-[13058.355022]  bfq_exit_icq_bfqq+0x164/0x348
-[13058.355026]  bfq_exit_icq+0x28/0x40
-[13058.355030]  ioc_exit_icq+0xa0/0x150
-[13058.355035]  put_io_context_active+0x250/0x438
-[13058.355038]  exit_io_context+0xd0/0x138
-[13058.355045]  do_exit+0x734/0xc58
-[13058.355050]  do_group_exit+0x78/0x220
-[13058.355054]  __wake_up_parent+0x0/0x50
-[13058.355058]  el0_svc_common+0xb4/0x1d8
-[13058.355062]  el0_svc_handler+0x50/0xa8
-[13058.355066]  el0_svc+0x8/0xc
-[13058.355067]
-[13058.355071] The buggy address belongs to the object at ffffa02cf3e63e70#012 which belongs to the cache bfq_queue of size 464
-[13058.355075] The buggy address is located 264 bytes inside of#012 464-byte region [ffffa02cf3e63e70, ffffa02cf3e64040)
-[13058.355077] The buggy address belongs to the page:
-[13058.355083] page:ffff7e80b3cf9800 count:1 mapcount:0 mapping:ffff802db5c90780 index:0xffffa02cf3e606f0 compound_mapcount: 0
-[13058.366175] flags: 0x2ffffe0000008100(slab|head)
-[13058.370781] raw: 2ffffe0000008100 ffff7e80b53b1408 ffffa02d730c1c90 ffff802db5c90780
-[13058.370787] raw: ffffa02cf3e606f0 0000000000370023 00000001ffffffff 0000000000000000
-[13058.370789] page dumped because: kasan: bad access detected
-[13058.370791]
-[13058.370792] Memory state around the buggy address:
-[13058.370797]  ffffa02cf3e63e00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fb fb
-[13058.370801]  ffffa02cf3e63e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[13058.370805] >ffffa02cf3e63f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[13058.370808]                                                                 ^
-[13058.370811]  ffffa02cf3e63f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[13058.370815]  ffffa02cf3e64000: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-[13058.370817] ==================================================================
-[13058.370820] Disabling lock debugging due to kernel taint
-
-Here, we directly pass the bfqd to bfq_idle_slice_timer_body func.
-
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Feilong Lin <linfeilong@huawei.com>
----
- block/bfq-iosched.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 8c436abfaf14..f470b9daa98b 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -6215,20 +6215,20 @@ static struct bfq_queue *bfq_init_rq(struct request *rq)
- 	return bfqq;
- }
-
--static void bfq_idle_slice_timer_body(struct bfq_queue *bfqq)
-+static void
-+bfq_idle_slice_timer_body(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- {
--	struct bfq_data *bfqd = bfqq->bfqd;
- 	enum bfqq_expiration reason;
- 	unsigned long flags;
-
- 	spin_lock_irqsave(&bfqd->lock, flags);
--	bfq_clear_bfqq_wait_request(bfqq);
--
- 	if (bfqq != bfqd->in_service_queue) {
- 		spin_unlock_irqrestore(&bfqd->lock, flags);
- 		return;
- 	}
-
-+	bfq_clear_bfqq_wait_request(bfqq);
-+
- 	if (bfq_bfqq_budget_timeout(bfqq))
- 		/*
- 		 * Also here the queue can be safely expired
-@@ -6273,7 +6273,7 @@ static enum hrtimer_restart bfq_idle_slice_timer(struct hrtimer *timer)
- 	 * early.
- 	 */
- 	if (bfqq)
--		bfq_idle_slice_timer_body(bfqq);
-+		bfq_idle_slice_timer_body(bfqd, bfqq);
-
- 	return HRTIMER_NORESTART;
- }
--- 
-2.19.1
-
+RnJvbTogQW5keSBUZW5nIDxhbmR5LnRlbmdAbWVkaWF0ZWsuY29tPg0KDQpBZGQgZGV2aWNldHJl
+ZSBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgTVQ2Nzc5IHBpbmN0cmwgZHJpdmVyLg0KDQpDaGFuZ2Ut
+SWQ6IEk5MjU4NjM2OTU2NDk0OGYyNjI4ZjcwNDIxYmNkNzA2NjhmMTMyYzRmDQpTaWduZWQtb2Zm
+LWJ5OiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQotLS0NCiAuLi4vYmluZGlu
+Z3MvcGluY3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sICB8ICAyMDggKysrKysrKysr
+KysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMjA4IGluc2VydGlvbnMoKykNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbWVk
+aWF0ZWssbXQ2Nzc5LXBpbmN0cmwueWFtbA0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwueWFtbCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3
+OS1waW5jdHJsLnlhbWwNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi5hYjZh
+YjAxDQotLS0gL2Rldi9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGluY3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQpAQCAtMCwwICsxLDIwOCBA
+QA0KKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCislWUFNTCAxLjINCistLS0N
+CiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2
+Nzc5LXBpbmN0cmwueWFtbCMNCiskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1z
+Y2hlbWFzL2NvcmUueWFtbCMNCisNCit0aXRsZTogTWVkaWF0ZWsgTVQ2Nzc5IFBpbiBDb250cm9s
+bGVyIERldmljZSBUcmVlIEJpbmRpbmdzDQorDQorbWFpbnRhaW5lcnM6DQorICAtIEFuZHkgVGVu
+ZyA8YW5keS50ZW5nQG1lZGlhdGVrLmNvbT4NCisNCitkZXNjcmlwdGlvbjogfA0KKyAgVGhlIHBp
+biBjb250cm9sbGVyIG5vZGUgc2hvdWxkIGJlIHRoZSBjaGlsZCBvZiBhIHN5c2NvbiBub2RlIHdp
+dGggdGhlDQorICByZXF1aXJlZCBwcm9wZXJ0eToNCisgIC0gY29tcGF0aWJsZTogICJzeXNjb24i
+DQorDQorcHJvcGVydGllczoNCisgIGNvbXBhdGlibGU6DQorICAgIGNvbnN0OiBtZWRpYXRlayxt
+dDY3NzktcGluY3RybA0KKw0KKyAgcmVnOg0KKyAgICBtaW5JdGVtczogOQ0KKyAgICBtYXhJdGVt
+czogOQ0KKyAgICBkZXNjcmlwdGlvbjoNCisgICAgICBwaHlzaWNhbCBhZGRyZXNzIGJhc2UgZm9y
+IGdwaW8tcmVsYXRlZCBjb250cm9sIHJlZ2lzdGVycy4NCisNCisgIHJlZy1uYW1lczoNCisgICAg
+LSAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy9zdHJpbmctYXJyYXkNCisg
+ICAgZGVzY3JpcHRpb246DQorICAgICAgR1BJTyBiYXNlIHJlZ2lzdGVyIG5hbWVzLg0KKw0KKyAg
+Z3Bpby1jb250cm9sbGVyOiB0cnVlDQorDQorICAiI2dwaW8tY2VsbHMiOg0KKyAgICBjb25zdDog
+Mg0KKyAgICBkZXNjcmlwdGlvbjoNCisgICAgICBOdW1iZXIgb2YgY2VsbHMgaW4gR1BJTyBzcGVj
+aWZpZXIuIFNpbmNlIHRoZSBnZW5lcmljIEdQSU8NCisgICAgICBiaW5kaW5nIGlzIHVzZWQsIHRo
+ZSBhbW91bnQgb2YgY2VsbHMgbXVzdCBiZSBzcGVjaWZpZWQgYXMgMi4gU2VlIHRoZSBiZWxvdw0K
+KyAgICAgIG1lbnRpb25lZCBncGlvIGJpbmRpbmcgcmVwcmVzZW50YXRpb24gZm9yIGRlc2NyaXB0
+aW9uIG9mIHBhcnRpY3VsYXIgY2VsbHMuDQorDQorICBncGlvLXJhbmdlczoNCisgICAgbWluSXRl
+bXM6IDQNCisgICAgbWF4SXRlbXM6IDQNCisgICAgZGVzY3JpcHRpb246DQorICAgICAgR1BJTyB2
+YWxpZCBudW1iZXIgcmFuZ2UuDQorDQorICBpbnRlcnJ1cHQtY29udHJvbGxlcjogdHJ1ZQ0KKw0K
+KyAgaW50ZXJydXB0czoNCisgICAgbWluSXRlbXM6IDMNCisgICAgbWF4SXRlbXM6IDMNCisgICAg
+ZGVzY3JpcHRpb246DQorICAgICAgVGhlIGludGVycnVwdCBvdXRwdXRzIHRvIHN5c2lycS4NCisN
+CisgICIjaW50ZXJydXB0LWNlbGxzIjoNCisgICAgY29uc3Q6IDINCisNCisgIGludGVycnVwdC1w
+YXJlbnQ6DQorICAgIG1pbkl0ZW1zOiAxDQorICAgIG1heEl0ZW1zOiAxDQorDQorcmVxdWlyZWQ6
+DQorICAtIGNvbXBhdGlibGUNCisgIC0gcmVnDQorICAtIHJlZy1uYW1lcw0KKyAgLSBncGlvLWNv
+bnRyb2xsZXINCisgIC0gIiNncGlvLWNlbGxzIg0KKyAgLSBncGlvLXJhbmdlcw0KKyAgLSBpbnRl
+cnJ1cHQtY29udHJvbGxlcg0KKyAgLSBpbnRlcnJ1cHRzDQorICAtICIjaW50ZXJydXB0LWNlbGxz
+Ig0KKyAgLSBpbnRlcnJ1cHQtcGFyZW50DQorDQorcGF0dGVyblByb3BlcnRpZXM6DQorICAnXi4q
+JCc6DQorICB0eXBlOiBvYmplY3QNCisgICAgZGVzY3JpcHRpb246DQorICAgICAgQSBwaW5jdHJs
+IG5vZGUgc2hvdWxkIGNvbnRhaW4gYXQgbGVhc3Qgb25lIHN1Ym5vZGVzIHJlcHJlc2VudGluZyB0
+aGUNCisgICAgICBwaW5jdHJsIGdyb3VwcyBhdmFpbGFibGUgb24gdGhlIG1hY2hpbmUuIEVhY2gg
+c3Vibm9kZSB3aWxsIGxpc3QgdGhlDQorICAgICAgcGlucyBpdCBuZWVkcywgYW5kIGhvdyB0aGV5
+IHNob3VsZCBiZSBjb25maWd1cmVkLCB3aXRoIHJlZ2FyZCB0byBtdXhlcg0KKyAgICAgIGNvbmZp
+Z3VyYXRpb24sIHB1bGx1cHMsIGRyaXZlIHN0cmVuZ3RoLCBpbnB1dCBlbmFibGUvZGlzYWJsZSBh
+bmQgaW5wdXQgc2NobWl0dC4NCisNCisgICAgcHJvcGVydGllczoNCisgICAgICBwaW5tdXg6DQor
+ICAgICAgICBkZXNjcmlwdGlvbjogfA0KKyAgICAgICAgICBpbnRlZ2VyIGFycmF5LCByZXByZXNl
+bnRzIGdwaW8gcGluIG51bWJlciBhbmQgbXV4IHNldHRpbmcuDQorICAgICAgICAgIFN1cHBvcnRl
+ZCBwaW4gbnVtYmVyIGFuZCBtdXggdmFyaWVzIGZvciBkaWZmZXJlbnQgU29DcywgYW5kIGFyZSBk
+ZWZpbmVkDQorICAgICAgICAgIGFzIG1hY3JvcyBpbiBib290L2R0cy88c29jPi1waW5mdW5jLmgg
+ZGlyZWN0bHkuDQorICAgICAgICBhbGxPZjoNCisgICAgICAgICAgLSAkcmVmOiAvc2NoZW1hcy90
+eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzItYXJyYXkNCisNCisgICAgICBiaWFzLWRpc2Fi
+bGU6DQorICAgICAgICB0eXBlOiBib29sZWFuDQorDQorICAgICAgYmlhcy1wdWxsLXVwOg0KKyAg
+ICAgICAgb25lT2Y6DQorICAgICAgICAgIC0gdHlwZTogYm9vbGVhbg0KKyAgICAgICAgICAtICRy
+ZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMg0KKw0KKyAgICAgIGJp
+YXMtcHVsbC1kb3duOg0KKyAgICAgICAgb25lT2Y6DQorICAgICAgICAgIC0gdHlwZTogYm9vbGVh
+bg0KKyAgICAgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3Vp
+bnQzMg0KKw0KKyAgICAgIGlucHV0LWVuYWJsZToNCisgICAgICAgIHR5cGU6IGJvb2xlYW4NCisN
+CisgICAgICBpbnB1dC1kaXNhYmxlOg0KKyAgICAgICAgdHlwZTogYm9vbGVhbg0KKw0KKyAgICAg
+IG91dHB1dC1sb3c6DQorICAgICAgICB0eXBlOiBib29sZWFuDQorDQorICAgICAgb3V0cHV0LWhp
+Z2g6DQorICAgICAgICB0eXBlOiBib29sZWFuDQorDQorICAgICAgaW5wdXQtc2NobWl0dC1lbmFi
+bGU6DQorICAgICAgICB0eXBlOiBib29sZWFuDQorDQorICAgICAgaW5wdXQtc2NobWl0dC1kaXNh
+YmxlOg0KKyAgICAgICAgdHlwZTogYm9vbGVhbg0KKw0KKyAgICAgIG1lZGlhdGVrLHB1bGwtdXAt
+YWR2Og0KKyAgICAgICAgZGVzY3JpcHRpb246IHwNCisgICAgICAgICAgUHVsbCB1cCBzZXRpbmdz
+IGZvciAyIHB1bGwgcmVzaXN0b3JzLCBSMCBhbmQgUjEuIFVzZXIgY2FuDQorICAgICAgICAgIGNv
+bmZpZ3VyZSB0aG9zZSBzcGVjaWFsIHBpbnMuIFZhbGlkIGFyZ3VtZW50cyBhcmUgZGVzY3JpYmVk
+IGFzIGJlbG93Og0KKyAgICAgICAgICAwOiAoUjEsIFIwKSA9ICgwLCAwKSB3aGljaCBtZWFucyBS
+MSBkaXNhYmxlZCBhbmQgUjAgZGlzYWJsZS4NCisgICAgICAgICAgMTogKFIxLCBSMCkgPSAoMCwg
+MSkgd2hpY2ggbWVhbnMgUjEgZGlzYWJsZWQgYW5kIFIwIGVuYWJsZWQuDQorICAgICAgICAgIDI6
+IChSMSwgUjApID0gKDEsIDApIHdoaWNoIG1lYW5zIFIxIGVuYWJsZWQgYW5kIFIwIGRpc2FibGVk
+Lg0KKyAgICAgICAgICAzOiAoUjEsIFIwKSA9ICgxLCAxKSB3aGljaCBtZWFucyBSMSBlbmFibGVk
+IGFuZCBSMCBlbmFibGVkLg0KKyAgICAgICAgYWxsT2Y6DQorICAgICAgICAgIC0gJHJlZjogL3Nj
+aGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyDQorICAgICAgICAgIC0gZW51bTog
+WzAsIDEsIDIsIDNdDQorDQorICAgICAgbWVkaWF0ZWsscHVsbC1kb3duLWFkdjoNCisgICAgICAg
+IGRlc2NyaXB0aW9uOiB8DQorICAgICAgICAgIFB1bGwgZG93biBzZXR0aW5ncyBmb3IgMiBwdWxs
+IHJlc2lzdG9ycywgUjAgYW5kIFIxLiBVc2VyIGNhbg0KKyAgICAgICAgICBjb25maWd1cmUgdGhv
+c2Ugc3BlY2lhbCBwaW5zLiBWYWxpZCBhcmd1bWVudHMgYXJlIGRlc2NyaWJlZCBhcyBiZWxvdzoN
+CisgICAgICAgICAgMDogKFIxLCBSMCkgPSAoMCwgMCkgd2hpY2ggbWVhbnMgUjEgZGlzYWJsZWQg
+YW5kIFIwIGRpc2FibGUuDQorICAgICAgICAgIDE6IChSMSwgUjApID0gKDAsIDEpIHdoaWNoIG1l
+YW5zIFIxIGRpc2FibGVkIGFuZCBSMCBlbmFibGVkLg0KKyAgICAgICAgICAyOiAoUjEsIFIwKSA9
+ICgxLCAwKSB3aGljaCBtZWFucyBSMSBlbmFibGVkIGFuZCBSMCBkaXNhYmxlZC4NCisgICAgICAg
+ICAgMzogKFIxLCBSMCkgPSAoMSwgMSkgd2hpY2ggbWVhbnMgUjEgZW5hYmxlZCBhbmQgUjAgZW5h
+YmxlZC4NCisgICAgICAgIGFsbE9mOg0KKyAgICAgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5cGVz
+LnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMg0KKyAgICAgICAgICAtIGVudW06IFswLCAxLCAyLCAz
+XQ0KKw0KKyAgICAgIGRyaXZlLXN0cmVuZ3RoOg0KKyAgICAgICAgZGVzY3JpcHRpb246IHwNCisg
+ICAgICAgICAgU2VsZWN0cyB0aGUgZHJpdmUgc3RyZW5ndGggZm9yIHRoZSBzcGVjaWZpZWQgcGlu
+cyBpbiBtQS4NCisgICAgICAgIGFsbE9mOg0KKyAgICAgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5
+cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMg0KKyAgICAgICAgICAtIGVudW06IFsyLCA0LCA2
+LCA4LCAxMCwgMTIsIDE0LCAxNl0NCisNCisgICAgcmVxdWlyZWQ6DQorICAgICAgLSBwaW5tdXgN
+CisNCitleGFtcGxlczoNCisgIC0gfA0KKyAgICAgICNpbmNsdWRlICJtdDY3NzktcGluZnVuYy5o
+Ig0KKw0KKyAgICAgIHBpbzogcGluY3RybEAxMDAwNTAwMCB7DQorICAgICAgY29tcGF0aWJsZSA9
+ICJtZWRpYXRlayxtdDY3NzktcGluY3RybCI7DQorICAgICAgcmVnID0gPDAgMHgxMDAwNTAwMCAw
+IDB4MTAwMD4sDQorICAgICAgICAgICAgPDAgMHgxMWMyMDAwMCAwIDB4MTAwMD4sDQorICAgICAg
+ICAgICAgPDAgMHgxMWQxMDAwMCAwIDB4MTAwMD4sDQorICAgICAgICAgICAgPDAgMHgxMWUyMDAw
+MCAwIDB4MTAwMD4sDQorICAgICAgICAgICAgPDAgMHgxMWU3MDAwMCAwIDB4MTAwMD4sDQorICAg
+ICAgICAgICAgPDAgMHgxMWVhMDAwMCAwIDB4MTAwMD4sDQorICAgICAgICAgICAgPDAgMHgxMWYy
+MDAwMCAwIDB4MTAwMD4sDQorICAgICAgICAgICAgPDAgMHgxMWYzMDAwMCAwIDB4MTAwMD4sDQor
+ICAgICAgICAgICAgPDAgMHgxMDAwYjAwMCAwIDB4MTAwMD47DQorICAgICAgcmVnLW5hbWVzID0g
+ImdwaW8iLCAiaW9jZmdfcm0iLA0KKyAgICAgICAgImlvY2ZnX2JyIiwgImlvY2ZnX2xtIiwNCisg
+ICAgICAgICJpb2NmZ19sYiIsICJpb2NmZ19ydCIsDQorICAgICAgICAiaW9jZmdfbHQiLCAiaW9j
+ZmdfdGwiLA0KKyAgICAgICAgImVpbnQiOw0KKyAgICAgIGdwaW8tY29udHJvbGxlcjsNCisgICAg
+ICAjZ3Bpby1jZWxscyA9IDwyPjsNCisgICAgICBncGlvLXJhbmdlcyA9IDwmcGlvIDAgMCAyMTA+
+Ow0KKyAgICAgIGludGVycnVwdC1jb250cm9sbGVyOw0KKyAgICAgICNpbnRlcnJ1cHQtY2VsbHMg
+PSA8Mj47DQorICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIwNCBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsNCisNCisgICAgICBtbWMwX3BpbnNfZGVmYXVsdDogbW1jMGRlZmF1bHQgew0KKyAgICAg
+ICAgcGluc19jbWRfZGF0IHsNCisgICAgICAgICAgcGlubXV4ID0gPFBJTk1VWF9HUElPMTY4X19G
+VU5DX01TREMwX0RBVDA+LA0KKyAgICAgICAgICAgICA8UElOTVVYX0dQSU8xNzJfX0ZVTkNfTVNE
+QzBfREFUMT4sDQorICAgICAgICAgICAgIDxQSU5NVVhfR1BJTzE2OV9fRlVOQ19NU0RDMF9EQVQy
+PiwNCisgICAgICAgICAgICAgPFBJTk1VWF9HUElPMTc3X19GVU5DX01TREMwX0RBVDM+LA0KKyAg
+ICAgICAgICAgICA8UElOTVVYX0dQSU8xNzBfX0ZVTkNfTVNEQzBfREFUND4sDQorICAgICAgICAg
+ICAgIDxQSU5NVVhfR1BJTzE3M19fRlVOQ19NU0RDMF9EQVQ1PiwNCisgICAgICAgICAgICAgPFBJ
+Tk1VWF9HUElPMTcxX19GVU5DX01TREMwX0RBVDY+LA0KKyAgICAgICAgICAgICA8UElOTVVYX0dQ
+SU8xNzRfX0ZVTkNfTVNEQzBfREFUNz4sDQorICAgICAgICAgICAgIDxQSU5NVVhfR1BJTzE2N19f
+RlVOQ19NU0RDMF9DTUQ+Ow0KKyAgICAgICAgICBpbnB1dC1lbmFibGU7DQorICAgICAgICAgIG1l
+ZGlhdGVrLHB1bGwtdXAtYWR2ID0gPDE+Ow0KKyAgICAgICAgfTsNCisgICAgICAgIHBpbnNfY2xr
+IHsNCisgICAgICAgICAgcGlubXV4ID0gPFBJTk1VWF9HUElPMTc2X19GVU5DX01TREMwX0NMSz47
+DQorICAgICAgICAgIG1lZGlhdGVrLHB1bGwtZG93bi1hZHYgPSA8Mj47DQorICAgICAgICB9Ow0K
+KyAgICAgICAgcGluc19yc3Qgew0KKyAgICAgICAgICBwaW5tdXggPSA8UElOTVVYX0dQSU8xNzhf
+X0ZVTkNfTVNEQzBfUlNUQj47DQorICAgICAgICAgIG1lZGlhdGVrLHB1bGwtdXAtYWR2ID0gPDA+
+Ow0KKyAgICAgICAgfTsNCisgICAgICB9Ow0KKyAgICB9Ow0KKw0KLS0gDQoxLjcuOS41DQo=
 
