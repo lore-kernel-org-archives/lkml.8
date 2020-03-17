@@ -2,131 +2,101 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148EFC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFC2C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA74206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A3B206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgCQO5C (ORCPT
+        id S1726874AbgCQO52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:57:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43052 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726484AbgCQO5C (ORCPT
+        Tue, 17 Mar 2020 10:57:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54792 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgCQO52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:57:02 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jEDeL-0005u8-Rs; Tue, 17 Mar 2020 14:56:57 +0000
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jEDeL-00CpNa-FG; Tue, 17 Mar 2020 14:56:57 +0000
-Message-ID: <18622dc08c49e7d4304f221e378137ecde09ba61.camel@decadent.org.uk>
-Subject: Re: [PATCH] genirq: fix reference leaks on irq affinity notifiers
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Edward Cree <ecree@solarflare.com>, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, psodagud@codeaurora.org
-Date:   Tue, 17 Mar 2020 14:56:46 +0000
-In-Reply-To: <a527a4bb-fdc4-815d-8852-674767b9dd1d@solarflare.com>
-References: <24f5983f-2ab5-e83a-44ee-a45b5f9300f5@solarflare.com>
-         <17c4273e4f72ebdf1ca838d75fc6ed93fcdc7287.camel@decadent.org.uk>
-         <a527a4bb-fdc4-815d-8852-674767b9dd1d@solarflare.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-8Dsb++f6nhTcgfY8y8C/"
-User-Agent: Evolution 3.34.1-4 
+        Tue, 17 Mar 2020 10:57:28 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jEDej-0002v3-J4; Tue, 17 Mar 2020 15:57:21 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2C61E1C2290;
+        Tue, 17 Mar 2020 15:57:21 +0100 (CET)
+Date:   Tue, 17 Mar 2020 14:57:20 -0000
+From:   "tip-bot2 for Thomas Hellstrom" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] dma-mapping: Fix dma_pgprot() for unencrypted coherent pages
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Borislav Petkov <bp@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200304114527.3636-3-thomas_os@shipmail.org>
+References: <20200304114527.3636-3-thomas_os@shipmail.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Message-ID: <158445704082.28353.8744856923251332507.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/mm branch of tip:
 
---=-8Dsb++f6nhTcgfY8y8C/
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     17c4a2ae15a7aaefe84bdb271952678c5c9cd8e1
+Gitweb:        https://git.kernel.org/tip/17c4a2ae15a7aaefe84bdb271952678c5c9cd8e1
+Author:        Thomas Hellstrom <thellstrom@vmware.com>
+AuthorDate:    Wed, 04 Mar 2020 12:45:27 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 17 Mar 2020 11:52:58 +01:00
 
-On Tue, 2020-03-17 at 10:58 +0000, Edward Cree wrote:
-> On 15/03/2020 20:29, Ben Hutchings wrote:
-> > ...since the pending work item holds a reference to the notification
-> > state, it's still not clear to me why or whether "genirq: Prevent use-
-> > after-free and work list corruption" was needed.
-> Yeah, I think that commit was bogus.  The email thread[1] doesn't
->  exactly inspire confidence either.  I think the submitter just didn't
->  realise that there was a ref corresponding to the work; AFAICT there's
->  no way the alleged "work list corruption" could happen.
->=20
-> > If it's reasonable to cancel_work_sync() when removing a notifier, I
-> > think we can remove the kref and call the release function directly.
-> I'd prefer to stick to the smaller fix for -rc and stable.  But if you
->  want to remove the kref for -next, I'd be happy to Ack that patch.
+dma-mapping: Fix dma_pgprot() for unencrypted coherent pages
 
-OK, then you can add:
+When dma_mmap_coherent() sets up a mapping to unencrypted coherent memory
+under SEV encryption and sometimes under SME encryption, it will actually
+set up an encrypted mapping rather than an unencrypted, causing devices
+that DMAs from that memory to read encrypted contents. Fix this.
 
-Acked-by: Ben Hutchings <ben@decadent.org.uk>
+When force_dma_unencrypted() returns true, the linear kernel map of the
+coherent pages have had the encryption bit explicitly cleared and the
+page content is unencrypted. Make sure that any additional PTEs we set
+up to these pages also have the encryption bit cleared by having
+dma_pgprot() return a protection with the encryption bit cleared in this
+case.
 
-to this one.
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Link: https://lkml.kernel.org/r/20200304114527.3636-3-thomas_os@shipmail.org
+---
+ kernel/dma/mapping.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Btw, we (sfc linux team) think there's still a use-after-free issue in
->  the cpu_rmap lib, as follows:
-> 1) irq_cpu_rmap_add creates a glue and notifier, adds glue to rmap->obj
-> 2) someone else does irq_set_affinity_notifier.
->    This causes cpu_rmap's notifier (old_notify) to get released, and so
->    irq_cpu_rmap_release kfrees glue.  But it's still in rmap->obj
-> 3) free_irq_cpu_rmap loops over obj, finds the glue, tries to clear its
->    notifier.
-> Now one could say that this UAF is academic, since having two bits of
->  code trying to register notifiers for the same IRQ is broken anyway
->  (in this case, the rmap would stop getting updated, because the
->  "someone else" stole the notifier).
-
-So far as I can remember, my thinking was that only non-shared IRQs
-will have notifiers and only the current user of the IRQ will set the
-notifier.  The doc comment for irq_set_affinity_notifier() implies the
-latter restriction, but it might be worth spelling this out explicitly.
-
-Ben.
-
-> But I thought I'd bring it up in case it's halfway relevant.
->=20
-> -ed
->=20
-> [1] https://lore.kernel.org/lkml/1553119211-29761-1-git-send-email-psodag=
-ud@codeaurora.org/T/#u
---=20
-Ben Hutchings
-For every complex problem
-there is a solution that is simple, neat, and wrong.
-
-
---=-8Dsb++f6nhTcgfY8y8C/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl5w5S8ACgkQ57/I7JWG
-EQmZBxAAucg9e7dBvW7zXPn9pe7tgtrQ/iR7i+Y5zGDNAYYHM2wafoFJ25eivyb5
-PkGWjBx2COU6U9aoXR3AFlrl1kx4iDmcdVo82WNa1el2RDntfVIytoDh65O31h2P
-yquPzfsBAd2appE2kFhOeVb/YXT27AcFBhsgOT0ltCKUiulci9u9B1IQbqE30oxu
-Hwqd+tFXnCzdo0gryx3tW1EaNgIYa+Cytlnu9NhCEypD0EaNc5NGIEYG2u7wTtGy
-dlPlxaINKKsW0tf6w8YPV2oRbd5EH4v2hqLBl5ey3znHw8ZJ5TiOyyxxm4BM9q4w
-4oZS4K1f5tO2EKOevlcuEXLsNQlUYgRWKCMQBgMGVx6oBwZiOfr7nMQTR0qWHLj8
-oqw4HVfaJpRCSEN0VA9ch64Xxyy2mkCOIXV9oCsFP0NMO2uXyEMeoMrtAmJ5Fbs5
-vqsPXEJLG1ks/+bemebK6BLvBh7ZJJytyp0G8XDKI1ogJnTTR51wQNaqAfgU/M6t
-jIo1kKWWoVw72xYDZbl4tlFb5ZvXeGvWPfF89MH9nkjYFyHk+JT9anr0KTyIYtjc
-DfBZ8Vqibne43wKUTjRHZFtLbDnZGxH6rePxYrPoCyiLC+rpgingUoVfgAAYuK6K
-lTMr9qOiSTSBhHR7XvytOvlS1CJbSgfSIK+09V35nW/kl+EnfC4=
-=78Yv
------END PGP SIGNATURE-----
-
---=-8Dsb++f6nhTcgfY8y8C/--
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index 12ff766..98e3d87 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -154,6 +154,8 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
+  */
+ pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
+ {
++	if (force_dma_unencrypted(dev))
++		prot = pgprot_decrypted(prot);
+ 	if (dev_is_dma_coherent(dev) ||
+ 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
+              (attrs & DMA_ATTR_NON_CONSISTENT)))
