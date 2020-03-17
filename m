@@ -2,186 +2,130 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74436C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F703C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E5D206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F97206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="iAehwnDf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M73VUuxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgCQOwD (ORCPT
+        id S1726838AbgCQOwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:52:03 -0400
-Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:55798 "EHLO
-        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726189AbgCQOwC (ORCPT
+        Tue, 17 Mar 2020 10:52:18 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37903 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbgCQOwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:52:02 -0400
-X-Greylist: delayed 3274 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Mar 2020 10:52:02 EDT
-Received: from pps.filterd (m0098780.ppops.net [127.0.0.1])
-        by mx0a-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HEp6LF007670;
-        Tue, 17 Mar 2020 09:51:39 -0500
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2043.outbound.protection.outlook.com [104.47.66.43])
-        by mx0a-00010702.pphosted.com with ESMTP id 2yrvsv1p9q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Mar 2020 09:51:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qzux5D0U9tW6s7scOnfUrCzicowYE/VSmhd+CisoTAxoGt1WWJm5p6rCnCsuC/mx6VYje5dCQTQtpjb3YpgjwPkUbdxvPp+FRPGG/smM3U8hujOeuThJDVpQ3Zs9JJ5XUrRgPJxdd/3kciIlsEJ3e+S2Mb8lsKhCAOqIN6OQHYM/ddwhEsmk+VYrJg//1VAXv6HgAvO8PsvxBbSxSYjZ3KqzXnPdcI2P+lbCX/Qn9mGyjG6jUKT1aJU4cwo4SIc64Kj3X3cQriotSyW+jYbvEYctSDsMUY7IUZaY3IQ0sW03otmZpuygwA+0SwJWJzPgMeXmzGFPKeAhclQ2JE6ebw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pTc1M08uh4ajhnLJSGyCpHmDMmV/ESEmtH376gDBt14=;
- b=CfNsNUDQqVrV3k7AzHcsBSTon49p0Cn8P1RmwABJu5SoNE8GYVzfawpBfMgfuM9ZZKu76NAqr1pXRXPZZPDIqdyaGcwoBLj5HP5QWWnESOhtceVYewqjib/IqM9FzDJzCCh3WrwWdkrc62OoBkkg56HWlnWAKbiAX+20WrAwLClu6VNusV1+yPImSXezsV8K26m39pn/CBT010kp5RL/BjyXs2JUfgvP1GmEbfk2NHHTiecsxB79f/wUyF6Gu2nndwLrVWHV2ZaJZw4kfCEDnu5lW6ESJBvk5y4NWHie6QpIlitn2vHoPkqKWVtG5IbOJlyAj0zKYfB+OrGJpBjlcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
- header.d=ni.com; arc=none
+        Tue, 17 Mar 2020 10:52:18 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k21so22021290oij.5;
+        Tue, 17 Mar 2020 07:52:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pTc1M08uh4ajhnLJSGyCpHmDMmV/ESEmtH376gDBt14=;
- b=iAehwnDfChKECjAvlp9kCcY8s4CbPrviolwj++uiD5mWwLbcrpzVyJMdC6GOJDbZFibi+rER/Me3d2M0onJ7TdyDLpXToct7d2PA/4fquxItMP6wYrxt2f0thMtxTlKBtkS/npLY/WFFgpfyg6N6KdqSB064dcYkRdT+XJxA/jc=
-Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
- (2603:10b6:803:4b::29) by SN4PR0401MB3519.namprd04.prod.outlook.com
- (2603:10b6:803:46::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Tue, 17 Mar
- 2020 14:51:37 +0000
-Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
- ([fe80::d05b:1953:4111:38e4]) by SN4PR0401MB3646.namprd04.prod.outlook.com
- ([fe80::d05b:1953:4111:38e4%5]) with mapi id 15.20.2793.023; Tue, 17 Mar 2020
- 14:51:37 +0000
-From:   Michael Auchter <michael.auchter@ni.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Auchter <michael.auchter@ni.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] dt-bindings: iio: adc: ad7291: add binding
-Date:   Tue, 17 Mar 2020 09:51:13 -0500
-Message-Id: <20200317145113.12413-2-michael.auchter@ni.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200317145113.12413-1-michael.auchter@ni.com>
-References: <20200317135649.8876-1-michael.auchter@ni.com>
- <20200317145113.12413-1-michael.auchter@ni.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: DM5PR11CA0007.namprd11.prod.outlook.com
- (2603:10b6:3:115::17) To SN4PR0401MB3646.namprd04.prod.outlook.com
- (2603:10b6:803:4b::29)
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ecR1Q8eBSDGpmsPXI5s5h5OW1t7Z861Vgx2tdv3FnXk=;
+        b=M73VUuxgxkAIX/ocDUVEUTlCgJ8KHTL6VWjeH54w4zFFZDtkniU3HZmsXZ8cRjx9SZ
+         iMVnldkfezJpuyIXdNUZs1deTLMHrwUENRf832zkxpCzawDTcrwBvI5caGFIB419DJKZ
+         HIJdVwv+ROFcmPkSmViyNyn+B6OzpRr3SqvxJO9WpQYvJyhbg06+VjTBCqxa/ksZpTn/
+         vPnVmQCiCyphkzpb1SclHw1OtQWGWDjuroBAtH+aSnnxZ1+WQLnm7ykFLShSOn3gUFpq
+         pECcMoWKMeBxIIIPEdmLTbnO8Xfcn8peASfRgLeawPjPJrzRBT6Ls5R/EEuy17cizVqW
+         kNTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ecR1Q8eBSDGpmsPXI5s5h5OW1t7Z861Vgx2tdv3FnXk=;
+        b=qtsFFYXGMkhDQezIGnHg2yxKGky4y7TtAzL9MyToV4p3+GsAT+llUwgatz6okHtrwu
+         lZr2z4ZlsPOsqtwNRHW3HeFhFRLyODNk+hyRZI08gsE+easlwfB3CTzudqmIt/iuMin+
+         3u2IdX7o+4SwKdRrKN7jY6h5OI2LCxraeBadbT3RqVYBO9uzO1Zq5kUgeGwBpWuxgNgl
+         C7PeKSJtzjtT1BhiOj1gS1VkTyVrCU2adzww0XRk4ur9WEBPVT4/T97H7gBO5Pttotrg
+         CTA+JKnky9CLZV6nD6WSge/DeW9UiLdaN6HMP2hX2wF6ZUm07RmgYqQbTVYJluK89rzm
+         pZJg==
+X-Gm-Message-State: ANhLgQ2THtvcaIEqD8FvWFxyjZXdDmSBrjVB7Am70EAF++RguORFVKJU
+        0daS8Dnr5fvT9QHJXGjmWQL7LVTv
+X-Google-Smtp-Source: ADFU+vsIaoTFpOvKki2DRF5YUDh4a0WfOkHZ9PIMSzhF/46X4oNIYN6IERXbjZ52QimF6y2g84nWZw==
+X-Received: by 2002:aca:52d0:: with SMTP id g199mr3824119oib.59.1584456736636;
+        Tue, 17 Mar 2020 07:52:16 -0700 (PDT)
+Received: from [192.168.1.120] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id 60sm1121917ott.17.2020.03.17.07.52.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 07:52:16 -0700 (PDT)
+Subject: Re: PROBLEM: 5.6.0-rc6 + Realtek RTL8188CUS wifi dongle: 8051 reset
+ failed!
+To:     AC <achirvasub@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>,
+        Jes Sorensen <Jes.Sorensen@gmail.com>,
+        linux-wireless@vger.kernel.org
+Cc:     kernel list <linux-kernel@vger.kernel.org>
+References: <C9F34A4B-E3F3-4D7A-B870-058C8D4871B9@gmail.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <9ae33061-1595-4387-5767-79437b2ff2ae@lwfinger.net>
+Date:   Tue, 17 Mar 2020 09:52:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xaphan.phire.org (66.90.216.181) by DM5PR11CA0007.namprd11.prod.outlook.com (2603:10b6:3:115::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Tue, 17 Mar 2020 14:51:36 +0000
-X-Mailer: git-send-email 2.24.1
-X-Originating-IP: [66.90.216.181]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 56c933a5-d111-4c89-5405-08d7ca82b17e
-X-MS-TrafficTypeDiagnostic: SN4PR0401MB3519:|SN4PR0401MB3519:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN4PR0401MB3519219D5286CF194F4C8C5887F60@SN4PR0401MB3519.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
-X-Forefront-PRVS: 0345CFD558
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(136003)(376002)(39860400002)(366004)(199004)(4326008)(110136005)(478600001)(81156014)(6666004)(6486002)(2906002)(16526019)(186003)(36756003)(26005)(956004)(316002)(8936002)(44832011)(66946007)(86362001)(1076003)(5660300002)(6506007)(8676002)(52116002)(6512007)(81166006)(2616005)(66556008)(66476007)(966005);DIR:OUT;SFP:1102;SCL:1;SRVR:SN4PR0401MB3519;H:SN4PR0401MB3646.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: ni.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YUcGZn6q6nvvrMwXWxaBheuXxmr/Myxd0h68OM90cRavg7D4JlIrLDsU15GVjdukDYmtIZXb0W/BLRZ7NsIqbr6MVWmhb6qQiwlZx3MoHcPm3hJPJ29mNMyjrQkg//s7EMefrYh1aE6grZFNRHJMYSk25DjOBo8qr1YpWsKErSDew5oY8xGKsI4UIkIJmitdlLZXmRNMIDGjK/Oo9MpogAp8L+wBQe/tT/AA8P6dwBOw9T6ujBL1DGmIflDXlNWIMdiencoEgeaESaHxTciiI6oVLt7WvYIjyLfdj6pZHxOqUkpqri40sAKLE6CF1O726so+ukl+WWAlLtNnp91qIJ4Yv/z7wTA/PofbcWR0S61RbNn0nhjxTWxnKr8U/PuSV2vXOehjSgk2eo88pyeX99jdgPivp9Uo5zgv8zKd+1OPf2hgnkVmHR5DIxF+6zIdx2oShk9dLJhcbRHrHvChMGN5ycTDfjvU4uDdA1e35yGwcUoMc086pF7fPJ+B53lbjETIp3ePnc/MQ62QSvzX8Q==
-X-MS-Exchange-AntiSpam-MessageData: ZQ5Z8rcfZbLCJPJvJUfM7G2PATF69rncFJxSrG9nHewsDKAY+8eDf7FcdVAX3oZpQlRnfLqzsA0mVi53bdaY5Cz/lpEoqw0pe9lq15OIGZH0oyUnuNqR2fJtFwS3S9z/aQLc5TQM/Nn1sn50mR6HbA==
-X-OriginatorOrg: ni.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56c933a5-d111-4c89-5405-08d7ca82b17e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 14:51:37.0289
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8nde0UY+2/9EK714DT7ZruH8XFt1+oUZ64Ct0MOO3sX5rd/XeP67D/FgtziHJfdSwHeHV2r/yAc8jPE5HHQFow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3519
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-17_06:2020-03-17,2020-03-17 signatures=0
-X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30 impostorscore=0
- lowpriorityscore=0 phishscore=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 mlxlogscore=999 suspectscore=0
- clxscore=1015 adultscore=0 bulkscore=0 classifier=spam adjust=30
- reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003170062
+In-Reply-To: <C9F34A4B-E3F3-4D7A-B870-058C8D4871B9@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-tree binding for ADI AD7291 ADC.
-
-Signed-off-by: Michael Auchter <michael.auchter@ni.com>
----
- .../bindings/iio/adc/adi,ad7291.yaml          | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
-new file mode 100644
-index 000000000000..93aa29413049
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7291.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: AD7291 8-Channel, I2C, 12-Bit SAR ADC with Temperature Sensor
-+
-+maintainers:
-+  - Michael Auchter <michael.auchter@ni.com>
-+
-+description: |
-+  Analog Devices AD7291 8-Channel I2C 12-Bit SAR ADC with Temperature Sensor
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7291.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7291
-+
-+  reg:
-+    maxItems: 1
-+
-+  vref-supply:
-+    description: |
-+      The regulator supply for ADC reference voltage.
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      ad7291: adc@0 {
-+        compatible = "adi,ad7291";
-+        reg = <0>;
-+        vref-supply = <&adc_vref>;
-+      };
-+    };
-+
--- 
-2.24.1
-
+T24gMy8xNy8yMCAxOjQ0IEFNLCBBQyB3cm90ZToNCj4gSSBhbSBvbiBEZWJpYW4gMTAuMyBz
+dGFibGUgaTM4NiwgcnVubmluZyBhIGN1c3RvbS1jb21waWxlZCBrZXJuZWwgKEkgY29tcGls
+ZSB3ZWVrbHksIHdoZW4gbmV3IHJjIHJlbGVhc2VzIGRyb3ApLg0KPiANCj4gSSBrZWVwIHRo
+ZSBmb2xsb3dpbmcgVVNCIHdpZmkgZG9uZ2xlIGNvbm5lY3RlZCB0byB0aGlzIG1hY2hpbmU6
+DQo+IA0KPiBJRCAwNTBkOjExMDIgQmVsa2luIENvbXBvbmVudHMgRjdEMTEwMiBOMTUwL1N1
+cmYgTWljcm8gV2lyZWxlc3MgQWRhcHRlciB2MTAwMCBbUmVhbHRlayBSVEw4MTg4Q1VTXQ0K
+PiANCj4gDQo+IC0tLQ0KPiANCj4gVGhlIHByb2JsZW06DQo+IA0KPiBBcyBvZiA1LjYuMC1y
+YzYsIGJvb3RpbmcgdXAgd2l0aCB0aGUgZG9uZ2xlIGNvbm5lY3RlZCByZXR1cm5zIGEgbnVt
+YmVyIG9mIGRtZXNnIGNvbXBsYWludHM6DQo+IA0KPiAtLS0gY3V0IGhlcmUgLS0tDQo+IA0K
+PiBbICAgIDkuNDQ4MzM3XSBydGw4MTkyY3U6IE1BQyBhdXRvIE9OIG9rYXkhICAgICAgICAg
+IFsgICAgOS41NzkwMjVdIHJ0bDgxOTJjdTogVHggcXVldWUgc2VsZWN0OiAweDA1ICAgICAg
+WyAgIDEwLjQ3NTMwOF0gcnRsODE5MmNfY29tbW9uOiBQb2xsaW5nIEZXIHJlYWR5IGZhaWwh
+IFJFR19NQ1VGV0RMOjB4MDAwMzAwMDYuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFsg
+ICAxMC40NzgyMTNdIHJ0bDgxOTJjX2NvbW1vbjogRmlybXdhcmUgaXMgbm90IHJlYWR5IHRv
+IHJ1biEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbICAg
+MTAuOTYwMDkzXSBydGw4MTkyY3U6IDgwNTEgcmVzZXQgZmFpbGVkIS4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgWyAgIDEw
+Ljk3MTAyN10gcnRsODE5MmN1OiBNQUMgYXV0byBPTiBva2F5ISAgICAgICAgICBbICAgMTEu
+MTAxNjkxXSBydGw4MTkyY3U6IFR4IHF1ZXVlIHNlbGVjdDogMHgwNQ0KPiANCj4gLS0tIGVu
+ZCAtLS0NCj4gDQo+IE9jY2FzaW9uYWxseSwgdGhpcyByZXN1bHRzIGluIGEgdGltZW91dCB3
+aGlsZSB0cnlpbmcgdG8gcmVhY2ggbmV0d29yay50YXJnZXQgKHN5c3RlbWQpLg0KPiANCj4g
+QWZ0ZXJ3YXJkcywgdGhlcmUncyBlbmRsZXNzIGRtZXNnIG5vaXNlIFJlOiBydGw4MTkyY3U6
+DQo+IA0KPiAtLS0gY3V0IGhlcmUgLS0tDQo+IA0KPiBbMTEzOTEuMjA0NTU1XSBydGw4MTky
+Y3U6IFR4IHF1ZXVlIHNlbGVjdDogMHgwNSAgICAgIFsxMTcwNy4wNTA0ODBdIHJ0bDgxOTJj
+dTogTUFDIGF1dG8gT04gb2theSEgICAgICAgICAgWzExNzA3LjE4MTExOF0gcnRsODE5MmN1
+OiBUeCBxdWV1ZSBzZWxlY3Q6IDB4MDUgICAgICBbMTIwMjMuMDU3MDU2XSBydGw4MTkyY3U6
+IE1BQyBhdXRvIE9OIG9rYXkhICAgICAgICAgIFsxMjAyMy4xODc3MjddIHJ0bDgxOTJjdTog
+VHggcXVldWUgc2VsZWN0OiAweDA1DQo+IFsxMjMzOS4wNjAxODNdIHJ0bDgxOTJjdTogTUFD
+IGF1dG8gT04gb2theSEgICAgICAgICAgWzEyMzM5LjE5OTMxNl0gcnRsODE5MmN1OiBUeCBx
+dWV1ZSBzZWxlY3Q6IDB4MDUgICAgICBbMTI2NTUuMDU0MTQwXSBydGw4MTkyY3U6IE1BQyBh
+dXRvIE9OIG9rYXkhICAgICAgICAgIFsxMjY1NS4xODQ3ODldIHJ0bDgxOTJjdTogVHggcXVl
+dWUgc2VsZWN0OiAweDA1ICAgICAgWzEyOTcxLjA1Mzk0OF0gcnRsODE5MmN1OiBNQUMgYXV0
+byBPTiBva2F5ISAgICAgICAgICBbMTI5NzEuMTg0NjAwXSBydGw4MTkyY3U6IFR4IHF1ZXVl
+IHNlbGVjdDogMHgwNSAgICAgIFsxMzI4Ny4wNjI3MTJdIHJ0bDgxOTJjdTogTUFDIGF1dG8g
+T04gb2theSEgICAgICAgICAgWzEzMjg3LjE5MzM2M10gcnRsODE5MmN1OiBUeCBxdWV1ZSBz
+ZWxlY3Q6IDB4MDUgICAgICBbMTM2MDMuMDY1OTg3XSBydGw4MTkyY3U6IE1BQyBhdXRvIE9O
+IG9rYXkhICAgICAgICAgIFsxMzYwMy4xOTY2NDFdIHJ0bDgxOTJjdTogVHggcXVldWUgc2Vs
+ZWN0OiAweDA1ICAgICAgWzEzOTE5LjA2NjYxN10gcnRsODE5MmN1OiBNQUMgYXV0byBPTiBv
+a2F5ISAgICAgICAgICBbMTM5MTkuMTk3MjcwXSBydGw4MTkyY3U6IFR4IHF1ZXVlIHNlbGVj
+dDogMHgwNSAgICAgIFsxNDIzNS4wNjA2MjFdIHJ0bDgxOTJjdTogTUFDIGF1dG8gT04gb2th
+eSEgICAgICAgICAgWzE0MjM1LjE5MTI3N10gcnRsODE5MmN1OiBUeCBxdWV1ZSBzZWxlY3Q6
+IDB4MDUgICAgICBbMTQ1NTEuMDU1MTA0XSBydGw4MTkyY3U6IE1BQyBhdXRvIE9OIG9rYXkh
+ICAgICAgICAgIFsxNDU1MS4xODU3NDFdIHJ0bDgxOTJjdTogVHggcXVldWUgc2VsZWN0OiAw
+eDA1ICAgICAgWzE0ODY3LjA1MTc5OV0gcnRsODE5MmN1OiBNQUMgYXV0byBPTiBva2F5ISAg
+ICAgICAgICBbMTQ4NjcuMTgyNDUxXSBydGw4MTkyY3U6IFR4IHF1ZXVlIHNlbGVjdDogMHgw
+NSAgICAgIFsxNDg3OC44NTUwNzBdIHBlcmY6IGludGVycnVwdCB0b29rIHRvbyBsb25nICg3
+ODk3ID4gNzg5NiksIGxvd2VyaW5nIGtlcm5lbC5wZXJmX2V2ZW50X21heF9zYW1wbGVfcmF0
+ZSB0byAyNTI1MA0KDQpQbGVhc2UgYmlzZWN0IHRoaXMgcHJvYmxlbS4gTm8gb25lIGVsc2Ug
+aGFzIHJlcG9ydGVkIGl0LCB0aHVzIGl0IG1heSBkZXBlbmQgb24gDQpzb21lIHNwZWNpZmlj
+IGNvbmZpZ3VyYXRpb24gb2YgeW91ciBzeXN0ZW0uDQoNCldhcyA1LjYuMC1yYzUgT0s/DQoN
+CkxhcnJ5DQoNCg==
