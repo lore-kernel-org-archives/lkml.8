@@ -2,93 +2,130 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C0CC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8084CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83FB20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584484233;
-	bh=69Vm+ZQ+trBq00La+Q/6ySMamY+DRfo+xpTdpnHr0Oc=;
-	h=Date:From:To:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:
-	 In-Reply-To:References:List-ID:From;
-	b=RIUydZvQALCzn6gHtlW5KwL52iV653YF8SsKawKBd7uP1wmSkhVw6VLVrOABFoIai
-	 K9z+rhB8dtSQhI41xNxQlsrVJKtZ+qaFgltweCvjoBwYuffWEFjuAm+hRfx5vNkZva
-	 fm6F2cqVlDgE9tRsiGepS2bIy1TZgj5Lr0mul/Eo=
+	by mail.kernel.org (Postfix) with ESMTP id 5099D20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="a4AYWaPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbgCQWac (ORCPT
+        id S1727250AbgCQWaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727232AbgCQWa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:30:29 -0400
-Received: from localhost (unknown [137.135.114.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6840A20738;
-        Tue, 17 Mar 2020 22:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584484228;
-        bh=69Vm+ZQ+trBq00La+Q/6ySMamY+DRfo+xpTdpnHr0Oc=;
-        h=Date:From:To:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:
-         In-Reply-To:References:From;
-        b=CTUc7HSF39IWepT00n+94v26NGOm7rTWCAGERCPEOdcK73rLbTqIMTxci2mUxSSU8
-         wuIC7mVNpPD7zWRfvVxJZ1/x1+LFcffGrDw2ePB3ezcOjqw3eR280zNZJUYO3+nvrV
-         Lt2vzX2pAz3+VSPYxndH1FjK+PMAO0jb1yosheQI=
-Date:   Tue, 17 Mar 2020 22:30:27 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-To:     Eric Biggers <ebiggers@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>
-Cc:     stable@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jeff Vander Stoep <jeffv@google.com>
-Cc:     Jessica Yu <jeyu@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>
-Cc:     NeilBrown <neilb@suse.com>
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] fs/filesystems.c: downgrade user-reachable WARN_ONCE() to pr_warn_once()
-In-Reply-To: <20200314213426.134866-3-ebiggers@kernel.org>
-References: <20200314213426.134866-3-ebiggers@kernel.org>
-Message-Id: <20200317223028.6840A20738@mail.kernel.org>
+        Tue, 17 Mar 2020 18:30:46 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38012 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbgCQWap (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:30:45 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z5so12750002pfn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 15:30:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
+        bh=wPJg6k1Sfn4B+Mn0ckVM+kQDp/J12ZPy70SP4OqLIKc=;
+        b=a4AYWaPYTV1Ov4C4bMzAohMy1SC9tLz+W2ucVsXcKXrISG2pEufjEu65pVsU1Ulzxc
+         SIInJL8CAWvEzvc4bd9aGw48Zr0Q1cHy+J5QxTenCh7Wo/xUBrzI0zUgcp71syQ4Ud38
+         jykLe4l8oLtY3FBM1DHX2IV9hs8tkHyakVKQw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=wPJg6k1Sfn4B+Mn0ckVM+kQDp/J12ZPy70SP4OqLIKc=;
+        b=cTQWFv4RAYXnXhToUe1aHI536iy0C6zOYfChqxITygRV5mfhPWqquLaeN2opKTtWb6
+         9MjLGsREKBAN8g9SYBZ/OadjF2kmGp5pDXSWlGF5Zop0a4ilXtdhZcAt+bhDvGC0jah6
+         j3xXN3/mMgsj7axbeltEvUSqRgGV7uFcnGjuRwK/0P9o4xrYA50ADp77AvEY4NUmeK6g
+         owNHYENgt8MyrP8xUNVUDl6OCEii3M8HU4e8sUUsuVyeFxi0SLcAjFke1J2Wf5ZL6cEA
+         c6bvldTYKmHGSGtz3KmrjMFbgjy81O/mACoSNr6cMY8J4lruS+An4Z0qPxBP6NXUh0iU
+         rQQQ==
+X-Gm-Message-State: ANhLgQ2olCsddae7NeFaNb4l1iZwBU7T5xa/B/MsVbur4YZIzWaVrhmS
+        RoE0pUABubEf4XNWjdmmTyPDgg==
+X-Google-Smtp-Source: ADFU+vtJ/d67T1c/j3elk3aQsSMEmbYNSCFaYEz7RmgX8uPiCI1o36kNu92JJiiS8LO+Qa1lkIqiog==
+X-Received: by 2002:a63:741c:: with SMTP id p28mr1255502pgc.402.1584484243489;
+        Tue, 17 Mar 2020 15:30:43 -0700 (PDT)
+Received: from localhost (2001-44b8-111e-5c00-11e1-e7cb-3c10-05d6.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:11e1:e7cb:3c10:5d6])
+        by smtp.gmail.com with ESMTPSA id a2sm348002pjq.20.2020.03.17.15.30.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 15:30:42 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>,
+        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, psampat@linux.ibm.com,
+        pratik.r.sampat@gmail.com, ego@linux.vnet.ibm.com
+Subject: Re: [PATCH] cpufreq: powernv: Fix frame-size-overflow in powernv_cpufreq_work_fn
+In-Reply-To: <20200316135743.57735-1-psampat@linux.ibm.com>
+References: <20200316135743.57735-1-psampat@linux.ibm.com>
+Date:   Wed, 18 Mar 2020 09:30:39 +1100
+Message-ID: <87fte6obqo.fsf@dja-thinkpad.axtens.net>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Hi Pratik,
 
-[This is an automated email]
+Thanks.
 
-This commit has been processed because it contains a -stable tag.
-The stable tag indicates that it's relevant for the following trees: all
+I have checked:
 
-The bot has tested the following trees: v5.5.9, v5.4.25, v4.19.109, v4.14.173, v4.9.216, v4.4.216.
+ - for matching puts/gets
+ - that all the '.' to '->' conversions, aud uses of '&' check out
+ - that the Snowpatch checks pass (https://patchwork.ozlabs.org/patch/1255580/)
 
-v5.5.9: Build OK!
-v5.4.25: Build OK!
-v4.19.109: Build OK!
-v4.14.173: Build OK!
-v4.9.216: Failed to apply! Possible dependencies:
-    41124db869b7 ("fs: warn in case userspace lied about modprobe return")
+On that basis:
 
-v4.4.216: Failed to apply! Possible dependencies:
-    41124db869b7 ("fs: warn in case userspace lied about modprobe return")
+Reviewed-by: Daniel Axtens <dja@axtens.net>
 
+Regards,
+Daniel
 
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
--- 
-Thanks
-Sasha
+> The patch avoids allocating cpufreq_policy on stack hence fixing frame
+> size overflow in 'powernv_cpufreq_work_fn'
+>
+> Fixes: 227942809b52 ("cpufreq: powernv: Restore cpu frequency to policy->cur on unthrottling")
+> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+> ---
+>  drivers/cpufreq/powernv-cpufreq.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+> index 56f4bc0d209e..20ee0661555a 100644
+> --- a/drivers/cpufreq/powernv-cpufreq.c
+> +++ b/drivers/cpufreq/powernv-cpufreq.c
+> @@ -902,6 +902,7 @@ static struct notifier_block powernv_cpufreq_reboot_nb = {
+>  void powernv_cpufreq_work_fn(struct work_struct *work)
+>  {
+>  	struct chip *chip = container_of(work, struct chip, throttle);
+> +	struct cpufreq_policy *policy;
+>  	unsigned int cpu;
+>  	cpumask_t mask;
+>  
+> @@ -916,12 +917,14 @@ void powernv_cpufreq_work_fn(struct work_struct *work)
+>  	chip->restore = false;
+>  	for_each_cpu(cpu, &mask) {
+>  		int index;
+> -		struct cpufreq_policy policy;
+>  
+> -		cpufreq_get_policy(&policy, cpu);
+> -		index = cpufreq_table_find_index_c(&policy, policy.cur);
+> -		powernv_cpufreq_target_index(&policy, index);
+> -		cpumask_andnot(&mask, &mask, policy.cpus);
+> +		policy = cpufreq_cpu_get(cpu);
+> +		if (!policy)
+> +			continue;
+> +		index = cpufreq_table_find_index_c(policy, policy->cur);
+> +		powernv_cpufreq_target_index(policy, index);
+> +		cpumask_andnot(&mask, &mask, policy->cpus);
+> +		cpufreq_cpu_put(policy);
+>  	}
+>  out:
+>  	put_online_cpus();
+> -- 
+> 2.24.1
