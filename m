@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D542CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59452C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9ADF205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22985205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:55:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tdBd3JXM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B4PdTjmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgCQGzF (ORCPT
+        id S1726416AbgCQGzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:55:05 -0400
-Received: from mail-qv1-f73.google.com ([209.85.219.73]:47701 "EHLO
-        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgCQGzE (ORCPT
+        Tue, 17 Mar 2020 02:55:09 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:42918 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgCQGzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:55:04 -0400
-Received: by mail-qv1-f73.google.com with SMTP id o102so8555791qvo.14
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:55:02 -0700 (PDT)
+        Tue, 17 Mar 2020 02:55:07 -0400
+Received: by mail-pf1-f202.google.com with SMTP id i127so14729605pfb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:55:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Vz8Rl+tO3s2Fvzy9mMmth3PcVEenCGW3CyqKGLCsJ9M=;
-        b=tdBd3JXMEOE0YT+L7rwOPZHaK8kRVwY4smj7X3+QwEyDXEwn7tlhTF4Ytp0NC86X6q
-         fT+BVMQpi67m9Q7lWDaj5yz1NykcSCPNpGQVIgCGqBeH1Z3YwPU9zQxS2D9ZnXph+o+9
-         hQBq1hYrgu7RWtKAszJvhlM964Knk9Pwoh/q+j+w4Kvxg0e3dKq1Mkb9+356AB/d/H7h
-         iAD7OzZ0QrCyxEdaBvXRTCqKVt8QlI4DQXlT6N+Mz+wM845Q62Q3guDM61RAa9rg7bzG
-         /LgCZAZbkmbfP7IiHAyTZtQ6S9+jLL1Ghvq0dxxWFL35GKxD7ldotwJLihuEfRF9jzU2
-         dnsg==
+        bh=E7+oI0v4YJiTcfxieAo+ZZx+f+6HuOczFo3lOATV4XM=;
+        b=B4PdTjmn0c6lJeIMW8vcsIVdp4xg+iTkfxBW8URMxjsfTod/34RC00rlZ8dY9/NGHj
+         rrKCTZusWClEMd6JNJPoxGp2JjQz3Vdcd8YYYLt20NfXX8ALy1ABiNkndW95RCqpE8hd
+         prQy8VwzHquTUj0dlmzVMKgJZiHOcwoRwnil89BdWszSfGhsLF+e6ccAm7U7VcM+GpvA
+         zmI9qXY0QpJJDmeCYFi7yAUGGnzoy7kTjPoTQHDso+wb2n8wl8eXnlryMojF8X+TorD1
+         AEuCw5Nq+ijxA2n3vndlx84VOq2VM3qpbtV13CO6bY/Gcj9J8dKvRO5GcexCO5mWqaVS
+         ukZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Vz8Rl+tO3s2Fvzy9mMmth3PcVEenCGW3CyqKGLCsJ9M=;
-        b=qF8FNGymVJAKohEO/txYVU/4hLPe/xqhJXmR/R7YeUzI6ue4DduF6+SOQ2Ye5ZmUN0
-         PcF/puxNqcA7jP57b/sIpotpb4sFf+3KlzwomGSmnniQU+qrsGX5fy0cAiBISdrDafoH
-         Ma6NgXBhRbILrl6u55JAUiJJdct0RbaoW2q0QmKjyXorw6dNGWtsTWCd9PkzO32VZRE7
-         F4I/2Ba1VYFizF6BAI97oJrmngJLvO6v3Hu+LM8XUk55TchljzuEsDrT1iURIILmYD/s
-         LlcJGjbUdKbJYFLD7YzLnaGM25+irw7C6wR7qKTR6rO6zQlsqG20YiHapLt0z/OXWuXy
-         zlrQ==
-X-Gm-Message-State: ANhLgQ0r/vixPgmj8FUQ9iLIaZZstK7XD8TFIPAMzvHF0N/zDdJeipo1
-        Q/4ofZDHsP5kSeC8ZepYV4dQsXkVIol97zg=
-X-Google-Smtp-Source: ADFU+vslXcTXZHxFbul+vKyVDDYbE109vB2qzmfCtTVliZ++Zd5h8tOc4jJH81ED+tXuc5j8cMzPwT/wJ2uvyfk=
-X-Received: by 2002:ac8:5193:: with SMTP id c19mr3907270qtn.204.1584428101406;
- Mon, 16 Mar 2020 23:55:01 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 23:54:47 -0700
+        bh=E7+oI0v4YJiTcfxieAo+ZZx+f+6HuOczFo3lOATV4XM=;
+        b=Pqq6TXKexj8zap2XVww+liVqissTOEmPQ3CzyqTG+csyNYCRGi4yynvNTUoMDFJvVG
+         J92qfxmK8oeQuUZeBep1x7kBGDDNRLrjdTRbNWS8r+pMSPBaKH+4Cmh2t4EpoobvBP3w
+         nec6xXwmuQBAB95UOdsWcvlD1WsHJWGm2JjrouL91c6S3YQJO5EF9g1rwsLAGuY4eqdM
+         MGxQ4TxIqK+3t6LGr7EA27wBcwZPFeJkEcDc5abOqo0j1ncbz4GxS1IGDOloVESIsxHB
+         j4VP6Q145kf4CqB5BmydHIU2bSSzwBmFByPa85/QU3jbrT/KMn4Dyd4Fe5OWWRM2NYmA
+         EdYA==
+X-Gm-Message-State: ANhLgQ2bGIpR6qCICcl5BK7u0vbLKcIaYAKQp75RjPklJKGWpnMq1Poh
+        WEqqXmmdAOJC0FsoQ5mHD0NzFOHwaBX0VQ0=
+X-Google-Smtp-Source: ADFU+vvIXvU94f5jKeoxuIFXK8fHLpbZJnHvhyMgI7zQmzpPqHJV9jhKFftzMx25WRb9Z932oqWKrkPXIha6jjs=
+X-Received: by 2002:a17:90a:d101:: with SMTP id l1mr3844319pju.130.1584428104661;
+ Mon, 16 Mar 2020 23:55:04 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 23:54:48 -0700
 In-Reply-To: <20200317065452.236670-1-saravanak@google.com>
-Message-Id: <20200317065452.236670-2-saravanak@google.com>
+Message-Id: <20200317065452.236670-3-saravanak@google.com>
 Mime-Version: 1.0
 References: <20200317065452.236670-1-saravanak@google.com>
 X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v1 1/6] driver core: Remove the link if there is no driver
- with AUTO flag
+Subject: [PATCH v1 2/6] driver core: Fix adding device links to probing suppliers
 From:   Saravana Kannan <saravanak@google.com>
 To:     stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -70,51 +69,207 @@ Cc:     Saravana Kannan <saravanak@google.com>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, kernel-team@android.com,
-        Yong Wu <yong.wu@mediatek.com>
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Wu <yong.wu@mediatek.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-DL_FLAG_AUTOREMOVE_CONSUMER/SUPPLIER means "Remove the link
-automatically on consumer/supplier driver unbind", that means we should
-remove whole the device_link when there is no this driver no matter what
-the ref_count of the link is.
+Currently, it is not valid to add a device link from a consumer
+driver ->probe callback to a supplier that is still probing too, but
+generally this is a valid use case.  For example, if the consumer has
+just acquired a resource that can only be available if the supplier
+is functional, adding a device link to that supplier right away
+should be safe (and even desirable arguably), but device_link_add()
+doesn't handle that case correctly and the initial state of the link
+created by it is wrong then.
 
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+To address this problem, change the initial state of device links
+added between a probing supplier and a probing consumer to
+DL_STATE_CONSUMER_PROBE and update device_links_driver_bound() to
+skip such links on the supplier side.
+
+With this change, if the supplier probe completes first,
+device_links_driver_bound() called for it will skip the link state
+update and when it is called for the consumer, the link state will
+be updated to "active".  In turn, if the consumer probe completes
+first, device_links_driver_bound() called for it will change the
+state of the link to "active" and when it is called for the
+supplier, the link status update will be skipped.
+
+However, in principle the supplier or consumer probe may still fail
+after the link has been added, so modify device_links_no_driver() to
+change device links in the "active" or "consumer probe" state to
+"dormant" on the supplier side and update __device_links_no_driver()
+to change the link state to "available" only if it is "consumer
+probe" or "active".
+
+Then, if the supplier probe fails first, the leftover link to the
+probing consumer will become "dormant" and device_links_no_driver()
+called for the consumer (when its probe fails) will clean it up.
+In turn, if the consumer probe fails first, it will either drop the
+link, or change its state to "available" and, in the latter case,
+when device_links_no_driver() is called for the supplier, it will
+update the link state to "dormant".  [If the supplier probe fails,
+but the consumer probe succeeds, which should not happen as long as
+the consumer driver is correct, the link still will be around, but
+it will be "dormant" until the supplier is probed again.]
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-(cherry picked from commit 0fe6f7874d467456da6f6a221dd92499a3ab1780)
+(cherry picked from commit 15cfb094160385cc0b303c4cda483caa102af654)
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/base/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/driver-api/device_link.rst | 10 +++-
+ drivers/base/core.c                      | 74 +++++++++++++++++++++---
+ 2 files changed, 73 insertions(+), 11 deletions(-)
 
+diff --git a/Documentation/driver-api/device_link.rst b/Documentation/driver-api/device_link.rst
+index d6763272e747..5c7178189612 100644
+--- a/Documentation/driver-api/device_link.rst
++++ b/Documentation/driver-api/device_link.rst
+@@ -59,11 +59,15 @@ device ``->probe`` callback or a boot-time PCI quirk.
+ 
+ Another example for an inconsistent state would be a device link that
+ represents a driver presence dependency, yet is added from the consumer's
+-``->probe`` callback while the supplier hasn't probed yet:  Had the driver
+-core known about the device link earlier, it wouldn't have probed the
++``->probe`` callback while the supplier hasn't started to probe yet:  Had the
++driver core known about the device link earlier, it wouldn't have probed the
+ consumer in the first place.  The onus is thus on the consumer to check
+ presence of the supplier after adding the link, and defer probing on
+-non-presence.
++non-presence.  [Note that it is valid to create a link from the consumer's
++``->probe`` callback while the supplier is still probing, but the consumer must
++know that the supplier is functional already at the link creation time (that is
++the case, for instance, if the consumer has just acquired some resources that
++would not have been available had the supplier not been functional then).]
+ 
+ If a device link is added in the ``->probe`` callback of the supplier or
+ consumer driver, it is typically deleted in its ``->remove`` callback for
 diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 742bc60e9cca..b354fdd7ce75 100644
+index b354fdd7ce75..ae2f85ca78fb 100644
 --- a/drivers/base/core.c
 +++ b/drivers/base/core.c
-@@ -546,7 +546,7 @@ static void __device_links_no_driver(struct device *dev)
+@@ -287,17 +287,26 @@ struct device_link *device_link_add(struct device *consumer,
+ 		link->status = DL_STATE_NONE;
+ 	} else {
+ 		switch (supplier->links.status) {
+-		case DL_DEV_DRIVER_BOUND:
++		case DL_DEV_PROBING:
+ 			switch (consumer->links.status) {
+ 			case DL_DEV_PROBING:
+ 				/*
+-				 * Some callers expect the link creation during
+-				 * consumer driver probe to resume the supplier
+-				 * even without DL_FLAG_RPM_ACTIVE.
++				 * A consumer driver can create a link to a
++				 * supplier that has not completed its probing
++				 * yet as long as it knows that the supplier is
++				 * already functional (for example, it has just
++				 * acquired some resources from the supplier).
+ 				 */
+-				if (flags & DL_FLAG_PM_RUNTIME)
+-					pm_runtime_resume(supplier);
+-
++				link->status = DL_STATE_CONSUMER_PROBE;
++				break;
++			default:
++				link->status = DL_STATE_DORMANT;
++				break;
++			}
++			break;
++		case DL_DEV_DRIVER_BOUND:
++			switch (consumer->links.status) {
++			case DL_DEV_PROBING:
+ 				link->status = DL_STATE_CONSUMER_PROBE;
+ 				break;
+ 			case DL_DEV_DRIVER_BOUND:
+@@ -317,6 +326,14 @@ struct device_link *device_link_add(struct device *consumer,
+ 		}
+ 	}
+ 
++	/*
++	 * Some callers expect the link creation during consumer driver probe to
++	 * resume the supplier even without DL_FLAG_RPM_ACTIVE.
++	 */
++	if (link->status == DL_STATE_CONSUMER_PROBE &&
++	    flags & DL_FLAG_PM_RUNTIME)
++		pm_runtime_resume(supplier);
++
+ 	/*
+ 	 * Move the consumer and all of the devices depending on it to the end
+ 	 * of dpm_list and the devices_kset list.
+@@ -508,6 +525,16 @@ void device_links_driver_bound(struct device *dev)
+ 		if (link->flags & DL_FLAG_STATELESS)
  			continue;
  
++		/*
++		 * Links created during consumer probe may be in the "consumer
++		 * probe" state to start with if the supplier is still probing
++		 * when they are created and they may become "active" if the
++		 * consumer probe returns first.  Skip them here.
++		 */
++		if (link->status == DL_STATE_CONSUMER_PROBE ||
++		    link->status == DL_STATE_ACTIVE)
++			continue;
++
+ 		WARN_ON(link->status != DL_STATE_DORMANT);
+ 		WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
+ 	}
+@@ -547,17 +574,48 @@ static void __device_links_no_driver(struct device *dev)
+ 
  		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
--			kref_put(&link->kref, __device_link_del);
-+			__device_link_del(&link->kref);
- 		else if (link->status != DL_STATE_SUPPLIER_UNBIND)
+ 			__device_link_del(&link->kref);
+-		else if (link->status != DL_STATE_SUPPLIER_UNBIND)
++		else if (link->status == DL_STATE_CONSUMER_PROBE ||
++			 link->status == DL_STATE_ACTIVE)
  			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
  	}
-@@ -591,7 +591,7 @@ void device_links_driver_cleanup(struct device *dev)
- 		 */
- 		if (link->status == DL_STATE_SUPPLIER_UNBIND &&
- 		    link->flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
--			kref_put(&link->kref, __device_link_del);
-+			__device_link_del(&link->kref);
  
- 		WRITE_ONCE(link->status, DL_STATE_DORMANT);
- 	}
+ 	dev->links.status = DL_DEV_NO_DRIVER;
+ }
+ 
++/**
++ * device_links_no_driver - Update links after failing driver probe.
++ * @dev: Device whose driver has just failed to probe.
++ *
++ * Clean up leftover links to consumers for @dev and invoke
++ * %__device_links_no_driver() to update links to suppliers for it as
++ * appropriate.
++ *
++ * Links with the DL_FLAG_STATELESS flag set are ignored.
++ */
+ void device_links_no_driver(struct device *dev)
+ {
++	struct device_link *link;
++
+ 	device_links_write_lock();
++
++	list_for_each_entry(link, &dev->links.consumers, s_node) {
++		if (link->flags & DL_FLAG_STATELESS)
++			continue;
++
++		/*
++		 * The probe has failed, so if the status of the link is
++		 * "consumer probe" or "active", it must have been added by
++		 * a probing consumer while this device was still probing.
++		 * Change its state to "dormant", as it represents a valid
++		 * relationship, but it is not functionally meaningful.
++		 */
++		if (link->status == DL_STATE_CONSUMER_PROBE ||
++		    link->status == DL_STATE_ACTIVE)
++			WRITE_ONCE(link->status, DL_STATE_DORMANT);
++	}
++
+ 	__device_links_no_driver(dev);
++
+ 	device_links_write_unlock();
+ }
+ 
 -- 
 2.25.1.481.gfbce0eb801-goog
 
