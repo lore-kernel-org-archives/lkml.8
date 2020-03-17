@@ -2,134 +2,178 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6931EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83337C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35AE72051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1842075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584478921;
+	bh=U57LyJghsjeiPtAtTLPXCjGsnVcnXSXPnKEiXhlMHk4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2aSsrdzg8QJoGIQrMeQpGQmzlCq+mp1jIkfDEzS4wT3SkKZKuwbDmCLwoCFXqypUX
+	 WAJda9KS6U5Q02c7J39gBNK2hmr+wCGabmhDZLPYo0DVOYf5miEzWq+SJzugb8KRx1
+	 ddPzMdzrLcxd9ctQ95qkM9yxabl+9FRDkcOyda6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgCQVB1 (ORCPT
+        id S1726932AbgCQVCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:01:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50937 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgCQVB0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:01:26 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEJKW-00039f-Bg; Tue, 17 Mar 2020 22:00:52 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEJKM-0003eU-V8; Tue, 17 Mar 2020 22:00:42 +0100
-Date:   Tue, 17 Mar 2020 22:00:42 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-Message-ID: <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
- <20200317174043.GA1464607@ulmo>
+        Tue, 17 Mar 2020 17:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726730AbgCQVB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:01:59 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 251D42051A;
+        Tue, 17 Mar 2020 21:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584478919;
+        bh=U57LyJghsjeiPtAtTLPXCjGsnVcnXSXPnKEiXhlMHk4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AdjUeQBkECR3/3jMUEzPlKStC/EKe86EYt7MekRUU8J7qVCc2PecOGBC5Q0RvTnjl
+         2SYKAlC4uFBF0S2+SkBPdbAlFN2dxNJvdXWD95/IItFhmZkAZRDqtYhkfoydnRP1M+
+         e2r2otpHwEJOtVu886GnbWU00FAjpDxRH2wRPWrY=
+Date:   Tue, 17 Mar 2020 21:01:54 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH] arm64: fix the missing ktpi= cmdline check in
+ arm64_kernel_unmapped_at_el0()
+Message-ID: <20200317210154.GA19752@willie-the-truck>
+References: <20200317114708.109283-1-yaohongbo@huawei.com>
+ <20200317121050.GH8831@lakrids.cambridge.arm.com>
+ <20200317124323.GA16200@willie-the-truck>
+ <20200317135719.GH3971@sirena.org.uk>
+ <20200317151813.GA16579@willie-the-truck>
+ <20200317163638.GI3971@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200317174043.GA1464607@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200317163638.GI3971@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Tue, Mar 17, 2020 at 06:40:43PM +0100, Thierry Reding wrote:
-> On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
-> > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
-> > Rename it to PWM_POLARITY_INVERTED.
+On Tue, Mar 17, 2020 at 04:36:38PM +0000, Mark Brown wrote:
+> On Tue, Mar 17, 2020 at 03:18:14PM +0000, Will Deacon wrote:
+> > On Tue, Mar 17, 2020 at 01:57:19PM +0000, Mark Brown wrote:
+> > > On Tue, Mar 17, 2020 at 12:43:24PM +0000, Will Deacon wrote:
+> > > > On Tue, Mar 17, 2020 at 12:10:51PM +0000, Mark Rutland wrote:
+> > > > > On Tue, Mar 17, 2020 at 07:47:08PM +0800, Hongbo Yao wrote:
 > 
-> It isn't misspelled. "inversed" is a synonym for "inverted". Both
-> spellings are correct.
+> > > > > > -	return arm64_use_ng_mappings;
+> > > > > > +	return arm64_use_ng_mappings &&
+> > > > > > +		cpus_have_const_cap(ARM64_UNMAP_KERNEL_AT_EL0);
+> 
+> > > > This probably isn't the right fix, since this will mean that early mappings
+> > > > will be global and we'll have to go through the painful page-table rewrite
+> > > > logic when the cap gets enabled for KASLR-enabled kernels.
+> 
+> > > Aren't we looking for a rewrite from non-global to global here (disable
+> > > KPTI where we would otherwise have it), which we don't currently have
+> > > code for?
+> 
+> > What I mean is that cpus_have_const_cap() will be false initially, so we'll
+> > put down global mappings early on because PTE_MAYBE_NG will be 0, which
+> > means that we'll have to invoke the rewriting code if we then realise we
+> > want non-global mappings after the caps are finalised.
+> 
+> Ah, I see - a different case to the one originally reported but also an
+> issue.
+> 
+> > > That is probably a good idea but I think that runs too late to affect
+> > > the early mappings, they're done based on kaslr_requires_kpti() well
+> > > before we start secondaries.  My first pass not having paged everything
+> > > back in yet is that there needs to be command line parsing in
+> > > kaslr_requires_kpti() but as things stand the command line isn't
+> > > actually ready then...
+> 
+> > Yeah, and I think you probably run into chicken and egg problems mapping
+> 
+> The whole area is just a mess.
+> 
+> > the thing. With the change above, it's true that /some/ mappings will
+> > still be nG if you pass kpti=off, but I was hoping that didn't really matter
+> > :)
+> 
+> > What was the behaviour prior to your patch? If it used to work without
+> > any nG mappings, then I suppose we should try to restore that behaviour.
+> 
+> I'd need to go back and retest to confirm but it looks like always had
+> the issue that we'd install some nG mappings early even with KPTI
+> disabled on the command line so your change is just restoring the
+> previous behaviour and we're no worse than we were before.
 
-Some time ago I stumbled about "inversed", too. My spell checker doesn't
-know it and I checked some dictionaries and none of them knew that word:
+Urgh, this code brings back really bad memories :( :( :(
 
-https://www.lexico.com/search?utf8=%E2%9C%93&filter=dictionary&dictionary=en&query=inversed
-https://de.pons.com/%C3%BCbersetzung/englisch-deutsch/inversed
-https://dictionary.cambridge.org/spellcheck/english-german/?q=inversed
+I just ran 5.4 and it looks like we leave everything non-global with KASLR,
+even when "kpti=off". Great -- that means we're ok with my patch! Well, we
+would be except that when we finalise the linear mapping we'll end up trying
+to transition the old non-global entry to global, which is a break-before-make
+violation (we panic early in __create_pgd_mapping()).
 
-https://en.wiktionary.org/wiki/inverse#Verb mentions "inverse" as a verb
-having "inversed" as past participle.
+Staring more at the code, I think we're conflating the global/non-global
+mappings with whether or not the kpti trampoline is active and it looks like
+this might lead to other issues in mainline right now -- for example, I
+don't think we clear TPIDRRO_EL0 properly for native tasks because the
+arm64_kernel_unmapped_at_el0() check in tls_thread_switch() will defer the
+zeroing to the trampoline code, but that might not even run!
 
-Having said this I think (independent of the question if "inversed"
-exists) using two similar terms for the same thing just results in
-confusion. I hit that in the past already and I like it being addressed.
+So I've hacked the following, which appears to work but damn I'd like
+somebody else to look at this. I also have a nagging feeling that you
+implemented it like this at some point, but we tried to consolidate things
+during review.
 
-> And as you noted in the cover letter, there's a conflict between the
-> macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
-> in the wrong order you'll get a compile error.
+Thoughts?
 
-There are also other symbols that exist twice (GPIO_ACTIVE_HIGH was the
-first to come to my mind). I'm not aware of any problems related to
-these. What am I missing?
+Will
+
+--->8
+
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index e4d862420bb4..d79ce6df9e12 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -29,11 +29,9 @@ typedef struct {
+  */
+ #define ASID(mm)	((mm)->context.id.counter & 0xffff)
  
-> The enum was named this way on purpose to make it separate from the
-> definition for the DT bindings.
-
-Then please let's make it different by picking a different prefix or
-something like that.
-
-> Note that DT bindings are an ABI and can
-> never change, whereas the enum pwm_polarity is part of a Linux internal
-> API and doesn't have the same restrictions as an ABI.
-
-I thought only binary device trees (dtb) are supposed to be ABI.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+-extern bool arm64_use_ng_mappings;
+-
+ static inline bool arm64_kernel_unmapped_at_el0(void)
+ {
+-	return arm64_use_ng_mappings;
++	return cpus_have_const_cap(ARM64_UNMAP_KERNEL_AT_EL0);
+ }
+ 
+ typedef void (*bp_hardening_cb_t)(void);
+diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+index 6f87839f0249..1305e28225fc 100644
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -23,11 +23,13 @@
+ 
+ #include <asm/pgtable-types.h>
+ 
++extern bool arm64_use_ng_mappings;
++
+ #define _PROT_DEFAULT		(PTE_TYPE_PAGE | PTE_AF | PTE_SHARED)
+ #define _PROT_SECT_DEFAULT	(PMD_TYPE_SECT | PMD_SECT_AF | PMD_SECT_S)
+ 
+-#define PTE_MAYBE_NG		(arm64_kernel_unmapped_at_el0() ? PTE_NG : 0)
+-#define PMD_MAYBE_NG		(arm64_kernel_unmapped_at_el0() ? PMD_SECT_NG : 0)
++#define PTE_MAYBE_NG		(arm64_use_ng_mappings ? PTE_NG : 0)
++#define PMD_MAYBE_NG		(arm64_use_ng_mappings ? PMD_SECT_NG : 0)
+ 
+ #define PROT_DEFAULT		(_PROT_DEFAULT | PTE_MAYBE_NG)
+ #define PROT_SECT_DEFAULT	(_PROT_SECT_DEFAULT | PMD_MAYBE_NG)
