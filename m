@@ -2,207 +2,113 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B03C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185D5C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF4F20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FD620752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:07:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="hxJgJ/Cs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q/CW7wqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgCQRGL (ORCPT
+        id S1726550AbgCQRHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:06:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38923 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgCQRGL (ORCPT
+        Tue, 17 Mar 2020 13:07:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43856 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgCQRHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:06:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f7so69079wml.4
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:06:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X6QHkzV5BBkFfgyNZs6t/GKJbiMk0jnjw8C1dAu/YqA=;
-        b=hxJgJ/CsEzZ4gWXbhwVkCscaWC4g9ZHYHHOoCzpnECMslLCAGScgK7zGzJV3JxKcgy
-         0nqrSDECdp4yCB6zMNDu+pqFodd+/KOYXXn/AyCcEAmjnSzChD6YexgVL9wDssuvgft0
-         G5LXQyTe0arN/FwTIgny0CU7fk+c4HU+frngE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X6QHkzV5BBkFfgyNZs6t/GKJbiMk0jnjw8C1dAu/YqA=;
-        b=UQARtpk6FjIjfCv6vMIrMs3grJsZAo9L9tx8fm+me78vhKsTXZBW8HaAZXNJQkVe2F
-         n/xc0j9YLjNG56R32/NruXcIZzLe5xnEj/AiRWdw14ahfPz7yw0AMbkgePPRZipEWP1n
-         Z6NGn7ar8Z+e38swFN4Cq7N4QxK3Qc1I8QKtgX2dN6ohy7FQG8JFlbPetS0TAd3NB/fz
-         +hzNSz94M2WagGBqnXzWusCQ5cK8GjukXlIP6Z7fMmz05sxxC7IRwJb6QdpInMutfa4i
-         kv5+vQPh6DDR04CFi1i1EgcSCCNXLPGeKnHQ1mecKPZWsSwTyKBqjvQVFWI4m4M9Teng
-         pINw==
-X-Gm-Message-State: ANhLgQ2NJ3Dn1JjgXeIuzcs2UhW8oe1E6vwzkElEKQkpsNAZv0O/cVBN
-        Yft5i/7x4CZFyEKSZvuDAL34o87fGmd5L+WV
-X-Google-Smtp-Source: ADFU+vtEgUB27vopeq8X2Q5eJtXEH8LMvVllU0OTEgK/JvAgmr4x4sQcJhvU6XRVrE6Zq2zfHcOSww==
-X-Received: by 2002:a05:600c:2105:: with SMTP id u5mr220153wml.163.1584464768185;
-        Tue, 17 Mar 2020 10:06:08 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id x17sm61790wmi.28.2020.03.17.10.06.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 10:06:07 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, Joe Perches <joe@perches.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH] MAINTAINERS: Better regex for dma_buf|fence|resv
-Date:   Tue, 17 Mar 2020 18:06:02 +0100
-Message-Id: <20200317170602.1021982-1-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.25.1
+        Tue, 17 Mar 2020 13:07:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2BoGGEdNQTv247lOoGQWSuvht20oQxr110Feea+TlWs=; b=q/CW7wqCHqnFnpmJV+W5tVWP4e
+        QCWw6HRa29pZio3fs1qQwZn6DwftNjCAEoEpckv8LNzYmwsLLvL7Z10FJuhVCKvuuu20J9yReNFGr
+        be4yOdRpocDxxoA6qxamS0Pk5E+pf841lrJN+vrkzFyseQOxWl5Ch0VD6CJ8B5gTMVj3re1ocF4fT
+        R3qw+ty5i7fofRDHRmqBGJ6GrtH+NLeOeZNn8v0UPQ3zXfEqAvOINV0CuQg+adyZiFuYN5TUWi3yA
+        UlQfJQlMAXu/BjFtbUwesx8L21ixKlHym8Vc6BRHBf1Xnq+T1gTW5FhNUL9aXxEIURAbTtYWmbpz4
+        J3Dhw+eQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEFg6-00010h-7t; Tue, 17 Mar 2020 17:06:54 +0000
+Date:   Tue, 17 Mar 2020 10:06:54 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     bjorn@helgaas.com
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH v17 06/12] Documentation: PCI: Remove reset_link
+ references
+Message-ID: <20200317170654.GA23125@infradead.org>
+References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <a46938d227f6a11c010943800450a10aac39b7d3.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20200317144203.GE23471@infradead.org>
+ <ebb79d02-53f5-cc23-0b38-72a351a05097@linux.intel.com>
+ <20200317150735.GA653@infradead.org>
+ <CABhMZUUn2RJWRTGc7xa1XcV3ozBOV24jjwhf6k08sP7XC1ETkw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABhMZUUn2RJWRTGc7xa1XcV3ozBOV24jjwhf6k08sP7XC1ETkw@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We're getting some random other stuff that we're not relly interested
-in, so match only word boundaries. Also avoid the capture group while
-at it.
+On Tue, Mar 17, 2020 at 11:03:36AM -0500, Bjorn Helgaas wrote:
+> On Tue, Mar 17, 2020 at 10:09 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Tue, Mar 17, 2020 at 08:05:50AM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > >
+> > > >
+> > > > This should be folded into the patch removing the method.
+> > > This is also folded in the mentioned patch.
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=review/edr&id=7a18dc6506f108db3dc40f5cd779bc15270c4183
+> >
+> > I can't find that series anywhere on the list.  What did I miss?
+> 
+> We've still been discussing other issues (access to AER registers,
+> synchronization between EDR and hotplug, etc) in other parts of this
+> thread.  The git branch Sathy pointed to above is my local branch.
+> I'll send it to the list before putting it into -next, but I wanted to
+> make progress on some of these other issues first.
 
-Suggested by Joe Perches.
+A few nitpicks:
 
-Cc: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linaro-mm-sig@lists.linaro.org
-Cc: Joe Perches <joe@perches.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
----
-v2: No single quotes in MAINTAINERS (Joe)
----
- MAINTAINERS                   |  2 +-
- drivers/gpu/drm/drm_managed.c | 27 +++++++++++++++++----------
- include/drm/drm_managed.h     |  2 +-
- 3 files changed, 19 insertions(+), 12 deletions(-)
+PCI/ERR: Update error status after reset_link():
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3005be638c2c..ed6088a01bfe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5025,7 +5025,7 @@ F:	include/linux/dma-buf*
- F:	include/linux/reservation.h
- F:	include/linux/*fence.h
- F:	Documentation/driver-api/dma-buf.rst
--K:	dma_(buf|fence|resv)
-+K:	\bdma_(?:buf|fence|resv)\b
- T:	git git://anongit.freedesktop.org/drm/drm-misc
- 
- DMA-BUF HEAPS FRAMEWORK
-diff --git a/drivers/gpu/drm/drm_managed.c b/drivers/gpu/drm/drm_managed.c
-index 5148ef786c3b..c256c9679eb5 100644
---- a/drivers/gpu/drm/drm_managed.c
-+++ b/drivers/gpu/drm/drm_managed.c
-@@ -52,6 +52,12 @@ struct drmres {
- 	u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
- };
- 
-+static void free_dr(struct drmres *dr)
-+{
-+	kfree_const(dr->node.name);
-+	kfree(dr);
-+}
-+
- void drm_managed_release(struct drm_device *dev)
- {
- 	struct drmres *dr, *tmp;
-@@ -65,13 +71,13 @@ void drm_managed_release(struct drm_device *dev)
- 			dr->node.release(dev, dr->node.size ? *(void **)&dr->data : NULL);
- 
- 		list_del(&dr->node.entry);
--		kfree(dr);
-+		free_dr(dr);
- 	}
- 	drm_dbg_drmres(dev, "drmres release end\n");
- }
- 
- /*
-- * Always inline so that kmallc_track_caller tracks the actual interesting
-+ * Always inline so that kmalloc_track_caller tracks the actual interesting
-  * caller outside of drm_managed.c.
-  */
- static __always_inline struct drmres * alloc_dr(drmres_release_t release,
-@@ -120,7 +126,7 @@ static void add_dr(struct drm_device *dev, struct drmres *dr)
- /**
-  * drmm_add_final_kfree - add release action for the final kfree()
-  * @dev: DRM device
-- * @parent: pointer to the kmalloc allocation containing @dev
-+ * @container: pointer to the kmalloc allocation containing @dev
-  *
-  * Since the allocation containing the struct &drm_device must be allocated
-  * before it can be initialized with drm_dev_init() there's no way to allocate
-@@ -129,12 +135,13 @@ static void add_dr(struct drm_device *dev, struct drmres *dr)
-  * will be released in the final drm_dev_put() for @dev, after all other release
-  * actions installed through drmm_add_action() have been processed.
-  */
--void drmm_add_final_kfree(struct drm_device *dev, void *parent)
-+void drmm_add_final_kfree(struct drm_device *dev, void *container)
- {
- 	WARN_ON(dev->managed.final_kfree);
--	WARN_ON(dev < (struct drm_device *) parent);
--	WARN_ON(dev + 1 >= (struct drm_device *) (parent + ksize(parent)));
--	dev->managed.final_kfree = parent;
-+	WARN_ON(dev < (struct drm_device *) container);
-+	WARN_ON(dev + 1 >=
-+		(struct drm_device *) (container + ksize(container)));
-+	dev->managed.final_kfree = container;
- }
- EXPORT_SYMBOL(drmm_add_final_kfree);
- 
-@@ -154,7 +161,7 @@ int __drmm_add_action(struct drm_device *dev,
- 		return -ENOMEM;
- 	}
- 
--	dr->node.name = name;
-+	dr->node.name = kstrdup_const(name, GFP_KERNEL);
- 	if (data) {
- 		void_ptr = (void **)&dr->data;
- 		*void_ptr = data;
-@@ -212,7 +219,7 @@ void drmm_remove_action(struct drm_device *dev,
- 	if (WARN_ON(!dr))
- 		return;
- 
--	kfree(dr);
-+	free_dr(dr);
- }
- EXPORT_SYMBOL(drmm_remove_action);
- 
-@@ -300,6 +307,6 @@ void drmm_kfree(struct drm_device *dev, void *data)
- 	if (WARN_ON(!dr_match))
- 		return;
- 
--	kfree(dr_match);
-+	free_dr(dr_match);
- }
- EXPORT_SYMBOL(drmm_kfree);
-diff --git a/include/drm/drm_managed.h b/include/drm/drm_managed.h
-index af152cfb173c..e4021484c78d 100644
---- a/include/drm/drm_managed.h
-+++ b/include/drm/drm_managed.h
-@@ -51,7 +51,7 @@ void drmm_remove_action(struct drm_device *dev,
- 			drmres_release_t action,
- 			void *data);
- 
--void drmm_add_final_kfree(struct drm_device *dev, void *parent);
-+void drmm_add_final_kfree(struct drm_device *dev, void *container);
- 
- void *drmm_kmalloc(struct drm_device *dev, size_t size, gfp_t gfp) __malloc;
- 
--- 
-2.25.1
+ - there are two "if (state == pci_channel_io_frozen)"
+   right after each other now, merging them would make the code a little
+   easier to read.
 
+PCI/DPC: Move DPC data into struct pci_dev:
+
+ - dpc_rp_extensions probable should be a "bool : 1"
+
+PCI/ERR: Remove service dependency in pcie_do_recovery():
+
+ - as mentioned to Kuppuswamy the reset_cb is never NULL, and thus
+   a lot of dead code in reset_link can be removed.  Also reset_link
+   should be merged into pcie_do_recovery.  That would also enable
+   to call the argument reset_link, which might be a bit more
+   descriptive than reset_cb.
+
+PCI/DPC: Cache DPC capabilities in pci_init_capabilities():
+
+ - I think the pci_dpc_init could be cleaned up a bit to:
+
+	...
+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
+	if (!(cap & PCI_EXP_DPC_CAP_RP_EXT))
+		return;
+	pdev->dpc_rp_extensions = true;
+	pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+	...
