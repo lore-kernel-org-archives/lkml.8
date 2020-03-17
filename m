@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C830FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2457C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC20205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE95205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443598;
-	bh=qj738WDBC0aPmVgUGzbHzuFqg5rI+Vr66qfUowkVNMI=;
+	s=default; t=1584443599;
+	bh=sDFKTy7QVaTA+HHCpN8vUO2vmbvFsJW0ZDHmpsFQ/FU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rchqyHpJgInDwioZGYnu4gREV+nRc+xvrxpv59VDm810fuqlpV38w6i7VAVmepEOr
-	 H3xnQ/0dqVUSbPKqp8m3b/mX5BfgpGjiO8waWHADBrZul7SSKIa8ObLgX5SsjGEVbY
-	 T4aT+A3Nsdkpuc914+0hZHl45L+Oc7c29TVZ3RLg=
+	b=z1bkcJ7s5HgzR3n9hy1Itw+g2ukH0EF39l9Hpk3BdEcLrCp4MZsQq4itGx7w/oGWE
+	 /zHJ0YCbxHhcLFdYaPcvhud9oGMXbvUeOPdtHqSyetfN+I2ZMByvxUn7JAyRdx8ySx
+	 SljgXGksdSZi3Jj7OTmSvLtdCRGx1JWI1hCMIVFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgCQLNQ (ORCPT
+        id S1728004AbgCQLNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:13:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbgCQLNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:13:11 -0400
+        id S1729229AbgCQLNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:13:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E05E205ED;
-        Tue, 17 Mar 2020 11:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97EAE20658;
+        Tue, 17 Mar 2020 11:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443591;
-        bh=qj738WDBC0aPmVgUGzbHzuFqg5rI+Vr66qfUowkVNMI=;
+        s=default; t=1584443595;
+        bh=sDFKTy7QVaTA+HHCpN8vUO2vmbvFsJW0ZDHmpsFQ/FU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m1i2hrSC8IgZT72ehX946RDJ8d1f1FaxtZB9HGx/eB5YXQAd6nC4moXq+NfqAuR/q
-         oAaYgMf9r8jZTqTHrOS1u/G6PKEMQJP99JjpV8TyYZnAmQWr8+CB18C/9IXxZXrSTo
-         scckVLoWpIJyd6B1FhgUE5EDqaWrQUw4aIwQlw8w=
+        b=Fd0733xEPmiBW1Z+JMZntwdQiIzJJIe7sNMUvESxGDfM5DccOKuiyNPnPhnSEsOw+
+         kfZE6NA1Idvf6o6UKn0aB30WCnboKx6FV+DV1qx8artVIlbueezZBSW5CVpd/0aEUP
+         9gvoELYuptwcI+D+hVFIj2yhavQsrkGi+7qy5gzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        stable@kernel.org
-Subject: [PATCH 5.5 097/151] gfs2_atomic_open(): fix O_EXCL|O_CREAT handling on cold dcache
-Date:   Tue, 17 Mar 2020 11:55:07 +0100
-Message-Id: <20200317103333.348437132@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH 5.5 098/151] KVM: x86: clear stale x86_emulate_ctxt->intercept value
+Date:   Tue, 17 Mar 2020 11:55:08 +0100
+Message-Id: <20200317103333.419618194@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,34 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-commit 21039132650281de06a169cbe8a0f7e5c578fd8b upstream.
+commit 342993f96ab24d5864ab1216f46c0b199c2baf8e upstream.
 
-with the way fs/namei.c:do_last() had been done, ->atomic_open()
-instances needed to recognize the case when existing file got
-found with O_EXCL|O_CREAT, either by falling back to finish_no_open()
-or failing themselves.  gfs2 one didn't.
+After commit 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest
+mode") Hyper-V guests on KVM stopped booting with:
 
-Fixes: 6d4ade986f9c (GFS2: Add atomic_open support)
-Cc: stable@kernel.org # v3.11
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+ kvm_nested_vmexit:    rip fffff802987d6169 reason EPT_VIOLATION info1 181
+    info2 0 int_info 0 int_info_err 0
+ kvm_page_fault:       address febd0000 error_code 181
+ kvm_emulate_insn:     0:fffff802987d6169: f3 a5
+ kvm_emulate_insn:     0:fffff802987d6169: f3 a5 FAIL
+ kvm_inj_exception:    #UD (0x0)
+
+"f3 a5" is a "rep movsw" instruction, which should not be intercepted
+at all.  Commit c44b4c6ab80e ("KVM: emulate: clean up initializations in
+init_decode_cache") reduced the number of fields cleared by
+init_decode_cache() claiming that they are being cleared elsewhere,
+'intercept', however, is left uncleared if the instruction does not have
+any of the "slow path" flags (NotImpl, Stack, Op3264, Sse, Mmx, CheckPerm,
+NearBranch, No16 and of course Intercept itself).
+
+Fixes: c44b4c6ab80e ("KVM: emulate: clean up initializations in init_decode_cache")
+Fixes: 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest mode")
+Cc: stable@vger.kernel.org
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/emulate.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/gfs2/inode.c
-+++ b/fs/gfs2/inode.c
-@@ -1248,7 +1248,7 @@ static int gfs2_atomic_open(struct inode
- 		if (!(file->f_mode & FMODE_OPENED))
- 			return finish_no_open(file, d);
- 		dput(d);
--		return 0;
-+		return excl && (flags & O_CREAT) ? -EEXIST : 0;
- 	}
- 
- 	BUG_ON(d != NULL);
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5195,6 +5195,7 @@ int x86_decode_insn(struct x86_emulate_c
+ 	ctxt->fetch.ptr = ctxt->fetch.data;
+ 	ctxt->fetch.end = ctxt->fetch.data + insn_len;
+ 	ctxt->opcode_len = 1;
++	ctxt->intercept = x86_intercept_none;
+ 	if (insn_len > 0)
+ 		memcpy(ctxt->fetch.data, insn, insn_len);
+ 	else {
 
 
