@@ -2,118 +2,78 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24572C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B31C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F088F20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584466567;
-	bh=vCkXg6ZKTmn/Kw2NcMY6GpGnLUbXdCNDQFCJeGQBEAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yjIgcDH4oAEzLcxT2IA5YCNDAHJzbV3xKiE5cY0wks5kBKB8YR/MqBHfc0TNhDSf7
-	 D2g1RmhwvMeoEDyk2S8YW/VD0NrSfcaUfr8lEkaojHpeTamDVQdW2RI0ownOazGC/x
-	 z4DreS4f+yQm+tDhaiUritGdBy+6JkLsuwTSgruk=
+	by mail.kernel.org (Postfix) with ESMTP id D746F20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgCQRgF (ORCPT
+        id S1726780AbgCQRgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:36:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37196 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgCQRgE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:36:04 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 6so26811177wre.4;
-        Tue, 17 Mar 2020 10:36:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HK4dtU6wlFNqeoi15VIX4txP4pHLLBJv5Yu+/ozsMlo=;
-        b=mfTsH6hLkOkCjRj90Xkh5eCAR1D8QvYRXBBDfM8ysrjex48uAq8j5cAOBXgu3aTKkZ
-         tn+83Bf+sSBGoRNjUBMS+E6fEqlG93CuiPBKbsz/G2FhW0ydRoBvR6DE8NG09NiOkr1a
-         iOg3HgM1xrqUfFyy1zcz5eSFR7wANA3lZEOTpAPnMaIbRghlgBKFTS6nsDVX9kKPegpt
-         ztlv4gm7AYqyvjw/6IlaGr+GNwhTvEyrVlum9UT6tWTOU3spONGeE0EGTGKvFKsS2oG7
-         aA+ZcfIbLfQr4YeZRWcPWSf1K/0FzLE5sn3RmtXWIdzaYOFEPzt6pyBijk6pNJYX2O7x
-         c3gQ==
-X-Gm-Message-State: ANhLgQ2S7iOPCkwz0mak60Xlg8n4kBvv60XQfjg9DIMWn0XLXizdUmIN
-        gEcCmHQDH202hK2JWUwlo58=
-X-Google-Smtp-Source: ADFU+vu9SYdwcgSZ2H4PuIVI9Wp9pPurJ3waoqVZWzO5zEOoKjPO/99OtjvJeY7eWQrGvPrFKK8lGg==
-X-Received: by 2002:a5d:4ac2:: with SMTP id y2mr69149wrs.263.1584466563140;
-        Tue, 17 Mar 2020 10:36:03 -0700 (PDT)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id k126sm202548wme.4.2020.03.17.10.36.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 10:36:02 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 17:36:00 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     ltykernel@gmail.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH 2/4] x86/Hyper-V: Free hv_panic_page when fail to
- register kmsg dump
-Message-ID: <20200317173600.2hqznyabyj4nckjo@debian>
-References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
- <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
+        Tue, 17 Mar 2020 13:36:35 -0400
+Received: from ms.lwn.net ([45.79.88.28]:33612 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726655AbgCQRge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 13:36:34 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 23EAD891;
+        Tue, 17 Mar 2020 17:36:34 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 11:36:33 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 04/17] kernel: futex.c: get rid of a docs build warning
+Message-ID: <20200317113633.32078328@lwn.net>
+In-Reply-To: <20200317165805.GA20713@hirez.programming.kicks-ass.net>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org>
+        <aab1052263e340a3eada5522f32be318890314a1.1584456635.git.mchehab+huawei@kernel.org>
+        <20200317165805.GA20713@hirez.programming.kicks-ass.net>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 06:25:21AM -0700, ltykernel@gmail.com wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> 
-> If fail to register kmsg dump on Hyper-V platform, hv_panic_page
-> will not be used anywhere. So free and reset it.
-> 
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index b56b9fb9bd90..b043efea092a 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
->  			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
->  			if (hv_panic_page) {
->  				ret = kmsg_dump_register(&hv_kmsg_dumper);
-> -				if (ret)
-> +				if (ret) {
->  					pr_err("Hyper-V: kmsg dump register "
->  						"error 0x%x\n", ret);
-> +					hv_free_hyperv_page(
-> +					    (unsigned long)hv_panic_page);
-> +					hv_panic_page = NULL;
-> +				}
+On Tue, 17 Mar 2020 17:58:05 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-While this modification looks correct to me, there is a call to free
-hv_panic_page in the err_alloc path. That makes the error handling a bit
-confusing here.
-
-I think you can just remove that function call in err_alloc path.
-
-Wei.
-
->  			} else
->  				pr_err("Hyper-V: panic message page memory "
->  					"allocation failed");
-> -- 
-> 2.14.5
+> On Tue, Mar 17, 2020 at 03:54:13PM +0100, Mauro Carvalho Chehab wrote:
+> > Adjust whitespaces and blank lines in order to get rid of this:
+> > 
+> > 	./kernel/futex.c:491: WARNING: Definition list ends without a blank line; unexpected unindent.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  kernel/futex.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/futex.c b/kernel/futex.c
+> > index 67f004133061..dda6ddbc2e7d 100644
+> > --- a/kernel/futex.c
+> > +++ b/kernel/futex.c
+> > @@ -486,7 +486,8 @@ static u64 get_inode_sequence_number(struct inode *inode)
+> >   * The key words are stored in @key on success.
+> >   *
+> >   * For shared mappings (when @fshared), the key is:
+> > - *   ( inode->i_sequence, page->index, offset_within_page )
+> > + * ( inode->i_sequence, page->index, offset_within_page )
+> > + *  
 > 
+> WTH, that's less readable.
+
+It won't render well in the build either; that should be a literal block.
+
+jon
