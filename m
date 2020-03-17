@@ -2,179 +2,187 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D0FC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D719CC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA236205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A8B205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 07:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgCQHc6 (ORCPT
+        id S1726057AbgCQHl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:32:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:28533 "EHLO mga14.intel.com"
+        Tue, 17 Mar 2020 03:41:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:18628 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbgCQHc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 03:32:58 -0400
-IronPort-SDR: BZ8ke6cDQvmw0R29DCVMJ5yxlsBjYe8k9ggI5hX+ijxxgUF/1RuWJSOpPv+SME2Y8SFXO4jjCh
- I8RHz4SFCriQ==
+        id S1725794AbgCQHl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 03:41:29 -0400
+IronPort-SDR: +1CpZ8PnnlJp4jP+vAoTDvBm+sqG0Q3O5v2ShitXbd+auAW+t+k6JGNbmeMf/m5Sld8OS7m+0c
+ /NR869i9Kjlg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 00:32:58 -0700
-IronPort-SDR: NA6fcj7hlzikUGXB/cbpVaqc5np2tQ3ndb4jl8/G7w+k5Snd2uTF+YddDkTjmRFkALd9YY+A5V
- hBndeU7tgJ+Q==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 00:41:28 -0700
+IronPort-SDR: Rh6v35oSwDAUkIqQr37u6MnCetiEjlu42va9wWGOFaf8EAPq3jOIxe+oZGmpgHacJe1hYVqZqN
+ Z4Z0L6YzTBAg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="443660878"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Mar 2020 00:32:56 -0700
-Subject: Re: [RESEND PATCH 1/3] mmc: host: Introduce the request_atomic() for
- the host
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cover.1583307441.git.baolin.wang7@gmail.com>
- <ace53bca354e2846f19684bd33a9c0f3c2ee2c44.1583307441.git.baolin.wang7@gmail.com>
- <dd44e606-3eb5-f7fc-5995-021705a9b5d9@intel.com>
- <CADBw62ojVB7nvwE9OM8-A_HfVBBXz7tuaxfqDCmQ39b1YiDBag@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <ea70f7a4-78cb-25b4-4363-c6493d885795@intel.com>
-Date:   Tue, 17 Mar 2020 09:32:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+   d="scan'208";a="247734664"
+Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.255.30.124]) ([10.255.30.124])
+  by orsmga006.jf.intel.com with ESMTP; 17 Mar 2020 00:41:26 -0700
+Subject: Re: [scsi] 618b4d07a4: xfstests.generic.484.fail
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200316134148.GG11705@shao2-debian>
+ <1584368247.14250.17.camel@mtksdccf07>
+From:   "Chen, Rong A" <rong.a.chen@intel.com>
+Message-ID: <531bbf4b-221c-5d42-e04f-6b15b6d27e35@intel.com>
+Date:   Tue, 17 Mar 2020 15:41:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CADBw62ojVB7nvwE9OM8-A_HfVBBXz7tuaxfqDCmQ39b1YiDBag@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <1584368247.14250.17.camel@mtksdccf07>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/20 5:36 am, Baolin Wang wrote:
-> On Mon, Mar 16, 2020 at 9:09 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+
+
+On 3/16/2020 10:17 PM, Stanley Chu wrote:
+> Hi,
+>
+> On Mon, 2020-03-16 at 21:41 +0800, kernel test robot wrote:
+>> FYI, we noticed the following commit (built with gcc-7):
 >>
->> On 4/03/20 9:42 am, Baolin Wang wrote:
->>> The SD host controller can process one request in the atomic context if
->>> the card is nonremovable, which means we can submit next request in the
->>> irq hard handler when using the MMC software queue to reduce the latency.
->>> Thus this patch adds a new API request_atomic() for the host controller
->>> and implement it for the SD host controller.
->>>
->>> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
->>> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
->>> ---
->>>  drivers/mmc/host/sdhci.c | 27 +++++++++++++++++++--------
->>>  drivers/mmc/host/sdhci.h |  1 +
->>>  include/linux/mmc/host.h |  3 +++
->>>  3 files changed, 23 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>> index 9c37451..4febbcb 100644
->>> --- a/drivers/mmc/host/sdhci.c
->>> +++ b/drivers/mmc/host/sdhci.c
->>> @@ -2016,17 +2016,12 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->>>   *                                                                           *
->>>  \*****************************************************************************/
->>>
->>> -void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
->>> +static void sdhci_start_request(struct mmc_host *mmc, struct mmc_request *mrq,
->>> +                             int present)
->>>  {
->>> -     struct sdhci_host *host;
->>> -     int present;
->>> +     struct sdhci_host *host = mmc_priv(mmc);
->>>       unsigned long flags;
->>>
->>> -     host = mmc_priv(mmc);
->>> -
->>> -     /* Firstly check card presence */
->>> -     present = mmc->ops->get_cd(mmc);
->>> -
->>>       spin_lock_irqsave(&host->lock, flags);
->>>
->>>       sdhci_led_activate(host);
->>> @@ -2043,6 +2038,22 @@ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
->>>
->>>       spin_unlock_irqrestore(&host->lock, flags);
->>>  }
->>> +
->>> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq)
->>> +{
->>> +     sdhci_start_request(mmc, mrq, 1);
->>> +}
->>> +EXPORT_SYMBOL_GPL(sdhci_request_atomic);
->>> +
->>> +void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
->>> +{
->>> +     int present;
->>> +
->>> +     /* Firstly check card presence */
->>> +     present = mmc->ops->get_cd(mmc);
->>> +
->>> +     sdhci_start_request(mmc, mrq, present);
->>> +}
->>>  EXPORT_SYMBOL_GPL(sdhci_request);
->>>
->>>  void sdhci_set_bus_width(struct sdhci_host *host, int width)
->>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->>> index cac2d97..5507a73 100644
->>> --- a/drivers/mmc/host/sdhci.h
->>> +++ b/drivers/mmc/host/sdhci.h
->>> @@ -775,6 +775,7 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->>>  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
->>>                          unsigned short vdd);
->>>  void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
->>> +void sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
->>>  void sdhci_set_bus_width(struct sdhci_host *host, int width);
->>>  void sdhci_reset(struct sdhci_host *host, u8 mask);
->>>  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
->>> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
->>> index 562ed06..db5e59c 100644
->>> --- a/include/linux/mmc/host.h
->>> +++ b/include/linux/mmc/host.h
->>> @@ -92,6 +92,9 @@ struct mmc_host_ops {
->>>                           int err);
->>>       void    (*pre_req)(struct mmc_host *host, struct mmc_request *req);
->>>       void    (*request)(struct mmc_host *host, struct mmc_request *req);
->>> +     /* Submit one request to host in atomic context. */
->>> +     void    (*request_atomic)(struct mmc_host *host,
->>> +                               struct mmc_request *req);
+>> commit: 618b4d07a4420ca9f01837f183ce7b1ac0b31307 ("scsi: ufs: ufs-mediatek: fix TX LCC disabling timing")
+>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 >>
->> This doesn't have the flexibility to return "busy".  For example,
->> sdhci_send_command() will potentially wait quite some time if the inhibit
->> bits are set.  That is not good in interrupt context.  It would be better to
->> return immediately in that case and have the caller fall back to a
->> non-atomic context.  Thoughts?
-> 
-> Yes, I unserstood your concern. But the sdhci_send_command() is
-> already under the spin_lock_irqsave() protection, which will also
-> disable the interrupt for some time if the inhibit bits are set. That
-> is same with moving it in interrupt context.
+> The modified file in above commit is /drivers/scsi/ufs/ufs-mediatek.c
+> which shall not be built according to the kernel configuration used by
+> the robot.
+>
+> Could this possibly be a false alarm?
+>
+> Thanks,
+> Stanley Chu
 
-It is, but I would like to fix that too.
+Hi Stanley,
 
-> 
-> Moreover, if the previous command complete interrupt and transfer
-> complete interrupt are normal, we should not meet this issue of
-> polling inhibit bits (I have not met this issue on my platform). So I
-> think we can remove the polling here? If the inhibit bits are set, I
-> think the command complete interrupt or the transfer complete
-> interrupt have been abnormal, so we can just return the error here.
-> What do you think? Thanks.
-> 
+Sorry for the inconvenience, it's a false positive, the 
+xfstests.generic.484 test
+didn't run successfully in the parent commit.
 
-I suspect the inhibit polling might be needed for some host controllers in
-some situations.  ie. taking it out would likely break things.
+Best Regards,
+Rong Chen
+
+
+>
+>
+>> in testcase: xfstests
+>> with following parameters:
+>>
+>> 	disk: 4HDD
+>> 	fs: xfs
+>> 	test: generic-group11
+>>
+>> test-description: xfstests is a regression test suite for xfs and other files ystems.
+>> test-url: git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+>>
+>>
+>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+>>
+>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+>>
+>>
+>>
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kernel test robot <rong.a.chen@intel.com>
+>>
+>> 2020-03-16 18:33:34 export TEST_DIR=/fs/vda
+>> 2020-03-16 18:33:34 export TEST_DEV=/dev/vda
+>> 2020-03-16 18:33:34 export FSTYP=xfs
+>> 2020-03-16 18:33:34 export SCRATCH_MNT=/fs/scratch
+>> 2020-03-16 18:33:34 mkdir /fs/scratch -p
+>> 2020-03-16 18:33:34 export SCRATCH_DEV=/dev/vdd
+>> 2020-03-16 18:33:34 export SCRATCH_LOGDEV=/dev/vdb
+>> meta-data=/dev/vda               isize=512    agcount=4, agsize=16777216 blks
+>>           =                       sectsz=512   attr=2, projid32bit=1
+>>           =                       crc=1        finobt=1, sparse=0, rmapbt=0, reflink=1
+>> data     =                       bsize=4096   blocks=67108864, imaxpct=25
+>>           =                       sunit=0      swidth=0 blks
+>> naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+>> log      =internal log           bsize=4096   blocks=32768, version=2
+>>           =                       sectsz=512   sunit=0 blks, lazy-count=1
+>> realtime =none                   extsz=4096   blocks=0, rtextents=0
+>> 2020-03-16 18:33:35 export MKFS_OPTIONS=-mreflink=1
+>> 2020-03-16 18:33:35 sed "s:^:generic/:" //lkp/benchmarks/xfstests/tests/generic-group11
+>> 2020-03-16 18:33:35 ./check generic/015 generic/056 generic/092 generic/124 generic/160 generic/192 generic/222 generic/254 generic/287 generic/319 generic/350 generic/381 generic/416 generic/446 generic/484 generic/519 generic/550 generic/580
+>> FSTYP         -- xfs (debug)
+>> PLATFORM      -- Linux/x86_64 vm-snb-15 5.6.0-rc1-00021-g618b4d07a4420 #1 SMP Mon Mar 16 17:42:08 CST 2020
+>> MKFS_OPTIONS  -- -f -mreflink=1 /dev/vdd
+>> MOUNT_OPTIONS -- /dev/vdd /fs/scratch
+>>
+>> generic/015	 2s
+>> generic/056	 3s
+>> generic/092	 2s
+>> generic/124	 5s
+>> generic/160	 2s
+>> generic/192	 7s
+>> generic/222	 5s
+>> generic/254	 4s
+>> generic/287	 4s
+>> generic/319	 2s
+>> generic/350	 2s
+>> generic/381	 2s
+>> generic/416	 157s
+>> generic/446	 9s
+>> generic/484	- output mismatch (see /lkp/benchmarks/xfstests/results//generic/484.out.bad)
+>>      --- tests/generic/484.out	2020-03-05 16:38:54.000000000 +0800
+>>      +++ /lkp/benchmarks/xfstests/results//generic/484.out.bad	2020-03-16 18:37:07.484545261 +0800
+>>      @@ -1,2 +1,3 @@
+>>       QA output created by 484
+>>      +record lock is not preserved across execve(2)
+>>       Silence is golden
+>>      ...
+>>      (Run 'diff -u /lkp/benchmarks/xfstests/tests/generic/484.out /lkp/benchmarks/xfstests/results//generic/484.out.bad'  to see the entire diff)
+>> generic/519	 2s
+>> generic/550	[not run] xfs_io set_encpolicy  support is missing
+>> generic/580	[not run] xfs_io set_encpolicy  support is missing
+>> Ran: generic/015 generic/056 generic/092 generic/124 generic/160 generic/192 generic/222 generic/254 generic/287 generic/319 generic/350 generic/381 generic/416 generic/446 generic/484 generic/519 generic/550 generic/580
+>> Not run: generic/550 generic/580
+>> Failures: generic/484
+>> Failed 1 of 18 tests
+>>
+>>
+>>
+>>
+>> To reproduce:
+>>
+>>          # build kernel
+>> 	cd linux
+>> 	cp config-5.6.0-rc1-00021-g618b4d07a4420 .config
+>> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig prepare modules_prepare bzImage modules
+>> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 INSTALL_MOD_PATH=<mod-install-dir> modules_install
+>> 	cd <mod-install-dir>
+>> 	find lib/ | cpio -o -H newc --quiet | gzip > modules.cgz
+>>
+>>
+>>          git clone https://github.com/intel/lkp-tests.git
+>>          cd lkp-tests
+>>          bin/lkp qemu -k <bzImage> -m modules.cgz job-script # job-script is attached in this email
+>>
+>>
+>>
+>> Thanks,
+>> Rong Chen
+>>
 
