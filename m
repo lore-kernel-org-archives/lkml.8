@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088E9C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F9AC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C78DE20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B3820714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443126;
-	bh=03xzoa24LTQ6z0+jZrl/hZ4inFdHU56AHL9eX4wVlTM=;
+	s=default; t=1584443129;
+	bh=x/iwEgPCjqg1vr+Jo85dKncNW7v4aqB6+4VNxqJquD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bi9KSAU+cQqxus73AwkSGdjoBFJkVwUeLy/e2y1M3RouJ4swkkHkdIUSpLRgzwuII
-	 De+RKBOL14D+Z1Jo8eAJkF2W43HgKI4Skrbo5hvbq+a9dAdcSiclXpSrEMfvoe07xD
-	 Cegc9ZrMehQxc89CGvMzXLEk7ScpJBvnRYfW+p+M=
+	b=JyZjmqyAEnw/SZJ+LKYjL04fViYjm+QfSEAON2FdMMmYRlYnxZSIe8xqsH2ZwXPtk
+	 Ql2Jsru3JPs9DF9P9E9uMVsbNLwqG3jNaOb4kE1dNoiTVqZMne82OYacuTJDHRrF42
+	 rJKJA/1UBezZEDM5hgVVs0l5JYWEnJH5iXWC9eMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgCQLFS (ORCPT
+        id S1728421AbgCQLF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:05:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45966 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbgCQLFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:13 -0400
+        id S1728061AbgCQLFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:05:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E058620658;
-        Tue, 17 Mar 2020 11:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 055DE20736;
+        Tue, 17 Mar 2020 11:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443112;
-        bh=03xzoa24LTQ6z0+jZrl/hZ4inFdHU56AHL9eX4wVlTM=;
+        s=default; t=1584443117;
+        bh=x/iwEgPCjqg1vr+Jo85dKncNW7v4aqB6+4VNxqJquD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oeppvnsgEIz/oGMpxA3cQOiyIkNOQo9co0568Tox+Y5zoYtlKF+bP0I9AmEjR5lTk
-         PEcuazntfUslPZOdJD/taIfpkAyJgZkD9zFGLaLtXdkhS/5W/ZEQwaQ7Er1lEMNPbv
-         FcOvarPNpBZDugGMo68E8DzuCrqqzRY+NEN7HY9I=
+        b=2rOYSmPgslhsUtz9n6PlW2cFSepmZtR00xu/Nrx1iMArPaXBLvPuGBi+32HIJfIOd
+         hZZj+3UH4TfPifbhueHXni06KeoPluvzrnXstUlM0RDGfdml0PZgYfXnVd4m7+Wq1l
+         hDbNvupEl1gd3XoCxAvEBNyMd6fMqg59VQquid3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 100/123] pinctrl: imx: scu: Align imx sc msg structs to 4
-Date:   Tue, 17 Mar 2020 11:55:27 +0100
-Message-Id: <20200317103317.893198662@linuxfoundation.org>
+        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 5.4 101/123] virtio_ring: Fix mem leak with vring_new_virtqueue()
+Date:   Tue, 17 Mar 2020 11:55:28 +0100
+Message-Id: <20200317103317.968666344@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,43 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Suman Anna <s-anna@ti.com>
 
-commit 4c48e549f39f8ed10cf8a0b6cb96f5eddf0391ce upstream.
+commit f13f09a12cbd0c7b776e083c5d008b6c6a9c4e0b upstream.
 
-The imx SC api strongly assumes that messages are composed out of
-4-bytes words but some of our message structs have odd sizeofs.
+The functions vring_new_virtqueue() and __vring_new_virtqueue() are used
+with split rings, and any allocations within these functions are managed
+outside of the .we_own_ring flag. The commit cbeedb72b97a ("virtio_ring:
+allocate desc state for split ring separately") allocates the desc state
+within the __vring_new_virtqueue() but frees it only when the .we_own_ring
+flag is set. This leads to a memory leak when freeing such allocated
+virtqueues with the vring_del_virtqueue() function.
 
-This produces many oopses with CONFIG_KASAN=y.
+Fix this by moving the desc_state free code outside the flag and only
+for split rings. Issue was discovered during testing with remoteproc
+and virtio_rpmsg.
 
-Fix by marking with __aligned(4).
-
-Fixes: b96eea718bf6 ("pinctrl: fsl: add scu based pinctrl support")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Link: https://lore.kernel.org/r/bd7ad5fd755739a6d8d5f4f65e03b3ca4f457bd2.1582216144.git.leonard.crestez@nxp.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring separately")
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Link: https://lore.kernel.org/r/20200224212643.30672-1-s-anna@ti.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/freescale/pinctrl-scu.c |    4 ++--
+ drivers/virtio/virtio_ring.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/pinctrl/freescale/pinctrl-scu.c
-+++ b/drivers/pinctrl/freescale/pinctrl-scu.c
-@@ -23,12 +23,12 @@ struct imx_sc_msg_req_pad_set {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 val;
- 	u16 pad;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_req_pad_get {
- 	struct imx_sc_rpc_msg hdr;
- 	u16 pad;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_resp_pad_get {
- 	struct imx_sc_rpc_msg hdr;
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueu
+ 					 vq->split.queue_size_in_bytes,
+ 					 vq->split.vring.desc,
+ 					 vq->split.queue_dma_addr);
+-
+-			kfree(vq->split.desc_state);
+ 		}
+ 	}
++	if (!vq->packed_ring)
++		kfree(vq->split.desc_state);
+ 	list_del(&_vq->list);
+ 	kfree(vq);
+ }
 
 
