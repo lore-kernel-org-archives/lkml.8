@@ -2,102 +2,111 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFFFC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A33C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8343520735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B054820714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgCQQZq (ORCPT
+        id S1726680AbgCQQ0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:25:46 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2568 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726082AbgCQQZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:25:45 -0400
-Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 019003C024E50199197F;
-        Tue, 17 Mar 2020 16:25:44 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 17 Mar 2020 16:25:43 +0000
-Received: from [127.0.0.1] (10.47.11.44) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 17 Mar
- 2020 16:25:42 +0000
-Subject: Re: [PATCH v2 2/7] perf jevents: Support test events folder
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <namhyung@kernel.org>, <will@kernel.org>, <ak@linux.intel.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <james.clark@arm.com>, <qiangqing.zhang@nxp.com>
-References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
- <1584442939-8911-3-git-send-email-john.garry@huawei.com>
- <20200317162052.GD759708@krava>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <de5b58ee-980e-973a-16db-73f23c3edfef@huawei.com>
-Date:   Tue, 17 Mar 2020 16:25:32 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 17 Mar 2020 12:26:53 -0400
+Received: from mga17.intel.com ([192.55.52.151]:60668 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgCQQ0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:26:53 -0400
+IronPort-SDR: wxM5gfHesnbqJyCURgpd/4lOq+yGbC4GIcGGOLobnUF8NbMzyvumHBs88jhFS6lqUt4t0BDD8t
+ XPM/DJpD4jeQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 09:26:52 -0700
+IronPort-SDR: 5sJQC8mpecwiXgdj9P9ed5N2YqvExySFjwF6A6vuCxy0XtwABcdBjxLZRM95CuAtsPEOiSVE/W
+ z9Aoh8NsX2QA==
+X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
+   d="scan'208";a="443814680"
+Received: from rchatre-s.jf.intel.com ([10.54.70.76])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 09:26:52 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     mingo@redhat.com, hpa@zytor.com, kuo-lang.tseng@intel.com,
+        xiaochen.shen@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        stable@vger.kernel.org,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Subject: [PATCH] x86/resctrl: Fix invalid attempt at removing default resource group
+Date:   Tue, 17 Mar 2020 09:26:45 -0700
+Message-Id: <884cbe1773496b5dbec1b6bd11bb50cffa83603d.1584461853.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20200317162052.GD759708@krava>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.11.44]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/2020 16:20, Jiri Olsa wrote:
-> On Tue, Mar 17, 2020 at 07:02:14PM +0800, John Garry wrote:
->> With the goal of supporting pmu-events test case, introduce support for a
->> test events folder.
->>
->> These test events can be used for testing generation of pmu-event tables
->> and alias creation for any arch.
->>
->> When running the pmu-events test case, these test events will be used
->> as the platform-agnostic events, so aliases can be created per-PMU and
->> validated against known expected values.
->>
->> To support the test events, add a "testcpu" entry in pmu_events_map[].
->> The pmu-events test will be able to lookup the events map for "testcpu",
->> to verify the generated tables against expected values.
->>
->> The resultant generated pmu-events.c will now look like the following:
-> 
-> can't compile this one:
-> 
->    HOSTCC   pmu-events/jevents.o
-> pmu-events/jevents.c: In function ‘main’:
-> pmu-events/jevents.c:1195:3: error: ‘ret’ undeclared (first use in this function)
->   1195 |   ret = 1;
->        |   ^~~
-> pmu-events/jevents.c:1195:3: note: each undeclared identifier is reported only once for each function it appears in
-> pmu-events/jevents.c:1196:3: error: label ‘out_free_mapfile’ used but not defined
->   1196 |   goto out_free_mapfile;
->        |   ^~~~
-> mv: cannot stat 'pmu-events/.jevents.o.tmp': No such file or directory
-> make[3]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:97: pmu-events/jevents.o] Error 1
-> make[2]: *** [Makefile.perf:619: pmu-events/jevents-in.o] Error 2
-> make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> make: *** [Makefile:70: all] Error 2
+The default resource group ("rdtgroup_default") is associated with the
+root of the resctrl filesystem and should never be removed. New resource
+groups can be created as subdirectories of the resctrl filesystem and
+they can be removed from user space. There exists a safeguard in the
+directory removal code (rdtgroup_rmdir()) that ensures that only
+subdirectories can be removed by testing that the directory to be
+removed has to be a child of the root directory.
 
-Hi jirka,
+A possible deadlock was recently fixed with commit 334b0f4e9b1b
+("x86/resctrl: Fix a deadlock due to inaccurate reference"). This fix
+involved associating the private data of the "mon_groups" and "mon_data"
+directories to the resource group to which they belong instead of NULL
+as before. A consequence of this change was that the original safeguard
+code preventing removal of "mon_groups" and "mon_data" found in the root
+directory failed resulting in attempts to remove the default resource
+group that ends in a BUG:
 
-What baseline are you using? I used v5.6-rc6. The patches are here:
+kernel BUG at mm/slub.c:3969!
+invalid opcode: 0000 [#1] SMP PTI
 
-https://github.com/hisilicon/kernel-dev/commits/private-topic-perf-5.6-pmu-events-test-upstream-v2
+Call Trace:
+rdtgroup_rmdir+0x16b/0x2c0
+kernfs_iop_rmdir+0x5c/0x90
+vfs_rmdir+0x7a/0x160
+do_rmdir+0x17d/0x1e0
+do_syscall_64+0x55/0x1d0
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-thanks,
-John
+Fix this by improving the directory removal safeguard to ensure that
+subdirectories of the resctrl root directory can only be removed if
+they are a child of the resctrl filesystem's root _and_ not associated
+with the default resource group.
+
+Fixes: 334b0f4e9b1b ("x86/resctrl: Fix a deadlock due to inaccurate reference")
+Cc: stable@vger.kernel.org
+Reported-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Tested-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 064e9ef44cd6..9d4e73a9b5a9 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -3072,7 +3072,8 @@ static int rdtgroup_rmdir(struct kernfs_node *kn)
+ 	 * If the rdtgroup is a mon group and parent directory
+ 	 * is a valid "mon_groups" directory, remove the mon group.
+ 	 */
+-	if (rdtgrp->type == RDTCTRL_GROUP && parent_kn == rdtgroup_default.kn) {
++	if (rdtgrp->type == RDTCTRL_GROUP && parent_kn == rdtgroup_default.kn &&
++	    rdtgrp != &rdtgroup_default) {
+ 		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP ||
+ 		    rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
+ 			ret = rdtgroup_ctrl_remove(kn, rdtgrp);
+-- 
+2.21.0
+
