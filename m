@@ -2,166 +2,140 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48DCC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EFAC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF8420735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E65620753
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:46:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IsVe3PCt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMRx7nwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgCQQpg (ORCPT
+        id S1726775AbgCQQqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:45:36 -0400
-Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:62592
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726016AbgCQQpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:45:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PuHb2k/NpjFJD1cN+JtGXzkh2/mXHCrSpKOEH5cjDLL0g6qgZqAWzWyDJxWnTsLNvDb7xZJF1QLSQLRrQNLBqBhhvXxNIleTd4bI6NtjukAkA1PjMISU6fF6kqUW0872gdUOISXh8NrVzdloaFk053q5TbQPomFI4H57muz7q85pFloo+Ii/vA2xCel67m/kRCXFzNVbBALtNWRxr6S8Ll3e09pXxn5vicRHKv9+V1Fq4PaUrdmbreYa6bc1lIcWL2O8AuYpEjZijju/T9nDVT9cqGiHbCW9QIGvKkDhn9LudM3chbwpMFOMXRfiyTzAJW8M2xz8ZyRNWltiR0pRrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JJ8q/7An/zFH2oP4PFfQd5wQwEVpidm2fZBwn7r454Y=;
- b=EvnZVJCZgZWvs6i6J96Q3WZnYG4Cl3PlUnmuhRQLw1uWCaPGd/AT8tgcrUxy76KEnMjiS4mAGTBm76uioK+US5WYpWAKsmgZyNeTDmVqqh12DQRFCaXrnWrWLVLSeQdUoJauXBy2T1Hy9jmu1nrTYJqDHC9ZDpSRs0sYzuAMu0eoDHzJU+vu8yRekIyAdhY1EFclH4Os7POBfJTXyh5njhL0DdXr/aNtmKfHTr0qhANzv8ZcZkTN38RSgvOBG48LP2f1dQgzPnzmpbD9AE0N0bqEcjmdI6r42UoDnIlOW7x7ZjoLico27wSKjEbXXxDE+9LUttmKpB5u0yNE+2Ap9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JJ8q/7An/zFH2oP4PFfQd5wQwEVpidm2fZBwn7r454Y=;
- b=IsVe3PCthqRnWG5Xa4tvtLJ8KrcwdXByH+wxI+rIZ0WoeMlosA8tUR7TeABpLbYMGKtgPZotU6dKSN8kV0WzDoRbEn4B+3qW/yDVXjUZJqIzEAsnTD8+tGds/wUNGaWlQYwifkli3hmHFeoOFOTqEyuXqLBjuxpwyh9LBI96Rzc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3951.eurprd04.prod.outlook.com (52.134.13.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.22; Tue, 17 Mar 2020 16:45:32 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 16:45:32 +0000
-Subject: Re: [PATCH v8 3/8] crypto: caam - drop global context pointer and
- init_done
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-References: <20200316150047.30828-1-andrew.smirnov@gmail.com>
- <20200316150047.30828-4-andrew.smirnov@gmail.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <49971beb-0681-de92-95f5-b18e1be05ce3@nxp.com>
-Date:   Tue, 17 Mar 2020 18:45:29 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200316150047.30828-4-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM4PR05CA0007.eurprd05.prod.outlook.com (2603:10a6:205::20)
- To VI1PR0402MB3485.eurprd04.prod.outlook.com (2603:10a6:803:7::25)
+        Tue, 17 Mar 2020 12:46:12 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34917 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQQqM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:46:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k26so22422435otr.2;
+        Tue, 17 Mar 2020 09:46:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5eJQW9u/oqLF6BZRfUiV1G5G6DviGGlWCr2b1498xxQ=;
+        b=LMRx7nwWe7cMHMOWNUg05zRuPgY6DofzFHMhj1gQnEGael6LRUmB87NFm94a/wAfQX
+         qykah79BwhO1P0ntFvhaKtyeXHgmlW5N/BGaWP5tIlIMKLhnE+3K5J8zhdQEUNxGgANf
+         mXgbeSIOtdcNdJ2mSwcAt00z0uL/hD3bOfgu7xKu2E8K4MYFOKF5f/4rqd54WT8p+4JU
+         Gzt//MblJ65rZBgIlXAHxF4Riy/dM6uPNIerdGo5NXG0RHt9RJHKUdWeTrkrfGrEMpeP
+         U9ixsy97/bDAWsXfWP/01XRU5DVl8ZcLaF4BgdJ2y7RJ4bx/dRXjPBaFxBoG5mN/5vsB
+         z+YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5eJQW9u/oqLF6BZRfUiV1G5G6DviGGlWCr2b1498xxQ=;
+        b=RfpjAdih189gR1m9EytlEdi4rmNm3i6BvpNSS5Z8Fvl/NeACW0/hXfxFXRKYVb4VD5
+         A65CDR9/G+AjO1cBZb3I4ctwra+yTbTZNp7Ntt1c2y7J/yD6a5B/6LalZ2MuSjbpnMjl
+         zIzmSm+6Gwjws3Ezj7XlrtCfBjlhgcO68ew+jrh60thGIzmu0Ps7FPBF2DrZu6HKOziv
+         oWDcGJHyh0pfoh6f0QQwdpoUaMCd2cRqYaZKuQSQfr17803CI/Dj2b6LEEZE2Tz+mQ/4
+         mftaMMUF8hydG/a9mXPah6Mflz9h25NJSZ3KSuCcI4MGIrdLy4xmDeUUDsrwOnJgzHsV
+         A3IA==
+X-Gm-Message-State: ANhLgQ35rZVu1xRGN0xqC6ylF1+GTpyYTqvW9gmbvWR1eleQaWl/zv73
+        stiXmaCYHnp52oo7dLN39HuXGleMW136HHG70A0=
+X-Google-Smtp-Source: ADFU+vvntK56sIrmvkmT/qpvgh4Fm7v80qV219/QCLI53RZ9n5flRN/sXMIpPVYkFqh99ZsVYYoAnS05cZQy56ytVHY=
+X-Received: by 2002:a9d:560b:: with SMTP id e11mr116304oti.226.1584463569050;
+ Tue, 17 Mar 2020 09:46:09 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM4PR05CA0007.eurprd05.prod.outlook.com (2603:10a6:205::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.19 via Frontend Transport; Tue, 17 Mar 2020 16:45:31 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 16a3ed67-0b6f-45b3-bb33-08d7ca929b71
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3951:|VI1PR0402MB3951:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB3951F2CFD485F50E285B99A398F60@VI1PR0402MB3951.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 0345CFD558
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(16576012)(31696002)(86362001)(52116002)(2616005)(5660300002)(956004)(2906002)(53546011)(6486002)(186003)(54906003)(16526019)(31686004)(8936002)(498600001)(26005)(36756003)(4326008)(110136005)(8676002)(81156014)(81166006)(66556008)(66476007)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3951;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 05Axj4bRB83wPCyzSrepStSivxn8ocCmiOBTgO5o2qqN3TqrFwiXAa+KXB5bIMW1tMeP/uJ7gdAfWtTinpwj/avz4yp7hIfllh6I9QH3dPdToNuBiFHDQHt1XljUx72jPoyjjmEN7hbWrRylZkoUQnbHB8Cnt0tyvPNWTPQj/UuDFP6jHuKQhUGhvbpDWqi9FVShYUpFiDmPOXhy0edNPnAXC5Fp7aSQlFIE/ZNwZxnJW3GS5ls5xLsCqFH4YJFzEyQhdl0V3KkXbTNCRlh4HNZv32OeGNB+1iK8SB2G06Bh70zqvpwM6ofnQ+Ma6y8C5HvxOor8yIe6sh8EEjnf+BiXnL8xcps3nR4rwB82f9RULPXwFfAFKTbFTEcnNyDZOITpDP4UPgNkSOllq4qsKmxd+G4HXxHUPI+ZKwG27z0DRP8ieOWLLiuHTechvP1E
-X-MS-Exchange-AntiSpam-MessageData: UxJoMBBHlOpgXZ9ir0F1y6dsuO11aVj6XvLO4v/Q+5NkFBq7DT2ZdeB3C+KL+oKqXweEOVZCcHNuvpZonMhTbWSAe6RZSXpn4E+EK+BfQCtcNS/0zq1ZoENNOXuGu6zp40OFXwZRnf818OeTxHXamQ==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16a3ed67-0b6f-45b3-bb33-08d7ca929b71
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 16:45:32.1140
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Cvvf096ak7GZ3936nKRYYAt2zMViV3tgjW6yeoJANDmNGgsOZYWXVOgZWpxe2RAoz/0w3eRykFr+fZQ24GTRoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3951
+References: <20200317155906.31288-1-dev@pascalroeleven.nl>
+In-Reply-To: <20200317155906.31288-1-dev@pascalroeleven.nl>
+From:   Emil Lenngren <emil.lenngren@gmail.com>
+Date:   Tue, 17 Mar 2020 17:45:58 +0100
+Message-ID: <CAO1O6sccq7c_S8ZMsChBKcVcCn-DDv6awZzNr2BEnh8TH6ZxGg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/4] pwm: sun4i: Properly turn pwm off and fix stuck
+ output state
+To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/16/2020 5:01 PM, Andrey Smirnov wrote:
-> diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
-> index 69a02ac5de54..753625f2b2c0 100644
-> --- a/drivers/crypto/caam/caamrng.c
-> +++ b/drivers/crypto/caam/caamrng.c
-> @@ -70,6 +70,7 @@ struct buf_data {
->  
->  /* rng per-device context */
->  struct caam_rng_ctx {
-> +	struct hwrng rng;
->  	struct device *jrdev;
->  	dma_addr_t sh_desc_dma;
->  	u32 sh_desc[DESC_RNG_LEN];
-> @@ -78,13 +79,10 @@ struct caam_rng_ctx {
->  	struct buf_data bufs[2];
->  };
-[...]
-> +static struct caam_rng_ctx *to_caam_rng_ctx(struct hwrng *r)
-> +{
-> +	return (struct caam_rng_ctx *)r->priv;
-> +}
-[...]
-> -static struct hwrng caam_rng = {
-> -	.name		= "rng-caam",
-> -	.init           = caam_init,
-> -	.cleanup	= caam_cleanup,
-> -	.read		= caam_read,
-> -};
-I would keep this statically allocated, see below.
+Hi all,
 
-> @@ -342,18 +332,27 @@ int caam_rng_init(struct device *ctrldev)
->  	if (!rng_inst)
->  		return 0;
->  
-> -	rng_ctx = kmalloc(sizeof(*rng_ctx), GFP_DMA | GFP_KERNEL);
-> -	if (!rng_ctx)
-> +	if (!devres_open_group(ctrldev, caam_rng_init, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	ctx = devm_kzalloc(ctrldev, sizeof(*ctx), GFP_DMA | GFP_KERNEL);
-> +	if (!ctx)
->  		return -ENOMEM;
->  
-> +	ctx->rng.name    = "rng-caam";
-> +	ctx->rng.init    = caam_init;
-> +	ctx->rng.cleanup = caam_cleanup;
-> +	ctx->rng.read    = caam_read;
-> +	ctx->rng.priv    = (unsigned long)ctx;
-> +
->  	dev_info(ctrldev, "registering rng-caam\n");
->  
-> -	err = hwrng_register(&caam_rng);
-> -	if (!err) {
-> -		init_done = true;
-> -		return err;
-> +	ret = devm_hwrng_register(ctrldev, &ctx->rng);
-Now that hwrng.priv is used to keep driver's private data / caam_rng_ctx,
-and thus container_of() is no longer needed to get from hwrng struct
-to caam_rng_ctx, it's no longer needed to embed struct hwrng
-into caam_rng_ctx.
+Den tis 17 mars 2020 kl 17:00 skrev Pascal Roeleven <dev@pascalroeleven.nl>:
+>
+> Hi all,
+>
+> For the last few days I've been debugging a lot to get pwm working again since
+> recent changes in 5.6-rc1 broke it for me.
+>
+> Testing shows the pwm controller crashes (or the output gets stuck) when the
+> period register is written when the channel is disabled while the clock gate is
+> still on. Usually after multiple writes, but one write can also lead to
+> unpredictable behaviour. Patch 3 and 4 fix this.
+>
+> Patch 2 contains a fix which wouldn't completely turn off the pwm if the
+> output is disabled. The clock gate needs to stay on for at least one more
+> period to ensure the output is properly disabled. This issue has been around
+> for a long time but has probably stayed unnoticed because if the duty_cycle is
+> also changed to 0, you can't tell the difference.
+>
+> Patch 1 removes some leftovers which aren't needed anymore.
+>
+> Obviously these patches work for my device, but I'd like to hear your opinion
+> if any of these changes make sense. After days, this one is a bit blurry for me.
+>
+> Thanks to Uwe for some help with debugging.
+>
+> Pascal.
+>
+> Pascal Roeleven (4):
+>   pwm: sun4i: Remove redundant needs_delay
+>   pwm: sun4i: Disable pwm before turning off clock gate
+>   pwm: sun4i: Move delay to function
+>   pwm: sun4i: Delay after writing the period
+>
+>  drivers/pwm/pwm-sun4i.c | 53 ++++++++++++++++++++---------------------
+>  1 file changed, 26 insertions(+), 27 deletions(-)
+>
+> --
+> 2.20.1
+>
 
-Horia
+I also worked on sun4i-pwm some time ago, fixing a bunch of issues.
+One was that disabling the pwm sometimes didn't turn off the signal,
+because the gate and enable bit were modified in the same clock cycle.
+Another was that the current code used an unnecessary sleep of a whole
+period length (or more?) in case of an update to the period, which
+could be very time-consuming if it's a very long interval, like 2
+seconds.
+
+Note that the behaviour is not unpredictable, if you know how it works ;)
+I fiddled around a long time with devmem2, an oscilloscope and the
+prescaler set to max to figure out how works internally.
+
+Please try my version I just posted at https://pastebin.com/GWrhWzPJ.
+It is based on this version from May 28, 2019:
+https://github.com/torvalds/linux/blob/f50a7f3d9225dd374455f28138f79ae3074a7a3d/drivers/pwm/pwm-sun4i.c.
+Sorry for not posting it inline, but GMail would break the formatting.
+It contains quite many comments about how it works internally. I also
+wrote a section at http://linux-sunxi.org/PWM_Controller, but it might
+be a bit old (two years), so please rather look at the code and the
+comments.
+
+/Emil
