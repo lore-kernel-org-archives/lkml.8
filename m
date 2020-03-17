@@ -2,86 +2,133 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A47C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B250CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404EF20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964C720735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgCQRq1 (ORCPT
+        id S1726553AbgCQRsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:46:27 -0400
-Received: from mga04.intel.com ([192.55.52.120]:27207 "EHLO mga04.intel.com"
+        Tue, 17 Mar 2020 13:48:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:41012 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgCQRq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:46:27 -0400
-IronPort-SDR: FpVMDU1WCK/8TwREBe8AyAnvCO4v2AEh4zJyZqscjA8WKrHUXTirKmXkg/ArUiEFjBbtjUfrUK
- rO62ZygRdZkg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 10:46:26 -0700
-IronPort-SDR: NGOWTXOpSTQHMdTy0eJgCmrmLu/DJqaJrm8+5OrXN11OwwgLh/M+vulXTg5WfFyXFXvyteKSVF
- b7pRjKz236LA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="237967855"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.143.249]) ([10.249.143.249])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Mar 2020 10:46:25 -0700
-Subject: Re: [PATCH 1/2] PNP: constify driver name
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-References: <1583481181-22972-1-git-send-email-clabbe@baylibre.com>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <a76a7dc9-4e5d-bb5b-b70c-cf6762b73f7d@intel.com>
-Date:   Tue, 17 Mar 2020 18:46:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726066AbgCQRsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 13:48:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8A3A31B;
+        Tue, 17 Mar 2020 10:48:11 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2EB63F67D;
+        Tue, 17 Mar 2020 10:48:08 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 17:48:06 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
+ vgettimeofday
+Message-ID: <20200317174806.GE632169@arrakis.emea.arm.com>
+References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
+ <20200317122220.30393-19-vincenzo.frascino@arm.com>
+ <20200317143834.GC632169@arrakis.emea.arm.com>
+ <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
+ <20200317155031.GD632169@arrakis.emea.arm.com>
+ <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1583481181-22972-1-git-send-email-clabbe@baylibre.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/2020 8:53 AM, Corentin Labbe wrote:
-> struct pnp_driver has name set as char* instead of const char* like platform_driver, pci_driver, usb_driver, etc...
-> Let's unify a bit by setting name as const char*.
-> Furthermore, all users of this structures set name from already const
-> data.
->
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
->   include/linux/pnp.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/pnp.h b/include/linux/pnp.h
-> index 3b12fd28af78..b18dca67253d 100644
-> --- a/include/linux/pnp.h
-> +++ b/include/linux/pnp.h
-> @@ -379,7 +379,7 @@ struct pnp_id {
->   };
->   
->   struct pnp_driver {
-> -	char *name;
-> +	const char *name;
->   	const struct pnp_device_id *id_table;
->   	unsigned int flags;
->   	int (*probe) (struct pnp_dev *dev, const struct pnp_device_id *dev_id);
+On Tue, Mar 17, 2020 at 04:40:48PM +0000, Vincenzo Frascino wrote:
+> On 3/17/20 3:50 PM, Catalin Marinas wrote:
+> > On Tue, Mar 17, 2020 at 03:04:01PM +0000, Vincenzo Frascino wrote:
+> >> On 3/17/20 2:38 PM, Catalin Marinas wrote:
+> >>> On Tue, Mar 17, 2020 at 12:22:12PM +0000, Vincenzo Frascino wrote:
+> >>
+> >> Can TASK_SIZE > UINTPTR_MAX on an arm64 system?
+> > 
+> > TASK_SIZE yes on arm64 but not TASK_SIZE_32. I was asking about the
+> > arm32 check where TASK_SIZE < UINTPTR_MAX. How does the vdsotest return
+> > -EFAULT on arm32? Which code path causes this in the user vdso code?
+> 
+> Sorry I got confused because you referred to arch/arm/vdso/vgettimeofday.c which
+> is the arm64 implementation, not the compat one :)
 
-Applied as 5.7 material along with the [2/2].
+You figured out (in your subsequent reply) that I was indeed talking
+about arm32 ;).
 
-BTW, please CC PNP patches to linux-acpi in the future.
+> In the case of arm32 everything is handled via syscall fallback.
 
+So clock_gettime() on arm32 always falls back to the syscall?
 
+> > My guess is that on arm32 it only fails with -EFAULT in the syscall
+> > fallback path since a copy_to_user() would fail the access_ok() check.
+> > Does it always take the fallback path if ts > TASK_SIZE?
+> 
+> Correct, it goes via fallback. The return codes for these syscalls are specified
+> by the ABI [1]. Then I agree with you the way on which arm32 achieves it should
+> be via access_ok() check.
+
+"it should be" or "it is" on arm32?
+
+If, on arm32, clock_gettime() is (would be?) handled in the vdso
+entirely, who checks for the pointer outside the accessible address
+space (as per the clock_gettime man page)?
+
+I'm fine with such check as long as it is consistent across arm32 and
+arm64 compat. Or even on arm64 native between syscall fallback and vdso
+execution. I haven't figured out yet whether this is the case.
+
+> >>> This last check needs an explanation. If the clock_id is invalid but res
+> >>> is not NULL, we allow it. I don't see where the compatibility issue is,
+> >>> arm32 doesn't have such check.
+> >>
+> >> The case that you are describing has to return -EPERM per ABI spec. This case
+> >> has to return -EINVAL.
+> >>
+> >> The first case is taken care from the generic code. But if we don't do this
+> >> check before on arm64 compat we end up returning the wrong error code.
+> > 
+> > I guess I have the same question as above. Where does the arm32 code
+> > return -EINVAL for that case? Did it work correctly before you removed
+> > the TASK_SIZE_32 check?
+> 
+> I repeated the test and seems that it was failing even before I removed
+> TASK_SIZE_32. For reasons I can't explain I did not catch it before.
+> 
+> The getres syscall should return -EINVAL in the cases specified in [1].
+
+It states 'clk_id specified is not supported on this system'. Fair
+enough but it doesn't say that it returns -EINVAL only if res == NULL.
+You also don't explain why __cvdso_clock_getres_time32() doesn't already
+detect an invalid clk_id on arm64 compat (but does it on arm32).
+
+-- 
+Catalin
