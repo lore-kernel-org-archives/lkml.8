@@ -2,194 +2,111 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E3BC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A220C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA51205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XBjasDU3"
+	by mail.kernel.org (Postfix) with ESMTP id D9DC820754
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgCQN7k (ORCPT
+        id S1726713AbgCQN7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:59:40 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46192 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgCQN7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:59:39 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w16so9401304wrv.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qIq9a6Fn1Cn6B1fIV3Y7/gdRMGnfDz0F2bZxevfg/uA=;
-        b=XBjasDU3W02s4HEZFC152YDltmIV6hbTlvz0/XobFQsViYBaOMNS0/bFzv58OmDdGm
-         fhtBMD5MO1pItXUMy+BvV+FLO/pOhMkFhnqdCFoM6UelvU9O/GodYeWAvrTynfc46TTw
-         wvTv4AExdeqM6eNapvb9IhxyDTC0QERMSsgs/wkC0YTfKepbrdukMxNP04Vr4EHqkNFz
-         myohIZFU7PzgodCW9/qqRRzNDaug43Gmln7UoIG8HuhB3NygKmv/n1zEg6o/fsg2/65Z
-         pSElYFsoIm//Zop1d1vLF9y33fs1qdHhvffZHbixcDcdUlJstIwNw4Wc/4s777oCxDVB
-         5d/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=qIq9a6Fn1Cn6B1fIV3Y7/gdRMGnfDz0F2bZxevfg/uA=;
-        b=Uqu0z6BbHznaxJKWmRK/3QnK+95edcqROo6Ebd3qSn2BiK88PGOBmt3Rl0W7xnoIoU
-         vhAbfpvydBakwSuN0LXMw02YqNxyL42+NNPCwFqJa0ysH7PeFT62MzkJrbqxJ/lSM8+v
-         mugGPsvMfWXEa5YgLO3DvGIexcUXwB/jfXzz1/xgkwGwSi7TbldksfN/kin2hD94vc4e
-         guBiOBGdDCy/BKiqam1wzGEwEWE+zan1N5yMoV+fZSX28uc02PUuAR7oAwyoTd16c2Tm
-         tHzr4xosS200huh8qdDpz28iRYHSDn9DA8wM+XiEazozSQQliEsqPH8ofeEUEvRk8KrW
-         AGEA==
-X-Gm-Message-State: ANhLgQ28Q7jPVZHv7ngrEcLy8R+8h0bawnrRGfF30r0ObPh/8vRvQpSO
-        h4FPNHpKmBcJbCH54Ymozcw7J9RTgXA=
-X-Google-Smtp-Source: ADFU+vsgRjDwsBSL+urTbwZJedPob+M2UMdfXbJSFFyhGCM9w7rdUP7IFwSpNftAMSyp1Vtnj4DJXQ==
-X-Received: by 2002:a05:6000:370:: with SMTP id f16mr6394456wrf.9.1584453577424;
-        Tue, 17 Mar 2020 06:59:37 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:817f:1d16:730:fbfb? ([2a01:e34:ed2f:f020:817f:1d16:730:fbfb])
-        by smtp.googlemail.com with ESMTPSA id x5sm4626644wrv.67.2020.03.17.06.59.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 06:59:36 -0700 (PDT)
-Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com,
-        linux-kernel@vger.kernel.org, qais.yousef@arm.com
-References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
- <jhjy2rzntbo.mognet@arm.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <0b174f13-c4d4-2be4-8d15-c6a3c0beac3b@linaro.org>
-Date:   Tue, 17 Mar 2020 14:59:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 17 Mar 2020 09:59:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:38618 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgCQN7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:59:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAF01FEC;
+        Tue, 17 Mar 2020 06:59:41 -0700 (PDT)
+Received: from [10.37.12.184] (unknown [10.37.12.184])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C0E73F534;
+        Tue, 17 Mar 2020 06:59:40 -0700 (PDT)
+Subject: Re: [PATCH] KVM: arm64: Use the correct timer for accessing CNT
+To:     KarimAllah Ahmed <karahmed@amazon.de>
+Cc:     linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+References: <1584351546-5018-1-git-send-email-karahmed@amazon.de>
+From:   James Morse <james.morse@arm.com>
+Openpgp: preference=signencrypt
+Message-ID: <ac2933bf-452a-f27a-2d8a-8299c3044111@arm.com>
+Date:   Tue, 17 Mar 2020 13:59:38 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <jhjy2rzntbo.mognet@arm.com>
+In-Reply-To: <1584351546-5018-1-git-send-email-karahmed@amazon.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/2020 11:56, Valentin Schneider wrote:
+Hi KarimAllah,
+
+On 3/16/20 9:39 AM, KarimAllah Ahmed wrote:
+> Use the physical timer object when reading the physical timer counter
+> instead of using the virtual timer object. This is only visible when
+> reading it from user-space as kvm_arm_timer_get_reg() is only executed on
+> the get register patch from user-space.
+
+Have you seen this go wrong?
+
+I agree this looks like this was a typo introduced by:
+84135d3d1 ("KVM: arm/arm64: consolidate arch timer trap handlers")
+-----------------%<-----------------
+        case KVM_REG_ARM_PTIMER_CNT:
+-               return kvm_phys_timer_read();
++               return kvm_arm_timer_read(vcpu,
++                                         vcpu_vtimer(vcpu), TIMER_REG_CNT);
+-----------------%<-----------------
+
+This would be a problem when the guest reads the physical counter
+directly, (which doesn't get trapped), and the VMM makes this API call
+and gets a number in a totally different ball-park.
+
+
+Can the VMM actually read these registers with this path?
+
+kvm_arm_get_reg() gets to filter out the coproc registers that aren't in
+the sys_reg[], it also uses is_timer_reg() to spot the timer/counter
+registers, but is_timer_reg() only matches three of them:
+|	case KVM_REG_ARM_TIMER_CTL:
+|	case KVM_REG_ARM_TIMER_CNT:
+|	case KVM_REG_ARM_TIMER_CVAL:
+
+KVM_REG_ARM_PTIMER_CNT is not one of them.
+
+It looks like when the VMM tries to read this, it fails is_timer_reg(),
+and matches in the sys_regs[] and is handled by access_arch_timer(),
+which uses kvm_arm_timer_read_sysreg() -> kvm_arm_timer_read(),
+bypassing this bug.
+
+... this looks like a bug in dead code ...
+
+
+Thanks!
+
+James
+
+> diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
+> index 0d9438e..93bd59b 100644
+> --- a/virt/kvm/arm/arch_timer.c
+> +++ b/virt/kvm/arm/arch_timer.c
+> @@ -788,7 +788,7 @@ u64 kvm_arm_timer_get_reg(struct kvm_vcpu *vcpu, u64 regid)
+>  					  vcpu_ptimer(vcpu), TIMER_REG_CTL);
+>  	case KVM_REG_ARM_PTIMER_CNT:
+>  		return kvm_arm_timer_read(vcpu,
+> -					  vcpu_vtimer(vcpu), TIMER_REG_CNT);
+> +					  vcpu_ptimer(vcpu), TIMER_REG_CNT);
+>  	case KVM_REG_ARM_PTIMER_CVAL:
+>  		return kvm_arm_timer_read(vcpu,
+>  					  vcpu_ptimer(vcpu), TIMER_REG_CVAL);
 > 
-> Hi Daniel,
-> 
-> One more comment on the break even itself, ignoring the rest:
-> 
-> On Wed, Mar 11 2020, Daniel Lezcano wrote:
->> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
->> index b743bf38f08f..3342e7bae072 100644
->> --- a/kernel/sched/idle.c
->> +++ b/kernel/sched/idle.c
->> @@ -19,7 +19,13 @@ extern char __cpuidle_text_start[], __cpuidle_text_end[];
->>   */
->>  void sched_idle_set_state(struct cpuidle_state *idle_state)
->>  {
->> -	idle_set_state(this_rq(), idle_state);
->> +	struct rq *rq = this_rq();
->> +
->> +	idle_set_state(rq, idle_state);
->> +
->> +	if (idle_state)
->> +		idle_set_break_even(rq, ktime_get_ns() +
->> +				    idle_state->exit_latency_ns);
-> 
-> I'm not sure I follow why we go for entry time + exit latency. If this
-> is based on the minimum residency, shouldn't this be something depending
-> on the entry latency? i.e. something like
-> 
->   break_even = now + entry_latency + idling_time
->                      \_________________________/
->                             min-residency
-> 
-> or am I missing something?
-Oh, no it is a stupid mistake from me. Thanks for pointing this out!
-
-It should be:
-
-	break_even = now + idle_state->target_residency_ns;
-
- - Documentation/devicetree/bindings/arm/idle-states.yaml
-
-* min-residency: Minimum period, including preparation and entry, for a
-given idle state to be worthwhile energywise.
-
-(target_residency_ns == min-residency).
-
-> 
->>  }
->>
->>  static int __read_mostly cpu_idle_force_poll;
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
 
