@@ -2,119 +2,140 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8101C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06AEC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3964206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D37206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KsofH70l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aqr6YEBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgCQTsQ (ORCPT
+        id S1726821AbgCQTsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:48:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34867 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgCQTsQ (ORCPT
+        Tue, 17 Mar 2020 15:48:54 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33677 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgCQTsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:48:16 -0400
-Received: by mail-pf1-f195.google.com with SMTP id u68so12529070pfb.2;
-        Tue, 17 Mar 2020 12:48:15 -0700 (PDT)
+        Tue, 17 Mar 2020 15:48:54 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r7so663157wmg.0;
+        Tue, 17 Mar 2020 12:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yH1lYkD7OLcq0j6vd9oNMU/PGORiz/yITq8HKj1rMjY=;
-        b=KsofH70lUxjzkrBL0YMiRPoujaIHSaQQyyqOiKnhZy+uwZOmGkz0Cjdnt973aOvAXI
-         O9Zm+sK6QfCEdpdIjMNv1EWIxeKCSL95s56tHTRP2CkRuFPebTxeSSo7gRilmNPf8Peh
-         8XMc9nakbo4lMO3F3AoxYmQBJZZVLLrzgh/e2Y3bA4FBN4VdQPZojhI3wUf6ncrwv3Y0
-         Cny0AdBmGsPAMLyV/1gvZ8lhmAQU0d5GlBZ0dceQL5r9Yq4iFIk2xVsg2qUwxBAl8wpI
-         tSEB6xdtJBnle4xdqUr0e2tIV9iGtSdgb9PXC7XsNuZDgj9KXy+2bNlfKwKr36q9+iC+
-         14ng==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UtycnypWOSdTUQYhHk7hnh6AgLVp1bYsP5ki90i2Y50=;
+        b=Aqr6YEBJtMUlMY5Ay+o2QlIKdGFv6rH70hA9Nt7UYoNioeBneHY2Qp3QIe/Wa35UJu
+         YPak9Ak5g6GChk4EEIMQVuMDk06Q25BL2E5jUnwG0xXbppUMxrmjdo6M6U5cXfoC81YC
+         ncFsOEKzTtvCAicWm24D1U1VTM6/nnaS7MIB1b3KhMEYbTFHs2B/My4wrbrvIisxnfgZ
+         gz4X9YRS6hEg1u/Bi+0sdMnfZljyQC0yQtAsLRhe0CoGsxBWC2ov0WLVBx3xsOUeOtoE
+         d3HX3VeRF5mAApUF75i7dBVI4hCoQ5AkvEwFgRL7dpqzvGNncuzN9OJidvs5c5mtR9mH
+         y3vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=yH1lYkD7OLcq0j6vd9oNMU/PGORiz/yITq8HKj1rMjY=;
-        b=kC7V0TBpfsdsTule4PvwrFsQBFmbA768h259v5LP8Yk4aDGHSnLrMXh0T3IRmB0COL
-         wk1siXpet+84ArW00qkz4nrfZxqjY7JcMkNHM1Rxl2hPkM5QGbhIng9Qd3jMtCdRNhP4
-         8HGdPImR8hUOi2dbaAJIiweu3URWUJudbd57dKcwNf1wxS1S5VtnwCn7zthNR4iJgMm6
-         CsWpzmRLLv/kB3UopXv12gbDNTMrN/9eJiJ9neVx1YVaDbCE1mbWNQ6m2TWROJ+qn2R9
-         eC5xbKtwGZZATWbUnxgVAABCB5mEX+/TYvOw8ryMhqdTNTffAtHwUkuwdPEUl36XRgyK
-         rbKQ==
-X-Gm-Message-State: ANhLgQ3tb4l8tEUIFWz7chLrPVT11h0bM2hAuCYgP66rgYLPtW+1YkgS
-        smCJ+0Qd1xhKEya/V4tgqEmrwEoH
-X-Google-Smtp-Source: ADFU+vuurSnKt6JdjGj4wyI8R9WJI/MJTbjZJm9UJerlUS/jJrl74c3qqgTbXS+YRLxWc2orRb+a6Q==
-X-Received: by 2002:a62:1d52:: with SMTP id d79mr380054pfd.53.1584474494800;
-        Tue, 17 Mar 2020 12:48:14 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 63sm3951743pfx.132.2020.03.17.12.48.13
+        bh=UtycnypWOSdTUQYhHk7hnh6AgLVp1bYsP5ki90i2Y50=;
+        b=KZdzqLousAJWKpPM70m1ArlK4+Dl8KiXtqD5WOn+NNuc7eNe6j4+TEnriAwCYgt/6Z
+         aE3wwK/K+zyoKYDwY6Hj3j8ZjTrTkkiWG4ht/kkGhclz5NleueYrHGnhWZf2fgz7Dq5S
+         zENkYUAawh4qPpRQL7MUwl3hHC7w7fhrx5XweyplS1idW7hP2CFMxWRs4Htg7+Ix3t0p
+         oW1oGv2cMsvVC7mV6AvPYloRahKTw+kkeKRvpPd1TwBjNqCxIuhp4djkgaFgibuQz1JZ
+         8XstgNeLeStoY/ODONyNWcaa28dAL3OBnv/xLu5mqCqd3R3eW/HV6C0sWQIKNiGn1Tq/
+         sAEA==
+X-Gm-Message-State: ANhLgQ0+6tqXJncRSH/Vl+oVQj9J7aBGYnZjDDcXX+54HT8s+FZj9DHM
+        Dd4wnBiXK2hJI9ErLpe8WmQ=
+X-Google-Smtp-Source: ADFU+vvhEuibGD5YkWwoKjkRWQlckOFoKqjAUAJ8Q6aF0pCYYbkxrLEAnUPj9B5KhDnOLg3/L/1A0w==
+X-Received: by 2002:a05:600c:258:: with SMTP id 24mr624885wmj.59.1584474531393;
+        Tue, 17 Mar 2020 12:48:51 -0700 (PDT)
+Received: from [10.230.0.112] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id f17sm6117960wrj.28.2020.03.17.12.48.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 12:48:14 -0700 (PDT)
-Subject: Re: [PATCH 5.5 000/151] 5.5.10-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200317103326.593639086@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <260df9bf-004c-9f1c-c5f3-479e024d69de@roeck-us.net>
-Date:   Tue, 17 Mar 2020 12:48:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 17 Mar 2020 12:48:50 -0700 (PDT)
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+To:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Marek Vasut <marex@denx.de>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <20200313052252.25389-1-o.rempel@pengutronix.de>
+ <20200313052252.25389-2-o.rempel@pengutronix.de>
+ <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
+ <20200313181056.GA29732@lunn.ch>
+ <20200313181601.sbxdrqdjqfj3xn3e@pengutronix.de>
+ <15dafdcd-1979-bf35-3968-c80ffc113001@gmail.com>
+ <20200313185327.nawcp2imfldyhpqa@pengutronix.de>
+ <20200317115626.4ncavxdcw4wu5zgc@pengutronix.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <137a6dd3-c5ba-25b1-67ff-f0112afd7f34@gmail.com>
+Date:   Tue, 17 Mar 2020 12:48:47 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
+In-Reply-To: <20200317115626.4ncavxdcw4wu5zgc@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -123,19 +144,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/20 3:53 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.10 release.
-> There are 151 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 19 Mar 2020 10:31:16 +0000.
-> Anything received after that time might be too late.
-> 
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 428 pass: 428 fail: 0
 
-Guenter
+On 3/17/2020 4:56 AM, Oleksij Rempel wrote:
+> On Fri, Mar 13, 2020 at 07:53:27PM +0100, Oleksij Rempel wrote:
+>> On Fri, Mar 13, 2020 at 11:20:35AM -0700, Florian Fainelli wrote:
+>>>
+>>>
+>>> On 3/13/2020 11:16 AM, Oleksij Rempel wrote:
+>>>> On Fri, Mar 13, 2020 at 07:10:56PM +0100, Andrew Lunn wrote:
+>>>>>>> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..42be0255512b
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+>>>>>>> @@ -0,0 +1,61 @@
+>>>>>>> +# SPDX-License-Identifier: GPL-2.0+
+>>>>>>> +%YAML 1.2
+>>>>>>> +---
+>>>>>>> +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+>>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>>>> +
+>>>>>>> +title: NXP TJA11xx PHY
+>>>>>>> +
+>>>>>>> +maintainers:
+>>>>>>> +  - Andrew Lunn <andrew@lunn.ch>
+>>>>>>> +  - Florian Fainelli <f.fainelli@gmail.com>
+>>>>>>> +  - Heiner Kallweit <hkallweit1@gmail.com>
+>>>>>>> +
+>>>>>>> +description:
+>>>>>>> +  Bindings for NXP TJA11xx automotive PHYs
+>>>>>>> +
+>>>>>>> +allOf:
+>>>>>>> +  - $ref: ethernet-phy.yaml#
+>>>>>>> +
+>>>>>>> +patternProperties:
+>>>>>>> +  "^ethernet-phy@[0-9a-f]+$":
+>>>>>>> +    type: object
+>>>>>>> +    description: |
+>>>>>>> +      Some packages have multiple PHYs. Secondary PHY should be defines as
+>>>>>>> +      subnode of the first (parent) PHY.
+>>>>>>
+>>>>>>
+>>>>>> There are QSGMII PHYs which have 4 PHYs embedded and AFAICT they are
+>>>>>> defined as 4 separate Ethernet PHY nodes and this would not be quite a
+>>>>>> big stretch to represent them that way compared to how they are.
+>>>>>>
+>>>>>> I would recommend doing the same thing and not bend the MDIO framework
+>>>>>> to support the registration of "nested" Ethernet PHY nodes.
+>>>>>
+>>>>> Hi Florian
+>>>>>
+>>>>> The issue here is the missing PHY ID in the secondary PHY. Because of
+>>>>> that, the secondary does not probe in the normal way. We need the
+>>>>> primary to be involved to some degree. It needs to register it. What
+>>>>> i'm not so clear on is if it just needs to register it, or if these
+>>>>> sub nodes are actually needed, given the current code.
+>>>>
+>>>> There are a bit more dependencies:
+>>>> - PHY0 is responsible for health monitoring. If some thing wrong, it may
+>>>>   shut down complete chip.
+>>>> - We have shared reset. It make no sense to probe PHY1 before PHY0 with
+>>>>   more controlling options will be probed
+>>>> - It is possible bat dangerous to use PHY1 without PHY0.
+>>>
+>>> probing is a software problem though. If we want to describe the PHY
+>>> package more correctly, we should be using a container node, something
+>>> like this maybe:
+>>>
+>>> phy-package {
+>>> 	compatible = "nxp,tja1102";
+>>>
+>>> 	ethernet-phy@4 {
+>>> 		reg = <4>;
+>>> 	};
+>>>
+>>> 	ethernet-phy@5 {
+>>> 		reg = <5>;
+>>> 	};
+>>> };
+>>
+>> Yes, this is almost the same as it is currently done:
+>>
+>> phy-package {
+>> 	reg = <4>;
+>>  
+>>  	ethernet-phy@5 {
+>>  		reg = <5>;
+>>  	};
+>> };
+>>
+>> Because the primary PHY0 can be autodetected by the bus scan.
+>> But I have nothing against your suggestions. Please, some one should say the
+>> last word here, how exactly it should be implemented?
+
+It's not for me to decide, I was hoping the Device Tree maintainers
+could chime in, your current approach would certainly work although it
+feels visually awkward.
+-- 
+Florian
