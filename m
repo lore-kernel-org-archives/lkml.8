@@ -2,132 +2,86 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EF8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51651C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57FB20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584466560;
-	bh=cISETOYNfsjjHUnzjgKsFDkt1WaLM9hca2xRLmSzytk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lZEI7PsaNNs8RCrq/wa+YT3NK0RwgTO0OX3m7mSOFrNpltOiymgTse4g+bzNqB1Rr
-	 BwT7JEwl5cRmzRpaiU3/1aCo8r+x+YecH7PNJkMTgYbFhvcMyw0xBDPAEah2Tlvi1D
-	 r/tXRNovK/fT1zt88Ndh6MdNK/xmRFCr5awPbORU=
+	by mail.kernel.org (Postfix) with ESMTP id 34BA420724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgCQRf7 (ORCPT
+        id S1726741AbgCQRgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:35:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35488 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgCQRf7 (ORCPT
+        Tue, 17 Mar 2020 13:36:02 -0400
+Received: from einhorn-mail.in-berlin.de ([217.197.80.20]:46191 "EHLO
+        einhorn-mail.in-berlin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgCQRgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:35:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so6208747wru.2;
-        Tue, 17 Mar 2020 10:35:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=z1FYoq7S+h9Cgu9l0oBNg+vW7ywbgvdSrh8VbOK3SfM=;
-        b=oxAW0Nup0YR+8xX8Qb6Xa8HlTGx9A0Saxe8Ip00Qg/yqT1QSrV54/VHC1D7GNayV5s
-         HIUbwydozvc4P9qL+fnYkCDW+PY1i40QB67XA1VRt08FJUlnOAIB3Kdynosj+tPOLQ8n
-         zo7gXef6ziu4mCirKdyvuqx7ImBLXXZyGNkOb/nVP+aIduGy7lADrrwNiKokaQaDyy0k
-         u/p2y86uzL55Ra568u914P95nh9rd80n+4En4F0eFl31TIkSfgDD1n7vBNGhnNPUKMWe
-         VveZZvRvrBwqs5cDz7c5zgA87p+JUkNoXots1pQtT0pdtOr7NVJ/qz1M+C1m4B+emIg2
-         Si0g==
-X-Gm-Message-State: ANhLgQ1HVwWj4aBX189zvpNX0CDUiOv0vxv82V5MBIrUeLxWuXl27LZK
-        YHWame/q+rjc9lIzOaNW8sg=
-X-Google-Smtp-Source: ADFU+vsRnkfec8PavottvdVxNiDc4mWmBjPI9jouBKRRcnyVA5ONRdkNDrTETtUY3kl/zdcooYiSvQ==
-X-Received: by 2002:adf:a313:: with SMTP id c19mr58403wrb.411.1584466556747;
-        Tue, 17 Mar 2020 10:35:56 -0700 (PDT)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id g2sm5779960wrs.42.2020.03.17.10.35.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 10:35:56 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 17:35:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     ltykernel@gmail.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH 0/4] x86/Hyper-V: Unload vmbus channel in hv panic
- callback
-Message-ID: <20200317173553.jerf6gjtaotqjbac@debian>
-References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
- <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
+        Tue, 17 Mar 2020 13:36:01 -0400
+X-Greylist: delayed 441 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Mar 2020 13:36:00 EDT
+X-Envelope-From: stefanr@s5r6.in-berlin.de
+Received: from authenticated.user (localhost [127.0.0.1]) by einhorn.in-berlin.de  with ESMTPSA id 02HHRurI015186
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 18:28:08 +0100
+Date:   Tue, 17 Mar 2020 18:27:55 +0100
+From:   Stefan Richter <stefanr@s5r6.in-berlin.de>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux1394-devel@lists.sourceforge.net
+Subject: Re: [PATCH 06/17] firewire: firewire-cdev.hL get rid of a docs
+ warning
+Message-ID: <20200317182755.1c4dd7e7@kant>
+In-Reply-To: <1e2af9e7b75c2d968033b5054969c2095b317b16.1584456635.git.mchehab+huawei@kernel.org>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org>
+        <1e2af9e7b75c2d968033b5054969c2095b317b16.1584456635.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 06:25:20AM -0700, ltykernel@gmail.com wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Mar 17 Mauro Carvalho Chehab wrote:
+> This warning:
 > 
-> Customer reported Hyper-V VM still responded network traffic
-> ack packets after kernel panic with kernel parameter "panic=0”.
-> This becauses vmbus driver interrupt handler still works
-> on the panic cpu after kernel panic. Panic cpu falls into
-> infinite loop of panic() with interrupt enabled at that point.
-> Vmbus driver can still handle network traffic.
+> 	./include/uapi/linux/firewire-cdev.h:312: WARNING: Inline literal start-string without end-string.
 > 
-> This confuses remote service that the panic system is still
-> alive when it gets ack packets. Unload vmbus channel in hv panic
-> callback and fix it.
+> is because %FOO doesn't work if there's a parenthesis at the
+> string (as a parenthesis may indicate a function). So, mark
+> the literal block using the alternate ``FOO`` syntax.
 > 
-> vmbus_initiate_unload() maybe double called during panic process
-> (e.g, hyperv_panic_event() and hv_crash_handler()). So check
-> and set connection state in vmbus_initiate_unload() to resolve
-> reenter issue.
-> 
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+I figure this is meant to go through the Documentation tree, hence
+
+Acked-by: Stefan Richter <stefanr@s5r6.in-berlin.de>
+
+But if I am to apply it, give me a note.
+
 > ---
->  drivers/hv/channel_mgmt.c |  5 +++++
->  drivers/hv/vmbus_drv.c    | 17 +++++++++--------
->  2 files changed, 14 insertions(+), 8 deletions(-)
+>  include/uapi/linux/firewire-cdev.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index 0370364169c4..893493f2b420 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -839,6 +839,9 @@ void vmbus_initiate_unload(bool crash)
->  {
->  	struct vmbus_channel_message_header hdr;
->  
-> +	if (vmbus_connection.conn_state == DISCONNECTED)
-> +		return;
-> +
->  	/* Pre-Win2012R2 hosts don't support reconnect */
->  	if (vmbus_proto_version < VERSION_WIN8_1)
->  		return;
-> @@ -857,6 +860,8 @@ void vmbus_initiate_unload(bool crash)
->  		wait_for_completion(&vmbus_connection.unload_event);
->  	else
->  		vmbus_wait_for_unload();
-> +
-> +	vmbus_connection.conn_state = DISCONNECTED;
+> diff --git a/include/uapi/linux/firewire-cdev.h b/include/uapi/linux/firewire-cdev.h
+> index 1acd2b179aef..7e5b5c10a49c 100644
+> --- a/include/uapi/linux/firewire-cdev.h
+> +++ b/include/uapi/linux/firewire-cdev.h
+> @@ -308,7 +308,7 @@ struct fw_cdev_event_iso_interrupt_mc {
+>  /**
+>   * struct fw_cdev_event_iso_resource - Iso resources were allocated or freed
+>   * @closure:	See &fw_cdev_event_common;
+> - *		set by %FW_CDEV_IOC_(DE)ALLOCATE_ISO_RESOURCE(_ONCE) ioctl
+> + *		set by``FW_CDEV_IOC_(DE)ALLOCATE_ISO_RESOURCE(_ONCE)`` ioctl
+>   * @type:	%FW_CDEV_EVENT_ISO_RESOURCE_ALLOCATED or
+>   *		%FW_CDEV_EVENT_ISO_RESOURCE_DEALLOCATED
+>   * @handle:	Reference by which an allocated resource can be deallocated
 
-This is only set at the end of the function.  I don't see how this solve
-the re-entrant issue with the check at the beginning. Do I miss anything
-here?
-
-Maybe this function should check and set the state to
-DISCONNECTING/DISCONNECTED at the beginning of this function?
-
-Wei.
+-- 
+Stefan Richter
+-======--=-- --== =---=
+http://arcgraph.de/sr/
