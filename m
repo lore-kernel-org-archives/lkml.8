@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D8DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDC0C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0365020736
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69A620714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442621;
-	bh=Hkf+6M1ZDvi4ZNg2WpBZQeFS497sAHY8CT4dzmBTmHk=;
+	s=default; t=1584442624;
+	bh=YLamHYzG8p2mndBq1DvdB3Od9iREHMDkD/9FLZBe51A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjEB8iDLiWxMfojjzT3zjzXJlKTxftZWIzh8Ynf+BoOc/z5tYXpg7wobeTyktxdKZ
-	 GUuMQNgLDjm+yaR1J0gHdUJpZcQzw+pNHoPEG63JXJo3dy+NXQKJvbQDfvC/SFbsK4
-	 mwj+7lyVTqQpDURLmE2cnDiWHKMZZPHXn8I8ab08=
+	b=SqifAdWip5CDVZTcwNSReu/OxFlZSuLkMitc65rOMlakMC1HnKcgZ2ONZYrtV0T82
+	 YpsjOE865ECNXTJfc5ynl+hMB9SA9qIDRK9KRhdVsY6nYJcYaHrIGszOkZWAbTVctn
+	 eEYKoP6ob01ATEaYpr89P0rnZRWYIOeCzib/+MRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgCQK5A (ORCPT
+        id S1726842AbgCQK5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbgCQK44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:56:56 -0400
+        id S1726823AbgCQK5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:57:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2862620736;
-        Tue, 17 Mar 2020 10:56:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C46B020714;
+        Tue, 17 Mar 2020 10:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442615;
-        bh=Hkf+6M1ZDvi4ZNg2WpBZQeFS497sAHY8CT4dzmBTmHk=;
+        s=default; t=1584442619;
+        bh=YLamHYzG8p2mndBq1DvdB3Od9iREHMDkD/9FLZBe51A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sd4cW3qiWTIiYHUa/Q5KENTL63nxpZOAXtHzeAHQEN2uVBZWlSEA7eWRfIkY5Klap
-         rBocX7RJMY557y43rcxEBxTBDtaLfW//InM+zDJrTK8qFvZ9h+Cn1wBahXXSSaufLe
-         J/QtYjr4UBUNkJ69bSopFpp3cQTLMEZqzTZ15ins=
+        b=R4B9mOxFRmkc1SmeBkwMXMwWqfwLZLi2mzNjMhnxGnEN5NGDHbdzvexO/1mztkMXI
+         NuyfFrSQMt33eLnOUsIN8ovkrvJtimZRG8hrEkGV6rYQ7c4cflGAkyTlv3sQIlwN/n
+         4tmvOq23MkYjkQFaoIub8vY8pD8R03wiYWD+WuIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 23/89] net: memcg: fix lockdep splat in inet_csk_accept()
-Date:   Tue, 17 Mar 2020 11:54:32 +0100
-Message-Id: <20200317103302.624537171@linuxfoundation.org>
+Subject: [PATCH 4.19 24/89] devlink: validate length of param values
+Date:   Tue, 17 Mar 2020 11:54:33 +0100
+Message-Id: <20200317103302.721147063@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -61,123 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit 06669ea346e476a5339033d77ef175566a40efbb upstream.
+[ Upstream commit 8750939b6ad86abc3f53ec8a9683a1cded4a5654 ]
 
-Locking newsk while still holding the listener lock triggered
-a lockdep splat [1]
+DEVLINK_ATTR_PARAM_VALUE_DATA may have different types
+so it's not checked by the normal netlink policy. Make
+sure the attribute length is what we expect.
 
-We can simply move the memcg code after we release the listener lock,
-as this can also help if multiple threads are sharing a common listener.
-
-Also fix a typo while reading socket sk_rmem_alloc.
-
-[1]
-WARNING: possible recursive locking detected
-5.6.0-rc3-syzkaller #0 Not tainted
---------------------------------------------
-syz-executor598/9524 is trying to acquire lock:
-ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
-ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
-
-but task is already holding lock:
-ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
-ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(sk_lock-AF_INET6);
-  lock(sk_lock-AF_INET6);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-1 lock held by syz-executor598/9524:
- #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
- #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
-
-stack backtrace:
-CPU: 0 PID: 9524 Comm: syz-executor598 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_deadlock_bug kernel/locking/lockdep.c:2370 [inline]
- check_deadlock kernel/locking/lockdep.c:2411 [inline]
- validate_chain kernel/locking/lockdep.c:2954 [inline]
- __lock_acquire.cold+0x114/0x288 kernel/locking/lockdep.c:3954
- lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
- lock_sock_nested+0xc5/0x110 net/core/sock.c:2947
- lock_sock include/net/sock.h:1541 [inline]
- inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
- inet_accept+0xe9/0x7c0 net/ipv4/af_inet.c:734
- __sys_accept4_file+0x3ac/0x5b0 net/socket.c:1758
- __sys_accept4+0x53/0x90 net/socket.c:1809
- __do_sys_accept4 net/socket.c:1821 [inline]
- __se_sys_accept4 net/socket.c:1818 [inline]
- __x64_sys_accept4+0x93/0xf0 net/socket.c:1818
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4445c9
-Code: e8 0c 0d 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc35b37608 EFLAGS: 00000246 ORIG_RAX: 0000000000000120
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004445c9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000306777 R09: 0000000000306777
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00000000004053d0 R14: 0000000000000000 R15: 0000000000000000
-
-Fixes: d752a4986532 ("net: memcg: late association of sock to memcg")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: e3b7ca18ad7b ("devlink: Add param set command")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/inet_connection_sock.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ net/core/devlink.c |   31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -480,27 +480,27 @@ struct sock *inet_csk_accept(struct sock
- 		spin_unlock_bh(&queue->fastopenq.lock);
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -2995,34 +2995,41 @@ devlink_param_value_get_from_info(const
+ 				  struct genl_info *info,
+ 				  union devlink_param_value *value)
+ {
++	struct nlattr *param_data;
+ 	int len;
+ 
+-	if (param->type != DEVLINK_PARAM_TYPE_BOOL &&
+-	    !info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA])
++	param_data = info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA];
++
++	if (param->type != DEVLINK_PARAM_TYPE_BOOL && !param_data)
+ 		return -EINVAL;
+ 
+ 	switch (param->type) {
+ 	case DEVLINK_PARAM_TYPE_U8:
+-		value->vu8 = nla_get_u8(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]);
++		if (nla_len(param_data) != sizeof(u8))
++			return -EINVAL;
++		value->vu8 = nla_get_u8(param_data);
+ 		break;
+ 	case DEVLINK_PARAM_TYPE_U16:
+-		value->vu16 = nla_get_u16(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]);
++		if (nla_len(param_data) != sizeof(u16))
++			return -EINVAL;
++		value->vu16 = nla_get_u16(param_data);
+ 		break;
+ 	case DEVLINK_PARAM_TYPE_U32:
+-		value->vu32 = nla_get_u32(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]);
++		if (nla_len(param_data) != sizeof(u32))
++			return -EINVAL;
++		value->vu32 = nla_get_u32(param_data);
+ 		break;
+ 	case DEVLINK_PARAM_TYPE_STRING:
+-		len = strnlen(nla_data(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]),
+-			      nla_len(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]));
+-		if (len == nla_len(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]) ||
++		len = strnlen(nla_data(param_data), nla_len(param_data));
++		if (len == nla_len(param_data) ||
+ 		    len >= __DEVLINK_PARAM_MAX_STRING_VALUE)
+ 			return -EINVAL;
+-		strcpy(value->vstr,
+-		       nla_data(info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA]));
++		strcpy(value->vstr, nla_data(param_data));
+ 		break;
+ 	case DEVLINK_PARAM_TYPE_BOOL:
+-		value->vbool = info->attrs[DEVLINK_ATTR_PARAM_VALUE_DATA] ?
+-			       true : false;
++		if (param_data && nla_len(param_data))
++			return -EINVAL;
++		value->vbool = nla_get_flag(param_data);
+ 		break;
  	}
- 
--	if (mem_cgroup_sockets_enabled) {
-+out:
-+	release_sock(sk);
-+	if (newsk && mem_cgroup_sockets_enabled) {
- 		int amt;
- 
- 		/* atomically get the memory usage, set and charge the
--		 * sk->sk_memcg.
-+		 * newsk->sk_memcg.
- 		 */
- 		lock_sock(newsk);
- 
--		/* The sk has not been accepted yet, no need to look at
--		 * sk->sk_wmem_queued.
-+		/* The socket has not been accepted yet, no need to look at
-+		 * newsk->sk_wmem_queued.
- 		 */
- 		amt = sk_mem_pages(newsk->sk_forward_alloc +
--				   atomic_read(&sk->sk_rmem_alloc));
-+				   atomic_read(&newsk->sk_rmem_alloc));
- 		mem_cgroup_sk_alloc(newsk);
- 		if (newsk->sk_memcg && amt)
- 			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
- 
- 		release_sock(newsk);
- 	}
--out:
--	release_sock(sk);
- 	if (req)
- 		reqsk_put(req);
- 	return newsk;
+ 	return 0;
 
 
