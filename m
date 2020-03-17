@@ -2,94 +2,112 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F5CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FB6C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E455F20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:30:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hBWJ+yn3"
+	by mail.kernel.org (Postfix) with ESMTP id 6F53F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgCQFaj (ORCPT
+        id S1725957AbgCQFd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 01:30:39 -0400
-Received: from ozlabs.org ([203.11.71.1]:33709 "EHLO ozlabs.org"
+        Tue, 17 Mar 2020 01:33:29 -0400
+Received: from mga18.intel.com ([134.134.136.126]:36674 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbgCQFaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 01:30:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hMFm3r6yz9sPF;
-        Tue, 17 Mar 2020 16:30:36 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584423037;
-        bh=0QSdFBmo3Jxw2FG6/tNSmnGRL3dfpOUfxQFPx7YyZUo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hBWJ+yn37axtoRhG3ePM41DkqPfLUhmVavBu+E3mYavCGm+NM+L59/SLp+gE7lLjR
-         7URkN+5eYupb7hkKFm5i7PCsWSEmuYQNGWA8fVfF0VCFqtO0tWOOKiuxP0YCzwiDo/
-         3DFX9I0igbJoXxnSomLIQEtmKRzUUcY0F0B0Qto53UcTfNUCxuvyOQZUt7f2+op/a8
-         OUXSEA949SWxMly+4alTIRAUxIhU2/kIqV7GNsV7a6eGJ0EsMOubfjE9/uG92LlL4a
-         b6h0ZJ21tCp9PNA/g73EmKZ2n3T+40s1gaINPdyAwKLvmR22YUsM/Boag8j4YTAl/u
-         DkHBxLmnmQn4g==
-Date:   Tue, 17 Mar 2020 16:30:34 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ran Bi <ran.bi@mediatek.com>
-Subject: linux-next: build warning after merge of the rtc tree
-Message-ID: <20200317163034.2921155e@canb.auug.org.au>
+        id S1725468AbgCQFd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 01:33:29 -0400
+IronPort-SDR: hzCWmpJGBuv79Yn8utzAU+uCd2NISYc7BmL48HKzWeBjMZDwFBfXASxvPknYyQKOWezjowqmdf
+ Xp6N050BZ7Pw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 22:33:28 -0700
+IronPort-SDR: ID65nFnfKpZivIijbXTcmaGV8dqg+OdEMnbV5uMOhlFfpPLRu48+JgT1CsHwcRJpzXZOLLSI0t
+ pUmzw7CSsl9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
+   d="scan'208";a="279284202"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Mar 2020 22:33:27 -0700
+Date:   Mon, 16 Mar 2020 22:33:27 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH 01/10] KVM: nVMX: Move reflection check into
+ nested_vmx_reflect_vmexit()
+Message-ID: <20200317053327.GR24267@linux.intel.com>
+References: <20200312184521.24579-1-sean.j.christopherson@intel.com>
+ <20200312184521.24579-2-sean.j.christopherson@intel.com>
+ <87k13opi6m.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4G6dYCPbVjrmEI7zzrRXetQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k13opi6m.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4G6dYCPbVjrmEI7zzrRXetQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 13, 2020 at 01:12:33PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> 
+> > Move the call to nested_vmx_exit_reflected() from vmx_handle_exit() into
+> > nested_vmx_reflect_vmexit() and change the semantics of the return value
+> > for nested_vmx_reflect_vmexit() to indicate whether or not the exit was
+> > reflected into L1.  nested_vmx_exit_reflected() and
+> > nested_vmx_reflect_vmexit() are intrinsically tied together, calling one
+> > without simultaneously calling the other makes little sense.
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/kvm/vmx/nested.h | 16 +++++++++++-----
+> >  arch/x86/kvm/vmx/vmx.c    |  4 ++--
+> >  2 files changed, 13 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+> > index 21d36652f213..6bc379cf4755 100644
+> > --- a/arch/x86/kvm/vmx/nested.h
+> > +++ b/arch/x86/kvm/vmx/nested.h
+> > @@ -72,12 +72,16 @@ static inline bool nested_ept_ad_enabled(struct kvm_vcpu *vcpu)
+> >  }
+> >  
+> >  /*
+> > - * Reflect a VM Exit into L1.
+> > + * Conditionally reflect a VM-Exit into L1.  Returns %true if the VM-Exit was
+> > + * reflected into L1.
+> >   */
+> > -static inline int nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
+> > -					    u32 exit_reason)
+> > +static inline bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
+> > +					     u32 exit_reason)
+> >  {
+> > -	u32 exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
+> > +	u32 exit_intr_info;
+> > +
+> > +	if (!nested_vmx_exit_reflected(vcpu, exit_reason))
+> > +		return false;
+> 
+> (unrelated to your patch)
+> 
+> It's probably just me but 'nested_vmx_exit_reflected()' name always
+> makes me thinkg 'the vmexit WAS [already] reflected' and not 'the vmexit
+> NEEDS to be reflected'. 'nested_vmx_exit_needs_reflecting()' maybe?
 
-Hi all,
+Not just you.  It'd be nice if the name some how reflected (ha) that the
+logic is mostly based on whether or not L1 expects the exit, with a few
+exceptions.  E.g. something like
 
-After merging the rtc tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
+	if (!l1_expects_vmexit(...) && !is_system_vmexit(...))
+		return false;
 
-drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_set_alarm':
-drivers/rtc/rtc-mt2712.c:235:6: warning: unused variable 'irqen' [-Wunused-=
-variable]
-  235 |  u16 irqen;
-      |      ^~~~~
-
-Introduced by commit
-
-  4037b7df1026 ("rtc: add support for the MediaTek MT2712 RTC")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4G6dYCPbVjrmEI7zzrRXetQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5wYHoACgkQAVBC80lX
-0GxEmAf8DijSiVIFOx1Ha5q0MO3eQgN9odfkjEIAHHroswHqZ3bGk3vTjW52QlGw
-l8Lu+3fZdwsuYl68GtzBKARYku/5tH+RZfpryCFO3oSW4oj8jtbb+UxUrlZElwMS
-q/zUc80jaQDwYZwVfBrDbWIvBAjiTbSZPXJ9jC6h7DpnkSRMBX1Nj72VxKK3fE2D
-QBteAJioDQtGEHd9ABES7cvSnqPoP3Wnkf7hF5W2T9F0OUQzKVPZFObYGRn8ByzY
-kR8YwOy001Wae+1ts6bgxisfhiP+y/jLgqzPqUMDuzb4bgAz2VwHEmcRWajo/39j
-MCv2IK9HuQgC+T3aJ1clXvvW+HX+MA==
-=kmhU
------END PGP SIGNATURE-----
-
---Sig_/4G6dYCPbVjrmEI7zzrRXetQ--
+The downside of that is the logic is split, which is probably a net loss?
