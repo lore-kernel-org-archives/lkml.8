@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD0EC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E272C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D86E20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1636C20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443659;
-	bh=TxtH6v93lCviriMgATKOd/9gkT51bsKELkLVIpHu/HE=;
+	s=default; t=1584443663;
+	bh=tF9zsP7B3zGjsnfoe0PRK5il9/3ztDtkXTIf9uhMMb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixXeuQz3lsXc02tQqTP+aGt+xP9K+FFl3rUoKI6+vrMzjIa/mDSsQ1nuewG/LY8oL
-	 DI8uZsS2T50jUZK5kG0v34dBmL+qFrICoTT7LPpApK6PnqCO/gq5auYb6d9RRIno0C
-	 lEmIvLOtngIfE3qoZ4E7nG5XBwFwPNqolw2pZMto=
+	b=pjr0cEMrYRiWd91CoYESJUc76+f43DcnI2oulpaK/4oiPavW0z2Dm49tyokxx2wS6
+	 QIXuKn8d5DWbp7EatNiIH9194o/9jSSzU3aoj78XIa1iDyhqdujGkICD3SL36KfFqh
+	 bKvdTML10qRgBIQ/X79MjXOHaogb89HuTXPHm8YU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgCQLOS (ORCPT
+        id S1729609AbgCQLOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58490 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbgCQLOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:14:14 -0400
+        id S1726943AbgCQLOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:14:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 002CA206EC;
-        Tue, 17 Mar 2020 11:14:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FCC6205ED;
+        Tue, 17 Mar 2020 11:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443654;
-        bh=TxtH6v93lCviriMgATKOd/9gkT51bsKELkLVIpHu/HE=;
+        s=default; t=1584443657;
+        bh=tF9zsP7B3zGjsnfoe0PRK5il9/3ztDtkXTIf9uhMMb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GvWjPLwI0EJlfBm/VvIDofdDhhZHzKtz02lgyA+Mq93t1+4bMG1vL2UPFkCKBQiLb
-         jpCzu3sQBU5N+ut5NpobQxb89ATOf/OJI+uSOVusN75wmy93AWGLLuSqWEKHbVo3s1
-         pp/P99AozYHisTZuOghweejP+RXdQUbz7WpqgqKw=
+        b=USJkCpEbz9732f/t9GWzxf2rign0ur+SulHmuO3ZoE1at2NnldK81/u2f6C7YTONL
+         8fH73pDyLLlNHDkw0EmxSJGqWw40UaZLbEElHTCs2EiM22HTQUuRFFQn0smlcejFa6
+         uIu9IaLpQDZ/jIkLTdWJfe6Swqpszt1Rfr9qRS2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tommi Rantala <tommi.t.rantala@nokia.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.5 139/151] perf bench futex-wake: Restore thread count default to online CPU count
-Date:   Tue, 17 Mar 2020 11:55:49 +0100
-Message-Id: <20200317103336.288272701@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a2ff6fa45162a5ed4dd3@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.5 140/151] netfilter: nf_tables: free flowtable hooks on hook register error
+Date:   Tue, 17 Mar 2020 11:55:50 +0100
+Message-Id: <20200317103336.356029744@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -67,71 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tommi Rantala <tommi.t.rantala@nokia.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit f649bd9dd5d5004543bbc3c50b829577b49f5d75 upstream.
+commit 2d285f26ecd072800a29c5b71e63437f21ef830a upstream.
 
-Since commit 3b2323c2c1c4 ("perf bench futex: Use cpumaps") the default
-number of threads the benchmark uses got changed from number of online
-CPUs to zero:
+If hook registration fails, the hooks allocated via nft_netdev_hook_alloc
+need to be freed.
 
-  $ perf bench futex wake
-  # Running 'futex/wake' benchmark:
-  Run summary [PID 15930]: blocking on 0 threads (at [private] futex 0x558b8ee4bfac), waking up 1 at a time.
-  [Run 1]: Wokeup 0 of 0 threads in 0.0000 ms
-  [...]
-  [Run 10]: Wokeup 0 of 0 threads in 0.0000 ms
-  Wokeup 0 of 0 threads in 0.0004 ms (+-40.82%)
+We can't change the goto label to 'goto 5' -- while it does fix the memleak
+it does cause a warning splat from the netfilter core (the hooks were not
+registered).
 
-Restore the old behavior by grabbing the number of online CPUs via
-cpu->nr:
-
-  $ perf bench futex wake
-  # Running 'futex/wake' benchmark:
-  Run summary [PID 18356]: blocking on 8 threads (at [private] futex 0xb3e62c), waking up 1 at a time.
-  [Run 1]: Wokeup 8 of 8 threads in 0.0260 ms
-  [...]
-  [Run 10]: Wokeup 8 of 8 threads in 0.0270 ms
-  Wokeup 8 of 8 threads in 0.0419 ms (+-24.35%)
-
-Fixes: 3b2323c2c1c4 ("perf bench futex: Use cpumaps")
-Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200305083714.9381-3-tommi.t.rantala@nokia.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 3f0465a9ef02 ("netfilter: nf_tables: dynamically allocate hooks per net_device in flowtables")
+Reported-by: syzbot+a2ff6fa45162a5ed4dd3@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/bench/futex-wake.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/netfilter/nf_tables_api.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/tools/perf/bench/futex-wake.c
-+++ b/tools/perf/bench/futex-wake.c
-@@ -43,7 +43,7 @@ static bool done = false, silent = false
- static pthread_mutex_t thread_lock;
- static pthread_cond_t thread_parent, thread_worker;
- static struct stats waketime_stats, wakeup_stats;
--static unsigned int ncpus, threads_starting, nthreads = 0;
-+static unsigned int threads_starting, nthreads = 0;
- static int futex_flag = 0;
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -6172,8 +6172,13 @@ static int nf_tables_newflowtable(struct
+ 		goto err4;
  
- static const struct option options[] = {
-@@ -141,7 +141,7 @@ int bench_futex_wake(int argc, const cha
- 	sigaction(SIGINT, &act, NULL);
+ 	err = nft_register_flowtable_net_hooks(ctx.net, table, flowtable);
+-	if (err < 0)
++	if (err < 0) {
++		list_for_each_entry_safe(hook, next, &flowtable->hook_list, list) {
++			list_del_rcu(&hook->list);
++			kfree_rcu(hook, rcu);
++		}
+ 		goto err4;
++	}
  
- 	if (!nthreads)
--		nthreads = ncpus;
-+		nthreads = cpu->nr;
- 
- 	worker = calloc(nthreads, sizeof(*worker));
- 	if (!worker)
+ 	err = nft_trans_flowtable_add(&ctx, NFT_MSG_NEWFLOWTABLE, flowtable);
+ 	if (err < 0)
 
 
