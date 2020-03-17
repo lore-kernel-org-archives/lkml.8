@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99CBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D641C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86862071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D0420658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443044;
-	bh=tU1sCskEZyRGbiY69yQ86F1d2qmqMz4UIRtAJdbj7Bs=;
+	s=default; t=1584443051;
+	bh=GwI3gY1sXrC3gZXxwYXmVKTzAnQwUmakGOz+AjeK0GA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2V3mOyOp/45tXzA+7r/wnku/fX2rkbSYBpeKJy44j1U7M0wkZ6vFbr0xNmtkNVlDu
-	 Ppq3ayqu8Y8PoVBvb011m1M6y5dmqZRWNl1lvuNH70A5xHsUW/LDXU74huqjXRkCLZ
-	 18YYxDz585eL0d/BnPPpJSzgnJLV5AngtXIIovCo=
+	b=dLaW7yuqaRtWhfy3dGH8a6d5mnfVOTKKrZ7OEajQxMP1G0y8zwu1Q+LdxVxRWUoZt
+	 TRrRU/L7YxzZ3NWPgZ1uIPjbdi8hrci9g7UuaOcKUBwo22S8nPyg/sk1drFcN+XWQ/
+	 LI3ZIif4GDnc5UWjYwgRf4n0HKPV5Hsqv/HWZJo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgCQLED (ORCPT
+        id S1726734AbgCQLEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44082 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:04:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727564AbgCQLEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:04:00 -0400
+        id S1728224AbgCQLEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905DA2071C;
-        Tue, 17 Mar 2020 11:03:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED99920714;
+        Tue, 17 Mar 2020 11:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443040;
-        bh=tU1sCskEZyRGbiY69yQ86F1d2qmqMz4UIRtAJdbj7Bs=;
+        s=default; t=1584443046;
+        bh=GwI3gY1sXrC3gZXxwYXmVKTzAnQwUmakGOz+AjeK0GA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P75Hh8v8ShYPLsQhTfCo7vfh6bX+UN2rwoYAhrp6f/8cL6N8mwtkqaODYrq6gso11
-         KFTn9x8qCk6BT2GgPVaKCFNbdMSeLSJZxf099LD8HNlv1X/N/SEzLVSXpFCIo5Zi69
-         PUFakC9LUeGuppWhq5and0p1Y8rTmdKijT5d9/Ko=
+        b=w9pfkmKqsptCNdAzyEfbK/oeeUh7XSSzqug/FxHRlWsbHAetdYPuAhpX8Ybj5prYL
+         NhBbDyn+PrSVjEouT4YDtAhe+OugnjlAb/6spJMvcp4sqXOHc9ANqmXHcvEjc9mLEE
+         LyFlWYHHko+VUfRQ39Pn2jWg+SnChlywlDJPGs/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        David Ahern <dsahern@gmail.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 038/123] fib: add missing attribute validation for tun_id
-Date:   Tue, 17 Mar 2020 11:54:25 +0100
-Message-Id: <20200317103311.793996925@linuxfoundation.org>
+Subject: [PATCH 5.4 040/123] nl802154: add missing attribute validation for dev_type
+Date:   Tue, 17 Mar 2020 11:54:27 +0100
+Message-Id: <20200317103311.975080702@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -62,28 +62,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 4c16d64ea04056f1b1b324ab6916019f6a064114 ]
+[ Upstream commit b60673c4c418bef7550d02faf53c34fbfeb366bf ]
 
-Add missing netlink policy entry for FRA_TUN_ID.
+Add missing attribute type validation for IEEE802154_ATTR_DEV_TYPE
+to the netlink policy.
 
-Fixes: e7030878fc84 ("fib: Add fib rule match on tunnel id")
+Fixes: 90c049b2c6ae ("ieee802154: interface type to be added")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/fib_rules.h |    1 +
+ net/ieee802154/nl_policy.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/include/net/fib_rules.h
-+++ b/include/net/fib_rules.h
-@@ -108,6 +108,7 @@ struct fib_rule_notifier_info {
- 	[FRA_OIFNAME]	= { .type = NLA_STRING, .len = IFNAMSIZ - 1 }, \
- 	[FRA_PRIORITY]	= { .type = NLA_U32 }, \
- 	[FRA_FWMARK]	= { .type = NLA_U32 }, \
-+	[FRA_TUN_ID]	= { .type = NLA_U64 }, \
- 	[FRA_FWMASK]	= { .type = NLA_U32 }, \
- 	[FRA_TABLE]     = { .type = NLA_U32 }, \
- 	[FRA_SUPPRESS_PREFIXLEN] = { .type = NLA_U32 }, \
+--- a/net/ieee802154/nl_policy.c
++++ b/net/ieee802154/nl_policy.c
+@@ -27,6 +27,7 @@ const struct nla_policy ieee802154_polic
+ 	[IEEE802154_ATTR_BAT_EXT] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_COORD_REALIGN] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_PAGE] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_DEV_TYPE] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_COORD_SHORT_ADDR] = { .type = NLA_U16, },
+ 	[IEEE802154_ATTR_COORD_HW_ADDR] = { .type = NLA_HW_ADDR, },
+ 	[IEEE802154_ATTR_COORD_PAN_ID] = { .type = NLA_U16, },
 
 
