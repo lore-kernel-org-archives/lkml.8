@@ -2,155 +2,94 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F12C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6740C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C34D20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E22320714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 17:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Cnt9unex"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jOeS0u82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgCQRCt (ORCPT
+        id S1726066AbgCQRD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 13:02:49 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36872 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgCQRCt (ORCPT
+        Tue, 17 Mar 2020 13:03:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42214 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgCQRD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:02:49 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a141so72389wme.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 10:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Fba/U9otc2Taw+dP1ayFE6PdkE156208ze8hBWbP5a0=;
-        b=Cnt9unexUh7DiO8/+NFCYWS6n4xihEaetGa9wprZioX0B5ztpZhNHZa1z+2KRnvfWc
-         WowDv3qSzyU+n5zlmaxOryg9osqcQL8P6I1u7bpW2c1aOrs+kq5fUBlulwSd/TX2Cf7Y
-         GE1nPLfhIjXMkIp+5+Wgpw/iv+wn0WIGofvNE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=Fba/U9otc2Taw+dP1ayFE6PdkE156208ze8hBWbP5a0=;
-        b=PokCWv0rdahjs20/j3nSAsxs+4b/RRcWspqzaAgJveUbRs7+Rm9+tr53B5Di/RK6eu
-         Q+7aM89XqYYWueqEjNm2cRQNdYidxN4NRmGx7EhEl2hAJhPOuSX+F+JUQE5w52aml6Qd
-         IL4i2cVvHdhIFst/ly3bgWA5fQz9OB8h4/yfAgMpdPcTy6DcawIM1Nz5Pkrsb4ErZx7G
-         8WcQVCy0m5aG+lHH+1XGyTVS9roSZX1z89YtLTl7+9ei08dj9RhfYgy5kz8tv8y8t2rc
-         fIVY6mNwAe1djeC3WuynKo9z8Y9qRvlNIlPF/slI1ZuYRCld04OgDeUE7ZJu3XW1UhIM
-         hw+A==
-X-Gm-Message-State: ANhLgQ2hp7HDJEhnSWXEk8fxZdmAajRypicc9fpbBLY+cJnPRN8RoH/a
-        yvA99YniJx/g93RCHI1cipE6bg==
-X-Google-Smtp-Source: ADFU+vtWZkm5YFA2wKbGqBsADcieSlIQinWEBnhNpwFvx09DRAxMcKI1mmVSAsGI36f/KlGOMFUewQ==
-X-Received: by 2002:a7b:c3ca:: with SMTP id t10mr231733wmj.69.1584464566676;
-        Tue, 17 Mar 2020 10:02:46 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id n14sm63632wmi.19.2020.03.17.10.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 10:02:45 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 18:02:43 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] drm/lease: fix potential race in fill_object_idr
-Message-ID: <20200317170243.GR2363188@phenom.ffwll.local>
-Mail-Followup-To: Qiujun Huang <hqjagain@gmail.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <1584343103-13896-1-git-send-email-hqjagain@gmail.com>
+        Tue, 17 Mar 2020 13:03:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=JrfbfStkuLthDJce1M1JugDTO24hOoZE58L7iN+zG2U=; b=jOeS0u829MtADQiUjmIqAmuJKK
+        etUNM1qkA+POedoDZdTcxDQbKGA5Ltl+G3zo4zyk9vZF9F2epczpebM4r+qpE4cCDXtTbXsEqsRdC
+        vwNMTgdrUxksdy3oy99KgYgsqiZaRhcsOrVfOjATxum+k7gbgA0tJIopajlTDy02l8YxkBiQ1Oqsp
+        WZvYKipXpfKvXKt/4eEl73Rqf0Te0oYUmBL1iVqhpx1sjqeu4xwtJlkjmqD1lVEyMOCXQFsABTnbR
+        HDsNTn55SBEezIAwjDefrCoetIBT6CbDNMVV31xTZvsIqj4wOzCxWEanwQpjL1gxU+eP8GLC/1SgA
+        nJFHVyqQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEFdC-0007p4-Kj; Tue, 17 Mar 2020 17:03:55 +0000
+Subject: Re: [PATCH v6 3/3] hwmon: add Gateworks System Controller support
+To:     Tim Harvey <tharvey@gateworks.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+References: <1584464453-28200-1-git-send-email-tharvey@gateworks.com>
+ <1584464453-28200-4-git-send-email-tharvey@gateworks.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f7ccbdb4-917a-2dd7-bf6b-8c82b87bc167@infradead.org>
+Date:   Tue, 17 Mar 2020 10:03:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584343103-13896-1-git-send-email-hqjagain@gmail.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <1584464453-28200-4-git-send-email-tharvey@gateworks.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 03:18:23PM +0800, Qiujun Huang wrote:
-> We should hold idr_mutex for idr_alloc.
-> 
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-
-I've not seen the first version of this anywhere in my inbox, not sure
-where that got lost.
-
-Anyway, this seems like a false positive - I'm assuming this was caught
-with KCSAN. The commit message really should mention that.
-
-fill_object_idr creates the idr, which yes is only access later on under
-the idr_mutex. But here it's not yet visible to any other thread, and
-hence lockless access is safe and correct.
-
-No idea what the KCSAN complains about safe access like this best practice
-is.
--Daniel
-
-> ---
->  drivers/gpu/drm/drm_lease.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
-> index b481caf..427ee21 100644
-> --- a/drivers/gpu/drm/drm_lease.c
-> +++ b/drivers/gpu/drm/drm_lease.c
-> @@ -418,6 +418,7 @@ static int fill_object_idr(struct drm_device *dev,
->  		goto out_free_objects;
->  	}
+On 3/17/20 10:00 AM, Tim Harvey wrote:
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 23dfe84..99dae13 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -494,6 +494,15 @@ config SENSORS_F75375S
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called f75375s.
 >  
-> +	mutex_lock(&dev->mode_config.idr_mutex);
->  	/* add their IDs to the lease request - taking into account
->  	   universal planes */
->  	for (o = 0; o < object_count; o++) {
-> @@ -437,7 +438,7 @@ static int fill_object_idr(struct drm_device *dev,
->  		if (ret < 0) {
->  			DRM_DEBUG_LEASE("Object %d cannot be inserted into leases (%d)\n",
->  					object_id, ret);
-> -			goto out_free_objects;
-> +			goto out_unlock;
->  		}
->  		if (obj->type == DRM_MODE_OBJECT_CRTC && !universal_planes) {
->  			struct drm_crtc *crtc = obj_to_crtc(obj);
-> @@ -445,20 +446,22 @@ static int fill_object_idr(struct drm_device *dev,
->  			if (ret < 0) {
->  				DRM_DEBUG_LEASE("Object primary plane %d cannot be inserted into leases (%d)\n",
->  						object_id, ret);
-> -				goto out_free_objects;
-> +				goto out_unlock;
->  			}
->  			if (crtc->cursor) {
->  				ret = idr_alloc(leases, &drm_lease_idr_object, crtc->cursor->base.id, crtc->cursor->base.id + 1, GFP_KERNEL);
->  				if (ret < 0) {
->  					DRM_DEBUG_LEASE("Object cursor plane %d cannot be inserted into leases (%d)\n",
->  							object_id, ret);
-> -					goto out_free_objects;
-> +					goto out_unlock;
->  				}
->  			}
->  		}
->  	}
->  
->  	ret = 0;
-> +out_unlock:
-> +	mutex_unlock(&dev->mode_config.idr_mutex);
->  out_free_objects:
->  	for (o = 0; o < object_count; o++) {
->  		if (objects[o])
-> -- 
-> 1.8.3.1
-> 
+> +config SENSORS_GSC
+> +        tristate "Gateworks System Controller ADC"
+> +        depends on MFD_GATEWORKS_GSC
+> +        help
+> +          Support for the Gateworks System Controller A/D converters.
+
+Hi Tim,
+Those 4 lines above should be using tabs for indentation.
++ 2 spaces on the final "Support" line.
+
+> +
+> +	  To compile this driver as a module, choose M here:
+> +	  the module will be called gsc-hwmon.
+> +
+>  config SENSORS_MC13783_ADC
+>          tristate "Freescale MC13783/MC13892 ADC"
+>          depends on MFD_MC13XXX
+
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+~Randy
+
