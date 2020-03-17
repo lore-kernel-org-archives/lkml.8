@@ -2,184 +2,152 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5350DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B3FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2854E2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D842073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w+O5kauc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H4CZRE6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgCQUWN (ORCPT
+        id S1726838AbgCQUWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:22:13 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43287 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbgCQUWM (ORCPT
+        Tue, 17 Mar 2020 16:22:17 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:56305 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgCQUWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:22:12 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n20so15039566lfl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:22:09 -0700 (PDT)
+        Tue, 17 Mar 2020 16:22:16 -0400
+Received: by mail-pj1-f66.google.com with SMTP id mj6so239039pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:22:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EdMXPbO8zSOEulSWNJSHIe0WVwdpQxRK/F6PIs8+nw4=;
-        b=w+O5kaucR7+KHOXBI6Ds3VVyyKM8T5i60xPnhOxsr2pi+JOOa73Vkx9rbjKOQnWTRq
-         T9peWdJ4zYvNGbmwHnwoVLyWzXXpsdzihZUMOd3TzSA4U4IZDXS0e3mCNyz7li6j05kt
-         Tc/UVQz7CpAvnQVzef9+df3s8hdPGWDIjWr8yLA+dyxzgkpW43QnOflFkBN7mP5vsB/T
-         SUWCrhGNht6Fjge/l7utK+OzCO138piQ548D10V5DKkunAxpcXixe1NfHg0utSnsZabx
-         pnPybtKnrpF8XICO3CW4ux1orTK10CncX+ccjpzweOX5n+7Tv/VyIU+ArnhA8YIoapM4
-         f4mQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZgC1djA04wl+1UG3Cj/HuSgpbFsTOFgzHvgdTKPnNp0=;
+        b=H4CZRE6VMBbEB8Hji3lWwaUwDqxZC4Bg0d0oIh9tBOL3zcGJGcAzVKyygFDdErRQqK
+         XDcn8dp06tPeWFz0YtmiV/5tsttgeqM4wNdTLQw6UsOAORNBPI6LDhW+QOSB430n8xUE
+         QBNl+T73+DJnkrAsh4odZ/nDT9fwkCbgcIHEA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EdMXPbO8zSOEulSWNJSHIe0WVwdpQxRK/F6PIs8+nw4=;
-        b=KN1aGIhsG6P/DJR3hyUtXJvOXmgE4hyp65OvTnl77ur32jhWWXA0I3KO3nCPhKIDsl
-         yD694TMTDGcnJQxZu1DnEv5gj1P39RySxBRquADhy+mKi7V87XDArmeEDjDmv6H2tA7Y
-         ZOlQbNDsveq1yTUZdlNXTYKCh+Xj4+Ej/evUd7yMD6VkaemuoKLN1Ga+CMHltr5GyCKf
-         A8Hzm5u4XU7Z1cRkbzAOz9vC02KFhCn2YJfoytiUJZZDavLOGG5QvPmQ/uaUkGbu5+p0
-         oshs+29I2zWP2VQrIINsmkUBf9csOEQr3WdBuSyI7gBT4zqpI+84ULY+lh2hAaD/eRiZ
-         sadA==
-X-Gm-Message-State: ANhLgQ34ztvSEhkTAa1eV1XSEB84zP1oJX6DZSzGCdRO7fQTjA6jnUAH
-        IMPUqEElKKCi4dK2rYkBMwB41hy4o05ohzKNd9aeh72FaDXJlg==
-X-Google-Smtp-Source: ADFU+vsqrqY5XaH1UaQ1opW1FSoMww78T+n7siei0d8Rc5gl3j9VqaydmtiCg45O3uYL9SVwbipWuXT+CCxhGzYVyDA=
-X-Received: by 2002:a05:6512:511:: with SMTP id o17mr664988lfb.74.1584476528137;
- Tue, 17 Mar 2020 13:22:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZgC1djA04wl+1UG3Cj/HuSgpbFsTOFgzHvgdTKPnNp0=;
+        b=CivBWaznjnZ6XfSK28Dv7AV2OLvcxAmsmdJxHNHZ5gn6xGV0+zXCr8TCDjJHKAJf1+
+         KtfwYrnM5DDTNfETPYDd5NdQohpChZaA/rGeRHRMBJnw8Sj2Prh6o/uau0RTIJAq6kJH
+         tVfUTQgt9R/eu9APRdeoXTuk5bZ+t8P1La3QhBgRqIKC0J898GlyZTL2TLE5l4OB+F3x
+         o6RhJ+KK6IxhscOPmIkG79LkmVDAPJzt3pgYvqdICcUhvn/7aILnvsZzRN2j2KvEGOzc
+         MI0ZgDVYMqIZjZ72gKvePn55t50wFp7WSTB+xSruXz+jRmWG/VmWT6TL1Yw1SQ6wiq5E
+         cIYw==
+X-Gm-Message-State: ANhLgQ3PsDEp/2v8H25yLnKXWhuBtMEI3ZnJ3gOsKLzC3Pv5l8psDKlm
+        tCCkJtbP5FmJ16ZHrHd8OAm8FA==
+X-Google-Smtp-Source: ADFU+vum1LO9z60NL3vOdRKNvZEfXZRFeaxNqaAhzjZZv6nhKQLnS+tqyBPjXOmirwHuPkOWOfoBdg==
+X-Received: by 2002:a17:90a:324b:: with SMTP id k69mr1022491pjb.50.1584476533955;
+        Tue, 17 Mar 2020 13:22:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v1sm230341pjy.35.2020.03.17.13.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 13:22:13 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 13:22:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, Tim.Bird@sony.com
+Subject: Re: [PATCH v3 1/6] selftests/seccomp: use correct FIXTURE macro
+Message-ID: <202003171322.77AD2BA3B@keescook>
+References: <20200316225647.3129354-1-kuba@kernel.org>
+ <20200316225647.3129354-2-kuba@kernel.org>
 MIME-Version: 1.0
-References: <20200317103326.593639086@linuxfoundation.org>
-In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 18 Mar 2020 01:51:56 +0530
-Message-ID: <CA+G9fYsNxuHUFmPwOn9JmJN+-NM1TF-io8SnSs+XehCB+vrTEw@mail.gmail.com>
-Subject: Re: [PATCH 5.5 000/151] 5.5.10-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316225647.3129354-2-kuba@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020 at 16:37, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.5.10 release.
-> There are 151 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 19 Mar 2020 10:31:16 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.5.10-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.5.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Mon, Mar 16, 2020 at 03:56:41PM -0700, Jakub Kicinski wrote:
+> Quoting kdoc:
+> 
+> FIXTURE_DATA:
+>  * This call may be used when the type of the fixture data
+>  * is needed.  In general, this should not be needed unless
+>  * the *self* is being passed to a helper directly.
+> 
+> FIXTURE:
+>  * Defines the data provided to TEST_F()-defined tests as *self*.  It should be
+>  * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
+> 
+> seccomp should use FIXTURE to declare types.
+> 
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Acked-by: Kees Cook <keescook@chromium.org>
 
-Summary
-------------------------------------------------------------------------
+-Kees
 
-kernel: 5.5.10-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.5.y
-git commit: 97969bd1700945fbc9ef82238f6a2d5a390e5b4d
-git describe: v5.5.9-152-g97969bd17009
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
-ld/v5.5.9-152-g97969bd17009
+> ---
+>  tools/testing/selftests/seccomp/seccomp_bpf.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> index ee1b727ede04..7bf82fb07f67 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@ -909,7 +909,7 @@ TEST(ERRNO_order)
+>  	EXPECT_EQ(12, errno);
+>  }
+>  
+> -FIXTURE_DATA(TRAP) {
+> +FIXTURE(TRAP) {
+>  	struct sock_fprog prog;
+>  };
+>  
+> @@ -1020,7 +1020,7 @@ TEST_F(TRAP, handler)
+>  	EXPECT_NE(0, (unsigned long)sigsys->_call_addr);
+>  }
+>  
+> -FIXTURE_DATA(precedence) {
+> +FIXTURE(precedence) {
+>  	struct sock_fprog allow;
+>  	struct sock_fprog log;
+>  	struct sock_fprog trace;
+> @@ -1509,7 +1509,7 @@ void tracer_poke(struct __test_metadata *_metadata, pid_t tracee, int status,
+>  	EXPECT_EQ(0, ret);
+>  }
+>  
+> -FIXTURE_DATA(TRACE_poke) {
+> +FIXTURE(TRACE_poke) {
+>  	struct sock_fprog prog;
+>  	pid_t tracer;
+>  	long poked;
+> @@ -1817,7 +1817,7 @@ void tracer_ptrace(struct __test_metadata *_metadata, pid_t tracee,
+>  		change_syscall(_metadata, tracee, -1, -ESRCH);
+>  }
+>  
+> -FIXTURE_DATA(TRACE_syscall) {
+> +FIXTURE(TRACE_syscall) {
+>  	struct sock_fprog prog;
+>  	pid_t tracer, mytid, mypid, parent;
+>  };
+> @@ -2321,7 +2321,7 @@ struct tsync_sibling {
+>  		}							\
+>  	} while (0)
+>  
+> -FIXTURE_DATA(TSYNC) {
+> +FIXTURE(TSYNC) {
+>  	struct sock_fprog root_prog, apply_prog;
+>  	struct tsync_sibling sibling[TSYNC_SIBLINGS];
+>  	sem_t started;
+> -- 
+> 2.24.1
+> 
 
-No regressions (compared to build v5.5.9)
-
-No fixes (compared to build v5.5.9)
-
-Ran 25803 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* perf
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-commands-kasan-tests
-* ltp-containers-kasan-tests
-* ltp-cve-kasan-tests
-* ltp-fs-kasan-tests
-* ltp-ipc-kasan-tests
-* ltp-math-kasan-tests
-* ltp-sched-kasan-tests
-* ltp-syscalls-kasan-tests
-* kvm-unit-tests
-* ltp-crypto-tests
-* ltp-open-posix-tests
-* network-basic-tests
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Kees Cook
