@@ -2,129 +2,163 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9BDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C620FC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 030DF20752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584481505;
-	bh=20DxxSkzpEpNqK1k6Pr8hoOHtM6IxlT9Ib/xkG7YUKg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=rF2A4MCwHpgya1oQD8CHwdvXPz+/p6zBPtaxnoqQvGVkU4mS8kcbepJ/5utupjTDp
-	 PQ98ixV/DYqc8q4udO8LXNSdVnFhsuyKNnXUv9wRCxU2xKjatRkXS51EsHNTfXU4b8
-	 5/4/0gK/vMcIRsjXjTOx4C2QtjewX2AlQef07x70=
+	by mail.kernel.org (Postfix) with ESMTP id A392F20752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgCQVpD (ORCPT
+        id S1726958AbgCQVqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbgCQVpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 17:45:03 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4FB720724;
-        Tue, 17 Mar 2020 21:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584481502;
-        bh=20DxxSkzpEpNqK1k6Pr8hoOHtM6IxlT9Ib/xkG7YUKg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=V0v/zLyOOxpwl03SxIcjTRapXjXI2bBP+4jK5GlyQ2UR/ZU2GvMmUxdks9/dMq+WB
-         NZcgnrPLFqo9d2x76Xp0LNSHG9MQ2mmMuznpq1v08K9xbISRhNXWvh95QZWUg1/QO8
-         Yt/wOHDNYIZmtdNg1UfeyiQjZssTJP8DGeJaIrd8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A44463523295; Tue, 17 Mar 2020 14:45:02 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 14:45:02 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        urezki@gmail.com
-Subject: Re: [PATCH v2 rcu-dev 1/3] rcuperf: Add ability to increase object
- allocation size
-Message-ID: <20200317214502.GA29184@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200316163228.62068-1-joel@joelfernandes.org>
- <20200317210822.GM3199@paulmck-ThinkPad-P72>
+        Tue, 17 Mar 2020 17:46:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51076 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726388AbgCQVqQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 17:46:16 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HLX7xk011319;
+        Tue, 17 Mar 2020 17:46:09 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yrtwverjb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 17:46:09 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02HLj0wm026781;
+        Tue, 17 Mar 2020 21:46:08 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 2yrpw6ja7b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 21:46:08 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02HLk7FJ62587192
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 21:46:07 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 16897BE059;
+        Tue, 17 Mar 2020 21:46:07 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E423EBE053;
+        Tue, 17 Mar 2020 21:46:06 +0000 (GMT)
+Received: from crimini9.aus.stglabs.ibm.com (unknown [9.40.192.141])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Tue, 17 Mar 2020 21:46:06 +0000 (GMT)
+Received: (from gcwilson@localhost)
+        by crimini9.aus.stglabs.ibm.com (8.15.2/8.15.2/Submit) id 02HLk4Xm009611;
+        Tue, 17 Mar 2020 17:46:04 -0400
+X-Authentication-Warning: crimini9.aus.stglabs.ibm.com: gcwilson set sender to gcwilson@linux.ibm.com using -f
+From:   George Wilson <gcwilson@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Linh Pham <phaml@us.ibm.com>
+Subject: [PATCH v2] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
+Date:   Tue, 17 Mar 2020 17:46:00 -0400
+Message-Id: <20200317214600.9561-1-gcwilson@linux.ibm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200317210822.GM3199@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_09:2020-03-17,2020-03-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 phishscore=0 suspectscore=1
+ priorityscore=1501 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003170082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 02:08:22PM -0700, Paul E. McKenney wrote:
-> On Mon, Mar 16, 2020 at 12:32:26PM -0400, Joel Fernandes (Google) wrote:
-> > This allows us to increase memory pressure dynamically using a new
-> > rcuperf boot command line parameter called 'rcumult'.
-> > 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> Applied for testing and review, thank you!
+tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
+with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
+“partner partition suspended” transport event disables the associated CRQ
+such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
+until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
+This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
+ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
+retries the ibmvtpm_send_crq() once.
 
-But testing did not go far:
+Reported-by: Linh Pham <phaml@us.ibm.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
+Tested-by: Linh Pham <phaml@us.ibm.com>
+---
+ drivers/char/tpm/tpm_ibmvtpm.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-kernel/rcu/tree.c: In function ‘kfree_rcu_shrink_count’:
-kernel/rcu/tree.c:3120:16: warning: unused variable ‘flags’ [-Wunused-variable]
-  unsigned long flags, count = 0;
-                ^~~~~
+diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+index 78cc52690177..ba3bd503e080 100644
+--- a/drivers/char/tpm/tpm_ibmvtpm.c
++++ b/drivers/char/tpm/tpm_ibmvtpm.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2012 IBM Corporation
++ * Copyright (C) 2012-2020 IBM Corporation
+  *
+  * Author: Ashley Lai <ashleydlai@gmail.com>
+  *
+@@ -25,6 +25,8 @@
+ #include "tpm.h"
+ #include "tpm_ibmvtpm.h"
+ 
++static int tpm_ibmvtpm_resume(struct device *dev);
++
+ static const char tpm_ibmvtpm_driver_name[] = "tpm_ibmvtpm";
+ 
+ static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
+@@ -147,6 +149,7 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
+ {
+ 	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
+ 	int rc, sig;
++	bool retry = true;
+ 
+ 	if (!ibmvtpm->rtce_buf) {
+ 		dev_err(ibmvtpm->dev, "ibmvtpm device is not ready\n");
+@@ -179,18 +182,28 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
+ 	 */
+ 	ibmvtpm->tpm_processing_cmd = true;
+ 
++again:
+ 	rc = ibmvtpm_send_crq(ibmvtpm->vdev,
+ 			IBMVTPM_VALID_CMD, VTPM_TPM_COMMAND,
+ 			count, ibmvtpm->rtce_dma_handle);
++
+ 	if (rc != H_SUCCESS) {
++		/*
++		 * H_CLOSED can be returned after LPM resume.  Call
++		 * tpm_ibmvtpm_resume() to re-enable the CRQ then retry
++		 * ibmvtpm_send_crq() once before failing.
++		 */
++		if (rc == H_CLOSED && retry) {
++			tpm_ibmvtpm_resume(ibmvtpm->dev);
++			retry = false;
++			goto again;
++		}
+ 		dev_err(ibmvtpm->dev, "tpm_ibmvtpm_send failed rc=%d\n", rc);
+-		rc = 0;
+ 		ibmvtpm->tpm_processing_cmd = false;
+-	} else
+-		rc = 0;
++	}
+ 
+ 	spin_unlock(&ibmvtpm->rtce_lock);
+-	return rc;
++	return 0;
+ }
+ 
+ static void tpm_ibmvtpm_cancel(struct tpm_chip *chip)
+-- 
+2.24.1
 
-I will drop these and await a replacement.
-
-							Thanx, Paul
-
-> > ---
-> > 
-> > The Series v1->v2 only has added a new patch (3/3).
-> > 
-> > 
-> >  kernel/rcu/rcuperf.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-> > index a4a8d097d84d9..16dd1e6b7c09f 100644
-> > --- a/kernel/rcu/rcuperf.c
-> > +++ b/kernel/rcu/rcuperf.c
-> > @@ -88,6 +88,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
-> >  torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
-> >  torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
-> >  torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
-> > +torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
-> >  
-> >  static char *perf_type = "rcu";
-> >  module_param(perf_type, charp, 0444);
-> > @@ -635,7 +636,7 @@ kfree_perf_thread(void *arg)
-> >  		}
-> >  
-> >  		for (i = 0; i < kfree_alloc_num; i++) {
-> > -			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
-> > +			alloc_ptr = kmalloc(kfree_mult * sizeof(struct kfree_obj), GFP_KERNEL);
-> >  			if (!alloc_ptr)
-> >  				return -ENOMEM;
-> >  
-> > @@ -722,6 +723,8 @@ kfree_perf_init(void)
-> >  		schedule_timeout_uninterruptible(1);
-> >  	}
-> >  
-> > +	pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
-> > +
-> >  	kfree_reader_tasks = kcalloc(kfree_nrealthreads, sizeof(kfree_reader_tasks[0]),
-> >  			       GFP_KERNEL);
-> >  	if (kfree_reader_tasks == NULL) {
-> > -- 
-> > 2.25.1.481.gfbce0eb801-goog
