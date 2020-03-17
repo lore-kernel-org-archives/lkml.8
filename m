@@ -2,177 +2,133 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FE4C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D91C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D341320674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:32:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OvKKPAvU"
+	by mail.kernel.org (Postfix) with ESMTP id 106FE20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgCQGcU (ORCPT
+        id S1726277AbgCQGcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:32:20 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:32972 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgCQGcT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:32:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m5so11185885pgg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Mar 2020 23:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fPDZ6+w3BtfImipFJW5a3OXasS2gBUMcdAat0qMbiEc=;
-        b=OvKKPAvUHrZ77ivg3BKzoibsavHaTXRrH/rGlfi8ebKoWd5cUH/7os3vHM/Xg1/X6q
-         Q3+DZF4FpIHaVdLLW7dEj8z4Oa7Tn+UX3wd5NNgomrhZp/nRpqXTv5hZ6aeRkP8MTit8
-         XRd9j98xVwJj8J+Qw6WriSsnIZD2GFwbqTfRYGVYuzV36QdeTPTWjtD0E9ZhC1thydCL
-         2j/cJItEeb1aA1ymBIVQxikl1YA/JYQ3SXki3OnflCHcVs68tX/fVTmIyJHFto+pYCLY
-         1VmNPMnaiLStOH+kFQ0MbHALwcfeH7Q60mFKWjapyc8rGSCSJOq8qskMXac1Xl53BGvs
-         0TqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fPDZ6+w3BtfImipFJW5a3OXasS2gBUMcdAat0qMbiEc=;
-        b=XljQBBjbvfoAKeCLEElRt6Zzo73cnlEIewgKZywnwmLsy35/H/hLuKqNxNpXTyD4rQ
-         GTimBjAEoeabYVHrgectqdl9XqkmEMxbUzjEk4xmVbxfQPVrkIf6MHg/MXywgVuIiWnU
-         yJYV/TcAoXMpD87kyfgqVrsABJ0hBHf+oG/dUfaVTbH8F3YnS7N5OnC6PMS3GjLkXSlF
-         p27TOetj2trEs+ACTTnVP354QueMvG3MTnPXmsv7p1+EDH8s+Y6bKbrZqdEspkrfqDki
-         XyglQ8cMf7sTpZuk2+Q7m1c9Uiq/IELgDsiX8fjjpOZPrHoJKeeSkAiU/zBFalmxGzZ4
-         7hjw==
-X-Gm-Message-State: ANhLgQ2HTScsAZex150Fbex8EvtsDE1KEk5zRBnWouYMXaPvEq2vyD81
-        uJo0jboGOAndg/ZA0KnXT4I12w==
-X-Google-Smtp-Source: ADFU+vtDVHGVGhRWc3b5Kbe7ELrzDJfeMmJctyiPAwyCZXURX7JHPZ/jPhFVH4Ab0yU9LkBak47NPg==
-X-Received: by 2002:a63:68a:: with SMTP id 132mr3603572pgg.12.1584426738234;
-        Mon, 16 Mar 2020 23:32:18 -0700 (PDT)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p2sm1793802pfb.41.2020.03.16.23.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 23:32:17 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 23:31:01 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jackp@codeaurora.org,
-        robh@kernel.org, Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 7/7] usb: dwc3: qcom: Enable gpio-usb-conn based
- role-switching
-Message-ID: <20200317063101.GA2778164@ripper>
-References: <20200311191501.8165-1-bryan.odonoghue@linaro.org>
- <20200311191501.8165-8-bryan.odonoghue@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311191501.8165-8-bryan.odonoghue@linaro.org>
+        Tue, 17 Mar 2020 02:32:41 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:37198 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725730AbgCQGcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 02:32:41 -0400
+Received: from localhost.localdomain (unknown [120.229.255.71])
+        by app2 (Coremail) with SMTP id XQUFCgCnrzvabnBermxTBQ--.3835S3;
+        Tue, 17 Mar 2020 14:31:57 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Vishnu DASA <vdasa@vmware.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu
+Subject: [PATCH] VMCI: Fix NULL pointer dereference on context ptr
+Date:   Tue, 17 Mar 2020 14:29:57 +0800
+Message-Id: <1584426607-89366-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgCnrzvabnBermxTBQ--.3835S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ur15JF1fAF1rArWfGw17Jrb_yoW8tFW7pr
+        ZxWFWxAF18JF42va9Fy3WjvF15Ww1FqFyjk34Dt345Z34fAFyDWr1UGa4Yvrn3XFyrZr12
+        vr1Ut3W3uan0kF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+        rcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+        sGvfC2KfnxnUUI43ZEXa7VUbHa0DUUUUU==
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11 Mar 12:15 PDT 2020, Bryan O'Donoghue wrote:
+The refcount wrapper function vmci_ctx_get() may return NULL
+context ptr. Thus, we need to add a NULL pointer check
+before its dereference.
 
-> This patch adds the ability to receive a notification from the DRD code for
-> role-switch events and in doing so it introduces a disjunction between
-> gpio-usb-conn or extcon mode.
-> 
-> This is what we want to do, since the two methods are mutually exclusive.
-> 
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Jack Pham <jackp@codeaurora.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  drivers/usb/dwc3/dwc3-qcom.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 6f4b2b3cffce..f6a7ede5953e 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -571,6 +571,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->  	struct device		*dev = &pdev->dev;
->  	struct dwc3_qcom	*qcom;
->  	struct resource		*res, *parent_res = NULL;
-> +	struct dwc3		*dwc;
->  	int			ret, i;
->  	bool			ignore_pipe_clk;
->  
-> @@ -669,8 +670,16 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->  	if (qcom->mode == USB_DR_MODE_PERIPHERAL)
->  		dwc3_qcom_vbus_overrride_enable(qcom, true);
->  
-> -	/* register extcon to override sw_vbus on Vbus change later */
-> -	ret = dwc3_qcom_register_extcon(qcom);
-> +	if (dwc3_qcom_find_gpio_usb_connector(qcom->dwc3)) {
-> +		/* Using gpio-usb-conn register a notifier for VBUS */
-> +		dwc = platform_get_drvdata(qcom->dwc3);
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ drivers/misc/vmw_vmci/vmci_context.c    |  2 ++
+ drivers/misc/vmw_vmci/vmci_queue_pair.c | 17 +++++++++++------
+ 2 files changed, 13 insertions(+), 6 deletions(-)
 
-As I was testing some other things on my qcs404 board this
-suddenly failed.
+diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
+index 16695366ec92..a20878fba374 100644
+--- a/drivers/misc/vmw_vmci/vmci_context.c
++++ b/drivers/misc/vmw_vmci/vmci_context.c
+@@ -898,6 +898,8 @@ void vmci_ctx_rcv_notifications_release(u32 context_id,
+ 					bool success)
+ {
+ 	struct vmci_ctx *context = vmci_ctx_get(context_id);
++	if (context == NULL)
++		return;
+ 
+ 	spin_lock(&context->lock);
+ 	if (!success) {
+diff --git a/drivers/misc/vmw_vmci/vmci_queue_pair.c b/drivers/misc/vmw_vmci/vmci_queue_pair.c
+index 8531ae781195..2ecb22d08692 100644
+--- a/drivers/misc/vmw_vmci/vmci_queue_pair.c
++++ b/drivers/misc/vmw_vmci/vmci_queue_pair.c
+@@ -1575,11 +1575,14 @@ static int qp_broker_attach(struct qp_broker_entry *entry,
+ 		 */
+ 
+ 		create_context = vmci_ctx_get(entry->create_id);
+-		supports_host_qp = vmci_ctx_supports_host_qp(create_context);
+-		vmci_ctx_put(create_context);
++		if (!create_context) {
++			supports_host_qp =
++				vmci_ctx_supports_host_qp(create_context);
++			vmci_ctx_put(create_context);
+ 
+-		if (!supports_host_qp)
+-			return VMCI_ERROR_INVALID_RESOURCE;
++			if (!supports_host_qp)
++				return VMCI_ERROR_INVALID_RESOURCE;
++		}
+ 	}
+ 
+ 	if ((entry->qp.flags & ~VMCI_QP_ASYMM) != (flags & ~VMCI_QP_ASYMM_PEER))
+@@ -1808,7 +1811,8 @@ static int qp_alloc_host_work(struct vmci_handle *handle,
+ 		pr_devel("queue pair broker failed to alloc (result=%d)\n",
+ 			 result);
+ 	}
+-	vmci_ctx_put(context);
++	if (context)
++		vmci_ctx_put(context);
+ 	return result;
+ }
+ 
+@@ -1859,7 +1863,8 @@ static int qp_detatch_host_work(struct vmci_handle handle)
+ 
+ 	result = vmci_qp_broker_detach(handle, context);
+ 
+-	vmci_ctx_put(context);
++	if (context)
++		vmci_ctx_put(context);
+ 	return result;
+ }
+ 
+-- 
+2.7.4
 
-The of_platform_populate() in dwc3_qcom_of_register_core() will create a
-struct platform_device and attempt to probe this. But as my PHY(s) isn't
-ready that returns with -EPROBE_DEFER - i.e. it will not reach the
-platform_set_drvdata().
-
-The check in dwc3_qcom_of_register_core() successfully resolves the
-struct platform_device (it's sitting there waiting to be reprobed
-later).
-
-So qcom->dwc3 will be valid, but dwc here will be NULL.
-
-> +		qcom->vbus_nb.notifier_call = dwc3_qcom_vbus_notifier;
-> +		ret = dwc3_role_switch_notifier_register(dwc, &qcom->vbus_nb);
-
-So here we pass NULL to dwc3_role_switch_notifier_register(), which
-dereferences it and we get an oops.
-
-
-I don't yet have a sane suggestion on how to redesign the dependency
-between the two drivers in order to avoid this, but it's at least not
-possible to access the child's state data from dwc3_qcom_probe().
-
-Regards,
-Bjorn
-
-> +	} else {
-> +		/* register extcon to override sw_vbus on Vbus change later */
-> +		ret = dwc3_qcom_register_extcon(qcom);
-> +	}
-> +
->  	if (ret)
->  		goto depopulate;
->  
-> @@ -702,8 +711,11 @@ static int dwc3_qcom_remove(struct platform_device *pdev)
->  {
->  	struct dwc3_qcom *qcom = platform_get_drvdata(pdev);
->  	struct device *dev = &pdev->dev;
-> +	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
->  	int i;
->  
-> +	dwc3_role_switch_notifier_unregister(dwc, &qcom->vbus_nb);
-> +
->  	of_platform_depopulate(dev);
->  
->  	for (i = qcom->num_clocks - 1; i >= 0; i--) {
-> -- 
-> 2.25.1
-> 
