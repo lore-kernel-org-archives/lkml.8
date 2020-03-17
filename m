@@ -7,134 +7,121 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB06DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2C6C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C582073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D7720724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="A6+A5ao4"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="R6oowquv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgCQQsN (ORCPT
+        id S1726683AbgCQQtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:48:13 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51991 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQQsN (ORCPT
+        Tue, 17 Mar 2020 12:49:46 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55256 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQQtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:48:13 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a132so31649wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:48:10 -0700 (PDT)
+        Tue, 17 Mar 2020 12:49:46 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n8so14755wmc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OD9FuwDDG0da4KeudVDubOUcHxfWY0Nj0pIiBKsww3w=;
-        b=A6+A5ao4lhYXDfjR31CtRR6eRlIG9boSOk0LtFwG9coQIGNl+zHshCpcveFSX+4Gn4
-         8d8WOF3x79ojpchRsP7CKK5l91Y4s5WxEDf/cCoElXqCviNyvWdVWcvHxLZZR7NjHInk
-         xJ5fiLtz23awk8+C5cF3rJlh0G6NDkSaI7Mxw=
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=mMiEl9L2S4tlLAiIN1V5kcZjzOStOhhL2zNGzs+Vouc=;
+        b=R6oowquvlxrvUCOrWAkR8nSqdDRskytPZj1t+oqMPZIXIdEaqaxrZausO30q5v2cij
+         Ta9XPGU0jQaKg5rNB49TK7FEHpqSy2S5b/6hMjglyIwqWn6CM31M2MK33qUQn6/uT7et
+         S8yBm+Y4yH5ujfReYwesuo5IRj0cN9DkeDzDg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=OD9FuwDDG0da4KeudVDubOUcHxfWY0Nj0pIiBKsww3w=;
-        b=Or9EMeX2E/R3OXPpyCe2mCE0Cf6mJSYA1umhdrfR2Ze+hYEpsilxWL1W7SWvDxuS99
-         PTVdHriZTpD+9zjn8n8SLtqacvqVT7nj2carLWnnJdwl0bTtSWRsG9qzpXetO7DSWLzh
-         aOcFUudwUsTMVrxC7xenpnMrC0BMvccuj5AyZQBH3Izl1UatFqze3z3o6yiaDP5MklU7
-         cip77LOiUnsGW/sFfRrjq35elAK5NxIOl+9UTQYmEstV9q64QaeiLaESbNqRUd8/Kc/e
-         AS+h/W5lfItitp6TZHBEetWkaI4fwQKxkoL0UzRQhduMXrfVeA4DQml3a/V/c03izXk+
-         0Hvw==
-X-Gm-Message-State: ANhLgQ3fg23ie9doSlhuuclHtsjMjE6o1Lo6e8HeLRpOZerDiUh4QNI+
-        m/VgAt0bYd2NlXl/eEghZQOZmw==
-X-Google-Smtp-Source: ADFU+vsm2JQbBpClsKbjdFmau5rDZaXHJnGmGZ52VylYOGNH7n6jFxhR5zm2VXPCTiOMmVSNFurUQA==
-X-Received: by 2002:a05:600c:29cf:: with SMTP id s15mr180084wmd.117.1584463689832;
-        Tue, 17 Mar 2020 09:48:09 -0700 (PDT)
+         :content-transfer-encoding:in-reply-to;
+        bh=mMiEl9L2S4tlLAiIN1V5kcZjzOStOhhL2zNGzs+Vouc=;
+        b=R4/Ggd+4SBqHtdMMQOj82GwguR7KQmJl7vjgNMI3SRU+Q4OkfEacIR2hZT3Y2BXSm+
+         GeKhhKhddVhL5pgiLO3GzVI8NVxrQT/M/TzLGuW5mCoGTWju+0Zmadt4fe7VZ5uoebbc
+         xQLgcotVAXpfKDS0Ze3arqqhSZ+BIlgwApzUBBgzlgUcQABaOYgJ1GwhO+v5v4FY2ZYa
+         TxVWw5B+rOijh3/rI8se4xECTbcLYd7IG3pM35aFJfIQoWnAzs5raZNk0Ft/UVtZSMAl
+         8MN4ULc1q/1XXQKznePSuQ+cSxPcm4KrQlbPW68CADAjyuMlLdau6elh0bvEPE8qZiyb
+         ikYg==
+X-Gm-Message-State: ANhLgQ3eRl/D0XdXi87HRCBcHf/jOND+1Fhkqof2FcUYGrjbfdJiKufw
+        EFOHBvI2+PUC4Dpp0wAwyVRRRQ==
+X-Google-Smtp-Source: ADFU+vt8dNlSMJCThKrf5v17M3aD/fp8xVTQ3Zc/gPBrkJ6TA++okOS+dztloBcqbCNdk++CpJkLog==
+X-Received: by 2002:a1c:5684:: with SMTP id k126mr163852wmb.181.1584463784547;
+        Tue, 17 Mar 2020 09:49:44 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id t124sm20732wmg.13.2020.03.17.09.48.08
+        by smtp.gmail.com with ESMTPSA id n10sm5554069wro.14.2020.03.17.09.49.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 09:48:08 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 17:48:06 +0100
+        Tue, 17 Mar 2020 09:49:43 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 17:49:41 +0100
 From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Joe Perches <joe@perches.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, marmarek@invisiblethingslab.com,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] drm: drm_vm: Use fallthrough;
-Message-ID: <20200317164806.GO2363188@phenom.ffwll.local>
-Mail-Followup-To: Joe Perches <joe@perches.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1584040050.git.joe@perches.com>
- <398db73cdc8a584fd7f34f5013c04df13ba90f64.1584040050.git.joe@perches.com>
+        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] drm/bochs: downgrade pci_request_region failure from
+ error to warning
+Message-ID: <20200317164941.GP2363188@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, marmarek@invisiblethingslab.com,
+        David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200313084152.2734-1-kraxel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <398db73cdc8a584fd7f34f5013c04df13ba90f64.1584040050.git.joe@perches.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200313084152.2734-1-kraxel@redhat.com>
 X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 12:17:12PM -0700, Joe Perches wrote:
-> Convert /* fallthrough */ style comments to fallthrough;
-> 
-> Convert the various uses of fallthrough comments to fallthrough;
-> 
-> Done via script
-> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
-> 
-> And by hand:
-> 
-> This file has a fallthrough comment outside of an #ifdef block
-> that causes gcc to emit a warning if converted in-place.
-> 
-> So move the new fallthrough; inside the containing #ifdef/#endif too.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+On Fri, Mar 13, 2020 at 09:41:52AM +0100, Gerd Hoffmann wrote:
+> Shutdown of firmware framebuffer has a bunch of problems.  Because
+> of this the framebuffer region might still be reserved even after
+> drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-I'm assuming this all lands through a special pull? Or should I apply
-this?
+Is that still the fbdev lifetime fun where the cleanup might be delayed if
+the char device node is still open?
 -Daniel
 
-> ---
->  drivers/gpu/drm/drm_vm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_vm.c b/drivers/gpu/drm/drm_vm.c
-> index 64619f..fd65c59 100644
-> --- a/drivers/gpu/drm/drm_vm.c
-> +++ b/drivers/gpu/drm/drm_vm.c
-> @@ -595,8 +595,8 @@ static int drm_mmap_locked(struct file *filp, struct vm_area_struct *vma)
->  			vma->vm_ops = &drm_vm_ops;
->  			break;
->  		}
-> +		fallthrough;	/* to _DRM_FRAME_BUFFER... */
->  #endif
-> -		/* fall through - to _DRM_FRAME_BUFFER... */
->  	case _DRM_FRAME_BUFFER:
->  	case _DRM_REGISTERS:
->  		offset = drm_core_get_reg_ofs(dev);
-> @@ -621,7 +621,7 @@ static int drm_mmap_locked(struct file *filp, struct vm_area_struct *vma)
->  		    vma->vm_end - vma->vm_start, vma->vm_page_prot))
->  			return -EAGAIN;
->  		vma->vm_page_prot = drm_dma_prot(map->type, vma);
-> -		/* fall through - to _DRM_SHM */
-> +		fallthrough;	/* to _DRM_SHM */
->  	case _DRM_SHM:
->  		vma->vm_ops = &drm_vm_shm_ops;
->  		vma->vm_private_data = (void *)map;
+> Don't consider pci_request_region() failure for the framebuffer
+> region as fatal error to workaround this issue.
+> 
+> Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
+> index 952199cc0462..dce4672e3fc8 100644
+> --- a/drivers/gpu/drm/bochs/bochs_hw.c
+> +++ b/drivers/gpu/drm/bochs/bochs_hw.c
+> @@ -157,10 +157,8 @@ int bochs_hw_init(struct drm_device *dev)
+>  		size = min(size, mem);
+>  	}
+>  
+> -	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
+> -		DRM_ERROR("Cannot request framebuffer\n");
+> -		return -EBUSY;
+> -	}
+> +	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
+> +		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
+>  
+>  	bochs->fb_map = ioremap(addr, size);
+>  	if (bochs->fb_map == NULL) {
 > -- 
-> 2.24.0
+> 2.18.2
 > 
 
 -- 
