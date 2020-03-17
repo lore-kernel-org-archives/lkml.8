@@ -2,95 +2,96 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746EEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17734C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A32320724
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC2820738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:03:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFgcbP6P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sCqQM4hm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgCQQDt (ORCPT
+        id S1726780AbgCQQDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:03:49 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36388 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbgCQQDt (ORCPT
+        Tue, 17 Mar 2020 12:03:54 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43660 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbgCQQDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:03:49 -0400
-Received: by mail-io1-f68.google.com with SMTP id d15so21602564iog.3;
-        Tue, 17 Mar 2020 09:03:48 -0700 (PDT)
+        Tue, 17 Mar 2020 12:03:53 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l13so17850247qtv.10;
+        Tue, 17 Mar 2020 09:03:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=tfPTr9c+gmB2qTQXjvO8mo7dSeG1TgIoTlBZZFCDn7A=;
-        b=sFgcbP6PYCeuXhHguj4wST4XkgksmzOKH68kMPZb29cQrqJ8NlwS3mBc0LSCQWO7kg
-         cx/GnKV0gpFGuaNWIGAijeCiAee0Z2ezPDnuI5R0QoXCAzAW3y+jJkZlA9PJyt2A6BZO
-         Z6hODg53D9XBSlUDWM6rVHw3d4/M6AVMWWuZOzeXMkvLVowV+TDPeMjuTPc1O5TvhBlC
-         d2qhzVL93JcosAKoeHZYxwZnDCy8ELFK3YTKvbrzjnpiQeGNN7q5Q+3FsuOrlLrYCTxp
-         BrExwUtsqBDY9eLL7JJG+VfJjsD4vNU8GkivB9utlQfCSVCckYqsqO3yy0+t7KoUhGDu
-         2LsQ==
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=1cq61pMKrXnE/8ZgHPZoRI5nasAc/Gz5oZHWr1Wic8E=;
+        b=sCqQM4hmv6145mTEPmet3o0Tv8fHUfT2SJ2jUgYxjyqHesDKwMrZMju/OqsGJ0KkUy
+         Zb8goI+G07BzcmChJSPGxgc0JO1adCIwbLtyLmrdlfP+y69SolfWTYipGyNYJWZngUgo
+         9/fFLBnjNH+njW6YDJY4ELS80/jIqjhJircFhujElwB6HiuMs/UJgZzrDyw90jrMNgyV
+         72LtRXZvRNBQLqAzZbwUBqPrxAI4hHj2pbSEzixtYzJfJF7ntJ3zDWg3GxEhDE5wOges
+         DMuWktybl8vpQKEWR25hXv2ITdLUyW2kck/j2ahjPVwdeWs9RM1Bu4bbe8v8HWhRBf5d
+         sxyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=tfPTr9c+gmB2qTQXjvO8mo7dSeG1TgIoTlBZZFCDn7A=;
-        b=cgPe1zlGfcPp18K/wFzpV8q3MunJZF6NfwiYuaCThBFgKouJYQnWXPiUKjmqcS4XWk
-         SiUYqyMmgzec9mwwASPWcHT2l1gjMJlgL0bdO2b1RXY3/ts9da66DDAaOOmH80p6Q/JX
-         kfXokA497mQgrntkk1WgVFx7oG9hctuOb4OMkp8LOuxgwJFxwLpcXaKN3k3rBX5xXw9X
-         tLxjEZBGcgSa4sUGw83wTNaiEIqLUoQiTY+OrNbAgHIa+JnhZOcLyBZ9q5PGhc2JjRZ7
-         XO89jGmRzlet0FB6TYG/iPhZMIZsIi92JE5FRiSxsTF/Un+gF0JWMHdHf69OUlRT+SyR
-         /g3Q==
-X-Gm-Message-State: ANhLgQ0qGMtvN8BbRhuXwlQjYZdP22beeF/BdTyllMfBWmRe84jnBYjK
-        2AajB3DGFgfjitgqZYYP/LVtyJc6omRtzdX/mAM=
-X-Google-Smtp-Source: ADFU+vuvqVM8SBN+mnHO5V/axjhjcAeMTsMpcyTZV9/6JFSY/eo2kIogHLHEd9X2o9Jb5+gix3jKpSQvQZynyTqZiSo=
-X-Received: by 2002:a5d:894d:: with SMTP id b13mr4755616iot.0.1584461028151;
- Tue, 17 Mar 2020 09:03:48 -0700 (PDT)
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=1cq61pMKrXnE/8ZgHPZoRI5nasAc/Gz5oZHWr1Wic8E=;
+        b=g4wriJL2WGl97qBIJJ2UbFu5NpMo/Q9wfuMuRDyw6m0bxB2PwhnPHDQvX8PwKXcgSu
+         /nlDshhLdG8dXgJFL0xb/cTHsTJ5fkYUqIPtF0BgD2Rb4DcKs2vRnvzyOKDwM8fCx2OR
+         YhcBV5S2jgz7T87D3pxNoaHl1KYntNCaVkQywiO2bzayOcV03hd6kyCIXQIyuVjUDhgm
+         fAytFwz7/tBoDsOzqcJcx7zqac99Mxbo28Qz9NbX/SidZxEcIoixlfPWasmae9yBPXAa
+         hSODuYAOjUu7aJ6HtaZAOMHNQmS9mqV+lVozSyxdgJBhutXmWtMTlrL039FLvRyxSQYD
+         QihA==
+X-Gm-Message-State: ANhLgQ1qoOQVZyn86uSOztWxSopYQOISeRkC50oRSZW9qFSu73kLeHBH
+        KUmdYBmCPe0a9QRHhZzAzCA=
+X-Google-Smtp-Source: ADFU+vt7FKNB0A6TEbsFTVfek3+MsRk98Sx7N8uZNFeebxxE9XulpOQvjLTKwJGXOtQ+xV1zLn8qEQ==
+X-Received: by 2002:ac8:3671:: with SMTP id n46mr6298448qtb.33.1584461031859;
+        Tue, 17 Mar 2020 09:03:51 -0700 (PDT)
+Received: from ?IPv6:2620:cc:8000:1c83:c194:7ea1:d9a4:fef8? ([2620:cc:8000:1c83:c194:7ea1:d9a4:fef8])
+        by smtp.gmail.com with ESMTPSA id 31sm2418634qta.56.2020.03.17.09.03.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 09:03:51 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 12:03:48 -0400
+User-Agent: K-9 Mail for Android
+In-Reply-To: <9ae33061-1595-4387-5767-79437b2ff2ae@lwfinger.net>
+References: <C9F34A4B-E3F3-4D7A-B870-058C8D4871B9@gmail.com> <9ae33061-1595-4387-5767-79437b2ff2ae@lwfinger.net>
 MIME-Version: 1.0
-References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <a46938d227f6a11c010943800450a10aac39b7d3.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20200317144203.GE23471@infradead.org> <ebb79d02-53f5-cc23-0b38-72a351a05097@linux.intel.com>
- <20200317150735.GA653@infradead.org>
-In-Reply-To: <20200317150735.GA653@infradead.org>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Tue, 17 Mar 2020 11:03:36 -0500
-Message-ID: <CABhMZUUn2RJWRTGc7xa1XcV3ozBOV24jjwhf6k08sP7XC1ETkw@mail.gmail.com>
-Subject: Re: [PATCH v17 06/12] Documentation: PCI: Remove reset_link references
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: PROBLEM: 5.6.0-rc6 + Realtek RTL8188CUS wifi dongle: 8051 reset failed!
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Jes Sorensen <Jes.Sorensen@gmail.com>,
+        linux-wireless@vger.kernel.org
+CC:     kernel list <linux-kernel@vger.kernel.org>
+From:   AC <achirvasub@gmail.com>
+Message-ID: <0B600F12-BD49-446B-9B4B-F6E873FB91B0@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:09 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Tue, Mar 17, 2020 at 08:05:50AM -0700, Kuppuswamy, Sathyanarayanan wrote:
-> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > >
-> > >
-> > > This should be folded into the patch removing the method.
-> > This is also folded in the mentioned patch.
-> > https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=review/edr&id=7a18dc6506f108db3dc40f5cd779bc15270c4183
->
-> I can't find that series anywhere on the list.  What did I miss?
 
-We've still been discussing other issues (access to AER registers,
-synchronization between EDR and hotplug, etc) in other parts of this
-thread.  The git branch Sathy pointed to above is my local branch.
-I'll send it to the list before putting it into -next, but I wanted to
-make progress on some of these other issues first.
 
-Bjorn
+On March 17, 2020 10:52:14 AM EDT, Larry Finger <Larry=2EFinger@lwfinger=
+=2Enet> wrote:
+>
+>Please bisect this problem=2E No one else has reported it, thus it may
+>depend on=20
+>some specific configuration of your system=2E
+>
+
+I will try=2E
+
+>Was 5=2E6=2E0-rc5 OK?
+>
+
+rc5 showed the same dmesg noise=2E
+
