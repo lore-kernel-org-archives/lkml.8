@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0472AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B380C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E5220658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6134D20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443976;
-	bh=OOSINW/hyFAGnHO/xbPruDAzEoRO0OuNE9KOW1QvA0w=;
+	s=default; t=1584443981;
+	bh=zIy4PtTqHP5sG2ZDhv6mTXuYL6t8WgXpvLShD16abIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JYs9ZP+g2zVp1d0LuQjfSCo0ipxGWzebvi+kv9GrCG7HypLr8fYBLiLyy42nyAttP
-	 Za77OBH+bKnxo5Z1oe9etBhY5geFu/uaR10j5FG92Oo4FPk5PZCpsrsRPgtKHeE8kT
-	 dVn+XRUpzXhcOlYEcNKtUXeAL25yKbv5RKvoTrAA=
+	b=CIc1TLQtyGiPJXKK3KT/z3ZYokwr9TxFSwpH7SMAeBwec5C8aPMnPUNBZmbnQlTrl
+	 o6/kDs+itmHwrzA/fFZ33jOB4uY//k9PrY51V59AA6+0LMysl6NwoCjeO+pTCJxMaS
+	 WH4msc7W4U5G4FcfqIpyaePKCRqBIGm3Yr+kA15k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgCQLDp (ORCPT
+        id S1727998AbgCQLTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:03:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:19:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727764AbgCQLDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:03:31 -0400
+        id S1728152AbgCQLDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:03:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCFA920658;
-        Tue, 17 Mar 2020 11:03:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F56520658;
+        Tue, 17 Mar 2020 11:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443011;
-        bh=OOSINW/hyFAGnHO/xbPruDAzEoRO0OuNE9KOW1QvA0w=;
+        s=default; t=1584443024;
+        bh=zIy4PtTqHP5sG2ZDhv6mTXuYL6t8WgXpvLShD16abIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ffgVd89BHKqmY+L4L0bVoCJDWdATKh+zVRKtLE91tHoWBLM9s4/0ZEqCttJ+fuVa5
-         n6kPPVjB9sHxO/dvnm7EsaphRWm3mKNXQptuGdedC+rtHvZKSAY+lt62E1hhUu1vwJ
-         orOoTFMzkYKPE3EXvoXodJwwCwpDGb9I2hCGgJeI=
+        b=ZgSx755Te08PrUqJSGxOL+msB8LSqRdPG5b65w1V65elLUH7gg0dgppyT0cjikT80
+         WiAaWnfHcj91jshHBIdpLaE2QhiooqoaJZ2akH+Qlf+DHH2tmgV3u4+uagM5CcYqNb
+         iNmIvr19HWi0FPlFDPgVwVvlrhzP8mOcpODc4j3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 064/123] netfilter: nf_conntrack: ct_cpu_seq_next should increase position index
-Date:   Tue, 17 Mar 2020 11:54:51 +0100
-Message-Id: <20200317103314.124953256@linuxfoundation.org>
+        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH 5.4 068/123] workqueue: dont use wq_select_unbound_cpu() for bound works
+Date:   Tue, 17 Mar 2020 11:54:55 +0100
+Message-Id: <20200317103314.476639796@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -59,35 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Hillf Danton <hdanton@sina.com>
 
-commit dc15af8e9dbd039ebb06336597d2c491ef46ab74 upstream.
+commit aa202f1f56960c60e7befaa0f49c72b8fa11b0a8 upstream.
 
-If .next function does not change position index,
-following .show function will repeat output related
-to current position index.
+wq_select_unbound_cpu() is designed for unbound workqueues only, but
+it's wrongly called when using a bound workqueue too.
 
-Cc: stable@vger.kernel.org
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixing this ensures work queued to a bound workqueue with
+cpu=WORK_CPU_UNBOUND always runs on the local CPU.
+
+Before, that would happen only if wq_unbound_cpumask happened to include
+it (likely almost always the case), or was empty, or we got lucky with
+forced round-robin placement.  So restricting
+/sys/devices/virtual/workqueue/cpumask to a small subset of a machine's
+CPUs would cause some bound work items to run unexpectedly there.
+
+Fixes: ef557180447f ("workqueue: schedule WORK_CPU_UNBOUND work on wq_unbound_cpumask CPUs")
+Cc: stable@vger.kernel.org # v4.5+
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+[dj: massage changelog]
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_conntrack_standalone.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/workqueue.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/net/netfilter/nf_conntrack_standalone.c
-+++ b/net/netfilter/nf_conntrack_standalone.c
-@@ -411,7 +411,7 @@ static void *ct_cpu_seq_next(struct seq_
- 		*pos = cpu + 1;
- 		return per_cpu_ptr(net->ct.stat, cpu);
- 	}
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1417,14 +1417,16 @@ static void __queue_work(int cpu, struct
+ 		return;
+ 	rcu_read_lock();
+ retry:
+-	if (req_cpu == WORK_CPU_UNBOUND)
+-		cpu = wq_select_unbound_cpu(raw_smp_processor_id());
 -
-+	(*pos)++;
- 	return NULL;
- }
+ 	/* pwq which will be used unless @work is executing elsewhere */
+-	if (!(wq->flags & WQ_UNBOUND))
+-		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
+-	else
++	if (wq->flags & WQ_UNBOUND) {
++		if (req_cpu == WORK_CPU_UNBOUND)
++			cpu = wq_select_unbound_cpu(raw_smp_processor_id());
+ 		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
++	} else {
++		if (req_cpu == WORK_CPU_UNBOUND)
++			cpu = raw_smp_processor_id();
++		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
++	}
  
+ 	/*
+ 	 * If @work was previously on a different pool, it might still be
 
 
