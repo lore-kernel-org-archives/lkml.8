@@ -2,67 +2,55 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5C6C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF83C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61EEF20752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C74020752
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584450675;
-	bh=YcuIoVrIQeXiuSD1j/Q1Lk0qQ1T1L/MGqpKL3q2kgPE=;
+	s=default; t=1584450678;
+	bh=92ammI6uJRb3AZ8FcF6Fkf3W17Lp//0sZz89b0+sTMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PZ+G1s4RxI8Ctvo0G4aDfu76qlqc7Ni9Jn0GRWBl3Cxfy8iqFpzteMjKtXRjEHUBX
-	 P/k3z0Plzd83DwIm98apEgVTj7QQpsXfexecsstK1udAENMOrO36BwZwx3XIoikUbd
-	 MSV2EydNzuypuI9VLN40k1TRIKR+NFzopHHGTi84=
+	b=SbSgHHo5ReZG+Ne1zHirrnuq9y1ilpjudJsAy4+s2PPXMntcX1QizE00rqdobmbAW
+	 +tWmDSyu2ZDJRkyU9NRYHrGaya+HPVl4liu22fbr/nnmsi3y4CbXW4XKbEuafKQFez
+	 TkEQlOaNVlBQ1gQx1g33zztl7arVjEL3ddh+HzcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgCQNLO (ORCPT
+        id S1726864AbgCQNK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37820 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 09:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbgCQNK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726112AbgCQNK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 09:10:56 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6C3620770;
+        by mail.kernel.org (Postfix) with ESMTPSA id 486B7206EC;
         Tue, 17 Mar 2020 13:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584450656;
-        bh=YcuIoVrIQeXiuSD1j/Q1Lk0qQ1T1L/MGqpKL3q2kgPE=;
+        s=default; t=1584450655;
+        bh=92ammI6uJRb3AZ8FcF6Fkf3W17Lp//0sZz89b0+sTMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcuEk5UvdTtgQPs7Io6jULVaHJVkCLU/zHbTq0oqrBwW/D/cKjSEoWtWxd+YhhLXk
-         B/FevolAtqO81SIqhZ/F73qyB/NPiLuKpSDQYQvO3t/qwbmLe/qamZUUhl28qWmSS2
-         8K5MJOGjJDqxW7WdgLywez4tn8tuWN4jpAQhG/3M=
+        b=RRSzq/DjBIREptoAJ5kZbOdC7cO76YDgciz5tpSEnxjBfmMeLnwpFhIQ2YYY6N77I
+         pMQf4eKM4gpgiCzMYXFIQKT08RJNEYSQjU6mKoRS37VmDv/8I8Is/mDgkh176WYhnc
+         D8UfSo6SPJMfqtoE+7oLERAedMLmV+UVUa2/xjtk=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jEBzh-0006S5-Kz; Tue, 17 Mar 2020 14:10:53 +0100
+        id 1jEBzh-0006Rp-FV; Tue, 17 Mar 2020 14:10:53 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Ben Peled <bpeled@marvell.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 05/12] docs: dt: fix references to ap806-system-controller.txt
-Date:   Tue, 17 Mar 2020 14:10:44 +0100
-Message-Id: <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
+        Rob Herring <robh@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 01/12] MAINTAINERS: dt: update display/allwinner file entry
+Date:   Tue, 17 Mar 2020 14:10:40 +0100
+Message-Id: <3f84175b93dd54db4565abf560b59644f7245894.1584450500.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1584450500.git.mchehab+huawei@kernel.org>
 References: <cover.1584450500.git.mchehab+huawei@kernel.org>
@@ -73,43 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ap806-system-controller.txt was renamed to ap80x-system-controller.txt.
+Changeset f5a98bfe7b37 ("dt-bindings: display: Convert Allwinner display pipeline to schemas")
+split Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+into several files. Yet, it kept the old place at MAINTAINERS.
 
-Update its references accordingly.
+Update it to point to the new place.
 
-Fixes: 2537831bbc19 ("dt-bindings: ap80x: replace AP806 with AP80x")
+Fixes: f5a98bfe7b37 ("dt-bindings: display: Convert Allwinner display pipeline to schemas")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/bindings/gpio/gpio-mvebu.txt        | 2 +-
- Documentation/devicetree/bindings/thermal/armada-thermal.txt | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-index 2e097b57f170..0fc6700ed800 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-@@ -14,7 +14,7 @@ Required properties:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index be44251d1e04..9f3ce3f8df56 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5552,7 +5552,7 @@ M:	Chen-Yu Tsai <wens@csie.org>
+ L:	dri-devel@lists.freedesktop.org
+ S:	Supported
+ F:	drivers/gpu/drm/sun4i/
+-F:	Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++F:	Documentation/devicetree/bindings/display/allwinner*
+ T:	git git://anongit.freedesktop.org/drm/drm-misc
  
-     "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
-     SoCs (either from AP or CP), see
--    Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-+    Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-     for specific details about the offset property.
- 
- - reg: Address and length of the register set for the device. Only one
-diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-index f3b441100890..b0bee7e42038 100644
---- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-@@ -12,7 +12,7 @@ Required properties:
- 
- Note: these bindings are deprecated for AP806/CP110 and should instead
- follow the rules described in:
--Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-+Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
- Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
- 
- - reg: Device's register space.
+ DRM DRIVER FOR ALLWINNER DE2 AND DE3 ENGINE
 -- 
 2.24.1
 
