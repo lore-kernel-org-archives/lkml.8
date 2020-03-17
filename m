@@ -2,103 +2,87 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65F8C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C317CC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA16A20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D90C20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 18:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgCQSVC (ORCPT
+        id S1726623AbgCQSWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 14:21:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55441 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgCQSVC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 14:21:02 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEGpi-00060L-Tq; Tue, 17 Mar 2020 19:20:55 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6764F1C2293;
-        Tue, 17 Mar 2020 19:20:54 +0100 (CET)
-Date:   Tue, 17 Mar 2020 18:20:54 -0000
-From:   "tip-bot2 for Baoquan He" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Remove the now redundant N_MEMORY check
-Cc:     Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200311011823.27740-1-bhe@redhat.com>
-References: <20200311011823.27740-1-bhe@redhat.com>
+        Tue, 17 Mar 2020 14:22:53 -0400
+Received: from mga04.intel.com ([192.55.52.120]:30210 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbgCQSWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 14:22:53 -0400
+IronPort-SDR: 7c1EC2KIzUAwU6HcZeWRhvsfqTkhjR/AHdzdvGcHeej+/uSQ9nHh3kiQ6Lks9mbqcraVh2Xzr+
+ kRG372nkY8tQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 11:22:52 -0700
+IronPort-SDR: wfhquiynLjI52JTnso+EMzRHDns9uNj7cZE3ex2Z0u/q8HwyXcRl3UAcbQu3HtPmznTB4qd1Wv
+ MaZn8sNfMiPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
+   d="scan'208";a="247911240"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 17 Mar 2020 11:22:52 -0700
+Date:   Tue, 17 Mar 2020 11:22:52 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH v2 31/32] KVM: nVMX: Don't flush TLB on nested VM
+ transition with EPT enabled
+Message-ID: <20200317182251.GD12959@linux.intel.com>
+References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
+ <20200317045238.30434-32-sean.j.christopherson@intel.com>
+ <97f91b27-65ac-9187-6b60-184e1562d228@redhat.com>
 MIME-Version: 1.0
-Message-ID: <158446925404.28353.8374899643384906431.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97f91b27-65ac-9187-6b60-184e1562d228@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/mm branch of tip:
+On Tue, Mar 17, 2020 at 06:18:37PM +0100, Paolo Bonzini wrote:
+> On 17/03/20 05:52, Sean Christopherson wrote:
+> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> > index d816f1366943..a77eab5b0e8a 100644
+> > --- a/arch/x86/kvm/vmx/nested.c
+> > +++ b/arch/x86/kvm/vmx/nested.c
+> > @@ -1123,7 +1123,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
+> >  	}
+> >  
+> >  	if (!nested_ept)
+> > -		kvm_mmu_new_cr3(vcpu, cr3, false);
+> > +		kvm_mmu_new_cr3(vcpu, cr3, enable_ept);
+> 
+> Even if enable_ept == false, we could have already scheduled or flushed
+> the TLB soon due to one of 1) nested_vmx_transition_tlb_flush 2)
+> vpid_sync_context in prepare_vmcs02 3) the processor doing it for
+> !enable_vpid.
+> 
+> So for !enable_ept only KVM_REQ_MMU_SYNC is needed, not
+> KVM_REQ_TLB_FLUSH_CURRENT I think.  Worth adding a TODO?
 
-Commit-ID:     aa61ee7b9ee3cb84c0d3a842b0d17937bf024c46
-Gitweb:        https://git.kernel.org/tip/aa61ee7b9ee3cb84c0d3a842b0d17937bf024c46
-Author:        Baoquan He <bhe@redhat.com>
-AuthorDate:    Wed, 11 Mar 2020 09:18:23 +08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 17 Mar 2020 19:12:39 +01:00
-
-x86/mm: Remove the now redundant N_MEMORY check
-
-In commit
-
-  f70029bbaacb ("mm, memory_hotplug: drop CONFIG_MOVABLE_NODE")
-
-the dependency on CONFIG_MOVABLE_NODE was removed for N_MEMORY.
-Before, CONFIG_HIGHMEM && !CONFIG_MOVABLE_NODE could make (N_MEMORY ==
-N_NORMAL_MEMORY) be true.
-
-After that commit, N_MEMORY cannot be equal to N_NORMAL_MEMORY. So the
-conditional check in paging_init() is not needed anymore, remove it.
-
- [ bp: Massage. ]
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Link: https://lkml.kernel.org/r/20200311011823.27740-1-bhe@redhat.com
----
- arch/x86/mm/init_64.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index abbdecb..0a14711 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -818,8 +818,7 @@ void __init paging_init(void)
- 	 *	 will not set it back.
- 	 */
- 	node_clear_state(0, N_MEMORY);
--	if (N_MEMORY != N_NORMAL_MEMORY)
--		node_clear_state(0, N_NORMAL_MEMORY);
-+	node_clear_state(0, N_NORMAL_MEMORY);
- 
- 	zone_sizes_init();
- }
+Now that you point it out, I think it makes sense to unconditionally pass
+%true here, i.e. rely 100% on nested_vmx_transition_tlb_flush() to do the
+right thing.
