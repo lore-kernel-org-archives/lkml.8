@@ -2,86 +2,104 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB73C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22269C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECAEF20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6002073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584483470;
+	bh=sY4cOhcMEMawFpaLftRkDuoAZYkzfT6Iq/pDMIVQ+QM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mJ9zHmJmzoLnVMK3Um7ds4QAw68QN7YiJWsHSN9QJH03wGuQD3yVhyFbJDv9x4AM2
+	 cZgAZ7SgmpAI6OUErPxpkFfdTiUYGCZlJ9yB+E4sNWpW4noWBG6X7129sc7vAyMJ6r
+	 wVFeEnqGMd1D7pnm9lw4zRKTDJJr0a3hy8myTvjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgCQWPU (ORCPT
+        id S1726976AbgCQWRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:15:20 -0400
-Received: from smtprelay0202.hostedemail.com ([216.40.44.202]:46094 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726476AbgCQWPT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:15:19 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id C9D5C181D330D;
-        Tue, 17 Mar 2020 22:15:18 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: chin52_2e3840607711f
-X-Filterd-Recvd-Size: 2086
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 17 Mar 2020 22:15:17 +0000 (UTC)
-Message-ID: <623eb1bc61951ed3c68a9224b9aa99a25e763913.camel@perches.com>
-Subject: Re: [PATCH 1/3] drm: drm_vm: Use fallthrough;
-From:   Joe Perches <joe@perches.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date:   Tue, 17 Mar 2020 15:13:29 -0700
-In-Reply-To: <20200317164806.GO2363188@phenom.ffwll.local>
-References: <cover.1584040050.git.joe@perches.com>
-         <398db73cdc8a584fd7f34f5013c04df13ba90f64.1584040050.git.joe@perches.com>
-         <20200317164806.GO2363188@phenom.ffwll.local>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 17 Mar 2020 18:17:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgCQWRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:17:49 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A73206EC;
+        Tue, 17 Mar 2020 22:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584483468;
+        bh=sY4cOhcMEMawFpaLftRkDuoAZYkzfT6Iq/pDMIVQ+QM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0QGP7zI9fM58OdTLqDxjLIcR2NDM+WwQ4MBisE/1SCYXBDjdNnC+PTF/305E5GyST
+         kIqZVvbLlzYcUqBHggnCaCPlwSH7VtJqmiU8YuCYpkjEJG1LvNZnpjOCI11ZdmF4Ey
+         0175SzJkfPb8KuTVROY2dRPony8hRwWy9EPhI0ys=
+Date:   Tue, 17 Mar 2020 22:17:43 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ardb@kernel.org
+Subject: Re: [Patch][Fix] crypto: arm{,64} neon: memzero_explicit aes-cbc key
+Message-ID: <20200317221743.GD20788@willie-the-truck>
+References: <20200313110258.94A0668C4E@verein.lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313110258.94A0668C4E@verein.lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-17 at 17:48 +0100, Daniel Vetter wrote:
-> On Thu, Mar 12, 2020 at 12:17:12PM -0700, Joe Perches wrote:
-> > Convert /* fallthrough */ style comments to fallthrough;
-> > 
-> > Convert the various uses of fallthrough comments to fallthrough;
-> > 
-> > Done via script
-> > Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
-> > 
-> > And by hand:
-> > 
-> > This file has a fallthrough comment outside of an #ifdef block
-> > that causes gcc to emit a warning if converted in-place.
-> > 
-> > So move the new fallthrough; inside the containing #ifdef/#endif too.
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
+[+Ard]
+
+On Fri, Mar 13, 2020 at 12:02:58PM +0100, Torsten Duwe wrote:
+> From: Torsten Duwe <duwe@suse.de>
 > 
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> At function exit, do not leave the expanded key in the rk struct
+> which got allocated on the stack.
 > 
-> I'm assuming this all lands through a special pull? Or should I apply
-> this?
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
+> ---
+> Another small fix from our FIPS evaluation. I hope you don't mind I merged
+> arm32 and arm64 into one patch -- this is really simple.
+> --- a/arch/arm/crypto/aes-neonbs-glue.c
+> +++ b/arch/arm/crypto/aes-neonbs-glue.c
+> @@ -138,6 +138,7 @@ static int aesbs_cbc_setkey(struct crypto_skcipher *tfm, const u8 *in_key,
+>  	kernel_neon_begin();
+>  	aesbs_convert_key(ctx->key.rk, rk.key_enc, ctx->key.rounds);
+>  	kernel_neon_end();
+> +	memzero_explicit(&rk, sizeof(rk));
+>  
+>  	return crypto_cipher_setkey(ctx->enc_tfm, in_key, key_len);
+>  }
+> diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
+> index e3e27349a9fe..c0b980503643 100644
+> --- a/arch/arm64/crypto/aes-neonbs-glue.c
+> +++ b/arch/arm64/crypto/aes-neonbs-glue.c
+> @@ -151,6 +151,7 @@ static int aesbs_cbc_setkey(struct crypto_skcipher *tfm, const u8 *in_key,
+>  	kernel_neon_begin();
+>  	aesbs_convert_key(ctx->key.rk, rk.key_enc, ctx->key.rounds);
+>  	kernel_neon_end();
+> +	memzero_explicit(&rk, sizeof(rk));
+>  
+>  	return 0;
+>  }
 
-Hi Daniel.
+I'm certainly not a crypto person, but this looks sensible to me and I
+couldn't find any other similar stack variable usage under
+arch/arm64/crypto/ at a quick glance.
 
-I think you should apply this.
+Acked-by: Will Deacon <will@kernel.org>
 
-The idea here is to allow a scripted conversion at some
-point and this patch is necessary to avoid new compiler
-warnings after running the script.
-
-
+Will
