@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0165DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94BFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C396A2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9878820658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444066;
-	bh=cyNgpEzyGuLvWLDc2ElLiyy0rVlPN1ISvm0FUaXmfMM=;
+	s=default; t=1584444070;
+	bh=NJ3VBxsbkJ2nRjiRJuZezISDL5eV2Iu2tM7LeVd/8iE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rOPy9YdtIw+E8cXwAZx3oZUTarvQA3fr5jSFOwCKNEbC6BL/jrLFmJy6Oee6eKV43
-	 e4kNSVSr7IPBwoPoGKzbY38wVgtBqO8hLuFOASjTCkiLi3lplmRUC4roMiUCDdM+Zo
-	 SGhWuJXzNEOWJgab3QEIsq6gAp/O8/8ubpHa1C1s=
+	b=ANoQYj8mMDme/8mlWxJR1f9RdP1h9YpqhTIY6ovW0VUfq72jjAy9p70NejAnEIF1D
+	 kxWxlHNPVuJsNnW5bNN6skuWeCwvkVyTmrlGLuEjmkAGxFhHz8u+gRRGawBD+Z4hvp
+	 4R1brnQ1FCjakUFsLwUqy1KBOTljGjVsLqHKGWsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgCQLVG (ORCPT
+        id S1727447AbgCQK7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38004 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 06:59:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727114AbgCQK7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:59:30 -0400
+        id S1727434AbgCQK7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:59:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5FC820658;
-        Tue, 17 Mar 2020 10:59:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9141420757;
+        Tue, 17 Mar 2020 10:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442770;
-        bh=cyNgpEzyGuLvWLDc2ElLiyy0rVlPN1ISvm0FUaXmfMM=;
+        s=default; t=1584442759;
+        bh=NJ3VBxsbkJ2nRjiRJuZezISDL5eV2Iu2tM7LeVd/8iE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e7zuE2mikSrD6SGW+l06xHljGfGwcfumBaGh757n08z8RR19VR5UajXPdUXF5SN4W
-         JRqDSab/3dSsTPfBNc081b5vjq/4yIYqoWoXU+LYepB9ieOtPtrf12e3mABb/tnMmm
-         ZiEKoN/pp0ehgrFtjkQU5gNniZWBByNHNoWWBN1s=
+        b=pbUYO9r5aKyVMJjtGZD90dGgNoNN9K2tS/oAxmV5Q2bWBd8y/H7dXSxIlpjNsJTkL
+         ArdAaiCJND65knFooeGHrVLA6f60sEGKysEXAHkvzjr4G//rq5SAWBo+IOYipZdfSz
+         RuPeaUBUaM+c3lNC6X0xH/A6ZWFgMHNoIe1NTtvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 28/89] can: add missing attribute validation for termination
-Date:   Tue, 17 Mar 2020 11:54:37 +0100
-Message-Id: <20200317103303.115048981@linuxfoundation.org>
+Subject: [PATCH 4.19 34/89] nfc: add missing attribute validation for deactivate target
+Date:   Tue, 17 Mar 2020 11:54:43 +0100
+Message-Id: <20200317103303.794124420@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
 References: <20200317103259.744774526@linuxfoundation.org>
@@ -62,29 +61,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit ab02ad660586b94f5d08912a3952b939cf4c4430 ]
+[ Upstream commit 88e706d5168b07df4792dbc3d1bc37b83e4bd74d ]
 
-Add missing attribute validation for IFLA_CAN_TERMINATION
+Add missing attribute validation for NFC_ATTR_TARGET_INDEX
 to the netlink policy.
 
-Fixes: 12a6075cabc0 ("can: dev: add CAN interface termination API")
+Fixes: 4d63adfe12dd ("NFC: Add NFC_CMD_DEACTIVATE_TARGET support")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/can/dev.c |    1 +
+ net/nfc/netlink.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/net/can/dev.c
-+++ b/drivers/net/can/dev.c
-@@ -892,6 +892,7 @@ static const struct nla_policy can_polic
- 				= { .len = sizeof(struct can_bittiming) },
- 	[IFLA_CAN_DATA_BITTIMING_CONST]
- 				= { .len = sizeof(struct can_bittiming_const) },
-+	[IFLA_CAN_TERMINATION]	= { .type = NLA_U16 },
- };
- 
- static int can_validate(struct nlattr *tb[], struct nlattr *data[],
+--- a/net/nfc/netlink.c
++++ b/net/nfc/netlink.c
+@@ -44,6 +44,7 @@ static const struct nla_policy nfc_genl_
+ 	[NFC_ATTR_DEVICE_NAME] = { .type = NLA_STRING,
+ 				.len = NFC_DEVICE_NAME_MAXSIZE },
+ 	[NFC_ATTR_PROTOCOLS] = { .type = NLA_U32 },
++	[NFC_ATTR_TARGET_INDEX] = { .type = NLA_U32 },
+ 	[NFC_ATTR_COMM_MODE] = { .type = NLA_U8 },
+ 	[NFC_ATTR_RF_MODE] = { .type = NLA_U8 },
+ 	[NFC_ATTR_DEVICE_POWERED] = { .type = NLA_U8 },
 
 
