@@ -2,101 +2,51 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764A4C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6A4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32024205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9F4205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 06:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725906AbgCQGut (ORCPT
+        id S1726016AbgCQGvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 02:50:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15952 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725536AbgCQGus (ORCPT
+        Tue, 17 Mar 2020 02:51:22 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:33049 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725928AbgCQGvW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 02:50:48 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02H6Z5Lr029838
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:50:46 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ytb4u0rkk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 02:50:46 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <maddy@linux.ibm.com>;
-        Tue, 17 Mar 2020 06:50:44 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Mar 2020 06:50:39 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02H6ocFu58261578
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Mar 2020 06:50:38 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C675AE051;
-        Tue, 17 Mar 2020 06:50:38 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 12600AE045;
-        Tue, 17 Mar 2020 06:50:31 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.82.238])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Mar 2020 06:50:30 +0000 (GMT)
-Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
- information
-To:     Kim Phillips <kim.phillips@amd.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>
-References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
- <20200302101332.GS18400@hirez.programming.kicks-ass.net>
- <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
- <df966d6e-8898-029f-e697-8496500a1663@amd.com>
- <2550ec4d-a015-4625-ca24-ff10632dbe2e@linux.ibm.com>
- <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
- <8a4d966c-acc9-b2b7-8ab7-027aefab201c@linux.ibm.com>
- <f226f4c5-6310-fd6b-ee76-aebd938ec212@amd.com>
-From:   maddy <maddy@linux.ibm.com>
-Date:   Tue, 17 Mar 2020 12:20:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 02:51:22 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TsrGYXe_1584427853;
+Received: from 30.27.116.176(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TsrGYXe_1584427853)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 17 Mar 2020 14:50:54 +0800
+Subject: Re: [PATCH 7/7] X.509: support OSCCA sm2-with-sm3 certificate
+ verification
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        David Miller <davem@davemloft.net>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>,
+        zohar@linux.ibm.com,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+References: <20200216085928.108838-1-tianjia.zhang@linux.alibaba.com>
+ <20200216085928.108838-8-tianjia.zhang@linux.alibaba.com>
+ <CAOtvUMdn+92vbEZ=V=e7PSuKwP3b1K==jFKjVWopVqJdfXzZxA@mail.gmail.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <40ed775a-064c-f483-4ab6-af2215e549e3@linux.alibaba.com>
+Date:   Tue, 17 Mar 2020 14:50:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <f226f4c5-6310-fd6b-ee76-aebd938ec212@amd.com>
+In-Reply-To: <CAOtvUMdn+92vbEZ=V=e7PSuKwP3b1K==jFKjVWopVqJdfXzZxA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 20031706-0008-0000-0000-0000035E89A2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031706-0009-0000-0000-00004A7FDF2B
-Message-Id: <0c5e94a3-e86e-f7cb-d668-d542b3a8ae29@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-17_01:2020-03-12,2020-03-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- suspectscore=0 malwarescore=0 spamscore=0 clxscore=1015 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003170026
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -104,193 +54,168 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/13/20 4:08 AM, Kim Phillips wrote:
-> On 3/11/20 11:00 AM, Ravi Bangoria wrote:
->> Hi Kim,
-> Hi Ravi,
->
->> On 3/6/20 3:36 AM, Kim Phillips wrote:
->>>> On 3/3/20 3:55 AM, Kim Phillips wrote:
->>>>> On 3/2/20 2:21 PM, Stephane Eranian wrote:
->>>>>> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>>>>>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
->>>>>>>> Modern processors export such hazard data in Performance
->>>>>>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
->>>>>>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
->>>>>>>> AMD[3] provides similar information.
->>>>>>>>
->>>>>>>> Implementation detail:
->>>>>>>>
->>>>>>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
->>>>>>>> If it's set, kernel converts arch specific hazard information
->>>>>>>> into generic format:
->>>>>>>>
->>>>>>>>      struct perf_pipeline_haz_data {
->>>>>>>>             /* Instruction/Opcode type: Load, Store, Branch .... */
->>>>>>>>             __u8    itype;
->>>>>>>>             /* Instruction Cache source */
->>>>>>>>             __u8    icache;
->>>>>>>>             /* Instruction suffered hazard in pipeline stage */
->>>>>>>>             __u8    hazard_stage;
->>>>>>>>             /* Hazard reason */
->>>>>>>>             __u8    hazard_reason;
->>>>>>>>             /* Instruction suffered stall in pipeline stage */
->>>>>>>>             __u8    stall_stage;
->>>>>>>>             /* Stall reason */
->>>>>>>>             __u8    stall_reason;
->>>>>>>>             __u16   pad;
->>>>>>>>      };
->>>>>>> Kim, does this format indeed work for AMD IBS?
->>>>> It's not really 1:1, we don't have these separations of stages
->>>>> and reasons, for example: we have missed in L2 cache, for example.
->>>>> So IBS output is flatter, with more cycle latency figures than
->>>>> IBM's AFAICT.
->>>> AMD IBS captures pipeline latency data incase Fetch sampling like the
->>>> Fetch latency, tag to retire latency, completion to retire latency and
->>>> so on. Yes, Ops sampling do provide more data on load/store centric
->>>> information. But it also captures more detailed data for Branch instructions.
->>>> And we also looked at ARM SPE, which also captures more details pipeline
->>>> data and latency information.
->>>>
->>>>>> Personally, I don't like the term hazard. This is too IBM Power
->>>>>> specific. We need to find a better term, maybe stall or penalty.
->>>>> Right, IBS doesn't have a filter to only count stalled or otherwise
->>>>> bad events.  IBS' PPR descriptions has one occurrence of the
->>>>> word stall, and no penalty.  The way I read IBS is it's just
->>>>> reporting more sample data than just the precise IP: things like
->>>>> hits, misses, cycle latencies, addresses, types, etc., so words
->>>>> like 'extended', or the 'auxiliary' already used today even
->>>>> are more appropriate for IBS, although I'm the last person to
->>>>> bikeshed.
->>>> We are thinking of using "pipeline" word instead of Hazard.
->>> Hm, the word 'pipeline' occurs 0 times in IBS documentation.
->> NP. We thought pipeline is generic hw term so we proposed "pipeline"
->> word. We are open to term which can be generic enough.
+On 2020/3/17 14:31, Gilad Ben-Yossef wrote:
+> Hi,
+> 
+> On Sun, Feb 16, 2020 at 11:00 AM Tianjia Zhang
+> <tianjia.zhang@linux.alibaba.com> wrote:
 >>
->>> I realize there are a couple of core pipeline-specific pieces
->>> of information coming out of it, but the vast majority
->>> are addresses, latencies of various components in the memory
->>> hierarchy, and various component hit/miss bits.
->> Yes. we should capture core pipeline specific details. For example,
->> IBS generates Branch unit information(IbsOpData1) and Icahce related
->> data(IbsFetchCtl) which is something that shouldn't be extended as
->> part of perf-mem, IMO.
-> Sure, IBS Op-side output is more 'perf mem' friendly, and so it
-> should populate perf_mem_data_src fields, just like POWER9 can:
->
-> union perf_mem_data_src {
-> ...
->                  __u64   mem_rsvd:24,
->                          mem_snoopx:2,   /* snoop mode, ext */
->                          mem_remote:1,   /* remote */
->                          mem_lvl_num:4,  /* memory hierarchy level number */
->                          mem_dtlb:7,     /* tlb access */
->                          mem_lock:2,     /* lock instr */
->                          mem_snoop:5,    /* snoop mode */
->                          mem_lvl:14,     /* memory hierarchy level */
->                          mem_op:5;       /* type of opcode */
->
->
-> E.g., SIER[LDST] SIER[A_XLATE_SRC] can be used to populate
-> mem_lvl[_num], SIER_TYPE can be used to populate 'mem_op',
-> 'mem_lock', and the Reload Bus Source Encoding bits can
-> be used to populate mem_snoop, right?
-Hi Kim,
+>> The digital certificate format based on SM2 crypto algorithm as
+>> specified in GM/T 0015-2012. It was published by State Encryption
+>> Management Bureau, China.
+>>
+>> The method of generating Other User Information is defined as
+>> ZA=H256(ENTLA || IDA || a || b || xG || yG || xA || yA), it also
+>> specified in https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02.
+>>
+>> The x509 certificate supports sm2-with-sm3 type certificate
+>> verification.  Because certificate verification requires ZA
+>> in addition to tbs data, ZA also depends on elliptic curve
+>> parameters and public key data, so you need to access tbs in sig
+>> and calculate ZA. Finally calculate the digest of the
+>> signature and complete the verification work. The calculation
+>> process of ZA is declared in specifications GM/T 0009-2012
+>> and GM/T 0003.2-2012.
+>>
+>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+>> ---
+>>   crypto/asymmetric_keys/public_key.c      | 61 ++++++++++++++++++++++++
+>>   crypto/asymmetric_keys/x509_public_key.c |  2 +
+>>   include/crypto/public_key.h              |  1 +
+>>   3 files changed, 64 insertions(+)
+>>
+>> diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
+>> index d7f43d4ea925..a51b09ee484d 100644
+>> --- a/crypto/asymmetric_keys/public_key.c
+>> +++ b/crypto/asymmetric_keys/public_key.c
+>> @@ -17,6 +17,11 @@
+>>   #include <keys/asymmetric-subtype.h>
+>>   #include <crypto/public_key.h>
+>>   #include <crypto/akcipher.h>
+> 
+> hmmm... ifdefs like these are kind of ugly.
+> 
+>> +#ifdef CONFIG_CRYPTO_SM2
+>> +#include <crypto/sm3_base.h>
+>> +#include <crypto/sm2.h>
+>> +#include "x509_parser.h"
+>> +#endif
+>>
+>>   MODULE_DESCRIPTION("In-software asymmetric public-key subtype");
+>>   MODULE_AUTHOR("Red Hat, Inc.");
+>> @@ -245,6 +250,54 @@ static int software_key_eds_op(struct kernel_pkey_params *params,
+>>          return ret;
+>>   }
+>>
+>> +#ifdef CONFIG_CRYPTO_SM2
+>> +static int cert_sig_digest_update(const struct public_key_signature *sig,
+>> +                               struct crypto_akcipher *tfm_pkey)
+>> +{
+>> +       struct x509_certificate *cert = sig->cert;
+>> +       struct crypto_shash *tfm;
+>> +       struct shash_desc *desc;
+>> +       size_t desc_size;
+>> +       unsigned char dgst[SM3_DIGEST_SIZE];
+>> +       int ret;
+>> +
+>> +       if (!cert)
+>> +               return -EINVAL;
+>> +
+>> +       ret = sm2_compute_z_digest(tfm_pkey, SM2_DEFAULT_USERID,
+>> +                                       SM2_DEFAULT_USERID_LEN, dgst);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       tfm = crypto_alloc_shash(sig->hash_algo, 0, 0);
+>> +       if (IS_ERR(tfm))
+>> +               return PTR_ERR(tfm);
+>> +
+>> +       desc_size = crypto_shash_descsize(tfm) + sizeof(*desc);
+>> +       desc = kzalloc(desc_size, GFP_KERNEL);
+>> +       if (!desc)
+>> +               goto error_free_tfm;
+>> +
+>> +       desc->tfm = tfm;
+>> +
+>> +       ret = crypto_shash_init(desc);
+>> +       if (ret < 0)
+>> +               goto error_free_desc;
+>> +
+>> +       ret = crypto_shash_update(desc, dgst, SM3_DIGEST_SIZE);
+>> +       if (ret < 0)
+>> +               goto error_free_desc;
+>> +
+>> +       ret = crypto_shash_finup(desc, cert->tbs, cert->tbs_size, sig->digest);
+>> +
+>> +error_free_desc:
+>> +       kfree(desc);
+>> +error_free_tfm:
+>> +       crypto_free_shash(tfm);
+>> +       return ret;
+>> +}
+>> +#endif
+>> +
+>>   /*
+>>    * Verify a signature using a public key.
+>>    */
+>> @@ -298,6 +351,14 @@ int public_key_verify_signature(const struct public_key *pkey,
+>>          if (ret)
+>>                  goto error_free_key;
+>>
+> 
+> OK, how about you put cert_sig_digest_update() in a separate file that
+> only gets compiled with  CONFIG_CRYPTO_SM2 and have a static inline
+> version that returns -ENOTSUPP otherwise?
+> or at least something in this spirit.
+> Done right it will allow you to drop the ifdefs and make for a much
+> cleaner code.
+> 
+>> +#ifdef CONFIG_CRYPTO_SM2
+>> +       if (strcmp(sig->pkey_algo, "sm2") == 0) {
+>> +               ret = cert_sig_digest_update(sig, tfm);
+>> +               if (ret)
+>> +                       goto error_free_key;
+>> +       }
+>> +#endif
+>> +
+>>          sg_init_table(src_sg, 2);
+>>          sg_set_buf(&src_sg[0], sig->s, sig->s_size);
+>>          sg_set_buf(&src_sg[1], sig->digest, sig->digest_size);
+>> diff --git a/crypto/asymmetric_keys/x509_public_key.c b/crypto/asymmetric_keys/x509_public_key.c
+>> index d964cc82b69c..feccec08b244 100644
+>> --- a/crypto/asymmetric_keys/x509_public_key.c
+>> +++ b/crypto/asymmetric_keys/x509_public_key.c
+>> @@ -30,6 +30,8 @@ int x509_get_sig_params(struct x509_certificate *cert)
+>>
+>>          pr_devel("==>%s()\n", __func__);
+>>
+>> +       sig->cert = cert;
+>> +
+>>          if (!cert->pub->pkey_algo)
+>>                  cert->unsupported_key = true;
+>>
+>> diff --git a/include/crypto/public_key.h b/include/crypto/public_key.h
+>> index 0588ef3bc6ff..27775e617e38 100644
+>> --- a/include/crypto/public_key.h
+>> +++ b/include/crypto/public_key.h
+>> @@ -44,6 +44,7 @@ struct public_key_signature {
+>>          const char *pkey_algo;
+>>          const char *hash_algo;
+>>          const char *encoding;
+>> +       void *cert;             /* For certificate */
+>>   };
+>>
+>>   extern void public_key_signature_free(struct public_key_signature *sig);
+>> --
+>> 2.17.1
+>>
+> 
+> 
 
-Yes. We do expose these data as part of perf-mem for POWER.
+Hi,
 
+Thanks for your suggestion, it is indeed appropriate to unify the SM2 
+implementation with the public code, I will implement it.
 
-> For IBS, I see PERF_SAMPLE_ADDR and PERF_SAMPLE_PHYS_ADDR can be
-> used for the ld/st target addresses, too.
->
->>> What's needed here is a vendor-specific extended
->>> sample information that all these technologies gather,
->>> of which things like e.g., 'L1 TLB cycle latency' we
->>> all should have in common.
->> Yes. We will include fields to capture the latency cycles (like Issue
->> latency, Instruction completion latency etc..) along with other pipeline
->> details in the proposed structure.
-> Latency figures are just an example, and from what I
-> can tell, struct perf_sample_data already has a 'weight' member,
-> used with PERF_SAMPLE_WEIGHT, that is used by intel-pt to
-> transfer memory access latency figures.  Granted, that's
-> a bad name given all other vendors don't call latency
-> 'weight'.
->
-> I didn't see any latency figures coming out of POWER9,
-> and do not expect this patchseries to implement those
-> of other vendors, e.g., AMD's IBS; leave each vendor
-> to amend perf to suit their own h/w output please.
-
-Reference structure proposed in this patchset did not have members
-to capture latency info for that exact reason. But idea here is to
-abstract  as vendor specific as possible. So if we include u16 array,
-then this format can also capture data from IBS since it provides
-few latency details.
-
-
->
-> My main point there, however, was that each vendor should
-> use streamlined record-level code to just copy the data
-> in the proprietary format that their hardware produces,
-> and then then perf tooling can synthesize the events
-> from the raw data at report/script/etc. time.
->
->>> I'm not sure why a new PERF_SAMPLE_PIPELINE_HAZ is needed
->>> either.  Can we use PERF_SAMPLE_AUX instead?
->> We took a look at PERF_SAMPLE_AUX. IIUC, PERF_SAMPLE_AUX is intended when
->> large volume of data needs to be captured as part of perf.data without
->> frequent PMIs. But proposed type is to address the capture of pipeline
-> SAMPLE_AUX shouldn't care whether the volume is large, or how frequent
-> PMIs are, even though it may be used in those environments.
->
->> information on each sample using PMI at periodic intervals. Hence proposing
->> PERF_SAMPLE_PIPELINE_HAZ.
-> And that's fine for any extra bits that POWER9 has to convey
-> to its users beyond things already represented by other sample
-> types like PERF_SAMPLE_DATA_SRC, but the capturing of both POWER9
-> and other vendor e.g., AMD IBS data can be made vendor-independent
-> at record time by using SAMPLE_AUX, or SAMPLE_RAW even, which is
-> what IBS currently uses.
-
-My bad. Not sure what you mean by this. We are trying to abstract
-as much vendor specific data as possible with this (like perf-mem).
-
-
-Maddy
->
->>>   Take a look at
->>> commit 98dcf14d7f9c "perf tools: Add kernel AUX area sampling
->>> definitions".  The sample identifier can be used to determine
->>> which vendor's sampling IP's data is in it, and events can
->>> be recorded just by copying the content of the SIER, etc.
->>> registers, and then events get synthesized from the aux
->>> sample at report/inject/annotate etc. time.  This allows
->>> for less sample recording overhead, and moves all the vendor
->>> specific decoding and common event conversions for userspace
->>> to figure out.
->> When AUX buffer data is structured, tool side changes added to present the
->> pipeline data can be re-used.
-> Not sure I understand: AUX data would be structured on
-> each vendor's raw h/w register formats.
->
-> Thanks,
->
-> Kim
->
->>>>>> Also worth considering is the support of ARM SPE (Statistical
->>>>>> Profiling Extension) which is their version of IBS.
->>>>>> Whatever gets added need to cover all three with no limitations.
->>>>> I thought Intel's various LBR, PEBS, and PT supported providing
->>>>> similar sample data in perf already, like with perf mem/c2c?
->>>> perf-mem is more of data centric in my opinion. It is more towards
->>>> memory profiling. So proposal here is to expose pipeline related
->>>> details like stalls and latencies.
->>> Like I said, I don't see it that way, I see it as "any particular
->>> vendor's event's extended details', and these pipeline details
->>> have overlap with existing infrastructure within perf, e.g., L2
->>> cache misses.
->>>
->>> Kim
->>>
-
+Thanks,
+Tianjia
