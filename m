@@ -2,87 +2,108 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94BFC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7680C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9878820658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9518220658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444070;
-	bh=NJ3VBxsbkJ2nRjiRJuZezISDL5eV2Iu2tM7LeVd/8iE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANoQYj8mMDme/8mlWxJR1f9RdP1h9YpqhTIY6ovW0VUfq72jjAy9p70NejAnEIF1D
-	 kxWxlHNPVuJsNnW5bNN6skuWeCwvkVyTmrlGLuEjmkAGxFhHz8u+gRRGawBD+Z4hvp
-	 4R1brnQ1FCjakUFsLwUqy1KBOTljGjVsLqHKGWsI=
+	s=default; t=1584444077;
+	bh=zhLVa1RuVrgSJcdi9jqazTCZWV0efB+OSiSdFSi7HC4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A/ZUymOauFnLTqU3yTqQgER3TeXeTKUBdNjw8KyYzaanrcqmHnHW4MPDFLf9CWjs0
+	 o75o5PGLcSVNKqTqAiqh/ND5O0iOTvG2/VALzNy3pL4EoHCrjP8n2Cr//5LWw5BdRn
+	 jl6qAITvey4LrceBENZK2NBpupBMSYW171T3ZA9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgCQK7Y (ORCPT
+        id S1727764AbgCQLVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:59:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727434AbgCQK7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:59:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9141420757;
-        Tue, 17 Mar 2020 10:59:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442759;
-        bh=NJ3VBxsbkJ2nRjiRJuZezISDL5eV2Iu2tM7LeVd/8iE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pbUYO9r5aKyVMJjtGZD90dGgNoNN9K2tS/oAxmV5Q2bWBd8y/H7dXSxIlpjNsJTkL
-         ArdAaiCJND65knFooeGHrVLA6f60sEGKysEXAHkvzjr4G//rq5SAWBo+IOYipZdfSz
-         RuPeaUBUaM+c3lNC6X0xH/A6ZWFgMHNoIe1NTtvg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 34/89] nfc: add missing attribute validation for deactivate target
-Date:   Tue, 17 Mar 2020 11:54:43 +0100
-Message-Id: <20200317103303.794124420@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
-References: <20200317103259.744774526@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 17 Mar 2020 07:21:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52735 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727427AbgCQK7S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:59:18 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 11so20896232wmo.2;
+        Tue, 17 Mar 2020 03:59:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8HFvJMFCJYNvz0dXv6Ch2UJSZolJY7vrNfNN5EOFEwc=;
+        b=siBQzjg1amBaD6qNQZLm60/lFV7eQlgZx5i5Jza1wu++MWulSnauV8pDhZOXImsAIH
+         Z1bVBvvRhgM0QyabJBvWntUXDd8kR4yvji5u3PAMQMS3cYXqCMfqX724evPzTDpwRCmX
+         JkvluF76P0+f42xLSY2pWcAiPucwd10Vt6E4lFzcsx2YYvh8vWtZ5GLUxxV9PHQOcOWh
+         /gbjuEz08+GGBoQHnydlsmoRk5CntHC4mPqTABWLYUG9ilpPj6A7w86J2qAIIRtMGm1X
+         m7GCUCdyRf/J+k+a4Lo4EzlRuVJ4Jp2D/2btjxvwzwSKL4rns+N3GvQmWeaE97gtzkIQ
+         PLoA==
+X-Gm-Message-State: ANhLgQ0MbvcQSL/j39QOAgkZJT09anNIVhARv0SynHTFFpPz47HGGhFJ
+        HpVGJwpztK4Vj9xuOOAc5PJ/WXtl
+X-Google-Smtp-Source: ADFU+vuKcSeScQJxJfHf3Bzh98ayLivgd2aUQq71FVoJVb8q4dHZuM8Z1Syn9jMTiCpNxqkeFdgWRw==
+X-Received: by 2002:a1c:6285:: with SMTP id w127mr4938571wmb.133.1584442756028;
+        Tue, 17 Mar 2020 03:59:16 -0700 (PDT)
+Received: from localhost (ip-37-188-255-121.eurotel.cz. [37.188.255.121])
+        by smtp.gmail.com with ESMTPSA id m17sm4293118wrw.3.2020.03.17.03.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 03:59:15 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 11:59:14 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v2 6/8] mm/memory_hotplug: unexport memhp_auto_online
+Message-ID: <20200317105914.GL26018@dhcp22.suse.cz>
+References: <20200317104942.11178-1-david@redhat.com>
+ <20200317104942.11178-7-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317104942.11178-7-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+On Tue 17-03-20 11:49:40, David Hildenbrand wrote:
+> All in-tree users except the mm-core are gone. Let's drop the export.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit 88e706d5168b07df4792dbc3d1bc37b83e4bd74d ]
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Add missing attribute validation for NFC_ATTR_TARGET_INDEX
-to the netlink policy.
+> ---
+>  mm/memory_hotplug.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 1a00b5a37ef6..2d2aae830b92 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -71,7 +71,6 @@ bool memhp_auto_online;
+>  #else
+>  bool memhp_auto_online = true;
+>  #endif
+> -EXPORT_SYMBOL_GPL(memhp_auto_online);
+>  
+>  static int __init setup_memhp_default_state(char *str)
+>  {
+> -- 
+> 2.24.1
 
-Fixes: 4d63adfe12dd ("NFC: Add NFC_CMD_DEACTIVATE_TARGET support")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/nfc/netlink.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -44,6 +44,7 @@ static const struct nla_policy nfc_genl_
- 	[NFC_ATTR_DEVICE_NAME] = { .type = NLA_STRING,
- 				.len = NFC_DEVICE_NAME_MAXSIZE },
- 	[NFC_ATTR_PROTOCOLS] = { .type = NLA_U32 },
-+	[NFC_ATTR_TARGET_INDEX] = { .type = NLA_U32 },
- 	[NFC_ATTR_COMM_MODE] = { .type = NLA_U8 },
- 	[NFC_ATTR_RF_MODE] = { .type = NLA_U8 },
- 	[NFC_ATTR_DEVICE_POWERED] = { .type = NLA_U8 },
-
-
+-- 
+Michal Hocko
+SUSE Labs
