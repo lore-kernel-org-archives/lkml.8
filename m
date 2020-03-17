@@ -2,167 +2,270 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ABCC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6FCC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C3520735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E104C20735
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgCQMWu (ORCPT
+        id S1726638AbgCQMWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 08:22:50 -0400
-Received: from mga04.intel.com ([192.55.52.120]:63790 "EHLO mga04.intel.com"
+        Tue, 17 Mar 2020 08:22:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:36416 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgCQMWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 08:22:50 -0400
-IronPort-SDR: 5UABjp4m0z6dUNdnZJxVotbqVICCpjXQY4bOLrfzgazrmmvjli9DmT8KC3Vn8Y2BA423q9TJKV
- 46WIzv+Fqjdw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 05:22:49 -0700
-IronPort-SDR: XdqzQsl1uPlDaP+NqkKStWnVn0XxYradtpWoKzUMeBatCJSEp3HS/E4eXGhBOGb/rYDjgj2Sgc
- 9Z8qsBE5mvrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="290978968"
-Received: from dasabhi1-mobl.amr.corp.intel.com (HELO [10.255.35.148]) ([10.255.35.148])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Mar 2020 05:22:48 -0700
-Subject: Re: [PATCH] soundwire: stream: only change state if needed
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
- <6bc8412a-f6d9-64d1-2218-ca98cfdb31c0@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <27a73cbd-9418-4488-5cb2-fb21f9fc9110@linux.intel.com>
-Date:   Tue, 17 Mar 2020 07:22:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1725906AbgCQMWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 08:22:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90A7A30E;
+        Tue, 17 Mar 2020 05:22:51 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 764FF3F534;
+        Tue, 17 Mar 2020 05:22:48 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>
+Subject: [PATCH v4 00/26] Introduce common headers for vDSO
+Date:   Tue, 17 Mar 2020 12:21:54 +0000
+Message-Id: <20200317122220.30393-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <6bc8412a-f6d9-64d1-2218-ca98cfdb31c0@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srinivas,
+Back in July last year we started having a problem in building compat
+vDSOs on arm64 [1] [2] that was not present when the arm64 porting to
+the Unified vDSO was done. In particular when the compat vDSO on such
+architecture is built with gcc it generates the warning below:
 
-> This patch did not work for me as it is as wsa881x codec does prepare 
-> and enable in one function, which breaks some of the assumptions in this 
-> patch.
+In file included from ./arch/arm64/include/asm/thread_info.h:17:0,
+                 from ./include/linux/thread_info.h:38,
+                 from ./arch/arm64/include/asm/preempt.h:5,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/seqlock.h:36,
+                 from ./include/linux/time.h:6,
+                 from ./lib/vdso/gettimeofday.c:7,
+                 from <command-line>:0:
+./arch/arm64/include/asm/memory.h: In function ‘__tag_set’:
+./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer
+                to integer of different size [-Wpointer-to-int-cast]
+  u64 __addr = (u64)addr & ~__tag_shifted(0xff);
+               ^
+In file included from ./arch/arm64/include/asm/pgtable-hwdef.h:8:0,
+                 from ./arch/arm64/include/asm/processor.h:34,
+                 from ./arch/arm64/include/asm/elf.h:118,
+                 from ./include/linux/elf.h:5,
+                 from ./include/linux/elfnote.h:62,
+                 from arch/arm64/kernel/vdso32/note.c:11:
+./arch/arm64/include/asm/memory.h: In function ‘__tag_set’:
+./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer
+                to integer of different size [-Wpointer-to-int-cast]
+  u64 __addr = (u64)addr & ~__tag_shifted(0xff);
 
-Ah yes, if two transitions happen in the same DAI callback that wouldn't 
-work indeed. We should probably add this restriction to the state 
-machine documentation, the suggested mapping from ASoC DAI states to 
-stream states did not account for compound cases.
+The same porting does not build at all when the selected compiler is
+clang.
 
-> However with below change I could get it working without moving stream 
-> handling to machine driver.
+I started an investigation to try to understand better the problem and
+after various discussions at Plumbers and Recipes last year the
+conclusion was that the vDSO library as it stands it is including more
+headers that it needs. In particular, being a user-space library, it
+should require only the UAPI and a minimal vDSO kernel interface instead
+of all the kernel-related inline functions which are not directly used
+and in some cases can have side effects.
 
-The change below would be an error case for Intel, so it's probably 
-better if we go with your suggestion. You have a very specific state 
-handling due to your power amps and it's probably better to keep it 
-platform-specific.
+To solve the problem, I decided to use the approach below:
+  * Extract from include/linux/ the vDSO required kernel interface
+    and place it in include/vdso/
+  * Make sure that where meaningful the kernel includes "vdso" headers.
+  * Limit the vDSO library to include headers coming only from UAPI
+    and "vdso" (with 2 exceptions compiler.h for barriers and param.h
+    for HZ).
+  * Adapt all the architectures that support the unified vDSO library
+    to use "vdso" headers.
 
-Can you confirm though that this patch works fine if you move all the 
-stream transitions to the machine driver? That should be a no-op but 
-better make sure there's no misunderstanding.
+According to me this approach allows up to exercise a better control on
+what the vDSO library can include and to prevent potential issues in
+future.
 
-Thanks
--Pierre
+This patch series contains the implementation of the described approach.
 
-> ---------------------------->cut<-------------------------------
-> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-> index be71af4671a4..4a94ea64c1c5 100644
-> --- a/drivers/soundwire/stream.c
-> +++ b/drivers/soundwire/stream.c
-> @@ -1574,7 +1574,8 @@ int sdw_prepare_stream(struct sdw_stream_runtime 
-> *stream)
-> 
->          sdw_acquire_bus_lock(stream);
-> 
-> -       if (stream->state == SDW_STREAM_PREPARED) {
-> +       if (stream->state == SDW_STREAM_PREPARED ||
-> +           stream->state == SDW_STREAM_ENABLED) {
->                  /* nothing to do */
->                  ret = 0;
->                  goto state_err;
-> @@ -1754,7 +1755,8 @@ int sdw_disable_stream(struct sdw_stream_runtime 
-> *stream)
-> 
->          sdw_acquire_bus_lock(stream);
-> 
-> -       if (stream->state == SDW_STREAM_DISABLED) {
-> +       if (stream->state == SDW_STREAM_DISABLED ||
-> +           stream->state == SDW_STREAM_DEPREPARED) {
->                  /* nothing to do */
->                  ret = 0;
->                  goto state_err;
-> ---------------------------->cut<-------------------------------
-> 
-> --srini
-> 
->> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
->> index 1b43d03c79ea..3319121cd706 100644
->> --- a/drivers/soundwire/stream.c
->> +++ b/drivers/soundwire/stream.c
->> @@ -1572,6 +1572,7 @@ int sdw_prepare_stream(struct sdw_stream_runtime 
->> *stream)
->>       sdw_acquire_bus_lock(stream);
->>       if (stream->state == SDW_STREAM_PREPARED) {
->> +        /* nothing to do */
->>           ret = 0;
->>           goto state_err;
->>       }
->> @@ -1661,6 +1662,12 @@ int sdw_enable_stream(struct sdw_stream_runtime 
->> *stream)
->>       sdw_acquire_bus_lock(stream);
->> +    if (stream->state == SDW_STREAM_ENABLED) {
->> +        /* nothing to do */
->> +        ret = 0;
->> +        goto state_err;
->> +    }
->> +
->>       if (stream->state != SDW_STREAM_PREPARED &&
->>           stream->state != SDW_STREAM_DISABLED) {
->>           pr_err("%s: %s: inconsistent state state %d\n",
->> @@ -1744,6 +1751,12 @@ int sdw_disable_stream(struct 
->> sdw_stream_runtime *stream)
->>       sdw_acquire_bus_lock(stream);
->> +    if (stream->state == SDW_STREAM_DISABLED) {
->> +        /* nothing to do */
->> +        ret = 0;
->> +        goto state_err;
->> +    }
->> +
->>       if (stream->state != SDW_STREAM_ENABLED) {
->>           pr_err("%s: %s: inconsistent state state %d\n",
->>                  __func__, stream->name, stream->state);
->> @@ -1809,6 +1822,12 @@ int sdw_deprepare_stream(struct 
->> sdw_stream_runtime *stream)
->>       sdw_acquire_bus_lock(stream);
->> +    if (stream->state == SDW_STREAM_DEPREPARED) {
->> +        /* nothing to do */
->> +        ret = 0;
->> +        goto state_err;
->> +    }
->> +
->>       if (stream->state != SDW_STREAM_PREPARED &&
->>           stream->state != SDW_STREAM_DISABLED) {
->>           pr_err("%s: %s: inconsistent state state %d\n",
->>
+The "vdso" headers have been verified on all the architectures that support
+unified vDSO using the vdsotest [3] testsuite for what concerns the vDSO part
+and randconfig to verify that they are included in the correct places.
+
+To simplify the testing, a copy of the patchset on top of a recent linux
+tree can be found at [4].
+
+[1] https://github.com/ClangBuiltLinux/linux/issues/595
+[2] https://lore.kernel.org/lkml/20190926151704.GH9689@arrakis.emea.arm.com
+[3] https://github.com/nathanlynch/vdsotest
+[4] git://linux-arm.org/linux-vf.git common-headers/v4
+
+Changes:
+--------
+v4:
+  - Dropped vDSO optimization patch for arm64.
+  - Introduce a new patch to drop dependency from TASK_SIZE_32 on arm64.
+  - Addressed review comments.
+  - Rebased on tip/timers/core.
+v3:
+  - Changed the namespace from common to vdso.
+  - Addressed an issue involving parisc modules compilation.
+  - Added vdso header for clocksource.h.
+  - Addressed review comments.
+  - Rebased on tip/timers/core.
+v2:
+  - Addressed review comments for clang support.
+  - Rebased on 5.6-rc4.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Mark Salyzyn <salyzyn@android.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Collingbourne <pcc@google.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Andrei Vagin <avagin@openvz.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+Vincenzo Frascino (26):
+  linux/const.h: Extract common header for vDSO
+  linux/bits.h: Extract common header for vDSO
+  linux/limits.h: Extract common header for vDSO
+  x86:Introduce asm/vdso/clocksource.h
+  arm: Introduce asm/vdso/clocksource.h
+  arm64: Introduce asm/vdso/clocksource.h
+  mips: Introduce asm/vdso/clocksource.h
+  linux/clocksource.h: Extract common header for vDSO
+  linux/math64.h: Extract common header for vDSO
+  linux/time.h: Extract common header for vDSO
+  linux/time32.h: Extract common header for vDSO
+  linux/time64.h: Extract common header for vDSO
+  linux/jiffies.h: Extract common header for vDSO
+  linux/ktime.h: Extract common header for vDSO
+  common: Introduce processor.h
+  scripts: Fix the inclusion order in modpost
+  linux/elfnote.h: Replace elf.h with UAPI equivalent
+  arm64: vdso32: Replace TASK_SIZE_32 check in vgettimeofday
+  arm64: Introduce asm/vdso/processor.h
+  arm64: vdso: Include common headers in the vdso library
+  arm64: vdso32: Include common headers in the vdso library
+  mips: vdso: Enable mips to use common headers
+  x86: vdso: Enable x86 to use common headers
+  arm: vdso: Enable arm to use common headers
+  lib: vdso: Enable common headers
+  arm64: vdso32: Enable Clang Compilation
+
+ arch/arm/include/asm/clocksource.h            |  6 +--
+ arch/arm/include/asm/cp15.h                   | 20 +---------
+ arch/arm/include/asm/processor.h              | 11 +-----
+ arch/arm/include/asm/vdso/clocksource.h       |  8 ++++
+ arch/arm/include/asm/vdso/cp15.h              | 38 +++++++++++++++++++
+ arch/arm/include/asm/vdso/gettimeofday.h      |  4 +-
+ arch/arm/include/asm/vdso/processor.h         | 22 +++++++++++
+ arch/arm64/include/asm/clocksource.h          |  3 +-
+ arch/arm64/include/asm/processor.h            |  7 +---
+ arch/arm64/include/asm/vdso/clocksource.h     |  8 ++++
+ .../include/asm/vdso/compat_gettimeofday.h    |  2 +-
+ arch/arm64/include/asm/vdso/gettimeofday.h    |  1 -
+ arch/arm64/include/asm/vdso/processor.h       | 17 +++++++++
+ arch/arm64/kernel/vdso/vgettimeofday.c        |  2 -
+ arch/arm64/kernel/vdso32/Makefile             | 11 ++++++
+ arch/arm64/kernel/vdso32/vgettimeofday.c      | 13 ++++---
+ arch/mips/include/asm/clocksource.h           |  4 +-
+ arch/mips/include/asm/processor.h             | 16 +-------
+ arch/mips/include/asm/vdso/clocksource.h      |  9 +++++
+ arch/mips/include/asm/vdso/gettimeofday.h     |  4 --
+ arch/mips/include/asm/vdso/processor.h        | 27 +++++++++++++
+ arch/x86/include/asm/clocksource.h            |  5 +--
+ arch/x86/include/asm/processor.h              | 12 +-----
+ arch/x86/include/asm/vdso/clocksource.h       | 10 +++++
+ arch/x86/include/asm/vdso/processor.h         | 23 +++++++++++
+ include/linux/bits.h                          |  2 +-
+ include/linux/clocksource.h                   | 11 +-----
+ include/linux/const.h                         |  5 +--
+ include/linux/elfnote.h                       |  2 +-
+ include/linux/jiffies.h                       |  4 +-
+ include/linux/ktime.h                         |  9 +----
+ include/linux/limits.h                        | 13 +------
+ include/linux/math64.h                        | 20 +---------
+ include/linux/time.h                          |  5 +--
+ include/linux/time32.h                        | 14 +------
+ include/linux/time64.h                        | 10 +----
+ include/vdso/bits.h                           |  9 +++++
+ include/vdso/clocksource.h                    | 23 +++++++++++
+ include/vdso/const.h                          | 10 +++++
+ include/vdso/datapage.h                       | 33 ++++++++++++++--
+ include/vdso/jiffies.h                        | 11 ++++++
+ include/vdso/ktime.h                          | 16 ++++++++
+ include/vdso/limits.h                         | 19 ++++++++++
+ include/vdso/math64.h                         | 24 ++++++++++++
+ include/vdso/processor.h                      | 14 +++++++
+ include/vdso/time.h                           | 12 ++++++
+ include/vdso/time32.h                         | 17 +++++++++
+ include/vdso/time64.h                         | 14 +++++++
+ lib/vdso/gettimeofday.c                       | 22 -----------
+ scripts/mod/modpost.c                         |  6 ++-
+ 50 files changed, 412 insertions(+), 196 deletions(-)
+ create mode 100644 arch/arm/include/asm/vdso/clocksource.h
+ create mode 100644 arch/arm/include/asm/vdso/cp15.h
+ create mode 100644 arch/arm/include/asm/vdso/processor.h
+ create mode 100644 arch/arm64/include/asm/vdso/clocksource.h
+ create mode 100644 arch/arm64/include/asm/vdso/processor.h
+ create mode 100644 arch/mips/include/asm/vdso/clocksource.h
+ create mode 100644 arch/mips/include/asm/vdso/processor.h
+ create mode 100644 arch/x86/include/asm/vdso/clocksource.h
+ create mode 100644 arch/x86/include/asm/vdso/processor.h
+ create mode 100644 include/vdso/bits.h
+ create mode 100644 include/vdso/clocksource.h
+ create mode 100644 include/vdso/const.h
+ create mode 100644 include/vdso/jiffies.h
+ create mode 100644 include/vdso/ktime.h
+ create mode 100644 include/vdso/limits.h
+ create mode 100644 include/vdso/math64.h
+ create mode 100644 include/vdso/processor.h
+ create mode 100644 include/vdso/time.h
+ create mode 100644 include/vdso/time32.h
+ create mode 100644 include/vdso/time64.h
+
+-- 
+2.25.1
+
