@@ -2,111 +2,136 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D72C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB38C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1506620674
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:08:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qqNOC86Q"
+	by mail.kernel.org (Postfix) with ESMTP id B062A20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgCQIIH (ORCPT
+        id S1726121AbgCQIKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:08:07 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43041 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgCQIIG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:08:06 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r7so21693455ljp.10;
-        Tue, 17 Mar 2020 01:08:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xJDoChAKlMblDnmdsWkrHiAcckWv+m3XVo6l0TPCl5M=;
-        b=qqNOC86QEbDtH12YTw6vhbr3LNJZVbggyXoR5v+zm9yqy4dDAmLkRrpnCpSXvdAiZL
-         IboHI+kGpdv+fFLxgsMSIZhR8f4TmjXerfnmWY5tItwLqFww2KBpJ8dnzlv+xla+TSkR
-         67OZQ6uMUkUTE2On2maijpoQngQ0mT+bCzuunr1HQSVI/fbn4y6cppioG6BaxFHXWqDj
-         gKWfwjWVBAaDCB8Cxesy2QTusbzwOLtQrqu4fQAs0he2t9DzBUXWAjU04xnPQXhLq4Ab
-         IM/G81ipMbL41jwI14qQFi0o+ZK5t7VpxvVvIDiUQAVONn8kz5FmkfyxjtTiPL5cTSKS
-         1Bpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xJDoChAKlMblDnmdsWkrHiAcckWv+m3XVo6l0TPCl5M=;
-        b=nCrOs+gAn3hqZoDT+5fjiqvwmPo+jUzLexrBbQJ2fuFmdKWjrHMzUg+c2zmk2/WPyP
-         ZxJYEjF5XwlmdkS8/c5qijR6lIcL30vUcv1hwqGEQfjMPdbMjpnqmIzfDrlZpUEgzfi4
-         DibZUY/VjEwNau/ms4BTnF7SgFY0U6oWag+Q4GO52B6+X/nRtesVdFLfuJqoOK4oWJm4
-         KS4CsSpjl50+rBnzOmduszXQZWcu/Zpv/rcD45H5RiMewlWk1aKeGCJBeX1klItO9LIg
-         9jdCNvQu9IrOu81wR6uNOJxH4nV2MGubRC+ebRrf+YEWMNTJKfhFLZhJ5tLM/D6cEX58
-         m49w==
-X-Gm-Message-State: ANhLgQ1kq/R44ipkV0kgQcsab7UsYkzOvmIiNhfXtnSzpNgaqzENyn11
-        rw70ZdlNuX87PScJ7xVkrXU=
-X-Google-Smtp-Source: ADFU+vvCQ3NoEJ3nb/OwR5lcRkL8eBY/cGrtriKrq/5tktFEr921qBkjihV+rjh0ZWyiMV4z1K2PxQ==
-X-Received: by 2002:a05:651c:1047:: with SMTP id x7mr2013039ljm.246.1584432483618;
-        Tue, 17 Mar 2020 01:08:03 -0700 (PDT)
-Received: from gmail.com (94-255-169-249.cust.bredband2.com. [94.255.169.249])
-        by smtp.gmail.com with ESMTPSA id 207sm1846451lfh.33.2020.03.17.01.08.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 01:08:03 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 09:11:19 +0100
-From:   Marcus Folkesson <marcus.folkesson@gmail.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v4 0/3] media: i2c: imx219: Feature enhancements
-Message-ID: <20200317081119.GB138007@gmail.com>
-References: <1583846229-6799-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200317080135.GA138007@gmail.com>
- <OSBPR01MB359081F292B1F7E3D56242EFAAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+        Tue, 17 Mar 2020 04:10:37 -0400
+Received: from mga18.intel.com ([134.134.136.126]:46845 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgCQIKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 04:10:37 -0400
+IronPort-SDR: mytqB5Eott+JlRVvCMg/6juDbVpJTbkD7nJ9csY4gidfhlV1O0Agoz1vfSJOH33STI9HM5Tleo
+ 3denp2i8aHXA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 01:10:36 -0700
+IronPort-SDR: K2hESqp48NSCqGFGaKbO3ciySRYdVROgOrIRP4l7rCNs+3TAxWjTlBB5/yV5NiEbmvgBlQSO2b
+ P63UR/LO6fXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
+   d="scan'208";a="262954250"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga002.jf.intel.com with ESMTP; 17 Mar 2020 01:10:32 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH -V2] mm: Code cleanup for MADV_FREE
+References: <20200316063740.2542014-1-ying.huang@intel.com>
+        <b328ac30-6c4e-0dfb-c771-cb09c6346c75@suse.cz>
+Date:   Tue, 17 Mar 2020 16:10:30 +0800
+In-Reply-To: <b328ac30-6c4e-0dfb-c771-cb09c6346c75@suse.cz> (Vlastimil Babka's
+        message of "Mon, 16 Mar 2020 18:17:23 +0100")
+Message-ID: <87v9n3qu4p.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB359081F292B1F7E3D56242EFAAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Vlastimil Babka <vbabka@suse.cz> writes:
 
-On Tue, Mar 17, 2020 at 08:03:49AM +0000, Prabhakar Mahadev Lad wrote:
-> Hi Marcus,
-> 
-> > -----Original Message-----
-> > From: Marcus Folkesson <marcus.folkesson@gmail.com>
-> > Sent: 17 March 2020 08:02
-> > To: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>; Sakari Ailus
-> > <sakari.ailus@linux.intel.com>; Mauro Carvalho Chehab
-> > <mchehab@kernel.org>; linux-media@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; Lad Prabhakar <prabhakar.csengg@gmail.com>
-> > Subject: Re: [PATCH v4 0/3] media: i2c: imx219: Feature enhancements
-> >
-> > Hi,
-> >
-> > To which tree does this patchset apply?
-> >
-> These patches apply to media_tree [1], btw v4 patches have been accepted and  merged into master branch of media_tree.
+> On 3/16/20 7:37 AM, Huang, Ying wrote:
+>> From: Huang Ying <ying.huang@intel.com>
+>> 
+>> Some comments for MADV_FREE is revised and added to help people understand the
+>> MADV_FREE code, especially the page flag, PG_swapbacked.  This makes
+>> page_is_file_cache() isn't consistent with its comments.  So the function is
+>> renamed to page_is_file_lru() to make them consistent again.  All these are put
+>> in one patch as one logical change.
+>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>> Suggested-by: David Hildenbrand <david@redhat.com>
+>> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+>> Suggested-and-acked-by: David Rientjes <rientjes@google.com>
+>> Acked-by: Michal Hocko <mhocko@kernel.org>
+>> Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>> Cc: Mel Gorman <mgorman@suse.de>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Minchan Kim <minchan@kernel.org>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Cc: Rik van Riel <riel@surriel.com>
+>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>
+> Thanks! A grammar nit below:
+>
+>> --- a/include/linux/mm_inline.h
+>> +++ b/include/linux/mm_inline.h
+>> @@ -6,19 +6,20 @@
+>>  #include <linux/swap.h>
+>>  
+>>  /**
+>> - * page_is_file_cache - should the page be on a file LRU or anon LRU?
+>> + * page_is_file_lru - should the page be on a file LRU or anon LRU?
+>>   * @page: the page to test
+>>   *
+>> - * Returns 1 if @page is page cache page backed by a regular filesystem,
+>> - * or 0 if @page is anonymous, tmpfs or otherwise ram or swap backed.
+>> - * Used by functions that manipulate the LRU lists, to sort a page
+>> - * onto the right LRU list.
+>> + * Returns 1 if @page is page cache page backed by a regular filesystem or
+>> + * anonymous page lazily freed (e.g. via MADV_FREE).  Returns 0 if @page is
+>
+>       a lazily freed anonymous page (e.g. ...
 
-Thank you and good work!
+Thought again.  Should we make the 2 sub-clauses consistent?  That is,
+either
 
-> 
-> [1] https://git.linuxtv.org//media_tree.git
-> 
-> Cheers,
-> --Prabhakar
+if @page is page cache page backed by a regular filesystem or anonymous
+page freed lazily
 
-Best regards
-Marcus Folkesson
+or
+
+if @page is a regular filesystem backed page cache page or a lazily
+freed anonymous page
+
+But I know that my English grammar isn't good enough :-(
+
+Best Regards,
+Huang, Ying
+
+>> + * normal anonymous page, tmpfs or otherwise ram or swap backed.  Used by
+>> + * functions that manipulate the LRU lists, to sort a page onto the right LRU
+>> + * list.
+>>   *
+>>   * We would like to get this info without a page flag, but the state
+>>   * needs to survive until the page is last deleted from the LRU, which
+>>   * could be as far down as __page_cache_release.
+>>   */
+>> -static inline int page_is_file_cache(struct page *page)
+>> +static inline int page_is_file_lru(struct page *page)
+>>  {
+>>  	return !PageSwapBacked(page);
+>>  }
