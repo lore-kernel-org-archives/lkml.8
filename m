@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EE8C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070BEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A49205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20B8205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443710;
-	bh=x/iwEgPCjqg1vr+Jo85dKncNW7v4aqB6+4VNxqJquD0=;
+	s=default; t=1584443714;
+	bh=Q2KuvY2wUIITZZ23RE0KyIC+rdvVru0ndU38jehTFXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0fqqsEgxAe0iPhpX+jp1mlMzkeCsBtaHlTOVgSFfN4LuN3y2LY5TN+HMVw0pitFLG
-	 HBsEjAq8Rin+wxReJTwiIE2aTM69qDM18k+i+XTgF6uktwPdnwEsIK6MZhcFVOBROB
-	 8uomsmCKNDq/haTJ+bBc5Pw3nR6BEcvPorLGPWGQ=
+	b=fwtzb6qRAM0l2Ysoz8kQWpYo5hBH9Hkk26C6i44l0PLDNsKv6ubng8dj1+XESOdHF
+	 ijygdztl59gBinuz0msTq8AIEJNAK6YoJqIoeMfkstz4o2cQYJJYjw/NJeb0MX0TiM
+	 oe9L9N5iMBNhTws+XO7WFWrGX2R0qUsDsk4YgDGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgCQLPI (ORCPT
+        id S1727647AbgCQLPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56708 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:15:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbgCQLM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:58 -0400
+        id S1729471AbgCQLMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D1AC205ED;
-        Tue, 17 Mar 2020 11:12:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B342B20735;
+        Tue, 17 Mar 2020 11:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443577;
-        bh=x/iwEgPCjqg1vr+Jo85dKncNW7v4aqB6+4VNxqJquD0=;
+        s=default; t=1584443571;
+        bh=Q2KuvY2wUIITZZ23RE0KyIC+rdvVru0ndU38jehTFXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dv2gsJ1uDEyIeRibu91TzGBeXg0NPQaBcBul1jQFLINkZBk80nuUBj2hcXvl0PWii
-         almEpCyjm2NfgwOCg6FhgKdjG/FdKRCF15eQWPYHYjjUQ/C9zOh0q7Dsbrg1rXYpER
-         uT5HvdeUIBWaDA+DFbPreByT5MoEjAmslnE15r60=
+        b=c2FotYPc/VCIZEpH2pw++NG5bzd4mWTLSgvnt/dLOwip6AcNVEIbFwYfL1vvm3PIf
+         5aHS0Q1uX4bQWzJQuouwzI6DnucWHIMLMdVB8PuwSC3gb2DJQea9+nRyulYDvf+y8y
+         mkXpLNO2NQUbzypJAIBktp9uYRp8hruC5lozOCcw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH 5.5 128/151] virtio_ring: Fix mem leak with vring_new_virtqueue()
-Date:   Tue, 17 Mar 2020 11:55:38 +0100
-Message-Id: <20200317103335.534521068@linuxfoundation.org>
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Nicolas Belin <nbelin@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.5 126/151] pinctrl: meson-gxl: fix GPIOX sdio pins
+Date:   Tue, 17 Mar 2020 11:55:36 +0100
+Message-Id: <20200317103335.395473551@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -60,47 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+From: Nicolas Belin <nbelin@baylibre.com>
 
-commit f13f09a12cbd0c7b776e083c5d008b6c6a9c4e0b upstream.
+commit dc7a06b0dbbafac8623c2b7657e61362f2f479a7 upstream.
 
-The functions vring_new_virtqueue() and __vring_new_virtqueue() are used
-with split rings, and any allocations within these functions are managed
-outside of the .we_own_ring flag. The commit cbeedb72b97a ("virtio_ring:
-allocate desc state for split ring separately") allocates the desc state
-within the __vring_new_virtqueue() but frees it only when the .we_own_ring
-flag is set. This leads to a memory leak when freeing such allocated
-virtqueues with the vring_del_virtqueue() function.
+In the gxl driver, the sdio cmd and clk pins are inverted. It has not caused
+any issue so far because devices using these pins always take both pins
+so the resulting configuration is OK.
 
-Fix this by moving the desc_state free code outside the flag and only
-for split rings. Issue was discovered during testing with remoteproc
-and virtio_rpmsg.
-
-Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring separately")
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Link: https://lore.kernel.org/r/20200224212643.30672-1-s-anna@ti.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Fixes: 0f15f500ff2c ("pinctrl: meson: Add GXL pinctrl definitions")
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+Link: https://lore.kernel.org/r/1582204512-7582-1-git-send-email-nbelin@baylibre.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virtio/virtio_ring.c |    4 ++--
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueu
- 					 vq->split.queue_size_in_bytes,
- 					 vq->split.vring.desc,
- 					 vq->split.queue_dma_addr);
--
--			kfree(vq->split.desc_state);
- 		}
- 	}
-+	if (!vq->packed_ring)
-+		kfree(vq->split.desc_state);
- 	list_del(&_vq->list);
- 	kfree(vq);
- }
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+@@ -147,8 +147,8 @@ static const unsigned int sdio_d0_pins[]
+ static const unsigned int sdio_d1_pins[]	= { GPIOX_1 };
+ static const unsigned int sdio_d2_pins[]	= { GPIOX_2 };
+ static const unsigned int sdio_d3_pins[]	= { GPIOX_3 };
+-static const unsigned int sdio_cmd_pins[]	= { GPIOX_4 };
+-static const unsigned int sdio_clk_pins[]	= { GPIOX_5 };
++static const unsigned int sdio_clk_pins[]	= { GPIOX_4 };
++static const unsigned int sdio_cmd_pins[]	= { GPIOX_5 };
+ static const unsigned int sdio_irq_pins[]	= { GPIOX_7 };
+ 
+ static const unsigned int nand_ce0_pins[]	= { BOOT_8 };
 
 
