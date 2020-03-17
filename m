@@ -2,96 +2,107 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D236C0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F1DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517DC20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584409286;
-	bh=FI9x9WC8KMWdC8ffuXM9W0eZbs6AIMk+34K4Ee1IW/o=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oLVGsurAZgotUllnvEwNmqnslVjgC1ym9ZewP+QjMzf4oPRk/SQsSd2NYnZjq4Kpx
-	 n5Rn4dCmVe/ZuS5Vtihw+FhdIA3Om0/MqMujJzfOHZLLKrnjpkUGnOlUiLL8pJuCrE
-	 mjyea1043Z4kYM2cPGH+SF6RdSPiYHEPo+t1MIJM=
+	by mail.kernel.org (Postfix) with ESMTP id C84BD20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgCQBlZ (ORCPT
+        id S1726619AbgCQBlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgCQBlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:41:24 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49DD02051A;
-        Tue, 17 Mar 2020 01:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584409284;
-        bh=FI9x9WC8KMWdC8ffuXM9W0eZbs6AIMk+34K4Ee1IW/o=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=eq8W4enIx3ZOcmc4IGtBEC/IgpS72WHEHHeGoKx+vPm+dxrzc4rNXbirfeGeTqNIL
-         EFybwvhF9F8u2a8kVLVYiXPhQ/q0+JGDIxY5Osr+gX1khDSACPkpT7u/ppygqxV5X8
-         xQLHRqBQYsWLIXJov3tObStP75LkcxBz8P21chj4=
-Date:   Tue, 17 Mar 2020 02:41:21 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Sergei Trofimovich <slyfox@gentoo.org>
-cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH] Makefile: disallow data races on gcc-10 as well
-In-Reply-To: <nycvar.YFH.7.76.2003170154580.19500@cbobk.fhfr.pm>
-Message-ID: <nycvar.YFH.7.76.2003170240410.19500@cbobk.fhfr.pm>
-References: <20200317000718.177637-1-slyfox@gentoo.org> <nycvar.YFH.7.76.2003170154580.19500@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 16 Mar 2020 21:41:31 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11652 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726597AbgCQBlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:41:31 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 85B2E639728DADF0C2D2;
+        Tue, 17 Mar 2020 09:41:29 +0800 (CST)
+Received: from [127.0.0.1] (10.133.210.141) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 17 Mar 2020
+ 09:41:29 +0800
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Layton <jlayton@kernel.org>
+CC:     NeilBrown <neilb@suse.de>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, <lkp@lists.01.org>,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <20200308140314.GQ5972@shao2-debian>
+ <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+ <875zfbvrbm.fsf@notabene.neil.brown.name>
+ <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+ <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
+ <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
+ <87v9nattul.fsf@notabene.neil.brown.name>
+ <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
+ <87o8t2tc9s.fsf@notabene.neil.brown.name>
+ <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
+ <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
+ <877dznu0pk.fsf@notabene.neil.brown.name>
+ <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
+ <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
+ <87pndcsxc6.fsf@notabene.neil.brown.name>
+ <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
+ <CAHk-=whnqDS0NJtAaArVeYQz3hcU=4Ja3auB1Jvs42eADfUgMQ@mail.gmail.com>
+From:   yangerkun <yangerkun@huawei.com>
+Message-ID: <7c8d3752-6573-ab83-d0af-f3dd4fc373f5@huawei.com>
+Date:   Tue, 17 Mar 2020 09:41:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAHk-=whnqDS0NJtAaArVeYQz3hcU=4Ja3auB1Jvs42eADfUgMQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.210.141]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020, Jiri Kosina wrote:
 
-> > The flag change happened at https://gcc.gnu.org/PR92046.
-> > 
-> > CC: Jiri Kosina <jkosina@suse.cz>
-> > CC: Masahiro Yamada <masahiroy@kernel.org>
-> > CC: Michal Marek <michal.lkml@markovi.net>
-> > CC: linux-kbuild@vger.kernel.org
-> > Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
-> > ---
-> >  Makefile | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Makefile b/Makefile
-> > index 171f2b004c8a..9696eb2cd5a1 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -714,6 +714,7 @@ endif
-> >  
-> >  # Tell gcc to never replace conditional load with a non-conditional one
-> >  KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
-> > +KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
+
+On 2020/3/17 1:26, Linus Torvalds wrote:
+> On Mon, Mar 16, 2020 at 4:07 AM Jeff Layton <jlayton@kernel.org> wrote:
+>>
+>>
+>> +       /*
+>> +        * If fl_blocker is NULL, it won't be set again as this thread "owns"
+>> +        * the lock and is the only one that might try to claim the lock.
+>> +        * Because fl_blocker is explicitly set last during a delete, it's
+>> +        * safe to locklessly test to see if it's NULL. If it is, then we know
+>> +        * that no new locks can be inserted into its fl_blocked_requests list,
+>> +        * and we can therefore avoid doing anything further as long as that
+>> +        * list is empty.
+>> +        */
+>> +       if (!smp_load_acquire(&waiter->fl_blocker) &&
+>> +           list_empty(&waiter->fl_blocked_requests))
+>> +               return status;
 > 
-> I have to say I can't really read gcc sources without major cerebral pain, 
-> so let me me dense here: what happens to gcc<10 if you pass 
-> -fno-allow-store-data-races to it?
+> Ack. This looks sane to me now.
+> 
+> yangerkun - how did you find the original problem?\
 
-Sorry, brainfart on my side, your patch is good :)
+While try to fix CVE-2019-19769, add some log in __locks_wake_up_blocks 
+help me to rebuild the problem soon. This help me to discern the problem 
+soon.
 
-	Acked-by: Jiri Kosina <jkosina@suse.cz>
+> 
+> Would you mind using whatever stress test that caused commit
+> 6d390e4b5d48 ("locks: fix a potential use-after-free problem when
+> wakeup a waiter") with this patch? And if you did it analytically,
+> you're a champ and should look at this patch too!
 
-Thanks,
+I will try to understand this patch, and if it's looks good to me, will 
+do the performance test!
 
--- 
-Jiri Kosina
-SUSE Labs
+Thanks
 
