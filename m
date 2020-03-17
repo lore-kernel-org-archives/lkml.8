@@ -2,138 +2,122 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7ADC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F207C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33C02076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6018E20757
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 13:53:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QSiI3s0Y"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="q3TpWkQQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aaKcs5r7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgCQNus (ORCPT
+        id S1726345AbgCQNxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:50:48 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36415 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgCQNur (ORCPT
+        Tue, 17 Mar 2020 09:53:20 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:45261 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726016AbgCQNxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:50:47 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g62so22089773wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 06:50:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
-        b=QSiI3s0YoV7n7/tnYog9oUBP3Cc6GxHGUCwCh0UhqjNIkn6pKoWxwDwIc7ZHfuKyt1
-         kEdvFCQ6j7+Noa9+D0kVSXd1O/Rq0h4ff0AABiKfQ0W9cNhse4SjTXrrb27FQeHJRpqX
-         rIA1fPNgK6D/F/8d3tqP2UVTDNrxXWhDA5E8X6jidyynaIZ0Cy+aY7WG7NpXiQONb4V8
-         LujVukcDZrWz+C7PF5bEhVfs5Bz/2BHH9zTE0HxRpIGKa2vvxtylEPZVlwnF7tZUgTXY
-         0rCI7jvUsKgzmx+R0sfFe10N4oWZb67+facmOeYl3vGzjeHlueh6TX64XNpmNRTf9oox
-         +L4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
-        b=C+r3rg1zrpqUV5mDlMku7c+OwpUBgOWLCF4gY/1riD3aIcjvEACAD6cdcNQwmrkWfy
-         yNA6mcg8dj163WQaoCmWwsllQlWiXANKPquTcKDqjnag9dCJZUDQYQzdQq4Kg6emNBvM
-         4jzvW4KxomHm1xgvlcJgYFvCItmSBtC3w7i9UTXt2BQqU/nErpESW2ND41aVwufT9/bj
-         n2z7dSvx3Bqv4Iq1hBSOtEm9EcN5TrH1IKISSdzx03od2fCTolnHAdDi1vOBNmORaJTQ
-         1dGUJV1wTfY8iUjVPVzjeB+FnHIpQHR/gBj1P2E12muihvqGIL8xnK0DMndCifCovUUT
-         TJ7A==
-X-Gm-Message-State: ANhLgQ1l8lGhDuNHvdbDZ2zyxhRusbSld2ZG2Q5FidKWv/eypMqK2wmJ
-        yhkwyqRX+3yLZDqYheqJXI1iVsoqDfNEUvaNqbk8SA==
-X-Google-Smtp-Source: ADFU+vusa/y0ClrKHxHtyBDmZj1O+rMx8uu0qjHobSSS5JQecz+zDpUKEEddBu5XlbGpEmdbaIvM2nWs+JrNOWL77kQ=
-X-Received: by 2002:a05:600c:21d1:: with SMTP id x17mr5249108wmj.3.1584453043184;
- Tue, 17 Mar 2020 06:50:43 -0700 (PDT)
+        Tue, 17 Mar 2020 09:53:19 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9BE9F5C01B3;
+        Tue, 17 Mar 2020 09:53:18 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 17 Mar 2020 09:53:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=ETwiKo7uaRHDpEEQzkythE/he2f
+        3dX58bEVdpvTwf0E=; b=q3TpWkQQ94yCpmYJyzmyCTSQ+a4TA/we85kdfyGfwTu
+        b1FxZB1l7AQx07J1xvgkfBEIikyOxoBjjsMnuka6heo86hfkGZvmp4Wxm3FIaFSc
+        Qmilo1F7ho6P/lHR/gKKiwOhI9tchW5JIaGbkd5TPG48iQsUA6rcLQJHIijD95dq
+        oFG0CkCg757LFt0Y+w5Ic+E9NVcDgRLE6oHxOnKyBgSkVppAgsNIwbg1n8FevlD0
+        wbsth31ayBMmkEPqR6nZMgkMH+Bta2duXOvGCLTQFi9gECZKt5lj8LeV6mEPC3IV
+        DYqwDrJxA1zIpdFWKVBTIIjriQiiwXWQwUC0aqjwcEQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ETwiKo
+        7uaRHDpEEQzkythE/he2f3dX58bEVdpvTwf0E=; b=aaKcs5r7G7lLayqbzS2o3k
+        k8e7rgAbKH7n6ERzNpR3WLHhPuKdr0BrFfXH7bbPnimKgg2by3+Q3wkHKSO25upb
+        kZJyrc4PNc47CmD4OZoGpA1SFPuTr/vFcUVjPJEGEd5ci10TnzVnVPHYzN7dQC45
+        IdxY6K+n5BbNMR9en0iazTVPF/hpdqF+Z/LazKfFOwpRT15EKf53fWD2554DrnDw
+        BraeK3EcPzDKL/nmktoys5mJ+Pz6GKwStUTrse3jrzcoTH4rDy/t7sieW+g7OBa2
+        Nlunxq7amRraQwQbaor3Snd75WHxZeekkkmxbGptg1565iD2g85+DgsN33NyvuPw
+        ==
+X-ME-Sender: <xms:TtZwXiXu4k3mVtD6YgmW27TxvKVLTxgH95xSkbYDCjUjykUKuhGupw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefhedgheefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepghhithhhuhgsrd
+    gtohhmnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:TtZwXi2Z1UxtdcQuznPABa8UQGPW8Aug_hhVuL0PcC73mEm25dngyg>
+    <xmx:TtZwXhaTt5tpzak_cqXTIYOMawsrRxvi-A499aRkWUMApnzuZlURIw>
+    <xmx:TtZwXtptlvZtfvKMjnjCaeAzNpMjAfN3Nh01ouzpSFTSaep53QQX-g>
+    <xmx:TtZwXhmJndvaiK8GunkfcMq4zhf1_etlZV6e-7qruUJVU-2-1EVNHA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DA148328006A;
+        Tue, 17 Mar 2020 09:53:17 -0400 (EDT)
+Date:   Tue, 17 Mar 2020 14:53:16 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: Re: linux-next: build warnings after merge of the usb tree
+Message-ID: <20200317135316.GB1360714@kroah.com>
+References: <20200317185748.085ecf7f@canb.auug.org.au>
+ <CAAeHK+zvcvxxxGKEhBm3t8rWoyMMEoGYJPpaW3-3sk4__PYJJg@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1584450500.git.mchehab+huawei@kernel.org> <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
-In-Reply-To: <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 17 Mar 2020 14:50:32 +0100
-Message-ID: <CAMpxmJUPA2qDwDu-LUh-RtXt66NhQUdjnPOCSaaBZ9xEm0C5LQ@mail.gmail.com>
-Subject: Re: [PATCH 05/12] docs: dt: fix references to ap806-system-controller.txt
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Ben Peled <bpeled@marvell.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        linux-pm <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+zvcvxxxGKEhBm3t8rWoyMMEoGYJPpaW3-3sk4__PYJJg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 17 mar 2020 o 14:10 Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> napisa=C5=82(a):
->
-> ap806-system-controller.txt was renamed to ap80x-system-controller.txt.
->
-> Update its references accordingly.
->
-> Fixes: 2537831bbc19 ("dt-bindings: ap80x: replace AP806 with AP80x")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt        | 2 +-
->  Documentation/devicetree/bindings/thermal/armada-thermal.txt | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Docu=
-mentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> index 2e097b57f170..0fc6700ed800 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> @@ -14,7 +14,7 @@ Required properties:
->
->      "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
->      SoCs (either from AP or CP), see
-> -    Documentation/devicetree/bindings/arm/marvell/ap806-system-controlle=
-r.txt
-> +    Documentation/devicetree/bindings/arm/marvell/ap80x-system-controlle=
-r.txt
->      for specific details about the offset property.
->
->  - reg: Address and length of the register set for the device. Only one
-> diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt=
- b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> index f3b441100890..b0bee7e42038 100644
-> --- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> @@ -12,7 +12,7 @@ Required properties:
->
->  Note: these bindings are deprecated for AP806/CP110 and should instead
->  follow the rules described in:
-> -Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.tx=
-t
-> +Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.tx=
-t
->  Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.tx=
-t
->
->  - reg: Device's register space.
-> --
-> 2.24.1
->
+On Tue, Mar 17, 2020 at 02:45:56PM +0100, Andrey Konovalov wrote:
+> On Tue, Mar 17, 2020 at 8:57 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> >
+> > After merging the usb tree, today's (actually yesterday's) linux-next
+> > build (powerpc allyesconfig) produced these warnings:
+> >
+> > ./usr/include/linux/usb/raw_gadget.h:74:12: warning: 'usb_raw_io_flags_zero' defined but not used [-Wunused-function]
+> >    74 | static int usb_raw_io_flags_zero(__u16 flags)
+> >       |            ^~~~~~~~~~~~~~~~~~~~~
+> > ./usr/include/linux/usb/raw_gadget.h:69:12: warning: 'usb_raw_io_flags_valid' defined but not used [-Wunused-function]
+> >    69 | static int usb_raw_io_flags_valid(__u16 flags)
+> >       |            ^~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Introduced by commit
+> >
+> >   f2c2e717642c ("usb: gadget: add raw-gadget interface")
+> >
+> > Missing "inline" n a header file?
+> 
+> Hi Stephen,
+> 
+> Yes, same issue as reported here:
+> https://github.com/ClangBuiltLinux/linux/issues/934
+> 
+> Thanks for the report!
+> 
+> Greg, should I send a new version with the fix right now, or is it OK
+> to wait until we get comments from Felipe/Alan and then send a new
+> version?
 
-For GPIO:
+Please send a fix for what is in my tree, I can't rebase it.
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+thanks,
+
+greg k-h
